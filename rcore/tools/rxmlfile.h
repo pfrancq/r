@@ -109,7 +109,7 @@ public:
 	* Open the file
 	* @param mode           The open mode for the file.
 	*/
-	virtual void Open(ModeType mode=Read);
+	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
 	* This function transform a given string that is supposed to represent a

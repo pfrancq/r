@@ -64,7 +64,7 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 RTextFile::RTextFile(const RString &name,const RString& encoding) throw(std::bad_alloc,RIOException, RException)
-  : RFile(name), All(true), NewLine(true), Rem("%"), BeginRem("/*"),
+  : RIOFile(name), All(true), NewLine(true), Rem("%"), BeginRem("/*"),
 	EndRem("*/"), CommentType(SingleLineComment), ActivComment(NoComment),
 	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
 {
@@ -72,41 +72,14 @@ RTextFile::RTextFile(const RString &name,const RString& encoding) throw(std::bad
 
 
 //------------------------------------------------------------------------------
-void RTextFile::Open(ModeType mode)
+void RTextFile::Open(RIO::ModeType mode)
 {
 	struct stat statbuf;
-	int localmode;
 
-	RFile::Open(mode);
-	switch(Mode)
-	{
-		case Read:
-			localmode=O_RDONLY;
-			break;
-
-		case Append:
-			localmode=O_WRONLY | O_CREAT | O_APPEND;
-			break;
-
-		case Create:
-			localmode=O_WRONLY | O_CREAT | O_TRUNC;
-			break;
-
-		default:
-			throw(RIOException(this,"No Valid Mode"));
-	};
-	#ifndef _BSD_SOURCE
-		localmode|=O_BINARY;
-	#endif
-	if(Mode==Read)
-		handle=open(Name,localmode);
-	else
-		handle=open(Name,localmode,S_IREAD|S_IWRITE);
-	if(handle==-1)
-		throw(RIOException(this,"Can't open file """+Name+""""));
+	RIOFile::Open(mode);
 	LastLine=Line=0;
 	ptr=Buffer=0;
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 	{
 		if(All)
 		{
@@ -130,12 +103,7 @@ void RTextFile::Open(ModeType mode)
 //------------------------------------------------------------------------------
 void RTextFile::Close(void)
 {
-	RFile::Close();
-	if(handle!=-1)
-	{
-		close(handle);
-		handle=-1;
-	}
+	RIOFile::Close();
 	if(Buffer)
 	{
 		delete[] Buffer;
@@ -147,7 +115,7 @@ void RTextFile::Close(void)
 //------------------------------------------------------------------------------
 void RTextFile::Begin(void) throw(RIOException)
 {
-	if(Mode!=Read)
+	if(Mode!=RIO::Read)
 		throw(RIOException(this,"File Mode is not Read"));
 	ptr=Buffer;
 	Len=TotalLen;
@@ -490,7 +458,7 @@ RString RTextFile::GetWord(void) throw(RIOException)
 {
 	RString res;
 
-	if(Mode!=Read)
+	if(Mode!=RIO::Read)
 		throw(RIOException(this,"File Mode is not Read"));
 	SkipSpaces();
 	while((!Cur.IsNull())&&(!Cur.IsSpace())&&(!BeginComment()))
@@ -507,7 +475,7 @@ RString RTextFile::GetLine(bool SkipEmpty) throw(RIOException)
 {
 	RString res;
 
-	if(Mode!=Read)
+	if(Mode!=RIO::Read)
 		throw(RIOException(this,"File Mode is not Read"));
 	if(Cur.IsNull()) return(res);
 	while((!Cur.IsNull())&&(!Eol(Cur))&&(!BeginComment()))
@@ -704,7 +672,6 @@ float RTextFile::GetFloat(void) throw(RIOException)
 	}
 	if((GetCur()=='e')||(GetCur()=='E'))
 	{
-		cout<<"passe dans e"<<endl;
 		str+=GetCur();
 		Next();
 		//Check for sign
@@ -755,7 +722,7 @@ void RTextFile::WriteSeparator(void)
 //------------------------------------------------------------------------------
 void RTextFile::WriteLine(void) throw(RIOException)
 {
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RIOException(this,"File Mode is Read"));
 	RString endofline("\n");
 	RCString str=Codec->FromUnicode(endofline);
@@ -771,7 +738,7 @@ void RTextFile::WriteLine(void) throw(RIOException)
 //------------------------------------------------------------------------------
 void RTextFile::WriteStr(const RString& str) throw(RIOException)
 {
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RIOException(this,"File Mode is Read"));
 	RReturnIfFail(str.GetLen()>0);
 	WriteSeparator();
@@ -795,7 +762,7 @@ void RTextFile::WriteStr(const char* c) throw(RIOException)
 //------------------------------------------------------------------------------
 void RTextFile::WriteStr(const char* c,unsigned int l) throw(RIOException)
 {
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RIOException(this,"File Mode is Read"));
 	if(!l) return;
 	WriteSeparator();
@@ -950,7 +917,7 @@ void RTextFile::WriteTime(void) throw(RIOException)
 	time_t timer;
 	struct tm *tblock;
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RIOException(this,"File Mode is Read"));
 	timer = time(NULL);
 	tblock = localtime(&timer);
@@ -968,7 +935,7 @@ void RTextFile::WriteLog(const RString& entry) throw(RIOException)
 	time_t timer;
 	struct tm *tblock;
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RIOException(this,"File Mode is Read"));
 	RReturnIfFail(entry.GetLen()>0);
 	RString str;

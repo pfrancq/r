@@ -56,17 +56,17 @@
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>::RRecFile(const RString &name) throw(std::bad_alloc,RString)
-		: RFile(name), NbRecs(0)
+		: RIOFile(name), NbRecs(0)
 {
 }
 
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::Open(ModeType mode)
+	void RRecFile<C,S,bOrder>::Open(RIO::ModeType mode)
 {
-	RFile::Open(mode);
-	if(Mode!=Create)
+	RIOFile::Open(mode);
+	if(Mode!=RIO::Create)
 	{
 		struct stat statbuf;
 		fstat(handle, &statbuf);
@@ -84,7 +84,7 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(double& nb) throw(RString)
 {
-	if(Mode!=R::Read)
+	if(Mode!=RIO::Read)
 		throw(RString("File Mode is not Read"));
 	if(eof)
 		throw(RString("End of File"));
@@ -97,7 +97,7 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(unsigned int& nb) throw(RString)
 {
-	if(Mode!=R::Read)
+	if(Mode!=RIO::Read)
 		throw(RString("File Mode is not Read"));
 	if(eof)
 		throw(RString("End of File"));
@@ -110,7 +110,7 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const unsigned char nb) throw(RString)
 {
-	if(Mode==R::Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	write(handle,&nb,sizeof(unsigned char));
 	#ifdef windows
@@ -124,7 +124,7 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const unsigned int nb) throw(RString)
 {
-	if(Mode==R::Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	write(handle,&nb,sizeof(unsigned int));
 	#ifdef windows
@@ -137,7 +137,7 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const unsigned long nb) throw(RString)
 {
-	if(Mode==R::Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	write(handle,&nb,sizeof(unsigned long));
 	#ifdef windows
@@ -151,7 +151,7 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const double d) throw(RString)
 {
-	if(Mode==R::Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	write(handle,&d,sizeof(double));
 	#ifdef windows
@@ -182,7 +182,7 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	bool RRecFile<C,S,bOrder>::Read(C& rec) throw(RString)
 {
-	if(Mode!=R::Read)
+	if(Mode!=RIO::Read)
 		throw(RString("File Mode is not Read"));
 	if(eof)
 		throw(RString("End of File"));

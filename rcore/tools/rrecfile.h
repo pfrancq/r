@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rfile.h>
+#include <rstd/riofile.h>
 
 
 //------------------------------------------------------------------------------
@@ -77,14 +77,9 @@ namespace R{
 * @short Text File.
 */
 template<class C,unsigned int S,bool bOrder=false>
-	class RRecFile : public RFile
+	class RRecFile : public RIOFile
 {
 protected:
-
-	/**
-	* Internal Handle of the file.
-	*/
-	int handle;
 
 	/**
 	* This variable is holding the record number.
@@ -113,7 +108,7 @@ public:
 	* Open the file
 	* @param mode           The open mode for the file.
 	*/
-	virtual void Open(ModeType mode=Read);
+	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
 	* Return true if the file is been treated.

@@ -80,7 +80,7 @@ void RXMLFile::SetDocType(const RString& docType) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::Open(ModeType mode)
+void RXMLFile::Open(RIO::ModeType mode)
 {
 	RXMLTag *top;
 	RCursor<RXMLAttr> Cur;
@@ -89,13 +89,13 @@ void RXMLFile::Open(ModeType mode)
 	RTextFile::Open(mode);
 	switch(Mode)
 	{
-		case Read:
+		case RIO::Read:
 			LoadHeader();
 			LoadNextTag();
 			break;
 
-		case Append:
-		case Create:
+		case RIO::Append:
+		case RIO::Create:
 			top = XMLStruct->GetTop();
 			Header="<?xml version=\""+XMLStruct->GetVersion()+"\" encoding=\""+XMLStruct->GetEncoding()+"\"?>";
 			(*this)<<Header<<endl;

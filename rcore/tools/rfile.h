@@ -64,7 +64,7 @@ protected:
 	/**
 	* How to file has to be used.
 	*/
-	ModeType Mode;
+	RIO::ModeType Mode;
 
 	/**
 	* Name of the File.
@@ -83,7 +83,7 @@ public:
 	* Open the file
 	* @param mode           The open mode for the file.
 	*/
-	virtual void Open(ModeType mode=Read);
+	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
 	* Close the file.

@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rfile.h>
+#include <rstd/riofile.h>
 
 
 //------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ class RTextEncoding;
 * @author Pascal Francq
 * @short Text File.
 */
-class RTextFile : public RFile
+class RTextFile : public RIOFile
 {
 public:
 	/**
@@ -102,11 +102,6 @@ public:
 	};
 
 protected:
-
-	/**
-	* Internal Handle of the file.
-	*/
-	int handle;
 
 	/**
 	* Buffer containing the file (Used only if read mode).
@@ -208,7 +203,7 @@ public:
 	* Open the file
 	* @param mode           The open mode for the file.
 	*/
-	virtual void Open(ModeType mode=Read);
+	virtual void Open(RIO::ModeType mode=Read);
 
 	/**
 	* Close the file.

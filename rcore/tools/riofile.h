@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RFile.cpp
+	RIOFile.h
 
-	Generic File - Implementation.
+	Generic File for Input/Output - Header.
 
-	Copyright 1999-2004 by the UniversitÃ© libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -31,76 +31,79 @@
 
 
 //------------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <sys/stat.h>
-#ifdef _BSD_SOURCE
-	#include <unistd.h>
-#else
-	#include <io.h>
-#endif
-#include <fcntl.h>
-#include <string.h>
-#include <time.h>
+#ifndef RIOFile_H
+#define RIOFile_H
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rfile.h>
-using namespace R;
-using namespace std;
-
 
 
 //------------------------------------------------------------------------------
-//
-// RFile
-//
+namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
-RFile::RFile(const RString &name)
-  : Mode(RIO::Undefined), Name(name)
+/**
+* The RIOFile class represents a file that can do some input and/or output
+* tasks.
+* @author Pascal Francq
+* @short Generic File for Input/Output.
+*/
+class RIOFile : public RFile
 {
-}
+protected:
+
+	/**
+	* Internal Handle of the file.
+	*/
+	int handle;
+
+public:
+
+	/**
+	* Construct a file.
+	* @param name           The name of the file.
+	*/
+	RIOFile(const RString &name);
+
+	/**
+	* Open the file
+	* @param mode           The open mode for the file.
+	*/
+	virtual void Open(RIO::ModeType mode=Read);
+
+	/**
+	* Close the file.
+	*/
+	virtual void Close(void);
+
+	/**
+	* Read a given number of bytes at the current position of the file.
+	* @param buffer         Buffer (must be allocated).
+	* @param nb             Number of bytes to read.
+	*/
+	void Read(char* buffer,unsigned int nb);
+
+	/**
+	* Write the first number of bytes of a buffer in the current position of
+	* the file.
+	* @param buffer         Buffer.
+	* @param nb             Number of bytes to read.
+	*/
+	void Write(char* buffer,unsigned int nb);
+
+	/**
+	* Destructs the file.
+	*/
+	virtual ~RIOFile(void);
+};
+
+
+}  //-------- End of namespace R -----------------------------------------------
 
 
 //------------------------------------------------------------------------------
-void RFile::Open(RIO::ModeType mode)
-{
-	Mode=mode;
-}
-
-
-//------------------------------------------------------------------------------
-void RFile::Close(void)
-{
-}
-
-
-//------------------------------------------------------------------------------
-const RString& RFile::GetName(void) const
-{
-	return(this->Name);
-}
-
-
-//------------------------------------------------------------------------------
-RChar RFile::GetDirSeparator(void)
-{
-#ifdef _BSD_SOURCE
-    return('/');
-#else
-    return('\\');
 #endif
-
-}
-
-
-//------------------------------------------------------------------------------
-RFile::~RFile(void)
-{
-	Close();
-}

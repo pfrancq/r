@@ -81,22 +81,22 @@ RDir::RDir(const RString& name)
 
 
 //-----------------------------------------------------------------------------
-void RDir::Open(ModeType mode)
+void RDir::Open(RIO::ModeType mode)
 {
 	RFile::Open(mode);
 	switch(Mode)
 	{
-		case Read:
+		case RIO::Read:
 			Data->Handle=opendir(GetName().Latin1());
 			if(!Data->Handle)
 				throw(RIOException(this,"Directory does not exist"));
 			break;
 
-		case Append:
+		case RIO::Append:
 			throw(RIOException(this,"Cannot append a directory"));
 			break;
 
-		case Create:
+		case RIO::Create:
 
 			break;
 

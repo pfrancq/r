@@ -160,7 +160,7 @@ RDebug::~RDebug(void)
 RDebugXML::RDebugXML(RString name,RString app,RString author) throw(std::bad_alloc)
 	: RDebug(app,author),Name(name), File(name)
 {
-	File.Open(Create);
+	File.Open(RIO::Create);
 	File.WriteStr("<!DOCTYPE "+RString(app)+">");
 	File.WriteLine();
 	for(int i=51;--i;)

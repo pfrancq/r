@@ -4,9 +4,9 @@
 
 	RFile.cpp
 
-	Generic File - Implementation.
+	Generic File for Input/Output - Implementation.
 
-	Copyright 1999-2004 by the UniversitÃ© libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -48,7 +48,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rfile.h>
+#include <rstd/riofile.h>
 using namespace R;
 using namespace std;
 
@@ -56,51 +56,82 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 //
-// RFile
+// RIOFile
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RFile::RFile(const RString &name)
-  : Mode(RIO::Undefined), Name(name)
+RIOFile::RIOFile(const RString &name)
+  : RFile(name)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RFile::Open(RIO::ModeType mode)
+void RIOFile::Open(RIO::ModeType mode)
 {
-	Mode=mode;
+	int localmode;
+
+	RFile::Open(mode);
+	switch(Mode)
+	{
+		case RIO::Read:
+			localmode=O_RDONLY;
+			break;
+
+		case RIO::Append:
+			localmode=O_WRONLY | O_CREAT | O_APPEND;
+			break;
+
+		case RIO::Create:
+			localmode=O_WRONLY | O_CREAT | O_TRUNC;
+			break;
+
+		default:
+			throw(RIOException(this,"No Valid Mode"));
+	};
+	#ifndef _BSD_SOURCE
+		localmode|=O_BINARY;
+	#endif
+	if(Mode==RIO::Read)
+		handle=open(Name,localmode);
+	else
+		handle=open(Name,localmode,S_IREAD|S_IWRITE);
+	if(handle==-1)
+		throw(RIOException(this,"Can't open the file"));
 }
 
 
 //------------------------------------------------------------------------------
-void RFile::Close(void)
+void RIOFile::Close(void)
 {
+	if(handle!=-1)
+	{
+		close(handle);
+		handle=-1;
+	}
 }
 
 
 //------------------------------------------------------------------------------
-const RString& RFile::GetName(void) const
+void RIOFile::Read(char* buffer,unsigned int nb)
 {
-	return(this->Name);
+	if(handle==-1)
+		throw(RIOException(this,"Can't read in the file"));
+	read(handle,buffer,nb);
 }
 
 
 //------------------------------------------------------------------------------
-RChar RFile::GetDirSeparator(void)
+void RIOFile::Write(char* buffer,unsigned int nb)
 {
-#ifdef _BSD_SOURCE
-    return('/');
-#else
-    return('\\');
-#endif
-
+	if(handle==-1)
+		throw(RIOException(this,"Can't write into the file"));
+	write(handle,buffer,nb);
 }
 
 
 //------------------------------------------------------------------------------
-RFile::~RFile(void)
+RIOFile::~RIOFile(void)
 {
-	Close();
 }

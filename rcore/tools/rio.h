@@ -53,18 +53,22 @@ class RTextFile;
 
 
 //------------------------------------------------------------------------------
-/**
-* The ModeType enum represents the different mode that can be used to open a
-* file.
-*/
-enum ModeType
+class RIO
 {
-	Append                       /** Append to an existing file. If the file
-	                                 does not exist, it is created.*/,
-	Read                         /** Open a file to read it.*/,
-	Create                       /** Create a new file. If the file already
-	                                 exists, it is destruct.*/,
-	Undefined                    /** The mode of the file is undefined.*/
+public:
+	/**
+	* The ModeType enum represents the different mode that can be used to open a
+	* file.
+	*/
+	enum ModeType
+	{
+		Append                       /** Append to an existing file. If the file
+		                                 does not exist, it is created.*/,
+		Read                         /** Open a file to read it.*/,
+		Create                       /** Create a new file. If the file already
+		                                 exists, it is destruct.*/,
+		Undefined                    /** The mode of the file is undefined.*/
+	};
 };
 
 
