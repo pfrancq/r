@@ -46,6 +46,7 @@ template<class C,bool bAlloc,bool bOrder>
 		Tab = new C*[MaxPtr];
 		memset(Tab,0,MaxPtr*sizeof(C*));
 		if(!IncPtr) IncPtr=MaxPtr/2;
+		if(!IncPtr) IncPtr=10;
 	}
 	else
 	{
@@ -394,6 +395,9 @@ template<class C,bool bAlloc,bool bOrder>
 	LastPtr=ActPtr=NbPtr=0;
 	Current=0;
 	IncPtr=I;
+	MaxPtr=M;
+	if(!IncPtr) IncPtr=MaxPtr/2;
+	if(!IncPtr) IncPtr=10;
 	VerifyTab(M);
 	memset(Tab,0,MaxPtr*sizeof(C*));
 }
