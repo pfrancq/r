@@ -6,7 +6,7 @@
 
 	MySQL C++ Classes - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,6 +37,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
+#include <rstd/rcontainer.h>
 #include <rstd/rcstring.h>
 #include <rstd/rstring.h>
 #include <rstd/rdate.h>
@@ -157,14 +158,23 @@ public:
 	RDb(RString host,RString user,RString pwd,RString db,RString coding="latin1") throw(RMySQLError);
 
 	/**
-	* Create a new database 
+	* Create a new database
 	* @param host           Host of the database server.
 	* @param user           User to connect with.
 	* @param pwd            Password of the user.
 	* @param name           The name of the new database
 	*/
 	static void CreateDatabase(RString host,RString user,RString pwd,RString name) throw(RMySQLError);
-	
+
+	/**
+	* Create a table that will be used to simulate transactions.
+	* @param name           Name of the transaction.
+	* @param nb             Number of paramters.
+	* @param ...            Name of the parameters of the transaction (transid
+	                        is reserved).
+	*/
+	void CreateTransactionTable(RString name,unsigned int nb,...);
+
 	/**
 	* Get the protocol version used.
 	* @return a identifier.
@@ -180,7 +190,6 @@ public:
 	// Friend class.
 	friend class RQuery;
 };
-
 
 
 //------------------------------------------------------------------------------
@@ -256,8 +265,16 @@ public:
 	/**
 	* Get the total number of rows of the query.
 	* @returns Number of row.
+	* \deprecated
 	*/
 	unsigned int GetNbRows(void)
+		{ return(nbrows); }
+
+	/**
+	* Get the total number of rows of the query.
+	* @returns Number of row.
+	*/
+	unsigned int GetNb(void)
 		{ return(nbrows); }
 
 	/**
@@ -325,6 +342,89 @@ public:
 	* Destruct the query.
 	*/
 	virtual ~RQuery(void);
+};
+
+
+//------------------------------------------------------------------------------
+/**
+* The RTransactionTable class provides a representation for a transaction table
+* based on MySQL.
+* @author Pascal Francq
+* @short MySQL Transaction Table.
+*/
+class RTransactionTable
+{
+	/**
+	* Name of the table.
+	*/
+	RString Name;
+
+	/**
+	* Parameters involved in a transaction.
+	*/
+	RContainer<RString,true,false> Params;
+
+	/**
+	* Database.
+	*/
+	RDb* DB;
+
+public:
+
+	/**
+	* Constructor of a transaction table.
+	* @param db             Database.
+	* @param name           Name of the transaction table.
+	*/
+	RTransactionTable(RDb* db,RString name);
+
+	/**
+	* Constructor of a transaction table.
+	* @param db             Database.
+	* @param name           Name of the transaction table.
+	* @param nb             Number of paramters.
+	* @param ...            Name of the parameters of the transaction (transid
+	                        is reserved).
+	*/
+	RTransactionTable(RDb* db,RString name,unsigned int nb,...);
+
+	/**
+	* Write a given transaction.
+
+	* @param ...            Values of the parameters of the transaction (transid
+	                        is reserved).
+	* @return The identificator of the transaction.
+	*/
+	unsigned int WriteTransaction(unsigned int id,...);
+
+	/**
+	* Get a transaction.
+	* @param id             Identificator of the transaction. If null, all the
+	*                       existing transactions are loaded.
+	* @param wait           If true, the method waits until at least one
+	*                       transaction arrived.
+	* @return Pointer to a query containing the loaded transactions. This query
+	*         should be destroyed by the caller.
+	*/
+	RQuery* ReadTransaction(unsigned int id,bool wait);
+
+	/**
+	* Wait that a given transaction arrived.
+	* @param id             Identificator of the transaction.
+	*/
+	void WaitTransaction(unsigned int id);
+
+	/**
+	* Remove a given transaction.
+	* @param id             Identificator of the transaction. If null, all the
+	*                       existing transactions are removed.
+	*/
+	void RemoveTransaction(unsigned int id);
+
+	/**
+	* Destructor.
+	*/
+	~RTransactionTable(void);
 };
 
 

@@ -32,11 +32,13 @@
 //------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <string.h>
+#include <stdarg.h>
 
 
 //------------------------------------------------------------------------------
 // include files for R Library
 #include <rstd/rstring.h>
+#include <rstd/rcursor.h>
 #include <rdb/rmysql.h>
 #include <rstd/rtextencoding.h>
 using namespace R;
@@ -90,6 +92,27 @@ void RDb::CreateDatabase(RString host,RString user,RString pwd,RString name) thr
 	sql+=name;
 	if(mysql_query(&ms,sql.Latin1()))
 		throw RMySQLError(mysql_error(&ms));
+}
+
+
+//------------------------------------------------------------------------------
+void RDb::CreateTransactionTable(RString name,unsigned int nb,...)
+{
+	va_list ap;
+	RString sSql;
+
+	// Create table if it doesn't already exist
+	sSql="CREATE TABLE IF NOT EXISTS "+name+" (transid INT(11) PRIMARY KEY AUTO_INCREMENT,";
+	va_start(ap,nb);
+	while(nb--)
+	{
+		sSql+=RString(va_arg(ap,char*))+" TEXT";
+		if(nb)
+			sSql+=",";
+	}
+	va_end(ap);
+	sSql+=")";
+	RQuery create(this,sSql);
 }
 
 
@@ -270,4 +293,171 @@ RString RQuery::SQLValue(const RDate& d)
 RQuery::~RQuery(void)
 {
 	if(result) mysql_free_result(result);
+}
+
+
+
+//------------------------------------------------------------------------------
+//
+// RTransactionTable
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+RTransactionTable::RTransactionTable(RDb* db,RString name)
+	: Name(name), Params(20,10), DB(db)
+{
+	RString sSql;
+
+	sSql="SHOW FIELDS FROM "+name;
+	RQuery params(DB,sSql);
+	// Skip 'transid
+	params.Start();
+	for(params.Next();!params.End();params.Next())
+		Params.InsertPtr(new RString(params[0]));
+}
+
+
+//------------------------------------------------------------------------------
+RTransactionTable::RTransactionTable(RDb* db,RString name,unsigned int nb,...)
+	: Name(name), Params(nb,5), DB(db)
+{
+	va_list ap;
+	RString sSql;
+
+	// Create table if it doesn't already exist
+	sSql="CREATE TABLE IF NOT EXISTS "+name+" (transid INT(11) PRIMARY KEY AUTO_INCREMENT,";
+	va_start(ap,nb);
+	while(nb--)
+	{
+		sSql+=RString(va_arg(ap,char*))+" TEXT";
+		Params.InsertPtr(new RString(va_arg(ap,char*)));
+		if(nb)
+			sSql+=",";
+	}
+	va_end(ap);
+	sSql+=")";
+	RQuery create(DB,sSql);
+}
+
+
+//------------------------------------------------------------------------------
+unsigned int RTransactionTable::WriteTransaction(unsigned int id,...)
+{
+	va_list ap;
+	RString sSql;
+
+	// Insert the info in the table
+	sSql="INSERT INTO "+Name+" SET ";
+	if(id)
+		sSql+="transid="+itou(id)+",";
+	va_start(ap,Params.GetNb());
+	RCursor<RString> Cur(Params);
+	for(Cur.Start();!Cur.End();)
+	{
+		sSql+=(*Cur())+"="+RQuery::SQLValue(va_arg(ap,char*));
+		Cur.Next();
+		if(!Cur.End())
+			sSql+=",";
+	}
+	va_end(ap);
+	RQuery insert(DB,sSql);
+
+	// Get the id of the transaction
+	if(id)
+		return(id);
+	sSql="SELECT LAST_INSERT_ID() FROM "+Name;
+	RQuery select(DB,sSql);
+	select.Start();
+	return(atoi(select[0]));
+}
+
+
+//------------------------------------------------------------------------------
+RQuery* RTransactionTable::ReadTransaction(unsigned int id,bool wait)
+{
+	RString sSql;
+	RQuery* Access=0;
+
+	sSql="SELECT * FROM "+Name;
+	if(id)
+		sSql+=" WHERE transid="+itou(id);
+	try
+	{
+		do
+		{
+			// Remove Old access
+			if(Access)
+			{
+				delete Access;
+				Access=0;
+			}
+
+//			std::cout<<sSql<<std::endl;
+			Access=new RQuery(DB,sSql);
+			Access->Start();
+		}
+		while((wait)&&(!Access->GetNbRows()));
+	}
+	catch(...)
+	{
+		Access=0;
+	}
+	return(Access);
+}
+
+
+//------------------------------------------------------------------------------
+void RTransactionTable::WaitTransaction(unsigned int id)
+{
+	RString sSql;
+	RQuery* Access=0;
+
+	sSql="SELECT * FROM "+Name;
+	if(id)
+		sSql+=" WHERE transid="+itou(id);
+	try
+	{
+		do
+		{
+			// Remove Old access
+			if(Access)
+			{
+				delete Access;
+				Access=0;
+			}
+
+			Access=new RQuery(DB,sSql);
+			Access->Start();
+		}
+		while(!Access->GetNbRows());
+		delete Access;
+	}
+	catch(...)
+	{
+	}
+}
+
+
+//------------------------------------------------------------------------------
+void RTransactionTable::RemoveTransaction(unsigned int id)
+{
+	RString sSql;
+
+	sSql="DELETE FROM "+Name;
+	if(id)
+		sSql+=" WHERE transid="+itou(id);
+	try
+	{
+		RQuery del(DB,sSql);
+	}
+	catch(...)
+	{
+	}
+}
+
+
+//------------------------------------------------------------------------------
+RTransactionTable::~RTransactionTable(void)
+{
 }
