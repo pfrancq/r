@@ -59,9 +59,13 @@ RMySQL::RMySQLError::RMySQLError(const char* error)
 //---------------------------------------------------------------------------
 RMySQL::RDb::RDb(const char* host,const char* user,const char* pwd,const char* db) throw(RMySQLError)
 {
-	mysql_init(&mysql);
+	MYSQL* ret;
+
+	ret=mysql_init(&mysql);
+	if((!ret)||(mysql_errno(&mysql)))
+		throw RMySQLError(mysql_error(&mysql));
 	connection=mysql_real_connect(&mysql,host,user,pwd,db,0,"",0);
-	if(!connection)
+	if((!connection)||(mysql_errno(&mysql)))
 		throw RMySQLError(mysql_error(&mysql));
 }
 
