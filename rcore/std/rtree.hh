@@ -51,7 +51,7 @@ template<class N,bool bAlloc,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	void RTree<N,bAlloc,bOrder>::AddNode(N *parent,N *node) throw(bad_alloc)
+	void RTree<N,bAlloc,bOrder>::AddNode(N* parent,N* node) throw(bad_alloc)
 {
 	RReturnIfFail(node);
 	if(!node) return;
@@ -68,7 +68,7 @@ template<class N,bool bAlloc,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	void RTree<N,bAlloc,bOrder>::DeleteNode(N *node)
+	void RTree<N,bAlloc,bOrder>::DeleteNode(N* node)
 {
 	RReturnIfFail(node);
 	if(!node) return;
@@ -80,6 +80,14 @@ template<class N,bool bAlloc,bool bOrder>
 	else
 		Top->RContainer<N,unsigned int,false,bOrder>::DeletePtr(node);
 	RContainer<N,unsigned int,bAlloc,bOrder>::DeletePtr(node);
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
+	unsigned int RTree<N,bAlloc,bOrder>::GetNbNodes(void) const
+{
+	return(NbPtr);
 }
 
 

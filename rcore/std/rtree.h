@@ -73,7 +73,7 @@ public:
 	/**
 	* This container hold the top nodes.
 	*/
-	RContainer<N,unsigned int,false,bOrder> *Top;
+	RContainer<N,unsigned int,false,bOrder>* Top;
 
 	/**
 	* Construct the tree.
@@ -87,13 +87,19 @@ public:
 	* @param parent         The parent node.
 	* @param node           The node to add to the tree.
 	*/
-	void AddNode(N *parent,N *node) throw(bad_alloc);
+	void AddNode(N* parent,N* node) throw(bad_alloc);
 
 	/**
 	* Delete the node from the tree.
 	* @param node           The node to be delete from the tree.
 	*/
-	void DeleteNode(N *node);
+	void DeleteNode(N* node);
+
+	/**
+	* Get the number of nodes in the tree.
+	* @return unsigned int
+	*/
+	unsigned int GetNbNodes(void) const;
 
 	/**
 	* Destruct the tree.
