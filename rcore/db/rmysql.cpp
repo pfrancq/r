@@ -62,7 +62,7 @@ RMySQL::RDb::RDb(const char* host,const char* user,const char* pwd,const char* d
 	mysql_init(&mysql);
 	connection=mysql_real_connect(&mysql,host,user,pwd,db,0,"",0);
 	if(!connection)
-		throw(new RMySQLError(mysql_error(&mysql)));
+		throw RMySQLError(mysql_error(&mysql));
 }
 
 
@@ -89,9 +89,9 @@ RMySQL::RQuery::RQuery(RDb* db,const char* sql) throw(RMySQLError)
 	bool bLastInsertId;
 
 	if((!db)||!(db->connection))
-		throw(new RMySQLError("Database not initialize"));
+		throw RMySQLError("Database not initialize");
 	if(mysql_real_query(db->connection,sql,strlen(sql)))
-		throw(new RMySQLError(mysql_error(&db->mysql)));
+		throw RMySQLError(mysql_error(&db->mysql));
 	Up.StrUpr();
 	bSelect=strstr(Up(),"SELECT");
 	if(bSelect)
@@ -139,9 +139,9 @@ RQuery& RMySQL::RQuery::operator++(int)
 const char* RMySQL::RQuery::operator[](unsigned int index) const throw(RMySQLError)
 {
 	if(index>=nbcols)
-		throw(RMySQLError("Index out of range"));
+		throw RMySQLError("Index out of range");
 	if(!row)
-		throw(RMySQLError("Treated set"));
+		throw RMySQLError("Treated set");
 	return(row[index]);
 }
 
