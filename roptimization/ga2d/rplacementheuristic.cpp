@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPlacementHeuristic.h
 
 	Generic Heuristic for Placement - Implemenation
 
-	(C) 1998-2000 by By P. Francq.
+	(C) 1998-2001 by By P. Francq.
 
 	Version $Revision$
 
@@ -32,11 +32,13 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rpromethee/rpromkernel.h>
 using namespace RPromethee;
-#include <rga/rplacementheuristic.h>
-using namespace RGA;
+#include <rga2d/rplacementheuristic.h>
+using namespace RGA2D;
+#include <rmath/random.h>
+using namespace RMath;
 
 
 
@@ -47,7 +49,7 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,bool ori)
+RGA2D::RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,bool ori)
 	: Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori)
 {
 	Order=new unsigned int[maxobjs];
@@ -55,15 +57,15 @@ RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use
 
 
 //-----------------------------------------------------------------------------
-void RPlacementHeuristic::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs)
+void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfo** infos,RGrid *grid)
 {
 	// Assign
-	Limits=limits;
+	Limits=prob->Limits;
 	Grid=grid;
-	Objs=objs;
 	Infos=infos;
-	NbObjs=nbobjs;
-
+	NbObjs=prob->Objs.NbPtr;
+	Connections=&prob->Cons;
+	
 	// Init the data for a placement
 	NbObjsOk=0;
 	Grid->Clear();	
@@ -74,58 +76,72 @@ void RPlacementHeuristic::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo
 	// Calculate an order
 	for(unsigned int i=0;i<NbObjs;i++)
 		Order[i]=i;
+	RRandom::randorder<unsigned int>(Order,NbObjs);
+}
+
+
+//-----------------------------------------------------------------------------
+void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfos *infos,RGrid *grid)
+{
+	Init(prob,infos->Tab,grid);
 }
 
 
 //----------------------------------------------------------------------------
-void RPlacementHeuristic::SetDistParams(double p,double q,double w)
+void RGA2D::RPlacementHeuristic::SetDistParams(double p,double q,double w)
 {
-	DistP=p;
-	DistQ=q;
-	DistWeight=w;
+	DistParams.P=p;
+	DistParams.Q=q;
+	DistParams.Weight=w;
+}
+
+
+//-----------------------------------------------------------------------------	
+void RGA2D::RPlacementHeuristic::SetDistParams(const RPromCriterionParams& params)
+{
+	DistParams=params;
+}
+
+
+//----------------------------------------------------------------------------
+void RGA2D::RPlacementHeuristic::SetAreaParams(const RPromCriterionParams& params)
+{
+	AreaParams=params;
+}
+
+		
+//----------------------------------------------------------------------------
+void RGA2D::RPlacementHeuristic::SetAreaParams(double p,double q,double w)
+{
+	AreaParams.P=p;
+	AreaParams.Q=q;
+	AreaParams.Weight=w;
 }
 
 	
-//----------------------------------------------------------------------------
-void RPlacementHeuristic::SetAreaParams(double p,double q,double w)
-{
-	AreaP=p;
-	AreaQ=q;
-	AreaWeight=w;
-}
-
-
 //-----------------------------------------------------------------------------
-double RPlacementHeuristic::CalcDist(RPoint& pos)
+void RGA2D::RPlacementHeuristic::SelectNextObject(void)
 {
-	RPoint Center(CurInfo->Width()/2,CurInfo->Height()/2);
-	static RPoint Attraction;
-
 	if(!NbObjsOk)
 	{
-		return(0.0);
+		CurInfo=Infos[Order[0]];
+		return;
 	}
-	if(NbObjsOk==1)
-	{
-		RGeoInfo *f=Infos[Order[0]];
-		Attraction=f->GetPos();
-		Attraction.X+=f->Width()/2;
-		Attraction.Y+=f->Height()/2;
-	}
-	return(Attraction.ManhattanDist(pos+Center));
+	
+	// Find the most connected object
+	CurInfo=Connections->GetMostConnected(Infos,NbObjs,Order,NbObjsOk);
 }
-
-
+	
+	
 //-----------------------------------------------------------------------------
-RGeoInfo* RPlacementHeuristic::NextObject(void)
+RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void)
 {
 	RPoint pos;
 	char nb;
 	RObj2D* obj;	
 	
-	// Select the next object
-	CurInfo=Infos[Order[NbObjsOk]];
-	obj=CurInfo->GetObj();		
+	SelectNextObject();
+	obj=CurInfo->GetObj();
 	
 	// Choose best free polygon (if any).
 	pos.Set(MaxCoord,MaxCoord);
@@ -135,56 +151,58 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
   	// Find the best position for current orientation if not already found.	
 	if(!pos.IsValid())		
 	{
-   	if(AllOri&&(obj->NbPossOri>1))
-   	{
-   		RPromKernel Prom("Orientations",8,2);
-   		RPromCriterion *area,*dist;
-   		RPromSol *sol;
-   		char o;
+	   	if(AllOri&&(obj->NbPossOri>1))
+   		{
+   			RPromKernel Prom("Orientations",8,2);
+	   		RPromCriterion *area,*dist;
+   			RPromSol *sol;
+   			char o;
 
-   		// Init Part
-   		area=Prom.NewCriterion(Minimize,AreaP,AreaQ,AreaWeight);
-   		dist=Prom.NewCriterion(Minimize,DistP,DistQ,DistWeight);		
+	   		// Init Part
+   			area=Prom.NewCriterion(Minimize,AreaParams);
+   			dist=Prom.NewCriterion(Minimize,DistParams);
 			nb=0;
 			   		
-   		// Compute all orientations
-   		for(o=0;o<obj->NbPossOri;o++)
-   		{
-	   		// Set an orientation & Find a position
-   			CurInfo->SetOri(o);		
-  				pos=NextObjectOri();	
-   			if(pos.IsValid())
+	   		// Compute all orientations
+   			for(o=0;o<obj->NbPossOri;o++)
    			{
-   				Ori[nb]=o;
-   				OriPos[nb]=pos;
-   				OriResult[nb++]=Result;
-   				sol=Prom.NewSol();
-   				Prom.Assign(sol,area,Result.Width()*Result.Height());
-   				Prom.Assign(sol,dist,CalcDist(pos));
-   			}
-   		}
-   		
-   		// Run Prométhée
-  			Prom.ComputePrometheeII();
+	   			// Set an orientation & Find a position
+	   			CurInfo->SetOri(o);
+				pos=NextObjectOri();
+   				if(pos.IsValid())
+   				{
+   					Ori[nb]=o;
+	   				OriPos[nb]=pos;
+   					OriResult[nb++]=Result;
+   					CurInfo->Assign(pos);		// Temporary assignement
+   					sol=Prom.NewSol();
+	   				Prom.Assign(sol,area,Result.Width()*Result.Height());
+   					Prom.Assign(sol,dist,Connections->GetDistances(Infos));
+   				}
+	   		}
+   			
+   			// Run Prométhée
+	  		Prom.ComputePrometheeII();
   			nb=Prom.GetBestSolId();
 			pos=OriPos[nb];	
 			Result=OriResult[nb];
 			CurInfo->SetOri(Ori[nb]);
-   	}
-   	else
-   	{
-   		// Set an orientation & Find a position
-   		CurInfo->SetOri(0);
-  			pos=NextObjectOri();
-  			if(AllOri&&(NbObjsOk==1))	// Need to calc Attraction in CalcDist as static
-  				(void)CalcDist(pos);		// Will change if connections
-   	}
+	   	}
+   		else
+	   	{
+   			// Set an orientation & Find a position
+   			CurInfo->SetOri(0);
+			pos=NextObjectOri();
+	   	}
 	}
 			
 	// Place it	
 	if(!pos.IsValid())
+	{
+		cout<<"Problem"<<endl;
 		throw;
-	Place(pos);		
+	}
+	Place(pos);
 
 	// Look for free polygons
 	if(CalcFree)
@@ -197,17 +215,26 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 
 
 //-----------------------------------------------------------------------------
-void RPlacementHeuristic::Run(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs)
+void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfo** infos,RGrid* grid)
 {
-	Init(limits,grid,objs,infos,nbobjs);
+	Init(prob,infos,grid);
 	while(NbObjsOk<NbObjs)
+	{
 		NextObject();
-	PostRun(limits);
+	}
+	PostRun(Limits);
 }
 
 
 //-----------------------------------------------------------------------------
-RRect& RPlacementHeuristic::GetResult(void)
+void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+{
+	Run(prob,infos->Tab,grid);
+}
+
+
+//-----------------------------------------------------------------------------
+RRect& RGA2D::RPlacementHeuristic::GetResult(void)
 {
 	RRect *rect=RRect::GetRect();
 	
@@ -217,7 +244,7 @@ RRect& RPlacementHeuristic::GetResult(void)
 
 
 //-----------------------------------------------------------------------------
-RPlacementHeuristic::~RPlacementHeuristic(void)
+RGA2D::RPlacementHeuristic::~RPlacementHeuristic(void)
 {
 	if(Order) delete[] Order;
 }

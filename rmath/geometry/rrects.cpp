@@ -45,28 +45,28 @@ using namespace RGeometry2D;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RRects::RRects(void)
+RGeometry2D::RRects::RRects(void)
 	: RContainer<RRect,unsigned int,true,false>(20,10)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RRects::RRects(unsigned int max)
+RGeometry2D::RRects::RRects(unsigned int max)
 	: RContainer<RRect,unsigned int,true,false>(max,10)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RRects::RRects(RRects *rects)
+RGeometry2D::RRects::RRects(RRects *rects)
 	: RContainer<RRect,unsigned int,true,false>(rects)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RCoord RRects::Area(void)
+RCoord RGeometry2D::RRects::Area(void)
 {
 	unsigned i;
 	RRect **rect;

@@ -44,7 +44,7 @@ using namespace RStd;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
+RStd::RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
  : RTextFile(name,mode), XMLStruct(xmlstruct)
 {
     RXMLTag *top;
@@ -78,21 +78,21 @@ RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
 
 
 //-----------------------------------------------------------------------------
-bool RXMLFile::BeginTag(void)
+bool RStd::RXMLFile::BeginTag(void)
 {
     return(((*ptr)=='<')&&((*(ptr+1))!='/'));
 }
 
 
 //-----------------------------------------------------------------------------
-bool RXMLFile::EndTag(void)
+bool RStd::RXMLFile::EndTag(void)
 {
     return(((*ptr)=='<')&&((*(ptr+1))=='/'));
 }
 
 
 //-----------------------------------------------------------------------------
-char* RXMLFile::GetTag(void)
+char* RStd::RXMLFile::GetTag(void)
 {
     char *tmp=GetCharPtr();
     char c,*ptr2;
@@ -115,7 +115,7 @@ char* RXMLFile::GetTag(void)
 
 
 //-----------------------------------------------------------------------------
-char* RXMLFile::GetContains(void)
+char* RStd::RXMLFile::GetContains(void)
 {
     char *tmp=GetCharPtr();
     char c,*ptr2;
@@ -134,6 +134,6 @@ char* RXMLFile::GetContains(void)
 
 
 //-----------------------------------------------------------------------------
-RXMLFile::~RXMLFile()
+RStd::RXMLFile::~RXMLFile()
 {
 }

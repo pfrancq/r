@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPlacementCenter.cpp
 
 	Center Heuristic for Placement - Implemenation
 
-	(C) 1998-2000 by By P. Francq.
+	(C) 1998-2001 by By P. Francq.
 
 	Version $Revision$
 
@@ -32,11 +32,11 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rpromethee/rpromkernel.h>
 using namespace RPromethee;
-#include <rga/rplacementcenter.h>
-using namespace RGA;
+#include <rga2d/rplacementcenter.h>
+using namespace RGA2D;
 
 
 
@@ -47,31 +47,39 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool use,bool ori)
-	: RPlacementHeuristic(maxobjs,calc,use,ori), CalcPos(0), MinDist(15)
+RGA2D::RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool use,bool ori)
+	: RPlacementHeuristic(maxobjs,calc,use,ori), CalcPos(0)
 {
 	MaxCalcPos=200;
 	CalcPos=new RPoint[MaxCalcPos];
-	AreaP=AreaQ=DistP=DistQ=0.0;
-	AreaWeight=2.0;
-	DistWeight=1.0;	
+	AreaParams.P=AreaParams.Q=DistParams.P=DistParams.Q=0.0;
+	AreaParams.Weight=2.0;
+	DistParams.Weight=1.0;	
 }
 
 
 //-----------------------------------------------------------------------------
-void RPlacementCenter::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs)
+void RGA2D::RPlacementCenter::Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid)
 {
-	RPlacementHeuristic::Init(limits,grid,objs,infos,nbobjs);
-	HoldLimits=limits;
+	RPlacementHeuristic::Init(prob,infos,grid);
+	HoldLimits=Limits;
 	Max=Limits+Limits;
-	limits=Max;
+	//Limits=Max;
 	Attraction.Set(Max.X/2,Max.Y/2);
+	Union.Clear();
 	Sol.Clear();
 }
 
 
 //-----------------------------------------------------------------------------
-void RPlacementCenter::AddPosition(RPromKernel& k,RPromCriterion *area,RPromCriterion *dist,RPoint& pos)
+void RGA2D::RPlacementCenter::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+{
+	Init(prob,infos->Tab,grid);
+}
+
+
+//-----------------------------------------------------------------------------
+void RGA2D::RPlacementCenter::AddPosition(RPromKernel& k,RPromCriterion *area,RPromCriterion *dist,RPoint& pos)
 {
   	RPoint Center;
   	RRect CurRect(Result);
@@ -90,20 +98,24 @@ void RPlacementCenter::AddPosition(RPromKernel& k,RPromCriterion *area,RPromCrit
   	}
   	
   	// Add new solution for Prométhée
-	CalcPos[NbCalcPos++]=pos;
+	CalcPos[NbCalcPos]=pos;
+	CurInfo->Assign(pos);	// Temporary assignment
   	Center.Set(CurInfo->Width()/2,CurInfo->Height()/2);
 	if(pos.X<CurRect.Pt1.X) CurRect.Pt1.X=pos.X;
   	if(pos.Y<CurRect.Pt1.Y) CurRect.Pt1.Y=pos.Y;
   	if(pos.X+CurInfo->Width()>CurRect.Pt2.X) CurRect.Pt2.X=pos.X+CurInfo->Width();
   	if(pos.Y+CurInfo->Height()>CurRect.Pt2.Y) CurRect.Pt2.Y=pos.Y+CurInfo->Height();
+  	if((CurRect.Width()>Max.X/2)||(CurRect.Height()>Max.Y/2))
+  		return;
   	sol=k.NewSol();
   	k.Assign(sol,area,CurRect.Width()*CurRect.Height());
-  	k.Assign(sol,dist,Attraction.ManhattanDist(pos+Center));
+	k.Assign(sol,dist,Connections->GetDistances(Infos));
+  	NbCalcPos++;
 }
 
 
 //-----------------------------------------------------------------------------
-RPoint& RPlacementCenter::NextObjectOri(void)
+RPoint& RGA2D::RPlacementCenter::NextObjectOri(void)
 {
 	RPoint Pos;									// Position to test (X,Y).
 	RPoint *Best=RPoint::GetPoint(); 	// Temporary point to hold best position.
@@ -125,15 +137,15 @@ RPoint& RPlacementCenter::NextObjectOri(void)
 
 	// Init Prométhée
 	NbCalcPos=0;
-	area=Prom.NewCriterion(Minimize,AreaP,AreaQ,AreaWeight);
-	dist=Prom.NewCriterion(Minimize,DistP,DistQ,DistWeight);
+	area=Prom.NewCriterion(Minimize,AreaParams);
+	dist=Prom.NewCriterion(Minimize,DistParams);
 		
 	// Find the Bottom-Left coordinate of the boundary rectangle
 	Actual=Union.GetBottomLeft();
 	i=Union.NbPtr+1;	
-	LookX=true;				// Go anti-clockwise, begin with X-Axis and then right.
-	LookBottom=true;     // Look (X,Y-1) or (X,Y+1) ?
-	LookLeft=true;			// Look (X-1,Y) or (X+1,Y) ?
+	LookX=true;					// Go anti-clockwise, begin with X-Axis and then right.
+	LookBottom=true;	    	// Look (X,Y-1) or (X,Y+1) ?
+	LookLeft=true;				// Look (X-1,Y) or (X+1,Y) ?
 
 
 	// Try all vertices
@@ -157,14 +169,14 @@ RPoint& RPlacementCenter::NextObjectOri(void)
 				if(Grid->IsFree(Actual->X,Actual->Y-1))
 				{
 					Pos.Set(Actual->X,Actual->Y-CurInfo->Height());
-   		  		if(CurInfo->Test(Pos,Max,Grid))
+   		  			if(CurInfo->Test(Pos,Max,Grid))
 						AddPosition(Prom,area,dist,Pos);
 				}
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
 					Pos.Set(Actual->X-CurInfo->Width(),Actual->Y-CurInfo->Height());
-   		  		if(CurInfo->Test(Pos,Max,Grid))
+	   		  		if(CurInfo->Test(Pos,Max,Grid))
 						AddPosition(Prom,area,dist,Pos);
 				}
 			}
@@ -195,7 +207,7 @@ RPoint& RPlacementCenter::NextObjectOri(void)
 			{
 				Pos.Set(Actual->X+1,Actual->Y);
 		  		if(CurInfo->Test(Pos,Max,Grid))
-						AddPosition(Prom,area,dist,Pos);
+					AddPosition(Prom,area,dist,Pos);
 			}
 			if(LookBottom)
 			{
@@ -280,26 +292,24 @@ RPoint& RPlacementCenter::NextObjectOri(void)
 
 
 //-----------------------------------------------------------------------------
-void RPlacementCenter::Place(RPoint& pos)
+void RGA2D::RPlacementCenter::Place(RPoint& pos)
 {
 	// Assign it
 	CurInfo->Assign(pos,Grid);
 	Sol.Clear();
 	Sol.InsertPtr(new RPolygon(Union));
 	CurInfo->Add(Sol);
-
-	// Calculate Union of all placed polygons
 	Sol.Union(&Union);
  	Union.Boundary(Result);
 }
 
 
 //----------------------------------------------------------------------------
-void RPlacementCenter::PostRun(RPoint &limits)
+void RGA2D::RPlacementCenter::PostRun(RPoint &limits)
 {
 	RGeoInfo **info;
 	unsigned int i;
-   RPoint tmp;
+	RPoint tmp;
 
 	Sol.Clear();
 	for(i=NbObjs+1,info=Infos;--i;info++)
@@ -319,7 +329,7 @@ void RPlacementCenter::PostRun(RPoint &limits)
 
 	
 //----------------------------------------------------------------------------
-RPlacementCenter::~RPlacementCenter(void)
+RGA2D::RPlacementCenter::~RPlacementCenter(void)
 {
 	if(CalcPos) delete[] CalcPos;
 }

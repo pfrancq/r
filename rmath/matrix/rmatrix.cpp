@@ -45,7 +45,7 @@ using namespace RMath;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RMatrix::RMatrix(void)
+RMath::RMatrix::RMatrix(void)
 {
 	Lin=MaxLin=Col=MaxCol=0;
 	M=0;
@@ -53,7 +53,7 @@ RMatrix::RMatrix(void)
 
 
 //-----------------------------------------------------------------------------
-RMatrix::RMatrix(tSize Size) throw(bad_alloc)
+RMath::RMatrix::RMatrix(tSize Size) throw(bad_alloc)
 {
 	Lin=MaxLin=Col=MaxCol=Size;
  	M=0;
@@ -62,7 +62,7 @@ RMatrix::RMatrix(tSize Size) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-RMatrix::RMatrix(tSize L,tSize C) throw(bad_alloc)
+RMath::RMatrix::RMatrix(tSize L,tSize C) throw(bad_alloc)
 {
 	Lin=MaxLin=L;
 	Col=MaxCol=C;
@@ -72,7 +72,7 @@ RMatrix::RMatrix(tSize L,tSize C) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-RMatrix::RMatrix(const RMatrix &Matrix) throw(bad_alloc)
+RMath::RMatrix::RMatrix(const RMatrix &Matrix) throw(bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
@@ -88,7 +88,7 @@ RMatrix::RMatrix(const RMatrix &Matrix) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-RMatrix::RMatrix(const RMatrix *Matrix) throw(bad_alloc)
+RMath::RMatrix::RMatrix(const RMatrix *Matrix) throw(bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
@@ -112,7 +112,7 @@ RMatrix::RMatrix(const RMatrix *Matrix) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-void RMatrix::Init(void) throw(bad_alloc)
+void RMath::RMatrix::Init(void) throw(bad_alloc)
 {
 	tNumber **ptr;
 	tSize i;
@@ -124,7 +124,7 @@ void RMatrix::Init(void) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-void RMatrix::VerifySize(tSize NewLin,tSize NewCol) throw(bad_alloc)
+void RMath::RMatrix::VerifySize(tSize NewLin,tSize NewCol) throw(bad_alloc)
 {
 	tNumber **ptr;
 	tSize i;
@@ -155,7 +155,7 @@ void RMatrix::VerifySize(tSize NewLin,tSize NewCol) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-void RMatrix::Symetrize(void)
+void RMath::RMatrix::Symetrize(void)
 {
 	tNumber **ptrL,**ptrLA,*ptrC,*ptrCA;
 	tSize i,j;
@@ -167,7 +167,7 @@ void RMatrix::Symetrize(void)
 
 
 //-----------------------------------------------------------------------------
-char RMatrix::TransitiveClosure(RMatrix *Matrix) throw(RMatrix::errMatrix,bad_alloc)
+char RMath::RMatrix::TransitiveClosure(RMatrix *Matrix) throw(RMatrix::errMatrix,bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM,**ptrLT,*ptrCT;
 	tSize i,j,k;
@@ -197,7 +197,7 @@ char RMatrix::TransitiveClosure(RMatrix *Matrix) throw(RMatrix::errMatrix,bad_al
 
 
 //-----------------------------------------------------------------------------
-tNumber& RMatrix::operator()(int m, int n) const throw(RMatrix::errMatrix,bad_alloc)
+tNumber& RMath::RMatrix::operator()(int m, int n) const throw(RMatrix::errMatrix,bad_alloc)
 {
 	if(m<0||m>Lin||n<0||n>Col) throw errBadIndex();
 	return(M[m][n]);
@@ -205,7 +205,7 @@ tNumber& RMatrix::operator()(int m, int n) const throw(RMatrix::errMatrix,bad_al
 
 
 //-----------------------------------------------------------------------------
-RMatrix& RMatrix::operator=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_alloc)
+RMatrix& RMath::RMatrix::operator=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
@@ -220,7 +220,7 @@ RMatrix& RMatrix::operator=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_a
 
 
 //-----------------------------------------------------------------------------
-RMatrix& RMatrix::operator+=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_alloc)
+RMatrix& RMath::RMatrix::operator+=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
@@ -236,7 +236,7 @@ RMatrix& RMatrix::operator+=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_
 
 
 //-----------------------------------------------------------------------------
-RMatrix& RMatrix::operator-=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_alloc)
+RMatrix& RMath::RMatrix::operator-=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
@@ -252,7 +252,7 @@ RMatrix& RMatrix::operator-=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_
 
 
 //-----------------------------------------------------------------------------
-RMatrix& RMatrix::operator*=(const tNumber arg) throw(RMatrix::errMatrix,bad_alloc)
+RMatrix& RMath::RMatrix::operator*=(const tNumber arg) throw(RMatrix::errMatrix,bad_alloc)
 {
 	tNumber **ptrL,*ptrC;
 	tSize i,j;
@@ -265,7 +265,7 @@ RMatrix& RMatrix::operator*=(const tNumber arg) throw(RMatrix::errMatrix,bad_all
 
 
 //-----------------------------------------------------------------------------
-RMatrix& RMatrix::operator*=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_alloc)
+RMatrix& RMath::RMatrix::operator*=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM,**ptrLR,*ptrCR,Sum;
 	tSize i,j,k;
@@ -290,14 +290,14 @@ RMatrix& RMatrix::operator*=(const RMatrix Matrix) throw(RMatrix::errMatrix,bad_
 
 
 //-----------------------------------------------------------------------------
-RMatrix* RMatrix::GetMatrix(void)
+RMatrix* RMath::RMatrix::GetMatrix(void)
 {
 	return(GetTemporaryObject<RMatrix,30>());
 }
 
 
 //-----------------------------------------------------------------------------
-RMatrix::~RMatrix(void)
+RMath::RMatrix::~RMatrix(void)
 {
 	tNumber **ptr;
 	tSize i;
@@ -318,7 +318,7 @@ RMatrix::~RMatrix(void)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RMatrix& RStd::operator+(const RMatrix &arg1,const RMatrix &arg2) throw(RMatrix::errMatrix,bad_alloc)
+RMatrix& RMath::operator+(const RMatrix &arg1,const RMatrix &arg2) throw(RMatrix::errMatrix,bad_alloc)
 {
 	RMatrix *res=RMatrix::GetMatrix();
 
@@ -329,7 +329,7 @@ RMatrix& RStd::operator+(const RMatrix &arg1,const RMatrix &arg2) throw(RMatrix:
 
 
 //-----------------------------------------------------------------------------
-RMatrix& RStd::operator-(const RMatrix &arg1,const RMatrix &arg2) throw(RMatrix::errMatrix,bad_alloc)
+RMatrix& RMath::operator-(const RMatrix &arg1,const RMatrix &arg2) throw(RMatrix::errMatrix,bad_alloc)
 {
 	RMatrix *res=RMatrix::GetMatrix();
 
@@ -340,7 +340,7 @@ RMatrix& RStd::operator-(const RMatrix &arg1,const RMatrix &arg2) throw(RMatrix:
 
 
 //-----------------------------------------------------------------------------
-RMatrix& RStd::operator*(const RMatrix& arg1,const RMatrix& arg2) throw(RMatrix::errMatrix,bad_alloc)
+RMatrix& RMath::operator*(const RMatrix& arg1,const RMatrix& arg2) throw(RMatrix::errMatrix,bad_alloc)
 {
 	RMatrix *res=RMatrix::GetMatrix();
 
@@ -351,7 +351,7 @@ RMatrix& RStd::operator*(const RMatrix& arg1,const RMatrix& arg2) throw(RMatrix:
 
 
 //-----------------------------------------------------------------------------
-RMatrix& RStd::operator*(const tNumber arg1,const RMatrix& arg2) throw(bad_alloc)
+RMatrix& RMath::operator*(const tNumber arg1,const RMatrix& arg2) throw(bad_alloc)
 {
 	RMatrix *res=RMatrix::GetMatrix();
 
@@ -362,7 +362,7 @@ RMatrix& RStd::operator*(const tNumber arg1,const RMatrix& arg2) throw(bad_alloc
 
 
 //-----------------------------------------------------------------------------
-RMatrix& RStd::operator*(const RMatrix& arg1,const tNumber arg2) throw(bad_alloc)
+RMatrix& RMath::operator*(const RMatrix& arg1,const tNumber arg2) throw(bad_alloc)
 {
 	RMatrix *res=RMatrix::GetMatrix();
 

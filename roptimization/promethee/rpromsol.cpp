@@ -45,20 +45,20 @@ using namespace RPromethee;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPromSol::RPromSol(const unsigned int id,const unsigned int nbcrit)
+RPromethee::RPromSol::RPromSol(const unsigned int id,const unsigned int nbcrit)
 	: RContainer<RPromCritValue,unsigned int,true,false>(nbcrit,nbcrit/2), Id(id)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPromSol::RPromSol(const unsigned int id,const RString&  name,const unsigned int nbcrit)
+RPromethee::RPromSol::RPromSol(const unsigned int id,const RString&  name,const unsigned int nbcrit)
 	: RContainer<RPromCritValue,unsigned int,true,false>(nbcrit,nbcrit/2), Id(id), Name(name)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPromSol::~RPromSol(void)
+RPromethee::RPromSol::~RPromSol(void)
 {
 }

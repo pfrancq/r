@@ -275,7 +275,7 @@ RMatrix& operator-(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,bad_
 RMatrix& operator*(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,bad_alloc);
 
 
-}  //-------- End of namespace RStd -------------------------------------------
+}  //-------- End of namespace RMath ------------------------------------------
 
 
 //-----------------------------------------------------------------------------

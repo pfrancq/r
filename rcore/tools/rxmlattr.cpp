@@ -44,13 +44,14 @@ using namespace RStd;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RXMLAttr::RXMLAttr(char *name,char *value)
+RStd::RXMLAttr::RXMLAttr(char *name,char *value)
 	: Name(name), Value(value)
 {
 }
 
+
 //------------------------------------------------------------------------------
-RString& RXMLAttr::GetName(void)
+RString& RStd::RXMLAttr::GetName(void)
 {
 	RString *tmp=RString::GetString();
 
@@ -58,8 +59,9 @@ RString& RXMLAttr::GetName(void)
 	return(*tmp);
 }
 
+
 //-----------------------------------------------------------------------------
-RString& RXMLAttr::GetValue(void)
+RString& RStd::RXMLAttr::GetValue(void)
 {
 	RString* tmp=RString::GetString();
 
@@ -67,8 +69,9 @@ RString& RXMLAttr::GetValue(void)
 	return(*tmp);
 }
 
+
 //-----------------------------------------------------------------------------
-RXMLAttr::~RXMLAttr(void)
+RStd::RXMLAttr::~RXMLAttr(void)
 {
 }
 

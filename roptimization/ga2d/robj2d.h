@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RObj2D.h
 
 	Object for 2D placement GA - Header
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,7 +37,9 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
+#include <rstd/rstring.h>
+using namespace RStd;
 #include <rgeometry/rpoint.h>
 #include <rgeometry/rrect.h>
 #include <rgeometry/rrects.h>
@@ -47,7 +49,7 @@ using namespace RGeometry2D;
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
 
 
@@ -55,11 +57,11 @@ namespace RGA{
 // Forward class declaration
 class RGeoInfo;
 class RObj2D;
+class RConnection;
 
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
 * This constance represent a non-identificator. It is used, for example, to
 * specify that a variable containing an identificator of an object. is
 * referencing no object.
@@ -70,7 +72,6 @@ const unsigned int NoObject=UINT_MAX;
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
 * This basic class represent a connection point for an object to place by using
 * the 2D placement GA.
 * @author Pascal Francq
@@ -78,6 +79,8 @@ const unsigned int NoObject=UINT_MAX;
 */
 class RObj2DConnector
 {
+public:
+
 	/**
 	* Owner of the connector.
 	*/
@@ -89,20 +92,56 @@ class RObj2DConnector
 	unsigned int Id;
 
 	/**
-	* Point representing the connector.
+	* Name of the connector.
 	*/
-	RPoint Pos;
+	RString Name;
 
-public:
+	/**
+	* Number of position for the connector.
+	*/
+	unsigned int NbPos;
 
-	/**	
+	/**
+	* Point representing the positions of the connector.
+	*/
+	RPoint* Pos;
+
+	/**
+	* Position of the connector for the possible orientations.
+	*/
+	RPoint Poss[8];
+
+	/**
+	* Connections of which the connector is involved.
+	*/
+	RContainer<RConnection,unsigned int,false,false> Connections;
+
+	/**
 	* Construct a connector.
 	* @param owner		Owner of the connector.
 	* @param id			Id of the connector.
 	* @param pos		Position of the connector.
 	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const RPoint pos);
-	
+
+	/**
+	* Construct a connector.
+	* @param owner		Owner of the connector.
+	* @param id			Id of the connector.
+	* @param name		Name of the connector.
+	* @param pos		Position of the connector.
+	*/
+	RObj2DConnector(RObj2D* owner, unsigned int id,const RString& name,const RPoint pos);
+
+	/**	
+	* Construct a connector.
+	* @param owner		Owner of the connector.
+	* @param id			Id of the connector.
+	* @param name		Name of the connector.
+	* @param pos		Position of the connector.
+	*/
+	RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const RPoint pos);
+
 	/**	
 	* Construct a connector.
 	* @param owner		Owner of the connector.
@@ -111,21 +150,51 @@ public:
 	* @param y			Y Coordinate of the position of the connector.	
 	*/	
 	RObj2DConnector(RObj2D* owner, unsigned int id,const unsigned int x,unsigned y);
-		
+
+	/**
+	* Construct a connector.
+	* @param owner		Owner of the connector.
+	* @param id			Id of the connector.
+	* @param name		Name of the connector.	
+	* @param x			X Coordinate of the position of the connector.
+	* @param y			Y Coordinate of the position of the connector.	
+	*/
+	RObj2DConnector(RObj2D* owner, unsigned int id,const RString& name,const unsigned int x,unsigned y);
+
+	
+	/**
+	* Construct a connector.
+	* @param owner		Owner of the connector.
+	* @param id			Id of the connector.
+	* @param name		Name of the connector.	
+	* @param x			X Coordinate of the position of the connector.
+	* @param y			Y Coordinate of the position of the connector.	
+	*/	
+	RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int x,unsigned y);
+
+	/**	
+	* Construct a connector.
+	* @param owner		Owner of the connector.
+	* @param id			Id of the connector.
+	* @param name		Name of the connector.
+	* @param nb			Number of the connector.
+	*/	
+	RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int nb);
+
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
 	* @param c		Connector used for the comparaison.
 	*/
 	int Compare(const RObj2DConnector* c) {return(Id-c->Id);}
-	
+
 	/**	
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
 	* @param c		Connector used for the comparaison.
 	*/
 	int Compare(const RObj2DConnector& c) {return(Id-c.Id);}
-	
+
 	/**
 	* This function compares a connector and an identificator and returns 0 if
 	* there are the same.
@@ -135,26 +204,62 @@ public:
 	int Compare(const unsigned int id) {return(Id-id);}
 	
 	/**
+	* This function compares a connector and a name and returns 0 if
+	* there are the same.
+	* This function is used for the class RContainer.
+	* @param name		Name used for the comparaison.
+	*/
+	int Compare(const RString& name) {return(Name.Compare(name));}
+
+	/**
+	* This function compares a connector and a name and returns 0 if
+	* there are the same.
+	* This function is used for the class RContainer.
+	* @param name		Name used for the comparaison.
+	*/
+	int Compare(const char* name) {return(Name.Compare(name));}
+
+	/**
 	* Return the object that's own the connector.
 	*/
 	RObj2D* GetObj(void) {return(Owner);}
-	
+
 	/**
 	* Return the identificator of the connector.
 	*/
 	unsigned int GetId(void) {return(Id);}
-	
+
 	/**
 	* Return the position of the connector relativ to the object.
 	*/
 	RPoint& GetPos(void);	
+
+	/**
+	* Return the position of the connector of the ith orientation.
+	*/
+	RPoint& GetPos(char i);	
+
+	/**
+	* Add a connection to this connector.
+	*/
+	void AddConnection(RConnection* con);
+
+	/**
+	* Return the name of the connector.
+	*/
+	const char* GetName(void) {return(Name());}
+
+	// friend classes
+	friend class RObj2D;
+	friend class RGeoInfoConnector;
+	friend class RConnections;
+	friend class RProblem2D;
 };
 
 
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
 * This basic class represent an object to place by using the 2D placement GA.
 * @author Pascal Francq
 * @short 2D Object.
@@ -167,6 +272,11 @@ public:
 	* Identificator of the object.
 	*/
 	unsigned int Id;
+	
+	/**
+	* Name of the object.
+	*/
+	RString Name;
 
 	/**
 	* Polygon that define the object.
@@ -194,7 +304,7 @@ public:
 	RPolygon Polygons[8];
 
 	/**
-	* Rectangular decompositions for the possible orientatoins.
+	* Rectangular decompositions for the possible orientations.
 	*/
 	RRects Rects[8];
 
@@ -214,6 +324,60 @@ public:
 	* @param deformable   Specify if the object is deformable.
 	*/
 	RObj2D(unsigned int id,bool deformable);
+
+	/**
+	* Construct an 2D object.
+	* @param id						Identificator of the object.
+	* @param name					Name of the object.
+	* @param deformable   Specify if the object is deformable.
+	*/
+	RObj2D(unsigned int id,const RString& name,bool deformable);
+	
+	/**
+	* Construct an 2D object.
+	* @param id						Identificator of the object.
+	* @param name					Name of the object.
+	* @param deformable   Specify if the object is deformable.
+	*/
+	RObj2D(unsigned int id,const char* name,bool deformable);
+
+	/**
+	* This function compares two cobjects and returns 0 if there are the same.
+	* This function is used for the class RContainer.
+	* @param o		Object used for the comparaison.
+	*/
+	int Compare(const RObj2D* o) {return(Id-o->Id);}
+
+	/**
+	* This function compares two cobjects and returns 0 if there are the same.
+	* This function is used for the class RContainer.
+	* @param o		Object used for the comparaison.
+	*/
+	int Compare(const RObj2D& o) {return(Id-o.Id);}
+
+	/**
+	* This function compares an object and an identificator and returns 0 if
+	* there are the same.
+	* This function is used for the class RContainer.
+	* @param id		Identificator used for the comparaison.
+	*/
+	int Compare(const unsigned int id) {return(Id-id);}
+	
+	/**
+	* This function compares an object and a name and returns 0 if
+	* there are the same.
+	* This function is used for the class RContainer.
+	* @param name		Name used for the comparaison.
+	*/
+	int Compare(const RString& name) {return(Name.Compare(name));}
+
+	/**
+	* This function compares an object and a name and returns 0 if
+	* there are the same.
+	* This function is used for the class RContainer.
+	* @param name		Name used for the comparaison.
+	*/
+	int Compare(const char* name) {return(Name.Compare(name));}
 
 	/**
 	* Initialize the object when all information are entered. In particular,
@@ -275,12 +439,16 @@ public:
 	* @param id
 	*/
 	RObj2DConnector* GetConnector(unsigned int id) {return(Connectors.GetPtr<unsigned int>(id));}
+
+	/**
+	* Copy the connectors from a given object.
+	*/
+	void CopyConnectors(RObj2D* o);
 };
 
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
 * This class represent an object containg other objects to place. It is use,
 * for example, in the 2D placement GA crossover.
 * @author Pascal Francq
@@ -362,7 +530,7 @@ public:
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA2D -------------------------------------------
 
 
 //-----------------------------------------------------------------------------

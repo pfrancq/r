@@ -182,6 +182,11 @@ public:
 	* Change the "orientation" of the point.
 	*/
 	void ChangeOrientation(ROrientation o);
+	
+	/**
+	* Save the point in a file.
+	*/
+	void Save(RTextFile& f);
 };
 
 

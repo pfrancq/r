@@ -47,14 +47,14 @@ using namespace RPromethee;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPromCriterionParams* RPromCriterionParams::GetParams(void)
+RPromCriterionParams* RPromethee::RPromCriterionParams::GetParams(void)
 {
 	return(GetTemporaryObject<RPromCriterionParams,30>());
 }
 
 
 //-----------------------------------------------------------------------------
-RPromCriterionParams& RPromCriterionParams::operator=(const RPromCriterionParams &params)
+RPromCriterionParams& RPromethee::RPromCriterionParams::operator=(const RPromCriterionParams &params)
 {
 	P=params.P;
 	Q=params.Q;
@@ -71,7 +71,7 @@ RPromCriterionParams& RPromCriterionParams::operator=(const RPromCriterionParams
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPromCriterion::RPromCriterion(const CriteriaType type,const double p,const double q,const double w,const unsigned int id,const unsigned int nb)
+RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const double p,const double q,const double w,const unsigned int id,const unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id),
 	  Type(type), P(p), Q(q), Weight(w)
 {
@@ -79,7 +79,7 @@ RPromCriterion::RPromCriterion(const CriteriaType type,const double p,const doub
 
 
 //-----------------------------------------------------------------------------
-RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,const unsigned int id,const unsigned int nb)
+RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,const unsigned int id,const unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id),
 	  Type(type), P(params.P), Q(params.Q), Weight(params.Weight)
 {
@@ -87,7 +87,7 @@ RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParam
 
 
 //-----------------------------------------------------------------------------
-RPromCriterion::RPromCriterion(const CriteriaType type,const double p,const double q,const double w,
+RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const double p,const double q,const double w,
 	const unsigned int id,const RString& name,const unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
 	  Type(type), P(p), Q(q), Weight(w)
@@ -96,7 +96,7 @@ RPromCriterion::RPromCriterion(const CriteriaType type,const double p,const doub
 
 
 //-----------------------------------------------------------------------------
-RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,
+RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,
 		const unsigned int id,const RString& name,const unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
 	  Type(type), P(params.P), Q(params.Q), Weight(params.Weight)
@@ -105,7 +105,7 @@ RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParam
 
 
 //-----------------------------------------------------------------------------
-void RPromCriterion::SetParams(const RPromCriterionParams& params)
+void RPromethee::RPromCriterion::SetParams(const RPromCriterionParams& params)
 {
 	P=params.P;
 	Q=params.Q;	
@@ -114,7 +114,7 @@ void RPromCriterion::SetParams(const RPromCriterionParams& params)
 
 
 //-----------------------------------------------------------------------------
-RPromCriterionParams& RPromCriterion::GetParams(void)
+RPromCriterionParams& RPromethee::RPromCriterion::GetParams(void)
 {
 	RPromCriterionParams* tmp=RPromCriterionParams::GetParams();
 	
@@ -126,7 +126,7 @@ RPromCriterionParams& RPromCriterion::GetParams(void)
 
 
 //-----------------------------------------------------------------------------
-void RPromCriterion::Normalize(void)
+void RPromethee::RPromCriterion::Normalize(void)
 {
 	unsigned int i;
 	RPromCritValue **ptr;
@@ -151,7 +151,7 @@ void RPromCriterion::Normalize(void)
 
 
 //-----------------------------------------------------------------------------
-double RPromCriterion::ComputePref(const double u,const double v)
+double RPromethee::RPromCriterion::ComputePref(const double u,const double v)
 {
 	double d=u-v;
 	double y;
@@ -160,7 +160,7 @@ double RPromCriterion::ComputePref(const double u,const double v)
 	{
 		case Maximize:
 			if(P<Q) return(0.0);
-			if((P<0.0)||(Q<0.)) return(0.0);
+			if((P<0.0)||(Q<0.0)) return(0.0);
 			if(P==Q)
 			{
 				if(d<=P) return(0.0); else return(1.0);
@@ -203,7 +203,7 @@ double RPromCriterion::ComputePref(const double u,const double v)
 
 
 //-----------------------------------------------------------------------------
-void RPromCriterion::ComputeFiCrit(RPromKernel *kern)
+void RPromethee::RPromCriterion::ComputeFiCrit(RPromKernel *kern)
 {
 	RPromCritValue **ptr,**ptr1;
 	RPromSol **sol,**sol1;
@@ -227,6 +227,6 @@ void RPromCriterion::ComputeFiCrit(RPromKernel *kern)
 
 
 //-----------------------------------------------------------------------------
-RPromCriterion::~RPromCriterion(void)
+RPromethee::RPromCriterion::~RPromCriterion(void)
 {
 }

@@ -54,35 +54,35 @@ using namespace RGeometry2D;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPolygon::RPolygon(void)
+RGeometry2D::RPolygon::RPolygon(void)
 	: RContainer<RPoint,unsigned int,true,false>(20,10)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPolygon::RPolygon(int Max)
+RGeometry2D::RPolygon::RPolygon(int Max)
 	: RContainer<RPoint,unsigned int,true,false>(Max,10)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPolygon::RPolygon(const RPolygon *poly)
+RGeometry2D::RPolygon::RPolygon(const RPolygon *poly)
 	: RContainer<RPoint,unsigned int,true,false>(poly)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPolygon::RPolygon(const RPolygon &poly)
+RGeometry2D::RPolygon::RPolygon(const RPolygon &poly)
 	: RContainer<RPoint,unsigned int,true,false>(poly)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPolygon& RPolygon::operator=(const RPolygon &poly)
+RPolygon& RGeometry2D::RPolygon::operator=(const RPolygon &poly)
 {
 	RContainer<RPoint,unsigned int,true,false>::operator=(poly);
 	return(*this);
@@ -90,7 +90,7 @@ RPolygon& RPolygon::operator=(const RPolygon &poly)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::operator==(const RPolygon &poly)
+bool RGeometry2D::RPolygon::operator==(const RPolygon &poly)
 {
 	RPoint **pt;
 	unsigned int i;
@@ -103,7 +103,7 @@ bool RPolygon::operator==(const RPolygon &poly)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::operator!=(const RPolygon &poly)
+bool RGeometry2D::RPolygon::operator!=(const RPolygon &poly)
 {
 	RPoint **pt;
 	unsigned int i;
@@ -115,7 +115,7 @@ bool RPolygon::operator!=(const RPolygon &poly)
 
 
 //-----------------------------------------------------------------------------
-RPolygon& RPolygon::operator+=(const RPoint &pt) throw(bad_alloc)
+RPolygon& RGeometry2D::RPolygon::operator+=(const RPoint &pt) throw(bad_alloc)
 {
 	unsigned int i;
 	RPoint **tab;
@@ -126,7 +126,7 @@ RPolygon& RPolygon::operator+=(const RPoint &pt) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-RPolygon& RPolygon::operator-=(const RPoint &pt) throw(bad_alloc)
+RPolygon& RGeometry2D::RPolygon::operator-=(const RPoint &pt) throw(bad_alloc)
 {
 	unsigned int i;
 	RPoint **tab;
@@ -137,7 +137,7 @@ RPolygon& RPolygon::operator-=(const RPoint &pt) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetConX(RPoint *pt) const
+RPoint* RGeometry2D::RPolygon::GetConX(RPoint *pt) const
 {
 	RPoint **point,*next;
 	unsigned int i;
@@ -165,7 +165,7 @@ RPoint* RPolygon::GetConX(RPoint *pt) const
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetConY(RPoint *pt) const
+RPoint* RGeometry2D::RPolygon::GetConY(RPoint *pt) const
 {
 	RPoint **point,*next;
 	unsigned int i;
@@ -193,7 +193,7 @@ RPoint* RPolygon::GetConY(RPoint *pt) const
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetBottomLeft(void) const
+RPoint* RGeometry2D::RPolygon::GetBottomLeft(void) const
 {
 	RPoint **point,*bl;
 	unsigned int i;
@@ -212,7 +212,7 @@ RPoint* RPolygon::GetBottomLeft(void) const
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX) const
+RPoint* RGeometry2D::RPolygon::GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX) const
 {
 	RPoint **point,*bl;
 	unsigned int i;
@@ -242,7 +242,7 @@ RPoint* RPolygon::GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX) const
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetLeftBottom(void) const
+RPoint* RGeometry2D::RPolygon::GetLeftBottom(void) const
 {
 	RPoint **point,*lb;
 	unsigned int i;
@@ -261,7 +261,7 @@ RPoint* RPolygon::GetLeftBottom(void) const
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY) const
+RPoint* RGeometry2D::RPolygon::GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY) const
 {
 	RPoint **point,*lb;
 	unsigned int i;
@@ -291,7 +291,7 @@ RPoint* RPolygon::GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY) const
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::Edge(RPoint *pt) const
+bool RGeometry2D::RPolygon::Edge(RPoint *pt) const
 {
 	RPoint **point,*deb;
 	unsigned int i;
@@ -341,7 +341,7 @@ bool RPolygon::Edge(RPoint *pt) const
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::Edge(RPoint *pt1,RPoint *pt2) const
+bool RGeometry2D::RPolygon::Edge(RPoint *pt1,RPoint *pt2) const
 {
 	RPoint **point,*deb;
 	unsigned int i;
@@ -416,7 +416,7 @@ bool RPolygon::Edge(RPoint *pt1,RPoint *pt2) const
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::IsVertice(const RPoint &pt) const
+bool RGeometry2D::RPolygon::IsVertice(const RPoint &pt) const
 {
 	RPoint **point;
 	unsigned int i;
@@ -428,7 +428,7 @@ bool RPolygon::IsVertice(const RPoint &pt) const
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::IsIn(const RCoord X,const RCoord Y) const
+bool RGeometry2D::RPolygon::IsIn(const RCoord X,const RCoord Y) const
 {
 	RPoint p(X,Y),**tab,*deb;
 	unsigned int i;
@@ -460,7 +460,7 @@ bool RPolygon::IsIn(const RCoord X,const RCoord Y) const
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::IsIn(const RPolygon* poly) const
+bool RGeometry2D::RPolygon::IsIn(const RPolygon* poly) const
 {
 	RPoint **pt;
 	unsigned int i;
@@ -519,7 +519,7 @@ bool RPolygon::IsIn(const RPolygon* poly) const
 
 
 //-----------------------------------------------------------------------------
-RCoord RPolygon::Area(void) const
+RCoord RGeometry2D::RPolygon::Area(void) const
 {
 	RRects r;
 
@@ -529,7 +529,7 @@ RCoord RPolygon::Area(void) const
 
 
 //-----------------------------------------------------------------------------
-void RPolygon::Boundary(RRect &rect) const
+void RGeometry2D::RPolygon::Boundary(RRect &rect) const
 {
 	RCoord MinX=MaxCoord,MinY=MaxCoord,MaxX=0,MaxY=0,X,Y;
 	RPoint **ptr;
@@ -552,7 +552,7 @@ void RPolygon::Boundary(RRect &rect) const
 
 
 //-----------------------------------------------------------------------------
-void RPolygon::ChangeOrientation(ROrientation o,RPoint& min)
+void RGeometry2D::RPolygon::ChangeOrientation(ROrientation o,RPoint& min)
 {
 	RCoord factx=1,facty=1,i,oldx,oldy;
 	RPoint **ptr;
@@ -592,7 +592,7 @@ void RPolygon::ChangeOrientation(ROrientation o,RPoint& min)
 
 
 //-----------------------------------------------------------------------------
-void RPolygon::RectDecomposition(RRects *rects) const
+void RGeometry2D::RPolygon::RectDecomposition(RRects *rects) const
 {
 	RPolygon work(this),tmpPoly(20);
 	RRects tmpRects;
@@ -758,7 +758,7 @@ void RPolygon::RectDecomposition(RRects *rects) const
 
 
 //-----------------------------------------------------------------------------
-void RPolygon::AddPoints(RPoints *points)
+void RGeometry2D::RPolygon::AddPoints(RPoints *points)
 {
 	RPoint **point;
 	unsigned int i;
@@ -770,7 +770,7 @@ void RPolygon::AddPoints(RPoints *points)
 
 
 //-----------------------------------------------------------------------------
-void RPolygon::ReOrder(void)
+void RGeometry2D::RPolygon::ReOrder(void)
 {
 	RPoint **tmp,**point,*next;
 	unsigned int i;
@@ -795,7 +795,7 @@ void RPolygon::ReOrder(void)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::DuplicatePoints(void)
+bool RGeometry2D::RPolygon::DuplicatePoints(void)
 {
 	unsigned int i,j;
 	RPoint **point1,**point2;
@@ -809,7 +809,7 @@ bool RPolygon::DuplicatePoints(void)
 
 
 //-----------------------------------------------------------------------------
-RPolygon* RPolygon::GetPolygon(void)
+RPolygon* RGeometry2D::RPolygon::GetPolygon(void)
 {
 	RPolygon *tmp;
 
@@ -820,7 +820,7 @@ RPolygon* RPolygon::GetPolygon(void)
 
 
 //-----------------------------------------------------------------------------
-RPoint& RPolygon::GetCentralPoint(void)
+RPoint& RGeometry2D::RPolygon::GetCentralPoint(void)
 {
 	RPoint* pt=RPoint::GetPoint();
 	RPoint Middle;
@@ -845,5 +845,33 @@ RPoint& RPolygon::GetCentralPoint(void)
 			}
 		}
 	}
+	return(*pt);
+}
+
+
+//-----------------------------------------------------------------------------
+void RGeometry2D::RPolygon::Save(RTextFile& f)
+{
+	f<<NbPtr<<endl;
+	for(Start();!End();Next())
+		(*this)()->Save(f);
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RGeometry2D::RPolygon::Calibrate(void)
+{
+	RPoint* pt=RPoint::GetPoint(),**tab;
+	unsigned int i;
+
+	pt->Set(MaxCoord,MaxCoord);
+	for(i=NbPtr+1,tab=Tab;--i;tab++)
+	{
+		if((*tab)->X<pt->X) pt->X=(*tab)->X;
+		if((*tab)->Y<pt->Y) pt->Y=(*tab)->Y;
+	}
+	
+	for(i=NbPtr+1,tab=Tab;--i;tab++)
+		(**tab)-=(*pt);
 	return(*pt);
 }

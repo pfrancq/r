@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RObj2D.hh
 
 	Object for 2D placement GA - Implementation
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -32,10 +32,10 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "robj2d.h"
-#include "rgeoinfo.h"
-using namespace RGA;
+// include files for R Project
+#include <rga2d/robj2d.h>
+#include <rga2d/rgeoinfo.h>
+#include <rga2d/rconnection.h>
 
 
 
@@ -46,26 +46,91 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const RPoint pos)
-	: Owner(owner), Id(id), Pos(pos)
+RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RPoint pos)
+	: Owner(owner), Id(id), Name(itoa(id)), Connections(10,5)
 {
+	Pos=new RPoint[1];
+	Pos[0]=pos;
 }
 
 
 //-----------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const unsigned int x,unsigned y)
-	: Owner(owner), Id(id), Pos(x,y)
+RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RString& name,const RPoint pos)
+	: Owner(owner), Id(id), Name(name), Connections(10,5)
 {
+	Pos=new RPoint[1];
+	Pos[0]=pos;
 }
 
 
 //-----------------------------------------------------------------------------
-RPoint& RObj2DConnector::GetPos(void)
+RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const char* name,const RPoint pos)
+	: Owner(owner), Id(id), Name(name), Connections(10,5)
+{
+	Pos=new RPoint[1];
+	Pos[0]=pos;
+}
+
+
+//-----------------------------------------------------------------------------
+RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const unsigned int x,unsigned y)
+	: Owner(owner), Id(id), Name(itoa(id)), Connections(10,5)
+{
+	Pos=new RPoint[1];
+	Pos[0].Set(x,y);
+}
+
+
+//-----------------------------------------------------------------------------
+RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RString& name,const unsigned int x,unsigned y)
+	: Owner(owner), Id(id), Name(name), Connections(10,5)
+{
+	Pos=new RPoint[1];
+	Pos[0].Set(x,y);
+}
+
+
+//-----------------------------------------------------------------------------
+RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int x,unsigned y)
+	: Owner(owner), Id(id), Name(name), Connections(10,5)
+{
+	Pos=new RPoint[1];
+	Pos[0].Set(x,y);
+}
+
+
+//-----------------------------------------------------------------------------
+RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int nb)
+	: Owner(owner), Id(id), Name(name), Connections(10,5)
+{
+	Pos=new RPoint[nb];
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RGA2D::RObj2DConnector::GetPos(void)
 {
 	RPoint *pt=RPoint::GetPoint();
 
-	(*pt)=Pos;
+	(*pt)=Pos[0];
 	return(*pt);
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RGA2D::RObj2DConnector::GetPos(char i)
+{
+	RPoint *pt=RPoint::GetPoint();
+
+	(*pt)=Poss[i];
+	return(*pt);
+}
+
+
+//-----------------------------------------------------------------------------
+void RGA2D::RObj2DConnector::AddConnection(RConnection* con)
+{
+	Connections.InsertPtr(con);
 }
 
 
@@ -77,14 +142,28 @@ RPoint& RObj2DConnector::GetPos(void)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RObj2D::RObj2D(unsigned int id,bool deformable)
-	: Id(id), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
+RGA2D::RObj2D::RObj2D(unsigned int id,bool deformable)
+	: Id(id), Name(itoa(id)), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-void RObj2D::Init(void)
+RGA2D::RObj2D::RObj2D(unsigned int id,const RString& name,bool deformable)
+	: Id(id), Name(name), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+RGA2D::RObj2D::RObj2D(unsigned int id,const char* name,bool deformable)
+	: Id(id), Name(name), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+void RGA2D::RObj2D::Init(void)
 {
 	char i;
 	RPolygon *p;
@@ -98,13 +177,14 @@ void RObj2D::Init(void)
 
 
 //-----------------------------------------------------------------------------
-void RObj2D::CalcPolygons(void)
+void RGA2D::RObj2D::CalcPolygons(void)
 {
-	char i;
+	char i,idx;
 	ROrientation *o;
 	RPolygon *ptr;
 	bool bNormal,bRota90;
-
+	RPoint Min;
+	
 	if(!NbPossOri) return;
 
 	// If Polygon is a rectangle
@@ -115,6 +195,8 @@ void RObj2D::CalcPolygons(void)
 		{
 			NbPossOri=1;
 			Polygons[0]=Polygon;
+			for(Connectors.Start();!Connectors.End();Connectors.Next())
+				Connectors()->Poss[0]=Connectors()->Pos;
 			return;
 		}
 		
@@ -125,23 +207,22 @@ void RObj2D::CalcPolygons(void)
 			if((!bNormal)&&(((*o)==Normal)||((*o)==NormalX)||((*o)==NormalY)||((*o)==NormalYX)))
 			{
 				bNormal=true;
-				if(bRota90)
-					Polygons[1]=Polygon;
-				else
-					Polygons[0]=Polygon;
+				if(bRota90) idx=1; else idx=0;
+				Polygons[idx]=Polygon;
+				for(Connectors.Start();!Connectors.End();Connectors.Next())
+					Connectors()->Poss[idx]=Connectors()->Pos;			
 			}
 			if((!bRota90)&&(((*o)==Rota90)||((*o)==Rota90X)||((*o)==Rota90Y)||((*o)==Rota90YX)))
 			{
 				bRota90=true;
-				if(bNormal)
+				if(bNormal) idx=1; else idx=0;
+				Polygons[idx]=Polygon;
+				Polygons[idx].ChangeOrientation(Rota90,Min);
+				for(Connectors.Start();!Connectors.End();Connectors.Next())
 				{
-					Polygons[1]=Polygon;
-					Polygons[1].ChangeOrientation(Rota90);
-				}
-				else
-				{
-					Polygons[0]=Polygon;
-					Polygons[0].ChangeOrientation(Rota90);
+					Connectors()->Poss[idx]=Connectors()->Pos;
+					Connectors()->Poss[idx].ChangeOrientation(Rota90);
+					Connectors()->Poss[idx]-=Min;					
 				}
 			}
 		}
@@ -149,16 +230,22 @@ void RObj2D::CalcPolygons(void)
 		if(bRota90&&bNormal) NbPossOri=2;
 		return;
 	}
-	for(i=NbPossOri+1,ptr=Polygons,o=PossOri;--i;ptr++,o++)
+	for(i=0,ptr=Polygons,o=PossOri;i<NbPossOri;ptr++,o++,i++)
 	{
 		(*ptr)=Polygon;
-		ptr->ChangeOrientation(*o);
+		ptr->ChangeOrientation(*o,Min);
+ 		for(Connectors.Start();!Connectors.End();Connectors.Next())
+ 		{
+ 			Connectors()->Poss[i]=Connectors()->Pos;
+ 			Connectors()->Poss[i].ChangeOrientation(*o);
+			Connectors()->Poss[i]-=Min;					 			
+ 		}		
 	}
 }
 
 
 //-----------------------------------------------------------------------------
-void RObj2D::SetOri(ROrientation o)
+void RGA2D::RObj2D::SetOri(ROrientation o)
 {
 	char i;
 	ROrientation *ptr;
@@ -170,7 +257,7 @@ void RObj2D::SetOri(ROrientation o)
 
 
 //-----------------------------------------------------------------------------
-bool RObj2D::IsOriSet(ROrientation o)
+bool RGA2D::RObj2D::IsOriSet(ROrientation o)
 {
 	char i;
 	ROrientation *ptr;
@@ -182,7 +269,7 @@ bool RObj2D::IsOriSet(ROrientation o)
 
 
 //-----------------------------------------------------------------------------
-RPolygon* RObj2D::GetPolygon(char i)
+RPolygon* RGA2D::RObj2D::GetPolygon(char i)
 {
 	if(i<NbPossOri) return(&Polygons[i]);
 	return(0);
@@ -190,7 +277,7 @@ RPolygon* RObj2D::GetPolygon(char i)
 
 
 //-----------------------------------------------------------------------------
-RRects* RObj2D::GetRects(char i)
+RRects* RGA2D::RObj2D::GetRects(char i)
 {
 	if(i<NbPossOri) return(&Rects[i]);
 	return(0);
@@ -198,7 +285,7 @@ RRects* RObj2D::GetRects(char i)
 
 
 //-----------------------------------------------------------------------------
-RObj2D& RObj2D::operator=(const RObj2D &obj)
+RObj2D& RGA2D::RObj2D::operator=(const RObj2D &obj)
 {
 	char i;
 	RPolygon *ptr;
@@ -216,9 +303,27 @@ RObj2D& RObj2D::operator=(const RObj2D &obj)
 
 
 //-----------------------------------------------------------------------------
-void RObj2D::AddConnector(unsigned int id,unsigned x,unsigned y)
+void RGA2D::RObj2D::AddConnector(unsigned int id,unsigned x,unsigned y)
 {
 	Connectors.InsertPtr(new RObj2DConnector(this,id,x,y));
+}
+
+
+//-----------------------------------------------------------------------------
+void RGA2D::RObj2D::CopyConnectors(RObj2D* o)
+{
+	RObj2DConnector *s,*d;
+
+	Connectors.Clear(o->Connectors.MaxPtr,o->Connectors.IncPtr);
+	for(o->Connectors.Start();!o->Connectors.End();o->Connectors.Next())
+	{
+		s=o->Connectors();
+		d=new RObj2DConnector(this,Connectors.NbPtr,s->Name,s->NbPos);
+		d->NbPos=s->NbPos;
+		for(unsigned int i=0;i<s->NbPos;i++)
+			d->Pos[i]=s->Pos[i];
+		Connectors.InsertPtr(d);
+	}
 }
 
 
@@ -230,7 +335,7 @@ void RObj2D::AddConnector(unsigned int id,unsigned x,unsigned y)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RObj2DContainer::RObj2DContainer(unsigned int id,unsigned int max)
+RGA2D::RObj2DContainer::RObj2DContainer(unsigned int id,unsigned int max)
 	: RObj2D(id,false),Ids(0),Infos(0),NbMax(max),Nb(0)
 {
 	NbPossOri=1;
@@ -243,7 +348,7 @@ RObj2DContainer::RObj2DContainer(unsigned int id,unsigned int max)
 
 
 //-----------------------------------------------------------------------------
-void RObj2DContainer::Clear(void)
+void RGA2D::RObj2DContainer::Clear(void)
 {
 	SPolygons.Clear();
 	memset(Ids,0,NbMax*sizeof(unsigned int));	
@@ -255,7 +360,7 @@ void RObj2DContainer::Clear(void)
 
 
 //-----------------------------------------------------------------------------
-void RObj2DContainer::AddObj(RObj2D *obj,RGeoInfo *info)
+void RGA2D::RObj2DContainer::AddObj(RObj2D *obj,RGeoInfo *info)
 {
 	RPoint **point,pt;
 	unsigned int i,j;
@@ -300,7 +405,7 @@ void RObj2DContainer::AddObj(RObj2D *obj,RGeoInfo *info)
 
 
 //-----------------------------------------------------------------------------
-void RObj2DContainer::EndObjs(void)
+void RGA2D::RObj2DContainer::EndObjs(void)
 {
 	SPolygons.Union(&Polygon);
 	Polygons[0]=Polygon;
@@ -309,7 +414,7 @@ void RObj2DContainer::EndObjs(void)
 
 
 //-----------------------------------------------------------------------------
-void RObj2DContainer::Assign(RPoint& /*pos*/,RGeoInfo** /*infos*/,unsigned int** /*OccX*/,unsigned int** /*OccY*/)
+void RGA2D::RObj2DContainer::Assign(RPoint& /*pos*/,RGeoInfo** /*infos*/,unsigned int** /*OccX*/,unsigned int** /*OccY*/)
 {
 /*	unsigned int i;
 	unsigned int *ids;
@@ -330,7 +435,7 @@ void RObj2DContainer::Assign(RPoint& /*pos*/,RGeoInfo** /*infos*/,unsigned int**
 
 
 //-----------------------------------------------------------------------------
-RObj2DContainer::~RObj2DContainer(void)
+RGA2D::RObj2DContainer::~RObj2DContainer(void)
 {
 	if(Ids) delete[] Ids;
 	if(Infos) delete[] Infos;

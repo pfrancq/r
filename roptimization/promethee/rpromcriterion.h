@@ -63,12 +63,12 @@ class RPromCriterionParams
 public:
 
 	/**
-	* Value for the indifference's threshold of the Prométhée method.
+	* Value for the preference's threshold of the Prométhée method.
 	*/
 	double P;
 
 	/**
-	* Value for the preference's threshold of the Prométhée method.
+	* Value for the indifference's threshold of the Prométhée method.
 	*/
 	double Q;
 	
@@ -115,12 +115,12 @@ class RPromCriterion : protected RContainer<RPromCritValue,unsigned int,false,fa
    	CriteriaType Type;
 
 	/**
-	* Value for the indifference's threshold of the Prométhée method.
+	* Value for the preference's threshold of the Prométhée method.
 	*/
 	double P;
 
 	/**
-	* Value for the preference's threshold of the Prométhée method.
+	* Value for the indifference's threshold of the Prométhée method.
 	*/
 	double Q;
 	
@@ -134,8 +134,8 @@ public:
 	/**
 	* Construct a criterion.
 	* @param type	Type of the criterion.
-	* @param p		Indifference's threshold.
-	* @param q		Preference's threshold.
+	* @param p		Preference's threshold.
+	* @param q		Indifference's threshold.
 	* @param w		Weight of the criterion.
 	* @param id		Identifier of the criterion.
 	* @param nb		Number of solution.
@@ -154,8 +154,8 @@ public:
 	/**
 	* Construct a criterion.
 	* @param type		Type of the criterion.
-	* @param p			Indifference's threshold.
-	* @param q			Preference's threshold.
+	* @param p			Preference's threshold.
+	* @param q			Indifference's threshold.
 	* @param w			Weight of the criterion.
 	* @param id			Identifier of the criterion.
 	* @param name		Name of the criterion.
@@ -221,19 +221,24 @@ public:
 	int Compare(const char* name) { return(Name.Compare(name));}
 	
 	/**
-	* Set the indifference's threshold.
+	* Set the preference's threshold.
 	*/
 	void SetP(double p) {P=p;}
 	
 	/**
-	* Get the indifference's threshold.
+	* Get the preference's threshold.
 	*/
 	double GetP(void) {return(P);}	
 	
 	/**
-	* Set the preference's threshold.
+	* Set the indifference's threshold.
 	*/
 	void SetQ(double q) {Q=q;}
+
+	/**
+	* Get the indifference's threshold.
+	*/
+	double GetQ(void) {return(Q);}	
 
 	/**
 	* Set the parameters.
@@ -244,12 +249,7 @@ public:
 	* Get the parameters.
 	*/
 	RPromCriterionParams& GetParams(void);
-	
-	/**
-	* Get the Preference's threshold.
-	*/
-	double GetQ(void) {return(Q);}	
-	
+
 	/**
 	* Set the weight.
 	*/
@@ -269,7 +269,7 @@ public:
 	* Compare two values representing two different solutions.
 	* @param u		Value of the first solution.
 	* @param v		Value of the second solution.
-	* @return	The resukt of the preference function defined.
+	* @return	The result of the preference function defined.
 	*/
 	double ComputePref(const double u,const double v);
 
@@ -283,6 +283,7 @@ public:
 	*/
 	~RPromCriterion(void);
 
+	// friend classes
 	friend RPromKernel;
 };
 

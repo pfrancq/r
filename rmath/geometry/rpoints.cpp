@@ -49,21 +49,21 @@ using namespace RGeometry2D;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPoints::RPoints(void)
+RGeometry2D::RPoints::RPoints(void)
 	: RContainer<RPoint,unsigned int,true,false>(10,5)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPoints::RPoints(unsigned int max)
+RGeometry2D::RPoints::RPoints(unsigned int max)
 	: RContainer<RPoint,unsigned int,true,false>(max,5)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPoints::RPoints(RPoints *points)
+RGeometry2D::RPoints::RPoints(RPoints *points)
 	: RContainer<RPoint,unsigned int,true,false>(points->MaxPtr,points->IncPtr)
 {
 	RPoint **pts;
@@ -77,7 +77,7 @@ RPoints::RPoints(RPoints *points)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPoints::FindLeft(RPoint *pt,RPolygons *polys)
+RPoint* RGeometry2D::RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -116,7 +116,7 @@ RPoint* RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPoints::FindRight(RPoint *pt,RPolygons *polys)
+RPoint* RGeometry2D::RPoints::FindRight(RPoint *pt,RPolygons *polys)
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -155,7 +155,7 @@ RPoint* RPoints::FindRight(RPoint *pt,RPolygons *polys)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPoints::FindUp(RPoint *pt,RPolygons *polys)
+RPoint* RGeometry2D::RPoints::FindUp(RPoint *pt,RPolygons *polys)
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -194,7 +194,7 @@ RPoint* RPoints::FindUp(RPoint *pt,RPolygons *polys)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPoints::FindBottomLeft(void)
+RPoint* RGeometry2D::RPoints::FindBottomLeft(void)
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -217,7 +217,7 @@ RPoint* RPoints::FindBottomLeft(void)
 
 
 //-----------------------------------------------------------------------------
-bool RPoints::DuplicatePoints(void)
+bool RGeometry2D::RPoints::DuplicatePoints(void)
 {
 	unsigned int i,j;
 	RPoint **point1,**point2;
@@ -231,7 +231,7 @@ bool RPoints::DuplicatePoints(void)
 
 
 //-----------------------------------------------------------------------------
-RPoints& RPoints::operator=(const RPoints &points)
+RPoints& RGeometry2D::RPoints::operator=(const RPoints &points)
 {
 	RContainer<RPoint,unsigned int,true,false>::operator=(points);
 	return(*this);

@@ -56,7 +56,7 @@ RDebug *RGA::Debug=0;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-eGA::eGA(const RString &msg)
+RGA::eGA::eGA(const RString &msg)
 	: Msg(msg)
 {
 	cerr<<Msg()<<endl;
@@ -64,21 +64,21 @@ eGA::eGA(const RString &msg)
 
 
 //-----------------------------------------------------------------------------
-eGAVerify::eGAVerify(void)
+RGA::eGAVerify::eGAVerify(void)
 	: eGA("Error when verify chromosomes")
 {
 }
 
 
 //-----------------------------------------------------------------------------
-eGACrossover::eGACrossover(void)
+RGA::eGACrossover::eGACrossover(void)
 	: eGA("Error when doing a crossover")
 {
 }
 
 
 //-----------------------------------------------------------------------------
-eGARandomConstruct::eGARandomConstruct(void)
+RGA::eGARandomConstruct::eGARandomConstruct(void)
 	: eGA("Error when doing random construct")
 {
 }

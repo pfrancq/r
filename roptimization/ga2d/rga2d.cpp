@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RGA2D.cpp
 
 	2D Placement Genetic Algorithm - Implementation
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -32,6 +32,6 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rga2d.h"
-using namespace RGA;
+// include files for R Project
+#include <rga2d/rga2d.h>
+using namespace RGA2D;

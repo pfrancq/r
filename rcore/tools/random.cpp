@@ -70,12 +70,12 @@ static const int MASK=123456987;
 
 //-----------------------------------------------------------------------------
 // Global static variable
-RRandom *RRandom::RandomGen=0;
+RRandom *RMath::RRandom::RandomGen=0;
 
 
 //-----------------------------------------------------------------------------
 // Global "random" function
-long RRandom::RRand(long max)
+long RMath::RRandom::RRand(long max)
 {
 	return(RandomGen->Value(max));
 }
@@ -89,7 +89,7 @@ long RRandom::RRand(long max)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-void RRandomGood::Reset(const int seed)
+void RMath::RRandomGood::Reset(const int seed)
 {
 	_seed = _seed == MASK ? 1 : MASK ^ seed; //  xor prevents seed == 0
 	_value = _seed; //  _value starts as _seed
@@ -97,7 +97,7 @@ void RRandomGood::Reset(const int seed)
 
 
 //-----------------------------------------------------------------------------
-double RRandomGood::Value(void)
+double RMath::RRandomGood::Value(void)
 {
 	int k = _value / q;
 	_value = a * (_value - k * q) - r * k; // Schrage's technique
@@ -114,7 +114,7 @@ double RRandomGood::Value(void)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-int RRandomBetter::Calc(void)
+int RMath::RRandomBetter::Calc(void)
 {
 	int k = _value / q;
 	_value = a * (_value - k * q) - r * k; // Schrage's technique
@@ -124,7 +124,7 @@ int RRandomBetter::Calc(void)
 
 
 //-----------------------------------------------------------------------------
-void RRandomBetter::Reset(const int seed)
+void RMath::RRandomBetter::Reset(const int seed)
 {
 	_seed = _seed == MASK ? 1 : MASK ^ seed; //  xor prevents seed == 0
 	_value = _seed; //  _value starts as _seed
@@ -142,7 +142,7 @@ void RRandomBetter::Reset(const int seed)
 
 
 //-----------------------------------------------------------------------------
-double RRandomBetter::Value(void)
+double RMath::RRandomBetter::Value(void)
 {
 	Calc();                   //  calc a new _value
 	int j = _aux / NDIV;      //  calc an index. j is in [0..31]
@@ -162,7 +162,7 @@ double RRandomBetter::Value(void)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-int RRandomBest::Calc1(void)
+int RMath::RRandomBest::Calc1(void)
 {
 	int k = _value / q1;
 	_value = a1 * (_value - k * q1) - r1 * k; // Schrage's technique
@@ -172,7 +172,7 @@ int RRandomBest::Calc1(void)
 
 
 //-----------------------------------------------------------------------------
-int RRandomBest::Calc2(void)
+int RMath::RRandomBest::Calc2(void)
 {
 	int k = _aux2 / q2;
 	_aux2 = a2 * (_aux2 - k * q2) - r2 * k; // Schrage's technique
@@ -184,7 +184,7 @@ int RRandomBest::Calc2(void)
 
 
 //-----------------------------------------------------------------------------
-void RRandomBest::Reset(const int seed)
+void RMath::RRandomBest::Reset(const int seed)
 {
 	_seed = _seed == MASK ? 1 : MASK ^ seed; //  xor prevents seed == 0
 	_value = _seed; //  _value starts as _seed
@@ -203,7 +203,7 @@ void RRandomBest::Reset(const int seed)
 
 
 //-----------------------------------------------------------------------------
-double RRandomBest::Value(void)
+double RMath::RRandomBest::Value(void)
 {
 	Calc1();
 	Calc2();

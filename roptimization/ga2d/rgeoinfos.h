@@ -2,12 +2,11 @@
 
 	R Project Library
 
+	RGeoInfos.h
 
-	RFreePolygons.h
+	Set of geometric informations - Header.
 
-	Description - Header.
-
-	(c) 2000-2001 by P. Francq.
+	(c) 2001 by P. Francq.
 
 	Version $Revision$
 
@@ -32,16 +31,19 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RFreePolygonsH
-#define RFreePolygonsH
+#ifndef RGeoInfosH
+#define RGeoInfosH
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
+#include <rstd/rstd.h>
 using namespace RStd;
-#include <rga2d/rfreepolygon.h>
+#include <rga2d/robj2d.h>
+#include <rga2d/rgeoinfo.h>
+#include <rga2d/rproblem2d.h>
 using namespace RGA2D;
+
 
 
 //-----------------------------------------------------------------------------
@@ -50,46 +52,50 @@ namespace RGA2D{
 
 
 //-----------------------------------------------------------------------------
-// Forward declaration
-class RGeoInfo;
-
-
-//-----------------------------------------------------------------------------
 /**
-* The RFreePolygons provides a representation for a container of polygons.
+* This class implements a container of geometric information.
 * @author Pascal Francq
-* @short Container of free polygons.
+* @short Container of geometric information.
 */
-class RFreePolygons : public RContainer<RFreePolygon,unsigned int,true,false>
+class RGeoInfos : public RStd::RContainer<RGeoInfo,unsigned int,true,false>
 {
+	/**
+	* Pointer to the problem.
+	*/	
+	RProblem2D* Problem;
+
 public:
 
 	/**
 	* Construct the container.
+	* @param prob		The instance of the problem.
+	* @param create		If true, nb geometric information are created.
 	*/
-	RFreePolygons(void);
-
+	RGeoInfos(RProblem2D* prob,bool create) throw(bad_alloc);
+	
 	/**
-	* Construct the container from another one.
+	* Select a "good" set of geometric informations. This is used by the
+	* crossover of the GA.
+	* @param cont		The container of objects that will be hold.
+	* @param grid		The grid representing the Layout.
+	* @param selected	Array given the already selected objects.
 	*/
-	RFreePolygons(RFreePolygons *cont);
-
+	void GetSetInfos(RObj2DContainer* cont,RGrid* grid,bool* selected);
+	
 	/**
-	* Calculate a position for the given geometric information.
-	* @param info	The object to place.
-	* @return	The function returns a valid position the object could be
-	*				placed.
+	* Calculate the boundary rectangle of all the geometric information.
+	* @param rect		The rectangle that will be hold the result.
 	*/
-	RPoint& CanPlace(RGeoInfo *info);
-
+	void Boundary(RRect &rect);
+	
 	/**
-	* Derstruct the container.
+	* Clear all the geometric informations.
 	*/
-	virtual ~RFreePolygons(void);
+	void Clear(void);
 };
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //-------- End of namespace RGA2D ------------------------------------------
 
 
 //-----------------------------------------------------------------------------

@@ -44,14 +44,14 @@ using namespace RGeometry2D;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RLine::RLine(void)
+RGeometry2D::RLine::RLine(void)
 	: Pt1(),Pt2(),Segment(false)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RLine::RLine(RPoint *pt1,RPoint *pt2,bool seg)
+RGeometry2D::RLine::RLine(RPoint *pt1,RPoint *pt2,bool seg)
 	: Pt1(*pt1),Pt2(*pt2)
 {
 	RReturnIfFail(pt1&&pt2);
@@ -60,7 +60,7 @@ RLine::RLine(RPoint *pt1,RPoint *pt2,bool seg)
 
 
 //-----------------------------------------------------------------------------
-float RLine::Length(void)
+float RGeometry2D::RLine::Length(void)
 {
 	RCoord X=labs(Pt2.X-Pt1.X),Y=labs(Pt2.Y-Pt1.Y);
 	return(sqrt(X*X+Y*Y));
@@ -68,7 +68,7 @@ float RLine::Length(void)
 
 
 //-----------------------------------------------------------------------------
-int RLine::CCW(const RPoint &pt) const
+int RGeometry2D::RLine::CCW(const RPoint &pt) const
 {
 	RCoord dx1,dx2,dy1,dy2;
 
@@ -85,7 +85,7 @@ int RLine::CCW(const RPoint &pt) const
 
 
 //-----------------------------------------------------------------------------
-bool RLine::Inter(RLine *line)
+bool RGeometry2D::RLine::Inter(RLine *line)
 {
 	RReturnValIfFail(line,false);
 	return((CCW(line->Pt1)*CCW(line->Pt2)<=0)&&(line->CCW(Pt1)*line->CCW(Pt2)<=0));
@@ -93,14 +93,14 @@ bool RLine::Inter(RLine *line)
 
 
 //-----------------------------------------------------------------------------
-bool RLine::Inter(RLine &line)
+bool RGeometry2D::RLine::Inter(RLine &line)
 {
 	return((CCW(line.Pt1)*CCW(line.Pt2)<=0)&&(line.CCW(Pt1)*line.CCW(Pt2)<=0));
 }
 
 
 //-----------------------------------------------------------------------------
-bool RLine::IsIn(const RPoint &pt)
+bool RGeometry2D::RLine::IsIn(const RPoint &pt)
 {
 	double a,b;			// y=ax+b	
 	double eq;			// y(pt);

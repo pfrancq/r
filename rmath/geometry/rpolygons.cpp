@@ -53,14 +53,14 @@ using namespace RGeometry2D;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPolygons::RPolygons(void)
+RGeometry2D::RPolygons::RPolygons(void)
 	: RContainer<RPolygon,unsigned int,true,false>(20,10)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-bool RPolygons::Edge(RPoint *pt)
+bool RGeometry2D::RPolygons::Edge(RPoint *pt)
 {
 	RPolygon **poly;
 	unsigned int i;
@@ -74,7 +74,7 @@ bool RPolygons::Edge(RPoint *pt)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygons::Edge(RPoint *pt,RPolygon *poly)
+bool RGeometry2D::RPolygons::Edge(RPoint *pt,RPolygon *poly)
 {
 	RPolygon **ptr;
 	unsigned int i;
@@ -88,7 +88,7 @@ bool RPolygons::Edge(RPoint *pt,RPolygon *poly)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygons::Edge(RPoint *pt1,RPoint *pt2)
+bool RGeometry2D::RPolygons::Edge(RPoint *pt1,RPoint *pt2)
 {
 	RPolygon **poly;
 	unsigned int i;
@@ -102,7 +102,7 @@ bool RPolygons::Edge(RPoint *pt1,RPoint *pt2)
 
 
 //-----------------------------------------------------------------------------
-void RPolygons::PutPoints(RPoints *points)
+void RGeometry2D::RPolygons::PutPoints(RPoints *points)
 {
 	RPolygon **poly;
 	RPoint **point;
@@ -139,7 +139,7 @@ void RPolygons::PutPoints(RPoints *points)
 
 
 //-----------------------------------------------------------------------------
-void RPolygons::Union(RPolygon *upoly)
+void RGeometry2D::RPolygons::Union(RPolygon *upoly)
 {
 	RPoint *next,*first,*ins,*last;
 	RDirection FromDir;
@@ -259,7 +259,7 @@ void RPolygons::Union(RPolygon *upoly)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygons::DuplicatePoints(void)
+bool RGeometry2D::RPolygons::DuplicatePoints(void)
 {
 	RPoints tmp(500);
 
@@ -269,7 +269,7 @@ bool RPolygons::DuplicatePoints(void)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygons::IsIn(const RCoord X,const RCoord Y)
+bool RGeometry2D::RPolygons::IsIn(const RCoord X,const RCoord Y)
 {
 	RPolygon **tab;
 	unsigned int i;
@@ -282,7 +282,7 @@ bool RPolygons::IsIn(const RCoord X,const RCoord Y)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygons::IsIn(const RPoint &pt)
+bool RGeometry2D::RPolygons::IsIn(const RPoint &pt)
 {
 	RPolygon **tab;
 	unsigned int i;
@@ -295,8 +295,17 @@ bool RPolygons::IsIn(const RPoint &pt)
 
 
 //-----------------------------------------------------------------------------
-RPolygons& RPolygons::operator=(const RPolygons &poly)
+RPolygons& RGeometry2D::RPolygons::operator=(const RPolygons &poly)
 {
 	RContainer<RPolygon,unsigned int,true,false>::operator=(poly);
 	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+void RGeometry2D::RPolygons::Save(RTextFile& f)
+{
+	f<<NbPtr<<endl;
+	for(Start();!End();Next())
+		(*this)()->Save(f);
 }

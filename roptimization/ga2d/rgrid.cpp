@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RGrid.cpp
 
 	Grid for the 2D placement - Implementation
 
-	(C) 1998-2000 by By P. Francq.
+	(C) 1998-2001 by By P. Francq.
 
 	Version $Revision$
 
@@ -32,10 +32,10 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include <rga/rgrid.h>
-#include <rga/rgeoinfo.h>
-using namespace RGA;
+// include files for R Project
+#include <rga2d/rgrid.h>
+#include <rga2d/rgeoinfo.h>
+using namespace RGA2D;
 
 
 
@@ -46,22 +46,22 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGrid::RGrid(RPoint &limits) throw(bad_alloc)
+RGA2D::RGrid::RGrid(RPoint &limits) throw(bad_alloc)
 	: Limits(limits), OccupiedX(0), OccupiedY(0)
 {
 	InternalLimits.Set(Limits.X*2,Limits.Y*2);
 	// Init Occupied
-	OccupiedX = new unsigned int*[InternalLimits.X];
-	for(RCoord R=0;R<InternalLimits.X;R++)
-		OccupiedX[R] = new unsigned int[InternalLimits.Y];
-	OccupiedY = new unsigned int*[InternalLimits.Y];
-	for(RCoord R=0;R<InternalLimits.Y;R++)
-		OccupiedY[R] = new unsigned int[InternalLimits.X];
+	OccupiedX = new unsigned int*[InternalLimits.X+1];
+	for(RCoord R=0;R<InternalLimits.X+1;R++)
+		OccupiedX[R] = new unsigned int[InternalLimits.Y+1];
+	OccupiedY = new unsigned int*[InternalLimits.Y+1];
+	for(RCoord R=0;R<InternalLimits.Y+1;R++)
+		OccupiedY[R] = new unsigned int[InternalLimits.X+1];
 }
 
 
 //-----------------------------------------------------------------------------
-void RGrid::Clear(void)
+void RGA2D::RGrid::Clear(void)
 {
 	RReturnIfFail(OccupiedX);
 	RReturnIfFail(OccupiedY);
@@ -77,7 +77,7 @@ void RGrid::Clear(void)
 
 
 //-----------------------------------------------------------------------------
-void RGrid::Assign(RRect &rect,RPoint &pos,unsigned int id)
+void RGA2D::RGrid::Assign(RRect &rect,RPoint &pos,unsigned int id)
 {
 	RCoord BeginX,BeginY,j,k,H,W;
 	unsigned int **ptr1,*ptr2;
@@ -103,7 +103,7 @@ void RGrid::Assign(RRect &rect,RPoint &pos,unsigned int id)
 
 
 //-----------------------------------------------------------------------------
-bool RGrid::IsFree(RCoord x,RCoord y)
+bool RGA2D::RGrid::IsFree(RCoord x,RCoord y)
 {
 	RReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.X)||y<0||y>(InternalLimits.Y))
@@ -113,7 +113,7 @@ bool RGrid::IsFree(RCoord x,RCoord y)
 
 
 //-----------------------------------------------------------------------------
-bool RGrid::IsOcc(RCoord x,RCoord y)
+bool RGA2D::RGrid::IsOcc(RCoord x,RCoord y)
 {
 	RReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.X)||y<0||y>(InternalLimits.Y))
@@ -123,7 +123,7 @@ bool RGrid::IsOcc(RCoord x,RCoord y)
 
 
 //-----------------------------------------------------------------------------
-RCoord RGrid::LookLeft(RPoint& pt)
+RCoord RGA2D::RGrid::LookLeft(RPoint& pt)
 {
 	unsigned int *ptr=&OccupiedY[pt.Y][pt.X];
 	RCoord x=pt.X;
@@ -138,7 +138,7 @@ RCoord RGrid::LookLeft(RPoint& pt)
 
 
 //-----------------------------------------------------------------------------
-RCoord RGrid::LookRight(RPoint& pt)
+RCoord RGA2D::RGrid::LookRight(RPoint& pt)
 {
 	unsigned int *ptr=&OccupiedY[pt.Y][pt.X];
 	RCoord x=pt.X;
@@ -153,7 +153,7 @@ RCoord RGrid::LookRight(RPoint& pt)
 
 
 //-----------------------------------------------------------------------------
-RCoord RGrid::LookUp(RPoint& pt)
+RCoord RGA2D::RGrid::LookUp(RPoint& pt)
 {
 	unsigned int *ptr=&OccupiedX[pt.X][pt.Y];
 	RCoord y=pt.Y;
@@ -168,7 +168,7 @@ RCoord RGrid::LookUp(RPoint& pt)
 
 
 //-----------------------------------------------------------------------------
-RCoord RGrid::LookDown(RPoint& pt)
+RCoord RGA2D::RGrid::LookDown(RPoint& pt)
 {
 	unsigned int *ptr=&OccupiedX[pt.X][pt.Y];
 	RCoord y=pt.Y;
@@ -183,7 +183,7 @@ RCoord RGrid::LookDown(RPoint& pt)
 
 
 //-----------------------------------------------------------------------------
-RCoord RGrid::SkirtLeft(RPoint& pt,RRect &bound)
+RCoord RGA2D::RGrid::SkirtLeft(RPoint& pt,RRect &bound)
 {
 	unsigned int *ptr,*ptrU,*ptrD;
 	RCoord x=pt.X;
@@ -211,7 +211,7 @@ RCoord RGrid::SkirtLeft(RPoint& pt,RRect &bound)
 
 
 //-----------------------------------------------------------------------------
-RCoord RGrid::SkirtRight(RPoint& pt,RRect &bound)
+RCoord RGA2D::RGrid::SkirtRight(RPoint& pt,RRect &bound)
 {
 	unsigned int *ptr,*ptrU,*ptrD;
 	RCoord x=pt.X;
@@ -238,7 +238,7 @@ RCoord RGrid::SkirtRight(RPoint& pt,RRect &bound)
 
 
 //-----------------------------------------------------------------------------
-RCoord RGrid::SkirtUp(RPoint& pt,RRect &bound)
+RCoord RGA2D::RGrid::SkirtUp(RPoint& pt,RRect &bound)
 {
 	unsigned int *ptr,*ptrL,*ptrR;
 	RCoord y=pt.Y;
@@ -266,7 +266,7 @@ RCoord RGrid::SkirtUp(RPoint& pt,RRect &bound)
 
 
 //-----------------------------------------------------------------------------
-RCoord RGrid::SkirtDown(RPoint& pt,RRect &bound)
+RCoord RGA2D::RGrid::SkirtDown(RPoint& pt,RRect &bound)
 {
 	unsigned int *ptr,*ptrL,*ptrR;
 	RCoord y=pt.Y;
@@ -294,7 +294,7 @@ RCoord RGrid::SkirtDown(RPoint& pt,RRect &bound)
 
 
 //-----------------------------------------------------------------------------
-bool RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect &bound,RPolygon& poly)
+bool RGA2D::RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect &bound,RPolygon& poly)
 {
 	RPoint *next,*first,pt;
 	RCoord TestX,TestY;
@@ -461,7 +461,7 @@ bool RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect &bound,
 
 
 //-----------------------------------------------------------------------------
-void RGrid::AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &bound)
+void RGA2D::RGrid::AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &bound)
 {
 	RPolygon Poly;			// Polygon representing the geometric information
 	RPolygons NewOne;		// Polygons added now
@@ -523,7 +523,7 @@ void RGrid::AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &bound)
 
 
 //-----------------------------------------------------------------------------
-RGrid::~RGrid(void)
+RGA2D::RGrid::~RGrid(void)
 {
 	if(OccupiedX)
 	{

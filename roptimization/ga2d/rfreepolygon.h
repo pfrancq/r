@@ -1,47 +1,49 @@
 /*
 
-  rfreepolygon.h
+	R Project Library
 
-  Description - Header.
+	RFreePolygon.h
 
-  (c) 2000 by P. Francq.
+	Description - Header.
 
-  Version $Revision$
+	(c) 2000-2001 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
 
 
 //-----------------------------------------------------------------------------
-#ifndef RFREEPOLYGON_H
-#define RFREEPOLYGON_H
+#ifndef RFreePolygonH
+#define RFreePolygonH
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rgeometry/rpoint.h>
 #include <rgeometry/rpolygon.h>
 using namespace RGeometry2D;
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
 
 
@@ -52,8 +54,8 @@ class RGeoInfo;
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
-* The RFreePolygon class provides a representation of a "free" polygon on the grid.
+* The RFreePolygon class provides a representation of a "free" polygon on the
+* grid.
 * @author Pascal Francq
 * @short Free Polygon class.
 */
@@ -119,7 +121,7 @@ public:
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA2D -------------------------------------------
 
 
 //-----------------------------------------------------------------------------

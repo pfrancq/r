@@ -45,14 +45,14 @@ using namespace RGeometry2D;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RRect::RRect(void)
+RGeometry2D::RRect::RRect(void)
 	: Pt1(),Pt2()
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RRect::RRect(RRect *rect)
+RGeometry2D::RRect::RRect(RRect *rect)
 	: Pt1(),Pt2()
 {
 	if(rect)
@@ -66,7 +66,7 @@ RRect::RRect(RRect *rect)
 
 
 //-----------------------------------------------------------------------------
-RRect::RRect(RPoint *pt1,RPoint *pt2)
+RGeometry2D::RRect::RRect(RPoint *pt1,RPoint *pt2)
 	: Pt1(), Pt2()
 {
 	RReturnIfFail(pt1&&pt2);
@@ -76,14 +76,14 @@ RRect::RRect(RPoint *pt1,RPoint *pt2)
 
 
 //-----------------------------------------------------------------------------
-RRect::RRect(RCoord MinX,RCoord MinY,RCoord MaxX,RCoord MaxY)
+RGeometry2D::RRect::RRect(RCoord MinX,RCoord MinY,RCoord MaxX,RCoord MaxY)
 	: Pt1(MinX,MinY),Pt2(MaxX,MaxY)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RRect& RRect::operator+=(const RPoint &pt) throw(bad_alloc)
+RRect& RGeometry2D::RRect::operator+=(const RPoint &pt) throw(bad_alloc)
 {
 	Pt1+=pt;
 	Pt2+=pt;
@@ -92,7 +92,7 @@ RRect& RRect::operator+=(const RPoint &pt) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-RRect& RRect::operator-=(const RPoint &pt) throw(bad_alloc)
+RRect& RGeometry2D::RRect::operator-=(const RPoint &pt) throw(bad_alloc)
 {
 	Pt1-=pt;
 	Pt2-=pt;
@@ -101,7 +101,7 @@ RRect& RRect::operator-=(const RPoint &pt) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-bool RRect::Clip(const RRect &clip)
+bool RGeometry2D::RRect::Clip(const RRect &clip)
 {
 	bool bClip=false;
 
@@ -159,7 +159,7 @@ bool RRect::Clip(const RRect &clip)
 
 
 //-----------------------------------------------------------------------------
-bool RRect::Clip(const RPoint &limits)
+bool RGeometry2D::RRect::Clip(const RPoint &limits)
 {
 	bool bClip=false;
 
@@ -197,7 +197,7 @@ bool RRect::Clip(const RPoint &limits)
 
 
 //-----------------------------------------------------------------------------
-void RRect::Translation(RCoord x,RCoord y)
+void RGeometry2D::RRect::Translation(RCoord x,RCoord y)
 {
 	Pt1.X+=x;
 	Pt1.Y+=y;
@@ -207,7 +207,7 @@ void RRect::Translation(RCoord x,RCoord y)
 
 
 //-----------------------------------------------------------------------------
-bool RRect::Overlap(const RRect *rect)
+bool RGeometry2D::RRect::Overlap(const RRect *rect)
 {
 	RReturnValIfFail(rect,false);
 	
@@ -222,7 +222,7 @@ bool RRect::Overlap(const RRect *rect)
 
 
 //-----------------------------------------------------------------------------
-bool RRect::IsIn(const RCoord X,const RCoord Y)
+bool RGeometry2D::RRect::IsIn(const RCoord X,const RCoord Y)
 {
 	// Is up or bottom of rect
 	if((Y>Pt2.Y)||(Y<Pt1.Y)) return(false);
@@ -235,7 +235,7 @@ bool RRect::IsIn(const RCoord X,const RCoord Y)
 
 
 //-----------------------------------------------------------------------------
-RRect* RRect::GetRect(void)
+RRect* RGeometry2D::RRect::GetRect(void)
 {
 	return(GetTemporaryObject<RRect,30>());
 }

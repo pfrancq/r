@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RChromo2D.h
 
 	Chromosome for 2D placement GA - Header
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,19 +37,18 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rga2d.h"
-using namespace RGA;
+// include files for R Project
+#include <rga2d/rga2d.h>
+using namespace RGA2D;
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
 * This class represents a chromosome for the 2D placement GA.
 * @author Pascal Francq
 * @short 2D GA chromosome.
@@ -168,19 +167,6 @@ public:
 	inline void thVarsClear(void);
 
 	/**
-	* This function constructs a set of objects that are not already selected for
-	* a crossover.
-	*
-	*	First, an unselected object is chosen by random. After that, the function
-	* try to add the objects that are placed near the selected object.
-	* @param obj				Container object for the selected objects.
-	* @param selected		Array of booleans to hold if an object is already
-											selected.
-	* @return						The function returns true if an object was constructed.
-	*/
-	bool GetSetOfObjs(RObj2DContainer *obj,bool *selected);
-
-	/**
 	* This function add all the unselected objects to thObjs and calculate the
 	* corresponding number.
 	* @param	objs			The array of pointers to objects to be filled.
@@ -261,7 +247,7 @@ public:
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA2D -------------------------------------------
 
 
 //-----------------------------------------------------------------------------

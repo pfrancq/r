@@ -46,20 +46,20 @@ using namespace RPromethee;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPromCritValue::RPromCritValue(void)
+RPromethee::RPromCritValue::RPromCritValue(void)
 	: Value(0.0)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPromCritValue::RPromCritValue(double value)
+RPromethee::RPromCritValue::RPromCritValue(double value)
 	: Value(value)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPromCritValue::~RPromCritValue(void)
+RPromethee::RPromCritValue::~RPromCritValue(void)
 {
 }

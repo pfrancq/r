@@ -70,6 +70,19 @@ public:
 	RXMLTag* GetTag(const char* name);
 
 	/**
+	* Find the first tag with a gtiven name and a given parent.
+	* @param name		Name of the tag to find.
+	* @param parent		Parent of the tag to find.
+	*/
+	RXMLTag* GetTag(const char* name,RXMLTag* parent);
+
+	/**
+	* Return the Top Nodes of the XML struct.
+	*/
+	RXMLTag* GetTop(void) {return(Top->Tab[1]);}
+
+public:
+	/**
 	* Destruct the XML Structure.
 	*/
 	~RXMLStruct(void);

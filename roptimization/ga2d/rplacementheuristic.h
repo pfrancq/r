@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPlacementHeuristic.h
 
 	Generic Heuristic for Placement - Header
 
-	(C) 1998-2000 by P. Francq.
+	(C) 1998-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,35 +37,31 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rstd/rstd.h>
 using namespace RStd;
 #include <rgeometry/rpoint.h>
 #include <rgeometry/rrect.h>
 using namespace RGeometry2D;
-#include <rga/robj2d.h>
-#include <rga/rgeoinfo.h>
-#include <rga/rgrid.h>
-#include <rga/rfreepolygons.h>
-using namespace RGA;
+#include <rga2d/robj2d.h>
+#include <rga2d/rgeoinfo.h>
+#include <rga2d/rgeoinfos.h>
+#include <rga2d/rgrid.h>
+#include <rga2d/rfreepolygons.h>
+#include <rga2d/rconnections.h>
+#include <rga2d/rproblem2d.h>
+using namespace RGA2D;
+#include <rpromethee/rpromcriterion.h>
+using namespace RPromethee;
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
-
-
-/**
-* \ingroup 2DGA
-* \defgroup 2DGAH 2D-Genetic Algorithm (Placement Heuristic).
-*
-* This classes represent the heuristics used for the 2D placement of polygons.
-*/
 
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGAH
 * The RPlacementHeuristic class provides an abstract class for placement
 * heuristics.
 * @author Pascal Francq
@@ -86,15 +82,15 @@ protected:
 	RGrid *Grid;
 
 	/**
-	* The objects to place.
-	*/
-	RObj2D **Objs;
-
-	/**
 	* The geometric information of the objects.
 	*/
 	RGeoInfo **Infos;
-
+	
+	/**
+	* The connections of the objects.	
+	*/
+	RConnections* Connections;
+	
 	/**
 	* Total number of objects to place.
 	*/
@@ -161,35 +157,15 @@ protected:
 	char NbOri;
 	
 	/**
-	* Prométhée p for Area.
+	* Prométhée Parameters for the distance.
 	*/
-	double AreaP;
+	RPromCriterionParams DistParams;
 	
 	/**
-	* Prométhée q for Area.
+	* Prométhée Parameters for the area.
 	*/
-	double AreaQ;
+	RPromCriterionParams AreaParams;						
 	
-	/**
-	* Prométhée weight for Area.
-	*/
-	double AreaWeight;
-	
-	/**
-	* Prométhée p for Dist.
-	*/
-	double DistP;
-	
-	/**
-	* Prométhée q for Area.
-	*/
-	double DistQ;
-	
-	/**
-	* Prométhée weight for Area.
-	*/
-	double DistWeight;
-						
 public:
 
 	/**
@@ -203,13 +179,19 @@ public:
 	
 	/**
 	* Initialize the heuristic.
-	* @param limits		Limits for the placement.
-	* @param grid			Pointer to the grid.
-	* @param objs			Pointer to the objects.
+	* @param prob			The problem.
 	* @param infos			Pointer to the geometric information.
-	* @param nbobjs		Number of objects to place.
+	* @param grid			Pointer to the grid.	
 	*/
-	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
+	virtual void Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
+		
+	/**
+	* Initialize the heuristic.
+	* @param prob			The problem.
+	* @param infos			Pointer to the geometric information.
+	* @param grid			Pointer to the grid.	
+	*/
+	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);	
 	
 	/**
 	* Set the parameters for the "area" criterion.
@@ -220,25 +202,37 @@ public:
 	void SetAreaParams(double p,double q,double w);
 	
 	/**
+	* Set the parameters for the "area" criterion.
+	* @param params		The parameters..
+	*/
+	void SetAreaParams(const RPromCriterionParams& params);
+	
+	/**
 	* Set the parameters for the "dist" criterion.
 	* @param p	The indifference's threshold.
 	* @param q	The preference's threshold.
 	* @param w	The weight.
 	*/
 	void SetDistParams(double p,double q,double w);
+	
+	/**
+	* Set the parameters for the "area" criterion.
+	* @param params		The parameters..
+	*/
+	void SetDistParams(const RPromCriterionParams& params);
 
+	/**
+	* Select the next object to place.
+	* The CurInfo must pointed to the geometric information representing the
+	* object to place.
+	*/
+	virtual void SelectNextObject(void);
+		
 	/**
 	* Place the next object.	
 	*/
 	RGeoInfo* NextObject(void);
 
-	/**
-	* Calculate the distance-flux part for the current information with all
-	* objects already placed.
-	* @param pos		Position where to place the object.
-	*/
-	double CalcDist(RPoint& pos);
-	
 	/**
 	* Calculate the position to place the next object for a specific geometric
 	* information.
@@ -255,11 +249,22 @@ public:
 	* @param pos	The position where to place it.
 	*/
 	virtual void Place(RPoint& pos)=0;
-
+	
 	/**
 	* Run the heuristic.
+	* @param prob			The problem.
+	* @param infos			Pointer to the geometric information.
+	* @param grid			Pointer to the grid.		
 	*/
-	void Run(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
+	void Run(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
+	
+	/**
+	* Run the heuristic.
+	* @param prob			The problem.
+	* @param infos			Pointer to the geometric information.
+	* @param grid			Pointer to the grid.		
+	*/
+	void Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
 
 	/**
 	*	Do some operations after the run.
@@ -269,7 +274,7 @@ public:
 	/**
 	* Return the bound rectangle containing all the objects.
 	*/
-   RRect& GetResult(void);
+   	RRect& GetResult(void);
 
 	/**
 	* Return true if all the objects are placed.
@@ -293,7 +298,7 @@ public:
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA2D -------------------------------------------
 
 
 //-----------------------------------------------------------------------------

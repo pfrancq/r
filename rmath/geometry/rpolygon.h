@@ -261,6 +261,17 @@ public:
 	* Compute a point in the polygon which represents a sort of "Mass Point".
 	*/
 	RPoint& GetCentralPoint(void);
+
+	/**
+	* Save the polygon in a file.
+	*/
+	void Save(RTextFile& f);
+
+	/**
+	* Calibrate the polygon, make the bottom-left point at (0,0).
+	* @return The translation that has be done.
+	*/
+	RPoint& Calibrate(void);
 };
 
 

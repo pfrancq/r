@@ -50,17 +50,21 @@ using namespace RStd;
 //-----------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RXMLTag::RXMLTag(void)
+RStd::RXMLTag::RXMLTag(void)
  : RNode<RXMLTag,false>(30,15), Attrs(10,5)
 {
 }
+
+
 //------------------------------------------------------------------------------
-RXMLTag::RXMLTag(RString _name)
+RStd::RXMLTag::RXMLTag(RString _name)
  : RNode<RXMLTag,false>(30,15), Name(_name), Attrs(10,5)
 {
 }
+
+
 //------------------------------------------------------------------------------
-void RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
+void RStd::RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
 {
     int i;
     RString text;
@@ -103,8 +107,10 @@ void RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
         (*f)<<"</"+Name+">"<<endl;
     }
 }
+
+
 //------------------------------------------------------------------------------
-void RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
+void RStd::RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 {
 	char *ptr,*ptr2,c;
 	char *attrn,*attrv;
@@ -119,7 +125,9 @@ void RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 	ptr++; // Skip '<'
 	while(isspace(*ptr)) ptr++; // Skip Spaces
 	ptr2=ptr;
-	while((!isspace(*ptr))&&((*ptr)!='>')) ptr++; // Read Name
+	// Read Name
+	while((!isspace(*ptr))&&((*ptr)!='>')&&((*ptr)!='/'))
+		ptr++;
 	c=(*ptr);
 	(*ptr)=0;
 	Name=ptr2;
@@ -173,8 +181,9 @@ void RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 	ptr=f->GetTag();
 }
 
+
 //------------------------------------------------------------------------------
-RString& RXMLTag::GetName(void)
+RString& RStd::RXMLTag::GetName(void)
 {
 	RString *tmp=RString::GetString();
 
@@ -182,8 +191,9 @@ RString& RXMLTag::GetName(void)
 	return(*tmp);
 }
 
+
 //------------------------------------------------------------------------------
-RString& RXMLTag::GetAttrValue(const char *name)
+RString& RStd::RXMLTag::GetAttrValue(const char *name)
 {
 	RString *tmp=RString::GetString();
    	RXMLAttr *attr;
@@ -198,6 +208,20 @@ RString& RXMLTag::GetAttrValue(const char *name)
 
 
 //------------------------------------------------------------------------------
-RXMLTag::~RXMLTag(void)
+bool RStd::RXMLTag::IsAttrDefined(const char *name)
+{
+	return(Attrs.IsIn<const char*>(name));
+}
+
+
+//-----------------------------------------------------------------------------
+RXMLTag* RStd::RXMLTag::GetTag(const char* name)
+{
+	return(GetPtr<const char*>(name,false));
+}
+
+
+//------------------------------------------------------------------------------
+RStd::RXMLTag::~RXMLTag(void)
 {
 }

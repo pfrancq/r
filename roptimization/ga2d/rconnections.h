@@ -1,28 +1,30 @@
 /*
 
-  rconnections.h
+	R Project Library
 
-  Connections for the 2D Placement - Header.
+	RConnections.h
 
-  (c) 2000 by P. Francq.
+	Connections for the 2D Placement - Header.
 
-  Version $Revision$
+	(c) 2000-2001 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
@@ -34,19 +36,21 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rga.h"
-#include "robj2d.h"
-#include "rgeoinfo.h"
-#include "rconnection.h"
+// include files for R Project
+#include <rga/rga.h>
 using namespace RGA;
+#include <rga2d/robj2d.h>
+#include <rga2d/rgeoinfo.h>
+#include <rga2d/rconnection.h>
+using namespace RGA2D;
+#include <rpromethee/rpromcriterion.h>
+using namespace RPromethee;
 
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
-
 
 
 //-----------------------------------------------------------------------------
@@ -57,28 +61,52 @@ namespace RGA{
 */
 class RConnections : public RContainer<RConnection,unsigned int,true,false>
 {			
+	/**
+	* Prométhée Parameters for the distance.
+	*/
+	RPromCriterionParams DistParams;
+	
+	/**
+	* Prométhée Parameters for the weight.
+	*/
+	RPromCriterionParams WeightParams;
+	
 public:
 
 	/**
 	* Construct the connections.
-	* @param m		Maximal number of objects connected.
 	*/
-	RConnections(unsigned int m);
+	RConnections(void);
 
 	/**
-	* Initialize all the necessary structures when all conections are inserted.
+	* Initialize all the necessary structures when all connections are inserted.
 	*/	
 	void Init(void);
-		
+	
+	/**
+	* Set the parameters for Prométhée.
+	*/	
+	void SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight);		
+	
 	/**
 	* Calculate the sum of the weight of the connected objects, that are already
 	* placed, to a given one representing by a geometric information.
 	* @param infos			The geometric information of all the objects.
-	* @param nb				Number of objects.
 	* @param cur			Geometric information representing the given object for
 	*						wich calculate the distance.	
 	*/
-	double GetCon(RGeoInfo **infos,unsigned int nb,RGeoInfo *cur);
+	double GetCon(RGeoInfo **infos,RGeoInfo *cur);
+	
+	/**
+	* Return the object that have the most connected objects go
+	* placed and that isn't selected.
+	*
+	* @return				The geometric information of the object to place.
+	* @param infos			The geometric information of all the objects.
+	* @param nb				Number of objects.
+	* @param selected		Array to hold which objects are selected.
+	*/
+	RGeoInfo* GetBestConnected(RGeoInfo **infos,unsigned int nb,bool* selected,RRect& bound);
 	
 	/**
 	* Return the object that is not placed and that have the most connected
@@ -86,20 +114,25 @@ public:
 	* @return				The geometric information of the object to place.
 	* @param infos			The geometric information of all the objects.
 	* @param nb				Number of objects.
+	* @param order			Order in which to treat the objects.
+	* @param nbok			Number of objects already placed.
 	*/
-	RGeoInfo* GetMostConnected(RGeoInfo **infos,unsigned int nb);
-		
-	/**
-	* Calculate the Manhanttan distance from one given object representing by a
-	* geometric information to all other that are connected with it.
-	*	@param infos		The geometric information of all the objects.
-	* @param nb				Number of objects.
-	* @param cur			Geometric information representing the given object for
-	*						wich calculate the distance.	
-	* @param pos			The position of the object.
-	*/
-	double GetDistance(RGeoInfo **infos,unsigned int nb,RGeoInfo *cur,RPoint& pos);
+	RGeoInfo* GetMostConnected(RGeoInfo **infos,unsigned int nb,unsigned int* order,unsigned int nbok);
 	
+	/**
+	* Calculate the sum of the Manhattant distance between all placed objects
+	* representing by the geometric informations.
+	* @patam infos		The goemetric informations.
+	*/
+	double GetDistances(RGeoInfo** infos);
+	
+	/**
+	* Calculate the sum of the Manhattant distance between all placed objects
+	* representing by the geometric informations and a given one.
+	* @patam infos		The goemetric informations.
+	*/
+	double GetDistances(RGeoInfo** infos,RGeoInfo* info);
+		
 	/**
 	* Add a connection.
 	* @param from		The "from" object.
@@ -115,7 +148,7 @@ public:
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA2D -------------------------------------------
 
 
 //-----------------------------------------------------------------------------

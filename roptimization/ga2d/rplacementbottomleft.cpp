@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPlacementBottomLeft.cpp
 
 	Bottom Left Heuristic for Placement - Implementation
 
-	(C) 1998-2000 by By P. Francq.
+	(C) 1998-2001 by By P. Francq.
 
 	Version $Revision$
 
@@ -32,9 +32,9 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rplacementbottomleft.h"
-using namespace RGA;
+// include files for R Project
+#include <rga2d/rplacementbottomleft.h>
+using namespace RGA2D;
 
 
 
@@ -45,24 +45,30 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,bool ori)
+RGA2D::RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,ori)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-void RPlacementBottomLeft::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs)
+void RGA2D::RPlacementBottomLeft::Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid)
 {
-	RPlacementHeuristic::Init(limits,grid,objs,infos,nbobjs);
+	RPlacementHeuristic::Init(prob,infos,grid);
 	Actual.Set(0,0);
 	Last.Set(0,0);
-
 }
 
 
 //-----------------------------------------------------------------------------
-RPoint& RPlacementBottomLeft::NextObjectOri(void)
+void RGA2D::RPlacementBottomLeft::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+{
+	Init(prob,infos->Tab,grid);
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RGA2D::RPlacementBottomLeft::NextObjectOri(void)
 {
 	RPoint* Pos=RPoint::GetPoint();
 	
@@ -96,7 +102,7 @@ RPoint& RPlacementBottomLeft::NextObjectOri(void)
 
 
 //-----------------------------------------------------------------------------
-void RPlacementBottomLeft::Place(RPoint& pos)
+void RGA2D::RPlacementBottomLeft::Place(RPoint& pos)
 {
  	// Assign the object to the current position
 	CurInfo->Assign(pos,Grid);

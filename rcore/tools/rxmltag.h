@@ -140,17 +140,33 @@ public:
     */
     RString& GetName(void);
 
-    /**
-    * Return the name of the tag.
-    * @returns a string containing the name.
-    */
-    RString& GetAttrValue(const char *name);
+	/**
+	* Return the name of the tag.
+	* param name	Name of the attribute.
+	* @returns a string containing the name.
+	*/
+	RString& GetAttrValue(const char* name);
 
+	/**
+	* Test if an attribute is defined.
+	* param name	Name of the attribute.
+	* @returns True if the attribute exists.
+	*/
+	bool IsAttrDefined(const char* name);
+
+	/**
+	* Find the first tag with a gtiven name.
+	* @param name		Name of the tag to find.
+	*/
+	RXMLTag* GetTag(const char* name);
 
     /**
     * Destruct the XML Tag.
     */
     ~RXMLTag(void);
+
+    // friend classes
+    friend class RXMLStruct;
 };
 
 

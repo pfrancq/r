@@ -1,38 +1,40 @@
 /*
 
-  rfreepolygon.cpp
+	R Project Library
 
-  Description - Implementation.
+	RFreePolygon.cpp
 
-  (c) 2000 by P. Francq.
+	Free Polygons are hole in a construction - Implementation.
 
-  Version $Revision$
+	(c) 2000-2001 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include <rga/rfreepolygon.h>
-#include <rga/rgeoinfo.h>
-using namespace RGA;
+// include files for R Project
+#include <rga2d/rfreepolygon.h>
+#include <rga2d/rgeoinfo.h>
+using namespace RGA2D;
 
 
 
@@ -43,7 +45,7 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RFreePolygon::RFreePolygon(RPolygon& poly)
+RGA2D::RFreePolygon::RFreePolygon(RPolygon& poly)
 	: RPolygon(poly)
 {
 	Pos=(*GetBottomLeft());
@@ -52,7 +54,7 @@ RFreePolygon::RFreePolygon(RPolygon& poly)
 
 
 //-----------------------------------------------------------------------------
-RFreePolygon::RFreePolygon(RFreePolygon* poly)
+RGA2D::RFreePolygon::RFreePolygon(RFreePolygon* poly)
 	: RPolygon(poly)
 {
 	Pos=poly->Pos;
@@ -60,7 +62,7 @@ RFreePolygon::RFreePolygon(RFreePolygon* poly)
 
 
 //-----------------------------------------------------------------------------
-int RFreePolygon::CanContain(RGeoInfo* info)
+int RGA2D::RFreePolygon::CanContain(RGeoInfo* info)
 {
 	if(!IsIn(info->GetBound())) return(0);
 	return((100*info->GetArea())/Area());
@@ -68,7 +70,7 @@ int RFreePolygon::CanContain(RGeoInfo* info)
 
 
 //-----------------------------------------------------------------------------
-RPoint& RFreePolygon::GetPos(void)
+RPoint& RGA2D::RFreePolygon::GetPos(void)
 {
 	RPoint *pt=RPoint::GetPoint();
 

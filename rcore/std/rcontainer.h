@@ -213,7 +213,15 @@ public:
 	void Clear(void);
 
 	/**
-  * @name Accessing elements.
+	* Clear the container and destruct the elements if he is responsible for
+	* the desallocation.
+	* @param M		The initial maximal size of the array.
+	* @param I		The value used when increasing the array.
+	*/
+	void Clear(T M,T I);
+
+	/**
+	* @name Accessing elements.
 	*/
 	//@{
 
@@ -288,7 +296,7 @@ public:
  	//@}
 
 	/**
-  * @name Deleteing elements.
+	* @name Deleting elements.
 	*/
 	//@{
 
@@ -310,7 +318,7 @@ public:
 	//@}
 
 	/**
-  * @name Iterator functions.
+	* @name Iterator functions.
 	*/
 	//@{
 

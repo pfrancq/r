@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RInst2D.cpp
 
 	Instance for 2D placement GA - Inline Implementation
 
-	 (C) 1999-2000 by P. Francq.
+	 (C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -39,7 +39,7 @@
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner) throw(bad_alloc)
+	RGA2D::RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner) throw(bad_alloc)
 		: RThreadData<cInst,cChromo>(owner),NbObjs(0),Order(0),tmpObj1(0),
 			tmpObj2(0), Heuristic(0)
 {
@@ -48,7 +48,7 @@ template<class cInst,class cChromo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	void RThreadData2D<cInst,cChromo>::Init(void) throw(bad_alloc)
+	void RGA2D::RThreadData2D<cInst,cChromo>::Init(void) throw(bad_alloc)
 {
 	RThreadData<cInst,cChromo>::Init();
 	NbObjs=Owner->NbObjs;
@@ -63,13 +63,13 @@ template<class cInst,class cChromo>
 	switch(Owner->GetHeuristic())
 	{
 		case BottomLeft:
-			Heuristic = new RPlacementBottomLeft(NbObjs+2,true,true);
+			Heuristic = new RPlacementBottomLeft(NbObjs+2,true,true,true);
 			break;
 		case Edge:
-			Heuristic = new RPlacementEdge(NbObjs+2,true,true);
+			Heuristic = new RPlacementEdge(NbObjs+2,true,true,true);
 			break;
 		case Center:
-			Heuristic = new RPlacementCenter(NbObjs+2,true,true);
+			Heuristic = new RPlacementCenter(NbObjs+2,true,true,true);
 			break;
 	}
 }
@@ -77,7 +77,7 @@ template<class cInst,class cChromo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	RThreadData2D<cInst,cChromo>::~RThreadData2D(void)
+	RGA2D::RThreadData2D<cInst,cChromo>::~RThreadData2D(void)
 {
 	if(Order) delete[] Order;
 	if(tmpObjs)	delete[] tmpObjs;
@@ -96,10 +96,10 @@ template<class cInst,class cChromo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RInst2D(unsigned int popsize,RObj2D **objs,unsigned int nbobjs,RPoint &limits,HeuristicType h) throw(bad_alloc)
-			: RInst<cInst,cChromo,cFit,cThreadData>(popsize), Objs(objs), NbObjs(nbobjs),
-				bLocalOpti(true), Heuristic(h), Limits(limits)
+	RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+		RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h) throw(bad_alloc)
+			: RInst<cInst,cChromo,cFit,cThreadData>(popsize), Problem(prob), Objs(prob->Objs.Tab),
+			 NbObjs(prob->Objs.NbPtr), bLocalOpti(true), Heuristic(h), Limits(prob->Limits)
 {
 	cChromo **C;
 	unsigned int i;
@@ -116,10 +116,26 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RPoint& RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLimits(void)
+	RPoint& RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLimits(void)
 {
 	RPoint *pt=RPoint::GetPoint();
 
 	(*pt)=Limits;
 	return(*pt);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
+	void RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetAreaParams(const RPromCriterionParams& params)
+{
+	thDatas[0]->Heuristic->SetAreaParams(params);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
+	void RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetDistParams(const RPromCriterionParams& params)
+{
+	thDatas[0]->Heuristic->SetDistParams(params);
 }

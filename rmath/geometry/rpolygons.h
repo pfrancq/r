@@ -57,6 +57,7 @@ namespace RGeometry2D{
 class RPolygons : public RStd::RContainer<RPolygon,unsigned int,true,false>
 {
 public:
+
 	/**
 	* Construct a container of polygons.
 	*/
@@ -102,17 +103,22 @@ public:
 	/**
 	* Return true if the point is inside one of the polygons.
 	*/
-  bool IsIn(const RCoord X,const RCoord Y);
+	bool IsIn(const RCoord X,const RCoord Y);
 
 	/**
 	* Return true if the point is inside one of the polygons.
 	*/
-  bool IsIn(const RPoint &pt);
+	bool IsIn(const RPoint &pt);
 
 	/**
 	* Assign operator.
 	*/
 	RPolygons& operator=(const RPolygons &poly);
+
+	/**
+	* Save the polygons in a file.
+	*/
+	void Save(RTextFile& f);
 };
 
 

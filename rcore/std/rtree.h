@@ -51,7 +51,7 @@ namespace RStd{                      // Using RStd namespace
 //-----------------------------------------------------------------------------
 /**
 * This class implement a generic tree of node of class N. The class N must
-* derived	from the RNode<N,bool> class. The paremeter bAlloc specify if the
+* derived from the RNode<N,bool> class. The paremeter bAlloc specify if the
 * tree is responsible for the desallocation of the nodes. The parameter bOrder
 * specify if the nodes are ordered. Here is a example:
 * <pre>

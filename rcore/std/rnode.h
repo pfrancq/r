@@ -69,19 +69,19 @@ public:
 	/**
 	* Parent Node.
 	*/
-  N *Parent;
+	N *Parent;
 
 	/**
 	* Construct the node.
-  	* @param max		The size of initial array of pointer to child.
-  	* @param inc		The increment size for the array.
-  	*/
-  RNode(unsigned int max,unsigned int inc) throw(bad_alloc);
+	* @param max		The size of initial array of pointer to child.
+	* @param inc		The increment size for the array.
+	*/
+	RNode(unsigned int max,unsigned int inc) throw(bad_alloc);
 
 	/**
 	* Is used to compare two nodes. The function returns the same type of
-  	* information than the strcmp function from the standard C library.
-  	*/
+	* information than the strcmp function from the standard C library.
+	*/
 	virtual int Compare(RNode*);
 
 	/**
@@ -93,7 +93,7 @@ public:
 	/**
 	* Destruct the node.
 	*/
-  virtual ~RNode(void);
+	virtual ~RNode(void);
 };
 
 

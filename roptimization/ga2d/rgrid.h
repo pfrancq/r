@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RGrid.h
 
 	Grid for the 2D placement - Header
 
-	(C) 1998-2000 by P. Francq.
+	(C) 1998-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,25 +37,24 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rstd/rstd.h>
 using namespace RStd;
 #include <rgeometry/rpoint.h>
 using namespace RGeometry2D;
-#include <rga/robj2d.h>
-#include <rga/rfreepolygon.h>
-#include <rga/rfreepolygons.h>
-using namespace RGA;
+#include <rga2d/robj2d.h>
+#include <rga2d/rfreepolygon.h>
+#include <rga2d/rfreepolygons.h>
+using namespace RGA2D;
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
 * The RGrid class provides some functions to manipulate a grid of geometric
 * points.
 * @author Pascal Francq
@@ -117,8 +116,7 @@ public:
 	* @param x		X position.
 	* @param y		Y position.
 	*/
-   unsigned int GetObjId(RCoord x,RCoord y)
-	{RReturnValIfFail(OccupiedX,false); return(OccupiedX[x][y]);}
+   	unsigned int GetObjId(RCoord x,RCoord y) {RReturnValIfFail(OccupiedX,false); return(OccupiedX[x][y]);}
 
 	/**
 	* Clear the Grid.
@@ -216,7 +214,7 @@ public:
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA2D -------------------------------------------
 
 
 //-----------------------------------------------------------------------------

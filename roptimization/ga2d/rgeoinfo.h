@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RGeoInfo.h
 
 	Geometric information - Header
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,19 +37,20 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rstd/rstd.h>
 using namespace RStd;
 #include <rgeometry/rpoint.h>
 #include <rgeometry/rrect.h>
 #include <rgeometry/rpolygon.h>
 using namespace RGeometry2D;
-#include <rga/robj2d.h>
-#include <rga/rgrid.h>
+#include <rga2d/robj2d.h>
+#include <rga2d/rgrid.h>
+using namespace RGA2D;
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
 
 
@@ -63,7 +64,6 @@ class RGeoInfo;
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
 * The RGeoInfoConnector class provides a connector of a geometric information
 * concerning the placement of an object.
 * @author Pascal Francq
@@ -75,28 +75,71 @@ class RGeoInfoConnector
 	* Pointer to the real connector.
 	*/
 	RObj2DConnector* Con;
-	
+
 	/**
 	* Owner of the connector.
 	*/
 	RGeoInfo* Owner;
-	
+
 	/**
-	* Position of the connector in the geometric information.
+	* Number of position for the connector.
 	*/
-	RPoint Pos;
-	
+	unsigned int NbPos;
+
+	/**
+	* Positions of the connector in the geometric information.
+	*/
+	RPoint* Pos;
+
 public:
 
 	/**
 	* Constructor of the connector.
 	* @param con		"Real" Connector of this one.
 	* @param owner		Geometric Information of the connector.
-	* @param pos		Position of the connector.
 	*/	
-	RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner,const RPoint &pos);
+	RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner);
 	
+	/**
+	* Constructor of the connector.
+	* @param con		"Real" Connector of this one.
+	* @param owner		Geometric Information of the connector.
+	* @param pos		The position of the connector
+	*/	
+	RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner,const RPoint& pos);
+	
+		
+	/**
+	* This function compares two connectors and returns 0 if there are the same.
+	* This function is used for the class RContainer.
+	* @param c		Connector used for the comparaison.
+	*/
+	int Compare(const RGeoInfoConnector* c) {return(Con->Id-c->Con->Id);}
+	
+	/**	
+	* This function compares two connectors and returns 0 if there are the same.
+	* This function is used for the class RContainer.
+	* @param c		Connector used for the comparaison.
+	*/
+	int Compare(const RGeoInfoConnector& c) {return(Con->Id-c.Con->Id);}
+	
+	/**
+	* This function compares a connector and an identificator and returns 0 if
+	* there are the same.
+	* This function is used for the class RContainer.
+	* @param id		Identificator used for the comparaison.
+	*/
+	int Compare(const unsigned int id) {return(Con->Id-id);}
+		
+	/**
+	* Return the position of the connector in absolute (not relativ to the
+	* object).
+	*/
 	RPoint& GetPos(void);
+	
+	// friend classes
+	friend class RGeoInfo;
+	friend class RConnections;
 };
 
 
@@ -147,12 +190,32 @@ class RGeoInfo
 	RRect Rect;
 
 public:
-
+	
+	/**
+	* The connectors of this object
+	*/
+	RContainer<RGeoInfoConnector,unsigned int,true,true> Connectors;
+	
+	/**
+	* Construct a geometric information.
+	*/
+	RGeoInfo(void);
+	
+	/**
+	* Construct a geometric information.
+	*/
+	RGeoInfo(RPolygon* poly);
+		
 	/**
 	* Construct a geometric information.
 	*/
 	RGeoInfo(RObj2D *obj);
-
+	
+	/**
+	* Construct a geometric information from another one.
+	*/
+	RGeoInfo(RGeoInfo& info);
+	
 	/**
 	* Construct a geometric information from another one.
 	*/
@@ -209,10 +272,15 @@ public:
 	* Assign the geometric information to the position and update the grids with the
 	* identicator of the object.
 	* @param pos				Position to place.
-	* @param OccX				The grid with X as entry.
-	* @param OccY				The grid with Y as entry.
+	* @param grid				The grid.
 	*/
 	void Assign(const RPoint &pos,RGrid *grid);
+	
+	/**
+	* Assign the geometric information to the position.
+	* @param pos				Position to place.
+	*/
+	void Assign(const RPoint &pos) {Pos=pos;}
 
 	/**
 	* Compare function use for the RContainer class. Compare only the adress of the
@@ -333,34 +401,69 @@ public:
 	* Return the polygon representing the object to place.
 	*/
 	RPolygon* GetBound(void) {return(Bound);}
+	
+	/**
+	* Start the iterator to go through the connections.
+	*/
+	void StartCon(void);
+	
+	/**
+	* Test if the end of the connections are reached.
+	*/
+	bool EndCon(void);
+	
+		
+	/**
+	* Go to the next connections, if the end is reached, go to the beginning.
+	*/
+	void NextCon(void);
+	
+	/**
+	* Return the current connection.
+	*/
+	RConnection* GetCurrentCon(void);
+	
+	// friend classes
+	friend class RGeoInfos;
 };
 
 
 //-----------------------------------------------------------------------------
 /**
-* This class implements a container of geometric information.
+* The RGeoInfoContainer class provides a set of geometric information to be
+* considered like one entity.
 * @author Pascal Francq
-* @short Container of geometric information.
+* @short Geometric Information Container.
 */
-class RGeoInfos : public RStd::RContainer<RGeoInfo,unsigned int,false,false>
+class RGeoInfoContainer : public RGeoInfo
 {
-public:
+public:	
+	
+	/**
+	* Construct a geometric information.
+	*/
+	RGeoInfoContainer(void);	
+	
+	/**
+	* Construct a geometric information.
+	*/
+	RGeoInfoContainer(RObj2D* obj);
+		
+	/**
+	* Add a geometric information information to the container.
+	* @param info		The geometric information of the object.
+	*/
+	void Add(RGeoInfo *info);
 
 	/**
-	* Construct the container.
-	* @param nb		Number of geometric information that will contained.
+	* Does some calculation after each geometric informartion were added to the
+	* container.
 	*/
-	RGeoInfos(unsigned int nb);
-
-	/**
-	* Calculate the boundary rectangle of all the geometric information.
-	* @param rect		The rectangle that will be hold the result.
-	*/
-	void Boundary(RRect &rect);
+	void End(void);
 };
 
 
-}  //-------- End of namespace RGA --------------------------------------------
+}  //-------- End of namespace RGA2D ------------------------------------------
 
 
 //-----------------------------------------------------------------------------

@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RInst2D.h
 
 	Instance for 2D placement GA - Header
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,23 +37,24 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rga2d.h"
-#include "rplacementheuristic.h"
-#include "rplacementbottomleft.h"
-#include "rplacementedge.h"
-#include "rplacementcenter.h"
-using namespace RGA;
+// include files for R Project
+#include <rga2d/rga2d.h>
+#include <rga2d/rplacementheuristic.h>
+#include <rga2d/rplacementbottomleft.h>
+#include <rga2d/rplacementedge.h>
+#include <rga2d/rplacementcenter.h>
+#include <rga2d/rconnections.h>
+#include <rga2d/rproblem2d.h>
+using namespace RGA2D;
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
 * This is a class that holds all data needed by each thread for the 2D GA.
 * @author Pascal Francq
 * @short 2D GA "thread-dependent" data.
@@ -97,7 +98,7 @@ public:
 	* Heuristic Used.
 	*/
 	RPlacementHeuristic *Heuristic;
-
+	
 	/**
 	* Construct the data.
 	* @param owner		The instance of the problem.
@@ -118,7 +119,6 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
 * Instance for the 2D placement GA.
 * @author Pascal Francq
 * @short 2D GA Instance.
@@ -128,6 +128,11 @@ template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo>
 {
 public:
 
+	/**
+	* The problem.
+	*/
+	RProblem2D* Problem;
+	
 	/**
 	* Objects to place.
 	*/
@@ -142,7 +147,12 @@ public:
 	* Local Optimisation.
 	*/
 	bool bLocalOpti;
-
+	
+	/**
+	* Connections for the objects.
+	*/
+	RConnections *Cons;
+	
 protected:
 
 	/**
@@ -161,12 +171,10 @@ public:
 	* Construct the instance. The instance is not responsible for the desallocation
 	* of the objects to place.
 	* @param popsize			The size of the population.
-	* @param objs				The objects to place.
-	* @param nbobjs			Number of objects to place.
-	* @param limits			The limits for the placement.
+	* @param prob				Pointer to the problem.
 	* @param h					The heuristic that has to be used.
 	*/
-	RInst2D(unsigned int popsize,RObj2D** objs,unsigned int nbobjs,RPoint &limits,HeuristicType h) throw(bad_alloc);
+	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h) throw(bad_alloc);
 
 	/**
 	* Return the limits for the placement.
@@ -177,7 +185,19 @@ public:
 	* Return the heuristic type.
 	*/
 	inline HeuristicType GetHeuristic(void) { return(Heuristic); }
-
+	
+	/**
+	* Set the parameters for the "area" criterion.
+	* @param params		The parameters..
+	*/
+	void SetAreaParams(const RPromCriterionParams& params);
+	
+	/**
+	* Set the parameters for the "area" criterion.
+	* @param params		The parameters..
+	*/
+	void SetDistParams(const RPromCriterionParams& params);
+	
 	/**
 	* Return true if a local optimisation is needed.
 	*/
@@ -185,7 +205,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA2D -------------------------------------------
+
 
 //-----------------------------------------------------------------------------
 #endif

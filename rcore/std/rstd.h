@@ -190,7 +190,7 @@ namespace RStd{
 * standard operators with non standard classes.
 * @author Pascal Francq
 * @param C				The type of class.
-* @param Max      	Maximal size of the array (neested operators).
+* @param Max			Maximal size of the array (neested operators).
 */
 template<class C,unsigned long Max>
 	inline C* GetTemporaryObject(void)

@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPlacementEdge.h
 
 	Edge Heuristic for Placement - Implementation
 
-	(C) 1998-2000 by By P. Francq.
+	(C) 1998-2001 by By P. Francq.
 
 	Version $Revision$
 
@@ -32,9 +32,9 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rplacementedge.h"
-using namespace RGA;
+// include files for R Project
+#include <rga2d/rplacementedge.h>
+using namespace RGA2D;
 
 
 
@@ -45,16 +45,16 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPlacementEdge::RPlacementEdge(unsigned int maxobjs,bool calc,bool use,bool ori)
+RGA2D::RPlacementEdge::RPlacementEdge(unsigned int maxobjs,bool calc,bool use,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,ori)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-void RPlacementEdge::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs)
+void RGA2D::RPlacementEdge::Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid)
 {
-	RPlacementHeuristic::Init(limits,grid,objs,infos,nbobjs);
+	RPlacementHeuristic::Init(prob,infos,grid);
 	for(unsigned i=0;i<40;i++)
 		Levels[i].Set(0,0);
 	NbLevels=0;
@@ -66,7 +66,14 @@ void RPlacementEdge::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **in
 
 
 //-----------------------------------------------------------------------------
-RPoint& RPlacementEdge::NextObjectOri(void)
+void RGA2D::RPlacementEdge::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+{
+	Init(prob,infos->Tab,grid);
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RGA2D::RPlacementEdge::NextObjectOri(void)
 {
 	double FactorX,FactorY;
 	RPoint* Pos=RPoint::GetPoint();	
@@ -125,7 +132,7 @@ RPoint& RPlacementEdge::NextObjectOri(void)
 
 
 //-----------------------------------------------------------------------------
-void RPlacementEdge::Place(RPoint& pos)
+void RGA2D::RPlacementEdge::Place(RPoint& pos)
 {
 	unsigned int i,l;
 

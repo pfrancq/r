@@ -39,7 +39,7 @@
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,unsigned int id) throw(bad_alloc)
+	RGA::RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,unsigned int id) throw(bad_alloc)
 		: Instance(inst),Id(id),ToEval(true)
 {
 	Fitness=new cFit();
@@ -48,14 +48,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RChromo<cInst,cChromo,cFit,cThreadData>::Init(cThreadData*) throw(bad_alloc)
+	void RGA::RChromo<cInst,cChromo,cFit,cThreadData>::Init(cThreadData*) throw(bad_alloc)
 {
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-  RChromo<cInst,cChromo,cFit,cThreadData>& RChromo<cInst,cChromo,cFit,cThreadData>::
+  RGA::RChromo<cInst,cChromo,cFit,cThreadData>& RChromo<cInst,cChromo,cFit,cThreadData>::
 		operator=(const RChromo &chromo)
 {
 	Id=chromo.Id;
@@ -66,7 +66,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RChromo<cInst,cChromo,cFit,cThreadData>::~RChromo(void)
+	RGA::RChromo<cInst,cChromo,cFit,cThreadData>::~RChromo(void)
 {
 	if(Fitness) delete Fitness;
 }

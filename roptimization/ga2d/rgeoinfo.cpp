@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RGeoInfo.cpp
 
 	Geometric information - Implementation.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -30,9 +30,11 @@
 */
 
 
+
 //-----------------------------------------------------------------------------
-#include "rgeoinfo.h"
-using namespace RGA;
+// include files for R Project
+#include <rga2d/rgeoinfo.h>
+using namespace RGA2D;
 
 
 
@@ -43,17 +45,29 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGeoInfoConnector::RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner,const RPoint &pos)
-	: Con(con), Owner(owner), Pos(pos)
+RGA2D::RGeoInfoConnector::RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner)
+	: Con(con), Owner(owner)
 {
+	Pos=0;
 }
 
+
 //-----------------------------------------------------------------------------
-RPoint& RGeoInfoConnector::GetPos(void)
+RGA2D::RGeoInfoConnector::RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner,const RPoint& pos)
+	: Con(con), Owner(owner)
+{
+	Pos=new RPoint[1];
+	Pos[0]=pos;
+
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RGA2D::RGeoInfoConnector::GetPos(void)
 {
 	RPoint *pt=RPoint::GetPoint();
 	
-	(*pt)=Pos;
+	(*pt)=Pos[0]+Owner->GetPos();
 	return(*pt);
 }
 
@@ -65,16 +79,52 @@ RPoint& RGeoInfoConnector::GetPos(void)
 //
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGeoInfo::RGeoInfo(RObj2D *obj)
-	: Obj(obj), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(0),
-		Rects(0)
+//-----------------------------------------------------------------------------	
+RGA2D::RGeoInfo::RGeoInfo(void)
+	: Obj(0), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(0),
+		Rects(0), Connectors(10,5)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RGeoInfo::RGeoInfo(RGeoInfo *info)
+RGA2D::RGeoInfo::RGeoInfo(RPolygon* poly)
+	: Obj(0), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(poly),
+		Rects(0), Connectors(10,5)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+RGA2D::RGeoInfo::RGeoInfo(RObj2D *obj)
+	: Obj(obj), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(0),
+		Rects(0), Connectors(10,5)
+{
+	for(obj->Connectors.Start();!obj->Connectors.End();obj->Connectors.Next())
+		Connectors.InsertPtr(new RGeoInfoConnector(obj->Connectors(),this));
+}
+
+
+//-----------------------------------------------------------------------------
+RGA2D::RGeoInfo::RGeoInfo(RGeoInfo& info)
+	: Connectors(info.Connectors.NbPtr,info.Connectors.IncPtr)
+{
+	Obj=info.Obj;
+	Selected=info.Selected;
+	Pos=info.Pos;
+	Bound=info.Bound;
+	Ori=info.Ori;
+	Rects=info.Rects;
+	Rect=info.Rect;
+	Selected=info.Selected;
+	for(info.Connectors.Start();!info.Connectors.End();info.Connectors.Next())
+		Connectors.InsertPtr(new RGeoInfoConnector(info.Connectors()->Con,this,info.Connectors()->Pos));	
+}
+
+
+//-----------------------------------------------------------------------------
+RGA2D::RGeoInfo::RGeoInfo(RGeoInfo *info)
+	: Connectors(info->Connectors.NbPtr,info->Connectors.IncPtr)
 {
 	Obj=info->Obj;
 	Selected=info->Selected;
@@ -83,11 +133,14 @@ RGeoInfo::RGeoInfo(RGeoInfo *info)
 	Ori=info->Ori;
 	Rects=info->Rects;
 	Rect=info->Rect;
+	Selected=info->Selected;
+	for(info->Connectors.Start();!info->Connectors.End();info->Connectors.Next())
+		Connectors.InsertPtr(new RGeoInfoConnector(info->Connectors()->Con,this,info->Connectors()->Pos));	
 }
 
 
 //-----------------------------------------------------------------------------
-void RGeoInfo::Clear(void)
+void RGA2D::RGeoInfo::Clear(void)
 {
 	Selected=false;
 	Pos.Set(MaxCoord,MaxCoord);
@@ -98,17 +151,19 @@ void RGeoInfo::Clear(void)
 
 
 //-----------------------------------------------------------------------------
-void RGeoInfo::SetOri(char i)
+void RGA2D::RGeoInfo::SetOri(char i)
 {
 	Ori=i;
 	Bound=Obj->GetPolygon(i);
 	Rects=Obj->GetRects(i);
 	Bound->Boundary(Rect);
+	for(Connectors.Start(),Obj->Connectors.Start();!Connectors.End();Connectors.Next(),Obj->Connectors.Next())
+		Connectors()->Pos[0]=Obj->Connectors()->GetPos(i);
 }
 
 
 //-----------------------------------------------------------------------------
-RCoord RGeoInfo::GetArea(void)
+RCoord RGA2D::RGeoInfo::GetArea(void)
 {
 	if(Obj)
 		return(Obj->GetArea());
@@ -117,7 +172,7 @@ RCoord RGeoInfo::GetArea(void)
 
 
 //-----------------------------------------------------------------------------
-void RGeoInfo::Boundary(RRect &rect)
+void RGA2D::RGeoInfo::Boundary(RRect &rect)
 {
 	Bound->Boundary(rect);
 	rect.Pt1.X+=Pos.X;
@@ -128,7 +183,7 @@ void RGeoInfo::Boundary(RRect &rect)
 
 
 //-----------------------------------------------------------------------------
-void RGeoInfo::Assign(const RPoint &pos,RGrid *grid)
+void RGA2D::RGeoInfo::Assign(const RPoint &pos,RGrid *grid)
 {
 	RRect **rect;
 	unsigned int i;
@@ -140,7 +195,7 @@ void RGeoInfo::Assign(const RPoint &pos,RGrid *grid)
 
 
 //-----------------------------------------------------------------------------
-bool RGeoInfo::Test(RPoint &pos,RPoint &limits,RGrid *grid)
+bool RGA2D::RGeoInfo::Test(RPoint &pos,RPoint &limits,RGrid *grid)
 {
 	RRect Test;
 	RPoint *start,*end;
@@ -193,7 +248,7 @@ bool RGeoInfo::Test(RPoint &pos,RPoint &limits,RGrid *grid)
 
 
 //-----------------------------------------------------------------------------
-void RGeoInfo::PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid)
+void RGA2D::RGeoInfo::PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid)
 {
 	RPoint TestPos;
 	bool change=true;
@@ -227,7 +282,7 @@ void RGeoInfo::PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid)
 
 
 //-----------------------------------------------------------------------------
-void RGeoInfo::PushCenter(RPoint &pos,RPoint &limits,RGrid *grid)
+void RGA2D::RGeoInfo::PushCenter(RPoint &pos,RPoint &limits,RGrid *grid)
 {
 	bool PushLeft,PushBottom;
 	RPoint TestPos;
@@ -268,7 +323,7 @@ void RGeoInfo::PushCenter(RPoint &pos,RPoint &limits,RGrid *grid)
 
 
 //-----------------------------------------------------------------------------
-bool RGeoInfo::Overlap(RGeoInfo *info)
+bool RGA2D::RGeoInfo::Overlap(RGeoInfo *info)
 {
 	RRect **rect1,**rect2;
 	unsigned int i,j;
@@ -281,7 +336,7 @@ bool RGeoInfo::Overlap(RGeoInfo *info)
 		for(j=info->Rects->NbPtr+1,rect2=info->Rects->Tab;--j;rect2++)
 		{
 			R2=(**rect2);
-			R2+=Pos;
+			R2+=info->Pos;
 			if(R1.Overlap(&R2))
 				return(true);
     }
@@ -291,7 +346,7 @@ bool RGeoInfo::Overlap(RGeoInfo *info)
 
 
 //-----------------------------------------------------------------------------
-RPoint& RGeoInfo::GetPos(void)
+RPoint& RGA2D::RGeoInfo::GetPos(void)
 {
 	RPoint *pt=RPoint::GetPoint();
 
@@ -301,7 +356,7 @@ RPoint& RGeoInfo::GetPos(void)
 
 
 //-----------------------------------------------------------------------------
-RPoint& RGeoInfo::operator()(void)
+RPoint& RGA2D::RGeoInfo::operator()(void)
 {
 	RPoint *Pt=RPoint::GetPoint();
 
@@ -312,7 +367,7 @@ RPoint& RGeoInfo::operator()(void)
 
 
 //-----------------------------------------------------------------------------
-bool RGeoInfo::IsValid(void) const
+bool RGA2D::RGeoInfo::IsValid(void) const
 {
 	// Test Position
 	if((Pos.X==MaxCoord)||(Pos.Y==MaxCoord))
@@ -322,16 +377,26 @@ bool RGeoInfo::IsValid(void) const
 
 
 //-----------------------------------------------------------------------------
-RGeoInfo& RGeoInfo::operator=(const RGeoInfo &info)
+RGeoInfo& RGA2D::RGeoInfo::operator=(const RGeoInfo &info)
 {
+	unsigned int i;
+	RGeoInfoConnector **tab;
+	
 	Pos=info.Pos;
 	Bound=info.Bound;
+	Selected=info.Selected;
+	Obj=info.Obj;
+	Rects=info.Rects;
+	Rect=info.Rect;
+	Connectors.Clear();
+	for(i=info.Connectors.NbPtr+1,tab=info.Connectors.Tab;--i;tab++)
+		Connectors.InsertPtr(new RGeoInfoConnector((*tab)->Con,this,(*tab)->Pos));		
 	return(*this);
 }
 
 
 //-----------------------------------------------------------------------------
-bool RGeoInfo::IsIn(RPoint pos)
+bool RGA2D::RGeoInfo::IsIn(RPoint pos)
 {
 	unsigned int i;
 	RRect **rect;
@@ -345,7 +410,7 @@ bool RGeoInfo::IsIn(RPoint pos)
 
 
 //-----------------------------------------------------------------------------
-void RGeoInfo::Add(RPolygons &polys)
+void RGA2D::RGeoInfo::Add(RPolygons &polys)
 {
   RPolygon *p;
 
@@ -356,7 +421,7 @@ void RGeoInfo::Add(RPolygons &polys)
 
 
 //-----------------------------------------------------------------------------
-RPolygon& RGeoInfo::GetPolygon(void)
+RPolygon& RGA2D::RGeoInfo::GetPolygon(void)
 {
 	RPolygon *poly=RPolygon::GetPolygon();
 
@@ -366,36 +431,86 @@ RPolygon& RGeoInfo::GetPolygon(void)
 }
 
 
+//-----------------------------------------------------------------------------
+void RGA2D::RGeoInfo::StartCon(void)
+{
+	bool Ok=false;
+	
+	Obj->Connectors.Start();
+	while((!Obj->Connectors.End())&&(!Ok))
+	{
+		Obj->Connectors()->Connections.Start();
+		if(Obj->Connectors()->Connections.End())
+			Obj->Connectors.Next();
+		else
+			Ok=true;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+bool RGA2D::RGeoInfo::EndCon(void)
+{
+	return(Obj->Connectors.End());
+}
+
+
+//-----------------------------------------------------------------------------
+void RGA2D::RGeoInfo::NextCon(void)
+{
+	Obj->Connectors()->Connections.Next();
+	if(Obj->Connectors()->Connections.End())
+	{
+		bool Ok=false;
+		Obj->Connectors.Next();
+     	while((!Obj->Connectors.End())&&(!Ok))
+     	{
+     		Obj->Connectors()->Connections.Start();
+     		if(Obj->Connectors()->Connections.End())
+     			Obj->Connectors.Next();
+			else
+     			Ok=true;
+		}
+	}
+}
+	
+
+//-----------------------------------------------------------------------------	
+RConnection* RGA2D::RGeoInfo::GetCurrentCon(void)
+{
+	return(Obj->Connectors()->Connections());
+}
+
+
 
 //-----------------------------------------------------------------------------
 //
-// RGeoInfos
+// Class "RGeoInfoContainer"
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGeoInfos::RGeoInfos(unsigned int nb)
-	: RContainer<RGeoInfo,unsigned int,false,false>(nb,1)
+RGA2D::RGeoInfoContainer::RGeoInfoContainer(void)
+	: RGeoInfo()
 {
 }
 
 
 //-----------------------------------------------------------------------------
-void RGeoInfos::Boundary(RRect &rect)
+RGA2D::RGeoInfoContainer::RGeoInfoContainer(RObj2D* obj)
+	: RGeoInfo(obj)
 {
+}
 
-	RGeoInfo **ptr;
-	unsigned int i;
-	RRect tmp;
 
-	rect.Pt1.X=rect.Pt1.Y=MaxCoord;
-	rect.Pt2.X=rect.Pt2.Y=0;
-	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-	{
-		(*ptr)->Boundary(tmp);
-		if(tmp.Pt1.X<rect.Pt1.X) rect.Pt1.X=tmp.Pt1.X;
-		if(tmp.Pt1.Y<rect.Pt1.Y) rect.Pt1.Y=tmp.Pt1.Y;
-		if(tmp.Pt2.X>rect.Pt2.X) rect.Pt2.X=tmp.Pt2.X;
-		if(tmp.Pt2.Y>rect.Pt2.Y) rect.Pt2.Y=tmp.Pt2.Y;
-	}
+
+//-----------------------------------------------------------------------------
+void RGA2D::RGeoInfoContainer::Add(RGeoInfo* /*info*/)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+void RGA2D::RGeoInfoContainer::End(void)
+{
 }

@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RChromo2D.hh
 
 	Chromosome for 2D placement GA - Inline Implementation
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -39,7 +39,7 @@
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+	RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc)
 			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id), Heuristic(0), Grid(0),
 				Objs(0), NbObjs(0), thOrder(0), thObjs(0),
@@ -51,7 +51,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		Init(cThreadData *thData) throw(bad_alloc)
 {
 	unsigned int i;
@@ -60,6 +60,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 	// Call the initialisation of the parent
 	RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
+
+	// Init "thread-dependent" data
+	thOrder=thData->Order;
+	thOrder2=thData->Order2;
+	thObjs=thData->tmpObjs;
+	thObj1=thData->tmpObj1;
+	thObj2=thData->tmpObj2;
+	Heuristic=thData->Heuristic;
 
 	// If objects to place -> create the information and selection
 	if(NbObjs)
@@ -81,20 +89,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 	// Init Occupied	(Add 1 Because <= Limits)
 	Grid=new RGrid(Limits);
-
-	// Init "thread-dependent" data
-	thOrder=thData->Order;
-	thOrder2=thData->Order2;
-	thObjs=thData->tmpObjs;
-	thObj1=thData->tmpObj1;
-	thObj2=thData->tmpObj2;
-	Heuristic=thData->Heuristic;
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	inline void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+	inline void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		ClearInfos(void)
 {
 	unsigned int i;
@@ -112,7 +112,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	inline void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+	inline void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		thVarsClear(void)
 {
 	thNbObjs=0;
@@ -124,146 +124,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		GetSetOfObjs(RObj2DContainer* /*obj*/,bool* /*selected*/)
-{
-/*	unsigned int idx;												// Id of the current object
-	bool bContinue;												// Continue to construct
-	unsigned long Current;										// Current index in obj
-	RObj2D *CurObj;												// Current object use to search others
-	RGeoInfo* CurInfo;											// Current geometric information
-	RPoint *start,*end;												
-	unsigned int nbpts;
-	RCoord X,Y,FindX,FindY;
-	int FromDir;		// 0=left ; 1=right ; 2=up ; 3=down
-
-	// Find an object not used and add it to selection
-	RRandom::randorder<unsigned int>(thOrder,NbObjs);
-	idx=0;
-	while(selected[thOrder[idx]]) idx++;
-	idx=thOrder[idx];
-	CurObj=Objs[idx];
-	CurInfo=Infos[idx];	
-	selected[idx]=true;
-	obj->AddObj(CurObj,CurInfo);
-	bContinue=true;
-	Current=0;
-	start=CurInfo->Bound->GetBottomLeft();
-	end=CurInfo->Bound->GetConX(start);
-	FromDir=0;
-	X=start->X+CurInfo->Pos.X;
-	Y=start->Y+CurInfo->Pos.Y;
-	nbpts=CurInfo->Bound->NbPtr-1;
- 	
-	// Select other objects
-	while(bContinue)
-	{
-		// Where to search for an object
-		switch(FromDir)
-		{
-			case 0: // from left
-				FindX=X;
-				FindY=Y-1;
-				break;
-
-			case 1: // from right
-				FindX=X;
-				FindY=Y+1;
-				break;
-
-			case 2: // from bottom
-				FindY=Y;
-				FindX=X+1;
-				break;
-
-			case 3: // from up
-				FindY=Y;
-				FindX=X-1;
-				break;
-		}
-
-		// Is in (FindX,FindY) an object to select
-		if((FindX>0)&&(FindY>0)&&(FindX<Limits.X)&&(FindY<Limits.Y))
-		{
-  		idx=Grid->GetObjId(FindX,FindY);
-  		if((idx!=NoObject)&&(!selected[idx]))	// Find an object not selected
-  		{
-  			obj->AddObj(Objs[idx],Infos[idx]);
-  			selected[idx]=true;
-      }
-		}
-
-		// If end of an edge
-		if((X==end->X+CurInfo->Pos.X)&&(Y==end->Y+CurInfo->Pos.Y))
-		{
-			start=end;
-			nbpts--;			// Next point
-			X=start->X+CurInfo->Pos.X;
-			Y=start->Y+CurInfo->Pos.Y;
-			if(FromDir<2)	// Go to up/bottom
-			{
-				end=CurInfo->Bound->GetConY(start);
-				if(start->Y<end->Y) FromDir=2; else FromDir=3;
-			}
-			else		// Go to left/right
-			{
-				end=CurInfo->Bound->GetConX(start);
-				if(start->X<end->X) FromDir=0; else FromDir=1;
-			}
-		}
-
-		// Go to next pos
-		switch(FromDir)
-		{
-			case 0: // from left
-				X++;
-				break;
-
-			case 1: // from right
-				X--;
-				break;
-
-			case 2: // from bottom
-				Y++;
-				break;
-
-			case 3: // from up
-				Y--;
-				break;
-		}
-
-		// If all the current object was search -> new object
-		if(!nbpts)
-		{
-			Current++;
-			if(Current==obj->Nb)	// Scanning for all objects selected done
-				bContinue=false;
-			else
-			{
-				idx=obj->Ids[Current];
-				CurObj=Objs[idx];
-				CurInfo=Infos[idx];	
-				start=CurInfo->Bound->GetBottomLeft();
-				end=CurInfo->Bound->GetConX(start);
-				X=start->X+CurInfo->Pos.X;
-				Y=start->Y+CurInfo->Pos.Y;
-				FromDir=0;
-				nbpts=CurInfo->Bound->NbPtr-1;	
-			}
-		}
-
-		// Test if continue to add other objects
-		if(obj->Nb>=(NbObjs/3)) bContinue=false;
-	}
-
-	obj->EndObjs();*/
-	return(true);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		FillObjs(RObj2D **objs,unsigned int &nbobjs)
 {
 	unsigned int i;
@@ -284,57 +145,59 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RandomConstruct(void)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
-	Heuristic->Run(Limits,Grid,Objs,Infos,NbObjs);
+	Heuristic->Run(Instance->Problem,Infos,Grid);
+	RRect r=Heuristic->GetResult();
+	ActLimits.Set(r.Width(),r.Height());
 	return(true);
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		Crossover(cChromo* parent1,cChromo* /*parent2*/)
+	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+		Crossover(cChromo* /*parent1*/,cChromo* /*parent2*/)
 {
-	RGeoInfo *info;
-
-	// Init Part
+//	RGeoInfo *info;
+//
+//	// Init Part
 	memset(Selected,0,NbObjs*sizeof(bool));						// No object selected
-	thVarsClear();															// Clear all temporary variables
-
-	// Select objs in parent1 & parent2
-	parent1->GetSetOfObjs(thObj1,Selected);						
-//	parent2->GetSetOfObjs(thObj2,Selected);						
-
-	// Put the rest of the objects & apply the placement heuristic
-	FillObjs(thObjs,thNbObjs);												
-	Heuristic->Run(Limits,Grid,thObjs,Infos,thNbObjs);
-
-	// Remplace container by objects
-	info=Infos[NbObjs];
-/*	if((info->Pos.X<MaxCoord)&&(info->Pos.Y<MaxCoord))
-		thObj1->Assign(Infos,Grid,info->Pos);*/
-//	info=Infos[NbObjs+1];
-//	thObj2->Assign(Infos,OccupiedX,OccupiedY,info->Pos.X,info->Pos.Y);
+//	thVarsClear();															// Clear all temporary variables
+//
+//	// Select objs in parent1 & parent2
+//	parent1->GetSetOfObjs(thObj1,Selected);						
+////	parent2->GetSetOfObjs(thObj2,Selected);						
+//
+//	// Put the rest of the objects & apply the placement heuristic
+//	FillObjs(thObjs,thNbObjs);												
+////	Heuristic->Run(Limits,Grid,Infos,0,thNbObjs);
+//
+//	// Remplace container by objects
+//	info=Infos[NbObjs];
+///*	if((info->Pos.X<MaxCoord)&&(info->Pos.Y<MaxCoord))
+//		thObj1->Assign(Infos,Grid,info->Pos);*/
+////	info=Infos[NbObjs+1];
+////	thObj2->Assign(Infos,OccupiedX,OccupiedY,info->Pos.X,info->Pos.Y);
 	return(true);
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void)
+	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
-	Heuristic->Run(Limits,Grid,Objs,Infos,NbObjs);
+//	Heuristic->Run(Limits,Grid,Infos,0,NbObjs);
 	return(true);
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void)
+	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void)
 {
 	unsigned int i,j;
 	RGeoInfo **infoi,**infoj;
@@ -360,7 +223,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
   RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>&
-		RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::operator=(const RChromo2D &chromo)
+		RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::operator=(const RChromo2D &chromo)
 {
 	unsigned int i;
 	cInfo **ptr,**ptr2;
@@ -375,7 +238,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RObj2D* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetObj(RCoord X,RCoord Y)
+	RObj2D* RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetObj(RCoord X,RCoord Y)
 {
 	unsigned int obj;
 	
@@ -390,7 +253,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	cInfo* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetInfo(RCoord X,RCoord Y)
+	cInfo* RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetInfo(RCoord X,RCoord Y)
 {
 	unsigned int obj;
 	
@@ -405,7 +268,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetActLimits(void)
+	RPoint& RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetActLimits(void)
 {
 	RPoint *pt=RPoint::GetPoint();
 
@@ -416,7 +279,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLevel(unsigned int i)
+	RPoint& RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLevel(unsigned int i)
 {
 	RPoint *pt=RPoint::GetPoint();
 
@@ -427,7 +290,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::~RChromo2D(void)
+	RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::~RChromo2D(void)
 {
 	cInfo **ptr;
 	unsigned int i;

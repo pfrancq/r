@@ -2,12 +2,11 @@
 
 	R Project Library
 
+	RProblem2D.h
 
-	RFreePolygons.h
+	2D Placement Problem - Header.
 
-	Description - Header.
-
-	(c) 2000-2001 by P. Francq.
+	(c) 2001 by P. Francq.
 
 	Version $Revision$
 
@@ -32,16 +31,20 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RFreePolygonsH
-#define RFreePolygonsH
+#ifndef RProblem2DH
+#define RProblem2DH
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
+#include <rstd/rxmltag.h>
 using namespace RStd;
-#include <rga2d/rfreepolygon.h>
-using namespace RGA2D;
+#include <rgeometry/rpoint.h>
+using namespace RGeometry2D;
+#include <rga2d/robj2d.h>
+#include <rga2d/rconnections.h>
+using namespace RGA;
 
 
 //-----------------------------------------------------------------------------
@@ -50,42 +53,79 @@ namespace RGA2D{
 
 
 //-----------------------------------------------------------------------------
-// Forward declaration
-class RGeoInfo;
-
-
-//-----------------------------------------------------------------------------
 /**
-* The RFreePolygons provides a representation for a container of polygons.
+* The RProblem2D class provides a representation for a 2D placement problem.
 * @author Pascal Francq
-* @short Container of free polygons.
+* @short 2D Placement Problem
 */
-class RFreePolygons : public RContainer<RFreePolygon,unsigned int,true,false>
-{
+class RProblem2D
+{	
 public:
+	
+	/**
+	* Limits for the construction.
+	*/
+	RPoint Limits;
 
 	/**
-	* Construct the container.
+	* Object representing the "Problem".
 	*/
-	RFreePolygons(void);
+	RObj2D Problem;
 
 	/**
-	* Construct the container from another one.
+	* Objects.
 	*/
-	RFreePolygons(RFreePolygons *cont);
+	RContainer<RObj2D,unsigned int,true,true> Objs;
+	
+	/**
+	* Connections.
+	*/
+	RConnections Cons;
 
 	/**
-	* Calculate a position for the given geometric information.
-	* @param info	The object to place.
-	* @return	The function returns a valid position the object could be
-	*				placed.
+	* Constructor of the problem.
 	*/
-	RPoint& CanPlace(RGeoInfo *info);
+	RProblem2D(void);
+	
+	/**
+	* Load a problem from a XML file.
+	* @param name		Name of the XML file.
+	*/
+	void Load(const char* name);
 
 	/**
-	* Derstruct the container.
+	* Clears the problem.
 	*/
-	virtual ~RFreePolygons(void);
+	void Clear(void);
+
+protected:
+
+	/**
+	* Create an object from a definition tag.
+	* @param o		Tag representing an object.
+	* @param ts		Container holding the templates.
+	*/
+	void CreateObj(RXMLTag* o,RContainer<RObj2D,unsigned int,true,true>& ts);
+
+	/**
+	* Create a connector from a tag.
+	* @param c		Tag representing the connector.
+	* @param obj	Object holding a connector (if 0, connector of problem).
+	* @param t		Transalation to do for the place.
+	*/
+	void CreateConnector(RXMLTag* c,RObj2D* obj,const RPoint& t);
+
+	/**
+	* Create a net from a tag.
+	* @param n		Tag representing the net.
+	*/
+	void CreateNet(RXMLTag* n);
+
+public:
+	/**
+	* Destructor of the problem.
+	*/
+	~RProblem2D(void);
 };
 
 

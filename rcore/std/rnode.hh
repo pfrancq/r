@@ -39,7 +39,7 @@
 
 //-----------------------------------------------------------------------------
 template<class N,bool bOrder>
-	RNode<N,bOrder>::RNode(unsigned int max,unsigned int inc) throw(bad_alloc)
+	RStd::RNode<N,bOrder>::RNode(unsigned int max,unsigned int inc) throw(bad_alloc)
 		: RContainer<N,unsigned int,false,bOrder>(max,inc), Parent(0)
 {
 }
@@ -47,7 +47,7 @@ template<class N,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class N,bool bOrder>
-	int RNode<N,bOrder>::Compare(RNode*)
+	int RStd::RNode<N,bOrder>::Compare(RNode*)
 {
 	return(-1);
 }
@@ -55,7 +55,7 @@ template<class N,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class N,bool bOrder>
-	void RNode<N,bOrder>::InsertNode(RNode<N,bOrder> *node)
+	void RStd::RNode<N,bOrder>::InsertNode(RNode<N,bOrder> *node)
 {
 	InsertPtr(node);
 	node->Parent=this;
@@ -64,7 +64,7 @@ template<class N,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class N,bool bOrder>
-	RNode<N,bOrder>::~RNode(void)
+	RStd::RNode<N,bOrder>::~RNode(void)
 {
 }
 

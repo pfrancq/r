@@ -44,20 +44,29 @@ using namespace RStd;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RXMLStruct::RXMLStruct(void)
+RStd::RXMLStruct::RXMLStruct(void)
  : RTree<RXMLTag,true,false>(30,15)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RXMLTag* RXMLStruct::GetTag(const char* name)
+RXMLTag* RStd::RXMLStruct::GetTag(const char* name)
 {
 	return(GetPtr<const char*>(name,false));
 }
 
 
 //-----------------------------------------------------------------------------
-RXMLStruct::~RXMLStruct(void)
+RXMLTag* RStd::RXMLStruct::GetTag(const char* name,RXMLTag* parent)
+{
+	if(!parent)
+		return(0);
+	return(parent->GetPtr<const char*>(name,false));
+}
+
+
+//-----------------------------------------------------------------------------
+RStd::RXMLStruct::~RXMLStruct(void)
 {
 }

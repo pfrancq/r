@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPlacementBottomLeft.h
 
 	Bottom Left Heuristic for Placement - Header
 
-	(C) 1998-2000 by P. Francq.
+	(C) 1998-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,20 +37,19 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rplacementheuristic.h"
+// include files for R Project
+#include <rga2d/rplacementheuristic.h>
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGAH
 * This class implements a bottom-left heuristic.
-* This heuristic hanbdles objects "line after line". The first object is place
+* This heuristic handles objects "line after line". The first object is place
 * in bottom-left part of the rectangle representing the limits. After that, the
 * heuristic try to place so much objects as possible to the right of the first
 * object. When it is not more possible, the next object is place top of the
@@ -82,23 +81,17 @@ public:
 	*/
 	RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,bool ori=false);
 
-	/**
-	* Initialize the heuristic.
-	* @param limits		Limits for the placement.
-	* @param grid			Pointer to the grid.
-	* @param objs			Pointer to the objects.
-	* @param infos			Pointer to the geometric information.
-	* @param nbobjs		Number of objects to place.
-	*/
-	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
-
+	virtual void Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
+	
+	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
+	
 	virtual RPoint& NextObjectOri(void);
 	
 	virtual void Place(RPoint& pos);
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA2D -------------------------------------------
 
 
 //-----------------------------------------------------------------------------

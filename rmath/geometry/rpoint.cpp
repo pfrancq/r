@@ -50,14 +50,14 @@ using namespace RGeometry2D;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPoint::RPoint(void)
+RGeometry2D::RPoint::RPoint(void)
 {
 	X=Y=0;
 }
 
 
 //-----------------------------------------------------------------------------
-RPoint::RPoint(const RCoord x,const RCoord y)
+RGeometry2D::RPoint::RPoint(const RCoord x,const RCoord y)
 {
 	X=x;
 	Y=y;
@@ -65,7 +65,7 @@ RPoint::RPoint(const RCoord x,const RCoord y)
 
 
 //-----------------------------------------------------------------------------
-RPoint::RPoint(const RPoint& pt)
+RGeometry2D::RPoint::RPoint(const RPoint& pt)
 {
 	X=pt.X;
 	Y=pt.Y;
@@ -73,7 +73,7 @@ RPoint::RPoint(const RPoint& pt)
 
 
 //-----------------------------------------------------------------------------
-RPoint::RPoint(const RPoint *pt)
+RGeometry2D::RPoint::RPoint(const RPoint *pt)
 {
 	RReturnIfFail(pt);
 	if(!pt) return;
@@ -83,7 +83,7 @@ RPoint::RPoint(const RPoint *pt)
 
 
 //-----------------------------------------------------------------------------
-double RPoint::EuclideanDist(const RPoint &pt) const
+double RGeometry2D::RPoint::EuclideanDist(const RPoint &pt) const
 {
 	double dx,dy;
 	
@@ -94,14 +94,14 @@ double RPoint::EuclideanDist(const RPoint &pt) const
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPoint::GetPoint(void)
+RPoint* RGeometry2D::RPoint::GetPoint(void)
 {
 	return(GetTemporaryObject<RPoint,30>());
 }
 
 
 //-----------------------------------------------------------------------------
-RDirection RPoint::Classify(const RPoint& p0,const RPoint& p1)
+RDirection RGeometry2D::RPoint::Classify(const RPoint& p0,const RPoint& p1)
 {
 	RPoint a=p1-p0;
 	RPoint b=(*this)-p0;
@@ -118,7 +118,7 @@ RDirection RPoint::Classify(const RPoint& p0,const RPoint& p1)
 
 
 //-----------------------------------------------------------------------------
-RDirection RPoint::Classify(const RPoint* p0,const RPoint* p1)
+RDirection RGeometry2D::RPoint::Classify(const RPoint* p0,const RPoint* p1)
 {
 	RPoint a=(*p1)-(*p0);
 	RPoint b=(*this)-(*p0);
@@ -135,10 +135,9 @@ RDirection RPoint::Classify(const RPoint* p0,const RPoint* p1)
 
 
 //-----------------------------------------------------------------------------
-void RPoint::ChangeOrientation(ROrientation o)
+void RGeometry2D::RPoint::ChangeOrientation(ROrientation o)
 {
-	RCoord factx=1,facty=1,i,oldx,oldy;
-	RPoint **ptr;
+	RCoord factx=1,facty=1,oldx,oldy;
 	double co=1,si=0;
 
 	// Determine scale and rotation
@@ -160,6 +159,13 @@ void RPoint::ChangeOrientation(ROrientation o)
 }
 
 
+//-----------------------------------------------------------------------------
+void RGeometry2D::RPoint::Save(RTextFile& f)
+{
+	f<<X<<Y<<endl;
+}
+
+
 
 //-----------------------------------------------------------------------------
 //
@@ -169,7 +175,7 @@ void RPoint::ChangeOrientation(ROrientation o)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPoint* RPoints::FindBottom(RPoint *pt,RPolygons *polys)
+RPoint* RGeometry2D::RPoints::FindBottom(RPoint *pt,RPolygons *polys)
 {
 	RPoint *Activ,**point;
 	unsigned int i;

@@ -51,6 +51,7 @@
 // include files for R Project
 #include <rstd/rstring.h>
 #include <rstd/rcontainer.h>
+#include <rstd/rmsg.h>
 #include <rstd/rtextfile.h>
 using namespace RStd;
 #include <rmath/random.h>

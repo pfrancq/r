@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPlacementCenter.h
 
 	Center Heuristic for Placement - Header
 
-	(C) 1998-2000 by P. Francq.
+	(C) 1998-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,20 +37,19 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rpromethee/rpromethee.h>
 using namespace RPromethee;
-#include <rga/rplacementheuristic.h>
+#include <rga2d/rplacementheuristic.h>
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup 2DGAH
 * The RPlacementCenter class provides the center heuristic.
 * The heuristic places the first object in the center of the rectangle
 * representing the limits. After that, the objects are placed so that the
@@ -104,12 +103,6 @@ class RPlacementCenter : public RPlacementHeuristic
 	*/
 	RPoint HoldLimits;
 
-	/**
-	* Minimal distance between current position and best position if total area
-	* is smaller.
-	*/
-	RCoord MinDist;
-	
 public:
 
 	/**
@@ -121,16 +114,10 @@ public:
 	*/
 	RPlacementCenter(unsigned int maxobjs,bool calc,bool use,bool ori=false);
 
-	/**
-	* Initialize the heuristic.
-	* @param limits		Limits for the placement.
-	* @param grid			Pointer to the grid.
-	* @param objs			Pointer to the objects.
-	* @param infos			Pointer to the geometric information.
-	* @param nbobjs		Number of objects to place.
-	*/
-	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
-
+	virtual void Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
+	
+	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
+	
 	/**
 	* Add the parameters for a solution for Prométhée.
 	* @param k		Kernel for Prométhée.
@@ -156,7 +143,7 @@ public:
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA2D -------------------------------------------
 
 
 //-----------------------------------------------------------------------------

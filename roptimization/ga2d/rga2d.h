@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RGA2D.h
 
 	2D Placement Genetic Algorithm - Header
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,22 +37,26 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rga.h"
+// include files for R Project
+#include <rga/rga.h>
 using namespace RGA;
 #include <rgeometry/rrect.h>
 #include <rgeometry/rpolygon.h>
 using namespace RGeometry2D;
 
+
+//-----------------------------------------------------------------------------
 /**
-* \defgroup 2DGA 2D-Genetic Algorithm.
+* \namespace RGA2D
+* \brief Genetic Algorithm Classes for 2D placement.
 *
-* This classes represent a genetic algorithm for the 2D placement of polygons.
+* This namespace declares classes resolving 2D placement with Genetic
+* Algorithms.
 */
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
 
 
@@ -68,32 +72,32 @@ template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> clas
 
 //-----------------------------------------------------------------------------
 // Heuristic Types
-enum HeuristicType{BottomLeft,Edge,Center};
+enum HeuristicType{BottomLeft=0,Edge=1,Center=2};
 
 
-}//------- End of namespace RGA ---------------------------------------------
+}//------- End of namespace RGA2D ---------------------------------------------
 
 
 //-----------------------------------------------------------------------------
-// include files for GA
-#include "rgeoinfo.h"
-#include "robj2d.h"
-#include "rinst2d.h"
-#include "rchromo2d.h"
+// include files for RGA2D
+#include <rga2d/rgeoinfo.h>
+#include <rga2d/robj2d.h>
+#include <rga2d/rinst2d.h>
+#include <rga2d/rchromo2d.h>
 using namespace RGA;
 
 
 //-----------------------------------------------------------------------------
-namespace RGA{
+namespace RGA2D{
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // Definitions of templates
-#include "rinst2d.hh"
-#include "rchromo2d.hh"
+#include <rga2d/rinst2d.hh>
+#include <rga2d/rchromo2d.hh>
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA2D -------------------------------------------
 
 
 //-----------------------------------------------------------------------------
