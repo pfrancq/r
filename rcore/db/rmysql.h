@@ -83,7 +83,7 @@ public:
 	* @returns Pointer to a C string.
 	*/
 	const char* GetError(void) const
-		{return(Error());}
+		{return(Error);}
 };
 
 

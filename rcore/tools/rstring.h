@@ -4,7 +4,7 @@
 
 	RString.h
 
-	String - Header.
+	Unicode String - Header.
 
 	Copyright 1999-2003 by the Université Libre de Bruxelles.
 
@@ -38,18 +38,16 @@
 #ifndef RString_H
 #define RString_H
 
+//------------------------------------------------------------------------------
+// include file for ANSI C/C++
+#include <string>
+
 
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rcursor.h>
-
-
-//------------------------------------------------------------------------------
-// Generic defines
-#ifndef __RMAXSTRING__
-	#define __RMAXSTRING__ 30
-#endif
+#include <rstd/rchar.h>
 
 
 //------------------------------------------------------------------------------
@@ -58,9 +56,10 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-/** This class implements the traditional "C string" (char*) as a class.
+/**
+* This class implements a unicode string (RChar*) as a class.
 * @author Pascal Francq
-* @short String Class
+* @short Unicode String
 */
 class RString
 {
@@ -69,7 +68,7 @@ protected:
 	/**
 	* The Text containing the string.
 	*/
-	char* Text;
+	RChar* Text;
 
 	/**
 	* The length of the string.
@@ -88,11 +87,27 @@ public:
 	*/
 	RString(void) throw(bad_alloc);
 
+protected:
+
+	/**
+	* Verify if the string can hold maxlen characters and extend the array if
+	* necessary.
+	*/
+	inline void Verify(const unsigned int maxlen) throw(bad_alloc);
+
+public:
+
 	/**
 	* Construct a string from a "C string".
 	* @param text           The "C string" used as reference.
 	*/
 	RString(const char* text) throw(bad_alloc);
+
+	/**
+	* Construct a string from a string.
+	* @param text           The string used as reference.
+	*/
+	RString(const std::string& text) throw(bad_alloc);
 
 	/**
 	* Construct an empty string with a maximal size.
@@ -123,6 +138,11 @@ public:
 	RString& operator=(const char* text) throw(bad_alloc);
 
 	/**
+	* Assignment operator using a string.
+	*/
+	RString& operator=(const string& text) throw(bad_alloc);
+
+	/**
 	* Copy a certain number of characters in the string.
 	* @param text           Text to copy.
 	* @param nb             Numbre of characters to copy.
@@ -130,21 +150,16 @@ public:
 	void Copy(const char* text,unsigned int nb);
 
 	/**
+	* Copy a certain number of characters in the string.
+	* @param text           Text to copy.
+	* @param nb             Numbre of characters to copy.
+	*/
+	void Copy(const RChar* text,unsigned int nb);
+
+	/**
 	* Make a copy a return a pointer to it.
 	*/
-	char* StrDup(void) const throw(bad_alloc);
-
-	/**
-	* Transform a character to lowercase. This function takes care of the
-	* special characters like 'é'.
-	*/
-	static char ToLower(const char c);
-
-	/**
-	* Transform a character to uppercase. This function takes care of the
-	* special characters like 'é'.
-	*/
-	static char ToUpper(const char c);
+	RChar* StrDup(void) const throw(bad_alloc);
 
 	/**
 	* Transform the string to uppercase.
@@ -152,10 +167,22 @@ public:
 	void StrUpr(void);
 
 	/**
+	* Get a uppercase version of the string.
+	* @return RString.
+	*/
+	RString& GetUpr(void) const;
+
+	/**
 	* Assign the uppercase version of a "C string".
 	* @param text           The "C string" used.
 	*/
 	void StrUpr(const char* text) throw(bad_alloc);
+
+	/**
+	* Assign the uppercase version of a string.
+	* @param text           The string used.
+	*/
+	void StrUpr(const RChar* text) throw(bad_alloc);
 
 	/**
 	* Assign the uppercase version of a string.
@@ -169,6 +196,12 @@ public:
 	void StrLwr(void);
 
 	/**
+	* Get a lowercase version of the string.
+	* @return RString.
+	*/
+	RString& GetLwr(void) const;
+
+	/**
 	* Assign the lowercase version of a "C string".
 	* @param text           The "C string" used.
 	*/
@@ -176,105 +209,15 @@ public:
 
 	/**
 	* Assign the lowercase version of a string.
+	* @param text           The string used.
+	*/
+	void StrLwr(const RChar* text) throw(bad_alloc);
+
+	/**
+	* Assign the lowercase version of a string.
 	* @param str            The string used.
 	*/
 	void StrLwr(const RString &str) throw(bad_alloc);
-
-	/**
-	* Add another string.
-	*/
-	RString& operator+=(const RString &str) throw(bad_alloc);
-
-	/**
-	* Add a "C string" to the string.
-	*/
-	RString& operator+=(const char *text) throw(bad_alloc);
-
-	/**
-	* Add a character to the string.
-	*/
-	RString& operator+=(const char c) throw(bad_alloc);
-
-	/**
-	* Return the "C string" containing the string.
-	*/
-	inline const char* operator()(void) const {return(Text);}
-
-	/**
-	* Return the "C string" containing the string.
-	*/
-	inline operator const char* () const {return(Text);}
-
-	/**
-	* Equal operator.
-	*/
-	bool operator==(const RString& str) const;
-
-	/**
-	* Equal operator.
-	*/
-	bool operator==(const char* str) const;
-
-	/**
-	* Non-equal operator.
-	*/
-	bool operator!=(const RString& str) const;
-	
-	/**
-	* Non-equal operator.
-	*/
-	bool operator!=(const char* str) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	*/
-	int Compare(const RString &str) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	*/
-	int Compare(const RString* str) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	*/
-	int Compare(const char* str) const;
-
-	/**
-	* Return a number between 0 and 26 according to the first character of the
-	* string. It is used for the RStd::RHashContainer class.
-	*/
-	static char HashIndex(const RString* str);
-
-	/**
-	* Return a number between 0 and 26 according to the first character of the
-	* string. It is used for the RStd::RHashContainer class.
-	*/
-	static char HashIndex(const RString& str);
-
-	/**
-	* Return a number between 0 and 26 according to the first character of the
-	* string. It is used for the RStd::RHashContainer class.
-	*/
-	static char HashIndex(const char* str);
-
-	/**
-	* Return a number between 0 and 26 according to the second character of the
-	* string. It is used for the RStd::RDblHashContainer class.
-	*/
-	static char HashIndex2(const RString* str);
-
-	/**
-	* Return a number between 0 and 26 according to the first character of the
-	* string. It is used for the RStd::RDblHashContainer class.
-	*/
-	static char HashIndex2(const RString& str);
-
-	/**
-	* Return a number between 0 and 26 according to the second character of the
-	* string. It is used for the RStd::RDblHashContainer class.
-	*/
-	static char HashIndex2(const char* str);
 
 	/**
 	* Return the length of the string.
@@ -293,22 +236,159 @@ public:
 	inline bool IsEmpty(void) const {return(!Len);}
 
 	/**
+	* Transform the string into a "C String" in Latin1 encoding. The resulting
+	* array should be copied (and not destroyed) since it is an internal
+	* structure.
+	* @return "C String" (char*)
+	*/
+	char* Latin1(void) const;
+
+	/**
+	* Add another string.
+	*/
+	RString& operator+=(const RString &str) throw(bad_alloc);
+
+	/**
+	* Add a "C string" to the string.
+	*/
+	RString& operator+=(const char* text) throw(bad_alloc);
+
+	/**
+	* Add a string to the string.
+	*/
+	RString& operator+=(const RChar* text) throw(bad_alloc);
+
+	/**
+	* Add a character to the string.
+	*/
+	RString& operator+=(const char c) throw(bad_alloc);
+
+	/**
+	* Return the string containing the string.
+	*/
+	inline const RChar* operator()(void) const {return(Text);}
+
+	/**
+	* Return the string containing the string.
+	*/
+	inline operator const char* () const {return(Latin1());}
+
+	/**
+	* Return the string containing the string.
+	*/
+	inline operator std::string () const {return(Latin1());}
+
+	/**
+	* Equal operator.
+	*/
+	bool operator==(const RString& str) const {return(RChar::StrCmp(Text,str.Text)==0);}
+
+	/**
+	* Equal operator.
+	*/
+	bool operator==(const char* str) const {return(RChar::StrCmp(Text,str)==0);}
+
+	/**
+	* Equal operator.
+	*/
+	bool operator==(const RChar* str) const {return(RChar::StrCmp(Text,str)==0);}
+
+	/**
+	* Non-equal operator.
+	*/
+	bool operator!=(const RString& str) const {return(RChar::StrCmp(Text,str.Text));}
+
+	/**
+	* Non-equal operator.
+	*/
+	bool operator!=(const char* str) const {return(RChar::StrCmp(Text,str));}
+
+	/**
+	* Non-equal operator.
+	*/
+	bool operator!=(const RChar* str) const {return(RChar::StrCmp(Text,str));}
+
+	/**
+	* Compare function like strcmp used in particular for RContainer class.
+	*/
+	int Compare(const RString &str) const {return(RChar::StrCmp(Text,str.Text));}
+
+	/**
+	* Compare function like strcmp used in particular for RContainer class.
+	*/
+	int Compare(const RString* str) const {return(RChar::StrCmp(Text,str->Text));}
+
+	/**
+	* Compare function like strcmp used in particular for RContainer class.
+	*/
+	int Compare(const char* str) const {return(RChar::StrCmp(Text,str));}
+
+	/**
+	* Compare function like strcmp used in particular for RContainer class.
+	*/
+	int Compare(const RChar* str) const {return(RChar::StrCmp(Text,str));}
+
+	/**
+	* Return a number between 0 and 26 according to the first character of the
+	* string. It is used for the RStd::RHashContainer class.
+	*/
+	static int HashIndex(const RString* str);
+
+	/**
+	* Return a number between 0 and 26 according to the first character of the
+	* string. It is used for the RStd::RHashContainer class.
+	*/
+	static int HashIndex(const RString& str);
+
+	/**
+	* Return a number between 0 and 26 according to the first character of the
+	* string. It is used for the RStd::RHashContainer class.
+	*/
+	static int HashIndex(const char* str);
+
+	/**
+	* Return a number between 0 and 26 according to the first character of the
+	* string. It is used for the RStd::RHashContainer class.
+	*/
+	static int HashIndex(const RChar* str);
+
+	/**
+	* Return a number between 0 and 26 according to the second character of the
+	* string. It is used for the RStd::RDblHashContainer class.
+	*/
+	static int HashIndex2(const RString* str);
+
+	/**
+	* Return a number between 0 and 26 according to the first character of the
+	* string. It is used for the RStd::RDblHashContainer class.
+	*/
+	static int HashIndex2(const RString& str);
+
+	/**
+	* Return a number between 0 and 26 according to the second character of the
+	* string. It is used for the RStd::RDblHashContainer class.
+	*/
+	static int HashIndex2(const char* str);
+
+	/**
+	* Return a number between 0 and 26 according to the second character of the
+	* string. It is used for the RStd::RDblHashContainer class.
+	*/
+	static int HashIndex2(const RChar* str);
+
+	/**
 	* Need to manage temporary strings.
 	*/
 	static RString* GetString(void);
 
 	/**
-	* Need to manage temporary C strings.
+	* Transfrom a C string into an array of RChar. The resulting arrey should be
+	* destroyed by the caller of the function.
+	* @param str             Source "C String".
+	* @param len             Length of the string (computed by the function).
+	* @param maxlen          Maximum length (may be updated by the function).
 	*/
-	static char* GetCString(void);
-
-protected:
-
-	/**
-	* Verify if the string can hold maxlen characters and extend the array if
-	* necessary.
-	*/
-	inline void Verify(const unsigned int maxlen) throw(bad_alloc);
+	static RChar* Latin1ToUnicode(const char *str,unsigned int& len, unsigned int& maxlen);
 
 public:
 
@@ -344,43 +424,43 @@ RString& operator+(const char* arg1,const RString& arg2);
 /**
 * Transform an int to a string.
 */
-RString& itoa(const int nb);
+RString& itou(const int nb);
 
 /**
 * Transform an unsigned int to a string.
 */
-RString& itoa(const unsigned int nb);
+RString& itou(const unsigned int nb);
 
 /**
 * Transform a long to a string.
 */
-RString& ltoa(const long nb);
+RString& ltou(const long nb);
 
 /**
 * Transform an unsigned char to a string.
 */
-RString& chr(const unsigned char c);
+RString& chrtou(const unsigned char c);
 
 /**
 * Transform an unsigned long to a string.
 */
-RString& ltoa(const unsigned long nb);
+RString& ltou(const unsigned long nb);
 
 /**
 * Transform a float to a string.
 */
-RString& ftoa(const float nb);
+RString& ftou(const float nb);
 
 /**
 * Transform a double to a string.
 */
-RString& dtoa(const double nb);
+RString& dtou(const double nb);
 
 
 //------------------------------------------------------------------------------
 /**
 * The RStringCursor class provides a way to go trough a set of strings.
-* @short Strings Cursor
+* @short Unicode Strings Cursor
 */
 CLASSCURSOR(RStringCursor,RString,unsigned int)
 

@@ -241,7 +241,7 @@ public:
 	/**
 	* Return the name of the connector.
 	*/
-	const char* GetName(void) {return(Name());}
+	const char* GetName(void) {return(Name);}
 
 	/**
 	* Return the minimum distance between two connectors.

@@ -101,11 +101,11 @@ RQuery::RQuery(RDb* db,const char* sql) throw(RMySQLError)
 	if(mysql_real_query(db->connection,sql,strlen(sql)))
 		throw RMySQLError(mysql_error(&db->mysql));
 	Up.StrUpr();
-	bSelect=strstr(Up(),"SELECT");
+	bSelect=strstr(Up,"SELECT");
 	if(bSelect)
 	{
-		bLastInsertId=strstr(Up(),"LAST_INSERT_ID()");
-		bInsert=strstr(Up(),"INSERT");
+		bLastInsertId=strstr(Up,"LAST_INSERT_ID()");
+		bInsert=strstr(Up,"INSERT");
 		if(!bInsert||(bInsert&&bLastInsertId))
 		{
 			result=mysql_store_result(db->connection);

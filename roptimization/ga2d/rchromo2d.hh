@@ -225,7 +225,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 			{
 				if((*infoi)->Overlap(*infoj))
 				{
-					sprintf(Tmp,"Overlapping Problem (Id==%u) between %s and %s",Id,(*infoi)->GetObj()->Name(),(*infoj)->GetObj()->Name());
+					sprintf(Tmp,"Overlapping Problem (Id==%u) between %s and %s",Id,(*infoi)->GetObj()->Name.Latin1(),(*infoj)->GetObj()->Name.Latin1());
 					#ifdef RGADEBUG
 						if(Instance->Debug)
 							Instance->Debug->PrintInfo(Tmp);

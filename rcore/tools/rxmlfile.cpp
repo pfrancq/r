@@ -80,7 +80,7 @@ RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
 				(*this)<<"["<<endl;
 				for(Cur.Start();!Cur.End();Cur.Next())
 				{
-					sprintf(tmp,"\t<!ENTITY %s \"%s\">",(Cur()->GetName())(),(Cur()->GetValue())());
+					sprintf(tmp,"\t<!ENTITY %s \"%s\">",Cur()->GetName().Latin1(),Cur()->GetValue().Latin1());
 					(*this)<<tmp<<endl;
 				}
 				(*this)<<"  ]>"<<endl;

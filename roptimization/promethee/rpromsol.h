@@ -165,7 +165,7 @@ public:
 	/**
 	* Return the name of the solution.
 	*/
-	const char* GetName(void) const {return(Name());}
+	const char* GetName(void) const {return(Name);}
 
 	/**
 	* Destruct a prométhée solution.

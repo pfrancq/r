@@ -79,7 +79,7 @@ void RDebug::BeginTag(const char* Text,unsigned NbAttr,...)
 //------------------------------------------------------------------------------
 const char* RDebug::GetCurrentTag(void) const
 {
-	return(CurTag());
+	return(CurTag);
 }
 
 
@@ -146,7 +146,7 @@ void RDebug::BeginApp(void)
 	time(&t);
 	strcpy(TempString,ctime(&t));
 	TempString[strlen(TempString)-1]=0;
-	BeginTag(App(),2,"Author",Author(),"Date",TempString);
+	BeginTag(App.Latin1(),2,"Author",Author.Latin1(),"Date",TempString);
 }
 
 

@@ -214,7 +214,7 @@ public:
 	/**
 	* @returns the text containning in the tag.
 	*/
-	const char* GetContent(void) const {return(Contains());}
+	const char* GetContent(void) const {return(Contains);}
 
 	/**
 	* See if the tag has a content.

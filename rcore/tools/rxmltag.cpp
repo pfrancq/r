@@ -145,13 +145,13 @@ void RXMLTag::Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RString)
 	// Skip first line <? xml ?>
 	if((*Name())=='?')
 	{
-		const char* n=Name()+1;
-		while(isspace(*n)) n++; // Skip Spaces
+		const RChar* n=Name()+1;
+		while(n->IsSpace()) n++; // Skip Spaces
 		return;
 	}
 
 	// Read DocType
-	if(!strcasecmp(Name(),"!DOCTYPE"))
+	if(Name.GetUpr()=="!DOCTYPE")
 	{
 		OpenTags=1;
 		ptr2=ptr;
