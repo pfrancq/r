@@ -147,12 +147,12 @@ void RXMLTag::Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RString)
 	{
 		const char* n=Name()+1;
 		while(isspace(*n)) n++; // Skip Spaces
-		RAssert(strcmp(n,"xml"))
+		RAssert(strcasecmp(n,"xml"))
 		return;
 	}
 
 	// Read DocType
-	if(!strcmp(Name(),"!DOCTYPE"))
+	if(!strcasecmp(Name(),"!DOCTYPE"))
 	{
 		OpenTags=1;
 		ptr2=ptr;
