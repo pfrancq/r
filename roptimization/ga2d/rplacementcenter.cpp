@@ -31,27 +31,27 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
 #include "rplacementcenter.h"
 using namespace RGA;
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //	RPlacementCenter
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPlacementCenter::RPlacementCenter(unsigned int maxobjs)
 	: RPlacementHeuristic(maxobjs)
 {
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RPlacementCenter::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs)
 {
 	RPlacementHeuristic::Init(limits,grid,objs,infos,nbobjs);
@@ -63,7 +63,7 @@ void RPlacementCenter::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool RPlacementCenter::NextObjectOri(void)
 {
 	RCoord BestDist,Dist2;
@@ -75,7 +75,7 @@ bool RPlacementCenter::NextObjectOri(void)
 	unsigned int i;
 	bool LookX;
 	bool LookLeft,LookBottom;
-	RRect Rect;
+//	RRect Rect;
 	RRect CurRect;
 	RCoord Area,BestArea;
 
@@ -88,13 +88,13 @@ bool RPlacementCenter::NextObjectOri(void)
 		CurInfo->Assign(Best,Grid);
 		CurInfo->Add(Sol);
 		NbObjsOk++;
+		// Calculate Union of all placed polygons
+		Sol.Union(&Union);
+ 		Union.Boundary(Result);
 	 	return(true);
   }
 
 
-	// Calculate Union of all placed polygons
-	Sol.Union(&Union);
- 	Union.Boundary(Rect);
 
 
 	// Find the Bottom-Left
@@ -157,7 +157,7 @@ bool RPlacementCenter::NextObjectOri(void)
 			{
 				CurInfo->PushCenter(Pos[nb],Max,Grid);
 				Dist2=Attraction.ManhattanDist(Pos[nb]+Center);				
- 				CurRect=Rect;
+ 				CurRect=Result;            // Rect
  				if(Pos[nb].X<CurRect.Pt1.X) CurRect.Pt1.X=Pos[nb].X;
  				if(Pos[nb].Y<CurRect.Pt1.Y) CurRect.Pt1.Y=Pos[nb].Y;
  				if(Pos[nb].X+CurInfo->Width()>CurRect.Pt2.X) CurRect.Pt2.X=Pos[nb].X+CurInfo->Width();
@@ -213,12 +213,16 @@ bool RPlacementCenter::NextObjectOri(void)
 	Sol.InsertPtr(new RPolygon(Union));
 	CurInfo->Add(Sol);
 
+	// Calculate Union of all placed polygons
+	Sol.Union(&Union);
+ 	Union.Boundary(Result);
+
 	// Ok
 	return(true);
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RPlacementCenter::PostRun(RPoint &limits)
 {
 	Sol.Union(&Union);
