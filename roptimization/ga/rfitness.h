@@ -47,8 +47,10 @@ namespace RGA{
 * This class represents a fitness for a specific problem. the cVal parameter
 * is used to specify the nature of the fitness, and the max parameter is used
 * to indicate if the fitness is to maximised or minimised.
+* @param cVal               The type of information contained in the fitness.
+* @param Max                If true, the fitness is to maximzed.
 *
-*	This example implements a fitness that is represented by a integer value and
+* This example implements a fitness that is represented by a integer value and
 * that has to be minimized.
 * <pre>
 * class MyFitness : public RFitness<int,false>
@@ -64,6 +66,7 @@ template<class cVal,bool Max>
 	class RFitness
 {
 public:
+
 	/**
 	* The value of the fitness.
 	*/
