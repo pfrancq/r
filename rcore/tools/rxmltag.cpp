@@ -142,8 +142,14 @@ void RXMLTag::Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RString)
 	(*ptr)=c;
 	while(isspace(*ptr)) ptr++; // Skip Spaces
 
-	// Skip first line <?xml ?>
-	if(!strcmp(Name(),"?xml")) return;
+	// Skip first line <? xml ?>
+	if((*Name())=='?')
+	{
+		const char* n=Name()+1;
+		while(isspace(*n)) n++; // Skip Spaces
+		RAssert(strcmp(n,"xml"))
+		return;
+	}
 
 	// Read DocType
 	if(!strcmp(Name(),"!DOCTYPE"))
