@@ -31,13 +31,13 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // RChromo<cInst,cChromo,cFit,cThreadData>
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,unsigned int id) throw(bad_alloc)
 		: Instance(inst),Id(id),ToEval(true)
@@ -46,16 +46,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RChromo<cInst,cChromo,cFit,cThreadData>::Init(cThreadData*) throw(bad_alloc)
 {
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-  RChromo<cInst,cChromo,cFit,cThreadData>& RChromo<cInst,cChromo,cFit,cThreadData>::operator=(const RChromo &chromo)
+  RChromo<cInst,cChromo,cFit,cThreadData>& RChromo<cInst,cChromo,cFit,cThreadData>::
+		operator=(const RChromo &chromo)
 {
 	Id=chromo.Id;
 	(*Fitness)=(*(chromo.Fitness));
@@ -63,7 +64,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	RChromo<cInst,cChromo,cFit,cThreadData>::~RChromo(void)
 {

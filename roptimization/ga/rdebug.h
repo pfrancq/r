@@ -31,24 +31,25 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #ifndef RDebugH
 #define RDebugH
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
 #include <rstd/rstring.h>
 using namespace RStd;
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 namespace RGA{
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
+* \ingroup GA
 * This file represent a generic debug output for the GA.
 * @author Pascal Francq
 * @short Generic Debug Output.
@@ -145,7 +146,7 @@ protected:
 	/**
 	* Begin to write a Tag. This function must be implement.
 	*/
-	virtual void WriteBeginTag(char *tag,char* options=NULL)=0;
+	virtual void WriteBeginTag(char *tag,char* options=0)=0;
 
 	/**
 	* Write Text associate with current tag. This function must be implement.
@@ -166,8 +167,9 @@ public:
 };
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
+* \ingroup GA
 * This class implement a debuuger file in XML format.
 * @author Pascal Francq
 * @short Debug XML file.
@@ -212,7 +214,7 @@ protected:
 	/**
 	* Begin to write a Tag.
 	*/
-	virtual void WriteBeginTag(char *tag,char* options=NULL);
+	virtual void WriteBeginTag(char *tag,char* options=0);
 
 	/**
 	* Write Text associate with current tag.
@@ -233,8 +235,8 @@ public:
 };
 
 
-}//------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA ---------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif

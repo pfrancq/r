@@ -31,18 +31,19 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #ifndef RRASignalsH
 #define RRASignalsH
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 namespace RGA{
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
+* \ingroup GA
 * This class represent a basic reveicer for GA signals. By default, it does
 * nothing.
 * @author Pascal Francq
@@ -54,6 +55,7 @@ template<class cInst,class cChromo,class cFit>
 public:
 
 	/**
+	* \ingroup GA
 	* This class represent a basic reveicer for GA signals. By default, it does
 	* @author Pascal Francq
 	* @short Best Signal.
@@ -67,6 +69,7 @@ public:
 	};
 
 	/**
+	* \ingroup GA
 	*	This class represent a signal to gives the user-interface the hand.
   	* @author Pascal Francq
   	* @short Interact Signal.
@@ -81,6 +84,7 @@ public:
 	};
 
 	/**
+	* \ingroup GA
 	*	This class represent a signal to indicate that the GA is running.
   	* @author Pascal Francq
   	* @short Run Signal.
@@ -95,6 +99,7 @@ public:
 	};
 
 	/**
+	* \ingroup GA
 	*	This class represent a signal to indicate that the GA is stopped.
   	* @author Pascal Francq
   	* @short Stop Signal.
@@ -114,6 +119,7 @@ public:
 	};
 
 	/**
+	* \ingroup GA
 	* This class represent a signal to indicate that a generation is
 	*	finished.
 	* @author Pascal Francq
@@ -168,8 +174,8 @@ public:
 };
 
 
-}//------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA ---------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif

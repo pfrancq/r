@@ -31,13 +31,13 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // RThreadData2D<cInst,cChromo>
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo>
 	RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner) throw(bad_alloc)
 		: RThreadData<cInst,cChromo>(owner),NbObjs(0),Order(0),tmpObj1(0),
@@ -46,7 +46,7 @@ template<class cInst,class cChromo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo>
 	void RThreadData2D<cInst,cChromo>::Init(void) throw(bad_alloc)
 {
@@ -75,7 +75,7 @@ template<class cInst,class cChromo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo>
 	RThreadData2D<cInst,cChromo>::~RThreadData2D(void)
 {
@@ -88,13 +88,13 @@ template<class cInst,class cChromo>
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // RInst2D<cInst,cChromo,cFit>
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RInst2D(unsigned int popsize,RObj2D **objs,unsigned int nbobjs,RPoint &limits,HeuristicType h) throw(bad_alloc)
@@ -114,7 +114,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RPoint& RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLimits(void)
 {

@@ -31,13 +31,13 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // RChromo2D<cInst,cChromo,cFit,cInfo>
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc)
@@ -49,7 +49,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		Init(cThreadData *thData) throw(bad_alloc)
@@ -92,7 +92,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	inline void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		ClearInfos(void)
@@ -110,7 +110,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	inline void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		thVarsClear(void)
@@ -122,9 +122,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
-// Regroup a set of object from Objs in obj and add it to objs
-// Make sure that the objects are not already selected
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		GetSetOfObjs(RObj2DContainer *obj,bool *selected)
@@ -263,8 +261,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
-// Fill objs with all the objects not already selected
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		FillObjs(RObj2D **objs,unsigned int &nbobjs)
@@ -285,8 +282,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
-// Initial construction
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RandomConstruct(void)
@@ -297,7 +293,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		Crossover(cChromo *parent1,cChromo *parent2)
@@ -326,7 +322,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void)
 {
@@ -336,7 +332,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void)
 {
@@ -361,7 +357,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
   RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>&
 		RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::operator=(const RChromo2D &chromo)
@@ -377,7 +373,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RObj2D* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetObj(RCoord X,RCoord Y)
 {
@@ -392,7 +388,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	cInfo* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetInfo(RCoord X,RCoord Y)
 {
@@ -407,7 +403,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetActLimits(void)
 {
@@ -418,7 +414,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLevel(unsigned int i)
 {
@@ -429,7 +425,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::~RChromo2D(void)
 {
