@@ -147,7 +147,6 @@ void RXMLTag::Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RString)
 	{
 		const char* n=Name()+1;
 		while(isspace(*n)) n++; // Skip Spaces
-		RAssert(strcasecmp(n,"xml"))
 		return;
 	}
 
