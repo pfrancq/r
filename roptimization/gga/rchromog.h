@@ -55,14 +55,14 @@ namespace RGGA{
 * @short GGA Chromosome.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	class RChromoG : public RGA::RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cGroupData>
+	class RChromoG : public RGA::RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cGroupData,cChromo>
 {
 protected:
 
 	/**
 	* Heuristic used for the groupment.
 	*/
-	RGroupingHeuristic<cGroup,cObj,cGroupData>* Heuristic;
+	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* Heuristic;
 
 	/**
 	* Assignment of the objects where the identificator of the first group

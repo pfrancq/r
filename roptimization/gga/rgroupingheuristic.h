@@ -71,7 +71,7 @@ public:
 * @author Pascal Francq
 * @short Generic Grouping Heuristic class.
 */
-template<class cGroup,class cObj,class cGroupData>
+template<class cGroup,class cObj,class cGroupData,class cGroups>
 	class RGroupingHeuristic
 {
 protected:
@@ -99,7 +99,7 @@ protected:
 	/**
 	* Groups.
 	*/
-	RGroups<cGroup,cObj,cGroupData>* Groups;
+	cGroups* Groups;
 	
 	/**
 	* Order in which the objects are to be treated.
@@ -129,7 +129,7 @@ public:
 	* Initialize the heuristic.
 	* @param groups         Pointer to the groups.
 	*/
-	virtual void Init(RGroups<cGroup,cObj,cGroupData>* groups);
+	virtual void Init(cGroups* groups);
 
 	/**
 	* Select the next object to place.
@@ -161,7 +161,7 @@ public:
 	* Run the heuristic.
 	* @param groups         Pointer to the groups.
 	*/
-	void Run(RGroups<cGroup,cObj,cGroupData>* groups) throw(RGroupingHeuristicException);
+	void Run(cGroups* groups) throw(RGroupingHeuristicException);
 
 	/**
 	* Do some operations after the run.

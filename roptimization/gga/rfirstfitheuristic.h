@@ -52,8 +52,8 @@ namespace RGGA{
 * @author Pascal Francq
 * @short Generic Grouping Heuristic class.
 */
-template<class cGroup,class cObj,class cGroupData>
-	class RFirstFitHeuristic : public RGroupingHeuristic<cGroup,cObj,cGroupData>
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	class RFirstFitHeuristic : public RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>
 {
 
 public:

@@ -33,7 +33,7 @@
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RChromoG(cInst *inst,unsigned id) throw(bad_alloc)
 		: RGA::RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
-		  RGroups<cGroup,cObj,cGroupData>(inst->Objs,inst->MaxGroups),
+		  RGroups<cGroup,cObj,cGroupData,cChromo>(inst->Objs,inst->MaxGroups),
 		  Heuristic(0), OrdObjectsAss(0), NewUsedId(0)
 {
 }
@@ -77,7 +77,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Clear(void)
 {
-	RGroups<cGroup,cObj,cGroupData>::ClearGroups();
+	RGroups<cGroup,cObj,cGroupData,cChromo>::ClearGroups();
 }
 
 
@@ -98,7 +98,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void)
 {
-	Heuristic->Run(this);
+	Heuristic->Run(static_cast<cChromo*>(this));
 	ComputeOrd();
 	return(true);
 }
@@ -161,7 +161,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	// Insert missing objects after a local optimisation
 	LocalOptimisation();
-	Heuristic->Run(this);
+	Heuristic->Run(static_cast<cChromo*>(this));
 	ComputeOrd();
 
 	return(true);
@@ -184,7 +184,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	// Insert missing objects after a local optimisation
 	LocalOptimisation();
-	Heuristic->Run(this);
+	Heuristic->Run(static_cast<cChromo*>(this));
 	ComputeOrd();
 
 	return(true);
@@ -218,7 +218,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Verify(void)
 {
-	if(!RGroups<cGroup,cObj,cGroupData>::Verify())
+	if(!RGroups<cGroup,cObj,cGroupData,cChromo>::Verify())
 		return(false);
 	if(!Used.NbPtr)
 	{
@@ -234,7 +234,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>& RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::operator=(const RChromoG& chromo)
 {
 	RGA::RChromo<cInst,cChromo,cFit,cThreadData>::operator=(chromo);
-	RGroups<cGroup,cObj,cGroupData>::operator=(chromo);
+	RGroups<cGroup,cObj,cGroupData,cChromo>::operator=(chromo);
 	return(*this);
 }
 

@@ -33,13 +33,13 @@
 
 //-----------------------------------------------------------------------------
 //
-// class RGroup<cGroup,cObj,cGroupData>
+// class RGroup<cGroup,cObj,cGroupData,cGroups>
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RGroup<cGroup,cObj,cGroupData>::RGroup(RGroup* grp)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RGroup<cGroup,cObj,cGroupData,cGroups>::RGroup(RGroup* grp)
 		: Id(grp->Id), Owner(grp->Owner)
 {
 	NbSubObjects= grp->NbSubObjects;
@@ -49,8 +49,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RGroup<cGroup,cObj,cGroupData>::RGroup(RGroups<cGroup,cObj,cGroupData>* owner,const unsigned int id,const cGroupData*)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RGroup<cGroup,cObj,cGroupData,cGroups>::RGroup(cGroups* owner,const unsigned int id,const cGroupData*)
 		: Id(id), Owner(owner)
 {
 	NbSubObjects= 0;
@@ -60,8 +60,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	bool RGroup<cGroup,cObj,cGroupData>::Verify(void)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	bool RGroup<cGroup,cObj,cGroupData,cGroups>::Verify(void)
 {
 	unsigned int i;
 	cObj** obj;
@@ -123,8 +123,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroup<cGroup,cObj,cGroupData>::Clear(void)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroup<cGroup,cObj,cGroupData,cGroups>::Clear(void)
 {
 	Reserved=false;
 	SubObjects=NoObject;
@@ -133,8 +133,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroup<cGroup,cObj,cGroupData>::Insert(RStd::RCursor<cObj,unsigned int>* /*objs*/,const cGroup* grp)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroup<cGroup,cObj,cGroupData,cGroups>::Insert(RStd::RCursor<cObj,unsigned int>* /*objs*/,const cGroup* grp)
 {
 	unsigned int i;
 	cObj** ptr;
@@ -147,8 +147,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RGroup<cGroup,cObj,cGroupData>& RGGA::RGroup<cGroup,cObj,cGroupData>::operator=(const RGroup<cGroup,cObj,cGroupData>& grp)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RGroup<cGroup,cObj,cGroupData,cGroups>& RGGA::RGroup<cGroup,cObj,cGroupData,cGroups>::operator=(const RGroup<cGroup,cObj,cGroupData,cGroups>& grp)
 {
 	if(this!=&grp)
 	{
@@ -162,8 +162,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	bool RGroup<cGroup,cObj,cGroupData>::IsIn(const unsigned int id) const
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	bool RGroup<cGroup,cObj,cGroupData,cGroups>::IsIn(const unsigned int id) const
 {
 	unsigned int i;
 	cObj** ptr;
@@ -175,8 +175,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	bool RGroup<cGroup,cObj,cGroupData>::CommonObjs(const cGroup* grp) const
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	bool RGroup<cGroup,cObj,cGroupData,cGroups>::CommonObjs(const cGroup* grp) const
 {
 	unsigned int i;
 	cObj** ptr;
@@ -188,8 +188,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	bool RGroup<cGroup,cObj,cGroupData>::SameObjs(const cGroup* grp) const
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	bool RGroup<cGroup,cObj,cGroupData,cGroups>::SameObjs(const cGroup* grp) const
 {
 	unsigned int i;
 	cObj** ptr;
@@ -202,8 +202,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	unsigned int* RGroup<cGroup,cObj,cGroupData>::GetObjectsId(void) const
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	unsigned int* RGroup<cGroup,cObj,cGroupData,cGroups>::GetObjectsId(void) const
 {
 	unsigned int* tmp;
 	unsigned int* tmp2;
@@ -219,7 +219,7 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RGroup<cGroup,cObj,cGroupData>::~RGroup(void)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RGroup<cGroup,cObj,cGroupData,cGroups>::~RGroup(void)
 {
 }

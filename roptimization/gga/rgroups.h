@@ -54,7 +54,7 @@ namespace RGGA{
 * @author Pascal Francq
 * @short Groups.
 */
-template<class cGroup,class cObj,class cGroupData>
+template<class cGroup,class cObj,class cGroupData,class cGroups>
 	class RGroups : public RStd::RContainer<cGroup,unsigned int,true,false>
 {
 public:
@@ -161,6 +161,11 @@ public:
 	cObj* GetObj(const unsigned int idx) {return(ObjsAss.Tab[idx]);}
 
 	/**
+	* Return a pointer to the objects of a group.
+	*/
+	cObj** GetObjs(const unsigned int idx) {return(&ObjsAss.Tab[idx]);}
+
+	/**
 	* The assigment operator.
 	* @param chromo         The chromosome used as source.
 	*/
@@ -172,8 +177,8 @@ public:
 	virtual ~RGroups(void);
 
 	// friend classes
-	friend class RGroup<cGroup,cObj,cGroupData>;
-	friend class RGroupingHeuristic<cGroup,cObj,cGroupData>;
+	friend class RGroup<cGroup,cObj,cGroupData,cGroups>;
+	friend class RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>;
 };
 
 

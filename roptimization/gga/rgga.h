@@ -59,9 +59,9 @@ namespace RGGA{
 //-----------------------------------------------------------------------------
 // Forward class declaration
 class RObjG;
-template<class cGroup,class cObj,class cGroupData> class RGroup;
-template<class cGroup,class cObj,class cGroupData> class RGroups;
-template<class cGroup,class cObj,class cGroupData> class RGroupingHeuristic;
+template<class cGroup,class cObj,class cGroupData,class cChromo> class RGroup;
+template<class cGroup,class cObj,class cGroupData,class cChromo> class RGroups;
+template<class cGroup,class cObj,class cGroupData,class cGroups> class RGroupingHeuristic;
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData> class RThreadDataG;
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData> class RChromoG;
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData> class RInstG;

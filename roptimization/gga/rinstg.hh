@@ -31,7 +31,7 @@
 
 //-----------------------------------------------------------------------------
 //
-// RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>
+// class RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>
 //
 //-----------------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	switch(Owner->GetHeuristic())
 	{
 		case FirstFit:
-			Heuristic = new RFirstFitHeuristic<cGroup,cObj,cGroupData>(Owner->Random,Owner->Objs);
+			Heuristic = new RFirstFitHeuristic<cGroup,cObj,cGroupData,cChromo>(Owner->Random,Owner->Objs);
 			break;
 	}
 }
@@ -69,7 +69,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //-----------------------------------------------------------------------------
 //
-// RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>
+// class RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>
 //
 //-----------------------------------------------------------------------------
 
@@ -106,8 +106,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
-		(static_cast<RGroups<cGroup,cObj,cGroupData>*>(*C))->Init(gdata);
-	(static_cast<RGroups<cGroup,cObj,cGroupData>*>(BestChromosome))->Init(gdata);
+		(static_cast<RGroups<cGroup,cObj,cGroupData,cChromo>*>(*C))->Init(gdata);
+	(static_cast<RGroups<cGroup,cObj,cGroupData,cChromo>*>(BestChromosome))->Init(gdata);
 }
 
 

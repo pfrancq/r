@@ -29,9 +29,16 @@
 
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RGroups<cGroup,cObj,cGroupData>::RGroups(RStd::RCursor<cObj,unsigned int>* objs,const unsigned max) throw(bad_alloc)
+//-----------------------------------------------------------------------------
+//
+// class RGroups<cGroup,cObj,cGroupData,cGroups>
+//
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RGroups<cGroup,cObj,cGroupData,cGroups>::RGroups(RStd::RCursor<cObj,unsigned int>* objs,const unsigned max) throw(bad_alloc)
 		: RStd::RContainer<cGroup,unsigned int,true,false>(max), Used(max),
 		  GroupData(0), Objs(objs), ObjsAss(objs->GetNb()), ObjsNoAss(objs->GetNb())
 {
@@ -40,21 +47,21 @@ template<class cGroup,class cObj,class cGroupData>
 }
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroups<cGroup,cObj,cGroupData>::Init(cGroupData* data)
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroups<cGroup,cObj,cGroupData,cGroups>::Init(cGroupData* data)
 {
 	unsigned int i;
 
 	GroupData=data;
 	for(i=0;i<MaxPtr;i++)
-		InsertPtr(new cGroup(static_cast<RGroups<cGroup,cObj,cGroupData>*>(this),i,GroupData));
+		InsertPtr(new cGroup(static_cast<cGroups*>(this),i,GroupData));
 }
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroups<cGroup,cObj,cGroupData>::ClearGroups(void)
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroups<cGroup,cObj,cGroupData,cGroups>::ClearGroups(void)
 {
 	cGroup **G;
 	unsigned int i;
@@ -70,15 +77,15 @@ template<class cGroup,class cObj,class cGroupData>
 }
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	cGroup* RGroups<cGroup,cObj,cGroupData>::ReserveGroup(void)
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::ReserveGroup(void)
 {
 	cGroup **ptr;
 
 	if(Used.NbPtr+1>MaxPtr)
 	{
-		InsertPtr(new cGroup(static_cast<RGroups<cGroup,cObj,cGroupData>*>(this),Used.NbPtr,GroupData));
+		InsertPtr(new cGroup(static_cast<cGroups*>(this),Used.NbPtr,GroupData));
 	}
 	ptr=Tab;
 	while((*ptr)->Reserved)
@@ -89,9 +96,9 @@ template<class cGroup,class cObj,class cGroupData>
 }
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroups<cGroup,cObj,cGroupData>::ReleaseGroup(const unsigned int grp)
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroups<cGroup,cObj,cGroupData,cGroups>::ReleaseGroup(const unsigned int grp)
 {
 	cGroup *G=Tab[grp];
 
@@ -101,9 +108,9 @@ template<class cGroup,class cObj,class cGroupData>
 }
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroups<cGroup,cObj,cGroupData>::InsertObj(cGroup* to,const cObj* obj)
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroups<cGroup,cObj,cGroupData,cGroups>::InsertObj(cGroup* to,const cObj* obj)
 {
 	unsigned int tmp,i,j;
 	cGroup** G;
@@ -132,9 +139,9 @@ template<class cGroup,class cObj,class cGroupData>
 }
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroups<cGroup,cObj,cGroupData>::DeleteObj(cGroup* from,const cObj* obj)
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroups<cGroup,cObj,cGroupData,cGroups>::DeleteObj(cGroup* from,const cObj* obj)
 {
 	unsigned int j,i;
 	cGroup** G;
@@ -154,9 +161,9 @@ template<class cGroup,class cObj,class cGroupData>
 }
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroups<cGroup,cObj,cGroupData>::DeleteObjs(cGroup* from)
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroups<cGroup,cObj,cGroupData,cGroups>::DeleteObjs(cGroup* from)
 {
 	unsigned int j,i;
 	cGroup** G;
@@ -180,9 +187,9 @@ template<class cGroup,class cObj,class cGroupData>
 }
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	bool RGroups<cGroup,cObj,cGroupData>::Verify(void)
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	bool RGroups<cGroup,cObj,cGroupData,cGroups>::Verify(void)
 {
 	unsigned int i,*list,nbobjs;
 	cGroup** G;
@@ -202,9 +209,9 @@ template<class cGroup,class cObj,class cGroupData>
 }
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RGroups<cGroup,cObj,cGroupData>& RGroups<cGroup,cObj,cGroupData>::operator=(const RGroups& grps)
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RGroups<cGroup,cObj,cGroupData,cGroups>& RGroups<cGroup,cObj,cGroupData,cGroups>::operator=(const RGroups& grps)
 {
 	unsigned int i;
 	cGroup** G;
@@ -216,9 +223,9 @@ template<class cGroup,class cObj,class cGroupData>
 }
 
 
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RGroups<cGroup,cObj,cGroupData>::~RGroups(void)
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RGroups<cGroup,cObj,cGroupData,cGroups>::~RGroups(void)
 {
 	if(ObjectsAss)
 		delete[] ObjectsAss;

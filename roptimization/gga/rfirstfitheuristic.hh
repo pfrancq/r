@@ -33,21 +33,21 @@
 
 //-----------------------------------------------------------------------------
 //
-// RGroupingHeuristic<cGroup,cObj,cGroupData>
+// class RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RFirstFitHeuristic<cGroup,cObj,cGroupData>::RFirstFitHeuristic(RRandom* r,RStd::RCursor<cObj,unsigned int>* objs)
-	: RGroupingHeuristic<cGroup,cObj,cGroupData>(r,objs)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RFirstFitHeuristic<cGroup,cObj,cGroupData,cGroups>::RFirstFitHeuristic(RRandom* r,RStd::RCursor<cObj,unsigned int>* objs)
+	: RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>(r,objs)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	cGroup* RFirstFitHeuristic<cGroup,cObj,cGroupData>::FindGroup(void) throw(RGGA::RGroupingHeuristicException)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	cGroup* RFirstFitHeuristic<cGroup,cObj,cGroupData,cGroups>::FindGroup(void) throw(RGGA::RGroupingHeuristicException)
 {
 	cGroup* grp;
 
@@ -60,7 +60,7 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RFirstFitHeuristic<cGroup,cObj,cGroupData>::~RFirstFitHeuristic(void)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RFirstFitHeuristic<cGroup,cObj,cGroupData,cGroups>::~RFirstFitHeuristic(void)
 {
 }

@@ -49,7 +49,7 @@ namespace RGGA{
 
 //-----------------------------------------------------------------------------
 // forward class declaration
-template<class cGroup,class cObj,class cGroupData> class RGroups;
+template<class cGroup,class cObj,class cGroupData,class cGroups> class RGroups;
 
 
 //-----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ const unsigned int NoGroup=0xFFFFFFFF;
 * @author Pascal Francq.
 * @short Group.
 */
-template<class cGroup,class cObj,class cGroupData>
+template<class cGroup,class cObj,class cGroupData,class cGroups>
 	class RGroup
 {
 protected:
@@ -77,7 +77,7 @@ protected:
 	/**
 	* Owner of the group.
 	*/
-	RGroups<cGroup,cObj,cGroupData>* Owner;
+	cGroups* Owner;
 
 	/**
 	* Index of the first object attached to the group.
@@ -108,7 +108,7 @@ public:
 	* @param id             Identificator of the group.
 	* @param data           Specific data to construct the group.
 	*/
-	RGroup(RGroups<cGroup,cObj,cGroupData>* owner,const unsigned int id,const cGroupData* data=0);
+	RGroup(cGroups* owner,const unsigned int id,const cGroupData* data=0);
 
 	/**
 	* Verify if the group is not violating the integrity of the system.
@@ -211,7 +211,7 @@ public:
 	virtual ~RGroup(void);
 
 	// friend classes
-	friend RGroups<cGroup,cObj,cGroupData>;
+	friend RGroups<cGroup,cObj,cGroupData,cGroups>;
 };
 
 

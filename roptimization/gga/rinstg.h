@@ -65,7 +65,7 @@ protected:
 	/**
 	* Heuristic Used.
 	*/
-	RGroupingHeuristic<cGroup,cObj,cGroupData>* Heuristic;
+	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* Heuristic;
 
 public:
 	

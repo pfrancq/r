@@ -33,13 +33,13 @@
 
 //-----------------------------------------------------------------------------
 //
-//	RGroupingHeuristic<cGroup,cObj,cGroupData>
+// class RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RGroupingHeuristic<cGroup,cObj,cGroupData>::RGroupingHeuristic(RRandom* r,RStd::RCursor<cObj,unsigned int>* objs)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::RGroupingHeuristic(RRandom* r,RStd::RCursor<cObj,unsigned int>* objs)
 		: Random(r), Objs(objs), Groups(0)
 {
 	Order=new cObj*[Objs->GetNb()];
@@ -47,8 +47,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData>::Init(RGroups<cGroup,cObj,cGroupData>* groups)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::Init(cGroups* groups)
 {
 	unsigned int* ass;
 
@@ -70,16 +70,16 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData>::SelectNextObject(void) throw(RGroupingHeuristicException)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::SelectNextObject(void) throw(RGroupingHeuristicException)
 {
 	CurObj=Order[NbObjsOk];
 }
 
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData>::PutNextObject(void) throw(RGroupingHeuristicException)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::PutNextObject(void) throw(RGroupingHeuristicException)
 {
 	SelectNextObject();
 	CurGroup=FindGroup();
@@ -89,8 +89,8 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData>::Run(RGroups<cGroup,cObj,cGroupData>* groups) throw(RGroupingHeuristicException)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::Run(cGroups* groups) throw(RGroupingHeuristicException)
 {
 	Init(groups);
 	while(NbObjsOk<NbObjs)
@@ -102,15 +102,15 @@ template<class cGroup,class cObj,class cGroupData>
 
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData>::PostRun(void)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::PostRun(void)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData>
-	RGroupingHeuristic<cGroup,cObj,cGroupData>::~RGroupingHeuristic(void)
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::~RGroupingHeuristic(void)
 {
 	if(Order) delete[] Order;
 }
