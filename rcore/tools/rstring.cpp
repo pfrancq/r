@@ -398,7 +398,7 @@ int RString::Find(const RChar car,int pos,bool CaseSensitive) const
 		left=false;
 
 		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=Data->Len+pos-1;
+		pos=Data->Len+pos;
 		if(pos<=0) return(-1);
 		start=&Data->Text[pos];
 		max=pos+1;
