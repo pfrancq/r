@@ -88,14 +88,14 @@ public:
 	* @param max            Variable used to calculate the number.
 	*/
 	long Value(const long max)
-  	{
-    	return(static_cast<long>(max*Value()));
-  	}
+	{
+		return(static_cast<long>(max*Value()));
+	}
 
 	/**
 	* Return the seed value.
 	*/
-	int	Seed(void) const { return(_seed); }
+	int Seed(void) const { return(_seed); }
 
 	/**
 	* Return a number in the interval [0,max[ using the current random generator.
@@ -169,7 +169,7 @@ class RRandomGood : public RRandom
 	/**
 	* Variable for Internal use.
 	*/
-	int	_value;
+	int _value;
 
 public:
 
@@ -203,17 +203,17 @@ class RRandomBetter : public RRandom
 	/**
 	* Variable for Internal use.
 	*/
-	int	_aux;
+	int _aux;
 
 	/**
 	* Variable for Internal use.
 	*/
-	int	_table[32];
+	int _table[32];
 
 	/**
 	* Variable for Internal use.
 	*/
-	int	_value;
+	int _value;
 
 	/**
 	* Calculation function for Internal use.
@@ -252,22 +252,22 @@ class RRandomBest : public RRandom
 	/**
 	* Variable for Internal use.
 	*/
-	int	_aux1;
+	int _aux1;
 
 	/**
 	* Variable for Internal use.
 	*/
-	int	_aux2;
+	int _aux2;
 
 	/**
 	* Variable for Internal use.
 	*/
-	int	_table[32];
+	int _table[32];
 
 	/**
 	* Variable for Internal use.
 	*/
-	int	_value;
+	int _value;
 
 	/**
 	* Calculation function for Internal use.
