@@ -146,7 +146,7 @@ protected:
 	RContainer<RGASignalsReceiver<cInst,cChromo,cFit>,unsigned int,false,false> Receivers;
 
 	/**
-	* This function is true if the random construction where done.
+	* This variable is true if the random construction where done.
 	*/
 	bool bRandomConstruct;
 
@@ -264,6 +264,11 @@ public:
 	* This function does the evaluation of the chromosomes when it is needed.
 	*/
 	virtual void Evaluate(void) throw(eGA);
+
+	/**
+	* This function goes through the chromosomes to determine the best one.
+	*/
+	virtual void PostEvaluate(void) throw(eGA);
 
 	/**
 	* This function does the crossovers for a generation. Actually, the

@@ -68,7 +68,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	FreqInversion=AgeNextInversion=10;
 	AgeNextMutation=MaxBestPopAge;
 	AgeNextBestMutation=MaxBestAge;
-	BestChromosome=0;
+	BestInPop=BestChromosome=0;
 	Random = new RRandomGood(12345);
 	#ifdef RGADEBUG
 		if(Debug) Debug->EndFunc("RInst","RInst");
@@ -92,6 +92,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		tmpChrom2=new cChromo*[PopSize];
 		for(i=0,C=Chromosomes;i<PopSize;C++,i++)
 			(*C)=new cChromo(static_cast<cInst*>(this),i);
+		BestInPop=Chromosomes[0];
 	}
 	BestChromosome=new cChromo(static_cast<cInst*>(this),PopSize);
 	thDatas=new cThreadData*[1];
@@ -107,37 +108,24 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RGA::RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct(void) throw(eGA)
 {
-	cChromo **C=Chromosomes,*p;
+	unsigned int i;
+	cChromo **C;
 
 	#ifdef RGADEBUG
 		if(Debug) Debug->BeginFunc("RandomConstruct","RInst");
 	#endif
-	p=(*(C++));
-	p->RandomConstruct();
-	emitInteractSig();
-	p->Evaluate();
-	p->ToEval=false;
-	BestInPop=p;
-	for(unsigned int i=PopSize;--i;C++)
+	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
-		p=(*C);
-		if(!p->RandomConstruct())
-			throw eGARandomConstruct();
+		(*C)->RandomConstruct();
 		emitInteractSig();
-		p->Evaluate();
-		emitInteractSig();
-		p->ToEval=false;
-		if((*(p->Fitness))>(*(BestInPop->Fitness))) BestInPop=p;
+		(*C)->ToEval=true;
 	}
-	(*BestChromosome)=(*BestInPop);
 	#ifdef RGADEBUG
 		if(Debug) Debug->EndFunc("RandomConstruct","RInst");
 	#endif
+	bRandomConstruct=true;
 	emitInteractSig();
 	Verify();
-	bRandomConstruct=true;
-	emitBestSig();
-	emitGenSig();
 }
 
 
@@ -145,36 +133,45 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreaData>
 	void RGA::RInst<cInst,cChromo,cFit,cThreaData>::Evaluate(void) throw(eGA)
 {
-	cChromo **C=Chromosomes,*p,*tmp;
 	unsigned int i;
+	cChromo **C;
 
 	#ifdef RGADEBUG
 		if(Debug) Debug->BeginFunc("Evaluate","RInst");
 	#endif
-	p=(*(C++));
-	if(p->ToEval)
+	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
-		p->Evaluate();
-		emitInteractSig();
-		p->ToEval=false;
-	}
-	tmp=p;
-	for(i=PopSize;--i;C++)
-	{
-		p=*C;
-		if(p->ToEval)
+		if((*C)->ToEval)
 		{
-			p->Evaluate();
+			(*C)->Evaluate();
+			(*C)->ToEval=false;
 			emitInteractSig();
-			p->ToEval=false;
 		}
-		if((*(p->Fitness))>(*(tmp->Fitness))) tmp=p;
 	}
-	if((*(tmp->Fitness))>(*(BestInPop->Fitness)))
+	#ifdef RGADEBUG
+		if(Debug) Debug->EndFunc("Evaluate","RInst");
+	#endif
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreaData>
+	void RGA::RInst<cInst,cChromo,cFit,cThreaData>::PostEvaluate(void) throw(eGA)
+{
+	unsigned int i;
+	cChromo **C;
+
+	#ifdef RGADEBUG
+		if(Debug) Debug->BeginFunc("PostEvaluate","RInst");
+	#endif
+	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
-		BestInPop=tmp;
-		AgeBestPop=0;
-		AgeNextMutation=MaxBestPopAge;
+		if((*((*C)->Fitness))>(*(BestInPop->Fitness)))
+		{
+			BestInPop=(*C);
+			AgeBestPop=0;
+			AgeNextMutation=MaxBestPopAge;
+		}
 	}
 	if((*(BestInPop->Fitness))>(*(BestChromosome->Fitness)))
 	{
@@ -183,7 +180,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 		emitBestSig();
 	}
 	#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("Evaluate","RInst");
+		if(Debug) Debug->EndFunc("PostEvaluate","RInst");
 	#endif
 }
 
@@ -427,9 +424,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		if(Debug) Debug->PrintComment(tmp);
 	#endif
 	Crossover();
+	emitInteractSig();
 	Mutation();
+	emitInteractSig();
 	Inversion();
+	emitInteractSig();
 	Evaluate();
+	emitInteractSig();
+	PostEvaluate();
 	emitGenSig();
 	emitInteractSig();
 	#ifdef RGADEBUG
@@ -445,7 +447,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	#ifdef RGADEBUG
 		if(Debug&&(!ExternBreak)) Debug->BeginFunc("Run","RInst");
 	#endif
-	if(!bRandomConstruct) RandomConstruct();
+	if(!bRandomConstruct)
+	{
+		RandomConstruct();
+		emitInteractSig();
+		Evaluate();
+		emitInteractSig();
+		PostEvaluate();
+		emitBestSig();
+		emitGenSig();
+	}
 	ExternBreak = false;
 	while((!StopCondition())&&(!ExternBreak))
 	{
@@ -565,7 +576,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		delete thDatas[0];
 		delete[] thDatas;
 	}
-
 	if(Random)
 		delete Random;
 }
