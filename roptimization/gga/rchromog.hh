@@ -93,7 +93,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	{
 		bInsertIt=true;
 		for(j=len1+1,grps1=&parent1->Used.Tab[pos1];(--j)&&bInsertIt;grps1++)
-			if(((*grps1)->CommonObjs(*grps2))&&(!((*grps1)->IsCompatible(*grps2))))
+			if(((*grps1)->CommonObjs(*grps2))||(!((*grps1)->IsCompatible(*grps2))))
 				bInsertIt=false;
 		if(bInsertIt)
 		{
@@ -117,7 +117,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	{
 		bInsertIt=true;
 		for(j=len1+1,grps1=&parent1->Used.Tab[pos1];(--j)&&bInsertIt;grps1++)
-			if(((*grps1)->CommonObjs(*grps2))&&(!((*grps1)->IsCompatible(*grps2))))
+			if(((*grps1)->CommonObjs(*grps2))||(!((*grps1)->IsCompatible(*grps2))))
 				bInsertIt=false;
 		if(bInsertIt)
 		{
