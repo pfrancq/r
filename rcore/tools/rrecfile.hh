@@ -180,6 +180,23 @@ template<class C,unsigned int S,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
+	void RIO::RRecFile<C,S,bOrder>::Seek(unsigned int nb) throw(RStd::RString)
+{
+	lseek(handle,nb*S,SEEK_SET);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	void RIO::RRecFile<C,S,bOrder>::SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc) throw(RStd::RString)
+{
+	lseek(handle,(c+(l*maxc))*S,SEEK_SET);
+}
+
+
+
+//-----------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
 	bool RIO::RRecFile<C,S,bOrder>::Read(C& rec) throw(RStd::RString)
 {
 	if(Mode!=RIO::Read)
@@ -197,6 +214,7 @@ template<class C,unsigned int S,bool bOrder>
 	}
 	return(true);
 }
+
 
 //-----------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>

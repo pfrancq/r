@@ -160,6 +160,21 @@ public:
 	RRecFile& operator<<(const double d) throw(RStd::RString);
 
 	/**
+	* Seek the file to a specific record number.
+	* @param nb             Number of record.
+	*/
+	void Seek(unsigned int nb) throw(RStd::RString);
+
+	/**
+	* Seek the file to a specific record number if the file represent a matrix.
+	* @param c             Column.
+	* @param l             Line.
+	* @param maxc          Number of Columns.
+	* \remarks It is presume that the file is store lines by lines.
+	*/
+	void SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc) throw(RStd::RString);
+
+	/**
 	* Read a record.
 	* @return true if the record could be read.
 	*/
