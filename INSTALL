@@ -1,3 +1,7 @@
+			 ==============================
+			|| Compiling and installing R  ||
+			 ==============================
+
 Basic Installation
 ==================
 
@@ -20,7 +24,7 @@ be considered for the next release.  If at some point `config.cache'
 contains results you don't want to keep, you may remove or edit it.
 
    The file `configure.in' is used to create `configure' by a program
-called `autoconf'.  You only need `configure.in' if you want to change
+called `autoconf'.  You only need `configure.in.in' if you want to change
 it or regenerate `configure' using a newer version of `autoconf'.
 
 The simplest way to compile this package is:
@@ -40,7 +44,98 @@ The simplest way to compile this package is:
      documentation.
 
   4. You can remove the program binaries and object files from the
-     source code directory by typing `make clean'.  
+     source code directory by typing `make clean'.
+
+Note for CVS checkouts
+======================
+
+  If you have checked this out from CVS, you need to have
+automake, autoconf and Libtoll installed.  Then,
+type "make -f Makefile.cvs" to build the needed configuration
+files and proceed as stated below.
+
+You will also probably need GNU m4 (perhaps installed as gm4).
+
+Requirements
+============
+
+  First of all, you will also need a recent C++ compiler, where recent
+means that the compilers are close to C++ standard conforming.
+
+
+libraries Needed by R
+-----------------------------------
+  Some libraries are needed by the R project. These libraries must
+  be present on the system. "configure" check for these libraries.
+
+
+  -o- libMysqlclient library must be present on the system. The libMysqlclient Project
+      can be found on SourceForge. The R Project has been tested to work with
+      clientMysql project at least version. If the library is not found use the
+      configure option :
+      --with-mysql
+      to specify the library location
+
+KDE - QT Frontend :
+-------------------
+
+The project can be compiled with an GUI. This GUI is based on the Qt3 library and
+also on KDE. The Qt libraries need to be present on the system (both qt and qt-devel).
+
+These GUIs are used to configure the differents methods during run time. These GUI are not essencial since all the methods can be configured by editing the corresponding XML configuration file.
+
+To allow the use of these GUIs add the option to the configure :
+	"--enable-kde=yes"
+By default the libraries are compiled using the "--enable-kde=no" option
+
+Others GUI :
+------------
+
+Others GUI are not yet developped but will arrive in a soon like Gtk/Gnome
+
+
+Creating the Makefile
+=====================
+
+R can be configured using GNU autoconf utility which attempts to guess
+the configuration needed to suit your system.  The standard way to use it
+is described in the file INSTALL.autoconf.  In most cases you will be able
+to create the Makefile by typing
+
+  ./configure
+
+For more complicated cases, LyX configure takes the following specific
+flags:
+
+  o --with-mysql=DIR allows to specify the instalation path of the clientMysql
+    library.
+
+  o --enable-kde=[yes/no] that allows to specify if you want to use a
+    frontend based on KDE and Qt. Default is no, no frontend for methods
+    configuration will be disponible.
+
+  o --with-qt-dir=DIR allow to specify where the root of Qt is installed
+
+  o --with-qt-includes=DIR allow to specify where the Qt includes are installed.
+
+  o --with-qt-libraries=DIR allow to specify where the Qt library is installed.
+
+  o --enable-debug will add debug information to your binary. This
+    requires a lot more disk space, but is a must if you want to try to
+    debug problems in "R". The default is to have debug information
+    for development versions and prereleases only.
+
+  o --datadir=DIRECTORY gives the directory where all extra LyX
+    files (lyxrc example, documentation, templates and layouts
+    definitions) will be installed.
+    [defaults to ${prefix}/share/lyx${program_suffix}]
+
+  o --bindir=DIRECTORY gives the directory where the lyx binary
+    will be installed. [defaults to ${prefix}/bin]
+
+  o --prefix=DIRECTORY specifies the root directory to use for installation.
+     [defaults to /usr/local]
+
 
 Compilers and Options
 =====================
@@ -54,6 +149,22 @@ this:
 
 Or on systems that have the `env' program, you can do it like this:
      env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
+
+Compiling and installing LyX
+============================
+
+Once you've got the Makefile created, you just have to type:
+
+  make all
+  make install
+
+All should be OK ;)
+
+If configure fails for some strange reason
+==========================================
+
+Even when configure fails, it creates a Makefile.  You always can check
+the contents of this file, modify it and run 'make'.
 
 Compiling For Multiple Architectures
 ====================================
