@@ -113,52 +113,42 @@ public:
 		{return(Msg==msg);}
 
 	/**
+	* Look after a specific message.
+	* @param msg	Message.
+	* @returns Pointer to the specific message, or 0 if not found.
+	*/
+	static RMsg* LookMsg(const RString& msg);
+
+	/**
+	* Look after a specific message.
+	* @param msg	Message.
+	* @returns Pointer to the specific message, or 0 if not found.
+	*/
+	static RMsg* LookMsg(const char* msg);
+
+	/**
+	* Insert a new message.
+	* @param msg	Message.
+	*/
+	static RMsg* InsertMsg(const RString& msg) throw(bad_alloc);
+
+	/**
+	* Insert a new message.
+	* @param msg	Message.
+	*/
+	static RMsg* InsertMsg(const char* msg) throw(bad_alloc);
+
+	/**
+	* Delete a message.
+	* @param msg	Message.
+	*/
+	static void DeleteMsg(RMsg* msg) throw(bad_alloc);
+
+	/**
 	* Destruct the message.
 	*/
 	~RMsg(void);
 };
-
-
-//-----------------------------------------------------------------------------
-/**
-* Look after a specific message.
-* @param msg	Message.
-* @returns Pointer to the specific message, or 0 if not found.
-*/
-RMsg* LookMsg(const RString& msg);
-
-
-//-----------------------------------------------------------------------------
-/**
-* Look after a specific message.
-* @param msg	Message.
-* @returns Pointer to the specific message, or 0 if not found.
-*/
-RMsg* LookMsg(const char* msg);
-
-
-//-----------------------------------------------------------------------------
-/**
-* Insert a new message.
-* @param msg	Message.
-*/
-RMsg* InsertMsg(const RString& msg) throw(bad_alloc);
-
-
-//-----------------------------------------------------------------------------
-/**
-* Insert a new message.
-* @param msg	Message.
-*/
-RMsg* InsertMsg(const char* msg) throw(bad_alloc);
-
-
-//-----------------------------------------------------------------------------
-/**
-* Delete a message.
-* @param msg	Message.
-*/
-void DeleteMsg(RMsg* msg) throw(bad_alloc);
 
 
 }  //-------- End of namespace RStd -------------------------------------------

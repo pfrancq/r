@@ -36,6 +36,11 @@
 using namespace RStd;
 
 
+//-----------------------------------------------------------------------------
+// Global variable
+RContainer<RMsg,unsigned int,true,false> Msgs(30,15);
+
+
 
 //-----------------------------------------------------------------------------
 //
@@ -44,52 +49,35 @@ using namespace RStd;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RStd::RMsg::RMsg(const RString& msg)
+RMsg::RMsg(const RString& msg)
 	: Msg(msg)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RStd::RMsg::RMsg(const char* msg)
+RMsg::RMsg(const char* msg)
 	: Msg(msg)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RStd::RMsg::~RMsg(void)
-{
-}
-
-
-
-//-----------------------------------------------------------------------------
-//
-// General Functions
-//
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-RContainer<RMsg,unsigned int,true,false> Msgs(30,15);
-
-
-//-----------------------------------------------------------------------------
-RMsg* RStd::LookMsg(const RString& msg)
+RMsg* RMsg::LookMsg(const RString& msg)
 {
 	return(Msgs.GetPtr<const RString>(msg));
 }
 
 
 //-----------------------------------------------------------------------------
-RMsg* RStd::LookMsg(const char* msg)
+RMsg* RMsg::LookMsg(const char* msg)
 {
 	return(Msgs.GetPtr<const char*>(msg));
 }
 
 
 //-----------------------------------------------------------------------------
-RMsg* RStd::InsertMsg(const RString& msg) throw(bad_alloc)
+RMsg* RMsg::InsertMsg(const RString& msg) throw(bad_alloc)
 {
 	RMsg* Msg=new RMsg(msg);
 	Msgs.InsertPtr(Msg);
@@ -98,7 +86,7 @@ RMsg* RStd::InsertMsg(const RString& msg) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-RMsg* RStd::InsertMsg(const char* msg) throw(bad_alloc)
+RMsg* RMsg::InsertMsg(const char* msg) throw(bad_alloc)
 {
 	RMsg* Msg=new RMsg(msg);
 	Msgs.InsertPtr(Msg);
@@ -107,7 +95,13 @@ RMsg* RStd::InsertMsg(const char* msg) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-void RStd::DeleteMsg(RMsg* msg) throw(bad_alloc)
+void RMsg::DeleteMsg(RMsg* msg) throw(bad_alloc)
 {
 	Msgs.DeletePtr(msg);
+}
+
+
+//-----------------------------------------------------------------------------
+RMsg::~RMsg(void)
+{
 }
