@@ -148,23 +148,35 @@ RPromSol* RPromethee::RPromKernel::NewSol(const char* name) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-void RPromethee::RPromKernel::Assign(RPromSol *sol,RPromCriterion *crit,const double v) throw(bad_alloc)
+void RPromethee::RPromKernel::Assign(RPromSol* sol,RPromCriterion* crit,const double v) throw(bad_alloc)
 {
-	RPromCritValue* val=new RPromCritValue(v);
-	sol->InsertPtrAt(val,crit->Id);
-	crit->InsertPtrAt(val,sol->Id);
+	RPromCritValue* val;
+
+	val=sol->GetPtrAt(crit->Id);
+	if(!val)
+	{
+		val=new RPromCritValue(v);
+		sol->InsertPtrAt(val,crit->Id);
+		crit->InsertPtrAt(val,sol->Id);
+	}
+	else
+	{
+		val->Value=v;
+		val=crit->GetPtrAt(sol->Id);
+		val->Value=v;
+	}
 }
 
 
 //-----------------------------------------------------------------------------
-void RPromethee::RPromKernel::Assign(const char* sol,RPromCriterion *crit,const double v) throw(bad_alloc)
+void RPromethee::RPromKernel::Assign(const char* sol,RPromCriterion* crit,const double v) throw(bad_alloc)
 {
 	Assign(Solutions.GetPtr<RString>(sol),crit,v);
 }
 
 
 //-----------------------------------------------------------------------------
-void RPromethee::RPromKernel::Assign(RPromSol *sol,const char* crit,const double v) throw(bad_alloc)
+void RPromethee::RPromKernel::Assign(RPromSol* sol,const char* crit,const double v) throw(bad_alloc)
 {
 	Assign(sol,Criteria.GetPtr<RString>(crit),v);
 }

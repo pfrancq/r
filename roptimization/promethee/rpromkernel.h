@@ -187,7 +187,8 @@ public:
 	static int sort_function_solutions( const void *a, const void *b);	
 
 	/**
-	* Return the solutions order by fit increase.
+	* Return the solutions order by fit increase. The resulting arry must be
+	* deleted by the caller.
 	*/
 	RPromSol** GetSols(void);
 
