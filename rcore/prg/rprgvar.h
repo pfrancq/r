@@ -6,7 +6,7 @@
 
 	Generic variable - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -80,7 +80,7 @@ public:
 	* @param v               Pointer to a variable.
 	* @return int
 	*/
-	int Compare(const RPrgVar* v) const;
+	int Compare(const RPrgVar& v) const;
 
 	/**
 	* This methods compares the name of a variable with a string and works like

@@ -6,7 +6,7 @@
 
 	Container Cursor - Header.
 
-	Copyright 1999-2005 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -30,24 +30,25 @@
 
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #ifndef RCursorH
 #define RCursorH
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
+#include <rstd/base/basiccursor.h>
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 namespace R{
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
-* @param C                  The class of the elements that are contained.
+* @param C                   The class of the elements that are contained.
 *
 * This class represent a cursor to iterate a RContainer. The parameters are
 * those of the container. When an element is added or removed from the container
@@ -69,45 +70,20 @@ namespace R{
 * @short Container Cursor.
 */
 template<class C>
-	class RCursor
+	class RCursor : public BasicCursor
 {
-	/**
-	* This variable is used to go through the container.
-	*/
-	C** Current;
-
-	/**
-	* This variable is used to see if the end of the container is reached.
-	*/
-	size_t ActPtr;
-
-	/**
-	* The array of pointers for the elements.
-	*/
-	C **Tab;
-
-	/**
-	* The number of elements in the container.
-	*/
-	size_t NbPtr;
-
-	/**
-	* The last position in the array used by an object.
-	*/
-	size_t LastPtr;
-
 public:
 
 	/**
 	* Construct the cursor.
 	*/
-	RCursor(void);
+	RCursor(void) : BasicCursor() {}
 
 	/**
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
-	RCursor(const RCursor<C>& src);
+	RCursor(const RCursor<C>& src) : BasicCursor(src) {}
 
 	/**
 	* Construct the cursor.
@@ -115,7 +91,7 @@ public:
 	* @param max             Maximum number of elements to iterate. If null,
 	*                        iterate over the whole container.
 	*/
-	RCursor(const RContainer<C,true,true>& c,size_t max=0);
+	RCursor(const RContainer<C,true,true>& c,size_t max=0) : BasicCursor(c,max) {}
 
 	/**
 	* Construct the cursor.
@@ -123,7 +99,7 @@ public:
 	* @param max             Maximum number of elements to iterate. If null,
 	*                        iterate over the whole container.
 	*/
-	RCursor(const RContainer<C,false,true>& c,size_t max=0);
+	RCursor(const RContainer<C,false,true>& c,size_t max=0) : BasicCursor(c,max) {}
 
 	/**
 	* Construct the cursor.
@@ -131,7 +107,7 @@ public:
 	* @param max             Maximum number of elements to iterate. If null,
 	*                        iterate over the whole container.
 	*/
-	RCursor(const RContainer<C,true,false>& c,size_t max=0);
+	RCursor(const RContainer<C,true,false>& c,size_t max=0) : BasicCursor(c,max) {}
 
 	/**
 	* Construct the cursor.
@@ -139,13 +115,13 @@ public:
 	* @param max             Maximum number of elements to iterate. If null,
 	*                        iterate over the whole container.
 	*/
-	RCursor(const RContainer<C,false,false>& c,size_t max=0);
+	RCursor(const RContainer<C,false,false>& c,size_t max=0) : BasicCursor(c,max) {}
 
 	/**
 	* Assignment operator using a "Cursor".
 	* @param src             Source container.
 	*/
-	RCursor<C>& operator=(const RCursor<C>& src);
+	RCursor<C>& operator=(const RCursor<C>& src) { return(static_cast<RCursor<C>&>(BasicCursor::operator=(src)));}
 
 	/**
 	* Set the container.
@@ -153,62 +129,18 @@ public:
 	* @param max             Maximum number of elements to iterate. If null,
 	*                        iterate over the whole container.
 	*/
-	template<bool b,bool o> void Set(const RContainer<C,b,o>& c,size_t max=0);
-
-	/**
-	* Clear the cursor.
-	*/
-	void Clear(void);
-
-	/**
-	* Start the iterator to go trough the container.
-	*/
-	inline void Start(void);
-
-	/**
-	* Go to the i-th element of the container.
-	* @param idx             Index of the element to get.
-	*/
-	void GoTo(size_t idx);
-
-	/**
-	* Return the actual position in the container.
-	*/
-	inline size_t GetPos(void) {return(ActPtr);}
-
-	/**
-	* Return the number of elements in the container.
-	*/
-	inline size_t GetNb(void);
-
-	/**
-	* Test if the end of the container is reached.
-	*/
-	inline bool End(void) const;
-
-	/**
-	* Test if the cursor is at a given index.
-	* @param idx             Index of the element.
-	*/
-	inline bool IsAt(size_t idx) const;
-
-	/**
-	* Goto the next element, if the end is reached, go to the beginning.
-	*/
-	inline void Next(void);
+	template<bool b,bool o> void Set(const RContainer<C,b,o>& c,size_t max=0) { BasicCursor::Set(c,max);}
 
 	/**
 	* Return the current element.
 	*/
-	inline C* operator()(void) const;
+	inline C* operator()(void) const {return(reinterpret_cast<C*>(*Current));}
+
 };
 
 
-#include <rstd/rcursor.hh> // implementation
+}  //-------- End of namespace R ----------------------------------------------
 
 
-}  //-------- End of namespace R -----------------------------------------------
-
-
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif

@@ -6,7 +6,7 @@
 
 	Generic Class - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -53,9 +53,9 @@ RPrgClass::RPrgClass(const char* name) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-int RPrgClass::Compare(const RPrgClass* c) const
+int RPrgClass::Compare(const RPrgClass& c) const
 {
-	return(Name.Compare(c->Name));
+	return(Name.Compare(c.Name));
 }
 
 

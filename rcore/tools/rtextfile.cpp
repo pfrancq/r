@@ -270,7 +270,7 @@ bool RTextFile::CurString(const RString& str,bool CaseSensitive) const
 	RChar tmp;
 
 	// Test the first character
-	if((CaseSensitive&&(Cur!=str[0]))||(!CaseSensitive&&(RChar::ToLower(Cur)!=RChar::ToLower(str[0]))))
+	if((CaseSensitive&&(Cur!=str[static_cast<size_t>(0)]))||(!CaseSensitive&&(RChar::ToLower(Cur)!=RChar::ToLower(str[static_cast<size_t>(0)]))))
 		return(false);
 	if(str.GetLen()==1) return(true);
 

@@ -6,7 +6,7 @@
 
 	Unicode character - Header.
 
-	Copyright 2003 by the Université Libre de Bruxelles.
+	Copyright 2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -237,6 +237,12 @@ public:
 	bool IsNull(void) const                       { return(Unicode()==0); }
 
 	/**
+	* Test if the character is a null one.
+	* @return bool.
+	*/
+	bool operator!() const                       { return(Unicode()==0); }
+
+	/**
 	* Test if the character is a printable one.
 	* @return bool.
 	*/
@@ -326,6 +332,63 @@ public:
 	*/
 	static const RChar* StrChr(const RChar* str1,const RChar c);
 };
+
+
+/**
+* Test if the character is a printable one.
+* @return bool.
+*/
+inline bool isprint(const RChar c)                      { return(c.IsPrint()); }
+
+/**
+* Test if the character is a punctuation one.
+* @return bool.
+*/
+inline bool ispunct(const RChar c)                      { return(c.IsPunct()); }
+
+/**
+* Test if the character is a space one.
+* @return bool.
+*/
+inline bool isspace(const RChar c)                      { return(c.IsSpace()); }
+
+/**
+* Test if the character is a letter.
+* @return bool.
+*/
+inline bool isalpha(const RChar c)                      { return(c.IsAlpha()); }
+
+/**
+* Test if the character is a digit.
+* @return bool.
+*/
+inline bool isdigit(const RChar c)                     { return(c.IsDigit()); }
+
+/**
+* Test if the character is alphanumeric.
+* @return bool.
+*/
+inline bool isalnum(const RChar c)                      { return(c.IsAlNum()); }
+
+/**
+* Test if the character is a graphical one.
+* @return bool.
+*/
+inline bool isgraph(const RChar c)                      { return(c.IsGraph()); }
+
+/**
+* Transform an Unicode character in lowercase.
+* @param c               Character.
+* return RChar.
+*/
+inline RChar tolower(const RChar c)                { return(RChar::ToLower(c)); }
+
+/**
+* Transform an Unicode character in upperrcase.
+* @param c               Character.
+* return RChar.
+*/
+inline RChar toupper(const RChar c)                { return(RChar::ToUpper(c)); }
 
 
 }  //-------- End of namespace R -----------------------------------------------

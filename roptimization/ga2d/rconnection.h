@@ -76,8 +76,8 @@ public:
 	* This function compares two connections returns 0 if
 	* there are the same.
 	* @param c              Connection used for the comparaison.
-	*/	
-	int Compare(const RConnection* c) {return(this-c);}
+	*/
+	int Compare(const RConnection&) const {return(-1);}
 
 	/**
 	* Return the weight.

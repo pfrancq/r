@@ -103,8 +103,8 @@ public:
 	* Compare function.
 	* @param p              Object used for the search.
 	*/
-	int Compare(const RGeoInfoConnectionPart* p)
-		{return(!(((p->Id1==Id1)&&(p->Id2==Id2))||((p->Id1==Id2)&&(p->Id2==Id1))));}
+	int Compare(const RGeoInfoConnectionPart& p) const
+		{return(!(((p.Id1==Id1)&&(p.Id2==Id2))||((p.Id1==Id2)&&(p.Id2==Id1))));}
 
 	/**
 	* Compare function.
@@ -165,13 +165,7 @@ public:
 	* This function compares two connections returns 0 if there are the same.
 	* @param c              Connection used for the comparaison.
 	*/
-	int Compare(const RGeoInfoConnection* c) {return(this-c);}
-
-	/**
-	* This function compares two connections returns 0 if there are the same.
-	* @param c              Connection used for the comparaison.
-	*/
-	int Compare(const RGeoInfoConnection& c) {return(this-(&c));}
+	int Compare(const RGeoInfoConnection&) {return(-1);}
 
 	/**
 	* Verify that at least two objects of the connection are placed.

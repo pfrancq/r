@@ -51,9 +51,9 @@ RPrgFunc::RPrgFunc(const char* name) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-int RPrgFunc::Compare(const RPrgFunc* f) const
+int RPrgFunc::Compare(const RPrgFunc& f) const
 {
-	return(Name.Compare(f->Name));
+	return(Name.Compare(f.Name));
 }
 
 

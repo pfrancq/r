@@ -6,7 +6,7 @@
 
 	Rectangle - Header
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -58,7 +58,7 @@ public:
 	* (left,bottom) edge.
 	*/
 	RPoint Pt1;
-	
+
 	/**
 	* (right,up) edge.
 	*/
@@ -132,7 +132,7 @@ public:
 	* is used with the class RContainer.
 	* @param rect           Rectangle used for the comparaison.
 	*/
-	int Compare(const RRect* rect) const { return((*this)!=(*rect)); }
+	int Compare(const RRect&) const { return(-1); }
 
 	/**
 	* Adapt the rectangle to be contained in a given region.

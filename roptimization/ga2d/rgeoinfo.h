@@ -338,7 +338,7 @@ public:
 	* pointers.
 	* @param info           Pointer used for the comparaison.
 	*/
-	int Compare(const RGeoInfo* info) const { return(info!=this); }
+	int Compare(const RGeoInfo&) const { return(-1); }
 
 	/**
 	* Compare function use for the RContainer class. Compare the identificator

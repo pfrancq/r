@@ -6,7 +6,7 @@
 
 	Container - Inline Implementation.
 
-	Copyright 1999-2005 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -30,53 +30,39 @@
 
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // class RContainer
 //
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>::RContainer(size_t m,size_t i)
-		: NbPtr(0), MaxPtr(m), LastPtr(0), IncPtr(i)
+		: BasicContainer(m,i)
 {
-	if(MaxPtr)
-	{
-		Tab = new C*[MaxPtr];
-		memset(Tab,0,MaxPtr*sizeof(C*));
-		if(!IncPtr) IncPtr=MaxPtr/2;
-		if(!IncPtr) IncPtr=10;
-	}
-	else
-	{
-		MaxPtr=10;
-		Tab = new C*[MaxPtr];
-		memset(Tab,0,MaxPtr*sizeof(C*));
-		if(!IncPtr) IncPtr=10;
-	}
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>::RContainer(const RContainer<C,true,bOrder>& src)
-		: NbPtr(0), MaxPtr(0), LastPtr(0), IncPtr(0)
+	: BasicContainer()
 {
 	Create<true>(src);
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>::RContainer(const RContainer<C,false,bOrder>& src)
-		: NbPtr(0), MaxPtr(0), LastPtr(0), IncPtr(0)
+		: BasicContainer()
 {
 	Create<false>(src);
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::
 		operator=(const RContainer<C,true,bOrder>& src)
@@ -85,7 +71,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::
 		operator=(const RContainer<C,false,bOrder>& src)
@@ -94,7 +80,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	void RContainer<C,bAlloc,bOrder>::Copy(const RContainer<C,true,bOrder>& src)
 {
@@ -102,7 +88,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	void RContainer<C,bAlloc,bOrder>::Copy(const RContainer<C,false,bOrder>& src)
 {
@@ -110,7 +96,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::
 		operator+=(const RContainer<C,true,true>& src)
@@ -119,7 +105,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::
 		operator+=(const RContainer<C,true,false>& src)
@@ -128,7 +114,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::
 		operator+=(const RContainer<C,false,true>& src)
@@ -137,7 +123,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::
 		operator+=(const RContainer<C,false,false>& src)
@@ -146,48 +132,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder>
-	void RContainer<C,bAlloc,bOrder>::VerifyTab(void)
-{
-	if(LastPtr==MaxPtr)
-	{
-		size_t OldSize;
-
-		OldSize=MaxPtr;
-		C **ptr;
-		MaxPtr+=IncPtr;
-		ptr=new C*[MaxPtr];
-		memcpy(ptr,Tab,OldSize*sizeof(C*));
-		delete[] Tab;
-		Tab=ptr;
-		memset(&Tab[OldSize],0,IncPtr*sizeof(C*));
-	}
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder>
-	void RContainer<C,bAlloc,bOrder>::VerifyTab(size_t max)
-{
-	RReturnIfFail(max>0);
-	if(max>MaxPtr)
-	{
-		C **ptr;
-		size_t OldSize;
-
-		OldSize=MaxPtr;
-		MaxPtr=max;
-		ptr=new C*[MaxPtr];
-		memcpy(ptr,Tab,OldSize*sizeof(C*));
-		delete[] Tab;
-		Tab=ptr;
-		memset(&Tab[OldSize],0,(MaxPtr-OldSize)*sizeof(C*));
-	}
-}
-
-
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	void RContainer<C,bAlloc,bOrder>::Clear(void)
 {
@@ -195,7 +140,7 @@ template<class C,bool bAlloc,bool bOrder>
 	{
 		C **ptr;
 
-		for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
+		for(LastPtr++,ptr=reinterpret_cast<C**>(Tab);--LastPtr;ptr++)
 			if(*ptr)
 				delete (*ptr);
 	}
@@ -204,11 +149,21 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	void RContainer<C,bAlloc,bOrder>::Clear(size_t m,size_t i)
 {
-	Clear();
+	if(bAlloc)
+	{
+		C **ptr;
+
+		for(LastPtr++,ptr=reinterpret_cast<C**>(Tab);--LastPtr;ptr++)
+		{
+			if(*ptr)
+				delete (*ptr);
+		}
+	}
+	LastPtr=NbPtr=0;
 	IncPtr=i;
 	MaxPtr=m;
 	if(!IncPtr) IncPtr=MaxPtr/2;
@@ -218,44 +173,9 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
-	void RContainer<C,bAlloc,bOrder>::ReOrder(int sortOrder(const void*,const void*))
-{
-	if(NbPtr)
-		qsort(static_cast<void*>(Tab),LastPtr,sizeof(C*),sortOrder);
-}
-
-
-
-//------------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder>
-	void RContainer<C,bAlloc,bOrder>::InsertPtrOrderAt(const C* ins,size_t pos)
-{
-	C **ptr;
-
-	RReturnIfFail(ins);
-	RReturnIfFail(pos<=LastPtr);
-	if(pos>MaxPtr)
-	{
-		VerifyTab(pos+IncPtr);
-	}
-	else
-	{
-		VerifyTab();
-	}
-	ptr=&Tab[pos];
-	if(pos<LastPtr)
-		memmove(ptr+1,ptr,(LastPtr-pos)*sizeof(C*));
-	(*ptr)=(C*)ins;
-	NbPtr++;
-	LastPtr++;
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder>
-	void RContainer<C,bAlloc,bOrder>::InsertPtrAt(const C* ins,size_t pos,bool del)
+	void RContainer<C,bAlloc,bOrder>::InsertPtrAt(const C* ins,unsigned int pos,bool del)
 {
 	C **ptr;
 
@@ -269,7 +189,7 @@ template<class C,bool bAlloc,bool bOrder>
 	{
 		VerifyTab();
 	}
-	ptr=&Tab[pos];
+	ptr=reinterpret_cast<C**>(&Tab[pos]);
 	if(pos<LastPtr)
 	{
 		if(del)
@@ -282,7 +202,7 @@ template<class C,bool bAlloc,bool bOrder>
 			memmove(ptr+1,ptr,(LastPtr-pos)*sizeof(C*));
 		}
 	}
-	(*ptr)=(C*)ins;
+	(*ptr)=const_cast<C*>(ins);
 	NbPtr++;
 	if(pos+1>LastPtr)
 	{
@@ -297,7 +217,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	void RContainer<C,bAlloc,bOrder>::InsertPtr(const C* ins)
 {
@@ -306,11 +226,11 @@ template<class C,bool bAlloc,bool bOrder>
 	if(bOrder)
 	{
 		bool Find;
-		size_t Index=GetId<const C*>(ins,Find);
+		size_t Index=GetId<const C>(*ins,Find);
 		if(Find)
 		{
 			if(bAlloc)
-				delete(Tab[Index]);
+				delete(static_cast<C*>(Tab[Index]));
 			Tab[Index]=(C*)ins;
 		}
 		else
@@ -325,19 +245,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder>
-	void RContainer<C,bAlloc,bOrder>::Exchange(size_t pos1,size_t pos2)
-{
-	if((pos1>LastPtr)||(pos2>LastPtr))
-		return;
-	C* ptr=Tab[pos1];
-	Tab[pos1]=Tab[pos2];
-	Tab[pos2]=ptr;
-}
-
-
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<class TUse>
 	size_t RContainer<C,bAlloc,bOrder>::GetId(const TUse& tag,bool& find) const
 {
@@ -358,7 +266,7 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 			while(Cont)
 			{
 				i=(NbMax+NbMin)/2;
-				ptr=Tab[i];
+				ptr=static_cast<C*>(Tab[i]);
 				Comp=ptr->Compare(tag);
 				if(!Comp)
 				{
@@ -379,7 +287,7 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 		else
 		{
 			i = 0;
-			Comp= (*Tab)->Compare(tag);
+			Comp=(static_cast<C*>(*Tab))->Compare(tag);
 			if(!Comp)
 			{
 				find=true;
@@ -392,7 +300,7 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 	else
 	{
 		find=true;
-		for(i=0,ptr2=Tab;i<LastPtr;ptr2++,i++)
+		for(i=0,ptr2=reinterpret_cast<C**>(Tab);i<LastPtr;ptr2++,i++)
 			if((*ptr2)&&(!((*ptr2)->Compare(tag)))) return(i);
 		find=false;
 		return(i);
@@ -400,7 +308,7 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<class TUse>
 	bool RContainer<C,bAlloc,bOrder>::IsIn(const TUse& tag,bool sortkey) const
 {
@@ -415,7 +323,7 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 		size_t i;
 		C **ptr;
 
-		for(i=LastPtr+1,ptr=Tab;--i;ptr++)
+		for(i=LastPtr+1,ptr=reinterpret_cast<C**>(Tab);--i;ptr++)
 			if((*ptr)&&(!((*ptr)->Compare(tag))))
 				return(true);
 		return(false);
@@ -423,35 +331,7 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 }
 
 
-//------------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder>
-	const C* RContainer<C,bAlloc,bOrder>::operator[](size_t idx) const
-{
-	if(idx>=LastPtr)
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("RContainer::operator[] const : index outside container");
-	#endif
-	return(Tab[idx]);
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder>
-	C* RContainer<C,bAlloc,bOrder>::operator[](size_t idx)
-{
-	if(idx>=LastPtr)
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("RContainer::operator[] const : index outside container");
-	#endif
-	return(Tab[idx]);
-}
-
-
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<class TUse>
 	C* RContainer<C,bAlloc,bOrder>::GetPtr(const TUse& tag,bool sortkey) const
 {
@@ -460,24 +340,24 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 		bool Find;
 		size_t Index=GetId<TUse>(tag,Find);
 		if(Find)
-			return(Tab[Index]);
+			return(static_cast<C*>(Tab[Index]));
 		else
 			return(0);
 	}
 	else
 	{
 		size_t i;
-		C **ptr;
+		C** ptr;
 
-		for(i=LastPtr+1,ptr=Tab;--i;ptr++)
+		for(i=LastPtr+1,ptr=reinterpret_cast<C**>(Tab);--i;ptr++)
 			if((*ptr)&&(!((*ptr)->Compare(tag))))
-				return(*ptr);
+				return(static_cast<C*>(*ptr));
 		return(0);
 	}
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<class TUse>
 	C* RContainer<C,bAlloc,bOrder>::GetInsertPtr(const TUse& tag,bool sortkey)
 {
@@ -487,16 +367,16 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 		size_t Index=GetId<TUse>(tag,Find);
 		if(!Find)
 			InsertPtrOrderAt(new C(tag),Index);
-		return(Tab[Index]);
+		return(static_cast<C*>(Tab[Index]));
 	}
 	else
 	{
 		size_t i;
 		C **ptr;
 
-		for(i=LastPtr+1,ptr=Tab;--i;ptr++)
+		for(i=LastPtr+1,ptr=reinterpret_cast<C**>(Tab);--i;ptr++)
 			if((*ptr)&&(!((*ptr)->Compare(tag))))
-				return(*ptr);
+				return(static_cast<C*>(*ptr));
 		VerifyTab();
 		(*ptr)=new C(tag);
 		InsertPtr(*ptr);
@@ -505,7 +385,7 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
   template<class TUse> RContainer<C,false,bOrder>*
     RContainer<C,bAlloc,bOrder>::GetPtrs(const TUse& tag) const
@@ -515,32 +395,14 @@ template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,false,bOrder> *tmp;
 
 	tmp=new RContainer<C,false,bOrder>(MaxPtr,IncPtr);
-	for(i=LastPtr+1,ptr=Tab;--i;ptr++)
+	for(i=LastPtr+1,ptr=reinterpret_cast<C**>(Tab);--i;ptr++)
 		if((*ptr)&&(!((*ptr)->Compare(tag))))
 			tmp->InsertPtr(*ptr);
 	return(tmp);
 }
 
 
-//------------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder>
-	size_t RContainer<C,bAlloc,bOrder>::GetTab(C** tab)
-{
-	memcpy(tab,Tab,LastPtr*sizeof(C*));
-	return(LastPtr);
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder>
-	size_t RContainer<C,bAlloc,bOrder>::GetTab(const C** tab) const
-{
-	memcpy(tab,Tab,LastPtr*sizeof(C*));
-	return(LastPtr);
-}
-
-
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	void RContainer<C,bAlloc,bOrder>::DeletePtr(C*& del)
 {
@@ -552,13 +414,13 @@ template<class C,bool bAlloc,bool bOrder>
 	if(bOrder)
 	{
 		bool Find;
-		Index=GetId<C*>(del,Find);
+		Index=GetId<C>(*del,Find);
 		if(!Find) return;
-		ptr=&Tab[Index];
+		ptr=reinterpret_cast<C**>(&Tab[Index]);
 	}
 	else
 	{
-		for(Index=0,ptr=Tab;((*ptr)!=del)&&(Index<LastPtr);Index++,ptr++);
+		for(Index=0,ptr=reinterpret_cast<C**>(Tab);((*ptr)!=del)&&(Index<LastPtr);Index++,ptr++);
 		if(Index==LastPtr) return;
 	}
 	memmove(ptr,ptr+1,((--LastPtr)-Index)*sizeof(C*));
@@ -568,7 +430,7 @@ template<class C,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<class TUse>
 	void RContainer<C,bAlloc,bOrder>::DeletePtr(const TUse& tag,bool sortkey)
 {
@@ -581,11 +443,11 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 		Index=GetId<TUse>(tag,Find);
 		if(!Find)
 			return;
-		ptr=&Tab[Index];
+		ptr=reinterpret_cast<C**>(&Tab[Index]);
 	}
 	else
 	{
-		for(Index=0,ptr=Tab;Index<LastPtr;Index++,ptr++)
+		for(Index=0,ptr=reinterpret_cast<C**>(Tab);Index<LastPtr;Index++,ptr++)
 		{
 			if((*ptr)&&(!((*ptr)->Compare(tag))))
 				break;
@@ -602,23 +464,28 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<bool b>
 	void RContainer<C,bAlloc,bOrder>::Create(const RContainer<C,b,bOrder>& src)
 {
-	size_t i;
+	unsigned int i;
 	C** tab;
 	C** tab2;
 
+	if(!src.NbPtr)
+	{
+		RContainer<C,bAlloc,bOrder>(10,10);
+		return;
+	}
 	MaxPtr=src.MaxPtr;
 	IncPtr=src.IncPtr;
 	NbPtr=src.NbPtr;
 	LastPtr=src.LastPtr;
-	Tab = new C*[MaxPtr];
-	memset(Tab,0,MaxPtr*sizeof(C*));
+	Tab = new void*[MaxPtr];
+	memset(Tab,0,MaxPtr*sizeof(void*));
 	if(bAlloc&&b)
 	{
-		for(i=src.LastPtr+1,tab=src.Tab,tab2=Tab;--i;tab++,tab2++)
+		for(i=src.LastPtr+1,tab=reinterpret_cast<C**>(src.Tab),tab2=reinterpret_cast<C**>(Tab);--i;tab++,tab2++)
 		{
 			if(*tab)
 				(*tab2)=new C(**tab);
@@ -633,11 +500,11 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<bool b>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::NormalCopy(const RContainer<C,b,bOrder>& src)
 {
-	size_t i;
+	unsigned int i;
 	C** tab;
 	C** tab2;
 
@@ -647,7 +514,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 	VerifyTab(src.LastPtr);
 	if(bAlloc&&b)
 	{
-		for(i=src.LastPtr+1,tab=src.Tab,tab2=Tab;--i;tab++,tab2++)
+		for(i=src.LastPtr+1,tab=reinterpret_cast<C**>(src.Tab),tab2=reinterpret_cast<C**>(Tab);--i;tab++,tab2++)
 		{
 			if(*tab)
 				(*tab2)=new C(**tab);
@@ -663,11 +530,11 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<bool b>
 	void RContainer<C,bAlloc,bOrder>::DeepCopy(const RContainer<C,b,bOrder>& src)
 {
-	size_t i;
+	unsigned int i;
 	C** tab;
 	C** tab2;
 
@@ -675,7 +542,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 	if(!src.NbPtr)
 		return;
 	VerifyTab(src.LastPtr);
-	for(i=src.LastPtr+1,tab=src.Tab,tab2=Tab;--i;tab++,tab2++)
+	for(i=src.LastPtr+1,tab=reinterpret_cast<C**>(src.Tab),tab2=reinterpret_cast<C**>(Tab);--i;tab++,tab2++)
 	{
 		if(*tab)
 			(*tab2)=new C(**tab);
@@ -685,11 +552,11 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<bool b,bool o>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::Add(const RContainer<C,b,o>& src)
 {
-	size_t i;
+	unsigned int i;
 	C** tab;
 	C** tab2;
 
@@ -698,7 +565,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b,bool o>
 	VerifyTab(src.LastPtr+LastPtr);
 	if(bOrder&&NbPtr)
 	{
-		for(i=src.LastPtr+1,tab=src.Tab;--i;tab++)
+		for(i=src.LastPtr+1,tab=reinterpret_cast<C**>(src.Tab);--i;tab++)
 		{
 			if(*tab)
 			{
@@ -711,7 +578,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b,bool o>
 	}
 	else
 	{
-		for(i=src.LastPtr+1,tab=src.Tab,tab2=&Tab[LastPtr];--i;tab++)
+		for(i=src.LastPtr+1,tab=reinterpret_cast<C**>(src.Tab),tab2=reinterpret_cast<C**>(&Tab[LastPtr]);--i;tab++)
 		{
 			if(*tab)
 			{
@@ -728,17 +595,15 @@ template<class C,bool bAlloc,bool bOrder> template<bool b,bool o>
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>::~RContainer(void)
 {
 	if(bAlloc)
 	{
-		C** ptr(Tab);
-		for(LastPtr++;--LastPtr;ptr++)
-		{
+		C** ptr;
+		for(LastPtr++,ptr=reinterpret_cast<C**>(Tab);--LastPtr;ptr++)
 			delete(*ptr);
-		}
 	}
 	delete[] Tab;
 }

@@ -6,7 +6,7 @@
 
 	Generic variable - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -51,9 +51,9 @@ RPrgVar::RPrgVar(const char* name) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-int RPrgVar::Compare(const RPrgVar* v) const
+int RPrgVar::Compare(const RPrgVar& v) const
 {
-	return(Name.Compare(v->Name));
+	return(Name.Compare(v.Name));
 }
 
 

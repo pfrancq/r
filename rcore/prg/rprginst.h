@@ -6,7 +6,7 @@
 
 	Generic instruction - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -74,7 +74,7 @@ public:
 	* @see R::RContainer.
 	* @return -1
 	*/
-	int Compare(const RPrgInst* t) const;
+	int Compare(const RPrgInst& t) const;
 
 	/**
 	* This method compares two instructions.
@@ -101,4 +101,4 @@ public:
 
 
 //------------------------------------------------------------------------------
-#endif 
+#endif

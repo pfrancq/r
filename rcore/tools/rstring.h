@@ -6,7 +6,7 @@
 
 	Unicode String - Header.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -30,30 +30,31 @@
 
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #ifndef RString_H
 #define RString_H
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include file for ANSI C/C++
 #include <string>
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rcontainer.h>
 #include <rstd/rcstring.h>
 #include <rstd/rchar.h>
+#include <rstd/base/basicstring.h>
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 namespace R{
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * This class implements a unicode string (RChar*) as a class. The class uses a
 * shared approach. For example in the following code:
@@ -67,16 +68,20 @@ namespace R{
 * @author Pascal Francq
 * @short Unicode String
 */
-class RString
+class RString : public BasicString<RChar,RString>
 {
-	class CharBuffer;
+	class CharBuffer : public BasicCharBuffer
+	{
+	public:
+		char* Latin1;        // Latin1 version of the string.
 
-protected:
-
-	/**
-	* Pointer to the buffer of the string.
-	*/
-	CharBuffer* Data;
+		CharBuffer(void)
+			: BasicCharBuffer(), Latin1(0) {}
+		CharBuffer(RChar* tab,size_t len,size_t maxlen)
+			: BasicCharBuffer(tab,len,maxlen), Latin1(0) {}
+		void InvalidLatin1(void) {delete[] Latin1; Latin1=0;}
+		~CharBuffer(void) {delete[] Latin1;}
+	};
 
 	/**
 	* Pointer to the buffer representing the null string.
@@ -97,39 +102,33 @@ public:
 
 	/**
 	* Construct a string from a "C string".
-	* @param text           The "C string" used as reference.
+	* @param src             C string" used as reference.
 	*/
-	RString(const char* text);
+	RString(const char* src);
 
 	/**
 	* Construct a string from a Unicode array.
-	* @param text           The array used as reference.
+	* @param src             Array used as reference.
 	*/
-	RString(const RChar* text);
+	RString(const RChar* src);
 
 	/**
 	* Construct a string from a string.
-	* @param text           The string used as reference.
+	* @param src             String used as reference.
 	*/
-	RString(const std::string& text);
+	RString(const std::string& src);
 
 	/**
 	* Construct an empty string with a maximal size.
-	* @param maxlen         Initial maximal length of the string.
+	* @param maxlen          Initial maximal length of the string.
 	*/
-	RString(unsigned int maxlen);
+	explicit RString(size_t maxlen);
 
 	/**
 	* Construct a string from another string.
-	* @param str            String used.
+	* @param src             Source string.
 	*/
-	RString(const RString& str);
-
-	/**
-	* Construct a string from another string.
-	* @param str            Pointer to the string.
-	*/
-	RString(const RString* str);
+	RString(const RString& src);
 
 private:
 
@@ -143,18 +142,21 @@ public:
 
 	/**
 	* Assignment operator using another string.
+	* @param src             Source string.
 	*/
-	RString& operator=(const RString& str);
+	RString& operator=(const RString& src);
 
 	/**
 	* Assignment operator using a "C string".
+	* @param src             Source string.
 	*/
-	RString& operator=(const char* text);
+	RString& operator=(const char* src);
 
 	/**
 	* Assignment operator using a string.
+	* @param src             Source string.
 	*/
-	RString& operator=(const std::string& text);
+	RString& operator=(const std::string& src);
 
 	/**
 	* Clear the content of the string.
@@ -163,19 +165,17 @@ public:
 
 	/**
 	* Copy a certain number of characters in the string.
-	* @param text           Text to copy.
-	* @param nb             Numbre of characters to copy.
+	* @param text            Text to copy.
+	* @param nb              Number of characters to copy.
 	*/
-	void Copy(const char* text,unsigned int nb);
+	void Copy(const char* text,size_t nb);
 
 	/**
 	* Copy a certain number of characters in the string.
-	* @param text           Text to copy.
-	* @param nb             Numbre of characters to copy.
+	* @param text            Text to copy.
+	* @param nb              Number of characters to copy.
 	*/
-	void Copy(const RChar* text,unsigned int nb);
-
-private:
+	void Copy(const RChar* text,size_t nb);
 
 	/**
 	* Deep copy of the string if necessary, i.e. when the string points to an
@@ -183,42 +183,13 @@ private:
 	*/
 	void Copy(void);
 
-public:
-
-	/**
-	* Get a uppercase version of the string.
-	* @return RString.
-	*/
-	RString ToUpper(void) const;
-
-	/**
-	* Get a lowercase version of the string.
-	* @return RString.
-	*/
-	RString ToLower(void) const;
-
-	/**
-	* Return the length of the string.
-	*/
-	unsigned int GetLen(void) const;
-
 	/**
 	* Set the length of the string. If the length is greater than the current
 	* one, the internal buffer is updated. Any new space allocated contains
 	* arbitrary data.
+	* @param len             Length of the string.
 	*/
-	void SetLen(unsigned int len);
-
-	/**
-	* Return the maximal length of the string.
-	*/
-	unsigned int GetMaxLen(void) const;
-
-	/**
-	* Look if the string is empty.
-	* @returns true if the length is null, false else.
-	*/
-	bool IsEmpty(void) const;
+	inline void SetLen(size_t len) {BasicString<RChar,RString>::SetLen<CharBuffer>(len);}
 
 	/**
 	* Transform the string into a "C String" in Latin1 encoding. The resulting
@@ -229,81 +200,58 @@ public:
 	const char* Latin1(void) const;
 
 	/**
-	* This function return a string by stripping whitespace (or other
-	* characters) from the beginning and end of the string.
-	*/
-	RString Trim(void) const;
-
-	/**
-	* This function returns the character at a given position in the string. If
-	* the position is outside the string, the null character is returned.
-	* @param pos            Position of the character.
+	* This function returns the character at a given position in the string.
+	* (Read only).
+	* @param idx             Position of the character.
 	* @returns RChar.
 	*/
-	RChar operator[](int pos) const;
+	const RChar& operator[](size_t idx) const;
 
 	/**
-	* Find the position of a given character in the string.
-	* @param car            Character to find.
-	* @param pos            Position to start the search. Negative values start
-	*                       the search from the end.
-	* @param CaseSensitive  Is the search case sensitive.
-	* @return The position of the first occurence or -1 if the character was not
-	*         found.
+	* This function returns the character at a given position in the string.
+	* @param idx             Position of the character.
+	* @returns RChar.
 	*/
-	int Find(const RChar car,int pos=0,bool CaseSensitive=true) const;
-
-	/**
-	* Find the position of a given string in the string.
-	* @param str            String to find.
-	* @param pos            Position to start the search. Negative values start
-	*                       the search from the end.
-	* @param CaseSensitive  Is the search case sensitive.
-	* @return The position of the first occurence or -1 if the character was not
-	*         found.
-	*/
-	int FindStr(const RString str,int pos=0,bool CaseSensitive=true) const;
+	RChar& operator[](size_t idx);
 
 	/**
 	* Get a sub-string of a given string.
-	* @param idx            Index of the first character.
-	* @param len            Length of the sub-string. If the legnth is not
-	*                       specified, the end of the string is copied.
+	* @param idx             Index of the first character.
+	* @param len             Length of the sub-string. If the legnth is not
+	*                        specified, the end of the string is copied.
 	* @returns A RString containing the substring.
 	*/
-	RString Mid(unsigned int idx,unsigned int len = 0xFFFFFFFF) const;
-
-	/**
-	* Split the string to find all the elements separated by a given character.
-	* @param elements       Container that will hold the results.
-	* @param car            Character used as separator.
-	*/
-	void Split(RContainer<RString,true,false>& elements,const RChar car) const;
+	inline RString Mid(size_t idx,int len=-1) const {return(BasicString<RChar,RString>::Mid<CharBuffer>(idx,len));}
 
 	/**
 	* Add another string.
+	* @param src             Source string.
 	*/
-	RString& operator+=(const RString& str);
+	RString& operator+=(const RString& src);
 
 	/**
 	* Add a "C string" to the string.
+	* @param src             Source string.
 	*/
-	RString& operator+=(const char* text);
+	RString& operator+=(const char* src);
 
 	/**
 	* Add a string to the string.
+	* @param src             Source string.
 	*/
-	RString& operator+=(const RChar* text);
+	RString& operator+=(const RChar* src);
 
 	/**
 	* Add a character to the string.
+	* @param src             Character.
 	*/
-	RString& operator+=(const char c);
+	RString& operator+=(const char src);
 
 	/**
 	* Add a character to the string.
+	* @param src             Character.
 	*/
-	RString& operator+=(const RChar c);
+	RString& operator+=(const RChar src);
 
 	/**
 	* Return the string in UTF16.
@@ -318,7 +266,7 @@ public:
 	/**
 	* Return the string.
 	*/
-	operator const char* ();
+	operator const char* () const;
 
 	/**
 	* Get a normal C++ string representring the current string.
@@ -333,150 +281,152 @@ public:
 	std::string ToString(void) const;
 
 	/**
-	* Equal operator.
+	* Lexically compares two strings and returns an integer less than, equal
+	* to, or greater than zero if this is less than, equal to, or greater than
+	* src.
+	* @param src             String to compare with.
+	* @see R::RContainer.
 	*/
-	bool operator==(const RString& str) const;
+	int Compare(const RString& src) const;
+
+	/**
+	* Lexically compares two strings and returns an integer less than, equal
+	* to, or greater than zero if this is less than, equal to, or greater than
+	* src.
+	* @param src             String to compare with.
+	* @see R::RContainer.
+	*/
+	int Compare(const char* src) const;
+
+	/**
+	* Lexically compares two strings and returns an integer less than, equal
+	* to, or greater than zero if this is less than, equal to, or greater than
+	* src.
+	* @param src             String to compare with.
+	* @see R::RContainer.
+	*/
+	int Compare(const RChar* src) const;
 
 	/**
 	* Equal operator.
+	* @param src             String to compare with.
 	*/
-	bool operator==(const char* str) const;
+	inline bool operator==(const RString& src) const {return(Compare(src)==0);}
 
 	/**
 	* Equal operator.
+	* @param src             String to compare with.
 	*/
-	bool operator==(const RChar* str) const;
+	inline bool operator==(const char* src) const {return(Compare(src)==0);}
+
+	/**
+	* Equal operator.
+	* @param src             String to compare with.
+	*/
+	inline bool operator==(const RChar* src) const {return(Compare(src)==0);}
 
 	/**
 	* Non-equal operator.
+	* @param src             String to compare with.
 	*/
-	bool operator!=(const RString& str) const;
+	inline bool operator!=(const RString& src) const {return(Compare(src));}
 
 	/**
 	* Non-equal operator.
+	* @param src             String to compare with.
 	*/
-	bool operator!=(const char* str) const;
+	inline bool operator!=(const char* src) const {return(Compare(src));}
 
 	/**
 	* Non-equal operator.
+	* @param src             String to compare with.
 	*/
-	bool operator!=(const RChar* str) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	*/
-	int Compare(const RString& str) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	*/
-	int Compare(const RString* str) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	*/
-	int Compare(const char* str) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	*/
-	int Compare(const RChar* str) const;
+	inline bool operator!=(const RChar* src) const {return(Compare(src));}
 
 	/**
 	* Return a number between 0 and 26 according to the first character of the
-	* string. It is used for the RStd::RHashContainer class.
-	*/
-	static int HashIndex(const RString* str);
-
-	/**
-	* Return a number between 0 and 26 according to the first character of the
-	* string. It is used for the RStd::RHashContainer class.
+	* string.
+	* @param str             String.
+	* @see R::RHashContainer and R::RDblHashContainer.
 	*/
 	static int HashIndex(const RString& str);
 
 	/**
 	* Return a number between 0 and 26 according to the first character of the
-	* string. It is used for the RStd::RHashContainer class.
+	* string.
+	* @param str             String.
+	* @see R::RHashContainer and R::RDblHashContainer.
 	*/
 	static int HashIndex(const char* str);
 
 	/**
 	* Return a number between 0 and 26 according to the first character of the
-	* string. It is used for the RStd::RHashContainer class.
+	* string.
+	* @param str             String.
+	* @see R::RHashContainer and R::RDblHashContainer.
 	*/
 	static int HashIndex(const RChar* str);
 
 	/**
 	* Return a number between 0 and 26 according to the second character of the
-	* string. It is used for the RStd::RDblHashContainer class.
-	*/
-	static int HashIndex2(const RString* str);
-
-	/**
-	* Return a number between 0 and 26 according to the first character of the
-	* string. It is used for the RStd::RDblHashContainer class.
+	* string.
+	* @param str             String.
+	* @see R::RHashContainer and R::RDblHashContainer.
 	*/
 	static int HashIndex2(const RString& str);
 
 	/**
 	* Return a number between 0 and 26 according to the second character of the
-	* string. It is used for the RStd::RDblHashContainer class.
+	* string.
+	* @param str             String.
+	* @see R::RHashContainer and R::RDblHashContainer.
 	*/
 	static int HashIndex2(const char* str);
 
 	/**
 	* Return a number between 0 and 26 according to the second character of the
-	* string. It is used for the RStd::RDblHashContainer class.
+	* string.
+	* @param str             String.
+	* @see R::RHashContainer and R::RDblHashContainer.
 	*/
 	static int HashIndex2(const RChar* str);
 
 	/**
 	* Transform a C string into an array of RChar. The resulting array should be
 	* destroyed by the caller of the function.
-	* @param str             Source "C String".
+	* @param src             Source "C String".
 	* @param len             Length of the string (computed by the function).
 	* @param maxlen          Maximum length (may be updated by the function).
 	*/
-	static RChar* Latin1ToUnicode(const char* str,unsigned int& len, unsigned int& maxlen);
+	static RChar* Latin1ToUnicode(const char* src,size_t& len,size_t& maxlen);
 
 	/**
 	* Transform an array of RChar into C string. The resulting C string should
 	* be destroyed by the caller of the function.
-	* @param tab             Source array of RChar.
+	* @param src             Source array of RChar.
 	* @param len             Number of characters in the array.
 	*/
-	static char* UnicodeToLatin1(const RChar* tab,unsigned int len);
+	static char* UnicodeToLatin1(const RChar* src,size_t len);
 
 	/**
 	* Destruct the string.
 	*/
-	virtual ~RString(void);
+	~RString(void);
 
 	// friend classes
 	friend class RCharCursor;
+	friend class BasicString<RChar,RString>;
 };
 
 
-//------------------------------------------------------------------------------
-// Operators
-
-/**
-* Add two strings together.
-*/
-RString operator+(const RString& arg1,const RString& arg2);
-
-/**
-* Add a string and a "C string" together.
-*/
-RString operator+(const RString& arg1,const char* arg2);
-
-/**
-* Add a "C string" and a string together.
-*/
-RString operator+(const char* arg1,const RString& arg2);
+//-----------------------------------------------------------------------------
+// Operators+
+inline const RString operator+(const RString& arg1,const RString& arg2) {return(RString(arg1)+=arg2);}
+inline const RString operator+(const RString& arg1,const char* arg2) {return(RString(arg1)+=arg2);}
+inline const RString operator+(const char* arg1,const RString& arg2) {return(RString(arg1)+=arg2);}
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Conversion functions
 
 /**
@@ -505,7 +455,7 @@ RString chrtou(const unsigned char c);
 RString ltou(const unsigned long nb);
 
 /**
-* Transform an unsigned long to a string.
+* Transform an unsigned long long to a string.
 */
 RString lltou(const unsigned long long nb);
 
@@ -520,7 +470,7 @@ RString ftou(const float nb);
 RString dtou(const double nb);
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * This class represent a cursor to iterate a RString. When the string parsed by
 * the cursor is modified, the cursor is not valid anymore.
@@ -550,7 +500,7 @@ class RCharCursor
 	/**
 	* This variable is used to see if the end of the string is reached.
 	*/
-	unsigned int ActPtr;
+	size_t ActPtr;
 
 	/**
 	* A Pointer to the string used.
@@ -566,76 +516,64 @@ public:
 
 	/**
 	* Construct the cursor.
-	* param str             String to iterate.
+	* param src              String to iterate.
 	*/
-	RCharCursor(const RString& str);
-
-	/**
-	* Construct the cursor.
-	* param str             String to iterate.
-	*/
-	RCharCursor(const RString* str);
+	RCharCursor(const RString& src);
 
 	/**
 	* Start the iterator to go trough the string.
 	*/
-	void Start(void) throw(RException);
+	void Start(void);
 
 	/**
 	* Set the string and start the iterator.
-	* param str             String to iterate.
+	* param src              String to iterate.
 	*/
-	void Set(const RString& str);
-
-	/**
-	* Set the string and start the iterator.
-	* param str             String to iterate.
-	*/
-	void Set(const RString* str);
+	void Set(const RString& src);
 
 	/**
 	* Go to the i-th character of the string.
+	* @param idx             Index of the character.
 	*/
-	void GoTo(const unsigned int i) throw(RException);
+	void GoTo(size_t idx);
 
 	/**
 	* Return the number of characters in the string.
 	*/
-	unsigned int GetNb(void)  throw(RException);
+	unsigned int GetNb(void);
 
 	/**
 	* Return the position of the cursor in the string.
 	*/
-	unsigned int GetPos(void) throw(RException);
+	unsigned int GetPos(void);
 
 	/**
 	* Test if the end of the string is reached.
 	*/
-	bool End(void) const throw(RException);
+	bool End(void) const;
 
 	/**
 	* Goto the next character, if the end is reached, go to the beginning.
 	*/
-	void Next(void) throw(RException);
+	void Next(void);
 
 	/**
 	* Return the current character.
 	*/
-	RChar operator()(void) const throw(RException);
+	RChar operator()(void) const;
 
 	/**
 	* This function returns the character at a given position in the string
-	* iterated. If the position is outside this string, an exception
-	* is generated.
-	* @param pos            Position of the character.
+	* iterated.
+	* @param idx             Index of the character.
 	* @returns RChar.
 	*/
-	RChar operator[](unsigned int pos) const throw(RException);
+	RChar operator[](size_t idx) const;
 };
 
 
-}  //-------- End of namespace R -----------------------------------------------
+}  //-------- End of namespace R ----------------------------------------------
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif

@@ -84,7 +84,7 @@ public:
 	* @param f               Pointer to a function.
 	* @return int
 	*/
-	int Compare(const RPrgFunc* f) const;
+	int Compare(const RPrgFunc& f) const;
 
 	/**
 	* This methods compares the name of a function with a string and works like
@@ -123,4 +123,4 @@ public:
 
 
 //------------------------------------------------------------------------------
-#endif 
+#endif

@@ -45,6 +45,7 @@
 #include <rprg/rprgvarconst.h>
 #include <rprg/rprgvarref.h>
 #include <rprg/rprgclass.h>
+#include <rprg/rprgfunc.h>
 #include <rstd/rcursor.h>
 using namespace R;
 

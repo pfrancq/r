@@ -6,7 +6,7 @@
 
 	Generic instruction - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -50,7 +50,7 @@ RPrgInst::RPrgInst(void) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const RPrgInst*) const
+int RPrgInst::Compare(const RPrgInst&) const
 {
 	return(-1);
 }

@@ -92,7 +92,7 @@ public:
 	* @param c               Pointer to a class.
 	* @return int
 	*/
-	int Compare(const RPrgClass* c) const;
+	int Compare(const RPrgClass& c) const;
 
 	/**
 	* This methods compares the name of a class with a string and works like

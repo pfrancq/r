@@ -6,7 +6,7 @@
 
 	C String - Implementation.
 
-	Copyright 1999-2004 by the Université libre de Bruxelles.
+	Copyright 1999-2005 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -30,7 +30,12 @@
 
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <ctype.h>
+
+
+//-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcstring.h>
 using namespace std;
@@ -38,231 +43,188 @@ using namespace R;
 
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // Static data
 //
-//------------------------------------------------------------------------------
-
-RCString::CharBuffer* RCString::DataNull=0;
+//-----------------------------------------------------------------------------
+BasicString<char,RCString>::BasicCharBuffer* RCString::DataNull=0;
 const RCString RCString::Null;
 
 
 
-//------------------------------------------------------------------------------
-//
-// RCString::CharBuffer
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-class RCString::CharBuffer : public RSharedData
-{
-public:
-	char* Text;          // Text
-	unsigned int Len;    // Actual length
-	unsigned int MaxLen; // Maximum length
-
-	CharBuffer(void)
-		: RSharedData(), Text(0), Len(0), MaxLen(0) {}
-	CharBuffer(char* tab,unsigned int len,unsigned int maxlen)
-		: RSharedData(), Text(tab), Len(len), MaxLen(maxlen) {}
-	void Verify(const unsigned int maxlen);
-	~CharBuffer(void) {if(Text) delete[] Text;}
-};
-
-
-//------------------------------------------------------------------------------
-void RCString::CharBuffer::Verify(const unsigned int maxlen)
-{
-	if(MaxLen<maxlen)
-	{
-		char* tmp;
-		MaxLen=maxlen;
-		tmp=new char[MaxLen+1];
-		if(Text)
-		{
-			memcpy(tmp,Text,(Len+1)*sizeof(char));
-			delete[] Text;
-		}
-		Text=tmp;
-	}
-}
-
-
-
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // RCString
 //
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RCString::RCString(void)
-	: Data(GetDataNull())
+	: BasicString<char,RCString>()
 {
+	Data=GetDataNull();
 }
 
 
-//------------------------------------------------------------------------------
-RCString::RCString(const char* text)
-	: Data(0)
+//-----------------------------------------------------------------------------
+RCString::RCString(const char* src)
+	: BasicString<char,RCString>()
 {
-	if(text)
+	if(src)
 	{
-		unsigned int len,maxlen;
-		len=maxlen=strlen(text);
+		size_t len,maxlen;
+		len=maxlen=strlen(src);
 		char* ptr=new char[maxlen+1];
-		memcpy(ptr,text,sizeof(char)*(len+1));
-		Data=new CharBuffer(ptr,len,maxlen);
+		memcpy(ptr,src,sizeof(char)*(len+1));
+		Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
 	}
 	else
 		Data=GetDataNull();
 }
 
 
-//------------------------------------------------------------------------------
-RCString::RCString(const char* text,unsigned int len)
-	: Data(0)
+//-----------------------------------------------------------------------------
+RCString::RCString(const char* src,size_t len)
+	: BasicString<char,RCString>()
 {
-	if(text)
+	if(src)
 	{
-		unsigned int maxlen;
+		size_t maxlen;
 		maxlen=len;
 		char* ptr=new char[maxlen+1];
-		memcpy(ptr,text,sizeof(char)*len);
+		memcpy(ptr,src,sizeof(char)*len);
 		ptr[len]=0;
-		Data=new CharBuffer(ptr,len,maxlen);
+		Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
 	}
 	else
 		Data=GetDataNull();
 }
 
 
-//------------------------------------------------------------------------------
-RCString::RCString(const std::string& text)
-	: Data(0)
+//-----------------------------------------------------------------------------
+RCString::RCString(const std::string& src)
+	: BasicString<char,RCString>()
 {
-	const char* tab=text.c_str();
-	unsigned int len=strlen(tab);
+	const char* tab=src.c_str();
+	size_t len=strlen(tab);
 
 	if(len)
 	{
-		unsigned int maxlen=len;
+		size_t maxlen=len;
 		char* ptr=new char[maxlen+1];
 		memcpy(ptr,tab,sizeof(char)*(len+1));
-		Data=new CharBuffer(ptr,len,maxlen);
+		Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
 	}
 	else
 		Data=GetDataNull();
 }
 
 
-//------------------------------------------------------------------------------
-RCString::RCString(const unsigned int maxlen)
-	: Data(0)
+//-----------------------------------------------------------------------------
+RCString::RCString(size_t maxlen)
+	: BasicString<char,RCString>()
 {
 	if(maxlen)
 	{
 		char* ptr=new char[maxlen+1];
 		(*ptr)=0;
-		Data=new CharBuffer(ptr,0,maxlen);
+		Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,0,maxlen);
 	}
 	else
 		Data=GetDataNull();
 }
 
 
-//------------------------------------------------------------------------------
-RCString::RCString(const RCString& str)
-	: Data(str.Data)
+//-----------------------------------------------------------------------------
+RCString::RCString(const RCString& src)
+	: BasicString<char,RCString>(src)
 {
-	RIncRef<CharBuffer>(Data);
 }
 
 
-//------------------------------------------------------------------------------
-RCString::CharBuffer* RCString::GetDataNull(void)
+//-----------------------------------------------------------------------------
+BasicString<char,RCString>::BasicCharBuffer* RCString::GetDataNull(void)
 {
 	if(!RCString::DataNull)
 	{
 		char* ptr2=new char[1];
 		(*ptr2)=0;
-		RCString::DataNull=new CharBuffer(ptr2,0,0);
+		RCString::DataNull=new BasicString<char,RCString>::BasicCharBuffer(ptr2,0,0);
 		RCString* ptr=const_cast<RCString*>(&RCString::Null);
 		ptr->Data = RCString::DataNull;
 	}
 	else
-		RIncRef<CharBuffer>(RCString::DataNull);
+		RIncRef<BasicString<char,RCString>::BasicCharBuffer>(RCString::DataNull);
 	return(RCString::DataNull);
 }
 
 
-//------------------------------------------------------------------------------
-RCString& RCString::operator=(const RCString& str)
+//-----------------------------------------------------------------------------
+RCString& RCString::operator=(const RCString& src)
 {
-	RIncRef(str.Data);
-	RDecRef<CharBuffer>(Data);
-	Data=str.Data;
+	RIncRef(src.Data);
+	RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
+	Data=src.Data;
 	return(*this);
 }
 
 
-//------------------------------------------------------------------------------
-RCString& RCString::operator=(const char* text)
+//-----------------------------------------------------------------------------
+RCString& RCString::operator=(const char* src)
 {
-	unsigned int len,maxlen;
+	size_t len,maxlen;
 
-	RDecRef<CharBuffer>(Data);
-	maxlen=len=strlen(text);
+	RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
+	maxlen=len=strlen(src);
 	char* ptr=new char[maxlen+1];
-	memcpy(ptr,text,sizeof(char)*len);
+	memcpy(ptr,src,sizeof(char)*len);
 	ptr[len]=0;
-	Data=new CharBuffer(ptr,len,maxlen);
+	Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
 	return(*this);
 }
 
 
-//------------------------------------------------------------------------------
-RCString& RCString::operator=(const std::string& text)
+//-----------------------------------------------------------------------------
+RCString& RCString::operator=(const std::string& src)
 {
-	(*this)=text.c_str();
+	(*this)=src.c_str();
 	return(*this);
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RCString::Clear(void)
 {
 	if(Data!=DataNull)
 	{
-		RDecRef<CharBuffer>(Data);
-		RIncRef<CharBuffer>(DataNull);
+		RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
+		RIncRef<BasicString<char,RCString>::BasicCharBuffer>(DataNull);
 		Data=DataNull;
 	}
 }
 
 
-//------------------------------------------------------------------------------
-void RCString::Copy(const char* text,unsigned int nb)
+//-----------------------------------------------------------------------------
+void RCString::Copy(const char* src,unsigned int nb)
 {
-	RDecRef<CharBuffer>(Data);
-	if(text)
+	RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
+	if(src)
 	{
-		unsigned int len=strlen(text);
+		size_t len=strlen(src);
 		if(nb<len)
 			nb=len;
 		char* ptr=new char[nb+1];
-		memcpy(ptr,text,sizeof(char)*len);
+		memcpy(ptr,src,sizeof(char)*len);
 		ptr[len]=0;
-		Data=new CharBuffer(ptr,len,nb);
+		Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,nb);
 	}
 	else
 		Data=GetDataNull();
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RCString::Copy(void)
 {
 	if(Data&&(Data->GetRefs()!=1))
@@ -270,419 +232,100 @@ void RCString::Copy(void)
 		if(Data!=DataNull)
 		{
 			char* ptr=new char[Data->MaxLen+1];
-			unsigned int len=Data->Len,maxlen=Data->MaxLen;
+			size_t len=Data->Len,maxlen=Data->MaxLen;
 			memcpy(ptr,Data->Text,sizeof(char)*(len+1));
-			RDecRef<CharBuffer>(Data);
-			Data=new CharBuffer(ptr,len,maxlen);
+			RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
+			Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
 		}
 	}
 }
 
 
-//------------------------------------------------------------------------------
-RCString RCString::ToUpper(void) const
+//-----------------------------------------------------------------------------
+const char& RCString::operator[](size_t idx) const
 {
-	unsigned int len = Data->Len;
-	char* ptr = Data->Text;
-
-	while(len)
-	{
-		if((*ptr)!=toupper(*ptr))
-		{
-			RCString str(*this);
-			str.Copy();
-			ptr = str.Data->Text+(ptr-Data->Text);
-	    	while(len)
-			{
-				(*ptr) = toupper(*ptr);
-				len--;
-				ptr++;
-			}
-			return(str);
-		}
-		len--;
-		ptr++;
-	}
-	return(*this);
+	if(idx>=Data->Len)
+	#ifdef __GNUC__
+		throw std::range_error(__PRETTY_FUNCTION__);
+	#else
+		throw std::range_error("RCString::operator[] const : index outside string");
+	#endif
+	return(Data->Text[idx]);
 }
 
 
-//------------------------------------------------------------------------------
-RCString RCString::ToLower(void) const
+//-----------------------------------------------------------------------------
+char& RCString::operator[](size_t idx)
 {
-	unsigned int len = Data->Len;
-	char* ptr = Data->Text;
-
-	while(len)
-	{
-		if((*ptr)!=tolower(*ptr))
-		{
-			RCString str(*this);
-			str.Copy();
-			ptr = str.Data->Text+(ptr-Data->Text);
-	    	while(len)
-			{
-				(*ptr) = tolower(*ptr);
-				len--;
-				ptr++;
-			}
-			return(str);
-		}
-		len--;
-		ptr++;
-	}
-	return(*this);
+	if(idx>=Data->Len)
+	#ifdef __GNUC__
+		throw std::range_error(__PRETTY_FUNCTION__);
+	#else
+		throw std::range_error("RCString::operator[] : index outside string");
+	#endif
+	return(Data->Text[idx]);
 }
 
 
-//------------------------------------------------------------------------------
-unsigned int RCString::GetLen(void) const
+//-----------------------------------------------------------------------------
+RCString& RCString::operator+=(const RCString& src)
 {
-	return(Data->Len);
-}
-
-
-//------------------------------------------------------------------------------
-void RCString::SetLen(unsigned int len)
-{
-	if(len<=Data->Len)
-	{
-		Data->Len=len;
-	}
-	else
-	{
-		if(Data==DataNull)
-		{
-			char* ptr=new char[len+1];
-			RDecRef<CharBuffer>(Data);
-			Data=new CharBuffer(ptr,len,len);
-		}
-		else
-			Data->Verify(len+1);
-	}
-	Data->Text[len]=0;
-}
-
-
-//------------------------------------------------------------------------------
-unsigned int RCString::GetMaxLen(void) const
-{
-	return(Data->MaxLen);
-}
-
-
-//------------------------------------------------------------------------------
-bool RCString::IsEmpty(void) const
-{
-	return(!Data->Len);
-}
-
-
-//------------------------------------------------------------------------------
-RCString RCString::Trim(void) const
-{
-	RCString res;
-	unsigned int len = Data->Len;
-	char* ptr = Data->Text;
-
-	// Skip ending spaces
-	if(!len)
-		return(res);
-	ptr=&Data->Text[len-1];
-	while(len&&isspace(*ptr))
-	{
-		len--;
-		ptr--;
-	}
-
-	// Skip beginning spaces
-	if(!len)
-		return(res);
-	ptr=Data->Text;
-	while(len&&isspace(*ptr))
-	{
-		len--;
-		ptr++;
-	}
-
-	// Get the rest of the string
-	while(len)
-	{
-		res+=(*(ptr++));
-		len--;
-	};
-
-	return(res);
-}
-
-
-//------------------------------------------------------------------------------
-char RCString::operator[](int pos) const
-{
-	if(pos>=Data->Len) return(0);
-	return(Data->Text[pos]);
-}
-
-
-//------------------------------------------------------------------------------
-int RCString::Find(char car,int pos,bool CaseSensitive) const
-{
-	char* start;
-	bool left;
-	unsigned int max;        // Maximal number of character to search.
-
-
-	// Initialise the search
-	if(!CaseSensitive)
-		car=toupper(car);
-	if(pos<0)
-	{
-		// From right
-		left=false;
-
-		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=Data->Len+pos;
-		if(pos<=0) return(-1);
-		start=&Data->Text[pos];
-		max=pos+1;
-	}
-	else
-	{
-		// From left
-		left=true;
-
-		// Start from 0 with maximal Len-pos+1 character to test.
-		start=&Data->Text[pos];
-		max=Data->Len-pos+1;
-	}
-
-	// Search for the maximal number of character
-	for(max++;--max;)
-	{
-		if(((CaseSensitive)&&((*start)==car)) || ((!CaseSensitive)&&(toupper(*start)==car)))
-			return(pos);
-		if(left)
-		{
-			start++;
-			pos++;
-		}
-		else
-		{
-			pos--;
-			start--;
-		}
-	}
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-int RCString::FindStr(const RCString str,int pos,bool CaseSensitive) const
-{
-	char* start;
-	const char* toFind;
-	unsigned int max;        // Maximal number of character to search.
-	int avanct;
-	int maxlen;  //max number of char contained in the string to search
-	int incr;
-	RCString search(str);
-
-	// Initialise the search
-	if(!CaseSensitive)
-		search=search.ToUpper();
-	if(pos<0)
-	{
-		// From right
-		incr=-1;
-
-		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=Data->Len+pos;
-		if(pos<=0) return(-1);
-		start=&Data->Text[pos];
-		max=pos+1;
-
-		// Init string to find (here the last character)
-		toFind=search();
-		toFind+=search.GetLen()-1;
-	}
-	else
-	{
-		// From left
-		incr=+1;
-
-		// Start from 0 with maximal Len-pos+1 character to test.
-		start=&Data->Text[pos];
-		max=Data->Len-pos+1;
-
-		// Init string to find
-		toFind=search();
-	}
-
-	// If string to find is longer than the string return -1
-	if(search.GetLen()>max)
-		return(-1);
-
-	// Search for the maximal number of character
-	for(max++;--max;)
-	{
-		if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(toupper(*start)==(*toFind))))
-		{
-			if(max>=search.GetLen())
-			{
-				avanct=0;
-				maxlen=search.GetLen();
-				bool found=true;
-				for(maxlen++;--maxlen,found;)
-				{
-					if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(toupper(*start)==(*toFind))))
-					{
-						if(!(maxlen-1))
-						{
-							// String found
-							if(incr>0)
-								return(pos);
-							else
-								return(pos-search.GetLen()+1);
-						}
-						start+=incr;
-						toFind+=incr;
-						avanct+=incr;
-					}
-					else
-					{
-						start-=avanct;
-						toFind-=avanct;
-						found=false;
-					}
-				}
-				if(found)
-				{
-					// String found
-					if(incr>0)
-						return(pos);
-					else
-						return(pos-search.GetLen()+1);
-				}
-			}
-		}
-		start+=incr;
-		pos+=incr;
-	}
-	return(-1);
-
-}
-
-
-//------------------------------------------------------------------------------
-RCString RCString::Mid(unsigned int idx,unsigned int len) const
-{
-	RCString res;
-    const char* ptr1;
-	char* ptr2;
-
-	// If the index is greather than the length -> return a null string.
-	if(Data->Len<=idx) return(res);
-
-	// Computed the number of caracters to copied
-	if(Data->Len-idx+1<len) len=Data->Len-idx+1;
-
-	// Verify the the string can hold the number to copied
-	res.Data->Verify(len+1);
-
-	// Copy the number of characters.
-	res.Data->Len=len;
-	for(len++,ptr1=&Data->Text[idx],ptr2=res.Data->Text;--len;)
-		(*(ptr2++))=(*(ptr1++));
-	(*ptr2)=0;
-
-	return(res);
-}
-
-
-//------------------------------------------------------------------------------
-void RCString::Split(RContainer<RCString,true,false>& elements,const char car) const
-{
-	RCString element;
-	unsigned int len;
-	char* ptr;
-
-	// Skip ending spaces
-	for(len=Data->Len+1,ptr=Data->Text;--len;ptr++)
-	{
-		if((*ptr)==car)
-		{
-			// Insert element
-			if(!element.IsEmpty())
-				elements.InsertPtr(new RCString(element));
-			element="";
-		}
-		else
-			element+=(*ptr);
-	}
-	if(!element.IsEmpty())
-		elements.InsertPtr(new RCString(element));
-}
-
-
-//------------------------------------------------------------------------------
-RCString& RCString::operator+=(const RCString& str)
-{
-	if(str.Data==DataNull)
+	if(src.Data==DataNull)
 		return(*this);
 	if(Data==DataNull)
 	{
-		(*this)=str;
+		(*this)=src;
 	}
 	else
 	{
 		Copy();
-		Data->Verify(str.Data->Len+Data->Len+1);
-		memcpy(&Data->Text[Data->Len],str.Data->Text,(str.Data->Len+1)*sizeof(char));
-		Data->Len+=str.Data->Len;
+		Data->Verify(src.Data->Len+Data->Len+1);
+		memcpy(&Data->Text[Data->Len],src.Data->Text,(src.Data->Len+1)*sizeof(char));
+		Data->Len+=src.Data->Len;
 	}
 	return(*this);
 }
 
 
-//------------------------------------------------------------------------------
-RCString& RCString::operator+=(const char* text)
+//-----------------------------------------------------------------------------
+RCString& RCString::operator+=(const char* src)
 {
-	RReturnValIfFail(text,*this);
+	RReturnValIfFail(src,*this);
 	if(Data==DataNull)
 	{
-		(*this)=text;
+		(*this)=src;
 	}
 	else
 	{
-		unsigned int len=strlen(text);
+		size_t len=strlen(src);
 		Copy();
 		Data->Verify(len+Data->Len+1);
-		memcpy(&Data->Text[Data->Len],text,sizeof(char)*len+1);
+		memcpy(&Data->Text[Data->Len],src,sizeof(char)*len+1);
 		Data->Len+=len;
 	}
 	return(*this);
 }
 
 
-//------------------------------------------------------------------------------
-RCString& RCString::operator+=(const char c)
+//-----------------------------------------------------------------------------
+RCString& RCString::operator+=(const char src)
 {
-	if(c)
+	if(src)
 	{
 		if(Data==DataNull)
 		{
-			unsigned int maxlen=1,len=1;
-			RDecRef<CharBuffer>(Data);
+			size_t maxlen=1,len=1;
+			RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
 			char* ptr=new char[2];
-			ptr[0]=c; ptr[1]=0;
-			Data=new CharBuffer(ptr,len,maxlen);
+			ptr[0]=src; ptr[1]=0;
+			Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
 		}
 		else
 		{
 			Copy();
 			Data->Verify(Data->Len+1);
 			char* ptr=&Data->Text[Data->Len++];
-			(*(ptr++))=c;
+			(*(ptr++))=src;
 			(*ptr)=0;
 		}
 	}
@@ -690,247 +333,135 @@ RCString& RCString::operator+=(const char c)
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 const char* RCString::operator()(void) const
 {
 	return(Data->Text);
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RCString::operator std::string () const
 {
 	return(Data->Text);
 }
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RCString::operator const char* () const
 {
 	return(Data->Text);
 }
 
 
-//------------------------------------------------------------------------------
-bool RCString::operator==(const RCString& str) const
-{
-	return(Compare(str)==0);
-}
-
-
-//------------------------------------------------------------------------------
-bool RCString::operator==(const char* str) const
-{
-	return(Compare(str)==0);
-}
-
-
-//------------------------------------------------------------------------------
-bool RCString::operator!=(const RCString& str) const
-{
-	return(Compare(str));
-}
-
-
-//------------------------------------------------------------------------------
-bool RCString::operator!=(const char* str) const
-{
-	return(Compare(str));
-}
-
-
-//------------------------------------------------------------------------------
-int RCString::Compare(const RCString& str) const
+//-----------------------------------------------------------------------------
+int RCString::Compare(const RCString& src) const
 {
 	if(!Data)
 	{
-		if(!str.Data)
+		if(!src.Data)
 			return(0);
 		return(-1);
 	}
-	else if(!str.Data)
+	else if(!src.Data)
 		return(1);
-	return(strcmp(Data->Text,str.Data->Text));
+	return(strcmp(Data->Text,src.Data->Text));
 }
 
-
-//------------------------------------------------------------------------------
-int RCString::Compare(const RCString* str) const
-{
-	if(!Data)
-	{
-		if((!str)||(!str->Data))
-			return(0);
-		return(-1);
-	}
-	else if((!str)||(!str->Data))
-		return(1);
-	return(strcmp(Data->Text,str->Data->Text));
-}
-
-
-//------------------------------------------------------------------------------
-int RCString::Compare(const char* str) const
-{
-	if(!Data)
-	{
-		if(!str)
-			return(0);
-		return(-1);
-	}
-	else if(!str)
-		return(1);
-	return(strcmp(Data->Text,str));
-}
-
-
-//------------------------------------------------------------------------------
-int RCString::HashIndex(const RCString* str)
-{
-	char c;
-	char u;
-	char a;
-
-	if((!str)||(!str->Data->Text)) return(26);
-	c=(*str->Data->Text);
-	if(!c) return(26);
-	u=tolower(c);
-	a=char('a');
-	if((u>=a)&&(u<=char('z')))
-		return(u-a);
-	return(26);
-}
-
-
-//------------------------------------------------------------------------------
-int RCString::HashIndex(const RCString& str)
-{
-	char c;
-	char u;
-	char a;
-
-	if(!str) return(26);
-	c=(*str.Data->Text);
-	if(!c) return(26);
-	u=tolower(c);
-	a=char('a');
-	if((u>=a)&&(u<=char('z')))
-		return(u-a);
-	return(26);
-}
-
-
-//------------------------------------------------------------------------------
-int RCString::HashIndex(const char* str)
-{
-	char c;
-	char u;
-	char a;
-
-	if(!str) return(26);
-	c=(*str);
-	if(!c) return(26);
-	u=tolower(c);
-	a=char('a');
-	if((u>=a)&&(u<=char('z')))
-		return(u-a);
-	return(26);
-}
-
-
-//------------------------------------------------------------------------------
-int RCString::HashIndex2(const RCString* str)
-{
-	char c;
-	char u;
-	char a;
-
-	if((!str)||(!str->Data->Text)) return(26);
-	c=*(str->Data->Text);
-	if(!c) return(26);
-	c=(*(str->Data->Text+1));
-	if(!c) return(26);
-	u=tolower(c);
-	a=char('a');
-	if((u>=a)&&(u<=char('z')))
-		return(u-a);
-	return(26);
-}
-
-
-//------------------------------------------------------------------------------
-int RCString::HashIndex2(const RCString& str)
-{
-	char c;
-	char u;
-	char a;
-
-	if(!str) return(26);
-	c=*(str.Data->Text);
-	if(!c) return(26);
-	c=(*(str.Data->Text+1));
-	if(!c) return(26);
-	u=tolower(c);
-	a=char('a');
-	if((u>=a)&&(u<=char('z')))
-		return(u-a);
-	return(26);
-}
-
-
-//------------------------------------------------------------------------------
-int RCString::HashIndex2(const char* str)
-{
-	char c;
-	char u;
-	char a;
-
-	if(!str) return(26);
-	c=*str;
-	if(!c) return(26);
-	c=(*(str+1));
-	if(!c) return(26);
-	u=tolower(c);
-	a=char('a');
-	if((u>=a)&&(u<=char('z')))
-		return(u-a);
-	return(26);
-}
-
-
-//------------------------------------------------------------------------------
-RCString::~RCString(void)
-{
-	RDecRef<CharBuffer>(Data);
-}
-
-
-
-//------------------------------------------------------------------------------
-//
-// Global Functions and Operators
-//
-//------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RCString R::operator+(const RCString& arg1,const RCString& arg2)
+int RCString::Compare(const char* src) const
 {
-	RCString res(arg1);
-	return(res+=arg2);
+	if(!Data)
+	{
+		if(!src)
+			return(0);
+		return(-1);
+	}
+	else if(!src)
+		return(1);
+	return(strcmp(Data->Text,src));
 }
 
 
-//------------------------------------------------------------------------------
-RCString R::operator+(const RCString& arg1,const char* arg2)
+//-----------------------------------------------------------------------------
+int RCString::HashIndex(const RCString& src)
 {
-	RCString res(arg1);
-	return(res+=arg2);
+	char c;
+	char u;
+	char a;
+
+	if(!src) return(26);
+	c=(*src.Data->Text);
+	if(!c) return(26);
+	u=tolower(c);
+	a=char('a');
+	if((u>=a)&&(u<=char('z')))
+		return(u-a);
+	return(26);
 }
 
 
-//------------------------------------------------------------------------------
-RCString R::operator+(const char* arg1,const RCString& arg2)
+//-----------------------------------------------------------------------------
+int RCString::HashIndex(const char* src)
 {
-	RCString res(arg1);
-	return(res+=arg2);
+	char c;
+	char u;
+	char a;
+
+	if(!src) return(26);
+	c=(*src);
+	if(!c) return(26);
+	u=tolower(c);
+	a=char('a');
+	if((u>=a)&&(u<=char('z')))
+		return(u-a);
+	return(26);
+}
+
+
+//-----------------------------------------------------------------------------
+int RCString::HashIndex2(const RCString& src)
+{
+	char c;
+	char u;
+	char a;
+
+	if(!src) return(26);
+	c=*(src.Data->Text);
+	if(!c) return(26);
+	c=(*(src.Data->Text+1));
+	if(!c) return(26);
+	u=tolower(c);
+	a=char('a');
+	if((u>=a)&&(u<=char('z')))
+		return(u-a);
+	return(26);
+}
+
+
+//-----------------------------------------------------------------------------
+int RCString::HashIndex2(const char* src)
+{
+	char c;
+	char u;
+	char a;
+
+	if(!src) return(26);
+	c=*src;
+	if(!c) return(26);
+	c=(*(src+1));
+	if(!c) return(26);
+	u=tolower(c);
+	a=char('a');
+	if((u>=a)&&(u<=char('z')))
+		return(u-a);
+	return(26);
+}
+
+
+//-----------------------------------------------------------------------------
+RCString::~RCString(void)
+{
+	RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
 }
