@@ -104,15 +104,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	cChromo **C,**C1,*p;
 	unsigned int i,j;
 
-//	cout<<"Gen n°"<<Gen<<endl;
 	for(i=0,C=Chromosomes;i<PopSize-1;C++,i++)
 	{
 		for(j=i+1,C1=C+1;j<PopSize;C1++,j++)
 		{
 			if((*C)->SameGroupment(*C1))
 			{
-//				cout<<"Same...";
-//				cout<<"  Chromo n°"<<i<<" and Chromo n°"<<j<<" are the same  :";
 				if((*((*C)->Fitness))>(*((*C1)->Fitness)))
 					p=(*C1);
 				else
@@ -125,10 +122,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 					p->Evaluate();
 					emitInteractSig();
 					p->ToEval=false;
-//					cout<<"OK"<<endl;
 				}
-//				else
-//					cout<<"KO"<<endl;
 			}
 		}
 	}
