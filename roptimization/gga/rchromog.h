@@ -89,7 +89,7 @@ public:
 	* Construct a valid solution.
 	* @return The function must retrun true if a solution has been constructed.
 	*/
-	virtual bool RandomConstruct(void);
+	virtual void RandomConstruct(void) throw(RGA::eGA);
 
 	/**
 	* Do a crossover by using the chromosome as child. The crossover
@@ -99,41 +99,39 @@ public:
 	* groups inseeted from parent2 it is also removed.
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
-	* @return The function must return true if the crossover has been done.
 	*/
-	virtual bool Crossover(cChromo* parent1,cChromo* parent2);
+	virtual void Crossover(cChromo* parent1,cChromo* parent2) throw(RGA::eGA);
 
 	/**
 	* Do a mutation of the chromosome, by choosing randomly groups and
 	* destroy them.
 	*/
-	virtual bool Mutation(void);
+	virtual void Mutation(void) throw(RGA::eGA);
 
 	/**
 	* Do a inversion of the chromosome, by exchanging two groups in list
 	* representing all the used one.
 	*/
-	virtual bool Inversion(void);
+	virtual void Inversion(void) throw(RGA::eGA);
 
 	/**
 	* Perform a local optimisation. This function is called by the crossover
 	* and the mutation operators just before the use of the heuristic to find
 	* a group for the objects not yet assigned.
 	*/
-	virtual void LocalOptimisation(void) {}
+	virtual void LocalOptimisation(void) throw(RGA::eGA) {}
 
 	/**
 	* Modify a given chromosome when it is identical to another one. By
 	* default, the mutation operator of the chromosome is called.
 	* destroy them.
 	*/
-	virtual bool Modify(void);
+	virtual void Modify(void) throw(RGA::eGA);
 
 	/**
 	* Verify the validity of the chromosome.
-	* @return True if the chromosome is a valid one, false else.
 	*/
-	virtual bool Verify(void);
+	virtual void Verify(void) throw(RGA::eGA);
 
 	/**
 	* The assigment operator.

@@ -82,7 +82,7 @@ extern bool ExternBreak;
 
 //-----------------------------------------------------------------------------
 /**
-* This class is a basic exception for the GA.
+* The eGA class provides a basic exception for the GA.
 * @author Pascal Francq
 * @short Basic GA Exception.
 */
@@ -122,8 +122,7 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-* This class represent a verify exception, when a chromosome is not valid
-* after a generation.
+* The eGAVerify class provides an exception for the verification.
 * @author Pascal Francq
 * @short Verify GA Exception
 */
@@ -133,16 +132,22 @@ public:
 
 	/**
 	* Construct the verify exception.
-	* @param g              Generation.
+	* @param g             Generation.
 	* @param c             Identificator of chromosome.
 	*/
 	eGAVerify(const unsigned int g,const unsigned int c);
+
+	/**
+	* Construct the verify exception.
+	* @param msg            The message.
+	*/
+	eGAVerify(const char* msg) : eGA(msg) {}
 };
 
 
 //-----------------------------------------------------------------------------
 /**
-* This class represent a crossover exception, when a crossover can't be done.
+* The eGACrossover class provides an exception for the crossover operator.
 * @author Pascal Francq
 * @short Crossover GA Exception
 */
@@ -158,12 +163,18 @@ public:
 	* @param c              Identificator of the child.
 	*/
 	eGACrossover(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c);
+
+	/**
+	* Construct the crossover exception.
+	* @param msg            The message.
+	*/
+	eGACrossover(const char* msg) : eGA(msg) {}
 };
 
 
 //-----------------------------------------------------------------------------
 /**
-* This class represent a mutation exception, when a mutation can't be done.
+* The eGAMutation class provides an exception for the mutation operator.
 * @author Pascal Francq
 * @short Mutation GA Exception
 */
@@ -177,23 +188,140 @@ public:
 	* @param c              Identificator of the child.
 	*/
 	eGAMutation(const unsigned int g,const unsigned int c);
+
+	/**
+	* Construct the mutation exception.
+	* @param msg            The message.
+	*/
+	eGAMutation(const char* msg) : eGA(msg) {}
 };
 
 
 //-----------------------------------------------------------------------------
 /**
-* The eGARancomConstruct class provides a exeception that occurs when an error
-* arrived during the construction.
+* The eGAInversion class provides an exception for the inversion operator.
+* @author Pascal Francq
+* @short Invesion GA Exception
+*/
+class eGAInversion : public eGA
+{
+public:
+
+	/**
+	* Construct the inversion exception.
+	* @param g              Generation.
+	* @param c              Identificator of the child.
+	*/
+	eGAInversion(const unsigned int g,const unsigned int c);
+
+	/**
+	* Construct the inversion exception.
+	* @param msg            The message.
+	*/
+	eGAInversion(const char* msg) : eGA(msg) {}
+};
+
+
+//-----------------------------------------------------------------------------
+/**
+* The eGAOptimisation class provides an exception for the optimisation
+* operator.
+* @author Pascal Francq
+* @short Optimisation GA Exception
+*/
+class eGAOptimisation : public eGA
+{
+public:
+
+	/**
+	* Construct the optimisation exception.
+	* @param g              Generation.
+	* @param c              Identificator of the child.
+	*/
+	eGAOptimisation(const unsigned int g,const unsigned int c);
+
+	/**
+	* Construct the optimisation exception.
+	* @param msg            The message.
+	*/
+	eGAOptimisation(const char* msg) : eGA(msg) {}
+};
+
+
+//-----------------------------------------------------------------------------
+/**
+* The eGARancomConstruct class provides a exception for the random
+* construction operator.
 * @author Pascal Francq
 * @short Random Construct GA Exception
 */
 class eGARandomConstruct : public eGA
 {
 public:
+
 	/**
-	* Construct the construction exception.
+	* Construct the random construction exception.
+	* @param g              Generation.
+	* @param c              Identificator of the child.
 	*/
-	eGARandomConstruct(void);
+	eGARandomConstruct(const unsigned int g,const unsigned int c);
+
+	/**
+	* Construct the random construction exception.
+	* @param msg            The message.
+	*/
+	eGARandomConstruct(const char* msg) : eGA(msg) {}
+};
+
+
+//-----------------------------------------------------------------------------
+/**
+* The eGAEvaluate class provides a exeception for the evaluation operator.
+* @author Pascal Francq
+* @short Evaluation GA Exception
+*/
+class eGAEvaluation : public eGA
+{
+public:
+
+	/**
+	* Construct the evaluation exception.
+	* @param g              Generation.
+	* @param c              Identificator of the child.
+	*/
+	eGAEvaluation(const unsigned int g,const unsigned int c);
+
+	/**
+	* Construct the evaluation exception.
+	* @param msg            The message.
+	*/
+	eGAEvaluation(const char* msg) : eGA(msg) {}
+};
+
+
+//-----------------------------------------------------------------------------
+/**
+* The eGAPostEvaluation class provides a exeception for the post evaluation
+* operator.
+* @author Pascal Francq
+* @short Post Evaluation GA Exception
+*/
+class eGAPostEvaluation : public eGA
+{
+public:
+
+	/**
+	* Construct the post evaluation exception.
+	* @param g              Generation.
+	* @param c              Identificator of the child.
+	*/
+	eGAPostEvaluation(const unsigned int g,const unsigned int c);
+
+	/**
+	* Construct the post evaluation exception.
+	* @param msg            The message.
+	*/
+	eGAPostEvaluation(const char* msg) : eGA(msg) {}
 };
 
 

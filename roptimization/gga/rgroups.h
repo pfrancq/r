@@ -166,7 +166,7 @@ public:
 	* Verify the validity of the groups.
 	* @return True if the groups are valid one, false else.
 	*/
-	virtual bool Verify(void);
+	virtual void Verify(void) throw(RGA::eGA);
 
 	/**
 	* Get the group of an object.

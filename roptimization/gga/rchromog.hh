@@ -61,17 +61,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void)
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void) throw(RGA::eGA)
 {
 	Heuristic->Run(static_cast<cChromo*>(this));
 	ComputeOrd();
-	return(true);
 }
 
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Crossover(cChromo* parent1,cChromo* parent2)
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Crossover(cChromo* parent1,cChromo* parent2) throw(RGA::eGA)
 {
 	unsigned int pos1,len1,pos2,i,j;
 	cGroup** grps2;
@@ -139,14 +138,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	#ifdef RGADEBUG
 		if(Instance->Debug) Instance->Debug->EndFunc("Crossover","RChromoG");
 	#endif
-
-	return(true);
 }
 
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Mutation(void)
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Mutation(void) throw(RGA::eGA)
 {
 	unsigned int nb;
 
@@ -162,54 +159,45 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
 	ComputeOrd();
-
-	return(true);
 }
 
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Inversion(void)
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Inversion(void) throw(RGA::eGA)
 {
 	unsigned int g1,g2,hold;
 	cGroup* ptr;
 
-	if(Used.NbPtr<3) return(true);
+	if(Used.NbPtr<3) return;
 	g1=Instance->RRand(Used.NbPtr);
 	hold=g2=g1+Instance->RRand(Used.NbPtr-2)+1;
 	if(g2>Used.NbPtr-1)
 		g2-=Used.NbPtr-1;
-	RReturnValIfFail(g2!=g1,false);
+	RReturnIfFail(g2!=g1);
 
 	// Exchange them in Used
 	ptr=Used.Tab[g1];
 	Used.Tab[g1]=Used.Tab[g2];
 	Used.Tab[g2]=ptr;
-
-	return(true);
 }
 
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Modify(void)
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Modify(void) throw(RGA::eGA)
 {
-	return(Mutation());
+	Mutation();
 }
 
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Verify(void)
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Verify(void) throw(RGA::eGA)
 {
-	if(!RGroups<cGroup,cObj,cGroupData,cChromo>::Verify())
-		return(false);
+	RGroups<cGroup,cObj,cGroupData,cChromo>::Verify();
 	if(!Used.NbPtr)
-	{
-		cout<<"No Group used."<<endl;
-		return(false);
-	}
-	return(true);
+		throw RGA::eGAVerify("No Group used.");
 }
 
 

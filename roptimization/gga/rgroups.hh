@@ -219,23 +219,22 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroups<cGroup,cObj,cGroupData,cGroups>::Verify(void)
+	void RGroups<cGroup,cObj,cGroupData,cGroups>::Verify(void) throw(RGA::eGA)
 {
 	unsigned int i,*list,nbobjs;
 	cGroup** G;
+	char tmp[200];
 
 	for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
-		if(!(*G)->Verify())
-			return(false);
+		(*G)->Verify();
 	for(i=Objs->GetNb()+1,list=ObjectsAss,nbobjs=0;--i;list++)
 		if((*list)!=NoGroup)
 			nbobjs++;
 	if(ObjsAss.NbPtr+ObjsNoAss.NbPtr!=Objs->GetNb())
 	{
-		cout<<"Problem with the number of objects: ObjsAss="<<ObjsAss.NbPtr<<" and ObjsNoAss="<<ObjsNoAss.NbPtr<<endl;
-		return(false);
+		sprintf(tmp,"Problem with the number of objects: ObjsAss=%u and ObjsNoAss=%u",ObjsAss.NbPtr,ObjsNoAss.NbPtr);
+		throw RGA::eGAVerify(tmp);
 	}
-	return(true);
 }
 
 

@@ -63,13 +63,11 @@ namespace RGA2D{
 //-----------------------------------------------------------------------------
 /**
 */
-class RPlacementHeuristicException
+class RPlacementHeuristicException : public RGA::eGA
 {
 public:
-	RString Msg;
-	
-	RPlacementHeuristicException(const RString& msg) : Msg(msg) {}
-	RPlacementHeuristicException(const char* msg) : Msg(msg) {}
+	RPlacementHeuristicException(const RString& msg) : RGA::eGA(msg) {}
+	RPlacementHeuristicException(const char* msg) : RGA::eGA(msg) {}
 };
 
 

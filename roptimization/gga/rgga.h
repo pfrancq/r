@@ -73,7 +73,7 @@ enum HeuristicType{Nothing,FirstFit,FirstFitDes};
 
 //-----------------------------------------------------------------------------
 /**
-* This class represent a modify exception, when a modify can't be done.
+* The eGAModify class provides an exception fot the modify operator.
 * @author Pascal Francq
 * @short Modify GA Exception
 */
@@ -87,6 +87,38 @@ public:
 	* @param c              Identificator of the child.
 	*/
 	eGAModify(const unsigned int g,const unsigned int c);
+
+	/**
+	* Construct the modify exception.
+	* @param msg            The message.
+	*/
+	eGAModify(const char* msg) : eGA(msg) {}
+};
+
+
+//-----------------------------------------------------------------------------
+/**
+* The eGALocalOptimisation class provides an exception for the local
+* optimisation process.
+* @author Pascal Francq
+* @short Local Optimisation GA Exception
+*/
+class eGALocalOptimisation : public RGA::eGA
+{
+public:
+
+	/**
+	* Construct the local optimisation exception.
+	* @param g              Generation.
+	* @param c              Identificator of the child.
+	*/
+	eGALocalOptimisation(const unsigned int g,const unsigned int c);
+
+	/**
+	* Construct the local optimisation exception.
+	* @param msg            The message.
+	*/
+	eGALocalOptimisation(const char* msg) : eGA(msg) {}
 };
 
 

@@ -93,42 +93,36 @@ public:
 
 	/**
 	* Construct a valid solution.
-	* @return The function must retrun true if a solution has been constructed.
 	*/
-	virtual bool RandomConstruct(void) {return(true);}
+	virtual void RandomConstruct(void) throw(eGA) {}
 
 	/**
 	* Evaluate the fitness of the chromosome.
 	*/
-	virtual void Evaluate(void) {}
+	virtual void Evaluate(void) throw(eGA) {}
 
 	/**
 	* Do a crossover by using the chromosome as child.
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
-	* @return The function must return true if the crossover has been done.
 	*/
-	virtual bool Crossover(cChromo* /*parent1*/,cChromo* /*parent2*/) {return(true);}
+	virtual void Crossover(cChromo* /*parent1*/,cChromo* /*parent2*/) throw(eGA) {}
 
 	/**
 	* Do a mutation with the chromosome.
-	* @return               The function must return true if the mutation has
-	*                       been done.
 	*/
-	virtual bool Mutation(void) {return(true);}
+	virtual void Mutation(void) throw(eGA) {}
 
 	/**
 	* Do an inversion with the chromosome.
-	* @return               The function must return true if the inversion has
-	* been done.
 	*/
-	virtual bool Inversion(void) {return(true);}
+	virtual void Inversion(void) throw(eGA) {}
 
 	/**
 	* Perform an optimisation. This function is called every time a chromosome
 	* is modified by the crossover, inversion, or the mutation operator.
 	*/
-	virtual void Optimisation(void) {}
+	virtual void Optimisation(void) throw(eGA)  {}
 
 	/**
 	* Print information on screen.
@@ -137,9 +131,8 @@ public:
 
 	/**
 	* Verify the validity of the chromosome.
-	* @return True if the chromosome is a valid one, false else.
 	*/
-	virtual bool Verify(void) {return(true);}
+	virtual void Verify(void) throw(eGA) {}
 
 	/**
 	* The assignment operator.

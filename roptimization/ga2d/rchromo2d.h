@@ -153,9 +153,8 @@ public:
 
 	/**
 	* The random construction uses the heuristic to place all the objects.
-	* @return The function returns true if a solution has been constructed.
 	*/
-	virtual bool RandomConstruct(void);
+	virtual void RandomConstruct(void) throw(RGA::eGA);
 
 	/**
 	* Make the crossover for the chromosome. A set of objects is taken from the
@@ -163,22 +162,19 @@ public:
 	* objects that aren't selected.
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
-	* @return The function returns true if the crossover has been done.
 	*/
-	virtual bool Crossover(cChromo *parent1,cChromo *parent2);
+	virtual void Crossover(cChromo *parent1,cChromo *parent2) throw(RGA::eGA);
 
 	/**
 	* The mutation simply calls the heuristic with all the objects.
-	* @return The function returns true if the mutation has been done.
 	*/
-	virtual bool Mutation(void);
+	virtual void Mutation(void) throw(RGA::eGA);
 
 	/**
 	* This function verify the validity of the chromosome, in particular that
 	* no polygons are overlaped.
-	* @return The function returns true if the chromosome is valid.
 	*/
-	virtual bool Verify(void);
+	virtual void Verify(void) throw(RGA::eGA);
 
 	/**
 	* The assignment operator.

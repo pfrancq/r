@@ -156,8 +156,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 					p=(*C);
 				if(RRand(100)<90)
 				{
-					if(!p->Modify())
-						throw eGAModify(Gen,p->Id);
+					p->Modify();
 					emitInteractSig();
 					p->Evaluate();
 					emitInteractSig();

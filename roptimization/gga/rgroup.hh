@@ -61,17 +61,18 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroup<cGroup,cObj,cGroupData,cGroups>::Verify(void)
+	void RGroup<cGroup,cObj,cGroupData,cGroups>::Verify(void) throw(RGA::eGA)
 {
 	unsigned int i;
 	cObj** obj;
 	unsigned int NbObjects=Owner->ObjsAss.NbPtr;
+	char tmp[200];
 
 	// Each group must have a parent.
 	if(!Owner)
 	{
-		cout<<"No Owner for group "<<Id<<endl;
-		return(false);
+		sprintf(tmp,"No Owner for group %u",Id);
+		throw RGA::eGAVerify(tmp);
 	}
 
 	// Verify objects attached.
@@ -80,22 +81,22 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		// The number of objects attached can't be null.
 		if(!NbSubObjects)
 		{
-			cout<<"!NbSubObjects for group "<<Id<<endl;
-			return(false);
+			sprintf(tmp,"!NbSubObjects for group %u",Id);
+			throw RGA::eGAVerify(tmp);
 		}
 
 		// The index of the first objects attached can not exceed the total number of objects.
 		if(SubObjects>NbObjects)
 		{
-			cout<<"SubObjects>NbObjects for group "<<Id<<endl;
-			return(false);
+			sprintf(tmp,"SubObjects>NbObjects for group %u",Id);
+			throw RGA::eGAVerify(tmp);
 		}
 
 		// The index of the last objects attached can not exceed the total number of objects.
 		if(SubObjects+NbSubObjects>NbObjects+1)
 		{
-			cout<<"SubObjects+NbSubObjects>NbObjects+1 for group "<<Id<<endl;
-			return(false);
+			sprintf(tmp,"SubObjects+NbSubObjects>NbObjects+1 for group %u",Id);
+			throw RGA::eGAVerify(tmp);
 		}
 	}
 	else
@@ -103,8 +104,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		// The number of objects attached must be null.
 		if(NbSubObjects)
 		{
-			cout<<"NbSubObjects for group "<<Id<<endl;
-			return(false);
+			sprintf(tmp,"NbSubObjects for group %u",Id);
+			throw RGA::eGAVerify(tmp);
 		}
 	}
 
@@ -113,18 +114,15 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	{
 		if(!(*obj))
 		{
-			cout<<"Owner->ObjsAss is null for group "<<Id<<endl;
-			return(false);
+			sprintf(tmp,"Owner->ObjsAss is null for group %u",Id);
+			throw RGA::eGAVerify(tmp);
 		}
 		if(Owner->ObjectsAss[(*obj)->GetId()]!=Id)
 		{
-			cout<<"Owner->ObjsAss[(*obj)->GetId()]!=Id for group "<<Id<<endl;
-			return(false);
+			sprintf(tmp,"Owner->ObjsAss[(*obj)->GetId()]!=Id for group %u",Id);
+			throw RGA::eGAVerify(tmp);
 		}
 	}
-
-	// return the value of the verification.
-	return(true);
 }
 
 

@@ -50,6 +50,17 @@ RGGA::eGAModify::eGAModify(const unsigned int g,const unsigned int c)
 {
 	char tmp[200];
 
-	sprintf(tmp,"Generation %u: Mutation error: Chromsosome %u",g,c);
+	sprintf(tmp,"Generation %u: Modify error: Chromsosome %u",g,c);
+	SetMsg(tmp);
+}
+
+
+//-----------------------------------------------------------------------------
+RGGA::eGALocalOptimisation::eGALocalOptimisation(const unsigned int g,const unsigned int c)
+	: eGA()
+{
+	char tmp[200];
+
+	sprintf(tmp,"Generation %u: Local Optimisation error: Chromsosome %u",g,c);
 	SetMsg(tmp);
 }

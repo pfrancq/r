@@ -89,21 +89,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RandomConstruct(void)
+	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::RandomConstruct(void) throw(RGA::eGA)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
 	Heuristic->Run(Instance->Problem,this,Grid);
 	RRect r=Heuristic->GetResult();
 	ActLimits.Set(r.Width(),r.Height());
-	return(true);
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		Crossover(cChromo* parent1,cChromo* parent2)
+	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Crossover(cChromo* parent1,cChromo* parent2) throw(RGA::eGA)
 {
 	unsigned int NbRealInfos,i;
 	RGeoInfo *info,*info1=0,*info2=0,*infoprob;
@@ -163,14 +160,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	thInfos->InsertPtr(new cInfo(&Problem->Problem));
 
 	// Calculate Positions
-	try
-	{
-		Heuristic->Run(Instance->Problem,thInfos,Grid);
-	}
-	catch(RPlacementHeuristicException& e)
-	{
-		return(false);
-	}
+	Heuristic->Run(Instance->Problem,thInfos,Grid);
 
 	RRect r=Heuristic->GetResult();
 	ActLimits.Set(r.Width(),r.Height());
@@ -202,26 +192,23 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 		if(Instance->Debug)
 			Instance->Debug->EndFunc("Crossover","RChromo2D");
 	#endif
-
-	return(true);
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void)
+	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void) throw(RGA::eGA)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
 	Heuristic->Run(Instance->Problem,this,Grid);
 	RRect r=Heuristic->GetResult();
 	ActLimits.Set(r.Width(),r.Height());
-	return(true);
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void)
+	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void) throw(RGA::eGA)
 {
 	unsigned int i,j;
 	RGeoInfo **infoi,**infoj;
@@ -235,26 +222,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 			{
 				if((*infoi)->Overlap(*infoj))
 				{
-					cerr<<"Overlapping Problem: (Id=="<<Id<<")"<<endl<<"  "<<i<<" : ";
-					for((*infoi)->Start();!(*infoi)->End();(*infoi)->Next())
-						cerr<<"("<<((**infoi)()).X<<","<<((**infoi)()).Y<<")     ";
-					cerr<<endl<<"  "<<j<<" : ";
-					for((*infoj)->Start();!(*infoi)->End();(*infoj)->Next())
-						cerr<<"("<<((**infoj)()).X<<","<<((**infoj)()).Y<<")     ";
-					cerr<<endl;
+					sprintf(Tmp,"Overlapping Problem (Id==%u) between %s and %s",Id,(*infoi)->GetObj()->Name(),(*infoj)->GetObj()->Name());
 					#ifdef RGADEBUG
 						if(Instance->Debug)
-						{
-							sprintf(Tmp,"Overlapping Problem (Id==%u) between %s and %s",Id,(*infoi)->GetObj()->Name(),(*infoj)->GetObj()->Name());
 							Instance->Debug->PrintInfo(Tmp);
-						}
 					#endif
-					return(false);
+					throw RGA::eGAVerify(Tmp);
 				}
 			}
 		}
 	}
-	return(true);
 }
 
 

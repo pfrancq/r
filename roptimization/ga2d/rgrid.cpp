@@ -533,10 +533,10 @@ void RGA2D::RGrid::AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &boun
 		{
 			if((free->NbPtr==1)&&(TestX==368)&&(TestY==183))
 			{
-				RMsg *m=LookMsg("Debug");
+				RMsg *m=RMsg::LookMsg("Debug");
 				if(m)
 				{
-					DeleteMsg(m);
+					RMsg::DeleteMsg(m);
 				}
 			}
 

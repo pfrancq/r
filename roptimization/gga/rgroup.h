@@ -112,9 +112,8 @@ public:
 
 	/**
 	* Verify if the group is not violating the integrity of the system.
-	* @return true if the group is correct, false else.
 	*/
-	virtual bool Verify(void);
+	virtual void Verify(void) throw(RGA::eGA);
 
 	/**
 	* Clear the information container in a group.

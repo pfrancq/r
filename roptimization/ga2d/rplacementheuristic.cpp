@@ -247,11 +247,11 @@ RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristic
 	{
 		if(NbObjsOk==26)
 		{
-			RMsg* m=LookMsg("Random");
+			RMsg* m=RMsg::LookMsg("Random");
 			if(m)
 			{
-				DeleteMsg(m);
-				InsertMsg("Debug");
+				RMsg::DeleteMsg(m);
+				RMsg::InsertMsg("Debug");
 			}
 		}
 		Grid->AddFreePolygons(CurInfo,&Free,Result);

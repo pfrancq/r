@@ -269,12 +269,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 				Debug->PrintInfo(Tmp);
 			}
 		#endif
-		if(!((*C1)->Crossover(*C2,C3)))
-			throw eGACrossover(Gen,(*C2)->Id,C3->Id,(*C1)->Id);
+		(*C1)->Crossover(*C2,C3);
 		(*C1)->Optimisation();
 		(*C1)->ToEval=true;
-		if(!(*C1)->Verify())
-			throw eGAVerify(Gen,(*C1)->Id);
+		#ifdef RGADEBUG
+			(*C1)->Verify();
+		#endif
 		emitInteractSig();
 
 		// Second Crossover
@@ -286,12 +286,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 				Debug->PrintInfo(Tmp);
 			}
 		#endif
-		if(!((*C1)->Crossover(C3,*C2)))
-			throw eGACrossover(Gen,C3->Id,(*C2)->Id,(*C1)->Id);
+		(*C1)->Crossover(C3,*C2);
 		(*C1)->Optimisation();
 		(*C1)->ToEval=true;
-		if(!(*C1)->Verify())
-			throw eGAVerify(Gen,(*C1)->Id);
+		#ifdef RGADEBUG
+		(*C1)->Verify();
+		#endif
 		emitInteractSig();
 	}
 	#ifdef RGADEBUG
@@ -337,12 +337,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			if(Debug) Debug->PrintInfo(Tmp);
 		#endif
 		emitInteractSig();
-		if(!p->Mutation())
-			throw eGAMutation(Gen,p->Id);
+		p->Mutation();
 		p->Optimisation();
 		p->ToEval=true;
-		if(!p->Verify())
-			throw eGAVerify(Gen,p->Id);
+		#ifdef RGADEBUG
+			p->Verify();
+		#endif
 		emitInteractSig();
 	}
 	if(AgeBest==AgeNextBestMutation)
@@ -367,12 +367,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			if(Debug) Debug->PrintInfo(Tmp);
 		#endif
 		emitInteractSig();
-		if(!p->Mutation())
-			throw eGAMutation(Gen,p->Id);
+		p->Mutation();
 		p->Optimisation();
 		p->ToEval=true;
-		if(!p->Verify())
-			throw eGAVerify(Gen,p->Id);
+		#ifdef RGADEBUG
+			p->Verify();
+		#endif
 		emitInteractSig();
 	}
 	#ifdef RGADEBUG
@@ -403,8 +403,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		p->Inversion();
 		p->Optimisation();
 		p->ToEval=true;
-		if(!p->Verify())
-			throw eGAVerify(Gen,p->Id);
+		#ifdef RGADEBUG
+			p->Verify();
+		#endif
 		emitInteractSig();
 	}
 	#ifdef RGADEBUG
@@ -491,8 +492,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	#endif
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
-		if(!((*C)->Verify()))
-			throw eGAVerify(Gen,(*C)->Id);
+		(*C)->Verify();
 		emitInteractSig();
 	}
 	#ifdef RGADEBUG

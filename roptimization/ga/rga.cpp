@@ -118,9 +118,57 @@ RGA::eGAMutation::eGAMutation(const unsigned int g,const unsigned int c)
 
 
 //-----------------------------------------------------------------------------
-RGA::eGARandomConstruct::eGARandomConstruct(void)
-	: eGA("Error when doing random construct")
+RGA::eGAInversion::eGAInversion(const unsigned int g,const unsigned int c)
+	: eGA()
 {
+	char tmp[200];
+
+	sprintf(tmp,"Generation %u: Inversion error: Chromsosome %u",g,c);
+	SetMsg(tmp);
+}
+
+
+//-----------------------------------------------------------------------------
+RGA::eGAOptimisation::eGAOptimisation(const unsigned int g,const unsigned int c)
+	: eGA()
+{
+	char tmp[200];
+
+	sprintf(tmp,"Generation %u: Optimisation error: Chromsosome %u",g,c);
+	SetMsg(tmp);
+}
+
+
+//-----------------------------------------------------------------------------
+RGA::eGARandomConstruct::eGARandomConstruct(const unsigned int g,const unsigned int c)
+	: eGA()
+{
+	char tmp[200];
+
+	sprintf(tmp,"Generation %u: Random Construction error: Chromsosome %u",g,c);
+	SetMsg(tmp);
+}
+
+
+//-----------------------------------------------------------------------------
+RGA::eGAEvaluation::eGAEvaluation(const unsigned int g,const unsigned int c)
+	: eGA()
+{
+	char tmp[200];
+
+	sprintf(tmp,"Generation %u: Evaluation error: Chromsosome %u",g,c);
+	SetMsg(tmp);
+}
+
+
+//-----------------------------------------------------------------------------
+RGA::eGAPostEvaluation::eGAPostEvaluation(const unsigned int g,const unsigned int c)
+	: eGA()
+{
+	char tmp[200];
+
+	sprintf(tmp,"Generation %u: Post Evaluation error: Chromsosome %u",g,c);
+	SetMsg(tmp);
 }
 
 
