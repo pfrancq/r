@@ -165,7 +165,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	}
 	else
 	{
-		memcpy(Tab,src.Tab,container.NbPtr*sizeof(C*));
+		memcpy(Tab,src.Tab,src.NbPtr*sizeof(C*));
 		NbPtr=src.NbPtr;
 		LastPtr=src.LastPtr;
 	}
