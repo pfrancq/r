@@ -531,6 +531,15 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 
 
 //-----------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	C* RStd::RContainer<C,T,bAlloc,bOrder>::GetPtrAt(unsigned int idx) const
+{
+	if(idx>=LastPtr) return(0);
+	return(Tab[idx]);
+}
+
+
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	C* RStd::RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse tag,bool sortkey) const
 {

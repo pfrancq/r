@@ -343,6 +343,14 @@ public:
 	template<class TUse> bool IsIn(const TUse tag,bool sortkey=bOrder) const;
 
 	/**
+	* Get a pointer to the ith element in the container.
+	* @param idx            Index of the element to get.
+	* @return Return the pointer or 0 if the index is outside the scope of the
+*             container.
+	*/
+	C* GetPtrAt(unsigned int idx) const;
+
+	/**
 	* Get a pointer to a certain element in the container.
 	* @param TUse           The type of tag, the container uses the Compare(TUse &)
 	*                       member function of the elements.
