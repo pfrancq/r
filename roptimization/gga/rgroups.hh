@@ -275,7 +275,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	for(i=grps.Used.NbPtr+1,G=grps.Used.Tab;--i;G++)
 	{
 		ptr=ReserveGroup();           // Reserve a new group
-		ptr->Insert(Objs,*G);         // Insert the necessary objects
+		ptr->Copy(*G);                // Copy the necessary objects
 		(*ptr)=(**G);                 // Update internal information.
 	}
 	return(*this);

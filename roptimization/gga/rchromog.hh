@@ -104,7 +104,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		if(bInsertIt)
 		{
 			grp=ReserveGroup();
-			grp->Insert(Objs,*grps2);
+			grp->Copy(*grps2);
 			(*grp)=(**grps2);
 		}
 	}
@@ -113,7 +113,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	for(i=len1+1,grps1=&parent1->Used.Tab[pos1];--i;grps1++)
 	{
 			grp=ReserveGroup();
-			grp->Insert(Objs,*grps1);
+			grp->Copy(*grps1);
 			(*grp)=(**grps1);
 	}
 
@@ -128,7 +128,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		if(bInsertIt)
 		{
 			grp=ReserveGroup();
-			grp->Insert(Objs,*grps2);
+			grp->Copy(*grps2);
 			(*grp)=(**grps2);
 		}
 	}

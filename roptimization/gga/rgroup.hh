@@ -141,7 +141,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroup<cGroup,cObj,cGroupData,cGroups>::Insert(RCursor<cObj,unsigned int>* /*objs*/,const cGroup* grp)
+	void RGroup<cGroup,cObj,cGroupData,cGroups>::Copy(const cGroup* grp)
 {
 	unsigned int i;
 	cObj** ptr;

@@ -130,12 +130,11 @@ public:
 	void Insert(const cObj* obj) {Owner->InsertObj(static_cast<cGroup*>(this),obj);}
 
 	/**
-	* Put all the objects of a group. The two groups have to be of two
+	* Copy all the objects of a group. The two groups have to be of two
 	* different owner.
-	* @param objs           Objects manipulated.
 	* @param grp            Group to copy from.
 	*/
-	void Insert(RCursor<cObj,unsigned int>* objs,const cGroup* grp);
+	void Copy(const cGroup* grp);
 
 	/**
 	* Delete an object in the group.
