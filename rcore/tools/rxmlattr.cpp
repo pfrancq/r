@@ -44,8 +44,15 @@ using namespace RStd;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RStd::RXMLAttr::RXMLAttr(char *name,char *value)
+RStd::RXMLAttr::RXMLAttr(const char *name,const char *value)
 	: Name(name), Value(value)
+{
+}
+
+
+//------------------------------------------------------------------------------
+RStd::RXMLAttr::RXMLAttr(const char *name,const double value)
+	: Name(name), Value(dtoa(value))
 {
 }
 

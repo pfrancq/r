@@ -208,6 +208,13 @@ RString& RStd::RXMLTag::GetAttrValue(const char *name)
 
 
 //------------------------------------------------------------------------------
+void RXMLTag::InsertAttr(RXMLAttr *Attr)
+{
+	Attrs.InsertPtr(Attr);
+}
+
+
+//------------------------------------------------------------------------------
 bool RStd::RXMLTag::IsAttrDefined(const char *name)
 {
 	return(Attrs.IsIn<const char*>(name));

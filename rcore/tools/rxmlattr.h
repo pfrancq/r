@@ -74,7 +74,15 @@ public:
     * @param value      The value of the attribute.
     *   
     */
-    RXMLAttr(char *name,char *value);
+    RXMLAttr(const char *name,const char *value);
+
+    /**
+    * Construct a XML Attribute.
+    * @param name       The name of the attribute.
+    * @param value      The value of the attribute.
+    *
+    */
+    RXMLAttr(const char *name,const double value);
 
     /**
     * Compare the name of the attribute with a given string. This function is

@@ -138,7 +138,7 @@ public:
     * Return the name of the tag.
     * @returns a string containing the name.
     */
-    RString& GetName(void);
+	RString& GetName(void);
 
 	/**
 	* Return the name of the tag.
@@ -159,6 +159,12 @@ public:
 	* @param name		Name of the tag to find.
 	*/
 	RXMLTag* GetTag(const char* name);
+
+    /**
+    * Insertan attribute
+    * @param Attr	the attribute to insert
+    */
+    void InsertAttr(RXMLAttr *Attr);
 
     /**
     * Destruct the XML Tag.
