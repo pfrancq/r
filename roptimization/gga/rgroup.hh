@@ -110,12 +110,18 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 	// Verify coherence with the objects.
 	for(i=NbSubObjects+1,obj=&Owner->ObjsAss.Tab[SubObjects];--i;obj++)
+	{
+		if(!(*obj))
+		{
+			cout<<"Owner->ObjsAss is null for group "<<Id<<endl;
+			return(false);
+		}
 		if(Owner->ObjectsAss[(*obj)->GetId()]!=Id)
 		{
 			cout<<"Owner->ObjsAss[(*obj)->GetId()]!=Id for group "<<Id<<endl;
 			return(false);
 		}
-
+	}
 
 	// return the value of the verification.
 	return(true);

@@ -165,11 +165,12 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroups<cGroup,cObj,cGroupData,cGroups>::DeleteObjs(cGroup* from)
 {
-	unsigned int j,i;
+	unsigned int j,i,tmp;
 	cGroup** G;
 	cObj** obj;
 
 	if(!(from->NbSubObjects)) return;
+	tmp=from->NbSubObjects;
 	for(i=from->NbSubObjects+1,obj=&ObjsAss.Tab[from->SubObjects];--i;)
 	{
 		 // No need to increment obj, because delete moves eveything
@@ -182,8 +183,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	j=from->SubObjects;
 	for(i=NbPtr+1,G=Tab;--i;G++)
 		if(((*G)->Reserved)&&((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
-			(*G)->SubObjects-=from->NbSubObjects;
-	from->NbSubObjects=0;
+			(*G)->SubObjects-=tmp;
 	from->SubObjects=NoObject;
 }
 
