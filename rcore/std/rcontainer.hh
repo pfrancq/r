@@ -71,9 +71,25 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	C **tab;
 
 	Clear();
+  VerifyTab(container.NbPtr);
 	for(i=container.NbPtr+1,tab=container.Tab;--i;tab++)
 		InsertPtr(new C(*tab));
 	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	RContainer<C,T,bAlloc,bOrder>& RContainer<C,T,bAlloc,bOrder>::
+		operator+=(const RContainer<C,T,bAlloc,bOrder>& container) throw(bad_alloc)
+{
+	T i;
+	C **tab;
+
+  VerifyTab(container.NbPtr+NbPtr);
+	for(i=container.NbPtr+1,tab=container.Tab;--i;tab++)
+		InsertPtr(new C(*tab));
+  return(*this);
 }
 
 
@@ -159,6 +175,26 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //---------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
+	void RContainer<C,T,bAlloc,bOrder>::VerifyTab(T MaxSize) throw(bad_alloc)
+{
+  if(MaxSize>MaxPtr)
+  {
+    C **ptr;
+		T OldSize;
+
+		OldSize=MaxPtr;
+    MaxPtr=MaxSize+IncPtr;
+    ptr=new C*[MaxPtr];
+    memcpy(ptr,Tab,NbPtr*sizeof(C*));
+    delete[] Tab;
+    Tab=ptr;
+    memset(&Tab[OldSize],0,(MaxPtr-OldSize)*sizeof(C*));
+  }
+}
+
+
+//---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::Clear(void)
 {
   if(bAlloc)
@@ -167,6 +203,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
     for(NbPtr++,ptr=Tab;--NbPtr;ptr++) delete (*ptr);
   }
+	NbPtr=0;
 	memset(Tab,0,MaxPtr*sizeof(C*));
 }
 
@@ -183,7 +220,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
   NbPtr++;
   VerifyTab();
   for(i=0,ptr=Tab;i<Pos;i++,ptr++);
-  memmove(ptr+1,ptr,(NbPtr-i-1)*sizeof(C*));
+	if(i<NbPtr) memmove(ptr+1,ptr,(NbPtr-i-1)*sizeof(C*));
   (*ptr)=ins;
 }
 
@@ -241,7 +278,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 
 //---------------------------------------------------------------------------
 // Return the pointer to the member corresponding to tag
-// If not find -> Return NULL
+// If not find -> Return 0
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	C* RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag)
 {
@@ -261,7 +298,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 
     for(i=NbPtr+1,ptr=Tab;--i;ptr++)
       if(!((*ptr)->Compare(tag))) return(*ptr);
-    return(NULL);
+    return(0);
   }
 }
 
@@ -298,6 +335,22 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 
 
 //---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+  template<class TUse> RContainer<C,T,false,bOrder>* RContainer<C,T,bAlloc,bOrder>::
+		GetPtrs(const TUse &tag) throw(bad_alloc)
+{
+  C **ptr;
+  T Index;
+	RContainer<C,T,false,bOrder>*	tmp;
+
+	tmp=new RContainer<C,T,false,bOrder>(MaxPtr,IncPtr);
+	for(i=NbPtr+1,ptr=Index;--i;ptr++)
+		if(!((*ptr)->Compare(tag)))	tmp->InsertPtr(tmp);
+	return(tmp);
+}
+
+
+//---------------------------------------------------------------------------
 // Delete the pointer to the member
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::DeletePtr(C* del)
@@ -317,6 +370,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
     for(Index=0,ptr=Tab;(*ptr)!=del;Index++,ptr++);
   }
   memcpy(ptr,ptr+1,((--NbPtr)-Index)*sizeof(C*));
+	Tab[NbPtr]=0;
   if(bAlloc) delete(del);
 }
 
@@ -342,19 +396,8 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
   }
   del=*ptr;
   memcpy(ptr,ptr+1,((--NbPtr)-Index)*sizeof(C*));
+	Tab[NbPtr]=0;
   if(bAlloc) delete(del);
-}
-
-
-//---------------------------------------------------------------------------
-// Class destructor
-template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-void RContainer<C,T,bAlloc,bOrder>::ForEach(void f(TUse),const TUse &tag)
-{
-  T Index;
-  C **ptr;
-
-  for(Index=NbPtr+1,ptr=Tab;--Index;ptr++) (*ptr)->f(tag);
 }
 
 
@@ -367,7 +410,8 @@ template<class C,class T,bool bAlloc,bool bOrder>
   {
     C **ptr;
 
-    for(NbPtr++,ptr=Tab;--NbPtr;ptr++) delete (*ptr);
+    for(NbPtr++,ptr=Tab;--NbPtr;ptr++)
+			delete(*ptr);
   }
   delete[] Tab;
 }

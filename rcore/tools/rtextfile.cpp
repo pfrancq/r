@@ -27,6 +27,8 @@
 */
 
 
+
+
 //---------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdlib.h>
@@ -49,6 +51,7 @@
 using namespace RStd;
 
 
+
 //---------------------------------------------------------------------------
 //
 // RTextFile
@@ -57,7 +60,7 @@ using namespace RStd;
 
 //---------------------------------------------------------------------------
 RTextFile::RTextFile(const RString &name,int mode) throw(bad_alloc,RString)
-  : Name(name),Mode(mode), NewLine(true)
+  : Mode(mode), Name(name), All(true), NewLine(true)
 {
   switch(Mode)
   {
@@ -88,7 +91,7 @@ RTextFile::RTextFile(const RString &name,int mode) throw(bad_alloc,RString)
 
 //---------------------------------------------------------------------------
 RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
-  : Name(name),All(all),Mode(modRead)
+  : Mode(modRead), Name(name), All(all), NewLine(false)
 {
 	handle=open(Name(),O_RDONLY);
   Init();
@@ -223,7 +226,9 @@ void RTextFile::WriteLine(void) throw(RString)
   if(Mode==modRead)
     throw(RString("File Mode is modRead"));
   write(handle,"\n",strlen("\n"));
-  flushall();
+	#ifdef windows
+	  flushall();
+	#endif
   NewLine=true;
 }
 
@@ -239,7 +244,9 @@ void RTextFile::WriteLong(long nb) throw(RString)
     write(handle," ",1);
   sprintf(Str,"%li",nb);
   write(handle,Str,strlen(Str));
-  flushall();
+	#ifdef windows
+	  flushall();
+	#endif
   NewLine=false;
 }
 
@@ -256,7 +263,9 @@ void RTextFile::WriteULong(unsigned long nb) throw(RString)
     write(handle," ",1);
   sprintf(Str,"%lu",nb);
   write(handle,Str,strlen(Str));
-  flushall();
+	#ifdef windows
+	  flushall();
+	#endif
   NewLine=false;
 }
 
@@ -272,7 +281,9 @@ void RTextFile::WriteStr(char *c) throw(RString)
     write(handle," ",1);
   l=strlen(c);
   write(handle,c,l);
-  flushall();
+	#ifdef windows
+	  flushall();
+	#endif
   if(c[l-1]!=' '&&c[l-1]!='\n'&&c[l-1]!='\t'&&c[l-1]!='\r')
     NewLine=false;
   else
@@ -289,9 +300,11 @@ void RTextFile::WriteBool(bool b) throw(RString)
     throw(RString("File Mode is modRead"));
   if(!NewLine)
     write(handle," ",1);
-  if(b) strcpy(Str,"true"); else strcpy(Str,"false");
+  if(b) strcpy(Str,"1"); else strcpy(Str,"0");
   write(handle,Str,strlen(Str));
-  flushall();
+	#ifdef windows
+	  flushall();
+	#endif
   NewLine=false;
 }
 
@@ -310,10 +323,12 @@ void RTextFile::WriteTime(void) throw(RString)
   tblock = localtime(&timer);
   if(!NewLine)
     write(handle," ",1);
-  flushall();
   strcpy(Str,asctime(tblock));
   Str[strlen(Str)-1]=0;
   write(handle,Str,strlen(Str));
+	#ifdef windows
+	  flushall();
+	#endif
   NewLine=false;
 }
 
@@ -337,6 +352,9 @@ void RTextFile::WriteLog(char *entry) throw(RString)
   write(handle,Str,strlen(Str));
   write(handle,entry,strlen(entry));
   WriteLine();
+	#ifdef windows
+	  flushall();
+	#endif
 }
 
 

@@ -27,11 +27,19 @@
 */
 
 
+
 //---------------------------------------------------------------------------
-#include <rstring.h>
-using namespace RStd;
+// include files for Standard C/C++ libraries
 #include <stdio.h>
 #include <string.h>
+
+
+//---------------------------------------------------------------------------
+// include files for Rainbow
+#include "rfunc.h"
+#include "rstring.h"
+using namespace RStd;
+
 
 
 //---------------------------------------------------------------------------
@@ -133,10 +141,14 @@ inline void RString::StrUpr(void)
 	char *ptr=Text;
 	while(*ptr)
 	{
-    #pragma warn -sig
+		#if __BORLANDC__
+	    #pragma warn -sig
+		#endif
 		if(((*ptr)>='a')&&((*ptr)<='z'))
 			(*ptr)-='a'-'A';
-    #pragma warn .sig
+		#if __BORLANDC__
+	    #pragma warn .sig
+		#endif
 		ptr++;
 	}
 }
@@ -169,10 +181,14 @@ inline void RString::StrLwr(void)
 
 	while(*ptr)
 	{
-    #pragma warn -sig
+		#if __BORLANDC__
+	    #pragma warn -sig
+		#endif
 		if(((*ptr)>='A')&&((*ptr)<='Z'))
 			(*ptr)+='a'-'A';
-    #pragma warn .sig
+		#if __BORLANDC__
+	    #pragma warn .sig
+		#endif
 		ptr++;
 	}
 }
@@ -248,9 +264,16 @@ int RString::Compare(const RString *str)
 
 
 //---------------------------------------------------------------------------
-char* RString::FindStr(const char *text)
+const char* RString::FindStr(const char *text)
 {
 	return(strstr(Text,text));
+}
+
+
+//---------------------------------------------------------------------------
+RString* RString::GetString(void)
+{
+	return(GetTemporaryObject<RString,__RMAXSTRING__>());
 }
 
 
@@ -261,22 +284,10 @@ char* RString::FindStr(const char *text)
 //
 //---------------------------------------------------------------------------
 
-
-//---------------------------------------------------------------------------
-inline RString* RStd::GetString(void)
-{
-  static RString tab[__RMAXSTRING__];
-  static long act=0;
-
-	if(act==__RMAXSTRING__) act=0;
-	return(&tab[act++]);
-}
-
-
 //---------------------------------------------------------------------------
 RString& RStd::operator+(const RString &arg1,const RString &arg2)
 {
-  RString *res=GetString();
+  RString *res=RString::GetString();
   (*res)=arg1;
   return((*res)+=arg2);
 }
@@ -285,7 +296,7 @@ RString& RStd::operator+(const RString &arg1,const RString &arg2)
 //---------------------------------------------------------------------------
 RString& RStd::operator+(const RString &arg1,const char *arg2)
 {
-  RString *res=GetString();
+  RString *res=RString::GetString();
   (*res)=arg1;
   return((*res)+=arg2);
 }
@@ -294,7 +305,7 @@ RString& RStd::operator+(const RString &arg1,const char *arg2)
 //---------------------------------------------------------------------------
 RString& RStd::operator+(const char *arg1,const RString &arg2)
 {
-  RString *res=GetString();
+  RString *res=RString::GetString();
   (*res)=arg1;
   return((*res)+=arg2);
 }
@@ -303,7 +314,7 @@ RString& RStd::operator+(const char *arg1,const RString &arg2)
 RString& RStd::itoa(const int nb)
 {
 	char Tmp[20];	
-	RString *res=GetString();
+	RString *res=RString::GetString();
 	
 	sprintf(Tmp,"%i",nb);
 	(*res)=Tmp;
@@ -315,7 +326,7 @@ RString& RStd::itoa(const int nb)
 RString& RStd::itoa(const unsigned int nb)
 {
 	char Tmp[20];	
-	RString *res=GetString();
+	RString *res=RString::GetString();
 	
 	sprintf(Tmp,"%u",nb);
 	(*res)=Tmp;
@@ -327,7 +338,7 @@ RString& RStd::itoa(const unsigned int nb)
 RString& RStd::ltoa(const long nb)
 {
 	char Tmp[20];	
-	RString *res=GetString();
+	RString *res=RString::GetString();
 	
 	sprintf(Tmp,"%li",nb);
 	(*res)=Tmp;
@@ -339,7 +350,7 @@ RString& RStd::ltoa(const long nb)
 RString& RStd::chr(const unsigned char c)
 {
 	char Tmp[2];	
-	RString *res=GetString();
+	RString *res=RString::GetString();
 	
 	(*Tmp)=c;
 	(*(Tmp+1))=0;
@@ -352,7 +363,7 @@ RString& RStd::chr(const unsigned char c)
 RString& RStd::ltoa(const unsigned long nb)
 {
 	char Tmp[20];	
-	RString *res=GetString();
+	RString *res=RString::GetString();
 	
 	sprintf(Tmp,"%lu",nb);
 	(*res)=Tmp;
@@ -364,7 +375,7 @@ RString& RStd::ltoa(const unsigned long nb)
 RString& RStd::ftoa(const float nb)
 {
 	char Tmp[20];	
-	RString *res=GetString();
+	RString *res=RString::GetString();
 	
 	sprintf(Tmp,"%f",nb);
 	(*res)=Tmp;
@@ -376,7 +387,7 @@ RString& RStd::ftoa(const float nb)
 RString& RStd::dtoa(const double nb)
 {
 	char Tmp[20];	
-	RString *res=GetString();
+	RString *res=RString::GetString();
 	
 	sprintf(Tmp,"%f",nb);
 	(*res)=Tmp;

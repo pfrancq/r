@@ -60,6 +60,24 @@ void strupr(char *s);
 void strlwr(char *s);
 
 
+//---------------------------------------------------------------------------
+/** This function provides a way to handle temporary objects needed when using
+	* standard operators with non standard classes.
+	* @author Pascal Francq
+	* @param C				The type of class.
+	* @param Max      Maximal size of the array (neested operators).
+	*/
+template<class C,unsigned long Max>
+	inline C* GetTemporaryObject(void)
+{
+  static C tab[Max];
+  static long act=0;
+
+	if(act==Max) act=0;
+	return(&tab[act++]);
+}
+
+
 }  //-------- End of namespace RStd ---------------------------------------
 
 
