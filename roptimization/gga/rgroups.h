@@ -167,6 +167,11 @@ public:
 	cGroup* GetGroup(const unsigned int id) {return(Tab[ObjectsAss[obj]]);}
 
 	/**
+	* Return a pointer to an object at a given position of a group.
+	*/
+	cObj* GetObj(const unsigned int idx) {return(Objs[ObjectsList[idx]]);}
+
+	/**
 	* The assigment operator.
 	* @param chromo         The chromosome used as source.
 	*/

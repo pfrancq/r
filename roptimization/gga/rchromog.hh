@@ -80,7 +80,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	// Clear the chromosome
 	Clear();
-
+	
 	// Select two crossing sites
 	pos1=Instance->RRand(parent1->Used.NbPtr);
 	len1=Instance->RRand(parent1->Used.NbPtr-pos1-1)+1;
@@ -98,8 +98,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		{
 			grp=ReserveGroup();
 			grp->Insert(Objs,*grps2);
-			if(!grp->Verify())
-				cout<<"????"<<endl;
 		}
 	}
 
@@ -108,8 +106,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	{
 			grp=ReserveGroup();
 			grp->Insert(Objs,*grps1);
-			if(!grp->Verify())
-				cout<<"????"<<endl;
 	}
 
 	// Insert groups from parent2<pos2 and verify that they dont contains "new"
@@ -124,12 +120,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		{
 			grp=ReserveGroup();
 			grp->Insert(Objs,*grps2);
-			if(!grp->Verify())
-				cout<<"????"<<endl;
 		}
 	}
 
-	// Insert missing objects
+	// Insert missing objects after a local optimisation
+	LocalOptimisation();
 	Heuristic->Run(Objs,this,NbObjs);
 
 	return(true);
@@ -150,7 +145,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	while(--nb)
 		ReleaseGroup(Instance->RRand(Used.NbPtr));
 
-	// Insert missing objects
+	// Insert missing objects after a local optimisation
+	LocalOptimisation();
 	Heuristic->Run(Objs,this,NbObjs);
 
 	return(true);
@@ -164,15 +160,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	unsigned int grp1,grp2,hold;
 	cGroup* ptr;
 
-	if(Used.NbPtr<2) return(true);
+	if(Used.NbPtr<3) return(true);
 	grp1=Instance->RRand(Used.NbPtr);
-	hold=grp2=grp1+Instance->RRand(Used.NbPtr-1);
+	hold=grp2=grp1+Instance->RRand(Used.NbPtr-2)+1;
 	if(grp2>Used.NbPtr-1)
 		grp2-=Used.NbPtr-1;
-	if(grp1==grp2)
-	{
-		cout<<grp1<<"  -  "<<hold<<endl;
-	}
 	RReturnValIfFail(grp2!=grp1,false);
 
 	// Exchange them in Used
@@ -191,7 +183,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	if(!RGroups<cGroup,cObj,cGroupData>::Verify())
 		return(false);
 	if(!Used.NbPtr)
+	{
+		cout<<"No Group used."<<endl;
 		return(false);
+	}
 	return(true);
 }
 

@@ -113,6 +113,13 @@ public:
 	virtual bool Inversion(void);
 
 	/**
+	* Perform a local optimisation. This function is called by the crossover
+	* and the mutation operators just before the use of the heuristic to find
+	* a group for the objects not yet assigned.
+	*/
+	virtual void LocalOptimisation(void) {}
+
+	/**
 	* Verify the validity of the chromosome.
 	* @return True if the chromosome is a valid one, false else.
 	*/

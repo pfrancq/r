@@ -65,38 +65,55 @@ template<class cGroup,class cObj,class cGroupData>
 {
 	unsigned int i,*obj;
 	unsigned int NbObjects=Owner->NbObjectsList;
-	unsigned int NbGroups=Owner->Used.NbPtr;
 	
 	// Each group must have a parent.
 	if(!Owner)
+	{
+		cout<<"No Owner for group "<<Id<<endl;
 		return(false);
+	}
 
 	// Verify objects attached.
 	if(SubObjects!=NoObject)
 	{
 		// The number of objects attached can't be null.
 		if(!NbSubObjects)
+		{
+			cout<<"!NbSubObjects for group "<<Id<<endl;
 			return(false);
+		}
 
 		// The index of the first objects attached can not exceed the total number of objects.
 		if(SubObjects>NbObjects)
+		{
+			cout<<"SubObjects>NbObjects for group "<<Id<<endl;
 			return(false);
+		}
 
 		// The index of the last objects attached can not exceed the total number of objects.
 		if(SubObjects+NbSubObjects>NbObjects+1)
+		{
+			cout<<"SubObjects+NbSubObjects>NbObjects+1 for group "<<Id<<endl;
 			return(false);
+		}
 	}
 	else
 	{
 		// The number of objects attached must be null.
 		if(NbSubObjects)
+		{
+			cout<<"NbSubObjects for group "<<Id<<endl;
 			return(false);
+		}
 	}
 
 	// Verify coherence with the objects.
 	for(i=NbSubObjects+1,obj=&(Owner->ObjectsList[SubObjects]);--i;obj++)
 		if(Owner->ObjectsAss[*obj]!=Id)
+		{
+			cout<<"Owner->ObjectsAss[*obj]!=Id for group "<<Id<<endl;
 			return(false);
+		}
 
 	// return the value of the verification.
 	return(true);

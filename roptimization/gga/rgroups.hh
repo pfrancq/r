@@ -176,65 +176,65 @@ template<class cGroup,class cObj,class cGroupData>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData>
-	void RGroups<cGroup,cObj,cGroupData>::MoveObjs(cGroup* to,cGroup* from)
+	void RGroups<cGroup,cObj,cGroupData>::MoveObjs(cGroup* /*to*/,cGroup* /*from*/)
 {
-	unsigned int nbt=to->NbSubObjects,nbf=from->NbSubObjects,nbtemp,nbtemp2;
-	unsigned int *ptrf=&ObjectsList[from->SubObjects],*ptrt=&ObjectsList[to->SubObjects];
-	unsigned int *ptr;
-	cGroup** G;
-	unsigned int i;
-
-	RReturnIfFail(to->Owner==from->Owner);
-	if(!nbf) return;
-	for(nbtemp=from->NbSubObjects+1,ptr=&ObjectsList[from->SubObjects];--nbtemp;ptr++)
-		ObjectsAss[*ptr]=to->Id;
-
-	// if To has no objects, use the same the subobjects
-	if(!nbt)
-	{
-		to->SubObjects=from->SubObjects;
-		to->NbSubObjects=from->NbSubObjects;
-		from->SubObjects=NoObject;
-		from->NbSubObjects=0;
-		return;
-	}
-	ptr=tmpObjs;
-	nbtemp2=nbf;
-	nbtemp=nbt+nbf;
-	while(nbtemp)
-	{
-		while(nbf&&((!nbt)||((*ptrf)<(*ptrt))))
-		{
-			nbf--;
-			nbtemp--;
-			(*(ptr++))=(*(ptrf++));
-		}
-		while(nbt&&((!nbf)||((*ptrt)<(*ptrf))))
-		{
-			nbt--;
-			nbtemp--;
-			(*(ptr++))=(*(ptrt++));
-		}
-	}
-	nbtemp=from->SubObjects;
-	ptr=&ObjectsList[nbtemp];
-	memcpy(ptr,ptr+from->NbSubObjects,(NbObjectsList-nbtemp)*sizeof(unsigned int));
-	for(i=MaxGroups+1,N=Groups;--i;G++)
-		if(((*G)->Reserved)&&((*G)->SubObjects>nbtemp)&&((*G)->SubObjects!=NoObject))
-			(*G)->SubObjects-=from->NbSubObjects;
-	from->NbSubObjects=0;
-	from->SubObjects=NoObject;
-	nbtemp=to->SubObjects+to->NbSubObjects;
-	to->NbSubObjects+=nbtemp2;
-	if(nbtemp+nbtemp2<Instance->NbObjects-1)
-	{
-		ptr=&ObjectsList[nbtemp];
-		memmove(ptr+nbtemp2,ptr,(NbObjectsList-to->NbSubObjects-to->SubObjects)*sizeof(unsigned int));
-		for(i=MaxGroups+1,N=Groups;--i;N++)
-			if(((*G)->Reserved)&&((*G)->SubObjects>to->SubObjects)&&((*G)->SubObjects!=NoObject))
-				(*G)->SubObjects+=nbtemp2;
-	}
-	memcpy(&ObjectsList[to->SubObjects],tmpObjs,to->NbSubObjects*sizeof(unsigned int));
+//	unsigned int nbt=to->NbSubObjects,nbf=from->NbSubObjects,nbtemp,nbtemp2;
+//	unsigned int *ptrf=&ObjectsList[from->SubObjects],*ptrt=&ObjectsList[to->SubObjects];
+//	unsigned int *ptr;
+//	cGroup** G;
+//	unsigned int i;
+//
+//	RReturnIfFail(to->Owner==from->Owner);
+//	if(!nbf) return;
+//	for(nbtemp=from->NbSubObjects+1,ptr=&ObjectsList[from->SubObjects];--nbtemp;ptr++)
+//		ObjectsAss[*ptr]=to->Id;
+//
+//	// if To has no objects, use the same the subobjects
+//	if(!nbt)
+//	{
+//		to->SubObjects=from->SubObjects;
+//		to->NbSubObjects=from->NbSubObjects;
+//		from->SubObjects=NoObject;
+//		from->NbSubObjects=0;
+//		return;
+//	}
+//	ptr=tmpObjs;
+//	nbtemp2=nbf;
+//	nbtemp=nbt+nbf;
+//	while(nbtemp)
+//	{
+//		while(nbf&&((!nbt)||((*ptrf)<(*ptrt))))
+//		{
+//			nbf--;
+//			nbtemp--;
+//			(*(ptr++))=(*(ptrf++));
+//		}
+//		while(nbt&&((!nbf)||((*ptrt)<(*ptrf))))
+//		{
+//			nbt--;
+//			nbtemp--;
+//			(*(ptr++))=(*(ptrt++));
+//		}
+//	}
+//	nbtemp=from->SubObjects;
+//	ptr=&ObjectsList[nbtemp];
+//	memcpy(ptr,ptr+from->NbSubObjects,(NbObjectsList-nbtemp)*sizeof(unsigned int));
+//	for(i=MaxGroups+1,N=Groups;--i;G++)
+//		if(((*G)->Reserved)&&((*G)->SubObjects>nbtemp)&&((*G)->SubObjects!=NoObject))
+//			(*G)->SubObjects-=from->NbSubObjects;
+//	from->NbSubObjects=0;
+//	from->SubObjects=NoObject;
+//	nbtemp=to->SubObjects+to->NbSubObjects;
+//	to->NbSubObjects+=nbtemp2;
+//	if(nbtemp+nbtemp2<Instance->NbObjects-1)
+//	{
+//		ptr=&ObjectsList[nbtemp];
+//		memmove(ptr+nbtemp2,ptr,(NbObjectsList-to->NbSubObjects-to->SubObjects)*sizeof(unsigned int));
+//		for(i=MaxGroups+1,N=Groups;--i;N++)
+//			if(((*G)->Reserved)&&((*G)->SubObjects>to->SubObjects)&&((*G)->SubObjects!=NoObject))
+//				(*G)->SubObjects+=nbtemp2;
+//	}
+//	memcpy(&ObjectsList[to->SubObjects],tmpObjs,to->NbSubObjects*sizeof(unsigned int));
 }
 
 
@@ -242,17 +242,20 @@ template<class cGroup,class cObj,class cGroupData>
 template<class cGroup,class cObj,class cGroupData>
 	bool RGroups<cGroup,cObj,cGroupData>::Verify(void)
 {
-	unsigned int i,*list;
+	unsigned int i,*list,nbobjs;
 	cGroup** G;
 
 	for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
 		if(!(*G)->Verify())
 			return(false);
-	if(NbObjectsList!=NbObjs)
+	for(i=NbObjs+1,list=ObjectsAss,nbobjs=0;--i;list++)
+		if((*list)!=NoGroup)
+			nbobjs++;
+	if(NbObjectsList!=nbobjs)
+	{
+		cout<<"NbObjectsList!=nbobjs"<<endl;
 		return(false);
-	for(i=NbObjectsList+1,list=ObjectsAss;--i;list++)
-		if((*list)==NoGroup)
-			return(false);
+	}
 	return(true);
 }
 
