@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga2d/rplacementheuristic.h>
+#include <rga/rplacementheuristic.h>
 
 
 //------------------------------------------------------------------------------

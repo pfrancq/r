@@ -40,7 +40,7 @@
 #include <rstd/rstring.h>
 #include <rstd/random.h>
 #include <rga/robjs.h>
-#include <rgga/rgroups.h>
+#include <rga/rgroups.h>
 #include <rga/rdebug.h>
 
 
@@ -203,7 +203,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Definitions of templates
-#include <rgga/rgroupingheuristic.hh>
+#include <rga/rgroupingheuristic.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

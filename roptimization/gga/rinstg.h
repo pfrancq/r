@@ -41,8 +41,8 @@
 #include <rstd/rcursor.h>
 #include <rga/robjs.h>
 #include <rga/rinst.h>
-#include <rgga/robjg.h>
-#include <rgga/rfirstfitheuristic.h>
+#include <rga/robjg.h>
+#include <rga/rfirstfitheuristic.h>
 
 
 //------------------------------------------------------------------------------
@@ -206,7 +206,7 @@ public:
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rgga/rinstg.hh>
+#include <rga/rinstg.hh>
 
 
 }//------- End of namespace R --------------------------------------------------

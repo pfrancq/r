@@ -77,19 +77,17 @@ AC_DEFUN(R_ALL_INC_CHK,[
 		[
 		R_INC_PATH="$withval"
 	])
-	# ---- end arg for include path  ----	
-	
+	# ---- end arg for include path  ----
+
 
 	# ---- check the presence of the includes for all the R libraries
 	R_INC_CHK(rdb,rmysql.h)
 	R_INC_CHK(rga,rga.h)
-	R_INC_CHK(rga2d,rga2d.h)
-	R_INC_CHK(rgga,rgga.h)
 	R_INC_CHK(rmath,rgraph.h)
 	R_INC_CHK(rprg,rprg.h)
 	R_INC_CHK(rpromethee,rpromethee.h)
 	R_INC_CHK(rstd,rcontainer.h)
-	
+
 	for l in $1 ; do
 		if test "$l" != "kde"; then
 			# ---- check the presence of the includes for all the R frontend libraries ----
@@ -120,7 +118,7 @@ AC_DEFUN(R_ALL_LIB_CHK,[
 	# ---- end arg for configure ----
 
 	# ---- check the presence of all R libraries
-	for l in rdb rga rga2d rgga rmath rprg rpromethee rstd; do
+	for l in rdb rga rmath rprg rpromethee rstd; do
 
 		#AC_MSG_CHECKING(for lib$l)
 		for i in $R_LIB_PATH ; do
@@ -142,11 +140,11 @@ AC_DEFUN(R_ALL_LIB_CHK,[
 		LIB_R="$R_LIB_DIR/lib$l.la $LIB_R"
 
 	done
-	
+
 	# ---- check the presence of all R frontend libraries ----
 	# --------------------------------------------------------------
 	for l in $1 ; do
-	
+
 		if test "$l" = "kde"; then
 			for i in $R_LIB_PATH ; do
 				R_LIB_CHK($i/frontend/kde,libkde_r)
@@ -165,20 +163,20 @@ using the --enable-kde=yes option !!!
 
 			else
 				AC_MSG_RESULT(yes in $R_LIB_DIR)
-	
+
 				if test "x$R_LIB_DIR" != "x$PAST_R_LIB_DIR"; then
-        		
+
 					LDFLAGS="-L$R_LIB_DIR $LDFLAGS"
 				fi
 				LIB_R="$R_LIB_DIR/libkde_r.la $LIB_R"
 			fi
 
 			PAST_R_LIB_DIR="$R_LIB_DIR"
-			
-			
+
+
 		fi
 	done
-	
+
 	# Add link to CURL library
 	LDFLAGS="-lcurl $LDFLAGS"
 

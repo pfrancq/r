@@ -40,13 +40,13 @@
 #include <rstd/rstd.h>
 #include <rmath/rpoint.h>
 #include <rmath/rrect.h>
-#include <rga2d/robj2d.h>
-#include <rga2d/rgeoinfo.h>
-#include <rga2d/rgeoinfos.h>
-#include <rga2d/rgrid.h>
-#include <rga2d/rfreepolygons.h>
-#include <rga2d/rconnections.h>
-#include <rga2d/rproblem2d.h>
+#include <rga/robj2d.h>
+#include <rga/rgeoinfo.h>
+#include <rga/rgeoinfos.h>
+#include <rga/rgrid.h>
+#include <rga/rfreepolygons.h>
+#include <rga/rconnections.h>
+#include <rga/rproblem2d.h>
 #include <rpromethee/rpromcriterion.h>
 
 

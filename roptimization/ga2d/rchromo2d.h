@@ -38,9 +38,9 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rchromo.h>
-#include <rga2d/rga2d.h>
-#include <rga2d/rgeoinfos.h>
-#include <rga2d/rplacementheuristic.h>
+#include <rga/rga2d.h>
+#include <rga/rgeoinfos.h>
+#include <rga/rplacementheuristic.h>
 
 
 //------------------------------------------------------------------------------
@@ -219,7 +219,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Template implementation
-#include <rga2d/rchromo2d.hh>
+#include <rga/rchromo2d.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

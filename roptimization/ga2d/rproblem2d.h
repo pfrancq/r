@@ -39,8 +39,8 @@
 #include <rstd/rcontainer.h>
 #include <rstd/rxmltag.h>
 #include <rmath/rpoint.h>
-#include <rga2d/robj2d.h>
-#include <rga2d/rconnections.h>
+#include <rga/robj2d.h>
+#include <rga/rconnections.h>
 
 
 //------------------------------------------------------------------------------

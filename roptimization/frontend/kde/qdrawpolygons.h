@@ -32,11 +32,11 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rmath/rpoint.h>
-#include <rga2d/rgeoinfos.h>
-#include <rga2d/rconnections.h>
-#include <rga2d/rfreepolygons.h>
-#include <rga2d/rproblem2d.h>
-#include <rga2d/rgeoinfoconnection.h>
+#include <rga/rgeoinfos.h>
+#include <rga/rconnections.h>
+#include <rga/rfreepolygons.h>
+#include <rga/rproblem2d.h>
+#include <rga/rgeoinfoconnection.h>
 
 
 //------------------------------------------------------------------------------

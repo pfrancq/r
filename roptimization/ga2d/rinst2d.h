@@ -38,13 +38,13 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rinst.h>
-#include <rga2d/rga2d.h>
-#include <rga2d/rplacementheuristic.h>
-#include <rga2d/rplacementbottomleft.h>
-#include <rga2d/rplacementedge.h>
-#include <rga2d/rplacementcenter.h>
-#include <rga2d/rconnections.h>
-#include <rga2d/rproblem2d.h>
+#include <rga/rga2d.h>
+#include <rga/rplacementheuristic.h>
+#include <rga/rplacementbottomleft.h>
+#include <rga/rplacementedge.h>
+#include <rga/rplacementcenter.h>
+#include <rga/rconnections.h>
+#include <rga/rproblem2d.h>
 
 
 //------------------------------------------------------------------------------
@@ -217,7 +217,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Template implementation
-#include <rga2d/rinst2d.hh>
+#include <rga/rinst2d.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

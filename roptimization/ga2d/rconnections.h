@@ -37,9 +37,9 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rga.h>
-#include <rga2d/robj2d.h>
-#include <rga2d/rgeoinfo.h>
-#include <rga2d/rconnection.h>
+#include <rga/robj2d.h>
+#include <rga/rgeoinfo.h>
+#include <rga/rconnection.h>
 #include <rpromethee/rpromcriterion.h>
 
 

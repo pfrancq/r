@@ -33,7 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromkernel.h>
-#include <rga2d/rplacementheuristic.h>
+#include <rga/rplacementheuristic.h>
 #include <rstd/random.h>
 #include <rstd/rxmlstruct.h>
 using namespace R;

@@ -39,9 +39,9 @@
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rmath/rpoint.h>
-#include <rga2d/robj2d.h>
-#include <rga2d/rfreepolygon.h>
-#include <rga2d/rfreepolygons.h>
+#include <rga/robj2d.h>
+#include <rga/rfreepolygon.h>
+#include <rga/rfreepolygons.h>
 
 
 //------------------------------------------------------------------------------

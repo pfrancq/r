@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rgga/rgroupingheuristic.h>
+#include <rga/rgroupingheuristic.h>
 #include <rga/rdebug.h>
 
 
@@ -80,7 +80,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Definitions of templates
-#include <rgga/rfirstfitheuristic.hh>
+#include <rga/rfirstfitheuristic.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

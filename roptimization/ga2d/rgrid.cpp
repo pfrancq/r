@@ -34,8 +34,8 @@
 // include files for R Project
 #include <rstd/rmsg.h>
 #include <rga/rga.h>
-#include <rga2d/rgrid.h>
-#include <rga2d/rgeoinfo.h>
+#include <rga/rgrid.h>
+#include <rga/rgeoinfo.h>
 using namespace R;
 
 

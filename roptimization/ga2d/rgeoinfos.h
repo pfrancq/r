@@ -37,11 +37,11 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
-#include <rga2d/robj2d.h>
-#include <rga2d/rgeoinfo.h>
-#include <rga2d/rgeoinfoconnections.h>
-#include <rga2d/robj2dcontainer.h>
-#include <rga2d/rproblem2d.h>
+#include <rga/robj2d.h>
+#include <rga/rgeoinfo.h>
+#include <rga/rgeoinfoconnections.h>
+#include <rga/robj2dcontainer.h>
+#include <rga/rproblem2d.h>
 
 
 //------------------------------------------------------------------------------

@@ -29,8 +29,8 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/random.h>
-#include <rga2d/rconnections.h>
-#include <rga2d/rgeoinfos.h>
+#include <rga/rconnections.h>
+#include <rga/rgeoinfos.h>
 #include <rpromethee/rpromkernel.h>
 using namespace R;
 

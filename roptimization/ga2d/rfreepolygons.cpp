@@ -28,8 +28,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga2d/rfreepolygons.h>
-#include <rga2d/rgeoinfo.h>
+#include <rga/rfreepolygons.h>
+#include <rga/rgeoinfo.h>
 using namespace R;
 
 

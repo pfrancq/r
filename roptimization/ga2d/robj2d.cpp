@@ -37,10 +37,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga2d/robj2d.h>
-#include <rga2d/rgeoinfo.h>
-#include <rga2d/rgeoinfos.h>
-#include <rga2d/rconnection.h>
+#include <rga/robj2d.h>
+#include <rga/rgeoinfo.h>
+#include <rga/rgeoinfos.h>
+#include <rga/rconnection.h>
 using namespace R;
 
 

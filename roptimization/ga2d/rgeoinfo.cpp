@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga2d/rgeoinfo.h>
+#include <rga/rgeoinfo.h>
 #include <rga/rga.h>
 using namespace R;
 

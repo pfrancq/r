@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga2d/rga2d.h>
+#include <rga/rga2d.h>
 
 
 //------------------------------------------------------------------------------
@@ -46,8 +46,8 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // Definitions of templates
-#include <rga2d/rinst2d.hh>
-#include <rga2d/rchromo2d.hh>
+#include <rga/rinst2d.hh>
+#include <rga/rchromo2d.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

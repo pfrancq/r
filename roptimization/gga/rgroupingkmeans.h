@@ -42,7 +42,7 @@
 #include <rstd/rcontainer.h>
 #include <rstd/random.h>
 #include <rga/robjs.h>
-#include <rgga/rgroups.h>
+#include <rga/rgroups.h>
 #include <rstd/rcursor.h>
 
 
@@ -367,7 +367,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Definitions of templates
-#include <rgga/rgroupingkmeans.hh>
+#include <rga/rgroupingkmeans.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

@@ -41,8 +41,8 @@
 #include <rmath/rpoint.h>
 #include <rmath/rrect.h>
 #include <rmath/rpolygon.h>
-#include <rga2d/robj2d.h>
-#include <rga2d/rgrid.h>
+#include <rga/robj2d.h>
+#include <rga/rgrid.h>
 
 
 //------------------------------------------------------------------------------

@@ -38,8 +38,8 @@
 // include files for R Project
 #include <rstd/rcontainer.h>
 #include <rmath/rgraph.h>
-#include <rga2d/rgeoinfo.h>
-#include <rga2d/rconnection.h>
+#include <rga/rgeoinfo.h>
+#include <rga/rconnection.h>
 
 
 //------------------------------------------------------------------------------

@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rgga/rgga.h>
+#include <rga/rgga.h>
 using namespace R;
 
 

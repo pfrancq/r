@@ -29,7 +29,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/random.h>
-#include <rga2d/rconnection.h>
+#include <rga/rconnection.h>
 using namespace R;
 
 

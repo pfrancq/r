@@ -32,5 +32,5 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga2d/rga2d.h>
+#include <rga/rga2d.h>
 using namespace R;
