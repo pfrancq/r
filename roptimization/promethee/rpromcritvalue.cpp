@@ -34,7 +34,6 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromcritvalue.h>
-#include <rpromethee/rpromevalfunc.h>
 using namespace RPromethee;
 
 
