@@ -355,7 +355,6 @@ int RString::Compare(const RString &str) const
 	const char *ptr1=str.Text;
 	char *ptr2=Text;
 
-	if(Len!=str.Len)	return(Len-str.Len);
 	while((*ptr1)&&(*ptr2)&&(*ptr1)==(*ptr2))
 	{
 		ptr1++;
@@ -374,7 +373,6 @@ int RString::Compare(const RString *str) const
 	RReturnValIfFail(Text,1);
 	if(!Text) return(1);
 	ptr1=str->Text;
-	if(Len!=str->Len) return(Len-str->Len);
 	while((*ptr1)&&(*ptr2)&&(*ptr1)==(*ptr2))
 	{
 		ptr1++;
