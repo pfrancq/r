@@ -69,19 +69,34 @@ using namespace RGA;
 
 //---------------------------------------------------------------------------
 RObj2D::RObj2D(unsigned int id,bool deformable)
-	: Id(id),NbPossOri(0),Deformable(deformable)
+	: Id(id), Area(0), NbPossOri(0), Deformable(deformable)
 {
 }
 
 
 //---------------------------------------------------------------------------
-bool RObj2D::CalcPolygons(void)
+void RObj2D::Init(void)
 {
-	char i,*ori;
+	char i;
+	RPolygon *p;
+  RRects *r;
+
+	CalcPolygons();
+	for(i=NbPossOri+1,p=Polygons,r=Rects;--i;p++,r++)
+		p->RectDecomposition(r);
+	Area=Rects[0].Area();
+}
+
+
+//---------------------------------------------------------------------------
+void RObj2D::CalcPolygons(void)
+{
+	char i;
+	ROrientation *o;
 	RPolygon *ptr;
 	bool bNormal,bRota90;
 
-	if(!NbPossOri) return(false);
+	if(!NbPossOri) return;
 
 	// If Polygon is a rectangle
 	if(Polygon.NbPtr==4)
@@ -91,14 +106,14 @@ bool RObj2D::CalcPolygons(void)
 		{
 			NbPossOri=1;
 			Polygons[0]=Polygon;
-			return(true);
+			return;
 		}
 		
 		// It is Rectangle -> Max 2 orientation only
 		bNormal=bRota90=false;
-		for(i=NbPossOri+1,ori=PossOri;--i;ori++)
+		for(i=NbPossOri+1,o=PossOri;--i;o++)
 		{
-			if((!bNormal)&&(((*ori)==orNormal)||((*ori)==orNormalMirrorX)||((*ori)==orNormalMirrorX)||((*ori)==orNormalMirrorYX)))
+			if((!bNormal)&&(((*o)==Normal)||((*o)==NormalX)||((*o)==NormalX)||((*o)==NormalYX)))
 			{
 				bNormal=true;
 				if(bRota90)
@@ -106,53 +121,69 @@ bool RObj2D::CalcPolygons(void)
 				else
 					Polygons[0]=Polygon;
 			}
-			if((!bRota90)&&(((*ori)==orRota90)||((*ori)==orRota90MirrorX)||((*ori)==orRota90MirrorX)||((*ori)==orRota90MirrorYX)))
+			if((!bRota90)&&(((*o)==Rota90)||((*o)==Rota90X)||((*o)==Rota90Y)||((*o)==Rota90YX)))
 			{
 				bRota90=true;
 				if(bNormal)
 				{
 					Polygons[1]=Polygon;
-					Polygons[1].Orientation(orRota90);
+					Polygons[1].ChangeOrientation(Rota90);
 				}
 				else
 				{
 					Polygons[0]=Polygon;
-					Polygons[0].Orientation(orRota90);
+					Polygons[0].ChangeOrientation(Rota90);
 				}
 			}
 		}
 		if(bRota90||bNormal) NbPossOri=1;
 		if(bRota90&&bNormal) NbPossOri=2;
-		return(true);
+		return;
 	}
-	for(i=NbPossOri+1,ptr=Polygons,ori=PossOri;--i;ptr++,ori++)
+	for(i=NbPossOri+1,ptr=Polygons,o=PossOri;--i;ptr++,o++)
 	{
 		(*ptr)=Polygon;
-		ptr->Orientation(*ori);
+		ptr->ChangeOrientation(*o);
 	}
-	return(true);
 }
 
 
 //---------------------------------------------------------------------------
-void RObj2D::SetOri(char ori)
+void RObj2D::SetOri(ROrientation o)
 {
-	char i,*ptr;
+	char i;
+	ROrientation *ptr;
 
 	for(i=NbPossOri+1,ptr=PossOri;--i;ptr++)
-		if((*ptr)==ori) return;
-	PossOri[NbPossOri++]=ori;
+		if((*ptr)==o) return;
+	PossOri[NbPossOri++]=o;
 }
 
 
 //---------------------------------------------------------------------------
-bool RObj2D::IsOriSet(char ori)
+bool RObj2D::IsOriSet(ROrientation o)
 {
-	char i,*ptr;
+	char i;
+	ROrientation *ptr;
 
 	for(i=NbPossOri+1,ptr=PossOri;--i;ptr++)
-		if((*ptr)==ori) return(true);
+		if((*ptr)==o) return(true);
 	return(false);
+}
+
+//---------------------------------------------------------------------------
+RPolygon* RObj2D::GetPolygon(char i)
+{
+	if(i<NbPossOri) return(&Polygons[i]);
+	return(0);
+}
+
+
+//---------------------------------------------------------------------------
+RRects* RObj2D::GetRects(char i)
+{
+	if(i<NbPossOri) return(&Rects[i]);
+	return(0);
 }
 
 
@@ -166,7 +197,7 @@ RObj2D& RObj2D::operator=(const RObj2D &obj)
 	Id=obj.Id;
 	NbPossOri=obj.NbPossOri;
 	Deformable=obj.Deformable;
-	memcpy(PossOri,obj.PossOri,sizeof(char)*8);
+	memcpy(PossOri,obj.PossOri,sizeof(ROrientation)*8);
 	Polygon=obj.Polygon;
 	for(i=NbPossOri+1,ptr=Polygons,ptr2=obj.Polygons;--i;ptr++,ptr2++)
 		(*ptr)=(*ptr2);
@@ -186,7 +217,7 @@ RObj2DContainer::RObj2DContainer(unsigned int id,unsigned int max)
 	: RObj2D(id,false),Ids(NULL),Infos(NULL),NbMax(max),Nb(0)
 {
 	NbPossOri=1;
-	PossOri[0]=orNormal;
+	PossOri[0]=Normal;
 	Ids=new unsigned int[NbMax];
 	Infos=new RGeoInfo*[NbMax];
 	memset(Ids,0,NbMax*sizeof(unsigned int));	
@@ -202,7 +233,7 @@ void RObj2DContainer::Clear(void)
 	memset(Infos,0,NbMax*sizeof(RGeoInfo*));	
 	Nb=0;
 	MinX=MinY=MaxCoord;
-	Area=0.0;
+	Area=0;
 }
 
 
@@ -217,7 +248,7 @@ void RObj2DContainer::AddObj(RObj2D *obj,RGeoInfo *info)
 	// Determine the most left-bottom edge
 	CalcX=MinX;
 	CalcY=MinY;
- 	for(i=info->Bound.NbPtr+1,point=info->Bound.Tab;--i;point++)
+ 	for(i=info->Bound->NbPtr+1,point=info->Bound->Tab;--i;point++)
  	{
  		X=(*point)->X+info->Pos.X;
  		Y=(*point)->Y+info->Pos.Y;
@@ -250,7 +281,7 @@ void RObj2DContainer::AddObj(RObj2D *obj,RGeoInfo *info)
 	SPolygons.InsertPtr(ins);
 	Ids[Nb]=obj->Id;
 	Infos[Nb]=info;
-	Area+=info->Area();
+	Area+=info->GetArea();
 	Nb++;
 }
 
@@ -260,23 +291,26 @@ void RObj2DContainer::EndObjs(void)
 {
 	SPolygons.Union(&Polygon);
 	Polygons[0]=Polygon;
+	Polygon.RectDecomposition(&Rects[0]);
 }
 
 
 //---------------------------------------------------------------------------
-void RObj2DContainer::Assign(RGeoInfo **infos,unsigned int **OccX,unsigned int **OccY,RCoord x,RCoord y)
+void RObj2DContainer::Assign(RPoint &pos,RGeoInfo **infos,unsigned int **OccX,unsigned int **OccY)
 {
 	unsigned int i;
 	unsigned int *ids;
 	RGeoInfo **info,*cur;
+	RPoint p;
 
-	x-=MinX;
-	y-=MinY;	
+	pos.X-=MinX;
+	pos.Y-=MinY;	
 	for(i=Nb+1,ids=Ids,info=Infos;--i;ids++,info++)
 	{
 		cur=infos[*ids];
-    cur->AssignBound(*ids,(*info)->Bound);
-    cur->Assign(OccX,OccY,(*info)->Pos.X+x,(*info)->Pos.Y+y);
+		p=(*info)->Pos;
+		p+=pos;
+    cur->Assign(p,OccX,OccY);
 		cur->Selected=true;
 	}
 }

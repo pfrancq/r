@@ -61,15 +61,28 @@
 
 //---------------------------------------------------------------------------
 // include files for Rainbow
-#include "rgeometry/polygons.h"
+#include "rpoint.h"
+#include "rrect.h"
+#include "rpolygon.h"
 using namespace RGeometry2D;
-#include "rga2d.h"
-using namespace RGA;
+#include "rgeoinfo.h"
 
 
 //---------------------------------------------------------------------------
 namespace RGA{
 //---------------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------------
+// Forward class declaration
+class RGeoInfo;
+
+
+//---------------------------------------------------------------------------
+/** This constance represent a non-identificator. It is used, for example, to
+	* specify that a variable containing an identificator of an object. is
+	* referencing no object. */
+const unsigned int NoObject=UINT_MAX;
 
 
 //---------------------------------------------------------------------------
@@ -80,16 +93,21 @@ namespace RGA{
 class RObj2D
 {
 public:
-	/** Id of the object.*/
+	/** Identificator of the object.*/
 	unsigned int Id;
+	/** Polygon that define the object.*/
+  RPolygon Polygon;
+	/** Represent the area of the object.*/
+	RCoord Area;
 	/** Number of possible Orientations.*/
 	char NbPossOri;
 	/** Different Orientations accepted.*/
-  char PossOri[8];
-	/** Polygon that define the object.*/
-  RPolygon Polygon;
-	/** Polygons corresponding to the possible orientations.*/
+  ROrientation PossOri[8];
+	/** Polygons for the possible orientations.*/
   RPolygon Polygons[8];
+	/** Rectangular decompositions for the possible orientatoins.*/
+	RRects Rects[8];
+
 	/** Specify if the object is deformable or rigid.*/
   bool Deformable;
 
@@ -99,16 +117,33 @@ public:
 		*/
   RObj2D(unsigned int id,bool deformable);
 
+	/** Initialize the object when all information are entered. In particular,
+		* it calculates the different polygon based on the possible orientations,
+		* the rectangular decompositions and the area of the object.*/
+	void Init(void);
+
 	/** Calculate all the polygons based on the possible orientations of the object.
 		*	@return The function returns true if the calculation has be done without errors.
 		*/
-	bool CalcPolygons(void);
+	void CalcPolygons(void);
 
 	/** Set a specific orientation as possible.*/
-	void SetOri(char ori);
+	void SetOri(ROrientation o);
 
 	/** Return true if the orientation is possible.*/
-	bool IsOriSet(char ori);
+	bool IsOriSet(ROrientation o);
+
+	/** Return the identificator of the object.*/
+	inline unsigned int GetId(void) {return(Id);}
+
+	/** Return the area of the object.*/
+	inline RCoord GetArea(void) {return(Area);}
+
+	/** Return a pointer to the polygon representing the ith orientation.*/
+	RPolygon* GetPolygon(char i);
+
+	/** Return a pointer to the rectangular decomposition of the ith orientation.*/
+	RRects* GetRects(char i);
 
 	/** The assignment operator.*/
   RObj2D& operator=(const RObj2D &obj);
@@ -136,8 +171,7 @@ public:
 	RPolygons SPolygons;				
 	/** Point the most left-bottom.*/
 	RCoord MinX,MinY;						
-	/** Point the most left-bottom.*/
-  double Area;							
+
 
 	/** Construct the container of objects.
 		* @param id		The identificator of the object.
@@ -158,8 +192,13 @@ public:
 	void EndObjs(void);
 
 	/** Assign this container to a position and replace it in the grid with all the
-		* identificators of the objects contained.*/
-	void Assign(RGeoInfo **infos,unsigned int **OccX,unsigned int **OccY,RCoord x,RCoord y);
+		* identificators of the objects contained.
+		* @param pos		Position.
+		* @param infos  The geometric information of the objects.
+		* @param OccY		Grid with X as entry.
+		* @param OccY		Grid with Y as entry.
+		*/
+	void Assign(RPoint &pos,RGeoInfo **infos,unsigned int **OccX,unsigned int **OccY);
 
 	/** Destruct the container.*/
 	~RObj2DContainer(void);
