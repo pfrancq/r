@@ -69,7 +69,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //-----------------------------------------------------------------------------
 // Heuristic Types
-enum HeuristicType{FirstFit=0};
+enum HeuristicType{FirstFit,FirstFitDes};
 
 
 }//------- End of namespace RGGA ----------------------------------------------

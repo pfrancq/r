@@ -143,6 +143,11 @@ public:
 	inline HeuristicType GetHeuristic(void) { return(Heuristic); }
 
 	/**
+	* Create a heuristic object.
+	*/
+	virtual RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* CreateHeuristic(void) throw(bad_alloc);
+
+	/**
 	* Handle the chromosomes that are representing the same solutions. If two
 	* same chromosomes are detect, one of them is replace a random based one
 	* with a probability of 90%.
