@@ -797,26 +797,16 @@ template<class C,bool bAlloc,bool bOrder> template<bool b,bool o>
 	if((!src)||(!src->NbPtr))
 		return(*this);
 	VerifyTab(src->LastPtr+LastPtr);
-	if(bAlloc)
+	if(bOrder&&NbPtr)
 	{
-		if(bOrder&&NbPtr)
+		for(i=src->LastPtr+1,tab=src->Tab;--i;tab++)
 		{
-			for(i=src->LastPtr+1,tab=src->Tab;--i;tab++)
+			if(*tab)
 			{
-				if(*tab)
+				if(bAlloc)
 					InsertPtr(new C(*tab));
-			}
-		}
-		else
-		{
-			for(i=src->LastPtr+1,tab=src->Tab,tab2=&Tab[LastPtr];--i;tab++)
-			{
-				if(*tab)
-				{
-					(*(tab2++))=new C(*tab);
-					LastPtr++;
-					NbPtr++;
-				}
+				else
+					InsertPtr(*tab);
 			}
 		}
 	}
@@ -826,7 +816,10 @@ template<class C,bool bAlloc,bool bOrder> template<bool b,bool o>
 		{
 			if(*tab)
 			{
-				(*(tab2++))=(*tab);
+				if(bAlloc)
+					(*(tab2++))=new C(*tab);
+				else
+					(*(tab2++))=*tab;
 				LastPtr++;
 				NbPtr++;
 			}
