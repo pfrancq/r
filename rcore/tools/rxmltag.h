@@ -203,6 +203,17 @@ public:
 	void AddTag(RXMLTag* tag);
 
 	/**
+	* Add a string to the content of the tag.
+	* @param text           Text to add.
+	*/
+	void AddContent(const char* text);
+
+	/**
+	* @returns the text containning in the tag.
+	*/
+	const char* GetContent(void) const {return(Contains());}
+
+	/**
 	* Destruct the XML Tag.
 	*/
 	~RXMLTag(void);

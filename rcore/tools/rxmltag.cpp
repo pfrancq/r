@@ -96,7 +96,10 @@ void RXML::RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
 			(*f)<<"<"+Name+"/>"<<endl;
 	}
 	if(Contains.GetLen())
+	{
+		for(int i=0;i<depth+1;i++) (*f)<<"\t";
 		(*f)<<Contains<<endl;
+	}
 	for (i=NbPtr+1, ptr1=Tab; --i; ptr1++)
 	{
 		(*ptr1)->Save(f,depth+1);
@@ -159,7 +162,7 @@ void RXML::RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 		ptr++;
 		while(isspace(*ptr)) ptr++; // Skip Spaces
 	}
-	if((*ptr)=='/') return;	// No Sub Tag
+	if((*ptr)=='/') return;       // No Sub Tag
 
 	// Treat sub-Tag
 	while(!f->EndTag())
@@ -260,6 +263,13 @@ void RXML::RXMLTag::AddTag(RXMLTag* tag)
 RXMLTag* RXML::RXMLTag::GetTag(const char* name)
 {
 	return(GetPtr<const char*>(name,false));
+}
+
+
+//------------------------------------------------------------------------------
+void RXML::RXMLTag::AddContent(const char* text)
+{
+	Contains+=text;
 }
 
 
