@@ -98,6 +98,12 @@ public:
 	const char* GetCode(void) {return(Code);}
 
 	/**
+	* Get the name of the language.
+	* @returns Pointer to a C string containing the name.
+	*/
+	const char* GetName(void) {return(Lang);}
+
+	/**
 	* Destructor of the language.
 	*/
 	virtual ~RLang(void);
