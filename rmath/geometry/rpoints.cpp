@@ -109,7 +109,7 @@ RPoint* RGeometry2D::RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 		{
 			Activ=(*point);	
 			AX=Activ->X;
-    }
+		}
 	}
 	return(Activ);
 }
@@ -202,11 +202,11 @@ RPoint* RGeometry2D::RPoints::FindBottomLeft(void)
 
 	if(!NbPtr) return(0);
 	point=Tab;
-	Activ=(*point);		
+	Activ=(*point);
 	X=Activ->X;
 	Y=Activ->Y;
 	for(i=NbPtr,point++;--i;point++)
- 		if(((*point)->Y<Y)||(((*point)->Y==Y)&&((*point)->X<X)))
+		if(((*point)->Y<Y)||(((*point)->Y==Y)&&((*point)->X<X)))
 		{
 			Activ=(*point);
 			X=Activ->X;

@@ -78,13 +78,13 @@ public:
 
 	/**
 	* Construct a point from pt.
-	* @param pt		The point used as reference.
+	* @param pt             The point used as reference.
 	*/
 	RPoint(const RPoint& pt);
 
 	/**
 	* Construct a point from pt.
-	* @param pt		The point used as reference.
+	* @param pt             The point used as reference.
 	*/
 	RPoint(const RPoint *pt);
 
@@ -100,27 +100,27 @@ public:
 
 	/**
 	* Make a translation of the point.
-	* @param pt 	The point representing the vector used.
+	* @param pt             The point representing the vector used.
 	*/
 	RPoint& operator+=(const RPoint &pt) {X+=pt.X;Y+=pt.Y;return(*this);}
 
 	/**
 	* Make a translation of the point.
-	* @param pt 	The point representing the vector used.
+	* @param pt             The point representing the vector used.
 	*/
 	RPoint& operator-=(const RPoint &pt) {X-=pt.X;Y-=pt.Y;return(*this);}
 
 	/**
 	* Compare two points and return 0 if there are at the same position. This function
 	* is used with the class RContainer.
-	* @param pt		Point used for the comparaison.
+	* @param pt             Point used for the comparaison.
 	*/
 	inline int Compare(const RPoint *pt) const { return((*this)!=(*pt)); }
 
 	/**
 	* Compare two points and return 0 if there are at the same position. This function
 	* is used with the class RContainer.
-	* @param pt		Point used for the comparaison.
+	* @param pt             Point used for the comparaison.
 	*/
 	inline int Compare(const RPoint &pt) const { return((*this)!=pt); }
 
@@ -136,8 +136,8 @@ public:
 
 	/**
 	* Set the point to the given position.
-	* @param x	X Position;
-	* @param y	Y Position;
+	* @param x	            X Position.
+	* @param y              Y Position.
 	*/
 	void Set(const RCoord x,const RCoord y) {X=x; Y=y;}
 
@@ -177,12 +177,12 @@ public:
 	* formed by two points.
 	*/
 	RDirection Classify(const RPoint* p0,const RPoint* p1);
-	
+
 	/**
 	* Change the "orientation" of the point.
 	*/
 	void ChangeOrientation(ROrientation o);
-	
+
 	/**
 	* Save the point in a file.
 	*/

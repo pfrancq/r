@@ -66,46 +66,46 @@ RStd::RXMLTag::RXMLTag(RString _name)
 //------------------------------------------------------------------------------
 void RStd::RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
 {
-    int i;
-    RString text;
-    RXMLAttr **ptr;
-    RXMLTag **ptr1;
+	int i;
+	RString text;
+	RXMLAttr **ptr;
+	RXMLTag **ptr1;
 
-    for(int i=0;i<depth;i++) (*f)<<"\t";
-    if(Attrs.NbPtr)
-    {
-        (*f)<<"<"+Name;
-        for (i=Attrs.NbPtr, ptr=Attrs.Tab; --i; ptr++)
-        {
-            (*f)<<(*ptr)->GetName()+"=\""+(*ptr)->GetValue()+"\"";
-        }
-        if(NbPtr||Contains.GetLen())
-        {
-            (*f)<<(*ptr)->GetName()+"=\""+(*ptr)->GetValue()+"\">"<<endl;
-        }
-        else
-        {
-            (*f)<<(*ptr)->GetName()+"=\""+(*ptr)->GetValue()+"\"/>"<<endl;
-        }
-    }
-    else
-    {
-        if(NbPtr||Contains.GetLen())
-            (*f)<<"<"+Name+">"<<endl;
-        else
-            (*f)<<"<"+Name+"/>"<<endl;
-    }
-    if(Contains.GetLen())
-        (*f)<<Contains<<endl;
-    for (i=NbPtr+1, ptr1=Tab; --i; ptr1++)
-    {
-        (*ptr1)->Save(f,depth+1);
-    }
-    if(NbPtr||Contains.GetLen())
-    {
-        for(int i=0;i<depth;i++) (*f)<<"\t";
-        (*f)<<"</"+Name+">"<<endl;
-    }
+	for(int i=0;i<depth;i++) (*f)<<"\t";
+	if(Attrs.NbPtr)
+	{
+		(*f)<<"<"+Name;
+		for (i=Attrs.NbPtr, ptr=Attrs.Tab; --i; ptr++)
+		{
+			(*f)<<(*ptr)->GetName()+"=\""+(*ptr)->GetValue()+"\"";
+		}
+		if(NbPtr||Contains.GetLen())
+		{
+			(*f)<<(*ptr)->GetName()+"=\""+(*ptr)->GetValue()+"\">"<<endl;
+		}
+		else
+		{
+			(*f)<<(*ptr)->GetName()+"=\""+(*ptr)->GetValue()+"\"/>"<<endl;
+		}
+	}
+	else
+	{
+		if(NbPtr||Contains.GetLen())
+			(*f)<<"<"+Name+">"<<endl;
+		else
+			(*f)<<"<"+Name+"/>"<<endl;
+	}
+	if(Contains.GetLen())
+		(*f)<<Contains<<endl;
+	for (i=NbPtr+1, ptr1=Tab; --i; ptr1++)
+	{
+		(*ptr1)->Save(f,depth+1);
+	}
+	if(NbPtr||Contains.GetLen())
+	{
+		for(int i=0;i<depth;i++) (*f)<<"\t";
+		(*f)<<"</"+Name+">"<<endl;
+	}
 }
 
 
@@ -114,7 +114,7 @@ void RStd::RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 {
 	char *ptr,*ptr2,c;
 	char *attrn,*attrv;
-   RXMLTag *tag;
+	RXMLTag *tag;
 
 	// If not a tag -> Error
 	if(!f->BeginTag())
@@ -196,7 +196,7 @@ RString& RStd::RXMLTag::GetName(void)
 RString& RStd::RXMLTag::GetAttrValue(const char *name)
 {
 	RString *tmp=RString::GetString();
-   	RXMLAttr *attr;
+	RXMLAttr *attr;
 
 	attr=Attrs.GetPtr<const char*>(name);
 	if(attr)

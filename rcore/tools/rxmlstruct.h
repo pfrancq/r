@@ -64,15 +64,15 @@ public:
 
 	/**
 	* Find the first tag with a given name.
-	* @param name		Name of the tag to find.
+	* @param name           Name of the tag to find.
 	* @returns a pointer to the tag of 0 if no tag exists.
 	*/
 	RXMLTag* GetTag(const char* name);
 
 	/**
 	* Find the first tag with a gtiven name and a given parent.
-	* @param name		Name of the tag to find.
-	* @param parent		Parent of the tag to find.
+	* @param name           Name of the tag to find.
+	* @param parent         Parent of the tag to find.
 	*/
 	RXMLTag* GetTag(const char* name,RXMLTag* parent);
 
@@ -82,6 +82,7 @@ public:
 	RXMLTag* GetTop(void) {return(Top->Tab[1]);}
 
 public:
+
 	/**
 	* Destruct the XML Structure.
 	*/

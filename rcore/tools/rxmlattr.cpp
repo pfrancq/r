@@ -81,4 +81,3 @@ RString& RStd::RXMLAttr::GetValue(void)
 RStd::RXMLAttr::~RXMLAttr(void)
 {
 }
-

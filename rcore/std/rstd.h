@@ -54,59 +54,59 @@
 
 	#ifdef __GNUC__
 
-		#define RAssert(expr)\
-    	if(!(expr))\
-		{\
-      	cerr	<<"file "<<__FILE__\
-					<<": line "<<__LINE__\
-					<<" ("<<__PRETTY_FUNCTION__\
-					<<"): assertion failed: "<<#expr<<endl;\
-			throw;\
+		#define RAssert(expr)                                                 \
+		if(!(expr))                                                           \
+		{                                                                     \
+			cerr  <<"file "<<__FILE__                                         \
+				  <<": line "<<__LINE__                                       \
+				  <<" ("<<__PRETTY_FUNCTION__                                 \
+				  <<"): assertion failed: "<<#expr<<endl;                     \
+			throw;                                                            \
 		}
 
-		#define RAssertNotReached()\
-		{\
-			cerr	<<"file "<<__FILE__\
-					<<": line "<<__LINE__\
-					<<" ("<<__PRETTY_FUNCTION__\
-					<<"): should not be reached"<<endl;\
-			throw;\
+		#define RAssertNotReached()                                           \
+		{                                                                     \
+			cerr  <<"file "<<__FILE__                                         \
+				  <<": line "<<__LINE__                                       \
+				  <<" ("<<__PRETTY_FUNCTION__                                 \
+				  <<"): should not be reached"<<endl;                         \
+			throw;                                                            \
 		}
 
-		#define RAssertMsg(msg)\
-		{\
-      	cerr	<<"file "<<__FILE__\
-					<<": line "<<__LINE__\
-					<<" ("<<__PRETTY_FUNCTION__\
-					<<"): "<<#msg<<endl;\
-			throw;\
+		#define RAssertMsg(msg)                                               \
+		{                                                                     \
+			cerr  <<"file "<<__FILE__                                         \
+				  <<": line "<<__LINE__                                       \
+				  <<" ("<<__PRETTY_FUNCTION__                                 \
+				  <<"): "<<#msg<<endl;                                        \
+			throw;                                                            \
 		}
 
 	#else 	// !__GNUC__
 
-		#define RAssert(expr)\
-    	if(!(expr))\
-		{\
-       	cerr	<<"file "<<__FILE__\
-					<<": line "<<__LINE__\
-					<<" : assertion failed: "<<#expr<<endl;\
-			throw;\
+		#define RAssert(expr)                                                 \
+		if(!(expr))                                                           \
+		{                                                                     \
+			cerr  <<"file "<<__FILE__                                         \
+				  <<": line "<<__LINE__                                       \
+				  <<" : assertion failed: "<<#expr<<endl;                     \
+			throw;                                                            \
 		}
 
-		#define RAssertNotReached()\
-		{\
-    		cerr	<<"file "<<__FILE__\
-					<<": line "<<__LINE__\
-					<<" : should not be reached"<<endl;\
-			throw;\
+		#define RAssertNotReached()                                           \
+		{                                                                     \
+			cerr  <<"file "<<__FILE__                                         \
+				  <<": line "<<__LINE__                                       \
+				  <<" : should not be reached"<<endl;                         \
+			throw;                                                            \
 		}
 
-		#define RAssertMsg(msg)\
-		{\
-      	cerr	<<"file "<<__FILE__\
-					<<": line "<<__LINE__\
-					<<": "<<#msg<<endl;\
-			throw;\
+		#define RAssertMsg(msg)                                               \
+		{                                                                     \
+			cerr  <<"file "<<__FILE__                                         \
+				  <<": line "<<__LINE__                                       \
+				  <<": "<<#msg<<endl;                                         \
+			throw;                                                            \
 		}
 
 	#endif 	// __GNUC__
@@ -125,44 +125,44 @@
 
 	#ifdef __GNUC__
 
-		#define RReturnIfFail(expr)\
-    	if(!(expr))\
-		{\
-       	cerr	<<"file "<<__FILE__\
-					<<": line "<<__LINE__\
-					<<" ("<<__PRETTY_FUNCTION__\
-					<<"): check failed: "<<#expr<<endl;\
-			return;\
+		#define RReturnIfFail(expr)                                           \
+		if(!(expr))                                                           \
+		{                                                                     \
+			cerr  <<"file "<<__FILE__                                         \
+				  <<": line "<<__LINE__                                       \
+				  <<" ("<<__PRETTY_FUNCTION__                                 \
+				  <<"): check failed: "<<#expr<<endl;                         \
+			return;                                                           \
 		}
 
-		#define RReturnValIfFail(expr,val)\
-    	if(!(expr))\
-		{\
-       	cerr	<<"file "<<__FILE__\
-					<<": line "<<__LINE__\
-					<<" ("<<__PRETTY_FUNCTION__\
-					<<"): check failed: "<<#expr<<endl;\
-			return(val);\
+		#define RReturnValIfFail(expr,val)                                    \
+    	if(!(expr))                                                           \
+		{                                                                     \
+			cerr  <<"file "<<__FILE__                                         \
+				  <<": line "<<__LINE__                                       \
+				  <<" ("<<__PRETTY_FUNCTION__                                 \
+				  <<"): check failed: "<<#expr<<endl;                         \
+			return(val);                                                      \
 		}
 
 	#else 	// !__GNUC__
 
-		#define RReturnIfFail(expr)\
-    	if(!(expr))\
-		{\
-       	cerr	<<"file "<<__FILE__\
-					<<": line "<<__LINE__\
-					<<" : check failed: "<<#expr<<endl;\
-			return;\
+		#define RReturnIfFail(expr)                                           \
+		if(!(expr))                                                           \
+		{                                                                     \
+			cerr  <<"file "<<__FILE__                                         \
+				  <<": line "<<__LINE__                                       \
+				  <<" : check failed: "<<#expr<<endl;                         \
+			return;                                                           \
 		}
 
-		#define RReturnValIfFail(expr,val)\
-    	if(!(expr))\
-		{\
-   	  	cerr	<<"file "<<__FILE__\
-					<<": line "<<__LINE__\
-					<<" : check failed: "<<#expr<<endl;\
-			return(val);\
+		#define RReturnValIfFail(expr,val)                                    \
+		if(!(expr))                                                           \
+		{                                                                     \
+			cerr  <<"file "<<__FILE__                                         \
+				  <<": line "<<__LINE__                                       \
+				  <<" : check failed: "<<#expr<<endl;                         \
+			return(val);                                                      \
 		}
 
 
@@ -189,14 +189,14 @@ namespace RStd{
 * This function provides a way to handle temporary objects needed when using
 * standard operators with non standard classes.
 * @author Pascal Francq
-* @param C				The type of class.
-* @param Max			Maximal size of the array (neested operators).
+* @param C                  The type of class.
+* @param Max                Maximal size of the array (neested operators).
 */
 template<class C,unsigned long Max>
 	inline C* GetTemporaryObject(void)
 {
-  static C tab[Max];
-  static long act=0;
+	static C tab[Max];
+	static long act=0;
 
 	if(act==Max) act=0;
 	return(&tab[act++]);

@@ -114,18 +114,19 @@ extern double Epsi;
 //-----------------------------------------------------------------------------
 /**
 * Affect the coordinates in function of a given direction.
-*	@param x				X Coordinate.
-*	@param y				Y Coordinate.
-* @param from			The direction from where "it" is coming.
+* @param x                  X Coordinate.
+* @param y                  Y Coordinate.
+* @param from               The direction from where "it" is coming.
 */
 void AdaptXY(RCoord &x,RCoord &y,RDirection from);
+
 
 //-----------------------------------------------------------------------------
 /**
 * Calculate the coordinates to test in function of a given direction.
-* @param x				X Coordinate.
-* @param y				Y Coordinate.
-* @param from			The direction from where "it" is coming.
+* @param x                  X Coordinate.
+* @param y                  Y Coordinate.
+* @param from               The direction from where "it" is coming.
 */
 void AdaptTestXY(RCoord &x,RCoord &y,RDirection from);
 

@@ -73,22 +73,22 @@ public:
 
 	/**
 	* Construct a rectangle from another one.
-	* @param rect		The rectangle used as reference.
+	* @param rect           The rectangle used as reference.
 	*/
 	RRect(RRect *rect);
 
 	/**
 	* Construct a rectangle with two points.
-	* @param pt1		Point used as (left,bottom) edge.
-	* @param pt2		Point used as (right,up) edge.
+	* @param pt1            Point used as (left,bottom) edge.
+	* @param pt2            Point used as (right,up) edge.
 	*/
 	RRect(RPoint *pt1,RPoint *pt2);
 
 	/** Construct a rectangle from four coordinates.
-	* @param MinX		The most left position.
-	* @param MinY			The most bottom position
-	* @param MaxX		The most right position.
-	* @param MaxY		The most up position.
+	* @param MinX           The most left position.
+	* @param MinY           The most bottom position
+	* @param MaxX           The most right position.
+	* @param MaxY           The most up position.
 	*/
 	RRect(RCoord MinX,RCoord MinY,RCoord MaxX,RCoord MaxY);
 
@@ -119,41 +119,41 @@ public:
 
 	/**
 	* Make a translation of the rectangle.
-	* @param pt 	The point representing the vector used.
+	* @param pt             The point representing the vector used.
 	*/
 	RRect& operator+=(const RPoint &pt) throw(bad_alloc);
 	
 	/**
 	* Make a minus translation of the rectangle.
-	* @param pt 	The point representing the vector used.
+	* @param pt             The point representing the vector used.
 	*/
 	RRect& operator-=(const RPoint &pt) throw(bad_alloc);
 
 	/**
 	* Compare two rectangles and return 0 if there are at the same. This function
 	* is used with the class RContainer.
-	*	@param rect		Rectangle used for the comparaison.
+	* @param rect           Rectangle used for the comparaison.
 	*/
 	int Compare(const RRect *rect) { return((*this)!=(*rect)); }
 
 	/**
 	* Adapt the rectangle to be contained in a given region.
-	* @param clip		The region used as reference.
-	* @returns 			The function returns true if the rectangle was clipped.
+	* @param clip           The region used as reference.
+	* @returns The function returns true if the rectangle was clipped.
 	*/
 	bool Clip(const RRect &clip);
 
 	/**
 	* Adapt the rectangle to be contained in a given region.
-	* @param limits		The point representing the limits of the region.
-	* @returns 	The function returns true if the rectangle was clipped.
+	* @param limits         The point representing the limits of the region.
+	* @returns The function returns true if the rectangle was clipped.
 	*/
 	bool Clip(const RPoint &limits);
 
 	/**
 	* Make a translation of the rectangle.
-	* @param x		The x to add.
-	* @param y		The y to add.
+	* @param x              The x to add.
+	* @param y              The y to add.
 	*/
 	void Translation(RCoord x,RCoord y);
 
@@ -164,8 +164,8 @@ public:
 
 	/**
 	* This function returns true if a given point is in the rectangle.
-	* @param X		X position of the point.
-	* @param Y 		Y position of the point.
+	* @param X              X position of the point.
+	* @param Y              Y position of the point.
 	*/
 	bool IsIn(const RCoord X,const RCoord Y);
 

@@ -63,13 +63,13 @@ public:
 
 	/**
 	* Construct a container of rectangles with a intial maximal size.
-    * @param max	Initial maxiaml size.
+	* @param max            Initial maxiaml size.
 	*/
 	RRects(unsigned int max);
 
 	/**
 	* Construct a container of rectangles from another.
-	* @param rects	The container used as reference.
+	* @param rects          The container used as reference.
 	*/
 	RRects(RRects *rects);
 

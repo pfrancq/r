@@ -64,45 +64,45 @@ public:
 
 	/**
 	* Construct a container of points with an initial maximal size.
-	* @param max		Initial maximal size of the container.
+	* @param max            Initial maximal size of the container.
 	*/
 	RPoints(unsigned int max);
 
 	/**
 	* Construct a container of points from another one.
-	* @param points		The container used as reeference.
+	* @param points         The container used as reeference.
 	*/
 	RPoints(RPoints *points);
 
 	/**
 	* Find the next point to the left and that is on a vertex of a polygon from
 	* a given set. This function is used to calculated the union of polygons.
-	* @param pt				Point used as reference.
-	* @param polys    The polygons used as reference.
+	* @param pt             Point used as reference.
+	* @param polys          The polygons used as reference.
 	*/
 	RPoint* FindLeft(RPoint *pt,RPolygons *polys);
 
 	/**
 	* Find the next point to the right and that is on a vertex of a polygon from
 	* a given set. This function is used to calculated the union of polygons.
-	* @param pt				Point used as reference.
-	* @param polys    The polygons used as reference.
+	* @param pt             Point used as reference.
+	* @param polys          The polygons used as reference.
 	*/
 	RPoint* FindRight(RPoint *pt,RPolygons *polys);
 
 	/**
 	* Find the next point to the bottom and that is on a vertex of a polygon from
 	* a given set. This function is used to calculated the union of polygons.
-	* @param pt				Point used as reference.
-	* @param polys    	The polygons used as reference.
+	* @param pt             Point used as reference.
+	* @param polys          The polygons used as reference.
 	*/
 	RPoint* FindBottom(RPoint *pt,RPolygons *polys); // in rpoint.cpp
 
 	/**
 	* Find the next point to the up and that is on a vertex of a polygon from
 	* a given set. This function is used to calculated the union of polygons.
-	* @param pt				Point used as reference.
-	* @param polys    The polygons used as reference.
+	* @param pt             Point used as reference.
+	* @param polys          The polygons used as reference.
 	*/
 	RPoint* FindUp(RPoint *pt,RPolygons *polys);
 
@@ -119,7 +119,7 @@ public:
 	/**
 	* Assignment operator.
 	*/
-	RPoints& operator=(const RPoints &points);		
+	RPoints& operator=(const RPoints &points);
 };
 
 

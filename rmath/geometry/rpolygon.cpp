@@ -348,7 +348,7 @@ bool RGeometry2D::RPolygon::Edge(RPoint *pt1,RPoint *pt2) const
 
 	RReturnValIfFail(pt1&&pt2,false);
 	if((pt1->X!=pt2->X)&&(pt1->Y!=pt2->Y)) return(false);
-	point=Tab;	
+	point=Tab;
 	i=NbPtr+1;
 	while(--i)
 	{
@@ -505,7 +505,7 @@ bool RGeometry2D::RPolygon::IsIn(const RPolygon* poly) const
 	{
 		// Each vertex of poly have to be in it.
 		for(i=poly->NbPtr,pt=poly->Tab;--i;pt++)
-		{	
+		{
 			if(!IsIn(*pt))
 				return(false);
 		}
@@ -542,7 +542,7 @@ bool RGeometry2D::RPolygon::IsIn(const RPolygon* poly) const
 				end=poly->GetConY(start);
 				if(start->Y<end->Y) FromDir=Down; else FromDir=Up;
 			}
-			else		// Go to left/right
+			else           // Go to left/right
 			{
 				end=poly->GetConX(start);
 				if(start->X<end->X) FromDir=Left; else FromDir=Right;
@@ -863,7 +863,7 @@ RPoint& RGeometry2D::RPolygon::GetCentralPoint(void)
 	RPoint Middle;
 	RRect r;
 	double min,act;
-	
+
 	Boundary(r);
 	Middle.Set(r.Width()/2,r.Height()/2);
 	if(IsIn(Middle))

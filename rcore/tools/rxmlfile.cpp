@@ -47,89 +47,88 @@ using namespace RStd;
 RStd::RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
  : RTextFile(name,mode), XMLStruct(xmlstruct)
 {
-    RXMLTag *top;
+	RXMLTag *top;
 
-    SetRemStyle(MultiLineComment);
-    SetRem("<!--","-->");
-    switch(Mode)
-    {
-        case Read:
-            while(*ptr)
-            {
-                SkipSpaces();
-                top=new RXMLTag();
-                top->Load(this,XMLStruct);
-                XMLStruct->AddNode(0,top);
-            }
-            break;
+	SetRemStyle(MultiLineComment);
+	SetRem("<!--","-->");
+	switch(Mode)
+	{
+		case Read:
+			while(*ptr)
+			{
+				SkipSpaces();
+				top=new RXMLTag();
+				top->Load(this,XMLStruct);
+				XMLStruct->AddNode(0,top);
+			}
+			break;
 
-        case Append:
-        case Create:
-            top = XMLStruct->Top->Tab[0];
-            (*this)<<"<!DOCTYPE"<<top->GetName()+">"<<endl;
-            top->Save(this,0);
-            break;
+		case Append:
+		case Create:
+			top = XMLStruct->Top->Tab[0];
+			(*this)<<"<!DOCTYPE"<<top->GetName()+">"<<endl;
+			top->Save(this,0);
+			break;
 
-        default:
-            throw(RString("No Valid Mode"));
-    };
-
+		default:
+			throw(RString("No Valid Mode"));
+	};
 }
 
 
 //-----------------------------------------------------------------------------
 bool RStd::RXMLFile::BeginTag(void)
 {
-    return(((*ptr)=='<')&&((*(ptr+1))!='/'));
+	return(((*ptr)=='<')&&((*(ptr+1))!='/'));
 }
 
 
 //-----------------------------------------------------------------------------
 bool RStd::RXMLFile::EndTag(void)
 {
-    return(((*ptr)=='<')&&((*(ptr+1))=='/'));
+	return(((*ptr)=='<')&&((*(ptr+1))=='/'));
 }
 
 
 //-----------------------------------------------------------------------------
 char* RStd::RXMLFile::GetTag(void)
 {
-    char *tmp=GetCharPtr();
-    char c,*ptr2;
+	char *tmp=GetCharPtr();
+	char c,*ptr2;
 
-    SkipSpaces();
-    ptr2=ptr;
-    while((*ptr)!='>')
-        ptr++;
-    ptr++;          // Skip '>'
+	SkipSpaces();
+	ptr2=ptr;
+	while((*ptr)!='>')
+		ptr++;
+	ptr++;          // Skip '>'
 
-    // Making ptr2 pointed to a valid C string
-    c=(*ptr);
-    (*ptr)=0;
-    strcpy(tmp,ptr2);
-    (*ptr)=c;
-    SkipSpaces();
+	// Making ptr2 pointed to a valid C string
+	c=(*ptr);
+	(*ptr)=0;
+	strcpy(tmp,ptr2);
+	(*ptr)=c;
+	SkipSpaces();
 
-    return(tmp);
+	return(tmp);
 }
 
 
 //-----------------------------------------------------------------------------
 char* RStd::RXMLFile::GetContains(void)
 {
-    char *tmp=GetCharPtr();
-    char c,*ptr2;
+	char *tmp=GetCharPtr();
+	char c,*ptr2;
 
-    ptr2=ptr;
-    while((*ptr)!='<')
-        ptr++;
+	ptr2=ptr;
+	while((*ptr)!='<')
+		ptr++;
 
-    c=(*ptr);
-    (*ptr)=0;
-    strcpy(tmp,ptr2);
-    (*ptr)=c;
+	c=(*ptr);
+	(*ptr)=0;
+	strcpy(tmp,ptr2);
+	(*ptr)=c;
 
-    return(tmp);
+	return(tmp);
 }
 
 

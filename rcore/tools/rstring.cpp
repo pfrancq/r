@@ -62,7 +62,7 @@ RStd::RString::RString(const char *text) throw(bad_alloc)
 	char *ptr2;
 
 	if(text)
-	{	
+	{
 		MaxLen=Len=strlen(text);
 		ptr2=Text=new char[MaxLen+1];
 		while(*ptr1)
@@ -95,7 +95,7 @@ RStd::RString::RString(const int maxlen) throw(bad_alloc)
 		MaxLen=200;
 		Len=0;
 		Text=new char[MaxLen+1];
-	 	(*Text)=0;
+		(*Text)=0;
 		RReturnIfFail(maxlen!=0);
 	}
 }
@@ -115,7 +115,7 @@ RStd::RString::RString(const RString& str) throw(bad_alloc)
 RStd::RString::RString(const RString* str) throw(bad_alloc)
 {
 	if(str)
-	{	
+	{
 		MaxLen=str->MaxLen;
 		Len=str->Len;
 		Text=new char[MaxLen+1];
@@ -126,7 +126,7 @@ RStd::RString::RString(const RString* str) throw(bad_alloc)
 		MaxLen=200;
 		Len=0;
 		Text=new char[MaxLen+1];
-	 	(*Text)=0;
+		(*Text)=0;
 		RReturnIfFail(str);
 	}
 }
@@ -137,11 +137,11 @@ inline void RStd::RString::Verify(const int maxlen) throw(bad_alloc)
 {
 	if(MaxLen<maxlen)
 	{
-	  	char *tmp;
+		char *tmp;
 		MaxLen=maxlen;
 		tmp=new char[MaxLen+1];
 		if(Text)
-    	{
+		{
 			memcpy(tmp,Text,(Len+1)*sizeof(char));
 			delete[] Text;
 		}
@@ -462,9 +462,9 @@ RString& RStd::operator+(const char *arg1,const RString &arg2)
 //-----------------------------------------------------------------------------
 RString& RStd::itoa(const int nb)
 {
-	char Tmp[20];	
+	char Tmp[20];
 	RString *res=RString::GetString();
-	
+
 	sprintf(Tmp,"%i",nb);
 	(*res)=Tmp;
 	return((*res));
@@ -474,9 +474,9 @@ RString& RStd::itoa(const int nb)
 //-----------------------------------------------------------------------------
 RString& RStd::itoa(const unsigned int nb)
 {
-	char Tmp[20];	
+	char Tmp[20];
 	RString *res=RString::GetString();
-	
+
 	sprintf(Tmp,"%u",nb);
 	(*res)=Tmp;
 	return((*res));
@@ -486,9 +486,9 @@ RString& RStd::itoa(const unsigned int nb)
 //-----------------------------------------------------------------------------
 RString& RStd::ltoa(const long nb)
 {
-	char Tmp[20];	
+	char Tmp[20];
 	RString *res=RString::GetString();
-	
+
 	sprintf(Tmp,"%li",nb);
 	(*res)=Tmp;
 	return((*res));
@@ -498,9 +498,9 @@ RString& RStd::ltoa(const long nb)
 //-----------------------------------------------------------------------------
 RString& RStd::chr(const unsigned char c)
 {
-	char Tmp[2];	
+	char Tmp[2];
 	RString *res=RString::GetString();
-	
+
 	(*Tmp)=c;
 	(*(Tmp+1))=0;
 	(*res)=Tmp;
@@ -511,9 +511,9 @@ RString& RStd::chr(const unsigned char c)
 //-----------------------------------------------------------------------------
 RString& RStd::ltoa(const unsigned long nb)
 {
-	char Tmp[20];	
+	char Tmp[20];
 	RString *res=RString::GetString();
-	
+
 	sprintf(Tmp,"%lu",nb);
 	(*res)=Tmp;
 	return((*res));
@@ -523,9 +523,9 @@ RString& RStd::ltoa(const unsigned long nb)
 //-----------------------------------------------------------------------------
 RString& RStd::ftoa(const float nb)
 {
-	char Tmp[20];	
+	char Tmp[20];
 	RString *res=RString::GetString();
-	
+
 	sprintf(Tmp,"%f",nb);
 	(*res)=Tmp;
 	return((*res));
@@ -535,9 +535,9 @@ RString& RStd::ftoa(const float nb)
 //-----------------------------------------------------------------------------
 RString& RStd::dtoa(const double nb)
 {
-	char Tmp[20];	
+	char Tmp[20];
 	RString *res=RString::GetString();
-	
+
 	sprintf(Tmp,"%f",nb);
 	(*res)=Tmp;
 	return((*res));

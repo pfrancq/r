@@ -53,93 +53,90 @@ namespace RStd{
 * @author Pascal Francq and Thomas L'Eglise.
 * @see RXMLTag
 */
-
 class RXMLAttr
 {
-    /**
-    * The name of the attribute.
-    */
-    RString Name;
+	/**
+	* The name of the attribute.
+	*/
+	RString Name;
 
-    /**
-    * The value of the attribute.
-    */
-    RString Value;
+	/**
+	* The value of the attribute.
+	*/
+	RString Value;
 
 public: 
 
-    /**
-    * Construct a XML Attribute.
-    * @param name       The name of the attribute.
-    * @param value      The value of the attribute.
-    *   
-    */
-    RXMLAttr(const char *name,const char *value);
+	/**
+	* Construct a XML Attribute.
+	* @param name           The name of the attribute.
+	* @param value          The value of the attribute.
+	*/
+	RXMLAttr(const char *name,const char *value);
 
-    /**
-    * Construct a XML Attribute.
-    * @param name       The name of the attribute.
-    * @param value      The value of the attribute.
-    *
-    */
-    RXMLAttr(const char *name,const double value);
+	/**
+	* Construct a XML Attribute.
+	* @param name           The name of the attribute.
+	* @param value          The value of the attribute.
+	*/
+	RXMLAttr(const char *name,const double value);
 
-    /**
-    * Compare the name of the attribute with a given string. This function is
-    * used by RContainer.
-    * @param name   The C string used for the comparaison.
-    * @returns  -1,0 or 1 if the attribute is greather, the same or lesser than
-    *               parameter.
-    * @see RContainer
-    */
-    int Compare(const char *name) {return(Name.Compare(name));}
+	/**
+	* Compare the name of the attribute with a given string. This function is
+	* used by RContainer.
+	* @param name           The C string used for the comparaison.
+	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
+	* parameter.
+	* @see RContainer
+	*/
+	int Compare(const char *name) {return(Name.Compare(name));}
 
-    /**
-    * Compare the name of the attribute with a given string. This function is
-    * used by RContainer.
-    * @param name   The string used for the comparaison.
-    * @returns  -1,0 or 1 if the attribute is greather, the same or lesser than
-    *               parameter.
-    */
-    int Compare(const RString &name) {return(Name.Compare(name));}
+	/**
+	* Compare the name of the attribute with a given string. This function is
+	* used by RContainer.
+	* @param name           The string used for the comparaison.
+	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
+	* parameter.
+	*/
+	int Compare(const RString &name) {return(Name.Compare(name));}
 
-    /**
-    * Compare the names of two attributes. This function is used by RContainer.
-    * @param attr   The attribute used for the comparaison.
-    * @returns  -1,0 or 1 if the attribute is greather, the same or lesser than
-    *               parameter.
-    */
-    int Compare(const RXMLAttr &attr) { return(Name.Compare(attr.Name)); }
+	/**
+	* Compare the names of two attributes. This function is used by RContainer.
+	* @param attr           The attribute used for the comparaison.
+	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
+	* parameter.
+	*/
+	int Compare(const RXMLAttr &attr) { return(Name.Compare(attr.Name)); }
 
-    /**
-    * Compare the names of two attributes. This function is used by RContainer.
-    * @param attr   The attribute used for the comparaison.
-    * @returns  -1,0 or 1 if the attribute is greather, the same or lesser than
-    *               parameter.
-    */
+	/**
+	* Compare the names of two attributes. This function is used by RContainer.
+	* @param attr           The attribute used for the comparaison.
+	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
+	* parameter.
+	*/
     int Compare(const RXMLAttr *attr) { return(Name.Compare(attr->Name)); }
 
-    /**
-    * Return the name of the tag.
-    * @returns a string containing the name.
-    */
-    RString& GetName(void);
+	/**
+	* Return the name of the tag.
+	* @returns a string containing the name.
+	*/
+	RString& GetName(void);
 
-    /**
-    * Returns the value of the attribute.
-    * @returns a string containing the value;
-    */
-    RString& GetValue(void);
+	/**
+	* Returns the value of the attribute.
+	* @returns a string containing the value;
+	*/
+	RString& GetValue(void);
 
-    /**
-    * Destruct the attribute.
-    */
-    ~RXMLAttr(void);
+	/**
+	* Destruct the attribute.
+	*/
+	~RXMLAttr(void);
 };
 
 
-}  //-------- End of namespace RStd -----------------------------------------
+}  //-------- End of namespace RStd -------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif

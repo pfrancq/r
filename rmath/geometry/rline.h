@@ -57,7 +57,7 @@ class RLine
 	/**
 	* Internal function to determine if two lines intersect.
 	*/
-  	int CCW(const RPoint &) const;
+	int CCW(const RPoint &) const;
 
 public:
 
@@ -83,9 +83,9 @@ public:
 
 	/**
 	* Construct a line.
-	* @param pt1		The first point used.
-	* @param pt2		The second point used.
-	* @param seg		Is the line a segment.
+	* @param pt1            The first point used.
+	* @param pt2            The second point used.
+	* @param seg            Is the line a segment.
 	*/
 	RLine(RPoint *pt1,RPoint *pt2,bool seg=true);
 

@@ -83,25 +83,25 @@ public:
 
 	/**
 	* Construct a string from a "C string".
-	* @param text		The "C string" used as reference.
+	* @param text           The "C string" used as reference.
 	*/
 	RString(const char *text) throw(bad_alloc);
 
 	/**
 	* Construct an empty string with a maximal size.
-	* @param maxlen		Initial maximal length of the string.
+	* @param maxlen         Initial maximal length of the string.
 	*/
 	RString(const int maxlen) throw(bad_alloc);
 
 	/**
 	* Construct a string from another string.
-	* @param str		The string used as reference.
+	* @param str            The string used as reference.
 	*/
 	RString(const RString& str) throw(bad_alloc);
 
 	/**
 	* Construct a string from another string.
-	* @param str		The string used as reference.
+	* @param str            The string used as reference.
 	*/
 	RString(const RString* str) throw(bad_alloc);
 
@@ -127,30 +127,30 @@ public:
 
 	/**
 	* Assign the uppercase version of a "C string".
-	* @param text		The "C string" used.
+	* @param text           The "C string" used.
 	*/
 	void StrUpr(const char *text) throw(bad_alloc);
 
 	/**
 	* Assign the uppercase version of a string.
-	* @param str		The string used.
+	* @param str            The string used.
 	*/
 	void StrUpr(const RString &str) throw(bad_alloc);
 
 	/**
 	* Transform the string to lowercase.
 	*/
- 	inline void StrLwr(void);
+	inline void StrLwr(void);
 
 	/**
 	* Assign the lowercase version of a "C string".
-	* @param text		The "C string" used.
+	* @param text           The "C string" used.
 	*/
 	void StrLwr(const char *text) throw(bad_alloc);
 
 	/**
 	* Assign the lowercase version of a string.
-	* @param str		The string used.
+	* @param str            The string used.
 	*/
 	void StrLwr(const RString &str) throw(bad_alloc);
 
@@ -256,7 +256,7 @@ protected:
 
 public:
 
-  /**
+	/**
 	* Destruct the string.
 	*/
 	virtual ~RString(void);

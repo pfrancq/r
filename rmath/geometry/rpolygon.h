@@ -68,31 +68,31 @@ public:
 
 	/**
 	* Construct a polygon with an initial maxiam size.
-	* @param Max			e initial maximal size.
+	* @param Max            Initial maximal size.
 	*/
 	RPolygon(int Max);
 
 	/**
 	* Construct a polygon from another.
-	* @param poly		Polygon used as reference.
+	* @param poly           Polygon used as reference.
 	*/
 	RPolygon(const RPolygon *poly);
 
 	/**
 	* Construct a polygon from another.
-	* @param poly		Polygon used as reference.
+	* @param poly           Polygon used as reference.
 	*/
 	RPolygon(const RPolygon &poly);
 
 	/**
 	* The assign operator.
 	*/
-  	RPolygon& operator=(const RPolygon &poly);
+	RPolygon& operator=(const RPolygon &poly);
 
 	/**
 	* The equal operator.
 	*/
- 	bool operator==(const RPolygon &poly);
+	bool operator==(const RPolygon &poly);
 
 	/**
 	* The non-equal operator.
@@ -101,13 +101,13 @@ public:
 
 	/**
 	* Make a translation of the polygon.
-	* @param pt 	The point representing the vector used.
+	* @param pt             The point representing the vector used.
 	*/
 	RPolygon& operator+=(const RPoint &pt) throw(bad_alloc);
 
 	/**
 	* Make a translation of the polygon.
-	* @param pt 	The point representing the vector used.
+	* @param pt             The point representing the vector used.
 	*/
 	RPolygon& operator-=(const RPoint &pt) throw(bad_alloc);
 
@@ -115,18 +115,18 @@ public:
 	* This function compares two polygons and returns 0 if there have the same
 	* number of points and at the same positions. This function is used for the
 	* class RContainer.
-	* @param poly		Polygon used for the comparaison.
+	* @param poly           Polygon used for the comparaison.
 	*/
 	int Compare(RPolygon *poly) {return((*this)!=(*poly));}
 
 	/**
 	* This function returns a pointer to the point on the same horizontal vertex.
-	*	@param pt		Point used as reference.
+	* @param pt             Point used as reference.
 	*/
 	RPoint* GetConX(RPoint *pt) const;
 
 	/** This function returns a pointer to the point on the same vertital vertex.
-    *	@param pt		Point used as reference.
+	* @param pt             Point used as reference.
 	*/
 	RPoint* GetConY(RPoint *pt) const;
 
@@ -138,9 +138,9 @@ public:
 	/**
 	* Return a pointer to the most bottom-left point of the polygon responding
 	* to the criteria.
-	* @param MinX			Minimal X position of the point to search.
-	* @param MinY			Minimal Y position of the point to search.
-	* @param MaxX			Maximal X position of the point to search.
+	* @param MinX           Minimal X position of the point to search.
+	* @param MinY           Minimal Y position of the point to search.
+	* @param MaxX           Maximal X position of the point to search.
 	*/
 	RPoint* GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX) const;
 
@@ -152,35 +152,35 @@ public:
 	/**
 	* Return a pointer to the most left-bottom point of the polygon responding
 	* to the criteria.
-	* @param MinX			Minimal X position of the point to search.
-	* @param MinY			Minimal Y position of the point to search.
-	* @param MaxY			Maximal Y position of the point to search.
+	* @param MinX           Minimal X position of the point to search.
+	* @param MinY           Minimal Y position of the point to search.
+	* @param MaxY           Maximal Y position of the point to search.
 	*/
 	RPoint* GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY) const;
 
 	/**
 	* Return true if the point is on an edge.
-	* @param X       The X Coordinate used.
-	* @param Y       The Y Coordinate used.
+	* @param X              The X Coordinate used.
+	* @param Y              The Y Coordinate used.
 	*/
 	bool Edge(const RCoord X,const RCoord Y) const;
 
 	/**
 	* Return true if the point is on an edge.
-	* @param pt		The point used.
+	* @param pt             The point used.
 	*/
 	bool Edge(const RPoint* pt) const {return(Edge(pt->X,pt->Y));}
 
 	/**
 	* Return true if the point is on an edge.
-	* @param pt		The point used.
+	* @param pt             The point used.
 	*/
 	bool Edge(const RPoint& pt) const {return(Edge(pt.X,pt.Y));}
 
 	/**
 	* Return true if two points are on the same edge.
-	* @param pt1		The first point used.
-	* @param pt2		The second point used.
+	* @param pt1            The first point used.
+	* @param pt2            The second point used.
 	*/
 	bool Edge(RPoint *pt1,RPoint *pt2) const;
 
@@ -210,7 +210,7 @@ public:
 	* Return true if the polygon poly is inside the polygon. The two polygons are
 	* supposed to be "rectangular". This function determines if all the points
 	* of poly are inside the polygon.
-	*	@param poly		The polygon to known if is in.
+	* @param poly           The polygon to known if is in.
 	*/
 	bool IsIn(const RPolygon& poly) const
 		{return(IsIn(&poly));}
@@ -219,7 +219,7 @@ public:
 	* Return true if the polygon poly is inside the polygon. The two polygons
 	* are supposed to be "rectangular". This function determines if all the
 	* points of the bound of the polygon poly are inside the current one.
-	* @param poly		The polygon to known if is in.
+	* @param poly           The polygon to known if is in.
 	*/
 	bool IsIn(const RPolygon* poly) const;
 
@@ -230,27 +230,27 @@ public:
 
 	/**
 	* Return the boundary rectangle of the polygon.
-	* @param rect		The rectangle.
+	* @param rect           The rectangle.
 	*/
 	void Boundary(RRect &rect) const;
 
 	/**
 	* Modify the polygon to a certain orientation.
-	* @param o		The orientation.
-	* @param min	The vector that has been substracted to have the
-	*				bottom-left point at (0,0).
+	* @param o              The orientation.
+	* @param min            The vector that has been substracted to have the
+	*                       bottom-left point at (0,0).
 	*/
 	void ChangeOrientation(ROrientation o,RPoint& min);
 
 	/**
 	* Decompose the polygon in a container of rectangles.
-	* @param rects	A pointer to the container of rectangles.
+	* @param rects          A pointer to the container of rectangles.
 	*/
 	void RectDecomposition(RRects *rects) const;
 
 	/**
 	* Add the points of the polygon to a container of points.
-	* @param points			A pointer to the container of points.
+	* @param points         A pointer to the container of points.
 	*/
 	void AddPoints(RPoints *points);
 

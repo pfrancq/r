@@ -97,7 +97,7 @@ bool RGeometry2D::RPolygons::Edge(RPoint *pt1,RPoint *pt2)
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
 		if((*poly)->Edge(pt1,pt2))
 			return(true);
-	return(false);	
+	return(false);
 }
 
 
@@ -108,7 +108,7 @@ void RGeometry2D::RPolygons::PutPoints(RPoints *points)
 	RPoint **point;
 	RPoint tmp;
 	unsigned int i,j;
-	
+
 	RReturnIfFail(points);
 	points->Clear();
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
@@ -147,7 +147,7 @@ void RGeometry2D::RPolygons::Union(RPolygon *upoly)
 
 	// Init Part
 	RReturnIfFail(upoly);
-	upoly->Clear();	
+	upoly->Clear();
 	PutPoints(&pts);
 
 	// Find the most (left,bottom) point -> curpt,curpoly -> next pt on the right
@@ -161,7 +161,7 @@ void RGeometry2D::RPolygons::Union(RPolygon *upoly)
 
 	// While nextpt!=firspt
 	while((*next)!=(*first))
-	{		
+	{
 		ins=new RPoint(next);
 		upoly->InsertPtr(ins);
 		last=next;
@@ -239,7 +239,7 @@ void RGeometry2D::RPolygons::Union(RPolygon *upoly)
 				}
 				if((next=pts.FindLeft(last,this)))
 				{
-  					FromDir=Right;
+					FromDir=Right;
 					break;
 				}
 				FromDir=NoDirection;

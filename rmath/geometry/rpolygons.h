@@ -65,33 +65,33 @@ public:
 
 	/**
 	* Return true if the point is on an edge of one of the polygon contained.
-	* @param pt				The point used.
+	* @param pt             The point used.
 	*/
 	bool Edge(RPoint *pt);
 
 	/**
 	* Return true if the point is on an edge of a certain polygon.
-	* @param pt				The point used.
-	* @param poly			The polygon to look in.
+	* @param pt             The point used.
+	* @param poly           The polygon to look in.
 	*/
 	bool Edge(RPoint *pt,RPolygon *poly);
 
 	/**
 	* Return true if two points are on the same edge of one of the polygon contained.
-	* @param pt1		The first point used.
-	* @param pt2		The second point used.
+	* @param pt1            The first point used.
+	* @param pt2            The second point used.
 	*/
 	bool Edge(RPoint *pt1,RPoint *pt2);
 
 	/**
 	* Add the points of the polygons contained to a container of points.
-	* @param points		A pointer to the container of points.
+	* @param points         A pointer to the container of points.
 	*/
 	void PutPoints(RPoints *points);
 
 	/**
 	* This function calculate the union of the polygons contained.
-	* @param upoly		A pointer to the polygon representing the union.
+	* @param upoly          A pointer to the polygon representing the union.
 	*/
 	void Union(RPolygon *upoly);
 

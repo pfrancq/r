@@ -64,14 +64,14 @@ public:
 
 	/**
 	* Construct the message.
-	* @param msg		Contain.
+	* @param msg            Contain.
 	*/
 	RMsg(const RString& msg);
 
 	/**
 	* Construct the message.
-	* @param msg		Contain.
-	*/	
+	* @param msg            Contain.
+	*/
 	RMsg(const char* msg);
 	
 	/**

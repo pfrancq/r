@@ -73,8 +73,8 @@ public:
 
 	/**
 	* Construct the node.
-	* @param max		The size of initial array of pointer to child.
-	* @param inc		The increment size for the array.
+	* @param max            The size of initial array of pointer to child.
+	* @param inc            The increment size for the array.
 	*/
 	RNode(unsigned int max,unsigned int inc) throw(bad_alloc);
 
@@ -86,7 +86,7 @@ public:
 
 	/**
 	* Insert a subnode.
-	* @param node 	The node to insert.
+	* @param node           The node to insert.
 	*/
 	void InsertNode(RNode<N,bOrder> *node);
 
@@ -97,7 +97,7 @@ public:
 };
 
 
-#include "rnode.hh"			// Template implementation
+#include "rnode.hh"    // Template implementation
 
 
 }	//---- End namespace RStd -------------------------------------------------

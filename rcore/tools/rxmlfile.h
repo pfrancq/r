@@ -57,54 +57,54 @@ namespace RStd{
 
 class RXMLFile : public RTextFile
 {
-    /**
-    * The structure associated with the XML file.
-    */
-    RXMLStruct *XMLStruct;
+	/**
+	* The structure associated with the XML file.
+	*/
+	RXMLStruct *XMLStruct;
 
 public:
 
-    /**
-    * Construct a XML file.
-    * @param name       Name of the file.
-    * @param xmlstruct      The XML tree associated with the file
-    * @param mode       The open mode for the file.
-    */
-    RXMLFile(const char* name,RXMLStruct *xmlstruct,ModeType mode=RTextFile::Read);
+	/**
+	* Construct a XML file.
+	* @param name           Name of the file.
+	* @param xmlstruct      The XML tree associated with the file
+	* @param mode           The open mode for the file.
+	*/
+	RXMLFile(const char* name,RXMLStruct *xmlstruct,ModeType mode=RTextFile::Read);
 
-    /**
-    * Test if a new tag begins.
-    * @returns true if a new tag begins.
-    */
-    bool BeginTag(void);
+	/**
+	* Test if a new tag begins.
+	* @returns true if a new tag begins.
+	*/
+	bool BeginTag(void);
 
-    /**
-    * Test if a tag is ending.
-    * @returns true if the tags is ending.
-    */
-    bool EndTag(void);
+	/**
+	* Test if a tag is ending.
+	* @returns true if the tags is ending.
+	*/
+	bool EndTag(void);
 
-    /**
-    * Return the next tag in the file.
-    * @returns Pointer to a C string containing the tag;
-    */
-    char* GetTag(void);
+	/**
+	* Return the next tag in the file.
+	* @returns Pointer to a C string containing the tag;
+	*/
+	char* GetTag(void);
 
-    /**
-    * Return the contains of the current tag in the file.
-    * @returns Pointer to a C string.
-    */
-    char *GetContains(void);
+	/**
+	* Return the contains of the current tag in the file.
+	* @returns Pointer to a C string.
+	*/
+	char *GetContains(void);
 
-    /**
-    * Destruct the XML file.
-    */
-    ~RXMLFile(void);
+	/**
+	* Destruct the XML file.
+	*/
+	~RXMLFile(void);
 };
 
 
-}  //-------- End of namespace RStd -----------------------------------------
+}  //-------- End of namespace RStd -------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif

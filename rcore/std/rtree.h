@@ -75,23 +75,23 @@ public:
 
 	/**
 	* Construct the tree.
-  	* @param max			Initial size of the array of top nodes.
-  	* @param inc			Increment size of the array.
-  	*/
+	* @param max            Initial size of the array of top nodes.
+	* @param inc            Increment size of the array.
+	*/
 	RTree(unsigned int max,unsigned int inc) throw(bad_alloc);
 
 	/**
 	* Add the node to the parent.
-	* @param parent		The parent node.
-	* @param node			The node to add to the tree.
+	* @param parent         The parent node.
+	* @param node           The node to add to the tree.
 	*/
-  	void AddNode(N *parent,N *node) throw(bad_alloc);
+	void AddNode(N *parent,N *node) throw(bad_alloc);
 
 	/**
 	* Delete the node from the tree.
-	* @param	node		The node to be delete from the tree.
+	* @param node           The node to be delete from the tree.
 	*/
-  void DeleteNode(N *node);
+	void DeleteNode(N *node);
 
 	/**
 	* Destruct the tree.
