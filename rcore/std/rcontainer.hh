@@ -542,7 +542,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
-	inline bool RStd::RContainer<C,T,bAlloc,bOrder>::End(void)
+	inline bool RStd::RContainer<C,T,bAlloc,bOrder>::End(void) const
 {
 	return(ActPtr==LastPtr);
 }
@@ -570,7 +570,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
-	inline C* RStd::RContainer<C,T,bAlloc,bOrder>::operator()(void)
+	inline C* RStd::RContainer<C,T,bAlloc,bOrder>::operator()(void) const
 {
 	return(*Current);
 }

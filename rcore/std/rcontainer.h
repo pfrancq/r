@@ -348,7 +348,7 @@ public:
 	/**
 	* Test if the end of the container is reached.
 	*/
-	inline bool End(void);
+	inline bool End(void) const;
 
 	/**
 	* Goto the next element, if the end is reached, go to the beginning.
@@ -358,7 +358,7 @@ public:
 	/**
 	* Return the current element.
 	*/
-	inline C* operator()(void);
+	inline C* operator()(void) const;
 	//@}
 
 	/**
