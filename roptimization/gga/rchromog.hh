@@ -192,6 +192,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Modify(void)
+{
+	Mutation();
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Verify(void)
 {
 	if(!RGroups<cGroup,cObj,cGroupData,cChromo>::Verify())

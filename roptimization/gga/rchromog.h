@@ -123,6 +123,13 @@ public:
 	virtual void LocalOptimisation(void) {}
 
 	/**
+	* Modify a given chromosome when it is identical to another one. By
+	* default, the mutation operator of the chromosome is called.
+	* destroy them.
+	*/
+	virtual bool Modify(void);
+
+	/**
 	* Verify the validity of the chromosome.
 	* @return True if the chromosome is a valid one, false else.
 	*/

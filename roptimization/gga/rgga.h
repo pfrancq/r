@@ -72,6 +72,25 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 enum HeuristicType{FirstFit,FirstFitDes};
 
 
+//-----------------------------------------------------------------------------
+/**
+* This class represent a modify exception, when a modify can't be done.
+* @author Pascal Francq
+* @short Modify GA Exception
+*/
+class eGAModify : public eGA
+{
+public:
+
+	/**
+	* Construct the modify exception.
+	* @param g              Generation.
+	* @param c              Identificator of the child.
+	*/
+	eGAModify(const unsigned int g,const unsigned int c);
+};
+
+
 }//------- End of namespace RGGA ----------------------------------------------
 
 

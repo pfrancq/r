@@ -34,3 +34,21 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rgga/rgga.h>
+
+
+
+//-----------------------------------------------------------------------------
+//
+// Exceptions
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+RGGA::eGAModify::eGAModify(const unsigned int g,const unsigned int c)
+	: eGA()
+{
+	char tmp[200];
+
+	sprintf(tmp,"Generation %u: Mutation error: Chromsosome %u",g,c);
+	SetMsg(tmp);
+}
