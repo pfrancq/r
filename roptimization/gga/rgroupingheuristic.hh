@@ -65,7 +65,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		if((*ass)==NoGroup)
 			Order[NbObjs++]=(*Objs)();
 	}
-	RandOrder<cObj*>(Order,NbObjs);
+	if(NbObjs)
+		RandOrder<cObj*>(Order,NbObjs);
 }
 
 
