@@ -64,8 +64,10 @@ public:
 	*/
 	cInst *Instance;
 
-	/** Identificator of the chromosome.*/
-  unsigned int Id;
+	/**
+	* Identificator of the chromosome.
+	*/
+	unsigned int Id;
 
 	/**
 	* Pointer to the fitness of the chromosome.
@@ -74,25 +76,25 @@ public:
 
 	/**
 	* Variable to indicate if the chromosome has to be evaluated again,
-	*	for example after a crossover or a mutation.
+	* for example after a crossover or a mutation.
 	*/
 	bool ToEval;
 
 	/** Construct the chromosome.
-	* @param inst			Pointer to the instance.
-	* @param id				Identificator of the chromosome.
+	* @param inst           Pointer to the instance.
+	* @param id             Identificator of the chromosome.
 	*/
 	RChromo(cInst *inst,unsigned int id) throw(bad_alloc);
 
 	/**
 	* Initialisation of the chromosome.
-	* @param thData		Pointer to the "thread-dependent" data of the chromosome.
+	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
 	*/
 	virtual void Init(cThreadData *thData) throw(bad_alloc);
 
 	/**
 	* Construct a valid solution.
-	* @return		The function must retrun true if a solution has been constructed.
+	* @return The function must retrun true if a solution has been constructed.
 	*/
 	virtual bool RandomConstruct(void) {return(true);}
 
@@ -103,15 +105,15 @@ public:
 
 	/**
 	* Do a crossover by using the chromosome as child.
-	* @param parent1	First parent used.
-	* @param parent2	Second parent used.
-	* @return 				The function must return true if the crossover has been done.
+	* @param parent1        First parent used.
+	* @param parent2        Second parent used.
+	* @return The function must return true if the crossover has been done.
 	*/
 	virtual bool Crossover(cChromo* /*parent1*/,cChromo* /*parent2*/) {return(true);}
 
 	/**
 	* Do a mutation with the chromosome.
-	* @return		The function must return true if the mutation has been done.
+	* @return               The function must return true if the mutation has been done.
 	*/
 	virtual bool Mutation(void) {return(true);}
 
@@ -122,7 +124,7 @@ public:
 
 	/**
 	* Verify the validity of the chromosome.
-	* @return			The function must return true if the chromosome is a valid one.
+	* @return True if the chromosome is a valid one, false else.
 	*/
 	virtual bool Verify(void) {return(true);}
 

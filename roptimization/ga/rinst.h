@@ -71,7 +71,7 @@ public:
 
 	/**
 	* Construct the data.
-	* @param owner		The instance of the problem.
+	* @param owner          The instance of the problem.
 	*/
 	RThreadData(cInst *owner) throw(bad_alloc);
 
@@ -99,12 +99,19 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 {
 	/**
 	* This function is used to make a sort of the chromosomes based on their fitness.
-	* @param a	The first chromosome.
-	* @param b	The second chromosome.
-	* @return 	a-b
+	* @param a              The first chromosome.
+	* @param b              The second chromosome.
+	* @return a-b
 	*/
 	static int sort_function_cChromosome( const void *a, const void *b);
 
+public:
+	/**
+	* Random number generator
+	*/
+	RRandom* Random;
+
+private:
 	/**
 	* Temporary data for internal use.
 	*/
@@ -191,18 +198,19 @@ public:
 
 	/**
 	* Age of the best chromosome before insertion of mutation of it in the
-	*	population.
+	* population.
 	*/
 	unsigned int MaxBestPopAge;
 
 	/**
 	* Age of the best chromosome ever calculate before insertion of mutation of it
-	* in the population.*/
+	* in the population.
+	*/
 	unsigned int MaxBestAge;
 
 	/**
 	* Construct the instance.
-	* @param popsize		The size of the population.
+	* @param popsize        The size of the population.
 	*/
 	RInst(unsigned int popsize) throw(bad_alloc);
 
@@ -213,14 +221,14 @@ public:
 
 	/**
 	* Random construction of the chromosomes.
-   * @return			The function returns true if all chromosomes are constructed.
+	* @return The function returns true if all chromosomes are constructed.
 	*/
 	virtual void RandomConstruct(void) throw(eGA);
 
 	/**
 	* This function determines if the GA must stop. It is called after
 	* each generation. This function is a pure one and has to be implement.
-	* @return	When the function returns true, the GA is stop.
+	* @return When the function returns true, the GA is stop.
 	*/
 	virtual bool StopCondition(void)=0;
 
@@ -289,6 +297,12 @@ public:
 	* Emit a "Best Chromosome" Signal.
 	*/
 	void emitBestSig(void);
+
+	/**
+	* Return a number in the interval [0,max[ using the current random generator.
+	* @param max            Variable used to calculate the number.
+	*/
+	long RRand(long max) {return(Random->Value(max));}
 
 	/**
 	* Destruct the instance.

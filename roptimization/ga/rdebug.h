@@ -86,10 +86,9 @@ public:
 	RDebug(void);
 
 	/**
-	* Begin a Tag with attributes.
-	* @param Text			The name of the Tag.
-	* @param NbAttr		The number of attributes.
-	* The attributes are added after.
+	* Begin a Tag with attributes. The attributes are added after.
+	* @param Text           The name of the Tag.
+	* @param NbAttr         The number of attributes.
 	*/
 	void BeginTag(const char *Text,unsigned NbAttr=0,...);
 
@@ -106,33 +105,33 @@ public:
 	/**
 	* Print an Info Tag.
 	*/
-	void PrintInfo(const char *Text);                             								
+	void PrintInfo(const char *Text);
 
 	/**
 	* Begin a member function tag.
-	* @param Name 		The name of the member function.
-	* @param Object		The name of the object.		
+	* @param Name           The name of the member function.
+	* @param Object         The name of the object.
 	*/
 	void BeginFunc(const char *Name,const char *Object);
 
 	/**
 	* End a member function tag.
-	* @param Name 		The name of the member function.
-	* @param Object		The name of the object.		
+	* @param Name           The name of the member function.
+	* @param Object         The name of the object.
 	*/
 	void EndFunc(const char *Name,const char *Object);
 
 	/**
 	* Begin an application tag.
-	* @param App			The name of the application.
-	* @param Author		The auhtor of the application.
+	* @param App            The name of the application.
+	* @param Author         The auhtor of the application.
 	*/
 	void BeginApp(const char *App,const char *Author);
 
 	/**
 	* End an application tag.
-	* @param App			The name of the application.
-	* @param Author		The auhtor of the application.
+	* @param App            The name of the application.
+	* @param Author         The auhtor of the application.
 	*/
 	void EndApp(const char *App,const char *Author);
 
@@ -205,7 +204,7 @@ public:
 
 	/**
 	* Construct the debug file.
-	* @param name		The name of the file.
+	* @param name           The name of the file.
 	*/
 	RDebugXML(const RString &name) throw(bad_alloc);	
 

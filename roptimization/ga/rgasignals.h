@@ -70,14 +70,14 @@ public:
 
 	/**
 	* \ingroup GA
-	*	This class represent a signal to gives the user-interface the hand.
-  	* @author Pascal Francq
-  	* @short Interact Signal.
-  	*/
+	* This class represent a signal to gives the user-interface the hand.
+	* @author Pascal Francq
+	* @short Interact Signal.
+	*/
 	class InteractSig
 	{
 	public:
-   		/**
+		/**
 		* Construct this signal.
 		*/
 		InteractSig(void) {}
@@ -85,14 +85,14 @@ public:
 
 	/**
 	* \ingroup GA
-	*	This class represent a signal to indicate that the GA is running.
-  	* @author Pascal Francq
-  	* @short Run Signal.
-  	*/
+	* This class represent a signal to indicate that the GA is running.
+	* @author Pascal Francq
+	* @short Run Signal.
+	*/
 	class RunSig
 	{
 	public:
-	  	/**
+		/**
 		* Construct this signal.
 		*/
 		RunSig(void) {}
@@ -100,28 +100,28 @@ public:
 
 	/**
 	* \ingroup GA
-	*	This class represent a signal to indicate that the GA is stopped.
-  	* @author Pascal Francq
-  	* @short Stop Signal.
-  	*/
+	* This class represent a signal to indicate that the GA is stopped.
+	* @author Pascal Francq
+	* @short Stop Signal.
+	*/
 	class StopSig
 	{
 	public:
 		/**
 		* Indicate if the GA stops after an external break.
 		*/
-		bool bExternBreak;						
+		bool bExternBreak;
 
-  		/**
+		/**
 		* Construct this signal.
 		*/
-  		StopSig(bool externbreak) : bExternBreak(externbreak) {}
+		StopSig(bool externbreak) : bExternBreak(externbreak) {}
 	};
 
 	/**
 	* \ingroup GA
 	* This class represent a signal to indicate that a generation is
-	*	finished.
+	* finished.
 	* @author Pascal Francq
 	* @short Generation Signal.
 	*/
@@ -132,7 +132,7 @@ public:
 		unsigned int BestGen;
 		cChromo **Pop;
 		cChromo *Best;
-		
+
 		GenSig(unsigned int gen,unsigned int bestgen,cChromo **pop,cChromo *best)
 			: Gen(gen), BestGen(bestgen), Pop(pop), Best(best) {}	
 	};
@@ -170,7 +170,7 @@ public:
 	/**
 	* Compare function.
 	*/
-	int Compare(RGASignalsReceiver*) { return(1); }
+	int Compare(RGASignalsReceiver* s) { return(this!=s); }
 };
 
 

@@ -101,14 +101,14 @@ bool RGA::Examine(int argc, char *argv[],const char* Prj,const char *Ver)
 	bool bSlave=false;
 //	char MasterIP[20];
 //	char HostIP[20];
-			
+
 	// Verify if parameters
 	if(argc==1)
- 	{
+	{
 		cout<<Prj<<": Not input file\n";
 		return(true);
 	}
- 	
+
 	// Analyse parameters
 	for(args=argv+1;--argc;args++)
 	{
@@ -119,7 +119,7 @@ bool RGA::Examine(int argc, char *argv[],const char* Prj,const char *Ver)
 			bHelp=true;
   }
 
-  // Treats parameters
+	// Treats parameters
 	if(bVersion)
 	{
 		cout<<Prj<<" Version "<<Ver<<"  (C) 1999-2000 by Pascal Francq\n";	
@@ -141,17 +141,17 @@ bool RGA::Examine(int argc, char *argv[],const char* Prj,const char *Ver)
 	if((!bSlave)&&(!bMaster))
 	{
 	}
-	
+
 	// Treat if Master
 	if(bMaster)
 	{
 	}
-	
+
 	// Treat if Slave
 	if(bSlave)
 	{
 	}
-	
+
 	// End
 	return(true);
 }

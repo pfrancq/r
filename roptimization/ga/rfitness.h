@@ -76,48 +76,48 @@ public:
 	RFitness(void);
 
 	/**
-	*	Assignment operator.
-	*	@param f	The fitness used for the assignment.
-	*	@return		The function returns (*this).
+	* Assignment operator.
+	* @param f              The fitness used for the assignment.
+	* @return The function returns (*this).
 	*/
 	inline RFitness& operator=(const RFitness &f);
 
 	/**
 	* Assignment operator.
-	*	@param value	The value used for the assignment.
-	*	@return				The function returns (*this).
+	* @param value          The value used for the assignment.
+	* @return The function returns (*this).
 	*/
 	inline RFitness& operator=(const cVal value);
 
 	/**
 	* The equal operator.
-	* @param	f	The fitness used for the compraraison.
-	* @return 		The function returns true if the value of the two fitnesses are
-	*						equal.
+	* @param f              The fitness used for the compraraison.
+	* @return The function returns true if the value of the two fitnesses are
+	* equal.
 	*/
 	inline bool operator==(const RFitness &f);
 
 	/**
 	* The different operator.
-	* @param	f	The fitness used for the compraraison.
-	* @return 		The function returns true if the value of the two fitnesses are
-	*						different.
+	* @param f              The fitness used for the compraraison.
+	* @return The function returns true if the value of the two fitnesses are
+	* different.
 	*/
 	inline bool operator!=(const RFitness &f);
 
 	/**
 	* The greater operator.
-	* @param	f	The fitness used for the compraraison.
-	* @return 		The function returns true if the value of the fitness is
-	*						greater than the value of f.
+	* @param f              The fitness used for the compraraison.
+	* @return The function returns true if the value of the fitness is
+	* greater than the value of f.
 	*/
 	inline bool operator>(const RFitness &f);
 
 	/**
 	* The less-than operator.
-	* @param	f	The fitness used for the compraraison.
-	* @return 		The function returns true if the value of the fitness is less
-	*						than the value of f.
+	* @param f              The fitness used for the compraraison.
+	* @return The function returns true if the value of the fitness is less
+	* than the value of f.
 	*/
 	inline bool operator<(const RFitness &f);
 

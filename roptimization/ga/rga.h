@@ -123,7 +123,7 @@ public:
 
 	/**
 	* Construct the exception.
-	* @param msg	The message.
+	* @param msg            The message.
 	*/
 	eGA(const RString &msg);
 };

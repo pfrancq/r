@@ -223,7 +223,7 @@ void RGA::RDebugXML::WriteEndTag(const char *tag)
 
 //-----------------------------------------------------------------------------
 void RGA::RDebugXML::WriteText(const char *text)
-{	
+{
 	write(Handle,tmpNL,tmpLenNL);
 	write(Handle,tmpTab,Deep+1);
 	write(Handle,text,strlen(text));
