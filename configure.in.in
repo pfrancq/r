@@ -7,7 +7,7 @@
 #------------------------------------------------------------------------------#
 
 
-AM_INIT_AUTOMAKE(r, 0.1)
+AM_INIT_AUTOMAKE(r, 1.0)
 AC_PROG_CXX
 
 # add argument : --with-mysql
@@ -76,6 +76,9 @@ KDE_SET_PREFIX
 
 KDE_USE_QT
 AC_PATH_KDE
+KDE_PROG_LIBTOOL
+else
+AC_PROG_LIBTOOL
 fi
 
 AC_SUBST(FRONTEND)
