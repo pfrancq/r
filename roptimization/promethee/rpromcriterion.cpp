@@ -113,7 +113,7 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCr
 
 //-----------------------------------------------------------------------------
 RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const double p,const double q,const double w,
-	const unsigned int id,const RString& name,const unsigned int nb)
+	const unsigned int id,const char* name,const unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
 	  Type(type), P(p), Q(q), Weight(w)
 {
@@ -132,7 +132,7 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const double 
 
 //-----------------------------------------------------------------------------
 RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,
-		const unsigned int id,const RString& name,const unsigned int nb)
+		const unsigned int id,const char* name,const unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
 	  Type(type), Weight(params.Weight)
 {

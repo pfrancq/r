@@ -160,7 +160,7 @@ public:
 	* @param nb             Number of solution.
 	*/
 	RPromCriterion(const CriteriaType type,const double p,const double q,const double w,const unsigned int id,
-		const RString& name,const unsigned int nb=30);
+		const char* name,const unsigned int nb=30);
 
 	/**
 	* Construct a criterion.
@@ -171,7 +171,7 @@ public:
 	* @param nb             Number of solution.
 	*/
 	RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,const unsigned int id,
-		const RString& name,const unsigned int nb=30);
+		const char* name,const unsigned int nb=30);
 
 	/**
 	* Compare the identifier of two criteria.

@@ -87,7 +87,7 @@ public:
 	* @param name           Name of the solution
 	* @param nbcrit         Number of criterions.
 	*/
-	RPromSol(const unsigned int id,const RString& name,const unsigned int nbcrit=30);
+	RPromSol(const unsigned int id,const char* name,const unsigned int nbcrit=30);
 
 	/**
 	* Compare two prométhée solutions.
@@ -137,7 +137,7 @@ public:
 	/**
 	* Return the name of the solution.
 	*/
-	RString& GetName(void);
+	const char* GetName(void) const {return(Name());}
 
 	/**
 	* Destruct a prométhée solution.

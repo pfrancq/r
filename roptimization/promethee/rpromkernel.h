@@ -87,7 +87,7 @@ public:
 	* @param crit           Number of criteria.
 	* @param norm           Normlisation activ.
 	*/
-	RPromKernel(const RString& name,const unsigned int sol,const unsigned int crit,const bool norm=true);
+	RPromKernel(const char* name,const unsigned int sol,const unsigned int crit,const bool norm=true);
 
 	/**
 	* Applicates the evaluation functions for the solution.
@@ -123,7 +123,7 @@ public:
 	* @param q              Preference's threshold.
 	* @param w              Weight of the criterion.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RString& name,const double p,
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const double p,
 	const double q,const double w) throw(bad_alloc);
 
 	/**
@@ -132,7 +132,7 @@ public:
 	* @param name           Name of the criterion.	
 	* @param params         Parameters.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RString& name,
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,
 		const RPromCriterionParams& params) throw(bad_alloc);
 
 	/**
@@ -144,7 +144,7 @@ public:
 	* Create a new solution.
 	* @param name           Name of the solution.	
 	*/
-	virtual RPromSol* NewSol(const RString& name) throw(bad_alloc);
+	virtual RPromSol* NewSol(const char* name) throw(bad_alloc);
 
 	/**
 	* Assign a value to a criterion.
@@ -160,7 +160,7 @@ public:
 	* @param crit           Pointer to the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(const RString& sol,RPromCriterion *crit,const double v) throw(bad_alloc);
+	virtual void Assign(const char* sol,RPromCriterion *crit,const double v) throw(bad_alloc);
 
 	/**
 	* Assign a value to a criterion.
@@ -168,7 +168,7 @@ public:
 	* @param crit           Name of the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(RPromSol *sol,const RString& crit,const double v) throw(bad_alloc);
+	virtual void Assign(RPromSol *sol,const char* crit,const double v) throw(bad_alloc);
 
 	/**
 	* Assign a value to a criterion.
@@ -176,7 +176,7 @@ public:
 	* @param crit           Name of the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(const RString& sol,const RString& crit,const double v) throw(bad_alloc);
+	virtual void Assign(const char* sol,const char* crit,const double v) throw(bad_alloc);
 
 	/**
 	* Return the best solution.
