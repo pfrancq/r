@@ -163,7 +163,7 @@ void RGeoInfo::PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid)
 
 	// Push Bottom
 	TestPos=pos;
-	while((TestPos.Y)&&Test(TestPos,limits,grid))
+	while((TestPos.Y>=0)&&Test(TestPos,limits,grid))
 	{
 		pos=TestPos;
 		TestPos.Y--;
@@ -171,7 +171,7 @@ void RGeoInfo::PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid)
 
 	// Push Left
 	TestPos=pos;
-	while((TestPos.X)&&Test(TestPos,limits,grid))
+	while((TestPos.X>=0)&&Test(TestPos,limits,grid))
 	{
 		pos=TestPos;
 		TestPos.X--;
@@ -228,6 +228,16 @@ bool RGeoInfo::Overlap(RGeoInfo *info)
     }
 	}
 	return(false);
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RGeoInfo::GetPos(void)
+{
+	RPoint *pt=RPoint::GetPoint();
+
+	(*pt)=Pos;
+	return(*pt);
 }
 
 

@@ -209,17 +209,38 @@ public:
 	/**
 	* Return the Width of the object represented.
 	*/
-	inline RCoord Width(void) {return(Rect.Pt2.X+1);}
+	inline RCoord Width(void) {return(Rect.Width());}
 
 	/**
 	* Return the Height of the object represented.
 	*/
-	inline RCoord Height(void) {return(Rect.Pt2.Y+1);}
+	inline RCoord Height(void) {return(Rect.Height());}
 
 	/**
 	* Return the number of points contained in the polygon.
 	*/
 	inline unsigned int NbPoints(void) {return(Bound->NbPtr);}
+
+	/**
+	* Return the position of the geometric information.
+	*/
+	RPoint& GetPos(void);
+
+	/**
+	* Make a translation of the point.
+	* @param pt 	The point representing the vector used.
+	*/
+	RGeoInfo& operator+=(const RPoint &pt) {Pos+=pt;return(*this);}
+
+	/**
+	* Make a translation of the point.
+	* @param pt 	The point representing the vector used.
+	*/
+	RGeoInfo& operator-=(const RPoint &pt)
+	{
+		Pos-=pt;
+		return(*this);
+	}
 
 	/**
 	* Start the iterator to go trough the points.
