@@ -89,11 +89,11 @@ public:
   }
   template<class TUse> inline bool IsIn(const TUse &tag)
   {
-		Hash[tag->HashIndex()]->IsIn<TUse>(tag);	  	
+		Hash[tag.HashIndex()]->IsIn<TUse>(tag);	  	
   }
   template<class TUse> inline C* GetPtr(const TUse &tag)
   {
-		return(Hash[tag->HashIndex()]->GetPtr<TUse>(tag));	  	
+		return(Hash[tag.HashIndex()]->GetPtr<TUse>(tag));	  	
   }
   template<class TUse> inline C* GetInsertPtr(const TUse &tag) throw(bad_alloc)
   {
@@ -105,11 +105,11 @@ public:
   }
   template<class TUse> inline void DeletePtr(const TUse &tag)
   {
-		Hash[tag->HashIndex()]->DeletePtr<TUse>(tag);	  	
+		Hash[tag.HashIndex()]->DeletePtr<TUse>(tag);	  	
   }
   template<class TUse> inline void ForEach(void f(TUse),const TUse &tag)
   {
-		Hash[tag->HashIndex()]->ForEach<TUse>(f,tag);	  	
+		Hash[tag.HashIndex()]->ForEach<TUse>(f,tag);	  	
   }
   ~RHashContainer(void)
   {
