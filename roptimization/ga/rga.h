@@ -91,7 +91,6 @@ public:
 
 	/**
 	* Construct an exception.
-	* @param str                      Message of the error.
 	*/
 	eGA(void) throw()
 		: R::RException() {}
