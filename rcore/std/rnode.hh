@@ -46,7 +46,7 @@ template<class N,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class N,bool bOrder>
-	int RNode<N,bOrder>::Compare(RNode*)
+	int RNode<N,bOrder>::Compare(const RNode*) const
 {
 	return(-1);
 }
@@ -54,7 +54,7 @@ template<class N,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class N,bool bOrder>
-	N* RNode<N,bOrder>::GetParent(void)
+	N* RNode<N,bOrder>::GetParent(void) const
 {
 	return(Parent);
 }
