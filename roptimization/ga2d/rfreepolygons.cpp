@@ -66,15 +66,14 @@ RPoint& RGA2D::RFreePolygons::CanPlace(RGeoInfo *info)
 	RFreePolygon **tab;
 	RPoint* pt=RPoint::GetPoint();
 	RObj2D* obj=info->GetObj();
-	
-  	for(i=NbPtr+1,tab=Tab;--i;tab++)	
+
+	for(i=NbPtr+1,tab=Tab;--i;tab++)	
 	{	
 		for(o=0;o<obj->NbPossOri;o++)
 		{
-			info->SetOri(o);   		
-			if((*tab)->CanContain(info))
+			info->SetOri(o);
+			if((*tab)->CanContain(info,*pt))
 			{
-				(*pt)=(*tab)->GetPos();
 				DeletePtr(*tab);
 				return(*pt);
 			}

@@ -107,12 +107,14 @@ public:
 	/**
 	* This function test if a geometric information can be contained in the free
 	* polygon.
-	* @param info		The geometric information to compare.
+	* @param info    The geometric information to compare.
+	* @param pos     Position where the geometric information can eventualy
+	*                be inserted.
 	* @return	The function returns 0 if the polygon can't be contained, >0 if
 	*				the polygon can be contained. The less is the space wasted, the
 	*				greather is the return value.
 	*/
-	int CanContain(RGeoInfo* info);
+	int CanContain(RGeoInfo* info,RPoint& pos);
 
 	/**
 	* Return the position of the free polygon.

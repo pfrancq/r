@@ -46,10 +46,18 @@ using namespace RGA2D;
 
 //-----------------------------------------------------------------------------
 RGA2D::RFreePolygon::RFreePolygon(RPolygon& poly)
-	: RPolygon(poly)
+	: RPolygon(poly), Pos(MaxCoord,MaxCoord)
 {
-	Pos=(*GetBottomLeft());
-	(*this)-=Pos;
+	unsigned int i;
+	RPoint **tab;
+
+	// Find the translation
+	for(i=NbPtr+1,tab=Tab;--i;tab++)
+	{
+		if((*tab)->X<Pos.X) Pos.X=(*tab)->X;
+		if((*tab)->Y<Pos.Y) Pos.Y=(*tab)->Y;
+	}
+	//(*this)-=Pos;
 }
 
 
@@ -62,10 +70,36 @@ RGA2D::RFreePolygon::RFreePolygon(RFreePolygon* poly)
 
 
 //-----------------------------------------------------------------------------
-int RGA2D::RFreePolygon::CanContain(RGeoInfo* info)
+int RGA2D::RFreePolygon::CanContain(RGeoInfo* info,RPoint &pos)
 {
-	if(!IsIn(info->GetBound())) return(0);
-	return((100*info->GetArea())/Area());
+	RPoint *act,*e1,*e2;
+	unsigned int nbpts;
+	RPolygon Test;
+
+	nbpts=NbPtr;
+	act=GetBottomLeft();
+	while(nbpts>0)
+	{
+		// Look for act
+		e1=GetConX(act);
+		e2=GetConY(act);
+//		if((act->X<e1->X)&&(act->Y<e2->Y))
+		{
+			Test=info->GetBound();
+			Test+=(*act);
+			if(IsIn(Test))
+			{
+				pos=(*act);
+				return((100*info->GetArea())/Area());
+			}
+		}
+		
+		nbpts--;
+		act=GetConX(act);
+		nbpts--;
+		act=GetConY(act);
+	}
+	return(0.0);
 }
 
 
