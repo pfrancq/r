@@ -283,10 +283,10 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	C **ptr;
 
 	RReturnIfFail(ins);
-	RReturnIfFail(Pos<=NbPtr);
+	RReturnIfFail(Pos<=LastPtr);
 	VerifyTab();
 	ptr=&Tab[Pos];
-	if(Pos<LastPtr-1)
+	if(Pos<LastPtr)
 		memmove(ptr+1,ptr,(LastPtr-Pos)*sizeof(C*));
 	(*ptr)=ins;
 	NbPtr++;
