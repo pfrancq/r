@@ -229,13 +229,13 @@ void RPromethee::RPromCriterion::Normalize(void)
 //-----------------------------------------------------------------------------
 double RPromethee::RPromCriterion::ComputePref(double u,double v) const
 {
-	double d/*=(u-v)*/;
+	double d;
 	double y;
 
-//	if(u!=0.0)
-//		d/=u;
 	if(u!=v)
 		d=(2.0*(u-v))/(u+v);
+	else
+		d=0.0;
 
 	switch(Type)
 	{
