@@ -168,7 +168,7 @@ public:
 	/**
 	* Destruct the database.
 	*/
-	~RDb(void);
+	virtual ~RDb(void);
 
 	// Friend class.
 	friend class RQuery;
@@ -247,7 +247,7 @@ public:
 	/**
 	* Destruct the query.
 	*/
-	~RQuery(void);
+	virtual ~RQuery(void);
 };
 
 
