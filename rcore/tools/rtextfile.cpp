@@ -410,7 +410,7 @@ float RIO::RTextFile::GetFloat(void) throw(RString)
 
 	if(Mode!=Read)
 		throw(RString("File Mode is not Read"));
-	while((*ptr)&&isspace(*ptr)&&(!BeginComment()))
+	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment()))
 	{
 		if((!isdigit(*ptr))&&(*ptr)!='.'&&(*ptr)!='e'&&(*ptr)!='E')
 			throw(RString("No float"));
