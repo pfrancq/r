@@ -150,6 +150,16 @@ public:
 	void SetToday(void);
 
 	/**
+	* Need to manage temporary dates.
+	*/
+	static RDate* GetDate(void);
+
+	/**
+	* Get the current date.
+	*/
+	static RDate& GetToday(void);
+
+	/**
 	* Destruct the date.
 	*/
 	~RDate(void);

@@ -41,6 +41,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
+#include <rstd/rstd.h>
 #include <rstd/rdate.h>
 using namespace R;
 
@@ -233,6 +234,24 @@ void RDate::SetToday(void)
 	Year=l_time->tm_year+1900;
 	Month=l_time->tm_mon+1;
 	Day=l_time->tm_mday;
+}
+
+
+//------------------------------------------------------------------------------
+RDate* RDate::GetDate(void)
+{
+	RDate *d=GetTemporaryObject<RDate,20>();
+
+	d->SetToday();
+	return(d);
+}
+
+
+//------------------------------------------------------------------------------
+RDate& RDate::GetToday(void)
+{
+	RDate *d=GetDate();
+	return(*d);
 }
 
 
