@@ -40,6 +40,7 @@
 #include <rga/rga.h>
 #include <rga/rdebug.h>
 #include <rga/rgasignals.h>
+#include <rstd/rcursor.h>
 
 
 //------------------------------------------------------------------------------
