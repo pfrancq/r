@@ -31,19 +31,19 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #ifndef RStdH
 #define RStdH
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Standard C/C++
 #include <stdio.h>					// for sprintf
 #include <string.h>					// for memcpy
 #include <iostream.h>				// for cerr
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Assertion macros
 #ifdef __RDISABLEASSERT__
 
@@ -57,19 +57,30 @@
 		#define RAssert(expr)																											\
     	if(!(expr))																																	\
 			{																																			\
-       	cerr	<<"file "<<__FILE__                             																\
-							<<": line "<<__LINE__                           														\
-							<<" ("<<__PRETTY_FUNCTION__                     											\
-							<<"): assertion failed: "<<#expr<<endl;         												\
+       		cerr	<<"file "<<__FILE__                             																\
+						<<": line "<<__LINE__                           														\
+						<<" ("<<__PRETTY_FUNCTION__                     											\
+						<<"): assertion failed: "<<#expr<<endl;         												\
 				throw;																																\
 			}
 
 		#define RAssertNotReached()																								\
+		{\
 			cerr	<<"file "<<__FILE__                             																\
-						<<": line "<<__LINE__                          	  														\
-						<<" ("<<__PRETTY_FUNCTION__                 	    											\
-						<<"): should not be reached"<<endl;       															\
-				throw;																		
+					<<": line "<<__LINE__                          	  														\
+					<<" ("<<__PRETTY_FUNCTION__                 	    											\
+					<<"): should not be reached"<<endl;       															\
+			throw;																		\
+		}
+
+		#define RAssertMsg(msg)																											\
+		{																																			\
+      	cerr	<<"file "<<__FILE__                             																\
+					<<": line "<<__LINE__                           														\
+					<<" ("<<__PRETTY_FUNCTION__                     											\
+					<<"): "<<#msg<<endl;         												\
+			throw;																																\
+		}
 
 	#else 	// !__GNUC__
 
@@ -84,12 +95,20 @@
 						<<": line "<<__LINE__																							\
 						<<" : should not be reached"<<endl;
 
+		#define RAssertMsg(msg)																											\
+		{																																			\
+      	cerr	<<"file "<<__FILE__                             																\
+					<<": line "<<__LINE__                           														\
+					<<": "<<#msg<<endl;         												\
+			throw;																																\
+		}
+
 	#endif 	// __GNUC__
 
 #endif 		// !__RDISABLEASSERT__
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Check macros
 #ifdef __RDISABLECHECKS__
 
@@ -145,14 +164,21 @@
 
 #endif 		// !__RDISABLECHECKS__
 
+/**
+* \namespace RStd
+* \brief Standard Classes.
+*
+* This namespace declares some generic classes.
+*/
 
-//---------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 namespace RStd{
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * This function provides a way to handle temporary objects needed when using
 * standard operators with non standard classes.
@@ -171,8 +197,8 @@ template<class C,unsigned long Max>
 }
 
 
-}  //-------- End of namespace RStd ---------------------------------------
+}  //-------- End of namespace RStd -------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif

@@ -31,8 +31,7 @@
 
 
 
-
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdlib.h>
 #include <stdio.h>
@@ -48,7 +47,7 @@
 #include <time.h>
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
 #include <rstd/rstd.h>
 #include <rstd/rtextfile.h>
@@ -56,13 +55,13 @@ using namespace RStd;
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // RTextFile
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
   : Mode(mode), Name(name), All(true), NewLine(true), Rem("%"),BeginRem("/*"),
 		EndRem("*/"),	CommentType(SingleLineComment), Separator(" "), Line(0)
@@ -96,7 +95,7 @@ RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
   : Mode(Read), Name(name), All(all), NewLine(false), Rem("%"), BeginRem("/*"),
 		EndRem("*/"),CommentType(SingleLineComment),Line(0)
@@ -106,7 +105,7 @@ RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::Init(void) throw(bad_alloc,RString)
 {
 	struct stat statbuf;
@@ -134,7 +133,7 @@ void RTextFile::Init(void) throw(bad_alloc,RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::Begin(void) throw(RString)
 {
 	if(Mode!=Read)
@@ -144,7 +143,7 @@ void RTextFile::Begin(void) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool RTextFile::BeginComment(void)
 {
 	switch(CommentType)
@@ -165,7 +164,7 @@ bool RTextFile::BeginComment(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool RTextFile::EndComment(void)
 {
 	switch(CommentType)
@@ -190,7 +189,7 @@ bool RTextFile::EndComment(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::SkipSpaces(void)
 {
 	// Read Spaces
@@ -243,7 +242,7 @@ void RTextFile::SkipSpaces(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 char* RTextFile::GetCharPtr(void)
 {
 	static char tab[25][300];
@@ -254,7 +253,7 @@ char* RTextFile::GetCharPtr(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 long RTextFile::GetInt(void) throw(RString)
 {
 	char *ptr2=ptr;
@@ -272,7 +271,7 @@ long RTextFile::GetInt(void) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 unsigned long RTextFile::GetUInt(void) throw(RString)
 {
 	char *ptr2=ptr;
@@ -290,7 +289,7 @@ unsigned long RTextFile::GetUInt(void) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator>>(char &nb) throw(RString)
 {
 	nb=GetInt();
@@ -298,7 +297,7 @@ RTextFile& RTextFile::operator>>(char &nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator>>(unsigned char &nb) throw(RString)
 {
 	nb=GetUInt();
@@ -306,7 +305,7 @@ RTextFile& RTextFile::operator>>(unsigned char &nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator>>(short &nb) throw(RString)
 {
 	nb=GetInt();
@@ -314,7 +313,7 @@ RTextFile& RTextFile::operator>>(short &nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator>>(unsigned short &nb) throw(RString)
 {
 	nb=GetUInt();
@@ -322,7 +321,7 @@ RTextFile& RTextFile::operator>>(unsigned short &nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator>>(int &nb) throw(RString)
 {
 	nb=GetInt();
@@ -330,7 +329,7 @@ RTextFile& RTextFile::operator>>(int &nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator>>(unsigned int &nb) throw(RString)
 {
 	nb=GetUInt();
@@ -338,7 +337,7 @@ RTextFile& RTextFile::operator>>(unsigned int &nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator>>(long &nb) throw(RString)
 {
 	nb=GetInt();
@@ -346,7 +345,7 @@ RTextFile& RTextFile::operator>>(long &nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator>>(unsigned long &nb) throw(RString)
 {
 	nb=GetUInt();
@@ -354,7 +353,7 @@ RTextFile& RTextFile::operator>>(unsigned long &nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 float RTextFile::GetFloat(void) throw(RString)
 {
 	char *ptr2=ptr;
@@ -376,7 +375,7 @@ float RTextFile::GetFloat(void) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 char* RTextFile::GetWord(void) throw(RString)
 {
 	char *ptr2=ptr;
@@ -393,7 +392,7 @@ char* RTextFile::GetWord(void) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 char* RTextFile::GetLine(void) throw(RString)
 {
 	char *ptr2=ptr;
@@ -410,7 +409,7 @@ char* RTextFile::GetLine(void) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::WriteLine(void) throw(RString)
 {
 	if(Mode==Read)
@@ -424,7 +423,7 @@ void RTextFile::WriteLine(void) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::WriteLong(const long nb) throw(RString)
 {
 	char Str[25];
@@ -442,7 +441,7 @@ void RTextFile::WriteLong(const long nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const char nb) throw(RString)
 {
 	WriteLong(nb);
@@ -450,7 +449,7 @@ RTextFile& RTextFile::operator<<(const char nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const short nb) throw(RString)
 {
 	WriteLong(nb);
@@ -458,7 +457,7 @@ RTextFile& RTextFile::operator<<(const short nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const int nb) throw(RString)
 {
 	WriteLong(nb);
@@ -466,7 +465,7 @@ RTextFile& RTextFile::operator<<(const int nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const long nb) throw(RString)
 {
 	WriteLong(nb);
@@ -474,7 +473,7 @@ RTextFile& RTextFile::operator<<(const long nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::WriteULong(const unsigned long nb) throw(RString)
 {
 	char Str[25];
@@ -492,7 +491,7 @@ void RTextFile::WriteULong(const unsigned long nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const unsigned char nb) throw(RString)
 {
 	WriteULong(nb);
@@ -500,14 +499,14 @@ RTextFile& RTextFile::operator<<(const unsigned char nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const unsigned int nb) throw(RString)
 {
 	WriteULong(nb);
 	return(*this);
 }
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const unsigned long nb) throw(RString)
 {
 	WriteULong(nb);
@@ -515,7 +514,7 @@ RTextFile& RTextFile::operator<<(const unsigned long nb) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::WriteStr(const char *c) throw(RString)
 {
 	int l;
@@ -538,7 +537,7 @@ void RTextFile::WriteStr(const char *c) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const char *c) throw(RString)
 {
 	WriteStr(c);
@@ -546,7 +545,7 @@ RTextFile& RTextFile::operator<<(const char *c) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::WriteStr(const RString &str) throw(RString)
 {
 	int l;
@@ -574,7 +573,7 @@ void RTextFile::WriteStr(const RString &str) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const RString &str) throw(RString)
 {
 	WriteStr(str);
@@ -582,7 +581,7 @@ RTextFile& RTextFile::operator<<(const RString &str) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::WriteBool(const bool b) throw(RString)
 {
 	char Str[10];
@@ -600,7 +599,7 @@ void RTextFile::WriteBool(const bool b) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const bool b) throw(RString)
 {
 	WriteBool(b);
@@ -608,7 +607,7 @@ RTextFile& RTextFile::operator<<(const bool b) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::WriteTime(void) throw(RString)
 {
 	char Str[30];
@@ -632,7 +631,7 @@ void RTextFile::WriteTime(void) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RTextFile::WriteLog(const char *entry) throw(RString)
 {
 	char Str[30];
@@ -658,7 +657,7 @@ void RTextFile::WriteLog(const char *entry) throw(RString)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile::~RTextFile(void)
 {
 	if(Buffer) delete[] Buffer;
@@ -667,13 +666,13 @@ RTextFile::~RTextFile(void)
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // General functions
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& endl(RTextFile &file)
 {
 	file.WriteLine();
@@ -681,7 +680,7 @@ RTextFile& endl(RTextFile &file)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RTextFile& Time(RTextFile &file)
 {
 	file.WriteTime();
