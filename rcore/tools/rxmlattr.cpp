@@ -6,7 +6,7 @@
 
 	Attribute for a XML Tag - Implementation.
 
-	(c) 2000 by P. Francq.
+	(c) 2000-2001 by P. Francq and T. L'Eglise.
 
 	Version $Revision$
 
@@ -49,6 +49,14 @@ RXMLAttr::RXMLAttr(char *name,char *value)
 {
 }
 
+//------------------------------------------------------------------------------
+RString& RXMLAttr::GetName(void)
+{
+	RString *tmp=RString::GetString();
+
+	(*tmp)=Name;
+	return(*tmp);
+}
 
 //-----------------------------------------------------------------------------
 RString& RXMLAttr::GetValue(void)
@@ -59,8 +67,8 @@ RString& RXMLAttr::GetValue(void)
 	return(*tmp);
 }
 
-
 //-----------------------------------------------------------------------------
 RXMLAttr::~RXMLAttr(void)
 {
 }
+

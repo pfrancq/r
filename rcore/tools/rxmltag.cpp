@@ -6,7 +6,7 @@
 
 	XML tag - Implementation.
 
-	(c) 2000-2001 by P. Francq.
+	(c) 2000-2001 by P. Francq and T. L'Eglise.
 
 	Version $Revision$
 
@@ -54,8 +54,55 @@ RXMLTag::RXMLTag(void)
  : RNode<RXMLTag,false>(30,15), Attrs(10,5)
 {
 }
+//------------------------------------------------------------------------------
+RXMLTag::RXMLTag(RString _name)
+ : RNode<RXMLTag,false>(30,15), Attrs(10,5), Name(_name)
+{
+}
+//------------------------------------------------------------------------------
+void RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
+{
+    int i;
+    RString text;
+    RXMLAttr **ptr;
+    RXMLTag **ptr1;
 
-
+    for(int i=0;i<depth;i++) (*f)<<"\t";
+    if(Attrs.NbPtr)
+    {
+        (*f)<<"<"+Name;
+        for (i=Attrs.NbPtr, ptr=Attrs.Tab; --i; ptr++)
+        {
+            (*f)<<(*ptr)->GetName()+"=\""+(*ptr)->GetValue()+"\"";
+        }
+        if(NbPtr||Contains.GetLen())
+        {
+            (*f)<<(*ptr)->GetName()+"=\""+(*ptr)->GetValue()+"\">"<<endl;
+        }
+        else
+        {
+            (*f)<<(*ptr)->GetName()+"=\""+(*ptr)->GetValue()+"\"/>"<<endl;
+        }
+    }
+    else
+    {
+        if(NbPtr||Contains.GetLen())
+            (*f)<<"<"+Name+">"<<endl;
+        else
+            (*f)<<"<"+Name+"/>"<<endl;
+    }
+    if(Contains.GetLen())
+        (*f)<<Contains<<endl;
+    for (i=NbPtr+1, ptr1=Tab; --i; ptr1++)
+    {
+        (*ptr1)->Save(f,depth+1);
+    }
+    if(NbPtr||Contains.GetLen())
+    {
+        for(int i=0;i<depth;i++) (*f)<<"\t";
+        (*f)<<"</"+Name+">"<<endl;
+    }
+}
 //------------------------------------------------------------------------------
 void RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 {
@@ -102,10 +149,10 @@ void RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 		(*ptr)=0;
 		Attrs.InsertPtr(new RXMLAttr(attrn,attrv));
 		ptr++;
-		while(isspace(*ptr)) ptr++; // Skip Spaces		
+		while(isspace(*ptr)) ptr++; // Skip Spaces
 	}
 	if((*ptr)=='/') return;	// No Sub Tag
-		
+
 	// Treat sub-Tag
 	while(!f->EndTag())
 	{
@@ -126,7 +173,6 @@ void RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 	ptr=f->GetTag();
 }
 
-
 //------------------------------------------------------------------------------
 RString& RXMLTag::GetName(void)
 {
@@ -135,7 +181,6 @@ RString& RXMLTag::GetName(void)
 	(*tmp)=Name;
 	return(*tmp);
 }
-
 
 //------------------------------------------------------------------------------
 RString& RXMLTag::GetAttrValue(const char *name)

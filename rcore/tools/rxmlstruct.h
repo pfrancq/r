@@ -6,7 +6,7 @@
 
 	XML structure - Header.
 
-	(c) 2000-2001 by P. Francq.
+	(c) 2000-2001 by P. Francq and T. L'Eglise.
 
 	Version $Revision$
 
@@ -51,7 +51,7 @@ namespace RStd{
 /**
 * This class provides a representation of a XML structure.
 * @short XML Structure.
-* @author Pascal Francq
+* @author Pascal Francq and Thomas L'Eglise.
 */
 class RXMLStruct : public RTree<RXMLTag,true,false>
 {

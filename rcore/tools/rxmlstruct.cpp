@@ -6,7 +6,7 @@
 
 	Description - Implementation.
 
-	(c) 2000-2001 by P. Francq.
+	(c) 2000-2001 by P. Francq and T. L'Eglise.
 
 	Version $Revision$
 
