@@ -33,6 +33,8 @@
 #include <sys/stat.h>
 #if unix
 	#include <unistd.h>
+#else
+	#include <io.h>
 #endif
 #include <fcntl.h>
 #include "rtextfile.h"
@@ -87,8 +89,11 @@ long int RTextFile::GetInt(void) throw(RString)
 	
 	while((*ptr)&&(*ptr)!=' '&&(*ptr)!='\t'&&(*ptr)!='\n'&&(*ptr)!='\r')
 		if(!isdigit(*(ptr++))) throw("No Int");
-	(*(ptr++))=0;
-	SkipSpaces();
+	if(*ptr)	
+	{
+		(*(ptr++))=0;
+		SkipSpaces();
+	}
 	return(atol(ptr2));
 }
 
@@ -103,8 +108,11 @@ float RTextFile::GetFloat(void) throw(RString)
 		if((!isdigit(*ptr))&&(*ptr)!='.'&&(*ptr)!='e'&&(*ptr)!='E') throw("No float");
 		ptr++;
 	}
-	(*(ptr++))=0;
-	SkipSpaces();
+	if(*ptr)
+  {
+		(*(ptr++))=0;
+		SkipSpaces();
+	}
 	return(atof(ptr2));
 }
 
@@ -115,8 +123,11 @@ char* RTextFile::GetWord(void)
 	char *ptr2=ptr;
 
 	while((*ptr)&&(*ptr)!=' '&&(*ptr)!='\t'&&(*ptr)!='\n'&&(*ptr)!='\r') ptr++;
-	(*(ptr++))=0;
-	SkipSpaces();
+	if(*ptr)
+	{
+		(*(ptr++))=0;
+		SkipSpaces();
+	}
 	return(ptr2);
 }
 
@@ -127,8 +138,11 @@ char* RTextFile::GetLine(void)
 	char *ptr2=ptr;
 
 	while((*ptr)&&(*ptr)!='\n'&&(*ptr)!='\r') ptr++;
-	(*(ptr++))=0;
-	SkipSpaces();
+	if(*ptr)
+	{
+		(*(ptr++))=0;
+		SkipSpaces();
+	}
 	return(ptr2);
 }
 
