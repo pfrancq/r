@@ -31,44 +31,96 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #ifndef RPlacementEdgeH
 #define RPlacementEdgeH
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
 #include "rplacementheuristic.h"
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 namespace RGA{
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
-* The RPlacementEdge class provides an edge placement heuristic.
+* The RPlacementEdge class provides an edge placement heuristic, it is a
+* modified version of the bottom-left heuristic where the resulting rectangle
+* have a width and a height in proportiion to the limits.
+*
+* This heuristic hanbles objects in the edge. The first object is place
+* in bottom-left part of the rectangle representing the limits. After that, the
+* heuristic try to place the next object either at the right or on the top of
+* the first one depending of the width and height of the first object. The next
+* objects are then place to try to fill the resulting rectangle while his width
+* and height are proportional to the limits.
 * @author Pascal Francq
 * @short Edge Heuristic class.
 */
 class RPlacementEdge : public RPlacementHeuristic
 {
+	/**
+	* Array to hold the different lines actually handled by the heuristic.
+	*/
 	RPoint Levels[40];
+
+	/**
+	* The number of total lines handled.
+	*/
 	unsigned int NbLevels;
+
+	/**
+	* Position where the next object has to be placed.
+	*/
 	RPoint Actual;
+
+	/**
+	* The dimension of the resulting rectangle.
+	*/
 	RPoint Max;
+
+	/**
+	* Indicate where a new line has to be added.
+	*/
 	RPoint Last;
+
+	/**
+	* Current line handled by the heuristic.
+	*/
 	unsigned int CurLevel;
+
 public:
+
+	/**
+	* Construct the edge heuristic.
+	*/
 	RPlacementEdge(unsigned int maxobjs);
+
+	/**
+	* Initialize the heuristic.
+	* @param limits		Limits for the placement.
+	* @param grid			Pointer to the grid.
+	* @param objs			Pointer to the objects.
+	* @param infos			Pointer to the geometric information.
+	* @param nbobjs		Number of objects to place.
+	*/
 	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
+
+	/**
+	* Place the next object for a specific information.
+	* @return		The function returns true if the object can be placed with the
+	*					current orientation.
+	*/
 	virtual bool NextObjectOri(void);
 };
 
 
-}//------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA ---------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif
