@@ -49,6 +49,10 @@ namespace RStd{
 
 //---------------------------------------------------------------------------
 /**
+* @param C  			The class of the elements to be contained.
+* @param T				The type of the iterator used.
+* @param bAlloc    Specify if the elements are desallocated by the container.
+* @param bOrder		Specify if the elements are ordered in the container.
 * This class represent a container of elements (class C). This elements are
 * store in an array of pointers which will be increase when necessary. The
 * container can be responsible for the desallocation of the elements
@@ -111,10 +115,6 @@ namespace RStd{
 * }
 * </pre>
 *
-* @param C  			The class of the elements to be contained.
-* @param T				The type of the iterator used.
-* @param bAlloc    Specify if the elements are desallocated by the container.
-* @param bOrder		Specify if the elements are ordered in the container.
 * @author Pascal Francq
 * @short Container template.
 */	
