@@ -306,7 +306,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RGA::RInst<cInst,cChromo,cFit,cThreadData>::Mutation(void) throw(eGA)
 {
 	unsigned int i;
-	cFit *WorstFitness=new cFit();
+	cFit *WorstFitness;
 	cChromo **C,*p;
 
 	#ifdef RGADEBUG
