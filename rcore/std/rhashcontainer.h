@@ -29,29 +29,6 @@
 
 */
 
-/*
-
-  template <class C,class T,T tSize,bool bAlloc> class RHashContainer
-    Class C  :  class representing a member (Ex.: string)
-    Class T  :  class representing an iterator (Ex.: int)
-    tSize		 :	size of the hash table
-    bAlloc   :  If true, the container is responsible for the
-                desallocation of his member
-	
-
-	
-  Class C:
-    The Compare(TUse tag) function returns an int:
-        C==tag : 0
-        C<tag  : <0
-        C>tag  : >0
-    The class C must declare at least one function with the signature
-    Compare(C*).
-		The HashIndex(void) function returns the hash index of the element
-		The HashIndex of TUse function returns the hash index of the tag
-
-*/
-
 
 
 //-----------------------------------------------------------------------------
@@ -60,8 +37,8 @@
 
 
 //-----------------------------------------------------------------------------
-#include "rcontainer.h"
-using namespace RStd;
+#include <rstd/rcontainer.h>
+
 
 
 //-----------------------------------------------------------------------------
@@ -69,14 +46,87 @@ namespace RStd{
 //-----------------------------------------------------------------------------
 
 
+//-----------------------------------------------------------------------------
+/**
+* @param C                  The class of the element to be contained.
+* @param T                  The type of the iterator used.
+* @param tSize              Size of the hash table
+* @param bAlloc             Specify if the elements are desallocated by the
+*                           container.
+* This class represent a container of elements (class C) with a hash table.
+*
+* To make the necessary comparaisons, the container used member functions of
+* the class representing the elements (class C). These functions have the
+* signature:
+* <pre>
+* int Compare(const TUse& tag) const;
+* int Compare(const TUse* tag) const;
+* static int HashIndex(const TUse& tag);
+* static int HashIndex(const TUse* tag);
+* </pre>
+*
+* The TUse represent a class or a structure used for the comparaisons. The
+* Compare methods are working like the strcmp function from the standard C/C++
+* library. The result returned specifies if the tag preceeds (>0), is the
+* same (0) or is after (<0) the element used. The HashIndex methods return the
+* hash index of the given argument.
+*
+* At least, a compare function and a HashIndex method must be implemented in
+* the class C:
+* <pre>
+* int Compare(const C*) const;
+* static int HashIndex(const C*);
+* </pre>
+*
+* Here is an example of class MyElement that will be contained in the
+* variable c:
+* <pre>
+* #include <string.h>
+* #include <rstd/hashcontainer.h>
+* using namespace RStd;
+*
+*
+* class MyElement
+* {
+* 	char Text[25];
+* public:
+* 	MyElement(const char* text) {Text=strdup(text);}
+* 	MyElement(MyElement *e) {Text=strdup(e->Text);}
+* 	int Compare(MyElement *e) {return(strcmp(Text,e->Text));}
+* 	int Compare(const char* text) {return(strcmp(Text,text));}
+* 	static int HashIndex(MyElement *e)
+* 	{
+* 		int c=(*e->Text);
+* 		if(c>='a'&&c<='z') return(c-'a');
+* 		if(c>='A'&&c<='Z') return(c-'A');
+* 		return(26);
+* 	}
+* };
+*
+*
+* int main()
+* {
+* 	RHashContainer<MyElement,unsigned int,27,true> c(20,10);
+*
+* 	c.InsertPtr(new MyElement("Coucou"));
+* 	if(c.IsIn<const char*>("Coucou"))
+* 		cout<<"An element of value 5 is in the container"<<endl;
+* 	c.InsertPtr(new MyElement("Autre"));
+* }
+* </pre>
+*
+* @author Pascal Francq
+* @short Hash Container Template.
+*/
 template<class C,class T,T tSize,bool bAlloc>
 	class RHashContainer
 {
-public:
 	/**
 	* This container represents the hash table of the elements.
 	*/
-	RContainer<C,T,bAlloc,true> **Hash;
+	RContainer<C,T,bAlloc,true>** Hash;
+
+public:
 
 	/**
 	* Construct a Hash container.
@@ -111,7 +161,7 @@ public:
 	inline void InsertPtr(C *ins) throw(bad_alloc)
 	{
 		RReturnIfFail(ins);
-		Hash[ins->HashIndex()]->InsertPtr(ins);
+		Hash[C::HashIndex(ins)]->InsertPtr(ins);
 	}
 
 	/**
@@ -124,7 +174,7 @@ public:
 	*/
 	template<class TUse> inline bool IsIn(const TUse tag,bool sortkey=true) const
 	{
-		return(Hash[tag.HashIndex()]->IsIn<TUse>(tag,sortkey));
+		return(Hash[C::HashIndex(tag)]->IsIn<TUse>(tag,sortkey));
 	}
 
 	/**
@@ -139,7 +189,7 @@ public:
 	*/
 	template<class TUse> inline C* GetPtr(const TUse tag,bool sortkey=true) const
 	{
-		return(Hash[tag.HashIndex()]->GetPtr<TUse>(tag,sortkey));
+		return(Hash[C::HashIndex(tag)]->GetPtr<TUse>(tag,sortkey));
 	}
 
 	/**
@@ -156,7 +206,7 @@ public:
 	*/
 	template<class TUse> inline C* GetInsertPtr(const TUse tag,bool sortkey=true) throw(bad_alloc)
 	{
-		return(Hash[tag.HashIndex()]->GetInsertPtr<TUse>(tag,sortkey));
+		return(Hash[C::HashIndex(tag)]->GetInsertPtr<TUse>(tag,sortkey));
 	}
 
 	/**
@@ -166,7 +216,7 @@ public:
 	inline void DeletePtr(C* del)
 	{
 		RReturnIfFail(del);
-		Hash[ins->HashIndex()]->DeletePtr(del);
+		Hash[C::HashIndex(ins)]->DeletePtr(del);
 	}
 
 	/**
@@ -180,7 +230,7 @@ public:
 	*/
 	template<class TUse> inline void DeletePtr(const TUse tag,bool sortkey=true)
 	{
-		Hash[tag.HashIndex()]->DeletePtr<TUse>(tag,sortkey);
+		Hash[C::HashIndex(tag)]->DeletePtr<TUse>(tag,sortkey);
 	}
 
 	/**
