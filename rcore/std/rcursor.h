@@ -64,7 +64,8 @@ namespace RStd{
 * {
 * 	RCursor<MyElement,unsigned int> Cur();
 *
-* 	for(Cur.Start(c);!Cur.End();Cur.Next())
+* 	Cur->Set(c);
+* 	for(Cur.Start();!Cur.End();Cur.Next())
 * 		Cur()->DoSomething(2.3);
 * }
 * </pre>
@@ -107,62 +108,63 @@ public:
 	*/
 	RCursor(void);
 
-private:
+	/**
+	* Assignment operator using a "Cursor".
+	*/
+	RCursor<C,T>& operator=(const RCursor<C,T>& c) throw(bad_alloc);
 
 	/**
 	* Start the iterator to go trough the container.
 	*/
 	inline void Start(void);
 
-public:
-
 	/**
-	* Start the cursor.
+	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Start(RContainer<C,T,true,true>& c);
+	void Set(RContainer<C,T,true,true>& c);
 
 	/**
-	* Start the cursor.
+	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Start(RContainer<C,T,true,true>* c);
+	void Set(RContainer<C,T,true,true>* c);
 
 	/**
-	* Start the cursor.
+	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Start(RContainer<C,T,false,true>& c);
+	void Set(RContainer<C,T,false,true>& c);
 
 	/**
-	* Start the cursor.
+	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Start(RContainer<C,T,false,true>* c);
+	void Set(RContainer<C,T,false,true>* c);
 
 	/**
-	* Start the cursor.
+	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Start(RContainer<C,T,true,false>& c);
+	void Set(RContainer<C,T,true,false>& c);
 
 	/**
-	* Start the cursor.
+	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Start(RContainer<C,T,true,false>* c);
+	void Set(RContainer<C,T,true,false>* c);
 
 	/**
-	* Start the cursor.
+	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Start(RContainer<C,T,false,false>& c);
+	void Set(RContainer<C,T,false,false>& c);
 
 	/**
-	* Start the cursor.
+	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Start(RContainer<C,T,false,false>* c);
+	void Set(RContainer<C,T,false,false>* c);
 
 	/**
 	* Test if the end of the container is reached.
@@ -196,11 +198,11 @@ public:
 * @param C                  The class of the elements that are contained.
 * @param T                  The type of the iterator used.
 */
-#define CLASSCURSOR(name,C,T)                                       \
-class name : public RStd::RCursor<C,T)        \
+#define CLASSCURSOR(name,C,T)                                        \
+class name : public RStd::RCursor<C,T>                               \
 {                                                                    \
 public:                                                              \
-	name(void) : RCursor<C,T( {}                   \
+	name(void) : RCursor<C,T>() {}                                   \
 };
 
 
