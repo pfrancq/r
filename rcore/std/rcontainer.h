@@ -37,7 +37,7 @@
                 order using the Compare function of the members
 
   Class C:
-    The Compare(TUse tag) function returns an int:
+     The Compare(TUse tag) function returns an int:
         C==tag : 0
         C<tag  : <0
         C>tag  : >0
@@ -108,7 +108,7 @@ public:
   template<class TUse> void ForEach(void f(TUse),const TUse &tag);
 
   // Class destructor
-  ~RContainer(void);
+  virtual ~RContainer(void);
 };
 
 

@@ -110,7 +110,7 @@ public:
   inline int GetMaxLen(void) {return(MaxLen);}
 
   // Destructor
-  ~RString(void){if(Text) delete[] Text;}
+  virtual ~RString(void){if(Text) delete[] Text;}
 
 protected:
 	inline void Verify(const int maxlen) throw(bad_alloc);	
@@ -145,3 +145,4 @@ RString& dtoa(const double nb);
 
 //---------------------------------------------------------------------------
 #endif
+

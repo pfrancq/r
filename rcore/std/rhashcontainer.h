@@ -81,6 +81,15 @@ public:
 			(*ptr)=new RContainer<C,T,bAlloc,true>(M,I);
 	}
 
+  // Clear
+  void Clear(void)
+  {
+		RContainer<C,T,bAlloc,true> **ptr;
+		T i;
+
+		for(i=tSize+1,ptr=Hash;--i;ptr++)	(*ptr)->Clear();
+  }
+
   // Get & Insert
   inline void InsertPtr(C *ins) throw(bad_alloc)
   {
@@ -118,7 +127,7 @@ public:
   }
 
   // Destructor
-  ~RHashContainer(void)
+  virtual ~RHashContainer(void)
   {
 		RContainer<C,T,bAlloc,true> **ptr;
 		T i;

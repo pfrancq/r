@@ -41,6 +41,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
   IncPtr=I;
   Tab = new C*[MaxPtr];
   memset(Tab,0,MaxPtr*sizeof(C*));
+  if(!IncPtr) IncPtr=1;
 }
 
 
@@ -199,7 +200,10 @@ template<class C,class T,bool bAlloc,bool bOrder>
     if(Find)
     {
       if(bAlloc)
+      {
         delete(ins);
+        ins=NULL;
+      }
     }
     else
       InsertPtrAt(ins,Index);
@@ -238,7 +242,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 //---------------------------------------------------------------------------
 // Return the pointer to the member corresponding to tag
 // If not find -> Return NULL
-template<class C,class T,bool bAlloc,bool bOrder> template<class TUse/*,bool LocalOrder*/>
+template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	C* RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag)
 {
   if(bOrder)
@@ -260,14 +264,6 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse/*,bool Loc
     return(NULL);
   }
 }
-
-
-//---------------------------------------------------------------------------
-/*template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	inline C* RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag)
-{
-	return(GetPtr<TUse,bOrder>(tag));
-}*/
 
 
 //---------------------------------------------------------------------------
