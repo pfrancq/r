@@ -69,7 +69,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	AgeNextMutation=MaxBestPopAge;
 	AgeNextBestMutation=MaxBestAge;
 	BestInPop=BestChromosome=0;
-	Random = new RRandomGood(12345);
+	Random = new RRandomGood(0);
+	Random->Reset(12345);
 	#ifdef RGADEBUG
 		if(Debug) Debug->EndFunc("RInst","RInst");
 	#endif
