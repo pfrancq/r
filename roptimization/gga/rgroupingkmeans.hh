@@ -32,8 +32,8 @@
 
 
 //------------------------------------------------------------------------------
-//include ANSI/C++ files
-#include <iostream.h>
+// include ANSI/C++ files
+#include <iostream>
 
 
 //------------------------------------------------------------------------------
@@ -87,8 +87,6 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	int r,finalcentersid;
 	unsigned int nbsubprofpersubsamp = static_cast <int> (Objs->NbPtr*level/100);
 
-	if (nbsubprofpersubsamp==0)
-		cout << "---------------------->    WARNING !!! Number of elements per subsamples = 0 !!! "<<endl;
 	RContainer<cGroup,true,true>* subsamples;
 	subsamples=new RContainer<cGroup,true,true>(10,5);
 	RContainer<cGroup,true,true>* initialcenters;
@@ -109,7 +107,6 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 			cObj* sub = Objs->GetPtrAt(r);
 			g->InsertPtr(sub);
 			curs=g->GetCursor();
-			cout << curs.GetNb()<<" data set into sample"<<endl;
 		}
 		subsamples->InsertPtr(g);
 
@@ -231,18 +228,13 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 	for (GroupsNumber=MinNbGroups; GroupsNumber<(MaxNbGroups+1); GroupsNumber++)
 	{
-		cout <<" ------------------------------------------------------------------------ init " <<endl;
 		if (initial==Refined)
 			Init();
-		cout <<" ------------------------------------------------------------------------Run " <<endl;
 		Execute(Objs, NbTests);
 
 
 		// evaluate the clustering / each clutering for each number of group
 		double finalcost=CostFunction(grpstemp2)/protos->NbPtr;
-//		double distortion=Distortion(grpstemp2);
-		cout << "----------------->>>>>> "<<GroupsNumber<< " goupes -   final cost function: "<< finalcost<<endl;
-//		cout << "----------------->>>>>> "<<GroupsNumber<< " goupes -   final distortion: "<< distortion<<endl;
 
 		if ((GroupsNumber==MinNbGroups)||(finalcost<var))
 		{
@@ -254,8 +246,6 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	 	}
 	}
 	GroupsNumber--;
-	cout << "----------------->>>>>>end final cost function: "<<var<<endl;
-	cout << "----------------->>>>>>end final nbgroup: "<< grnumber<<endl;
 }
 
 
@@ -263,14 +253,14 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::DisplayInfos(void)
 {
-	cout << " *** KMeansCos *** "<< endl;
-	cout << "Number of Objects"<<Objs->NbPtr<<endl;
-	cout << "nombre de test= "<<NbTests <<endl;
-	cout << " parameters max iter:"<<IterNumber<< " nb tests: "<<NbTests<<endl<<endl;
-	cout << "nombre de SubSamples= "<<NbSubSamples <<endl;
-	cout << "taux des SubSamples= "<<SubSamplesRate <<endl;
-	cout << "epsilon= "<<Epsilon <<endl;
-	cout << "nombre de groupes "<<GroupsNumber<<endl;
+	std::cout<<" *** KMeansCos *** "<<std::endl;
+	std::cout<<"Number of Objects "<<Objs->NbPtr<<std::endl;
+	std::cout<<"Number of tests "<<NbTests<<std::endl;
+	std::cout<<"Parameters: max iter="<<IterNumber<<" ; nb tests="<<NbTests<<std::endl<<std::endl;
+	std::cout<<"Number of SubSamples= "<<NbSubSamples<<std::endl;
+	std::cout<<"Rate of SubSamples= "<<SubSamplesRate<<std::endl;
+	std::cout<<"Epsilon="<<Epsilon<<std::endl;
+	std::cout<<"Number of groups "<<GroupsNumber<<std::endl;
 
 }
 
@@ -291,12 +281,10 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 	for (ptr=RandObjects, i=dataset->NbPtr; (protos->NbPtr<nbgroups)&&(i); ptr++,i--)
 	{
-		cout <<" i="<<i<<endl;
 		cObj* randomobj=(*ptr);
 		 if (IsValidProto(protos, randomobj))
 			protos->InsertPtr(randomobj);
 	}
-	cout <<" Random Init : "<<protos->NbPtr<< " centers found !"<<endl;
 	if(nbgroups!=protos->NbPtr)
 		throw RException("KMeans : Can not find valid protypes");
 }
@@ -314,14 +302,12 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	// initialization
 	for (unsigned int test=0; test<nbtests; test++)
 	{
-		cout <<" ********************* TEST "<<test<<"/"<<nbtests<<" ********************"<<endl;
 		if (initial==Random)
 			RandomInitObjects(Objs, GroupsNumber); // cycle
 		iter=0;
 		error=1;
 		while ((iter<IterNumber)&&(error!=0))
 		{
-			cout << " running iteration "<<iter<<"/"<<IterNumber<<endl;
 			grpstemp->Clear();
 			ReAllocate(dataset);
 			ReCenter();
@@ -383,7 +369,6 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::ReAllocate(RContainer<cObj,false,true>* dataset)
 {
-	cout << " re-allocating"<<endl;
 	int i=0;
 	cGroup * g;
 	for (protos->Start(); !protos->End(); protos->Next())  // groupscontaining one proto are created
@@ -413,7 +398,6 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		cGroup* gr=FindGroup(grpstemp, parent);
 		gr->InsertPtr(s);
 	}
-	cout << " re-allocation done !"<<endl;
 
 }
 
@@ -422,14 +406,12 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::ReCenter(void)
 {
-	cout <<" Re centering..."<<endl;
 	protoserror->Clear();
 	for (grpstemp->Start(); !grpstemp->End(); grpstemp->Next())
 	{
 		cObj* tmp=(*grpstemp)()->RelevantObj();
 		protoserror->InsertPtr(tmp);
 	}
-	cout <<" Re centering done !"<<endl;
 }
 
 
