@@ -2,53 +2,30 @@
 
 	Rainbow Library Project
 
-  RObj2D.hh
+	RObj2D.hh
 
-  Object for 2D placement GA - Inline Implementation
+	Object for 2D placement GA - Implementation
 
-  (C) 1999-2000 by P. Francq.
+	(C) 1999-2000 by P. Francq.
 
-  Version $Revision$
+	Version $Revision$
 
-  Last Modify: $Date$
+	Last Modify: $Date$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Library General Public
+	License as published by the Free Software Foundation; either
+	version 2.0 of the License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	Library General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-	As a special exception to the GNU General Public License, permission is
-	granted for additional uses of the text contained in its release
-	of the Rainbow Library.
-
-	The exception is that, if you link the Rainbow with other files
-	to produce an executable, this does not by itself cause the
-	resulting executable to be covered by the GNU General Public License.
-	Your use of that executable is in no way restricted on account of
-	linking the Rainbow library code into it.
-
-	This exception does not however invalidate any other reasons why
-	the executable file might be covered by the GNU General Public License.
-
-	This exception applies only to the code released under the
-	name Rainbow.  If you copy code from other releases into a copy of
-	RAinbow, as the General Public License permits, the exception does
-	not apply to the code that you add in this way.  To avoid misleading
-	anyone as to the status of such modified files, you must delete
-	this exception notice from them.
-
-	If you write modifications of your own for Rainbow, it is your choice
-	whether to permit this exception to apply to your modifications.
-	If you do not wish that, delete this exception notice.
+	You should have received a copy of the GNU Library General Public
+	License along with this library, as a file COPYING.LIB; if not, write
+	to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+	Boston, MA  02111-1307  USA
 
 */
 
@@ -57,6 +34,7 @@
 //---------------------------------------------------------------------------
 // include files for Rainbow
 #include "robj2d.h"
+#include "rgeoinfo.h"
 using namespace RGA;
 
 
@@ -79,7 +57,7 @@ void RObj2D::Init(void)
 {
 	char i;
 	RPolygon *p;
-  RRects *r;
+	RRects *r;
 
 	CalcPolygons();
 	for(i=NbPossOri+1,p=Polygons,r=Rects;--i;p++,r++)
@@ -171,6 +149,7 @@ bool RObj2D::IsOriSet(ROrientation o)
 	return(false);
 }
 
+
 //---------------------------------------------------------------------------
 RPolygon* RObj2D::GetPolygon(char i)
 {
@@ -240,29 +219,25 @@ void RObj2DContainer::Clear(void)
 //---------------------------------------------------------------------------
 void RObj2DContainer::AddObj(RObj2D *obj,RGeoInfo *info)
 {
-	RPoint **point;
+	RPoint **point,pt;
 	unsigned int i,j;
-	RCoord X,Y,CalcX,CalcY;
-  RPolygon *ins,**poly;
+	RCoord CalcX,CalcY;
+	RPolygon ins,**poly;
 
 	// Determine the most left-bottom edge
 	CalcX=MinX;
 	CalcY=MinY;
- 	for(i=info->Bound->NbPtr+1,point=info->Bound->Tab;--i;point++)
- 	{
- 		X=(*point)->X+info->Pos.X;
- 		Y=(*point)->Y+info->Pos.Y;
-		if(Y<MinY) MinY=Y;
-		if(X<MinX) MinX=X;
- 	}
+	for(info->Start();!info->End();info->Next())
+	{
+		pt=(*info)();
+		if(pt.Y<MinY) MinY=pt.Y;
+		if(pt.X<MinX) MinX=pt.X;
+	}
 	
 	// Create new polygon and translate it
-	ins=new RPolygon(info->Bound);
- 	for(i=ins->NbPtr+1,point=ins->Tab;--i;point++)
- 	{
- 		(*point)->X+=info->Pos.X-MinX;
- 		(*point)->Y+=info->Pos.Y-MinY;
- 	}
+	ins=info->GetPolygon();
+	pt.Set(-MinX,-MinY);
+	ins+=pt;
 
 	// translate already inserted polygons if new MinX,MinY
 	if(Nb&&((CalcX!=MinX)||(CalcY!=MinY)))
@@ -270,15 +245,15 @@ void RObj2DContainer::AddObj(RObj2D *obj,RGeoInfo *info)
 		CalcX-=MinX;
 		CalcY-=MinY;
 		for(i=SPolygons.NbPtr+1,poly=SPolygons.Tab;--i;poly++)
-    	for(j=(*poly)->NbPtr+1,point=(*poly)->Tab;--j;point++)
-    	{
-    		(*point)->X+=CalcX;
-    		(*point)->Y+=CalcY;
-    	}
-  }
+			for(j=(*poly)->NbPtr+1,point=(*poly)->Tab;--j;point++)
+			{
+				(*point)->X+=CalcX;
+				(*point)->Y+=CalcY;
+			}
+	}
 
 	// Put object in lists
-	SPolygons.InsertPtr(ins);
+	SPolygons.InsertPtr(new RPolygon(ins));
 	Ids[Nb]=obj->Id;
 	Infos[Nb]=info;
 	Area+=info->GetArea();
@@ -298,7 +273,7 @@ void RObj2DContainer::EndObjs(void)
 //---------------------------------------------------------------------------
 void RObj2DContainer::Assign(RPoint &pos,RGeoInfo **infos,unsigned int **OccX,unsigned int **OccY)
 {
-	unsigned int i;
+/*	unsigned int i;
 	unsigned int *ids;
 	RGeoInfo **info,*cur;
 	RPoint p;
@@ -310,9 +285,9 @@ void RObj2DContainer::Assign(RPoint &pos,RGeoInfo **infos,unsigned int **OccX,un
 		cur=infos[*ids];
 		p=(*info)->Pos;
 		p+=pos;
-    cur->Assign(p,OccX,OccY);
+		cur->Assign(p,OccX,OccY);
 		cur->Selected=true;
-	}
+	}*/
 }
 
 

@@ -2,11 +2,11 @@
 
 	Rainbow Library Project
 
-	RGA2D.h
+	RPlacementBottomLeft.h
 
-	2D Placement Genetic Algorithm - Header
+	Bottom Left Heuristic for Placement - Header
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1998-2000 by P. Francq.
 
 	Version $Revision$
 
@@ -32,17 +32,13 @@
 
 
 //---------------------------------------------------------------------------
-#ifndef RGA2DH
-#define RGA2DH
+#ifndef RPlacementBottomLeftH
+#define RPlacementBottomLeftH
 
 
 //---------------------------------------------------------------------------
 // include files for Rainbow
-#include "rga.h"
-using namespace RGA;
-#include <rgeometry/rrect.h>
-#include <rgeometry/rpolygon.h>
-using namespace RGeometry2D;
+#include "rplacementheuristic.h"
 
 
 //---------------------------------------------------------------------------
@@ -51,40 +47,21 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
-// Forward class declaration
-class RGeoInfo;
-class RObj2D;
-class RObj2DContainer;
-template<class cInst,class cChromo>	class RThreadData2D;
-template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RInst2D;
-template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RChromo2D;
-
-
-//---------------------------------------------------------------------------
-// Heuristic Types
-enum HeuristicType{BottomLeft,Edge,Center};
-
-
-}//------- End of namespace RGA ---------------------------------------------
-
-
-//---------------------------------------------------------------------------
-// include files for GA
-#include "rgeoinfo.h"
-#include "robj2d.h"
-#include "rinst2d.h"
-#include "rchromo2d.h"
-using namespace RGA;
-
-
-//---------------------------------------------------------------------------
-namespace RGA{
-//---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
-// Definitions of templates
-#include "rinst2d.hh"
-#include "rchromo2d.hh"
+/**
+* The RPlacementHeuristic class provides an abstract class for placement
+* heuristics.
+* @author Pascal Francq
+* @short Generic Placement Heuristic class.
+*/
+class RPlacementBottomLeft : public RPlacementHeuristic
+{
+	RPoint Actual;
+	RPoint Last;
+public:
+	RPlacementBottomLeft(unsigned int maxobjs);
+	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
+	virtual bool NextObjectOri(void);
+};
 
 
 }//------- End of namespace RGA ---------------------------------------------

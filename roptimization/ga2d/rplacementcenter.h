@@ -2,11 +2,11 @@
 
 	Rainbow Library Project
 
-	RGA2D.h
+	RPlacementCenter.h
 
-	2D Placement Genetic Algorithm - Header
+	Center Heuristic for Placement - Header
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1998-2000 by P. Francq.
 
 	Version $Revision$
 
@@ -32,17 +32,13 @@
 
 
 //---------------------------------------------------------------------------
-#ifndef RGA2DH
-#define RGA2DH
+#ifndef RPlacementCenterH
+#define RPlacementCenterH
 
 
 //---------------------------------------------------------------------------
 // include files for Rainbow
-#include "rga.h"
-using namespace RGA;
-#include <rgeometry/rrect.h>
-#include <rgeometry/rpolygon.h>
-using namespace RGeometry2D;
+#include "rplacementheuristic.h"
 
 
 //---------------------------------------------------------------------------
@@ -51,40 +47,24 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
-// Forward class declaration
-class RGeoInfo;
-class RObj2D;
-class RObj2DContainer;
-template<class cInst,class cChromo>	class RThreadData2D;
-template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RInst2D;
-template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RChromo2D;
-
-
-//---------------------------------------------------------------------------
-// Heuristic Types
-enum HeuristicType{BottomLeft,Edge,Center};
-
-
-}//------- End of namespace RGA ---------------------------------------------
-
-
-//---------------------------------------------------------------------------
-// include files for GA
-#include "rgeoinfo.h"
-#include "robj2d.h"
-#include "rinst2d.h"
-#include "rchromo2d.h"
-using namespace RGA;
-
-
-//---------------------------------------------------------------------------
-namespace RGA{
-//---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
-// Definitions of templates
-#include "rinst2d.hh"
-#include "rchromo2d.hh"
+/**
+* The RPlacementCenter class provides the center heuristic.
+* @author Pascal Francq
+* @short Generic Placement Heuristic class.
+*/
+class RPlacementCenter : public RPlacementHeuristic
+{
+	RPolygons Sol;
+	RPolygon Union;
+	RPoint Max;
+	RPoint Attraction;
+	RPoint HoldLimits;
+public:
+	RPlacementCenter(unsigned int maxobjs);
+	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
+	virtual bool NextObjectOri(void);
+	virtual void PostRun(RPoint &limits);
+};
 
 
 }//------- End of namespace RGA ---------------------------------------------

@@ -2,11 +2,11 @@
 
 	Rainbow Library Project
 
-	RGA2D.h
+	RPlacementHeuristic.h
 
-	2D Placement Genetic Algorithm - Header
+	Generic Heuristic for Placement - Implemenation
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1998-2000 by By P. Francq.
 
 	Version $Revision$
 
@@ -32,63 +32,85 @@
 
 
 //---------------------------------------------------------------------------
-#ifndef RGA2DH
-#define RGA2DH
-
-
-//---------------------------------------------------------------------------
 // include files for Rainbow
-#include "rga.h"
-using namespace RGA;
-#include <rgeometry/rrect.h>
-#include <rgeometry/rpolygon.h>
-using namespace RGeometry2D;
-
-
-//---------------------------------------------------------------------------
-namespace RGA{
-//---------------------------------------------------------------------------
-
-
-//---------------------------------------------------------------------------
-// Forward class declaration
-class RGeoInfo;
-class RObj2D;
-class RObj2DContainer;
-template<class cInst,class cChromo>	class RThreadData2D;
-template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RInst2D;
-template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RChromo2D;
-
-
-//---------------------------------------------------------------------------
-// Heuristic Types
-enum HeuristicType{BottomLeft,Edge,Center};
-
-
-}//------- End of namespace RGA ---------------------------------------------
-
-
-//---------------------------------------------------------------------------
-// include files for GA
-#include "rgeoinfo.h"
-#include "robj2d.h"
-#include "rinst2d.h"
-#include "rchromo2d.h"
+#include "rplacementheuristic.h"
 using namespace RGA;
 
 
-//---------------------------------------------------------------------------
-namespace RGA{
-//---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-// Definitions of templates
-#include "rinst2d.hh"
-#include "rchromo2d.hh"
+//
+//	RPlacementHeuristic
+//
+//---------------------------------------------------------------------------
 
-
-}//------- End of namespace RGA ---------------------------------------------
+//---------------------------------------------------------------------------
+RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs)
+{
+	Order=new unsigned int[maxobjs];
+}
 
 
 //---------------------------------------------------------------------------
-#endif
+void RPlacementHeuristic::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs)
+{
+	// Assign
+	Limits=limits;
+	Grid=grid;
+	Objs=objs;
+	Infos=infos;
+	NbObjs=nbobjs;
+
+	// Init the data for a placement
+	NbObjsOk=0;
+	Grid->Clear();	
+
+	// Calculate an order
+	for(unsigned int i=0;i<NbObjs;i++)
+		Order[i]=i;
+}
+
+
+//---------------------------------------------------------------------------
+RGeoInfo* RPlacementHeuristic::NextObject(void)
+{
+	// Select the next object
+	CurInfo=Infos[Order[NbObjsOk]];
+
+	// Set an orientation
+	CurInfo->SetOri(0);
+
+	// Place it
+	NextObjectOri();
+
+	// Next Object
+	NbObjsOk++;
+	return(CurInfo);
+}
+
+
+//---------------------------------------------------------------------------
+void RPlacementHeuristic::Run(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs)
+{
+	Init(limits,grid,objs,infos,nbobjs);
+	while(NbObjsOk<NbObjs)
+		NextObject();
+	PostRun(limits);
+}
+
+
+//---------------------------------------------------------------------------
+RRect& RPlacementHeuristic::GetResult(void)
+{
+	RRect *rect=RRect::GetRect();
+	
+	(*rect)=Result;
+	return(*rect);
+}
+
+
+//---------------------------------------------------------------------------
+RPlacementHeuristic::~RPlacementHeuristic(void)
+{
+	if(Order) delete[] Order;
+}

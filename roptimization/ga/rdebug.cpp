@@ -1,29 +1,31 @@
 /*
 
-  RDebug.cpp
+	Rainbow Library Project
 
-  Debugging file in XML format (eXtended Markup Language) - Implementation
+	RDebug.cpp
 
-  (C) 1998-2000 by P. Francq.
+	Debugging file in XML format (eXtended Markup Language) - Implementation
 
-  Version $Revision$
+	(C) 1998-2000 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
+	Last Modify: $Date$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Library General Public
+	License as published by the Free Software Foundation; either
+	version 2.0 of the License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	Library General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	You should have received a copy of the GNU Library General Public
+	License along with this library, as a file COPYING.LIB; if not, write
+	to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+	Boston, MA  02111-1307  USA
 
 */
 
@@ -67,15 +69,15 @@ RDebug::RDebug(void) : Deep(-1)
 //---------------------------------------------------------------------------
 void RDebug::BeginTag(char *Text,unsigned NbAttr,...)
 {
-  va_list ap;
+	va_list ap;
 
-  LevelOutput[++Deep]=false;	// For the moment nothing as child
+	LevelOutput[++Deep]=false;	// For the moment nothing as child
 	NbOptions=0;
 	(*tmpOpt)=0;
-  va_start(ap, NbAttr);
-  while(NbAttr--)
-    AddAttribute(tmpOpt,va_arg(ap,char*),va_arg(ap,char*));
-  va_end(ap);
+	va_start(ap, NbAttr);
+	while(NbAttr--)
+		AddAttribute(tmpOpt,va_arg(ap,char*),va_arg(ap,char*));
+	va_end(ap);
 	WriteBeginTag(Text,tmpOpt);
 }
 
@@ -102,9 +104,9 @@ void RDebug::PrintComment(char *Text)
 //---------------------------------------------------------------------------
 void RDebug::EndTag(char *Text)
 {
-  if(!LevelOutput[Deep])
-    WriteText("No Special Information");
-  if(Deep) LevelOutput[Deep-1]=true;
+	if(!LevelOutput[Deep])
+		WriteText("No Special Information");
+	if(Deep) LevelOutput[Deep-1]=true;
 	WriteEndTag(Text);
 	Deep--;
 }
@@ -122,34 +124,34 @@ void RDebug::PrintInfo(char *Text)
 //---------------------------------------------------------------------------
 void RDebug::BeginFunc(char *Name,char *Object)
 {
-  BeginTag(Name,1,"Object",Object);
+	BeginTag(Name,1,"Object",Object);
 }
 
 
 //---------------------------------------------------------------------------
 void RDebug::EndFunc(char *Name,char *)
 {
-  EndTag(Name);
+	EndTag(Name);
 }
 
                                
 //---------------------------------------------------------------------------
 void RDebug::BeginApp(char *App,char *Author)
 {
-  time_t t;
+	time_t t;
 	char TempString[50];
 
-  time(&t);
-  strcpy(TempString,ctime(&t));
-  TempString[strlen(TempString)-1]=0;
-  BeginTag(App,2,"Author",Author,"Date",TempString);
+	time(&t);
+	strcpy(TempString,ctime(&t));
+	TempString[strlen(TempString)-1]=0;
+	BeginTag(App,2,"Author",Author,"Date",TempString);
 }
 
 
 //---------------------------------------------------------------------------
 void RDebug::EndApp(char *App,char *)
 {
-  EndTag(App);
+	EndTag(App);
 }
 
 
@@ -185,7 +187,7 @@ RDebugXML::RDebugXML(const RString &name) throw(bad_alloc)
 //---------------------------------------------------------------------------
 void RDebugXML::WriteBeginTag(char *tag,char *options)
 {
-  if(Deep)
+	if(Deep)
 	{
 		write(Handle,tmpNL,tmpLenNL);
 		write(Handle,tmpTab,Deep);
@@ -204,14 +206,14 @@ void RDebugXML::WriteBeginTag(char *tag,char *options)
 //---------------------------------------------------------------------------
 void RDebugXML::WriteEndTag(char *tag)
 {
-  if(Deep&&LevelOutput[Deep-1])
+	if(Deep&&LevelOutput[Deep-1])
 	{
 		write(Handle,tmpNL,tmpLenNL);
 		write(Handle,tmpTab,Deep);
 	}
-  write(Handle,"</",2);
-  write(Handle,tag,strlen(tag));
-  write(Handle,">",1);
+	write(Handle,"</",2);
+	write(Handle,tag,strlen(tag));
+	write(Handle,">",1);
 }
 
 
@@ -234,6 +236,3 @@ RDebugXML::~RDebugXML(void)
 	#endif
 	chmod(Name(),access);
 }
-
-
-//---------------------------------------------------------------------------

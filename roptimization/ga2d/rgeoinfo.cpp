@@ -1,28 +1,31 @@
 /*
 
-  RGeoInfo.cpp
+	Rainbow Library Project
 
-  Geometric information - Implementation.
+	RGeoInfo.cpp
 
-  (C) 1999-2000 by P. Francq.
+	Geometric information - Implementation.
 
-  Version $Revision$
+	(C) 1999-2000 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Library General Public
+	License as published by the Free Software Foundation; either
+	version 2.0 of the License, or (at your option) any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	Library General Public License for more details.
+
+	You should have received a copy of the GNU Library General Public
+	License along with this library, as a file COPYING.LIB; if not, write
+	to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+	Boston, MA  02111-1307  USA
 
 */
 
@@ -80,36 +83,23 @@ RCoord RGeoInfo::GetArea(void)
 //---------------------------------------------------------------------------
 void RGeoInfo::Boundary(RRect &rect)
 {
-  Bound->Boundary(rect);
-  rect.Pt1.X+=Pos.X;
-  rect.Pt1.Y+=Pos.Y;
-  rect.Pt2.X+=Pos.X;
-  rect.Pt2.Y+=Pos.Y;
+	Bound->Boundary(rect);
+	rect.Pt1.X+=Pos.X;
+	rect.Pt1.Y+=Pos.Y;
+	rect.Pt2.X+=Pos.X;
+	rect.Pt2.Y+=Pos.Y;
 }
 
 
 //---------------------------------------------------------------------------
-// Verify if each point in the bound rectangle is in the polygon
-void RGeoInfo::Assign(const RPoint &pos,unsigned int **OccX,unsigned int **OccY)
+void RGeoInfo::Assign(const RPoint &pos,RGrid *grid)
 {
-  RRect **rect;
-	RCoord BeginX,BeginY,j,k;
-	unsigned int i,**ptr1,*ptr2;
+	RRect **rect;
+	unsigned int i;
 
-  Pos=pos;
+	Pos=pos;
 	for(i=Rects->NbPtr+1,rect=Rects->Tab;--i;rect++)
-	{
-		BeginX=(*rect)->Pt1.X+Pos.X;
-		BeginY=(*rect)->Pt1.Y+Pos.Y;
-		// OccX
-		for(j=(*rect)->Width()+1,ptr1=&OccX[BeginX];--j;ptr1++)
-			for(k=(*rect)->Height()+1,ptr2=&((*ptr1)[BeginY]);--k;ptr2++)
-				(*ptr2)=Obj->GetId();
-		// OccY
-		for(j=(*rect)->Height()+1,ptr1=&OccY[BeginY];--j;ptr1++)
-			for(k=(*rect)->Width()+1,ptr2=&((*ptr1)[BeginX]);--k;ptr2++)
-				(*ptr2)=Obj->GetId();
-	}
+		grid->Assign(**rect,Pos,Obj->GetId());
 }
 
 
@@ -122,20 +112,20 @@ int RGeoInfo::TestLeft(RPoint test,RPoint &limits,unsigned int **OccX)
 	bool bCanPush=true;
 	bool bClip=false;
 	unsigned int *nptr;
-  RCoord j;
+	RCoord j;
 
 //	test-=Pos;
- 	for(i=Rects->NbPtr+1,rect=Rects->Tab;(--i)&&bCanPush;rect++)
- 	{
- 		Rect=(**rect);
-			Rect+=test;
- 		if(Rect.Clip(limits)) bClip=true;
- 		for(j=Rect.Height()+1,nptr=&OccX[Rect.Pt1.X-1][Rect.Pt1.Y];(--j)&&bCanPush;nptr++)
- 			if((*nptr)!=NoObject) bCanPush=false;	
- 	}
+	for(i=Rects->NbPtr+1,rect=Rects->Tab;(--i)&&bCanPush;rect++)
+	{
+		Rect=(**rect);
+		Rect+=test;
+		if(Rect.Clip(limits)) bClip=true;
+		for(j=Rect.Height()+1,nptr=&OccX[Rect.Pt1.X-1][Rect.Pt1.Y];(--j)&&bCanPush;nptr++)
+			if((*nptr)!=NoObject) bCanPush=false;	
+	}
 	if(bCanPush)
 	{
-		if(bClip)	ret=1; else ret=2;
+		if(bClip) ret=1; else ret=2;
 	}
 	else
 		ret=0;
@@ -152,19 +142,19 @@ int RGeoInfo::TestBottom(RPoint test,RPoint &limits,unsigned int **OccY)
 	bool bCanPush=true;
 	bool bClip=false;
 	unsigned int *nptr;
-  RCoord j;
+	RCoord j;
 
- 	for(i=Rects->NbPtr+1,rect=Rects->Tab;(--i)&&bCanPush;rect++)
- 	{
- 		Rect=(**rect);
- 		Rect+=test;
- 		if(Rect.Clip(limits)) bClip=true;
- 		for(j=Rect.Width()+1,nptr=&OccY[Rect.Pt1.Y-1][Rect.Pt1.X];(--j)&&bCanPush;nptr++)
- 			if((*nptr)!=NoObject) bCanPush=false;	
- 	}
+	for(i=Rects->NbPtr+1,rect=Rects->Tab;(--i)&&bCanPush;rect++)
+	{
+		Rect=(**rect);
+		Rect+=test;
+		if(Rect.Clip(limits)) bClip=true;
+		for(j=Rect.Width()+1,nptr=&OccY[Rect.Pt1.Y-1][Rect.Pt1.X];(--j)&&bCanPush;nptr++)
+			if((*nptr)!=NoObject) bCanPush=false;	
+	}
 	if(bCanPush)
 	{
-		if(bClip)	ret=1; else ret=2;
+		if(bClip) ret=1; else ret=2;
 	}
 	else
 		ret=0;
@@ -173,55 +163,21 @@ int RGeoInfo::TestBottom(RPoint test,RPoint &limits,unsigned int **OccY)
 
 
 //---------------------------------------------------------------------------
-void RGeoInfo::PushBottomLeft(RPoint &pos,RPoint &limits,unsigned int **OccX,unsigned int **OccY)
-{
-	bool bAnotherTry;					// Try it again
-	RPoint Test;     					// Test coordinates
-	int ret;
-
-	// Init
-	Test=pos;
-	bAnotherTry=true;
-
-	// Try to push it
-	while(bAnotherTry)
-	{
-		// By default: the last
-		bAnotherTry=false;
-
-		// Push Down
- 		ret=1;
- 		while(ret&&Test.Y)
- 		{
- 			ret=TestBottom(Test,limits,OccY);
- 			if(ret)	Test.Y--;		// Push it left
- 			if(ret==2) pos=Test;
- 		}
-
-		// Push Left
- 		ret=1;
- 		while(ret&&Test.X)
- 		{
- 			ret=TestLeft(Test,limits,OccX);
- 			if(ret)
- 			{
- 				Test.X--;		// Push it left
- 				bAnotherTry=true;
- 			}
- 			if(ret==2) pos=Test;
- 		}
-	}
-}
-
-
-//---------------------------------------------------------------------------
 bool RGeoInfo::Test(RPoint &pos,RPoint &limits,unsigned int **OccX,unsigned int **OccY)
 {
+	RRect Test;
 	RPoint *start,*end;
 	unsigned int nbpts;
- 	int FromDir;		// 0=left ; 1=right ; 2=up ; 3=down
+	int FromDir;		// 0=left ; 1=right ; 2=up ; 3=down
 	RCoord X,Y;
 
+	// Test % limits
+	if((pos.X<0)||(pos.Y<0)) return(false);
+	Test=Rect;
+	Test+=pos;
+	if(Test.Clip(limits)) return(false);	
+
+	// Select first segment
 	start=Bound->GetBottomLeft();
 	end=Bound->GetConX(start);
 	FromDir=0;
@@ -229,7 +185,7 @@ bool RGeoInfo::Test(RPoint &pos,RPoint &limits,unsigned int **OccX,unsigned int 
 	Y=start->Y+pos.Y;
 	nbpts=Bound->NbPtr;
 
-	// Select other objects
+	// Test it and go through the other
 	while(nbpts)
 	{
 		if(OccX[X][Y]!=NoObject) return(false);
@@ -254,74 +210,152 @@ bool RGeoInfo::Test(RPoint &pos,RPoint &limits,unsigned int **OccX,unsigned int 
 		}
 		else
 		{
-  		// Go to next pos
-  		switch(FromDir)
-  		{
-  			case 0: // from left
-  				X++;
-  				break;
+			// Go to next pos
+			switch(FromDir)
+			{
+				case 0: // from left
+					X++;
+					break;
 
-  			case 1: // from right
-  				X--;
-  				break;
+				case 1: // from right
+					X--;
+					break;
 
-  			case 2: // from bottom
-  				Y++;
-  				break;
+				case 2: // from bottom
+					Y++;
+					break;
 
-  			case 3: // from up
-  				Y--;
-  				break;
-  		}
+				case 3: // from up
+					Y--;
+					break;
+			}
 		}
-  }
+	}
 	return(true);
 }
 
 
 //---------------------------------------------------------------------------
-void RGeoInfo::PushCenter(RPoint &pos,RPoint &limits,unsigned int **OccX,unsigned int **OccY)
+bool RGeoInfo::Test(RPoint &pos,RPoint &limits,RGrid *grid)
+{
+	RRect Test;
+	RPoint *start,*end;
+	unsigned int nbpts;
+	int FromDir;		// 0=left ; 1=right ; 2=up ; 3=down
+	RCoord X,Y;
+
+	// Test % limits
+	if((pos.X<0)||(pos.Y<0)) return(false);
+	Test=Rect;
+	Test+=pos;
+	if(Test.Clip(limits)) return(false);	
+
+	// Test it and go through the other
+	start=Bound->GetBottomLeft();
+	end=Bound->GetConX(start);
+	FromDir=0;
+	X=start->X+pos.X;
+	Y=start->Y+pos.Y;
+	nbpts=Bound->NbPtr;
+
+	// Test it and go through the other
+	while(nbpts)
+	{
+		if(grid->IsOcc(X,Y)) return(false);
+
+		// If end of an edge
+		if((X==end->X+pos.X)&&(Y==end->Y+pos.Y))
+		{
+			start=end;
+			nbpts--;			// Next point
+			X=start->X+pos.X;
+			Y=start->Y+pos.Y;
+			if(FromDir<2)	// Go to up/bottom
+			{
+				end=Bound->GetConY(start);
+				if(start->Y<end->Y) FromDir=2; else FromDir=3;
+			}
+			else		// Go to left/right
+			{
+				end=Bound->GetConX(start);
+				if(start->X<end->X) FromDir=0; else FromDir=1;
+			}
+		}
+		else
+		{
+			// Go to next pos
+			switch(FromDir)
+			{
+				case 0: // from left
+					X++;
+					break;
+
+				case 1: // from right
+					X--;
+					break;
+
+				case 2: // from bottom
+					Y++;
+					break;
+
+				case 3: // from up
+					Y--;
+					break;
+			}
+		}
+	}
+	return(true);
+}
+
+
+//---------------------------------------------------------------------------
+void RGeoInfo::PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid)
+{
+	RPoint TestPos;
+
+	// Push Bottom
+	TestPos=pos;
+	while((TestPos.Y)&&Test(TestPos,limits,grid))
+	{
+		pos=TestPos;
+		TestPos.Y--;
+	}
+
+	// Push Left
+	TestPos=pos;
+	while((TestPos.X)&&Test(TestPos,limits,grid))
+	{
+		pos=TestPos;
+		TestPos.X--;
+	}	
+}
+
+
+//---------------------------------------------------------------------------
+void RGeoInfo::PushCenter(RPoint &pos,RPoint &limits,RGrid *grid)
 {
 	bool PushLeft,PushBottom;
-	bool bAnotherTry;
-	bool bDoX,bDoY;
-	RPoint PTest;
+	RPoint TestPos;
 	RPoint Center;
 
 	Center.Set(limits.X/2,limits.Y/2);
 	PushLeft=(pos.X-Center.X>0);
 	PushBottom=(pos.Y-Center.Y>0);
-	bDoX=(pos.X!=Center.X);
-	bDoY=(pos.Y!=Center.Y);
-	PTest=pos;
-	bAnotherTry=true;
-	if(bDoY)
-	{
-		if(PushBottom) PTest.Y--; else PTest.Y++;
-	}
-	else
-	{
-		if(PushLeft) PTest.X--; else PTest.X++;
-	}
-	while(bAnotherTry)
-	{
-		// By default, last try
-		bAnotherTry=false;
 
-		// Push Bottom/Up
-		while((PTest.Y!=Center.Y)&&Test(PTest,limits,OccX,OccY))
-		{
-			pos=PTest;
-			if(PushBottom) PTest.Y--; else PTest.Y++;
-		}
+	// Push Bottom/Up
+	TestPos=pos;
+	while((TestPos.Y!=Center.Y)&&Test(TestPos,limits,grid))
+	{
+		pos=TestPos;
+		if(PushBottom) TestPos.Y--; else TestPos.Y++;
+	}
 
-		// Push Left/Right
-		while((PTest.X!=Center.X)&&Test(PTest,limits,OccX,OccY))
-		{
-			pos=PTest;
-			if(PushLeft) PTest.X--; else PTest.X++;
-			bAnotherTry=true;
-		}	
+	// Push Left/Right
+	TestPos=pos;
+	while((TestPos.X!=Center.X)&&Test(TestPos,limits,grid))
+	{
+		pos=TestPos;
+		if(PushLeft) TestPos.X--; else TestPos.X++;
 	}	
 }
 
@@ -336,12 +370,10 @@ bool RGeoInfo::Overlap(RGeoInfo *info)
 	for(i=Rects->NbPtr+1,rect1=Rects->Tab;--i;rect1++)
 	{
 		R1=(**rect1);
-//		R1.Translation(Pos.X,Pos.Y);
 		R1+=Pos;
 		for(j=info->Rects->NbPtr+1,rect2=info->Rects->Tab;--j;rect2++)
 		{
 			R2=(**rect2);
-//			R2.Translation(info->Pos.X,info->Pos.Y);	
 			R2+=Pos;
 			if(R1.Overlap(&R2))
 				return(true);
@@ -376,7 +408,7 @@ bool RGeoInfo::IsValid(void)
 RGeoInfo& RGeoInfo::operator=(const RGeoInfo &info)
 {
 	Pos=info.Pos;
-  Bound=info.Bound;
+	Bound=info.Bound;
 	return(*this);
 }
 
@@ -392,7 +424,6 @@ bool RGeoInfo::IsIn(RPoint pos)
 	for(i=Rects->NbPtr+1,rect=Rects->Tab;--i;rect++)
 		if((*rect)->IsIn(pos)) return(true);
 	return(false);
-//	return(Bound->IsIn(pos));
 }
 
 
@@ -402,8 +433,19 @@ void RGeoInfo::Add(RPolygons &polys)
   RPolygon *p;
 
 	p=new RPolygon(Bound);
-  (*p)+=Pos;
+	(*p)+=Pos;
 	polys.InsertPtr(p);
+}
+
+
+//---------------------------------------------------------------------------
+RPolygon& RGeoInfo::GetPolygon(void)
+{
+	RPolygon *poly=RPolygon::GetPolygon();
+
+	(*poly)=(*Bound);
+	(*poly)+=Pos;
+	return(*poly);
 }
 
 
@@ -426,17 +468,17 @@ void RGeoInfos::Boundary(RRect &rect)
 {
 
 	RGeoInfo **ptr;
-  unsigned int i;
-  RRect tmp;
+	unsigned int i;
+	RRect tmp;
 
 	rect.Pt1.X=rect.Pt1.Y=MaxCoord;
 	rect.Pt2.X=rect.Pt2.Y=0;
-  for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-  {
+	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
+	{
 		(*ptr)->Boundary(tmp);
 		if(tmp.Pt1.X<rect.Pt1.X) rect.Pt1.X=tmp.Pt1.X;
 		if(tmp.Pt1.Y<rect.Pt1.Y) rect.Pt1.Y=tmp.Pt1.Y;
 		if(tmp.Pt2.X>rect.Pt2.X) rect.Pt2.X=tmp.Pt2.X;
 		if(tmp.Pt2.Y>rect.Pt2.Y) rect.Pt2.Y=tmp.Pt2.Y;
-  }
+	}
 }
