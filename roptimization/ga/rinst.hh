@@ -262,7 +262,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		RAssert(idx1!=idx2);
 		s1=tmpChrom1[idx1];
 		s2=tmpChrom1[idx2];
-		if((*s1->Fitness)<(*s2->Fitness))
+		if((*s1->Fitness)>(*s2->Fitness))
 		{
 			tmpChrom2[NbTreated--]=s2;
 			memcpy(&tmpChrom1[idx2],&tmpChrom1[idx2+1],((--NbToTreat)-idx2)*sizeof(cChromo*));
