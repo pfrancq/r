@@ -137,6 +137,9 @@ void RDir::OpenEntries(void)
 		// Name og the 'file"
 		Name=ep->d_name;
 
+		if((Name==".")||(Name==".."))
+			continue;
+
 		// Look if it is a directoy
 		if(ep->d_type==DT_DIR)
 		{
