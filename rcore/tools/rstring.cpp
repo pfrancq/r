@@ -165,11 +165,13 @@ RString& RStd::RString::operator=(const char *text) throw(bad_alloc)
 {
 	const char *ptr1;
 	char *ptr2;
+    unsigned int len;
 
 	RReturnValIfFail(text,*this);
 	ptr1=text;
-	Len=strlen(text);
-	Verify(Len);
+	len=strlen(text);
+	Verify(len);
+    Len=len;
 	ptr2=Text;
 	while(*ptr1)
 		(*(ptr2++))=(*(ptr1++));
