@@ -472,7 +472,7 @@ template<class C,bool bAlloc,bool bOrder>
 		if(!del)
 			LastPtr++;
 	}
-	
+
 }
 
 
@@ -505,7 +505,7 @@ template<class C,bool bAlloc,bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder> 
+template<class C,bool bAlloc,bool bOrder>
 	void RContainer<C,bAlloc,bOrder>::Exchange(unsigned int pos1,unsigned int pos2) throw(std::bad_alloc)
 {
 	if((pos1>LastPtr)||(pos2>LastPtr))
@@ -767,7 +767,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 
 	Clear();
 	if((!src)||(!src->NbPtr))
-		return(*this);
+		return;
 	VerifyTab(src->LastPtr);
 	for(i=src->LastPtr+1,tab=src->Tab,tab2=Tab;--i;tab++,tab2++)
 	{
@@ -891,7 +891,7 @@ template<class C,bool bAlloc,bool bOrder>
 		if(bAlloc)
 		{
 			C** ptr;
-	
+
 			for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
 			{
 				if(*ptr)
