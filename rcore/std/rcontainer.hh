@@ -81,6 +81,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		{
 			memcpy(Tab,src->Tab,src->NbPtr*sizeof(C*));
 			NbPtr=src->NbPtr;
+			LastPtr=src->LastPtr;
 		}
 	}
 	else
@@ -110,6 +111,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		{
 			memcpy(Tab,src->Tab,src->NbPtr*sizeof(C*));
 			NbPtr=src->NbPtr;
+			LastPtr=src->LastPtr;
 		}
 	}
 	else
@@ -137,6 +139,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		memcpy(Tab,srr.Tab,container.NbPtr*sizeof(C*));
 		NbPtr=src.NbPtr;
+		LastPtr=src.LastPtr;
 	}
 }
 
@@ -161,6 +164,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		memcpy(Tab,srr.Tab,container.NbPtr*sizeof(C*));
 		NbPtr=src.NbPtr;
+		LastPtr=src.LastPtr;
 	}
 }
 
@@ -184,6 +188,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		memcpy(Tab,src.Tab,src.NbPtr*sizeof(C*));
 		NbPtr=src.NbPtr;
+		LastPtr=src.LastPtr;
 	}
 	return(*this);
 }
@@ -208,6 +213,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		memcpy(Tab,src.Tab,src.NbPtr*sizeof(C*));
 		NbPtr=src.NbPtr;
+		LastPtr=src.LastPtr;
 	}
 	return(*this);
 }
@@ -231,6 +237,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		memcpy(&Tab[NbPtr],src.Tab,src.NbPtr*sizeof(C*));
 		NbPtr+=src.NbPtr;
+		LastPtr+=src.LastPtr;
 	}
 	return(*this);
 }
@@ -254,6 +261,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		memcpy(&Tab[NbPtr],src.Tab,src.NbPtr*sizeof(C*));
 		NbPtr+=src.NbPtr;
+		LastPtr+=src.LastPtr;
 	}
 	return(*this);
 }
