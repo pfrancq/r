@@ -248,11 +248,10 @@ void RStd::RString::StrUpr(void)
 //-----------------------------------------------------------------------------
 void RStd::RString::StrUpr(const char *text) throw(bad_alloc)
 {
-	const char *ptr1;
+	const char *ptr1=text;
 	char *ptr2;
 
 	RReturnIfFail(text);
-	ptr1=text;
 	Len=strlen(text);
 	Verify(Len);
 	ptr2=Text;
@@ -265,7 +264,7 @@ void RStd::RString::StrUpr(const char *text) throw(bad_alloc)
 //-----------------------------------------------------------------------------
 void RStd::RString::StrUpr(const RString &str) throw(bad_alloc)
 {
-	const char *ptr1;
+	const char *ptr1=str.Text;
 	char *ptr2;
 
 	Verify(str.MaxLen);
@@ -306,13 +305,13 @@ void RStd::RString::StrLwr(const char *text) throw(bad_alloc)
 //-----------------------------------------------------------------------------
 void RStd::RString::StrLwr(const RString &str) throw(bad_alloc)
 {
-	const char *ptr1;
+	const char *ptr1=str.Text;
 	char *ptr2;
 
 	Verify(str.MaxLen);
 	Len=str.Len;
 	memcpy(Text,str.Text,(Len+1)*sizeof(char));
-	ptr2=str.Text;
+	ptr2=Text;
 	while(*ptr1)
 		(*(ptr2++))=ToLower(*(ptr1++));
 	(*ptr2)=0;
