@@ -31,9 +31,25 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <stdlib.h>
+#include <ctype.h>
+#include <sys/stat.h>
+#ifdef _BSD_SOURCE
+	#include <unistd.h>
+#else
+	#include <io.h>
+#endif
+#include <fcntl.h>
+#include <string.h>
+#include <time.h>
+
+
+//-----------------------------------------------------------------------------
 // include files for R Project
 #include <rxml/rxmlattr.h>
 using namespace RXML;
+using namespace RStd;
 
 
 
@@ -52,8 +68,11 @@ RXML::RXMLAttr::RXMLAttr(const char *name,const char *value)
 
 //------------------------------------------------------------------------------
 RXML::RXMLAttr::RXMLAttr(const char *name,const double value)
-	: Name(name), Value(dtoa(value))
+	: Name(name), Value(30)
 {
+	char Str[30];
+	sprintf(Str,"%f",value);
+	Value=Str;
 }
 
 

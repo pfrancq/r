@@ -38,9 +38,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rtree.h>
-using namespace RStd;
 #include <rxml/rxmltag.h>
-using namespace RXML;
 
 
 //-----------------------------------------------------------------------------
@@ -54,12 +52,12 @@ namespace RXML{
 * @short XML Structure.
 * @author Pascal Francq and Thomas L'Eglise.
 */
-class RXMLStruct : public RTree<RXMLTag,true,false>
+class RXMLStruct : public RStd::RTree<RXMLTag,true,false>
 {
 	/**
 	* The entities of the structure.
 	*/
-	RContainer<RXMLAttr,unsigned,true,true> Entities;
+	RStd::RContainer<RXMLAttr,unsigned,true,true> Entities;
 
 public:
 

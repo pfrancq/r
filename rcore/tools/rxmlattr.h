@@ -39,7 +39,6 @@
 // incluce files for R Project
 #include <rstd/rcursor.h>
 #include <rstd/rstring.h>
-using namespace RStd;
 
 
 //-----------------------------------------------------------------------------
@@ -59,12 +58,12 @@ class RXMLAttr
 	/**
 	* The name of the attribute.
 	*/
-	RString Name;
+	RStd::RString Name;
 
 	/**
 	* The value of the attribute.
 	*/
-	RString Value;
+	RStd::RString Value;
 
 public:
 
@@ -99,7 +98,7 @@ public:
 	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
 	* parameter.
 	*/
-	int Compare(const RString &name) {return(Name.Compare(name));}
+	int Compare(const RStd::RString &name) {return(Name.Compare(name));}
 
 	/**
 	* Compare the names of two attributes. This function is used by RContainer.
@@ -121,13 +120,13 @@ public:
 	* Return the name of the tag.
 	* @returns a string containing the name.
 	*/
-	RString& GetName(void);
+	RStd::RString& GetName(void);
 
 	/**
 	* Returns the value of the attribute.
 	* @returns a string containing the value;
 	*/
-	RString& GetValue(void);
+	RStd::RString& GetValue(void);
 
 	/**
 	* Destruct the attribute.

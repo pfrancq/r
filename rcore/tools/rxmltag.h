@@ -41,9 +41,7 @@
 #include <rstd/rstring.h>
 #include <rstd/rnode.h>
 #include <rstd/rcursor.h>
-using namespace RStd;
 #include <rxml/rxmlattr.h>
-using namespace RXML;
 
 
 //-----------------------------------------------------------------------------
@@ -64,22 +62,22 @@ class RXMLTagCursor;
 * @short XML Tag.
 * @author Pascal Francq and Thomas L'Eglise.
 */
-class RXMLTag : public RNode<RXMLTag,false>
+class RXMLTag : public RStd::RNode<RXMLTag,false>
 {
 	/**
 	* The name of the tag.
 	*/
-	RString Name;
+	RStd::RString Name;
 
 	/**
 	* The contain of the tag
 	*/
-	RString Contains;
+	RStd::RString Contains;
 
 	/**
 	* The attributes of the tag.
 	*/
-	RContainer<RXMLAttr,unsigned,true,true> Attrs;
+	RStd::RContainer<RXMLAttr,unsigned,true,true> Attrs;
 
 public:
 
@@ -92,28 +90,28 @@ public:
 	* Construct a XML Tag.
 	* @param _name          The name of the tag.
 	*/
-	RXMLTag(RString _name);
+	RXMLTag(RStd::RString _name);
 
 	/**
 	* Load a XML tag from a XML file.
 	* @param f              The XML file.
 	* @param xmlstruct      The XML Structure of the tag.
 	*/
-	void Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString);
+	void Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RStd::RString);
 
 	/**
 	* Save a XML tag to a XML file.
 	* @param f              The XML file.
 	* @param xmlstruct      The XML Structure of the tag.
 	*/
-	void Save(RXMLFile *f,int depth) throw(RString);
+	void Save(RXMLFile* f,int depth) throw(RStd::RString);
 
 	/**
 	* Compare a tag with a given name.
 	* @param name           Name used for the comparaison.
 	* @returns 0 if the same, -1 or +1 if different.
 	*/
-	int Compare(const RString &name) {return(Name.Compare(name));}
+	int Compare(const RStd::RString &name) {return(Name.Compare(name));}
 
 	/**
 	* Compare a tag with a given name.
@@ -127,27 +125,27 @@ public:
 	* @param tag            Tag used for the comparaison.
 	* @returns 0 if the same, -1 or +1 if different.
 	*/
-	int Compare(const RXMLTag *tag) {return(Name.Compare(tag->Name));}
+	int Compare(const RXMLTag* tag) {return(Name.Compare(tag->Name));}
 
 	/**
 	* Compare two tags.
 	* @param tag            Tag used for the comparaison.
 	* @returns 0 if the same, -1 or +1 if different.
 	*/
-	int Compare(const RXMLTag &tag) {return(Name.Compare(tag.Name));}
+	int Compare(const RXMLTag& tag) {return(Name.Compare(tag.Name));}
 
 	/**
 	* Return the name of the tag.
 	* @returns a string containing the name.
 	*/
-	RString& GetName(void);
+	RStd::RString& GetName(void);
 
 	/**
 	* Return the name of the tag.
 	* param name            Name of the attribute.
 	* @returns a string containing the name.
 	*/
-	RString& GetAttrValue(const char* name);
+	RStd::RString& GetAttrValue(const char* name);
 
 	/**
 	* Test if an attribute is defined.
@@ -167,28 +165,28 @@ public:
 	* Insert an attribute.
 	* @param Attr           Attribute to insert
 	*/
-	void InsertAttr(RXMLAttr *Attr);
+	void InsertAttr(RXMLAttr* Attr);
 
 	/**
 	* Insert an attribute.
 	* @param name           Name of thae attribute.
 	* @param value          Value of thae attribute.
 	*/
-	void InsertAttr(const RString& name,const RString& value);
+	void InsertAttr(const RStd::RString& name,const RStd::RString& value);
 
 	/**
 	* Insert an attribute.
 	* @param name           Name of thae attribute.
 	* @param value          Value of thae attribute.
 	*/
-	void InsertAttr(const char* name,const RString& value);
+	void InsertAttr(const char* name,const RStd::RString& value);
 
 	/**
 	* Insert an attribute.
 	* @param name           Name of thae attribute.
 	* @param value          Value of thae attribute.
 	*/
-	void InsertAttr(const RString& name,const char* value);
+	void InsertAttr(const RStd::RString& name,const char* value);
 
 	/**
 	* Insert an attribute.

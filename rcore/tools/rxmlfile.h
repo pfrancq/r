@@ -38,9 +38,7 @@
 //-----------------------------------------------------------------------------
 // include files for Rainbow
 #include <rio/rtextfile.h>
-using namespace RIO;
 #include <rxml/rxmlstruct.h>
-using namespace RXML;
 
 
 //-----------------------------------------------------------------------------
@@ -54,8 +52,7 @@ namespace RXML{
 * @short XML File.
 * @author Pascal Francq and Thomas L'Eglise.
 */
-
-class RXMLFile : public RTextFile
+class RXMLFile : public RIO::RTextFile
 {
 	/**
 	* The structure associated with the XML file.
@@ -70,7 +67,7 @@ public:
 	* @param xmlstruct      The XML tree associated with the file
 	* @param mode           The open mode for the file.
 	*/
-	RXMLFile(const char* name,RXMLStruct *xmlstruct,ModeType mode=RTextFile::Read);
+	RXMLFile(const char* name,RXMLStruct* xmlstruct,RIO::ModeType mode=RIO::Read);
 
 	/**
 	* Test if a new tag begins.

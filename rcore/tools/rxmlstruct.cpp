@@ -34,6 +34,7 @@
 // include files for R Project
 #include <rxml/rxmlstruct.h>
 using namespace RXML;
+using namespace RStd;
 
 
 

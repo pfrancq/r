@@ -34,6 +34,8 @@
 // include files for R PRoject
 #include <rxml/rxmlfile.h>
 using namespace RXML;
+using namespace RIO;
+using namespace RStd;
 
 
 
