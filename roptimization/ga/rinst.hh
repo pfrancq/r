@@ -280,6 +280,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		if(!((*C1)->Crossover(*C2,C3)))
 			throw eGACrossover(Gen,(*C2)->Id,C3->Id,(*C1)->Id);
 		(*C1)->ToEval=true;
+		if(!(*C1)->Verify())
+			throw eGAVerify(Gen,(*C1)->Id);
 		emitInteractSig();
 		#ifdef RGADEBUG
 			if(Debug)
@@ -291,6 +293,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		if(!((*(--C1))->Crossover(C3,*C2)))
 			throw eGACrossover(Gen,C3->Id,(*C2)->Id,(*C1)->Id);
 		(*C1)->ToEval=true;
+		if(!(*C1)->Verify())
+			throw eGAVerify(Gen,(*C1)->Id);
 		emitInteractSig();
 	}
 	#ifdef RGADEBUG
@@ -338,6 +342,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		emitInteractSig();
 		p->Mutation();
 		p->ToEval=true;
+		if(!p->Verify())
+			throw eGAVerify(Gen,p->Id);
 		emitInteractSig();
 	}
 	if(AgeBest==AgeNextBestMutation)
@@ -364,6 +370,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		emitInteractSig();
 		p->Mutation();
 		p->ToEval=true;
+		if(!p->Verify())
+			throw eGAVerify(Gen,p->Id);
 		emitInteractSig();
 	}
 	#ifdef RGADEBUG
@@ -393,6 +401,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		emitInteractSig();
 		p->Inversion();
 		p->ToEval=true;
+		if(!p->Verify())
+			throw eGAVerify(Gen,p->Id);
 		emitInteractSig();
 	}
 	#ifdef RGADEBUG
