@@ -34,16 +34,8 @@
 
 //---------------------------------------------------------------------------
 // include files for Rainbow
-#include "rstd/rcontainer.h"
+#include "rcontainer.h"
 using namespace RStd;
-
-
-//---------------------------------------------------------------------------
-// Forward class declaration
-namespace RGeometry
-{
-	class RPolygon;
-}
 
 
 //---------------------------------------------------------------------------
@@ -59,42 +51,125 @@ namespace RGeometry{
 
 //---------------------------------------------------------------------------
 // RPoint
+/** This class represent a point.
+	* @author Pascal Francq
+	* @short Point class.
+  */
 class RPoint
 {
 public:
-  RCoord X,Y;
-	#if RGEOMETRY_DIMS==3
-		RCoord Z;
-	#endif
-	
+	/** This is the X coordinate.*/
+  RCoord X;
+	/** This is the Y coordinate.*/
+	RCoord Y;
+
+	/** Construct a point at (0,0).*/	
   RPoint(void);
-  RPoint(RCoord x,RCoord y,RCoord z=0);
+
+	/** Construct a point at (x,y). */
+  RPoint(RCoord x,RCoord y);
+
+	/** Construct a point from pt.
+		* @param pt		The point used as reference.
+		*/
   RPoint(const RPoint& pt);
+
+	/** Construct a point from pt.
+		* @param pt		The point used as reference.
+		*/
   RPoint(RPoint *pt);
-  inline int Compare(RPoint *pt) { return(this==pt); }
-  inline RPoint& operator=(const RPoint &pt);
-  inline bool operator==(const RPoint &pt);
-  inline bool operator!=(const RPoint &pt);
-	~RPoint(void) {}
+
+	/** The equal operator.*/
+  inline bool operator==(const RPoint &pt) {return((X==pt.X)&&(Y==pt.Y));}
+
+	/** The non-equal operator.*/
+  inline bool operator!=(const RPoint &pt) {return((X!=pt.X)||(Y!=pt.Y));}
+
+
+	/** Compare two points and return 0 if there are at the same position. This function
+		* is used with the class RContainer.
+		*	@param pt		Point used for the comparaison.
+		*/
+  inline int Compare(RPoint *pt) { return((*this)!=(*pt)); }
+
+	/** Compare two points and return 0 if there are at the same position. This function
+		* is used with the class RContainer.
+		*	@param pt		Point used for the comparaison.
+		*/
+  inline int Compare(const RPoint &pt) { return((*this)!=pt); }
+
+	/** Assignment operator.*/
+  inline RPoint& operator=(const RPoint &pt) {X=pt.X;Y=pt.Y;return(*this);}
+
+	/** This function returns true if the two points are side by side.*/
+	inline bool Near(RPoint *pt) {return((labs(X-pt->X)<=1)&&(labs(Y-pt->Y)<=1));}
+
+	/** Return a pointer to a temporary object of class point.*/
+	static RPoint* GetPoint(void);
 };
 
 
 //---------------------------------------------------------------------------
 // RPoints
+/** This class represents a set of points regrouped in a container.
+	*	@author Pascal Francq
+	*	@short Container of points.
+  */
 class RPoints : public RContainer<RPoint,unsigned int,true,false>
 {
 public:
+
+	/** Construct a container of points.*/
 	RPoints(void);
+
+	/** Construct a container of points with an initial maximal size.
+		* @param max		Initial maximal size of the container.
+		*/
 	RPoints(unsigned int max);
+
+	/** Construct a container of points from another one.
+		* @param points		The container used as reeference.
+		*/
 	RPoints(RPoints *points);
-  inline void AddPoint(RPoint* pt);
-  inline void AddPoint(RCoord x,RCoord y,RCoord z=0);
-  bool IsIn(const RPoint &pt);
-	void GetPolygon(RPolygon *poly);
+
+	/** Find the next point to the left and that is on a vertex of a polygon from
+		* a given set. This function is used to calculated the union of polygons.
+		* @param pt				Point used as reference.
+		* @param polys    The polygons used as reference.
+		*/
+	RPoint* FindLeft(RPoint *pt,RPolygons *polys);
+
+	/** Find the next point to the right and that is on a vertex of a polygon from
+		* a given set. This function is used to calculated the union of polygons.
+		* @param pt				Point used as reference.
+		* @param polys    The polygons used as reference.
+		*/
+	RPoint* FindRight(RPoint *pt,RPolygons *polys);
+
+	/** Find the next point to the bottom and that is on a vertex of a polygon from
+		* a given set. This function is used to calculated the union of polygons.
+		* @param pt				Point used as reference.
+		* @param polys    The polygons used as reference.
+		*/
+	RPoint* FindBottom(RPoint *pt,RPolygons *polys);
+
+	/** Find the next point to the up and that is on a vertex of a polygon from
+		* a given set. This function is used to calculated the union of polygons.
+		* @param pt				Point used as reference.
+		* @param polys    The polygons used as reference.
+		*/
+	RPoint* FindUp(RPoint *pt,RPolygons *polys);
+
+	/** Find the most bottom-left point of the container.*/
+	RPoint* FindBottomLeft(void);
+
+	/**	This function returns true when there are duplicate points.*/
+	bool DuplicatePoints(void);
+
+	/** Assignment operator.*/
   RPoints& operator=(const RPoints &points);		
 };
 
-#include "rpoint.hh"
 
 }  //-------- End of namespace RStd ---------------------------------------
 #endif

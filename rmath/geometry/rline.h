@@ -43,21 +43,43 @@ namespace RGeometry{
 
 
 //---------------------------------------------------------------------------
-// Line
+/** This class represent a line.
+	* @author Pascal Francq
+	* @short Line.
+	*/
 class RLine
 {
+	/** Internal function to determine if two lines intersect.*/
+  int CCW(const RPoint &) const;
 public:
-  RPoint Pt1,Pt2;
+	/** The First point of the line.*/
+  RPoint Pt1;
+	/** The second point of the line.*/
+	RPoint Pt2;
+	/** Is the line a segment delimited by the two points.*/
   bool Segment;
 
+	/** Construct a imaginary line. */
   RLine(void);
-  RLine(RPoint *,RPoint *,bool seg=true);
+
+	/** Construct a line.
+		* @param pt1		The first point used.
+		* @param pt2		The second point used.
+		* @param seg		Is the line a segment.
+		*/
+  RLine(RPoint *pt1,RPoint *pt2,bool seg=true);
+
+	/** Return the length of the line.*/
   float Length(void);
-  int CCW(const RPoint &) const;
+
+	/** Determine if there is an intersection between two lines.*/
   bool Inter(RLine *);
+
+	/** Determine if there is an intersection between two lines.*/
   bool Inter(const RLine &);
+
+	/** Determine if a point is on the line/segment.*/
 	bool IsIn(const RPoint &);
-	~RLine(void) {}
 };
 
 

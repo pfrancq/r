@@ -29,7 +29,6 @@
 /*
 		The followind defines are used;
 		RGEOMETRY_TYPE : by default it is long
-		RGEOMETRY_DIMS : by default it is 2 (max=3)
 */
 
 
@@ -48,15 +47,20 @@ namespace RGeometry{
 
 
 //---------------------------------------------------------------------------
+// Forward class declaration
+class RPoint;
+class RPoints;
+class RLine;
+class RRect;
+class RRects;
+class RPolygon;
+class RPolygons;
+
+
+//---------------------------------------------------------------------------
 // Defines
 #ifndef RGEOMETRY_TYPE
 	#define RGEOMETRY_TYPE int
-#endif
-#ifndef RGEOMETRY_DIMS
-	#define RGEOMETRY_DIMS 2
-#endif
-#if RGEOMETRY_DIMS<2 || RGEOMETRY_DIMS>3
-	#error RGEOMETRY_DIMS must be either 2 or 3.
 #endif
 
 

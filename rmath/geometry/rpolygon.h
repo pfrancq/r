@@ -34,7 +34,7 @@
 
 //---------------------------------------------------------------------------
 // include files for Rainbow
-#include "rstd/rcontainer.h"
+#include "rcontainer.h"
 using namespace RStd;
 
 
@@ -52,36 +52,177 @@ namespace RGeometry{
 
 //---------------------------------------------------------------------------
 // Polygon
+/** This class represent a polygon as a set of points regroup in a container.
+	*	@author Pascal FRancq
+	* @short Polygon class.
+	*/
 class RPolygon : public RContainer<RPoint,unsigned int,true,false>
 {
 public:
+	
+	/** Construct a polygon.*/
   RPolygon(void);
+
+	/** Construct a polygon with an initial maxiam size.
+		* @param Max	The initial maxiaml size.
+		*/
   RPolygon(int Max);
-  RPolygon(RPolygon *);
+
+	/** Construct a polygon from another.
+		*	@param poly		Polygon used as reference.
+		*/
+  RPolygon(RPolygon *poly);
+
+	/** Construct a polygon from another.
+		*	@param poly		Polygon used as reference.
+		*/
+  RPolygon(RPolygon &poly);
+
+	/** The assign operator.*/
   RPolygon& operator=(const RPolygon &poly);
-  int Compare(RPolygon*);
-  inline void AddPoint(RPoint* pt);
-  inline void AddPoint(RCoord x,RCoord y,RCoord z=0);
+
+	/** The equal operator.*/
+ 	bool operator==(const RPolygon &poly);
+
+	/** The non-equal operator.*/
+  bool operator!=(const RPolygon &poly);
+
+	/** This function compares two polygons and returns 0 if there have the same
+		* number of points and at the same positions. This function is used for the
+		* class RContainer.
+		* @param poly		Polygon used for the comparaison.
+		*/
+  int Compare(RPolygon *poly) {return((*this)!=(*poly));}
+
+	/** This function returns a pointer to the point on the same horizontal vertex.
+    *	@param pt		Point used as reference.
+		*/
+	RPoint* GetConX(RPoint *pt);
+
+	/** This function returns a pointer to the point on the same vertital vertex.
+    *	@param pt		Point used as reference.
+		*/
+	RPoint* GetConY(RPoint *pt);
+
+	/** Return a pointer to the most bottom-left point of the polygon.*/
+	RPoint* GetBottomLeft(void);
+
+	/** Return a pointer to the most bottom-left point of the polygon responding
+		* to the criteria.
+		* @param MinX		Minimal X position of the point to search.
+		* @param MinY		Minimal Y position of the point to search.
+		* @param MaxX		Maximal X position of the point to search.
+		*/
+	RPoint* GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX);
+
+	/** Return a pointer to the most left-bottom point of the polygon.*/
+	RPoint* GetLeftBottom(void);
+
+	/** Return a pointer to the most left-bottom point of the polygon responding
+		* to the criteria.
+		* @param MinX		Minimal X position of the point to search.
+		* @param MinY		Minimal Y position of the point to search.
+		* @param MaxY		Maximal Y position of the point to search.
+		*/
+	RPoint* GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY);
+
+	/** Return true if the point is on a vertex.
+		* @param pt		The point used.
+		*/
+	bool Vertex(RPoint *pt);
+
+	/** Return true if two points are on the same vertex.
+		* @param pt1		The first point used.
+		* @param pt2		The second point used.
+		*/
+	bool Vertex(RPoint *pt1,RPoint *pt2);
+
+	/** Return true if the point is a edge.*/
+	bool IsEdge(const RPoint &pt) const;
+
+	/** Return true if the point is inside the polygon.*/
   bool IsIn(const RPoint &pt);
-  RRect* Boundary(void);
-  void Boundary(RRect&);
+
+	/** Return true if the polygon poly is inside the polygon. The two polygons are
+		* supposed to be "rectangular". This function determines if all the points
+		* of poly are inside the polygon.
+		*	@param poly		The polygon to known if is in.
+		*/
+	bool IsIn(const RPolygon &poly);
+
+	/** Return the boundary rectangle of the polygon.
+		* @param rect		The rectangle.
+		*/
+  void Boundary(RRect &rect);
+
+	/** Modify the polygon to a certain orientation.
+		* @param Ori		The orientation.
+		*/
   void Orientation(char Ori);
+
+	/** Decompose the polygon in a container of rectangles.
+		* @param rects	A pointer to the container of rectangles.
+		*/
 	void RectDecomposition(RRects *rects);
+
+	/** Add the points of the polygon to a container of points.
+		* @param points			A pointer to the container of points.
+		*/
+	void AddPoints(RPoints *points);
+
+	/** Shift the points of the polygon to make the bottom-left point be the first one.*/
+	void ReOrder(void);
+
+	/**	This function returns when there are duplicate points.*/
+	bool DuplicatePoints(void);
 };
 
 
 //---------------------------------------------------------------------------
 // A collection of polygons
+/** This class represents a set of polygons regrouped in a container.
+	*	@author Pascal Francq
+	*	@short Container of polygons.
+  */
 class RPolygons : public RContainer<RPolygon,unsigned int,true,false>
 {
 public:
+	/** Construct a container of polygons.*/
   RPolygons(void);
-  void Union(RPolygon *poly);
+
+	/** Return true if the point is on a vertex of one of the polygon contained.
+		* @param pt				The point used.
+		*/
+	bool Vertex(RPoint *pt);
+
+	/** Return true if the point is on a vertex of a certain polygon.
+		* @param pt				The point used.
+		* @param poly			The polygon to look in.
+		*/
+	bool Vertex(RPoint *pt,RPolygon *poly);
+
+	/** Return true if two points are on the same vertex of one of the polygon contained.
+		* @param pt1		The first point used.
+		* @param pt2		The second point used.
+		*/
+	bool Vertex(RPoint *pt1,RPoint *pt2);
+
+	/** Add the points of the polygons contained to a container of points.
+		* @param points		A pointer to the container of points.
+		*/
+	void PutPoints(RPoints *points);
+
+	/** This function calculate the union of the polygons contained.
+		* @param upoly		A pointer to the polygon representing the union.
+		*/
+  void Union(RPolygon *upoly);
+
+	/**	This function returns true when there are duplicate points.	
+		*/
+	bool DuplicatePoints(void);
   RPolygons& operator=(const RPolygons &poly);
 };
 
-
-#include "polygons.hh"
 
 }  //-------- End of namespace RStd ---------------------------------------
 #endif

@@ -29,7 +29,9 @@
 
 
 //---------------------------------------------------------------------------
-// include files for RGeometry
+// include files for Rainbow
+#include "rfunc.h"
+using namespace RStd;
 #include "rpoint.h"
 #include "polygons.h"
 using namespace RGeometry;
@@ -50,13 +52,10 @@ RPoint::RPoint(void)
 
 
 //---------------------------------------------------------------------------
-RPoint::RPoint(RCoord x,RCoord y,RCoord z)
+RPoint::RPoint(RCoord x,RCoord y)
 {
   X=x;
   Y=y;
-  #if RGEOMETRY_DIMS==3
-  	Z=z;
-  #endif
 }
 
 
@@ -65,9 +64,6 @@ RPoint::RPoint(const RPoint& pt)
 {
   X=pt.X;
   Y=pt.Y;
-  #if RGEOMETRY_DIMS==3
-  	Z=pt.Z;
-  #endif
 }
 
 
@@ -76,9 +72,13 @@ RPoint::RPoint(RPoint *pt)
 {
   X=pt->X;
   Y=pt->Y;
-  #if RGEOMETRY_DIMS==3
-  	Z=pt->Z;
-  #endif
+}
+
+
+//---------------------------------------------------------------------------
+RPoint* RPoint::GetPoint(void)
+{
+	return(GetTemporaryObject<RPoint,30>());
 }
 
 
@@ -116,17 +116,192 @@ RPoints::RPoints(RPoints *points)
 
 
 //---------------------------------------------------------------------------
-bool RPoints::IsIn(const RPoint &pt)
+RPoint* RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 {
-	return(true);
+  RPoint *Activ,**point;
+	unsigned int i;
+	RCoord X,Y;
+	RCoord AX;
+
+	if(!NbPtr) return(NULL);
+	X=pt->X;
+	Y=pt->Y;
+	Activ=NULL;
+	point=Tab;
+	i=NbPtr+1;
+	// Find first point on left
+	while((!Activ)&&(--i))
+	{
+		if(((*point)->Y==Y)&&((*point)->X==X-1)) return(*point);
+		if(((*point)->Y==Y)&&(polys->Vertex(*point,pt))&&((*point)->X<X))
+			Activ=(*point);
+		point++;
+	}
+	if(!Activ) return(NULL);
+	// Find right most point on left
+	AX=Activ->X;
+	for(;--i;point++)
+	{
+		if(((*point)->Y==Y)&&((*point)->X==X-1)) return(*point);
+		if(((*point)->Y==Y)&&(polys->Vertex(*point,pt))&&((*point)->X>AX)&&((*point)->X<X))
+		{
+			Activ=(*point);	
+			AX=Activ->X;
+    }
+	}
+  return(Activ);
 }
-	
+
 
 //---------------------------------------------------------------------------
-void RPoints::GetPolygon(RPolygon *poly)
+RPoint* RPoints::FindRight(RPoint *pt,RPolygons *polys)
 {
+  RPoint *Activ,**point;
+	unsigned int i;
+	RCoord X,Y;
+	RCoord AX;
+
+	if(!NbPtr) return(NULL);
+	X=pt->X;
+	Y=pt->Y;
+	Activ=NULL;
+	point=Tab;
+	i=NbPtr+1;
+	// Find first point on right
+	while((!Activ)&&(--i))
+	{
+		if(((*point)->Y==Y)&&((*point)->X==X+1)) return(*point);
+		if(((*point)->Y==Y)&&(polys->Vertex(*point,pt))&&((*point)->X>X))
+			Activ=(*point);
+		point++;
+	}
+	if(!Activ) return(NULL);
+	// Find left most point on right
+	AX=Activ->X;
+	for(;--i;point++)
+	{
+		if(((*point)->Y==Y)&&((*point)->X==X+1)) return(*point);
+		if(((*point)->Y==Y)&&(polys->Vertex(*point,pt))&&((*point)->X<AX)&&((*point)->X>X))
+		{
+			Activ=(*point);	
+			AX=Activ->X;
+    }
+	}
+  return(Activ);
 }
 
+
+//---------------------------------------------------------------------------
+RPoint* RPoints::FindBottom(RPoint *pt,RPolygons *polys)
+{
+  RPoint *Activ,**point;
+	unsigned int i;
+	RCoord X,Y;
+	RCoord AY;
+
+	if(!NbPtr) return(NULL);
+	X=pt->X;
+	Y=pt->Y;
+	Activ=NULL;
+	point=Tab;
+	i=NbPtr+1;
+	// Find first point on bottom
+	while((!Activ)&&(--i))
+	{
+		if(((*point)->X==X)&&((*point)->Y==Y-1)) return(*point);
+		if(((*point)->X==X)&&(polys->Vertex(*point,pt))&&((*point)->Y<Y))
+			Activ=(*point);
+		point++;
+	}
+	if(!Activ) return(NULL);
+	// Find up most point on bottom
+	AY=Activ->Y;
+	for(;--i;point++)
+	{
+		if(((*point)->X==X)&&((*point)->Y==Y-1)) return(*point);
+		if(((*point)->X==X)&&(polys->Vertex(*point,pt))&&((*point)->Y>AY)&&((*point)->Y<Y))
+		{
+			Activ=(*point);	
+			AY=Activ->Y;
+    }
+	}
+  return(Activ);
+}
+
+
+//---------------------------------------------------------------------------
+RPoint* RPoints::FindUp(RPoint *pt,RPolygons *polys)
+{
+  RPoint *Activ,**point;
+	unsigned int i;
+	RCoord X,Y;
+	RCoord AY;
+
+	if(!NbPtr) return(NULL);
+	X=pt->X;
+	Y=pt->Y;
+	Activ=NULL;
+	point=Tab;
+	i=NbPtr+1;
+	// Find first point on up
+	while((!Activ)&&(--i))
+	{
+		if(((*point)->X==X)&&((*point)->Y==Y+1)) return(*point);
+		if(((*point)->X==X)&&(polys->Vertex(*point,pt))&&((*point)->Y>Y))
+			Activ=(*point);
+		point++;
+	}
+	if(!Activ) return(NULL);
+	// Find bottom most point on up
+	AY=Activ->Y;
+	for(;--i;point++)
+	{
+		if(((*point)->X==X)&&((*point)->Y==Y+1)) return(*point);
+		if(((*point)->X==X)&&(polys->Vertex(*point,pt))&&((*point)->Y<AY)&&((*point)->Y>Y))
+		{
+			Activ=(*point);	
+			AY=Activ->Y;
+    }
+	}
+  return(Activ);
+}
+
+
+//---------------------------------------------------------------------------
+RPoint* RPoints::FindBottomLeft(void)
+{
+  RPoint *Activ,**point;
+	unsigned int i;
+	RCoord X,Y;
+
+	if(!NbPtr) return(NULL);
+	point=Tab;
+	Activ=(*point);		
+	X=Activ->X;
+	Y=Activ->Y;
+	for(i=NbPtr,point++;--i;point++)
+ 		if(((*point)->Y<Y)||(((*point)->Y==Y)&&((*point)->X<X)))
+		{
+			Activ=(*point);
+			X=Activ->X;
+			Y=Activ->Y;
+		}
+	return(Activ);
+}
+
+
+//---------------------------------------------------------------------------
+bool RPoints::DuplicatePoints(void)
+{
+	unsigned int i,j;
+	RPoint **point1,**point2;
+
+	for(i=0,point1=Tab;i<NbPtr-1;point1++,i++)
+		for(j=i+1,point2=&Tab[i+1];j<NbPtr;point2++,j++)
+			if((**point1)==(**point2))
+				return(true);
+	return(false);
+}
 
 
 //---------------------------------------------------------------------------
