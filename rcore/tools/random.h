@@ -85,7 +85,7 @@ public:
 
 	/**
 	* Return a number in the interval [0,max[.
-	* @param max	Variable used to calculate the number.
+	* @param max            Variable used to calculate the number.
 	*/
 	long Value(const long max)
   	{
@@ -99,14 +99,14 @@ public:
 
 	/**
 	* Return a number in the interval [0,max[ using the current random generator.
-	* @param max				Variable used to calculate the number.
+	* @param max            Variable used to calculate the number.
 	*/
 	static long RRand(long max);
 
 	/**
 	* Random the position of elements of a vector using the current random generator.
-	* @param arr		A pointer to the array representing the vector.
-	* @param size		The size of the vector.
+	* @param arr            A pointer to the array representing the vector.
+	* @param size           The size of the vector.
 	*/
     template<class T> static inline void randorder(T *arr,unsigned size)
     {
@@ -115,45 +115,45 @@ public:
 		register T *p1;
 		register T *p2;
 
-    	#if __BORLANDC__
-    	  #pragma warn -pia
-    	#endif
-      	if(size>1)
-        	for(p1=arr,i=size;;p1++)
-	        {
-    	      if(jump=RRand(i)) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
-        	  if(!--i) break;
-	        }
+		#if __BORLANDC__
+			#pragma warn -pia
+		#endif
+		if(size>1)
+			for(p1=arr,i=size;;p1++)
+			{
+				if(jump=RRand(i)) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
+				if(!--i) break;
+			}
 		#if __BORLANDC__
 			#pragma warn +pia
 		#endif
 	}
-	
+
 	/**
 	* Random the position of elements of a vector.
-	* @param arr		A pointer to the array representing the vector.
-	* @param size		The size of the vector.
+	* @param arr            A pointer to the array representing the vector.
+	* @param size           The size of the vector.
 	*/
     template<class T> inline void RandOrder(T *arr,unsigned size)
     {
-      register unsigned i,jump;
-      T aux;
-      register T *p1;
-      register T *p2;
+		register unsigned i,jump;
+		T aux;
+		register T *p1;
+		register T *p2;
 
-    	#if __BORLANDC__
-    	  #pragma warn -pia
-    	#endif
-      if(size>1)
-        for(p1=arr,i=size;;p1++)
-        {
-          if(jump=Value(i)) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
-          if(!--i) break;
-        }
+		#if __BORLANDC__
+			#pragma warn -pia
+		#endif
+		if(size>1)
+			for(p1=arr,i=size;;p1++)
+			{
+				if(jump=Value(i)) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
+				if(!--i) break;
+			}
 		#if __BORLANDC__
 			#pragma warn +pia
 		#endif
-	}	
+	}
 };
 
 
@@ -180,7 +180,7 @@ public:
 
 	/**
 	* Restart the sequence.
-	* @param seed		Value used to restart.
+	* @param seed           Value used to restart.
 	*/
 	virtual void Reset(const int seed);
 
@@ -229,7 +229,7 @@ public:
 
 	/**
 	* Restart the sequence.
-	* @param seed		Value used to restart.
+	* @param seed           Value used to restart.
 	*/
 	virtual void Reset(const int seed);
 
@@ -288,7 +288,7 @@ public:
 
 	/**
 	* Restart the sequence.
-	* @param seed		Value used to restart.
+	* @param seed           Value used to restart.
 	*/
 	virtual void Reset(const int seed);
 

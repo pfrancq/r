@@ -42,11 +42,11 @@ using namespace RMath;
 //-----------------------------------------------------------------------------
 // General Variables
 static const int a=16807;
-static const int q=INT_MAX/a;					//  cf limits.h; INT_MAX == LONG_MAX in C++
+static const int q=INT_MAX/a;                //  cf limits.h; INT_MAX == LONG_MAX in C++
 static const int r=INT_MAX%a;
 static const double Minv=1.0/INT_MAX;
 static const int NDIV=1+((INT_MAX-1)/32);
-static const double MaxR=1.0-1.2e-7;		//  maximum value to return
+static const double MaxR=1.0-1.2e-7;         //  maximum value to return
 static const int M1=2147483563;
 static const int a1=16807;
 static const int q1=M1/a1;
@@ -131,7 +131,7 @@ void RMath::RRandomBetter::Reset(const int seed)
 
 	//  1st, a few warmups
 	for (int i = 0; i < 8; i++)
-   	Calc();
+		Calc();
 
 	//  ok, NOW fill the table
 	for (int i = 31; i >= 0; i--)
