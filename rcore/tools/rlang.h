@@ -92,6 +92,12 @@ public:
 	int Compare(const char* code) const;
 
 	/**
+	* Get the code of the language.
+	* @returns Pointer to a C string containing the code.
+	*/
+	const char* GetCode(void) {return(Code);}
+
+	/**
 	* Destructor of the language.
 	*/
 	virtual ~RLang(void);
