@@ -97,3 +97,34 @@ void RGA::RandomPlace(RCoord& X,RCoord& Y)
 	if(Y<Limits.Pt1.Y) Y=Limits.Pt2.Y-(Limits.Pt1.Y-Y);
 	if(Y>Limits.Pt2.Y) Y=Limits.Pt1.Y+(Y-Limits.Pt2.Y);
 }
+
+
+//---------------------------------------------------------------------------
+void RGA::LocalOptimisation(const RRects &Rects,RCoord &PosX,RCoord &PosY,unsigned int **OccX,unsigned int **OccY)
+{
+	bool bCanPush;
+  unsigned int i;
+	RCoord j;
+  RRect **rect;
+  unsigned int *nptr;
+
+	// Push Left
+  bCanPush=true;
+	while(bCanPush&&(PosX>Limits.Pt1.X))
+	{				
+		for(i=Rects.NbPtr+1,rect=Rects.Tab;(--i)&&bCanPush;rect++)
+			for(j=(*rect)->Width()+1,nptr=&OccX[PosX+(*rect)->Pt1.X-1][PosY+(*rect)->Pt1.Y];(--j)&&bCanPush;nptr++)
+				if((*nptr)!=NoObject) bCanPush=false;	
+		if(bCanPush) PosX--;		// Push it left
+	}
+
+	// Push Down
+  bCanPush=true;
+	while(bCanPush&&(PosY>Limits.Pt1.Y))
+	{				
+		for(i=Rects.NbPtr+1,rect=Rects.Tab;(--i)&&bCanPush;rect++)
+			for(j=(*rect)->Length()+1,nptr=&OccY[PosY+(*rect)->Pt1.Y-1][PosX+(*rect)->Pt1.X];(--j)&&bCanPush;nptr++)
+				if((*nptr)!=NoObject) bCanPush=false;	
+		if(bCanPush) PosY--;		// Push it down
+	}
+}

@@ -103,6 +103,7 @@ extern RCoord AvWidth;					// Average Width of objects to place
 //---------------------------------------------------------------------------
 // General functions
 void RandomPlace(RCoord& X,RCoord& Y);
+void LocalOptimisation(const RRects &Rects,RCoord &PosX,RCoord &PosY,unsigned int **OccX,unsigned int **OccY);
 
 
 //---------------------------------------------------------------------------

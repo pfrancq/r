@@ -94,6 +94,7 @@ public:
 	RObj2D **Objs;											// Objects to place (ref)
 	unsigned int NbObjs;								// Nb Objects to place
 	RThreadData2D<cInfo> *thDatas;			// Thread dependant data
+	bool bLocalOpti;										// Local Optimization
 
   RInst2D(unsigned int popsize,RObj2D** objs,unsigned int nbobjs) throw(bad_alloc);
 	virtual void Init(void) throw(bad_alloc);

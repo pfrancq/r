@@ -68,18 +68,18 @@ template<class cInst,class cChromo,class cFit,class cInfo>
  	RCoord j;
 	unsigned int **bptr;
 		
-	// Init Occupied	
- 	OccupiedX = new unsigned int*[Limits.Pt2.X];
-  for(j=Limits.Pt2.X+1,bptr=OccupiedX;--j;bptr++)
+	// Init Occupied	(Add 1 Because <= Limits)
+ 	OccupiedX = new unsigned int*[Limits.Pt2.X+1];
+  for(j=Limits.Pt2.X+2,bptr=OccupiedX;--j;bptr++)
   {
-    (*bptr) = new unsigned int[Limits.Pt2.Y];
-    memset(*bptr,NoObject,sizeof(unsigned int)*Limits.Pt2.Y);
+    (*bptr) = new unsigned int[Limits.Pt2.Y+1];
+    memset(*bptr,NoObject,sizeof(unsigned int)*(Limits.Pt2.Y+1));
   }
-  OccupiedY = new unsigned int*[Limits.Pt2.Y];
-  for(j=Limits.Pt2.Y+1,bptr=OccupiedY;--j;bptr++)
+  OccupiedY = new unsigned int*[Limits.Pt2.Y+1];
+  for(j=Limits.Pt2.Y+2,bptr=OccupiedY;--j;bptr++)
   {
-    (*bptr) = new unsigned int[Limits.Pt2.X];
-    memset(*bptr,NoObject,sizeof(unsigned int)*Limits.Pt2.X);
+    (*bptr) = new unsigned int[Limits.Pt2.X+1];
+    memset(*bptr,NoObject,sizeof(unsigned int)*(Limits.Pt2.X+1));
   }
 }
 
@@ -133,27 +133,29 @@ template<class cInst,class cChromo,class cFit,class cInfo>
 {
   unsigned int i,*ptr;
 	RCoord j;								// counter
-  RCoord PosX=0,PosY=0;   // Left-Bottom
-  RCoord NextPosY=0;
+  RCoord PosX=Limits.Pt1.X,PosY=Limits.Pt1.Y;   // Left-Bottom
+  RCoord NextPosY=0,ActPosY=Limits.Pt1.Y;
   RCoord TempY;
   RObj2D *Current;
   RObj2D *First=NULL;       // First object "of the line"
-  RRect Rect;
+	RRect Rect;
   unsigned int **bptr;
   char Ori;
   RGeoInfo *info,*FirstInfo;
-
+	
   // Initialisation
-  for(j=Limits.Pt2.X+1,bptr=OccX;--j;bptr++)
-    memset(*bptr,NoObject,sizeof(unsigned int)*Limits.Pt2.Y);
-  for(j=Limits.Pt2.Y+1,bptr=OccY;--j;bptr++)
-    memset(*bptr,NoObject,sizeof(unsigned int)*Limits.Pt2.X);
+  for(j=Limits.Pt2.X+2,bptr=OccX;--j;bptr++)
+    memset(*bptr,NoObject,sizeof(unsigned int)*(Limits.Pt2.Y+1));
+  for(j=Limits.Pt2.Y+2,bptr=OccY;--j;bptr++)
+    memset(*bptr,NoObject,sizeof(unsigned int)*(Limits.Pt2.X+1));
   for(i=0,ptr=thOrder;i<nbobjs;ptr++,i++) (*ptr)=i;
   randorder<unsigned int>(thOrder,nbobjs);
 
-  // Place them
+  // Place the objects
   while(nbobjs--) // Decrease and index for current object
   {
+
+		// Find a polygon for the object
     Current=objs[thOrder[nbobjs]];
 		info=infos[Current->Id];
     Ori = Current->PossOri[RRand(Current->NbPossOri)];
@@ -164,21 +166,29 @@ template<class cInst,class cChromo,class cFit,class cInfo>
       First=Current;
       FirstInfo=info;
     }
+
+		// Place it to (PosX,PosY=ActPosY)
+		PosY=ActPosY;
+		if(Instance->bLocalOpti) LocalOptimisation(info->Rects,PosX,PosY,OccX,OccY);
     info->Boundary(Rect);
     TempY=Rect.Width();
     if(TempY+PosY>NextPosY)
       NextPosY=PosY+TempY;
-    if(PosX+Rect.Pt2.X>Limits.Pt2.X)
+		if(PosY+TempY>Limits.Pt2.Y) return(false);
+
+		// If to long than begin from left again
+    if(PosX+Rect.Length()-1>Limits.Pt2.X)			
     {
-      PosX=0;
-      FirstInfo->Boundary(Rect);
-      PosY=NextPosY;
-      NextPosY=0;
+      PosX=Limits.Pt1.X;								// Left
+      PosY=ActPosY=NextPosY;						// Increase Y position
       First=NULL;
+			if(Instance->bLocalOpti) LocalOptimisation(info->Rects,PosX,PosY,OccX,OccY);			
+			if(PosY+TempY>Limits.Pt2.Y) return(false);
     }
     info->Assign(OccX,OccY,PosX,PosY,Current->Id);
     info->Boundary(Rect);
-    PosX=Rect.Pt2.X+1;
+    PosX=Rect.Pt2.X+1;									// Increase X position
+
   }
 	
 	return(true);

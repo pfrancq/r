@@ -114,7 +114,7 @@ template<class cInfo>
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cInfo>
 	RInst2D<cInst,cChromo,cFit,cInfo>::RInst2D(unsigned int popsize,RObj2D **objs,unsigned int nbobjs) throw(bad_alloc)
-		: RInst<cInst,cChromo,cFit>(popsize), Objs(objs), NbObjs(nbobjs), thDatas(NULL)
+		: RInst<cInst,cChromo,cFit>(popsize), Objs(objs), NbObjs(nbobjs), thDatas(NULL), bLocalOpti(true)
 {
 	RObj2D **obj;
   cChromo **C;

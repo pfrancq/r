@@ -203,13 +203,22 @@ void RPolygon::RectDecomposition(RRects *rects)
 	unsigned int i;
 	RCoord tmp;
 	bool depc,corc;	
+	RRect *rect;
 
 	// Init
 	rects->Clear();
+	if(NbPtr==4)	// The polygon is already a rectangle
+	{
+		rect=new RRect();
+		Boundary(*rect);
+		rects->InsertPtr(rect);
+		return;
+	}
 	for(i=NbPtr+1,pt=Tab;--i;pt++)
 		pts.InsertPtr(new RPoint(*pt));
 
-	while(pts.NbPtr)	// There is at least a rectangle to construct
+	// There is more than one rectangle to construct
+	while(pts.NbPtr)	
 	{
 		// Find the Left-Down point and delete it
 		pt=pts.Tab;
