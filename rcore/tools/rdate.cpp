@@ -86,7 +86,7 @@ RTimeDate::RDate::RDate(const char* date)
 			(*(begin++)) = (*(ptr++));
 		(*begin)=0;
 		ptr++; // Skip "-"
-		Year=atol(num);
+		Year=atoi(num);
 		if(Year<1000)
 		{
 			if(Year<70) Year+=1970; else Year+=2000;
@@ -98,14 +98,14 @@ RTimeDate::RDate::RDate(const char* date)
 			(*(begin++)) = (*(ptr++));
 		(*begin)=0;
 		ptr++; // Skip "-"
-		Month=atol(num);
+		Month=atoi(num);
 
 		// Read Year
 		begin=num;
 		while(*ptr)
 			(*(begin++)) = (*(ptr++));
 		(*begin)=0;
-		Day=atol(num);
+		Day=atoi(num);
 	}
 }
 
