@@ -376,6 +376,13 @@ public:
 	* "greater" tahn the second and <0 else.
 	*/
 	static int StrCmp(const char* str1,const RChar* str2);
+
+	/**
+	* Test if a given character is in a string.
+	* @return 0 if the the character was not found, or point to the first
+	* occurence of the character in the string.
+	*/
+	static const RChar* StrChr(const RChar* str1,const RChar c);
 };
 
 

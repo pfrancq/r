@@ -58,7 +58,7 @@ int RChar::StrLen(const RChar* str)
 	const RChar* ptr;
 
 	if(!str) return(0);
-	for(len=0,ptr=str;ptr->IsNull();len++,ptr++);
+	for(len=0,ptr=str;!ptr->IsNull();len++,ptr++);
 	return(len);
 }
 
@@ -114,4 +114,20 @@ int RChar::StrCmp(const char* str1,const RChar* str2)
 		str2++;
 	}
 	return(RChar(*str1).Unicode()-(*str2).Unicode());
+}
+
+
+//------------------------------------------------------------------------------
+const RChar* RChar::StrChr(const RChar* str1,const RChar c)
+{
+	UChar u1,u2;
+
+	u2=c.Unicode();
+	while(!str1->IsNull())
+	{
+		u1=(*str1).Unicode();
+		if(u1==u2) return(str1);
+		str1++;
+	}
+	return(0);
 }
