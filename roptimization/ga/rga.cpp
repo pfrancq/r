@@ -86,6 +86,27 @@ eGA::eGA(const RString &msg)
 }
 
 
+//---------------------------------------------------------------------------
+eGAVerify::eGAVerify(void)
+	: eGA("Error when verify chromosomes")
+{
+}
+
+
+//---------------------------------------------------------------------------
+eGACrossover::eGACrossover(void)
+	: eGA("Error when doing a crossover")
+{
+}
+
+
+//---------------------------------------------------------------------------
+eGARandomConstruct::eGARandomConstruct(void)
+	: eGA("Error when doing random construct")
+{
+}
+
+
 
 //---------------------------------------------------------------------------
 //

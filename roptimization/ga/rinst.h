@@ -125,6 +125,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	cThreadData **thDatas;
 	/** Container of all objects that will be receive signals from the GA.*/
 	RContainer<RGASignalsReceiver<cInst,cChromo,cFit>,unsigned int,false,false> Receivers;
+	/** This function is tru if the randol construction where done.*/
+	bool bRandomConstruct;
 public:
 	/** The chromosomes.*/
   cChromo **Chromosomes;

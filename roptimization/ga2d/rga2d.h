@@ -65,20 +65,30 @@
 using namespace RGA;
 #include "rgeometry/rrect.h"
 #include "rgeometry/polygons.h"
-using namespace RGeometry;
+using namespace RGeometry2D;
+
+
+//---------------------------------------------------------------------------
+namespace RGA{
+//---------------------------------------------------------------------------
 
 
 //---------------------------------------------------------------------------
 // Forward class declaration
-namespace RGA
-{
-	class RGeoInfo;
-	class RObj2D;
-	class RObj2DContainer;
-	template<class cInst,class cChromo>	class RThreadData2D;
-	template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RInst2D;
-	template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RChromo2D;
-}
+class RGeoInfo;
+class RObj2D;
+class RObj2DContainer;
+template<class cInst,class cChromo>	class RThreadData2D;
+template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RInst2D;
+template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RChromo2D;
+
+
+//---------------------------------------------------------------------------
+// Heuristic Types
+enum HeuristicType{BottomLeft,Edge,Central};
+
+
+}//------- End of namespace RGA ---------------------------------------------
 
 
 //---------------------------------------------------------------------------
@@ -94,14 +104,13 @@ using namespace RGA;
 namespace RGA{
 //---------------------------------------------------------------------------
 
-
 //---------------------------------------------------------------------------
 // Definitions of templates
 #include "rinst2d.hh"
 #include "rchromo2d.hh"
 
 
-}//------- End of namespace nDGA --------------------------------------------
+}//------- End of namespace RGA ---------------------------------------------
 
 
 

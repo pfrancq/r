@@ -62,7 +62,7 @@
 //---------------------------------------------------------------------------
 // include files for Rainbow
 #include "rgeometry/polygons.h"
-using namespace RGeometry;
+using namespace RGeometry2D;
 #include "rga2d.h"
 using namespace RGA;
 

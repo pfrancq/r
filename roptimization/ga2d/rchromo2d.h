@@ -79,8 +79,10 @@ namespace RGA{
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	class RChromo2D : public RChromo<cInst,cChromo,cFit,cThreadData>
 {
-	/** Tha ctual limits of the solution represented by the chromosome.*/
+	/** The actual limits of the solution represented by the chromosome.*/	
 	RPoint ActLimits;
+	/** The attractive point used for the local optimisation.*/
+	RPoint Attraction;
 public:
 	/** Objects to place.*/
 	RObj2D **Objs;						
@@ -148,13 +150,20 @@ public:
 		*/
 	void FillObjs(RObj2D **objs,unsigned int &nbobjs);
 
+	/** Determine the directions where to move an object at a given position to go
+		* to de attrative point.
+		* @param dirs				An array which will hold the directions.
+		* @param nbdirs			The number of directions.
+		* @param pos				The position of the object.
+		*/
+	void GetDirections(char *dirs,char &nbdirs,const RPoint &pos);
+
 	/** This function does a local optimisation by trying to push the object defined by the rectangles
 		* Rects and with initial position PosX and PosY.
-		* @param Rects			The list of rectangles representing the object.
-		* @param PosX				Initial X position.
-		* @param PosY				Initial Y position.
+		* @param rects			The list of rectangles representing the object.
+		* @param pos				Initial position.
 		*/
-	void LocalOptimisation(const RRects &Rects,RCoord &PosX,RCoord &PosY);
+	void LocalOptimisation(const RRects &rects,RPoint &pos);
 
 	/** This is the heuristic used to make a placement of a given set of objects.
 		*

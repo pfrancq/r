@@ -76,8 +76,8 @@ template<class cInst,class cChromo>
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize) throw(bad_alloc)
-		: Parents(0),Childs(0),tmpChrom(0),Receivers(10,5),Chromosomes(0),PopSize(popsize),
-			Gen(0),AgeBest(0)
+		: Parents(0),Childs(0),tmpChrom(0),Receivers(10,5),bRandomConstruct(false),
+			Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0)
 {
   cChromo **C;
   unsigned int i;
@@ -144,7 +144,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
   for(unsigned int i=PopSize;--i;C++)
   {
     p=(*C);
-    p->RandomConstruct();
+    if(!p->RandomConstruct())
+			throw eGARandomConstruct();
     p->Evaluate();
     p->ToEval=false;
     if((*(p->Fitness))>(*(BestInPop->Fitness))) BestInPop=p;
@@ -153,6 +154,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
   #ifdef RGADEBUG
     if(Debug) Debug->EndFunc("RandomConstruct","RInst");
   #endif
+	bRandomConstruct=true;
   return(true);
 }
 
@@ -349,8 +351,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
   #ifdef RGADEBUG
     if(Debug&&(!ExternBreak)) Debug->BeginFunc("Run","RInst");
   #endif
-//	EmitSigRun();
-  if(!Gen) RandomConstruct();
+  if(!bRandomConstruct) RandomConstruct();
 	emitInteractSig();
   ExternBreak = false;
   while((!StopCondition())&&(!ExternBreak))

@@ -117,7 +117,7 @@ public:
 	* @author Pascal Francq
 	* @short Container of geometric information.
 	*/
-class RGeoInfos : public RContainer<RGeoInfo,unsigned int,false,false>
+class RGeoInfos : public RStd::RContainer<RGeoInfo,unsigned int,false,false>
 {
 public:
 	/** Construct the container.

@@ -75,6 +75,7 @@
 #include "rstd/random.h"        // Random numbers generator
 #include "rstd/rstring.h"       // Strings
 #include "rstd/rcontainer.h"    // Container
+#include "rtextfile.h"					// Text files
 using namespace RStd;
 
 
@@ -144,7 +145,7 @@ class eGAVerify : public eGA
 {
 public:
 	/** Construct the verify exception.*/
-	eGAVerify(void) : eGA("Error when verify chromosomes") {}
+	eGAVerify(void);
 };
 
 
@@ -157,7 +158,20 @@ class eGACrossover : public eGA
 {
 public:
 	/** Construct the crossover esception.*/
-	eGACrossover(void) : eGA("Error when doing a crossover") {}
+	eGACrossover(void);
+};
+
+
+//---------------------------------------------------------------------------
+/** The eGARancomConstruct class provides a exeception that occurs when an error
+	* arrived during the construction.
+	* @author Pascal Francq
+	* @short Random Construct GA Exception
+	*/
+class eGARandomConstruct : public eGA
+{
+public:
+	eGARandomConstruct(void);
 };
 
 

@@ -106,7 +106,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RInst2D(unsigned int popsize,RObj2D **objs,unsigned int nbobjs,RPoint &limits) throw(bad_alloc)
 			: RInst<cInst,cChromo,cFit,cThreadData>(popsize), Objs(objs), NbObjs(nbobjs),
-				bLocalOpti(true), bControlBottomLeft(true), Limits(limits)
+				bLocalOpti(true), Heuristic(Edge), Limits(limits)
 {
   cChromo **C;
   unsigned int i;

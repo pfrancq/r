@@ -52,8 +52,6 @@
 
 */
 
-//#include "rtextfile.h"
-//using namespace RStd;*/
 
 
 //---------------------------------------------------------------------------
@@ -328,69 +326,121 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
   void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		LocalOptimisation(const RRects &Rects,RCoord &PosX,RCoord &PosY)
+		GetDirections(char *dirs,char &nbdirs,const RPoint &pos)
 {
-	bool bCanPush;					// Can contune to push
-	bool bClip;							// Must clip to test
-	bool bAnotherTry;				// Try it again
+	RCoord TempX,TempY;
+
+	// Look in wheach quadrant
+	TempX=pos.X-Attraction.X;
+	TempY=pos.Y-Attraction.Y;
+
+	// By default
+	nbdirs=0;
+
+	// If bottom or up
+	if(TempY<0)
+		dirs[nbdirs++]=2;
+	else
+		if(TempY>0)
+			dirs[nbdirs++]=3;
+
+	// If left or right
+	if(TempX<0)
+		dirs[nbdirs++]=1;
+	else
+		if(TempX>0)
+			dirs[nbdirs++]=0;
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
+  void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+		LocalOptimisation(const RRects &rects,RPoint &pos)
+{
+	bool bCanPush;						// Can contune to push
+	bool bClip;								// Must clip to test
+	bool bAnotherTry;					// Try it again
+	bool bInvertDirs;					// Invert Direction has been done
   unsigned int i;
 	RCoord j;
   RRect **rect;
-	RRect Rect;							// Current rectangle to treat
+	RRect Rect;								// Current rectangle to treat
   unsigned int *nptr;
-	RCoord TestX,TestY;     // Test coordinates
-  RRect RectLimits(0,0,Limits.X,Limits.Y);
+	RPoint Test;     					// Test coordinates
+	char Dirs[2],Dir,*dir;		// Directions (0=left ; 1=right ; 2=up ; 3=down)
+	char NbDir;								// Number of possible directions
 
 	// Init
-	TestX=PosX;
-	TestY=PosY;
+	Test=pos;
 	bAnotherTry=true;
+	bInvertDirs=false;
 
+	// Get the directions
+	GetDirections(Dirs,NbDir,pos);
+	if(!NbDir) return;
+	
 	while(bAnotherTry)
 	{
 		// By default: the last
 		bAnotherTry=false;
 
-  	// Push Down
-    bCanPush=true;
-  	while(bCanPush&&TestY)
-   	{				
-   		bClip=false;
-   		for(i=Rects.NbPtr+1,rect=Rects.Tab;(--i)&&bCanPush;rect++)
-   		{
-   			Rect=(**rect);
-   			Rect.Translation(TestX,TestY);
- 				if(Rect.Clip(RectLimits)) bClip=false;
-   			for(j=Rect.Width()+1,nptr=&OccupiedY[Rect.Pt1.Y-1][Rect.Pt1.X];(--j)&&bCanPush;nptr++)
-   				if((*nptr)!=NoObject) bCanPush=false;	
-   		}
-   		if(bCanPush) TestY--;
-   		if(!bClip)
-   			PosY=TestY;
-   	}
-
-  	// Push Left
-    bCanPush=true;
-  	while(bCanPush&&TestX)
-  	{				
-  		bClip=false;
-  		for(i=Rects.NbPtr+1,rect=Rects.Tab;(--i)&&bCanPush;rect++)
-  		{
-  			Rect=(**rect);
-  			Rect.Translation(TestX,TestY);
-				if(Rect.Clip(RectLimits)) bClip=false;
-  			for(j=Rect.Height()+1,nptr=&OccupiedX[Rect.Pt1.X-1][Rect.Pt1.Y];(--j)&&bCanPush;nptr++)
-  				if((*nptr)!=NoObject) bCanPush=false;	
-  		}
-  		if(bCanPush)
+		for(Dir=NbDir+1,dir=Dirs;--Dir;dir++)
+		{
+			switch(*dir)    	
 			{
-				TestX--;		// Push it left
-				bAnotherTry=true;
-			}
-  		if(!bClip)
-  			PosX=TestX;
-  	}
+				case 0:		// Push Left        	
+          bCanPush=true;
+        	while(bCanPush&&Test.X)
+        	{				
+        		bClip=false;
+        		for(i=rects.NbPtr+1,rect=rects.Tab;(--i)&&bCanPush;rect++)
+        		{
+        			Rect=(**rect);
+         			Rect+=Test;
+      				if(Rect.Clip(Limits)) bClip=true;/*bCanPush=false;*/
+        			for(j=Rect.Height()+1,nptr=&OccupiedX[Rect.Pt1.X-1][Rect.Pt1.Y];(--j)&&bCanPush;nptr++)
+        				if((*nptr)!=NoObject) bCanPush=false;	
+        		}
+        		if(bCanPush)
+      			{
+      				Test.X--;		// Push it left
+      				bAnotherTry=true;
+      			}
+        		if((!bClip)&&bCanPush)
+        			pos=Test;
+        	}
+          break;
 
+				case 3:		// Push Down        	
+          bCanPush=true;
+        	while(bCanPush&&Test.Y)
+         	{				
+         		bClip=false;
+         		for(i=rects.NbPtr+1,rect=rects.Tab;(--i)&&bCanPush;rect++)
+         		{
+         			Rect=(**rect);
+         			Rect+=Test;
+       				if(Rect.Clip(Limits)) bClip=true;/*bCanPush=false;*/
+         			for(j=Rect.Width()+1,nptr=&OccupiedY[Rect.Pt1.Y-1][Rect.Pt1.X];(--j)&&bCanPush;nptr++)
+         				if((*nptr)!=NoObject) bCanPush=false;	
+         		}
+         		if(bCanPush) Test.Y--;
+        		if((!bClip)&&bCanPush)
+         			pos=Test;
+         	}
+					break;
+      }
+    }
+		if(NbDir==1) bAnotherTry=false;
+		if((!bAnotherTry)&&(!bInvertDirs)&&(NbDir==2)&&(bClip))
+		{
+			bAnotherTry=true;
+			bInvertDirs=true;
+			Dir=Dirs[0];
+			Dirs[0]=Dirs[1];
+			Dirs[1]=Dir;
+		}
 	}
 }
 
@@ -407,22 +457,27 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RRect Rect;																		// Bound rectangle of current object
   RCoord TempX,TempY;														// Length and Height of Rect
 	unsigned int nbswitch;												// Number of switch that can be tried	
-
 	RPoint Pos(0,0);															// Test Position
 	RPoint Actual(0,0);														// Actual Left Position
 	RPoint Next(0,0);															// Next Position
-	RPoint Max;																		// Max Position	
+	RPoint Max(0,0);															// Max Position	
 	double FactorX,FactorY;												// Ratio between BestPoss and Limits
+	static RPoint EOLs[40];												// Coordinates of "end of lines"
+	unsigned int CurLine;													// Actual "Line"
+	unsigned int MaxLine;													// Maximal "Line"
 
 	// Calculate an initial random order
   for(i=0,ptr=thOrder;i<nbobjs;ptr++,i++) (*ptr)=i;
   RRandom::randorder<unsigned int>(thOrder,nbobjs);
 	memcpy(thOrder2,thOrder,nbobjs*sizeof(unsigned int));
+	Attraction.Set(0,0);
+	if(Instance->Heuristic==Edge)
+		Max.X=Limits.X;;
+	MaxLine=CurLine=0;
 
 	// Clear Geometric informations
 	ClearInfos();
-	Max=Limits;
-
+	
   // Place the objects
 	nbswitch=nbobjs;
   while(nbobjs--) // Decrease and index for current object
@@ -437,63 +492,67 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 		info=Infos[Current->Id];
     Ori = Current->PossOri[RRandom::RRand(Current->NbPossOri)];
     info->AssignBound(Current->Id,Current->Polygons[Ori]);
-    info->Boundary(Rect);
+    info->Bound.Boundary(Rect);
     TempX=Rect.Width();
     TempY=Rect.Height();
 
 
-		// Calculate Max
-		if(Instance->bControlBottomLeft)
+		// Verify if add normally or on bottom
+		if((Instance->Heuristic==Edge)&&((ActLimits.X+1)<Limits.X))
 		{
-			Max=ActLimits;
-			if((ActLimits.X+1)<Limits.X)
-			{
-				FactorX=(static_cast<double>(ActLimits.X/*µ+TempX*/))/(static_cast<double>(Limits.X));
-				FactorY=(static_cast<double>(ActLimits.Y/*+TempY*/))/(static_cast<double>(Limits.Y));
-				if(FactorX<FactorY)
-				{
-					Max.X+=TempX;
-					if(Max.X>Limits.X)
-						Max.X=Limits.X;
-				}
-			}		
+			FactorX=(static_cast<double>(ActLimits.X+TempX))/(static_cast<double>(Limits.X));
+ 			FactorY=(static_cast<double>(ActLimits.Y+TempY))/(static_cast<double>(Limits.Y));
+ 			if(FactorX<FactorY)
+ 			{
+				Next.Set(ActLimits.X+1,0);
+				Actual=Next;
+ 				Max.X=ActLimits.X+TempX+1;
+ 				if(Max.X>Limits.X)
+	 				Max.X=Limits.X;
+				CurLine=0;
+				Actual=Next;
+ 			}
     }
-
-
-		// Test Actual Position
+					
+		// Do a local optimisationn at actual position
 		Pos=Actual;
-		if(Instance->bLocalOpti)	// Do a local optimisation
-			LocalOptimisation(info->Rects,Pos.X,Pos.Y);
-
+		if(Instance->bLocalOpti)	
+			LocalOptimisation(info->Rects,Pos);
+	
 
 		// If to long than begin from left again
-		if(Pos.X+TempX>Max.X)
+		while((Pos.X>0)&&(Pos.X+TempX>Max.X))
 		{
-			Pos=Actual=Next;
- 			if(Instance->bLocalOpti)	// Do a local optimisation
- 				LocalOptimisation(info->Rects,Pos.X,Pos.Y);
-		}
+			if(Instance->Heuristic==Edge)
+			{
+				EOLs[CurLine++]=Actual;
+				if(CurLine>MaxLine) CurLine=MaxLine;
+				if(CurLine<MaxLine)	
+					Actual=EOLs[CurLine];
+				else
+					Actual.Set(0,Max.Y);
+      }
+      else
+				Actual.Set(0,Max.Y);
+			Pos=Actual;
+			if(Instance->bLocalOpti)	// Do a local optimisation
+ 				LocalOptimisation(info->Rects,Pos);
+    }
 
 
 		// If to high than try to switch objects and place another one
 		if(Pos.Y+TempY>Limits.Y)
 		{
-			if((ActLimits.X+TempX)<Limits.X)
-			{
-      	ActLimits.X+=TempX;
-				nbobjs++;
-				nbswitch++;
-				continue;
-			}
-			if(nbswitch) 	// A switch is possible
-			{
- 				i=thOrder[nbobjs];
-				thOrder[nbobjs++]=(*thOrder);
-				(*thOrder)=i;
-				nbswitch--;
-				continue;
-			}
-			return(false);
+ 			// Try to switch
+ 			if(nbswitch) 	
+ 			{
+  				i=thOrder[nbobjs];
+ 				thOrder[nbobjs++]=(*thOrder);
+ 				(*thOrder)=i;
+ 				nbswitch--;
+ 				continue;
+ 			}
+ 			return(false);
 		}
 
 
@@ -501,17 +560,23 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
     info->Assign(OccupiedX,OccupiedY,Pos.X,Pos.Y);
 
 
-		// Calculate Next
+		// Calculate Next position
 		if(Pos.X+TempX>Actual.X)
 			Actual.X=Pos.X+TempX;
-		if(Pos.Y+TempY>Next.Y)
-			Next.Y=Pos.Y+TempY;
+		if(Pos.Y+TempY>Max.Y)
+			Max.Y=Pos.Y+TempY;
 
 
 		// Verify ActLimits
-		if(Actual.X>ActLimits.X) ActLimits.X=Actual.X;
-		if(Next.Y>ActLimits.Y) ActLimits.Y=Next.Y;
+		if(Pos.X+TempX>ActLimits.X)
+		{
+			ActLimits.X=Pos.X+TempX;
+			if(Max.X==0) Max.X=ActLimits.X;
+		}
+		if(Pos.Y+TempY>ActLimits.Y) ActLimits.Y=Pos.Y+TempY;
   }
+
+	// Ok, all objects are placed
 	return(true);
 }
 
@@ -527,25 +592,32 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
   RGeoInfo *info;																// Current info
 	RRect Rect;																		// Bound rectangle of current object
   RCoord TempX,TempY;														// Length and Height of Rect
-	unsigned int nbswitch;												// Number of switch that can be tried	
-
-	RPoint Pos(Limits.X/2,Limits.Y/2);						// Test Position
+	RPoint Pos(0,0);															// Test Position
 
 	// Calculate an initial random order
   for(i=0,ptr=thOrder;i<nbobjs;ptr++,i++) (*ptr)=i;
   RRandom::randorder<unsigned int>(thOrder,nbobjs);
+	Attraction.X=Limits.X/2;
+	Attraction.Y=Limits.Y/2;
 
 	// Find a polygon for the object
-  Current=objs[*thOrder];
+  Current=objs[thOrder[--nbobjs]];
 	info=Infos[Current->Id];
   Ori = Current->PossOri[RRandom::RRand(Current->NbPossOri)];
   info->AssignBound(Current->Id,Current->Polygons[Ori]);
   info->Boundary(Rect);
   TempX=Rect.Width();
   TempY=Rect.Height();
-	// Assign the object to the current position
+
+	// Calculate Position for the first object and assign it
+	Pos.X=(Limits.X-TempX)/2;
+	Pos.Y=(Limits.Y-TempY)/2;
   info->Assign(OccupiedX,OccupiedY,Pos.X,Pos.Y);
-	
+
+	while(nbobjs--)
+	{
+	}
+	return(true);	
 }
 
 
@@ -555,8 +627,21 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RandomConstruct(void)
 {
+	bool b;
+
 	memset(Selected,0,NbObjs*sizeof(bool));
-	return(HeuristicC(Objs,NbObjs));
+	switch(Instance->Heuristic)
+	{
+		case BottomLeft:
+		case Edge:
+			b=HeuristicBL(Objs,NbObjs);
+			break;
+
+		case Central:
+			b=HeuristicC(Objs,NbObjs);
+			break;
+	}
+	return(b);
 }
 
 
@@ -566,7 +651,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 		Crossover(cChromo *parent1,cChromo *parent2)
 {
 	RGeoInfo *info;
-	bool bPlace;
+	bool b;
 
 	// Init Part
 	memset(Selected,0,NbObjs*sizeof(bool));						// No object selected
@@ -578,7 +663,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 	// Put the rest of the objects & apply the placement heuristic
   FillObjs(thObjs,thNbObjs);												
-	bPlace=HeuristicBL(thObjs,thNbObjs);
+	switch(Instance->Heuristic)
+	{
+		case BottomLeft:
+		case Edge:
+			b=HeuristicBL(Objs,NbObjs);
+			break;
+
+		case Central:
+			b=HeuristicC(Objs,NbObjs);
+			break;
+	}
 
 	// Remplace container by objects
 	info=Infos[NbObjs];
@@ -586,7 +681,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 		thObj1->Assign(Infos,OccupiedX,OccupiedY,info->Pos.X,info->Pos.Y);
 /*	info=Infos[NbObjs+1];
 	thObj2->Assign(Infos,OccupiedX,OccupiedY,info->Pos.X,info->Pos.Y);*/
-	return(bPlace);
+	return(b);
 }
 
 
@@ -594,8 +689,21 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void)
 {
+	bool b;
+
 	memset(Selected,0,NbObjs*sizeof(bool));
-	return(HeuristicBL(Objs,NbObjs));
+	switch(Instance->Heuristic)
+	{
+		case BottomLeft:
+		case Edge:
+			b=HeuristicBL(Objs,NbObjs);
+			break;
+
+		case Central:
+			b=HeuristicC(Objs,NbObjs);
+			break;
+	}
+	return(b);
 }
 
 

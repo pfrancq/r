@@ -121,7 +121,7 @@ public:
 	/** Local Optimisation.*/
 	bool bLocalOpti;
 	/** Use a Left-Bottom heuristic with a control of the bound.*/
-	bool bControlBottomLeft;
+	HeuristicType Heuristic;
 	/** Point representing the limits for the placement.*/
 	RPoint Limits;
 
