@@ -126,12 +126,12 @@ class RPromCriterion : protected RContainer<RPromCritValue,unsigned int,false,fa
 	CriteriaType Type;
 
 	/**
-	* Value for the preference's threshold of the Prométhée method.
+	* Value for the preference threshold of the Prométhée method.
 	*/
 	double P;
 
 	/**
-	* Value for the indifference's threshold of the Prométhée method.
+	* Value for the indifference threshold of the Prométhée method.
 	*/
 	double Q;
 
