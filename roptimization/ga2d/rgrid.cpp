@@ -31,20 +31,21 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
-#include "rgrid.h"
+#include <rga/rgrid.h>
+#include <rga/rgeoinfo.h>
 using namespace RGA;
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // RGrid
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RGrid::RGrid(RPoint &limits) throw(bad_alloc)
 	: Limits(limits), OccupiedX(0), OccupiedY(0)
 {
@@ -58,7 +59,7 @@ RGrid::RGrid(RPoint &limits) throw(bad_alloc)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RGrid::Clear(void)
 {
 	RReturnIfFail(OccupiedX);
@@ -73,7 +74,7 @@ void RGrid::Clear(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RGrid::Assign(RRect &rect,RPoint &pos,unsigned int id)
 {
 	RCoord BeginX,BeginY,j,k,H,W;
@@ -98,81 +99,370 @@ void RGrid::Assign(RRect &rect,RPoint &pos,unsigned int id)
 }
 
 
-//---------------------------------------------------------------------------
-void RGrid::AddFreePolygons(RGeoInfo *ins,RPolygons *polys,RRect &bound)
+//-----------------------------------------------------------------------------
+bool RGrid::IsFree(RCoord x,RCoord y)
 {
-	RRect Rects;				// Rectangle eventually to add
-	RPolygon Poly;			// Polygon representing the geometric information
-	RPoint *start,*end;
-	unsigned int nbpts;
-	int FromDir;		// 0=left ; 1=right ; 2=up ; 3=down
-/*	RCoord X,Y;
-
-	// Test % limits
-	if((pos.X<0)||(pos.Y<0)) return(false);
-	Test=Rect;
-	Test+=pos;
-	if(Test.Clip(limits)) return(false);	
-
-	// Test it and go through the other
-	start=Bound->GetBottomLeft();
-	end=Bound->GetConX(start);
-	FromDir=0;
-	X=start->X+pos.X;
-	Y=start->Y+pos.Y;
-	nbpts=Bound->NbPtr;
-
-	// Test it and go through the other
-	while(nbpts)
-	{
-		if(grid->IsOcc(X,Y)) return(false);
-
-		// If end of an edge
-		if((X==end->X+pos.X)&&(Y==end->Y+pos.Y))
-		{
-			start=end;
-			nbpts--;			// Next point
-			X=start->X+pos.X;
-			Y=start->Y+pos.Y;
-			if(FromDir<2)	// Go to up/bottom
-			{
-				end=Bound->GetConY(start);
-				if(start->Y<end->Y) FromDir=2; else FromDir=3;
-			}
-			else		// Go to left/right
-			{
-				end=Bound->GetConX(start);
-				if(start->X<end->X) FromDir=0; else FromDir=1;
-			}
-		}
-		else
-		{
-			// Go to next pos
-			switch(FromDir)
-			{
-				case 0: // from left
-					X++;
-					break;
-
-				case 1: // from right
-					X--;
-					break;
-
-				case 2: // from bottom
-					Y++;
-					break;
-
-				case 3: // from up
-					Y--;
-					break;
-			}
-		}
-	}
-*/	
+	RReturnValIfFail(OccupiedX,false);
+	if(x<0||x>(Limits.X*2)||y<0||y>(Limits.Y*2))
+		return(false);
+	return(OccupiedX[x][y]==NoObject);
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool RGrid::IsOcc(RCoord x,RCoord y)
+{
+	RReturnValIfFail(OccupiedX,false);
+	if(x<0||x>(Limits.X*2)||y<0||y>(Limits.Y*2))
+		return(true);
+	return(OccupiedX[x][y]!=NoObject);
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RGrid::LookLeft(RPoint pt)
+{
+	unsigned int *ptr=&OccupiedY[pt.Y][pt.X];
+	RCoord x=pt.X;
+
+	while(x&&((*ptr)!=NoObject))
+	{
+		ptr--;
+		x--;	
+	}
+	return(x);
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RGrid::LookRight(RPoint pt)
+{
+	unsigned int *ptr=&OccupiedY[pt.Y][pt.X];
+	RCoord x=pt.X;
+
+	while((x<Limits.X)&&((*ptr)!=NoObject))
+	{
+		ptr++;
+		x++;	
+	}
+	return(x);
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RGrid::LookUp(RPoint pt)
+{
+	unsigned int *ptr=&OccupiedX[pt.X][pt.Y];
+	RCoord y=pt.Y;
+
+	while((y<=Limits.Y)&&((*ptr)!=NoObject))
+	{
+		ptr++;
+		y++;	
+	}
+	return(y);
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RGrid::LookDown(RPoint pt)
+{
+	unsigned int *ptr=&OccupiedX[pt.X][pt.Y];
+	RCoord y=pt.Y;
+
+	while(y&&((*ptr)!=NoObject))
+	{
+		ptr--;
+		y--;	
+	}
+	return(y);
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RGrid::SkirtLeft(RPoint pt,RRect &bound)
+{
+	unsigned int *ptr=&OccupiedY[pt.Y][pt.X],*ptrU,*ptrD;
+	RCoord x=pt.X;
+	RCoord Limit=bound.Pt1.X;	
+
+	if(pt.Y>0) ptrD=&OccupiedY[pt.Y-1][pt.X]; else ptrD=0;
+	if(pt.Y<Limits.Y) ptrU=&OccupiedY[pt.Y+1][pt.X]; else ptrU=0;
+	while((x>=Limit)&&((*ptr)!=NoObject)&&!(((!ptrU)&&(ptrU&&((*ptrU)==NoObject)))&&((!ptrD)&&(ptrU&&((*ptrD)==NoObject)))))
+	{
+		ptr--;
+		x--;	
+	}
+	return(x);
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RGrid::SkirtRight(RPoint pt,RRect &bound)
+{
+	unsigned int *ptr=&OccupiedY[pt.Y][pt.X],*ptrU,*ptrD;
+	RCoord x=pt.X;
+	RCoord Limit=bound.Pt2.X;
+
+	if(pt.Y>0) ptrD=&OccupiedY[pt.Y-1][pt.X]; else ptrD=0;
+	if(pt.Y<Limits.Y) ptrU=&OccupiedY[pt.Y+1][pt.X]; else ptrU=0;
+	while((x<Limit)&&((*ptr)!=NoObject)&&!(((!ptrU)&&(ptrU&&((*ptrU)==NoObject)))&&((!ptrD)&&(ptrU&&((*ptrD)==NoObject)))))
+	{
+		ptr++;
+		x++;	
+	}
+	return(x);
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RGrid::SkirtUp(RPoint pt,RRect &bound)
+{
+	unsigned int *ptr=&OccupiedX[pt.X][pt.Y],*ptrL,*ptrR;
+	RCoord y=pt.Y;
+	RCoord Limit=bound.Pt2.Y;
+
+	if(pt.X>0) ptrL=&OccupiedX[pt.X-1][pt.Y]; else ptrL=0;
+	if(pt.X<Limits.X) ptrR=&OccupiedX[pt.X+1][pt.Y]; else ptrR=0;
+	while((y<=Limit)&&((*ptr)!=NoObject)&&!(((!ptrR)&&(ptrR&&((*ptrR)==NoObject)))&&((!ptrL)&&(ptrL&&((*ptrL)==NoObject)))))
+	{
+		ptr++;
+		y++;	
+	}
+	return(y);
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RGrid::SkirtDown(RPoint pt,RRect &bound)
+{
+	unsigned int *ptr=&OccupiedX[pt.X][pt.Y],*ptrL,*ptrR;
+	RCoord y=pt.Y;
+	RCoord Limit=bound.Pt1.Y;
+
+	if(pt.X>0) ptrL=&OccupiedX[pt.X-1][pt.Y]; else ptrL=0;
+	if(pt.X<Limits.X) ptrR=&OccupiedX[pt.X+1][pt.Y]; else ptrR=0;
+	while((y>=Limit)&&((*ptr)!=NoObject)&&!(((!ptrR)&&(ptrR&&((*ptrR)==NoObject)))&&((!ptrL)&&(ptrL&&((*ptrL)==NoObject)))))
+	{
+		ptr--;
+		y--;	
+	}
+	return(y);
+}
+
+
+//-----------------------------------------------------------------------------
+bool RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect &bound,RPolygon *poly)
+{
+	RPoint *next,*first,pt;
+	RCoord TestX,TestY;
+	// Init Part
+	RReturnValIfFail(poly,false);
+	poly->Clear();	
+	poly->InsertPtr(first=new RPoint(X,Y));
+	pt.Set(X,Y);
+
+	// Find the next vertice of the polygon
+  	switch(from)		
+  	{
+  		case Left:
+			Y=SkirtDown(pt,bound);
+			from=Up;
+  			break;
+  		case Right:
+			Y=SkirtUp(pt,bound);
+			from=Down;
+  			break;
+  		case Down:
+			X=SkirtRight(pt,bound);
+			from=Left;
+  			break;
+  		case Up:
+			X=SkirtLeft(pt,bound);
+			from=Right;
+  			break;
+  		case NoDirection:
+  			RAssertMsg("Direction can't be undefined");
+  			break;
+  	}
+
+	// Test if Valid one and insert it
+	if((X==bound.Pt1.X)||(X==bound.Pt2.X)||(Y==bound.Pt1.Y)||(Y==bound.Pt2.Y)||(X==pt.X)||(Y==pt.Y))
+		return(false);
+
+	// Find next Vertices
+	while((first->X!=X)||(first->Y!=Y))
+	{
+		poly->InsertPtr(next=new RPoint(X,Y));
+		pt.Set(X,Y);
+		switch(from)		
+		{
+			case Left:
+				TestY=SkirtDown(pt,bound);
+				if((TestY!=Y)&&(TestY>bound.Pt1.Y))
+				{
+					Y=TestY;
+					break;
+				}
+				TestX=SkirtRight(pt,bound);
+				if((TestX!=X)&&(TestX<bound.Pt2.X))
+				{
+					X=TestX;
+					break;
+				}
+				TestY=SkirtUp(pt,bound);
+				if((TestY!=Y)&&(TestY<bound.Pt2.Y))
+				{
+					Y=TestY;
+					break;
+				}
+				return(false);
+				break;
+
+			case Right:
+				TestY=SkirtUp(pt,bound);
+				if((TestY!=Y)&&(TestY<bound.Pt2.Y))
+				{
+					Y=TestY;
+					break;
+				}
+				TestX=SkirtLeft(pt,bound);
+				if((TestX!=X)&&(TestX>bound.Pt1.X))
+				{
+					X=TestX;
+					break;
+				}
+				TestY=SkirtDown(pt,bound);
+				if((TestY!=Y)&&(TestY>bound.Pt1.Y))
+				{
+					Y=TestY;
+					break;
+				}
+				return(false);
+				break;
+
+			case Down:
+				TestX=SkirtRight(pt,bound);
+				if((TestX!=X)&&(TestX<bound.Pt2.X))
+				{
+					X=TestX;
+					break;
+				}
+				TestY=SkirtUp(pt,bound);
+				if((TestY!=Y)&&(TestY<bound.Pt2.Y))
+				{
+					Y=TestY;
+					break;
+				}
+				TestX=SkirtLeft(pt,bound);
+				if((TestX!=X)&&(TestX>bound.Pt1.X))
+				{
+					X=TestX;
+					break;
+				}
+				return(false);
+				break;
+
+			case Up:
+				TestX=SkirtLeft(pt,bound);
+				if((TestX!=X)&&(TestX>bound.Pt1.X))
+				{
+					X=TestX;
+					break;
+				}
+				TestY=SkirtDown(pt,bound);
+				if((TestY!=Y)&&(TestY>bound.Pt1.Y))
+				{
+					Y=TestY;
+					break;
+				}
+				TestX=SkirtRight(pt,bound);
+				if((TestX!=X)&&(TestX<bound.Pt2.X))
+				{
+					X=TestX;
+					break;
+				}
+				return(false);
+				break;
+
+			case NoDirection:
+				RAssertMsg("Direction can't be undefined");
+				break;
+		}
+	}
+
+	// Ok	
+	return(true);
+}
+
+
+//-----------------------------------------------------------------------------
+void RGrid::AddFreePolygons(RGeoInfo *ins,RPolygons *polys,RRect &bound)
+{
+	RPolygon Poly;			// Polygon representing the geometric information
+	RPolygons NewOne;		// Polygons added now
+	RPolygon *New;			// New Polygon
+	RPoint *start,*end;
+	unsigned int nbpts;
+	RDirection FromDir;
+	RCoord X,Y;
+	RCoord TestX,TestY;
+
+	// Initialisation
+	Poly=ins->GetPolygon();
+	start=Poly.GetBottomLeft();
+	end=Poly.GetConX(start);
+	FromDir=Left;
+	X=start->X;
+	Y=start->Y;
+	nbpts=Poly.NbPtr;
+
+	// Go through the vertices
+	while(nbpts)
+	{
+		TestX=X;
+		TestY=Y;
+		AdaptTestXY(TestX,TestY,FromDir);
+		if(bound.IsIn(TestX,TestY)&&IsFree(TestX,TestY)&&(!NewOne.IsIn(TestX,TestY)))
+		{
+			// A new Polygon has to be created
+			New = new RPolygon();
+
+			// Calculate Polygon
+			if(CalculateFreePolygon(TestX,TestY,FromDir,bound,New))
+			{
+				NewOne.InsertPtr(New);
+				polys->InsertPtr(New);
+			}
+			else
+				delete New;
+		}
+
+		// If end of an edge
+		if((X==end->X)&&(Y==end->Y))
+		{
+			start=end;
+			nbpts--;			// Next vertice
+			TestX=X=start->X;
+			TestY=Y=start->Y;
+			if((FromDir==Left)||(FromDir==Right))	// Go to up/bottom
+			{
+				end=Poly.GetConY(start);
+				if(start->Y<end->Y) FromDir=Down; else FromDir=Up;
+			}
+			else		// Go to left/right
+			{
+				end=Poly.GetConX(start);
+				if(start->X<end->X) FromDir=Left; else FromDir=Right;
+			}
+		}
+		else
+			AdaptXY(X,Y,FromDir);
+	}	
+}
+
+
+//-----------------------------------------------------------------------------
 RGrid::~RGrid(void)
 {
 	if(OccupiedX)
