@@ -331,7 +331,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			if(Debug) Debug->PrintInfo(Tmp);
 		#endif
 		emitInteractSig();
-		p->Mutation();
+		if(!p->Mutation())
+			throw eGAMutation(Gen,p->Id);
 		p->ToEval=true;
 		if(!p->Verify())
 			throw eGAVerify(Gen,p->Id);
@@ -359,7 +360,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			if(Debug) Debug->PrintInfo(Tmp);
 		#endif
 		emitInteractSig();
-		p->Mutation();
+		if(!p->Mutation())
+			throw eGAMutation(Gen,p->Id);
 		p->ToEval=true;
 		if(!p->Verify())
 			throw eGAVerify(Gen,p->Id);

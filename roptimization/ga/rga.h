@@ -115,7 +115,6 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup GA
 * This class represent a verify exception, when a chromosome is not valid
 * after a generation.
 * @author Pascal Francq
@@ -136,7 +135,6 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup GA
 * This class represent a crossover exception, when a crossover can't be done.
 * @author Pascal Francq
 * @short Crossover GA Exception
@@ -158,7 +156,25 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup GA
+* This class represent a mutation exception, when a mutation can't be done.
+* @author Pascal Francq
+* @short Mutation GA Exception
+*/
+class eGAMutation : public eGA
+{
+public:
+
+	/**
+	* Construct the mutation exception.
+	* @param g              Generation.
+	* @param c              Identificator of the child.
+	*/
+	eGAMutation(const unsigned int g,const unsigned int c);
+};
+
+
+//-----------------------------------------------------------------------------
+/**
 * The eGARancomConstruct class provides a exeception that occurs when an error
 * arrived during the construction.
 * @author Pascal Francq

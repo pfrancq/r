@@ -99,6 +99,17 @@ RGA::eGACrossover::eGACrossover(const unsigned int g,const unsigned p1,const uns
 
 
 //-----------------------------------------------------------------------------
+RGA::eGAMutation::eGAMutation(const unsigned int g,const unsigned int c)
+	: eGA()
+{
+	char tmp[200];
+
+	sprintf(tmp,"Generation %u: Mutation error: Chromsosome %u",g,c);
+	SetMsg(tmp);
+}
+
+
+//-----------------------------------------------------------------------------
 RGA::eGARandomConstruct::eGARandomConstruct(void)
 	: eGA("Error when doing random construct")
 {
