@@ -6,7 +6,7 @@
 
 	Text File - Implementation.
 
-	Copyright 1999-2004 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the UniversitÃ© libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -252,7 +252,7 @@ RString RTextFile::GetUntilEnd(void)
 	RChar Buffer[513];
 	RChar* tmp;
 	unsigned int len;
-	
+
 	while(*ptr)
 	{
 		// Read a block of maximum 512 characters in Buffer
@@ -286,7 +286,7 @@ void RTextFile::SkipEol(void)
 		Next();
 		Line++;
 	}
-	
+
 	// MAC and DOS
 	if(Cur==13)
 	{
@@ -296,7 +296,7 @@ void RTextFile::SkipEol(void)
 		// DOS only
 		if(Cur==10) Next();
 	}
-}                   
+}
 
 
 //------------------------------------------------------------------------------
@@ -517,9 +517,9 @@ RString RTextFile::GetLine(bool SkipEmpty) throw(RIOException)
 	if((res.IsEmpty())&&(SkipEmpty))
 		return(GetLine());
 
-	// Return readed line	
+	// Return readed line
 	return(res);
-}                    
+}
 
 
 //------------------------------------------------------------------------------
@@ -527,7 +527,7 @@ long RTextFile::GetInt(void) throw(RIOException)
 {
 	long nb;
 	char* ptr;
-	
+
 	RString str("");
 	//SkipSpaces
 	while((GetCur()==' '))
@@ -703,7 +703,7 @@ float RTextFile::GetFloat(void) throw(RIOException)
 			Next();
 		}
 	}
-	
+
 	nb=strtof(str,&ptr);
 	if(ptr==str)
 		throw RIOException(this,"No Float");
@@ -964,6 +964,18 @@ void RTextFile::WriteLog(const RString& entry) throw(RIOException)
 	str=RString("[")+tmp+"] : "+entry;
 	WriteStr(str);
 	WriteLine();
+}
+
+
+//------------------------------------------------------------------------------
+RChar RTextFile::GetDirSeparator(void)
+{
+#ifdef _BSD_SOURCE
+    return('/');
+#else
+    return('\\');
+#endif
+
 }
 
 

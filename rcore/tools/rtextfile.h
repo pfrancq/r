@@ -6,7 +6,7 @@
 
 	Text File - Header.
 
-	Copyright 1999-2004 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the UniversitÃ© libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -113,7 +113,7 @@ protected:
 	* How to file has to be used.
 	*/
 	ModeType Mode;
-	
+
 	/**
 	* Name of the File.
 	*/
@@ -268,7 +268,7 @@ protected:
 	* If the character to be read is Invalid, it is skipped and the function
 	* returns the number of characters skipped.
 	* @param ptr            Pointer to a buffer of character to read.
-	* @param len            Number of character in the buffer. After the call, 
+	* @param len            Number of character in the buffer. After the call,
 	*                       this parameter contains the number bytes read.
 	* @param read           The resulting character
 	* @return unsigned int  return the number of bytes that have been skipped.
@@ -282,7 +282,7 @@ protected:
 	* @param ptr            Pointer to a string.
 	*/
 	static bool Eol(RChar car);
-	
+
 	/**
 	* This function skip a end of line.
 	*/
@@ -584,6 +584,11 @@ public:
 	* Specify the set of characters used as separator.
 	*/
 	void SetSeparator(const char* str) {Separator=str;}
+
+	/**
+	* Get the separator used for the directories.
+	*/
+	static RChar GetDirSeparator(void);
 
 	/**
 	* Destructs the file.
