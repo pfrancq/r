@@ -32,6 +32,12 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <stdlib.h>
+
+
+//-----------------------------------------------------------------------------
+// include files for Rainbow
 #include <rpromethee/rpromkernel.h>
 #include <rpromethee/rpromcritvalue.h>
 using namespace RPromethee;
@@ -95,6 +101,15 @@ RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const double p,co
 
 
 //-----------------------------------------------------------------------------
+RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const RPromCriterionParams& params) throw(bad_alloc)
+{
+	RPromCriterion* crit=new RPromCriterion(t,params,Criteria.NbPtr,Solutions.MaxPtr);
+	Criteria.InsertPtr(crit);
+	return(crit);
+}
+
+
+//-----------------------------------------------------------------------------
 RPromSol* RPromKernel::NewSol(void) throw(bad_alloc)
 {
 	RPromSol* sol=new RPromSol(Solutions.NbPtr,Criteria.MaxPtr);
@@ -123,6 +138,36 @@ RPromSol* RPromKernel::GetBestSol(void)
 		if(best->Fi<(*sol)->Fi)
 			best=(*sol);
 	return(best);
+}
+
+
+//-----------------------------------------------------------------------------
+int RPromKernel::sort_function_solutions( const void *a, const void *b)
+{
+	RPromSol* as=(*(static_cast<RPromSol**>(a)));
+	RPromSol* bs=(*(static_cast<RPromSol**>(b)));
+	double d;
+	
+	d=as->Fi-bs->Fi;
+	if(d<=0.000001) return(0);
+	if(d<0)
+		return(-1);
+	else
+		return(1);
+}
+
+
+//-----------------------------------------------------------------------------
+RPromSol** RPromKernel::GetSols(void)
+{
+	RPromSol **Sols=new RPromSol*[Solutions.NbPtr];
+	RPromSol **sol1,**sol2;
+	unsigned int i;	
+
+	for(i=Solutions.NbPtr+1,sol1=Sols,sol2=Solutions.Tab;--i;sol1++,sol2++)
+		(*sol1)=(*sol2);
+	qsort(static_cast<void*>(Sols),Solutions.NbPtr,sizeof(RPromSol*),sort_function_solutions);	
+	return(Sols);
 }
 
 

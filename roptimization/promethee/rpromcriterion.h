@@ -50,6 +50,46 @@ namespace RPromethee{
 
 //-----------------------------------------------------------------------------
 /**
+* The RPromCriterionParams is use to hold the parameters that can influence a
+* criterion in Promethee.
+* @short Prométhée Criterion.
+* @author Pascal Francq.
+*/
+class RPromCriterionParams
+{
+
+public:
+
+	/**
+	* Value for the indifference's threshold of the Prométhée method.
+	*/
+	double P;
+
+	/**
+	* Value for the preference's threshold of the Prométhée method.
+	*/
+	double Q;
+	
+	/**
+	* Weight of this criterion.
+	*/
+	double Weight;
+	
+	/**
+	* Return a pointer to a temporary object of class point.
+	*/
+	static RPromCriterionParams* GetParams(void);
+	
+	/**
+	* Assignment operator.
+	*/
+	RPromCriterionParams& operator=(const RPromCriterionParams &params);
+};
+
+
+
+//-----------------------------------------------------------------------------
+/**
 * The RPromCriterion class provides a representation for a Prométhée Criterion.
 * @short Prométhée Criterion.
 * @author Pascal Francq & Thomas L'Eglise.
@@ -65,7 +105,7 @@ class RPromCriterion : protected RContainer<RPromCritValue,unsigned int,false,fa
 	/**
 	* The type of criteria.
 	*/
-   CriteriaType Type;
+   	CriteriaType Type;
 
 	/**
 	* Value for the indifference's threshold of the Prométhée method.
@@ -93,7 +133,18 @@ public:
 	* @param nb		Number of solution.
 	*/
 	RPromCriterion(const CriteriaType type,const double p,const double q,const double w,const unsigned int id,const unsigned int nb=30);
-
+	
+	/**
+	* Construct a criterion.
+	* @param type		Type of the criterion.
+	* @param params		Parameters.
+	* @param q			Preference's threshold.
+	* @param w			Weight of the criterion.
+	* @param id			Identifier of the criterion.
+	* @param nb			Number of solution.
+	*/
+	RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,const unsigned int id,const unsigned int nb=30);
+	
 	/**
 	* Compare the identifier of two criteria.
 	* @param crit		The criterion used for the comparaison.
@@ -135,6 +186,16 @@ public:
 	* Set the preference's threshold.
 	*/
 	void SetQ(double q) {Q=q;}
+
+	/**
+	* Set the parameters.
+	*/
+	void SetParams(const RPromCriterionParams& params);
+	
+	/**
+	* Get the parameters.
+	*/
+	RPromCriterionParams& GetParams(void);
 	
 	/**
 	* Get the Preference's threshold.

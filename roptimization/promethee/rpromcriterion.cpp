@@ -41,6 +41,30 @@ using namespace RPromethee;
 
 //-----------------------------------------------------------------------------
 //
+// class RPromCriterionParams
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+RPromCriterionParams* RPromCriterionParams::GetParams(void)
+{
+	return(GetTemporaryObject<RPromCriterionParams,30>());
+}
+
+
+//-----------------------------------------------------------------------------
+RPromCriterionParams& RPromCriterionParams::operator=(const RPromCriterionParams &params)
+{
+	P=params.P;
+	Q=params.Q;
+	Weight=params.Weight;
+	return(*this);
+}
+	
+
+
+//-----------------------------------------------------------------------------
+//
 // class RPromCriterion
 //
 //-----------------------------------------------------------------------------
@@ -50,6 +74,35 @@ RPromCriterion::RPromCriterion(const CriteriaType type,const double p,const doub
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id),
 	  Type(type), P(p), Q(q), Weight(w)
 {
+}
+
+
+//-----------------------------------------------------------------------------
+RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,const unsigned int id,const unsigned int nb)
+	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id),
+	  Type(type), P(params.P), Q(params.Q), Weight(params.Weight)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+void RPromCriterion::SetParams(const RPromCriterionParams& params)
+{
+	P=params.P;
+	Q=params.Q;	
+	Weight=params.Weight;
+}
+
+
+//-----------------------------------------------------------------------------
+RPromCriterionParams& RPromCriterion::GetParams(void)
+{
+	RPromCriterionParams* tmp=RPromCriterionParams::GetParams();
+	
+	tmp->P=P;
+	tmp->Q=Q;
+	tmp->Weight=Weight;
+	return(*tmp);
 }
 
 

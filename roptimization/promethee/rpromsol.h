@@ -104,6 +104,11 @@ public:
 	int Compare(const unsigned int id) {return(Id-id);}
 
 	/**
+	* @return Identificator of the solution.
+	*/
+	unsigned int GetId(void) {return(Id);}
+	
+	/**
 	* Destruct a prométhée solution.
 	*/
 	virtual ~RPromSol(void);

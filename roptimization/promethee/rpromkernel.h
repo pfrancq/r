@@ -107,12 +107,19 @@ public:
 	* @param w		Weight of the criterion.
 	*/
 	virtual RPromCriterion* NewCriterion(const CriteriaType t,const double p,const double q,const double w) throw(bad_alloc);
-
+	
+	/**
+	* Create a new criterion.
+	* @param type		Type of the criterion.
+	* @param params		Parameters.
+	*/
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RPromCriterionParams& params) throw(bad_alloc);
+	
 	/**
 	* Create a new solution.
 	*/
 	virtual RPromSol* NewSol(void) throw(bad_alloc);
-
+	
 	/**
 	* Assign a value to a criterion.
 	* @param sol	Pointer to the solution.
@@ -125,7 +132,17 @@ public:
 	* Return the best solution.
 	*/
 	RPromSol* GetBestSol(void);
-
+	
+	/**
+	* Function used to sort the solutions by fit.
+	*/
+	static int sort_function_solutions( const void *a, const void *b);	
+	
+	/**
+	* Return the solutions order by fit increase.
+	*/
+	RPromSol** GetSols(void);
+	
 	/**
 	* Return the best solution identifier.
 	*/
