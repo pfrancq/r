@@ -272,7 +272,7 @@ void RString::StrUpr(const RString& str) throw(bad_alloc)
 
 	Verify(str.MaxLen);
 	Len=str.Len;
-	ptr2=str.Text;
+	ptr2=Text;
 	while(*ptr1)
 		(*(ptr2++))=ToUpper(*(ptr1++));
 	(*ptr2)=0;
