@@ -203,6 +203,10 @@ class name : public RStd::RCursor<C,T>                               \
 {                                                                    \
 public:                                                              \
 	name(void) : RCursor<C,T>() {}                                   \
+	static name* GetTmpCursor(void)                                  \
+	{                                                                \
+		return(GetTemporaryObject<name,20>());                       \
+	}                                                                \
 };
 
 
