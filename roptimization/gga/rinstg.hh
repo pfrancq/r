@@ -97,6 +97,80 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 }
 
 
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::HandleSameChromosomes(void) throw(eGA)
+{
+	cChromo **C,**C1,*p;
+	unsigned int i,j;
+
+//	cout<<"Gen n°"<<Gen<<endl;
+	for(i=0,C=Chromosomes;i<PopSize-1;C++,i++)
+	{
+		for(j=i+1,C1=C+1;j<PopSize;C1++,j++)
+		{
+			if((*C)->SameGroupment(*C1))
+			{
+//				cout<<"Same...";
+//				cout<<"  Chromo n°"<<i<<" and Chromo n°"<<j<<" are the same  :";
+				if((*((*C)->Fitness))>(*((*C1)->Fitness)))
+					p=(*C1);
+				else
+					p=(*C);
+				if(RRand(100)<90)
+				{
+					if(!p->RandomConstruct())
+						throw eGARandomConstruct();
+					emitInteractSig();
+					p->Evaluate();
+					emitInteractSig();
+					p->ToEval=false;
+//					cout<<"OK"<<endl;
+				}
+//				else
+//					cout<<"KO"<<endl;
+			}
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void) throw(eGA)
+{
+	RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct();
+	HandleSameChromosomes();
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Crossover(void) throw(eGA)
+{
+	RInst<cInst,cChromo,cFit,cThreadData>::Crossover();
+	HandleSameChromosomes();
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Mutation(void) throw(eGA)
+{
+	RInst<cInst,cChromo,cFit,cThreadData>::Mutation();
+	HandleSameChromosomes();
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Inversion(void) throw(eGA)
+{
+	RInst<cInst,cChromo,cFit,cThreadData>::Inversion();
+	HandleSameChromosomes();
+}
+
+
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::~RInstG(void)

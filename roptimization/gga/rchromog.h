@@ -64,6 +64,19 @@ protected:
 	*/
 	RGroupingHeuristic<cGroup,cObj,cGroupData>* Heuristic;
 
+	/**
+	* Assignment of the objects where the identificator of the first group
+	* found is always 1. This array is used to compare if two solutions are
+	* representing the same "real" groupment.
+	*/
+	unsigned int* OrdObjectsAss;
+
+	/**
+	* Array representing the identificators assigned to each group to compute
+	* OrdObjectsAss.
+	*/
+	unsigned int* NewUsedId;
+
 public:
 
 	/**
@@ -81,9 +94,21 @@ public:
 	virtual void Init(cThreadData *thData) throw(bad_alloc);
 
 	/**
+	* Compute OrdObjectsAss.
+	*/
+	void ComputeOrd(void);
+
+	/**
 	* Clear all the information of the chromosome.
 	*/
 	void Clear(void);
+
+	/**
+	* This method look if the two chromosomes are representing the same
+	* solution.
+	* @param c              Chromosome used for the comparaison.
+	*/
+	bool SameGroupment(const cChromo* c) const;
 
 	/**
 	* Construct a valid solution.

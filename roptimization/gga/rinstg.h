@@ -133,6 +133,37 @@ public:
 	inline HeuristicType GetHeuristic(void) { return(Heuristic); }
 
 	/**
+	* Handle the chromosomes that are representing the same solutions. If two
+	* same chromosomes are detect, one of them is replace a random based one
+	* with a probability of 90%.
+	*/
+	virtual void HandleSameChromosomes(void) throw(eGA);
+
+	/**
+	* Random construction of the chromosomes. Call the method of RInst and
+	* handles the same solutions after.
+	*/
+	virtual void RandomConstruct(void) throw(eGA);
+
+	/**
+	* This function does the crossovers for a generation. Call the method of
+	* RInst and handles the same solutions after.
+	*/
+	virtual void Crossover(void) throw(eGA);
+
+	/**
+	* This function does the necessary mutations for a generation. Call the
+	* method of RInst and handles the same solutions after.
+	*/
+	virtual void Mutation(void) throw(eGA);
+	
+	/**
+	* This function does the necessary inversions for a generation. Call the
+	* method of RInst and handles the same solutions after.
+	*/
+	virtual void Inversion(void) throw(eGA);
+
+	/**
 	* Destruct the instance.
 	*/
 	virtual ~RInstG(void);
