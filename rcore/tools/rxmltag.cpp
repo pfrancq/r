@@ -56,7 +56,7 @@ RXMLTag::RXMLTag(void)
 }
 //------------------------------------------------------------------------------
 RXMLTag::RXMLTag(RString _name)
- : RNode<RXMLTag,false>(30,15), Attrs(10,5), Name(_name)
+ : RNode<RXMLTag,false>(30,15), Name(_name), Attrs(10,5)
 {
 }
 //------------------------------------------------------------------------------
