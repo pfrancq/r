@@ -449,7 +449,7 @@ void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag
 	{
 		// Read the Name
 		attrn.Clear();
-		while((!Cur.IsNull())&&(!Cur.IsSpace())&&(Cur!=RChar('=')))
+		while((!Cur.IsNull())&&(!Cur.IsSpace())&&(Cur!=RChar('='))&&(Cur!=RChar('>')))
 		{
 			attrn+=Cur;
 			Next();
