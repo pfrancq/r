@@ -220,6 +220,8 @@ public:
 	/**
 	* Look if all rows of the query were treated.
 	* @return False if all rows were treated.
+	* \deprecated
+	* Use the !End() method instead.
 	*/
 	bool IsMore(void)
 		{ return(row); }
@@ -233,11 +235,20 @@ public:
 
 	/**
 	* Put the query at the first row.
+	* \deprecated
+	* Use the Start() method instead.
 	*/
 	void Begin(void);
 
 	/**
+	* Put the query at the first row.
+	*/
+	void Start(void);
+
+	/**
 	* Increment the current row.
+	* \deprecated
+	* Use the Next() method instead.
 	*/
 	RQuery& operator++(int);
 

@@ -127,6 +127,13 @@ void RMySQL::RQuery::Begin(void)
 }
 
 
+//---------------------------------------------------------------------------	
+void RMySQL::RQuery::Start(void)
+{
+	row=mysql_fetch_row(result);
+}
+
+
 //---------------------------------------------------------------------------
 RQuery& RMySQL::RQuery::operator++(int)
 {
