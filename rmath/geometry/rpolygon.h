@@ -160,9 +160,22 @@ public:
 
 	/**
 	* Return true if the point is on an edge.
+	* @param X       The X Coordinate used.
+	* @param Y       The Y Coordinate used.
+	*/
+	bool Edge(const RCoord X,const RCoord Y) const;
+
+	/**
+	* Return true if the point is on an edge.
 	* @param pt		The point used.
 	*/
-	bool Edge(RPoint *pt) const;
+	bool Edge(const RPoint* pt) const {return(Edge(pt->X,pt->Y));}
+
+	/**
+	* Return true if the point is on an edge.
+	* @param pt		The point used.
+	*/
+	bool Edge(const RPoint& pt) const {return(Edge(pt.X,pt.Y));}
 
 	/**
 	* Return true if two points are on the same edge.

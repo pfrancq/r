@@ -204,7 +204,7 @@ RPoint* RGeometry2D::RPolygon::GetBottomLeft(void) const
 	{
 		X=(*point)->X;
 		Y=(*point)->Y;
-		if((Y<bl->Y)||((Y==bl->Y)&&(X<bl->X)))		
+		if((Y<bl->Y)||((Y==bl->Y)&&(X<bl->X)))
 			bl=(*point);
 	}
 	return(bl);
@@ -291,13 +291,12 @@ RPoint* RGeometry2D::RPolygon::GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY
 
 
 //-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygon::Edge(RPoint *pt) const
+bool RGeometry2D::RPolygon::Edge(const RCoord X,const RCoord Y) const
 {
 	RPoint **point,*deb;
 	unsigned int i;
-	RCoord X,Y;
+	RCoord DiffX,DiffY;
 
-	RReturnValIfFail(pt,false);
 	point=Tab;
 	i=NbPtr+1;
 	while(--i)
@@ -307,34 +306,34 @@ bool RGeometry2D::RPolygon::Edge(RPoint *pt) const
 		{
 			point=Tab;
 		}
-		X=deb->X-(*point)->X;
-		Y=deb->Y-(*point)->Y;
-		if(!Y)
+		DiffX=deb->X-(*point)->X;
+		DiffY=deb->Y-(*point)->Y;
+		if(!DiffY)
 		{
 			// Horizontal edge
-			if(pt->Y!=deb->Y) continue;
-			if(X<0)
+			if(Y!=deb->Y) continue;
+			if(DiffX<0)
 			{
-				if((pt->X>=deb->X)&&(pt->X<=(*point)->X)) return(true);
+				if((X>=deb->X)&&(X<=(*point)->X)) return(true);
 			}
 			else
 			{
-				if((pt->X<=deb->X)&&(pt->X>=(*point)->X)) return(true);
-			}				
+				if((X<=deb->X)&&(X>=(*point)->X)) return(true);
+			}
 		}
 		else
 		{
 			// Vertical edge
-			if(pt->X!=deb->X) continue;
-			if(Y<0)
+			if(X!=deb->X) continue;
+			if(DiffY<0)
 			{
-				if((pt->Y>=deb->Y)&&(pt->Y<=(*point)->Y)) return(true);
+				if((Y>=deb->Y)&&(Y<=(*point)->Y)) return(true);
 			}
 			else
 			{
-				if((pt->Y<=deb->Y)&&(pt->Y>=(*point)->Y)) return(true);
-			}				
-		}		
+				if((Y<=deb->Y)&&(Y>=(*point)->Y)) return(true);
+			}
+		}
 	}
 	return(false);
 }
@@ -383,7 +382,7 @@ bool RGeometry2D::RPolygon::Edge(RPoint *pt1,RPoint *pt2) const
 					else
 						return(false);
 				}
-			}				
+			}
 		}
 		else
 		{
@@ -393,7 +392,7 @@ bool RGeometry2D::RPolygon::Edge(RPoint *pt1,RPoint *pt2) const
 			{
 				if((pt1->Y>=deb->Y)&&(pt1->Y<=(*point)->Y))
 				{
-					if((pt2->Y>=deb->Y)&&(pt2->Y<=(*point)->Y))			
+					if((pt2->Y>=deb->Y)&&(pt2->Y<=(*point)->Y))
 						return(true);
 					else
 						return(false);
@@ -408,8 +407,8 @@ bool RGeometry2D::RPolygon::Edge(RPoint *pt1,RPoint *pt2) const
 					else
 						return(false);
 				}
-			}				
-		}		
+			}
+		}
 	}
 	return(false);
 }
@@ -430,8 +429,9 @@ bool RGeometry2D::RPolygon::IsVertice(const RPoint &pt) const
 //-----------------------------------------------------------------------------
 bool RGeometry2D::RPolygon::IsIn(const RCoord X,const RCoord Y) const
 {
-	RPoint p(X,Y),**tab,*deb;
-	unsigned int i;
+	RPoint p(X,Y),**tab,*act,*next;
+	unsigned int i,count;
+	RCoord y1,y2;
 
 	// Special cases
 	if(NbPtr==1) return(p==(*Tab[0]));
@@ -440,22 +440,52 @@ bool RGeometry2D::RPolygon::IsIn(const RCoord X,const RCoord Y) const
 		RDirection c=p.Classify(Tab[0],Tab[1]);
 		return((c==Between)||(c==Origin)||(c==Destination));
 	}
-	
+	if(NbPtr==4)
+	{
+		if((X>=Tab[0]->X)&&(Y>=Tab[0]->Y)&&(X<=Tab[2]->X)&&(Y<=Tab[2]->Y))
+			return(true);
+		return(false);
+	}
+
 	// Verify if not a vertice
 	for(i=NbPtr+1,tab=Tab;--i;tab++)
 		if(((*tab)->X==X)&&((*tab)->Y==Y))
 			return(true);
-				
-	// Verify if not on a edge
-	tab=Tab;
-	deb=(*(tab++));
-	if(p.Classify(Tab[NbPtr-1],deb)==Right) return(false);
-	for(i=NbPtr;--i;tab++)
+
+	// Verify if not on an edge
+	if(Edge(X,Y))
+		return(true);
+
+	// Count the intersections between the line (X,Y) and (MaxCoord,Y) and the edges
+	count=0;
+	i=NbPtr;
+	act=GetBottomLeft();
+	while(i>0)
 	{
-		if(p.Classify(deb,*tab)==Right) return(false);
-		deb=(*tab);
+		// Look for act
+		next=GetConY(act);
+		if(act->Y>next->Y)
+		{
+			y1=next->Y;
+			y2=act->Y;
+		}
+		else
+		{
+			y1=act->Y;
+			y2=next->Y;
+		}
+		
+		// Test Line e1,act
+		if((act->X>=X)&&(Y>=y1)&&(Y<=y2))
+			count++;
+		i--;
+		act=GetConX(act);
+		i--;
+		act=GetConY(act);
 	}
-	return(true);
+
+	// if count%2==0 -> Not in
+	return(count%2);
 }
 
 
@@ -466,15 +496,14 @@ bool RGeometry2D::RPolygon::IsIn(const RPolygon* poly) const
 	unsigned int i;
 	RRect r1,r2;
 	RDirection FromDir;
-	RPoint *deb,*end;
-	bool AxisX;
+	RPoint *start,*end;
 	RCoord X,Y;
-	
-	
+	unsigned int nbpts;
+
 	// Polygon is a rectangle?
 	if(NbPtr==4)
 	{
-		// Each points of poly have to be in it.
+		// Each vertex of poly have to be in it.
 		for(i=poly->NbPtr,pt=poly->Tab;--i;pt++)
 		{	
 			if(!IsIn(*pt))
@@ -482,38 +511,46 @@ bool RGeometry2D::RPolygon::IsIn(const RPolygon* poly) const
 		}
 		return(true);
 	}
-	
-	return(false);
-	
+
 	// Verify first if the boundary rectangles overlap
 	Boundary(r1);
 	poly->Boundary(r2);
 	if(!r1.Overlap(&r2))
 		return(false);
-			
-	// Test all the bound
-	deb=poly->GetBottomLeft();
-	end=poly->GetConX(deb);
-	AxisX=true;
-	FromDir=Left;
-	while((*end)!=(*deb))
-	{
-		X=deb->X;
-		Y=deb->Y;
-		while((X!=end->X)||(Y!=end->Y))
-		{
-			if(!IsIn(X,Y))
-				return(false);
-			AdaptXY(X,Y,FromDir);
-		}
-		AxisX=!AxisX;
-		deb=end;
-		if(AxisX)
-			end=poly->GetConX(deb);
-		else
-			end=poly->GetConY(deb);
-	}
 
+	// Test it and go through the other
+	start=poly->GetBottomLeft();
+	end=poly->GetConX(start);
+	FromDir=Left;
+	X=start->X;
+	Y=start->Y;
+	nbpts=poly->NbPtr;
+	while(nbpts)
+	{
+		if(!IsIn(X,Y))
+			return(false);
+
+		// If end of an edge
+		if((X==end->X)&&(Y==end->Y))
+		{
+			start=end;
+			nbpts--;        // Next point
+			X=start->X;
+			Y=start->Y;
+			if((FromDir==Left)||(FromDir==Right))
+			{
+				end=poly->GetConY(start);
+				if(start->Y<end->Y) FromDir=Down; else FromDir=Up;
+			}
+			else		// Go to left/right
+			{
+				end=poly->GetConX(start);
+				if(start->X<end->X) FromDir=Left; else FromDir=Right;
+			}
+		}
+		else
+			AdaptXY(X,Y,FromDir);
+	}
 	return(true);
 }
 
@@ -587,7 +624,7 @@ void RGeometry2D::RPolygon::ChangeOrientation(ROrientation o,RPoint& min)
 		(*ptr)->X -= min.X;
 		(*ptr)->Y -= min.Y;
 	}
-	ReOrder();	// Make the bottom-left point be the first
+	ReOrder();    // Make the bottom-left point be the first
 }
 
 
@@ -596,15 +633,15 @@ void RGeometry2D::RPolygon::RectDecomposition(RRects *rects) const
 {
 	RPolygon work(this),tmpPoly(20);
 	RRects tmpRects;
-	RPoint *Pt11;								// Point at (X1,Y1)
-	RPoint *Pt12;								// Point at (X1,Y2)
-	RPoint *PtX2;								// Point at (?,Y2)
-	RPoint *Pt2Y;								// Point at (X2,?)
+	RPoint *Pt11;                               // Point at (X1,Y1)
+	RPoint *Pt12;                               // Point at (X1,Y2)
+	RPoint *PtX2;                               // Point at (?,Y2)
+	RPoint *Pt2Y;                               // Point at (X2,?)
 	RPoint **point,*Test,tmp;
-	RCoord X1,Y1,X2,Y2;					// Vertices of the rectangle to insert
+	RCoord X1,Y1,X2,Y2;                         // Vertices of the rectangle to insert
 	unsigned int i,Count,Nb;
-	bool bFind;									// To use with GetId
-	bool bFind21;								// True if Point (X2,?) is (X2,Y1)
+	bool bFind;                                 // To use with GetId
+	bool bFind21;                               // True if Point (X2,?) is (X2,Y1)
 
 	// Init
 	RReturnIfFail(rects);
@@ -626,7 +663,7 @@ void RGeometry2D::RPolygon::RectDecomposition(RRects *rects) const
 
 		// Delete Vertice1 and Vertice2
 		work.DeletePtr(Pt11);
-		work.DeletePtr(Pt12);				
+		work.DeletePtr(Pt12);
 
 		// Find the point at (X2,?) -> Fix X2
 		Pt2Y=work.GetLeftBottom(X1,Y1,Y2);
@@ -638,7 +675,7 @@ void RGeometry2D::RPolygon::RectDecomposition(RRects *rects) const
 
 		// If Pt2Y is (X2,Y1) -> bFind=true
 		if((Pt2Y->X==X2)&&(Pt2Y->Y==Y1))
-			bFind21=true;		
+			bFind21=true;
 		else
 			bFind21=false;
 
@@ -678,12 +715,12 @@ void RGeometry2D::RPolygon::RectDecomposition(RRects *rects) const
 				if(Test->X>X2) Count++;
 			}
 		if(Count%2) continue;
-		Count/=2;	// if count Vertices found -> count/2 polygon are necessary
-		while(Count>1)	// if more than one polygon is necessary
+		Count/=2;       // if count Vertices found -> count/2 polygon are necessary
+		while(Count>1)  // if more than one polygon is necessary
 		{
 			Count--;
 			// Find the most bottom point at X2 at put point to it
-			point=work.Tab;			
+			point=work.Tab;
 			i=work.NbPtr+1;
 			while((*point)->X!=X2)
 			{
@@ -694,7 +731,7 @@ void RGeometry2D::RPolygon::RectDecomposition(RRects *rects) const
 			for(;--i;point++)
 				if(((*point)->X==X2)&&((*point)->Y<Test->Y))
 					Test=(*point);
-			point=work.Tab;			
+			point=work.Tab;
 			i=0;
 			while((*point)!=Test)
 			{
@@ -774,9 +811,9 @@ void RGeometry2D::RPolygon::ReOrder(void)
 {
 	RPoint **tmp,**point,*next;
 	unsigned int i;
-	bool bX; 		// Next Vertice is horizontal
+	bool bX;            // Next Vertice is horizontal
 
-	point=tmp=new RPoint*[MaxPtr];	
+	point=tmp=new RPoint*[MaxPtr];
 	next=GetBottomLeft();
 	(*(point++))=next;
 	next=GetConX(next);
