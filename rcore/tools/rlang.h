@@ -54,7 +54,7 @@ namespace RInter{
 */
 class RLang
 {
-public:
+protected:
 
 	/**
 	* Name of the Language.
@@ -95,13 +95,13 @@ public:
 	* Get the code of the language.
 	* @returns Pointer to a C string containing the code.
 	*/
-	const char* GetCode(void) {return(Code);}
+	const char* GetCode(void) const {return(Code);}
 
 	/**
 	* Get the name of the language.
 	* @returns Pointer to a C string containing the name.
 	*/
-	const char* GetName(void) {return(Lang);}
+	const char* GetName(void) const {return(Lang);}
 
 	/**
 	* Destructor of the language.
