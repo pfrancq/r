@@ -27,9 +27,13 @@
 */
 
 
+
 //---------------------------------------------------------------------------
+// include files for RGeometry
 #include "rpoint.h"
+#include "polygons.h"
 using namespace RGeometry;
+
 
 
 //---------------------------------------------------------------------------
@@ -78,5 +82,56 @@ RPoint::RPoint(RPoint *pt)
 }
 
 
+
+//---------------------------------------------------------------------------
+//
+// RPoints
+//
 //---------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------
+RPoints::RPoints(void)
+	: RContainer<RPoint,unsigned int,true,false>(10,5)
+{
+}
+
+
+//---------------------------------------------------------------------------
+RPoints::RPoints(unsigned int max)
+	: RContainer<RPoint,unsigned int,true,false>(max,5)
+{
+}
+
+
+//---------------------------------------------------------------------------
+RPoints::RPoints(RPoints *points)
+	: RContainer<RPoint,unsigned int,true,false>(points->MaxPtr,points->IncPtr)
+{
+	RPoint **pts;
+	unsigned int i;
+
+	for(i=points->NbPtr+1,pts=points->Tab;--i;pts++)
+		InsertPtr(new RPoint(*pts));
+}
+
+
+//---------------------------------------------------------------------------
+bool RPoints::IsIn(const RPoint &pt)
+{
+	return(true);
+}
+	
+
+//---------------------------------------------------------------------------
+void RPoints::GetPolygon(RPolygon *poly)
+{
+}
+
+
+
+//---------------------------------------------------------------------------
+RPoints& RPoints::operator=(const RPoints &points)
+{
+	RContainer<RPoint,unsigned int,true,false>::operator=(points);
+	return(*this);
+}

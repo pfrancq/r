@@ -33,11 +33,16 @@
 
 
 //---------------------------------------------------------------------------
+// include files for Rainbow
+#include "rstd/rcontainer.h"
+using namespace RStd;
+
+
+//---------------------------------------------------------------------------
+// include files for RGeometry
 #include "rpoint.h"
 #include "rrect.h"
 using namespace RGeometry;
-#include "rstd/rcontainer.h"
-using namespace RStd;
 
 
 //---------------------------------------------------------------------------
@@ -47,7 +52,7 @@ namespace RGeometry{
 
 //---------------------------------------------------------------------------
 // Polygon
-class RPolygon : public RContainer<RPoint,unsigned,true,false>
+class RPolygon : public RContainer<RPoint,unsigned int,true,false>
 {
 public:
   RPolygon(void);
@@ -61,18 +66,18 @@ public:
   RRect* Boundary(void);
   void Boundary(RRect&);
   void Orientation(char Ori);
-	~RPolygon(void) {}
+	void RectDecomposition(RRects *rects);
 };
 
 
 //---------------------------------------------------------------------------
 // A collection of polygons
-class RPolygons : public RContainer<RPolygon,unsigned,true,false>
+class RPolygons : public RContainer<RPolygon,unsigned int,true,false>
 {
 public:
   RPolygons(void);
   void Union(RPolygon *poly);
-	~RPolygons(void) {}
+  RPolygons& operator=(const RPolygons &poly);
 };
 
 

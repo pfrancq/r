@@ -46,6 +46,12 @@ RRect::RRect(void) : Pt1(),Pt2()
 
 
 //---------------------------------------------------------------------------
+RRect::RRect(RRect *rect) : Pt1(rect->Pt1),Pt2(rect->Pt2)
+{
+}
+
+
+//---------------------------------------------------------------------------
 RRect::RRect(RPoint *pt1,RPoint *pt2) : Pt1(pt1),Pt2(pt2)
 {
 }
@@ -58,14 +64,40 @@ RRect::RRect(RCoord MinX,RCoord MinY,RCoord MaxX,RCoord MaxY) : Pt1(MinX,MinY),P
 
 
 //---------------------------------------------------------------------------
-RCoord RRect::Area(void)
+double RRect::Area(void)
 {
-  RCoord X=labs(Pt2.X-Pt1.X),Y=labs(Pt2.Y-Pt1.Y);
-  return(X*Y);
+  return(static_cast<double>(Width())*static_cast<double>(Length()));
 }
 
 
 
-
+//---------------------------------------------------------------------------
+//
+// RRects
+//
 //---------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------
+RRects::RRects(void) : RContainer<RRect,unsigned int,true,false>(20,10)
+{
+}
+
+
+//---------------------------------------------------------------------------
+RRects::RRects(unsigned int max) : RContainer<RRect,unsigned int,true,false>(max,10)
+{
+}
+
+
+//---------------------------------------------------------------------------
+RRects::RRects(RRects *rects) : RContainer<RRect,unsigned int,true,false>(rects)
+{
+}
+
+
+//---------------------------------------------------------------------------
+RRects& RRects::operator=(const RRects &rects)
+{
+	RContainer<RRect,unsigned int,true,false>::operator=(rects);
+	return(*this);
+}

@@ -27,7 +27,14 @@
 */
 
 
+
 //---------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <iostream.h>
+
+
+//---------------------------------------------------------------------------
+// include files for RGeometry
 #include "polygons.h"
 #include "rline.h"
 using namespace RGeometry;
@@ -41,19 +48,19 @@ using namespace RGeometry;
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-RPolygon::RPolygon(void) : RContainer<RPoint,unsigned,true,false>(20,10)
+RPolygon::RPolygon(void) : RContainer<RPoint,unsigned int,true,false>(20,10)
 {
 }
 
 
 //---------------------------------------------------------------------------
-RPolygon::RPolygon(int Max) : RContainer<RPoint,unsigned,true,false>(Max,10)
+RPolygon::RPolygon(int Max) : RContainer<RPoint,unsigned int,true,false>(Max,10)
 {
 }
 
 
 //---------------------------------------------------------------------------
-RPolygon::RPolygon(RPolygon *poly) : RContainer<RPoint,unsigned,true,false>(poly->NbPtr,10)
+RPolygon::RPolygon(RPolygon *poly) : RContainer<RPoint,unsigned int,true,false>(poly->NbPtr,10)
 {
   RPoint **ptr;
   int i;
@@ -66,15 +73,10 @@ RPolygon::RPolygon(RPolygon *poly) : RContainer<RPoint,unsigned,true,false>(poly
 //---------------------------------------------------------------------------
 RPolygon& RPolygon::operator=(const RPolygon &poly)
 {
-  RPoint **ptr;
-  int i;
-
-  for(NbPtr++,ptr=Tab;--NbPtr;ptr++)
-    delete (*ptr);
-  for(i=poly.NbPtr+1,ptr=poly.Tab;--i;ptr++)
-    InsertPtr(new RPoint(*ptr));
+	RContainer<RPoint,unsigned int,true,false>::operator=(poly);
   return(*this);
 }
+
 
 //---------------------------------------------------------------------------
 int RPolygon::Compare(RPolygon*)
@@ -192,6 +194,94 @@ void RPolygon::Orientation(char Ori)
 }
 
 
+//---------------------------------------------------------------------------
+void RPolygon::RectDecomposition(RRects *rects)
+{
+	RPoints pts(NbPtr*2);
+	RPoint **pt,*cur,*cur2;	
+	RPoint dep,cor;
+	unsigned int i;
+	RCoord tmp;
+	bool depc,corc;	
+
+	// Init
+	rects->Clear();
+	for(i=NbPtr+1,pt=Tab;--i;pt++)
+		pts.InsertPtr(new RPoint(*pt));
+
+	while(pts.NbPtr)	// There is at least a rectangle to construct
+	{
+		// Find the Left-Down point and delete it
+		pt=pts.Tab;
+		cur=(*pt);
+		for(i=pts.NbPtr,pt++;--i;pt++)
+		{
+			if((*pt)->X<cur->X)
+				cur=(*pt);
+			else
+				if(((*pt)->X==cur->X)&&((*pt)->Y<cur->Y))
+					cur=(*pt);
+		}
+		dep=(*cur);
+		pts.DeletePtr(cur);
+
+		// Find the corresponding vertex and delete it
+		pt=pts.Tab;		
+		i=pts.NbPtr+1;
+		while((*pt)->X!=dep.X)
+		{
+			pt++;
+			i--;
+		}
+		cur=(*pt);		
+		for(--i,pt++;--i;pt++)
+			if(((*pt)->X==dep.X)&&((*pt)->Y<cur->Y)) cur=(*pt);
+		cor=(*cur);
+		pts.DeletePtr(cur);
+
+		// Find the next vertext of dep,cor
+		cur=cur2=NULL;
+		for(i=pts.NbPtr+1,pt=pts.Tab;--i;pt++)
+		{
+			if((*pt)->Y==dep.Y)
+				if(!cur||(*pt)->X<cur->X)
+					cur=(*pt);
+			if((*pt)->Y==cor.Y)
+				if(!cur2||(*pt)->X<cur2->X)
+					cur2=(*pt);
+    }
+
+		// Look for rectangle
+		tmp=cur->X-cur2->X;		
+		if(!tmp)	// Already Rectangle
+		{
+			rects->InsertPtr(new RRect(dep.X,dep.Y,cur2->X,cur2->Y));
+			depc=corc=true;
+			for(i=pts.NbPtr+1,pt=pts.Tab;--i;pt++)
+			{
+				if((*pt)->X==cur->X&&(*pt)->Y<cur->Y) depc=false;
+				if((*pt)->X==cur2->X&&(*pt)->Y>cur2->Y) corc=false;
+			}	
+			if(depc) pts.DeletePtr(cur);
+			if(corc) pts.DeletePtr(cur2);			
+		}
+		else
+			if(tmp<0)
+			{
+				rects->InsertPtr(new RRect(dep.X,dep.Y,cur->X,cor.Y));
+				pts.InsertPtr(new RPoint(cur->X,cur2->Y));
+				pts.DeletePtr(cur);
+			}
+		  else
+			{
+				rects->InsertPtr(new RRect(dep.X,dep.Y,cur2->X,cur2->Y));
+				pts.InsertPtr(new RPoint(cur2->X,cur->Y));
+				pts.DeletePtr(cur2);
+			}
+	}
+}
+
+
 
 //---------------------------------------------------------------------------
 //
@@ -200,7 +290,7 @@ void RPolygon::Orientation(char Ori)
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-RPolygons::RPolygons(void) : RContainer<RPolygon,unsigned,true,false>(20,10)
+RPolygons::RPolygons(void) : RContainer<RPolygon,unsigned int,true,false>(20,10)
 {
 }
 
@@ -211,6 +301,9 @@ void RPolygons::Union(RPolygon *poly)
 }
 
 
-
 //---------------------------------------------------------------------------
-
+RPolygons& RPolygons::operator=(const RPolygons &poly)
+{
+	RContainer<RPolygon,unsigned int,true,false>::operator=(poly);
+	return(*this);
+}

@@ -33,7 +33,21 @@
 
 
 //---------------------------------------------------------------------------
-// Includes
+// include files for Rainbow
+#include "rstd/rcontainer.h"
+using namespace RStd;
+
+
+//---------------------------------------------------------------------------
+// Forward class declaration
+namespace RGeometry
+{
+	class RPolygon;
+}
+
+
+//---------------------------------------------------------------------------
+// include files for RGeometry
 #include "geometry.h"
 using namespace RGeometry;
 
@@ -57,11 +71,27 @@ public:
   RPoint(RCoord x,RCoord y,RCoord z=0);
   RPoint(const RPoint& pt);
   RPoint(RPoint *pt);
-  inline int Compare(RPoint pt);
+  inline int Compare(RPoint *pt) { return(this==pt); }
   inline RPoint& operator=(const RPoint &pt);
   inline bool operator==(const RPoint &pt);
   inline bool operator!=(const RPoint &pt);
 	~RPoint(void) {}
+};
+
+
+//---------------------------------------------------------------------------
+// RPoints
+class RPoints : public RContainer<RPoint,unsigned int,true,false>
+{
+public:
+	RPoints(void);
+	RPoints(unsigned int max);
+	RPoints(RPoints *points);
+  inline void AddPoint(RPoint* pt);
+  inline void AddPoint(RCoord x,RCoord y,RCoord z=0);
+  bool IsIn(const RPoint &pt);
+	void GetPolygon(RPolygon *poly);
+  RPoints& operator=(const RPoints &points);		
 };
 
 #include "rpoint.hh"
