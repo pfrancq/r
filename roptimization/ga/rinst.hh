@@ -129,7 +129,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	bool RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct(void) throw(eGA)
 {
   cChromo **C=Chromosomes,*p;
 
@@ -154,8 +154,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
   #ifdef RGADEBUG
     if(Debug) Debug->EndFunc("RandomConstruct","RInst");
   #endif
+	emitInteractSig();
+	Verify();
 	bRandomConstruct=true;
-  return(true);
 }
 
 
@@ -368,29 +369,24 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	bool RInst<cInst,cChromo,cFit,cThreadData>::Verify(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreadData>::Verify(void) throw(eGA)
 {
   unsigned int i;
   cChromo **C;
-  bool Ok=true;
 
   #ifdef RGADEBUG
     if(Debug) Debug->BeginFunc("Verify","RInst");
   #endif
   for(i=PopSize+1,C=Chromosomes;--i;C++)
     if(!((*C)->Verify()))
-      Ok=false;
+      throw eGAVerify();
   #ifdef RGADEBUG
 		if(Debug)
 		{
-			if(Ok)
-				Debug->PrintComment("Instance Ok");
-			else
-				Debug->PrintComment("!!! Instance not Ok !!!");
+			Debug->PrintComment("Instance Ok");
+    	Debug->EndFunc("Verify","RInst");
 		}
-    if(Debug) Debug->EndFunc("Verify","RInst");
   #endif
-  return(Ok);
 }
 
 

@@ -49,6 +49,7 @@ RGeoInfo::RGeoInfo(void)
 void RGeoInfo::Clear(void)
 {
 	Id=NoObject;
+	Order=0;
 	Selected=false;
 	Pos.Y=Pos.X=MaxCoord;
 	Bound.Clear();

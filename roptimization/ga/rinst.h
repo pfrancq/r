@@ -166,7 +166,7 @@ public:
 	/** Random construction of the chromosomes.
     * @return The function returns true if all chromosomes are constrcuted.
 		*/
-  virtual bool RandomConstruct(void) throw(eGA);
+  virtual void RandomConstruct(void) throw(eGA);
 
 	/**	This function determines if the GA must stop. It is called after
 		* each generation. This function is a pure one and has to be implement.
@@ -197,7 +197,7 @@ public:
   void Run(void) throw(eGA);
 
 	/** This functions verifies all the chromosomes after each generation.*/
-  virtual bool Verify(void) throw(eGA);
+  virtual void Verify(void) throw(eGA);
 
 	/** Add a receiver to the list of signals receivers.*/
 	inline void AddReceiver(RGASignalsReceiver<cInst,cChromo,cFit> *rec);

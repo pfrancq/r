@@ -120,8 +120,14 @@ public:
 	unsigned int NbObjs;
 	/** Local Optimisation.*/
 	bool bLocalOpti;
-	/** Use a Left-Bottom heuristic with a control of the bound.*/
+
+protected:
+
+	/** Type of the heuristic that used.*/
 	HeuristicType Heuristic;
+
+public:
+
 	/** Point representing the limits for the placement.*/
 	RPoint Limits;
 
@@ -131,11 +137,18 @@ public:
 		* @param objs				The objects to place.
 		* @param nbobjs			Number of objects to place.
 		* @param limits			The limits for the placement.
+		* @param h					The heuristic that has to be used.
 		*/
-  RInst2D(unsigned int popsize,RObj2D** objs,unsigned int nbobjs,RPoint &limits) throw(bad_alloc);
+  RInst2D(unsigned int popsize,RObj2D** objs,unsigned int nbobjs,RPoint &limits,HeuristicType h) throw(bad_alloc);
 
 	/** Return the limits for the placement.*/
-	RPoint& GetLimits(void);
+	inline RPoint& GetLimits(void);
+
+	/** Return the heuristic type.*/
+	inline HeuristicType GetHeuristic(void) { return(Heuristic); }
+
+	/** Return true if a local optimisation is needed.*/
+	inline bool LocalOpti(void) { return(bLocalOpti); }
 };
 
 

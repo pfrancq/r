@@ -55,6 +55,8 @@ class RGeoInfo
 public:
 	/** Identificator of the object.*/
 	unsigned int Id;
+	/** Order.*/
+	unsigned int Order;
 	/** Indicate if the object was selected for the crossover.*/
 	bool Selected;
 	/** Position of the object.*/

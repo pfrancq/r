@@ -64,8 +64,9 @@
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc)
-			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id), Objs(0),NbObjs(0),OccupiedX(0),
-				OccupiedY(0),thOrder(0),thObjs(0),thObj1(0),thObj2(0),Infos(0),Selected(0),Limits()
+			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id), Levels(0), NbLevels(0),
+				Objs(0), NbObjs(0),	OccupiedX(0), OccupiedY(0), thOrder(0), thObjs(0),
+				thObj1(0), thObj2(0), Infos(0), Selected(0), Limits()
 {
 	
 }
@@ -120,6 +121,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
  	thObjs=thData->tmpObjs;
  	thObj1=thData->tmpObj1;
  	thObj2=thData->tmpObj2;
+
+	// Init Levels if needed
+	if((Instance->GetHeuristic()==BottomLeft)||(Instance->GetHeuristic()==Edge))
+		Levels = new RPoint[40];
 }
 
 
@@ -132,6 +137,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	unsigned int **ptr;
 	unsigned int i;
 	cInfo **info;
+	RPoint *pt;
 
   // Clear Grid -> Put NoObject in each position
   for(R=Limits.X+2,ptr=OccupiedX;--R;ptr++)
@@ -145,6 +151,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 	// ActLimits -> (0,0)
 	ActLimits.X=ActLimits.Y=0;
+
+	// Levels -> (0,0)	
+	for(i=NbLevels+1,pt=Levels;--i;pt++)
+		pt->Set(0,0);
+	NbLevels=0;
 }
 
 
@@ -455,28 +466,27 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
   char Ori;																			// Current Orientation
   RGeoInfo *info;																// Current info
 	RRect Rect;																		// Bound rectangle of current object
-  RCoord TempX,TempY;														// Length and Height of Rect
+  RCoord SizeX,SizeY;														// Length and Height of Rect
 	unsigned int nbswitch;												// Number of switch that can be tried	
 	RPoint Pos(0,0);															// Test Position
 	RPoint Actual(0,0);														// Actual Left Position
-	RPoint Next(0,0);															// Next Position
 	RPoint Max(0,0);															// Max Position	
 	double FactorX,FactorY;												// Ratio between BestPoss and Limits
-	static RPoint EOLs[40];												// Coordinates of "end of lines"
-	unsigned int CurLine;													// Actual "Line"
-	unsigned int MaxLine;													// Maximal "Line"
+	unsigned int CurLevel;												// Actual "Level"
+	unsigned int Hold=nbobjs;
 
 	// Calculate an initial random order
   for(i=0,ptr=thOrder;i<nbobjs;ptr++,i++) (*ptr)=i;
   RRandom::randorder<unsigned int>(thOrder,nbobjs);
 	memcpy(thOrder2,thOrder,nbobjs*sizeof(unsigned int));
 	Attraction.Set(0,0);
-	if(Instance->Heuristic==Edge)
+	if(Instance->GetHeuristic()==BottomLeft)
 		Max.X=Limits.X;;
-	MaxLine=CurLine=0;
+	CurLevel=0;
 
 	// Clear Geometric informations
 	ClearInfos();
+
 	
   // Place the objects
 	nbswitch=nbobjs;
@@ -493,24 +503,24 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
     Ori = Current->PossOri[RRandom::RRand(Current->NbPossOri)];
     info->AssignBound(Current->Id,Current->Polygons[Ori]);
     info->Bound.Boundary(Rect);
-    TempX=Rect.Width();
-    TempY=Rect.Height();
+    SizeX=Rect.Width();
+    SizeY=Rect.Height();
+		info->Order=Hold-nbobjs;
 
 
 		// Verify if add normally or on bottom
-		if((Instance->Heuristic==Edge)&&((ActLimits.X+1)<Limits.X))
+		if((Instance->GetHeuristic()==Edge)&&((ActLimits.X+1)<Limits.X))
 		{
-			FactorX=(static_cast<double>(ActLimits.X+TempX))/(static_cast<double>(Limits.X));
- 			FactorY=(static_cast<double>(ActLimits.Y+TempY))/(static_cast<double>(Limits.Y));
+			FactorX=(static_cast<double>(ActLimits.X))/(static_cast<double>(Limits.X));
+ 			FactorY=(static_cast<double>(ActLimits.Y))/(static_cast<double>(Limits.Y));
  			if(FactorX<FactorY)
  			{
-				Next.Set(ActLimits.X+1,0);
-				Actual=Next;
- 				Max.X=ActLimits.X+TempX+1;
+				// Next element at bottom
+				Actual.Set(ActLimits.X,0);
+ 				Max.X=ActLimits.X+SizeX+1;
  				if(Max.X>Limits.X)
 	 				Max.X=Limits.X;
-				CurLine=0;
-				Actual=Next;
+				CurLevel=0;
  			}
     }
 					
@@ -518,19 +528,21 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 		Pos=Actual;
 		if(Instance->bLocalOpti)	
 			LocalOptimisation(info->Rects,Pos);
-	
+
 
 		// If to long than begin from left again
-		while((Pos.X>0)&&(Pos.X+TempX>Max.X))
+		while((Pos.X>0)&&(Pos.X+SizeX>Max.X))
 		{
-			if(Instance->Heuristic==Edge)
+			if(Instance->GetHeuristic()==Edge)
 			{
-				EOLs[CurLine++]=Actual;
-				if(CurLine>MaxLine) CurLine=MaxLine;
-				if(CurLine<MaxLine)	
-					Actual=EOLs[CurLine];
-				else
+				Levels[CurLevel++]=Actual;
+				if(CurLevel>NbLevels)
+				{
+					NbLevels=CurLevel;
 					Actual.Set(0,Max.Y);
+				}
+				else
+					Actual=Levels[CurLevel];									
       }
       else
 				Actual.Set(0,Max.Y);
@@ -541,12 +553,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 
 		// If to high than try to switch objects and place another one
-		if(Pos.Y+TempY>Limits.Y)
+		if(Pos.Y+SizeY>Limits.Y)
 		{
  			// Try to switch
  			if(nbswitch) 	
  			{
-  				i=thOrder[nbobjs];
+  			i=thOrder[nbobjs];
  				thOrder[nbobjs++]=(*thOrder);
  				(*thOrder)=i;
  				nbswitch--;
@@ -558,25 +570,43 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 		// Assign the object to the current position
     info->Assign(OccupiedX,OccupiedY,Pos.X,Pos.Y);
-
+		
 
 		// Calculate Next position
-		if(Pos.X+TempX>Actual.X)
-			Actual.X=Pos.X+TempX;
-		if(Pos.Y+TempY>Max.Y)
-			Max.Y=Pos.Y+TempY;
+		if(Pos.X+SizeX>Actual.X)
+			Actual.X=Pos.X+SizeX;
+		if((Pos.X==0)&&(Pos.X+SizeX)>Max.X)
+			Max.X=Pos.X+SizeX;
+		if(Pos.Y+SizeY>Max.Y)
+			Max.Y=Pos.Y+SizeY;
+
+		// Verify if down level needed update
+		for(i=0;i<CurLevel;i++)
+			if(Levels[i].X<Max.X) Levels[i].X=Max.X;
+
+
+		// Verify if some levels must be skipped
+		i=CurLevel+1;
+		while((i<NbLevels)&&(Levels[i].Y<Pos.Y+SizeY))
+		{
+			NbLevels--;
+			for(int j=i;j<NbLevels;j++)
+				Levels[j]=Levels[j+1];
+		}
 
 
 		// Verify ActLimits
-		if(Pos.X+TempX>ActLimits.X)
+		if(Pos.X+SizeX>ActLimits.X)
 		{
-			ActLimits.X=Pos.X+TempX;
+			ActLimits.X=Pos.X+SizeX;
 			if(Max.X==0) Max.X=ActLimits.X;
 		}
-		if(Pos.Y+TempY>ActLimits.Y) ActLimits.Y=Pos.Y+TempY;
+		if(Pos.Y+SizeY>ActLimits.Y)
+			ActLimits.Y=Pos.Y+SizeY;
   }
 
 	// Ok, all objects are placed
+	cerr<<NbLevels<<endl;
 	return(true);
 }
 
@@ -630,7 +660,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool b;
 
 	memset(Selected,0,NbObjs*sizeof(bool));
-	switch(Instance->Heuristic)
+	switch(Instance->GetHeuristic())
 	{
 		case BottomLeft:
 		case Edge:
@@ -663,15 +693,15 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 	// Put the rest of the objects & apply the placement heuristic
   FillObjs(thObjs,thNbObjs);												
-	switch(Instance->Heuristic)
+	switch(Instance->GetHeuristic())
 	{
 		case BottomLeft:
 		case Edge:
-			b=HeuristicBL(Objs,NbObjs);
+			b=HeuristicBL(thObjs,thNbObjs);
 			break;
 
 		case Central:
-			b=HeuristicC(Objs,NbObjs);
+			b=HeuristicC(thObjs,thNbObjs);
 			break;
 	}
 
@@ -692,7 +722,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool b;
 
 	memset(Selected,0,NbObjs*sizeof(bool));
-	switch(Instance->Heuristic)
+	switch(Instance->GetHeuristic())
 	{
 		case BottomLeft:
 		case Edge:
@@ -803,6 +833,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
+	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLevel(unsigned int i)
+{
+	RPoint *pt=RPoint::GetPoint();
+
+	(*pt)=Levels[i];
+	return(*pt);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::~RChromo2D(void)
 {
   cInfo **ptr;
@@ -828,4 +869,5 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
     delete[] OccupiedY;
 	}
 	if(Selected) delete[] Selected;
+	if(Levels) delete[] Levels;
 }
