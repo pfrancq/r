@@ -34,9 +34,8 @@
 
 
 //---------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rstd/rstring.h>
-using namespace RStd;
 
 
 //---------------------------------------------------------------------------
@@ -51,52 +50,205 @@ using namespace RStd;
 
 
 //---------------------------------------------------------------------------
+/**
+* \namespace RMySQL
+* \brief MySQL Classes.
+*
+* This namespace declares classes needed to work with a MySQL database.
+*
+* Here is a example:
+*
+* <pre>
+* #include <iostream.h>
+* #include <rmysql/rmysql.h>
+* using namespace RMySQL;
+*
+*
+* //---------------------------------------------------------------------------
+* void Load(void) throw(RMySQLError)
+* {
+* 	RDb db("host","me","mypassword","thedb");
+* 	RQuery q(&db, "SELECT * FROM tbl");
+*
+* 	for(q.Begin();q.IsMore();q++)
+* 		cout<<"Col 1: "<<q[0]<<"   -    Col 2:"<<q[1]<<endl;
+* }
+*
+*
+* //---------------------------------------------------------------------------
+* int main(void)
+* {
+* 	try
+* 	{
+* 		Load();
+* 	}
+* 	catch(RMySQLError &e)
+* 	{
+* 		cout<<"Error: "<<e.GetError()<<endl;
+* 	}
+* }
+* </pre>
+*/
+
+
+
+//---------------------------------------------------------------------------
 namespace RMySQL{
 //---------------------------------------------------------------------------
 
 
 //---------------------------------------------------------------------------
-class RError
+/**
+* The RMySQL class provides a representation of an error that occurs while
+* working with a MySQL database.
+* @author Pascal Francq
+* @short MySQL Error.
+*/
+class RMySQLError
 {
+	/**
+	* Description of the error.
+	*/
+	RStd::RString Error;
+
 public:
-	RString Error;
-	
-	RError(const RString &error);	
+
+	/**
+	* Constructor.
+	* @param error          Description.
+	*/
+	RMySQLError(const char* error);
+
+	/**
+	* Get the description of the error.
+	* @returns Pointer to a C string.
+	*/
+	const char* GetError(void) const
+		{return(Error());}
 };
 
 
 
 //---------------------------------------------------------------------------
+/**
+* The RDb class provides a representation of a MySQL database.
+* @author Pascal Francq
+* @short MySQL Database.
+*/
 class RDb
 {
+	/**
+	* Internal structure.
+	*/
 	MYSQL* connection;
+
+	/**
+	* Internal structure.
+	*/
 	MYSQL mysql;
+
 public:
-	RDb(const RString &host,const RString &user,const RString &pwd,const RString &db) throw(RError);
-	int GetProtocolVersion(void) {return(mysql.protocol_version);}
+
+	/**
+	* Connstruct a database.
+	* @param host           Host of the database server.
+	* @param user           User to connect with.
+	* @param pwd            Password of the uzer.
+	* @param db             Name of the database.
+	*/
+	RDb(const char* host,const char* user,const char* pwd,const char* db) throw(RMySQLError);
+
+	/**
+	* Get the protocol version used.
+	* @return a identifier.
+	*/
+	int GetProtocolVersion(void)
+		{return(mysql.protocol_version);}
+
+	/**
+	* Destruct the database.
+	*/
 	~RDb(void);
-	
+
+	// Friend class.
 	friend class RQuery;
 };
 
 
 
 //---------------------------------------------------------------------------
+/**
+* The RQuery class provides a representation of a query.
+* @author Pascal Francq
+* @short MySQL Query.
+*/
 class RQuery
 {
+	/**
+	* Internal structure.
+	*/
 	MYSQL_RES *result;
+
+
+	/**
+	* Actual row.
+	*/
 	MYSQL_ROW row;
-	unsigned int nbrows,nbcols;
+
+	/**
+	* Total number of rows returned by the query.
+	*/
+	unsigned int nbrows;
+	
+	/**
+	* Number of columns of the query.
+	*/
+	unsigned int nbcols;
+
 public:
-	RQuery(RDb *db,const RString &sql) throw(RError);
-	unsigned int NbRows(void) { return(nbrows); }
-	bool IsMore(void) { return(row); }	
+
+	/**
+	* Construct a query.
+	* @param db             Pointer to the corresponding database.
+	* @param sql            String containing a SQL query.
+	*/
+	RQuery(RDb* db,const char* sql) throw(RMySQLError);
+
+	/**
+	* Get the total number of rows of the query.
+	* @returns Number of row.
+	*/
+	unsigned int GetNbRows(void)
+		{ return(nbrows); }
+
+	/**
+	* Look if all rows of the query were treated.
+	* @return False if all rows were treated.
+	*/
+	bool IsMore(void)
+		{ return(row); }
+
+	/**
+	* Put the query at the first row.
+	*/
 	void Begin(void);
+
+	/**
+	* Increment the current row.
+	*/
 	RQuery& operator++(int);
-	char* operator[](unsigned int index);
+
+	/**
+	* Return a specific field of the current row.
+	* @param index          Index of the field in the query.
+	*/
+	const char* operator[](unsigned int index) const throw(RMySQLError);
+
+	/**
+	* Destruct the query.
+	*/
 	~RQuery(void);
 };
-
 
 
 }  //-------- End of namespace RMySQL ---------------------------------------

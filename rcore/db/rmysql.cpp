@@ -32,17 +32,18 @@
 #include <string.h>
 #include <rmysql/rmysql.h>
 using namespace RMySQL;
+using namespace RStd;
 
 
 
 //---------------------------------------------------------------------------
 //
-// RError
+// RMySQLError
 //
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-RError::RError(const RString &error)
+RMySQL::RMySQLError::RMySQLError(const char* error)
 	: Error(error)
 {
 }
@@ -56,16 +57,17 @@ RError::RError(const RString &error)
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-RDb::RDb(const RString &host,const RString &user,const RString &pwd,const RString &db) throw(RError)
+RMySQL::RDb::RDb(const char* host,const char* user,const char* pwd,const char* db) throw(RMySQLError)
 {
 	mysql_init(&mysql);
-	connection=mysql_real_connect(&mysql,host(),user(),pwd(),db(),0,0,0);
-	if(!connection) throw(new RError(mysql_error(&mysql)));
+	connection=mysql_real_connect(&mysql,host,user,pwd,db,0,"",0);
+	if(!connection)
+		throw(new RMySQLError(mysql_error(&mysql)));
 }
 
 
 //---------------------------------------------------------------------------
-RDb::~RDb(void)
+RMySQL::RDb::~RDb(void)
 {
 	if(connection) mysql_close(connection);
 }
@@ -79,14 +81,15 @@ RDb::~RDb(void)
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-RQuery::RQuery(RDb *db,const RString &sql) throw(RError)
+RMySQL::RQuery::RQuery(RDb* db,const char* sql) throw(RMySQLError)
 {
 	RString Up(sql);
-	
-	if(!db||!db->connection) throw(new RError("Database not initialize"));
-	if(mysql_real_query(db->connection,sql(),strlen(sql())))
-		throw(new RError(mysql_error(&db->mysql)));
-	Up.StrUpr();	
+
+	if((!db)||!(db->connection))
+		throw(new RMySQLError("Database not initialize"));
+	if(mysql_real_query(db->connection,sql,strlen(sql)))
+		throw(new RMySQLError(mysql_error(&db->mysql)));
+	Up.StrUpr();
 	if(strstr(Up(),"SELECT")&&!strstr(Up(),"INSERT"))
 	{
 		result=mysql_store_result(db->connection);
@@ -103,14 +106,14 @@ RQuery::RQuery(RDb *db,const RString &sql) throw(RError)
 
 
 //---------------------------------------------------------------------------	
-void RQuery::Begin(void)
+void RMySQL::RQuery::Begin(void)
 {
 	row=mysql_fetch_row(result);
 }
 
 
 //---------------------------------------------------------------------------
-RQuery& RQuery::operator++(int)
+RQuery& RMySQL::RQuery::operator++(int)
 {
 	row=mysql_fetch_row(result);
 	return(*this);
@@ -118,18 +121,18 @@ RQuery& RQuery::operator++(int)
 
 
 //---------------------------------------------------------------------------	
-char* RQuery::operator[](unsigned int index)
+const char* RMySQL::RQuery::operator[](unsigned int index) const throw(RMySQLError)
 {
 	if(index>=nbcols)
-		throw(RError("Index out of range"));
+		throw(RMySQLError("Index out of range"));
 	if(!row)
-		throw(RError("Treated set"));
+		throw(RMySQLError("Treated set"));
 	return(row[index]);
 }
 
 
 //---------------------------------------------------------------------------
-RQuery::~RQuery(void)
+RMySQL::RQuery::~RQuery(void)
 {
 	if(result) mysql_free_result(result);
 }
