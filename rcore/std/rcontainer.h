@@ -218,9 +218,12 @@ public:
 	//@{
 
 	/**
-	* Insert an element at a certain position. The function verify not if the
-	* index used is compatible with the order in case of the elements are
-	* treated in ascending order.
+	* Insert an element at a certain position. Two remarks must be made :
+	* -#	The function verify not if the index used is compatible with the order
+	*		in case of the elements are treated in ascending order.
+	* -#	By using this function, the user can leave "blanks" in the container,
+	*		in other words, some "valid" pointers could be null. This situation is
+	*		not handle by the other functions of the container.
 	* @param ins		A pointer to the element to insert.
 	* @param Pos		The position where to insert it.
 	*/

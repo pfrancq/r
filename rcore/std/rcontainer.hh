@@ -250,18 +250,19 @@ template<class C,class T,bool bAlloc,bool bOrder>
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::InsertPtrAt(C *ins,T Pos) throw(bad_alloc)
 {
-	T i;
 	C **ptr;
 
 	RReturnIfFail(ins);
-	RReturnIfFail(Pos<=NbPtr);
 	if(!ins) return;
-	if(Pos>NbPtr) return;
-	NbPtr++;
-	VerifyTab();
-	for(i=0,ptr=Tab;i<Pos;i++,ptr++);
-		if(i<NbPtr) memmove(ptr+1,ptr,(NbPtr-i-1)*sizeof(C*));
+	VerifyTab(Pos+1);
+	ptr=&Tab[Pos];
+	if(Pos<NbPtr)
+		memmove(ptr+1,ptr,(NbPtr-Pos)*sizeof(C*));	
 	(*ptr)=ins;
+	if(Pos>=NbPtr)
+		NbPtr=Pos+1;
+	else
+		NbPtr++;
 }
 
 
