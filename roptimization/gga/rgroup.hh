@@ -6,7 +6,7 @@
 
 	Group of a GGA - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -118,7 +118,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		}
 		if(Owner->ObjectsAss[(*obj)->GetId()]!=Id)
 		{
-			sprintf(tmp,"Owner->ObjsAss[(*obj)->GetId()]!=Id for group %u",Id);
+			sprintf(tmp,"Owner->ObjsAss[(*obj)->GetId()]!=Id for group %u and object %u",Id,(*obj)->GetId());
 			throw eGAVerify(tmp);
 		}
 	}
@@ -209,7 +209,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 {
 	unsigned int i;
 	cObj** ptr;
-	
+
 	for(i=NbSubObjects+1,ptr=&Owner->ObjsAss.Tab[SubObjects];--i;ptr++)
 		if((*ptr)->GetId()==id) return(true);
 	return(false);
