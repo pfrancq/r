@@ -249,6 +249,9 @@ void RPolygons::Union(RPolygon *upoly)
 				RAssertMsg("Direction can't be undefined");
 				break;
 
+			default:
+				RAssertMsg("Not a valid Direction in this context");
+				break;
 		}
 		RAssert(next);
 	}

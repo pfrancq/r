@@ -430,36 +430,44 @@ bool RPolygon::IsVertice(const RPoint &pt) const
 //-----------------------------------------------------------------------------
 bool RPolygon::IsIn(const RCoord X,const RCoord Y)
 {
-	RLine lt,lp;
-	RPoint **pt,*last;
+	RPoint p(X,Y),**tab,*deb;
 	unsigned int i;
-	long count=0;
-	
-	lt.Pt1.Set(X,Y);
-	lt.Pt2.X=MaxCoord;
-	lt.Pt2.Y=Y;
-	last=Tab[NbPtr-1];	// Point last to ending point of Polygon
-	for(i=NbPtr+1,pt=Tab;--i;pt++)
+
+	if(NbPtr==1) return(p==(*Tab[0]));
+	if(NbPtr==2)
 	{
-		if(lt.IsIn(**pt)) continue;
-		lp.Pt1=(**pt);
-		lp.Pt2=(*last);
-		last=(*pt);
-		if(lp.Inter(lt)) count++;
+		RDirection c=p.Classify(Tab[0],Tab[1]);
+		return((c==Between)||(c==Origin)||(c==Destination));
 	}
-	return(count%2);
+	// Verify if not on a edge
+	tab=Tab;
+	deb=(*(tab++));
+	if(p.Classify(Tab[NbPtr-1],deb)==Right) return(false);
+	for(i=NbPtr;--i;tab++)
+	{
+		if(p.Classify(deb,*tab)==Right) return(false);
+		deb=(*tab);
+	}
+	return(true);
 }
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::IsIn(const RPoint &point)
+bool RPolygon::IsIn(const RPoint& point)
 {
 	return(IsIn(point.X,point.Y));
 }
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::IsIn(const RPolygon &poly)
+bool RPolygon::IsIn(const RPoint* point)
+{
+	return(IsIn(point->X,point->Y));
+}
+
+
+//-----------------------------------------------------------------------------
+bool RPolygon::IsIn(const RPolygon& poly)
 {
 	RPoint **pt;
 	unsigned int i;
@@ -468,6 +476,29 @@ bool RPolygon::IsIn(const RPolygon &poly)
 		if(!IsIn(*pt))
 			return(false);
 	return(true);
+}
+
+
+//-----------------------------------------------------------------------------
+bool RPolygon::IsIn(const RPolygon* poly)
+{
+	RPoint **pt;
+	unsigned int i;
+
+	for(i=poly->NbPtr+1,pt=poly->Tab;--i;pt++)
+		if(!IsIn(*pt))
+			return(false);
+	return(true);
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RPolygon::Area(void)
+{
+	RRects r;
+
+	RectDecomposition(&r);
+	return(r.Area());
 }
 
 
@@ -501,7 +532,7 @@ void RPolygon::ChangeOrientation(ROrientation o)
 	RPoint **ptr;
 	double co=1,si=0;
 
-	// Determine scale and roration
+	// Determine scale and rotation
 	if((o==NormalX)||(o==NormalYX)||(o==Rota90X)||(o==Rota90YX))
 		facty=-1;
 	if((o==NormalY)||(o==Normal)||(o==Rota90Y)||(o==Rota90YX))
@@ -511,7 +542,7 @@ void RPolygon::ChangeOrientation(ROrientation o)
 		co=0;
 		si=1;
 	}
-	minx=miny=0;
+	minx=miny=MaxCoord;
 
 	// Make the transformation for each vertice
 	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
@@ -530,7 +561,7 @@ void RPolygon::ChangeOrientation(ROrientation o)
 		(*ptr)->X -= minx;
 		(*ptr)->Y -= miny;
 	}
-	ReOrder();	// Make the top-left point be the first
+	ReOrder();	// Make the bottom-left point be the first
 }
 
 
@@ -719,12 +750,12 @@ void RPolygon::ReOrder(void)
 	unsigned int i;
 	bool bX; 		// Next Vertice is horizontal
 
-	point=tmp=new RPoint*[MaxPtr];
-	bX=false;
+	point=tmp=new RPoint*[MaxPtr];	
 	next=GetBottomLeft();
 	(*(point++))=next;
 	next=GetConX(next);
 	(*(point++))=next;
+	bX=false;	
 	i=NbPtr-1;
 	while(--i)
 	{

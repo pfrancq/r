@@ -51,6 +51,9 @@ namespace RGeometry2D{
 //-----------------------------------------------------------------------------
 /**
 * This class represent a polygon as a set of points regroup in a container.
+* Most of the functions assume that the order of the points in the container
+* must be anti-clockwise. The ReOrder() method does this job, so don't be
+* afraid to call it each time it's necessary.
 * @author Pascal Francq
 * @short Polygon class.
 */
@@ -181,7 +184,12 @@ public:
 	/**
 	* Return true if the point is inside the polygon.
 	*/
-  bool IsIn(const RPoint &pt);
+	bool IsIn(const RPoint& pt);
+
+	/**
+	* Return true if the point is inside the polygon.
+	*/
+	bool IsIn(const RPoint* pt);
 
 	/**
 	* Return true if the polygon poly is inside the polygon. The two polygons are
@@ -189,19 +197,32 @@ public:
 	* of poly are inside the polygon.
 	*	@param poly		The polygon to known if is in.
 	*/
-	bool IsIn(const RPolygon &poly);
+	bool IsIn(const RPolygon& poly);
+
+	/**
+	* Return true if the polygon poly is inside the polygon. The two polygons are
+	* supposed to be "rectangular". This function determines if all the points
+	* of poly are inside the polygon.
+	* @param poly		The polygon to known if is in.
+	*/
+	bool IsIn(const RPolygon* poly);
+
+	/**
+	* Return the area of the polygon.
+	*/
+	RCoord Area(void);
 
 	/**
 	* Return the boundary rectangle of the polygon.
 	* @param rect		The rectangle.
 	*/
-  void Boundary(RRect &rect);
+	void Boundary(RRect &rect);
 
 	/**
 	* Modify the polygon to a certain orientation.
 	* @param o		The orientation.
 	*/
-  void ChangeOrientation(ROrientation o);
+	void ChangeOrientation(ROrientation o);
 
 	/**
 	* Decompose the polygon in a container of rectangles.
@@ -216,7 +237,8 @@ public:
 	void AddPoints(RPoints *points);
 
 	/**
-	* Shift the points of the polygon to make the bottom-left point be the first one.
+	* Shift the points of the polygon to make the bottom-left point be the first
+	* one, and the rest are in the anti-clockwise order.
 	*/
 	void ReOrder(void);
 
