@@ -44,6 +44,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <time.h>
+#include <cstdlib>
 
 
 //------------------------------------------------------------------------------
@@ -123,7 +124,25 @@ RChar RFile::GetDirSeparator(void)
 #else
     return('\\');
 #endif
+}
 
+
+//------------------------------------------------------------------------------
+void RFile::RemoveFile(const RString& name)
+{
+	remove(name.Latin1());
+}
+
+
+//------------------------------------------------------------------------------
+RString RFile::GetTempFile(void)
+{
+	char filename[L_tmpnam+1];
+	RString res;
+
+	tmpnam(filename);
+	res=filename;
+	return(res);
 }
 
 

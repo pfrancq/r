@@ -133,6 +133,18 @@ public:
 	static RChar GetDirSeparator(void);
 
 	/**
+	* Remove a file from the disk.
+	* @param name            Name of the file.
+	*/
+	static void RemoveFile(const RString& name);
+
+	/**
+	* Get a name for temporary file.
+	* @return Name of the file.
+	*/
+	static RString GetTempFile(void);
+
+	/**
 	* Destructs the file.
 	*/
 	virtual ~RFile(void);
