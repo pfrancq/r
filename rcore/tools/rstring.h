@@ -62,26 +62,26 @@ public:
   RString(void) throw(bad_alloc);
   RString(const char *text) throw(bad_alloc);
   RString(const int maxlen) throw(bad_alloc);
-  RString(const RString& str);
-	RString(RString* str);
+  RString(const RString& str) throw(bad_alloc);
+	RString(RString* str) throw(bad_alloc);
 
 	// Assignation
-  RString& operator=(const RString &str);
-  RString& operator=(const char *text);
+  RString& operator=(const RString &str) throw(bad_alloc);
+  RString& operator=(const char *text) throw(bad_alloc);
 
   // Transform to uppercase
   inline void StrUpr(void);
-  void StrUpr(char *text);
-	void StrUpr(RString &str);
+  void StrUpr(char *text) throw(bad_alloc);
+	void StrUpr(RString &str) throw(bad_alloc);
 
   // Transform to lowercase
   inline void StrLwr(void);
-  void StrLwr(char *text);
-  void StrLwr(RString &str);
+  void StrLwr(char *text) throw(bad_alloc);
+  void StrLwr(RString &str) throw(bad_alloc);
 
   // Addition
-  RString& operator+=(const RString &str);
-  RString& operator+=(const char *text);
+  RString& operator+=(const RString &str) throw(bad_alloc);
+  RString& operator+=(const char *text) throw(bad_alloc);
 
   // Content
   inline char operator[](int i) const	{return(Text[i]);}

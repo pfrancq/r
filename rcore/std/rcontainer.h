@@ -93,7 +93,8 @@ public:
   void InsertPtr(C* ins) throw(bad_alloc);
   // Get
   template<class TUse> bool IsIn(const TUse &tag);
-  template<class TUse> C* GetPtr(const TUse &tag);
+//  template<class TUse,bool LocalOrder> C* GetPtr(const TUse &tag);
+  template<class TUse> inline C* GetPtr(const TUse &tag);
   // Insert or Get
   template<class TUse> C* GetInsertPtr(const TUse &tag) throw(bad_alloc);
   // Delete

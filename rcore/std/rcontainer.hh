@@ -238,7 +238,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 //---------------------------------------------------------------------------
 // Return the pointer to the member corresponding to tag
 // If not find -> Return NULL
-template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
+template<class C,class T,bool bAlloc,bool bOrder> template<class TUse/*,bool LocalOrder*/>
 	C* RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag)
 {
   if(bOrder)
@@ -260,6 +260,14 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
     return(NULL);
   }
 }
+
+
+//---------------------------------------------------------------------------
+/*template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
+	inline C* RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag)
+{
+	return(GetPtr<TUse,bOrder>(tag));
+}*/
 
 
 //---------------------------------------------------------------------------

@@ -70,7 +70,7 @@ RString::RString(const int maxlen) throw(bad_alloc)
 
 
 //---------------------------------------------------------------------------
-RString::RString(const RString& str)
+RString::RString(const RString& str) throw(bad_alloc)
 {
   MaxLen=str.MaxLen;
   Len=str.Len;
@@ -80,7 +80,7 @@ RString::RString(const RString& str)
 
 
 //---------------------------------------------------------------------------
-RString::RString(RString* str)
+RString::RString(RString* str) throw(bad_alloc)
 {
   MaxLen=str->MaxLen;
   Len=str->Len;
@@ -108,7 +108,7 @@ inline void RString::Verify(const int maxlen) throw(bad_alloc)
 
 
 //---------------------------------------------------------------------------
-RString& RString::operator=(const RString &str)
+RString& RString::operator=(const RString &str) throw(bad_alloc)
 {
   Verify(str.MaxLen);
   Len=str.Len;
@@ -118,7 +118,7 @@ RString& RString::operator=(const RString &str)
 
 
 //---------------------------------------------------------------------------
-RString& RString::operator=(const char *text)
+RString& RString::operator=(const char *text) throw(bad_alloc)
 {
   Len=strlen(text),
   Verify(Len);
@@ -141,7 +141,7 @@ inline void RString::StrUpr(void)
 
 
 //---------------------------------------------------------------------------
-void RString::StrUpr(char *text)
+void RString::StrUpr(char *text) throw(bad_alloc)
 {
   Len=strlen(text),
   Verify(Len);
@@ -151,7 +151,7 @@ void RString::StrUpr(char *text)
 
 
 //---------------------------------------------------------------------------
-void RString::StrUpr(RString &str)
+void RString::StrUpr(RString &str) throw(bad_alloc)
 {
   Verify(str.MaxLen);
   Len=str.Len;
@@ -175,7 +175,7 @@ inline void RString::StrLwr(void)
 
 
 //---------------------------------------------------------------------------
-void RString::StrLwr(char *text)
+void RString::StrLwr(char *text) throw(bad_alloc)
 {
   Len=strlen(text),
   Verify(Len);
@@ -185,7 +185,7 @@ void RString::StrLwr(char *text)
 
 
 //---------------------------------------------------------------------------
-void RString::StrLwr(RString &str)
+void RString::StrLwr(RString &str) throw(bad_alloc)
 {
   Verify(str.MaxLen);
   Len=str.Len;
@@ -195,7 +195,7 @@ void RString::StrLwr(RString &str)
 
 
 //---------------------------------------------------------------------------
-RString& RString::operator+=(const RString &str)
+RString& RString::operator+=(const RString &str) throw(bad_alloc)
 {
   Verify(str.Len+Len);
   memcpy(&Text[Len],str.Text,str.Len+1);
@@ -205,7 +205,7 @@ RString& RString::operator+=(const RString &str)
 
 
 //---------------------------------------------------------------------------
-RString& RString::operator+=(const char *text)
+RString& RString::operator+=(const char *text) throw(bad_alloc)
 {
   int len=strlen(text);
   Verify(len+Len);
