@@ -49,11 +49,12 @@
 
 //-----------------------------------------------------------------------------
 // include files for Rainbow
-#include <rstd/random.h>								// Random numbers generator
 #include <rstd/rstring.h>								// Strings
 #include <rstd/rcontainer.h>							// Container
 #include <rstd/rtextfile.h>								// Text files
 using namespace RStd;
+#include <rmath/random.h>								// Random numbers generator
+using namespace RMath;
 
 
 //-----------------------------------------------------------------------------
