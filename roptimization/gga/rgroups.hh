@@ -82,10 +82,13 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::ReserveGroup(void)
 {
 	cGroup **ptr;
+	unsigned int i,j;
 
 	if(Used.NbPtr+1>MaxPtr)
 	{
-		InsertPtr(new cGroup(static_cast<cGroups*>(this),Used.NbPtr,GroupData));
+		j=MaxPtr+IncPtr;
+		for(i=MaxPtr;i<j;i++)
+			InsertPtr(new cGroup(static_cast<cGroups*>(this),i,GroupData));
 	}
 	ptr=Tab;
 	while((*ptr)->Reserved)
