@@ -186,7 +186,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		from->SubObjects=NoObject;
 	from->PostDelete(obj);
 	for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
-		if(((*G)->Reserved)&&((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
+		if(((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
 			(*G)->SubObjects--;
 }
 
@@ -215,7 +215,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		from->PostDelete(tmpObj);
 	}
 	for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
-		if(((*G)->Reserved)&&((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
+		if(((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
 			(*G)->SubObjects-=tmp;
 }
 
