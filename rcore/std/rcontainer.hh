@@ -426,7 +426,14 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	RReturnIfFail(ins);
 	RReturnIfFail(Pos<=LastPtr);
 	VerifyTab();
-	ptr=&Tab[Pos];
+	if(Pos>MaxPtr)
+	{
+		VerifyTab(Pos+IncPtr);
+	}
+	else
+	{
+		VerifyTab();
+	}
 	if(Pos<LastPtr)
 		memmove(ptr+1,ptr,(LastPtr-Pos)*sizeof(C*));
 	(*ptr)=(C*)ins;
