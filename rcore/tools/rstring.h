@@ -143,10 +143,10 @@ public:
 	* @param str            String used.
 	*/
 	RString(const RString& str) throw(std::bad_alloc);
-
+	
 	/**
 	* Construct a string from another string.
-	* @param str            Pointer to the string used.
+	* @param str            Pointer to the string.
 	*/
 	RString(const RString* str) throw(std::bad_alloc);
 
