@@ -6,7 +6,7 @@
 
 	Chromosome for 2D placement GA - Header
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -203,7 +203,7 @@ public:
 	/**
 	* Return the number of levels.
 	*/
-	inline unsigned int GetNbLevels(void) { return(NbLevels); }
+	inline unsigned int GetNbLevels(void) { return(this->NbLevels); }
 
 	/**
 	* Return the ith level of the chromosome.

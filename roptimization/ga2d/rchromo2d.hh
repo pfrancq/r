@@ -6,7 +6,7 @@
 
 	Chromosome for 2D placement GA - Inline Implementation
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -58,8 +58,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
 
 	// General Initialisation
-	Objs=Instance->Objs;
-	NbObjs=Instance->NbObjs;
+	Objs=this->Instance->Objs;
+	NbObjs=this->Instance->NbObjs;
 
 	// Init "thread-dependent" data
 	thOrder=thData->Order;
@@ -79,7 +79,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	}
 
 	// Init Limits
-	Limits=Instance->GetLimits();
+	Limits=this->Instance->GetLimits();
 
 	// Init Occupied	(Add 1 Because <= Limits)
 	Grid=new RGrid(Limits);
@@ -91,7 +91,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::RandomConstruct(void) throw(eGA)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
-	Heuristic->Run(Instance->Problem,this,Grid);
+	Heuristic->Run(this->Instance->Problem,this,Grid);
 	RRect r=Heuristic->GetResult();
 	ActLimits.Set(r.Width(),r.Height());
 }
@@ -108,8 +108,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 	#ifdef RGADEBUG
 		char tmpmsg[100];
-		if(Instance->Debug)
-			Instance->Debug->BeginFunc("Crossover","RChromo2D");
+		if(this->Instance->Debug)
+			this->Instance->Debug->BeginFunc("Crossover","RChromo2D");
 	#endif
 
 	// Init
@@ -121,18 +121,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	// Select the objects from the parents
 	parent1->GetSetInfos(thObj1,Grid,Selected);
 	#ifdef RGADEBUG
-		if(Instance->Debug)
+		if(this->Instance->Debug)
 		{
 			sprintf(tmpmsg,"%u objects selected from %u",thObj1->NbPtr,parent1->Id);
-			Instance->Debug->PrintInfo(tmpmsg);
+			this->Instance->Debug->PrintInfo(tmpmsg);
 		}
 	#endif
 	parent2->GetSetInfos(thObj2,Grid,Selected);
 	#ifdef RGADEBUG
-		if(Instance->Debug)
+		if(this->Instance->Debug)
 		{
 			sprintf(tmpmsg,"%u objects selected from %u",thObj2->NbPtr,parent2->Id);
-			Instance->Debug->PrintInfo(tmpmsg);
+			this->Instance->Debug->PrintInfo(tmpmsg);
 		}
 	#endif
 
@@ -159,7 +159,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	thInfos->InsertPtr(new cInfo(&Problem->Problem));
 
 	// Calculate Positions
-	Heuristic->Run(Instance->Problem,thInfos,Grid);
+	Heuristic->Run(this->Instance->Problem,thInfos,Grid);
 
 	RRect r=Heuristic->GetResult();
 	ActLimits.Set(r.Width(),r.Height());
@@ -188,8 +188,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	}
 
 	#ifdef RGADEBUG
-		if(Instance->Debug)
-			Instance->Debug->EndFunc("Crossover","RChromo2D");
+		if(this->Instance->Debug)
+			this->Instance->Debug->EndFunc("Crossover","RChromo2D");
 	#endif
 }
 
@@ -199,7 +199,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void) throw(eGA)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
-	Heuristic->Run(Instance->Problem,this,Grid);
+	Heuristic->Run(this->Instance->Problem,this,Grid);
 	RRect r=Heuristic->GetResult();
 	ActLimits.Set(r.Width(),r.Height());
 }
@@ -221,10 +221,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 			{
 				if((*infoi)->Overlap(*infoj))
 				{
-					sprintf(Tmp,"Overlapping Problem (Id==%u) between %s and %s",Id,(*infoi)->GetObj()->Name.Latin1(),(*infoj)->GetObj()->Name.Latin1());
+					sprintf(Tmp,"Overlapping Problem (Id==%u) between %s and %s",this->Id,(*infoi)->GetObj()->Name.Latin1(),(*infoj)->GetObj()->Name.Latin1());
 					#ifdef RGADEBUG
-						if(Instance->Debug)
-							Instance->Debug->PrintInfo(Tmp);
+						if(this->Instance->Debug)
+							this->Instance->Debug->PrintInfo(Tmp);
 					#endif
 					throw eGAVerify(Tmp);
 				}
@@ -270,7 +270,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	if((X>Limits.X)||(Y>Limits.Y)) return(0);
 	obj=Grid->GetObjId(X,Y);
 	if(obj!=NoObject)
-		return(Infos[obj]);
+		return(this->Infos[obj]);
 	else
 		return(0);
 }
@@ -280,10 +280,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetActLimits(void)
 {
-	RPoint *pt=RPoint::GetPoint();
+	RPoint pt;
 
-	(*pt)=ActLimits;
-	return(*pt);
+	pt=ActLimits;
+	return(pt);
 }
 
 
@@ -291,10 +291,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLevel(unsigned int i)
 {
-	RPoint *pt=RPoint::GetPoint();
+	RPoint pt;
 
-	(*pt)=Levels[i];
-	return(*pt);
+	pt=this->Levels[i];
+	return(pt);
 }
 
 
