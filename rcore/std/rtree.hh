@@ -69,10 +69,10 @@ template<class N,bool bAlloc,bool bOrder>
 {
 	RReturnIfFail(node);
 	if(!node) return;
-	if(node->Top)
+	if(node->Parent)
 	{
-		node->Top->DeletePtr(node);
-		node->Top=0;
+		node->Parent->DeletePtr(node);
+		node->Parent=0;
 	}
 	else
 		Top->DeletePtr(node);
