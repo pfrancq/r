@@ -36,7 +36,8 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
+#include <rstd/rstd.h>
 #include <rstd/rstring.h>
 using namespace RStd;
 
