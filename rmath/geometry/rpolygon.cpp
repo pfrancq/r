@@ -1,28 +1,31 @@
 /*
 
-  Polygons.cpp
+	Rainbow Library Project
 
-  Polygons - Implentation.
+	Polygons.cpp
 
-  (C) 1999-2000 by P. Francq.
+	Polygons - Implentation.
 
-  Version $Revision$
+	(C) 1999-2000 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Library General Public
+	License as published by the Free Software Foundation; either
+	version 2.0 of the License, or (at your option) any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	Library General Public License for more details.
+
+	You should have received a copy of the GNU Library General Public
+	License along with this library, as a file COPYING.LIB; if not, write
+	to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+	Boston, MA  02111-1307  USA
 
 */
 
@@ -36,6 +39,7 @@
 //---------------------------------------------------------------------------
 // include files for RGeometry
 #include "rpolygon.h"
+#include "rrect.h"
 #include "rline.h"
 using namespace RGeometry2D;
 
@@ -63,25 +67,15 @@ RPolygon::RPolygon(int Max)
 
 //---------------------------------------------------------------------------
 RPolygon::RPolygon(RPolygon *poly)
-	: RContainer<RPoint,unsigned int,true,false>(poly->NbPtr,10)
+	: RContainer<RPoint,unsigned int,true,false>(poly)
 {
-  RPoint **ptr;
-  int i;
-
-  for(i=poly->NbPtr+1,ptr=poly->Tab;--i;ptr++)
-    InsertPtr(new RPoint(*ptr));
 }
 
 
 //---------------------------------------------------------------------------
 RPolygon::RPolygon(RPolygon &poly)
-	: RContainer<RPoint,unsigned int,true,false>(poly.NbPtr,10)
+	: RContainer<RPoint,unsigned int,true,false>(poly)
 {
-  RPoint **ptr;
-  int i;
-
-  for(i=poly.NbPtr+1,ptr=poly.Tab;--i;ptr++)
-    InsertPtr(new RPoint(*ptr));
 }
 
 
@@ -89,7 +83,7 @@ RPolygon::RPolygon(RPolygon &poly)
 RPolygon& RPolygon::operator=(const RPolygon &poly)
 {
 	RContainer<RPoint,unsigned int,true,false>::operator=(poly);
-  return(*this);
+	return(*this);
 }
 
 
@@ -135,6 +129,7 @@ RPoint* RPolygon::GetConX(RPoint *pt)
 	RPoint **point,*next;
 	unsigned int i;
 
+	RReturnValIfFail(pt,0);
 	point=Tab;
 	i=0;
 	while((**point)!=(*pt))
@@ -152,7 +147,7 @@ RPoint* RPolygon::GetConX(RPoint *pt)
 	if(next->Y==pt->Y) return(next);
 
 	// Problems when arriving here
-	return(NULL);
+	return(0);
 }
 
 
@@ -162,6 +157,7 @@ RPoint* RPolygon::GetConY(RPoint *pt)
 	RPoint **point,*next;
 	unsigned int i;
 
+	RReturnValIfFail(pt,0);
 	point=Tab;
 	i=0;
 	while((**point)!=(*pt))
@@ -179,7 +175,7 @@ RPoint* RPolygon::GetConY(RPoint *pt)
 	if(next->X==pt->X) return(next);
 
 	// Problems when arriving here
-	return(NULL);
+	return(0);
 }
 
 
@@ -288,6 +284,7 @@ bool RPolygon::Vertex(RPoint *pt)
 	unsigned int i;
 	RCoord X,Y;
 
+	RReturnValIfFail(pt,false);
 	point=Tab;	
 	i=NbPtr+1;
 	while(--i)
@@ -337,6 +334,7 @@ bool RPolygon::Vertex(RPoint *pt1,RPoint *pt2)
 	unsigned int i;
 	RCoord X,Y;
 
+	RReturnValIfFail(pt1&&pt2,false);
 	if((pt1->X!=pt2->X)&&(pt1->Y!=pt2->Y)) return(false);
 	point=Tab;	
 	i=NbPtr+1;
@@ -422,14 +420,14 @@ bool RPolygon::IsEdge(const RPoint &pt) const
 // If nb intersections is odd -> point is in the polygon
 bool RPolygon::IsIn(const RPoint &point)
 {
-  RLine lt,lp;
-  RPoint **pt,*last;
-  unsigned int i;
+	RLine lt,lp;
+	RPoint **pt,*last;
+	unsigned int i;
 	long count=0;
 	
-  lt.Pt1=point;
-  lt.Pt2.X=MaxCoord;
-  lt.Pt2.Y=point.Y;
+	lt.Pt1=point;
+	lt.Pt2.X=MaxCoord;
+	lt.Pt2.Y=point.Y;
 	last=Tab[NbPtr-1];	// Point last to ending point of Polygon
 	for(i=NbPtr+1,pt=Tab;--i;pt++)
 	{
@@ -438,8 +436,8 @@ bool RPolygon::IsIn(const RPoint &point)
 		lp.Pt2=(*last);
 		last=(*pt);
 		if(lp.Inter(lt)) count++;
-  }
-  return(count%2);
+	}
+	return(count%2);
 }
 
 
@@ -459,62 +457,62 @@ bool RPolygon::IsIn(const RPolygon &poly)
 //---------------------------------------------------------------------------
 void RPolygon::Boundary(RRect &rect)
 {
-  RCoord MinX=MaxCoord,MinY=MaxCoord,MaxX=0,MaxY=0,X,Y;
-  RPoint **ptr;
-  int i;
+	RCoord MinX=MaxCoord,MinY=MaxCoord,MaxX=0,MaxY=0,X,Y;
+	RPoint **ptr;
+	int i;
 
-  for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-  {
-    X=(*ptr)->X;
-    Y=(*ptr)->Y;
-    if(MinX>X) MinX=X;
-    if(MinY>Y) MinY=Y;
-    if(MaxX<X) MaxX=X;
-    if(MaxY<Y) MaxY=Y;
-  }
-  rect.Pt1.X=MinX;
-  rect.Pt1.Y=MinY;
-  rect.Pt2.X=MaxX;
-  rect.Pt2.Y=MaxY;
+	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
+	{
+		X=(*ptr)->X;
+		Y=(*ptr)->Y;
+		if(MinX>X) MinX=X;
+		if(MinY>Y) MinY=Y;
+		if(MaxX<X) MaxX=X;
+		if(MaxY<Y) MaxY=Y;
+	}
+	rect.Pt1.X=MinX;
+	rect.Pt1.Y=MinY;
+	rect.Pt2.X=MaxX;
+	rect.Pt2.Y=MaxY;
 }
 
 
 //---------------------------------------------------------------------------
 void RPolygon::ChangeOrientation(ROrientation o)
 {
-  RCoord factx=1,facty=1,i,minx,miny,oldx,oldy;
-  RPoint **ptr;
-  double co=1,si=0;
+	RCoord factx=1,facty=1,i,minx,miny,oldx,oldy;
+	RPoint **ptr;
+	double co=1,si=0;
 
-  // Determine scale and roration
-  if((o==NormalX)||(o==NormalYX)||(o==Rota90X)||(o==Rota90YX))
-    facty=-1;
-  if((o==NormalY)||(o==Normal)||(o==Rota90Y)||(o==Rota90YX))
-    factx=-1;
-  if((o==Rota90)||(o==Rota90X)||(o==Rota90Y)||(o==Rota90YX))
-  {
-   co=0;
-   si=1;
-  }
-  minx=miny=0;
+	// Determine scale and roration
+	if((o==NormalX)||(o==NormalYX)||(o==Rota90X)||(o==Rota90YX))
+		facty=-1;
+	if((o==NormalY)||(o==Normal)||(o==Rota90Y)||(o==Rota90YX))
+		factx=-1;
+	if((o==Rota90)||(o==Rota90X)||(o==Rota90Y)||(o==Rota90YX))
+	{
+		co=0;
+		si=1;
+	}
+	minx=miny=0;
 
-  // Make the transformation for each vertex
-  for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-  {
-    oldx = factx*(*ptr)->X;
-    oldy = facty*(*ptr)->Y;
-    (*ptr)->X = RCoord(co*oldx - si*oldy);
-    (*ptr)->Y = RCoord(si*oldx + co*oldy);
-    if((*ptr)->X<minx) minx=(*ptr)->X;
-    if((*ptr)->Y<miny) miny=(*ptr)->Y;
-  }
+	// Make the transformation for each vertex
+	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
+	{
+		oldx = factx*(*ptr)->X;
+		oldy = facty*(*ptr)->Y;
+		(*ptr)->X = RCoord(co*oldx - si*oldy);
+		(*ptr)->Y = RCoord(si*oldx + co*oldy);
+		if((*ptr)->X<minx) minx=(*ptr)->X;
+		if((*ptr)->Y<miny) miny=(*ptr)->Y;
+	}
 
-  // Replace (0,0) as the left-top point of the embedded rectangle
-  for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-  {
-    (*ptr)->X -= minx;
-    (*ptr)->Y -= miny;
-  }
+	// Replace (0,0) as the left-top point of the embedded rectangle
+	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
+	{
+		(*ptr)->X -= minx;
+		(*ptr)->Y -= miny;
+	}
 	ReOrder();	// Make the top-left point be the first
 }
 
@@ -535,6 +533,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 	bool bFind21;								// True if Point (X2,?) is (X2,Y1)
 
 	// Init
+	RReturnIfFail(rects);
 	rects->Clear();
 
 	// While points  -> Construct the rectangle (X1,Y1,X2,Y2)
@@ -542,8 +541,11 @@ void RPolygon::RectDecomposition(RRects *rects)
 	{
 		// Search the points (X1,Y1),(X1,Y2) and (?,Y2) -> Fix X1,Y1,Y2.
 		Pt11=work.GetLeftBottom();
+		RAssert(Pt11);
 		Pt12=work.GetConY(Pt11);
+		RAssert(Pt12);
 		PtX2=work.GetConX(Pt12);
+		RAssert(PtX2);
 		X1=Pt11->X;
 		Y1=Pt11->Y;
 		Y2=Pt12->Y;
@@ -554,6 +556,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 
 		// Find the point at (X2,?) -> Fix X2
 		Pt2Y=work.GetLeftBottom(X1,Y1,Y2);
+		RAssert(Pt2Y);
 		X2=Pt2Y->X;
 
 		// Insert Rectangle
@@ -565,7 +568,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 		else
 			bFind21=false;
 
-  	// If point to add -> after PtX2
+		// If point to add -> after PtX2
 		if(!bFind21)
 			i=work.GetId<RPoint*>(PtX2,bFind)+1;
 
@@ -578,7 +581,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 		else
 			work.InsertPtrAt(new RPoint(tmp),i);
 
-  	// If point to add -> after edge4
+		// If point to add -> after edge4
 		if(bFind21)
 			i=work.GetId<RPoint*>(PtX2,bFind)+1;
 
@@ -597,6 +600,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 			if(((*point)->X==X2)&&((*point)->Y<=Y2)&&((*point)->Y>=Y1))
 			{
 				Test=work.GetConX(*point);
+				RAssert(Test);
 				if(Test->X>X2) Count++;
 			}
 		if(Count%2) continue;
@@ -685,6 +689,7 @@ void RPolygon::AddPoints(RPoints *points)
 	RPoint **point;
 	unsigned int i;
 
+	RReturnIfFail(points);
 	for(i=NbPtr+1,point=Tab;--i;point++)
 		points->InsertPtr(new RPoint(*point));
 }
@@ -729,6 +734,16 @@ bool RPolygon::DuplicatePoints(void)
 }
 
 
+//---------------------------------------------------------------------------
+RPolygon* RPolygon::GetPolygon(void)
+{
+	RPolygon *tmp;
+	tmp=GetTemporaryObject<RPolygon,30>();
+	tmp->Clear();
+	return(tmp);
+}
+
+
 
 //---------------------------------------------------------------------------
 //
@@ -737,7 +752,8 @@ bool RPolygon::DuplicatePoints(void)
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-RPolygons::RPolygons(void) : RContainer<RPolygon,unsigned int,true,false>(20,10)
+RPolygons::RPolygons(void)
+	: RContainer<RPolygon,unsigned int,true,false>(20,10)
 {
 }
 
@@ -745,9 +761,10 @@ RPolygons::RPolygons(void) : RContainer<RPolygon,unsigned int,true,false>(20,10)
 //---------------------------------------------------------------------------
 bool RPolygons::Vertex(RPoint *pt)
 {
-  RPolygon **poly;
+	RPolygon **poly;
 	unsigned int i;
-	
+
+	RReturnValIfFail(pt,false);	
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
 		if((*poly)->Vertex(pt))
 			return(true);
@@ -758,9 +775,10 @@ bool RPolygons::Vertex(RPoint *pt)
 //---------------------------------------------------------------------------
 bool RPolygons::Vertex(RPoint *pt,RPolygon *poly)
 {
-  RPolygon **ptr;
+	RPolygon **ptr;
 	unsigned int i;
 	
+	RReturnValIfFail(pt&&poly,false);
 	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
 		if(((*ptr)!=poly)&&((*ptr)->Vertex(pt)))
 			return(true);
@@ -771,9 +789,10 @@ bool RPolygons::Vertex(RPoint *pt,RPolygon *poly)
 //---------------------------------------------------------------------------
 bool RPolygons::Vertex(RPoint *pt1,RPoint *pt2)
 {
-  RPolygon **poly;
+	RPolygon **poly;
 	unsigned int i;
-	
+
+	RReturnValIfFail(pt1&&pt2,false);	
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
 		if((*poly)->Vertex(pt1,pt2))
 			return(true);
@@ -784,36 +803,37 @@ bool RPolygons::Vertex(RPoint *pt1,RPoint *pt2)
 //---------------------------------------------------------------------------
 void RPolygons::PutPoints(RPoints *points)
 {
-  RPolygon **poly;
+	RPolygon **poly;
 	RPoint **point;
 	RPoint tmp;
 	unsigned int i,j;
 	
+	RReturnIfFail(points);
 	points->Clear();
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
 		(*poly)->AddPoints(points);	
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
 		for(j=(*poly)->NbPtr+1,point=(*poly)->Tab;--j;point++)
-  	{
-  		tmp.X=(*point)->X;
-  		tmp.Y=(*point)->Y-1;
-  		if(!points->IsIn<RPoint>(tmp))
-  			if(Vertex(&tmp,*poly))
-  				points->InsertPtr(new RPoint(tmp));
-  		tmp.Y=(*point)->Y+1;
-  		if(!points->IsIn<RPoint>(tmp))
-  			if(Vertex(&tmp,*poly))
-  				points->InsertPtr(new RPoint(tmp));
-  		tmp.X=(*point)->X+1;
-  		tmp.Y=(*point)->Y;
-  		if(!points->IsIn<RPoint>(tmp))
-  			if(Vertex(&tmp,*poly))
-  				points->InsertPtr(new RPoint(tmp));
-  		tmp.X=(*point)->X-1;
-  		if(!points->IsIn<RPoint>(tmp))
-  			if(Vertex(&tmp,*poly))
-  				points->InsertPtr(new RPoint(tmp));
-  	}
+		{
+			tmp.X=(*point)->X;
+			tmp.Y=(*point)->Y-1;
+			if(!points->IsIn<RPoint>(tmp))
+				if(Vertex(&tmp,*poly))
+					points->InsertPtr(new RPoint(tmp));
+			tmp.Y=(*point)->Y+1;
+			if(!points->IsIn<RPoint>(tmp))
+				if(Vertex(&tmp,*poly))
+					points->InsertPtr(new RPoint(tmp));
+			tmp.X=(*point)->X+1;
+			tmp.Y=(*point)->Y;
+			if(!points->IsIn<RPoint>(tmp))
+				if(Vertex(&tmp,*poly))
+					points->InsertPtr(new RPoint(tmp));
+				tmp.X=(*point)->X-1;
+			if(!points->IsIn<RPoint>(tmp))
+				if(Vertex(&tmp,*poly))
+					points->InsertPtr(new RPoint(tmp));
+		}
 }
 
 
@@ -822,19 +842,22 @@ void RPolygons::PutPoints(RPoints *points)
 void RPolygons::Union(RPolygon *upoly)
 {
 	RPoint *next,*first,*ins,*last;
-	int FromDir;		// 0=left ; 1=right ; 2=up ; 3=down
-  RPoints pts(100);
+	RDirection FromDir;
+	RPoints pts(100);
 
 	// Init Part
+	RReturnIfFail(upoly);
 	upoly->Clear();	
 	PutPoints(&pts);
 
 	// Find the most (left,bottom) point -> curpt,curpoly -> next pt on the right
 	last=first=next=pts.FindBottomLeft();
+	RAssert(last);
 	ins=new RPoint(next);
 	upoly->InsertPtr(ins);
 	next=pts.FindRight(next,this);
-	FromDir=0;
+	RAssert(next);
+	FromDir=Left;
 
 	// While nextpt!=firspt
 	while((*next)!=(*first))
@@ -842,89 +865,89 @@ void RPolygons::Union(RPolygon *upoly)
 		ins=new RPoint(next);
 		upoly->InsertPtr(ins);
 		last=next;
-//		pts.DeletePtr(next);
 
-  	switch(FromDir)
+		switch(FromDir)
 		{
 
-			case 0 : // Coming from left
-   			if((next=pts.FindBottom(last,this)))
-  			{
-  				FromDir=2;
-  				break;
-  			}
-  			if((next=pts.FindRight(last,this)))
-  			{
-  				upoly->DeletePtr(ins);
-					break;
-        }
-				if((next=pts.FindUp(last,this)))
-				{
-					FromDir=3;
-					break;
-				}
-				FromDir=-1;
-  			break;
-
-			case 1 : // Coming from right
-				if((next=pts.FindUp(last,this)))
-				{
-					FromDir=3;
-					break;
-				}
-  			if((next=pts.FindLeft(last,this)))
-  			{
-  				upoly->DeletePtr(ins);
-					break;
-        }
-   			if((next=pts.FindBottom(last,this)))
-  			{
-  				FromDir=2;
-  				break;
-  			}
-				FromDir=-1;
-  			break;
-
-			case 2 : // Coming from up
-  			if((next=pts.FindLeft(last,this)))
-  			{
-					FromDir=1;
-					break;
-        }
+			case Left :
 				if((next=pts.FindBottom(last,this)))
 				{
-  				upoly->DeletePtr(ins);
+					FromDir=Up;
 					break;
 				}
-  			if((next=pts.FindRight(last,this)))
-  			{
-  				FromDir=0;
+				if((next=pts.FindRight(last,this)))
+				{
+					upoly->DeletePtr(ins);
 					break;
-        }
-				FromDir=-1;
-  			break;
-
-			case 3 : // Coming from bottom
-  			if((next=pts.FindRight(last,this)))
-  			{
-					FromDir=0;
-					break;
-        }
+				}
 				if((next=pts.FindUp(last,this)))
 				{
-  				upoly->DeletePtr(ins);
+					FromDir=Down;
 					break;
 				}
-  			if((next=pts.FindLeft(last,this)))
-  			{
-  				FromDir=1;
-					break;
-        }
-				FromDir=-1;
-  			break;
+				FromDir=NoDirection;
+				break;
 
-    }
-  }
+			case Right :
+				if((next=pts.FindUp(last,this)))
+				{
+					FromDir=Down;
+					break;
+				}
+				if((next=pts.FindLeft(last,this)))
+				{
+					upoly->DeletePtr(ins);
+					break;
+				}
+   			if((next=pts.FindBottom(last,this)))
+				{
+					FromDir=Up;
+					break;
+				}
+				FromDir=NoDirection;
+				break;
+
+			case Up :
+				if((next=pts.FindLeft(last,this)))
+				{
+					FromDir=Right;
+					break;
+				}
+				if((next=pts.FindBottom(last,this)))
+				{
+					upoly->DeletePtr(ins);
+					break;
+				}
+				if((next=pts.FindRight(last,this)))
+				{
+					FromDir=Left;
+					break;
+				}
+				FromDir=NoDirection;
+				break;
+
+			case Down :
+				if((next=pts.FindRight(last,this)))
+				{
+					FromDir=Left;
+					break;
+				}
+				if((next=pts.FindUp(last,this)))
+				{
+					upoly->DeletePtr(ins);
+					break;
+				}
+				if((next=pts.FindLeft(last,this)))
+				{
+  					FromDir=Right;
+					break;
+				}
+				FromDir=NoDirection;
+				break;
+
+		}
+		RAssert(next);
+	}
 }
 
 

@@ -1,28 +1,31 @@
 /*
 
-  RPoint.cpp
+	Rainbow Library Project
 
-  Point - Implementation.
+	RPoint.cpp
 
-  (C) 1999-2000 by P. Francq.
+	Point - Implementation.
 
-  Version $Revision$
+	(C) 1999-2000 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Library General Public
+	License as published by the Free Software Foundation; either
+	version 2.0 of the License, or (at your option) any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	Library General Public License for more details.
+
+	You should have received a copy of the GNU Library General Public
+	License along with this library, as a file COPYING.LIB; if not, write
+	to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+	Boston, MA  02111-1307  USA
 
 */
 
@@ -30,7 +33,7 @@
 
 //---------------------------------------------------------------------------
 // include files for Rainbow
-#include "rfunc.h"
+#include <rstd/rstd.h>
 using namespace RStd;
 #include "rpoint.h"
 #include "rpolygon.h"
@@ -47,31 +50,33 @@ using namespace RGeometry2D;
 //---------------------------------------------------------------------------
 RPoint::RPoint(void)
 {
-  X=Y=0;
+	X=Y=0;
 }
 
 
 //---------------------------------------------------------------------------
 RPoint::RPoint(const RCoord x,const RCoord y)
 {
-  X=x;
-  Y=y;
+	X=x;
+	Y=y;
 }
 
 
 //---------------------------------------------------------------------------
 RPoint::RPoint(const RPoint& pt)
 {
-  X=pt.X;
-  Y=pt.Y;
+	X=pt.X;
+	Y=pt.Y;
 }
 
 
 //---------------------------------------------------------------------------
 RPoint::RPoint(const RPoint *pt)
 {
-  X=pt->X;
-  Y=pt->Y;
+	RReturnIfFail(pt);
+	if(!pt) return;
+	X=pt->X;
+	Y=pt->Y;
 }
 
 
@@ -110,6 +115,8 @@ RPoints::RPoints(RPoints *points)
 	RPoint **pts;
 	unsigned int i;
 
+	RReturnIfFail(points);
+	if(!points) return;
 	for(i=points->NbPtr+1,pts=points->Tab;--i;pts++)
 		InsertPtr(new RPoint(*pts));
 }
@@ -118,12 +125,13 @@ RPoints::RPoints(RPoints *points)
 //---------------------------------------------------------------------------
 RPoint* RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 {
-  RPoint *Activ,**point;
+	RPoint *Activ,**point;
 	unsigned int i;
 	RCoord X,Y;
 	RCoord AX;
 
-	if(!NbPtr) return(NULL);
+	RReturnValIfFail(pt&&polys,0);
+	if(!NbPtr) return(0);
 	X=pt->X;
 	Y=pt->Y;
 	Activ=NULL;
@@ -137,7 +145,7 @@ RPoint* RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 			Activ=(*point);
 		point++;
 	}
-	if(!Activ) return(NULL);
+	if(!Activ) return(0);
 	// Find right most point on left
 	AX=Activ->X;
 	for(;--i;point++)
@@ -149,19 +157,20 @@ RPoint* RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 			AX=Activ->X;
     }
 	}
-  return(Activ);
+	return(Activ);
 }
 
 
 //---------------------------------------------------------------------------
 RPoint* RPoints::FindRight(RPoint *pt,RPolygons *polys)
 {
-  RPoint *Activ,**point;
+	RPoint *Activ,**point;
 	unsigned int i;
 	RCoord X,Y;
 	RCoord AX;
 
-	if(!NbPtr) return(NULL);
+	RReturnValIfFail(pt&&polys,0);
+	if(!NbPtr) return(0);
 	X=pt->X;
 	Y=pt->Y;
 	Activ=NULL;
@@ -175,7 +184,7 @@ RPoint* RPoints::FindRight(RPoint *pt,RPolygons *polys)
 			Activ=(*point);
 		point++;
 	}
-	if(!Activ) return(NULL);
+	if(!Activ) return(0);
 	// Find left most point on right
 	AX=Activ->X;
 	for(;--i;point++)
@@ -187,19 +196,20 @@ RPoint* RPoints::FindRight(RPoint *pt,RPolygons *polys)
 			AX=Activ->X;
     }
 	}
-  return(Activ);
+	return(Activ);
 }
 
 
 //---------------------------------------------------------------------------
 RPoint* RPoints::FindBottom(RPoint *pt,RPolygons *polys)
 {
-  RPoint *Activ,**point;
+	RPoint *Activ,**point;
 	unsigned int i;
 	RCoord X,Y;
 	RCoord AY;
 
-	if(!NbPtr) return(NULL);
+	RReturnValIfFail(pt&&polys,0);
+	if(!NbPtr) return(0);
 	X=pt->X;
 	Y=pt->Y;
 	Activ=NULL;
@@ -213,7 +223,7 @@ RPoint* RPoints::FindBottom(RPoint *pt,RPolygons *polys)
 			Activ=(*point);
 		point++;
 	}
-	if(!Activ) return(NULL);
+	if(!Activ) return(0);
 	// Find up most point on bottom
 	AY=Activ->Y;
 	for(;--i;point++)
@@ -225,22 +235,23 @@ RPoint* RPoints::FindBottom(RPoint *pt,RPolygons *polys)
 			AY=Activ->Y;
     }
 	}
-  return(Activ);
+	return(Activ);
 }
 
 
 //---------------------------------------------------------------------------
 RPoint* RPoints::FindUp(RPoint *pt,RPolygons *polys)
 {
-  RPoint *Activ,**point;
+	RPoint *Activ,**point;
 	unsigned int i;
 	RCoord X,Y;
 	RCoord AY;
 
-	if(!NbPtr) return(NULL);
+	RReturnValIfFail(pt&&polys,0);
+	if(!NbPtr) return(0);
 	X=pt->X;
 	Y=pt->Y;
-	Activ=NULL;
+	Activ=0;
 	point=Tab;
 	i=NbPtr+1;
 	// Find first point on up
@@ -251,7 +262,7 @@ RPoint* RPoints::FindUp(RPoint *pt,RPolygons *polys)
 			Activ=(*point);
 		point++;
 	}
-	if(!Activ) return(NULL);
+	if(!Activ) return(0);
 	// Find bottom most point on up
 	AY=Activ->Y;
 	for(;--i;point++)
@@ -263,18 +274,18 @@ RPoint* RPoints::FindUp(RPoint *pt,RPolygons *polys)
 			AY=Activ->Y;
     }
 	}
-  return(Activ);
+	return(Activ);
 }
 
 
 //---------------------------------------------------------------------------
 RPoint* RPoints::FindBottomLeft(void)
 {
-  RPoint *Activ,**point;
+	RPoint *Activ,**point;
 	unsigned int i;
 	RCoord X,Y;
 
-	if(!NbPtr) return(NULL);
+	if(!NbPtr) return(0);
 	point=Tab;
 	Activ=(*point);		
 	X=Activ->X;
@@ -322,16 +333,16 @@ RPoints& RPoints::operator=(const RPoints &points)
 //---------------------------------------------------------------------------
 RPoint& RGeometry2D::operator+(const RPoint &arg1,const RPoint &arg2)
 {
-  RPoint *res=RPoint::GetPoint();
-  (*res)=arg1;
-  return((*res)+=arg2);
+	RPoint *res=RPoint::GetPoint();
+	(*res)=arg1;
+	return((*res)+=arg2);
 }
 
 
 //---------------------------------------------------------------------------
 RPoint& RGeometry2D::operator-(const RPoint &arg1,const RPoint &arg2)
 {
-  RPoint *res=RPoint::GetPoint();
-  (*res)=arg1;
-  return((*res)-=arg2);
+	RPoint *res=RPoint::GetPoint();
+	(*res)=arg1;
+	return((*res)-=arg2);
 }

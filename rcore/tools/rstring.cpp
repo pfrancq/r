@@ -1,28 +1,31 @@
 /*
 
-  RString.cpp
+	Rainbow Library Project
 
-  String - Implementation.
+	RString.cpp
 
-  (C) 1999-2000 by P. Francq.
+	String - Implementation.
 
-  Version $Revision$
+	(C) 1999-2000 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Library General Public
+	License as published by the Free Software Foundation; either
+	version 2.0 of the License, or (at your option) any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	Library General Public License for more details.
+
+	You should have received a copy of the GNU Library General Public
+	License along with this library, as a file COPYING.LIB; if not, write
+	to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+	Boston, MA  02111-1307  USA
 
 */
 
@@ -30,7 +33,8 @@
 
 //---------------------------------------------------------------------------
 // include files for Rainbow
-#include "rstd.h"
+#include <rstd/rstd.h>
+#include <rstd/rstring.h>
 using namespace RStd;
 
 
@@ -45,9 +49,9 @@ using namespace RStd;
 RString::RString(void) throw(bad_alloc)
 {
 	MaxLen=200;
-  Len=0;
-  Text=new char[MaxLen+1];
-  (*Text)=0;
+	Len=0;
+	Text=new char[MaxLen+1];
+	(*Text)=0;
 }
 
 
@@ -59,8 +63,8 @@ RString::RString(const char *text) throw(bad_alloc)
 
 	if(text)
 	{	
-  	MaxLen=Len=strlen(text);
-  	ptr2=Text=new char[MaxLen+1];
+		MaxLen=Len=strlen(text);
+		ptr2=Text=new char[MaxLen+1];
 		while(*ptr1)
 			(*(ptr2++))=(*(ptr1++));
 		(*ptr2)=0;
@@ -68,9 +72,9 @@ RString::RString(const char *text) throw(bad_alloc)
 	else
 	{
 		MaxLen=200;
-  	Len=0;
-	  Text=new char[MaxLen+1];
-  	(*Text)=0;
+		Len=0;
+		Text=new char[MaxLen+1];
+		(*Text)=0;
 		RReturnIfFail(text);
 	}
 }
@@ -81,29 +85,29 @@ RString::RString(const int maxlen) throw(bad_alloc)
 {
 	if(maxlen)
 	{
-  	MaxLen=maxlen;
-  	Len=0;
-  	Text=new char[MaxLen+1];
-  	(*Text)=0;
+		MaxLen=maxlen;
+		Len=0;
+		Text=new char[MaxLen+1];
+		(*Text)=0;
 	}
 	else
 	{
 		MaxLen=200;
-  	Len=0;
-  	Text=new char[MaxLen+1];
-	  (*Text)=0;
+		Len=0;
+		Text=new char[MaxLen+1];
+	 	(*Text)=0;
 		RReturnIfFail(maxlen!=0);
-  }
+	}
 }
 
 
 //---------------------------------------------------------------------------
 RString::RString(const RString& str) throw(bad_alloc)
 {
-  MaxLen=str.MaxLen;
-  Len=str.Len;
-  Text=new char[MaxLen+1];
-  memcpy(Text,str.Text,(Len+1)*sizeof(char));
+	MaxLen=str.MaxLen;
+	Len=str.Len;
+	Text=new char[MaxLen+1];
+	memcpy(Text,str.Text,(Len+1)*sizeof(char));
 }
 
 
@@ -112,17 +116,17 @@ RString::RString(const RString* str) throw(bad_alloc)
 {
 	if(str)
 	{	
-  	MaxLen=str->MaxLen;
-  	Len=str->Len;
-  	Text=new char[MaxLen+1];
-  	memcpy(Text,str->Text,(Len+1)*sizeof(char));
+		MaxLen=str->MaxLen;
+		Len=str->Len;
+		Text=new char[MaxLen+1];
+		memcpy(Text,str->Text,(Len+1)*sizeof(char));
 	}
 	else
 	{
 		MaxLen=200;
-  	Len=0;
-  	Text=new char[MaxLen+1];
-	  (*Text)=0;
+		Len=0;
+		Text=new char[MaxLen+1];
+	 	(*Text)=0;
 		RReturnIfFail(str);
 	}
 }
@@ -132,28 +136,28 @@ RString::RString(const RString* str) throw(bad_alloc)
 inline void RString::Verify(const int maxlen) throw(bad_alloc)
 {
 	RReturnIfFail(maxlen!=0);
-  if(MaxLen<maxlen)
-  {
-    char *tmp;
-    MaxLen=maxlen;
-    tmp=new char[MaxLen+1];
-    if(Text)
-    {
-      memcpy(tmp,Text,(Len+1)*sizeof(char));
-      delete[] Text;
-    }
-    Text=tmp;
-  }
+	if(MaxLen<maxlen)
+	{
+	  	char *tmp;
+		MaxLen=maxlen;
+		tmp=new char[MaxLen+1];
+		if(Text)
+    	{
+			memcpy(tmp,Text,(Len+1)*sizeof(char));
+			delete[] Text;
+		}
+		Text=tmp;
+	}
 }
 
 
 //---------------------------------------------------------------------------
 RString& RString::operator=(const RString &str) throw(bad_alloc)
 {
-  Verify(str.MaxLen);
-  Len=str.Len;
-  memcpy(Text,str.Text,(Len+1)*sizeof(char));
-  return(*this);
+	Verify(str.MaxLen);
+	Len=str.Len;
+	memcpy(Text,str.Text,(Len+1)*sizeof(char));
+	return(*this);
 }
 
 
@@ -165,13 +169,13 @@ RString& RString::operator=(const char *text) throw(bad_alloc)
 
 	RReturnValIfFail(text,*this);
 	ptr1=text;
-  Len=strlen(text);
-  Verify(Len);
+	Len=strlen(text);
+	Verify(Len);
 	ptr2=Text;
 	while(*ptr1)
 		(*(ptr2++))=(*(ptr1++));
 	(*ptr2)=0;
-  return(*this);
+	return(*this);
 }
 
 
@@ -196,12 +200,12 @@ inline void RString::StrUpr(void)
 	while(*ptr)
 	{
 		#if __BORLANDC__
-	    #pragma warn -sig
+			#pragma warn -sig
 		#endif
 		if(((*ptr)>='a')&&((*ptr)<='z'))
 			(*ptr)-='a'-'A';
 		#if __BORLANDC__
-	    #pragma warn .sig
+			#pragma warn .sig
 		#endif
 		ptr++;
 	}
@@ -216,23 +220,23 @@ void RString::StrUpr(const char *text) throw(bad_alloc)
 
 	RReturnIfFail(text);
 	ptr1=text;
-  Len=strlen(text);
-  Verify(Len);
+	Len=strlen(text);
+	Verify(Len);
 	ptr2=Text;
 	while(*ptr1)
 		(*(ptr2++))=(*(ptr1++));
 	(*ptr2)=0;
-  StrUpr();
+	StrUpr();
 }
 
 
 //---------------------------------------------------------------------------
 void RString::StrUpr(const RString &str) throw(bad_alloc)
 {
-  Verify(str.MaxLen);
-  Len=str.Len;
-  memcpy(Text,str.Text,(Len+1)*sizeof(char));
-  StrUpr();
+	Verify(str.MaxLen);
+	Len=str.Len;
+	memcpy(Text,str.Text,(Len+1)*sizeof(char));
+	StrUpr();
 }
 
 
@@ -244,12 +248,12 @@ inline void RString::StrLwr(void)
 	while(*ptr)
 	{
 		#if __BORLANDC__
-	    #pragma warn -sig
+			#pragma warn -sig
 		#endif
 		if(((*ptr)>='A')&&((*ptr)<='Z'))
 			(*ptr)+='a'-'A';
 		#if __BORLANDC__
-	    #pragma warn .sig
+			#pragma warn .sig
 		#endif
 		ptr++;
 	}
@@ -263,33 +267,33 @@ void RString::StrLwr(const char *text) throw(bad_alloc)
 	char *ptr2;
 
 	RReturnIfFail(text);
-  Len=strlen(text);
-  Verify(Len);
+	Len=strlen(text);
+	Verify(Len);
 	ptr2=Text;
 	while(*ptr1)
 		(*(ptr2++))=(*(ptr1++));
 	(*ptr2)=0;
-  StrLwr();
+	StrLwr();
 }
 
 
 //---------------------------------------------------------------------------
 void RString::StrLwr(const RString &str) throw(bad_alloc)
 {
-  Verify(str.MaxLen);
-  Len=str.Len;
-  memcpy(Text,str.Text,(Len+1)*sizeof(char));
-  StrLwr();
+	Verify(str.MaxLen);
+	Len=str.Len;
+	memcpy(Text,str.Text,(Len+1)*sizeof(char));
+	StrLwr();
 }
 
 
 //---------------------------------------------------------------------------
 RString& RString::operator+=(const RString &str) throw(bad_alloc)
 {
-  Verify(str.Len+Len);
-  memcpy(&Text[Len],str.Text,(str.Len+1)*sizeof(char*));
-  Len+=str.Len;
-  return(*this);
+	Verify(str.Len+Len);
+	memcpy(&Text[Len],str.Text,(str.Len+1)*sizeof(char*));
+	Len+=str.Len;
+	return(*this);
 }
 
 
@@ -301,14 +305,14 @@ RString& RString::operator+=(const char *text) throw(bad_alloc)
 
 	RReturnValIfFail(text,*this);
 	ptr1=text;
-  int len=strlen(text);
-  Verify(len+Len);
+	int len=strlen(text);
+	Verify(len+Len);
 	ptr2=&Text[len];
 	while(*ptr1)
 		(*(ptr2++))=(*(ptr1++));
 	(*ptr2)=0;
-  Len+=len;
-  return(*this);
+	Len+=len;
+	return(*this);
 }
 
 
@@ -371,7 +375,7 @@ int RString::Compare(const RString *str) const
 	RReturnValIfFail(ptr1,1);
 	if(!ptr1) return(1);
 	ptr1=str->Text;
-	if(Len!=str->Len)	return(Len-str->Len);
+	if(Len!=str->Len) return(Len-str->Len);
 	while((*ptr1)==(*ptr2))
 	{
 		ptr1++;
@@ -386,12 +390,12 @@ char RString::HashIndex(void) const
 {
 	int c=(*Text);
 	#ifdef __BORLANDC__
-    #pragma warn -sig
+		#pragma warn -sig
 	#endif
 	if(c>='a'&&c<='z') return(c-'a');
 	if(c>='A'&&c<='Z') return(c-'A');
 	#ifdef __BORLANDC__
-    #pragma warn .sig	
+		#pragma warn .sig	
 	#endif
 	return(26);
 }
@@ -411,6 +415,14 @@ char* RString::GetCString(void)
 }
 
 
+//---------------------------------------------------------------------------
+RString::~RString(void)
+{
+	if(Text)
+		delete[] Text;
+}
+
+
 
 //---------------------------------------------------------------------------
 //
@@ -421,27 +433,27 @@ char* RString::GetCString(void)
 //---------------------------------------------------------------------------
 RString& RStd::operator+(const RString &arg1,const RString &arg2)
 {
-  RString *res=RString::GetString();
-  (*res)=arg1;
-  return((*res)+=arg2);
+	RString *res=RString::GetString();
+	(*res)=arg1;
+	return((*res)+=arg2);
 }
 
 
 //---------------------------------------------------------------------------
 RString& RStd::operator+(const RString &arg1,const char *arg2)
 {
-  RString *res=RString::GetString();
-  (*res)=arg1;
-  return((*res)+=arg2);
+	RString *res=RString::GetString();
+	(*res)=arg1;
+	return((*res)+=arg2);
 }
 
 
 //---------------------------------------------------------------------------
 RString& RStd::operator+(const char *arg1,const RString &arg2)
 {
-  RString *res=RString::GetString();
-  (*res)=arg1;
-  return((*res)+=arg2);
+	RString *res=RString::GetString();
+	(*res)=arg1;
+	return((*res)+=arg2);
 }
 
 //---------------------------------------------------------------------------
@@ -527,6 +539,3 @@ RString& RStd::dtoa(const double nb)
 	(*res)=Tmp;
 	return((*res));
 }
-
-
-//---------------------------------------------------------------------------

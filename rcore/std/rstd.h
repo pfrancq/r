@@ -1,29 +1,32 @@
 /*
 
-  RStd.h
+	Rainbow Library Project
 
-  Rainbow Standard Library - Header.
+	RStd.h
 
-  (C) 1999-2000 by P. Francq.
+	Rainbow Standard Library - Header.
 
-  Version $Revision$
+	(C) 1999-2000 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Library General Public
+	License as published by the Free Software Foundation; either
+	version 2.0 of the License, or (at your option) any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-    
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	Library General Public License for more details.
+
+	You should have received a copy of the GNU Library General Public
+	License along with this library, as a file COPYING.LIB; if not, write
+	to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+	Boston, MA  02111-1307  USA
+
 */
 
 
@@ -51,34 +54,34 @@
 
 	#ifdef __GNUC__
 
-		#define RAssert(expr)																			\
-    	if(!(expr))																							\
-			{																												\
-       	cerr	<<"file "<<__FILE__                             \
-							<<": line "<<__LINE__                           \
-							<<" ("<<__PRETTY_FUNCTION__                     \
-							<<"): assertion failed: "<<#expr<<endl;         \
-				throw;																		\
+		#define RAssert(expr)																											\
+    	if(!(expr))																																	\
+			{																																			\
+       	cerr	<<"file "<<__FILE__                             																\
+							<<": line "<<__LINE__                           														\
+							<<" ("<<__PRETTY_FUNCTION__                     											\
+							<<"): assertion failed: "<<#expr<<endl;         												\
+				throw;																																\
 			}
 
-		#define RAssertNotReached()																\
-			cerr	<<"file "<<__FILE__                             	\
-						<<": line "<<__LINE__                          	  \
-						<<" ("<<__PRETTY_FUNCTION__                 	    \
-						<<"): should not be reached"<<endl;       				\
+		#define RAssertNotReached()																								\
+			cerr	<<"file "<<__FILE__                             																\
+						<<": line "<<__LINE__                          	  														\
+						<<" ("<<__PRETTY_FUNCTION__                 	    											\
+						<<"): should not be reached"<<endl;       															\
 				throw;																		
 
 	#else 	// !__GNUC__
 
-		#define RAssert(expr)																			\
-    	if(!(expr))																							\
-       	cerr	<<"file "<<__FILE__															\
-							<<": line "<<__LINE__														\
+		#define RAssert(expr)																											\
+    	if(!(expr))																																	\
+       	cerr	<<"file "<<__FILE__																									\
+							<<": line "<<__LINE__																						\
 							<<" : assertion failed: "<<#expr<<endl;
 
-		#define RAssertNotReached()																\
-    	cerr	<<"file "<<__FILE__																\
-						<<": line "<<__LINE__															\
+		#define RAssertNotReached()																								\
+    	cerr	<<"file "<<__FILE__																										\
+						<<": line "<<__LINE__																							\
 						<<" : should not be reached"<<endl;
 
 	#endif 	// __GNUC__
@@ -97,44 +100,44 @@
 
 	#ifdef __GNUC__
 
-		#define RReturnIfFail(expr)																\
-    	if(!(expr))																							\
-			{																												\
-       	cerr	<<"file "<<__FILE__                             \
-							<<": line "<<__LINE__                           \
-							<<" ("<<__PRETTY_FUNCTION__                     \
-							<<"): assertion failed: "<<#expr<<endl;         \
-				return;																								\
+		#define RReturnIfFail(expr)																								\
+    	if(!(expr))																																\
+			{																																		\
+       	cerr	<<"file "<<__FILE__                             															\
+							<<": line "<<__LINE__                           													\
+							<<" ("<<__PRETTY_FUNCTION__                     										\
+							<<"): assertion failed: "<<#expr<<endl;         											\
+				return;																															\
 			}
 
-		#define RReturnValIfFail(expr,val)												\
-    	if(!(expr))																							\
-			{																												\
-       	cerr	<<"file "<<__FILE__                             \
-							<<": line "<<__LINE__                           \
-							<<" ("<<__PRETTY_FUNCTION__                     \
-							<<"): assertion failed: "<<#expr<<endl;         \
-				return(val);																					\
+		#define RReturnValIfFail(expr,val)																					\
+    	if(!(expr))																																\
+			{																																		\
+       	cerr	<<"file "<<__FILE__                             															\
+							<<": line "<<__LINE__                           													\
+							<<" ("<<__PRETTY_FUNCTION__                     										\
+							<<"): assertion failed: "<<#expr<<endl;         											\
+				return(val);																													\
 			}
 
 	#else 	// !__GNUC__
 
-		#define RReturnIfFail(expr)																\
-    	if(!(expr))																							\
-			{																												\
-       	cerr	<<"file "<<__FILE__                             \
-							<<": line "<<__LINE__                           \
-							<<" : assertion failed: "<<#expr<<endl;         \
-				return;																								\
+		#define RReturnIfFail(expr)																								\
+    	if(!(expr))																																\
+			{																																		\
+       	cerr	<<"file "<<__FILE__                             															\
+							<<": line "<<__LINE__                           													\
+							<<" : assertion failed: "<<#expr<<endl;         											\
+				return;																															\
 			}
 
-		#define RReturnValIfFail(expr,val)												\
-    	if(!(expr))																							\
-			{																												\
-       	cerr	<<"file "<<__FILE__                             \
-							<<": line "<<__LINE__                           \
-							<<" : assertion failed: "<<#expr<<endl;         \
-				return(val);																					\
+		#define RReturnValIfFail(expr,val)																					\
+    	if(!(expr))																																\
+			{																																		\
+       	cerr	<<"file "<<__FILE__                             															\
+							<<": line "<<__LINE__                           													\
+							<<" : assertion failed: "<<#expr<<endl;         											\
+				return(val);																													\
 			}
 
 
@@ -148,13 +151,15 @@ namespace RStd{
 //---------------------------------------------------------------------------
 
 
+
 //---------------------------------------------------------------------------
-/** This function provides a way to handle temporary objects needed when using
-	* standard operators with non standard classes.
-	* @author Pascal Francq
-	* @param C				The type of class.
-	* @param Max      Maximal size of the array (neested operators).
-	*/
+/**
+* This function provides a way to handle temporary objects needed when using
+* standard operators with non standard classes.
+* @author Pascal Francq
+* @param C				The type of class.
+* @param Max      	Maximal size of the array (neested operators).
+*/
 template<class C,unsigned long Max>
 	inline C* GetTemporaryObject(void)
 {
@@ -167,16 +172,6 @@ template<class C,unsigned long Max>
 
 
 }  //-------- End of namespace RStd ---------------------------------------
-
-
-//---------------------------------------------------------------------------
-// include files for Rainbow/RStd
-#include <rstd/rcontainer.h>
-#include <rstd/rhashcontainer.h>
-#include <rstd/rstring.h>
-#include <rstd/rtextfile.h>
-#include <rstd/rnode.h>
-#include <rstd/rtree.h>
 
 
 //---------------------------------------------------------------------------

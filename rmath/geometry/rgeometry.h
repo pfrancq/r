@@ -1,28 +1,31 @@
 /*
 
-  Geometry.h
+	Rainbow Library Project
 
-  Geometry base classes - Basic definition - Header.
+	Geometry.h
 
-  (C) 1999-2000 by P. Francq.
+	Geometry base classes - Basic definition - Header.
 
-  Version $Revision$
+	(C) 1999-2000 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Library General Public
+	License as published by the Free Software Foundation; either
+	version 2.0 of the License, or (at your option) any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	Library General Public License for more details.
+
+	You should have received a copy of the GNU Library General Public
+	License along with this library, as a file COPYING.LIB; if not, write
+	to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+	Boston, MA  02111-1307  USA
 
 */
 
@@ -35,6 +38,14 @@
 
 //---------------------------------------------------------------------------
 #include <limits.h>
+
+
+//---------------------------------------------------------------------------
+// include files for Rainbow
+#include <rstd/rstd.h>
+#include <rstd/rcontainer.h>
+#include <rstd/rtextfile.h>
+using namespace RStd;
 
 
 //---------------------------------------------------------------------------
@@ -54,25 +65,53 @@ class RPolygons;
 
 
 //---------------------------------------------------------------------------
-/** The RCoord type represents a coordinate.*/
+/**
+* The RCoord type represents a coordinate.
+*/
 typedef int RCoord;
 
 
 //---------------------------------------------------------------------------
-/** The MaxCoord constante represent the maximal positive value that a
-	* coordinate can have. It is often used to indicate an invalid coordinate.*/
+/**
+* The MaxCoord constante represent the maximal positive value that a
+* coordinate can have. It is often used to indicate an invalid coordinate.
+*/
 const RCoord MaxCoord=INT_MAX;
 
 
 //---------------------------------------------------------------------------
-/** Represent the different orientation of a given polygon.*/
-enum ROrientation{Normal=0,NormalX=1,NormalY=2,NormalYX=3,Rota90=4,Rota90X=5,Rota90Y=6,Rota90YX=7};
+/**
+* Represent the different orientation of a given polygon.
+*/
+enum ROrientation {Normal=0,NormalX=1,NormalY=2,NormalYX=3,Rota90=4,Rota90X=5,Rota90Y=6,Rota90YX=7};
 
 
 //---------------------------------------------------------------------------
-/** This variable represents a tolerance for calculations.*/
+/**
+* Represent different directions.
+*/
+enum RDirection {NoDirection,Left,Right,Down,Up};
+
+
+//---------------------------------------------------------------------------
+/**
+* This variable represents a tolerance for calculations.
+*/
 extern double Epsi;
 
 
-}  //-------- End of namespace RGeometry ------------------------------------
+//---------------------------------------------------------------------------
+/**
+* Affect the coordinates in function of a given direction.
+*	@param x				X Coordinate.
+*	@param y				Y Coordinate.
+* @param from			The direction from where "it" is coming.
+*/
+void AdaptXY(RCoord &x,RCoord &y,RDirection from);
+
+
+}  //-------- End of namespace RGeometry2D ----------------------------------
+
+
+//---------------------------------------------------------------------------
 #endif
