@@ -85,37 +85,23 @@ extern bool ExternBreak;
 * @author Pascal Francq
 * @short Basic GA Exception.
 */
-class eGA
+class eGA : public R::RException
 {
 public:
 
 	/**
-	* A String to hold a message
+	* Construct an exception.
+	* @param str                      Message of the error.
 	*/
-	RString Msg;
+	eGA(void) throw()
+		: R::RException() {}
 
 	/**
-	* Construct the exception.
+	* Construct an exception.
+	* @param str                      Message of the error.
 	*/
-	eGA(void);
-
-	/**
-	* Construct the exception.
-	* @param msg            The message.
-	*/
-	eGA(const RString& msg);
-
-	/**
-	* Construct the exception.
-	* @param msg            The message.
-	*/
-	eGA(const char* msg);
-
-	/**
-	* Set Message.
-	* m                     The message.
-	*/
-	void SetMsg(const char* m);
+	eGA(const char* str) throw()
+		: R::RException(str) {}
 };
 
 
@@ -134,13 +120,13 @@ public:
 	* @param g             Generation.
 	* @param c             Identificator of chromosome.
 	*/
-	eGAVerify(const unsigned int g,const unsigned int c);
+	eGAVerify(const unsigned int g,const unsigned int c) throw();
 
 	/**
 	* Construct the verify exception.
 	* @param msg            The message.
 	*/
-	eGAVerify(const char* msg) : eGA(msg) {}
+	eGAVerify(const char* msg) throw() : eGA(msg) {}
 };
 
 
@@ -161,13 +147,13 @@ public:
 	* @param p2             Identificator of the second parent.
 	* @param c              Identificator of the child.
 	*/
-	eGACrossover(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c);
+	eGACrossover(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c) throw();
 
 	/**
 	* Construct the crossover exception.
 	* @param msg            The message.
 	*/
-	eGACrossover(const char* msg) : eGA(msg) {}
+	eGACrossover(const char* msg) throw() : eGA(msg) {}
 };
 
 
@@ -186,13 +172,13 @@ public:
 	* @param g              Generation.
 	* @param c              Identificator of the child.
 	*/
-	eGAMutation(const unsigned int g,const unsigned int c);
+	eGAMutation(const unsigned int g,const unsigned int c) throw();
 
 	/**
 	* Construct the mutation exception.
 	* @param msg            The message.
 	*/
-	eGAMutation(const char* msg) : eGA(msg) {}
+	eGAMutation(const char* msg) throw() : eGA(msg) {}
 };
 
 
@@ -211,13 +197,13 @@ public:
 	* @param g              Generation.
 	* @param c              Identificator of the child.
 	*/
-	eGAInversion(const unsigned int g,const unsigned int c);
+	eGAInversion(const unsigned int g,const unsigned int c) throw();
 
 	/**
 	* Construct the inversion exception.
 	* @param msg            The message.
 	*/
-	eGAInversion(const char* msg) : eGA(msg) {}
+	eGAInversion(const char* msg) throw() : eGA(msg) {}
 };
 
 
@@ -237,13 +223,13 @@ public:
 	* @param g              Generation.
 	* @param c              Identificator of the child.
 	*/
-	eGAOptimisation(const unsigned int g,const unsigned int c);
+	eGAOptimisation(const unsigned int g,const unsigned int c) throw();
 
 	/**
 	* Construct the optimisation exception.
 	* @param msg            The message.
 	*/
-	eGAOptimisation(const char* msg) : eGA(msg) {}
+	eGAOptimisation(const char* msg) throw() : eGA(msg) {}
 };
 
 
@@ -263,13 +249,13 @@ public:
 	* @param g              Generation.
 	* @param c              Identificator of the child.
 	*/
-	eGARandomConstruct(const unsigned int g,const unsigned int c);
+	eGARandomConstruct(const unsigned int g,const unsigned int c) throw();
 
 	/**
 	* Construct the random construction exception.
 	* @param msg            The message.
 	*/
-	eGARandomConstruct(const char* msg) : eGA(msg) {}
+	eGARandomConstruct(const char* msg) throw() : eGA(msg) {}
 };
 
 
@@ -288,13 +274,13 @@ public:
 	* @param g              Generation.
 	* @param c              Identificator of the child.
 	*/
-	eGAEvaluation(const unsigned int g,const unsigned int c);
+	eGAEvaluation(const unsigned int g,const unsigned int c) throw();
 
 	/**
 	* Construct the evaluation exception.
 	* @param msg            The message.
 	*/
-	eGAEvaluation(const char* msg) : eGA(msg) {}
+	eGAEvaluation(const char* msg) throw() : eGA(msg) {}
 };
 
 
@@ -314,23 +300,14 @@ public:
 	* @param g              Generation.
 	* @param c              Identificator of the child.
 	*/
-	eGAPostEvaluation(const unsigned int g,const unsigned int c);
+	eGAPostEvaluation(const unsigned int g,const unsigned int c) throw();
 
 	/**
 	* Construct the post evaluation exception.
 	* @param msg            The message.
 	*/
-	eGAPostEvaluation(const char* msg) : eGA(msg) {}
+	eGAPostEvaluation(const char* msg) throw() : eGA(msg) {}
 };
-
-
-//------------------------------------------------------------------------------
-/*
-* Examine the program parameters for a GA use in a non-graphical way.
-* @author Pascal Francq
-* @short Examine program parameters.
-*/
-bool Examine(int argc, char *argv[],const char* Prj,const char *Ver);
 
 
 //------------------------------------------------------------------------------

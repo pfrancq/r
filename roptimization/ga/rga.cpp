@@ -58,38 +58,7 @@ bool R::ExternBreak=false;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-eGA::eGA(void)
-	: Msg()
-{
-}
-
-
-//------------------------------------------------------------------------------
-eGA::eGA(const RString& msg)
-	: Msg(msg)
-{
-	cerr<<Msg()<<endl;
-}
-
-
-//------------------------------------------------------------------------------
-eGA::eGA(const char* msg)
-	: Msg(msg)
-{
-	cerr<<Msg()<<endl;
-}
-
-
-//------------------------------------------------------------------------------
-void eGA::SetMsg(const char* m)
-{
-	Msg=m;
-	cerr<<Msg()<<endl;
-}
-
-
-//------------------------------------------------------------------------------
-eGAVerify::eGAVerify(const unsigned int g,const unsigned int c)
+eGAVerify::eGAVerify(const unsigned int g,const unsigned int c) throw()
 	: eGA()
 {
 	char tmp[200];
@@ -100,7 +69,7 @@ eGAVerify::eGAVerify(const unsigned int g,const unsigned int c)
 
 
 //------------------------------------------------------------------------------
-eGACrossover::eGACrossover(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c)
+eGACrossover::eGACrossover(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c) throw()
 	: eGA()
 {
 	char tmp[200];
@@ -111,7 +80,7 @@ eGACrossover::eGACrossover(const unsigned int g,const unsigned p1,const unsigned
 
 
 //------------------------------------------------------------------------------
-eGAMutation::eGAMutation(const unsigned int g,const unsigned int c)
+eGAMutation::eGAMutation(const unsigned int g,const unsigned int c) throw()
 	: eGA()
 {
 	char tmp[200];
@@ -122,7 +91,7 @@ eGAMutation::eGAMutation(const unsigned int g,const unsigned int c)
 
 
 //------------------------------------------------------------------------------
-eGAInversion::eGAInversion(const unsigned int g,const unsigned int c)
+eGAInversion::eGAInversion(const unsigned int g,const unsigned int c) throw()
 	: eGA()
 {
 	char tmp[200];
@@ -133,7 +102,7 @@ eGAInversion::eGAInversion(const unsigned int g,const unsigned int c)
 
 
 //------------------------------------------------------------------------------
-eGAOptimisation::eGAOptimisation(const unsigned int g,const unsigned int c)
+eGAOptimisation::eGAOptimisation(const unsigned int g,const unsigned int c) throw()
 	: eGA()
 {
 	char tmp[200];
@@ -144,7 +113,7 @@ eGAOptimisation::eGAOptimisation(const unsigned int g,const unsigned int c)
 
 
 //------------------------------------------------------------------------------
-eGARandomConstruct::eGARandomConstruct(const unsigned int g,const unsigned int c)
+eGARandomConstruct::eGARandomConstruct(const unsigned int g,const unsigned int c) throw()
 	: eGA()
 {
 	char tmp[200];
@@ -155,7 +124,7 @@ eGARandomConstruct::eGARandomConstruct(const unsigned int g,const unsigned int c
 
 
 //------------------------------------------------------------------------------
-eGAEvaluation::eGAEvaluation(const unsigned int g,const unsigned int c)
+eGAEvaluation::eGAEvaluation(const unsigned int g,const unsigned int c) throw()
 	: eGA()
 {
 	char tmp[200];
@@ -166,84 +135,11 @@ eGAEvaluation::eGAEvaluation(const unsigned int g,const unsigned int c)
 
 
 //------------------------------------------------------------------------------
-eGAPostEvaluation::eGAPostEvaluation(const unsigned int g,const unsigned int c)
+eGAPostEvaluation::eGAPostEvaluation(const unsigned int g,const unsigned int c) throw()
 	: eGA()
 {
 	char tmp[200];
 
 	sprintf(tmp,"Generation %u: Post Evaluation error: Chromsosome %u",g,c);
 	SetMsg(tmp);
-}
-
-
-
-//------------------------------------------------------------------------------
-//
-// General functions
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-bool Examine(int argc, char *argv[],const char* Prj,const char *Ver)
-{
-	char **args;
-	bool bVersion=false;
-	bool bHelp=false;
-	bool bMaster=false;
-	bool bSlave=false;
-//	char MasterIP[20];
-//	char HostIP[20];
-
-	// Verify if parameters
-	if(argc==1)
-	{
-		cout<<Prj<<": Not input file\n";
-		return(true);
-	}
-
-	// Analyse parameters
-	for(args=argv+1;--argc;args++)
-	{
-		if(!strcmp(*args,"--version"))
-			bVersion=true;
-		else
-		if(!strcmp(*args,"--help"))
-			bHelp=true;
-  }
-
-	// Treats parameters
-	if(bVersion)
-	{
-		cout<<Prj<<" Version "<<Ver<<"  (C) 1999-2000 by Pascal Francq\n";
-		return(true);
-	}
-	if(bHelp)
-	{
-		cout<<"Usage: "<<Prj<<" [options] file\nOptions:\n";
-		cout<<"--help\t\t\tDisplay this information\n";
-		cout<<"--version\t\tDisplay the version information\n";
-		cout<<"-o <file>\t\tPut output into <file>\n";
-		cout<<"-s <ip>\t\t\tSlave mode with master address <ip>\n";
-		cout<<"-m <ip>\t\t\tMaster mode\n";
-		cout<<"-h <ip>\t\t\tIP address of host (DISPLAY)\n";
-		return(true);
-	}
-
-	// Treat if Stand-alone
-	if((!bSlave)&&(!bMaster))
-	{
-	}
-
-	// Treat if Master
-	if(bMaster)
-	{
-	}
-
-	// Treat if Slave
-	if(bSlave)
-	{
-	}
-
-	// End
-	return(true);
 }
