@@ -44,8 +44,8 @@ using namespace RStd;
 #include <rgeometry/rrect.h>
 #include <rgeometry/rpolygon.h>
 using namespace RGeometry2D;
-#include "robj2d.h"
-#include "rgrid.h"
+#include <rga/robj2d.h>
+#include <rga/rgrid.h>
 
 
 //-----------------------------------------------------------------------------
@@ -57,6 +57,48 @@ namespace RGA{
 // Forward class declaration
 class RObj2D;
 class RGrid;
+class RGeoInfo;
+
+
+
+//-----------------------------------------------------------------------------
+/**
+* \ingroup 2DGA
+* The RGeoInfoConnector class provides a connector of a geometric information
+* concerning the placement of an object.
+* @author Pascal Francq
+* @short Connector of a Geometric Information.
+*/
+class RGeoInfoConnector
+{
+	/**
+	* Pointer to the real connector.
+	*/
+	RObj2DConnector* Con;
+	
+	/**
+	* Owner of the connector.
+	*/
+	RGeoInfo* Owner;
+	
+	/**
+	* Position of the connector in the geometric information.
+	*/
+	RPoint Pos;
+	
+public:
+
+	/**
+	* Constructor of the connector.
+	* @param con		"Real" Connector of this one.
+	* @param owner		Geometric Information of the connector.
+	* @param pos		Position of the connector.
+	*/	
+	RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner,const RPoint &pos);
+	
+	RPoint& GetPos(void);
+};
+
 
 
 //-----------------------------------------------------------------------------
@@ -112,6 +154,11 @@ public:
 	RGeoInfo(RObj2D *obj);
 
 	/**
+	* Construct a geometric information from another one.
+	*/
+	RGeoInfo(RGeoInfo *info);
+
+	/**
 	* Clears the geometric information.
 	*/
 	void Clear(void);
@@ -140,13 +187,13 @@ public:
 	/**
 	* Return true if the geometric information is a valid one.
 	*/	
-	bool IsValid(void);
+	bool IsValid(void) const;
 
 	/**
 	* Return true if the object represented by the geometric information is
 	* selected.
 	*/
-	bool IsSelect(void) {return(Selected);}
+	bool IsSelect(void) const {return(Selected);}
 
 	/**
 	* Set that the object represented by the geometric information is selected.
@@ -156,7 +203,7 @@ public:
 	/**
 	* Return the object.
 	*/
-	RObj2D* GetObj(void) {return(Obj);}
+	RObj2D* GetObj(void) const {return(Obj);}
 
 	/**
 	* Assign the geometric information to the position and update the grids with the
@@ -281,6 +328,11 @@ public:
 	* Return the polygon representing the object placed.
 	*/
 	RPolygon& GetPolygon(void);
+
+	/**
+	* Return the polygon representing the object to place.
+	*/
+	RPolygon* GetBound(void) {return(Bound);}
 };
 
 

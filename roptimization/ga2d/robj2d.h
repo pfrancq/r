@@ -40,7 +40,9 @@
 // include files for Rainbow
 #include <rgeometry/rpoint.h>
 #include <rgeometry/rrect.h>
+#include <rgeometry/rrects.h>
 #include <rgeometry/rpolygon.h>
+#include <rgeometry/rpolygons.h>
 using namespace RGeometry2D;
 
 
@@ -52,6 +54,7 @@ namespace RGA{
 //-----------------------------------------------------------------------------
 // Forward class declaration
 class RGeoInfo;
+class RObj2D;
 
 
 //-----------------------------------------------------------------------------
@@ -62,6 +65,91 @@ class RGeoInfo;
 * referencing no object.
 */
 const unsigned int NoObject=UINT_MAX;
+
+
+
+//-----------------------------------------------------------------------------
+/**
+* \ingroup 2DGA
+* This basic class represent a connection point for an object to place by using
+* the 2D placement GA.
+* @author Pascal Francq
+* @short Connector of a 2D Object.
+*/
+class RObj2DConnector
+{
+	/**
+	* Owner of the connector.
+	*/
+	RObj2D* Owner;
+	
+	/**
+	* Identificator of the connector.
+	*/
+	unsigned int Id;
+
+	/**
+	* Point representing the connector.
+	*/
+	RPoint Pos;
+
+public:
+
+	/**	
+	* Construct a connector.
+	* @param owner		Owner of the connector.
+	* @param id			Id of the connector.
+	* @param pos		Position of the connector.
+	*/
+	RObj2DConnector(RObj2D* owner, unsigned int id,const RPoint pos);
+	
+	/**	
+	* Construct a connector.
+	* @param owner		Owner of the connector.
+	* @param id			Id of the connector.
+	* @param x			X Coordinate of the position of the connector.
+	* @param y			Y Coordinate of the position of the connector.	
+	*/	
+	RObj2DConnector(RObj2D* owner, unsigned int id,const unsigned int x,unsigned y);
+		
+	/**
+	* This function compares two connectors and returns 0 if there are the same.
+	* This function is used for the class RContainer.
+	* @param c		Connector used for the comparaison.
+	*/
+	int Compare(const RObj2DConnector* c) {return(Id-c->Id);}
+	
+	/**	
+	* This function compares two connectors and returns 0 if there are the same.
+	* This function is used for the class RContainer.
+	* @param c		Connector used for the comparaison.
+	*/
+	int Compare(const RObj2DConnector& c) {return(Id-c.Id);}
+	
+	/**
+	* This function compares a connector and an identificator and returns 0 if
+	* there are the same.
+	* This function is used for the class RContainer.
+	* @param id		Identificator used for the comparaison.
+	*/
+	int Compare(const unsigned int id) {return(Id-id);}
+	
+	/**
+	* Return the object that's own the connector.
+	*/
+	RObj2D* GetObj(void) {return(Owner);}
+	
+	/**
+	* Return the identificator of the connector.
+	*/
+	unsigned int GetId(void) {return(Id);}
+	
+	/**
+	* Return the position of the connector relativ to the object.
+	*/
+	RPoint& GetPos(void);	
+};
+
 
 
 //-----------------------------------------------------------------------------
@@ -83,7 +171,7 @@ public:
 	/**
 	* Polygon that define the object.
 	*/
-  RPolygon Polygon;
+	RPolygon Polygon;
 
 	/**
 	* Represent the area of the object.
@@ -114,7 +202,12 @@ public:
 	* Specify if the object is deformable or rigid.
 	*/
 	bool Deformable;
-
+	
+	/**
+	* The connectors of this object
+	*/
+	RContainer<RObj2DConnector,unsigned int,true,true> Connectors;
+	
 	/**
 	* Construct an 2D object.
 	* @param id						The identificator of the object.
@@ -147,7 +240,7 @@ public:
 	/**
 	* Return the identificator of the object.
 	*/
-	inline unsigned int GetId(void) {return(Id);}
+	inline unsigned int GetId(void) const {return(Id);}
 
 	/**
 	* Return the area of the object.
@@ -168,6 +261,20 @@ public:
 	* The assignment operator.
 	*/
 	RObj2D& operator=(const RObj2D &obj);
+		
+	/**
+	* Add a connector to this object
+	* @param id		Identificator of the connector.
+	* @param x		X-Coordinate of the connection point.
+	* @param y		Y-Coordinate of the connection point.	
+	*/
+	void AddConnector(unsigned int id,unsigned x,unsigned y);
+	
+	/**
+	* Return the connector corresponding to a given identificator.
+	* @param id
+	*/
+	RObj2DConnector* GetConnector(unsigned int id) {return(Connectors.GetPtr<unsigned int>(id));}
 };
 
 
@@ -246,7 +353,8 @@ public:
 	* @param OccY		Grid with Y as entry.
 	*/
 	void Assign(RPoint &pos,RGeoInfo **infos,unsigned int **OccX,unsigned int **OccY);
-
+	
+	
 	/**
 	* Destruct the container.
 	*/

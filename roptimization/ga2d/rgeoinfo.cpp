@@ -38,6 +38,29 @@ using namespace RGA;
 
 //-----------------------------------------------------------------------------
 //
+// Class "RGeoInfoConnector"
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+RGeoInfoConnector::RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner,const RPoint &pos)
+	: Con(con), Owner(owner), Pos(pos)
+{
+}
+
+//-----------------------------------------------------------------------------
+RPoint& RGeoInfoConnector::GetPos(void)
+{
+	RPoint *pt=RPoint::GetPoint();
+	
+	(*pt)=Pos;
+	return(*pt);
+}
+
+
+
+//-----------------------------------------------------------------------------
+//
 // Class "RGeoInfo"
 //
 //-----------------------------------------------------------------------------
@@ -47,6 +70,19 @@ RGeoInfo::RGeoInfo(RObj2D *obj)
 	: Obj(obj), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(0),
 		Rects(0)
 {
+}
+
+
+//-----------------------------------------------------------------------------
+RGeoInfo::RGeoInfo(RGeoInfo *info)
+{
+	Obj=info->Obj;
+	Selected=info->Selected;
+	Pos=info->Pos;
+	Bound=info->Bound;
+	Ori=info->Ori;
+	Rects=info->Rects;
+	Rect=info->Rect;
 }
 
 
@@ -160,22 +196,33 @@ bool RGeoInfo::Test(RPoint &pos,RPoint &limits,RGrid *grid)
 void RGeoInfo::PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid)
 {
 	RPoint TestPos;
+	bool change=true;
 
-	// Push Bottom
-	TestPos=pos;
-	while((TestPos.Y>=0)&&Test(TestPos,limits,grid))
+	while(change)
 	{
-		pos=TestPos;
-		TestPos.Y--;
+		change=false;
+
+   	// Push Bottom
+   	TestPos=pos;
+  		TestPos.Y--;
+   	while((TestPos.Y>=0)&&Test(TestPos,limits,grid))
+   	{
+			change=true;
+   		pos=TestPos;
+   		TestPos.Y--;
+   	}
+
+   	// Push Left
+   	TestPos=pos;
+  		TestPos.X--;
+   	while((TestPos.X>=0)&&Test(TestPos,limits,grid))
+   	{
+			change=true;
+   		pos=TestPos;
+   		TestPos.X--;
+	  	}	
+
 	}
-
-	// Push Left
-	TestPos=pos;
-	while((TestPos.X>=0)&&Test(TestPos,limits,grid))
-	{
-		pos=TestPos;
-		TestPos.X--;
-	}	
 }
 
 
@@ -185,26 +232,38 @@ void RGeoInfo::PushCenter(RPoint &pos,RPoint &limits,RGrid *grid)
 	bool PushLeft,PushBottom;
 	RPoint TestPos;
 	RPoint Center;
+	bool change=true;
 
 	Center.Set(limits.X/2,limits.Y/2);
 	PushLeft=(pos.X-Center.X>0);
 	PushBottom=(pos.Y-Center.Y>0);
 
-	// Push Bottom/Up
-	TestPos=pos;
-	while((TestPos.Y!=Center.Y)&&Test(TestPos,limits,grid))
+	while(change)
 	{
-		pos=TestPos;
-		if(PushBottom) TestPos.Y--; else TestPos.Y++;
+		change=false;
+
+   	// Push Bottom/Up
+   	TestPos=pos;
+   	if(PushBottom) TestPos.Y--; else TestPos.Y++;
+   	while((TestPos.Y!=Center.Y)&&Test(TestPos,limits,grid))
+   	{
+   		change=true;
+   		pos=TestPos;
+   		if(PushBottom) TestPos.Y--; else TestPos.Y++;
+   	}
+
+   	// Push Left/Right
+   	TestPos=pos;
+   	if(PushLeft) TestPos.X--; else TestPos.X++;
+   	while((TestPos.X!=Center.X)&&Test(TestPos,limits,grid))
+   	{
+   		pos=TestPos;
+   		change=true;
+   		if(PushLeft) TestPos.X--; else TestPos.X++;
+   	}	
+
 	}
 
-	// Push Left/Right
-	TestPos=pos;
-	while((TestPos.X!=Center.X)&&Test(TestPos,limits,grid))
-	{
-		pos=TestPos;
-		if(PushLeft) TestPos.X--; else TestPos.X++;
-	}	
 }
 
 
@@ -253,7 +312,7 @@ RPoint& RGeoInfo::operator()(void)
 
 
 //-----------------------------------------------------------------------------
-bool RGeoInfo::IsValid(void)
+bool RGeoInfo::IsValid(void) const
 {
 	// Test Position
 	if((Pos.X==MaxCoord)||(Pos.Y==MaxCoord))

@@ -41,13 +41,44 @@ using namespace RGA;
 
 //-----------------------------------------------------------------------------
 //
+// RObj2DConnector
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const RPoint pos)
+	: Owner(owner), Id(id), Pos(pos)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const unsigned int x,unsigned y)
+	: Owner(owner), Id(id), Pos(x,y)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RObj2DConnector::GetPos(void)
+{
+	RPoint *pt=RPoint::GetPoint();
+
+	(*pt)=Pos;
+	return(*pt);
+}
+
+
+
+//-----------------------------------------------------------------------------
+//
 // RObj2D
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 RObj2D::RObj2D(unsigned int id,bool deformable)
-	: Id(id), Area(0), NbPossOri(0), Deformable(deformable)
+	: Id(id), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
 {
 }
 
@@ -91,7 +122,7 @@ void RObj2D::CalcPolygons(void)
 		bNormal=bRota90=false;
 		for(i=NbPossOri+1,o=PossOri;--i;o++)
 		{
-			if((!bNormal)&&(((*o)==Normal)||((*o)==NormalX)||((*o)==NormalX)||((*o)==NormalYX)))
+			if((!bNormal)&&(((*o)==Normal)||((*o)==NormalX)||((*o)==NormalY)||((*o)==NormalYX)))
 			{
 				bNormal=true;
 				if(bRota90)
@@ -184,6 +215,13 @@ RObj2D& RObj2D::operator=(const RObj2D &obj)
 }
 
 
+//-----------------------------------------------------------------------------
+void RObj2D::AddConnector(unsigned int id,unsigned x,unsigned y)
+{
+	Connectors.InsertPtr(new RObj2DConnector(this,id,x,y));
+}
+
+
 
 //-----------------------------------------------------------------------------
 //
@@ -271,7 +309,7 @@ void RObj2DContainer::EndObjs(void)
 
 
 //-----------------------------------------------------------------------------
-void RObj2DContainer::Assign(RPoint &pos,RGeoInfo **infos,unsigned int **OccX,unsigned int **OccY)
+void RObj2DContainer::Assign(RPoint& /*pos*/,RGeoInfo** /*infos*/,unsigned int** /*OccX*/,unsigned int** /*OccY*/)
 {
 /*	unsigned int i;
 	unsigned int *ids;
