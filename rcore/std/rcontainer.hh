@@ -53,7 +53,6 @@ template<class C,bool bAlloc,bool bOrder>
 		Tab = new C*[MaxPtr];
 		memset(Tab,0,MaxPtr*sizeof(C*));
 		if(!IncPtr) IncPtr=10;
-		RReturnIfFail(M>0);
 	}
 }
 
@@ -737,7 +736,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 	C** tab2;
 
 	Clear();
-	if(!src)
+	if((!src)||(!src->NbPtr))
 		return(*this);
 	VerifyTab(src->LastPtr);
 	if(bAlloc&&b)
@@ -767,7 +766,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 	C** tab2;
 
 	Clear();
-	if(!src)
+	if((!src)||(!src->NbPtr))
 		return(*this);
 	VerifyTab(src->LastPtr);
 	for(i=src->LastPtr+1,tab=src->Tab,tab2=Tab;--i;tab++,tab2++)
@@ -788,7 +787,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b,bool o>
 	C** tab;
 	C** tab2;
 
-	if(!src)
+	if((!src)||(!src->NbPtr))
 		return(*this);
 	VerifyTab(src->LastPtr+LastPtr);
 	if(bAlloc)
