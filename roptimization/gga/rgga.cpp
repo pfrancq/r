@@ -34,6 +34,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rgga/rgga.h>
+using namespace RGA;
 
 
 

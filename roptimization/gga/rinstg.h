@@ -58,7 +58,7 @@ namespace RGGA{
 * @short GGA "thread-dependent" Data.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	class RThreadDataG : public RThreadData<cInst,cChromo>
+	class RThreadDataG : public RGA::RThreadData<cInst,cChromo>
 {
 protected:
 
@@ -91,7 +91,7 @@ public:
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	class RInstG : public RInst<cInst,cChromo,cFit,cThreadData>
+	class RInstG : public RGA::RInst<cInst,cChromo,cFit,cThreadData>
 {
 
 protected:
@@ -120,7 +120,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RGA::RObjs<cObj>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,RGA::RObjs<cObj>* objs,HeuristicType h,RGA::RDebug *debug=0) throw(bad_alloc);
 
 	/**
 	* Construct the instance.
@@ -129,7 +129,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RStd::RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,RStd::RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RGA::RDebug *debug=0) throw(bad_alloc);
 
 	/**
 	* Construct the instance.
@@ -138,7 +138,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RStd::RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,RStd::RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RGA::RDebug *debug=0) throw(bad_alloc);
 
 	/**
 	* Initialisation of the instance.
@@ -161,31 +161,31 @@ public:
 	* same chromosomes are detect, one of them is replace a random based one
 	* with a probability of 90%.
 	*/
-	virtual void HandleSameChromosomes(void) throw(eGA);
+	virtual void HandleSameChromosomes(void) throw(RGA::eGA);
 
 	/**
 	* Random construction of the chromosomes. Call the method of RInst and
 	* handles the same solutions after.
 	*/
-	virtual void RandomConstruct(void) throw(eGA);
+	virtual void RandomConstruct(void) throw(RGA::eGA);
 
 	/**
 	* This function does the crossovers for a generation. Call the method of
 	* RInst and handles the same solutions after.
 	*/
-	virtual void Crossover(void) throw(eGA);
+	virtual void Crossover(void) throw(RGA::eGA);
 
 	/**
 	* This function does the necessary mutations for a generation. Call the
 	* method of RInst and handles the same solutions after.
 	*/
-	virtual void Mutation(void) throw(eGA);
+	virtual void Mutation(void) throw(RGA::eGA);
 	
 	/**
 	* This function does the necessary inversions for a generation. Call the
 	* method of RInst and handles the same solutions after.
 	*/
-	virtual void Inversion(void) throw(eGA);
+	virtual void Inversion(void) throw(RGA::eGA);
 
 	/**
 	* Destruct the instance.

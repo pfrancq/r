@@ -39,7 +39,6 @@
 //-----------------------------------------------------------------------------
 // include files for RProject
 #include <rga/rga.h>
-using namespace RGA;
 
 
 //-----------------------------------------------------------------------------
@@ -78,7 +77,7 @@ enum HeuristicType{FirstFit,FirstFitDes};
 * @author Pascal Francq
 * @short Modify GA Exception
 */
-class eGAModify : public eGA
+class eGAModify : public RGA::eGA
 {
 public:
 
