@@ -46,6 +46,11 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
+// Exceptions
+NEWRIOEXCEPTION(RIOException,eInvalidXMLFile);
+
+
+//------------------------------------------------------------------------------
 /**
 * This class represents a XML file.
 * @short XML File.

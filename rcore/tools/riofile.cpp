@@ -160,7 +160,7 @@ unsigned int RIOFile::Read(char* buffer,unsigned int nb)
 
 
 //------------------------------------------------------------------------------
-void RIOFile::Write(char* buffer,unsigned int nb)
+void RIOFile::Write(const char* buffer,unsigned int nb)
 {
 	if(handle==-1)
 		throw(RIOException(this,"Can't write into the file"));

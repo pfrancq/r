@@ -186,38 +186,38 @@ public:
 	/**
 	* >> Operator for unsigned int.
 	*/
-	RRecFile& operator>>(unsigned int& nb) throw(RString);
+	RRecFile& operator>>(unsigned int& nb);
 
 	/**
 	* >> Operator for a double.
 	*/
-	RRecFile& operator>>(double& nb) throw(RString);
+	RRecFile& operator>>(double& nb);
 
 	/**
 	* << Operator for unsigned char.
 	*/
-	RRecFile& operator<<(unsigned char nb) throw(RString);
+	RRecFile& operator<<(unsigned char nb);
 
 	/**
 	* << Operator for unsigned int.
 	*/
-	RRecFile& operator<<(unsigned int nb) throw(RString);
+	RRecFile& operator<<(unsigned int nb);
 
 	/**
 	* << Operator for unsigned long.
 	*/
-	RRecFile& operator<<(unsigned long nb) throw(RString);
+	RRecFile& operator<<(unsigned long nb);
 
 	/**
 	* << Operator for double.
 	*/
-	RRecFile& operator<<(double nb) throw(RString);
+	RRecFile& operator<<(double nb);
 
 	/**
 	* Seek the file to a specific record number.
 	* @param nb             Number of record.
 	*/
-	void Seek(unsigned int nb) throw(RString);
+	void Seek(unsigned int nb);
 
 	/**
 	* Seek the file to a specific record number if the file represent a matrix.
@@ -226,7 +226,7 @@ public:
 	* @param maxc          Number of Columns.
 	* \remarks It is presume that the file is store lines by lines.
 	*/
-	void SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc) throw(RString);
+	void SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc);
 
 	/**
 	* This function returns the number of a record represented by tag, and it

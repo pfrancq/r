@@ -72,7 +72,7 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(double& nb) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(double& nb)
 {
 	Read((char*)(&nb),sizeof(double));
 	return(*this);
@@ -81,7 +81,7 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(unsigned int& nb) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(unsigned int& nb)
 {
 	Read((char*)(&nb),sizeof(unsigned int));
 	return(*this);
@@ -90,7 +90,7 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned char nb) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned char nb)
 {
 	Write((char*)(&nb),sizeof(unsigned char));
 	return(*this);
@@ -99,7 +99,7 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned int nb) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned int nb)
 {
 	Write((char*)(&nb),sizeof(unsigned int));
 	return(*this);
@@ -107,7 +107,7 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned long nb) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned long nb)
 {
 	Write((char*)(&nb),sizeof(unsigned long));
 	return(*this);
@@ -116,7 +116,7 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(double nb) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(double nb)
 {
 	Write((char*)(&nb),sizeof(double));
 	return(*this);
@@ -125,7 +125,7 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::Seek(unsigned int nb) throw(RString)
+	void RRecFile<C,S,bOrder>::Seek(unsigned int nb)
 {
 	Find=false;
 	RIOFile::Seek(nb*S);
@@ -136,7 +136,7 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc) throw(RString)
+	void RRecFile<C,S,bOrder>::SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc)
 {
 	Find=false;
 	Seek(c+(l*maxc));

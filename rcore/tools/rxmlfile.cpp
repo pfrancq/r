@@ -237,7 +237,7 @@ RString RXMLFile::XMLToString(const RString& str) throw(RIOException)
 				{
 					if(InvalidXMLCodeAccept())
 						return(Code);
-					throw RIOException(this,"Invalid XML/HTML code \""+Code+"\"");
+					throw eInvalidXMLFile(this,"Invalid XML/HTML code \""+Code+"\"");
 				}
 				else
 					res+=What;
@@ -250,7 +250,7 @@ RString RXMLFile::XMLToString(const RString& str) throw(RIOException)
 			{
 				if(InvalidXMLCodeAccept())
 					return(Code);
-				throw RIOException(this,"Invalid XML/HTML code \""+Code+"\"");
+				throw eInvalidXMLFile(this,"Invalid XML/HTML code \""+Code+"\"");
 			}
 		}
 		else
@@ -313,7 +313,7 @@ void RXMLFile::LoadHeader(void) throw(RIOException)
 	{
 		Next(); Next(); // Skip <?
 		if(!CurString("DOCTYPE",false))
-			throw RIOException(this,"Wrong DOCTYPE command");
+			throw eInvalidXMLFile(this,"Wrong DOCTYPE command");
 
 		// Skip DOCTYPE
 		for(int i=8;--i;)
@@ -349,27 +349,8 @@ void RXMLFile::LoadNextTag(void) throw(RIOException)
 	bool CDATA;
 
 	// If not a tag -> Error
-	try
-	{
-		if((Cur!=RChar('<'))||(GetNextCur()==RChar('/')))
-			throw RIOException(this,"Not a tag");
-	}
-	catch(InvalidFile e)
-	{
-		throw RIOException(this,e.GetMsg());
-	}
-	catch(exception e)
-	{
-		throw RIOException(this,e.what());
-	}
-	catch(RException e)
-	{
-		throw RIOException(this,e.GetMsg());
-	}
-	catch(...)
-	{
-		throw RIOException(this,"?");
-	}
+	if((Cur!=RChar('<'))||(GetNextCur()==RChar('/')))
+		throw eInvalidXMLFile(this,"Not a tag");
 
 	// Read name of the tag
 	Next(); // Skip <
@@ -505,7 +486,7 @@ void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag
 			{
 				// If Quote must be used -> generate an exeception
 				if(OnlyQuote())
-					throw RIOException(this,"Quote must be used to delimit the parameter value in a tag.");
+					throw eInvalidXMLFile(this,"Quote must be used to delimit the parameter value in a tag.");
 
 				// Read until a space or the end of the tag
 				while((!Cur.IsNull())&&(!Cur.IsSpace())&&(!  (((Cur==EndTag1)&&(GetNextCur()==EndTag2)) || (Cur==EndTag2))))
@@ -625,7 +606,7 @@ void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RCon
 		{
 			// Name of the Tag must be name of the DocType
 			if(tag->GetName()!=DocType)
-				throw RIOException(this,"Not a valid XML file");
+				throw eInvalidXMLFile(this,"Not a valid XML file");
 		}
 		else
 		{
@@ -649,7 +630,7 @@ void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RCon
 void RXMLFile::EndTag(const RString&, const RString&, const RString& name) throw(RIOException)
 {
 	if(CurTag->GetName()!=name)
-		throw RIOException(this,"Found closing tag '"+name+"' while closing tag '"+CurTag->GetName()+"' was expected.");
+		throw eInvalidXMLFile(this,"Found closing tag '"+name+"' while closing tag '"+CurTag->GetName()+"' was expected.");
 	CurTag=CurTag->GetParent();
 }
 

@@ -64,6 +64,17 @@ RIOException::RIOException(const RFile* file,const char* str) throw(std::bad_all
 
 
 //------------------------------------------------------------------------------
+RIOException::RIOException(const RIOFile* file,const char* str) throw(std::bad_alloc)
+	: RException()
+{
+	if(file)
+		strcpy(Msg,file->GetName()+" ("+itou(file->GetPos())+"): "+str);
+	else
+		strcpy(Msg,str);
+}
+
+
+//------------------------------------------------------------------------------
 RIOException::RIOException(const RTextFile* file,const char* str) throw(std::bad_alloc)
 	: RException()
 {

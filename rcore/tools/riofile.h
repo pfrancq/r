@@ -54,8 +54,6 @@ namespace R{
 */
 class RIOFile : public RFile
 {
-protected:
-
 	/**
 	* Internal Handle of the file.
 	*/
@@ -116,7 +114,7 @@ public:
 	* @param buffer         Buffer.
 	* @param nb             Number of bytes to read.
 	*/
-	void Write(char* buffer,unsigned int nb);
+	void Write(const char* buffer,unsigned int nb);
 
 	/**
 	* Go to a specific position of the file.

@@ -47,11 +47,6 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// New exceptions
-NEWRIOEXCEPTION(InvalidFile);
-
-
-//------------------------------------------------------------------------------
 // Forward declaration
 class RIOFile;
 class RDir;

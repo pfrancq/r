@@ -49,6 +49,7 @@ namespace R{
 //------------------------------------------------------------------------------
 // Forward declaration
 class RFile;
+class RIOFile;
 class RTextFile;
 
 
@@ -105,6 +106,13 @@ public:
 	* @param file                     File process when the error occurs.
 	* @param str                      Message of the error.
 	*/
+	RIOException(const RIOFile* file,const char* str) throw(std::bad_alloc);
+
+	/**
+	* Construct an IO exception.
+	* @param file                     File process when the error occurs.
+	* @param str                      Message of the error.
+	*/
 	RIOException(const RTextFile* file,const char* str) throw(std::bad_alloc);
 };
 
@@ -114,13 +122,17 @@ public:
 
 //------------------------------------------------------------------------------
 // Macro to create a new exception directlty derived from RIOException
-#define NEWRIOEXCEPTION(name)                                                 \
-class name : public R::RIOException                                           \
+#define NEWRIOEXCEPTION(parent,name)                                          \
+class name : public parent                                                    \
 {                                                                             \
 public:                                                                       \
-	name(const char* str) throw() : R::RIOException(str) {}                   \
+	name(const char* str) throw() : parent(str) {}                            \
+	name(const R::RFile* file,const char* str) throw()                        \
+		: parent(file,str) {}                                                 \
+	name(const R::RIOFile* file,const char* str) throw()                      \
+		: parent(file,str) {}                                                 \
 	name(const R::RTextFile* file,const char* str) throw()                    \
-		: R::RIOException(file,str) {}                                        \
+		: parent(file,str) {}                                                 \
 }
 
 

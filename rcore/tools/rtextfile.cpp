@@ -31,22 +31,6 @@
 
 
 //------------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <sys/stat.h>
-#ifdef _BSD_SOURCE
-	#include <unistd.h>
-#else
-	#include <io.h>
-#endif
-#include <fcntl.h>
-#include <string.h>
-#include <time.h>
-
-
-//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rtextfile.h>
@@ -83,25 +67,22 @@ RTextFile::RTextFile(RIOFile& file,const RString& encoding)
 //------------------------------------------------------------------------------
 void RTextFile::Open(RIO::ModeType mode)
 {
-	struct stat statbuf;
-
 	RIOFile::Open(mode);
 	LastLine=Line=0;
 	ptr=Buffer=0;
 	if(Mode==RIO::Read)
 	{
+		TotalLen=GetSize();
 		if(All)
 		{
-			fstat(handle, &statbuf);
-			TotalLen=statbuf.st_size;
-			Buffer=new char[statbuf.st_size+1];
-			read(handle,Buffer,statbuf.st_size);
-			Buffer[statbuf.st_size]=0;
+			Buffer=new char[GetSize()+1];
+			Read(Buffer,GetSize());
+			Buffer[GetSize()]=0;
 		}
 		else
 		{
 			Buffer=new char[1001];
-			read(handle,Buffer,1000);
+			Read(Buffer,1000);
 			Buffer[1000]=0;
 		}
 		Begin();
@@ -122,7 +103,7 @@ void RTextFile::Close(void)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::Begin(void) throw(RIOException)
+void RTextFile::Begin(void)
 {
 	if(Mode!=RIO::Read)
 		throw(RIOException(this,"File Mode is not Read"));
@@ -147,7 +128,7 @@ void RTextFile::Begin(void) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-unsigned int RTextFile::ReadCar(char* &text,unsigned int &len,RChar& read) const throw(InvalidFile)
+unsigned int RTextFile::ReadCar(char* &text,unsigned int &len,RChar& read) const
 {
 	RString str;
 	unsigned int skip=0;
@@ -166,7 +147,7 @@ unsigned int RTextFile::ReadCar(char* &text,unsigned int &len,RChar& read) const
 		}
 		catch(RException e)
 		{
-			throw InvalidFile(this,e.GetMsg());
+			throw RIOException(this,e.GetMsg());
 		}
 	}
 	return(skip);
@@ -174,7 +155,7 @@ unsigned int RTextFile::ReadCar(char* &text,unsigned int &len,RChar& read) const
 
 
 //------------------------------------------------------------------------------
-void RTextFile::Next(void) throw(RIOException)
+void RTextFile::Next(void)
 {
 	RString str;
 
@@ -192,20 +173,9 @@ void RTextFile::Next(void) throw(RIOException)
 		CurLen=0;
 		return;
 	}
-	try
-	{
-		//Read char if nor correct one -> skip it
-		CurLen=Len;
-		Len-=ReadCar(ptr,CurLen,Cur);
-	}
-	catch(InvalidFile e)
-	{
-		throw RIOException(e.GetMsg());
-	}
-	catch(RException e)
-	{
-		throw RException(e.GetMsg());
-	}
+	//Read char if nor correct one -> skip it
+	CurLen=Len;
+	Len-=ReadCar(ptr,CurLen,Cur);
 }
 
 
@@ -314,7 +284,7 @@ bool RTextFile::CurString(const RString& str,bool CaseSensitive) const
 			len=Len;
   			ReadCar(parse,len,tmp);
 		}
-		catch(InvalidFile)
+		catch(RIOException) // Invalid File
 		{
 			// Whatever occurs -> It is not the string
 			return false;
@@ -424,7 +394,8 @@ void RTextFile::SkipComments(void)
 void RTextFile::SkipSpaces(void)
 {
 	unsigned int oldLen;
-	do{
+	do
+	{
 		oldLen=Len;
 		while((!Cur.IsNull())&&(Cur.IsSpace()))
 		{
@@ -434,13 +405,61 @@ void RTextFile::SkipSpaces(void)
 				Next();
 		}
 		SkipComments();
-
-	}while((!Cur.IsNull())&&(oldLen!=Len));
+	}
+	while((!Cur.IsNull())&&(oldLen!=Len));
 }
 
 
 //------------------------------------------------------------------------------
-void RTextFile::SetEncoding(const RString& name) throw(RIOException)
+void RTextFile::SkipEmptyLines(void)
+{
+	unsigned int oldLen;
+	bool GoNextLine;
+	RChar oldCur;
+	char* oldptr;
+	do
+	{
+		// Look until end of current line
+		oldLen=Len;
+		oldCur=Cur;
+		oldptr=ptr;
+		GoNextLine=false;
+		while((!Cur.IsNull())&&(Cur.IsSpace())&&(!Eol(Cur)))
+			Next();
+
+		if((!Cur.IsNull())&&(Eol(Cur)))
+		{
+			// Only spaces -> If end-of-line -> go trough next line
+			if(!Cur.IsNull())
+			{
+				if(Eol(Cur))
+					SkipEol();
+				GoNextLine=true;
+			}
+		}
+		else
+		{
+			// Not only spaces -> perhaps comments
+			if(BeginComment())
+			{
+				SkipComments();
+				SkipEmptyLines();
+			}
+			else
+			{
+				// Normal sequence -> old position
+				Len=oldLen;
+				Cur=oldCur;
+				ptr=oldptr;
+			}
+		}
+	}
+	while((!Cur.IsNull())&&(GoNextLine));
+}
+
+
+//------------------------------------------------------------------------------
+void RTextFile::SetEncoding(const RString& name)
 {
 	try
 	{
@@ -463,7 +482,14 @@ RString RTextFile::GetEncoding(void) const
 
 
 //------------------------------------------------------------------------------
-RString RTextFile::GetWord(void) throw(RIOException)
+bool RTextFile::Eof(void)
+{
+	return(Len==0);
+}
+
+
+//------------------------------------------------------------------------------
+RString RTextFile::GetWord(void)
 {
 	RString res;
 
@@ -475,12 +501,13 @@ RString RTextFile::GetWord(void) throw(RIOException)
 		res+=Cur;
 		Next();
 	}
+	SkipEmptyLines();
 	return(res);
 }
 
 
 //------------------------------------------------------------------------------
-RString RTextFile::GetLine(bool SkipEmpty) throw(RIOException)
+RString RTextFile::GetLine(bool SkipEmpty)
 {
 	RString res;
 
@@ -506,6 +533,7 @@ RString RTextFile::GetLine(bool SkipEmpty) throw(RIOException)
 			}
 		}
 	}
+
 	// If the line is empty or contains only spaces -> read next line
 	if((res.IsEmpty())&&(SkipEmpty))
 		return(GetLine());
@@ -516,27 +544,30 @@ RString RTextFile::GetLine(bool SkipEmpty) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-long RTextFile::GetInt(void) throw(RIOException)
+long RTextFile::GetInt(void)
 {
 	long nb;
 	char* ptr;
+	RString str;
 
-	RString str("");
-	//SkipSpaces
-	while((GetCur()==' '))
-		Next();
-	//Get the sign
+	SkipSpaces();
+
+	// Get the sign
 	if((GetCur()=='+')||(GetCur()=='-'))
 	{
 		str+=GetCur();
 		Next();
 	}
-	//Get number
+
+	// Get number
 	while(GetCur().IsDigit())
 	{
 		str+=GetCur();
 		Next();
 	}
+
+	SkipEmptyLines();
+
 	nb=strtol(str,&ptr,10);
 	if(ptr==str)
 		throw RIOException(this,"No Int");
@@ -545,27 +576,30 @@ long RTextFile::GetInt(void) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-unsigned long RTextFile::GetUInt(void) throw(RIOException)
+unsigned long RTextFile::GetUInt(void)
 {
 	unsigned long nb;
 	char* ptr;
+	RString str;
 
-	RString str("");
-	//SkipSpaces
-	while((GetCur()==' '))
-		Next();
-	//Get the sign
+	SkipSpaces();
+
+	// Get the sign
 	if((GetCur()=='+')||(GetCur()=='-'))
 	{
 		str+=GetCur();
 		Next();
 	}
-	//Get Number
+
+	// Get Number
 	while(GetCur().IsDigit()||(GetCur()=='+')||(GetCur()=='-'))
 	{
 		str+=GetCur();
 		Next();
 	}
+
+	SkipEmptyLines();
+
 	nb=strtoul(str,&ptr,10);
 	if(ptr==str)
 		throw RIOException(this,"No unsigned Int");
@@ -574,7 +608,7 @@ unsigned long RTextFile::GetUInt(void) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(RString& str) throw(RIOException)
+RTextFile& RTextFile::operator>>(RString& str)
 {
 	str=GetWord();
 	return(*this);
@@ -582,7 +616,7 @@ RTextFile& RTextFile::operator>>(RString& str) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(char &nb) throw(RIOException)
+RTextFile& RTextFile::operator>>(char &nb)
 {
 	nb=GetInt();
 	return(*this);
@@ -590,7 +624,7 @@ RTextFile& RTextFile::operator>>(char &nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(unsigned char &nb) throw(RIOException)
+RTextFile& RTextFile::operator>>(unsigned char &nb)
 {
 	nb=GetUInt();
 	return(*this);
@@ -598,7 +632,7 @@ RTextFile& RTextFile::operator>>(unsigned char &nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(short &nb) throw(RIOException)
+RTextFile& RTextFile::operator>>(short &nb)
 {
 	nb=GetInt();
 	return(*this);
@@ -606,7 +640,7 @@ RTextFile& RTextFile::operator>>(short &nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(unsigned short &nb) throw(RIOException)
+RTextFile& RTextFile::operator>>(unsigned short &nb)
 {
 	nb=GetUInt();
 	return(*this);
@@ -614,7 +648,7 @@ RTextFile& RTextFile::operator>>(unsigned short &nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(int &nb) throw(RIOException)
+RTextFile& RTextFile::operator>>(int &nb)
 {
 	nb=GetInt();
 	return(*this);
@@ -622,7 +656,7 @@ RTextFile& RTextFile::operator>>(int &nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(unsigned int &nb) throw(RIOException)
+RTextFile& RTextFile::operator>>(unsigned int &nb)
 {
 	nb=GetUInt();
 	return(*this);
@@ -630,7 +664,7 @@ RTextFile& RTextFile::operator>>(unsigned int &nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(long &nb) throw(RIOException)
+RTextFile& RTextFile::operator>>(long &nb)
 {
 	nb=GetInt();
 	return(*this);
@@ -638,7 +672,7 @@ RTextFile& RTextFile::operator>>(long &nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(unsigned long &nb) throw(RIOException)
+RTextFile& RTextFile::operator>>(unsigned long &nb)
 {
 	nb=GetUInt();
 	return(*this);
@@ -646,16 +680,15 @@ RTextFile& RTextFile::operator>>(unsigned long &nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-float RTextFile::GetFloat(void) throw(RIOException)
+float RTextFile::GetFloat(void)
 {
 	//Patern [whitespaces][+|-][nnnnn][.nnnnn][e|E[+|-]nnnn]
 	float nb;
 	char* ptr;
+	RString str;
 
-	RString str("");
-	//SkipSpaces
-	while((GetCur()==' '))
-		Next();
+	SkipSpaces();
+
 	//Check for sign
 	if((GetCur()=='-')||(GetCur()=='+'))
 	{
@@ -696,6 +729,8 @@ float RTextFile::GetFloat(void) throw(RIOException)
 		}
 	}
 
+	SkipEmptyLines();
+
 	nb=strtof(str,&ptr);
 	if(ptr==str)
 		throw RIOException(this,"No Float");
@@ -704,7 +739,7 @@ float RTextFile::GetFloat(void) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(float& nb) throw(RIOException)
+RTextFile& RTextFile::operator>>(float& nb)
 {
 	nb=GetFloat();
 	return(*this);
@@ -712,7 +747,7 @@ RTextFile& RTextFile::operator>>(float& nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator>>(double& nb) throw(RIOException)
+RTextFile& RTextFile::operator>>(double& nb)
 {
 	nb=GetFloat();
 	return(*this);
@@ -724,18 +759,16 @@ void RTextFile::WriteSeparator(void)
 {
 	if(NewLine) return;
 	RCString str=Codec->FromUnicode(Separator);
-	write(handle,str,str.GetLen());
+	Write(str,str.GetLen());
 }
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteLine(void) throw(RIOException)
+void RTextFile::WriteLine(void)
 {
-	if(Mode==RIO::Read)
-		throw(RIOException(this,"File Mode is Read"));
 	RString endofline("\n");
 	RCString str=Codec->FromUnicode(endofline);
-	write(handle,str,str.GetLen());
+	Write(str,str.GetLen());
 	LastLine=Line++;
 	#ifdef windows
 		flushall();
@@ -745,14 +778,12 @@ void RTextFile::WriteLine(void) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteStr(const RString& str) throw(RIOException)
+void RTextFile::WriteStr(const RString& str)
 {
-	if(Mode==RIO::Read)
-		throw(RIOException(this,"File Mode is Read"));
 	RReturnIfFail(str.GetLen()>0);
 	WriteSeparator();
 	RCString res=Codec->FromUnicode(str);
-	write(handle,res,res.GetLen());
+	Write(res,res.GetLen());
 	#ifdef windows
 		flushall();
 	#endif
@@ -761,7 +792,7 @@ void RTextFile::WriteStr(const RString& str) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteStr(const char* c) throw(RIOException)
+void RTextFile::WriteStr(const char* c)
 {
 	RString str(c);
 	WriteStr(str);
@@ -769,13 +800,11 @@ void RTextFile::WriteStr(const char* c) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteStr(const char* c,unsigned int l) throw(RIOException)
+void RTextFile::WriteStr(const char* c,unsigned int l)
 {
-	if(Mode==RIO::Read)
-		throw(RIOException(this,"File Mode is Read"));
 	if(!l) return;
 	WriteSeparator();
-	write(handle,c,l);
+	Write(c,l);
 	#ifdef windows
 		flushall();
 	#endif
@@ -783,7 +812,7 @@ void RTextFile::WriteStr(const char* c,unsigned int l) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const char* c) throw(RIOException)
+RTextFile& RTextFile::operator<<(const char* c)
 {
 	RString str(c);
 	WriteStr(str);
@@ -792,7 +821,7 @@ RTextFile& RTextFile::operator<<(const char* c) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const RString& str) throw(RIOException)
+RTextFile& RTextFile::operator<<(const RString& str)
 {
 	WriteStr(str);
 	return(*this);
@@ -800,7 +829,7 @@ RTextFile& RTextFile::operator<<(const RString& str) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteLong(const long nb) throw(RIOException)
+void RTextFile::WriteLong(const long nb)
 {
 	RString res=ltou(nb);
 	WriteStr(res);
@@ -808,7 +837,7 @@ void RTextFile::WriteLong(const long nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const short nb) throw(RIOException)
+RTextFile& RTextFile::operator<<(const short nb)
 {
 	WriteLong(nb);
 	return(*this);
@@ -816,7 +845,7 @@ RTextFile& RTextFile::operator<<(const short nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const int nb) throw(RIOException)
+RTextFile& RTextFile::operator<<(const int nb)
 {
 	WriteLong(nb);
 	return(*this);
@@ -824,7 +853,7 @@ RTextFile& RTextFile::operator<<(const int nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const long nb) throw(RIOException)
+RTextFile& RTextFile::operator<<(const long nb)
 {
 	WriteLong(nb);
 	return(*this);
@@ -832,7 +861,7 @@ RTextFile& RTextFile::operator<<(const long nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteULong(const unsigned long nb) throw(RIOException)
+void RTextFile::WriteULong(const unsigned long nb)
 {
 	RString res=ltou(nb);
 	WriteStr(res);
@@ -840,7 +869,7 @@ void RTextFile::WriteULong(const unsigned long nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const unsigned char nb) throw(RIOException)
+RTextFile& RTextFile::operator<<(const unsigned char nb)
 {
 	WriteULong(nb);
 	return(*this);
@@ -848,7 +877,7 @@ RTextFile& RTextFile::operator<<(const unsigned char nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const unsigned int nb) throw(RIOException)
+RTextFile& RTextFile::operator<<(const unsigned int nb)
 {
 	WriteULong(nb);
 	return(*this);
@@ -856,7 +885,7 @@ RTextFile& RTextFile::operator<<(const unsigned int nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const unsigned long nb) throw(RIOException)
+RTextFile& RTextFile::operator<<(const unsigned long nb)
 {
 	WriteULong(nb);
 	return(*this);
@@ -864,7 +893,7 @@ RTextFile& RTextFile::operator<<(const unsigned long nb) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteBool(const bool b) throw(RIOException)
+void RTextFile::WriteBool(const bool b)
 {
 	if(b)
 	{
@@ -880,7 +909,7 @@ void RTextFile::WriteBool(const bool b) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const bool b) throw(RIOException)
+RTextFile& RTextFile::operator<<(const bool b)
 {
 	WriteBool(b);
 	return(*this);
@@ -888,7 +917,7 @@ RTextFile& RTextFile::operator<<(const bool b) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteChar(const char c) throw(RIOException)
+void RTextFile::WriteChar(const char c)
 {
 	RString res(c);
 	WriteStr(res);
@@ -896,7 +925,7 @@ void RTextFile::WriteChar(const char c) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const char c) throw(RIOException)
+RTextFile& RTextFile::operator<<(const char c)
 {
 	WriteChar(c);
 	return(*this);
@@ -904,7 +933,7 @@ RTextFile& RTextFile::operator<<(const char c) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteDouble(const double d) throw(RIOException)
+void RTextFile::WriteDouble(const double d)
 {
 	RString str=dtou(d);
 	WriteStr(str);
@@ -912,7 +941,7 @@ void RTextFile::WriteDouble(const double d) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const double d) throw(RIOException)
+RTextFile& RTextFile::operator<<(const double d)
 {
 	WriteDouble(d);
 	return(*this);
@@ -920,14 +949,12 @@ RTextFile& RTextFile::operator<<(const double d) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteTime(void) throw(RIOException)
+void RTextFile::WriteTime(void)
 {
 	char tmp[30];
 	time_t timer;
 	struct tm *tblock;
 
-	if(Mode==RIO::Read)
-		throw(RIOException(this,"File Mode is Read"));
 	timer = time(NULL);
 	tblock = localtime(&timer);
 	asctime_r(tblock,tmp);
@@ -938,14 +965,12 @@ void RTextFile::WriteTime(void) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteLog(const RString& entry) throw(RIOException)
+void RTextFile::WriteLog(const RString& entry)
 {
 	char tmp[30];
 	time_t timer;
 	struct tm *tblock;
 
-	if(Mode==RIO::Read)
-		throw(RIOException(this,"File Mode is Read"));
 	RReturnIfFail(entry.GetLen()>0);
 	RString str;
 	if(!NewLine) WriteLine();
