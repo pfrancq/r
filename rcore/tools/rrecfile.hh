@@ -47,14 +47,6 @@
 #include <time.h>
 
 
-//-----------------------------------------------------------------------------
-// include files for R Project
-#include <rstd/rstd.h>
-using namespace RStd;
-#include <rio/rrecfile.h>
-using namespace RIO;
-
-
 
 //-----------------------------------------------------------------------------
 //
@@ -63,10 +55,9 @@ using namespace RIO;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RIO::RRecFile::RRecFile(const RString &name,RIO::ModeType mode) throw(bad_alloc,RString)
-  : Mode(mode), Name(name), All(true), NewLine(true), Rem("%"),BeginRem("/*"),
-		EndRem("*/"), CommentType(SingleLineComment), ActivComment(NoComment),
-		Separator(" "), Line(0), LastLine(0)
+template<class C,unsigned int S,bool bOrder>
+	RIO::RRecFile<C,S,bOrder>::RRecFile(const RString &name,RIO::ModeType mode) throw(bad_alloc,RString)
+		: Mode(mode), Name(name), NbRecs(0)
 {
 	int localmode;
 
@@ -94,730 +85,194 @@ RIO::RRecFile::RRecFile(const RString &name,RIO::ModeType mode) throw(bad_alloc,
 		handle=open(Name,localmode);
 	else
 		handle=open(Name,localmode,S_IREAD|S_IWRITE);
+	if(Mode!=RIO::Create)
+	{
+		struct stat statbuf;
+		fstat(handle, &statbuf);
+		NbRecs=statbuf.st_size/S;
+	}
 	if(handle==-1)
 		throw(RString("Can't open file """+Name+""""));
-	Init();
+	eof=false;
 }
 
 
 //-----------------------------------------------------------------------------
-RIO::RRecFile::RRecFile(const RString &name,bool all) throw(bad_alloc,RString)
-  : Mode(Read), Name(name), All(all), NewLine(false), Rem("%"), BeginRem("/*"),
-		EndRem("*/"),CommentType(SingleLineComment),Line(0)
+template<class C,unsigned int S,bool bOrder>
+	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator>>(double& nb) throw(RStd::RString)
 {
-	#ifdef _BSD_SOURCE
-		handle=open(Name,O_RDONLY);
-	#else
-		handle=open(Name,O_RDONLY | O_BINARY);
-	#endif
-	Init();
+	if(Mode!=RIO::Read)
+		throw(RString("File Mode is not Read"));
+	if(eof)
+		throw(RString("End of File"));
+	eof=!read(handle,&nb,sizeof(double));
+	return(*this);
 }
 
 
 //-----------------------------------------------------------------------------
-void RIO::RRecFile::Init(void) throw(bad_alloc,RString)
+template<class C,unsigned int S,bool bOrder>
+	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator>>(unsigned int& nb) throw(RStd::RString)
 {
-	struct stat statbuf;
+	if(Mode!=RIO::Read)
+		throw(RString("File Mode is not Read"));
+	if(eof)
+		throw(RString("End of File"));
+	eof=!read(handle,&nb,sizeof(unsigned int));
+	return(*this);
+}
 
-	Line=0;
-	ptr=Buffer=0;
+
+//-----------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator<<(const unsigned char nb) throw(RStd::RString)
+{
 	if(Mode==RIO::Read)
+		throw(RString("File Mode is Read"));
+	write(handle,&nb,sizeof(unsigned char));
+	#ifdef windows
+		flushall();
+	#endif
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator<<(const unsigned int nb) throw(RStd::RString)
+{
+	if(Mode==RIO::Read)
+		throw(RString("File Mode is Read"));
+	write(handle,&nb,sizeof(unsigned int));
+	#ifdef windows
+		flushall();
+	#endif
+	return(*this);
+}
+
+//-----------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator<<(const unsigned long nb) throw(RStd::RString)
+{
+	if(Mode==RIO::Read)
+		throw(RString("File Mode is Read"));
+	write(handle,&nb,sizeof(unsigned long));
+	#ifdef windows
+		flushall();
+	#endif
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator<<(const double d) throw(RString)
+{
+	if(Mode==RIO::Read)
+		throw(RString("File Mode is Read"));
+	write(handle,&d,sizeof(double));
+	#ifdef windows
+		flushall();
+	#endif
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	bool RIO::RRecFile<C,S,bOrder>::Read(C& rec) throw(RStd::RString)
+{
+	if(Mode!=RIO::Read)
+		throw(RString("File Mode is not Read"));
+	if(eof)
+		throw(RString("End of File"));
+	try
 	{
-		if(All)
+		rec.Read(*this);
+	}
+	catch(RString& msg)
+	{
+		if(eof) return(false);
+		throw RString(msg);
+	}
+	return(true);
+}
+
+//-----------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	template<class TUse>
+		unsigned int RIO::RRecFile<C,S,bOrder>::GetId(const TUse tag,bool &Find)
+{
+	unsigned int NbMin,NbMax,i=0;
+	int Comp=0;
+	bool Cont=true,NotLast=true;
+
+	if(bOrder)
+	{
+		Find=false;
+		if(!NbRecs)
+			return(0);
+		NbMax=NbRecs-1;
+		NbMin=0;
+		if(NbMax)
 		{
-			fstat(handle, &statbuf);
-			Buffer=new char[statbuf.st_size+1];
-			read(handle,Buffer,statbuf.st_size);
-			Buffer[statbuf.st_size]=0;
+			while(Cont)
+			{
+				i=(NbMax+NbMin)/2;
+				lseek(handle,i*S,SEEK_SET);
+				Current.Read(*this);
+				Comp=Current.Compare(tag);
+				if(!Comp)
+				{
+					Find=true;
+					return(i);
+				}
+				if(Comp>0)
+				{
+					NbMax = i;
+					if(i) NbMax--;
+				}
+				else
+					NbMin = i+1;
+				Cont = NotLast;
+				if(NbMin>=NbMax) NotLast=false;
+			}
 		}
 		else
 		{
-			Buffer=new char[1001];
-			read(handle,Buffer,1000);
-			Buffer[1000]=0;
-		}
-		Begin();
-	}
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::Begin(void) throw(RString)
-{
-	if(Mode!=RIO::Read)
-		throw(RString("File Mode is not Read"));
-	ptr=Buffer;
-	Line=1;
-	SkipSpaces();
-}
-
-
-//-----------------------------------------------------------------------------
-bool RIO::RRecFile::BeginComment(void)
-{
-	bool ret=false;
-
-	if((CommentType==SingleLineComment)||(CommentType==SingleMultiLineComment))
-	{
-		if(!strncmp(ptr,Rem,Rem.GetLen()))
-		{
-			ActivComment=SingleLineComment;
-			ret=true;
-		}
-	}
-	if((CommentType==MultiLineComment)||(CommentType==SingleMultiLineComment))
-	{
-		if(!strncmp(ptr,BeginRem,BeginRem.GetLen()))
-		{
-			ActivComment=MultiLineComment;
-			ret=true;
-		}
-	}
-
-	return(ret);
-}
-
-
-//-----------------------------------------------------------------------------
-bool RIO::RRecFile::EndComment(void)
-{
-	if(ActivComment==NoComment) return(false);
-	if(ActivComment==SingleLineComment)
-	{
-		if(((*ptr)=='\n')||((*ptr)=='\r'))
-		{
-			ActivComment=NoComment;
-			Line++;
-			switch(*ptr)
+			i = 0;
+			lseek(handle,i*S,SEEK_SET);
+			Current.Read(*this);
+			Comp=Current.Compare(tag);
+			if(!Comp)
 			{
-				case '\n':
-					if((*(ptr+1))=='\r') ptr++;
-					break;
-				case '\r':
-					if((*(ptr+1))=='\n') ptr++;
-					break;
+				Find=true;
+				return(0);
 			}
-			ptr++;
-			return(true);
 		}
-	}
-	if(ActivComment==MultiLineComment)
-	{
-		if(!strncmp(ptr,EndRem,EndRem.GetLen()))
-		{
-			ptr+=EndRem.GetLen();
-			ActivComment=NoComment;
-			return(true);
-		}
-	}
-
-	return(false);
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::SkipComments(void)
-{
-	// Read Comments
-	while(BeginComment())
-	{
-		// Skip Begin Comment
-		if(ActivComment==SingleLineComment)
-			ptr+=Rem.GetLen();
-		if(ActivComment==MultiLineComment)
-			ptr+=BeginRem.GetLen();
-
-		// Read a Comment
-		while((*ptr)&&(!EndComment()))
-		{
-			switch(*ptr)
-			{
-				case '\n':
-					Line++;
-					if((*(ptr+1))=='\r') ptr++;
-					break;
-				case '\r':
-					Line++;
-					if((*(ptr+1))=='\n') ptr++;
-					break;
-			}
-			ptr++;
-		}
+		if(Comp<0) i++;
+		return(i);
 	}
 }
 
 
 //-----------------------------------------------------------------------------
-void RIO::RRecFile::SkipSpaces(void)
+template<class C,unsigned int S,bool bOrder>
+	bool RIO::RRecFile<C,S,bOrder>::GetRec(C& Rec) throw(RStd::RString)
 {
-	//while(isspace(*ptr))
-	{
-		// Read Spaces
-		while((*ptr)&&isspace(*ptr))
-		{
-			switch(*ptr)
-			{
-				case '\n':
-					Line++;
-					if((*(ptr+1))=='\r') ptr++;
-					break;
-				case '\r':
-					Line++;
-					if((*(ptr+1))=='\n') ptr++;
-					break;
-			}
-			ptr++;
-		}
-		SkipComments();
-		// Read Spaces
-		while((*ptr)&&isspace(*ptr))
-		{
-			switch(*ptr)
-			{
-				case '\n':
-					Line++;
-					if((*(ptr+1))=='\r') ptr++;
-					break;
-				case '\r':
-					Line++;
-					if((*(ptr+1))=='\n') ptr++;
-					break;
-			}
-			ptr++;
-		}
+	bool Find;
+	unsigned id;
 
-	}
+	id=GetId<C&>(Rec,Find);
+	if(!Find) return(false);
+	Rec=Current;
+	return(true);
 }
 
 
 //-----------------------------------------------------------------------------
-char* RIO::RRecFile::GetCharPtr(void)
+template<class C,unsigned int S,bool bOrder>
+	RIO::RRecFile<C,S,bOrder>::~RRecFile(void)
 {
-	static char tab[25][300];
-	static long act=0;
-
-	if(act==25) act=0;
-	return(tab[act++]);
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::GetUntilEnd(char* &buffer)
-{
-	buffer=strdup(ptr);
-}
-
-
-//-----------------------------------------------------------------------------
-long RIO::RRecFile::GetInt(void) throw(RString)
-{
-	char* ptr2=ptr;
-	char* rem;
-
-	if(Mode!=RIO::Read)
-		throw(RString("File Mode is not Read"));
-	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment()))
-		if(!isdigit(*(ptr++))) throw(RString("No Int"));
-	LastLine=Line;
-	if(*ptr)
-	{
-		rem=ptr;
-		SkipSpaces();
-		(*rem)=0;
-	}
-	return(strtol(ptr2,0,10));
-}
-
-
-//-----------------------------------------------------------------------------
-unsigned long RIO::RRecFile::GetUInt(void) throw(RString)
-{
-	char* ptr2=ptr;
-	char* rem;
-
-	if(Mode!=RIO::Read)
-		throw(RString("File Mode is not Read"));
-	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment()))
-		if(!isdigit(*(ptr++))) throw(RString("No Int"));
-	LastLine=Line;
-	if(*ptr)
-	{
-		rem=ptr;
-		SkipSpaces();
-		(*rem)=0;
-	}
-	return(strtoul(ptr2,0,10));
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator>>(char &nb) throw(RString)
-{
-	nb=GetInt();
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator>>(unsigned char &nb) throw(RString)
-{
-	nb=GetUInt();
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator>>(short &nb) throw(RString)
-{
-	nb=GetInt();
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator>>(unsigned short &nb) throw(RString)
-{
-	nb=GetUInt();
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator>>(int &nb) throw(RString)
-{
-	nb=GetInt();
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator>>(unsigned int &nb) throw(RString)
-{
-	nb=GetUInt();
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator>>(long &nb) throw(RString)
-{
-	nb=GetInt();
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator>>(unsigned long &nb) throw(RString)
-{
-	nb=GetUInt();
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-float RIO::RRecFile::GetFloat(void) throw(RString)
-{
-	char *ptr2=ptr;
-	char* rem;
-
-	if(Mode!=RIO::Read)
-		throw(RString("File Mode is not Read"));
-	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment()))
-	{
-		if((!isdigit(*ptr))&&(*ptr)!='.'&&(*ptr)!='e'&&(*ptr)!='E')
-			throw(RString("No float"));
-		ptr++;
-	}
-	LastLine=Line;
-	if(*ptr)
-	{
-		rem=ptr;
-		SkipSpaces();
-		(*rem)=0;
-	}
-	return(atof(ptr2));
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator>>(float& nb) throw(RString)
-{
-	nb=GetFloat();
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator>>(double& nb) throw(RString)
-{
-	nb=GetFloat();
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-char* RIO::RRecFile::GetWord(void) throw(RString)
-{
-	char *ptr2=ptr;
-	char* rem;
-
-	if(Mode!=RIO::Read)
-		throw(RString("File Mode is not Read"));
-	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment())) ptr++;
-	LastLine=Line;
-	if(*ptr)
-	{
-		rem=ptr;
-		SkipSpaces();
-		(*rem)=0;
-	}
-	return(ptr2);
-}
-
-
-//-----------------------------------------------------------------------------
-char* RIO::RRecFile::GetLine(void) throw(RString)
-{
-	char *ptr2=ptr,*ptr3;
-
-	if(Mode!=RIO::Read)
-		throw(RString("File Mode is not Read"));
-	while((*ptr)&&(*ptr)!='\n'&&(*ptr)!='\r'&&(!BeginComment())) ptr++;
-	LastLine=Line;
-	if(*ptr)
-	{
-		ptr3=ptr;
-		SkipSpaces();
-		(*ptr3)=0;
-	}
-	// If the line is empty, read next line
-	if(!(*ptr2))
-	{
-		return(GetLine());
-	}
-	return(ptr2);
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::WriteLine(void) throw(RString)
-{
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	write(handle,"\n",strlen("\n"));
-	LastLine=Line++;
-	#ifdef windows
-		flushall();
-	#endif
-	NewLine=true;
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::WriteLong(const long nb) throw(RString)
-{
-	char Str[25];
-
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	if(!NewLine)
-		write(handle,Separator,Separator.GetLen());
-	sprintf(Str,"%li",nb);
-	write(handle,Str,strlen(Str));
-	#ifdef windows
-		flushall();
-	#endif
-	NewLine=false;
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator<<(const short nb) throw(RString)
-{
-	WriteLong(nb);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RRecFile::operator<<(const int nb) throw(RString)
-{
-	WriteLong(nb);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator<<(const long nb) throw(RString)
-{
-	WriteLong(nb);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-void RRecFile::WriteULong(const unsigned long nb) throw(RString)
-{
-	char Str[25];
-
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	if(!NewLine)
-		write(handle,Separator,Separator.GetLen());
-	sprintf(Str,"%lu",nb);
-	write(handle,Str,strlen(Str));
-	#ifdef windows
-		flushall();
-	#endif
-	NewLine=false;
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator<<(const unsigned char nb) throw(RString)
-{
-	WriteULong(nb);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator<<(const unsigned int nb) throw(RString)
-{
-	WriteULong(nb);
-	return(*this);
-}
-
-//-----------------------------------------------------------------------------
-RRecFile& RRecFile::operator<<(const unsigned long nb) throw(RString)
-{
-	WriteULong(nb);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::WriteStr(const char *c) throw(RString)
-{
-	int l;
-
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	if(!NewLine)
-		write(handle,Separator,Separator.GetLen());
-	l=strlen(c);
-	RReturnIfFail(l);
-	write(handle,c,l);
-	#ifdef windows
-		flushall();
-	#endif
-	if(c[l-1]!=' '&&c[l-1]!='\n'&&c[l-1]!='\t'&&c[l-1]!='\r')
-		NewLine=false;
-	else
-		NewLine=true;
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::WriteStr(const char *c,unsigned int l) throw(RString)
-{
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	if(!l) return;
-	write(handle,c,l);
-	#ifdef windows
-		flushall();
-	#endif
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator<<(const char *c) throw(RString)
-{
-	WriteStr(c);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::WriteStr(const RString &str) throw(RString)
-{
-	int l;
-
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	RReturnIfFail(str.GetLen()>0);
-	if(!NewLine)
-		write(handle,Separator,Separator.GetLen());
-	l=str.GetLen();
-	if(!l) return;
-	if((str()[l-1]!='\n')&&(str()[l-1]!='\r'))
-		NewLine=false;
-	else
-	{
-		NewLine=true;
-		l--;
-		if((str()[l-1]!='\n')&&(str()[l-1]!='\r')) l--;
-	}
-	write(handle,str,l);
-	if(NewLine) WriteLine();
-	#ifdef windows
-		flushall();
-	#endif
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator<<(const RString &str) throw(RString)
-{
-	WriteStr(str);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::WriteBool(const bool b) throw(RString)
-{
-	char Str[10];
-
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	if(!NewLine)
-		write(handle,Separator,Separator.GetLen());
-	if(b) strcpy(Str,"1"); else strcpy(Str,"0");
-	write(handle,Str,strlen(Str));
-	#ifdef windows
-		flushall();
-	#endif
-	NewLine=false;
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator<<(const bool b) throw(RString)
-{
-	WriteBool(b);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::WriteChar(const char c) throw(RString)
-{
-	char Str[10];
-
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	sprintf(Str,"%c",c);
-	write(handle,Str,1);
-	#ifdef windows
-		flushall();
-	#endif
-	NewLine=false;
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator<<(const char c) throw(RString)
-{
-	WriteChar(c);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::WriteDouble(const double d) throw(RString)
-{
-	char Str[25];
-
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	if(!NewLine)
-		write(handle,Separator,Separator.GetLen());
-	sprintf(Str,"%f",d);
-	write(handle,Str,strlen(Str));
-	#ifdef windows
-		flushall();
-	#endif
-	NewLine=false;
-}
-
-
-//-----------------------------------------------------------------------------
-RRecFile& RIO::RRecFile::operator<<(const double d) throw(RString)
-{
-	WriteDouble(d);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::WriteTime(void) throw(RString)
-{
-	char Str[30];
-	time_t timer;
-	struct tm *tblock;
-
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	timer = time(NULL);
-	tblock = localtime(&timer);
-	if(!NewLine)
-		write(handle,Separator,Separator.GetLen());
-	strcpy(Str,asctime(tblock));
-	Str[strlen(Str)-1]=0;
-	write(handle,Str,strlen(Str));
-	#ifdef windows
-		flushall();
-	#endif
-	NewLine=false;
-}
-
-
-//-----------------------------------------------------------------------------
-void RIO::RRecFile::WriteLog(const char *entry) throw(RString)
-{
-	char Str[30];
-	time_t timer;
-	struct tm *tblock;
-
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	RReturnIfFail(strlen(entry)>0);
-	if(!NewLine) WriteLine();
-	strcpy(Str,"[");
-	timer = time(NULL);
-	tblock = localtime(&timer);
-	strcat(Str,asctime(tblock));
-	Str[strlen(Str)-1]=0;
-	strcat(Str,"] : ");
-	write(handle,Str,strlen(Str));
-	write(handle,entry,strlen(entry));
-	WriteLine();
-	#ifdef windows
-		flushall();
-	#endif
-}
-
-
-//-----------------------------------------------------------------------------
-RIO::RRecFile::~RRecFile(void)
-{
-	if(Buffer) delete[] Buffer;
 	if(handle!=-1) close(handle);
-}
-
-
-
-//-----------------------------------------------------------------------------
-//
-// General functions
-//
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-RRecFile& Time(RRecFile &file)
-{
-	file.WriteTime();
-	return(file);
 }
