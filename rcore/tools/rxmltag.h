@@ -214,6 +214,12 @@ public:
 	const char* GetContent(void) const {return(Contains());}
 
 	/**
+	* See if the tag has a content.
+	* @returns bool.
+	*/
+	bool HasContent(void) const {return(Contains.GetLen());}
+
+	/**
 	* Start the iterator to go trough the word.
 	*/
 	inline void AttrsStart(void)
