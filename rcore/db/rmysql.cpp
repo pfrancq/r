@@ -83,33 +83,39 @@ RDb::~RDb(void)
 //------------------------------------------------------------------------------
 RQuery::RQuery(RDb* db,const char* sql) throw(RMySQLError)
 {
-	RString Up(sql);
-	bool bSelect;
-	bool bInsert;
-	bool bLastInsertId;
+	const char* ptr;
+	char* tmp;
+	unsigned int size;
+	char cmd[10];
 
 	if((!db)||!(db->connection))
 		throw RMySQLError("Database not initialize");
 	if(mysql_real_query(db->connection,sql,strlen(sql)))
 		throw RMySQLError(mysql_error(&db->mysql));
-	Up.StrUpr();
-	bSelect=strstr(Up,"SELECT");
-	if(bSelect)
+
+	ptr=sql;
+	if(!(*ptr))
+		throw RMySQLError("Empty SQL");
+
+	// Skip spaces
+	while((*ptr)&&(isspace(*ptr))) ptr++;
+
+	// Find the command
+	tmp=cmd;
+	size=0;
+	while((*ptr)&&(isalpha(*ptr))&&(size<7))
 	{
-		bLastInsertId=strstr(Up,"LAST_INSERT_ID()");
-		bInsert=strstr(Up,"INSERT");
-		if(!bInsert||(bInsert&&bLastInsertId))
-		{
-			result=mysql_store_result(db->connection);
-			nbrows=mysql_num_rows(result);
-			nbcols=mysql_num_fields(result);
-		}
-		else
-		{
-			nbcols=nbrows=0;
-			row=0;
-			result=0;
-		}
+		(*(tmp++))=(*(ptr++));
+		size++;
+	}
+
+	// It is a SELECT command -> retrieve results
+
+	if((size<7)&&(!strncmp(cmd,"SELECT",6)))
+	{
+		result=mysql_store_result(db->connection);
+		nbrows=mysql_num_rows(result);
+		nbcols=mysql_num_fields(result);
 	}
 	else
 	{
