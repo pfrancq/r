@@ -38,9 +38,10 @@
 
 //-----------------------------------------------------------------------------
 // include files for Standard C/C++
-#include <stdio.h>					// for sprintf
-#include <string.h>					// for memcpy
-#include <iostream.h>				// for cerr
+#include <new.h>
+#include <stdio.h>
+#include <string.h>
+#include <iostream.h>
 
 
 //-----------------------------------------------------------------------------
@@ -208,6 +209,40 @@ template<class C,unsigned long Max>
 	if(act==Max) act=0;
 	return(&tab[act++]);
 }
+
+
+//-----------------------------------------------------------------------------
+/**
+* The RException class provides a basic representation for an exception.
+* @author Pascal Francq
+* @short Basic Exception.
+*/
+class RException
+{
+	/**
+	* Message holding some information.
+	*/
+	char* Msg;
+
+public:
+
+	/**
+	* Construct an exception.
+	* @param str                      Message of the error.
+	*/
+	RException(const char* str) throw(bad_alloc);
+
+	/**
+	* Get the content of the exception.
+	* @returns Pointer to a C String.
+	*/
+	const char* GetMsg(void) const {return(Msg);}
+
+	/**
+	* Destructor.
+	*/
+	virtual ~RException(void);
+};
 
 
 }  //-------- End of namespace RStd -------------------------------------------

@@ -35,3 +35,27 @@
 // include files for R Project
 #include <rstd/rstd.h>
 using namespace RStd;
+
+
+
+//-----------------------------------------------------------------------------
+//
+// class RException
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+RException::RException(const char* str) throw(bad_alloc)
+	: Msg(0)
+{
+	if(str)
+		Msg=strdup(str);
+}
+
+
+//-----------------------------------------------------------------------------
+RException::~RException(void)
+{
+	if(Msg)
+		delete Msg;
+}
