@@ -181,28 +181,29 @@ void RXMLTag::AddContent(RString text)
 //------------------------------------------------------------------------------
 bool RXMLTag::IsEmpty(void)
 {
-	return((!Contains.GetLen())&&(!NbPtr)&&(!Attrs.NbPtr));
+	return((!Contains.GetLen())&&(!GetNb())&&(!Attrs.GetNb()));
 }
 
 
 //------------------------------------------------------------------------------
 void RXMLTag::DeleteEmptyTags(RXMLStruct* s)
 {
-	RXMLTag **ptr;
+#warning verify this behavior
 	unsigned int i;
 
 	// Go through the subtags.
-	for(i=NbPtr+1,ptr=Tab;--i;)
+	RCursor<RXMLTag> ptr(*this);
+	for(i=GetNb()+1,ptr.Start();--i;)
 	{
-		(*ptr)->DeleteEmptyTags(s);
-		if((*ptr)->IsEmpty())
+		ptr()->DeleteEmptyTags(s);
+		if(ptr()->IsEmpty())
 		{
 			// If the tags is empty -> Delete it but don't increase ptr
 			// because DeletePtr will move everything to the left
-			s->DeleteTag(*ptr);
+			s->DeleteTag(ptr());
 		}
 		else
-			ptr++;  // No empty tag -> Go to the next.
+			ptr.Next();  // No empty tag -> Go to the next.
 	}
 }
 
@@ -210,16 +211,14 @@ void RXMLTag::DeleteEmptyTags(RXMLStruct* s)
 //------------------------------------------------------------------------------
 RCursor<RXMLAttr> RXMLTag::GetXMLAttrCursor(void)
 {
-	RCursor<RXMLAttr> cur(Attrs);
-	return(cur);
+	return(RCursor<RXMLAttr>(Attrs));
 }
 
 
 //------------------------------------------------------------------------------
 RCursor<RXMLTag> RXMLTag::GetXMLTagsCursor(void)
 {
-	RCursor<RXMLTag> cur(this);
-	return(cur);
+	return(RCursor<RXMLTag>(*this));
 }
 
 

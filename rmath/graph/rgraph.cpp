@@ -6,7 +6,7 @@
 
 	A Graph - Implementation.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,6 +37,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rmath/rgraph.h>
+#include <rstd/rcursor.h>
 using namespace R;
 
 
@@ -67,7 +68,7 @@ RVertex* RGraph::CreateVertex(void)
 {
 	RVertex *ptr;
 
-	Vertices.InsertPtr(ptr=new RVertex(Vertices.NbPtr,Vertices.NbPtr,Vertices.MaxPtr));
+	Vertices.InsertPtr(ptr=new RVertex(Vertices.GetNb(),Vertices.GetNb(),Vertices.GetMaxNb()));
 	return(ptr);
 }
 
@@ -77,7 +78,7 @@ RVertex* RGraph::CreateVertex(const unsigned int id)
 {
 	RVertex *ptr;
 
-	Vertices.InsertPtr(ptr=new RVertex(id,Vertices.NbPtr,Vertices.MaxPtr));
+	Vertices.InsertPtr(ptr=new RVertex(id,Vertices.GetNb(),Vertices.GetMaxNb()));
 	return(ptr);
 }
 
@@ -89,8 +90,8 @@ RVertex* RGraph::GetVertex(const unsigned int id)
 	RVertex::VertexStruct s;
 
 	s.id=id;
-	s.idx=Vertices.NbPtr;
-	s.nb=Vertices.MaxPtr;
+	s.idx=Vertices.GetNb();
+	s.nb=Vertices.GetMaxNb();
 	ptr=Vertices.GetInsertPtr<RVertex::VertexStruct>(s);
 	return(ptr);
 }
@@ -112,30 +113,31 @@ REdge* RGraph::CreateEdge(RVertex* v1,RVertex* v2,double w)
 void RGraph::MinSpanningTree(RGraph* g)
 {
 	RVertex *v1, *v2;
-	REdge **e,*best=0;
+	REdge *best=0;
 	double bestw;
-	unsigned nb=Vertices.NbPtr,i;
+	unsigned nb=Vertices.GetNb();
 	bool b1,b2,b;
 
 	g->Clear();
 	if(!nb) return;
-	g->CreateVertex(Vertices.Tab[0]->Id);
+	g->CreateVertex(Vertices[0]->Id);
 	while(--nb)
 	{
 		bestw=HUGE_VAL;
 
 		// Go through the edges and find the minimal one with a connected.
-		for(i=Edges.NbPtr+1,e=Edges.Tab;--i;e++)
+		RCursor<REdge> e(Edges);
+		for(e.Start();!e.End();e.Next())
 		{
 			// Test if possible good vertex
-			if((*e)->Weight<bestw)
+			if(e()->Weight<bestw)
 			{
 				// Test if only one is in g
-				b1=g->Vertices.IsIn<const unsigned int>((*e)->v1->Id);
-				b2=g->Vertices.IsIn<const unsigned int>((*e)->v2->Id);
+				b1=g->Vertices.IsIn<const unsigned int>(e()->v1->Id);
+				b2=g->Vertices.IsIn<const unsigned int>(e()->v2->Id);
 				if((b1&&!b2)||(!b1&&b2))
 				{
-					best=(*e);
+					best=e();
 					bestw=best->Weight;
 					b=b1;
 				}

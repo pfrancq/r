@@ -68,7 +68,7 @@ public:
 	/**
 	* Construct the container from another one.
 	*/
-	RFreePolygons(RFreePolygons* cont);
+	RFreePolygons(const RFreePolygons& cont);
 
 	/**
 	* Calculate a position for the given geometric information.

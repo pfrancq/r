@@ -70,7 +70,7 @@ public:
 	* Construct a container of points from another one.
 	* @param points         The container used as reeference.
 	*/
-	RPoints(const RPoints* points);
+	RPoints(const RPoints& points);
 
 	/**
 	* Find the next point to the left and that is on a vertex of a polygon from

@@ -6,7 +6,7 @@
 
 	Container - Header.
 
-	Copyright 1999-2004 by the Université Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -124,23 +124,6 @@ template<class C,bool bAlloc,bool bOrder=false>
 	class RContainer
 {
 	/**
-	* This variable is used to go through the container.
-	*/
-	C** Current;
-
-	/**
-	* This variable is used to see if the end of the container is reached.
-	*/
-	unsigned int ActPtr;
-
-#ifdef PRIVATE
-protected:
-#else
-public:
-#endif
-public:
-
-	/**
 	* The array of pointers for the elements.
 	*/
 	C** Tab;
@@ -148,23 +131,23 @@ public:
 	/**
 	* The number of elements in the container.
 	*/
-	unsigned int NbPtr;
+	size_t NbPtr;
 
 	/**
 	* The maximal number of elements that can be hold by the container
 	* actually.
 	*/
-	unsigned int MaxPtr;
+	size_t MaxPtr;
 
 	/**
 	* The last position in the array used by an object.
 	*/
-	unsigned int LastPtr;
+	size_t LastPtr;
 
 	/**
 	* When the array is increased, this value is used.
 	*/
-	unsigned int IncPtr;
+	size_t IncPtr;
 
 public:
 
@@ -174,47 +157,26 @@ public:
 	//@{
 
 	/**
-	* Construct the container.
-	* @param m              The initial maximal size of the array.
-	* @param i              The value used when increasing the array.
+	* Constructor of a container.
+	* @param m               The initial maximal size of the array.
+	* @param i               The value used when increasing the array. If null
+	*                        value, the size is set to the half the maximal
+	*                        size.
 	*/
-	RContainer(unsigned int m,unsigned int i=0) throw(std::bad_alloc);
+	explicit RContainer(size_t m,size_t i=0);
 
 	/**
-	* Construct the container from another container.
-	* @param src            Pointer to the container used as source.
+	* Copy constructor of a container.
+	* @param src             Container used as source.
 	*/
-	RContainer(const RContainer<C,true,bOrder>* src) throw(std::bad_alloc);
+	RContainer(const RContainer<C,true,bOrder>& src);
 
 	/**
-	* Construct the container from another container.
-	* @param src            Pointer to the container used as source.
+	* Copy constructor of a container.
+	* @param src             Container used as source.
 	*/
-	RContainer(const RContainer<C,false,bOrder>* src) throw(std::bad_alloc);
+	RContainer(const RContainer<C,false,bOrder>& src);
 
-	/**
-	* Construct the container from another container.
-	* @param src            Container used as source.
-	*/
-	RContainer(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc);
-
-	/**
-	* Construct the container from another container.
-	* @param src            Container used as source.
-	*/
-	RContainer(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
-
-	/**
-	* Construct the container from another container.
-	* @param src            Smart pointer to the container used as source.
-	*/
-	RContainer(const std::auto_ptr<RContainer<C,true,bOrder> >& src) throw(std::bad_alloc);
-
-	/**
-	* Construct the container from another container.
-	* @param src            Smart pointer to the container used as source.
-	*/
-	RContainer(const std::auto_ptr<RContainer<C,false,bOrder> >& src) throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -224,117 +186,60 @@ public:
 
 	/**
 	* The assignement operator.
-	* @param src            Container used as source.
+	* @param src             Container used as source.
 	* \warning If the container is not a responsible for the allocation, the
 	* elements of src are just copied and not re-created. Use Copy if you want a
 	* "deep" copy of src.
 	*/
-	RContainer& operator=(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc);
+	RContainer& operator=(const RContainer<C,true,bOrder>& src);
 
 	/**
 	* The assignement operator.
-	* @param src            Container used as source.
+	* @param src             Container used as source.
 	* \warning The elements of src are just copied and not re-created. Use
 	* Copy if you want a "deep" copy of src.
 	*/
-	RContainer& operator=(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
-
-	/**
-	* The assignement operator.
-	* @param src            Smart pointer to the container used as source.
-	* \warning If the container is not a responsible for the allocation, the
-	* elements of src are just copied and not re-created. Use Copy if you want a
-	* "deep" copy of src.
-	*/
-	RContainer& operator=(const std::auto_ptr<RContainer<C,true,bOrder> >& src) throw(std::bad_alloc);
-
-	/**
-	* The assignement operator.
-	* @param src            Smart pointer to the container used as source.
-	* \warning The elements of src are just copied and not re-created. Use
-	* Copy if you want a "deep" copy of src.
-	*/
-	RContainer& operator=(const std::auto_ptr<RContainer<C,false,bOrder> >& src) throw(std::bad_alloc);
+	RContainer& operator=(const RContainer<C,false,bOrder>& src);
 
 	/**
 	* Deep copy of a container.
-	* @param src            Container used as source.
+	* @param src             Container used as source.
 	*/
-	void Copy(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
+	void Copy(const RContainer<C,false,bOrder>& src);
 
 	/**
 	* Deep copy of a container.
-	* @param src            Container used as source.
+	* @param src             Container used as source.
 	*/
-	void Copy(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc);
-
-	/**
-	* Deep copy of a container.
-	* @param src            Container used as source.
-	*/
-	void Copy(const std::auto_ptr<RContainer<C,false,bOrder> >& src) throw(std::bad_alloc);
-
-	/**
-	* Deep copy of a container.
-	* @param src            Container used as source.
-	*/
-	void Copy(const std::auto_ptr<RContainer<C,true,bOrder> >& src) throw(std::bad_alloc);
+	void Copy(const RContainer<C,true,bOrder>& src);
 
 	/**
 	* Add the elements of a container. If the source container contains null
 	* elements, these elements are not copied.
-	* @param src            Container used as source.
+	* @param src             Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,true,true>& src) throw(std::bad_alloc);
+	RContainer& operator+=(const RContainer<C,true,true>& src);
 
 	/**
 	* Add the elements of a container. If the source container contains null
 	* elements, these elements are not copied.
-	* @param src            Container used as source.
+	* @param src             Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,true,false>& src) throw(std::bad_alloc);
+	RContainer& operator+=(const RContainer<C,true,false>& src);
 
 	/**
 	* Add the elements of a container. If the source container contains null
 	* elements, these elements are not copied.
-	* @param src            Container used as source.
+	* @param src             Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,false,true>& src) throw(std::bad_alloc);
+	RContainer& operator+=(const RContainer<C,false,true>& src);
 
 	/**
 	* Add the elements of a container. If the source container contains null
 	* elements, these elements are not copied.
-	* @param src            Container used as source.
+	* @param src             Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,false,false>& src) throw(std::bad_alloc);
-
-	/**
-	* Add the elements of a container. If the source container contains null
-	* elements, these elements are not copied.
-	* @param src            Smart pointer to the container used as source.
-	*/
-	RContainer& operator+=(const std::auto_ptr<RContainer<C,true,true> >& src) throw(std::bad_alloc);
-
-	/**
-	* Add the elements of a container. If the source container contains null
-	* elements, these elements are not copied.
-	* @param src            Smart pointer to the container used as source.
-	*/
-	RContainer& operator+=(const std::auto_ptr<RContainer<C,true,false> >& src) throw(std::bad_alloc);
-
-	/**
-	* Add the elements of a container. If the source container contains null
-	* elements, these elements are not copied.
-	* @param src            Smart pointer to the container used as source.
-	*/
-	RContainer& operator+=(const std::auto_ptr<RContainer<C,false,true> >& src) throw(std::bad_alloc);
-
-	/**
-	* Add the elements of a container. If the source container contains null
-	* elements, these elements are not copied.
-	* @param src            Smart pointer to the container used as source.
-	*/
-	RContainer& operator+=(const std::auto_ptr<RContainer<C,false,false> >& src) throw(std::bad_alloc);
+	RContainer& operator+=(const RContainer<C,false,false>& src);
 	//@}
 
 	/**
@@ -346,14 +251,14 @@ public:
 	* Verify if the container can hold the next element to be inserted. If not,
 	* the container is extended.
 	*/
-	void VerifyTab(void) throw(std::bad_alloc);
+	void VerifyTab(void);
 
 	/**
 	* Verify if the container can hold a certain nujmber of elements. If not,
 	* the container is extended.
-    * @param max            The number of elements that must be contained.
+    * @param max             Maximal number of elements that must be contained.
 	*/
-	void VerifyTab(unsigned int max) throw(std::bad_alloc);
+	void VerifyTab(size_t max);
 	//@}
 
 	/**
@@ -370,10 +275,10 @@ public:
 	/**
 	* Clear the container and destruct the elements if he is responsible for
 	* the desallocation.
-	* @param m              The initial maximal size of the array.
-	* @param i              The value used when increasing the array.
+	* @param m               The initial maximal size of the array.
+	* @param i               The value used when increasing the array.
 	*/
-	void Clear(unsigned int m,unsigned int i);
+	void Clear(size_t m,size_t i=0);
 	//@}
 
 	/**
@@ -385,19 +290,25 @@ public:
 	* Get the number of elements in the container.
 	* @return unsigned int.
 	*/
-	unsigned int GetNb(void) const {return(NbPtr);}
+	size_t GetNb(void) const {return(NbPtr);}
+
+	/**
+	* Get the maximal position occupied by an elements in the container.
+	* @return unsigned int.
+	*/
+	size_t GetMaxPos(void) const {return(LastPtr);}
 
 	/**
 	* Get the maximum number of elements in the container.
 	* @return unsigned int.
 	*/
-	unsigned int GetMaxNb(void) const {return(MaxPtr);}
+	size_t GetMaxNb(void) const {return(MaxPtr);}
 
 	/**
 	* Get the increment used to resize the container.
 	* @return unsigned int.
 	*/
-	unsigned int GetIncNb(void) const {return(IncPtr);}
+	size_t GetIncNb(void) const {return(IncPtr);}
 
 	/**
 	* ReOrder the container. This method must be used with caution, because it
@@ -405,9 +316,9 @@ public:
 	* -# The container contains null pointers.
 	* -# The container is ordered and the method does not use the same criterion
 	*    for the ordering.
-	* @param sortOrder      Pointer to a (static) funtion used for the ordering.
+	* @param sortOrder       Pointer to a (static) funtion used for the ordering.
 	*/
-	void ReOrder(int sortOrder(const void*,const void*)) throw(std::bad_alloc);
+	void ReOrder(int sortOrder(const void*,const void*));
 	//@}
 
 	/**
@@ -418,10 +329,10 @@ public:
 	/**
 	* Insert an element in an ordered container. Used by InsertPtr and
 	* GetInsertPtr.
-	* @param ins            A pointer to the element to insert.
-	* @param pos            The position where to insert it.
+	* @param ins             A pointer to the element to insert.
+	* @param pos             The position where to insert it.
 	*/
-	void InsertPtrOrderAt(const C* ins,unsigned int pos) throw(std::bad_alloc);
+	void InsertPtrOrderAt(const C* ins,size_t pos);
 
 	/**
 	* Insert an element at a certain position. Two remarks must be made :
@@ -430,29 +341,29 @@ public:
 	* -#    By using this function, the user can leave "blanks" in the container,
 	*       in other words, some "valid" pointers could be null. This situation is
 	*       not handle by the other functions of the container.
-	* @param ins            A pointer to the element to insert.
-	* @param pos            The position where to insert it.
-	* @param del            Specify if the object that was previously at Pos
-	*                       must be shift or deleted.
+	* @param ins             A pointer to the element to insert.
+	* @param pos             The position where to insert it.
+	* @param del             Specify if the object that was previously at Pos
+	*                        must be shift or deleted.
 	*/
-	void InsertPtrAt(const C* ins,unsigned int pos,bool del=bAlloc) throw(std::bad_alloc);
+	void InsertPtrAt(const C* ins,size_t pos,bool del=bAlloc);
 
 	/**
 	* Insert an element in the container. If the container is ordered and if
 	* the corresponding index is already used, the previously inserted element
 	* is removed from the container (and destroy if the container is
 	* responsible for the allocation)
-	* @param ins            A pointer to the element to insert.
+	* @param ins             A pointer to the element to insert.
 	*/
-	void InsertPtr(const C* ins) throw(std::bad_alloc);
+	void InsertPtr(const C* ins);
 
 	/**
 	* Exchange two elements in the container. The method does not verify if the
 	* exchange is compatible with the ordering of the container.
-	* @param pos1           Position of the first element.
-	* @param pos2           Position of the second element.
+	* @param pos1            Position of the first element.
+	* @param pos2            Position of the second element.
 	*/
-	void Exchange(unsigned int pos1,unsigned int pos2) throw(std::bad_alloc);
+	void Exchange(size_t pos1,size_t pos2);
 	//@}
 
 public:
@@ -465,52 +376,52 @@ public:
 	/**
 	* This function returns the index of an element represented by tag, and it
 	* is used when the elements are to be ordered.
-	* @param TUse           The type of tag, the container uses the Compare(TUse &)
-	*                       member function of the elements.
-	* @param tag            The tag used.
-	* @param find           If the element represented by tag exist, find is set to
-	*                       true.
+	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param find            If the element represented by tag exist, find is set to
+	*                        true.
 	* @return Returns the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
-	template<class TUse> unsigned int GetId(const TUse& tag,bool& find) const;
+	template<class TUse> size_t GetId(const TUse& tag,bool& find) const;
 
 	/**
 	* Look if a certain element is in the container.
-	* @param TUse           The type of tag, the container uses the Compare(TUse &)
-	*                       member function of the elements.
-	* @param tag            The tag used.
-	* @param sortkey        The tag represents the sorting key. The default value
-	*                       depends if the container is ordered (true) or not
-	*                       (false).
+	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param sortkey         The tag represents the sorting key. The default value
+	*                        depends if the container is ordered (true) or not
+	*                        (false).
 	* @return Return true if the element is in the container.
 	*/
 	template<class TUse> bool IsIn(const TUse& tag,bool sortkey=bOrder) const;
 
 	/**
-	* Get a pointer to the ith element in the container.
-	* @param idx            Index of the element to get.
+	* Get a pointer to the ith element in the container (Only read).
+	* @param idx             Index of the element to get.
 	* @return Return the pointer or 0 if the index is outside the scope of the
 	*         container.
 	*/
-	C* GetPtrAt(unsigned int idx) const;
+	const C* operator[](size_t idx) const;
 
 	/**
-	* Get a pointer to the ith element in the container.
-	* @param idx            Index of the element to get.
+	* Get a pointer to the ith element in the container (Read/Write).
+	* @param idx             Index of the element to get.
 	* @return Return the pointer or 0 if the index is outside the scope of the
 	*         container.
 	*/
-	C* operator[](int idx) const;
+	C* operator[](size_t idx);
 
 	/**
 	* Get a pointer to a certain element in the container.
-	* @param TUse           The type of tag, the container uses the Compare(TUse &)
-	*                       member function of the elements.
-	* @param tag            The tag used.
-	* @param sortkey        The tag represents the sorting key. The default value
-	*                       depends if the container is ordered (true) or not
-	*                       (false).
+	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param sortkey         The tag represents the sorting key. The default value
+	*                        depends if the container is ordered (true) or not
+	*                        (false).
 	* @return Return the pointer or 0 if the element is not in the container.
 	*/
 	template<class TUse> C* GetPtr(const TUse& tag,bool sortkey=bOrder) const;
@@ -519,25 +430,44 @@ public:
 	* Get a pointer to a certain element in the container. If the element is
 	* not existing, the container creates it by using the constructor with TUse
 	* as parameter.
-	* @param TUse           The type of tag, the container uses the Compare(TUse &)
-	*                       member function of the elements.
-	* @param tag            The tag used.
-	* @param sortkey        The tag represents the sorting key. The default value
-	*                       depends if the container is ordered (true) or not
-	*                       (false).
+	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param sortkey         The tag represents the sorting key. The default value
+	*                        depends if the container is ordered (true) or not
+	*                        (false).
 	* @return The function returns a pointer to the element of the container.
 	*/
-	template<class TUse> C* GetInsertPtr(const TUse& tag,bool sortkey=bOrder) throw(std::bad_alloc);
+	template<class TUse> C* GetInsertPtr(const TUse& tag,bool sortkey=bOrder);
 
 	/**
 	* This function returns a container of all the elements that are responding
 	* to the given criteria.
-	* @param TUse           The type of tag, the container uses the Compare(TUse &)
-	*                       member function of the elements.
-	* @param tag            The tag used.
+	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
 	* @return The function returns a pointer to the result container.
 	*/
-	template<class TUse> RContainer<C,false,bOrder>* GetPtrs(const TUse& tag) const throw(std::bad_alloc);
+	template<class TUse> RContainer<C,false,bOrder>* GetPtrs(const TUse& tag) const;
+
+	/**
+	* Copy the array of pointer into a temporary array. This array must have
+	* the right size (Read only).
+	* @param tab             Array of pointer.
+	* @return number of elements in the array (including eventually null
+	* pointers).
+	*/
+	size_t GetTab(C** tab);
+
+	/**
+	* Copy the array of pointer into a temporary array. This array must have
+	* the right size (Read only).
+	* @param tab             Array of pointer.
+	* @return number of elements in the array (including eventually null
+	* pointers).
+	*/
+	size_t GetTab(const C** tab) const;
+
 	//@}
 
 	/**
@@ -548,21 +478,21 @@ public:
 	/**
 	* Delete an element from the container. The element is destruct if the
 	* container is responsible of the desallocation.
-	* @param del            A pointer to the element to delete.
+	* @param del             A pointer to the element to delete.
 	*/
-	void DeletePtr(C*& del) throw(std::bad_alloc);
+	void DeletePtr(C*& del);
 
 	/**
 	* Delete an element from the container. The element is destruct if the
 	* container is responsible of the desallocation.
-	* @param TUse           The type of tag, the container uses the Compare(TUse &)
-	*                       member function of the elements.
-	* @param tag            The tag used.
-	* @param sortkey        The tag represents the sorting key. The default value
-	*                       depends if the container is ordered (true) or not
-	*                       (false).
+	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param sortkey         The tag represents the sorting key. The default value
+	*                        depends if the container is ordered (true) or not
+	*                        (false).
 	*/
-	template<class TUse> void DeletePtr(const TUse& tag,bool sortkey=bOrder) throw(std::bad_alloc);
+	template<class TUse> void DeletePtr(const TUse& tag,bool sortkey=bOrder);
 	//@}
 
 private:
@@ -575,74 +505,30 @@ private:
 	/**
 	* Create a container from another one. If the pointer to the container is
 	* null, an empty container is created.
-	* @param src            Pointer to the source container.
+	* @param src             Source container.
 	*/
-	template<bool b> void Create(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc);
+	template<bool b> void Create(const RContainer<C,b,bOrder>& src);
 
 	/**
 	* Copy a container from another one. If the pointer to the container is
 	* null, the container is just emptied.
-	* @param src            Pointer to the source container.
+	* @param src             Source container.
 	*/
-	template<bool b> RContainer& NormalCopy(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc);
+	template<bool b> RContainer& NormalCopy(const RContainer<C,b,bOrder>& src);
 
 	/**
 	* Deep copy of a container in another one. If the pointer to the container is
 	* null, the container is just emptied.
-	* @param src            Pointer to the source container.
+	* @param src             Source container.
 	*/
-	template<bool b> void DeepCopy(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc);
+	template<bool b> void DeepCopy(const RContainer<C,b,bOrder>& src);
 
 	/**
 	* Add a container (if the pointer is not null) from another one.
-	* @param src            Pointer to the source container.
+	* @param src             Source container.
 	*/
-	template<bool b,bool o> RContainer& Add(const RContainer<C,b,o>* src) throw(std::bad_alloc);
+	template<bool b,bool o> RContainer& Add(const RContainer<C,b,o>& src);
 
-	//@}
-
-public:
-
-	/**
-	* @name Iterator functions.
-	* \deprecated
-	* Use the RCursor class instead of this methods.
-	*/
-	//@{
-
-#ifdef PRIVATE
-private:
-#else
-public:
-#endif
-
-	/**
-	* Start the iterator to go trough the container.
-	* \deprecated
-	* Use the RCursor class instead of this methods.
-	*/
-	inline void Start(void);
-
-	/**
-	* Test if the end of the container is reached.
-	* \deprecated
-	* Use the RCursor class instead of this methods.
-	*/
-	inline bool End(void) const;
-
-	/**
-	* Goto the next element, if the end is reached, go to the beginning.
-	* \deprecated
-	* Use the RCursor class instead of this methods.
-	*/
-	inline void Next(void);
-
-	/**
-	* Return the current element.
-	* \deprecated
-	* Use the RCursor class instead of this methods.
-	*/
-	inline C* operator()(void) const;
 	//@}
 
 public:
@@ -658,6 +544,10 @@ public:
 	//@}
 
 	friend class RCursor<C>;
+	friend class RContainer<C,true,true>;
+	friend class RContainer<C,true,false>;
+	friend class RContainer<C,false,true>;
+	friend class RContainer<C,false,false>;
 };
 
 

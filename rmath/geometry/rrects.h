@@ -69,12 +69,12 @@ public:
 	* Construct a container of rectangles from another.
 	* @param rects          The container used as reference.
 	*/
-	RRects(RRects* rects);
+	RRects(const RRects& rects);
 
 	/**
 	* Return the area of all the rectangles.
 	*/
-	RCoord Area(void);
+	RCoord Area(void) const;
 };
 
 

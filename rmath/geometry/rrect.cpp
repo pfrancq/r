@@ -6,7 +6,7 @@
 
 	Rectangle - Implemtation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -251,12 +251,10 @@ bool RRect::IsIn(const RCoord X,const RCoord Y) const
 //------------------------------------------------------------------------------
 bool RRect::IsIn(const RPolygon* poly) const
 {
-	RPoint **tab;
-	unsigned int i;
-
-	for(i=poly->NbPtr+1,tab=poly->Tab;--i;tab++)
+	RCursor<RPoint> tab(*poly);
+	for(tab.Start();!tab.End();tab.Next())
 	{
-		if(!IsIn(*tab))
+		if(!IsIn(*tab()))
 			return(false);
 	}
 	return(true);

@@ -63,7 +63,7 @@ RGeoInfoConnectionPart::RGeoInfoConnectionPart(const RGeoInfoConnectionPart* p)
 
 //------------------------------------------------------------------------------
 RGeoInfoConnection::RGeoInfoConnection(RConnection* con)
-	: RContainer<RGeoInfoConnectionPart,true,false>(con->Connect.NbPtr,con->Connect.NbPtr/2),
+	: RContainer<RGeoInfoConnectionPart,true,false>(con->Connect.GetNb()),
 		Con(con), Complete(false), Dist(0)
 {
 }
@@ -73,14 +73,6 @@ RGeoInfoConnection::RGeoInfoConnection(RConnection* con)
 RGeoInfoConnection::RGeoInfoConnection(const RGeoInfoConnection& con)
 	: RContainer<RGeoInfoConnectionPart,true,false>(con),
 	  Con(con.Con), Complete(con.Complete), Dist(con.Dist)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RGeoInfoConnection::RGeoInfoConnection(const RGeoInfoConnection* con)
-	: RContainer<RGeoInfoConnectionPart,true,false>(con),
-	  Con(con->Con), Complete(con->Complete), Dist(con->Dist)
 {
 }
 
@@ -96,14 +88,13 @@ void RGeoInfoConnection::UnComplete(void)
 //------------------------------------------------------------------------------
 bool RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
 {
-	unsigned int i,count;
-	RObj2DConnector **con;
+	unsigned int count(0);
 
-	count=0;
 	// Go through each connectors
-	for(i=Con->Connect.NbPtr+1,con=Con->Connect.Tab;--i;con++)
+	RCursor<RObj2DConnector> con(Con->Connect);
+	for(con.Start();!con.End();con.Next())
 	{
-		if(infos->GetPtr<unsigned int>((*con)->Owner->GetId())->IsValid())
+		if(infos->GetPtr<unsigned int>(con()->Owner->GetId())->IsValid())
 		{
 			count++;
 		}
@@ -117,15 +108,12 @@ bool RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
 //------------------------------------------------------------------------------
 void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 {
-	RObj2DConnector **con,**con2;
 	RGeoInfo *g1,*g2;
-	unsigned int i,j;
 	unsigned int id1,id2;
 	RVertex *v1,*v2;
-	REdge **e;
 	RPoint pt1,pt2;
-	RGraph T(Con->Connect.NbPtr),S(Con->Connect.NbPtr);
-	RContainer<RGeoInfoConnectionPart,true,false> Local(Con->Connect.NbPtr,Con->Connect.NbPtr/2);
+	RGraph T(Con->Connect.GetNb()),S(Con->Connect.GetNb());
+	RContainer<RGeoInfoConnectionPart,true,false> Local(Con->Connect.GetNb());
 	RGeoInfoConnectionPart::sSearch s;
 
 	// Init
@@ -133,22 +121,24 @@ void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 	Complete=true;
 
 	// Go through each connectors but the last one
-	RAssert(Con->Connect.NbPtr);
-	for(i=Con->Connect.NbPtr,con=Con->Connect.Tab;--i;con++)
+	RAssert(Con->Connect.GetNb());
+	RCursor<RObj2DConnector> con(Con->Connect);
+	RCursor<RObj2DConnector> con2(Con->Connect);
+	for(con.Start();!con.End();con.Next())
 	{
-		id1=(*con)->Owner->GetId();
+		id1=con()->Owner->GetId();
 		g1=infos->GetPtr<unsigned int>(id1);
 		if(g1->IsValid())
 		{
 			v1=T.GetVertex(id1);
-			for(j=i+1,con2=con+1;--j;con2++)
+			for(con2.GoTo(con.GetPos()+1);!con2.End();con.Next())
 			{
-				id2=(*con2)->Owner->GetId();
+				id2=con2()->Owner->GetId();
 				g2=infos->GetPtr<unsigned int>(id2);
 				if(g2->IsValid())
 				{
 					v2=T.GetVertex(id2);
-					T.CreateEdge(v1,v2,(*con)->GetMinDist(*con2,infos,pt1,pt2));
+					T.CreateEdge(v1,v2,con()->GetMinDist(con2(),infos,pt1,pt2));
 					Local.InsertPtr(new RGeoInfoConnectionPart(pt1,id1,pt2,id2));
 				}
 				else
@@ -162,11 +152,12 @@ void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 	// Compute Minimum Spanning tree
 	Dist=0.0;
 	T.MinSpanningTree(&S);
-	for(i=S.Edges.NbPtr+1,e=S.Edges.Tab;--i;e++)
+	RCursor<REdge> e(S.Edges);
+	for(e.Start();!e.End();e.Next())
 	{
-		Dist+=(*e)->Weight;
-		s.id1=(*e)->v1->Id;
-		s.id2=(*e)->v2->Id;
+		Dist+=e()->Weight;
+		s.id1=e()->v1->Id;
+		s.id2=e()->v2->Id;
 		InsertPtr(new RGeoInfoConnectionPart(Local.GetPtr<RGeoInfoConnectionPart::sSearch>(s)));
 	}
 }
@@ -214,15 +205,14 @@ double RGeoInfoConnection::GetDist(RGeoInfos* infos,RGeoInfo* cur)
 //------------------------------------------------------------------------------
 bool RGeoInfoConnection::IsIn(const RGeoInfo* info)
 {
-	RObj2DConnector **con;
 	RObj2D* owner;
-	unsigned int i;
 
 	if(!info) return(false);
 	owner=info->Obj;
-	for(i=Con->Connect.NbPtr+1,con=Con->Connect.Tab;--i;con++)
+	RCursor<RObj2DConnector> con(Con->Connect);
+	for(con.Start();!con.End();con.Next())
 	{
-		if((*con)->Owner==owner)
+		if(con()->Owner==owner)
 			return(true);
 	}
 	return(false);
@@ -232,17 +222,16 @@ bool RGeoInfoConnection::IsIn(const RGeoInfo* info)
 //------------------------------------------------------------------------------
 bool RGeoInfoConnection::IsIn(const RGeoInfoConnector* con)
 {
-	RObj2DConnector **cons;
 	unsigned int id;
-	unsigned int i;
 	RObj2D* owner;
 
 	if(!con) return(false);
 	id=con->Con->Id;
 	owner=con->Owner->Obj;
-	for(i=Con->Connect.NbPtr+1,cons=Con->Connect.Tab;--i;cons++)
+	RCursor<RObj2DConnector> cons(Con->Connect);
+	for(cons.Start();!cons.End();cons.Next())
 	{
-		if(((*cons)->Id==id)&&((*cons)->Owner==owner))
+		if((cons()->Id==id)&&(cons()->Owner==owner))
 			return(true);
 	}
 	return(false);

@@ -52,17 +52,17 @@ RConnections::RConnections(void)
 //------------------------------------------------------------------------------
 void RConnections::Init(void)
 {
-	RConnection **tab;
-	RObj2DConnector **con;
-	unsigned int i,j;
+	RCursor<RObj2DConnector> con;
 
 	// Go through all connections
-	for(i=NbPtr+1,tab=Tab;--i;tab++)
+	RCursor<RConnection> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		// Go through each connector
-		for(j=(*tab)->Connect.NbPtr+1,con=(*tab)->Connect.Tab;--j;con++)
+		con.Set(Cur()->Connect);
+		for(con.Start();!con.End();con.Next())
 		{
-			(*con)->Connections.InsertPtr(*tab);
+			con()->Connections.InsertPtr(Cur());
 		}
 	}
 }
@@ -80,30 +80,32 @@ void RConnections::SetParams(const RPromCriterionParams& dist,const RPromCriteri
 //------------------------------------------------------------------------------
 double RConnections::GetCon(RGeoInfos* infos,RGeoInfo* cur)
 {
-	double sum=0.0;
-	unsigned int i,j,k;
-	RObj2DConnector **con,**con2;
-	RConnection **tab;
+	double sum(0.0);
+	RCursor<RObj2DConnector> con2;
+	RCursor<RConnection> tab;
 	bool cont;
 	RGeoInfo *tmp;
 
 	// Go through all connectors
-	for(i=cur->GetObj()->Connectors.NbPtr+1,con=cur->GetObj()->Connectors.Tab;--i;con++)
+	RCursor<RObj2DConnector> con(cur->GetObj()->Connectors);
+	for(con.Start();!con.End();con.Next())
 	{
 		// Go through each connection
-		for(j=(*con)->Connections.NbPtr+1,tab=(*con)->Connections.Tab;--j;tab++)
+		tab.Set(con()->Connections);
+		for(tab.Start();!tab.End();tab.Next())
 		{
 			// Go through each connector and see if the geometric information is placed
-			for(k=(*tab)->Connect.NbPtr+1,con2=(*tab)->Connect.Tab,cont=true;(--k)&&cont;con2++)
+			con2.Set(tab()->Connect);
+			for(con2.Start();!con2.End();con2.Next())
 			{
-				tmp=infos->GetPtr<unsigned int>((*con2)->Owner->Id);
+				tmp=infos->GetPtr(con2()->Owner->Id);
 				if(tmp)
 					cont=!tmp->IsValid();
 			}
 			if(!cont)
 			{
 				// At least one valid geometric information found
-				sum+=(*tab)->Weight;
+				sum+=tab()->Weight;
 			}
 		}
 	}
@@ -119,8 +121,8 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 	RPromSol* sol;
 	RPromSol** sols=0;
 	RPromSol** best=0;
-	RGeoInfo **info,**treat,*b;
-	unsigned int i,Nb=0;
+	RGeoInfo **treat,*b;
+	unsigned int Nb=0;
 	double w,d;
 	RRect r1,r2;
 	bool bFound;
@@ -134,22 +136,23 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 	treat=new RGeoInfo*[nb];
 
 	// Go through each info
-	for(i=nb+1,info=infos->Tab;--i;info++)
+	RCursor<RGeoInfo> info(*infos);
+	for(info.Start();!info.End();info.Next())
 	{
 		// If selected -> go to next
-		if(selected[(*info)->GetObj()->GetId()])
+		if(selected[info()->GetObj()->GetId()])
 			continue;
 
 		// Calculate distance and weight
-		w=GetCon(infos,*info);
-		d=GetDistances(infos->Tab,*info);
+		w=GetCon(infos,info());
+		d=GetDistances(*infos,info());
 		if((w>0.0)&&(d>0.0))
 		{
 			// If both are not null -> Create a Prom�h� solution
 			sol=Prom.NewSol();
 			Prom.Assign(sol,weight,w);
 			Prom.Assign(sol,dist,d);
-			treat[sol->GetId()]=(*info);
+			treat[sol->GetId()]=info();
 			Nb++;        // Increment number of solution
 		}
 	}
@@ -160,7 +163,7 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 		Nb=nb;
 		memcpy(treat,infos,nb*sizeof(RGeoInfo*));
 		Random->RandOrder<RGeoInfo*>(treat,nb);
-		info=treat;
+		RGeoInfo** info=treat;
 		while(selected[(*info)->GetObj()->GetId()])
 			info++;
 		b=(*info);
@@ -265,7 +268,7 @@ RGeoInfo* RConnections::GetMostConnected(RGeoInfos* infos,unsigned int nb,RGeoIn
 
 
 //------------------------------------------------------------------------------
-double RConnections::GetDistances(RGeoInfo** /*infos*/,RGeoInfo* /*info*/)
+double RConnections::GetDistances(RGeoInfos&/*infos*/,RGeoInfo* /*info*/)
 {
 //	RConnection* c;
 //	RGeoInfo *f,*t;

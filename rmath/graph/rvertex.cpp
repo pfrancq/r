@@ -6,7 +6,7 @@
 
 	Vertex of a graph - Implementation.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -50,15 +50,8 @@ RVertex::RVertex(const unsigned int id,const unsigned int idx,const unsigned int
 
 
 //------------------------------------------------------------------------------
-RVertex::RVertex(const RVertex* v)
-	: Edges(v->Edges.MaxPtr,v->Edges.IncPtr)
-{
-}
-
-
-//------------------------------------------------------------------------------
 RVertex::RVertex(const RVertex& v)
-	: Edges(v.Edges.MaxPtr,v.Edges.IncPtr)
+	: Edges(v.Edges.GetMaxNb(),v.Edges.GetIncNb())
 {
 }
 

@@ -6,7 +6,7 @@
 
 	Container Cursor - Header.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Universit�Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -79,7 +79,7 @@ template<class C>
 	/**
 	* This variable is used to see if the end of the container is reached.
 	*/
-	unsigned int ActPtr;
+	size_t ActPtr;
 
 	/**
 	* The array of pointers for the elements.
@@ -89,12 +89,12 @@ template<class C>
 	/**
 	* The number of elements in the container.
 	*/
-	unsigned int NbPtr;
+	size_t NbPtr;
 
 	/**
 	* The last position in the array used by an object.
 	*/
-	unsigned int LastPtr;
+	size_t LastPtr;
 
 public:
 
@@ -105,84 +105,55 @@ public:
 
 	/**
 	* Construct the cursor.
-	* param c               Container to iterate.
+	* @param src             Source container.
 	*/
-	RCursor(const RContainer<C,true,true>& c);
+	RCursor(const RCursor<C>& src);
 
 	/**
 	* Construct the cursor.
-	* param c               Smart pointer to the container to iterate.
+	* param c                Container to iterate.
+	* @param max             Maximum number of elements to iterate. If null,
+	*                        iterate over the whole container.
 	*/
-	RCursor(const std::auto_ptr<RContainer<C,true,true> >& c);
-
-	/**
-	* Construct the cursor. If the pointer passed is null, the cursor will parse
-	* zero elements.
-	* param c               Pointer to the container to iterate.
-	*/
-	RCursor(const RContainer<C,true,true>* c);
+	RCursor(const RContainer<C,true,true>& c,size_t max=0);
 
 	/**
 	* Construct the cursor.
-	* param c               Container to iterate.
+	* param c                Container to iterate.
+	* @param max             Maximum number of elements to iterate. If null,
+	*                        iterate over the whole container.
 	*/
-	RCursor(const RContainer<C,false,true>& c);
+	RCursor(const RContainer<C,false,true>& c,size_t max=0);
 
 	/**
 	* Construct the cursor.
-	* param c               Smart pointer to the container to iterate.
+	* param c                Container to iterate.
+	* @param max             Maximum number of elements to iterate. If null,
+	*                        iterate over the whole container.
 	*/
-	RCursor(const std::auto_ptr<RContainer<C,false,true> >& c);
-
-	/**
-	* Construct the cursor. If the pointer passed is null, the cursor will parse
-	* zero elements.
-	* param c               Pointer to the container to iterate.
-	*/
-	RCursor(const RContainer<C,false,true>* c);
+	RCursor(const RContainer<C,true,false>& c,size_t max=0);
 
 	/**
 	* Construct the cursor.
-	* param c               Container to iterate.
+	* param c                Container to iterate.
+	* @param max             Maximum number of elements to iterate. If null,
+	*                        iterate over the whole container.
 	*/
-	RCursor(const RContainer<C,true,false>& c);
-
-	/**
-	* Construct the cursor.
-	* param c               Smart pointer to the container to iterate.
-	*/
-	RCursor(const std::auto_ptr<RContainer<C,true,false> >& c);
-
-	/**
-	* Construct the cursor. If the pointer passed is null, the cursor will parse
-	* zero elements.
-	* param c               Pointer to the container to iterate.
-	*/
-	RCursor(const RContainer<C,true,false>* c);
-
-	/**
-	* Construct the cursor.
-	* param c               Container to iterate.
-	*/
-	RCursor(const RContainer<C,false,false>& c);
-
-	/**
-	* Construct the cursor.
-	* param c               Smart pointer to the container to iterate.
-	*/
-	RCursor(const std::auto_ptr<RContainer<C,false,false> >& c);
-
-	/**
-	* Construct the cursor. If the pointer passed is null, the cursor will parse
-	* zero elements.
-	* param c               Pointer to the container to iterate.
-	*/
-	RCursor(const RContainer<C,false,false>* c);
+	RCursor(const RContainer<C,false,false>& c,size_t max=0);
 
 	/**
 	* Assignment operator using a "Cursor".
+	* @param src             Source container.
 	*/
-	RCursor<C>& operator=(const RCursor<C>& c) throw(std::bad_alloc);
+	RCursor<C>& operator=(const RCursor<C>& src);
+
+	/**
+	* Set the container.
+	* param c                Container to iterate.
+	* @param max             Maximum number of elements to iterate. If null,
+	*                        iterate over the whole container.
+	*/
+	template<bool b,bool o> void Set(const RContainer<C,b,o>& c,size_t max=0);
 
 	/**
 	* Clear the cursor.
@@ -195,95 +166,31 @@ public:
 	inline void Start(void);
 
 	/**
-	* Set the container.
-	* param c               Container to iterate.
-	*/
-	void Set(const RContainer<C,true,true>& c);
-
-	/**
-	* Set the container.
-	* param c               Smart pointer to the container to iterate.
-	*/
-	void Set(const std::auto_ptr<RContainer<C,true,true> >& c);
-
-	/**
-	* Set the container. If the pointer passed is null, the cursor will parse
-	* zero elements.
-	* param c               Pointer to the container to iterate.
-	*/
-	void Set(const RContainer<C,true,true>* c);
-
-	/**
-	* Set the container.
-	* param c               Container to iterate.
-	*/
-	void Set(const RContainer<C,false,true>& c);
-
-	/**
-	* Set the container.
-	* param c               Smart pointer to the container to iterate.
-	*/
-	void Set(const std::auto_ptr<RContainer<C,false,true> >& c);
-
-	/**
-	* Set the container. If the pointer passed is null, the cursor will parse
-	* zero elements.
-	* param c               Pointer to the container to iterate.
-	*/
-	void Set(const RContainer<C,false,true>* c);
-
-	/**
-	* Set the container.
-	* param c               Container to iterate.
-	*/
-	void Set(const RContainer<C,true,false>& c);
-
-	/**
-	* Set the container.
-	* param c               Smart pointer to the container to iterate.
-	*/
-	void Set(const std::auto_ptr<RContainer<C,true,false> >& c);
-
-	/**
-	* Set the container. If the pointer passed is null, the cursor will parse
-	* zero elements.
-	* param c               Pointer to the container to iterate.
-	*/
-	void Set(const RContainer<C,true,false>* c);
-
-	/**
-	* Set the container.
-	* param c               Container to iterate.
-	*/
-	void Set(const RContainer<C,false,false>& c);
-
-	/**
-	* Set the container.
-	* param c               Smart pointer to the container to iterate.
-	*/
-	void Set(const std::auto_ptr<RContainer<C,false,false> >& c);
-
-	/**
-	* Set the container. If the pointer passed is null, the cursor will parse
-	* zero elements.
-	* param c               Pointer to the container to iterate.
-	*/
-	void Set(const RContainer<C,false,false>* c);
-
-	/**
 	* Go to the i-th element of the container.
+	* @param idx             Index of the element to get.
 	*/
-	void GoTo(const unsigned int i) throw(std::bad_alloc);
+	void GoTo(size_t idx);
+
+	/**
+	* Return the actual position in the container.
+	*/
+	inline size_t GetPos(void) {return(ActPtr);}
 
 	/**
 	* Return the number of elements in the container.
 	*/
-	inline unsigned int GetNb(void);
+	inline size_t GetNb(void);
 
 	/**
 	* Test if the end of the container is reached.
 	*/
 	inline bool End(void) const;
+
+	/**
+	* Test if the cursor is at a given index.
+	* @param idx             Index of the element.
+	*/
+	inline bool IsAt(size_t idx) const;
 
 	/**
 	* Goto the next element, if the end is reached, go to the beginning.

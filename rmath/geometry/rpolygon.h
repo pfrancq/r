@@ -74,12 +74,6 @@ public:
 	* Construct a polygon from another.
 	* @param poly           Polygon used as reference.
 	*/
-	RPolygon(const RPolygon* poly);
-
-	/**
-	* Construct a polygon from another.
-	* @param poly           Polygon used as reference.
-	*/
 	RPolygon(const RPolygon& poly);
 
 	/**
@@ -129,17 +123,17 @@ public:
 	* This function returns a pointer to the point on the same horizontal vertex.
 	* @param pt             Point used as reference.
 	*/
-	RPoint* GetConX(const RPoint* pt) const;
+	RPoint GetConX(const RPoint* pt) const;
 
 	/** This function returns a pointer to the point on the same vertital vertex.
 	* @param pt             Point used as reference.
 	*/
-	RPoint* GetConY(const RPoint* pt) const;
+	RPoint GetConY(const RPoint* pt) const;
 
 	/**
 	* Return a pointer to the most bottom-left point of the polygon.
 	*/
-	RPoint* GetBottomLeft(void) const;
+	RPoint GetBottomLeft(void) const;
 
 	/**
 	* Return a pointer to the most bottom-left point of the polygon responding

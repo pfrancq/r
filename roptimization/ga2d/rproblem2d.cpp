@@ -61,12 +61,11 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 {
 	RXMLStruct s;
 	RXMLFile f(name,&s);
-	RXMLTag *tag,**tab;
+	RXMLTag *tag;
 	unsigned int i,X,Y;
 	RString Attr;
 	RContainer<RObj2D,true,true> Templates(50,25);
 	RPoint Tr;
-	RCursor<RXMLTag> Cur;
 
 	// Clear the Problem
 	f.Open(RIO::Read);
@@ -77,7 +76,7 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	if(tag)
 	{
 		// Read the points but the last
-		Cur.Set(tag);
+		RCursor<RXMLTag> Cur(*tag);
 		for(Cur.Start(),i=Cur.GetNb();--i;Cur.Next())  // Last point = first point
 		{
 			if(Cur()->GetName()!="Point")
@@ -95,11 +94,12 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	tag=s.GetTag("InstanceMasters",s.GetTop());
 	if(tag)
 	{
-		Templates.Clear(tag->NbPtr,tag->NbPtr/2);
-		for(i=tag->NbPtr+1,tab=tag->Tab;--i;tab++)
+		Templates.Clear(tag->GetNb());
+		RCursor<RXMLTag> Cur(*tag);
+		for(Cur.Start();!Cur.End();Cur.Next())
 		{
-			if((*tab)->GetName()=="Master")
-				CreateObj(*tab,Templates);
+			if(Cur()->GetName()=="Master")
+				CreateObj(Cur(),Templates);
 		}
 	}
 
@@ -107,33 +107,39 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	tag=s.GetTag("Instances",s.GetTop());
 	if(tag)
 	{
-		Objs.Clear(tag->NbPtr,tag->NbPtr/2);
-		for(i=tag->NbPtr+1,tab=tag->Tab;--i;tab++)
-			if((*tab)->GetName()==RString("Instance"))
-				CreateObj(*tab,Templates);
+		Objs.Clear(tag->GetNb());
+		RCursor<RXMLTag> Cur(*tag);
+		for(Cur.Start();!Cur.End();Cur.Next())
+		{
+			if(Cur()->GetName()==RString("Instance"))
+				CreateObj(Cur(),Templates);
+		}
 	}
 
 	// Connectors of global shape
 	tag=s.GetTag("Terminals",s.GetTop());
 	if(tag)
 	{
-		for(i=tag->NbPtr+1,tab=tag->Tab;--i;tab++)
-			CreateConnector(*tab,&Problem,Tr);
+		Objs.Clear(tag->GetNb());
+		RCursor<RXMLTag> Cur(*tag);
+		for(Cur.Start();!Cur.End();Cur.Next())
+			CreateConnector(Cur(),&Problem,Tr);
 	}
 
 	// Connections
 	tag=s.GetTag("Connections",s.GetTop());
 	if(tag)
 	{
-		Cons.Clear(tag->NbPtr,tag->NbPtr/2);
-		for(i=tag->NbPtr+1,tab=tag->Tab;--i;tab++)
-			CreateNet(*tab);
+		Cons.Clear(tag->GetNb());
+		RCursor<RXMLTag> Cur(*tag);
+		for(Cur.Start();!Cur.End();Cur.Next())
+			CreateNet(Cur());
 		Cons.Init();
 	}
 
 	DetermineLimit();
 	// The object problem have the greathers id
-	Problem.Id=Objs.NbPtr;
+	Problem.Id=Objs.GetNb();
 	Problem.SetOri(Normal);
 	Problem.Init();
 }
@@ -144,7 +150,7 @@ void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 {
 	RObj2D *obj,*t;
 	bool IsObj;
-	RXMLTag *tag,**tab;
+	RXMLTag *tag;
 	unsigned int i;
 	RCoord X,Y;
 	RPoint Tr;
@@ -152,12 +158,12 @@ void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 	IsObj=(o->GetName()=="Instance");
 	if(IsObj)
 	{
-		obj = new RObj2D(Objs.NbPtr,o->GetAttrValue("Id"),false);
+		obj = new RObj2D(Objs.GetNb(),o->GetAttrValue("Id"),false);
 		Objs.InsertPtr(obj);
 	}
 	else
 	{
-		obj = new RObj2D(ts.NbPtr,o->GetAttrValue("Id"),false);
+		obj = new RObj2D(ts.GetNb(),o->GetAttrValue("Id"),false);
 		ts.InsertPtr(obj);
 	}
 
@@ -176,12 +182,13 @@ void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 		tag=o->GetTag("Shape");
 		if(tag)
 		{
-			for(i=tag->NbPtr,tab=tag->Tab;--i;tab++)             // Last Point==First Point
+			RCursor<RXMLTag> Cur(*tag);
+			for(Cur.Start(),i=tag->GetNb();--i;Cur.Next())              // Last Point==First Point
 			{
-				if((*tab)->GetName()=="Point")
+				if(Cur()->GetName()=="Point")
 				{
-					X = atoi((*tab)->GetAttrValue("X"));
-					Y = atoi((*tab)->GetAttrValue("Y"));
+					X = atoi(Cur()->GetAttrValue("X"));
+					Y = atoi(Cur()->GetAttrValue("Y"));
 					obj->Polygon.InsertPtr(new RPoint(X,Y));
 				}
 			}
@@ -193,8 +200,9 @@ void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 		tag=o->GetTag("Terminals");
 		if(tag)
 		{
-			for(i=tag->NbPtr+1,tab=tag->Tab;--i;tab++)
-				CreateConnector(*tab,obj,Tr);
+			RCursor<RXMLTag> Cur(*tag);
+			for(Cur.Start();!Cur.End();Cur.Next())
+				CreateConnector(Cur(),obj,Tr);
 		}
 	}
 
@@ -221,17 +229,18 @@ void RProblem2D::CreateConnector(RXMLTag* c,RObj2D* obj,const RPoint& t)
 {
 	RObj2DConnector* con;
 	unsigned int i;
-	RXMLTag *pt,**tab;
+	RXMLTag *pt;
 
 	if(c->GetName()!="Terminal") return;
-	con=new RObj2DConnector(obj,obj->Connectors.NbPtr,c->GetAttrValue("Id"),c->NbPtr);
-	for(i=0,tab=c->Tab;i<c->NbPtr;i++,tab++)
+	con=new RObj2DConnector(obj,obj->Connectors.GetNb(),c->GetAttrValue("Id"),c->GetNb());
+	RCursor<RXMLTag> Cur(*c);
+	for(Cur.Start(),i=c->GetNb();--i;Cur.Next())              // Last Point==First Point
 	{
-		pt=(*tab)->GetTag("Shape")->GetTag("Point");
+		pt=Cur()->GetTag("Shape")->GetTag("Point");
 		con->Pos[i].Set(atoi(pt->GetAttrValue("X")),atoi(pt->GetAttrValue("Y")));
 		con->Pos[i]-=t;
 	}
-	con->NbPos=c->NbPtr;
+	con->NbPos=c->GetNb();
 	obj->Connectors.InsertPtr(con);
 }
 
@@ -240,8 +249,6 @@ void RProblem2D::CreateConnector(RXMLTag* c,RObj2D* obj,const RPoint& t)
 void RProblem2D::CreateNet(RXMLTag* n)
 {
 	double w;
-	RXMLTag** tab;
-	unsigned int i;
 	RObj2DConnector* con;
 	RObj2D* obj;
 	RConnection* cnt;
@@ -254,18 +261,19 @@ void RProblem2D::CreateNet(RXMLTag* n)
 		w=1.0;
 
 	// Look if connection with a external pin
-	cnt=new RConnection(n->NbPtr,w);
+	cnt=new RConnection(n->GetNb(),w);
 	con=Problem.Connectors.GetPtr<const char*>(n->GetAttrValue("Id"),false);
 	if(con)
 		cnt->Connect.InsertPtr(con);
 
 	// Go through objects
-	for(i=n->NbPtr+1,tab=n->Tab;--i;tab++)
+	RCursor<RXMLTag> tab(*n);
+	for(tab.Start();!tab.End();tab.Next())
 	{
-		if((*tab)->GetName()!="Connect") continue;
-		obj=Objs.GetPtr<const char*>((*tab)->GetAttrValue("Instance"),false);
+		if(tab()->GetName()!="Connect") continue;
+		obj=Objs.GetPtr<const char*>(tab()->GetAttrValue("Instance"),false);
 		if(!obj) continue;
-		con=obj->Connectors.GetPtr<const char*>((*tab)->GetAttrValue("Terminal"),false);
+		con=obj->Connectors.GetPtr<const char*>(tab()->GetAttrValue("Terminal"),false);
 		if(!con) continue;
 		cnt->Connect.InsertPtr(con);
 	}
@@ -286,8 +294,7 @@ void RProblem2D::DetermineLimit(void)
 {
 	RRect r;
 	bool Cont=true;
-	unsigned int i,j;
-	RObj2DConnector **con;
+	unsigned int j;
 
 	Problem.Polygon.Boundary(r);
 	GlobalLimits.X = r.Width();
@@ -299,10 +306,11 @@ void RProblem2D::DetermineLimit(void)
 		r.Pt2.X--;
 		r.Pt2.Y--;
 		Cont=false;
-		for(i=Problem.Connectors.NbPtr+1,con=Problem.Connectors.Tab;--i;con++)
+		RCursor<RObj2DConnector> con(Problem.Connectors);
+		for(con.Start();!con.End();con.Next())
 		{
-			for(j=0;j<(*con)->NbPos;j++)
-				if(r.IsIn((*con)->Pos[j]))
+			for(j=0;j<con()->NbPos;j++)
+				if(r.IsIn(con()->Pos[j]))
 					Cont=true;
 		}
 	}

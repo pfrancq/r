@@ -58,20 +58,19 @@ RRects::RRects(unsigned int max)
 
 
 //------------------------------------------------------------------------------
-RRects::RRects(RRects* rects)
+RRects::RRects(const RRects& rects)
 	: RContainer<RRect,true,false>(rects)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RCoord RRects::Area(void)
+RCoord RRects::Area(void) const
 {
-	unsigned i;
-	RRect **rect;
 	RCoord Area;
 
-	for(i=NbPtr+1,rect=Tab,Area=0;--i;rect++)
-		Area+=(*rect)->Area();
+	RCursor<RRect> rect(*this);
+	for(rect.Start(),Area=0;!rect.End();rect.Next())
+		Area+=rect()->Area();
 	return(Area);
 }

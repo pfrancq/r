@@ -5,10 +5,11 @@
 
 	Cursor for RGenericSparseMatrix  - Header.
 
-	Copyright 2003 by the Université Libre de Bruxelles.
+	Copyright 2003-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors
-		 Vandaele Valery(vavdaele@ulb.ac.be)
+		Pascal Francq (pfrancq@ulb.ac.be)
+		Vandaele Valery(vavdaele@ulb.ac.be)
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -75,19 +76,7 @@ public :
 	* Construct the cursor.
 	* param v               The GenericSparseMatrix  to iterate.
 	*/
-	RGenericVectorCursor(RGenericSparseMatrix<RGenericCell<C>,true>* v);
-
-	/**
-	* Construct the cursor.
-	* param v               The GenericSparseMatrix  to iterate.
-	*/
 	RGenericVectorCursor(RGenericSparseMatrix<RGenericCell<C>,false>& v);
-
-	/**
-	* Construct the cursor.
-	* param v               The GenericSparseMatrix to iterate.
-	*/
-	RGenericVectorCursor(RGenericSparseMatrix<RGenericCell<C>,false>* v);
 
 	/**
 	* Assignment operator using a "GenericCellCursor".
@@ -102,21 +91,9 @@ public :
 
 	/**
 	* Set the container.
-	* param v               GenericSparseMatrix  to iterate.
-	*/
-	void Set(RGenericSparseMatrix<RGenericCell<C>,true>* v);
-
-	/**
-	* Set the container.
 	* param v               GenericSparseMatrix to iterate.
 	*/
 	void Set(RGenericSparseMatrix<RGenericCell<C>,false>& v);
-
-	/**
-	* Set the container.
-	* param v               GenericSparseMatrix to iterate.
-	*/
-	void Set(RGenericSparseMatrix<RGenericCell<C>,false>* v);
 };
 
 

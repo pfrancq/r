@@ -5,9 +5,10 @@
 
 	Generic Cell Element  - Header.
 
-	Copyright 2003 by the Université Libre de Bruxelles.
+	Copyright 2003-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors
+		 Pascal Francq (pfrancq@ulb.ac.be)
 		 Vandaele Valery(vavdaele@ulb.ac.be)
 
 	This library is free software; you can redistribute it and/or
@@ -51,7 +52,7 @@ namespace R{
 * This class provides a way to create different type of cells each containing different type of information.
 * @author  Vandaele Valery
 * @short Generic Cell template.
-*/                                                                                                                                                                   
+*/
 
 template<class C>
 	class RGenericCell
@@ -105,7 +106,7 @@ public :
 	* Method used by the container
 	* param c               The pointer to the RGenericCell to be compared.
 	*/
-	int Compare(const RGenericCell<C>* c) const; 
+	int Compare(const RGenericCell<C>* c) const;
 
 	/**
 	* Method used by the container
@@ -118,7 +119,7 @@ public :
 	* param id              The id to be compared.
 	*/
 	int Compare(const unsigned int id) const;
-	
+
 	/**
 	* Get the id of the cell.
 	* @return id                Int descibing the id of the cell.
@@ -136,7 +137,7 @@ public :
 	* @param value          The value to be contained in the cell (of type C).
 	*/
 	void SetValue(C value) { Value=value;}
-	
+
 	/**
 	* Destructor of RGenericCell
 	*/

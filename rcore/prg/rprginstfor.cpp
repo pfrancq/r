@@ -6,7 +6,7 @@
 
 	"for" Instruction - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -35,6 +35,7 @@
 #include <rprg/rprginstfor.h>
 #include <rprg/rprgvarval.h>
 #include <rprg/rprg.h>
+#include <rstd/rcursor.h>
 using namespace R;
 
 
@@ -86,13 +87,13 @@ void RPrgInstFor::Run(RPrg* prg,RPrgOutput* o) throw(RException)
 	RPrgVarVal* local=new RPrgVarVal(Var,"");
 
 	prg->AddVar(local);
-	for(Values.Start();!Values.End();Values.Next())
+	RCursor<RPrgVar> Cur(Values);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		local->Assign(Values()->GetValue(prg));
-		for(Insts.Start();!Insts.End();Insts.Next())
-		{
-			Insts()->Run(prg,o);
-		}
+		local->Assign(Cur()->GetValue(prg));
+		RCursor<RPrgInst> Cur2(Insts);
+		for(Cur2.Start();!Cur2.End();Cur2.Next())
+			Cur2()->Run(prg,o);
 	}
 	prg->DelVar(local);
 }

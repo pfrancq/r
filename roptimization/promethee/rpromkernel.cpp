@@ -66,31 +66,30 @@ void RPromKernel::ComputeEvalFunc(void)
 //------------------------------------------------------------------------------
 void RPromKernel::ComputePrometheeII(void)
 {
-	RPromCriterion **crit;
-	RPromSol **sol;
-	RPromCritValue **value;
-	unsigned int i,j;
 	double SumWTot = 0.0;
 
 	// Calculation of Fit Crit fot the criteria.
-	for(i=Criteria.NbPtr+1,crit=Criteria.Tab;--i;crit++)
+	RCursor<RPromCriterion> crit(Criteria);
+	for(crit.Start();!crit.End();crit.Next())
 	{
 		if(Normalize)
-			(*crit)->Normalize();
-		SumWTot+=(*crit)->Weight;
-		(*crit)->ComputeFiCrit(this);
+			crit()->Normalize();
+		SumWTot+=crit()->Weight;
+		crit()->ComputeFiCrit(this);
 	}
 
 	// Calculation of the flux.
-	for(i=Solutions.NbPtr+1,sol=Solutions.Tab;--i;sol++)
+	RCursor<RPromSol> sol(Solutions);
+	for(sol.Start();!sol.End();sol.Next())
 	{
-		(*sol)->FiPlus=(*sol)->FiMinus=0.0;
-		for(j=(*sol)->NbPtr+1,value=(*sol)->Tab,crit=Criteria.Tab;--j;value++,crit++)
+		sol()->FiPlus=sol()->FiMinus=0.0;
+		RCursor<RPromCritValue> value(*sol());
+		for(crit.Start(),value.Start();!value.End();crit.Next(),value.Next())
 		{
-			(*sol)->FiPlus+=(((*crit)->Weight)*((*value)->FiCritPlus))/SumWTot;
-			(*sol)->FiMinus+=(((*crit)->Weight)*((*value)->FiCritMinus))/SumWTot;
+			sol()->FiPlus+=((crit()->Weight)*(value()->FiCritPlus))/SumWTot;
+			sol()->FiMinus+=((crit()->Weight)*(value()->FiCritMinus))/SumWTot;
 		}
-		(*sol)->Fi=(*sol)->FiPlus-(*sol)->FiMinus;
+		sol()->Fi=sol()->FiPlus-sol()->FiMinus;
 	}
 }
 
@@ -98,7 +97,7 @@ void RPromKernel::ComputePrometheeII(void)
 //------------------------------------------------------------------------------
 RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const double p,const double q,const double w) throw(std::bad_alloc)
 {
-	RPromCriterion* crit=new RPromCriterion(t,p,q,w,Criteria.NbPtr,Solutions.MaxPtr);
+	RPromCriterion* crit=new RPromCriterion(t,p,q,w,Criteria.GetNb(),Solutions.GetMaxNb());
 	Criteria.InsertPtr(crit);
 	return(crit);
 }
@@ -107,7 +106,7 @@ RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const double p,co
 //------------------------------------------------------------------------------
 RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const RPromCriterionParams& params) throw(std::bad_alloc)
 {
-	RPromCriterion* crit=new RPromCriterion(t,params,Criteria.NbPtr,Solutions.MaxPtr);
+	RPromCriterion* crit=new RPromCriterion(t,params,Criteria.GetNb(),Solutions.GetMaxNb());
 	Criteria.InsertPtr(crit);
 	return(crit);
 }
@@ -117,7 +116,7 @@ RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const RPromCriter
 RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const char* name,
 		const double p,const double q,const double w) throw(std::bad_alloc)
 {
-	RPromCriterion* crit=new RPromCriterion(t,p,q,w,Criteria.NbPtr,name,Solutions.MaxPtr);
+	RPromCriterion* crit=new RPromCriterion(t,p,q,w,Criteria.GetNb(),name,Solutions.GetMaxNb());
 	Criteria.InsertPtr(crit);
 	return(crit);
 }
@@ -127,7 +126,7 @@ RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const char* name,
 RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const char* name,
 		const RPromCriterionParams& params) throw(std::bad_alloc)
 {
-	RPromCriterion* crit=new RPromCriterion(t,params,Criteria.NbPtr,name,Solutions.MaxPtr);
+	RPromCriterion* crit=new RPromCriterion(t,params,Criteria.GetNb(),name,Solutions.GetMaxNb());
 	Criteria.InsertPtr(crit);
 	return(crit);
 }
@@ -136,7 +135,7 @@ RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const char* name,
 //------------------------------------------------------------------------------
 RPromSol* RPromKernel::NewSol(void) throw(std::bad_alloc)
 {
-	RPromSol* sol=new RPromSol(Solutions.NbPtr,Criteria.MaxPtr);
+	RPromSol* sol=new RPromSol(Solutions.GetNb(),Criteria.GetMaxNb());
 	Solutions.InsertPtr(sol);
 	return(sol);
 }
@@ -145,7 +144,7 @@ RPromSol* RPromKernel::NewSol(void) throw(std::bad_alloc)
 //------------------------------------------------------------------------------
 RPromSol* RPromKernel::NewSol(const char* name) throw(std::bad_alloc)
 {
-	RPromSol* sol=new RPromSol(Solutions.NbPtr,name,Criteria.MaxPtr);
+	RPromSol* sol=new RPromSol(Solutions.GetNb(),name,Criteria.GetMaxNb());
 	Solutions.InsertPtr(sol);
 	return(sol);
 }
@@ -157,8 +156,7 @@ void RPromKernel::Assign(RPromSol* sol,RPromCriterion* crit,const double v) thro
 	RPromCritValue* val;
 
 	if((!sol)||(!crit)) return;
-	val=sol->GetPtrAt(crit->Id);
-	if(!val)
+	if((sol->GetMaxPos()<crit->Id+1)||(!(val=(*sol)[crit->Id])))
 	{
 		val=new RPromCritValue(v);
 		sol->InsertPtrAt(val,crit->Id);
@@ -167,7 +165,7 @@ void RPromKernel::Assign(RPromSol* sol,RPromCriterion* crit,const double v) thro
 	else
 	{
 		val->Value=v;
-		val=crit->GetPtrAt(sol->Id);
+		val=(*crit)[sol->Id];
 		val->Value=v;
 	}
 }
@@ -197,13 +195,13 @@ void RPromKernel::Assign(const char* sol,const char* crit,const double v) throw(
 //------------------------------------------------------------------------------
 RPromSol* RPromKernel::GetBestSol(void)
 {
-	RPromSol *best,**sol;
-	unsigned int i;
-
-	best=(*Solutions.Tab);
-	for(i=Solutions.NbPtr,sol=&Solutions.Tab[1];--i;sol++)
-		if(best->Fi<(*sol)->Fi)
-			best=(*sol);
+	RPromSol *best;
+	RCursor<RPromSol> sol(Solutions);
+	sol.Start();
+	best=sol();
+	for(sol.Next();!sol.End();sol.Next())
+		if(best->Fi<sol()->Fi)
+			best=sol();
 	return(best);
 }
 
@@ -227,9 +225,9 @@ int RPromKernel::sort_function_solutions(const void *a,const void *b)
 //------------------------------------------------------------------------------
 RPromSol** RPromKernel::GetSols(void)
 {
-	RPromSol** Sols=new RPromSol*[Solutions.NbPtr];
-	memcpy(Sols,Solutions.Tab,Solutions.NbPtr*sizeof(RPromSol*));
-	qsort(static_cast<void*>(Sols),Solutions.NbPtr,sizeof(RPromSol*),sort_function_solutions);
+	RPromSol** Sols=new RPromSol*[Solutions.GetMaxPos()];
+	Solutions.GetTab(Sols);
+	qsort(static_cast<void*>(Sols),Solutions.GetNb(),sizeof(RPromSol*),sort_function_solutions);
 	return(Sols);
 }
 
@@ -245,9 +243,7 @@ void RPromKernel::Clear(void)
 //------------------------------------------------------------------------------
 void RPromKernel::ClearSols(void)
 {
-	RCursor<RPromCriterion> Cur;
-
-	Cur.Set(Criteria);
+	RCursor<RPromCriterion> Cur(Criteria);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->Clear();
 	Solutions.Clear();

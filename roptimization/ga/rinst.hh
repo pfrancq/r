@@ -535,12 +535,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RInst<cInst,cChromo,cFit,cThreadData>::emitGenSig(void)
 {
-	unsigned int i;
-	RGASignalsReceiver<cInst,cChromo,cFit> **r;
 	typename RGASignalsReceiver<cInst,cChromo,cFit>::GenSig s(Gen,AgeBest,Chromosomes,BestChromosome);
-
-	for(i=Receivers.NbPtr+1,r=Receivers.Tab;--i;r++)
-		(*r)->receiveGenSig(&s);
+	RCursor<RGASignalsReceiver<cInst,cChromo,cFit> > r(Receivers);
+	for(r.Start();!r.End();r.Next())
+		r()->receiveGenSig(&s);
 }
 
 
@@ -548,12 +546,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RInst<cInst,cChromo,cFit,cThreadData>::emitInteractSig(void)
 {
-	unsigned int i;
-	RGASignalsReceiver<cInst,cChromo,cFit> **r;
 	typename RGASignalsReceiver<cInst,cChromo,cFit>::InteractSig s;
-
-	for(i=Receivers.NbPtr+1,r=Receivers.Tab;--i;r++)
-		(*r)->receiveInteractSig(&s);
+	RCursor<RGASignalsReceiver<cInst,cChromo,cFit> > r(Receivers);
+	for(r.Start();!r.End();r.Next())
+		r()->receiveInteractSig(&s);
 }
 
 
@@ -561,12 +557,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RInst<cInst,cChromo,cFit,cThreadData>::emitBestSig(void)
 {
-	unsigned int i;
-	RGASignalsReceiver<cInst,cChromo,cFit> **r;
 	typename RGASignalsReceiver<cInst,cChromo,cFit>::BestSig s(BestChromosome);
 
-	for(i=Receivers.NbPtr+1,r=Receivers.Tab;--i;r++)
-		(*r)->receiveBestSig(&s);
+	RCursor<RGASignalsReceiver<cInst,cChromo,cFit> > r(Receivers);
+	for(r.Start();!r.End();r.Next())
+		r()->receiveBestSig(&s);
 }
 
 

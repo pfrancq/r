@@ -43,12 +43,13 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RGeoInfoConnections::RGeoInfoConnections(RConnections* c,RGeoInfos* i)
-	: RContainer<RGeoInfoConnection,true,false>(c->NbPtr,c->IncPtr),
+	: RContainer<RGeoInfoConnection,true,false>(c->GetNb(),c->GetIncNb()),
 	  Cons(c), Infos(i)
 {
-	for(Cons->Start();!Cons->End();Cons->Next())
+	RCursor<RConnection> Cur(*Cons);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		InsertPtr(new RGeoInfoConnection((*Cons)()));
+		InsertPtr(new RGeoInfoConnection(Cur()));
 	}
 }
 
@@ -57,13 +58,10 @@ RGeoInfoConnections::RGeoInfoConnections(RConnections* c,RGeoInfos* i)
 double RGeoInfoConnections::GetDistances(RGeoInfo* info,const RPoint& pos)
 {
 	double sum=0.0;
-	unsigned int i;
-	RGeoInfoConnection** cur;
-
-	for(i=NbPtr+1,cur=Tab;--i;cur++)
-	{
-		sum+=(*cur)->GetDist(Infos,info,pos);
-	}
+	
+	RCursor<RGeoInfoConnection> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		sum+=Cur()->GetDist(Infos,info,pos);
 	return(sum);
 }
 
@@ -72,13 +70,10 @@ double RGeoInfoConnections::GetDistances(RGeoInfo* info,const RPoint& pos)
 double RGeoInfoConnections::GetDistances(RGeoInfo* info)
 {
 	double sum=0.0;
-	unsigned int i;
-	RGeoInfoConnection** cur;
-
-	for(i=NbPtr+1,cur=Tab;--i;cur++)
-	{
-		sum+=(*cur)->GetDist(Infos,info);
-	}
+	
+	RCursor<RGeoInfoConnection> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		sum+=Cur()->GetDist(Infos,info);
 	return(sum);
 }
 
@@ -86,11 +81,11 @@ double RGeoInfoConnections::GetDistances(RGeoInfo* info)
 //------------------------------------------------------------------------------
 void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,const bool* selected)
 {
-	RPromKernel Prom("PlacementCenter",Infos->NbPtr,2);
+	RPromKernel Prom("PlacementCenter",Infos->GetNb(),2);
 	RPromCriterion *weight,*dist;
 	RPromSol *sol,**sols,**best;
-	RGeoInfo **info,**treat;
-	unsigned int i,Nb=0;
+	RGeoInfo **treat;
+	unsigned int Nb=0;
 	double w,d;
 	RRect r1,r2;
 	bool bFound;
@@ -99,25 +94,26 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 	i1=i2=0;
 	weight=Prom.NewCriterion(Maximize,Cons->WeightParams);
 	dist=Prom.NewCriterion(Minimize,Cons->DistParams);
-	treat=new RGeoInfo*[Infos->NbPtr];
+	treat=new RGeoInfo*[Infos->GetMaxPos()];
 
 	// Go through each info
-	for(i=Infos->RealNb+1,info=Infos->Tab;--i;info++)
+	RCursor<RGeoInfo> info(*Infos);
+	for(info.Start();!info.End();info.Next())
 	{
 		// If selected -> go to next
-		if(selected[(*info)->GetObj()->GetId()])
+		if(selected[info()->GetObj()->GetId()])
 			continue;
 
 		// Calculate distance and weight
-		w=Cons->GetCon(Infos,*info);
-		d=GetDistances(*info);
+		w=Cons->GetCon(Infos,info());
+		d=GetDistances(info());
 		if((w>0.0)&&(d>0.0))
 		{
 			// If both are not null -> Create a Prom�h� solution
 			sol=Prom.NewSol();
 			Prom.Assign(sol,weight,w);
 			Prom.Assign(sol,dist,d);
-			treat[sol->GetId()]=(*info);
+			treat[sol->GetId()]=info();
 			Nb++;        // Increment number of solution
 		}
 	}
@@ -126,9 +122,9 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 	{
 		// Choose a random not selected object
 		Nb=Infos->RealNb;
-		memcpy(treat,Infos->Tab,Nb*sizeof(RGeoInfo*));
+		Infos->GetTab(treat);
 		Cons->Random->RandOrder<RGeoInfo*>(treat,Nb);
-		info=treat;
+		RGeoInfo** info=treat;
 		while(selected[(*info)->GetObj()->GetId()])
 			info++;
 		i1=(*(info++));
@@ -195,11 +191,7 @@ RGeoInfoConnections& RGeoInfoConnections::operator=(const RGeoInfoConnections& c
 //------------------------------------------------------------------------------
 void RGeoInfoConnections::UnComplete(void)
 {
-	unsigned int i;
-	RGeoInfoConnection** cur;
-
-	for(i=NbPtr+1,cur=Tab;--i;cur++)
-	{
-		(*cur)->UnComplete();
-	}
+	RCursor<RGeoInfoConnection> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Cur()->UnComplete();
 }

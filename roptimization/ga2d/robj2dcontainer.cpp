@@ -88,24 +88,24 @@ void RObj2DContainer::Complete(void)
 {
 	RPolygons Polys;
 	RPolygon* p;
-	RGeoInfo** info;
-	RGeoInfoConnector** tab;
 	RObj2DConnector* con;
-	unsigned int i,j,k;
+	unsigned int k;
 
 	// Go through all geometric information to make the translation
 	// Add it to the polygons
-	for(i=NbPtr+1,info=Tab;--i;info++)
+	RCursor<RGeoInfo> info(*this);
+	for(info.Start();!info.End();info.Next())
 	{
-		p=new RPolygon((*info)->Bound);
-		(*p)+=(*info)->Pos-Translation;
+		p=new RPolygon(*info()->Bound);
+		(*p)+=info()->Pos-Translation;
 		Polys.InsertPtr(p);
-		for(j=(*info)->Connectors.NbPtr+1,tab=(*info)->Connectors.Tab;--j;tab++)
+		RCursor<RGeoInfoConnector> tab(info()->Connectors);
+		for(tab.Start();!tab.End();tab.Next())
 		{
-			con=new RObj2DConnector(this,(*tab)->Con->Id,(*tab)->Con->Name,(*tab)->Con->NbPos);
+			con=new RObj2DConnector(this,tab()->Con->Id,tab()->Con->Name,tab()->Con->NbPos);
 			for(k=0;k<con->NbPos;k++)
 			{
-				con->Pos[k]=con->Pos[k]+(*info)->Pos-Translation;
+				con->Pos[k]=con->Pos[k]+info()->Pos-Translation;
 			}
 			Connectors.InsertPtr(con);
 		}
@@ -121,30 +121,32 @@ void RObj2DContainer::Complete(void)
 //------------------------------------------------------------------------------
 void RObj2DContainer::Assign(RGeoInfos* infos,const RPoint& pos,RGrid* grid,const unsigned int order)
 {
-	RGeoInfo **info,*ptr;
-	unsigned int i,j,k;
-	RGeoInfoConnector **tab,*con;
+	RGeoInfo *ptr;
+	unsigned int k;
+	RGeoInfoConnector *con;
 
-	for(i=NbPtr+1,info=Tab;--i;info++)
+	RCursor<RGeoInfo> info(*this);
+	for(info.Start();!info.End();info.Next())
 	{
-		ptr=infos->GetPtr<unsigned int>((*info)->GetObj()->GetId());
-		ptr->Bound=(*info)->Bound;
+		ptr=infos->GetPtr<unsigned int>(info()->GetObj()->GetId());
+		ptr->Bound=info()->Bound;
 		ptr->Selected=true;
-		ptr->Obj=(*info)->Obj;
-		ptr->Rects=(*info)->Rects;
-		ptr->Rect=(*info)->Rect;
+		ptr->Obj=info()->Obj;
+		ptr->Rects=info()->Rects;
+		ptr->Rect=info()->Rect;
 		ptr->Order=order;
 		ptr->Connectors.Clear();
-		for(j=(*info)->Connectors.NbPtr+1,tab=(*info)->Connectors.Tab;--j;tab++)
+		RCursor<RGeoInfoConnector> tab(info()->Connectors);
+		for(tab.Start();!tab.End();tab.Next())
 		{
-			con=new RGeoInfoConnector((*tab),ptr);
+			con=new RGeoInfoConnector(tab(),ptr);
 			for(k=0;k<con->NbPos;k++)
 			{
-				con->Pos[k]=con->Pos[k]+(*info)->Pos-Translation;
+				con->Pos[k]=con->Pos[k]+info()->Pos-Translation;
 			}
 			ptr->Connectors.InsertPtr(con);
 		}
-		ptr->Assign((*info)->Pos-Translation+pos,grid);
+		ptr->Assign(info()->Pos-Translation+pos,grid);
 	}
 }
 
@@ -152,12 +154,10 @@ void RObj2DContainer::Assign(RGeoInfos* infos,const RPoint& pos,RGrid* grid,cons
 //------------------------------------------------------------------------------
 bool RObj2DContainer::IsIn(unsigned int id)
 {
-	RGeoInfo **info;
-	unsigned int i;
-
-	for(i=NbPtr+1,info=Tab;--i;info++)
+	RCursor<RGeoInfo> info(*this);
+	for(info.Start();!info.End();info.Next())
 	{
-		if((*info)->GetObj()->GetId()==id)
+		if(info()->GetObj()->GetId()==id)
 			return(true);
 	}
 	return(false);

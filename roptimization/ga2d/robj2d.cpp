@@ -6,7 +6,7 @@
 
 	Object for 2D placement GA - Implementation
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -244,18 +244,19 @@ void RObj2D::CalcPolygons(void)
 	if(!NbPossOri) return;
 
 	// If Polygon is a rectangle
-	if(Polygon.NbPtr==4)
+	if(Polygon.GetNb()==4)
 	{
 		// Test if a square -> 1 orientation only
-		if(Polygon.Tab[2]->X==Polygon.Tab[2]->Y)
+		if(Polygon[2]->X==Polygon[2]->Y)
 		{
 			NbPossOri=1;
 			Polygons[0]=Polygon;
-			for(Connectors.Start();!Connectors.End();Connectors.Next())
+			RCursor<RObj2DConnector> Cur(Connectors);
+			for(Cur.Start();!Cur.End();Cur.Next())
 			{
-				for(unsigned int j=0;j<Connectors()->NbPos;j++)
+				for(unsigned int j=0;j<Cur()->NbPos;j++)
 				{
-					Connectors()->Poss[j][0]=Connectors()->Pos[j]-Min;
+					Cur()->Poss[j][0]=Cur()->Pos[j]-Min;
 				}
 			}
 			return;
@@ -270,12 +271,13 @@ void RObj2D::CalcPolygons(void)
 				bNormal=true;
 				if(bRota90) idx=1; else idx=0;
 				Polygons[idx]=Polygon;
-				for(Connectors.Start();!Connectors.End();Connectors.Next())
+				RCursor<RObj2DConnector> Cur(Connectors);
+				for(Cur.Start();!Cur.End();Cur.Next())
 				{
-					for(unsigned int j=0;j<Connectors()->NbPos;j++)
+					for(unsigned int j=0;j<Cur()->NbPos;j++)
 					{
-						Connectors()->Poss[j][idx]=Connectors()->Pos[j];
-						Connectors()->Poss[j][idx]-=Min;
+						Cur()->Poss[j][idx]=Cur()->Pos[j];
+						Cur()->Poss[j][idx]-=Min;
 					}
 				}
 			}
@@ -285,13 +287,14 @@ void RObj2D::CalcPolygons(void)
 				if(bNormal) idx=1; else idx=0;
 				Polygons[idx]=Polygon;
 				Polygons[idx].ChangeOrientation(Rota90,Min);
-				for(Connectors.Start();!Connectors.End();Connectors.Next())
+				RCursor<RObj2DConnector> Cur(Connectors);
+				for(Cur.Start();!Cur.End();Cur.Next())
 				{
-					for(unsigned int j=0;j<Connectors()->NbPos;j++)
+					for(unsigned int j=0;j<Cur()->NbPos;j++)
 					{
-						Connectors()->Poss[j][idx]=Connectors()->Pos[j];
-						Connectors()->Poss[j][idx].ChangeOrientation(Rota90);
-						Connectors()->Poss[j][idx]-=Min;
+						Cur()->Poss[j][idx]=Cur()->Pos[j];
+						Cur()->Poss[j][idx].ChangeOrientation(Rota90);
+						Cur()->Poss[j][idx]-=Min;
 					}
 				}
 			}
@@ -306,13 +309,14 @@ void RObj2D::CalcPolygons(void)
 	{
 		(*ptr)=Polygon;
 		ptr->ChangeOrientation(*o,Min);
-		for(Connectors.Start();!Connectors.End();Connectors.Next())
+		RCursor<RObj2DConnector> Cur(Connectors);
+		for(Cur.Start();!Cur.End();Cur.Next())
 		{
-			for(unsigned int j=0;j<Connectors()->NbPos;j++)
+			for(unsigned int j=0;j<Cur()->NbPos;j++)
 			{
-				Connectors()->Poss[j][i]=Connectors()->Pos[j];
-				Connectors()->Poss[j][i].ChangeOrientation(*o);
-				Connectors()->Poss[j][i]-=Min;
+				Cur()->Poss[j][i]=Cur()->Pos[j];
+				Cur()->Poss[j][i].ChangeOrientation(*o);
+				Cur()->Poss[j][i]-=Min;
 			}
 		}
 	}
@@ -387,15 +391,15 @@ void RObj2D::AddConnector(unsigned int id,unsigned x,unsigned y)
 //------------------------------------------------------------------------------
 void RObj2D::CopyConnectors(RObj2D* o)
 {
-	RObj2DConnector *s,*d;
+	RObj2DConnector* d;
 
-	Connectors.Clear(o->Connectors.MaxPtr,o->Connectors.IncPtr);
-	for(o->Connectors.Start();!o->Connectors.End();o->Connectors.Next())
+	Connectors.Clear(o->Connectors.GetMaxNb(),o->Connectors.GetIncNb());
+	RCursor<RObj2DConnector> Cur(o->Connectors);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		s=o->Connectors();
-		d=new RObj2DConnector(this,Connectors.NbPtr,s->Name,s->NbPos);
-		for(unsigned int i=0;i<s->NbPos;i++)
-			d->Pos[i]=s->Pos[i];
+		d=new RObj2DConnector(this,Connectors.GetNb(),Cur()->Name,Cur()->NbPos);
+		for(unsigned int i=0;i<Cur()->NbPos;i++)
+			d->Pos[i]=Cur()->Pos[i];
 		Connectors.InsertPtr(d);
 	}
 }

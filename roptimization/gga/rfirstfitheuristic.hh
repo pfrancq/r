@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Grouping - Inline Implemenation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -50,9 +50,10 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 {
 	cGroup* grp;
 
-	for(this->Groups->Used.Start();!this->Groups->Used.End();this->Groups->Used.Next())
-		if(this->Groups->Used()->CanInsert(this->CurObj))
-			return(this->Groups->Used());
+	RCursor<cGroup> G(this->Groups->Used);
+	for(G.Start();!G.End();G.Next())
+		if(G()->CanInsert(this->CurObj))
+			return(G());
 	grp=this->Groups->ReserveGroup();
 	return(grp);
 }

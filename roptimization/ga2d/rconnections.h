@@ -142,7 +142,7 @@ public:
 	* @param infos          Goemetric information of the objects.
 	* @param info           Geometric information info of the single object.
 	*/
-	double GetDistances(RGeoInfo** infos,RGeoInfo* info);
+	double GetDistances(RGeoInfos& infos,RGeoInfo* info);
 
 	/**
 	* Destruct the connections.

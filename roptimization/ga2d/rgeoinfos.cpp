@@ -44,24 +44,22 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RGeoInfos::RGeoInfos(RProblem2D* prob,bool create) throw(std::bad_alloc)
-	: RContainer<RGeoInfo,true,false>(prob->Objs.NbPtr+3,prob->Objs.NbPtr/2),
-	  Problem(prob), Cons(&prob->Cons,this), RealNb(prob->Objs.NbPtr), Selected(0)
+	: RContainer<RGeoInfo,true,false>(prob->Objs.GetNb()+3),
+	  Problem(prob), Cons(&prob->Cons,this), RealNb(prob->Objs.GetNb()), Selected(0)
 {
 	if(create)
 	{
-		RObj2D** obj;
-		unsigned int i;
 		RGeoInfo* l;
 
 		// Create geometric information
-		for(i=prob->Objs.NbPtr+1,obj=Problem->Objs.Tab;--i;obj++)
-			InsertPtr(new RGeoInfo(*obj));
-
+		RCursor<RObj2D> obj(prob->Objs);
+		for(obj.Start();!obj.End();obj.Next())
+			InsertPtr(new RGeoInfo(obj()));
 		InsertPtr(l=new RGeoInfo(&prob->Problem));
 		l->SetOri(0);
 		l->Pos.Set(-prob->Translation.X,-prob->Translation.Y);
 	}
-	Selected=new bool[NbPtr];
+	Selected=new bool[GetNb()];
 }
 
 
@@ -99,13 +97,14 @@ void RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* selected
 	if(r.Pt1.Y<bound.Pt1.Y) bound.Pt1.Y=r.Pt1.Y;
 	if(r.Pt2.X>bound.Pt2.X) bound.Pt2.X=r.Pt2.X;
 	if(r.Pt2.Y>bound.Pt2.Y) bound.Pt2.Y=r.Pt2.Y;
-	for(Start();!End();Next())
+	RCursor<RGeoInfo> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		if((!selected[(*this)()->GetObj()->GetId()])&&bound.IsIn((*this)()->GetPolygon()))
+		if((!selected[Cur()->GetObj()->GetId()])&&bound.IsIn(Cur()->GetPolygon()))
 		{
 			// Add it
-			cont->Add(this,(*this)());
-			selected[(*this)()->GetObj()->GetId()]=true;
+			cont->Add(this,Cur());
+			selected[Cur()->GetObj()->GetId()]=true;
 		}
 	}	
 	cont->Complete();
@@ -115,15 +114,15 @@ void RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* selected
 //------------------------------------------------------------------------------
 void RGeoInfos::Boundary(RRect& rect)
 {
-	RGeoInfo **ptr;
 	unsigned int i;
 	RRect tmp;
 
 	rect.Pt1.X=rect.Pt1.Y=MaxCoord;
 	rect.Pt2.X=rect.Pt2.Y=0;
-	for(i=RealNb+1,ptr=Tab;--i;ptr++)
+	RCursor<RGeoInfo> Cur(*this);
+	for(i=RealNb+1,Cur.Start();--i;Cur.Next())
 	{
-		(*ptr)->Boundary(tmp);
+		Cur()->Boundary(tmp);
 		if(tmp.Pt1.X<rect.Pt1.X) rect.Pt1.X=tmp.Pt1.X;
 		if(tmp.Pt1.Y<rect.Pt1.Y) rect.Pt1.Y=tmp.Pt1.Y;
 		if(tmp.Pt2.X>rect.Pt2.X) rect.Pt2.X=tmp.Pt2.X;
@@ -135,8 +134,9 @@ void RGeoInfos::Boundary(RRect& rect)
 //------------------------------------------------------------------------------
 void RGeoInfos::ClearInfos(void)
 {
-	for(Start();!End();Next())
-		(*this)()->ClearInfo();
+	RCursor<RGeoInfo> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Cur()->ClearInfo();
 	Cons.UnComplete();
 }
 
@@ -149,7 +149,7 @@ RGeoInfos& RGeoInfos::operator=(const RGeoInfos& infos) throw(std::bad_alloc)
 	Cons=infos.Cons;
 	Cons.Infos=this;
 	RealNb=infos.RealNb;
-	memcpy(Selected,infos.Selected,NbPtr*sizeof(bool));
+	memcpy(Selected,infos.Selected,GetNb()*sizeof(bool));
 	return(*this);
 }
 
@@ -157,6 +157,5 @@ RGeoInfos& RGeoInfos::operator=(const RGeoInfos& infos) throw(std::bad_alloc)
 //------------------------------------------------------------------------------
 RGeoInfos::~RGeoInfos(void)
 {
-	if(Selected)
-		delete[] Selected;
+	delete[] Selected;
 }

@@ -6,7 +6,7 @@
 
 	Grid for the 2D placement - Implementation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -466,10 +466,10 @@ bool RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect& bound,
 	}
 
 	// Verify that the not same X or not same Y
-	next=poly.Tab[poly.NbPtr-1];
-	if((first->X==next->X)&&(first->X==poly.Tab[1]->X))
+	next=poly[poly.GetNb()-1];
+	if((first->X==next->X)&&(first->X==poly[1]->X))
 	{
-		if(poly.GetConY(next)->X<first->X)
+		if(poly.GetConY(next).X<first->X)
 		{
 			poly.InsertPtr(new RPoint(next->X-1,next->Y));
 			poly.InsertPtr(new RPoint(next->X-1,first->Y));
@@ -481,9 +481,9 @@ bool RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect& bound,
 		}
 		poly.DeletePtr(next);
 	}
-	if((first->Y==next->Y)&&(first->Y==poly.Tab[1]->Y))
+	if((first->Y==next->Y)&&(first->Y==poly[1]->Y))
 	{
-		if(poly.GetConX(next)->Y<first->Y)
+		if(poly.GetConX(next).Y<first->Y)
 		{
 			poly.InsertPtr(new RPoint(next->X,next->Y-1));
 			poly.InsertPtr(new RPoint(first->X-1,next->Y-1));
@@ -507,7 +507,7 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,RRect& bound)
 	RPolygon Poly;          // Polygon representing the geometric information
 	RPolygons NewOne;       // Polygons added now
 	RPolygon New;           // New Polygon
-	RPoint *start,*end;
+	RPoint start,end;
 	unsigned int nbpts;
 	RDirection FromDir;
 	RCoord X,Y;
@@ -516,11 +516,11 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,RRect& bound)
 	// Initialisation
 	Poly=ins->GetPolygon();
 	start=Poly.GetBottomLeft();
-	end=Poly.GetConX(start);
+	end=Poly.GetConX(&start);
 	FromDir=Left;
-	X=start->X;
-	Y=start->Y;
-	nbpts=Poly.NbPtr;
+	X=start.X;
+	Y=start.Y;
+	nbpts=Poly.GetNb();
 
 	// Go through the vertices
 	while(nbpts)
@@ -530,7 +530,7 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,RRect& bound)
 		AdaptTestXY(TestX,TestY,FromDir);
 		if(bound.IsIn(TestX,TestY)&&IsFree(TestX,TestY)&&(!NewOne.IsIn(TestX,TestY)))
 		{
-			if((free->NbPtr==1)&&(TestX==368)&&(TestY==183))
+			if((free->GetNb()==1)&&(TestX==368)&&(TestY==183))
 			{
 				RMsg *m=RMsg::LookMsg("Debug");
 				if(m)
@@ -544,7 +544,7 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,RRect& bound)
 			{
 				New.ReOrder();    // The points must order anti-clockwise.
 				New.ReValid();    // The vertex can't be close.
-				if(New.NbPtr)
+				if(New.GetNb())
 				{
 					NewOne.InsertPtr(new RPolygon(New));
 					free->InsertPtr(new RFreePolygon(New));
@@ -553,21 +553,21 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,RRect& bound)
 		}
 
 		// If end of an edge
-		if((X==end->X)&&(Y==end->Y))
+		if((X==end.X)&&(Y==end.Y))
 		{
 			start=end;
 			nbpts--;          // Next vertice
-			TestX=X=start->X;
-			TestY=Y=start->Y;
+			TestX=X=start.X;
+			TestY=Y=start.Y;
 			if((FromDir==Left)||(FromDir==Right))    // Go to up/bottom
 			{
-				end=Poly.GetConY(start);
-				if(start->Y<end->Y) FromDir=Down; else FromDir=Up;
+				end=Poly.GetConY(&start);
+				if(start.Y<end.Y) FromDir=Down; else FromDir=Up;
 			}
 			else      // Go to left/right
 			{
-				end=Poly.GetConX(start);
-				if(start->X<end->X) FromDir=Left; else FromDir=Right;
+				end=Poly.GetConX(&start);
+				if(start.X<end.X) FromDir=Left; else FromDir=Right;
 			}
 		}
 		else

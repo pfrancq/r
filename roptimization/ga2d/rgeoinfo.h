@@ -114,14 +114,14 @@ public:
 	* This function is used for the class RContainer.
 	* @param c              Connector used for the comparaison.
 	*/
-	int Compare(const RGeoInfoConnector* c) {return(Con->Id-c->Con->Id);}
+	int Compare(const RGeoInfoConnector* c) const {return(Con->Id-c->Con->Id);}
 
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
 	* @param c              Connector used for the comparaison.
 	*/
-	int Compare(const RGeoInfoConnector& c) {return(Con->Id-c.Con->Id);}
+	int Compare(const RGeoInfoConnector& c) const {return(Con->Id-c.Con->Id);}
 
 	/**
 	* This function compares a connector and an identificator and returns 0 if
@@ -129,13 +129,13 @@ public:
 	* This function is used for the class RContainer.
 	* @param id             Identificator used for the comparaison.
 	*/
-	int Compare(const unsigned int id) {return(Con->Id-id);}
+	int Compare(const unsigned int id) const {return(Con->Id-id);}
 
 	/**
 	* Return the position of the connector in absolute (not relativ to the
 	* object).
 	*/
-	RPoint GetPos(void);
+	RPoint GetPos(void) const;
 
 	// friend classes
 	friend class RGeoInfo;
@@ -170,57 +170,15 @@ public:
 	RRelPointCursor(RGeoInfo& info);
 
 	/**
-	* Construct the cursor.
-	* param c               Container to iterate.
-	*/
-	RRelPointCursor(RGeoInfo* info);
-
-	/**
 	* Assignment operator using a "Cursor".
 	*/
 	RRelPointCursor& operator=(const RRelPointCursor& c) throw(std::bad_alloc);
-
-	/**
-	* Clear the cursor.
-	*/
-	void Clear(void);
-
-	/**
-	* Start the iterator to go trough the container.
-	*/
-	void Start(void);
 
 	/**
 	* Set the container.
 	* param c               Container to iterate.
 	*/
 	void Set(RGeoInfo& info);
-
-	/**
-	* Set the container.
-	* param c               Container to iterate.
-	*/
-	void Set(RGeoInfo* info);
-
-	/**
-	* Go to the i-th element of the container.
-	*/
-	void GoTo(const unsigned int i) throw(std::bad_alloc);
-
-	/**
-	* Return the number of elements in the container.
-	*/
-	unsigned int GetNb(void);
-
-	/**
-	* Test if the end of the container is reached.
-	*/
-	bool End(void) const;
-
-	/**
-	* Goto the next element, if the end is reached, go to the beginning.
-	*/
-	void Next(void);
 
 	/**
 	* Return the current element.
@@ -308,11 +266,6 @@ public:
 	RGeoInfo(RGeoInfo& info);
 
 	/**
-	* Construct a geometric information from another one.
-	*/
-	RGeoInfo(RGeoInfo* info);
-
-	/**
 	* Clears the geometric information.
 	*/
 	virtual void ClearInfo(void);
@@ -320,7 +273,7 @@ public:
 	/**
 	* Return the index of the orientation.
 	*/
-	inline char GetOri(void) {return(Ori);}
+	inline char GetOri(void) const {return(Ori);}
 
 	/**
 	* Set to ith Orienation of the object.
@@ -330,7 +283,7 @@ public:
 	/**
 	* Area used by the polygon.
 	*/
-	RCoord GetArea(void);
+	RCoord GetArea(void) const;
 
 	/**
 	* Calculate the boundary rectangle of the polygon according to the position.
@@ -385,14 +338,14 @@ public:
 	* pointers.
 	* @param info           Pointer used for the comparaison.
 	*/
-	int Compare(const RGeoInfo* info) { return(info!=this); }
+	int Compare(const RGeoInfo* info) const { return(info!=this); }
 
 	/**
 	* Compare function use for the RContainer class. Compare the identificator
 	* with the one of the corresponding object.
 	* @param id             Idenfificator used for the comparaison.
 	*/
-	int Compare(const unsigned int id) { return(Obj->Compare(id)); }
+	int Compare(const unsigned int id) const { return(Obj->Compare(id)); }
 
 	/**
 	* Test if the object can be placed at a specific position in regards of the
@@ -429,22 +382,22 @@ public:
 	/**
 	* Return the Width of the object represented.
 	*/
-	inline RCoord Width(void) {return(Rect.Width());}
+	inline RCoord Width(void) const {return(Rect.Width());}
 
 	/**
 	* Return the Height of the object represented.
 	*/
-	inline RCoord Height(void) {return(Rect.Height());}
+	inline RCoord Height(void) const {return(Rect.Height());}
 
 	/**
 	* Return the number of points contained in the polygon.
 	*/
-	inline unsigned int NbPoints(void) {return(Bound->NbPtr);}
+	inline unsigned int NbPoints(void) const {return(Bound->GetNb());}
 
 	/**
 	* Return the position of the geometric information.
 	*/
-	RPoint GetPos(void);
+	RPoint GetPos(void) const;
 
 	/**
 	* Make a translation of the point.
@@ -470,7 +423,7 @@ public:
 	/**
 	* Return true if a point is in the polygon.
 	*/
-	bool IsIn(RPoint pos);
+	bool IsIn(RPoint pos) const;
 
 	/**
 	* See if a connector is at a specific position.
@@ -492,27 +445,32 @@ public:
 	/**
 	* Return the polygon representing the object to place.
 	*/
-	RPolygon* GetBound(void) {return(Bound);}
+	RPolygon* GetBound(void) const {return(Bound);}
+
+	/**
+	* Get a cursor over the connections of the object.
+	*/
+	RCursor<RObj2DConnector> GetObjConnectors(void) const;
 
 	/**
 	* Start the iterator to go through the connections.
 	*/
-	void StartCon(void);
+//	void StartCon(void);
 
 	/**
 	* Test if the end of the connections are reached.
 	*/
-	bool EndCon(void);
+//	bool EndCon(void);
 
 	/**
 	* Go to the next connections, if the end is reached, go to the beginning.
 	*/
-	void NextCon(void);
+//	void NextCon(void);
 
 	/**
 	* Return the current connection.
 	*/
-	RConnection* GetCurrentCon(void);
+//	RConnection* GetCurrentCon(void);
 
 	/**
 	* Set the order.

@@ -86,12 +86,6 @@ public:
 	RPoint(const RPoint& pt);
 
 	/**
-	* Construct a point from pt.
-	* @param pt             The point used as reference.
-	*/
-	RPoint(const RPoint* pt);
-
-	/**
 	* The equal operator.
 	*/
 	inline bool operator==(const RPoint& pt) const {return((X==pt.X)&&(Y==pt.Y));}

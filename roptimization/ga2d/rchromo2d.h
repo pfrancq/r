@@ -79,7 +79,7 @@ public:
 	/**
 	* Objects to place.
 	*/
-	RObj2D** Objs;
+	RCursor<RObj2D> Objs;
 
 	/**
 	* Number of objects to place.

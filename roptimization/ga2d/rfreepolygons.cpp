@@ -48,7 +48,7 @@ RFreePolygons::RFreePolygons(void)
 
 
 //------------------------------------------------------------------------------
-RFreePolygons::RFreePolygons(RFreePolygons* cont)
+RFreePolygons::RFreePolygons(const RFreePolygons& cont)
 	: RContainer<RFreePolygon,true,false>(cont)
 {
 }
@@ -58,19 +58,18 @@ RFreePolygons::RFreePolygons(RFreePolygons* cont)
 RPoint RFreePolygons::CanPlace(RGeoInfo* info)
 {
 	char o;
-	unsigned int i;
-	RFreePolygon **tab;
 	RPoint pt;
 	RObj2D* obj=info->GetObj();
 
-	for(i=NbPtr+1,tab=Tab;--i;tab++)	
+	RCursor<RFreePolygon> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{	
 		for(o=0;o<obj->NbPossOri;o++)
 		{
 			info->SetOri(o);
-			if((*tab)->CanContain(info,pt))
+			if(Cur()->CanContain(info,pt))
 			{
-				DeletePtr(*tab);
+				DeletePtr(Cur());
 				return(pt);
 			}
 		}

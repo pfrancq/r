@@ -41,59 +41,59 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RFreePolygon::RFreePolygon(RPolygon& poly)
+RFreePolygon::RFreePolygon(const RPolygon& poly)
 	: RPolygon(poly), Pos(MaxCoord,MaxCoord)
 {
-	unsigned int i;
-	RPoint **tab;
-
 	// Find the translation
-	for(i=NbPtr+1,tab=Tab;--i;tab++)
+	RCursor<RPoint> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		if((*tab)->X<Pos.X) Pos.X=(*tab)->X;
-		if((*tab)->Y<Pos.Y) Pos.Y=(*tab)->Y;
+		if(Cur()->X<Pos.X)
+			Pos.X=Cur()->X;
+		if(Cur()->Y<Pos.Y)
+			Pos.Y=Cur()->Y;
 	}
 	Area=RPolygon::Area();
 }
 
 
 //------------------------------------------------------------------------------
-RFreePolygon::RFreePolygon(RFreePolygon* poly)
+RFreePolygon::RFreePolygon(const RFreePolygon& poly)
 	: RPolygon(poly)
 {
-	Pos=poly->Pos;
+	Pos=poly.Pos;
 }
 
 
 //------------------------------------------------------------------------------
-int RFreePolygon::CanContain(RGeoInfo* info,RPoint& pos)
+int RFreePolygon::CanContain(const RGeoInfo* info,RPoint& pos) const
 {
-	RPoint *act,*e1,*e2;
+	RPoint act,e1,e2;
 	unsigned int nbpts;
 	RPolygon Test;
 
-	nbpts=NbPtr;
+	nbpts=GetNb();
 	act=GetBottomLeft();
 	while(nbpts>0)
 	{
 		// Look for act
-		e1=GetConX(act);
-		e2=GetConY(act);
+		e1=GetConX(&act);
+		e2=GetConY(&act);
 //		if((act->X<e1->X)&&(act->Y<e2->Y))
 		{
-			Test=info->GetBound();
-			Test+=(*act);
+			Test=(*info->GetBound());
+			Test+=act;
 			if(IsIn(Test))
 			{
-				pos=(*act);
+				pos=act;
 				return(static_cast<int>((100*info->GetArea())/Area));
 			}
 		}
 		
 		nbpts--;
-		act=GetConX(act);
+		act=GetConX(&act);
 		nbpts--;
-		act=GetConY(act);
+		act=GetConY(&act);
 	}
 	return(0);
 }

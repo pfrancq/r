@@ -6,7 +6,7 @@
 
 	Group of a GGA - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -186,6 +186,12 @@ public:
 	unsigned int GetNbObjs(void) const {return(NbSubObjects);}
 
 	/**
+	* Get the position of the first object in the group.
+	* @return unsigned int.
+	*/
+	unsigned int GetObjsPos(void) const {return(SubObjects);}
+
+	/**
 	* Return true if an object is in the group.
 	* @param id             Identificator of the object to test.
 	*/
@@ -216,11 +222,6 @@ public:
 	* be deleted by the caller. The list is ended by a NoObject value.
 	*/
 	unsigned int* GetObjectsId(void) const;
-
-	/**
-	* Return a pointer to the begin of the list of the objects.
-	*/
-	cObj** GetObjects(void) const;
 
 	/**
 	* Compare two groups. Used for RContainer.

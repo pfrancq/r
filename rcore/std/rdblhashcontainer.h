@@ -211,7 +211,7 @@ public:
 		for(i=tSize1+1,ptr=Hash;--i;ptr++)
 		{
 			for(j=tSize2+1,ptr2=*ptr;--j;ptr2++)
-				nb+=(*ptr2)->NbPtr;
+				nb+=(*ptr2)->GetNb();
 		}
 		return(nb);
 	}

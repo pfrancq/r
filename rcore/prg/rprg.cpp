@@ -45,6 +45,7 @@
 #include <rprg/rprgvarconst.h>
 #include <rprg/rprgvarref.h>
 #include <rprg/rprgclass.h>
+#include <rstd/rcursor.h>
 using namespace R;
 
 
@@ -257,8 +258,9 @@ void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* va
 //-----------------------------------------------------------------------------
 void RPrg::Exec(void) throw(RException)
 {
-	for(Insts.Start();!Insts.End();Insts.Next())
-		Insts()->Run(this,Cout);
+	RCursor<RPrgInst> Cur(Insts);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Cur()->Run(this,Cout);
 }
 
 

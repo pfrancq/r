@@ -63,8 +63,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroup<cGroup,cObj,cGroupData,cGroups>::Verify(void) throw(eGA)
 {
 	unsigned int i;
-	cObj** obj;
-	unsigned int NbObjects=Owner->ObjsAss.NbPtr;
+	unsigned int NbObjects=Owner->ObjsAss.GetNb();
 	char tmp[200];
 
 	// Each group must have a parent.
@@ -109,16 +108,17 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	}
 
 	// Verify coherence with the objects.
-	for(i=NbSubObjects+1,obj=&Owner->ObjsAss.Tab[SubObjects];--i;obj++)
+	RCursor<cObj> ptr(Owner->ObjsAss);
+	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next())
 	{
-		if(!(*obj))
+		if(!ptr())
 		{
 			sprintf(tmp,"Owner->ObjsAss is null for group %u",Id);
 			throw eGAVerify(tmp);
 		}
-		if(Owner->ObjectsAss[(*obj)->GetId()]!=Id)
+		if(Owner->ObjectsAss[ptr()->GetId()]!=Id)
 		{
-			sprintf(tmp,"Owner->ObjsAss[(*obj)->GetId()]!=Id for group %u and object %u",Id,(*obj)->GetId());
+			sprintf(tmp,"Owner->ObjsAss[(*obj)->GetId()]!=Id for group %u and object %u",Id,ptr()->GetId());
 			throw eGAVerify(tmp);
 		}
 	}
@@ -140,11 +140,11 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroup<cGroup,cObj,cGroupData,cGroups>::Copy(const cGroup* grp)
 {
 	unsigned int i;
-	cObj** ptr;
 
 	RReturnIfFail(Owner!=grp->Owner);
-	for(i=grp->NbSubObjects+1,ptr=&grp->Owner->ObjsAss.Tab[grp->SubObjects];--i;ptr++)
-		Insert(*ptr);
+	RCursor<cObj> ptr(grp->Owner->ObjsAss);
+	for(i=grp->NbSubObjects+1,ptr.GoTo(grp->SubObjects);--i;ptr.Next())
+		Insert(ptr());
 
 }
 
@@ -208,10 +208,10 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	bool RGroup<cGroup,cObj,cGroupData,cGroups>::IsIn(const unsigned int id) const
 {
 	unsigned int i;
-	cObj** ptr;
 
-	for(i=NbSubObjects+1,ptr=&Owner->ObjsAss.Tab[SubObjects];--i;ptr++)
-		if((*ptr)->GetId()==id) return(true);
+	RCursor<cObj> ptr(Owner->ObjsAss);
+	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next())
+		if(ptr()->GetId()==id) return(true);
 	return(false);
 }
 
@@ -221,10 +221,10 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	bool RGroup<cGroup,cObj,cGroupData,cGroups>::CommonObjs(const cGroup* grp) const
 {
 	unsigned int i;
-	cObj** ptr;
 
-	for(i=NbSubObjects+1,ptr=&Owner->ObjsAss.Tab[SubObjects];--i;ptr++)
-		if(grp->IsIn((*ptr)->GetId())) return(true);
+	RCursor<cObj> ptr(Owner->ObjsAss);
+	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next())
+		if(grp->IsIn(ptr()->GetId())) return(true);
 	return(false);
 }
 
@@ -234,11 +234,11 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	bool RGroup<cGroup,cObj,cGroupData,cGroups>::SameObjs(const cGroup* grp) const
 {
 	unsigned int i;
-	cObj** ptr;
 
 	if(NbSubObjects!=grp->NbSubObjects) return(false);
-	for(i=NbSubObjects+1,ptr=&Owner->ObjsAss.Tab[SubObjects];--i;ptr++)
-		if(!grp->IsIn((*ptr)->GetId())) return(false);
+	RCursor<cObj> ptr(Owner->ObjsAss);
+	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next())
+		if(!grp->IsIn(ptr()->GetId())) return(false);
 	return(true);
 }
 
@@ -249,22 +249,14 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 {
 	unsigned int* tmp;
 	unsigned int* tmp2;
-	cObj** ptr;
 	unsigned int i;
 
 	tmp2=tmp=new unsigned int[NbSubObjects+1];
-	for(i=NbSubObjects+1,ptr=&Owner->ObjsAss.Tab[SubObjects];--i;ptr++,tmp2++)
-		(*tmp2)=(*ptr)->GetId();
+	RCursor<cObj> ptr(Owner->ObjsAss);
+	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next(),tmp2++)
+		(*tmp2)=ptr()->GetId();
 	(*tmp2)=NoObject;
 	return(tmp);
-}
-
-
-//------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	cObj** RGroup<cGroup,cObj,cGroupData,cGroups>::GetObjects(void) const
-{
-	return(&Owner->ObjsAss.Tab[SubObjects]);
 }
 
 

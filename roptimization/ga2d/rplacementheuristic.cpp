@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Placement - Implemenation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -76,7 +76,7 @@ void RPlacementHeuristic::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 
 	// Calculate an order
 	for(unsigned int i=0;i<NbObjs;i++)
-		Order[i]=Infos->Tab[i];
+		Order[i]=((*Infos)[i]);
 	Random->RandOrder<RGeoInfo*>(Order,NbObjs);
 }
 
@@ -157,7 +157,7 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 		return;
 	}
 
-	// Add new solution for Prométhée
+	// Add new solution for Promï¿½hï¿½
 	p=&Sols[NbPromSol];
 	p->Ori=CurInfo->GetOri();
 	p->Pos=pos;
@@ -212,7 +212,7 @@ RGeoInfo* RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristicExcepti
 			NextObjectOri();
 		}
 
-		// Run Prométhée
+		// Run Promï¿½hï¿½
 		if(NbPromSol)
 		{
 			if(NbPromSol>1)
@@ -277,10 +277,11 @@ void RPlacementHeuristic::PostRun(RPoint&)
 	// Compute all connections part again
 	Distances=0.0;
 	Infos->Cons.UnComplete();
-	for(Infos->Cons.Start();!Infos->Cons.End();Infos->Cons.Next())
+	RCursor<RGeoInfoConnection> Cons(Infos->Cons);
+	for(Cons.Start();!Cons.End();Cons.Next())
 	{
-		Infos->Cons()->ComputeMinDist(Infos);
-		Distances+=Infos->Cons()->Dist;
+		Cons()->ComputeMinDist(Infos);
+		Distances+=Cons()->Dist;
 	}
 }
 

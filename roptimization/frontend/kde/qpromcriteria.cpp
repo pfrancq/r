@@ -157,18 +157,10 @@ void QPromCriteria::InsertCriterion(const char* crit)
 {
 	QPromCriterion* ptr;
 
-//	QHBoxLayout* L = new QHBoxLayout(0,0,5);
-	ptr=new QPromCriterion(/*this,*/crit,Crits.NbPtr);
-	//ptr->setGeometry(QRect(10,40,width()-20,20));
-	//L->addWidget(ptr);
-//	WLayout->addWidget(ptr);
-/*		ptr->hide();*/
-//	connect(ptr,SIGNAL(valueChanged()),this,SLOT(slotChanged()));
-	Direct->insertItem(crit,Crits.NbPtr);
+	ptr=new QPromCriterion(crit,Crits.GetNb());
+	Direct->insertItem(crit,Crits.GetNb());
 	Crits.InsertPtr(ptr);
-/*	if(Current==-1)
-		Direct->setCurrentItem(Crits.NbPtr);*/
-	Current=Crits.NbPtr-1;
+	Current=Crits.GetNb()-1;
 }
 
 
@@ -295,7 +287,7 @@ void QPromCriteria::slotActivated(int index)
 
 	if(Current!=-1)
 	{
-		ptr=Crits.Tab[Current];
+		ptr=Crits[Current];
 		d=P->text().toDouble();
 		if((d>=0.0)&&(d<=1.0))
 			ptr->P=d;
@@ -304,11 +296,8 @@ void QPromCriteria::slotActivated(int index)
 			ptr->Q=d;
 		ptr->W=W->text().toDouble();
 	}
-
-/*		Tab[Current]->hide();*/
 	Current=index;
-	ptr=Crits.Tab[Current];
-/*	Tab[Current]->show();*/
+	ptr=Crits[Current];
 	tmp.setNum(ptr->P);
 	P->setText(tmp);
 	tmp.setNum(ptr->Q);

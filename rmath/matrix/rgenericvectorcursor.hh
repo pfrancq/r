@@ -5,9 +5,10 @@
 
 	Cursor for RGenericSparseMatrix - Implementation.
 
-	Copyright 2003 by the Université Libre de Bruxelles.
+	Copyright 2003-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors
+		 Pascal Francq (pfrancq@ulb.ac.be)
 		 Vandaele Valery(vavdaele@ulb.ac.be)
 
 	This library is free software; you can redistribute it and/or
@@ -52,14 +53,6 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericVectorCursor<C>::RGenericVectorCursor(RGenericSparseMatrix<RGenericCell<C>,true>* v)
-		: R::RCursor< RGenericSparseVector<RGenericCell<C>,true> >(v)
-{
-}
-
-
-//-----------------------------------------------------------------------------
-template<class C>
 	RGenericVectorCursor<C>::RGenericVectorCursor(RGenericSparseMatrix<RGenericCell<C>,false>& v)
 		: R::RCursor< RGenericSparseVector<RGenericCell<C>,true> >(v)
 {
@@ -68,25 +61,10 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericVectorCursor<C>::RGenericVectorCursor(RGenericSparseMatrix<RGenericCell<C>,false>* v)
-		: R::RCursor< RGenericSparseVector<RGenericCell<C>,true> >(v)
-{
-}
-
-//-----------------------------------------------------------------------------
-template<class C>
 	RGenericVectorCursor<C>& RGenericVectorCursor<C>::operator=(const RGenericVectorCursor<C>& c) throw(std::bad_alloc)
 {
 	R::RCursor< RGenericSparseVector<RGenericCell<C>,true> >::operator=(c);
 	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class C>
-	void RGenericVectorCursor<C>::Set(RGenericSparseMatrix<RGenericCell<C>,true>* c)
-{
-	R::RCursor< RGenericSparseVector<RGenericCell<C>,true> >::Set(c);
 }
 
 
@@ -100,16 +78,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RGenericVectorCursor<C>::Set(RGenericSparseMatrix<RGenericCell<C>,false>* c)
-{
-	R::RCursor< RGenericSparseVector<RGenericCell<C>,true> >::Set(c);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class C>
 	void RGenericVectorCursor<C>::Set(RGenericSparseMatrix<RGenericCell<C>,false>& c)
 {
 	R::RCursor< RGenericSparseVector<RGenericCell<C>,true> >::Set(c);
 }
-

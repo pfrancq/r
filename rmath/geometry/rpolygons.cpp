@@ -62,12 +62,10 @@ RPolygons::RPolygons(void)
 //------------------------------------------------------------------------------
 bool RPolygons::Edge(const RPoint* pt) const
 {
-	RPolygon** poly;
-	unsigned int i;
-
 	RReturnValIfFail(pt,false);
-	for(i=NbPtr+1,poly=Tab;--i;poly++)
-		if((*poly)->Edge(pt))
+	RCursor<RPolygon> poly(*this);
+	for(poly.Start();!poly.End();poly.Next())
+		if(poly()->Edge(pt))
 			return(true);
 	return(false);
 }
@@ -76,12 +74,10 @@ bool RPolygons::Edge(const RPoint* pt) const
 //------------------------------------------------------------------------------
 bool RPolygons::Edge(const RPoint* pt,const RPolygon* poly) const
 {
-	RPolygon** ptr;
-	unsigned int i;
-
 	RReturnValIfFail(pt&&poly,false);
-	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-		if(((*ptr)!=poly)&&((*ptr)->Edge(pt)))
+	RCursor<RPolygon> polys(*this);
+	for(polys.Start();!polys.End();polys.Next())
+		if((polys()!=poly)&&(polys()->Edge(pt)))
 			return(true);
 	return(false);
 }
@@ -90,12 +86,10 @@ bool RPolygons::Edge(const RPoint* pt,const RPolygon* poly) const
 //------------------------------------------------------------------------------
 bool RPolygons::Edge(const RPoint* pt1,const RPoint* pt2) const
 {
-	RPolygon** poly;
-	unsigned int i;
-
 	RReturnValIfFail(pt1&&pt2,false);
-	for(i=NbPtr+1,poly=Tab;--i;poly++)
-		if((*poly)->Edge(pt1,pt2))
+	RCursor<RPolygon> poly(*this);
+	for(poly.Start();!poly.End();poly.Next())
+		if(poly()->Edge(pt1,pt2))
 			return(true);
 	return(false);
 }
@@ -104,37 +98,38 @@ bool RPolygons::Edge(const RPoint* pt1,const RPoint* pt2) const
 //------------------------------------------------------------------------------
 void RPolygons::PutPoints(RPoints* points) const
 {
-	RPolygon** poly;
-	RPoint** point;
 	RPoint tmp;
-	unsigned int i,j;
 
 	RReturnIfFail(points);
 	points->Clear();
-	for(i=NbPtr+1,poly=Tab;--i;poly++)
-		(*poly)->AddPoints(points);
-	for(i=NbPtr+1,poly=Tab;--i;poly++)
-		for(j=(*poly)->NbPtr+1,point=(*poly)->Tab;--j;point++)
+	RCursor<RPolygon> poly(*this);
+	for(poly.Start();!poly.End();poly.Next())
+		poly()->AddPoints(points);
+	for(poly.Start();!poly.End();poly.Next())
+	{
+		RCursor<RPoint> point(*poly());
+		for(point.Start();!point.End();point.Next())
 		{
-			tmp.X=(*point)->X;
-			tmp.Y=(*point)->Y-1;
+			tmp.X=point()->X;
+			tmp.Y=point()->Y-1;
 			if(!points->IsIn<RPoint>(tmp))
-				if(Edge(&tmp,*poly))
+				if(Edge(&tmp,poly()))
 					points->InsertPtr(new RPoint(tmp));
-			tmp.Y=(*point)->Y+1;
+			tmp.Y=point()->Y+1;
 			if(!points->IsIn<RPoint>(tmp))
-				if(Edge(&tmp,*poly))
+				if(Edge(&tmp,poly()))
 					points->InsertPtr(new RPoint(tmp));
-			tmp.X=(*point)->X+1;
-			tmp.Y=(*point)->Y;
+			tmp.X=point()->X+1;
+			tmp.Y=point()->Y;
 			if(!points->IsIn<RPoint>(tmp))
-				if(Edge(&tmp,*poly))
+				if(Edge(&tmp,poly()))
 					points->InsertPtr(new RPoint(tmp));
-				tmp.X=(*point)->X-1;
+				tmp.X=point()->X-1;
 			if(!points->IsIn<RPoint>(tmp))
-				if(Edge(&tmp,*poly))
+				if(Edge(&tmp,poly()))
 					points->InsertPtr(new RPoint(tmp));
 		}
+	}
 }
 
 
@@ -153,7 +148,7 @@ void RPolygons::Union(RPolygon* upoly) const
 	// Find the most (left,bottom) point -> curpt,curpoly -> next pt on the right
 	last=first=next=pts.FindBottomLeft();
 	RAssert(last);
-	ins=new RPoint(next);
+	ins=new RPoint(*next);
 	upoly->InsertPtr(ins);
 	next=pts.FindRight(next,this);
 	RAssert(next);
@@ -162,7 +157,7 @@ void RPolygons::Union(RPolygon* upoly) const
 	// While nextpt!=firspt
 	while((*next)!=(*first))
 	{
-		ins=new RPoint(next);
+		ins=new RPoint(*next);
 		upoly->InsertPtr(ins);
 		last=next;
 
@@ -271,11 +266,9 @@ bool RPolygons::DuplicatePoints(void) const
 //------------------------------------------------------------------------------
 bool RPolygons::IsIn(const RCoord X,const RCoord Y) const
 {
-	RPolygon **tab;
-	unsigned int i;
-
-	for(i=NbPtr+1,tab=Tab;--i;tab++)
-		if((*tab)->IsIn(X,Y))
+	RCursor<RPolygon> poly(*this);
+	for(poly.Start();!poly.End();poly.Next())
+		if(poly()->IsIn(X,Y))
 			return(true);
 	return(false);
 }
@@ -284,11 +277,9 @@ bool RPolygons::IsIn(const RCoord X,const RCoord Y) const
 //------------------------------------------------------------------------------
 bool RPolygons::IsIn(const RPoint& pt) const
 {
-	RPolygon **tab;
-	unsigned int i;
-
-	for(i=NbPtr+1,tab=Tab;--i;tab++)
-		if((*tab)->IsIn(pt))
+	RCursor<RPolygon> poly(*this);
+	for(poly.Start();!poly.End();poly.Next())
+		if(poly()->IsIn(pt))
 			return(true);
 	return(false);
 }
@@ -305,15 +296,15 @@ RPolygons& RPolygons::operator=(const RPolygons& poly)
 //------------------------------------------------------------------------------
 void RPolygons::Save(RTextFile& f)
 {
-	f<<NbPtr<<endl;
-	for(Start();!End();Next())
-		(*this)()->Save(f);
+	f<<GetNb()<<endl;
+	RCursor<RPolygon> poly(*this);
+	for(poly.Start();!poly.End();poly.Next())
+		poly()->Save(f);
 }
 
 
 //------------------------------------------------------------------------------
 RCursor<RPolygon> RPolygons::GetPolygonsCursor(void)
 {
-	RCursor<RPolygon> cur(this);
-	return(cur);
+	return(RCursor<RPolygon>(*this));
 }

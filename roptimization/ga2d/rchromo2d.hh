@@ -42,8 +42,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 		RChromo2D(cInst *inst,unsigned int id) throw(std::bad_alloc)
 			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
 			  RGeoInfos(inst->Problem,true),
-			  Heuristic(0), Grid(0),
-			  Objs(0), NbObjs(0), thOrder(0), thObjs(0),
+			  Heuristic(0), Grid(0), Objs(),
+			  NbObjs(0), thOrder(0), thObjs(0),
 			  thObj1(0), thObj2(0), Limits()
 {
 }
@@ -123,7 +123,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	#ifdef RGADEBUG
 		if(this->Instance->Debug)
 		{
-			sprintf(tmpmsg,"%u objects selected from %u",thObj1->NbPtr,parent1->Id);
+			sprintf(tmpmsg,"%u objects selected from %u",thObj1->GetNb(),parent1->Id);
 			this->Instance->Debug->PrintInfo(tmpmsg);
 		}
 	#endif
@@ -131,7 +131,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	#ifdef RGADEBUG
 		if(this->Instance->Debug)
 		{
-			sprintf(tmpmsg,"%u objects selected from %u",thObj2->NbPtr,parent2->Id);
+			sprintf(tmpmsg,"%u objects selected from %u",thObj2->GetNb(),parent2->Id);
 			this->Instance->Debug->PrintInfo(tmpmsg);
 		}
 	#endif
@@ -142,16 +142,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 		if(!Selected[i])
 		{
 			NbRealInfos++;
-			thInfos->InsertPtr(new cInfo(Objs[Tab[i]->GetObj()->GetId()]));
+			Objs.GoTo(((*this)[i])->GetObj()->GetId());
+			thInfos->InsertPtr(new cInfo(Objs()));
 		}
 	}
 	thInfos->RealNb=NbRealInfos;
-	if(thObj1->NbPtr)
+	if(thObj1->GetNb())
 	{
 		thInfos->RealNb++;
 		thInfos->InsertPtr(info1=new cInfo(thObj1));
 	}
-	if(thObj2->NbPtr)
+	if(thObj2->GetNb())
 	{
 		thInfos->RealNb++;
 		thInfos->InsertPtr(info2=new cInfo(thObj2));
@@ -167,24 +168,25 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	// Assign the "real" geometric information
 	for(i=0;i<NbRealInfos;i++)
 	{
-		info=GetPtr<unsigned int>(thInfos->Tab[i]->GetObj()->GetId());
-		(*info)=(*thInfos->Tab[i]);
+		info=GetPtr<unsigned int>(((*thInfos)[i])->GetObj()->GetId());
+		(*info)=(*((*thInfos)[i]));
 	}
 	if(info1)
 		thObj1->Assign(this,info1->GetPos(),Grid,info1->GetOrder());
 	if(info2)
 		thObj2->Assign(this,info2->GetPos(),Grid,info2->GetOrder());
-	infoprob=Tab[RealNb];
+	infoprob=(*this)[RealNb];
 	infoprob->SetOri(0);
 	infoprob->Assign(T);
 
 	// Compute all connections
 	Distances=0.0;
 	Cons.UnComplete();
-	for(Cons.Start();!Cons.End();Cons.Next())
+	RCursor<RGeoInfoConnection> Cur(Cons);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		Cons()->ComputeMinDist(this);
-		Distances+=Cons()->Dist;
+		Cur()->ComputeMinDist(this);
+		Distances+=Cur()->Dist;
 	}
 
 	#ifdef RGADEBUG
@@ -209,19 +211,20 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void) throw(eGA)
 {
-	unsigned int i,j;
-	RGeoInfo **infoi,**infoj;
+	unsigned int i;
 	char Tmp[200];
 
-	for(i=0,infoi=Tab;i<NbObjs-1;i++,infoi++)
+	RCursor<RGeoInfo> infoi(*this);
+	RCursor<RGeoInfo> infoj(*this);
+	for(i=0,infoi.Start();i<NbObjs-1;i++,infoi.Next())
 	{
-		for(j=i+1,infoj=&Tab[i+1];j<NbObjs;j++,infoj++)
+		for(infoj.GoTo(i+1);!infoj.End();infoj.Next())
 		{
-			if(((*infoi)->IsValid())&&((*infoj)->IsValid()))
+			if((infoi()->IsValid())&&(infoj()->IsValid()))
 			{
-				if((*infoi)->Overlap(*infoj))
+				if(infoi()->Overlap(infoj()))
 				{
-					sprintf(Tmp,"Overlapping Problem (Id==%u) between %s and %s",this->Id,(*infoi)->GetObj()->Name.Latin1(),(*infoj)->GetObj()->Name.Latin1());
+					sprintf(Tmp,"Overlapping Problem (Id==%u) between %s and %s",this->Id,infoi()->GetObj()->Name.Latin1(),infoj()->GetObj()->Name.Latin1());
 					#ifdef RGADEBUG
 						if(this->Instance->Debug)
 							this->Instance->Debug->PrintInfo(Tmp);
@@ -255,7 +258,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	if((X>Limits.X)||(Y>Limits.Y)) return(0);
 	obj=Grid->GetObjId(X,Y);
 	if(obj!=NoObject)
-		return(Objs[obj]);
+	{
+		Objs.GoTo(obj);
+		return(Objs());
+	}
 	else
 		return(0);
 }

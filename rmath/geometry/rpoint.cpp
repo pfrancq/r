@@ -6,7 +6,7 @@
 
 	Point - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -68,16 +68,6 @@ RPoint::RPoint(const RPoint& pt)
 {
 	X=pt.X;
 	Y=pt.Y;
-}
-
-
-//------------------------------------------------------------------------------
-RPoint::RPoint(const RPoint* pt)
-{
-	RReturnIfFail(pt);
-	if(!pt) return;
-	X=pt->X;
-	Y=pt->Y;
 }
 
 

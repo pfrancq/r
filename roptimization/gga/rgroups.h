@@ -188,13 +188,14 @@ public:
 	* @param idx            Global Index.
 	* @returns cObj*
 	*/
-	cObj* GetObj(unsigned int idx) {return(ObjsAss.Tab[idx]);}
+	cObj* GetObj(unsigned int idx) {return(ObjsAss[idx]);}
 
 	/**
-	* Return a pointer to the objects of a group.
-	* @param idx            Global Index.
+	* Return a cursor over the objects of a group. The cursor cannot iterate
+	* after the last oobject.
+	* @param grp            Group.
 	*/
-	cObj** GetObjs(unsigned int idx) {return(&ObjsAss.Tab[idx]);}
+	RCursor<cObj> GetObjs(const cGroup& grp);
 
 	/**
 	* The assigment operator.
@@ -213,6 +214,11 @@ public:
 	* @param grps           Configuration used for the comparaison.
 	*/
 	bool SameGroupment(const RGroups* grps) const;
+
+	/**
+	* Get a cursor over the objects already assigned.
+	*/
+	RCursor<cObj> GetObjsCursor(void) const;
 
 	/**
 	* Destruct the groups.

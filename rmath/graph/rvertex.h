@@ -89,12 +89,6 @@ public:
 	* Copy constructor.
 	* @param v              Vertex used.
 	*/
-	RVertex(const RVertex* v);
-
-	/**
-	* Copy constructor.
-	* @param v              Vertex used.
-	*/
 	RVertex(const RVertex& v);
 
 	/**
@@ -108,14 +102,14 @@ public:
 	* information than the strcmp function from the standard C library.
 	* @param v              Vertex used for the comparaison.
 	*/
-	int Compare(const RVertex& v) {return(this!=&v);}
+	int Compare(const RVertex& v) const {return(this!=&v);}
 
 	/**
 	* Is used to compare two vertices. The function returns the same type of
 	* information than the strcmp function from the standard C library.
 	* @param v              Vertex used for the comparaison.
 	*/
-	int Compare(const RVertex* v) {return(this!=v);}
+	int Compare(const RVertex* v) const {return(this!=v);}
 	
 	/**
 	* Is used to compare a vertex and an identificator. The function returns
@@ -123,7 +117,7 @@ public:
 	* C library.
 	* @param i              Identificator used for the comparaison.
 	*/
-	int Compare(const unsigned int i) {return(Id-i);}
+	int Compare(const unsigned int i) const {return(Id-i);}
 
 	/**
 	* Is used to compare a vertex and a structure. The function returns
@@ -131,7 +125,7 @@ public:
 	* C library.
 	* @param s              Structure used for the comparaison.
 	*/
-	int Compare(const VertexStruct& s) {return(Id-s.id);}
+	int Compare(const VertexStruct& s) const {return(Id-s.id);}
 
 	/**
 	* Destructor of the vertex.

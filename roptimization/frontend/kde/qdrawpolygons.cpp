@@ -63,7 +63,7 @@ QInfoBox::QInfoBox(QWidget* parent,RGeoInfo* info)
 	}
 	insertItem("Points:");
 
-	RRelPointCursor Cur(info);
+	RRelPointCursor Cur(*info);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		Tmp="    ("+QString::number(Cur().X)+","+QString::number(Cur().Y)+")";
@@ -105,9 +105,10 @@ void QInfoBox::AddConnectionInfo(RGeoInfoConnection* con)
 		Empty=false;
 	else
 		insertSeparator();
-	for(con->Con->Connect.Start();!con->Con->Connect.End();con->Con->Connect.Next())
+	RCursor<RObj2DConnector> Cur(con->Con->Connect);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		Tmp="Connector '"+ToQString(con->Con->Connect()->Owner->Name)+"\t|\t"+ToQString(con->Con->Connect()->Name)+"'";
+		Tmp="Connector '"+ToQString(Cur()->Owner->Name)+"\t|\t"+ToQString(Cur()->Name)+"'";
 		insertItem(Tmp);
 	}
 }
@@ -180,7 +181,7 @@ void QDrawPolygons::addInfo(RGeoInfo* info)
 	{
 		Painter->setBrush(brBlue);
 		Pts.fill(Null,Last->NbPoints());
-		Cur.Set(Last);
+		Cur.Set(*Last);
 		for(Cur.Start(),j=0;!Cur.End();Cur.Next(),j++)
 		{
 			Pt=Cur();
@@ -190,7 +191,7 @@ void QDrawPolygons::addInfo(RGeoInfo* info)
 	}
 	Painter->setBrush(brBlack);
 	Pts.fill(Null,info->NbPoints());
-	Cur.Set(info);
+	Cur.Set(*info);
 	for(Cur.Start(),j=0;!Cur.End();Cur.Next(),j++)
 	{
 		Pt=Cur();
@@ -211,7 +212,7 @@ void QDrawPolygons::addFree(RFreePolygon* poly)
 	unsigned int j;
 	QPoint Null(0,0);
 	QPointArray Pts;
-	RPoint *Pt,Pos;
+	RPoint Pos;
 
 	if(!pixmap)
 	{
@@ -225,12 +226,12 @@ void QDrawPolygons::addFree(RFreePolygon* poly)
 	CHECK_PTR(Painter);
 	Painter->setPen(black);
 	Painter->setBrush(brYellow);
-	Pts.fill(Null,poly->NbPtr);
-	for(poly->Start(),j=0;!poly->End();poly->Next(),j++)
+	Pts.fill(Null,poly->GetNb());
+	RCursor<RPoint> Pt(*poly);
+	for(Pt.Start(),j=0;!Pt.End();Pt.Next(),j++)
 	{
-		Pt=(*poly)();
 		Pos=poly->GetPos();
-		Pts.setPoint(j,RealToScreenX(Pt->X+Translation.X),RealToScreenY(Pt->Y+Translation.Y));
+		Pts.setPoint(j,RealToScreenX(Pt()->X+Translation.X),RealToScreenY(Pt()->Y+Translation.Y));
 	}
 	Painter->drawPolygon(Pts);
 	delete Painter;
@@ -274,18 +275,18 @@ void QDrawPolygons::end(void)
 //------------------------------------------------------------------------------
 void QDrawPolygons::paintConnectors(RGeoInfo* info,QPainter* Painter)
 {
-	unsigned i,j;
-	RGeoInfoConnector** tab;
+	unsigned j;
 	RCoord x,y;
 
 	Painter->setPen(black);
 	Painter->setBrush(SolidPattern);
-	for(i=info->Connectors.NbPtr+1,tab=info->Connectors.Tab;--i;tab++)
+	RCursor<RGeoInfoConnector> Cur(info->Connectors);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		for(j=0;j<(*tab)->NbPos;j++)
+		for(j=0;j<Cur()->NbPos;j++)
 		{
-			x=RealToScreenX((*tab)->Pos[j].X+Translation.X+info->GetPos().X-1);
-			y=RealToScreenY((*tab)->Pos[j].Y+Translation.Y+info->GetPos().Y+1);
+			x=RealToScreenX(Cur()->Pos[j].X+Translation.X+info->GetPos().X-1);
+			y=RealToScreenY(Cur()->Pos[j].Y+Translation.Y+info->GetPos().Y+1);
 			Painter->drawRect(x,y,static_cast<int>(3*FactorX),static_cast<int>(3*FactorY));
 		}
 	}
@@ -389,18 +390,17 @@ void QDrawPolygons::AdaptExternCon(RCoord& x,RCoord& y)
 //------------------------------------------------------------------------------
 void QDrawPolygons::paintConnection(RGeoInfoConnection* con,QPainter* Painter,bool c)
 {
-	RGeoInfoConnectionPart *p;
 	int X1,Y1,X2,Y2;
 
-	for(con->Start();!con->End();con->Next())
+	RCursor<RGeoInfoConnectionPart> p(*con);
+	for(p.Start();!p.End();p.Next())
 	{
-		p=(*con)();
-		X1=p->PosCon1.X;
-		Y1=p->PosCon1.Y;
-		X2=p->PosCon2.X;
-		Y2=p->PosCon2.Y;
+		X1=p()->PosCon1.X;
+		Y1=p()->PosCon1.Y;
+		X2=p()->PosCon2.X;
+		Y2=p()->PosCon2.Y;
 
-		if(p->Id1==Problem->Problem.GetId())
+		if(p()->Id1==Problem->Problem.GetId())
 		{
 			X1+=Problem->Translation.X;
 			Y1+=Problem->Translation.Y;
@@ -412,7 +412,7 @@ void QDrawPolygons::paintConnection(RGeoInfoConnection* con,QPainter* Painter,bo
 			Y1+=Translation.Y;
 		}
 
-		if(p->Id2==Problem->Problem.GetId())
+		if(p()->Id2==Problem->Problem.GetId())
 		{
 			X2+=Problem->Translation.X;
 			Y2+=Problem->Translation.Y;
@@ -449,12 +449,11 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 	}
 	if(Changed)
 	{
-		unsigned int i,j;
+		unsigned int j;
 		QPoint Null(0,0);
 		QPointArray Pts;
-		RGeoInfo **o;
-		RFreePolygon *p;
-		RPoint *Pt,Pos;
+		RPoint Pos;
+		RCursor<RPoint> Pt;
 
 		pixmap->fill(this,r.topLeft());
 		Painter=new QPainter(pixmap);
@@ -462,44 +461,39 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 		Painter->setPen(black);
 		if(Infos)
 		{
-			for(i=Infos->RealNb+1,o=Infos->Tab;--i;o++)
+			RCursor<RGeoInfo> Cur(*Infos);
+			for(Cur.Start();!Cur.End();Cur.Next())
 			{
-				if((*o)->IsSelect())
+				if(Cur()->IsSelect())
 					Painter->setBrush(brGreen);
 				else
 				{
-					if((*o)==Last)
+					if(Cur()==Last)
 						Painter->setBrush(brBlack);
 					else
 						Painter->setBrush(brBlue);
 				}
-				if((*o)->IsValid())
+				if(Cur()->IsValid())
 				{
-					Pts.fill(Null,(*o)->NbPoints());
-					RRelPointCursor Cur(*o);
-					for(Cur.Start(),j=0;!Cur.End();Cur.Next(),j++)
-					{
-						Pos=Cur();
-						Pts.setPoint(j,RealToScreenX(Pos.X+Translation.X),RealToScreenY(Pos.Y+Translation.Y));
-					}
+					Pts.fill(Null,Cur()->NbPoints());
+					RRelPointCursor Cur2(*Cur());
+					for(Cur2.Start(),j=0;!Cur2.End();Cur2.Next(),j++)
+						Pts.setPoint(j,RealToScreenX(Cur2().X+Translation.X),RealToScreenY(Cur2().Y+Translation.Y));
 					Painter->drawPolygon(Pts);
-					paintConnectors(*o,Painter);
+					paintConnectors(Cur(),Painter);
 				}
 			}
 		}
 		if(FreePolygons)
 		{
 			Painter->setBrush(brYellow);
-			for(FreePolygons->Start();!FreePolygons->End();FreePolygons->Next())
+			RCursor<RFreePolygon> p(*FreePolygons);
+			for(p.Start();!p.End();p.Next())
 			{
-				p=(*FreePolygons)();
-				Pts.fill(Null,p->NbPtr);
-				for(p->Start(),j=0;!p->End();p->Next(),j++)
-				{
-					Pt=(*p)();
-					Pos=p->GetPos();
-					Pts.setPoint(j,RealToScreenX(Pt->X+Translation.X),RealToScreenY(Pt->Y+Translation.Y));
-				}
+				Pts.fill(Null,p.GetNb());
+				Pt.Set(*p());
+				for(Pt.Start(),j=0;!Pt.End();Pt.Next(),j++)
+					Pts.setPoint(j,RealToScreenX(Pt()->X+Translation.X),RealToScreenY(Pt()->Y+Translation.Y));
 				Painter->drawPolygon(Pts);
 			}
 		}
@@ -510,8 +504,7 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 		{
 			Painter->drawRect(RealToScreenX(Translation.X),RealToScreenY(Translation.Y+Problem->Limits.Y),
 				static_cast<int>((Problem->Limits.X+1)*FactorX),static_cast<int>((Problem->Limits.Y+1)*FactorY));
-			unsigned i,j;
-			RGeoInfoConnector** tab;
+			unsigned j;
 			RGeoInfo* info;
 			RCoord x,y;
 			Painter->setPen(black);
@@ -519,12 +512,13 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 			info=Infos->GetPtr<unsigned int>(Problem->Problem.GetId());
 			if(info)
 			{
-				for(i=info->Connectors.NbPtr+1,tab=info->Connectors.Tab;--i;tab++)
+				RCursor<RGeoInfoConnector> tab(info->Connectors);
+				for(tab.Start();!tab.End();tab.Next())
 				{
-					for(j=0;j<(*tab)->NbPos;j++)
+					for(j=0;j<tab()->NbPos;j++)
 					{
-						x=(*tab)->Pos[j].X;
-						y=(*tab)->Pos[j].Y;
+						x=tab()->Pos[j].X;
+						y=tab()->Pos[j].Y;
 						TransformExternCon(x,y);
 						Painter->drawRect(RealToScreenX(x-1),RealToScreenY(y+1),static_cast<int>(3*FactorX),static_cast<int>(3*FactorY));
 					}
@@ -574,7 +568,6 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 	{
 		RGeoInfoConnector* con;
 		RGeoInfo** info;
-		unsigned int i;
 		RPoint Pos,Pos2;
 		QRect r;
 		QInfoBox *InfoBox;
@@ -587,9 +580,10 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
  			Painter=new QPainter(tmppixmap);
  			CHECK_PTR(Painter);
  			Painter->setPen(red);
-			for(Infos->Cons.Start();!Infos->Cons.End();Infos->Cons.Next())
+			RCursor<RGeoInfoConnection> Cur(Infos->Cons);
+			for(Cur.Start();!Cur.End();Cur.Next())
 			{
-				paintConnection(Infos->Cons(),Painter,false);
+				paintConnection(Cur(),Painter,false);
 			}
 			delete Painter;
 			Painter=0;
@@ -599,16 +593,17 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 		{
 			Pos2.X=static_cast<RCoord>(e->x()/FactorX)-Translation.X;
 			Pos2.Y=Limits.Y-static_cast<RCoord>(e->y()/FactorY)-Translation.Y;
-			for(i=Infos->NbPtr+1,info=Infos->Tab;--i;info++)
+			RCursor<RGeoInfo> Cur(*Infos);
+			for(Cur.Start();!Cur.End();Cur.Next())
 			{
 				Pos=Pos2;
-				if((*info)->GetObj()->GetId()==Problem->Problem.GetId())
+				if(Cur()->GetObj()->GetId()==Problem->Problem.GetId())
 				{
 					AdaptExternCon(Pos.X,Pos.Y);
 				}
-				if((*info)->IsIn(Pos))
+				if(Cur()->IsIn(Pos))
 				{
-					con=(*info)->GetConnector(Pos);
+					con=Cur()->GetConnector(Pos);
 					if(e->state()==ShiftButton)
 					{
 						// Click with Left Button -> Show the Connections
@@ -618,26 +613,27 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 						Painter->setPen(red);
 						Painter->setBrush(brRed);
 						InfoBox=0;
-						for(Infos->Cons.Start();!Infos->Cons.End();Infos->Cons.Next())
+						RCursor<RGeoInfoConnection> Cons(Infos->Cons);
+						for(Cons.Start();!Cons.End();Cons.Next())
 						{
 							if(con)
 							{
-								if(Infos->Cons()->IsIn(con))
+								if(Cons()->IsIn(con))
 								{
 									if(!InfoBox)
 										InfoBox=new QInfoBox(this,pixmap,tmppixmap);
-									paintConnection(Infos->Cons(),Painter,true);
-									InfoBox->AddConnectionInfo(Infos->Cons());
+									paintConnection(Cons(),Painter,true);
+									InfoBox->AddConnectionInfo(Cons());
 								}
 							}
 							else
 							{
-								if(Infos->Cons()->IsIn(*info))
+								if(Cons()->IsIn(*info))
 								{
 									if(!InfoBox)
 										InfoBox=new QInfoBox(this,pixmap,tmppixmap);
-									paintConnection(Infos->Cons(),Painter,true);
-									InfoBox->AddConnectionInfo(Infos->Cons());
+									paintConnection(Cons(),Painter,true);
+									InfoBox->AddConnectionInfo(Cons());
 								}
 							}
 						}

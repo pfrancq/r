@@ -157,12 +157,6 @@ public:
 	RGeoInfoConnection(const RGeoInfoConnection& con);
 
 	/**
-	* Copy constructor.
-	* @param con            Source object.
-	*/
-	RGeoInfoConnection(const RGeoInfoConnection* con);
-
-	/**
 	* Make this connection uncompleted.
 	*/
 	void UnComplete(void);

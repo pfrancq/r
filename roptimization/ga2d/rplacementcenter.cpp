@@ -6,7 +6,7 @@
 
 	Center Heuristic for Placement - Implemenation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -80,7 +80,7 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 {
 	RPoint Pos;                     // Position to test (X,Y).
 	unsigned int NbPos;
-	RPoint *Actual,*Last;
+	RPoint Actual,Last;
 	unsigned int i;
 	bool LookX;
 	bool LookLeft,LookBottom;
@@ -95,7 +95,7 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 
 	// Find the Bottom-Left coordinate of the boundary rectangle
 	Actual=Union.GetBottomLeft();
-	i=Union.NbPtr+1;
+	i=Union.GetNb()+1;
 	LookX=true;                 // Go anti-clockwise, begin with X-Axis and then right.
 	LookBottom=true;            // Look (X,Y-1) or (X,Y+1) ?
 	LookLeft=true;              // Look (X-1,Y) or (X+1,Y) ?
@@ -109,9 +109,9 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 		{
 
 			// Look to the Left -> Test (X-1,Y)
-			if(Grid->IsFree(Actual->X-1,Actual->Y))
+			if(Grid->IsFree(Actual.X-1,Actual.Y))
 			{
-				Pos.Set(Actual->X-CurInfo->Width(),Actual->Y);
+				Pos.Set(Actual.X-CurInfo->Width(),Actual.Y);
 				if(CurInfo->Test(Pos,Grid))
 				{
 					CurInfo->PushCenter(Pos,Limits,Grid);
@@ -121,9 +121,9 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 			if(LookBottom)
 			{
 				// If look to bottom -> Test (X,Y-1)
-				if(Grid->IsFree(Actual->X,Actual->Y-1))
+				if(Grid->IsFree(Actual.X,Actual.Y-1))
 				{
-					Pos.Set(Actual->X,Actual->Y-CurInfo->Height());
+					Pos.Set(Actual.X,Actual.Y-CurInfo->Height());
 					if(CurInfo->Test(Pos,Grid))
 					{
 						CurInfo->PushCenter(Pos,Limits,Grid);
@@ -133,7 +133,7 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos.Set(Actual->X-CurInfo->Width(),Actual->Y-CurInfo->Height());
+					Pos.Set(Actual.X-CurInfo->Width(),Actual.Y-CurInfo->Height());
 					if(CurInfo->Test(Pos,Grid))
 					{
 						CurInfo->PushCenter(Pos,Limits,Grid);
@@ -144,17 +144,17 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 			else
 			{
 				// If look to up -> Test (X,Y+1)
-				if(Grid->IsFree(Actual->X,Actual->Y+1))
+				if(Grid->IsFree(Actual.X,Actual.Y+1))
 				{
-					Pos.Set(Actual->X,Actual->Y+1);
+					Pos.Set(Actual.X,Actual.Y+1);
 					if(CurInfo->Test(Pos,Grid))
 						AddValidPosition(Pos);
 				}
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos.Set(Actual->X-CurInfo->Width(),Actual->Y+1);
-					Pos.Set(Actual->X-CurInfo->Width(),Actual->Y-CurInfo->Height());
+					Pos.Set(Actual.X-CurInfo->Width(),Actual.Y+1);
+					Pos.Set(Actual.X-CurInfo->Width(),Actual.Y-CurInfo->Height());
 					if(CurInfo->Test(Pos,Grid))
 					{
 						CurInfo->PushCenter(Pos,Limits,Grid);
@@ -167,9 +167,9 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 		else
 		{
 			// Look to the right -> Test (X+1,Y)
-			if(Grid->IsFree(Actual->X+1,Actual->Y))
+			if(Grid->IsFree(Actual.X+1,Actual.Y))
 			{
-				Pos.Set(Actual->X+1,Actual->Y);
+				Pos.Set(Actual.X+1,Actual.Y);
 				if(CurInfo->Test(Pos,Grid))
 				{
 					CurInfo->PushCenter(Pos,Limits,Grid);
@@ -179,9 +179,9 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 			if(LookBottom)
 			{
 				// If look to bottom -> Test (X,Y-1)
-				if(Grid->IsFree(Actual->X,Actual->Y-1))
+				if(Grid->IsFree(Actual.X,Actual.Y-1))
 				{
-					Pos.Set(Actual->X,Actual->Y-CurInfo->Height());
+					Pos.Set(Actual.X,Actual.Y-CurInfo->Height());
 					if(CurInfo->Test(Pos,Grid))
 					{
 						CurInfo->PushCenter(Pos,Limits,Grid);
@@ -191,7 +191,7 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos.Set(Actual->X+1,Actual->Y-CurInfo->Height());
+					Pos.Set(Actual.X+1,Actual.Y-CurInfo->Height());
 					if(CurInfo->Test(Pos,Grid))
 					{
 						CurInfo->PushCenter(Pos,Limits,Grid);
@@ -202,9 +202,9 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 			else
 			{
 				// If look to up -> Test (X,Y+1)
-				if(Grid->IsFree(Actual->X,Actual->Y+1))
+				if(Grid->IsFree(Actual.X,Actual.Y+1))
 				{
-					Pos.Set(Actual->X,Actual->Y+1);
+					Pos.Set(Actual.X,Actual.Y+1);
 					if(CurInfo->Test(Pos,Grid))
 					{
 						CurInfo->PushCenter(Pos,Limits,Grid);
@@ -214,7 +214,7 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos.Set(Actual->X+1,Actual->Y+1);
+					Pos.Set(Actual.X+1,Actual.Y+1);
 					if(CurInfo->Test(Pos,Grid))
 					{
 						CurInfo->PushCenter(Pos,Limits,Grid);
@@ -228,8 +228,8 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 		Last=Actual;
 		if(LookX)
 		{
-			Actual=Union.GetConX(Last);
-			if(Actual->X<Last->X)
+			Actual=Union.GetConX(&Last);
+			if(Actual.X<Last.X)
 			{
 				LookBottom=false;
 				LookLeft=true;
@@ -242,8 +242,8 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 		}
 		else
 		{
-			Actual=Union.GetConY(Last);
-			if(Actual->Y<Last->Y)
+			Actual=Union.GetConY(&Last);
+			if(Actual.Y<Last.Y)
 			{
 				LookLeft=true;
 				LookBottom=true;
@@ -275,13 +275,11 @@ void RPlacementCenter::Place(RPoint& pos) throw(RPlacementHeuristicException)
 //------------------------------------------------------------------------------
 void RPlacementCenter::PostRun(RPoint& limits)
 {
-	RGeoInfo **info;
-	unsigned int i;
-
 	RPlacementHeuristic::PostRun(limits);
 	Sol.Clear();
-	for(i=NbObjs+1,info=Infos->Tab;--i;info++)
-		Sol.InsertPtr(new RPolygon((*info)->GetPolygon()));
+	RCursor<RGeoInfo> info(*Infos);
+	for(info.Start();!info.End();info.Next())
+		Sol.InsertPtr(new RPolygon(info()->GetPolygon()));
 	Sol.Union(&Union);
 	Union.Boundary(Result);
 	limits=HoldLimits;

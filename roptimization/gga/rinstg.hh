@@ -74,7 +74,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
 	Objs=new RCursor<cObj>();
-	Objs->Set(objs);
+	Objs->Set(*objs);
 	if(Objs->GetNb()<11)
 		MaxGroups=10;
 	else
@@ -89,7 +89,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
 	Objs=new RCursor<cObj>();
-	Objs->Set(objs);
+	Objs->Set(*objs);
 	if(Objs->GetNb()<11)
 		MaxGroups=10;
 	else

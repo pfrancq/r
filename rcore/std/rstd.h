@@ -6,7 +6,7 @@
 
 	R Standard Library - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -38,6 +38,7 @@
 //------------------------------------------------------------------------------
 // include files for Standard C/C++
 #include <new>
+#include <stdexcept>
 #include <stdio.h>
 #include <string.h>
 #include <iostream>

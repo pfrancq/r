@@ -5,9 +5,10 @@
 
 	Generic Sparse Vector containing generic Cells- Header.
 
-	Copyright 2003 by the Universit�Libre de Bruxelles.
+	Copyright 2003-2005 by the Université Libre de Bruxelles.
 
 	Authors
+		Pascal Francq (pfrancq@ulb.ac.be)
 		 Vandaele Valery(vavdaele@ulb.ac.be)
 
 	This library is free software; you can redistribute it and/or
@@ -85,12 +86,6 @@ public :
 	* Construct the generic cell from another one.
 	* @param src            Generic Sparse Vector used as source.
 	*/
-	RGenericSparseVector(const RGenericSparseVector<C,bAlloc>* src) throw(std::bad_alloc);
-
-	/**
-	* Construct the generic cell from another one.
-	* @param src            Generic Sparse Vector used as source.
-	*/
 	RGenericSparseVector(const RGenericSparseVector<C,bAlloc>& src) throw(std::bad_alloc);
 
 	/**
@@ -128,6 +123,7 @@ public :
 	*/
 	virtual ~RGenericSparseVector(void);
 };
+
 
 //---------------------------------------------------------------------------
 // inline implementation

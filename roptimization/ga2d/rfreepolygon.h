@@ -6,7 +6,7 @@
 
 	Polygon representing a free space - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -74,22 +74,22 @@ public:
 	/**
 	* Construct a free polygon.
 	*/
-	RFreePolygon(RPolygon& poly);
+	RFreePolygon(const RPolygon& poly);
 
 	/**
 	* Construct a free polygon from another one.
 	*/
-	RFreePolygon(RFreePolygon* poly);
+	RFreePolygon(const RFreePolygon& poly);
 
 	/**
 	* The equal operator.
 	*/
-	bool operator==(const RFreePolygon& poly) {return(RPolygon::operator==(poly));}
+	bool operator==(const RFreePolygon& poly) const {return(RPolygon::operator==(poly));}
 
 	/**
 	* The non-equal operator.
 	*/
-	bool operator!=(const RFreePolygon& poly) {return(RPolygon::operator!=(poly));}
+	bool operator!=(const RFreePolygon& poly) const {return(RPolygon::operator!=(poly));}
 
 	/**
 	* This function compares two polygons and returns 0 if there have the same
@@ -97,7 +97,7 @@ public:
 	* class RContainer.
 	* @param poly           Polygon used for the comparaison.
 	*/
-	int Compare(const RFreePolygon* poly) {return((*this)!=(*poly));}
+	int Compare(const RFreePolygon* poly) const {return((*this)!=(*poly));}
 
 	/**
 	* This function compares two polygons and returns 0 if there have the same
@@ -105,7 +105,7 @@ public:
 	* class RContainer.
 	* @param poly           Polygon used for the comparaison.
 	*/
-	int Compare(const RFreePolygon& poly) {return((*this)!=poly);}
+	int Compare(const RFreePolygon& poly) const {return((*this)!=poly);}
 
 	/**
 	* This function test if a geometric information can be contained in the free
@@ -117,7 +117,7 @@ public:
 	* the polygon can be contained. The less is the space wasted, the
 	* greather is the return value.
 	*/
-	int CanContain(RGeoInfo* info,RPoint& pos);
+	int CanContain(const RGeoInfo* info,RPoint& pos) const;
 
 	/**
 	* Return the position of the free polygon.

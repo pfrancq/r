@@ -75,9 +75,9 @@ RGeoInfoConnector::RGeoInfoConnector(RGeoInfoConnector* con,RGeoInfo* owner)
 
 
 //------------------------------------------------------------------------------
-RPoint RGeoInfoConnector::GetPos(void)
+RPoint RGeoInfoConnector::GetPos(void) const
 {
-	return(Pos[0]+Owner->GetPos());
+	return( RPoint(Pos[0])+=Owner->GetPos());
 }
 
 
@@ -97,79 +97,23 @@ RRelPointCursor::RRelPointCursor(void)
 
 //------------------------------------------------------------------------------
 RRelPointCursor::RRelPointCursor(RGeoInfo& info)
-	: RCursor<RPoint>(info.Bound), Base(info.Pos)
+	: RCursor<RPoint>(*info.Bound), Base(info.Pos)
 {
-}
-
-//------------------------------------------------------------------------------
-RRelPointCursor::RRelPointCursor(RGeoInfo* info)
-	: RCursor<RPoint>(info->Bound), Base(info->Pos)
-{
-}
-
-
-//------------------------------------------------------------------------------
-void RRelPointCursor::Clear(void)
-{
-	RCursor<RPoint>::Clear();
-}
-
-
-//------------------------------------------------------------------------------
-void RRelPointCursor::Start(void)
-{
-	RCursor<RPoint>::Start();
 }
 
 
 //------------------------------------------------------------------------------
 void RRelPointCursor::Set(RGeoInfo& info)
 {
-	RCursor<RPoint>::Set(info.Bound);
+	RCursor<RPoint>::Set(*info.Bound);
 	Base=info.Pos;
-}
-
-
-//------------------------------------------------------------------------------
-void RRelPointCursor::Set(RGeoInfo* info)
-{
-	RCursor<RPoint>::Set(info->Bound);
-	Base=info->Pos;
-}
-
-
-//------------------------------------------------------------------------------
-void RRelPointCursor::GoTo(const unsigned int i) throw(std::bad_alloc)
-{
-	RCursor<RPoint>::GoTo(i);
-}
-
-
-//------------------------------------------------------------------------------
-unsigned int RRelPointCursor::GetNb(void)
-{
-	return(RCursor<RPoint>::GetNb());
-}
-
-
-//------------------------------------------------------------------------------
-bool RRelPointCursor::End(void) const
-{
-	return(RCursor<RPoint>::End());
-}
-
-
-//------------------------------------------------------------------------------
-void RRelPointCursor::Next(void)
-{
-	RCursor<RPoint>::Next();
 }
 
 
 //------------------------------------------------------------------------------
 RPoint RRelPointCursor::operator()(void) const
 {
-	RPoint Pt((*(dynamic_cast<const RCursor<RPoint>*>(this)))());
+	RPoint Pt(*(*(dynamic_cast<const RCursor<RPoint>*>(this)))());
 	Pt+=Base;
 	return(Pt);
 }
@@ -203,14 +147,15 @@ RGeoInfo::RGeoInfo(RObj2D* obj)
 	: Obj(obj), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(0),
 		Rects(0), Order(NoObject), Connectors(10,5)
 {
-	for(obj->Connectors.Start();!obj->Connectors.End();obj->Connectors.Next())
-		Connectors.InsertPtr(new RGeoInfoConnector(obj->Connectors(),this));
+	RCursor<RObj2DConnector> Cur(obj->Connectors);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Connectors.InsertPtr(new RGeoInfoConnector(Cur(),this));
 }
 
 
 //------------------------------------------------------------------------------
 RGeoInfo::RGeoInfo(RGeoInfo& info)
-	: Connectors(info.Connectors.NbPtr,info.Connectors.IncPtr)
+	: Connectors(info.Connectors.GetNb(),info.Connectors.GetIncNb())
 {
 	Obj=info.Obj;
 	Selected=info.Selected;
@@ -221,26 +166,9 @@ RGeoInfo::RGeoInfo(RGeoInfo& info)
 	Rect=info.Rect;
 	Selected=info.Selected;
 	Order=info.Order;
-	for(info.Connectors.Start();!info.Connectors.End();info.Connectors.Next())
-		Connectors.InsertPtr(new RGeoInfoConnector(info.Connectors(),this));
-}
-
-
-//------------------------------------------------------------------------------
-RGeoInfo::RGeoInfo(RGeoInfo* info)
-	: Connectors(info->Connectors.NbPtr,info->Connectors.IncPtr)
-{
-	Obj=info->Obj;
-	Selected=info->Selected;
-	Pos=info->Pos;
-	Bound=info->Bound;
-	Ori=info->Ori;
-	Rects=info->Rects;
-	Rect=info->Rect;
-	Selected=info->Selected;
-	Order=info->Order;
-	for(info->Connectors.Start();!info->Connectors.End();info->Connectors.Next())
-		Connectors.InsertPtr(new RGeoInfoConnector(info->Connectors(),this));
+	RCursor<RGeoInfoConnector> Cur(info.Connectors);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Connectors.InsertPtr(new RGeoInfoConnector(Cur(),this));
 }
 
 
@@ -263,18 +191,19 @@ void RGeoInfo::SetOri(char i)
 	Bound=Obj->GetPolygon(i);
 	Rects=Obj->GetRects(i);
 	Bound->Boundary(Rect);
-	for(Connectors.Start();!Connectors.End();Connectors.Next())
+	RCursor<RGeoInfoConnector> Cur(Connectors);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		for(unsigned j=0;j<Connectors()->Con->NbPos;j++)
+		for(unsigned j=0;j<Cur()->Con->NbPos;j++)
 		{
-			Connectors()->Pos[j]=Connectors()->Con->GetPos(j,i);
+			Cur()->Pos[j]=Cur()->Con->GetPos(j,i);
 		}
 	}
 }
 
 
 //------------------------------------------------------------------------------
-RCoord RGeoInfo::GetArea(void)
+RCoord RGeoInfo::GetArea(void) const
 {
 	if(Obj)
 		return(Obj->GetArea());
@@ -296,30 +225,28 @@ void RGeoInfo::Boundary(RRect& rect)
 //------------------------------------------------------------------------------
 void RGeoInfo::Assign(const RPoint& pos,RGrid* grid)
 {
-	RRect **rect;
-	unsigned int i;
-
 	Pos=pos;
-	for(i=Rects->NbPtr+1,rect=Rects->Tab;--i;rect++)
-		grid->Assign(**rect,Pos,Obj->GetId());
+	RCursor<RRect> rect(*Rects);
+	for(rect.Start();rect.End();rect.End())
+		grid->Assign(*rect(),Pos,Obj->GetId());
 }
 
 
 //------------------------------------------------------------------------------
 bool RGeoInfo::Test(RPoint& pos,RGrid* grid)
 {
-	RPoint *start,*end;
+	RPoint start,end;
 	unsigned int nbpts;
 	RDirection FromDir;
 	RCoord X,Y;
 
 	// Test it and go through the other
 	start=Bound->GetBottomLeft();
-	end=Bound->GetConX(start);
+	end=Bound->GetConX(&start);
 	FromDir=Left;
-	X=start->X+pos.X;
-	Y=start->Y+pos.Y;
-	nbpts=Bound->NbPtr;
+	X=start.X+pos.X;
+	Y=start.Y+pos.Y;
+	nbpts=Bound->GetNb();
 
 	// Test it and go through the other
 	while(nbpts)
@@ -328,21 +255,21 @@ bool RGeoInfo::Test(RPoint& pos,RGrid* grid)
 			return(false);
 
 		// If end of an edge
-		if((X==end->X+pos.X)&&(Y==end->Y+pos.Y))
+		if((X==end.X+pos.X)&&(Y==end.Y+pos.Y))
 		{
 			start=end;
 			nbpts--;        // Next point
-			X=start->X+pos.X;
-			Y=start->Y+pos.Y;
+			X=start.X+pos.X;
+			Y=start.Y+pos.Y;
 			if((FromDir==Left)||(FromDir==Right))
 			{
-				end=Bound->GetConY(start);
-				if(start->Y<end->Y) FromDir=Down; else FromDir=Up;
+				end=Bound->GetConY(&start);
+				if(start.Y<end.Y) FromDir=Down; else FromDir=Up;
 			}
 			else		// Go to left/right
 			{
-				end=Bound->GetConX(start);
-				if(start->X<end->X) FromDir=Left; else FromDir=Right;
+				end=Bound->GetConX(&start);
+				if(start.X<end.X) FromDir=Left; else FromDir=Right;
 			}
 		}
 		else
@@ -427,30 +354,30 @@ void RGeoInfo::PushCenter(RPoint& pos,RPoint& limits,RGrid* grid)
 //------------------------------------------------------------------------------
 bool RGeoInfo::Overlap(RGeoInfo* info)
 {
-	RRect **rect1,**rect2;
-	unsigned int i,j;
 	RRect R1,R2;
 
-	for(i=Rects->NbPtr+1,rect1=Rects->Tab;--i;rect1++)
+	RCursor<RRect> rect(*Rects);
+	RCursor<RRect> rect2(*info->Rects);
+	for(rect.Start();rect.End();rect.End())
 	{
-		R1=(**rect1);
+		R1=(*rect());
 		R1+=Pos;
-		for(j=info->Rects->NbPtr+1,rect2=info->Rects->Tab;--j;rect2++)
+		for(rect2.Start();rect2.End();rect2.End())
 		{
-			R2=(**rect2);
+			R2=(*rect2());
 			R2+=info->Pos;
 			if(R1.Overlap(&R2))
 				return(true);
-    }
+    	}
 	}
 	return(false);
 }
 
 
 //------------------------------------------------------------------------------
-RPoint RGeoInfo::GetPos(void)
+RPoint RGeoInfo::GetPos(void) const
 {
-	return(Pos);
+	return(RPoint(Pos));
 }
 
 
@@ -478,9 +405,6 @@ bool RGeoInfo::IsValid(const RPoint& pos,const RPoint& limits) const
 //------------------------------------------------------------------------------
 RGeoInfo& RGeoInfo::operator=(const RGeoInfo& info)
 {
-	unsigned int i;
-	RGeoInfoConnector** tab;
-
 	Pos=info.Pos;
 	Bound=info.Bound;
 	Selected=info.Selected;
@@ -489,22 +413,20 @@ RGeoInfo& RGeoInfo::operator=(const RGeoInfo& info)
 	Rect=info.Rect;
 	Order=info.Order;
 	Connectors.Clear();
-	for(i=info.Connectors.NbPtr+1,tab=info.Connectors.Tab;--i;tab++)
-		Connectors.InsertPtr(new RGeoInfoConnector((*tab),this));
+	RCursor<RGeoInfoConnector> tab(info.Connectors);
+		Connectors.InsertPtr(new RGeoInfoConnector(tab(),this));
 	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
-bool RGeoInfo::IsIn(RPoint pos)
+bool RGeoInfo::IsIn(RPoint pos) const
 {
-	unsigned int i;
-	RRect** rect;
-
 	if(!IsValid()) return(false);
 	pos-=Pos;
-	for(i=Rects->NbPtr+1,rect=Rects->Tab;--i;rect++)
-		if((*rect)->IsIn(pos)) return(true);
+	RCursor<RRect> rect(*Rects);
+	for(rect.Start();!rect.End();rect.Next())
+		if(rect()->IsIn(pos)) return(true);
 	return(false);
 }
 
@@ -512,17 +434,17 @@ bool RGeoInfo::IsIn(RPoint pos)
 //------------------------------------------------------------------------------
 RGeoInfoConnector* RGeoInfo::GetConnector(const RPoint& pos)
 {
-	RGeoInfoConnector** tab;
 	RPoint p;
-	unsigned int i,j;
+	unsigned int j;
 
-	for(i=Connectors.NbPtr+1,tab=Connectors.Tab;--i;tab++)
+	RCursor<RGeoInfoConnector> tab(Connectors);
+	for(tab.Start();!tab.End();tab.Next())
 	{
-		for(j=0;j<(*tab)->NbPos;j++)
+		for(j=0;j<tab()->NbPos;j++)
 		{
-			p=(*tab)->Pos[j]+Pos;
+			p=tab()->Pos[j]+Pos;
 			if((pos.X>=p.X-1)&&(pos.X<=p.X+1)&&(pos.Y>=p.Y-1)&&(pos.Y<=p.Y+1))
-				return(*tab);
+				return(tab());
 		}
 	}
 	return(0);
@@ -532,9 +454,9 @@ RGeoInfoConnector* RGeoInfo::GetConnector(const RPoint& pos)
 //------------------------------------------------------------------------------
 void RGeoInfo::Add(RPolygons& polys)
 {
-  RPolygon *p;
+	RPolygon *p;
 
-	p=new RPolygon(Bound);
+	p=new RPolygon(*Bound);
 	(*p)+=Pos;
 	polys.InsertPtr(p);
 }
@@ -552,7 +474,14 @@ RPolygon RGeoInfo::GetPolygon(void)
 
 
 //------------------------------------------------------------------------------
-void RGeoInfo::StartCon(void)
+RCursor<RObj2DConnector> RGeoInfo::GetObjConnectors(void) const
+{
+	return RCursor<RObj2DConnector>(Obj->Connectors);
+}
+
+
+//------------------------------------------------------------------------------
+/*void RGeoInfo::StartCon(void)
 {
 	bool Ok=false;
 
@@ -599,7 +528,7 @@ void RGeoInfo::NextCon(void)
 RConnection* RGeoInfo::GetCurrentCon(void)
 {
 	return(Obj->Connectors()->Connections());
-}
+}*/
 
 
 //------------------------------------------------------------------------------
