@@ -4,7 +4,7 @@
 
 	Class representing a chromosome for a GGA - Inline implementation
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -69,13 +69,69 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Crossover(cChromo* parent1,cChromo* parent2) throw(eGA)
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int nb1,unsigned int pos2,unsigned int nb2)
 {
-	unsigned int pos1,len1,pos2,i,j;
+	unsigned int i,j,k;
 	cGroup** grps2;
 	cGroup** grps1;
 	cGroup* grp;
+	cGroup* src;
 	bool bInsertIt;
+	cObj** obj;
+//    RContainer<cObj,false,false> Del(20,10);
+
+	for(i=nb2+1,grps2=&parent2->Used.Tab[pos2];--i;grps2++)
+	{
+		bInsertIt=true;
+		for(j=nb1+1,grps1=&parent1->Used.Tab[pos1];(--j)&&bInsertIt;grps1++)
+			if((this->Instance->EmptyModifiedGroups&&((*grps1)->CommonObjs(*grps2)))||(!((*grps1)->IsCompatible(*grps2))))
+			//if(((*grps1)->CommonObjs(*grps2))||(!((*grps1)->IsCompatible(*grps2))))
+				bInsertIt=false;
+		if(bInsertIt)
+		{
+//			std::cout<<"Create grp"<<std::endl;
+//			Verify();
+			grp=this->ReserveGroup();
+			if(this->Instance->EmptyModifiedGroups)
+			{
+				// Only groups with no common objects are inserted -> all objects can be inserted
+				grp->Copy(*grps2);
+				(*grp)=(**grps2);
+			}
+			else
+			{
+				// Must only insert the objects that are not in parent1
+				src=(*grps2);
+				for(k=src->GetNbObjs()+1,obj=src->GetObjects();--k;obj++)
+				{
+					bInsertIt=true;
+					for(j=nb1+1,grps1=&parent1->Used.Tab[pos1];(--j)&&bInsertIt;grps1++)
+					{
+						if((*grps1)->IsIn((*obj)->GetId()))
+						{
+							bInsertIt=false;
+						}
+					}
+					if(bInsertIt)
+						grp->Insert(*obj);
+				}
+				if(!grp->GetNbObjs())
+				{
+					this->ReleaseGroup(grp);
+				}
+			}
+		}
+	}
+}
+
+
+//------------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Crossover(cChromo* parent1,cChromo* parent2) throw(eGA)
+{
+	unsigned int pos1,len1,pos2,i;
+	cGroup** grps1;
+	cGroup* grp;
 
 	#ifdef RGADEBUG
 		if(this->Instance->Debug) this->Instance->Debug->BeginFunc("Crossover","RChromoG");
@@ -90,20 +146,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	pos2=this->Instance->RRand(parent2->Used.NbPtr);
 
 	// Insert groups from parent2<pos2 and verify that they dont contains "new"
-	// objects insert from parent1.
-	for(i=pos2+1,grps2=parent2->Used.Tab;--i;grps2++)
-	{
-		bInsertIt=true;
-		for(j=len1+1,grps1=&parent1->Used.Tab[pos1];(--j)&&bInsertIt;grps1++)
-			if(((*grps1)->CommonObjs(*grps2))||(!((*grps1)->IsCompatible(*grps2))))
-				bInsertIt=false;
-		if(bInsertIt)
-		{
-			grp=this->ReserveGroup();
-			grp->Copy(*grps2);
-			(*grp)=(**grps2);
-		}
-	}
+	// objects insert from parent1. //EmptyModifiedGroups
+	CopyGroups(parent1,parent2,pos1,len1,0,pos2);
 
 	// Insert the selected group from parent1
 	for(i=len1+1,grps1=&parent1->Used.Tab[pos1];--i;grps1++)
@@ -115,23 +159,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	// Insert groups from parent2<pos2 and verify that they dont contains "new"
 	// objects insert from parent1.
-	for(i=parent2->Used.NbPtr-pos2+1,grps2=&parent2->Used.Tab[pos2];--i;grps2++)
-	{
-		bInsertIt=true;
-		for(j=len1+1,grps1=&parent1->Used.Tab[pos1];(--j)&&bInsertIt;grps1++)
-			if(((*grps1)->CommonObjs(*grps2))||(!((*grps1)->IsCompatible(*grps2))))
-				bInsertIt=false;
-		if(bInsertIt)
-		{
-			grp=this->ReserveGroup();
-			grp->Copy(*grps2);
-			(*grp)=(**grps2);
-		}
-	}
+	CopyGroups(parent1,parent2,pos1,len1,pos2,parent2->Used.NbPtr-pos2);
 
 	// Insert missing objects after a local optimisation
 	LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
+	Optimisation();
 	this->ComputeOrd();
 
 	#ifdef RGADEBUG
@@ -157,6 +190,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	// Insert missing objects after a local optimisation
 	LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
+	Optimisation();
 	this->ComputeOrd();
 }
 
@@ -202,7 +236,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>& RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::operator=(const RChromoG& chromo)
+	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>&
+		RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::operator=(const RChromoG& chromo)
 {
 	RChromo<cInst,cChromo,cFit,cThreadData>::operator=(chromo);
 	RGroups<cGroup,cObj,cGroupData,cChromo>::operator=(chromo);

@@ -106,6 +106,12 @@ protected:
 	HeuristicType Heuristic;
 
 	/**
+	* Determine if the groups modified during a crossover must be emptied, or
+	* only the existing objects should be removed.
+	*/
+	bool EmptyModifiedGroups;
+
+	/**
 	* Objects to group.
 	*/
 	RCursor<cObj>* Objs;
@@ -154,6 +160,22 @@ public:
 	* Return the heuristic type.
 	*/
 	inline HeuristicType GetHeuristic(void) {return(Heuristic);}
+
+	/**
+	* Look if the groups containing objects that are also contained in groups
+	* inserted during a crossover must be completely emptied.
+	* @return true if the groups must be emptied.
+	*/
+	bool GetEmptyModifiedGroups(void) const {return(EmptyModifiedGroups);}
+
+
+	/**
+	* Set if the groups containing objects that are also contained in groups
+	* inserted during a crossover must be completely emptied.
+	* @param empty          If true, the groups must be emptied.
+	*/
+	void SetEmptyModifiedGroups(bool empty) {EmptyModifiedGroups=empty;}
+
 
 	/**
 	* Get the Objects to group.

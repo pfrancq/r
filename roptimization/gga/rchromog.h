@@ -4,7 +4,7 @@
 
 	Class representing a chromosome of a GGA - Header
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -90,6 +90,21 @@ public:
 	*/
 	virtual void RandomConstruct(void) throw(eGA);
 
+private:
+
+	/**
+	* This method simply copies nb2 groups of parent2 beginning at pos2 and
+	* verifies if some objects are in one of the nb1 groups of parent1
+	* beginning at pos1.
+	*
+	* In regards of the parameter of the instance, the groups of parent2
+	* containing objects of parent1 are copied (and the common objects not) or
+	* not.
+	*/
+	void CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int nb1,unsigned int pos2,unsigned int nb2);
+
+public:
+
 	/**
 	* Do a crossover by using the chromosome as child. The crossover
 	* implemented is the BPX (bin packing crossover). The groups of parent1
@@ -119,6 +134,12 @@ public:
 	* a group for the objects not yet assigned.
 	*/
 	virtual void LocalOptimisation(void) throw(eGA) {}
+
+	/**
+	* Perform an optimisation. This function is called at the end of the
+	* crossover and the mutation operators.
+	*/
+	virtual void Optimisation(void) throw(eGA) {}
 
 	/**
 	* Modify a given chromosome when it is identical to another one. By
