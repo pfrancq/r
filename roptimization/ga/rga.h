@@ -107,11 +107,6 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
-// Constances for objects manipulation
-const unsigned int NoObject=UINT_MAX;				// Reference to no object
-
-
-//---------------------------------------------------------------------------
 // General Variables
 extern bool ExternBreak;										// If true, GA stops
 extern RDebug *Debug;
