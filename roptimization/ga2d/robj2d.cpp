@@ -47,36 +47,43 @@
 
 //-----------------------------------------------------------------------------
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RPoint pos)
-	: Owner(owner), Id(id), Name(itoa(id)), Connections(10,5)
+	: Owner(owner), Id(id), Name(itoa(id)), NbPos(1), Connections(10,5)
 {
-	Pos=new RPoint[1];
+	Pos=new RPoint[NbPos];
+	Poss=new RPoint*[NbPos];
 	Pos[0]=pos;
 }
 
 
 //-----------------------------------------------------------------------------
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RString& name,const RPoint pos)
-	: Owner(owner), Id(id), Name(name), Connections(10,5)
+	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[1];
+	Poss=new RPoint*[NbPos];
+	Poss[0]=new RPoint[8];
 	Pos[0]=pos;
 }
 
 
 //-----------------------------------------------------------------------------
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const char* name,const RPoint pos)
-	: Owner(owner), Id(id), Name(name), Connections(10,5)
+	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[1];
+	Poss=new RPoint*[NbPos];
+	Poss[0]=new RPoint[8];
 	Pos[0]=pos;
 }
 
 
 //-----------------------------------------------------------------------------
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const unsigned int x,unsigned y)
-	: Owner(owner), Id(id), Name(itoa(id)), Connections(10,5)
+	: Owner(owner), Id(id), Name(itoa(id)), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[1];
+	Poss=new RPoint*[NbPos];
+	Poss[0]=new RPoint[8];
 	Pos[0].Set(x,y);
 }
 
@@ -86,24 +93,31 @@ RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RStr
 	: Owner(owner), Id(id), Name(name), Connections(10,5)
 {
 	Pos=new RPoint[1];
+	Poss=new RPoint*[NbPos];
+	Poss[0]=new RPoint[8];
 	Pos[0].Set(x,y);
 }
 
 
 //-----------------------------------------------------------------------------
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int x,unsigned y)
-	: Owner(owner), Id(id), Name(name), Connections(10,5)
+	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[1];
+	Poss=new RPoint*[NbPos];
+	Poss[0]=new RPoint[8];
 	Pos[0].Set(x,y);
 }
 
 
 //-----------------------------------------------------------------------------
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int nb)
-	: Owner(owner), Id(id), Name(name), Connections(10,5)
+	: Owner(owner), Id(id), Name(name), NbPos(nb), Connections(10,5)
 {
-	Pos=new RPoint[nb];
+	Pos=new RPoint[NbPos];
+	Poss=new RPoint*[NbPos];
+	for(unsigned int i;i<NbPos;i++)
+		Poss[i]=new RPoint[8];
 }
 
 
@@ -118,11 +132,11 @@ RPoint& RGA2D::RObj2DConnector::GetPos(void)
 
 
 //-----------------------------------------------------------------------------
-RPoint& RGA2D::RObj2DConnector::GetPos(char i)
+RPoint& RGA2D::RObj2DConnector::GetPos(unsigned int i,char o)
 {
 	RPoint *pt=RPoint::GetPoint();
 
-	(*pt)=Poss[i];
+	(*pt)=Poss[i][o];
 	return(*pt);
 }
 
@@ -220,9 +234,12 @@ void RGA2D::RObj2D::CalcPolygons(void)
 				Polygons[idx].ChangeOrientation(Rota90,Min);
 				for(Connectors.Start();!Connectors.End();Connectors.Next())
 				{
-					Connectors()->Poss[idx]=Connectors()->Pos;
-					Connectors()->Poss[idx].ChangeOrientation(Rota90);
-					Connectors()->Poss[idx]-=Min;					
+					for(unsigned int j=0;j<Connectors()->NbPos;j++)
+					{
+						Connectors()->Poss[j][idx]=Connectors()->Pos;
+						Connectors()->Poss[j][idx].ChangeOrientation(Rota90);
+						Connectors()->Poss[j][idx]-=Min;
+					}
 				}
 			}
 		}
@@ -230,15 +247,20 @@ void RGA2D::RObj2D::CalcPolygons(void)
 		if(bRota90&&bNormal) NbPossOri=2;
 		return;
 	}
+	
+	// Other Polygon
 	for(i=0,ptr=Polygons,o=PossOri;i<NbPossOri;ptr++,o++,i++)
 	{
 		(*ptr)=Polygon;
 		ptr->ChangeOrientation(*o,Min);
  		for(Connectors.Start();!Connectors.End();Connectors.Next())
  		{
- 			Connectors()->Poss[i]=Connectors()->Pos;
- 			Connectors()->Poss[i].ChangeOrientation(*o);
-			Connectors()->Poss[i]-=Min;					 			
+			for(unsigned int j=0;j<Connectors()->NbPos;j++)
+			{
+ 				Connectors()->Poss[j][i]=Connectors()->Pos;
+ 				Connectors()->Poss[j][i].ChangeOrientation(*o);
+				Connectors()->Poss[j][i]-=Min;
+			}
  		}		
 	}
 }

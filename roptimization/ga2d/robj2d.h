@@ -109,7 +109,7 @@ public:
 	/**
 	* Position of the connector for the possible orientations.
 	*/
-	RPoint Poss[8];
+	RPoint** Poss;
 
 	/**
 	* Connections of which the connector is involved.
@@ -235,9 +235,11 @@ public:
 	RPoint& GetPos(void);	
 
 	/**
-	* Return the position of the connector of the ith orientation.
+	* Return the position of the connector of the oth orientation.
+	* @return i		The number.
+	* @return o		The orientation.
 	*/
-	RPoint& GetPos(char i);	
+	RPoint& GetPos(unsigned int i,char o);
 
 	/**
 	* Add a connection to this connector.
