@@ -311,7 +311,8 @@ void RIO::RTextFile::GetUntilEnd(char* &buffer)
 //-----------------------------------------------------------------------------
 long RIO::RTextFile::GetInt(void) throw(RString)
 {
-	char *ptr2=ptr;
+	char* ptr2=ptr;
+	char* rem;
 
 	if(Mode!=Read)
 		throw(RString("File Mode is not Read"));
@@ -320,8 +321,9 @@ long RIO::RTextFile::GetInt(void) throw(RString)
 	LastLine=Line;
 	if(*ptr)
 	{
-		(*(ptr++))=0;
+		rem=ptr;
 		SkipSpaces();
+		(*rem)=0;
 	}
 	return(strtol(ptr2,0,10));
 }
@@ -330,7 +332,8 @@ long RIO::RTextFile::GetInt(void) throw(RString)
 //-----------------------------------------------------------------------------
 unsigned long RIO::RTextFile::GetUInt(void) throw(RString)
 {
-	char *ptr2=ptr;
+	char* ptr2=ptr;
+	char* rem;
 
 	if(Mode!=Read)
 		throw(RString("File Mode is not Read"));
@@ -339,8 +342,9 @@ unsigned long RIO::RTextFile::GetUInt(void) throw(RString)
 	LastLine=Line;
 	if(*ptr)
 	{
-		(*(ptr++))=0;
+		rem=ptr;
 		SkipSpaces();
+		(*rem)=0;
 	}
 	return(strtoul(ptr2,0,10));
 }
@@ -414,6 +418,7 @@ RTextFile& RIO::RTextFile::operator>>(unsigned long &nb) throw(RString)
 float RIO::RTextFile::GetFloat(void) throw(RString)
 {
 	char *ptr2=ptr;
+	char* rem;
 
 	if(Mode!=Read)
 		throw(RString("File Mode is not Read"));
@@ -426,8 +431,9 @@ float RIO::RTextFile::GetFloat(void) throw(RString)
 	LastLine=Line;
 	if(*ptr)
 	{
-		(*(ptr++))=0;
+		rem=ptr;
 		SkipSpaces();
+		(*rem)=0;
 	}
 	return(atof(ptr2));
 }
@@ -437,6 +443,7 @@ float RIO::RTextFile::GetFloat(void) throw(RString)
 char* RIO::RTextFile::GetWord(void) throw(RString)
 {
 	char *ptr2=ptr;
+	char* rem;
 
 	if(Mode!=Read)
 		throw(RString("File Mode is not Read"));
@@ -444,8 +451,9 @@ char* RIO::RTextFile::GetWord(void) throw(RString)
 	LastLine=Line;
 	if(*ptr)
 	{
-		(*(ptr++))=0;
+		rem=ptr;
 		SkipSpaces();
+		(*rem)=0;
 	}
 	return(ptr2);
 }
