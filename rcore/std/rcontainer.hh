@@ -35,10 +35,9 @@
 //---------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>::RContainer(T M,T I) throw(bad_alloc)
+		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(M),IncPtr(I)
+
 {
-  NbPtr=0;
-  MaxPtr=M;
-  IncPtr=I;
   Tab = new C*[MaxPtr];
   memset(Tab,0,MaxPtr*sizeof(C*));
   if(!IncPtr) IncPtr=1;
@@ -48,13 +47,11 @@ template<class C,class T,bool bAlloc,bool bOrder>
 //---------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>::RContainer(RContainer<C,T,bAlloc,bOrder> *container) throw(bad_alloc)
+		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(container->MaxPtr),IncPtr(container->IncPtr)
 {
 	T i;
 	C **tab;
 
-	NbPtr=0;
-	MaxPtr=container->MaxPtr;
-	IncPtr=container->IncPtr;
   Tab = new C*[MaxPtr];
   memset(Tab,0,MaxPtr*sizeof(C*));
 	for(i=container->NbPtr+1,tab=container->Tab;--i;tab++)
@@ -280,16 +277,16 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 // Return the pointer to the member corresponding to tag
 // If not find -> Return 0
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	C* RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag)
+	C* RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag,bool sortkey)
 {
-  if(bOrder)
+  if(bOrder&&sortkey)
   {
     bool Find;
     T Index=GetId<TUse>(tag,Find);
     if(Find)
       return(Tab[Index]);
     else
-      return(NULL);
+      return(0);
   }
   else
   {
@@ -307,9 +304,9 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 // Return the pointer to the member corresponding to tag
 // If not find -> Create a member with tag
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	C* RContainer<C,T,bAlloc,bOrder>::GetInsertPtr(const TUse &tag) throw(bad_alloc)
+	C* RContainer<C,T,bAlloc,bOrder>::GetInsertPtr(const TUse &tag,bool sortkey) throw(bad_alloc)
 {
-  if(bOrder)
+  if(bOrder&&sortkey)
   {
     bool Find;
     T Index=GetId<TUse>(tag,Find);
@@ -398,6 +395,45 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
   memcpy(ptr,ptr+1,((--NbPtr)-Index)*sizeof(C*));
 	Tab[NbPtr]=0;
   if(bAlloc) delete(del);
+}
+
+
+//---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	inline void RContainer<C,T,bAlloc,bOrder>::Start(void)
+{
+	Current=Tab;
+	ActPtr=0;
+}
+
+
+//---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	inline bool RContainer<C,T,bAlloc,bOrder>::End(void)
+{
+	return(ActPtr==NbPtr);
+}
+
+
+//---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	inline void RContainer<C,T,bAlloc,bOrder>::Next(void)
+{
+	if(End())
+		Start();
+	else
+	{
+		ActPtr++;
+		Current++;
+	}
+}
+
+
+//---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	inline C* RContainer<C,T,bAlloc,bOrder>::operator()(void)
+{
+	return(*Current);
 }
 
 
