@@ -297,16 +297,8 @@ public:
 	* Get a cursor on the points of the polygon.
 	* @return RPointCursor.
 	*/
-	RPointCursor GetPointsCursor(void);
+	R::RCursor<RPoint> GetPointsCursor(void);
 };
-
-
-//------------------------------------------------------------------------------
-/**
-* The RPolygonCursor class provides a way to go trough a set of polygons.
-* @short Polygons Cursor
-*/
-CLASSCURSOR(RPolygonCursor,RPolygon);
 
 
 }  //-------- End of namespace R -----------------------------------------------

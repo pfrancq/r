@@ -123,7 +123,7 @@ public:
 	* Get a cursor on the polygons.
 	* @return RPolygonCursor.
 	*/
-	RPolygonCursor GetPolygonsCursor(void);
+	R::RCursor<RPolygon> GetPolygonsCursor(void);
 };
 
 

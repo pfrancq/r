@@ -6,7 +6,7 @@
 
 	Geometric information - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -90,20 +90,20 @@ RPoint RGeoInfoConnector::GetPos(void)
 
 //------------------------------------------------------------------------------
 RRelPointCursor::RRelPointCursor(void)
-	: RPointCursor(), Base()
+	: RCursor<RPoint>(), Base()
 {
 }
 
 
 //------------------------------------------------------------------------------
 RRelPointCursor::RRelPointCursor(RGeoInfo& info)
-	: RPointCursor(info.Bound), Base(info.Pos)
+	: RCursor<RPoint>(info.Bound), Base(info.Pos)
 {
 }
 
 //------------------------------------------------------------------------------
 RRelPointCursor::RRelPointCursor(RGeoInfo* info)
-	: RPointCursor(info->Bound), Base(info->Pos)
+	: RCursor<RPoint>(info->Bound), Base(info->Pos)
 {
 }
 
@@ -111,21 +111,21 @@ RRelPointCursor::RRelPointCursor(RGeoInfo* info)
 //------------------------------------------------------------------------------
 void RRelPointCursor::Clear(void)
 {
-	RPointCursor::Clear();
+	RCursor<RPoint>::Clear();
 }
 
 
 //------------------------------------------------------------------------------
 void RRelPointCursor::Start(void)
 {
-	RPointCursor::Start();
+	RCursor<RPoint>::Start();
 }
 
 
 //------------------------------------------------------------------------------
 void RRelPointCursor::Set(RGeoInfo& info)
 {
-	RPointCursor::Set(info.Bound);
+	RCursor<RPoint>::Set(info.Bound);
 	Base=info.Pos;
 }
 
@@ -133,7 +133,7 @@ void RRelPointCursor::Set(RGeoInfo& info)
 //------------------------------------------------------------------------------
 void RRelPointCursor::Set(RGeoInfo* info)
 {
-	RPointCursor::Set(info->Bound);
+	RCursor<RPoint>::Set(info->Bound);
 	Base=info->Pos;
 }
 
@@ -141,35 +141,35 @@ void RRelPointCursor::Set(RGeoInfo* info)
 //------------------------------------------------------------------------------
 void RRelPointCursor::GoTo(const unsigned int i) throw(std::bad_alloc)
 {
-	RPointCursor::GoTo(i);
+	RCursor<RPoint>::GoTo(i);
 }
 
 
 //------------------------------------------------------------------------------
 unsigned int RRelPointCursor::GetNb(void)
 {
-	return(RPointCursor::GetNb());
+	return(RCursor<RPoint>::GetNb());
 }
 
 
 //------------------------------------------------------------------------------
 bool RRelPointCursor::End(void) const
 {
-	return(RPointCursor::End());
+	return(RCursor<RPoint>::End());
 }
 
 
 //------------------------------------------------------------------------------
 void RRelPointCursor::Next(void)
 {
-	RPointCursor::Next();
+	RCursor<RPoint>::Next();
 }
 
 
 //------------------------------------------------------------------------------
 RPoint RRelPointCursor::operator()(void) const
 {
-	RPoint Pt((*(dynamic_cast<const RPointCursor*>(this)))());
+	RPoint Pt((*(dynamic_cast<const RCursor<RPoint>*>(this)))());
 	Pt+=Base;
 	return(Pt);
 }
@@ -250,7 +250,7 @@ void RGeoInfo::ClearInfo(void)
 	Selected=false;
 	Pos.Set(MaxCoord,MaxCoord);
 	Bound=0;
-	Rects=0;	
+	Rects=0;
 	Ori=-1;
 	Order=NoObject;
 }

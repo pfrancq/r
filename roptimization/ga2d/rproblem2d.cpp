@@ -66,8 +66,8 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	RString Attr;
 	RContainer<RObj2D,true,true> Templates(50,25);
 	RPoint Tr;
-	RXMLTagCursor Cur;
-	
+	RCursor<RXMLTag> Cur;
+
 	// Clear the Problem
 	f.Process();
 	Clear();
@@ -76,7 +76,7 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	tag=s.GetTag("Shape",s.GetTop());
 	if(tag)
 	{
-		// Read the points but the last	
+		// Read the points but the last
 		Cur.Set(tag);
 		for(Cur.Start(),i=Cur.GetNb();--i;Cur.Next())  // Last point = first point
 		{
@@ -107,7 +107,7 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	tag=s.GetTag("Instances",s.GetTop());
 	if(tag)
 	{
-		Objs.Clear(tag->NbPtr,tag->NbPtr/2);	
+		Objs.Clear(tag->NbPtr,tag->NbPtr/2);
 		for(i=tag->NbPtr+1,tab=tag->Tab;--i;tab++)
 			if((*tab)->GetName()==RString("Instance"))
 				CreateObj(*tab,Templates);
@@ -149,7 +149,7 @@ void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 	RCoord X,Y;
 	RPoint Tr;
 
-	IsObj=(o->GetName()=="Instance");	
+	IsObj=(o->GetName()=="Instance");
 	if(IsObj)
 	{
 		obj = new RObj2D(Objs.NbPtr,o->GetAttrValue("Id"),false);
@@ -275,7 +275,7 @@ void RProblem2D::CreateNet(RXMLTag* n)
 
 //------------------------------------------------------------------------------
 void RProblem2D::Clear(void)
-{	
+{
 	Objs.Clear();
 	Cons.Clear();
 }

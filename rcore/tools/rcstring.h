@@ -6,7 +6,7 @@
 
 	C String - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -42,7 +42,6 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
-#include <rstd/rcursor.h>
 #include <rstd/rshareddata.h>
 
 
@@ -230,7 +229,7 @@ public:
 	*                       the search from the end.
 	* @param CaseSensitive  Is the search case sensitive.
 	* @return The position of the first occurence or -1 if the character was not
-	*         found. 
+	*         found.
 	*/
 	int Find(char car,int pos=0,bool CaseSensitive=true) const;
 
@@ -253,7 +252,7 @@ public:
 	* @returns A RCString containing the substring.
 	*/
 	RCString Mid(unsigned int idx,unsigned int len = 0xFFFFFFFF) const;
-	
+
 	/**
 	* Add another string.
 	*/
@@ -381,14 +380,6 @@ RCString operator+(const RCString& arg1,const char* arg2);
 * Add a "C string" and a string together.
 */
 RCString operator+(const char* arg1,const RCString& arg2);
-
-
-//------------------------------------------------------------------------------
-/**
-* The RCStringCursor class provides a way to go trough a set of C strings.
-* @short C Strings Cursor
-*/
-CLASSCURSOR(RCStringCursor,RCString);
 
 
 }  //-------- End of namespace R -----------------------------------------------

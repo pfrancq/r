@@ -38,6 +38,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
+#include <rstd/rcontainer.h>
 
 
 //------------------------------------------------------------------------------
@@ -69,7 +70,7 @@ protected:
 	/**
 	* Variables defined in the class.
 	*/
-	RContainer<RPrgVar,true,true> Vars;
+	R::RContainer<RPrgVar,true,true> Vars;
 
 	/**
 	* Methods defined in the class.

@@ -98,7 +98,7 @@ public:
 	* Constructor of the connector.
 	* @param con            "Real" Connector of this one.
 	* @param owner          Geometric Information of the connector.
-	*/	
+	*/
 	RGeoInfoConnector(RGeoInfoConnector* con,RGeoInfo* owner);
 
 	/**
@@ -116,7 +116,7 @@ public:
 	*/
 	int Compare(const RGeoInfoConnector* c) {return(Con->Id-c->Con->Id);}
 
-	/**	
+	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
 	* @param c              Connector used for the comparaison.
@@ -145,11 +145,11 @@ public:
 
 //------------------------------------------------------------------------------
 /**
-* The RBoundCursor class provides a way to go trough a set of points 
+* The RBoundCursor class provides a way to go trough a set of points
 * representing a boundary of a RGeoInfo.
 * @short Relative Points Cursor
 */
-class RRelPointCursor : public RPointCursor
+class RRelPointCursor : public R::RCursor<RPoint>
 {
 	/**
 	* Base point.
@@ -281,32 +281,32 @@ class RGeoInfo
 	unsigned int Order;
 
 public:
-	
+
 	/**
 	* The connectors of this object
 	*/
 	RContainer<RGeoInfoConnector,true,true> Connectors;
-	
+
 	/**
 	* Construct a geometric information.
 	*/
 	RGeoInfo(void);
-	
+
 	/**
 	* Construct a geometric information.
 	*/
 	RGeoInfo(RPolygon* poly);
-		
+
 	/**
 	* Construct a geometric information.
 	*/
 	RGeoInfo(RObj2D* obj);
-	
+
 	/**
 	* Construct a geometric information from another one.
 	*/
 	RGeoInfo(RGeoInfo& info);
-	
+
 	/**
 	* Construct a geometric information from another one.
 	*/
@@ -419,7 +419,7 @@ public:
 	* @param grid           Grid.
 	*/
 	void PushCenter(RPoint& pos,RPoint& limits,RGrid* grid);
-	
+
 	/**
 	* This function returns true if the two objects represented by this geometric information
 	* overlap (Rects have to be calculated.

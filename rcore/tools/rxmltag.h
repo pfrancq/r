@@ -40,8 +40,8 @@
 // include files for R Project
 #include <rstd/rstring.h>
 #include <rstd/rnode.h>
-#include <rstd/rcursor.h>
 #include <rstd/rxmlattr.h>
+#include <rstd/rcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -253,13 +253,13 @@ public:
 	* Get a Cursor on the attributes.
 	* @return GXMLAttrCursor.
 	*/
-	RXMLAttrCursor GetXMLAttrCursor(void);
+	R::RCursor<RXMLAttr> GetXMLAttrCursor(void);
 
 	/**
 	* Get a Cursor on the sub tags.
 	* @return GXMLTagCursor.
 	*/
-	RXMLTagCursor GetXMLTagsCursor(void);
+	R::RCursor<RXMLTag> GetXMLTagsCursor(void);
 
 	/**
 	* Destruct the XML Tag.
@@ -268,16 +268,7 @@ public:
 
 	// friend classes
 	friend class RXMLStruct;
-	friend class RXMLTagCursor;
 };
-
-
-//------------------------------------------------------------------------------
-/**
-* The RXMLTagCursor class provides a way to go trough a set of XML tags.
-* @short XML Tags Cursor
-*/
-CLASSCURSOR(RXMLTagCursor,RXMLTag);
 
 
 }  //-------- End of namespace R -----------------------------------------------

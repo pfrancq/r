@@ -6,7 +6,7 @@
 
 	Promethee Kernel - Implementation.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -39,6 +39,7 @@
 // include files for R Project
 #include <rpromethee/rpromkernel.h>
 #include <rpromethee/rpromcritvalue.h>
+#include <rstd/rcursor.h>
 using namespace R;
 
 
@@ -244,7 +245,7 @@ void RPromKernel::Clear(void)
 //------------------------------------------------------------------------------
 void RPromKernel::ClearSols(void)
 {
-	RPromCriterionCursor Cur;
+	RCursor<RPromCriterion> Cur;
 
 	Cur.Set(Criteria);
 	for(Cur.Start();!Cur.End();Cur.Next())

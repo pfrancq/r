@@ -38,6 +38,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rtextfile.h>
+#include <rstd/rcontainer.h>
 
 
 //------------------------------------------------------------------------------
@@ -71,7 +72,7 @@ protected:
 	/**
 	* Generic output.
 	*/
-	RPrgOutput* Cout;
+	R::RPrgOutput* Cout;
 
 	/**
 	* List of all "Instructions" to execute.

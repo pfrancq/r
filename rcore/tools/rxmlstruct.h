@@ -6,7 +6,7 @@
 
 	XML structure - Header.
 
-	Copyright 2000-2004 by the Université Libre de Bruxelles.
+	Copyright 2000-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -130,7 +130,7 @@ public:
 	* Get a Cursor on the entities.
 	* @return GXMLAttrCursor.
 	*/
-	RXMLAttrCursor GetXMLEntitiesCursor(void);
+	R::RCursor<RXMLAttr> GetXMLEntitiesCursor(void);
 
 	/**
 	* Set the version of the XML standard.

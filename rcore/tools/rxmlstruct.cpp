@@ -6,7 +6,7 @@
 
 	XML Structure - Implementation.
 
-	Copyright 2000-2004 by the Université Libre de Bruxelles.
+	Copyright 2000-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -33,6 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rxmlstruct.h>
+#include <rstd/rcursor.h>
 using namespace R;
 
 
@@ -108,9 +109,9 @@ void RXMLStruct::Clear(void)
 
 
 //------------------------------------------------------------------------------
-RXMLAttrCursor RXMLStruct::GetXMLEntitiesCursor(void)
+R::RCursor<RXMLAttr> RXMLStruct::GetXMLEntitiesCursor(void)
 {
-	RXMLAttrCursor cur(Entities);
+	R::RCursor<RXMLAttr> cur(Entities);
 	return(cur);
 }
 

@@ -304,14 +304,6 @@ public:
 };
 
 
-//------------------------------------------------------------------------------
-/**
-* The RPromCriterionCursor class provides a way to go trough a set of criterion.
-* @short Criterion Cursor.
-*/
-CLASSCURSOR(RPromCriterionCursor,RPromCriterion);
-
-
 }  //-------- End of namespace R -----------------------------------------------
 
 

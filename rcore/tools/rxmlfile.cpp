@@ -6,7 +6,7 @@
 
 	XML file - Implementation.
 
-	Copyright 2000-2004 by the Université Libre de Bruxelles.
+	Copyright 2000-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -32,6 +32,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rxmlfile.h>
+#include <rstd/rcursor.h>
 using namespace R;
 using namespace std;
 
@@ -82,7 +83,7 @@ void RXMLFile::SetDocType(const RString& docType) throw(RIOException)
 void RXMLFile::Process(void) throw(RIOException)
 {
 	RXMLTag *top;
-	RXMLAttrCursor Cur;
+	RCursor<RXMLAttr> Cur;
 	RString Header;
 
 	switch(Mode)
@@ -506,8 +507,8 @@ void RXMLFile::SaveNextTag(int depth) throw(RIOException)
 {
 	int i;
 	RString text;
-	RXMLAttrCursor Cur;
-	RXMLTagCursor Tags;
+	RCursor<RXMLAttr> Cur;
+	RCursor<RXMLTag> Tags;
 	RString line;
 
 	for(int i=0;i<depth;i++) line+="\t";
@@ -587,7 +588,7 @@ void RXMLFile::AddNextCharacter(RString& str) throw(RIOException)
 void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RContainer<RXMLAttr,true,true>& attrs) throw(RIOException)
 {
 	RXMLTag* tag;
-	RXMLAttrCursor Cur;
+	RCursor<RXMLAttr> Cur;
 
 	// Create the tag
 	tag=new RXMLTag(name);

@@ -312,8 +312,8 @@ void RPolygons::Save(RTextFile& f)
 
 
 //------------------------------------------------------------------------------
-RPolygonCursor RPolygons::GetPolygonsCursor(void)
+RCursor<RPolygon> RPolygons::GetPolygonsCursor(void)
 {
-	RPolygonCursor cur(this);
+	RCursor<RPolygon> cur(this);
 	return(cur);
 }

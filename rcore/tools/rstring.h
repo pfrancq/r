@@ -44,7 +44,6 @@
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rcstring.h>
-#include <rstd/rcursor.h>
 #include <rstd/rchar.h>
 #include <rstd/rshareddata.h>
 
@@ -143,7 +142,7 @@ public:
 	* @param str            String used.
 	*/
 	RString(const RString& str) throw(std::bad_alloc);
-	
+
 	/**
 	* Construct a string from another string.
 	* @param str            Pointer to the string.
@@ -262,7 +261,7 @@ public:
 	*                       the search from the end.
 	* @param CaseSensitive  Is the search case sensitive.
 	* @return The position of the first occurence or -1 if the character was not
-	*         found. 
+	*         found.
 	*/
 	int Find(const RChar car,int pos=0,bool CaseSensitive=true) const;
 
@@ -633,14 +632,6 @@ public:
 	*/
 	RChar operator[](unsigned int pos) const throw(RException);
 };
-
-
-//------------------------------------------------------------------------------
-/**
-* The RStringCursor class provides a way to go trough a set of strings.
-* @short Unicode Strings Cursor
-*/
-CLASSCURSOR(RStringCursor,RString);
 
 
 }  //-------- End of namespace R -----------------------------------------------

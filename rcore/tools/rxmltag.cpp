@@ -6,7 +6,7 @@
 
 	XML tag - Implementation.
 
-	Copyright 2000-2004 by the Université Libre de Bruxelles.
+	Copyright 2000-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -208,17 +208,17 @@ void RXMLTag::DeleteEmptyTags(RXMLStruct* s)
 
 
 //------------------------------------------------------------------------------
-RXMLAttrCursor RXMLTag::GetXMLAttrCursor(void)
+RCursor<RXMLAttr> RXMLTag::GetXMLAttrCursor(void)
 {
-	RXMLAttrCursor cur(Attrs);
+	RCursor<RXMLAttr> cur(Attrs);
 	return(cur);
 }
 
 
 //------------------------------------------------------------------------------
-RXMLTagCursor RXMLTag::GetXMLTagsCursor(void)
+RCursor<RXMLTag> RXMLTag::GetXMLTagsCursor(void)
 {
-	RXMLTagCursor cur(this);
+	RCursor<RXMLTag> cur(this);
 	return(cur);
 }
 

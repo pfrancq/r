@@ -6,7 +6,7 @@
 
 	Container Cursor - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -301,44 +301,6 @@ public:
 
 
 }  //-------- End of namespace R -----------------------------------------------
-
-
-//------------------------------------------------------------------------------
-/**
-* The CLASSCURSOR macro defines a way to create a cursor for a given class with
-* a name. It is sometimes easier to create a specific class rather than using
-* directly the template class RContainerCursor.
-* @param name               Name of the class representing the cursor.
-* @param C                  The class of the elements that are contained.
-*/
-#define CLASSCURSOR(name,C)                                                          \
-class name : public R::RCursor<C>                                                    \
-{                                                                                    \
-public:                                                                              \
-	name(void) : R::RCursor<C>() {}                                                  \
-	name(const R::RContainer<C,true,true>& c) : R::RCursor<C>(c) {}                  \
-	name(const std::auto_ptr<R::RContainer<C,true,true> >& c) : R::RCursor<C>(c) {}  \
-	name(const R::RContainer<C,true,true>* c) : R::RCursor<C>(c) {}                  \
-	name(const R::RContainer<C,true,false>& c) : R::RCursor<C>(c) {}                 \
-	name(const std::auto_ptr<R::RContainer<C,true,false> >& c) : R::RCursor<C>(c) {} \
-	name(const R::RContainer<C,true,false>* c) : R::RCursor<C>(c) {}                 \
-	name(const R::RContainer<C,false,true>& c) : R::RCursor<C>(c) {}                 \
-	name(const std::auto_ptr<R::RContainer<C,false,true> >& c) : R::RCursor<C>(c) {} \
-	name(const R::RContainer<C,false,true>* c) : R::RCursor<C>(c) {}                 \
-	name(const R::RContainer<C,false,false>& c) : R::RCursor<C>(c) {}                \
-	name(const std::auto_ptr<R::RContainer<C,false,false> >& c) : R::RCursor<C>(c) {}\
-	name(const R::RContainer<C,false,false>* c) : R::RCursor<C>(c) {}                \
-	name& operator=(const name& c) throw(std::bad_alloc)                             \
-	{                                                                                \
-		R::RCursor<C>::operator=(c);                                                 \
-		return(*this);                                                               \
-	}                                                                                \
-	name& operator=(const R::RCursor<C>& c) throw(std::bad_alloc)                    \
-	{                                                                                \
-		R::RCursor<C>::operator=(c);                                                 \
-		return(*this);                                                               \
-	}                                                                                \
-}
 
 
 //------------------------------------------------------------------------------

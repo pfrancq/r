@@ -474,7 +474,7 @@ bool RPolygon::IsIn(const RCoord X,const RCoord Y) const
 			y1=act->Y;
 			y2=next->Y;
 		}
-		
+
 		// Test Line e1,act
 		if((act->X>=X)&&(Y>=y1)&&(Y<=y2))
 			count++;
@@ -768,7 +768,7 @@ void RPolygon::RectDecomposition(RRects* rects) const
 			tmp=(*Test);
 			tmpPoly.InsertPtr(new RPoint(Test));
 			work.DeletePtr(Test);
-	
+
 			// Verify if no points left under the last inserted
 			point=work.Tab;
 			i=work.NbPtr+1;
@@ -821,7 +821,7 @@ void RPolygon::ReOrder(void)
 	(*(point++))=next;
 	next=GetConX(next);
 	(*(point++))=next;
-	bX=false;	
+	bX=false;
 	i=NbPtr-1;
 	while(--i)
 	{
@@ -945,8 +945,8 @@ RPoint RPolygon::Calibrate(void)
 
 
 //------------------------------------------------------------------------------
-RPointCursor RPolygon::GetPointsCursor(void)
+RCursor<RPoint> RPolygon::GetPointsCursor(void)
 {
-	RPointCursor cur(this);
+	RCursor<RPoint> cur(this);
 	return(cur);
 }

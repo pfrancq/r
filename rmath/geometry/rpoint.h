@@ -71,7 +71,7 @@ public:
 
 	/**
 	* Construct a point at (0,0).
-	*/	
+	*/
 	RPoint(void);
 
 	/**
@@ -204,14 +204,6 @@ RPoint operator+(const RPoint& arg1,const RPoint& arg2);
 * Substract two points.
 */
 RPoint operator-(const RPoint& arg1,const RPoint& arg2);
-
-
-//------------------------------------------------------------------------------
-/**
-* The RPointCursor class provides a way to go trough a set of points.
-* @short Points Cursor
-*/
-CLASSCURSOR(RPointCursor,RPoint);
 
 
 }  //-------- End of namespace R -----------------------------------------------

@@ -37,7 +37,6 @@
 
 //------------------------------------------------------------------------------
 // incluce files for R Project
-#include <rstd/rcursor.h>
 #include <rstd/rstring.h>
 
 
@@ -133,14 +132,6 @@ public:
 	*/
 	~RXMLAttr(void);
 };
-
-
-//------------------------------------------------------------------------------
-/**
-* The RXMLAttrCursor class provides a way to go trough a set of XML attributes.
-* @short XML attributes Cursor
-*/
-CLASSCURSOR(RXMLAttrCursor,RXMLAttr);
 
 
 }  //-------- End of namespace R -----------------------------------------------
