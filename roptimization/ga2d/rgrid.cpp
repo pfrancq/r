@@ -38,6 +38,11 @@
 using namespace RGA2D;
 
 
+//-----------------------------------------------------------------------------
+// defines
+//#define DOUBLESPACE
+
+
 
 //-----------------------------------------------------------------------------
 //
@@ -49,7 +54,11 @@ using namespace RGA2D;
 RGA2D::RGrid::RGrid(RPoint &limits) throw(bad_alloc)
 	: Limits(limits), OccupiedX(0), OccupiedY(0)
 {
-	InternalLimits.Set(Limits.X*2,Limits.Y*2);
+	#ifdef DOUBLESPACE
+		InternalLimits.Set(Limits.X*2,Limits.Y*2);
+	#else
+		InternalLimits=Limits;
+	#endif
 	// Init Occupied
 	OccupiedX = new unsigned int*[InternalLimits.X+1];
 	for(RCoord R=0;R<InternalLimits.X+1;R++)
@@ -107,7 +116,7 @@ bool RGA2D::RGrid::IsFree(RCoord x,RCoord y)
 {
 	RReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.X)||y<0||y>(InternalLimits.Y))
-		return(false);
+		return(true);
 	return(OccupiedX[x][y]==NoObject);
 }
 
@@ -117,7 +126,7 @@ bool RGA2D::RGrid::IsOcc(RCoord x,RCoord y)
 {
 	RReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.X)||y<0||y>(InternalLimits.Y))
-		return(true);
+		return(false);
 	return(OccupiedX[x][y]!=NoObject);
 }
 
@@ -305,37 +314,37 @@ bool RGA2D::RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect 
 	pt.Set(X,Y);
 
 	// Find the next vertice of the polygon
-  	switch(from)		
-  	{
-  		case Left:
+	switch(from)
+	{
+		case Left:
 			Y=SkirtDown(pt,bound);
 			from=Up;
-  			break;
-  		case Right:
+			break;
+		case Right:
 			Y=SkirtUp(pt,bound);
 			from=Down;
-  			break;
-  		case Down:
+			break;
+		case Down:
 			X=SkirtRight(pt,bound);
 			from=Left;
-  			break;
-  		case Up:
+			break;
+		case Up:
 			X=SkirtLeft(pt,bound);
 			from=Right;
-  			break;
-  		case NoDirection:
-  			RAssertMsg("Direction can't be undefined");
-  			break;
+			break;
+		case NoDirection:
+			RAssertMsg("Direction can't be undefined");
+			break;
 		default:
 			RAssertMsg("Not a valid Direction in this context");
 			break;
-  	}
+	}
 
 	// Test if Valid one and insert it
-	if(	((bound.Pt1.X>0)&&(X==bound.Pt1.X))	||
-			(X==bound.Pt2.X)	||
-			((bound.Pt1.Y>0)&&(Y==bound.Pt1.Y))	||
-			(Y==bound.Pt2.Y)||((X==pt.X)&&(Y==pt.Y))	)
+	if(  ((bound.Pt1.X>0)&&(X==bound.Pt1.X)) ||
+	     (X==bound.Pt2.X)                    ||
+	     ((bound.Pt1.Y>0)&&(Y==bound.Pt1.Y)) ||
+	     (Y==bound.Pt2.Y)||((X==pt.X)&&(Y==pt.Y))  )
 		return(false);
 
 	// Find next Vertices
@@ -343,7 +352,7 @@ bool RGA2D::RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect 
 	{
 		poly.InsertPtr(next=new RPoint(X,Y));
 		pt.Set(X,Y);
-		switch(from)		
+		switch(from)
 		{
 			case Left:
 				TestY=SkirtDown(pt,bound);
@@ -463,9 +472,9 @@ bool RGA2D::RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect 
 //-----------------------------------------------------------------------------
 void RGA2D::RGrid::AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &bound)
 {
-	RPolygon Poly;			// Polygon representing the geometric information
-	RPolygons NewOne;		// Polygons added now
-	RPolygon New;			// New Polygon
+	RPolygon Poly;          // Polygon representing the geometric information
+	RPolygons NewOne;       // Polygons added now
+	RPolygon New;           // New Polygon
 	RPoint *start,*end;
 	unsigned int nbpts;
 	RDirection FromDir;
@@ -492,7 +501,7 @@ void RGA2D::RGrid::AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &boun
 			// Calculate Polygon
 			if(CalculateFreePolygon(TestX,TestY,FromDir,bound,New))
 			{
-				New.ReOrder();	// The points must order anti-clockwise.
+				New.ReOrder();    // The points must order anti-clockwise.
 				NewOne.InsertPtr(new RPolygon(New));
 				free->InsertPtr(new RFreePolygon(New));
 			}
@@ -502,15 +511,15 @@ void RGA2D::RGrid::AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &boun
 		if((X==end->X)&&(Y==end->Y))
 		{
 			start=end;
-			nbpts--;			// Next vertice
+			nbpts--;          // Next vertice
 			TestX=X=start->X;
 			TestY=Y=start->Y;
-			if((FromDir==Left)||(FromDir==Right))	// Go to up/bottom
+			if((FromDir==Left)||(FromDir==Right))    // Go to up/bottom
 			{
 				end=Poly.GetConY(start);
 				if(start->Y<end->Y) FromDir=Down; else FromDir=Up;
 			}
-			else		// Go to left/right
+			else      // Go to left/right
 			{
 				end=Poly.GetConX(start);
 				if(start->X<end->X) FromDir=Left; else FromDir=Right;

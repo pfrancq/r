@@ -93,11 +93,12 @@ public:
 	RGrid(RPoint &limits) throw(bad_alloc);
 
 	/**
-	* This function returns true if the position (x,y) is free.
+	* This function returns true if the position (x,y) is free or if it is out
+	* of the limits.
 	* @param x		X position.
 	* @param y		Y position.
-	* @returns	The function return true if the point is in the limits and if
-	*				the position is free.
+	* @returns		The function return true if the point is out of the limits
+	*				or if the position is free.
 	*/
 	bool IsFree(RCoord x,RCoord y);
 
@@ -105,8 +106,8 @@ public:
 	* This function returns true if the position (x,y) is occupied.
 	* @param x		X position.
 	* @param y		Y position.
-	* @returns	The function returns true if the point is out of the limits or
-	*				if the position is occupied.
+	* @returns	The function returns true if the position is occupied, false
+	*			else (also if the point is out of the limits).
 	*/
 	bool IsOcc(RCoord x,RCoord y);
 	
