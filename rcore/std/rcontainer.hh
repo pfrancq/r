@@ -325,8 +325,16 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	}
 	(*ptr)=ins;
 	NbPtr++;
-	if(Pos>LastPtr-1)
+	if(Pos+1>LastPtr)
+	{
 		LastPtr=Pos+1;
+	}
+	else
+	{
+		if(!del)
+			LastPtr++;
+	}
+	
 }
 
 
