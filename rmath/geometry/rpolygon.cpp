@@ -76,7 +76,7 @@ RPolygon& RPolygon::operator=(const RPolygon &poly)
 }
 
 //---------------------------------------------------------------------------
-int RPolygon::Compare(ROolygon*)
+int RPolygon::Compare(RPolygon*)
 {
 	return(0);
 }
