@@ -64,17 +64,17 @@ template<bool bOrder=true>
 {
 protected:
 	/**
-	* Number of Integer value in the list.
+	* Number of values in the list.
 	*/
 	unsigned int NbInt;
 
 	/**
-	* Maximal Number of Integer value in the list.
+	* Maximal number of values in the list.
 	*/
 	unsigned int MaxInt;
 
 	/**
-	* The array representing the Integer values.
+	* The array representing the integer values.
 	*/
 	unsigned int* List;
 
@@ -94,9 +94,9 @@ public:
 
 	/**
 	* Construct the list of Integer value.
-	* @param MaxSize        The maximum number of Integer value.
+	* @param Max            The maximum number of values.
 	*/
-	RVectorInt(const unsigned int MaxSize) throw(std::bad_alloc);
+	RVectorInt(const unsigned int max) throw(std::bad_alloc);
 
 	/**
 	* Copy constructor.
@@ -133,38 +133,45 @@ private:
 public:
 
 	/**
-	* Test if two lists have exactly the same Integers.
+	* Test if two lists have exactly the same integers.
 	* @param vi             The list used for the comparaison.
 	* @return True if the lists are the same.
 	*/
 	bool IsSame(const RVectorInt& vi) const;
 
 	/**
-	* Verify if a Integer value is in the list.
-	* @param In             The Integer value to test.
-	* @return True if the Integer is in the list, false else.
+	* Verify if a integer value is in the list.
+	* @param value          The integer value to test.
+	* @return True if the integer is in the list, false else.
 	*/
-	bool IsIn(const unsigned int In) const;
+	bool IsIn(unsigned int value) const;
 
 	/**
-	* Insert an Integer value in the list.
-	* @param Ins            The Integer value to insert.
+	* Insert an integer value in the list.
+	* @param ins            The integer value to insert.
 	*/
-	void Insert(const unsigned int Ins);
+	void Insert(unsigned int ins);
 
 	/**
-	* Insert all the Integer of a list in the current one. This function
+	* Insert all the integer of a list in the current one. This function
 	* supposes that the list to insert don't contain any Integers already
 	* in the current list.
-	* @param Ins            The list to insert.
+	* @param ins            The list to insert.
 	*/
-	void Insert(const RVectorInt& Ins);
+	void Insert(const RVectorInt& ins);
 
 	/**
-	* Delete an Integer value in the list.
-	* @param Del            The Integer value to delete.
+	* Insert an integer value in the list at a given position.
+	* @param ins            The integer value to insert.
+	* @param pos            The position where to insert.
 	*/
-	void Delete(const unsigned int Del);
+	void InsertAt(unsigned int ins,unsigned int pos);
+
+	/**
+	* Delete an integer value in the list.
+	* @param del            The integer value to delete.
+	*/
+	void Delete(const unsigned int del);
 
 	/**
 	* Reset the list.
