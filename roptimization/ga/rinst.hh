@@ -270,6 +270,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		#endif
 		if(!((*C1)->Crossover(*C2,C3)))
 			throw eGACrossover(Gen,(*C2)->Id,C3->Id,(*C1)->Id);
+		(*C1)->Optimisation();
 		(*C1)->ToEval=true;
 		if(!(*C1)->Verify())
 			throw eGAVerify(Gen,(*C1)->Id);
@@ -283,6 +284,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		#endif
 		if(!((*(--C1))->Crossover(C3,*C2)))
 			throw eGACrossover(Gen,C3->Id,(*C2)->Id,(*C1)->Id);
+		(*C1)->Optimisation();
 		(*C1)->ToEval=true;
 		if(!(*C1)->Verify())
 			throw eGAVerify(Gen,(*C1)->Id);
@@ -333,6 +335,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		emitInteractSig();
 		if(!p->Mutation())
 			throw eGAMutation(Gen,p->Id);
+		p->Optimisation();
 		p->ToEval=true;
 		if(!p->Verify())
 			throw eGAVerify(Gen,p->Id);
@@ -362,6 +365,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		emitInteractSig();
 		if(!p->Mutation())
 			throw eGAMutation(Gen,p->Id);
+		p->Optimisation();
 		p->ToEval=true;
 		if(!p->Verify())
 			throw eGAVerify(Gen,p->Id);
@@ -393,6 +397,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		#endif
 		emitInteractSig();
 		p->Inversion();
+		p->Optimisation();
 		p->ToEval=true;
 		if(!p->Verify())
 			throw eGAVerify(Gen,p->Id);

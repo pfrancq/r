@@ -112,15 +112,23 @@ public:
 
 	/**
 	* Do a mutation with the chromosome.
-	* @return               The function must return true if the mutation has been done.
+	* @return               The function must return true if the mutation has
+	*                       been done.
 	*/
 	virtual bool Mutation(void) {return(true);}
 
 	/**
 	* Do an inversion with the chromosome.
-	* @return               The function must return true if the inversion has been done.
+	* @return               The function must return true if the inversion has
+	* been done.
 	*/
 	virtual bool Inversion(void) {return(true);}
+
+	/**
+	* Perform an optimisation. This function is called every time a chromosome
+	* is modified by the crossover, inversion, or the mutation operator.
+	*/
+	virtual void Optimisation(void) {}
 
 	/**
 	* Print information on screen.
