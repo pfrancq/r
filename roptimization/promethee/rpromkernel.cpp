@@ -195,8 +195,8 @@ RPromSol* RPromethee::RPromKernel::GetBestSol(void)
 //-----------------------------------------------------------------------------
 int RPromethee::RPromKernel::sort_function_solutions( const void *a, const void *b)
 {
-	RPromSol* as=(*(static_cast<RPromSol**>(a)));
-	RPromSol* bs=(*(static_cast<RPromSol**>(b)));
+	const RPromSol* as=(*(( RPromSol**)(a)));
+	const RPromSol* bs=(*(( RPromSol**)(b)));
 	double d;
 
 	d=bs->Fi-as->Fi;
