@@ -225,6 +225,13 @@ public:
 		{ return(row); }
 
 	/**
+	* Look if all rows of the query were treated.
+	* @return True if all rows were treated.
+	*/
+	bool End(void)
+		{ return(!row); }
+
+	/**
 	* Put the query at the first row.
 	*/
 	void Begin(void);
@@ -233,6 +240,11 @@ public:
 	* Increment the current row.
 	*/
 	RQuery& operator++(int);
+
+	/**
+	* Increment the current row.
+	*/
+	void Next(void);
 
 	/**
 	* Return a specific field of the current row.

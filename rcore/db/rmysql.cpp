@@ -135,6 +135,13 @@ RQuery& RMySQL::RQuery::operator++(int)
 }
 
 
+//---------------------------------------------------------------------------
+void RMySQL::RQuery::Next(void)
+{
+	row=mysql_fetch_row(result);
+}
+
+
 //---------------------------------------------------------------------------	
 const char* RMySQL::RQuery::operator[](unsigned int index) const throw(RMySQLError)
 {
