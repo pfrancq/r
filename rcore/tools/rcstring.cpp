@@ -341,6 +341,44 @@ void RCString::SetLen(unsigned int len)
 
 
 //------------------------------------------------------------------------------
+RCString RCString::Trim(void) const
+{
+	RCString res;
+	unsigned int len = Data->Len;
+	char* ptr = Data->Text;
+
+	// Skip ending spaces
+	if(!len)
+		return(res);
+	ptr=&Data->Text[len-1];
+	while(len&&isspace(*ptr))
+	{
+		len--;
+		ptr--;
+	}
+
+	// Skip beginning spaces
+	if(!len)
+		return(res);
+	ptr=Data->Text;
+	while(len&&isspace(*ptr))
+	{
+		len--;
+		ptr++;
+	}
+
+	// Get the rest of the string
+	while(len)
+	{
+		res+=(*(ptr++));
+		len--;
+	};
+
+	return(res);
+}
+
+
+//------------------------------------------------------------------------------
 char RCString::operator[](int pos) const
 {
 	if(pos>=Data->Len) return(0);
@@ -520,6 +558,31 @@ RCString RCString::Mid(unsigned int idx,unsigned int len) const
 	(*ptr2)=0;
 
 	return(res);
+}
+
+
+//------------------------------------------------------------------------------
+void RCString::Split(RContainer<RCString,true,false>& elements,const char car) const
+{
+	RCString element;
+	unsigned int len;
+	char* ptr;
+
+	// Skip ending spaces
+	for(len=Data->Len+1,ptr=Data->Text;--len;ptr++)
+	{
+		if((*ptr)==car)
+		{
+			// Insert element
+			if(!element.IsEmpty())
+				elements.InsertPtr(new RCString(element));
+			element="";
+		}
+		else
+			element+=(*ptr);
+	}
+	if(!element.IsEmpty())
+		elements.InsertPtr(new RCString(element));
 }
 
 

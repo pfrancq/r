@@ -372,6 +372,44 @@ const char* RString::Latin1(void) const
 
 
 //------------------------------------------------------------------------------
+RString RString::Trim(void) const
+{
+	RString res;
+	unsigned int len = Data->Len;
+	RChar* ptr = Data->Text;
+
+	// Skip ending spaces
+	if(!len)
+		return(res);
+	ptr=&Data->Text[len-1];
+	while(len&&ptr->IsSpace())
+	{
+		len--;
+		ptr--;
+	}
+
+	// Skip beginning spaces
+	if(!len)
+		return(res);
+	ptr=Data->Text;
+	while(len&&ptr->IsSpace())
+	{
+		len--;
+		ptr++;
+	}
+
+	// Get the rest of the string
+	while(len)
+	{
+		res+=(*(ptr++));
+		len--;
+	};
+
+	return(res);
+}
+
+
+//------------------------------------------------------------------------------
 RChar RString::operator[](int pos) const
 {
 	if(pos>=Data->Len) return(0);
@@ -548,6 +586,31 @@ RString RString::Mid(unsigned int idx,unsigned int len) const
 	ptr[len]=0;
 	res.Data=new CharBuffer(ptr,len,len);
 	return(res);
+}
+
+
+//------------------------------------------------------------------------------
+void RString::Split(RContainer<RString,true,false>& elements,const RChar car) const
+{
+	RString element;
+	unsigned int len;
+	RChar* ptr;
+
+	// Skip ending spaces
+	for(len=Data->Len+1,ptr=Data->Text;--len;ptr++)
+	{
+		if((*ptr)==car)
+		{
+			// Insert element
+			if(!element.IsEmpty())
+				elements.InsertPtr(new RString(element));
+			element="";
+		}
+		else
+			element+=(*ptr);
+	}
+	if(!element.IsEmpty())
+		elements.InsertPtr(new RString(element));
 }
 
 

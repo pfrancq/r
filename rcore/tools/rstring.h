@@ -43,6 +43,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
+#include <rstd/rcontainer.h>
 #include <rstd/rcstring.h>
 #include <rstd/rchar.h>
 #include <rstd/rshareddata.h>
@@ -247,6 +248,12 @@ public:
 	const char* Latin1(void) const;
 
 	/**
+	* This function return a string by stripping whitespace (or other
+	* characters) from the beginning and end of the string.
+	*/
+	RString Trim(void) const;
+
+	/**
 	* This function returns the character at a given position in the string. If
 	* the position is outside the string, the null character is returned.
 	* @param pos            Position of the character.
@@ -280,10 +287,17 @@ public:
 	* Get a sub-string of a given string.
 	* @param idx            Index of the first character.
 	* @param len            Length of the sub-string. If the legnth is not
-	*                      specified, the end of the string is copied.
+	*                       specified, the end of the string is copied.
 	* @returns A RString containing the substring.
 	*/
 	RString Mid(unsigned int idx,unsigned int len = 0xFFFFFFFF) const;
+
+	/**
+	* Split the string to find all the elements separated by a given character.
+	* @param elements       Container that will hold the results.
+	* @param car            Character used as separator.
+	*/
+	void Split(RContainer<RString,true,false>& elements,const RChar car) const;
 
 	/**
 	* Add another string.

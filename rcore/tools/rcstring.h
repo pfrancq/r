@@ -42,6 +42,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
+#include <rstd/rcontainer.h>
 #include <rstd/rshareddata.h>
 
 
@@ -215,6 +216,12 @@ public:
 	inline bool IsEmpty(void) const {return(!Data->Len);}
 
 	/**
+	* This function return a string by stripping whitespace (or other
+	* characters) from the beginning and end of the string.
+	*/
+	RCString Trim(void) const;
+
+	/**
 	* This function returns the character at a given position in the string. If
 	* the position is outside the string, the null character is returned.
 	* @param pos            Position of the character.
@@ -252,6 +259,13 @@ public:
 	* @returns A RCString containing the substring.
 	*/
 	RCString Mid(unsigned int idx,unsigned int len = 0xFFFFFFFF) const;
+
+	/**
+	* Split the string to find all the elements separated by a given character.
+	* @param elements       Container that will hold the results.
+	* @param car            Character used as separator.
+	*/
+	void Split(RContainer<RCString,true,false>& elements,const char car) const;
 
 	/**
 	* Add another string.
