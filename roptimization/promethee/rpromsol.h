@@ -61,7 +61,12 @@ class RPromSol : protected RContainer<RPromCritValue,unsigned int,true,false>
 	* The identifier of the solution.
 	*/
 	unsigned int Id;
-
+	
+	/**
+	* Name of the solution.
+	*/
+	RString Name;
+	
 	/**
 	* The fi of the solution.
 	*/
@@ -75,7 +80,15 @@ public:
 	* @param nbcrit	Number of criterions.
 	*/
 	RPromSol(const unsigned int id,const unsigned int nbcrit=30);
-
+	
+	/*
+	* Construct a prométhée solution.
+	* @param id			Identifier of the solution.
+	* @param name		Name of the solution
+	* @param nbcrit	Number of criterions.
+	*/
+	RPromSol(const unsigned int id,const RString& name,const unsigned int nbcrit=30);
+	
 	/**
 	* Compare two prométhée solutions.
 	* @param sol		The solution used for the comparaison.
@@ -95,14 +108,32 @@ public:
 	int Compare(const RPromSol* sol) {return(Id-sol->Id);}
 
 	/**
-	* Compare the identifier of the prométhée solution with another name.
+	* Compare the identifier of the prométhée solution with another identificator.
 	* @param id		The identifier used for the comparaison.
 	* @return	The function returns -1,0,+1 depends if the identifier of the
 	*				current solution is less, equal or greater than the one passed
 	*				as	argument.
 	*/
 	int Compare(const unsigned int id) {return(Id-id);}
-
+	
+	/**
+	* Compare the name of the prométhée solution with another string.
+	* @param name		The string used for the comparaison.
+	* @return	The function returns -1,0,+1 depends if the identifier of the
+	*				current solution is less, equal or greater than the one passed
+	*				as	argument.
+	*/
+	int Compare(const RString& name) {return(Name.Compare(name));}
+	
+	/**
+	* Compare the name of the prométhée solution with another string.
+	* @param name		The string used for the comparaison.
+	* @return	The function returns -1,0,+1 depends if the identifier of the
+	*				current solution is less, equal or greater than the one passed
+	*				as	argument.
+	*/
+	int Compare(const char* name) {return(Name.Compare(name));}
+		
 	/**
 	* @return Identificator of the solution.
 	*/

@@ -86,6 +86,24 @@ RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParam
 
 
 //-----------------------------------------------------------------------------
+RPromCriterion::RPromCriterion(const CriteriaType type,const double p,const double q,const double w,
+	const unsigned int id,const RString& name,const unsigned int nb)
+	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
+	  Type(type), P(p), Q(q), Weight(w)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,
+		const unsigned int id,const RString& name,const unsigned int nb)
+	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
+	  Type(type), P(params.P), Q(params.Q), Weight(params.Weight)
+{
+}
+
+
+//-----------------------------------------------------------------------------
 void RPromCriterion::SetParams(const RPromCriterionParams& params)
 {
 	P=params.P;
@@ -124,7 +142,7 @@ void RPromCriterion::Normalize(void)
 			min=(*ptr)->Value;
    }
 
-   diff=max-min;	
+	diff=max-min;	
 	// Normalize
 	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
 		(*ptr)->Value=((*ptr)->Value-min)/diff;
