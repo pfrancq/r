@@ -157,13 +157,19 @@ public:
 	* Look if an object can be insert in the group.
 	* @param obj            Pointer to the object to insert.
 	*/
-	virtual bool CanInsert(const cObj* /*obj*/) {return(true);}
+	virtual bool CanInsert(const cObj* /*obj*/) const {return(true);}
+
+	/**
+	* Look if an object is "compatible" with a specific group.
+	* @param obj            Pointer to the object to verify.
+	*/
+	virtual bool IsCompatible(const cObj* /*obj*/) const {return(true);}
 
 	/**
 	* Look if an object can be delete from the group.
 	* @param obj            Pointer to the object to delete.
 	*/
-	virtual bool CanDelete(const cObj* /*obj*/) {return(true);}
+	virtual bool CanDelete(const cObj* /*obj*/) const {return(true);}
 
 	/**
 	* Assignment operator.
