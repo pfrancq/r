@@ -55,14 +55,14 @@ template<class N,bool bAlloc,bool bOrder>
 {
 	RReturnIfFail(node);
 	if(!node) return;
-	InsertPtr(node);
+	RContainer<N,unsigned int,bAlloc,bOrder>::InsertPtr(node);
 	if(parent)
 	{
 		node->Parent=parent;
-		parent->InsertPtr(node);
+		parent->RContainer<N,unsigned int,false,bOrder>::InsertPtr(node);
 	}
 	else
-		Top->InsertPtr(node);
+		Top->RContainer<N,unsigned int,false,bOrder>::InsertPtr(node);
 }
 
 
@@ -74,12 +74,12 @@ template<class N,bool bAlloc,bool bOrder>
 	if(!node) return;
 	if(node->Parent)
 	{
-		node->Parent->DeletePtr(node);
+		node->Parent->RContainer<N,unsigned int,false,bOrder>::DeletePtr(node);
 		node->Parent=0;
 	}
 	else
-		Top->DeletePtr(node);
-	DeletePtr(node);
+		Top->RContainer<N,unsigned int,false,bOrder>::DeletePtr(node);
+	RContainer<N,unsigned int,bAlloc,bOrder>::DeletePtr(node);
 }
 
 
