@@ -39,8 +39,8 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
+#include <rga/robjs.h>
 #include <rga/rinst.h>
-using namespace RGA;
 #include <rgga/robjg.h>
 #include <rgga/rfirstfitheuristic.h>
 
@@ -103,12 +103,7 @@ protected:
 	/**
 	* Objects to group.
 	*/
-	cObj** Objs;
-
-	/**
-	* Number of objects to group.
-	*/
-	unsigned int NbObjs;
+	RGA::RObjs<cObj>* Objs;
 
 	/**
 	* Maximal number of groups to allocate by default.
@@ -120,12 +115,11 @@ public:
 	/**
 	* Construct the instance.
 	* @param popsize        Size of the population.
-	* @param objs           Objects to place in the tree.
-	* @param nbobjs         Number of objects to place.
+	* @param objs           Objects to groups.
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,cObj** objs,unsigned int nbobjs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,RGA::RObjs<cObj>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
 
 	/**
 	* Initialisation of the instance.

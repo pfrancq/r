@@ -38,6 +38,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rga/robjs.h>
 #include <rgga/robjg.h>
 
 
@@ -132,7 +133,7 @@ public:
 	* @param objs           Objects manipulated.
 	* @param grp            Group to copy from.
 	*/
-	void Insert(cObj** objs,const cGroup* grp);
+	void Insert(RGA::RObjs<cObj>* objs,const cGroup* grp);
 
 	/**
 	* Delete an object in the group.

@@ -33,7 +33,7 @@
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RChromoG(cInst *inst,unsigned id) throw(bad_alloc)
 		: RGA::RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
-		  RGroups<cGroup,cObj,cGroupData>(inst->NbObjs,inst->MaxGroups),
+		  RGroups<cGroup,cObj,cGroupData>(inst->Objs,inst->MaxGroups),
 		  Heuristic(0)
 {
 }
@@ -63,7 +63,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void)
 {
-	Heuristic->Run(Objs,this,NbObjs);
+	Heuristic->Run(this);
 	return(true);
 }
 
@@ -125,7 +125,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	// Insert missing objects after a local optimisation
 	LocalOptimisation();
-	Heuristic->Run(Objs,this,NbObjs);
+	Heuristic->Run(this);
 
 	return(true);
 }
@@ -147,7 +147,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	// Insert missing objects after a local optimisation
 	LocalOptimisation();
-	Heuristic->Run(Objs,this,NbObjs);
+	Heuristic->Run(this);
 
 	return(true);
 }

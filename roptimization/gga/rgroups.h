@@ -37,6 +37,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
+#include <rga/robjs.h>
 #include <rgga/rgga.h>
 #include <rgga/rgroup.h>
 
@@ -71,9 +72,9 @@ public:
 protected:
 
 	/**
-	* Total number of objects.
+	* The Objects to group.
 	*/
-	unsigned int NbObjs;
+	RGA::RObjs<cObj>* Objs;
 
 	/**
 	* Assignment of the objects.
@@ -81,34 +82,29 @@ protected:
 	unsigned int* ObjectsAss;
 
 	/**
-	* Array of identificator of objects.
+	* Container of objects already assigned.
 	*/
-	unsigned int* ObjectsList;
+	RStd::RContainer<cObj,unsigned int,false,false> ObjsAss;
 
 	/**
-	* Number of objects in the list.
+	* Container of objects not assigned.
 	*/
-	unsigned int NbObjectsList;
-
-	/**
-	* The Objects to group.
-	*/
-	cObj** Objs;
+	RStd::RContainer<cObj,unsigned int,false,false> ObjsNoAss;
 
 public:
 
 	/**
 	* Construct the groups.
-	* @param nbobjs         Number of objects.
+	* @param objs           Objects to group.
 	* @param max            Maximal number of groups to create.
 	*/
-	RGroups(const unsigned int nbobjs,const unsigned int max) throw(bad_alloc);
+	RGroups(RGA::RObjs<cObj>* objs,const unsigned int max) throw(bad_alloc);
 
 	/**
 	* Init the groups.
 	* @param data           Data used to construct the groups.
 	*/
-	void Init(cObj** objs,cGroupData* data);
+	void Init(cGroupData* data);
 
 	/**
 	* Clear all the information of the chromosome.
@@ -148,13 +144,6 @@ public:
 	void DeleteObjs(cGroup* node);
 
 	/**
-	* Move all the objects of a group to another.
-	* @param to             Pointer of the destination group.
-	* @param from           Pointer of the origin group.
-	*/
-	void MoveObjs(cGroup* to,cGroup* from);
-
-	/**
 	* Verify the validity of the groups.
 	* @return True if the groups are valid one, false else.
 	*/
@@ -169,7 +158,7 @@ public:
 	/**
 	* Return a pointer to an object at a given position of a group.
 	*/
-	cObj* GetObj(const unsigned int idx) {return(Objs[ObjectsList[idx]]);}
+	cObj* GetObj(const unsigned int idx) {return(ObjsAss.Tab[idx]);}
 
 	/**
 	* The assigment operator.

@@ -61,8 +61,9 @@ public:
 	/**
 	* Construct the grouping heuristic.
 	* @param r              The random genrator to use.
+	* @param objs           Pointer to the objects.
 	*/
-	RFirstFitHeuristic(RRandom* r,const unsigned int maxobjs);
+	RFirstFitHeuristic(RRandom* r,RGA::RObjs<cObj>* objs);
 
 	/**
 	* Find a group for the next object.

@@ -39,16 +39,16 @@
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData>
-	RGroupingHeuristic<cGroup,cObj,cGroupData>::RGroupingHeuristic(RRandom* r,const unsigned int maxobjs)
-		: Random(r), Groups(0), Objs(0)
+	RGroupingHeuristic<cGroup,cObj,cGroupData>::RGroupingHeuristic(RRandom* r,RGA::RObjs<cObj>* objs)
+		: Random(r), Objs(objs), Groups(0)
 {
-	Order=new cObj*[maxobjs];
+	Order=new cObj*[Objs->NbPtr];
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData>::Init(cObj** objs,RGroups<cGroup,cObj,cGroupData>* groups,const unsigned int nbobjs)
+	void RGroupingHeuristic<cGroup,cObj,cGroupData>::Init(RGroups<cGroup,cObj,cGroupData>* groups)
 {
 	unsigned int i;
 	unsigned int* ass;
@@ -56,14 +56,13 @@ template<class cGroup,class cObj,class cGroupData>
 
 	// Assign
 	Groups=groups;
-	Objs=objs;
 	NbObjs=0;
 	
 	// Init the data for a grouping
 	NbObjsOk=0;
 
 	// Calculate an order
-	for(i=nbobjs+1,ass=groups->ObjectsAss,obj=Objs;--i;ass++,obj++)
+	for(i=Objs->NbPtr+1,ass=groups->ObjectsAss,obj=Objs->Tab;--i;ass++,obj++)
 	{
 		if((*ass)==NoGroup)
 			Order[NbObjs++]=(*obj);
@@ -93,9 +92,9 @@ template<class cGroup,class cObj,class cGroupData>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData>::Run(cObj** objs,RGroups<cGroup,cObj,cGroupData>* groups,const unsigned int nbobjs) throw(RGroupingHeuristicException)
+	void RGroupingHeuristic<cGroup,cObj,cGroupData>::Run(RGroups<cGroup,cObj,cGroupData>* groups) throw(RGroupingHeuristicException)
 {
-	Init(objs,groups,nbobjs);
+	Init(groups);
 	while(NbObjsOk<NbObjs)
 	{
 		PutNextObject();

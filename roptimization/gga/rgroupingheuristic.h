@@ -42,6 +42,7 @@
 using namespace RStd;
 #include <rmath/random.h>
 using namespace RMath;
+#include <rga/robjs.h>
 #include <rgga/rgroups.h>
 
 
@@ -81,7 +82,12 @@ protected:
 	RRandom* Random;
 
 	/**
-	* Total number of objects to group.
+	* Objects to be grouped.
+	*/
+	RObjs<cObj>* Objs;
+
+	/**
+	* Number of objects to be grouped.
 	*/
 	unsigned int NbObjs;
 
@@ -95,11 +101,6 @@ protected:
 	*/
 	RGroups<cGroup,cObj,cGroupData>* Groups;
 	
-	/**
-	* Objects are to be treated.
-	*/
-	cObj** Objs;
-
 	/**
 	* Order in which the objects are to be treated.
 	*/
@@ -120,15 +121,15 @@ public:
 	/**
 	* Construct the grouping heuristic.
 	* @param r              The random genrator to use.
+	* @param objs           Pointer to the objects.
 	*/
-	RGroupingHeuristic(RRandom* r,const unsigned int maxobjs);
+	RGroupingHeuristic(RRandom* r,RGA::RObjs<cObj>* objs);
 
 	/**
 	* Initialize the heuristic.
-	* @param objs           Pointer to the objects.
 	* @param groups         Pointer to the groups.
 	*/
-	virtual void Init(cObj** objs,RGroups<cGroup,cObj,cGroupData>* groups,const unsigned int nbobjs);
+	virtual void Init(RGroups<cGroup,cObj,cGroupData>* groups);
 
 	/**
 	* Select the next object to place.
@@ -158,10 +159,9 @@ public:
 
 	/**
 	* Run the heuristic.
-	* @param objs           Pointer to the objects.
 	* @param groups         Pointer to the groups.
 	*/
-	void Run(cObj** objs,RGroups<cGroup,cObj,cGroupData>* groups,const unsigned int nbobjs) throw(RGroupingHeuristicException);
+	void Run(RGroups<cGroup,cObj,cGroupData>* groups) throw(RGroupingHeuristicException);
 
 	/**
 	* Do some operations after the run.

@@ -42,14 +42,21 @@ using namespace RGGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGGA::RObjG::RObjG(const unsigned int id,const RString& name)
+RObjG::RObjG(const unsigned int id,const RString& name)
 	: Id(id), Name(name)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RString& RGGA::RObjG::GetName(void) const
+RObjG::RObjG(const RObjG* obj)
+	: Id(obj->Id), Name(obj->Name)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+RString& RObjG::GetName(void) const
 {
 	RString *str=RString::GetString();
 
@@ -59,6 +66,6 @@ RString& RGGA::RObjG::GetName(void) const
 
 
 //-----------------------------------------------------------------------------
-RGGA::RObjG::~RObjG(void)
+RObjG::~RObjG(void)
 {
 }

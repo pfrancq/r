@@ -81,6 +81,12 @@ public:
 	RObjG(const unsigned int id,const RString& name);
 
 	/**
+	* Copy Construct.
+	* @param obj            Source used.
+	*/
+	RObjG(const RObjG* obj);
+
+	/**
 	* Return the identificator of the object.
 	*/
 	unsigned int GetId(void) const {return(Id);}
