@@ -6,7 +6,7 @@
 
 		Class to download files (using the CURL library) - Implementation.
 
-	Copyright 2004 by the Université Libre de Bruxelles.
+	Copyright 2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Valery Vandaele (vavdaele@ulb.ac.be)
@@ -54,7 +54,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 struct DwnFile
 {
-	const char* filename;
+	char filename[L_tmpnam+1];
 	FILE *stream;
 };
 
@@ -91,23 +91,22 @@ RDownload::RDownload(void) throw(std::bad_alloc)
 //------------------------------------------------------------------------------
 void RDownload::Download(const char* URL,RString& tmpFile) throw(RException)
 {
-	
 	struct DwnFile tmpfile;
 	int err;
-	char filename[L_tmpnam+1];
+
 	// Fill structure -> 
 	//find a local temporary file if tmpFile not specified else use the one specified
 	if(tmpFile.IsEmpty())
 	{
-		tmpnam(filename);
-		tmpfile.filename=filename;
+		(*tmpfile.filename)=0;
+		tmpnam(tmpfile.filename);
 		tmpfile.stream=0;
 		tmpFile=tmpfile.filename;
 	}
 	else 
 	{
 		tmpfile.stream=0;
-		tmpfile.filename=tmpFile.Latin1();
+		strcpy(tmpfile.filename,tmpFile.Latin1());
 	}
 
 	// Download the file
