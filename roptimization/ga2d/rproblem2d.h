@@ -59,7 +59,7 @@ namespace RGA2D{
 * @short 2D Placement Problem
 */
 class RProblem2D
-{	
+{
 public:
 	
 	/**
@@ -81,12 +81,12 @@ public:
 	* Translation to be done to adapt the placement on the global objects.
 	*/
 	RPoint Translation;
-	
+
 	/**
 	* Objects.
 	*/
 	RContainer<RObj2D,unsigned int,true,true> Objs;
-	
+
 	/**
 	* Connections.
 	*/
@@ -96,10 +96,10 @@ public:
 	* Constructor of the problem.
 	*/
 	RProblem2D(void);
-	
+
 	/**
 	* Load a problem from a XML file.
-	* @param name		Name of the XML file.
+	* @param name           Name of the XML file.
 	*/
 	void Load(const char* name);
 
@@ -107,7 +107,7 @@ public:
 	* Clears the problem.
 	*/
 	void Clear(void);
-	
+
 	/**
 	* Determine the limits of the problem based of the shape.
 	*/
@@ -117,26 +117,27 @@ protected:
 
 	/**
 	* Create an object from a definition tag.
-	* @param o		Tag representing an object.
-	* @param ts		Container holding the templates.
+	* @param o              Tag representing an object.
+	* @param ts             Container holding the templates.
 	*/
 	void CreateObj(RXMLTag* o,RContainer<RObj2D,unsigned int,true,true>& ts);
 
 	/**
 	* Create a connector from a tag.
-	* @param c		Tag representing the connector.
-	* @param obj	Object holding a connector (if 0, connector of problem).
-	* @param t		Transalation to do for the place.
+	* @param c              Tag representing the connector.
+	* @param obj            Object holding a connector (if 0, connector of problem).
+	* @param t              Transalation to do for the place.
 	*/
 	void CreateConnector(RXMLTag* c,RObj2D* obj,const RPoint& t);
 
 	/**
 	* Create a net from a tag.
-	* @param n		Tag representing the net.
+	* @param n              Tag representing the net.
 	*/
 	void CreateNet(RXMLTag* n);
 
 public:
+
 	/**
 	* Destructor of the problem.
 	*/

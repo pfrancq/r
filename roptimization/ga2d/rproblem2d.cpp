@@ -68,7 +68,7 @@ void RGA2D::RProblem2D::Load(const char* name)
 	RString Attr;
 	RContainer<RObj2D,unsigned int,true,true> Templates(50,25);
 	RPoint Tr;
-	
+
 	// Take the Limits
 	tag=s.GetTag("Shape",s.GetTop());
 	if(tag)
@@ -125,7 +125,7 @@ void RGA2D::RProblem2D::Load(const char* name)
 		Cons.Clear(tag->NbPtr,tag->NbPtr/2);
 		for(i=tag->NbPtr+1,tab=tag->Tab;--i;tab++)
 			CreateNet(*tab);
-//		Cons.Init();
+		Cons.Init();
 	}
 	
 	DetermineLimit();
@@ -169,7 +169,7 @@ void RGA2D::RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,unsigned int,true
 		tag=o->GetTag("Shape");
 		if(tag)
 		{
-			for(i=tag->NbPtr,tab=tag->Tab;--i;tab++)		// Last Point==First Point
+			for(i=tag->NbPtr,tab=tag->Tab;--i;tab++)             // Last Point==First Point
 			{
 				if((*tab)->GetName()=="Point")
 				{
@@ -251,7 +251,7 @@ void RGA2D::RProblem2D::CreateNet(RXMLTag* n)
 	con=Problem.Connectors.GetPtr<const char*>(n->GetAttrValue("Id"),false);
 	if(con)
 		cnt->Connect.InsertPtr(con);
-		
+
 	// Go through objects
 	for(i=n->NbPtr+1,tab=n->Tab;--i;tab++)
 	{

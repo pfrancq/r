@@ -74,12 +74,12 @@ public:
 
 	/**
 	* Construct the bottom-left heuristic.
-	* @param maxobjs		Maximal number of objects to place.
-	* @param calc			Must free polygons be calculated.
-	* @param use			Must free polygons be used.
-	* @param ori			Must all orientation be tested.
+	* @param maxobjs        Maximal number of objects to place.
+	* @param calc           Must free polygons be calculated.
+	* @param use            Must free polygons be used.
+	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,bool ori=false);
+	RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 
 	virtual void Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
 	

@@ -41,11 +41,12 @@
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc)
-			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id), Heuristic(0), Grid(0),
-				Objs(0), NbObjs(0), thOrder(0), thObjs(0),
-				thObj1(0), thObj2(0), Infos(0), Selected(0), Limits()
+			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
+			  RGeoInfos(inst->Problem,false),
+			  Heuristic(0), Grid(0),
+			  Objs(0), NbObjs(0), thOrder(0), thObjs(0),
+			  thObj1(0), thObj2(0), Limits()
 {
-	
 }
 
 
@@ -55,11 +56,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 		Init(cThreadData *thData) throw(bad_alloc)
 {
 	unsigned int i;
-	cInfo **ptr;
 	RObj2D **objs;
 
 	// Call the initialisation of the parent
 	RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
+
+	// General Initialisation
+	Objs=Instance->Objs;
+	NbObjs=Instance->NbObjs;
 
 	// Init "thread-dependent" data
 	thOrder=thData->Order;
@@ -73,11 +77,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	if(NbObjs)
 	{
 		// Create Infos
-		Infos=new cInfo*[NbObjs+2];	// +2 -> because need of temporary objects
-			for(i=NbObjs+1,ptr=Infos,objs=Objs;--i;ptr++,objs++)
-				(*ptr)=new cInfo(*objs);  		
-		(*(ptr++))=new cInfo(thObj1);	
-		(*ptr)=new cInfo(thObj2);
+		for(i=NbObjs+1,objs=Objs;--i;objs++)
+		{
+			InsertPtr(new cInfo(*objs));
+		}
+		InsertPtr(new cInfo(thObj1));
+		InsertPtr(new cInfo(thObj2));
 
 		// Create Selected
 		Selected=new bool[NbObjs];
@@ -101,7 +106,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	cInfo **info;
 
 	// All objects place in (MaxCoord,MaxCoord)
-	for(i=NbObjs+3,info=Infos;--i;info++)  	// +3 because there are 2 temporary objects
+	for(i=NbObjs+3,info=Tab;--i;info++)      // +3 because there are 2 temporary objects
 		(*info)->Clear();
 
 	// ActLimits -> (0,0)
@@ -149,7 +154,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 		RandomConstruct(void)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
-	Heuristic->Run(Instance->Problem,Infos,Grid);
+	Heuristic->Run(Instance->Problem,Tab,Grid);
 	RRect r=Heuristic->GetResult();
 	ActLimits.Set(r.Width(),r.Height());
 	return(true);
@@ -164,15 +169,15 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 //	RGeoInfo *info;
 //
 //	// Init Part
-	memset(Selected,0,NbObjs*sizeof(bool));						// No object selected
-//	thVarsClear();															// Clear all temporary variables
+	memset(Selected,0,NbObjs*sizeof(bool));              // No object selected
+//	thVarsClear();// Clear all temporary variables
 //
 //	// Select objs in parent1 & parent2
-//	parent1->GetSetOfObjs(thObj1,Selected);						
-////	parent2->GetSetOfObjs(thObj2,Selected);						
+//	parent1->GetSetOfObjs(thObj1,Selected);
+////	parent2->GetSetOfObjs(thObj2,Selected);
 //
 //	// Put the rest of the objects & apply the placement heuristic
-//	FillObjs(thObjs,thNbObjs);												
+//	FillObjs(thObjs,thNbObjs);
 ////	Heuristic->Run(Limits,Grid,Infos,0,thNbObjs);
 //
 //	// Remplace container by objects
@@ -202,20 +207,26 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	unsigned int i,j;
 	RGeoInfo **infoi,**infoj;
 
-	for(i=0,infoi=Infos;i<NbObjs-1;i++,infoi++)
-		for(j=i+1,infoj=&Infos[i+1];j<NbObjs;j++,infoj++)
+	for(i=0,infoi=Tab;i<NbObjs-1;i++,infoi++)
+	{
+		for(j=i+1,infoj=&Tab[i+1];j<NbObjs;j++,infoj++)
+		{
 			if(((*infoi)->IsValid())&&((*infoj)->IsValid()))
- 				if((*infoi)->Overlap(*infoj))
- 				{
- 					cerr<<"Overlapping Problem: (Id=="<<Id<<")"<<endl<<"  "<<i<<" : ";
- 					for((*infoi)->Start();!(*infoi)->End();(*infoi)->Next())
- 						cerr<<"("<<((**infoi)()).X<<","<<((**infoi)()).Y<<")     ";
- 					cerr<<endl<<"  "<<j<<" : ";
- 					for((*infoj)->Start();!(*infoi)->End();(*infoj)->Next())
- 						cerr<<"("<<((**infoj)()).X<<","<<((**infoj)()).Y<<")     ";
- 					cerr<<endl;
- 					return(false);
- 				}
+			{
+				if((*infoi)->Overlap(*infoj))
+				{
+					cerr<<"Overlapping Problem: (Id=="<<Id<<")"<<endl<<"  "<<i<<" : ";
+					for((*infoi)->Start();!(*infoi)->End();(*infoi)->Next())
+						cerr<<"("<<((**infoi)()).X<<","<<((**infoi)()).Y<<")     ";
+					cerr<<endl<<"  "<<j<<" : ";
+					for((*infoj)->Start();!(*infoi)->End();(*infoj)->Next())
+						cerr<<"("<<((**infoj)()).X<<","<<((**infoj)()).Y<<")     ";
+					cerr<<endl;
+					return(false);
+				}
+			}
+		}
+	}
 	return(true);
 }
 
@@ -225,12 +236,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
   RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>&
 		RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::operator=(const RChromo2D &chromo)
 {
-	unsigned int i;
-	cInfo **ptr,**ptr2;
-
 	RChromo<cInst,cChromo,cFit,cThreadData>::operator=(chromo);
-	for(i=NbObjs+1,ptr=Infos,ptr2=chromo.Infos;--i;ptr++,ptr2++)
-		(**ptr)=(**ptr2);
+	RGeoInfos::operator=(chromo);
 	memcpy(Selected,chromo.Selected,NbObjs*sizeof(bool));
 	return(*this);
 }
@@ -241,7 +248,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RObj2D* RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetObj(RCoord X,RCoord Y)
 {
 	unsigned int obj;
-	
+
 	if((X>Limits.X)||(Y>Limits.Y)) return(0);
 	obj=Grid->GetObjId(X,Y);
 	if(obj!=NoObject)
@@ -256,7 +263,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	cInfo* RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetInfo(RCoord X,RCoord Y)
 {
 	unsigned int obj;
-	
+
 	if((X>Limits.X)||(Y>Limits.Y)) return(0);
 	obj=Grid->GetObjId(X,Y);
 	if(obj!=NoObject)
@@ -292,14 +299,5 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::~RChromo2D(void)
 {
-	cInfo **ptr;
-	unsigned int i;
-	
-	if(Infos)
-	{
-		for(i=NbObjs+3,ptr=Infos;--i;ptr++) delete(*ptr);
-		delete[] Infos;
-	}
-	if(Selected) delete[] Selected;
 	if(Grid) delete Grid;
 }

@@ -67,12 +67,12 @@ public:
 	/**
 	* Number of objects to place.
 	*/
-	unsigned int NbObjs;				
+	unsigned int NbObjs;
 
 	/**
 	* Array of identificators for objects.
 	*/
-	unsigned int *Order;				
+	unsigned int *Order;
 
 	/**
 	* Array of identificators for objects.
@@ -82,12 +82,12 @@ public:
 	/**
 	* Temporary array of pointers to Objects (Crossover & Mutation).
 	*/
-	RObj2D **tmpObjs;						
+	RObj2D **tmpObjs;
 
 	/**
 	* Temporary objects container.
 	*/
-	RObj2DContainer *tmpObj1; 	
+	RObj2DContainer *tmpObj1;
 
 	/**
 	* Temporary objects container.
@@ -98,10 +98,10 @@ public:
 	* Heuristic Used.
 	*/
 	RPlacementHeuristic *Heuristic;
-	
+
 	/**
 	* Construct the data.
-	* @param owner		The instance of the problem.
+	* @param owner          The instance of the problem.
 	*/
 	RThreadData2D(cInst *owner) throw(bad_alloc);
 
@@ -132,7 +132,7 @@ public:
 	* The problem.
 	*/
 	RProblem2D* Problem;
-	
+
 	/**
 	* Objects to place.
 	*/
@@ -147,12 +147,12 @@ public:
 	* Local Optimisation.
 	*/
 	bool bLocalOpti;
-	
+
 	/**
 	* Connections for the objects.
 	*/
 	RConnections *Cons;
-	
+
 protected:
 
 	/**
@@ -170,11 +170,16 @@ public:
 	/**
 	* Construct the instance. The instance is not responsible for the desallocation
 	* of the objects to place.
-	* @param popsize			The size of the population.
-	* @param prob				Pointer to the problem.
-	* @param h					The heuristic that has to be used.
+	* @param popsize        The size of the population.
+	* @param prob           Pointer to the problem.
+	* @param h              The heuristic that has to be used.
 	*/
 	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h) throw(bad_alloc);
+
+	/**
+	* Initialisation of the instance.
+	*/
+	virtual void Init(void) throw(bad_alloc);
 
 	/**
 	* Return the limits for the placement.
@@ -185,19 +190,19 @@ public:
 	* Return the heuristic type.
 	*/
 	inline HeuristicType GetHeuristic(void) { return(Heuristic); }
-	
+
 	/**
 	* Set the parameters for the "area" criterion.
-	* @param params		The parameters..
+	* @param params         The parameters.
 	*/
 	void SetAreaParams(const RPromCriterionParams& params);
-	
+
 	/**
 	* Set the parameters for the "area" criterion.
-	* @param params		The parameters..
+	* @param params         The parameters.
 	*/
 	void SetDistParams(const RPromCriterionParams& params);
-	
+
 	/**
 	* Return true if a local optimisation is needed.
 	*/

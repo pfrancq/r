@@ -40,64 +40,75 @@ using namespace RGA2D;
 using namespace RPromethee;
 
 
+
 //-----------------------------------------------------------------------------
 //
-// class RCons
+// class RConnections
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 RGA2D::RConnections::RConnections(void)
-	: RContainer<RConnection,unsigned int,true,false>(50,25)
+	: RContainer<RConnection,unsigned int,true,false>(50,25), Random(0)
 {
 }
 
 
-//-----------------------------------------------------------------------------	
+//-----------------------------------------------------------------------------
 void RGA2D::RConnections::Init(void)
 {
 	RConnection **tab;
-	unsigned int i;
-	
+	RObj2DConnector **con;
+	unsigned int i,j;
+
 	// Go through all connections
 	for(i=NbPtr+1,tab=Tab;--i;tab++)
 	{
-		// Add Connection to "To"
-		(*tab)->GetTo()->AddConnection(*tab);
-		// Add Connection to "From"
-		(*tab)->GetFrom()->AddConnection(*tab);
+		// Go through each connector
+		for(j=(*tab)->Connect.NbPtr+1,con=(*tab)->Connect.Tab;--j;con++)
+		{
+			(*con)->Connections.InsertPtr(*tab);
+		}
 	}
 }
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RConnections::SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight)
+void RGA2D::RConnections::SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight,RRandom* r)
 {
 	DistParams=dist;
-	WeightParams=weight;	
+	WeightParams=weight;
+	Random=r;
 }
 
 
-//-----------------------------------------------------------------------------	
-double RGA2D::RConnections::GetCon(RGeoInfo **infos,RGeoInfo *cur)
+//-----------------------------------------------------------------------------
+double RGA2D::RConnections::GetCon(RGeoInfo** infos,RGeoInfo* cur)
 {
 	double sum=0.0;
-	RObj2DConnector *con;
-	RGeoInfo *f,*t;
-	RObj2D* o1;
-	RObj2D *o2;
-		
-	for(cur->Connectors.Start();!cur->Connectors.End();cur->Connectors.Next())
+	unsigned int i,j,k,idx;
+	RObj2DConnector **con,**con2;
+	RConnection **tab;
+	bool cont;
+
+	// Go through all connectors
+	for(i=cur->GetObj()->Connectors.NbPtr+1,con=cur->GetObj()->Connectors.Tab;--i;con++)
 	{
-		con=cur->Connectors()->Con;
-		for(con->Connections.Start();!con->Connections.End();con->Connections.Next())
+		// Go through each connection
+		for(j=(*con)->Connections.NbPtr+1,tab=(*con)->Connections.Tab;--j;tab++)
 		{
-			o1=con->Connections()->From->Owner;
-			o2=con->Connections()->To->Owner;
-			f=infos[con->Connections()->From->Owner->GetId()];
-			t=infos[con->Connections()->To->Owner->GetId()];
-			if(((f==cur)&&t->IsValid())||((t==cur)&&f->IsValid()))
-				sum+=con->Connections()->GetWeight();
+			// Go through each connector and see if the geometric information is placed
+			for(k=(*tab)->Connect.NbPtr+1,con2=(*tab)->Connect.Tab,cont=true;(--k)&&cont;con2++)
+			{
+				idx=(*con2)->Owner->Id;
+				if(idx!=NoObject)
+					cont=!infos[idx]->IsValid();
+			}
+			if(!cont)
+			{
+				// At least one valid geometric information found
+				sum+=(*tab)->Weight;
+			}
 		}
 	}
 	return(sum);
@@ -109,7 +120,7 @@ RGeoInfo* RGA2D::RConnections::GetBestConnected(RGeoInfo **infos,unsigned int nb
 {
 	RPromKernel Prom("PlacementCenter",nb,2);
 	RPromCriterion *weight,*dist;
-  	RPromSol *sol,**sols,**best;	
+	RPromSol *sol,**sols,**best;	
 	RGeoInfo **info,**treat,*b;
 	unsigned int i,Nb=0;
 	double w,d;
@@ -117,22 +128,22 @@ RGeoInfo* RGA2D::RConnections::GetBestConnected(RGeoInfo **infos,unsigned int nb
 	bool bFound;
 	RCoord X1,Y1,X2,Y2;
 	RPoint Pt;
-	
+
 	// Init Part
 	weight=Prom.NewCriterion(Maximize,WeightParams);
 	dist=Prom.NewCriterion(Minimize,DistParams);
 	treat=new RGeoInfo*[nb];
-	
+
 	// Go through each info
 	for(i=nb+1,info=infos;--i;info++)
 	{
 		// If selected -> go to next
 		if(selected[(*info)->GetObj()->GetId()])
 			continue;
-		
+
 		// Calculate distance and weight
 		w=GetCon(infos,*info);
-		d=GetDistances(infos,*info);		
+		d=GetDistances(infos,*info);
 		if((w>0.0)&&(d>0.0))
 		{
 			// If both are not null -> Create a Prométhée solution
@@ -140,32 +151,32 @@ RGeoInfo* RGA2D::RConnections::GetBestConnected(RGeoInfo **infos,unsigned int nb
 			Prom.Assign(sol,weight,w);
 			Prom.Assign(sol,dist,d);
 			treat[sol->GetId()]=(*info);
-			Nb++;	// Increment number of solution
+			Nb++;        // Increment number of solution
 		}
 	}
-	
+
 	if(!Nb)
 	{
 		// Choose a random not selected object
 		memcpy(treat,infos,nb*sizeof(RGeoInfo*));
-		RRandom::randorder<RGeoInfo*>(treat,nb);
-		info=treat;		
+		Random->RandOrder<RGeoInfo*>(treat,nb);
+		info=treat;
 		while(selected[(*info)->GetObj()->GetId()])
 			info++;
 		b=(*info);
 	}
 	else
 	{
-		Prom.ComputePrometheeII();		// Compute Prométhée		
-		best=sols=Prom.GetSols();		// Get the solutions
-		b=treat[(*(best++))->GetId()];	// The first one is the best
-		b->Boundary(r1);				// Get The boundary rectangle
-		
+		Prom.ComputePrometheeII();         // Compute Prométhée
+		best=sols=Prom.GetSols();          // Get the solutions
+		b=treat[(*(best++))->GetId()];     // The first one is the best
+		b->Boundary(r1);                   // Get The boundary rectangle
+
 		// Go through the others and find the best one that can go in bound
 		bFound=false;
 		while((--Nb)&&(!bFound))
 		{
-			treat[(*best)->GetId()]->Boundary(r2);		// Get The boundary rectangle
+			treat[(*best)->GetId()]->Boundary(r2);      // Get The boundary rectangle
 			if(r1.Pt1.X<r2.Pt1.X) X1=r1.Pt1.X; else X1=r2.Pt1.X;
 			if(r1.Pt1.Y<r2.Pt1.Y) Y1=r1.Pt1.Y; else Y1=r2.Pt1.Y;
 			if(r1.Pt2.X>r2.Pt2.X) X2=r1.Pt2.X; else X2=r2.Pt2.X;
@@ -181,7 +192,7 @@ RGeoInfo* RGA2D::RConnections::GetBestConnected(RGeoInfo **infos,unsigned int nb
 			best++;
 		}
 		delete[] sols;
-		
+
 		if(!bFound)
 		{
 			// Nothing found -> Central Rectangle
@@ -196,12 +207,12 @@ RGeoInfo* RGA2D::RConnections::GetBestConnected(RGeoInfo **infos,unsigned int nb
 }
 
 
-//-----------------------------------------------------------------------------	
+//-----------------------------------------------------------------------------
 RGeoInfo* RGA2D::RConnections::GetMostConnected(RGeoInfo **infos,unsigned int nb,unsigned int* order,unsigned int nbok)
 {
 	unsigned int *ptr=&order[nbok],best,bestpos,i=nbok+1;
 	double bestw,w;	
-	
+
 	best=(*(ptr++));
 	bestw=GetCon(infos,infos[best]);
 	bestpos=nbok;
@@ -222,59 +233,52 @@ RGeoInfo* RGA2D::RConnections::GetMostConnected(RGeoInfo **infos,unsigned int nb
 }
 
 
-//-----------------------------------------------------------------------------	
-double RGA2D::RConnections::GetDistances(RGeoInfo** infos)
+//-----------------------------------------------------------------------------
+double RGA2D::RConnections::GetDistances(RGeoInfo** /*infos*/)
 {
-	RConnection* c;
-	RGeoInfo *f,*t;
-	RGeoInfoConnector *cf,*ct;
+//	RConnection* c;
+//	RGeoInfo *f,*t;
+//	RGeoInfoConnector *cf,*ct;
 	double sum=0.0;
-	
-	for(Start();!End();Next())
-	{
-		c=(*this)();
-		f=infos[c->From->Owner->GetId()];
-		t=infos[c->To->Owner->GetId()];		
-		if((!t->IsValid())||(!f->IsValid())) continue;
-		cf=f->Connectors.GetPtr<unsigned int>(c->From->GetId());
-		ct=t->Connectors.GetPtr<unsigned int>(c->To->GetId());		
-		sum+=cf->GetPos().ManhattanDist(ct->GetPos())*c->Weight;
-	}
+
+//	for(Start();!End();Next())
+//	{
+//		c=(*this)();
+//		f=infos[c->From->Owner->GetId()];
+//		t=infos[c->To->Owner->GetId()];
+//		if((!t->IsValid())||(!f->IsValid())) continue;
+//		cf=f->Connectors.GetPtr<unsigned int>(c->From->GetId());
+//		ct=t->Connectors.GetPtr<unsigned int>(c->To->GetId());
+//		sum+=cf->GetPos().ManhattanDist(ct->GetPos())*c->Weight;
+//	}
 	return(sum);
 }
 
 
-//-----------------------------------------------------------------------------	
-double RGA2D::RConnections::GetDistances(RGeoInfo** infos,RGeoInfo* info)
+//-----------------------------------------------------------------------------
+double RGA2D::RConnections::GetDistances(RGeoInfo** /*infos*/,RGeoInfo* /*info*/)
 {
-	RConnection* c;
-	RGeoInfo *f,*t;
-	RGeoInfoConnector *cf,*ct;
+//	RConnection* c;
+//	RGeoInfo *f,*t;
+//	RGeoInfoConnector *cf,*ct;
 	double sum=0.0;
-	
-	for(Start();!End();Next())
-	{
-		c=(*this)();
-		f=infos[c->From->Owner->GetId()];
-		t=infos[c->To->Owner->GetId()];		
-		if((!t->IsValid())||(!f->IsValid())) continue;
-		if((t!=info)&&(f!=info)) continue;
-		cf=f->Connectors.GetPtr<unsigned int>(c->From->GetId());
-		ct=t->Connectors.GetPtr<unsigned int>(c->To->GetId());		
-		sum+=cf->GetPos().ManhattanDist(ct->GetPos())*c->Weight;
-	}
+
+//	for(Start();!End();Next())
+//	{
+//		c=(*this)();
+//		f=infos[c->From->Owner->GetId()];
+//		t=infos[c->To->Owner->GetId()];
+//		if((!t->IsValid())||(!f->IsValid())) continue;
+//		if((t!=info)&&(f!=info)) continue;
+//		cf=f->Connectors.GetPtr<unsigned int>(c->From->GetId());
+//		ct=t->Connectors.GetPtr<unsigned int>(c->To->GetId());
+//		sum+=cf->GetPos().ManhattanDist(ct->GetPos())*c->Weight;
+//	}
 	return(sum);
 }
 
 
-//-----------------------------------------------------------------------------	
-void RGA2D::RConnections::AddConnection(RObj2DConnector* from,RObj2DConnector* to,double weight)
-{
-	InsertPtr(new RConnection(from,to,weight));
-}
-
-
-//-----------------------------------------------------------------------------	
+//-----------------------------------------------------------------------------
 RGA2D::RConnections::~RConnections(void)
 {
 }

@@ -86,38 +86,38 @@ public:
 
 	/**
 	* Construct the grid.
-	* @param limits	Representing the maximal limits for the grid. In fact,
-	* 						internally, the grid is allocate 2x the size to be used
-	*						by the "center" heuristic.
-	*/	
+	* @param limits         Representing the maximal limits for the grid. In fact,
+	*                       internally, the grid is allocate 2x the size to be used
+	*                       by the "center" heuristic.
+	*/
 	RGrid(RPoint &limits) throw(bad_alloc);
 
 	/**
 	* This function returns true if the position (x,y) is free or if it is out
 	* of the limits.
-	* @param x		X position.
-	* @param y		Y position.
-	* @returns		The function return true if the point is out of the limits
-	*				or if the position is free.
+	* @param x              X position.
+	* @param y              Y position.
+	* @returns The function return true if the point is out of the limits
+	* or if the position is free.
 	*/
 	bool IsFree(RCoord x,RCoord y);
 
 	/**
 	* This function returns true if the position (x,y) is occupied.
-	* @param x		X position.
-	* @param y		Y position.
-	* @returns	The function returns true if the position is occupied, false
-	*			else (also if the point is out of the limits).
+	* @param x              X position.
+	* @param y              Y position.
+	* @returns The function returns true if the position is occupied, false
+	* else (also if the point is out of the limits).
 	*/
 	bool IsOcc(RCoord x,RCoord y);
-	
+
 	/**
 	* This function returns the identificator of the object placed at position
 	* (x,y) or NoObject if no object is placed there.
-	* @param x		X position.
-	* @param y		Y position.
+	* @param x              X position.
+	* @param y              Y position.
 	*/
-   	unsigned int GetObjId(RCoord x,RCoord y) {RReturnValIfFail(OccupiedX,false); return(OccupiedX[x][y]);}
+	unsigned int GetObjId(RCoord x,RCoord y) {RReturnValIfFail(OccupiedX,false); return(OccupiedX[x][y]);}
 
 	/**
 	* Clear the Grid.
@@ -126,85 +126,84 @@ public:
 
 	/**
 	* Assign a rectangle to the grid.
-	* @param rect		The rectangle to assign.
-	* @param pos		The position.
-	* @param id			The identificator to put.
+	* @param rect           The rectangle to assign.
+	* @param pos            The position.
+	* @param id             The identificator to put.
 	*/
 	void Assign(RRect &rect,RPoint &pos,unsigned int id);
-	
+
 	/**
 	* Find the left most x coordinates that is free of a reference.
-	* @param pt		Point used as reference.
+	* @param pt             Point used as reference.
 	*/
 	RCoord LookLeft(RPoint& pt);
 
 	/**
 	* Find the right most x coordinates that is free of a reference.
-	* @param pt		Point used as reference.
+	* @param pt             Point used as reference.
 	*/
 	RCoord LookRight(RPoint& pt);
 
 	/**
 	* Find the up most x coordinates that is free of a reference.
-	* @param pt		Point used as reference.
+	* @param pt             Point used as reference.
 	*/
 	RCoord LookUp(RPoint& pt);
 
 	/**
 	* Find the down most x coordinates that is free of a reference.
-	* @param pt		Point used as reference.
+	* @param pt             Point used as reference.
 	*/
 	RCoord LookDown(RPoint& pt);
 
 	/**
 	* Find the left most x coordinates that is free and that skirt an edge.
-	* @param pt			Point used as reference.
-	* @param bound	   The rectangle which limits the research.
+	* @param pt             Point used as reference.
+	* @param bound          The rectangle which limits the research.
 	*/
 	RCoord SkirtLeft(RPoint& pt,RRect &bound);
 
 	/**
 	* Find the right most x coordinates that is free and that skirt an edge.
-	* @param pt			Point used as reference.
-	* @param bound	   The rectangle which limits the research.
+	* @param pt             Point used as reference.
+	* @param bound          The rectangle which limits the research.
 	*/
 	RCoord SkirtRight(RPoint& pt,RRect &bound);
 
 	/**
 	* Find the up most x coordinates that is free and that skirt an edge.
-	* @param pt			Point used as reference.
-	* @param bound	   The rectangle which limits the research.
+	* @param pt             Point used as reference.
+	* @param bound          The rectangle which limits the research.
 	*/
 	RCoord SkirtUp(RPoint& pt,RRect &bound);
 
 	/**
 	* Find the down most x coordinates that is free and that skirt an edge.
-	* @param pt		Point used as reference.
-	* @param bound	   The rectangle which limits the research.
+	* @param pt             Point used as reference.
+	* @param bound          The rectangle which limits the research.
 	*/
 	RCoord SkirtDown(RPoint& pt,RRect &bound);
 
 	/**
 	* Calculate a free polygon from a given position and a given direction.
-	* @param X			X-Coordinate of the position.
-	* @param Y			Y-Coordinate of the position.
-	* @param from		The direction from where "it" is coming.
-	* @param bound		The bound rectangle.
-	* @param poly		The polygon to calculated.
-	* @returns	The function returns true if a close polygon has been calculated
-	*				, or false if not.
-	*
+	* @param X              X-Coordinate of the position.
+	* @param Y              Y-Coordinate of the position.
+	* @param from           The direction from where "it" is coming.
+	* @param bound          The bound rectangle.
+	* @param poly           The polygon to calculated.
+	* @returns The function returns true if a close polygon has been calculated
+	* or false if not.
 	*/
 	bool CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect &boud,RPolygon& poly);
 
 	/**
 	* Add all the polygons representing free spaces that are closed and resulting
 	* of the placement of an object.
-	* @param ins		The geometric information representing the last inserted
-	*								object.
-	* @param polys	The container of polygons where all the free spaces
-	*								calculated must be add.
-	* @param bound	The bounding rectangle of the objects already placed.
+	* @param ins            The geometric information representing the last inserted
+	*                       object.
+	* @param polys          The container of polygons where all the free spaces
+	*                       calculated must be add.
+	* @param bound          The bounding rectangle of the objects already placed.
 	*/
 	void AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &bound);
 

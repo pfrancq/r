@@ -45,17 +45,19 @@ using namespace RGA2D;
 
 //-----------------------------------------------------------------------------
 RGA2D::RGeoInfos::RGeoInfos(RProblem2D* prob,bool create) throw(bad_alloc)
-	: RContainer<RGeoInfo,unsigned int,true,false>(prob->Objs.NbPtr,prob->Objs.NbPtr/2), Problem(prob)
+	: RContainer<RGeoInfo,unsigned int,true,false>(prob->Objs.NbPtr+2,prob->Objs.NbPtr/2),
+	  Problem(prob), Selected(0)
 {
 	if(create)
 	{
 		RObj2D** obj;	
 		unsigned int i;
-	
+
 		// Create geometric information and Objs orientations
 		for(i=prob->Objs.NbPtr+1,obj=Problem->Objs.Tab;--i;obj++)
 			InsertPtr(new RGeoInfo(*obj));
 	}
+	Selected=new bool[prob->Objs.NbPtr];
 }
 
 
@@ -65,9 +67,9 @@ void RGA2D::RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* s
 	RGeoInfo* best;
 	RPolygon Envelop(4);
 	RRect bound;
-	
+
 	cont->Clear();
-	Boundary(bound);	
+	Boundary(bound);
 	bound.Pt2.X/=4;
 	bound.Pt2.Y/=4;
 	best=Problem->Cons.GetBestConnected(Tab,NbPtr,selected,bound);
@@ -95,7 +97,6 @@ void RGA2D::RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* s
 //-----------------------------------------------------------------------------
 void RGA2D::RGeoInfos::Boundary(RRect &rect)
 {
-
 	RGeoInfo **ptr;
 	unsigned int i;
 	RRect tmp;
@@ -118,4 +119,11 @@ void RGA2D::RGeoInfos::Clear(void)
 {
 	for(Start();!End();Next())
 		(*this)()->Clear();
+}
+
+
+//-----------------------------------------------------------------------------
+RGA2D::RGeoInfos::~RGeoInfos(void)
+{
+	if(Selected) delete[] Selected;
 }

@@ -114,22 +114,21 @@ public:
 	* @param pos		The position of the connector
 	*/	
 	RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner,const RPoint& pos);
-	
-		
+
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
 	* @param c		Connector used for the comparaison.
 	*/
 	int Compare(const RGeoInfoConnector* c) {return(Con->Id-c->Con->Id);}
-	
+
 	/**	
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
 	* @param c		Connector used for the comparaison.
 	*/
 	int Compare(const RGeoInfoConnector& c) {return(Con->Id-c.Con->Id);}
-	
+
 	/**
 	* This function compares a connector and an identificator and returns 0 if
 	* there are the same.
@@ -137,7 +136,7 @@ public:
 	* @param id		Identificator used for the comparaison.
 	*/
 	int Compare(const unsigned int id) {return(Con->Id-id);}
-		
+
 	/**
 	* Return the position of the connector in absolute (not relativ to the
 	* object).
@@ -174,7 +173,7 @@ class RGeoInfo
 	/**
 	* Position of the object.
 	*/
-	RPoint Pos;    			
+	RPoint Pos;
 
 	/**
 	* Index of the orientation used for this info.
@@ -184,12 +183,12 @@ class RGeoInfo
 	/**
 	* Polygon representing the object.
 	*/
-	RPolygon *Bound;			
+	RPolygon *Bound;
 
 	/**
 	* Rectangles Decomposition of the polygon.
 	*/
-	RRects *Rects;				
+	RRects *Rects;
 
 	/**
 	* Rectangle holding the polygon.
@@ -255,7 +254,7 @@ public:
 
 	/**
 	* Calculate the boundary rectangle of the polygon according to the position.
-	* @param rect 	The rectangle that will hold the result.
+	* @param rect           Rectangle that will hold the result.
 	*/
 	void Boundary(RRect &rect);
 
@@ -283,53 +282,54 @@ public:
 	/**
 	* Assign the geometric information to the position and update the grids with the
 	* identicator of the object.
-	* @param pos				Position to place.
-	* @param grid				The grid.
+	* @param pos            Position to place.
+	* @param grid           Grid.
 	*/
 	void Assign(const RPoint &pos,RGrid *grid);
 	
 	/**
 	* Assign the geometric information to the position.
-	* @param pos				Position to place.
+	* @param pos            Position to place.
 	*/
 	void Assign(const RPoint &pos) {Pos=pos;}
 
 	/**
 	* Compare function use for the RContainer class. Compare only the adress of the
 	* pointers.
-	* @param info			The pointer used for the comparaison.
+	* @param info           Pointer used for the comparaison.
 	*/
 	int Compare(RGeoInfo *info) { return(info!=this); }
 
 	/**
 	* Test if the object can be placed at a specific position in regards of the
 	* occupation.
-	* @param pos				The position to test.
-	* @param grid				Grid.
+	* @param pos            Position to test.
+	* @param grid           Grid.
 	*/
 	bool Test(RPoint &pos,RGrid *grid);
 
 	/**
 	* Calculate the position where the object represented can be placed, if it
 	* is pushed to the bottom and to the left.
-	* @param pos				The initial position, and then the final one.
-	* @param limits			The limits for the placement.
-	* @param grid				Grid.
+	* @param pos            Initial position, and then the final one.
+	* @param limits         Limits for the placement.
+	* @param grid           Grid.
 	*/
 	void PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid);
 
 	/**
 	* Calculate the position where the object represented can be placed, if it
 	* is pushed in direction of the center.
-	* @param pos				The initial position, and then the final one.
-	* @param limits	    The limits for the placement.
-	* @param grid				Grid.
+	* @param pos            Initial position, and then the final one.
+	* @param limits         Limits for the placement.
+	* @param grid           Grid.
 	*/
 	void PushCenter(RPoint &pos,RPoint &limits,RGrid *grid);
 	
 	/**
 	* This function returns true if the two objects represented by this geometric information
-	* overlap (Rects have to be calculated.*/
+	* overlap (Rects have to be calculated.
+	*/
 	bool Overlap(RGeoInfo *info);
 
 	/**
@@ -354,13 +354,13 @@ public:
 
 	/**
 	* Make a translation of the point.
-	* @param pt 	The point representing the vector used.
+	* @param pt             Point representing the vector used.
 	*/
 	RGeoInfo& operator+=(const RPoint &pt) {Pos+=pt;return(*this);}
 
 	/**
 	* Make a translation of the point.
-	* @param pt 	The point representing the vector used.
+	* @param pt             The point representing the vector used.
 	*/
 	RGeoInfo& operator-=(const RPoint &pt)
 	{
@@ -412,23 +412,22 @@ public:
 	* Return the polygon representing the object to place.
 	*/
 	RPolygon* GetBound(void) {return(Bound);}
-	
+
 	/**
 	* Start the iterator to go through the connections.
 	*/
 	void StartCon(void);
-	
+
 	/**
 	* Test if the end of the connections are reached.
 	*/
 	bool EndCon(void);
-	
-		
+
 	/**
 	* Go to the next connections, if the end is reached, go to the beginning.
 	*/
 	void NextCon(void);
-	
+
 	/**
 	* Return the current connection.
 	*/
@@ -458,21 +457,21 @@ public:
 */
 class RGeoInfoContainer : public RGeoInfo
 {
-public:	
+public:
 	
 	/**
 	* Construct a geometric information.
 	*/
 	RGeoInfoContainer(void);	
-	
+
 	/**
 	* Construct a geometric information.
 	*/
 	RGeoInfoContainer(RObj2D* obj);
-		
+
 	/**
 	* Add a geometric information information to the container.
-	* @param info		The geometric information of the object.
+	* @param info           The geometric information of the object.
 	*/
 	void Add(RGeoInfo *info);
 

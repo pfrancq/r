@@ -39,6 +39,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rga2d/rga2d.h>
+#include <rga2d/rgeoinfos.h>
 using namespace RGA2D;
 
 
@@ -54,7 +55,7 @@ namespace RGA2D{
 * @short 2D GA chromosome.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	class RChromo2D : public RChromo<cInst,cChromo,cFit,cThreadData>
+	class RChromo2D : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGeoInfos
 {
 protected:
 
@@ -78,7 +79,7 @@ public:
 	/**
 	* Objects to place.
 	*/
-	RObj2D **Objs;						
+	RObj2D **Objs;
 
 	/**
 	* Number of objects to place.
@@ -103,12 +104,12 @@ protected:
 	* Temporary objects used in crossover and mutation. This is a
 	* "thread-dependent" data.
 	*/
-	RObj2D **thObjs;					
+	RObj2D **thObjs;
 
 	/**
 	* Number of temporary objects.
 	*/
-	unsigned int thNbObjs;		
+	unsigned int thNbObjs;
 
 	/**
 	* Temporary object container used for the crossover. This is a
@@ -125,31 +126,21 @@ protected:
 public:
 
 	/**
-	* Geometric information of the objects.
-	*/
-	cInfo **Infos;
-
-	/**
-	* Which objects were selected for crossover.
-	*/
-	bool *Selected;
-
-	/**
 	* Point representing the limits for the placement.
 	*/
 	RPoint Limits;
 
 	/**
 	* Construct the chromosome.
-	* @param inst			Pointer to the instance.
-	* @param id				Identificator of the chromosome.
+	* @param inst           Pointer to the instance.
+	* @param id             Identificator of the chromosome.
 	*/
 	RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc);
 
 	/**
 	* This function initialises some important data, in particular Infos and
 	* Selected.
-	* @param thData		Pointer to the "thread-dependent" data of the chromosome.
+	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
 	*/
 	virtual void Init(cThreadData *thData) throw(bad_alloc);
 
@@ -168,15 +159,15 @@ public:
 
 	/**
 	* This function add all the unselected objects to thObjs and calculate the
-	* corresponding number.
-	* @param	objs			The array of pointers to objects to be filled.
-	*	@param	nbobjs		The total number of objects in the array.
+	* correspoding number.
+	* @param objs           The array of pointers to objects to be filled.
+	* @param nbobjs         The total number of objects in the array.
 	*/
 	void FillObjs(RObj2D **objs,unsigned int &nbobjs);
 
 	/**
 	* The random construction uses the heuristic to place all the objects.
-	* @return		The function returns true if a solution has been constructed.
+	* @return The function returns true if a solution has been constructed.
 	*/
 	virtual bool RandomConstruct(void);
 
@@ -184,23 +175,23 @@ public:
 	* Make the crossover for the chromosome. A set of objects is taken from the
 	* first parent. Then, the heuristic is used to place this object and the
 	* objects that aren't selected.
-	* @param parent1	First parent used.
-	* @param parent2	Second parent used (Actually, no information is taken
-	*									from this parent).
-	* @return 				The function returns true if the crossover has been done.
+	* @param parent1        First parent used.
+	* @param parent2        Second parent used (Actually, no information is
+	*                       taken from this parent).
+	* @return The function returns true if the crossover has been done.
 	*/
 	virtual bool Crossover(cChromo *parent1,cChromo *parent2);
 
 	/**
 	* The mutation simply calls the heuristic with all the objects.
-	* @return		The function returns true if the mutation has been done.
+	* @return The function returns true if the mutation has been done.
 	*/
 	virtual bool Mutation(void);
 
 	/**
 	* This function verify the validity of the chromosome, in particular that
-	*	no polygons are overlaped.
-	* @return		The function returns true if the chromosome is valid.
+	* no polygons are overlaped.
+	* @return The function returns true if the chromosome is valid.
 	*/
 	virtual bool Verify(void);
 
@@ -211,17 +202,17 @@ public:
 
 	/**
 	* Gives the object at position (X,Y).
-	* @param X		X Position.
-	* @param Y		Y Position.
-	* @return			The function returns a pointer to the objects or 0.
+	* @param X              X Position.
+	* @param Y              Y Position.
+	* @return The function returns a pointer to the objects or 0.
 	*/
 	RObj2D* GetObj(RCoord X,RCoord Y);
 
 	/**
 	* Gives the geometric information of the object at position (X,Y).
-	* @param X		X Position.
-	* @param Y		Y Position.
-	* @return			The function returns a pointer to the information or 0.
+	* @param X              X Position.
+	* @param Y              Y Position.
+	* @return The function returns a pointer to the information or 0.
 	*/
 	cInfo* GetInfo(RCoord X,RCoord Y);
 

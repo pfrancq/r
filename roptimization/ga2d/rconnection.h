@@ -59,45 +59,30 @@ namespace RGA2D{
 */
 class RConnection
 {
-	RObj2DConnector* From;
-	RObj2DConnector* To;
+public:
+	/**
+	* Weight of the connection.
+	*/
 	double Weight;
 
-public:
-
+	/**
+	* The connectors involved in the connections.
+	*/
 	RContainer<RObj2DConnector,unsigned int,false,false> Connect;
 
 	/**
 	* Construct a connection.
-	* @param from 		"From" Connector.
-	* @param to 		"To" Connector.	
-	* @param weight		Weight of the connection (Default is 1).
-	*/
-	RConnection(RObj2DConnector* from,RObj2DConnector* to,double weight=1.0);
-
-	/**
-	* Construct a connection.
-	* @param nb 		Max number of connectors involved.
-	* @param weight		Weight of the connection (Default is 1).
+	* @param nb             Max number of connectors involved.
+	* @param weight         Weight of the connection (Default is 1).
 	*/
 	RConnection(unsigned int nb,double weight=1.0);
 
 	/**
 	* This function compares two connections returns 0 if
 	* there are the same.
-	* @param c		Connection used for the comparaison.
+	* @param c              Connection used for the comparaison.
 	*/	
 	int Compare(const RConnection* c) {return(this-c);}
-
-	/**
-	* Return the "from" part.
-	*/
-	RObj2DConnector* GetFrom(void) {return(From);}
-
-	/**
-	* Return the "from" part.
-	*/
-	RObj2DConnector* GetTo(void) {return(To);}
 
 	/**
 	* Return the weight.
@@ -107,8 +92,8 @@ public:
 	/**
 	* Return the distance of the net for a given set of geometric information.
 	* The "Prim's Algorithm for Minimum Spanning Trees" is used.
-	* @param infos		Geometric informations.
-	* @returns	The "minimal" distance of the net.
+	* @param infos          Geometric informations.
+	* @returns The "minimal" distance of the net.
 	*/
 	double GetMinDist(RGeoInfo** infos);
 

@@ -60,7 +60,12 @@ namespace RGA2D{
 * @author Pascal Francq
 */
 class RConnections : public RContainer<RConnection,unsigned int,true,false>
-{			
+{
+	/**
+	* Random number generator to use.
+	*/
+	RRandom* Random;
+
 	/**
 	* Prométhée Parameters for the distance.
 	*/
@@ -70,7 +75,7 @@ class RConnections : public RContainer<RConnection,unsigned int,true,false>
 	* Prométhée Parameters for the weight.
 	*/
 	RPromCriterionParams WeightParams;
-	
+
 public:
 
 	/**
@@ -80,67 +85,58 @@ public:
 
 	/**
 	* Initialize all the necessary structures when all connections are inserted.
-	*/	
+	*/
 	void Init(void);
 	
 	/**
 	* Set the parameters for Prométhée.
-	*/	
-	void SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight);		
-	
+	*/
+	void SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight,RRandom* r);
+
 	/**
 	* Calculate the sum of the weight of the connected objects, that are already
 	* placed, to a given one representing by a geometric information.
-	* @param infos			The geometric information of all the objects.
-	* @param cur			Geometric information representing the given object for
-	*						wich calculate the distance.	
+	* @param infos          The geometric information of all the objects.
+	* @param cur            Geometric information representing the given object for
+	*                       wich calculate the distance.
 	*/
 	double GetCon(RGeoInfo **infos,RGeoInfo *cur);
-	
+
 	/**
 	* Return the object that have the most connected objects go
 	* placed and that isn't selected.
-	*
-	* @return				The geometric information of the object to place.
-	* @param infos			The geometric information of all the objects.
-	* @param nb				Number of objects.
-	* @param selected		Array to hold which objects are selected.
+	* @param infos          The geometric information of all the objects.
+	* @param nb             Number of objects.
+	* @param selected       Array to hold which objects are selected.
+	* @return               The geometric information of the object to place.
 	*/
 	RGeoInfo* GetBestConnected(RGeoInfo **infos,unsigned int nb,bool* selected,RRect& bound);
-	
+
 	/**
 	* Return the object that is not placed and that have the most connected
 	* weight with the objects already placed.
-	* @return				The geometric information of the object to place.
-	* @param infos			The geometric information of all the objects.
-	* @param nb				Number of objects.
-	* @param order			Order in which to treat the objects.
-	* @param nbok			Number of objects already placed.
+	* @param infos          The geometric information of all the objects.
+	* @param nb             Number of objects.
+	* @param order          Order in which to treat the objects.
+	* @param nbok           Number of objects already placed.
+	* @return The geometric information of the object to place.
 	*/
 	RGeoInfo* GetMostConnected(RGeoInfo **infos,unsigned int nb,unsigned int* order,unsigned int nbok);
-	
+
 	/**
 	* Calculate the sum of the Manhattant distance between all placed objects
 	* representing by the geometric informations.
-	* @patam infos		The goemetric informations.
+	* @param infos          The goemetric informations.
 	*/
 	double GetDistances(RGeoInfo** infos);
-	
+
 	/**
 	* Calculate the sum of the Manhattant distance between all placed objects
 	* representing by the geometric informations and a given one.
-	* @patam infos		The goemetric informations.
+	* @param infos          The goemetric informations.
 	*/
 	double GetDistances(RGeoInfo** infos,RGeoInfo* info);
-		
-	/**
-	* Add a connection.
-	* @param from		The "from" object.
-	* @param to			The "to" object.
-	* @param weight		The weight of the connection.
-	*/
-	void AddConnection(RObj2DConnector* from,RObj2DConnector* to,double weight=1.0);
-	
+
 	/**
 	* Destruct the connections.
 	*/

@@ -45,8 +45,8 @@ using namespace RGA2D;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGA2D::RPlacementEdge::RPlacementEdge(unsigned int maxobjs,bool calc,bool use,bool ori)
-	: RPlacementHeuristic(maxobjs,calc,use,ori)
+RGA2D::RPlacementEdge::RPlacementEdge(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
 }
 
@@ -120,7 +120,6 @@ void RGA2D::RPlacementEdge::NextObjectOri(void) throw(RPlacementHeuristicExcepti
 		CurInfo->PushBottomLeft(Pos,Limits,Grid);
 	}
 
-
 	// If to high than try to switch objects and place another one
 	if(Pos.Y+CurInfo->Height()>Limits.Y)
 	{
@@ -139,39 +138,38 @@ void RGA2D::RPlacementEdge::Place(RPoint& pos) throw(RPlacementHeuristicExceptio
 
 	// Assign the object to the current position
 	CurInfo->Assign(pos,Grid);
-		
 
- 	// Calculate Next position
+	// Calculate Next position
 	Last=Actual;
- 	if(pos.X+CurInfo->Width()>Actual.X)
- 		Actual.X=pos.X+CurInfo->Width();
- 	if((pos.X==0)&&(pos.X+CurInfo->Width())>Max.X)
- 		Max.X=pos.X+CurInfo->Width();
- 	if(pos.Y+CurInfo->Height()>Max.Y)
- 		Max.Y=pos.Y+CurInfo->Height();
+	if(pos.X+CurInfo->Width()>Actual.X)
+		Actual.X=pos.X+CurInfo->Width();
+	if((pos.X==0)&&(pos.X+CurInfo->Width())>Max.X)
+		Max.X=pos.X+CurInfo->Width();
+	if(pos.Y+CurInfo->Height()>Max.Y)
+		Max.Y=pos.Y+CurInfo->Height();
 	Last.Y+=CurInfo->Height();
 
 
- 	// Verify if down level needed update
- 	for(i=0;i<CurLevel;i++)
- 		if(Levels[i].X<Max.X) Levels[i].X=Max.X;
+	// Verify if down level needed update
+	for(i=0;i<CurLevel;i++)
+		if(Levels[i].X<Max.X) Levels[i].X=Max.X;
 
 
- 	// Verify if some levels must be skipped
- 	i=CurLevel+1;
- 	while((i<NbLevels)&&(Levels[i].Y<pos.Y+CurInfo->Height()))
- 	{
- 		NbLevels--;
- 		for(l=i;l<NbLevels;l++)
- 			Levels[l]=Levels[l+1];
+	// Verify if some levels must be skipped
+	i=CurLevel+1;
+	while((i<NbLevels)&&(Levels[i].Y<pos.Y+CurInfo->Height()))
+	{
+		NbLevels--;
+		for(l=i;l<NbLevels;l++)
+			Levels[l]=Levels[l+1];
 	}
 
 	// Verify ActLimits
- 	if(pos.X+CurInfo->Width()>Result.Pt2.X)
- 	{
- 		Result.Pt2.X=pos.X+CurInfo->Width();
- 		if(Max.X==0) Max.X=Result.Pt2.X;
- 	}
- 	if(pos.Y+CurInfo->Height()>Result.Pt2.Y)
- 		Result.Pt2.Y=pos.Y+CurInfo->Height();
+	if(pos.X+CurInfo->Width()>Result.Pt2.X)
+	{
+		Result.Pt2.X=pos.X+CurInfo->Width();
+		if(Max.X==0) Max.X=Result.Pt2.X;
+	}
+	if(pos.Y+CurInfo->Height()>Result.Pt2.Y)
+		Result.Pt2.Y=pos.Y+CurInfo->Height();
 }

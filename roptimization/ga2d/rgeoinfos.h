@@ -61,37 +61,47 @@ class RGeoInfos : public RStd::RContainer<RGeoInfo,unsigned int,true,false>
 {
 	/**
 	* Pointer to the problem.
-	*/	
+	*/
 	RProblem2D* Problem;
 
 public:
 
 	/**
+	* Which objects were selected for crossover.
+	*/
+	bool *Selected;
+
+	/**
 	* Construct the container.
-	* @param prob		The instance of the problem.
-	* @param create		If true, nb geometric information are created.
+	* @param prob           The instance of the problem.
+	* @param create         If true, nb geometric information are created.
 	*/
 	RGeoInfos(RProblem2D* prob,bool create) throw(bad_alloc);
-	
+
 	/**
 	* Select a "good" set of geometric informations. This is used by the
 	* crossover of the GA.
-	* @param cont		The container of objects that will be hold.
-	* @param grid		The grid representing the Layout.
-	* @param selected	Array given the already selected objects.
+	* @param cont           The container of objects that will be hold.
+	* @param grid           The grid representing the Layout.
+	* @param selected       Array given the already selected objects.
 	*/
 	void GetSetInfos(RObj2DContainer* cont,RGrid* grid,bool* selected);
-	
+
 	/**
 	* Calculate the boundary rectangle of all the geometric information.
-	* @param rect		The rectangle that will be hold the result.
+	* @param rect           The rectangle that will be hold the result.
 	*/
 	void Boundary(RRect &rect);
-	
+
 	/**
 	* Clear all the geometric informations.
 	*/
 	void Clear(void);
+
+	/**
+	* Destruct the geometric information.
+	*/
+	virtual ~RGeoInfos(void);
 };
 
 

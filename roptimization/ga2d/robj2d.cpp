@@ -32,6 +32,11 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <math.h>
+
+
+//-----------------------------------------------------------------------------
 // include files for R Project
 #include <rga2d/robj2d.h>
 #include <rga2d/rgeoinfo.h>
@@ -148,6 +153,36 @@ void RGA2D::RObj2DConnector::AddConnection(RConnection* con)
 }
 
 
+//-----------------------------------------------------------------------------
+double RGA2D::RObj2DConnector::GetMinDist(RObj2DConnector* c,RGeoInfo** infos,RPoint& pt1,RPoint& pt2)
+{
+	double min=HUGE_VAL,d;
+	RGeoInfo *g1,*g2;
+	RGeoInfoConnector *c1,*c2;
+	unsigned int i,j;
+	RPoint p1,p2;
+
+	g1=infos[Owner->GetId()];
+	c1=g1->Connectors.GetPtr<unsigned int>(Id);
+	g2=infos[c->Owner->GetId()];
+	c2=g2->Connectors.GetPtr<unsigned int>(c->Id);
+	for(i=0;i<c1->NbPos;i++)
+		for(j=0;j<c2->NbPos;j++)
+		{
+			p1=c1->Pos[i]+g1->GetPos();
+			p2=c2->Pos[j]+g2->GetPos();
+			d=p1.ManhattanDist(p2);
+			if(d<min)
+			{
+				min=d;
+				pt1=p1;
+				pt2=p2;
+			}
+		}
+	return(min);
+}
+
+
 
 //-----------------------------------------------------------------------------
 //
@@ -198,7 +233,7 @@ void RGA2D::RObj2D::CalcPolygons(void)
 	RPolygon *ptr;
 	bool bNormal,bRota90;
 	RPoint Min;
-	
+
 	if(!NbPossOri) return;
 
 	// If Polygon is a rectangle
@@ -213,7 +248,7 @@ void RGA2D::RObj2D::CalcPolygons(void)
 				Connectors()->Poss[0]=Connectors()->Pos;
 			return;
 		}
-		
+
 		// It is Rectangle -> Max 2 orientation only
 		bNormal=bRota90=false;
 		for(i=NbPossOri+1,o=PossOri;--i;o++)
@@ -247,21 +282,21 @@ void RGA2D::RObj2D::CalcPolygons(void)
 		if(bRota90&&bNormal) NbPossOri=2;
 		return;
 	}
-	
+
 	// Other Polygon
 	for(i=0,ptr=Polygons,o=PossOri;i<NbPossOri;ptr++,o++,i++)
 	{
 		(*ptr)=Polygon;
 		ptr->ChangeOrientation(*o,Min);
- 		for(Connectors.Start();!Connectors.End();Connectors.Next())
- 		{
+		for(Connectors.Start();!Connectors.End();Connectors.Next())
+		{
 			for(unsigned int j=0;j<Connectors()->NbPos;j++)
 			{
- 				Connectors()->Poss[j][i]=Connectors()->Pos;
- 				Connectors()->Poss[j][i].ChangeOrientation(*o);
+				Connectors()->Poss[j][i]=Connectors()->Pos;
+				Connectors()->Poss[j][i].ChangeOrientation(*o);
 				Connectors()->Poss[j][i]-=Min;
 			}
- 		}		
+		}
 	}
 }
 
@@ -398,7 +433,7 @@ void RGA2D::RObj2DContainer::AddObj(RObj2D *obj,RGeoInfo *info)
 		if(pt.Y<MinY) MinY=pt.Y;
 		if(pt.X<MinX) MinX=pt.X;
 	}
-	
+
 	// Create new polygon and translate it
 	ins=info->GetPolygon();
 	pt.Set(-MinX,-MinY);

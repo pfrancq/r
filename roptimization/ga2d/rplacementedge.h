@@ -97,11 +97,11 @@ public:
 
 	/**
 	* Construct the edge heuristic.
-	* @param calc			Must free polygons be calculated.
-	* @param use			Must free polygons be used.
-	* @param ori			Must all orientation be tested.	
+	* @param calc           Must free polygons be calculated.
+	* @param use            Must free polygons be used.
+	* @param ori            Must all orientation be tested.	
 	*/
-	RPlacementEdge(unsigned int maxobjs,bool calc,bool use,bool ori=false);
+	RPlacementEdge(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 
 	virtual void Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
 	

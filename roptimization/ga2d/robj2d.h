@@ -118,80 +118,80 @@ public:
 
 	/**
 	* Construct a connector.
-	* @param owner		Owner of the connector.
-	* @param id			Id of the connector.
-	* @param pos		Position of the connector.
+	* @param owner          Owner of the connector.
+	* @param id             Id of the connector.
+	* @param pos            Position of the connector.
 	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const RPoint pos);
 
 	/**
 	* Construct a connector.
-	* @param owner		Owner of the connector.
-	* @param id			Id of the connector.
-	* @param name		Name of the connector.
-	* @param pos		Position of the connector.
+	* @param owner          Owner of the connector.
+	* @param id             Id of the connector.
+	* @param name           Name of the connector.
+	* @param pos            Position of the connector.
 	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const RString& name,const RPoint pos);
 
-	/**	
+	/**
 	* Construct a connector.
-	* @param owner		Owner of the connector.
-	* @param id			Id of the connector.
-	* @param name		Name of the connector.
-	* @param pos		Position of the connector.
+	* @param owner          Owner of the connector.
+	* @param id             Id of the connector.
+	* @param name           Name of the connector.
+	* @param pos            Position of the connector.
 	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const RPoint pos);
 
 	/**	
 	* Construct a connector.
-	* @param owner		Owner of the connector.
-	* @param id			Id of the connector.
-	* @param x			X Coordinate of the position of the connector.
-	* @param y			Y Coordinate of the position of the connector.	
-	*/	
+	* @param owner          Owner of the connector.
+	* @param id             Id of the connector.
+	* @param x              X Coordinate of the position of the connector.
+	* @param y              Y Coordinate of the position of the connector.	
+	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const unsigned int x,unsigned y);
 
 	/**
 	* Construct a connector.
-	* @param owner		Owner of the connector.
-	* @param id			Id of the connector.
-	* @param name		Name of the connector.	
-	* @param x			X Coordinate of the position of the connector.
-	* @param y			Y Coordinate of the position of the connector.	
+	* @param owner          Owner of the connector.
+	* @param id             Id of the connector.
+	* @param name           Name of the connector.
+	* @param x              X Coordinate of the position of the connector.
+	* @param y              Y Coordinate of the position of the connector.
 	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const RString& name,const unsigned int x,unsigned y);
 
 	
 	/**
 	* Construct a connector.
-	* @param owner		Owner of the connector.
-	* @param id			Id of the connector.
-	* @param name		Name of the connector.	
-	* @param x			X Coordinate of the position of the connector.
-	* @param y			Y Coordinate of the position of the connector.	
-	*/	
+	* @param owner          Owner of the connector.
+	* @param id             Id of the connector.
+	* @param name           Name of the connector.
+	* @param x              X Coordinate of the position of the connector.
+	* @param y              Y Coordinate of the position of the connector.
+	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int x,unsigned y);
 
-	/**	
+	/**
 	* Construct a connector.
-	* @param owner		Owner of the connector.
-	* @param id			Id of the connector.
-	* @param name		Name of the connector.
-	* @param nb			Number of the connector.
-	*/	
+	* @param owner          Owner of the connector.
+	* @param id             Id of the connector.
+	* @param name           Name of the connector.
+	* @param nb             Number of the connector.
+	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int nb);
 
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param c		Connector used for the comparaison.
+	* @param c              Connector used for the comparaison.
 	*/
 	int Compare(const RObj2DConnector* c) {return(Id-c->Id);}
 
-	/**	
+	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param c		Connector used for the comparaison.
+	* @param c              Connector used for the comparaison.
 	*/
 	int Compare(const RObj2DConnector& c) {return(Id-c.Id);}
 
@@ -199,7 +199,7 @@ public:
 	* This function compares a connector and an identificator and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param id		Identificator used for the comparaison.
+	* @param id             Identificator used for the comparaison.
 	*/
 	int Compare(const unsigned int id) {return(Id-id);}
 	
@@ -207,7 +207,7 @@ public:
 	* This function compares a connector and a name and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param name		Name used for the comparaison.
+	* @param name           Name used for the comparaison.
 	*/
 	int Compare(const RString& name) {return(Name.Compare(name));}
 
@@ -215,7 +215,7 @@ public:
 	* This function compares a connector and a name and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param name		Name used for the comparaison.
+	* @param name           Name used for the comparaison.
 	*/
 	int Compare(const char* name) {return(Name.Compare(name));}
 
@@ -232,12 +232,12 @@ public:
 	/**
 	* Return the position of the connector relativ to the object.
 	*/
-	RPoint& GetPos(void);	
+	RPoint& GetPos(void);
 
 	/**
 	* Return the position of the connector of the oth orientation.
-	* @return i		The number.
-	* @return o		The orientation.
+	* @return i             The number.
+	* @return o             The orientation.
 	*/
 	RPoint& GetPos(unsigned int i,char o);
 
@@ -250,6 +250,15 @@ public:
 	* Return the name of the connector.
 	*/
 	const char* GetName(void) {return(Name());}
+
+	/**
+	* Return the minimum distance between two connectors.
+	* @param c              The second connector.
+	* @param infos          The goemetric information representing the placed objects.
+	* @param pt1            The first connector point used.
+	* @param pt2            The second connector point used.
+	*/
+	double GetMinDist(RObj2DConnector* c,RGeoInfo** infos,RPoint& pt1,RPoint& pt2);
 
 	// friend classes
 	friend class RObj2D;
@@ -274,7 +283,7 @@ public:
 	* Identificator of the object.
 	*/
 	unsigned int Id;
-	
+
 	/**
 	* Name of the object.
 	*/
@@ -314,46 +323,46 @@ public:
 	* Specify if the object is deformable or rigid.
 	*/
 	bool Deformable;
-	
+
 	/**
 	* The connectors of this object
 	*/
 	RContainer<RObj2DConnector,unsigned int,true,true> Connectors;
-	
+
 	/**
 	* Construct an 2D object.
-	* @param id						The identificator of the object.
-	* @param deformable   Specify if the object is deformable.
+	* @param id             The identificator of the object.
+	* @param deformable     Specify if the object is deformable.
 	*/
 	RObj2D(unsigned int id,bool deformable);
 
 	/**
 	* Construct an 2D object.
-	* @param id						Identificator of the object.
-	* @param name					Name of the object.
-	* @param deformable   Specify if the object is deformable.
+	* @param id             Identificator of the object.
+	* @param name           Name of the object.
+	* @param deformable     Specify if the object is deformable.
 	*/
 	RObj2D(unsigned int id,const RString& name,bool deformable);
-	
+
 	/**
 	* Construct an 2D object.
-	* @param id						Identificator of the object.
-	* @param name					Name of the object.
-	* @param deformable   Specify if the object is deformable.
+	* @param id             Identificator of the object.
+	* @param name           Name of the object.
+	* @param deformable     Specify if the object is deformable.
 	*/
 	RObj2D(unsigned int id,const char* name,bool deformable);
 
 	/**
 	* This function compares two cobjects and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param o		Object used for the comparaison.
+	* @param o              Object used for the comparaison.
 	*/
 	int Compare(const RObj2D* o) {return(Id-o->Id);}
 
 	/**
 	* This function compares two cobjects and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param o		Object used for the comparaison.
+	* @param o              Object used for the comparaison.
 	*/
 	int Compare(const RObj2D& o) {return(Id-o.Id);}
 
@@ -361,15 +370,15 @@ public:
 	* This function compares an object and an identificator and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param id		Identificator used for the comparaison.
+	* @param id             Identificator used for the comparaison.
 	*/
 	int Compare(const unsigned int id) {return(Id-id);}
-	
+
 	/**
 	* This function compares an object and a name and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param name		Name used for the comparaison.
+	* @param name           Name used for the comparaison.
 	*/
 	int Compare(const RString& name) {return(Name.Compare(name));}
 
@@ -377,19 +386,20 @@ public:
 	* This function compares an object and a name and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param name		Name used for the comparaison.
+	* @param name           Name used for the comparaison.
 	*/
 	int Compare(const char* name) {return(Name.Compare(name));}
 
 	/**
 	* Initialize the object when all information are entered. In particular,
 	* it calculates the different polygon based on the possible orientations,
-	* the rectangular decompositions and the area of the object.*/
+	* the rectangular decompositions and the area of the object.
+	*/
 	void Init(void);
 
 	/**
 	* Calculate all the polygons based on the possible orientations of the object.
-	*	@return The function returns true if the calculation has be done without errors.
+	* @return The function returns true if the calculation has be done without errors.
 	*/
 	void CalcPolygons(void);
 
@@ -427,18 +437,18 @@ public:
 	* The assignment operator.
 	*/
 	RObj2D& operator=(const RObj2D &obj);
-		
+
 	/**
 	* Add a connector to this object
-	* @param id		Identificator of the connector.
-	* @param x		X-Coordinate of the connection point.
-	* @param y		Y-Coordinate of the connection point.	
+	* @param id             Identificator of the connector.
+	* @param x              X-Coordinate of the connection point.
+	* @param y              Y-Coordinate of the connection point.	
 	*/
 	void AddConnector(unsigned int id,unsigned x,unsigned y);
-	
+
 	/**
 	* Return the connector corresponding to a given identificator.
-	* @param id
+	* @param id             Identificator used for the search.
 	*/
 	RObj2DConnector* GetConnector(unsigned int id) {return(Connectors.GetPtr<unsigned int>(id));}
 
@@ -463,37 +473,37 @@ public:
 	/**
 	* Identificators of the objects contained.
 	*/
-	unsigned int *Ids;					
+	unsigned int *Ids;
 
 	/**
 	* Pointer to all geometric infos of the objects.
 	*/
-	RGeoInfo** Infos;						
+	RGeoInfo** Infos;
 
 	/**
 	* Maximum number of objects contained.
 	*/
-	unsigned int NbMax;					
+	unsigned int NbMax;
 
 	/**
 	* Number of objects contained.
 	*/
-	unsigned int Nb;						
+	unsigned int Nb;
 
 	/**
 	* Polygons of the objects.
 	*/
-	RPolygons SPolygons;				
+	RPolygons SPolygons;
 
 	/**
 	* Point the most left-bottom.
 	*/
-	RCoord MinX,MinY;						
+	RCoord MinX,MinY;
 
- 	/**
+	/**
 	* Construct the container of objects.
-	* @param id				The identificator of the object.
-	* @param max			Maxmimum number of objects that can be contained.
+	* @param id             The identificator of the object.
+	* @param max            Maxmimum number of objects that can be contained.
 	*/
 	RObj2DContainer(unsigned int id,unsigned int max);
 
@@ -504,8 +514,8 @@ public:
 
 	/**
 	* Add an object and his information to the container.
-	* @param obj		The object to add.
-	* @param info		The geometric information of the object.
+	* @param obj            The object to add.
+	* @param info           The geometric information of the object.
 	*/
 	void AddObj(RObj2D *obj,RGeoInfo *info);
 
@@ -517,14 +527,13 @@ public:
 	/**
 	* Assign this container to a position and replace it in the grid with all the
 	* identificators of the objects contained.
-	* @param pos		Position.
-	* @param infos  The geometric information of the objects.
-	* @param OccY		Grid with X as entry.
-	* @param OccY		Grid with Y as entry.
+	* @param pos            Position.
+	* @param infos          The geometric information of the objects.
+	* @param OccY           Grid with X as entry.
+	* @param OccY           Grid with Y as entry.
 	*/
 	void Assign(RPoint &pos,RGeoInfo **infos,unsigned int **OccX,unsigned int **OccY);
-	
-	
+
 	/**
 	* Destruct the container.
 	*/

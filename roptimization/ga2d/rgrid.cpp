@@ -201,8 +201,8 @@ RCoord RGA2D::RGrid::SkirtLeft(RPoint& pt,RRect &bound)
 	if(pt.X>0) ptr=&OccupiedY[pt.Y][pt.X-1]; else return(x);
 	if(pt.Y>0) ptrD=&OccupiedY[pt.Y-1][pt.X-1]; else ptrD=0;
 	if(pt.Y<InternalLimits.Y) ptrU=&OccupiedY[pt.Y+1][pt.X-1]; else ptrU=0;
-	
-   // While next point is free and not a bifurcation, go to left
+
+	// While next point is free and not a bifurcation, go to left
 	while((x>=Limit)&&((*ptr)==NoObject)&&!((ptrU&&((*ptrU)==NoObject))&&(ptrD&&((*ptrD)==NoObject))))
 	{
 		ptr--;
@@ -257,7 +257,7 @@ RCoord RGA2D::RGrid::SkirtUp(RPoint& pt,RRect &bound)
 	if(pt.X>0) ptrL=&OccupiedX[pt.X-1][pt.Y+1]; else ptrL=0;
 	if(pt.X<InternalLimits.X) ptrR=&OccupiedX[pt.X+1][pt.Y+1]; else ptrR=0;
 
-   // While next point is free and not a bifurcation, go to up
+	// While next point is free and not a bifurcation, go to up
 	while((y<=Limit)&&((*ptr)==NoObject)&&!((ptrR&&((*ptrR)==NoObject))&&(ptrL&&((*ptrL)==NoObject))))
 	{
 		ptr++;
@@ -269,7 +269,7 @@ RCoord RGA2D::RGrid::SkirtUp(RPoint& pt,RRect &bound)
 	// If bifucation and next up point is free, go to it
 	if((ptrL&&((*ptrL)==NoObject))&&(ptrR&&((*ptrR)==NoObject))&&((y!=pt.Y)&&(y<=Limit)&&((*(ptr))==NoObject)))
 		y++;
-	
+
 	return(y);
 }
 
@@ -280,12 +280,12 @@ RCoord RGA2D::RGrid::SkirtDown(RPoint& pt,RRect &bound)
 	unsigned int *ptr,*ptrL,*ptrR;
 	RCoord y=pt.Y;
 	RCoord Limit=bound.Pt1.Y;
-	
+
 	if(pt.Y>0) ptr=&OccupiedX[pt.X][pt.Y-1]; else return(y);
 	if(pt.X>0) ptrL=&OccupiedX[pt.X-1][pt.Y-1]; else ptrL=0;
 	if(pt.X<InternalLimits.X) ptrR=&OccupiedX[pt.X+1][pt.Y-1]; else ptrR=0;
 
-   // While next point is free and not a bifurcation, go to down
+	// While next point is free and not a bifurcation, go to down
 	while((y>=Limit)&&((*ptr)==NoObject)&&!((ptrR&&((*ptrR)==NoObject))&&(ptrL&&((*ptrL)==NoObject))))
 	{
 		ptr--;
@@ -341,10 +341,10 @@ bool RGA2D::RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect 
 	}
 
 	// Test if Valid one and insert it
-	if(  ((bound.Pt1.X>0)&&(X==bound.Pt1.X)) ||
-	     (X==bound.Pt2.X)                    ||
-	     ((bound.Pt1.Y>0)&&(Y==bound.Pt1.Y)) ||
-	     (Y==bound.Pt2.Y)||((X==pt.X)&&(Y==pt.Y))  )
+	if( ((bound.Pt1.X>0)&&(X==bound.Pt1.X)) ||
+	    (X==bound.Pt2.X)                    ||
+	    ((bound.Pt1.Y>0)&&(Y==bound.Pt1.Y)) ||
+	    (Y==bound.Pt2.Y)||((X==pt.X)&&(Y==pt.Y))  )
 		return(false);
 
 	// Find next Vertices
@@ -464,7 +464,7 @@ bool RGA2D::RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect 
 		}
 	}
 
-	// Ok	
+	// Ok
 	return(true);
 }
 
@@ -527,7 +527,7 @@ void RGA2D::RGrid::AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &boun
 		}
 		else
 			AdaptXY(X,Y,FromDir);
-	}	
+	}
 }
 
 

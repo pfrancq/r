@@ -49,8 +49,8 @@ using namespace RMath;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGA2D::RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,bool ori)
-	: Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori)
+RGA2D::RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+	: Random(r), Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori)
 {
 	Order=new unsigned int[maxobjs];
 	MaxPromSol=500;
@@ -67,7 +67,7 @@ void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfo** infos,RGrid *g
 	Infos=infos;
 	NbObjs=prob->Objs.NbPtr;
 	Connections=&prob->Cons;
-	
+
 	// Init the data for a placement
 	NbObjsOk=0;
 	Grid->Clear();
@@ -78,7 +78,7 @@ void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfo** infos,RGrid *g
 	// Calculate an order
 	for(unsigned int i=0;i<NbObjs;i++)
 		Order[i]=i;
-	RRandom::randorder<unsigned int>(Order,NbObjs);
+	Random->RandOrder<unsigned int>(Order,NbObjs);
 }
 
 
@@ -111,7 +111,7 @@ void RGA2D::RPlacementHeuristic::SetAreaParams(const RPromCriterionParams& param
 	AreaParams=params;
 }
 
-		
+
 //----------------------------------------------------------------------------
 void RGA2D::RPlacementHeuristic::SetAreaParams(double p,double q,double w)
 {
@@ -129,7 +129,7 @@ void RGA2D::RPlacementHeuristic::SelectNextObject(void) throw(RPlacementHeuristi
 		CurInfo=Infos[Order[0]];
 		return;
 	}
-	
+
 	// Find the most connected object
 	CurInfo=Connections->GetMostConnected(Infos,NbObjs,Order,NbObjsOk);
 }
@@ -164,7 +164,7 @@ void RGA2D::RPlacementHeuristic::AddValidPosition(RPoint& pos)
 	{
 		return;
 	}
-	
+
 	// Add new solution for Prométhée
 	p=&Sols[NbPromSol];
 	p->Ori=CurInfo->GetOri();

@@ -63,13 +63,13 @@ template<class cInst,class cChromo>
 	switch(Owner->GetHeuristic())
 	{
 		case BottomLeft:
-			Heuristic = new RPlacementBottomLeft(NbObjs+2,true,true,true);
+			Heuristic = new RPlacementBottomLeft(NbObjs+2,true,true,Owner->Random,true);
 			break;
 		case Edge:
-			Heuristic = new RPlacementEdge(NbObjs+2,true,true,true);
+			Heuristic = new RPlacementEdge(NbObjs+2,true,true,Owner->Random,true);
 			break;
 		case Center:
-			Heuristic = new RPlacementCenter(NbObjs+2,true,true,true);
+			Heuristic = new RPlacementCenter(NbObjs+2,true,true,Owner->Random,true);
 			break;
 	}
 }
@@ -101,14 +101,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 			: RInst<cInst,cChromo,cFit,cThreadData>(popsize), Problem(prob), Objs(prob->Objs.Tab),
 			 NbObjs(prob->Objs.NbPtr), bLocalOpti(true), Heuristic(h), Limits(prob->Limits)
 {
-	cChromo **C;
-	unsigned int i;
+}
 
-	for(i=PopSize+1,C=Chromosomes;--i;C++)
-	{
-		(*C)->Objs=Objs;
-		(*C)->NbObjs=NbObjs;
-	}
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
+	void RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::Init(void) throw(bad_alloc)
+{
+	RInst<cInst,cChromo,cFit,cThreadData>::Init();
 	BestChromosome->Objs=Objs;
 	BestChromosome->NbObjs=NbObjs;
 }

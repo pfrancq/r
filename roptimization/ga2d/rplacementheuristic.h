@@ -69,7 +69,7 @@ public:
 	RString Msg;
 	
 	RPlacementHeuristicException(const RString& msg) : Msg(msg) {}
-	RPlacementHeuristicException(const char* msg) : Msg(msg) {}	
+	RPlacementHeuristicException(const char* msg) : Msg(msg) {}
 };
 
 
@@ -89,6 +89,11 @@ class RPlacementHeuristic
 	};
 	
 protected:
+
+	/**
+	* The random number genrator to use
+	*/
+	RRandom *Random;
 
 	/**
 	* The limits for the placement.
@@ -199,54 +204,55 @@ public:
 
 	/**
 	* Construct the placement heuristic.
-	* @param maxobjs		The maximum objects to placed fore this object.
-	* @param calc			Must free polygons be calculated.
-	* @param use			Must free polygons be used.
-	* @param ori			Must all orientation be tested.
+	* @param maxobjs        The maximum objects to placed fore this object.
+	* @param calc           Must free polygons be calculated.
+	* @param use            Must free polygons be used.
+	* @param r              The random genrator to use.
+	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,bool ori=false);
+	RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 	
 	/**
 	* Initialize the heuristic.
-	* @param prob			The problem.
-	* @param infos			Pointer to the geometric information.
-	* @param grid			Pointer to the grid.	
+	* @param prob           The problem.
+	* @param infos          Pointer to the geometric information.
+	* @param grid           Pointer to the grid.	
 	*/
 	virtual void Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
 		
 	/**
 	* Initialize the heuristic.
-	* @param prob			The problem.
-	* @param infos			Pointer to the geometric information.
-	* @param grid			Pointer to the grid.	
+	* @param prob           The problem.
+	* @param infos          Pointer to the geometric information.
+	* @param grid           Pointer to the grid.
 	*/
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);	
 	
 	/**
 	* Set the parameters for the "area" criterion.
-	* @param p	The indifference's threshold.
-	* @param q	The preference's threshold.
-	* @param w	The weight.
+	* @param p              The indifference's threshold.
+	* @param q              The preference's threshold.
+	* @param w              The weight.
 	*/
 	void SetAreaParams(double p,double q,double w);
 	
 	/**
 	* Set the parameters for the "area" criterion.
-	* @param params		The parameters..
+	* @param params         The parameters.
 	*/
 	void SetAreaParams(const RPromCriterionParams& params);
 	
 	/**
 	* Set the parameters for the "dist" criterion.
-	* @param p	The indifference's threshold.
-	* @param q	The preference's threshold.
-	* @param w	The weight.
+	* @param p              The indifference's threshold.
+	* @param q              The preference's threshold.
+	* @param w              The weight.
 	*/
 	void SetDistParams(double p,double q,double w);
 	
 	/**
 	* Set the parameters for the "area" criterion.
-	* @param params		The parameters..
+	* @param params         The parameters.
 	*/
 	void SetDistParams(const RPromCriterionParams& params);
 
@@ -256,7 +262,7 @@ public:
 	* object to place.
 	*/
 	virtual void SelectNextObject(void) throw(RPlacementHeuristicException);
-		
+
 	/**
 	* Place the next object.
 	*/
@@ -273,41 +279,41 @@ public:
 	* Place the current object to a specific position. This function is called
 	* by the NextObject method.<BR>
 	* This function is responsible to update Result.
-	* @param pos	The position where to place it.
+	* @param pos            The position where to place it.
 	*/
 	virtual void Place(RPoint& pos) throw(RPlacementHeuristicException)=0;
-	
+
 	/**
 	* Run the heuristic.
-	* @param prob			The problem.
-	* @param infos			Pointer to the geometric information.
-	* @param grid			Pointer to the grid.		
+	* @param prob           The problem.
+	* @param infos          Pointer to the geometric information.
+	* @param grid           Pointer to the grid.
 	*/
 	void Run(RProblem2D* prob,RGeoInfo** infos,RGrid* grid) throw(RPlacementHeuristicException);
-	
+
 	/**
 	* Run the heuristic.
-	* @param prob			The problem.
-	* @param infos			Pointer to the geometric information.
-	* @param grid			Pointer to the grid.		
+	* @param prob           The problem.
+	* @param infos          Pointer to the geometric information.
+	* @param grid           Pointer to the grid.
 	*/
 	void Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid) throw(RPlacementHeuristicException);
 
 	/**
 	* Add a valid position fot the current geometric information to place.
-	* @param pos	Position to be a valid.
+	* @param pos            Position to be a valid.
 	*/
 	void AddValidPosition(RPoint& pos);
 
 	/**
-	*	Do some operations after the run.
+	* Do some operations after the run.
 	*/
 	virtual void PostRun(RPoint &){}
 
 	/**
 	* Return the bound rectangle containing all the objects.
 	*/
-   	RRect& GetResult(void);
+	RRect& GetResult(void);
 
 	/**
 	* Return true if all the objects are placed.

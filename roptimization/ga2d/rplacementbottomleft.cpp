@@ -45,8 +45,8 @@ using namespace RGA2D;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGA2D::RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,bool ori)
-	: RPlacementHeuristic(maxobjs,calc,use,ori)
+RGA2D::RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
 }
 
@@ -81,7 +81,6 @@ void RGA2D::RPlacementBottomLeft::NextObjectOri(void) throw(RPlacementHeuristicE
 		CurInfo->PushBottomLeft(Pos,Limits,Grid);
 	}
 
-
 	// If to long than begin from left again
 	if(Pos.X+CurInfo->Width()>Limits.X)
 	{
@@ -89,7 +88,6 @@ void RGA2D::RPlacementBottomLeft::NextObjectOri(void) throw(RPlacementHeuristicE
 		Pos=Actual;
 		CurInfo->PushBottomLeft(Pos,Limits,Grid);
 	}
-
 
 	// If to high than try to switch objects and place another one
 	if(Pos.Y+CurInfo->Height()>Limits.Y)
@@ -110,7 +108,6 @@ void RGA2D::RPlacementBottomLeft::Place(RPoint& pos) throw(RPlacementHeuristicEx
 	if(pos.X+CurInfo->Width()>Actual.X)
 		Actual.X=pos.X+CurInfo->Width();
 	Last.Y+=CurInfo->Height();
-
 
 	// Verify ActLimits
 	if(pos.X+CurInfo->Width()>Result.Pt2.X)

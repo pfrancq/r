@@ -90,7 +90,7 @@ int RGA2D::RFreePolygon::CanContain(RGeoInfo* info,RPoint &pos)
 			if(IsIn(Test))
 			{
 				pos=(*act);
-				return((100*info->GetArea())/Area());
+				return(static_cast<int>((100*info->GetArea())/Area()));
 			}
 		}
 		
@@ -99,7 +99,7 @@ int RGA2D::RFreePolygon::CanContain(RGeoInfo* info,RPoint &pos)
 		nbpts--;
 		act=GetConY(act);
 	}
-	return(0.0);
+	return(0);
 }
 
 

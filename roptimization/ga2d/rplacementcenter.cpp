@@ -52,8 +52,8 @@ using namespace RGA2D;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGA2D::RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool use,bool ori)
-	: RPlacementHeuristic(maxobjs,calc,use,ori)
+RGA2D::RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
 	AreaParams.P=AreaParams.Q=DistParams.P=DistParams.Q=0.0;
 	AreaParams.Weight=2.0;
@@ -128,7 +128,7 @@ void RGA2D::RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicExcep
 				}
 			}
 			if(LookBottom)
-			{				
+			{
 				// If look to bottom -> Test (X,Y-1)
 				if(Grid->IsFree(Actual->X,Actual->Y-1))
 				{
@@ -171,11 +171,11 @@ void RGA2D::RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicExcep
 					}
 				}
 			}
-		
+
 		}
 		else
 		{
-			
+
 			// Look to the right -> Test (X+1,Y)
 			if(Grid->IsFree(Actual->X+1,Actual->Y))
 			{
@@ -278,7 +278,7 @@ void RGA2D::RPlacementCenter::Place(RPoint& pos) throw(RPlacementHeuristicExcept
 	Sol.InsertPtr(new RPolygon(Union));
 	CurInfo->Add(Sol);
 	Sol.Union(&Union);
- 	Union.Boundary(Result);
+	Union.Boundary(Result);
 }
 
 

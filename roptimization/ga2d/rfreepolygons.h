@@ -76,9 +76,9 @@ public:
 
 	/**
 	* Calculate a position for the given geometric information.
-	* @param info	The object to place.
-	* @return	The function returns a valid position the object could be
-	*				placed.
+	* @param info           The object to place.
+	* @return The function returns a valid position the object could be
+	* placed.
 	*/
 	RPoint& CanPlace(RGeoInfo *info);
 

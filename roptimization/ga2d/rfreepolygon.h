@@ -70,18 +70,18 @@ public:
 
 	/**
 	* Construct a free polygon.
-	*/	
+	*/
 	RFreePolygon(RPolygon& poly);
 
 	/**
 	* Construct a free polygon from another one.
-	*/	
+	*/
 	RFreePolygon(RFreePolygon* poly);
 
 	/**
 	* The equal operator.
 	*/
- 	bool operator==(const RFreePolygon &poly) {return(RPolygon::operator==(poly));}
+	bool operator==(const RFreePolygon &poly) {return(RPolygon::operator==(poly));}
 
 	/**
 	* The non-equal operator.
@@ -92,7 +92,7 @@ public:
 	* This function compares two polygons and returns 0 if there have the same
 	* number of points and at the same positions. This function is used for the
 	* class RContainer.
-	* @param poly		Polygon used for the comparaison.
+	* @param poly           Polygon used for the comparaison.
 	*/
 	int Compare(const RFreePolygon* poly) {return((*this)!=(*poly));}
 
@@ -100,19 +100,19 @@ public:
 	* This function compares two polygons and returns 0 if there have the same
 	* number of points and at the same positions. This function is used for the
 	* class RContainer.
-	* @param poly		Polygon used for the comparaison.
+	* @param poly           Polygon used for the comparaison.
 	*/
 	int Compare(const RFreePolygon& poly) {return((*this)!=poly);}
 
 	/**
 	* This function test if a geometric information can be contained in the free
 	* polygon.
-	* @param info    The geometric information to compare.
-	* @param pos     Position where the geometric information can eventualy
-	*                be inserted.
-	* @return	The function returns 0 if the polygon can't be contained, >0 if
-	*				the polygon can be contained. The less is the space wasted, the
-	*				greather is the return value.
+	* @param info           The geometric information to compare.
+	* @param pos            Position where the geometric information can eventualy
+	*                       be inserted.
+	* @return The function returns 0 if the polygon can't be contained, >0 if
+	* the polygon can be contained. The less is the space wasted, the
+	* greather is the return value.
 	*/
 	int CanContain(RGeoInfo* info,RPoint& pos);
 

@@ -92,12 +92,12 @@ public:
 
 	/**
 	* Construct the center heuristic.
-	* @param maxobjs		The maximal number of objects to place.
-	* @param calc			Must free polygons be calculated.
-	* @param use			Must free polygons be used.
-	* @param ori			Must all orientation be tested.
+	* @param maxobjs        The maximal number of objects to place.
+	* @param calc           Must free polygons be calculated.
+	* @param use            Must free polygons be used.
+	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementCenter(unsigned int maxobjs,bool calc,bool use,bool ori=false);
+	RPlacementCenter(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 
 	virtual void Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
 

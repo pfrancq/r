@@ -217,7 +217,6 @@ void RGA2D::RGeoInfo::Assign(const RPoint &pos,RGrid *grid)
 //-----------------------------------------------------------------------------
 bool RGA2D::RGeoInfo::Test(RPoint &pos,RGrid *grid)
 {
-	RRect Test;
 	RPoint *start,*end;
 	unsigned int nbpts;
 	RDirection FromDir;
@@ -263,7 +262,7 @@ bool RGA2D::RGeoInfo::Test(RPoint &pos,RGrid *grid)
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RGeoInfo::PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid)
+void RGA2D::RGeoInfo::PushBottomLeft(RPoint &pos,RPoint& /*limits*/,RGrid* grid)
 {
 	RPoint TestPos;
 	bool change=true;
@@ -393,7 +392,7 @@ RGeoInfo& RGA2D::RGeoInfo::operator=(const RGeoInfo &info)
 {
 	unsigned int i;
 	RGeoInfoConnector **tab;
-	
+
 	Pos=info.Pos;
 	Bound=info.Bound;
 	Selected=info.Selected;
@@ -448,7 +447,7 @@ RPolygon& RGA2D::RGeoInfo::GetPolygon(void)
 void RGA2D::RGeoInfo::StartCon(void)
 {
 	bool Ok=false;
-	
+
 	Obj->Connectors.Start();
 	while((!Obj->Connectors.End())&&(!Ok))
 	{
@@ -476,17 +475,17 @@ void RGA2D::RGeoInfo::NextCon(void)
 	{
 		bool Ok=false;
 		Obj->Connectors.Next();
-     	while((!Obj->Connectors.End())&&(!Ok))
-     	{
-     		Obj->Connectors()->Connections.Start();
-     		if(Obj->Connectors()->Connections.End())
-     			Obj->Connectors.Next();
-			else
-     			Ok=true;
+		while((!Obj->Connectors.End())&&(!Ok))
+		{
+			Obj->Connectors()->Connections.Start();
+			if(Obj->Connectors()->Connections.End())
+				Obj->Connectors.Next();
+				else
+				Ok=true;
 		}
 	}
 }
-	
+
 
 //-----------------------------------------------------------------------------	
 RConnection* RGA2D::RGeoInfo::GetCurrentCon(void)
