@@ -169,15 +169,15 @@ public:
 
 	/**
 	* Construct a text file.
-	* @param name		The name of the file.
-	* @param mode		The open mode for the file.
+	* @param name           The name of the file.
+	* @param mode           The open mode for the file.
 	*/
 	RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString);
 
 	/**
 	* Construct a text file in read mode.
-	* @param name		The name of the file.
-	* @param all		The text file is open in one time (Only Supported yet).
+	* @param name           The name of the file.
+	* @param all            The text file is open in one time (Only Supported yet).
 	*/
 	RTextFile(const RString &name,bool all=true) throw(bad_alloc,RString);
 
@@ -230,20 +230,20 @@ public:
 
 	/**
 	* Set the style of comments.
-	* @param style		The Style.
+	* @param style          The Style.
 	*/
 	void SetRemStyle(RemType style) {CommentType=style;}
 
 	/**
 	* Set the string of comments when single line.
-	* @param c		This string represent the begin of a comment.
+	* @param c              This string represent the begin of a comment.
 	*/
 	void SetRem(const char *c) {Rem=c;}
 
 	/**
 	* Set the begin and the end strings of comments when in multiline.
-	* @param b		This string represent the begin of a comment.
-	* @param e		This string represent the end of a comment.
+	* @param b              This string represent the begin of a comment.
+	* @param e              This string represent the end of a comment.
 	*/
 	void SetRem(const char *b,const char *e) {BeginRem=b; EndRem=e; }
 
@@ -320,7 +320,7 @@ public:
 	
 	/**
 	* Write a long in the file. If the number is not the first thing on the line,
-	*	a space is add before it.
+	* a space is add before it.
 	*/
 	void WriteLong(const long nb) throw(RString);
 
@@ -367,7 +367,7 @@ public:
 
 	/**
 	* Write a string in the file. If the string is not the first thing on the
-	* line,	a separator is add before it.
+	* line, a separator is add before it.
 	*/
 	void WriteStr(const char *c) throw(RString);
 
@@ -378,7 +378,7 @@ public:
 
 	/**
 	* Write a string in the file. If the string is not the first thing on the
-	* line,	a separator is add before it.
+	* line, a separator is add before it.
 	*/
 	void WriteStr(const RString &str) throw(RString);
 
@@ -410,7 +410,7 @@ public:
 
 	/**
 	* Write the time in the file. If the time is not the first thing on the line,
-	*	a separator is add before it.
+	* a separator is add before it.
 	*/
 	void WriteTime(void) throw(RString);
 
@@ -450,13 +450,19 @@ public:
 // Global functions
 extern "C++"
 {
-	/** Write an end-of-line in a RTextFile.*/
+	/**
+	* Write an end-of-line in a RTextFile.
+	*/
 	extern RStd::RTextFile& endl(RStd::RTextFile &file);
 
-	/** Write the current time and date in a RTextFile.*/
+	/**
+	* Write the current time and date in a RTextFile.
+	*/
 	extern RStd::RTextFile& Time(RStd::RTextFile &file);
 
-	/** Operator needed for using generic writing functions.*/
+	/**
+	* Operator needed for using generic writing functions.
+	*/
 	inline RStd::RTextFile& operator<<(RStd::RTextFile& o, RStd::RTextFile& (&f)(RStd::RTextFile&)) {return(f(o));}
 }
 

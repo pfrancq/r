@@ -89,7 +89,7 @@ RStd::RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RS
 		localmode|=O_BINARY;
 	#endif
 	if(Mode==Read)
-    	handle=open(Name,localmode);
+		handle=open(Name,localmode);
 	else
 		handle=open(Name,localmode,S_IREAD|S_IWRITE);
 	if(handle==-1)
@@ -157,16 +157,14 @@ bool RStd::RTextFile::BeginComment(void)
 	{
 		case NoComment:
 			return(false);
-			break;
 
 		case SingleLineComment:
 			return(!strncmp(ptr,Rem,Rem.GetLen()));
-			break;
 
 		case MultiLineComment:
 			return(!strncmp(ptr,BeginRem,BeginRem.GetLen()));
-			break;
 	}
+
 	return(false);
 }
 
@@ -178,11 +176,10 @@ bool RStd::RTextFile::EndComment(void)
 	{
 		case NoComment:
 			return(false);
-			break;
 
 		case SingleLineComment:
-			if(((*ptr)=='\n')||((*ptr)=='\r')) return(true);
-			break;
+			if(((*ptr)=='\n')||((*ptr)=='\r'))
+				return(true);
 
 		case MultiLineComment:
 			if(!strncmp(ptr,EndRem,EndRem.GetLen()))
@@ -192,6 +189,7 @@ bool RStd::RTextFile::EndComment(void)
 			}
 			break;
 	}
+
 	return(false);
 }
 
@@ -646,7 +644,6 @@ void RStd::RTextFile::WriteTime(void) throw(RString)
 	char Str[30];
 	time_t timer;
 	struct tm *tblock;
-
 
 	if(Mode==Read)
 		throw(RString("File Mode is Read"));
