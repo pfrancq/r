@@ -51,14 +51,14 @@ using namespace RStd;
 
 //------------------------------------------------------------------------------
 RStd::RXMLTag::RXMLTag(void)
- : RNode<RXMLTag,false>(30,15), Attrs(10,5)
+ : RNode<RXMLTag,false>(100,50), Attrs(20,10)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RStd::RXMLTag::RXMLTag(RString _name)
- : RNode<RXMLTag,false>(30,15), Name(_name), Attrs(10,5)
+ : RNode<RXMLTag,false>(100,50), Name(_name), Attrs(20,10)
 {
 }
 

@@ -45,7 +45,7 @@ using namespace RStd;
 
 //-----------------------------------------------------------------------------
 RStd::RXMLStruct::RXMLStruct(void)
- : RTree<RXMLTag,true,false>(30,15)
+ : RTree<RXMLTag,true,false>(100,50)
 {
 }
 
