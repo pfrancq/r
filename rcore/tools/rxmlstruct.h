@@ -80,7 +80,7 @@ public:
 	/**
 	* Return the Top Nodes of the XML struct.
 	*/
-	RXMLTag* GetTop(void) {return(Top->Tab[1]);}
+	RXMLTag* GetTop(void) {return(Top->Tab[0]);}
 
 public:
 
