@@ -50,17 +50,6 @@ namespace RStd{
 
 
 //---------------------------------------------------------------------------
-// General Variables
-extern char CommentIndicator;                        // Default ';'
-
-
-//---------------------------------------------------------------------------
-char *ReadLine(char *s, int n, FILE *f);
-void strupr(char *s);
-void strlwr(char *s);
-
-
-//---------------------------------------------------------------------------
 /** This function provides a way to handle temporary objects needed when using
 	* standard operators with non standard classes.
 	* @author Pascal Francq
