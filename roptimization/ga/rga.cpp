@@ -77,14 +77,18 @@ void RGA::eGA::SetMsg(const char* m)
 
 
 //-----------------------------------------------------------------------------
-RGA::eGAVerify::eGAVerify(void)
-	: eGA("Error when verify chromosomes")
+RGA::eGAVerify::eGAVerify(const unsigned int g,const unsigned int c)
+	: eGA()
 {
+	char tmp[200];
+
+	sprintf(tmp,"Generation %u: Verify error for chromosome %u",g,c);
+	SetMsg(tmp);
 }
 
 
 //-----------------------------------------------------------------------------
-RGA::eGACrossover::eGACrossover(unsigned int g,unsigned p1,unsigned int p2,unsigned int c)
+RGA::eGACrossover::eGACrossover(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];

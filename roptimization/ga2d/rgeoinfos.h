@@ -117,13 +117,6 @@ public:
 	RGeoInfos& operator=(const RGeoInfos& infos) throw(bad_alloc);
 
 	/**
-	* Create a problem file for a specific configuration.
-	* @seek                 Actual "seek" value for the random number
-	*                       generator.
-	*/
-	void CreateProblem(unsigned long seek);
-
-	/**
 	* Destruct the geometric information.
 	*/
 	virtual ~RGeoInfos(void);

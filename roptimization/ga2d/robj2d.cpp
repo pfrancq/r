@@ -228,12 +228,12 @@ RGA2D::RObj2D::RObj2D(unsigned int id,const char* name,bool deformable)
 //-----------------------------------------------------------------------------
 void RGA2D::RObj2D::Init(void)
 {
-	char i;
+	char i,j;
 	RPolygon *p;
 	RRects *r;
 
 	CalcPolygons();
-	for(i=NbPossOri+1,p=Polygons,r=Rects;--i;p++,r++)
+	for(i=NbPossOri+1,p=Polygons,r=Rects,j=0;--i;p++,r++,j++)
 		p->RectDecomposition(r);
 	Area=Rects[0].Area();
 }

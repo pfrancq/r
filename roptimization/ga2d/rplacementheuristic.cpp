@@ -39,6 +39,8 @@ using namespace RPromethee;
 using namespace RGA2D;
 #include <rmath/random.h>
 using namespace RMath;
+#include <rxml/rxmlstruct.h>
+using namespace RXML;
 
 
 
@@ -295,6 +297,14 @@ RRect& RGA2D::RPlacementHeuristic::GetResult(void)
 	(*rect)=Result;
 	return(*rect);
 }
+
+
+//-----------------------------------------------------------------------------
+void RGA2D::RPlacementHeuristic::CreateProblem(void)
+{
+	
+}
+
 
 
 //-----------------------------------------------------------------------------

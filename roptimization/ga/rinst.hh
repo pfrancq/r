@@ -56,7 +56,7 @@ template<class cInst,class cChromo>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	RGA::RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,RDebug *debug) throw(bad_alloc)
 		: Debug(debug), Random(0), Parents(0),Childs(0),tmpChrom(0),Receivers(10,5),bRandomConstruct(false),
-			Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0)
+			Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0),AgeBestPop(0)
 {
 //	EmitSig(sigGAInit);
 	#ifdef RGADEBUG
@@ -211,12 +211,19 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 {
 	unsigned i;
 	cChromo **C1,**C2,*C3;
+	static char Tmp[200];
 
 	#ifdef RGADEBUG
 		if(Debug) Debug->BeginFunc("Crossover","RInst");
 	#endif
 	// Determine the childs (end of tmpChrom) and the parents (begin of tmpChrom)
-	if(PopSize<4) return;
+	if(PopSize<4)
+	{
+		#ifdef RGADEBUG
+		if(Debug) Debug->EndFunc("Crossover","RInst");
+		#endif
+		return;
+	}
 	memcpy(tmpChrom,Chromosomes,sizeof(cChromo*)*PopSize);
 	qsort(static_cast<void*>(tmpChrom),PopSize,sizeof(cChromo*),sort_function_cChromosome);
 	emitInteractSig();
@@ -227,16 +234,21 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	{
 		C3=(*(C2++));
 		#ifdef RGADEBUG
-			static char Tmp[200];
-			sprintf(Tmp,"Parent %u + Parent %u -> Child %u",(*C2)->Id,C3->Id,(*C1)->Id);
-			if(Debug) Debug->PrintInfo(Tmp);
+			if(Debug)
+			{
+				sprintf(Tmp,"Parent %u + Parent %u -> Child %u",(*C2)->Id,C3->Id,(*C1)->Id);
+				Debug->PrintInfo(Tmp);
+			}
 		#endif
 		if(!((*(C1--))->Crossover(*C2,C3)))
 			throw eGACrossover(Gen,(*C2)->Id,C3->Id,(*C1)->Id);
 		emitInteractSig();
 		#ifdef RGADEBUG
-			sprintf(Tmp,"Parent %u + Parent %u -> Child %u",C3->Id,(*C2)->Id,(*C1)->Id);
-			if(Debug) Debug->PrintInfo(Tmp);
+			if(Debug)
+			{
+				sprintf(Tmp,"Parent %u + Parent %u -> Child %u",C3->Id,(*C2)->Id,(*C1)->Id);
+				Debug->PrintInfo(Tmp);
+			}
 		#endif
 		if(!((*C1)->Crossover(C3,*C2)))
 			throw eGACrossover(Gen,C3->Id,(*C2)->Id,(*C1)->Id);
@@ -368,7 +380,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 {
 	unsigned int i;
 	cChromo **C;
-	bool b=false;
 
 	#ifdef RGADEBUG
 		if(Debug) Debug->BeginFunc("Verify","RInst");
@@ -376,13 +387,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		if(!((*C)->Verify()))
-		{
-			b=true;
-		}
+			throw eGAVerify(Gen,(*C)->Id);
 		emitInteractSig();
 	}
-	if(b)
-		throw eGAVerify();
 	#ifdef RGADEBUG
 		if(Debug)
 		{

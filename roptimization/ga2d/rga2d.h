@@ -40,9 +40,6 @@
 // include files for R Project
 #include <rga/rga.h>
 using namespace RGA;
-#include <rgeometry/rrect.h>
-#include <rgeometry/rpolygon.h>
-using namespace RGeometry2D;
 
 
 //-----------------------------------------------------------------------------
@@ -76,28 +73,6 @@ enum HeuristicType{BottomLeft=0,Edge=1,Center=2};
 
 
 }//------- End of namespace RGA2D ---------------------------------------------
-
-
-//-----------------------------------------------------------------------------
-// include files for RGA2D
-#include <rga2d/rgeoinfo.h>
-#include <rga2d/robj2d.h>
-#include <rga2d/rinst2d.h>
-#include <rga2d/rchromo2d.h>
-using namespace RGA;
-
-
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-// Definitions of templates
-#include <rga2d/rinst2d.hh>
-#include <rga2d/rchromo2d.hh>
-
-
-}  //------- End of namespace RGA2D -------------------------------------------
 
 
 //-----------------------------------------------------------------------------

@@ -49,6 +49,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rstd/rstd.h>
 #include <rga/rdebug.h>
 using namespace RGA;
 
@@ -71,7 +72,7 @@ void RGA::RDebug::BeginTag(const char *Text,unsigned NbAttr,...)
 {
 	va_list ap;
 
-	LevelOutput[++Deep]=false;	// For the moment nothing as child
+	LevelOutput[++Deep]=false;      // For the moment nothing as child
 	NbOptions=0;
 	(*tmpOpt)=0;
 	va_start(ap, NbAttr);
@@ -177,7 +178,7 @@ RGA::RDebugXML::RDebugXML(const RString &name) throw(bad_alloc)
 	char *ptr;
 
 	Handle=open(Name(),O_WRONLY	| O_CREAT | O_TRUNC);
-	if(!Handle) throw(new bad_alloc);
+	RAssert(!Handle)
 	strcpy(tmpNL,"\n");
 	tmpLenNL=strlen(tmpNL);
 	for(i=50,ptr=tmpTab;--i;ptr++)

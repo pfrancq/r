@@ -325,6 +325,13 @@ public:
 	inline RFreePolygons* GetFreePolygons(void) {return(&Free);}
 
 	/**
+	* Create a problem file for a specific configuration.
+	* @seek                 Actual "seek" value for the random number
+	*                       generator.
+	*/
+	void CreateProblem(void);
+	
+	/**
 	* Destruct the placement heuristic.
 	*/
 	virtual ~RPlacementHeuristic(void);

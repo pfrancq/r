@@ -38,6 +38,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rga/rinst.h>
+using namespace RGA;
 #include <rga2d/rga2d.h>
 #include <rga2d/rplacementheuristic.h>
 #include <rga2d/rplacementbottomleft.h>
@@ -72,43 +74,43 @@ public:
 	/**
 	* Array of identificators for objects.
 	*/
-	unsigned int *Order;
+	unsigned int* Order;
 
 	/**
 	* Array of identificators for objects.
 	*/
-	unsigned int *Order2;
+	unsigned int* Order2;
 
 	/**
 	* Temporary array of pointers to Objects (Crossover & Mutation).
 	*/
-	RObj2D **tmpObjs;
+	RObj2D** tmpObjs;
 
 	/**
 	* Temporary objects container.
 	*/
-	RObj2DContainer *tmpObj1;
+	RObj2DContainer* tmpObj1;
 
 	/**
 	* Temporary objects container.
 	*/
-	RObj2DContainer *tmpObj2;
+	RObj2DContainer* tmpObj2;
 
 	/**
 	* Temporary geometric informations.
 	*/
-	RGeoInfos *tmpInfos;
+	RGeoInfos* tmpInfos;
 
 	/**
 	* Heuristic Used.
 	*/
-	RPlacementHeuristic *Heuristic;
+	RPlacementHeuristic* Heuristic;
 
 	/**
 	* Construct the data.
 	* @param owner          The instance of the problem.
 	*/
-	RThreadData2D(cInst *owner) throw(bad_alloc);
+	RThreadData2D(cInst* owner) throw(bad_alloc);
 
 	/**
 	* Initialise thje data.
@@ -129,7 +131,7 @@ public:
 * @short 2D GA Instance.
 */
 template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo>
-	class RInst2D	: public RGA::RInst<cInst,cChromo,cFit,cThreaData>
+	class RInst2D : public RGA::RInst<cInst,cChromo,cFit,cThreaData>
 {
 public:
 
@@ -141,7 +143,7 @@ public:
 	/**
 	* Objects to place.
 	*/
-	RObj2D **Objs;
+	RObj2D** Objs;
 
 	/**
 	* Number of objects.
@@ -156,7 +158,7 @@ public:
 	/**
 	* Connections for the objects.
 	*/
-	RConnections *Cons;
+	RConnections* Cons;
 
 protected:
 
@@ -214,6 +216,11 @@ public:
 	*/
 	inline bool LocalOpti(void) { return(bLocalOpti); }
 };
+
+
+//-----------------------------------------------------------------------------
+// Template implementation
+#include <rga2d/rinst2d.hh>
 
 
 }  //------- End of namespace RGA2D -------------------------------------------

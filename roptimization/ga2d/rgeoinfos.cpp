@@ -32,8 +32,6 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rxml/rxmlstruct.h>
-using namespace RXML;
 #include <rga2d/rgeoinfos.h>
 using namespace RGA2D;
 
@@ -154,13 +152,6 @@ RGeoInfos& RGA2D::RGeoInfos::operator=(const RGeoInfos& infos) throw(bad_alloc)
 	RealNb=infos.RealNb;
 	memcpy(Selected,infos.Selected,NbPtr*sizeof(bool));
 	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-void RGA2D::RGeoInfos::CreateProblem(unsigned long seek)
-{
-
 }
 
 

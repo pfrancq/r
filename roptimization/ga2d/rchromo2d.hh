@@ -92,8 +92,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RandomConstruct(void)
 {
-	if(Id==12)
-		InsertMsg("Random");
 	memset(Selected,0,NbObjs*sizeof(bool));
 	Heuristic->Run(Instance->Problem,this,Grid);
 	RRect r=Heuristic->GetResult();

@@ -69,6 +69,9 @@ void RGA2D::RProblem2D::Load(const char* name)
 	RContainer<RObj2D,unsigned int,true,true> Templates(50,25);
 	RPoint Tr;
 
+	// Clear the Problem
+	Clear();
+
 	// Take the Limits
 	tag=s.GetTag("Shape",s.GetTop());
 	if(tag)

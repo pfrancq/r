@@ -42,9 +42,14 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for R project
+// include files for R Project
+#include <rstd/rcontainer.h>
+using namespace RStd;
+#include <rmath/random.h>
+using namespace RMath;
 #include <rga/rga.h>
-using namespace RGA;
+#include <rga/rdebug.h>
+#include <rga/rgasignals.h>
 
 
 //-----------------------------------------------------------------------------
@@ -255,7 +260,9 @@ public:
 	virtual void Evaluate(void) throw(eGA);
 
 	/**
-	* This function does the crossovers for a generation.
+	* This function does the crossovers for a generation. Actually, the
+	* strategy implemented is the "ranking" one, but the tournament method must
+	* be implemented in a near future.
 	*/
 	virtual void Crossover(void) throw(eGA);
 
@@ -348,6 +355,11 @@ public:
 	*/
 	static const char instMultiEchos=8;
 };
+
+
+//-----------------------------------------------------------------------------
+// Template implementation
+#include <rga/rinst.hh>
 
 
 }  //------- End of namespace RGA ---------------------------------------------

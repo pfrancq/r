@@ -127,8 +127,10 @@ public:
 
 	/**
 	* Construct the verify exception.
+	* @param g              Generation.
+	* @param c             Identificator of chromosome.
 	*/
-	eGAVerify(void);
+	eGAVerify(const unsigned int g,const unsigned int c);
 };
 
 
@@ -150,7 +152,7 @@ public:
 	* @param p2             Identificator of the second parent.
 	* @param c              Identificator of the child.
 	*/
-	eGACrossover(unsigned int g,unsigned p1,unsigned int p2,unsigned int c);
+	eGACrossover(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c);
 };
 
 
@@ -180,31 +182,12 @@ public:
 */
 bool Examine(int argc, char *argv[],const char* Prj,const char *Ver);
 
-class RDebug;
+
+//-----------------------------------------------------------------------------
+// Forward declaration
 template<class cVal,bool Max> class RFitness;
 template<class cInst,class cChromo,class cFit,class cThreadData> class RChromo;
 template<class cInst,class cChromo,class cFit,class cThreadData> class RInst;
-
-}  //------- End of namespace RGA ---------------------------------------------
-
-//-----------------------------------------------------------------------------
-// include files for GA
-#include <rga/rgasignals.h>
-#include <rga/rdebug.h>
-#include <rga/rfitness.h>
-#include <rga/rinst.h>
-#include <rga/rchromo.h>
-using namespace RGA;
-
-//-----------------------------------------------------------------------------
-namespace RGA{
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-// Definitions of templates
-#include <rga/rfitness.hh>
-#include <rga/rinst.hh>
-#include <rga/rchromo.hh>
 
 
 }  //------- End of namespace RGA ---------------------------------------------

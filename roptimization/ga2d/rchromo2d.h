@@ -38,9 +38,11 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rga/rchromo.h>
+using namespace RGA;
 #include <rga2d/rga2d.h>
 #include <rga2d/rgeoinfos.h>
-using namespace RGA2D;
+#include <rga2d/rplacementheuristic.h>
 
 
 //-----------------------------------------------------------------------------
@@ -219,6 +221,11 @@ public:
 	*/
 	virtual ~RChromo2D(void);
 };
+
+
+//-----------------------------------------------------------------------------
+// Template implementation
+#include <rga2d/rchromo2d.hh>
 
 
 }  //------- End of namespace RGA2D -------------------------------------------
