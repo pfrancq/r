@@ -61,7 +61,15 @@ RGA::eGA::eGA(void)
 
 
 //-----------------------------------------------------------------------------
-RGA::eGA::eGA(const RString &msg)
+RGA::eGA::eGA(const RString& msg)
+	: Msg(msg)
+{
+	cerr<<Msg()<<endl;
+}
+
+
+//-----------------------------------------------------------------------------
+RGA::eGA::eGA(const char* msg)
 	: Msg(msg)
 {
 	cerr<<Msg()<<endl;

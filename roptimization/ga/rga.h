@@ -104,7 +104,13 @@ public:
 	* Construct the exception.
 	* @param msg            The message.
 	*/
-	eGA(const RString &msg);
+	eGA(const RString& msg);
+
+	/**
+	* Construct the exception.
+	* @param msg            The message.
+	*/
+	eGA(const char* msg);
 
 	/**
 	* Set Message.
