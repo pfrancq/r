@@ -70,7 +70,7 @@ public:
 	/**
 	* Construct the random generator.
 	*/
-	RRandom(void) {}
+	RRandom(void) {_seed=0;}
 
 	/**
 	* Restart the sequence.
