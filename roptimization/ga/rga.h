@@ -40,8 +40,6 @@
 // include files for AINSI C/C++
 #include <iostream.h>
 #include <new.h>
-#include <values.h>
-#include <limits.h>
 #ifndef RGADEBUG
 	#define RGADEBUG 1
 #endif
@@ -58,27 +56,6 @@ using namespace RIO;
 #include <rmath/random.h>
 using namespace RMath;
 
-
-//-----------------------------------------------------------------------------
-// Forward class declaration
-namespace RGA
-{
-	class RDebug;
-	template<class cVal,bool Max> class RFitness;
-	template<class cInst,class cChromo,class cFit,class cThreadData> class RChromo;
-	template<class cInst,class cChromo,class cFit,class cThreadData> class RInst;
-	class eGA;
-}
-
-
-//-----------------------------------------------------------------------------
-// include files for GA
-#include <rga/rgasignals.h>
-#include <rga/rdebug.h>
-#include <rga/rfitness.h>
-#include <rga/rinst.h>
-#include <rga/rchromo.h>
-using namespace RGA;
 
 
 /**
@@ -203,6 +180,25 @@ public:
 */
 bool Examine(int argc, char *argv[],const char* Prj,const char *Ver);
 
+class RDebug;
+template<class cVal,bool Max> class RFitness;
+template<class cInst,class cChromo,class cFit,class cThreadData> class RChromo;
+template<class cInst,class cChromo,class cFit,class cThreadData> class RInst;
+
+}  //------- End of namespace RGA ---------------------------------------------
+
+//-----------------------------------------------------------------------------
+// include files for GA
+#include <rga/rgasignals.h>
+#include <rga/rdebug.h>
+#include <rga/rfitness.h>
+#include <rga/rinst.h>
+#include <rga/rchromo.h>
+using namespace RGA;
+
+//-----------------------------------------------------------------------------
+namespace RGA{
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // Definitions of templates

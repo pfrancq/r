@@ -192,8 +192,10 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	int RGA::RInst<cInst,cChromo,cFit,cThreadData>::sort_function_cChromosome( const void *a, const void *b)
 {
-	cFit *af=(*(static_cast<cChromo**>(a)))->Fitness;
-	cFit *bf=(*(static_cast<cChromo**>(b)))->Fitness;
+//	cFit *af=(*(static_cast<cChromo**>(a)))->Fitness;
+//	cFit *bf=(*(static_cast<cChromo**>(b)))->Fitness;
+	cFit *af=(*((cChromo**)(a)))->Fitness;
+	cFit *bf=(*((cChromo**)(b)))->Fitness;
 
 	if((*af)==(*bf)) return(0);
 	if((*af)>(*bf))
