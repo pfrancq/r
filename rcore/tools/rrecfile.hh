@@ -31,23 +31,6 @@
 
 
 //------------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <sys/stat.h>
-#ifdef _BSD_SOURCE
-	#include <unistd.h>
-#else
-	#include <io.h>
-#endif
-#include <fcntl.h>
-#include <string.h>
-#include <time.h>
-
-
-
-//------------------------------------------------------------------------------
 //
 // RRecFile
 //
@@ -56,7 +39,7 @@
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>::RRecFile(const RString &name)
-		: RIOFile(name), NbRecs(0)
+		: RIOFile(name), Find(false), Dirty(true)
 {
 }
 
@@ -64,7 +47,7 @@ template<class C,unsigned int S,bool bOrder>
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>::RRecFile(RIOFile &file)
-		: RIOFile(file), NbRecs(0)
+		: RIOFile(file), Find(false), Dirty(true)
 {
 }
 
@@ -74,29 +57,24 @@ template<class C,unsigned int S,bool bOrder>
 	void RRecFile<C,S,bOrder>::Open(RIO::ModeType mode)
 {
 	RIOFile::Open(mode);
-	if(Mode!=RIO::Create)
-	{
-		struct stat statbuf;
-		fstat(handle, &statbuf);
-		NbRecs=statbuf.st_size/S;
-	}
-	if(handle==-1)
-		throw(RString("Can't open file """+Name+""""));
-	eof=false;
 }
 
 
+//------------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	void RRecFile<C,S,bOrder>::Close(void)
+{
+	Find=false;
+	Dirty=true;
+	RIOFile::Close();
+}
 
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(double& nb) throw(RString)
 {
-	if(Mode!=RIO::Read)
-		throw(RString("File Mode is not Read"));
-	if(eof)
-		throw(RString("End of File"));
-	eof=!read(handle,&nb,sizeof(double));
+	Read((char*)(&nb),sizeof(double));
 	return(*this);
 }
 
@@ -105,66 +83,42 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(unsigned int& nb) throw(RString)
 {
-	if(Mode!=RIO::Read)
-		throw(RString("File Mode is not Read"));
-	if(eof)
-		throw(RString("End of File"));
-	eof=!read(handle,&nb,sizeof(unsigned int));
+	Read((char*)(&nb),sizeof(unsigned int));
 	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const unsigned char nb) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned char nb) throw(RString)
 {
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	write(handle,&nb,sizeof(unsigned char));
-	#ifdef windows
-		flushall();
-	#endif
+	Write((char*)(&nb),sizeof(unsigned char));
 	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const unsigned int nb) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned int nb) throw(RString)
 {
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	write(handle,&nb,sizeof(unsigned int));
-	#ifdef windows
-		flushall();
-	#endif
+	Write((char*)(&nb),sizeof(unsigned int));
 	return(*this);
 }
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const unsigned long nb) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned long nb) throw(RString)
 {
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	write(handle,&nb,sizeof(unsigned long));
-	#ifdef windows
-		flushall();
-	#endif
+	Write((char*)(&nb),sizeof(unsigned long));
 	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const double d) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(double nb) throw(RString)
 {
-	if(Mode==RIO::Read)
-		throw(RString("File Mode is Read"));
-	write(handle,&d,sizeof(double));
-	#ifdef windows
-		flushall();
-	#endif
+	Write((char*)(&nb),sizeof(double));
 	return(*this);
 }
 
@@ -173,7 +127,10 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	void RRecFile<C,S,bOrder>::Seek(unsigned int nb) throw(RString)
 {
-	lseek(handle,nb*S,SEEK_SET);
+	Find=false;
+	RIOFile::Seek(nb*S);
+	Dirty=true;
+	Find=true;
 }
 
 
@@ -181,36 +138,17 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	void RRecFile<C,S,bOrder>::SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc) throw(RString)
 {
-	lseek(handle,(c+(l*maxc))*S,SEEK_SET);
-}
-
-
-
-//------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	bool RRecFile<C,S,bOrder>::Read(C& rec) throw(RString)
-{
-	if(Mode!=RIO::Read)
-		throw(RString("File Mode is not Read"));
-	if(eof)
-		throw(RString("End of File"));
-	try
-	{
-		rec.Read(*this);
-	}
-	catch(RString& msg)
-	{
-		if(eof) return(false);
-		throw RString(msg);
-	}
-	return(true);
+	Find=false;
+	Seek(c+(l*maxc));
+	Dirty=true;
+	Find=true;
 }
 
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
 	template<class TUse>
-		unsigned int RRecFile<C,S,bOrder>::GetId(const TUse tag,bool &Find)
+		unsigned int RRecFile<C,S,bOrder>::Search(const TUse& tag)
 {
 	unsigned int NbMin,NbMax,i=0;
 	int Comp=0;
@@ -219,17 +157,18 @@ template<class C,unsigned int S,bool bOrder>
 	if(bOrder)
 	{
 		Find=false;
-		if(!NbRecs)
+		if(!GetSize())
 			return(0);
-		NbMax=NbRecs-1;
+		NbMax=GetSize()-1;
 		NbMin=0;
 		if(NbMax)
 		{
 			while(Cont)
 			{
 				i=(NbMax+NbMin)/2;
-				lseek(handle,i*S,SEEK_SET);
+				Seek(i);
 				Current.Read(*this);
+				Dirty=false;
 				Comp=Current.Compare(tag);
 				if(!Comp)
 				{
@@ -250,8 +189,9 @@ template<class C,unsigned int S,bool bOrder>
 		else
 		{
 			i = 0;
-			lseek(handle,i*S,SEEK_SET);
+			Seek(i);
 			Current.Read(*this);
+			Dirty=false;
 			Comp=Current.Compare(tag);
 			if(!Comp)
 			{
@@ -267,15 +207,50 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	bool RRecFile<C,S,bOrder>::GetRec(C& Rec) throw(RString)
+	unsigned int RRecFile<C,S,bOrder>::GetSize(void) const
 {
-	bool Find;
-	unsigned id;
+	return(RIOFile::GetSize()/S);
+}
 
-	id=GetId<C&>(Rec,Find);
-	if(!Find) return(false);
-	Rec=Current;
-	return(true);
+
+//------------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	unsigned int RRecFile<C,S,bOrder>::GetPos(void) const
+{
+	return(RIOFile::GetPos()/S);
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	void RRecFile<C,S,bOrder>::Start(void)
+{
+	Seek(0);
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	void RRecFile<C,S,bOrder>::Next(void)
+{
+	if(Dirty)
+		Seek(GetPos()+1);
+	Dirty=true;
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	C* RRecFile<C,S,bOrder>::operator()(void)
+{
+	if(!Find)
+		return(0);
+	if(Dirty)
+	{
+		Current.Read(*this);
+		Dirty=false;
+	}
+	return(&Current);
 }
 
 

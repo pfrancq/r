@@ -47,34 +47,94 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RRecFile class implements some basic functions needed when working
-* with binary files for records.
+* The RRecFile class implements some basic functions needed when working with
+* files for records. This files can be accessed as ordered or not. Opening a
+* non ordered file as ordered gives problems.
 *
-* When multiple elements are inserted on the same text line, before each
-* insertion, and except for the first one, a set of characters representing
-* a separator (' ' by default) are added.
+* As for the RContainer class, the TUse represent a class or a structure used
+* for the comparaisons.
 *
-* The user can write his own operators to read and write with RTextFile. Here
-* is an example:
+* At least, one read function must be implemented in the class C:
 * @code
-* class Point
+* void Read(R::RecFile<C,S,bOrder>& f);
+* @endcode
+*
+* The user can write his own operators to read and write record from a
+* RRecFile. Here is an example:
+* @code
+* class Person
 * {
 * public:
-* 	int X,Y;
+* 	R::RString LastName;
+* 	R::RString FirstName;
+*
+* 	Person(void) {}
+* 	Person(const R::RString& l,const RString& f) : LastName(l), FirstName(f) {}
+* 	Person(const Person* p) : LastName(p->LastName), FirstName(p->FirstName) {}
+* 	int Compare(const Person* p) const {return(LastName.Compare(p->LastName));}
+* 	int Compare(const R::RString& name) const {return(LastName.Compare(name));}
+* 	void Read(R::RRecFile<Person,80,true>& f);
+* 	void Write(R::RRecFile<Person,80,true>& f);
+* };
+*
+* void Person::Read(R::RRecFile<Person,80,true>& f)
+* {
+* 	char Buf[41];
+* 	f.Read(Buf,40);
+* 	LastName=Buf;
+* 	f.Read(Buf,40);
+* 	FirstName=Buf;
 * }
 *
-* RTextFile& operator<<(RTextFile &f,Point &pt)
+* void Person::Write(R::RRecFile<Person,80,true>& f)
 * {
-* 	return(f<<pt.X<<pt.Y);
+* 	char Buf[41];
+* 	strcpy(Buf,LastName.Latin1());
+* 	f.Write(Buf,40);
+* 	strcpy(Buf,FirstName.Latin1());
+* 	f.Write(Buf,40);
 * }
 *
-* RTextFile& operator>>(RTextFile &f,Point &pt)
+* int main(int argc, char *argv[])
 * {
-* 	return(f>>pt.X>>pt.Y);
+* 	R::RContainer<Person,true,true> Cont(2,1);
+* 	R::RCursor<Person> Cur;
+* 	R::RRecFile<Person,80,true> File("/home/pfrancq/test.bin");
+*
+* 	// Create container -> create file -> write data
+* 	cout<<"Create"<<endl;
+* 	Cont.InsertPtr(new Person("Jagger","Mike"));
+* 	Cont.InsertPtr(new Person("Gillian","Ian"));
+* 	Cont.InsertPtr(new Person("Plant","Robert"));
+* 	Cont.InsertPtr(new Person("Coverdale","David"));
+* 	File.Open(R::RIO::Create);
+* 	Cur.Set(Cont);
+* 	for(Cur.Start();!Cur.End();Cur.Next())
+* 		Cur()->Write(File);
+* 	File.Close();
+*
+* 	// Clean container -> open file -> read data
+* 	cout<<"Read"<<endl;
+* 	Cont.Clear();
+* 	File.Open(R::RIO::Read);
+* 	for(File.Start();!File.End();File.Next())
+		Cont.InsertPtr(new Person(File()));
+* 	Cur.Set(Cont);
+* 	for(Cur.Start();!Cur.End();Cur.Next())
+* 		cout<<"  "<<Cur()->LastName<<", "<<Cur()->FirstName<<endl;
+* 	File.Close();
+*
+* 	// Just find the firstname of "Gillian" directly in the file
+* 	cout<<"Find"<<endl;
+* 	File.Open(R::RIO::Read);
+* 	Person* Find=File.GetRec<RString>("Gillian");
+* 	if(Find)
+* 		cout<<"  "<<Find->LastName<<", "<<Find->FirstName<<endl;
+* 	File.Close();
 * }
 * @endcode
 * @author Pascal Francq
-* @short Text File.
+* @short Fixed-length Records File.
 */
 template<class C,unsigned int S,bool bOrder=false>
 	class RRecFile : public RIOFile
@@ -82,19 +142,19 @@ template<class C,unsigned int S,bool bOrder=false>
 protected:
 
 	/**
-	* This variable is holding the record number.
-	*/
-	unsigned int NbRecs;
-
-	/**
-	* Is it end of file?
-	*/
-	bool eof;
-
-	/**
-	* Current record;
+	* Current record.
 	*/
 	C Current;
+
+	/**
+	* Was the searched record found?
+	*/
+	bool Find;
+
+	/**
+	* Is the record in memory dirty?
+	*/
+	bool Dirty;
 
 public:
 
@@ -119,9 +179,9 @@ public:
 	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
-	* Return true if the file is been treated.
+	* Close the file
 	*/
-	inline bool Eof(void) {return(eof);}
+	virtual void Close(void);
 
 	/**
 	* >> Operator for unsigned int.
@@ -136,22 +196,22 @@ public:
 	/**
 	* << Operator for unsigned char.
 	*/
-	RRecFile& operator<<(const unsigned char nb) throw(RString);
+	RRecFile& operator<<(unsigned char nb) throw(RString);
 
 	/**
 	* << Operator for unsigned int.
 	*/
-	RRecFile& operator<<(const unsigned int nb) throw(RString);
+	RRecFile& operator<<(unsigned int nb) throw(RString);
 
 	/**
 	* << Operator for unsigned long.
 	*/
-	RRecFile& operator<<(const unsigned long nb) throw(RString);
+	RRecFile& operator<<(unsigned long nb) throw(RString);
 
 	/**
 	* << Operator for double.
 	*/
-	RRecFile& operator<<(const double d) throw(RString);
+	RRecFile& operator<<(double nb) throw(RString);
 
 	/**
 	* Seek the file to a specific record number.
@@ -169,29 +229,42 @@ public:
 	void SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc) throw(RString);
 
 	/**
-	* Read a record.
-	* @return true if the record could be read.
-	*/
-	bool Read(C& rec) throw(RString);
-
-	/**
-	* This function returns the index of an element represented by tag, and it
-	* is used when the elements are to be ordered.
-	* @param TUse           The type of tag, the container uses the Compare(TUse &)
-	*                       member function of the elements.
+	* This function returns the number of a record represented by tag, and it
+	* is used when the file is ordered.
+	* @param TUse           The type of tag, the file uses the Compare(TUse &)
+	*                       member function of the records.
 	* @param tag            The tag used.
-	* @param Find           If the element represented by tag exist, bFind is set to
+	* @param find           If the record represented by tag exist, find is set to
 	*                       true.
-	* @return Returns the index of the element if it exists orthe index where
+	* @return Returns the number of the record if it exists or the index where
 	* is has to inserted.
 	*/
-	template<class TUse> unsigned int GetId(const TUse tag,bool &Find);
+	template<class TUse> unsigned int Search(const TUse& tag);
 
 	/**
-	* Get the Record in the parameter.
-	* @returns true if the record was found.
+	* Get the number of records in the file.
 	*/
-	bool GetRec(C& Rec) throw(RString);
+	unsigned int GetSize(void) const;
+
+	/**
+	* Get the current record number.
+	*/
+	unsigned int GetPos(void) const;
+
+	/**
+	* Start the file at the first record.
+	*/
+	void Start(void);
+
+	/**
+	* Goto the next record.
+	*/
+	void Next(void);
+
+	/**
+	* Return the current record.
+	*/
+	C* operator()(void);
 
 	/**
 	* Destructs the file.

@@ -61,13 +61,23 @@ protected:
 	*/
 	int handle;
 
+	/**
+	* Size of the file.
+	*/
+	unsigned int Size;
+
+	/**
+	* Current position in the file.
+	*/
+	unsigned int Pos;
+
 public:
 
 	/**
 	* Construct a file.
 	* @param name           The name of the file.
 	*/
-	RIOFile(const RString &name);
+	RIOFile(const RString& name);
 
 	/**
 	* Copy constructor of a file.
@@ -82,6 +92,12 @@ public:
 	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
+	* Verify if the file is opened or not.
+	* @return true if the file is open.
+	*/
+	bool IsOpen(void) const;
+
+	/**
 	* Close the file.
 	*/
 	virtual void Close(void);
@@ -90,8 +106,9 @@ public:
 	* Read a given number of bytes at the current position of the file.
 	* @param buffer         Buffer (must be allocated).
 	* @param nb             Number of bytes to read.
+	* @return Number of bytes readed.
 	*/
-	void Read(char* buffer,unsigned int nb);
+	unsigned int Read(char* buffer,unsigned int nb);
 
 	/**
 	* Write the first number of bytes of a buffer in the current position of
@@ -100,6 +117,27 @@ public:
 	* @param nb             Number of bytes to read.
 	*/
 	void Write(char* buffer,unsigned int nb);
+
+	/**
+	* Go to a specific position of the file.
+	* @param pos            Position to reach.
+	*/
+	void Seek(unsigned int pos);
+
+	/**
+	* Return true if the file is at the end.
+	*/
+	bool End(void) const;
+
+	/**
+	* Return the size of the file.
+	*/
+	unsigned int GetSize(void) const;
+
+	/**
+	* Return the current position in the file.
+	*/
+	unsigned int GetPos(void) const;
 
 	/**
 	* Destructs the file.
