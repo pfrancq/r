@@ -234,6 +234,11 @@ public:
 
 	/**
 	* Construct an exception.
+	*/
+	RException(void) throw();
+
+	/**
+	* Construct an exception.
 	* @param str                      Message of the error.
 	*/
 	RException(const char* str) throw();
@@ -243,6 +248,12 @@ public:
 	* @returns Pointer to a C String.
 	*/
 	const char* GetMsg(void) const {return(Msg);}
+
+	/**
+	* Set the error message.
+	* @param str                      Message of the error.
+	*/
+	void SetMsg(const char* str);
 
 	/**
 	* Destructor.
