@@ -66,8 +66,8 @@ namespace RStd{
 * the class representing the elements (class C). These functions have the
 * signature:
 * <pre>
-* int Compare(const TUse &tag);
-* int Compare(const TUse *tag);
+* int Compare(const TUse& tag) const;
+* int Compare(const TUse* tag) const;
 * </pre>
 *
 * The TUse represent a class or a structure used for the comparaisons. These
@@ -80,7 +80,7 @@ namespace RStd{
 *
 * At least, a compare function must be implemented in the class C:
 * <pre>
-* int Compare(C*);
+* int Compare(const C*) const;
 * </pre>
 *
 * The functions Start, End, Next and the operator () are used to go through
