@@ -56,7 +56,15 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* This class implements a unicode string (RChar*) as a class.
+* This class implements a unicode string (RChar*) as a class. The class uses a
+* shared approach. For example in the following code:
+* @code
+* RString str1("Hello Wold");
+* RString str2;
+* str2=str2;
+* @endcode
+* The strings str1 and str2 use (as long as none of tehm is modified) the same
+* copy of the characters.
 * @author Pascal Francq
 * @short Unicode String
 */
@@ -132,9 +140,15 @@ public:
 
 	/**
 	* Construct a string from another string.
-	* @param str            The string used as reference.
+	* @param str            String used.
 	*/
 	RString(const RString& str) throw(std::bad_alloc);
+
+	/**
+	* Construct a string from another string.
+	* @param str            Pointer to the string used.
+	*/
+	RString(const RString* str) throw(std::bad_alloc);
 
 private:
 
@@ -149,7 +163,7 @@ public:
 	/**
 	* Assignment operator using another string.
 	*/
-	RString& operator=(const RString &str) throw(std::bad_alloc);
+	RString& operator=(const RString& str) throw(std::bad_alloc);
 
 	/**
 	* Assignment operator using a "C string".

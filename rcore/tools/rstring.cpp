@@ -156,6 +156,20 @@ RString::RString(const RString& str) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
+RString::RString(const RString* str) throw(std::bad_alloc)
+	: Data(0)
+{
+	if(str)
+	{
+		Data=str->Data;
+		RIncRef<CharBuffer>(Data);
+	}
+	else
+		Data=GetDataNull();
+}
+
+
+//------------------------------------------------------------------------------
 RString::CharBuffer* RString::GetDataNull(void)
 {
 	if(!RString::DataNull)
