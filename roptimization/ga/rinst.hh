@@ -229,7 +229,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	emitInteractSig();
 
 	// Make the crossovers
-//	Random->RandOrder<cChromo*>(tmpChrom,2*NbCross);
+	RandOrder<cChromo*>(tmpChrom,2*NbCross);
 	for(C1=&tmpChrom[PopSize-1],C2=tmpChrom,i=NbCross+1;--i;C1--,C2++) // A changer au cas où crossover pas possible
 	{
 		C3=(*(C2++));
