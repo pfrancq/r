@@ -284,7 +284,7 @@ public:
 
 		for(i=tSize1+1,ptr=Hash;--i;ptr++)
 		{
-			for(j=tSize1+1,ptr2=*ptr;--j;ptr2++)
+			for(j=tSize2+1,ptr2=*ptr;--j;ptr2++)
 				delete (*ptr2);
 			delete[] (*ptr);
 		}
