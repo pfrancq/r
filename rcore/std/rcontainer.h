@@ -38,6 +38,7 @@
 
 //---------------------------------------------------------------------------
 // include files for R Project
+#include <new.h>
 #include <rstd/rstd.h>
 using namespace RStd;
 
