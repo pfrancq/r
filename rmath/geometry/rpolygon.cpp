@@ -35,7 +35,7 @@
 
 //---------------------------------------------------------------------------
 // include files for RGeometry
-#include "polygons.h"
+#include "rpolygon.h"
 #include "rline.h"
 using namespace RGeometry2D;
 
@@ -115,6 +115,17 @@ bool RPolygon::operator!=(const RPolygon &poly)
 	for(i=NbPtr+1,pt=Tab;--i;pt++)
 		if(!poly.IsEdge(*pt)) return(true);
 	return(false);
+}
+
+
+//---------------------------------------------------------------------------
+RPolygon& RPolygon::operator+=(const RPoint &pt) throw(bad_alloc)
+{
+	unsigned int i;
+	RPoint **tab;
+
+	for(i=NbPtr+1,tab=Tab;--i;tab++) (**tab)+=pt;
+	return(*this);
 }
 
 
@@ -417,8 +428,8 @@ bool RPolygon::IsIn(const RPoint &point)
 	long count=0;
 	
   lt.Pt1=point;
-  lt.Pt1.X=MaxCoord;
-  lt.Pt1.Y=point.Y;
+  lt.Pt2.X=MaxCoord;
+  lt.Pt2.Y=point.Y;
 	last=Tab[NbPtr-1];	// Point last to ending point of Polygon
 	for(i=NbPtr+1,pt=Tab;--i;pt++)
 	{
@@ -428,7 +439,7 @@ bool RPolygon::IsIn(const RPoint &point)
 		last=(*pt);
 		if(lp.Inter(lt)) count++;
   }
-  return(count%1);
+  return(count%2);
 }
 
 

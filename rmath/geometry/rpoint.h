@@ -90,6 +90,11 @@ public:
 		*/
 	RPoint& operator+=(const RPoint &pt) {X+=pt.X;Y+=pt.Y;return(*this);}
 
+	/** Make a translation of the point.
+		* @param pt 	The point representing the vector used.
+		*/
+	RPoint& operator-=(const RPoint &pt) {X-=pt.X;Y-=pt.Y;return(*this);}
+
 	/** Compare two points and return 0 if there are at the same position. This function
 		* is used with the class RContainer.
 		*	@param pt		Point used for the comparaison.
@@ -113,6 +118,9 @@ public:
 		* @param y	Y Position;
 		*/
 	void Set(const RCoord x,const RCoord y) {X=x; Y=y;}
+
+	/** Return the manhatan distance from a given point.*/
+	inline RCoord ManhattanDist(const RPoint &pt) {return(labs(X-pt.X)+labs(Y-pt.Y));}
 
 	/** Return a pointer to a temporary object of class point.*/
 	static RPoint* GetPoint(void);
@@ -179,6 +187,14 @@ public:
 	/** Assignment operator.*/
   RPoints& operator=(const RPoints &points);		
 };
+
+
+//---------------------------------------------------------------------------
+// Operators
+/** Add two points.*/
+RPoint& operator+(const RPoint &arg1,const RPoint &arg2);
+/** Substract two points.*/
+RPoint& operator-(const RPoint &arg1,const RPoint &arg2);
 
 
 }  //-------- End of namespace RStd ---------------------------------------

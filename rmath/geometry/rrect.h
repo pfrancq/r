@@ -84,14 +84,14 @@ public:
 		*/
   RRect(RCoord MinX,RCoord MinY,RCoord MaxX,RCoord MaxY);
 
-	/** Return the area of the rectangle.*/
-  double Area(void);
-
 	/** Return the width of the rectangle.*/
   inline RCoord Width(void) {return(labs(Pt2.X-Pt1.X+1));}
 	
 	/** Return the height of the rectangle.*/
   inline RCoord Height(void) {return(labs(Pt2.Y-Pt1.Y+1));}
+
+	/** Return the area of the rectangle.*/
+  inline RCoord Area(void) {return(Height()*Width());}
 
 	/** The equal operator.*/
   inline bool operator==(const RRect &rect) {return((Pt1==rect.Pt1)&&(Pt2==rect.Pt2));}
@@ -137,6 +137,9 @@ public:
 		*/
 	bool IsIn(RCoord X,RCoord Y);
 
+	/** This function returns true if a given point is in the rectangle.*/
+	inline bool IsIn(RPoint& pos) {return(IsIn(pos.X,pos.Y));}
+
 	/** The assign Operator.*/
   inline RRect& operator=(const RRect &rect) {Pt1=rect.Pt1;Pt2=rect.Pt2;return(*this);}
 };
@@ -164,8 +167,8 @@ public:
 		*/
 	RRects(RRects *rects);
 
-	/** The assign operator.*/
-  RRects& operator=(const RRects &rects);
+	/** Return the area of all the rectangles.*/
+  RCoord Area(void);
 };
 
 

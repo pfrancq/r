@@ -64,13 +64,6 @@ RRect::RRect(RCoord MinX,RCoord MinY,RCoord MaxX,RCoord MaxY) : Pt1(MinX,MinY),P
 
 
 //---------------------------------------------------------------------------
-double RRect::Area(void)
-{
-  return(static_cast<double>(Height())*static_cast<double>(Width()));
-}
-
-
-//---------------------------------------------------------------------------
 RRect& RRect::operator+=(const RPoint &pt) throw(bad_alloc)
 {
 	Pt1+=pt;
@@ -237,8 +230,13 @@ RRects::RRects(RRects *rects) : RContainer<RRect,unsigned int,true,false>(rects)
 
 
 //---------------------------------------------------------------------------
-RRects& RRects::operator=(const RRects &rects)
+RCoord RRects::Area(void)
 {
-	RContainer<RRect,unsigned int,true,false>::operator=(rects);
-	return(*this);
+	unsigned i;
+	RRect **rect;
+	RCoord Area;
+
+	for(i=NbPtr+1,rect=Tab,Area=0;--i;rect++)
+		Area+=(*rect)->Area();
+	return(Area);
 }

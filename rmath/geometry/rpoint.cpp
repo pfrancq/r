@@ -33,7 +33,7 @@
 #include "rfunc.h"
 using namespace RStd;
 #include "rpoint.h"
-#include "polygons.h"
+#include "rpolygon.h"
 using namespace RGeometry2D;
 
 
@@ -309,4 +309,29 @@ RPoints& RPoints::operator=(const RPoints &points)
 {
 	RContainer<RPoint,unsigned int,true,false>::operator=(points);
 	return(*this);
+}
+
+
+
+//---------------------------------------------------------------------------
+//
+// Global Functions and Operators
+//
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+RPoint& RGeometry2D::operator+(const RPoint &arg1,const RPoint &arg2)
+{
+  RPoint *res=RPoint::GetPoint();
+  (*res)=arg1;
+  return((*res)+=arg2);
+}
+
+
+//---------------------------------------------------------------------------
+RPoint& RGeometry2D::operator-(const RPoint &arg1,const RPoint &arg2)
+{
+  RPoint *res=RPoint::GetPoint();
+  (*res)=arg1;
+  return((*res)-=arg2);
 }

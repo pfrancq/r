@@ -54,26 +54,24 @@ class RPolygons;
 
 
 //---------------------------------------------------------------------------
-// Typedefs
-typedef int RCoord;                 // A coordinate type
+/** The RCoord type represents a coordinate.*/
+typedef int RCoord;
 
 
 //---------------------------------------------------------------------------
-// Const
+/** The MaxCoord constante represent the maximal positive value that a
+	* coordinate can have. It is often used to indicate an invalid coordinate.*/
 const RCoord MaxCoord=INT_MAX;
-const char orNormal=0;
-const char orNormalMirrorX=1;
-const char orNormalMirrorY=2;
-const char orNormalMirrorYX=3;
-const char orRota90=4;
-const char orRota90MirrorX=5;
-const char orRota90MirrorY=6;
-const char orRota90MirrorYX=7;
 
 
 //---------------------------------------------------------------------------
-// General Varaibles
-extern double Epsi;														// tolerance for calculations
+/** Represent the different orientation of a given polygon.*/
+enum ROrientation{Normal=0,NormalX=1,NormalY=2,NormalYX=3,Rota90=4,Rota90X=5,Rota90Y=6,Rota90YX=7};
+
+
+//---------------------------------------------------------------------------
+/** This variable represents a tolerance for calculations.*/
+extern double Epsi;
 
 
 }  //-------- End of namespace RGeometry ------------------------------------

@@ -72,11 +72,11 @@ public:
 	/** Return the length of the line.*/
   float Length(void);
 
-	/** Determine if there is an intersection between two lines.*/
+	/** Determine if there is an intersection between two lines (To verify!!!).*/
   bool Inter(RLine *);
 
-	/** Determine if there is an intersection between two lines.*/
-  bool Inter(const RLine &);
+	/** Determine if there is an intersection between two lines (To verify!!!).*/
+  bool Inter(RLine &);
 
 	/** Determine if a point is on the line/segment.*/
 	bool IsIn(const RPoint &);

@@ -27,6 +27,7 @@
 */
 
 
+
 //---------------------------------------------------------------------------
 #ifndef PolygonsH
 #define PolygonsH
@@ -53,7 +54,7 @@ namespace RGeometry2D{
 //---------------------------------------------------------------------------
 // Polygon
 /** This class represent a polygon as a set of points regroup in a container.
-	*	@author Pascal FRancq
+	*	@author Pascal Francq
 	* @short Polygon class.
 	*/
 class RPolygon : public RStd::RContainer<RPoint,unsigned int,true,false>
@@ -86,6 +87,11 @@ public:
 
 	/** The non-equal operator.*/
   bool operator!=(const RPolygon &poly);
+
+	/** Make a translation of the polygon.
+		* @param pt 	The point representing the vector used.
+		*/
+  RPolygon& operator+=(const RPoint &pt) throw(bad_alloc);
 
 	/** This function compares two polygons and returns 0 if there have the same
 		* number of points and at the same positions. This function is used for the
