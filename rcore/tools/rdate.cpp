@@ -110,6 +110,8 @@ RDate::RDate(const char* date)
 		(*begin)=0;
 		Day=atoi(num);
 	}
+	else
+		SetToday();
 }
 
 
