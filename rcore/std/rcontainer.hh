@@ -40,7 +40,7 @@
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RStd::RContainer<C,T,bAlloc,bOrder>::RContainer(T M,T I) throw(bad_alloc)
-		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(M),IncPtr(I)
+		: Current(0), ActPtr(0), NbPtr(0), MaxPtr(M), LastPtr(0), IncPtr(I)
 {
 	if(MaxPtr)
 	{
@@ -62,7 +62,8 @@ template<class C,class T,bool bAlloc,bool bOrder>
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RStd::RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,bAlloc,bOrder> *container) throw(bad_alloc)
-		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(container->MaxPtr),IncPtr(container->IncPtr)
+		: Current(0), ActPtr(0), NbPtr(0), MaxPtr(container->MaxPtr),
+		  LastPtr(0), IncPtr(container->IncPtr)
 {
 	T i;
 	C **tab;
@@ -72,7 +73,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		Tab = new C*[MaxPtr];
 		memset(Tab,0,MaxPtr*sizeof(C*));
 		for(i=container->NbPtr+1,tab=container->Tab;--i;tab++)
-			InsertPtr(new C(*tab));	
+			InsertPtr(new C(*tab));
 	}
 	else
 	{
@@ -85,7 +86,8 @@ template<class C,class T,bool bAlloc,bool bOrder>
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RStd::RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,bAlloc,bOrder> &container) throw(bad_alloc)
-		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(0),IncPtr(container.IncPtr)
+		: Current(0), ActPtr(0), NbPtr(0), MaxPtr(0),
+		  LastPtr(0), IncPtr(container.IncPtr)
 {
 	T i;
 	C **tab;
@@ -196,16 +198,16 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RStd::RContainer<C,T,bAlloc,bOrder>::VerifyTab(void) throw(bad_alloc)
 {
-	if(NbPtr==MaxPtr)
+	if(LastPtr==MaxPtr)
 	{
 		C **ptr;
 		MaxPtr+=IncPtr;
 		ptr=new C*[MaxPtr];
-		memcpy(ptr,Tab,NbPtr*sizeof(C*));
+		memcpy(ptr,Tab,LastPtr*sizeof(C*));
 		delete[] Tab;
 		Tab=ptr;
-		memset(&Tab[NbPtr],0,IncPtr*sizeof(C*));
-		if(Current&&(ActPtr<NbPtr))
+		memset(&Tab[LastPtr],0,IncPtr*sizeof(C*));
+		if(Current&&(ActPtr<LastPtr))
 			Current=&Tab[ActPtr];
 	}
 }
@@ -224,11 +226,11 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		OldSize=MaxPtr;
 		MaxPtr=MaxSize;
 		ptr=new C*[MaxPtr];
-		memcpy(ptr,Tab,NbPtr*sizeof(C*));
+		memcpy(ptr,Tab,LastPtr*sizeof(C*));
 		delete[] Tab;
 		Tab=ptr;
 		memset(&Tab[OldSize],0,(MaxPtr-OldSize)*sizeof(C*));
-		if(Current&&(ActPtr<NbPtr))
+		if(Current&&(ActPtr<LastPtr))
 			Current=&Tab[ActPtr];
 	}
 }
@@ -242,8 +244,9 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		C **ptr;
 
-		for(NbPtr++,ptr=Tab;--NbPtr;ptr++)
-			delete (*ptr);
+		for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
+			if(*ptr)
+				delete (*ptr);
 	}
 	ActPtr=NbPtr=0;
 	Current=0;
@@ -259,8 +262,11 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		C **ptr;
 
-		for(NbPtr++,ptr=Tab;--NbPtr;ptr++)
-			delete (*ptr);
+		for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
+		{
+			if(*ptr)
+				delete (*ptr);
+		}
 	}
 	ActPtr=NbPtr=0;
 	Current=0;
@@ -272,23 +278,55 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
-	void RStd::RContainer<C,T,bAlloc,bOrder>::InsertPtrAt(C *ins,T Pos) throw(bad_alloc)
+	void RStd::RContainer<C,T,bAlloc,bOrder>::InsertPtrOrderAt(C *ins,T Pos) throw(bad_alloc)
 {
 	C **ptr;
-	unsigned int max;
+
+	RReturnIfFail(ins);
+	RReturnIfFail(Pos<=NbPtr);
+	VerifyTab();
+	ptr=&Tab[Pos];
+	if(Pos<LastPtr-1)
+		memmove(ptr+1,ptr,(LastPtr-Pos)*sizeof(C*));
+	(*ptr)=ins;
+	NbPtr++;
+	LastPtr++;
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	void RStd::RContainer<C,T,bAlloc,bOrder>::InsertPtrAt(C *ins,T Pos,bool del) throw(bad_alloc)
+{
+	C **ptr;
 
 	RReturnIfFail(ins);
 	if(!ins) return;
-	if(Pos>=MaxPtr)
-		max=Pos;
+	if(Pos>MaxPtr)
+	{
+		VerifyTab(Pos+IncPtr);
+	}
 	else
-		max=MaxPtr-1;
-	VerifyTab(max+1);
+	{
+		VerifyTab();
+	}
 	ptr=&Tab[Pos];
-	if(Pos<NbPtr)
-		memmove(ptr+1,ptr,(NbPtr-Pos)*sizeof(C*));
+	if(Pos<LastPtr)
+	{
+		if(del)
+		{
+			if(*ptr)
+				delete(*ptr);
+		}
+		else
+		{
+			memmove(ptr+1,ptr,(LastPtr-Pos)*sizeof(C*));
+		}
+	}
 	(*ptr)=ins;
 	NbPtr++;
+	if(Pos>LastPtr-1)
+		LastPtr=Pos+1;
 }
 
 
@@ -311,12 +349,13 @@ template<class C,class T,bool bAlloc,bool bOrder>
 			}
 		}
 		else
-			InsertPtrAt(ins,Index);
+			InsertPtrOrderAt(ins,Index);
 	}
 	else
 	{
 		VerifyTab();
-		Tab[NbPtr++]=ins;
+		Tab[LastPtr++]=ins;
+		NbPtr++;
 	}
 }
 
@@ -336,8 +375,8 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 		T i;
 		C **ptr;
 
-		for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-			if(!((*ptr)->Compare(tag)))
+		for(i=LastPtr+1,ptr=Tab;--i;ptr++)
+			if((*ptr)&&(!((*ptr)->Compare(tag))))
 				return(true);
 		return(false);
 	}
@@ -362,8 +401,8 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 		T i;
 		C **ptr;
 
-		for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-			if(!((*ptr)->Compare(tag)))
+		for(i=LastPtr+1,ptr=Tab;--i;ptr++)
+			if((*ptr)&&(!((*ptr)->Compare(tag))))
 				return(*ptr);
 		return(0);
 	}
@@ -379,7 +418,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 		bool Find;
 		T Index=GetId<TUse>(tag,Find);
 		if(!Find)
-			InsertPtrAt(new C(tag),Index);
+			InsertPtrOrderAt(new C(tag),Index);
 		return(Tab[Index]);
 	}
 	else
@@ -387,8 +426,8 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 		T i;
 		C **ptr;
 
-		for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-			if(!((*ptr)->Compare(tag)))
+		for(i=LastPtr+1,ptr=Tab;--i;ptr++)
+			if((*ptr)&&(!((*ptr)->Compare(tag))))
 				return(*ptr);
 		VerifyTab();
 		(*ptr)=new C(tag);
@@ -405,11 +444,11 @@ template<class C,class T,bool bAlloc,bool bOrder>
 {
 	C **ptr;
 	T i;
-	RContainer<C,T,false,bOrder>*	tmp;
+	RContainer<C,T,false,bOrder> *tmp;
 
 	tmp=new RContainer<C,T,false,bOrder>(MaxPtr,IncPtr);
-	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-		if(!((*ptr)->Compare(tag)))
+	for(i=LastPtr+1,ptr=Tab;--i;ptr++)
+		if((*ptr)&&(!((*ptr)->Compare(tag))))
 			tmp->InsertPtr(*ptr);
 	return(tmp);
 }
@@ -433,11 +472,12 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	}
 	else
 	{
-		for(Index=0,ptr=Tab;((*ptr)!=del)&&(Index<NbPtr);Index++,ptr++);
-		if(Index==NbPtr) return;
+		for(Index=0,ptr=Tab;((*ptr)!=del)&&(Index<LastPtr);Index++,ptr++);
+		if(Index==LastPtr) return;
 	}
-	memcpy(ptr,ptr+1,((--NbPtr)-Index)*sizeof(C*));
-	Tab[NbPtr]=0;
+	memcpy(ptr,ptr+1,((--LastPtr)-Index)*sizeof(C*));
+	Tab[LastPtr]=0;
+	NbPtr--;
 	if(bAlloc) delete(del);
 }
 
@@ -459,13 +499,18 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	}
 	else
 	{
-		for(Index=0,ptr=Tab;((*ptr)->Compare(tag))&&(Index<Nbptr);Index++,ptr++);
-		if(Index==NbPtr)
+		for(Index=0,ptr=Tab;Index<LastPtr;Index++,ptr++)
+		{
+			if((*ptr)&&(!((*ptr)->Compare(tag))))
+				break;
+		}
+		if(Index==LastPtr)
 			return;
 	}
 	del=*ptr;
-	memcpy(ptr,ptr+1,((--NbPtr)-Index)*sizeof(C*));
-	Tab[NbPtr]=0;
+	memcpy(ptr,ptr+1,((--LastPtr)-Index)*sizeof(C*));
+	Tab[LastPtr]=0;
+	NbPtr--;
 	if(bAlloc)
 		delete(del);
 }
@@ -475,8 +520,15 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 template<class C,class T,bool bAlloc,bool bOrder>
 	inline void RStd::RContainer<C,T,bAlloc,bOrder>::Start(void)
 {
+	if(!NbPtr)
+	{
+		Current=0;
+		return;
+	}
 	Current=Tab;
 	ActPtr=0;
+	while(!(*Current))
+		Next();
 }
 
 
@@ -484,7 +536,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 template<class C,class T,bool bAlloc,bool bOrder>
 	inline bool RStd::RContainer<C,T,bAlloc,bOrder>::End(void)
 {
-	return(ActPtr==NbPtr);
+	return(ActPtr==LastPtr);
 }
 
 
@@ -492,12 +544,18 @@ template<class C,class T,bool bAlloc,bool bOrder>
 template<class C,class T,bool bAlloc,bool bOrder>
 	inline void RStd::RContainer<C,T,bAlloc,bOrder>::Next(void)
 {
-	if(End())
+	if(!NbPtr) return;
+	if(ActPtr==LastPtr)
 		Start();
 	else
 	{
 		ActPtr++;
 		Current++;
+		while((!(*Current))&&(ActPtr<LastPtr))
+		{
+			ActPtr++;
+			Current++;
+		}
 	}
 }
 
@@ -518,8 +576,11 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		C **ptr;
 
-		for(NbPtr++,ptr=Tab;--NbPtr;ptr++)
-			delete(*ptr);
+		for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
+		{
+			if(*ptr)
+				delete(*ptr);
+		}
 	}
 	delete[] Tab;
 }

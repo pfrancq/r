@@ -151,6 +151,11 @@ public:
 	T MaxPtr;
 
 	/**
+	* The last position in the array used by an object.
+	*/
+	T LastPtr;
+
+	/**
 	* When the array is increased, this value is used.
 	*/
 	T IncPtr;
@@ -227,6 +232,18 @@ public:
 	*/
 	//@{
 
+protected:
+
+	/**
+	* Insert an element in an ordered container. Used by InsertPtr and
+	* GetInsertPtr.
+	* @param ins            A pointer to the element to insert.
+	* @param Pos            The position where to insert it.
+	*/
+	void InsertPtrOrderAt(C *ins,T Pos) throw(bad_alloc);
+
+public:
+
 	/**
 	* Insert an element at a certain position. Two remarks must be made :
 	* -#    The function verify not if the index used is compatible with the order
@@ -236,8 +253,10 @@ public:
 	*       not handle by the other functions of the container.
 	* @param ins            A pointer to the element to insert.
 	* @param Pos            The position where to insert it.
+	* @param del            Specify if the object that was previously at Pos
+	*                       must be shift or deleted.
 	*/
-	void InsertPtrAt(C *ins,T Pos) throw(bad_alloc);
+	void InsertPtrAt(C *ins,T Pos,bool del=true) throw(bad_alloc);
 
 	/**
 	* Insert an element in the container.
