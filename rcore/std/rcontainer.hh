@@ -486,6 +486,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	memcpy(ptr,ptr+1,((--LastPtr)-Index)*sizeof(C*));
 	Tab[LastPtr]=0;
 	NbPtr--;
+	LastPtr--;
 	if(bAlloc) delete(del);
 }
 
@@ -519,6 +520,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	memcpy(ptr,ptr+1,((--LastPtr)-Index)*sizeof(C*));
 	Tab[LastPtr]=0;
 	NbPtr--;
+	LastPtr--;
 	if(bAlloc)
 		delete(del);
 }
