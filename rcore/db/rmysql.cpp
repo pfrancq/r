@@ -30,7 +30,7 @@
 
 //---------------------------------------------------------------------------
 #include <string.h>
-#include "rmysql.h"
+#include <rmysql/rmysql.h>
 using namespace RMySQL;
 
 
