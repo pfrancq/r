@@ -186,6 +186,25 @@ public:
 	}
 
 	/**
+	* Get the number of elements in the hash container.
+	* @returns Number of elements.
+	*/
+	inline unsigned int GetNb(void) const
+	{
+		unsigned int nb=0;
+		RContainer<C,T,bAlloc,true>*** ptr;
+		RContainer<C,T,bAlloc,true>** ptr2;
+		T i,j;
+
+		for(i=tSize1+1,ptr=Hash;--i;ptr++)
+		{
+			for(j=tSize2+1,ptr2=*ptr;--j;ptr2++)
+				nb+=(*ptr2)->NbPtr;
+		}
+		return(nb);
+	}
+
+	/**
 	* Verify if an element is in the hash container.
 	* @param TUse           The type of tag, the hash container uses the
 	*                       Compare(TUse &) member function of the elements.
