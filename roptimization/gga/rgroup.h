@@ -177,6 +177,12 @@ public:
 	unsigned int GetId(void) const {return(Id);}
 
 	/**
+	* Get the number of objects in the group.
+	* @return unsigned int.
+	*/
+	unsigned int GetNbObjs(void) const {return(NbSubObjects);}
+
+	/**
 	* Return true if an object is in the group.
 	* @param id             Identificator of the object to test.
 	*/
