@@ -48,9 +48,8 @@ namespace RGA{
 
 //-----------------------------------------------------------------------------
 /**
-* The RPlacementHeuristic class provides an abstract class for placement
-* heuristics.
-*
+* \ingroup 2DGAH
+* This class implements a bottom-left heuristic.
 * This heuristic hanbdles objects "line after line". The first object is place
 * in bottom-left part of the rectangle representing the limits. After that, the
 * heuristic try to place so much objects as possible to the right of the first
@@ -58,7 +57,7 @@ namespace RGA{
 * first one. The heuristic try then to put the rest of the objects to the right
 * and so on.
 * @author Pascal Francq
-* @short Generic Placement Heuristic class.
+* @short Bottom-Left Placement Heuristic.
 */
 class RPlacementBottomLeft : public RPlacementHeuristic
 {
@@ -77,9 +76,11 @@ public:
 	/**
 	* Construct the bottom-left heuristic.
 	* @param maxobjs		Maximal number of objects to place.
-	* @param calcfree		Must free polygons be calculated.
+	* @param calc			Must free polygons be calculated.
+	* @param use			Must free polygons be used.
+	* @param ori			Must all orientation be tested.
 	*/
-	RPlacementBottomLeft(unsigned int maxobjs,bool calcfree);
+	RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,bool ori=false);
 
 	/**
 	* Initialize the heuristic.
@@ -91,12 +92,9 @@ public:
 	*/
 	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
 
-	/**
-	* Place the next object for a specific information.
-	* @return		The function returns true if the object can be placed with the
-	*					current orientation.
-	*/
-	virtual bool NextObjectOri(void);
+	virtual RPoint& NextObjectOri(void);
+	
+	virtual void Place(RPoint& pos);
 };
 
 

@@ -33,7 +33,9 @@
 
 //-----------------------------------------------------------------------------
 // include files for Rainbow
-#include "rplacementcenter.h"
+#include <rpromethee/rpromkernel.h>
+using namespace RPromethee;
+#include <rga/rplacementcenter.h>
 using namespace RGA;
 
 
@@ -45,9 +47,14 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calcfree,RCoord mindist)
-	: RPlacementHeuristic(maxobjs,calcfree), MinDist(mindist)
+RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool use,bool ori)
+	: RPlacementHeuristic(maxobjs,calc,use,ori), CalcPos(0), MinDist(15)
 {
+	MaxCalcPos=200;
+	CalcPos=new RPoint[MaxCalcPos];
+	AreaP=AreaQ=DistP=DistQ=0.0;
+	AreaWeight=2.0;
+	DistWeight=1.0;	
 }
 
 
@@ -64,302 +71,171 @@ void RPlacementCenter::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **
 
 
 //-----------------------------------------------------------------------------
-void RPlacementCenter::CalcPositions(void)
+void RPlacementCenter::AddPosition(RPromKernel& k,RPromCriterion *area,RPromCriterion *dist,RPoint& pos)
 {
-	RPoint Pos;
-	RPoint Center;
-	unsigned int nb,NbPos;
-	ICalcPos *pos;
-	RPoint *Actual,*Last;
-	unsigned int i;
-	bool LookX;
-	bool LookLeft,LookBottom;
-	RRect CurRect;
-
-	// Init
-	NbCalcPos=0;
-
-	// Find the Bottom-Left coordinate of the boundary rectangle
-	Actual=Union.GetBottomLeft();
-	i=Union.NbPtr+1;	
-	LookX=true;
-	LookLeft=true;
-	LookBottom=true;
-
-	// Try vertices
-	while(--i)
-	{
-		// Calculate possible positions at "Actual" position
-		NbPos=0;
-		if(LookLeft)
-		{
-			if(Grid->IsFree(Actual->X-1,Actual->Y))
-			{
-				Pos.Set(Actual->X-CurInfo->Width(),Actual->Y);
-		  		if(CurInfo->Test(Pos,Max,Grid))
-					CalcPos[NbCalcPos++].Pos=Pos;
-			}
-			if(LookBottom)
-			{				
-				if(Grid->IsFree(Actual->X,Actual->Y-1))
-				{
-					Pos.Set(Actual->X,Actual->Y-CurInfo->Height());
-   		  		if(CurInfo->Test(Pos,Max,Grid))
-   					CalcPos[NbCalcPos++].Pos=Pos;
-				}
-				if(NbPos==0)
-				{
-					Pos.Set(Actual->X-CurInfo->Width(),Actual->Y-CurInfo->Height());
-   		  		if(CurInfo->Test(Pos,Max,Grid))
-   					CalcPos[NbCalcPos++].Pos=Pos;
-				}
-			}
-			else
-			{
-				if(Grid->IsFree(Actual->X,Actual->Y+1))
-				{
-					Pos.Set(Actual->X,Actual->Y+1);
-			  		if(CurInfo->Test(Pos,Max,Grid))
-						CalcPos[NbCalcPos++].Pos=Pos;
-				}
-				if(NbPos==0)
-				{
-					Pos.Set(Actual->X-CurInfo->Width(),Actual->Y+1);
-			  		if(CurInfo->Test(Pos,Max,Grid))
-						CalcPos[NbCalcPos++].Pos=Pos;
-				}
-			}
-		}			
-		else
-		{
-			if(Grid->IsFree(Actual->X+1,Actual->Y))
-			{
-				Pos.Set(Actual->X+1,Actual->Y);
-		  		if(CurInfo->Test(Pos,Max,Grid))
-					CalcPos[NbCalcPos++].Pos=Pos;
-			}
-			if(LookBottom)
-			{
-				if(Grid->IsFree(Actual->X,Actual->Y-1))
-				{
-					Pos.Set(Actual->X,Actual->Y-CurInfo->Height());
-			  		if(CurInfo->Test(Pos,Max,Grid))
-						CalcPos[NbCalcPos++].Pos=Pos;
-				}
-				if(NbPos==0)
-				{
-					Pos.Set(Actual->X+1,Actual->Y-CurInfo->Height());
-			  		if(CurInfo->Test(Pos,Max,Grid))
-						CalcPos[NbCalcPos++].Pos=Pos;
-				}
-			}
-			else
-			{
-				if(Grid->IsFree(Actual->X,Actual->Y+1))
-				{
-					Pos.Set(Actual->X,Actual->Y+1);
-			  		if(CurInfo->Test(Pos,Max,Grid))
-						CalcPos[NbCalcPos++].Pos=Pos;
-				}
-				if(NbPos==0)
-				{
-					Pos.Set(Actual->X+1,Actual->Y+1);
-			  		if(CurInfo->Test(Pos,Max,Grid))
-						CalcPos[NbCalcPos++].Pos=Pos;
-				}
-			}
-		}
-
-		// Choose next vertice
-		Last=Actual;
-		LookX=!LookX;
-		if(LookX)
-		{
-			Actual=Union.GetConX(Last);
-			if(Actual->X<Last->X)
-			{
-				LookBottom=false;
-				LookLeft=true;
-			}
-			else
-			{
-				LookBottom=true;
-				LookLeft=false;
-			}
-		}
-		else
-		{
-			Actual=Union.GetConY(Last);
-			if(Actual->Y<Last->Y)
-			{
-				LookLeft=true;
-				LookBottom=true;
-			}
-			else
-			{
-				LookLeft=false;
-				LookBottom=false;
-			}
-		}
-
-	}
-
-
-  	// Try all the possibilities
-  	for(nb=NbCalcPos+1,pos=CalcPos;--nb;pos++)
+  	RPoint Center;
+  	RRect CurRect(Result);
+  	RPromSol *sol;
+  	 	
+  	// Push it to the center
+  	CurInfo->PushCenter(pos,Max,Grid);
+  	
+  	// Verify the the position is a valid one (in the limits)
+  	if((pos.X<0)||(pos.X+CurInfo->Width()>=Max.X)||(pos.Y<0)||(pos.Y+CurInfo->Height()>=Max.Y))	return;
+  	
+  	// Verify CalcPos
+  	if(NbCalcPos==MaxCalcPos)
   	{
-		CurInfo->PushCenter(pos->Pos,Max,Grid);
-		Center.Set(CurInfo->Width()/2,CurInfo->Height()/2);
-		pos->Dist=Attraction.ManhattanDist(pos->Pos+Center);				
-		CurRect=Result;
-		if(pos->Pos.X<CurRect.Pt1.X) CurRect.Pt1.X=pos->Pos.X;
-		if(pos->Pos.Y<CurRect.Pt1.Y) CurRect.Pt1.Y=pos->Pos.Y;
-		if(pos->Pos.X+CurInfo->Width()>CurRect.Pt2.X) CurRect.Pt2.X=pos->Pos.X+CurInfo->Width();
-		if(pos->Pos.Y+CurInfo->Height()>CurRect.Pt2.Y) CurRect.Pt2.Y=pos->Pos.Y+CurInfo->Height();
-		pos->Area=CurRect.Width()*CurRect.Height();
+  		// Allocate new CalcPos
   	}
+  	
+  	// Add new solution for Prométhée
+	CalcPos[NbCalcPos++]=pos;
+  	Center.Set(CurInfo->Width()/2,CurInfo->Height()/2);
+	if(pos.X<CurRect.Pt1.X) CurRect.Pt1.X=pos.X;
+  	if(pos.Y<CurRect.Pt1.Y) CurRect.Pt1.Y=pos.Y;
+  	if(pos.X+CurInfo->Width()>CurRect.Pt2.X) CurRect.Pt2.X=pos.X+CurInfo->Width();
+  	if(pos.Y+CurInfo->Height()>CurRect.Pt2.Y) CurRect.Pt2.Y=pos.Y+CurInfo->Height();
+  	sol=k.NewSol();
+  	k.Assign(sol,area,CurRect.Width()*CurRect.Height());
+  	k.Assign(sol,dist,Attraction.ManhattanDist(pos+Center));
 }
 
 
 //-----------------------------------------------------------------------------
-bool RPlacementCenter::NextObjectOri(void)
+RPoint& RPlacementCenter::NextObjectOri(void)
 {
-	RCoord BestDist,Dist2;
-	RPoint Best;
-	RPoint Pos[2];
-	RPoint Center;
-	char NbPos,nb;
+	RPoint Pos;									// Position to test (X,Y).
+	RPoint *Best=RPoint::GetPoint(); 	// Temporary point to hold best position.
+	unsigned int NbPos;
 	RPoint *Actual,*Last;
 	unsigned int i;
 	bool LookX;
 	bool LookLeft,LookBottom;
-	RRect CurRect;
-	RCoord Area,BestArea;
-	unsigned count=0;
+	RPromKernel Prom("PlacementCenter",100,2);
+	RPromCriterion *area,*dist;
 
 	// If first object -> place it in the middle
 	if(!NbObjsOk)
 	{
- 		Best.X=(Max.X-CurInfo->Width())/2;
- 		Best.Y=(Max.Y-CurInfo->Height())/2;
-		CurInfo->Assign(Best,Grid);
-		CurInfo->Add(Sol);
-		// Calculate Union of all placed polygons
-		Sol.Union(&Union);
- 		Union.Boundary(Result);
-	 	return(true);
+ 		Best->X=(Max.X-CurInfo->Width())/2;
+ 		Best->Y=(Max.Y-CurInfo->Height())/2;
+	 	return(*Best);
 	}
 
-
+	// Init Prométhée
+	NbCalcPos=0;
+	area=Prom.NewCriterion(Minimize,AreaP,AreaQ,AreaWeight);
+	dist=Prom.NewCriterion(Minimize,DistP,DistQ,DistWeight);
+		
 	// Find the Bottom-Left coordinate of the boundary rectangle
-	Center.Set(CurInfo->Width()/2,CurInfo->Height()/2);
 	Actual=Union.GetBottomLeft();
 	i=Union.NbPtr+1;	
-	LookX=true;
-	LookLeft=true;
-	LookBottom=true;
-	BestArea=MaxCoord;
-	BestDist=MaxCoord;
+	LookX=true;				// Go anti-clockwise, begin with X-Axis and then right.
+	LookBottom=true;     // Look (X,Y-1) or (X,Y+1) ?
+	LookLeft=true;			// Look (X-1,Y) or (X+1,Y) ?
 
-	// Try vertices
+
+	// Try all vertices
 	while(--i)
 	{
 		// Calculate possible positions at "Actual" position
 		NbPos=0;
 		if(LookLeft)
 		{
+			
+			// Look to the Left -> Test (X-1,Y)
 			if(Grid->IsFree(Actual->X-1,Actual->Y))
 			{
-				count++;
-				Pos[NbPos++].Set(Actual->X-CurInfo->Width(),Actual->Y);
+				Pos.Set(Actual->X-CurInfo->Width(),Actual->Y);
+		  		if(CurInfo->Test(Pos,Max,Grid))
+					AddPosition(Prom,area,dist,Pos);
 			}
 			if(LookBottom)
 			{				
+				// If look to bottom -> Test (X,Y-1)
 				if(Grid->IsFree(Actual->X,Actual->Y-1))
 				{
-					count++;
-					Pos[NbPos++].Set(Actual->X,Actual->Y-CurInfo->Height());
+					Pos.Set(Actual->X,Actual->Y-CurInfo->Height());
+   		  		if(CurInfo->Test(Pos,Max,Grid))
+						AddPosition(Prom,area,dist,Pos);
 				}
+				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					count++;
-					Pos[NbPos++].Set(Actual->X-CurInfo->Width(),Actual->Y-CurInfo->Height());
+					Pos.Set(Actual->X-CurInfo->Width(),Actual->Y-CurInfo->Height());
+   		  		if(CurInfo->Test(Pos,Max,Grid))
+						AddPosition(Prom,area,dist,Pos);
 				}
 			}
 			else
 			{
+				// If look to up -> Test (X,Y+1)				
 				if(Grid->IsFree(Actual->X,Actual->Y+1))
 				{
-					count++;
-					Pos[NbPos++].Set(Actual->X,Actual->Y+1);
+					Pos.Set(Actual->X,Actual->Y+1);
+			  		if(CurInfo->Test(Pos,Max,Grid))
+						AddPosition(Prom,area,dist,Pos);
 				}
+				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos[NbPos++].Set(Actual->X-CurInfo->Width(),Actual->Y+1);
-					count++;
+					Pos.Set(Actual->X-CurInfo->Width(),Actual->Y+1);
+			  		if(CurInfo->Test(Pos,Max,Grid))
+						AddPosition(Prom,area,dist,Pos);
 				}
 			}
+		
 		}			
 		else
 		{
+			
+			// Look to the right -> Test (X+1,Y)
 			if(Grid->IsFree(Actual->X+1,Actual->Y))
 			{
-				Pos[NbPos++].Set(Actual->X+1,Actual->Y);
-				count++;
+				Pos.Set(Actual->X+1,Actual->Y);
+		  		if(CurInfo->Test(Pos,Max,Grid))
+						AddPosition(Prom,area,dist,Pos);
 			}
 			if(LookBottom)
 			{
+				// If look to bottom -> Test (X,Y-1)				
 				if(Grid->IsFree(Actual->X,Actual->Y-1))
 				{
-					Pos[NbPos++].Set(Actual->X,Actual->Y-CurInfo->Height());
-					count++;
+					Pos.Set(Actual->X,Actual->Y-CurInfo->Height());
+			  		if(CurInfo->Test(Pos,Max,Grid))
+						AddPosition(Prom,area,dist,Pos);
 				}
+				// If no positions -> Test(X,Y)				
 				if(NbPos==0)
 				{
-					Pos[NbPos++].Set(Actual->X+1,Actual->Y-CurInfo->Height());
-					count++;
+					Pos.Set(Actual->X+1,Actual->Y-CurInfo->Height());
+			  		if(CurInfo->Test(Pos,Max,Grid))
+						AddPosition(Prom,area,dist,Pos);
 				}
 			}
 			else
 			{
+				// If look to up -> Test (X,Y+1)				
 				if(Grid->IsFree(Actual->X,Actual->Y+1))
 				{
-					Pos[NbPos++].Set(Actual->X,Actual->Y+1);
-					count++;
+					Pos.Set(Actual->X,Actual->Y+1);
+			  		if(CurInfo->Test(Pos,Max,Grid))
+						AddPosition(Prom,area,dist,Pos);
 				}
+				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					count++;
-					Pos[NbPos++].Set(Actual->X+1,Actual->Y+1);
+					Pos.Set(Actual->X+1,Actual->Y+1);
+			  		if(CurInfo->Test(Pos,Max,Grid))
+						AddPosition(Prom,area,dist,Pos);
 				}
 			}
-		}
-
-		// Try the possibilities and see if one of them is better
-		for(nb=0;nb<NbPos;nb++)
-		{
-			if(CurInfo->Test(Pos[nb],Max,Grid))
-			{
-				CurInfo->PushCenter(Pos[nb],Max,Grid);
-				Dist2=Attraction.ManhattanDist(Pos[nb]+Center);				
- 				CurRect=Result;
- 				if(Pos[nb].X<CurRect.Pt1.X) CurRect.Pt1.X=Pos[nb].X;
- 				if(Pos[nb].Y<CurRect.Pt1.Y) CurRect.Pt1.Y=Pos[nb].Y;
- 				if(Pos[nb].X+CurInfo->Width()>CurRect.Pt2.X) CurRect.Pt2.X=Pos[nb].X+CurInfo->Width();
- 				if(Pos[nb].Y+CurInfo->Height()>CurRect.Pt2.Y) CurRect.Pt2.Y=Pos[nb].Y+CurInfo->Height();
- 				Area=CurRect.Width()*CurRect.Height();
-				if(((labs(Dist2-BestDist)<MinDist)&&(Area<BestArea))||(Dist2<BestDist))
-				{
-					BestArea=Area;
-					Best=Pos[nb];
-					BestDist=Dist2;						
-				}
-			}
+		
 		}
 
 		// Choose next vertice
 		Last=Actual;
-		LookX=!LookX;
 		if(LookX)
 		{
 			Actual=Union.GetConX(Last);
@@ -388,13 +264,26 @@ bool RPlacementCenter::NextObjectOri(void)
 				LookBottom=false;
 			}
 		}
-
+		LookX=!LookX; // If X-Axis -> Next time : Y-Axis.				
 	}
-//	CalcPositions();
+
+	// Calculate Prométhée II and return the "best"	solution.
+	if(NbCalcPos==0)
+	{
+		Best->Set(MaxCoord,MaxCoord);
+		return(*Best);
+	}
+	Prom.ComputePrometheeII();
+	(*Best)=CalcPos[Prom.GetBestSolId()];	
+	return(*Best);
+}
 
 
+//-----------------------------------------------------------------------------
+void RPlacementCenter::Place(RPoint& pos)
+{
 	// Assign it
-	CurInfo->Assign(Best,Grid);
+	CurInfo->Assign(pos,Grid);
 	Sol.Clear();
 	Sol.InsertPtr(new RPolygon(Union));
 	CurInfo->Add(Sol);
@@ -402,15 +291,10 @@ bool RPlacementCenter::NextObjectOri(void)
 	// Calculate Union of all placed polygons
 	Sol.Union(&Union);
  	Union.Boundary(Result);
-	cout<<"Result: ("<<Result.Pt1.X<<","<<Result.Pt1.Y<<") - ("<<Result.Pt2.X<<","<<Result.Pt2.Y<<")"<<endl;
-
-	// Ok
-	cout<<count<<endl;
-	return(true);
 }
 
 
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void RPlacementCenter::PostRun(RPoint &limits)
 {
 	RGeoInfo **info;
@@ -433,20 +317,9 @@ void RPlacementCenter::PostRun(RPoint &limits)
 		(*Free())-=Result.Pt1;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+//----------------------------------------------------------------------------
+RPlacementCenter::~RPlacementCenter(void)
+{
+	if(CalcPos) delete[] CalcPos;
+}

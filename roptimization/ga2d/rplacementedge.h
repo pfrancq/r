@@ -48,10 +48,11 @@ namespace RGA{
 
 //-----------------------------------------------------------------------------
 /**
+* \ingroup 2DGAH
+* The RPlacementEdge class provides an edge placement heuristic.
 * The RPlacementEdge class provides an edge placement heuristic, it is a
 * modified version of the bottom-left heuristic where the resulting rectangle
-* have a width and a height in proportiion to the limits.
-*
+* have a width and a height in proportiion to the limits.<BR>
 * This heuristic hanbles objects in the edge. The first object is place
 * in bottom-left part of the rectangle representing the limits. After that, the
 * heuristic try to place the next object either at the right or on the top of
@@ -59,7 +60,7 @@ namespace RGA{
 * objects are then place to try to fill the resulting rectangle while his width
 * and height are proportional to the limits.
 * @author Pascal Francq
-* @short Edge Heuristic class.
+* @short Edge Placement Heuristic.
 */
 class RPlacementEdge : public RPlacementHeuristic
 {
@@ -97,9 +98,11 @@ public:
 
 	/**
 	* Construct the edge heuristic.
-	* @param calcfree		Must free polygons be calculated.
+	* @param calc			Must free polygons be calculated.
+	* @param use			Must free polygons be used.
+	* @param ori			Must all orientation be tested.	
 	*/
-	RPlacementEdge(unsigned int maxobjs,bool calcfree);
+	RPlacementEdge(unsigned int maxobjs,bool calc,bool use,bool ori=false);
 
 	/**
 	* Initialize the heuristic.
@@ -111,12 +114,9 @@ public:
 	*/
 	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
 
-	/**
-	* Place the next object for a specific information.
-	* @return		The function returns true if the object can be placed with the
-	*					current orientation.
-	*/
-	virtual bool NextObjectOri(void);
+	virtual RPoint& NextObjectOri(void);
+	
+	virtual void Place(RPoint& pos);
 };
 
 

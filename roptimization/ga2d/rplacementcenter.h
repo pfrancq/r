@@ -38,7 +38,9 @@
 
 //-----------------------------------------------------------------------------
 // include files for Rainbow
-#include "rplacementheuristic.h"
+#include <rpromethee/rpromethee.h>
+using namespace RPromethee;
+#include <rga/rplacementheuristic.h>
 
 
 //-----------------------------------------------------------------------------
@@ -48,34 +50,28 @@ namespace RGA{
 
 //-----------------------------------------------------------------------------
 /**
+* \ingroup 2DGAH
 * The RPlacementCenter class provides the center heuristic.
-*
 * The heuristic places the first object in the center of the rectangle
 * representing the limits. After that, the objects are placed so that the
-* resulting rectangle is proportional to the limits.
-*
+* resulting rectangle is proportional to the limits.<BR>
 * The heuristic doubles the limits of the result during the placement. The
 * PostRun method make then a translation of the bottom-left coin of the
 * resulting rectangle to (0,0).
 * @author Pascal Francq
-* @short Generic Placement Heuristic class.
+* @short Center Placement Heuristic.
 */
 class RPlacementCenter : public RPlacementHeuristic
 {
 	/**
-	* The ICalcPos structure represents a valid position for an object.
-	*/
-	struct ICalcPos
-	{
-		RPoint Pos;
-		RCoord Area;
-		RCoord Dist;
-	};
-
-	/**
 	* An array of calculate position for an element.
 	*/
-   ICalcPos CalcPos[100];
+   RPoint *CalcPos;
+	
+   /**
+   * Maximal number of the CalcPos array.
+   */
+	unsigned int MaxCalcPos;
 	
    /**
 	* Number of calculated position.
@@ -113,15 +109,17 @@ class RPlacementCenter : public RPlacementHeuristic
 	* is smaller.
 	*/
 	RCoord MinDist;
-
+	
 public:
 
 	/**
 	* Construct the center heuristic.
 	* @param maxobjs		The maximal number of objects to place.
-	* @param calcfree		Must free polygons be calculated.
+	* @param calc			Must free polygons be calculated.
+	* @param use			Must free polygons be used.
+	* @param ori			Must all orientation be tested.
 	*/
-	RPlacementCenter(unsigned int maxobjs,bool calcfree,RCoord mindist=15);
+	RPlacementCenter(unsigned int maxobjs,bool calc,bool use,bool ori=false);
 
 	/**
 	* Initialize the heuristic.
@@ -134,21 +132,27 @@ public:
 	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
 
 	/**
-	* Calculate all the possible position for the current object.
+	* Add the parameters for a solution for Prométhée.
+	* @param k		Kernel for Prométhée.
+	* @param area	Represent the "area" criterion.
+	* @param dist	Represent the "manhattan distance" criterion.
+	* @param pos	Position to be a valid.
 	*/
-	void CalcPositions(void);
-
-	/**
-	* Place the next object for a specific information.
-	* @return		The function returns true if the object can be placed with the
-	*					current orientation.
-	*/
-	virtual bool NextObjectOri(void);
+	void AddPosition(RPromKernel& k,RPromCriterion *area,RPromCriterion *dist,RPoint& pos);
+	
+	virtual RPoint& NextObjectOri(void);
+		
+	virtual void Place(RPoint& pos);
 
 	/**
 	*	Do some operations after the run.
 	*/
 	virtual void PostRun(RPoint &limits);
+
+	/**
+	* Destruct the heuristic.
+	*/
+	virtual ~RPlacementCenter(void);
 };
 
 

@@ -45,8 +45,8 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calcfree)
-	: RPlacementHeuristic(maxobjs,calcfree)
+RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,bool ori)
+	: RPlacementHeuristic(maxobjs,calc,use,ori)
 {
 }
 
@@ -62,53 +62,56 @@ void RPlacementBottomLeft::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInf
 
 
 //-----------------------------------------------------------------------------
-bool RPlacementBottomLeft::NextObjectOri(void)
+RPoint& RPlacementBottomLeft::NextObjectOri(void)
 {
-	RPoint Pos;
+	RPoint* Pos=RPoint::GetPoint();
 	
  	// Do a local optimisationn at actual position
-	Pos=Last;
-	CurInfo->PushBottomLeft(Pos,Limits,Grid);
-	if((Pos.Y+CurInfo->Height()>Result.Pt2.Y)||(Pos.X+CurInfo->Width()>Actual.X))
+	(*Pos)=Last;
+	CurInfo->PushBottomLeft(*Pos,Limits,Grid);
+	if((Pos->Y+CurInfo->Height()>Result.Pt2.Y)||(Pos->X+CurInfo->Width()>Actual.X))
 	{
- 		Pos=Actual;
-		CurInfo->PushBottomLeft(Pos,Limits,Grid);
+ 		(*Pos)=Actual;
+		CurInfo->PushBottomLeft(*Pos,Limits,Grid);
   }
 
 
  	// If to long than begin from left again
- 	if(Pos.X+CurInfo->Width()>Limits.X)
+ 	if(Pos->X+CurInfo->Width()>Limits.X)
  	{
 		Actual.Set(0,Result.Pt2.Y);
- 		Pos=Actual;
-		CurInfo->PushBottomLeft(Pos,Limits,Grid);
+ 		(*Pos)=Actual;
+		CurInfo->PushBottomLeft(*Pos,Limits,Grid);
   }
 
 
  	// If to high than try to switch objects and place another one
- 	if(Pos.Y+CurInfo->Height()>Limits.Y)
+ 	if(Pos->Y+CurInfo->Height()>Limits.Y)
  	{
-		return(false);
+		Pos->Set(MaxCoord,MaxCoord);
  	}
+	
+	return(*Pos);
+}
 
 
+//-----------------------------------------------------------------------------
+void RPlacementBottomLeft::Place(RPoint& pos)
+{
  	// Assign the object to the current position
-	CurInfo->Assign(Pos,Grid);
+	CurInfo->Assign(pos,Grid);
 		
 
  	// Calculate Next position
 	Last=Actual;
- 	if(Pos.X+CurInfo->Width()>Actual.X)
- 		Actual.X=Pos.X+CurInfo->Width();
+ 	if(pos.X+CurInfo->Width()>Actual.X)
+ 		Actual.X=pos.X+CurInfo->Width();
 	Last.Y+=CurInfo->Height();
 
 
 	// Verify ActLimits
- 	if(Pos.X+CurInfo->Width()>Result.Pt2.X)
- 		Result.Pt2.X=Pos.X+CurInfo->Width();
- 	if(Pos.Y+CurInfo->Height()>Result.Pt2.Y)
- 		Result.Pt2.Y=Pos.Y+CurInfo->Height();
-
-	// Ok
-	return(true);
+ 	if(pos.X+CurInfo->Width()>Result.Pt2.X)
+ 		Result.Pt2.X=pos.X+CurInfo->Width();
+ 	if(pos.Y+CurInfo->Height()>Result.Pt2.Y)
+ 		Result.Pt2.Y=pos.Y+CurInfo->Height();
 }

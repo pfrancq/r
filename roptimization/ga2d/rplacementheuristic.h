@@ -54,8 +54,18 @@ using namespace RGA;
 namespace RGA{
 //-----------------------------------------------------------------------------
 
+
+/**
+* \ingroup 2DGA
+* \defgroup 2DGAH 2D-Genetic Algorithm (Placement Heuristic).
+*
+* This classes represent the heuristics used for the 2D placement of polygons.
+*/
+
+
 //-----------------------------------------------------------------------------
 /**
+* \ingroup 2DGAH
 * The RPlacementHeuristic class provides an abstract class for placement
 * heuristics.
 * @author Pascal Francq
@@ -118,16 +128,78 @@ protected:
 	/**
 	* Calculations of free polygons.
 	*/
-	bool CalculateFree;
+	bool CalcFree;
 
+	/**
+	* Use of free polygons.
+	*/
+	bool UseFree;
+	
+	/**
+	* All possible orientation must be tested.
+	*/
+	bool AllOri;
+	
+	/**
+	* All the bounding rectangles for the different orientation.
+	*/
+	RRect OriResult[8];
+	
+	/**
+	* All the position for the different orientation.
+	*/
+	RPoint OriPos[8];
+
+	/**
+	* All the orientation.
+	*/
+	char Ori[8]	;
+	
+	/**
+	* Number of orientations tested.
+	*/
+	char NbOri;
+	
+	/**
+	* Prométhée p for Area.
+	*/
+	double AreaP;
+	
+	/**
+	* Prométhée q for Area.
+	*/
+	double AreaQ;
+	
+	/**
+	* Prométhée weight for Area.
+	*/
+	double AreaWeight;
+	
+	/**
+	* Prométhée p for Dist.
+	*/
+	double DistP;
+	
+	/**
+	* Prométhée q for Area.
+	*/
+	double DistQ;
+	
+	/**
+	* Prométhée weight for Area.
+	*/
+	double DistWeight;
+						
 public:
 
 	/**
 	* Construct the placement heuristic.
 	* @param maxobjs		The maximum objects to placed fore this object.
-	* @param calcfree		Must free polygons be calculated.
+	* @param calc			Must free polygons be calculated.
+	* @param use			Must free polygons be used.
+	* @param ori			Must all orientation be tested.
 	*/
-	RPlacementHeuristic(unsigned int maxobjs,bool calcfree=false);
+	RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,bool ori=false);
 	
 	/**
 	* Initialize the heuristic.
@@ -138,6 +210,22 @@ public:
 	* @param nbobjs		Number of objects to place.
 	*/
 	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
+	
+	/**
+	* Set the parameters for the "area" criterion.
+	* @param p	The indifference's threshold.
+	* @param q	The preference's threshold.
+	* @param w	The weight.
+	*/
+	void SetAreaParams(double p,double q,double w);
+	
+	/**
+	* Set the parameters for the "dist" criterion.
+	* @param p	The indifference's threshold.
+	* @param q	The preference's threshold.
+	* @param w	The weight.
+	*/
+	void SetDistParams(double p,double q,double w);
 
 	/**
 	* Place the next object.	
@@ -145,11 +233,28 @@ public:
 	RGeoInfo* NextObject(void);
 
 	/**
-	* Place the next object (To override) for a specific information.
-	* @return		The function returns true if the object can be placed with the
-	*					current orientation.
+	* Calculate the distance-flux part for the current information with all
+	* objects already placed.
+	* @param pos		Position where to place the object.
 	*/
-	virtual bool NextObjectOri(void)=0;
+	double CalcDist(RPoint& pos);
+	
+	/**
+	* Calculate the position to place the next object for a specific geometric
+	* information.
+	* @return	The function returns the position where the object can be
+	*				placed with the current orientation. The position returned
+	*				can be invalid if nothing was found.
+	*/
+	virtual RPoint& NextObjectOri(void)=0;
+
+	/**
+	* Place the current object to a specific position. This function is called
+	* by the NextObject method.<BR>
+	* This function is responsible to update Result.
+	* @param pos	The position where to place it.
+	*/
+	virtual void Place(RPoint& pos)=0;
 
 	/**
 	* Run the heuristic.
