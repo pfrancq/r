@@ -293,7 +293,7 @@ public:
 	* Look if the string is empty.
 	* @returns true if the length is null, false else.
 	*/
-	inline bool IsEmpty(void) const {return(Len);}
+	inline bool IsEmpty(void) const {return(!Len);}
 
 	/**
 	* Need to manage temporary strings.
