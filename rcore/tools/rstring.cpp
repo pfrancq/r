@@ -151,18 +151,7 @@ RString::RString(unsigned int maxlen) throw(std::bad_alloc)
 RString::RString(const RString& str) throw(std::bad_alloc)
 	: Data(str.Data)
 {
-	Data->IncRef();
-}
-
-
-//------------------------------------------------------------------------------
-void RString::DecRef(void)
-{
-	if (Data&&Data->DecRef())
-	{
-		delete Data;
-		Data = 0;
-	}
+	RIncRef<CharBuffer>(Data);
 }
 
 
@@ -176,7 +165,7 @@ RString::CharBuffer* RString::GetDataNull(void)
 		ptr->Data = RString::DataNull;
 	}
 	else
-		RString::DataNull->IncRef();
+		RIncRef<CharBuffer>(RString::DataNull);
 	return(RString::DataNull);
 }
 
@@ -184,8 +173,8 @@ RString::CharBuffer* RString::GetDataNull(void)
 //------------------------------------------------------------------------------
 RString& RString::operator=(const RString& str) throw(std::bad_alloc)
 {
-	str.Data->IncRef();
-	DecRef();
+	RIncRef(str.Data);
+	RDecRef<CharBuffer>(Data);
 	Data=str.Data;
 	return(*this);
 }
@@ -195,7 +184,7 @@ RString& RString::operator=(const RString& str) throw(std::bad_alloc)
 RString& RString::operator=(const char* text) throw(std::bad_alloc)
 {
 	unsigned int len,maxlen=0;
-	DecRef();
+	RDecRef<CharBuffer>(Data);
 	RChar* ptr=Latin1ToUnicode(text,len,maxlen);
 	Data=new CharBuffer(ptr,len,maxlen);
 	return(*this);
@@ -206,7 +195,7 @@ RString& RString::operator=(const char* text) throw(std::bad_alloc)
 RString& RString::operator=(const std::string& text) throw(std::bad_alloc)
 {
 	unsigned int len,maxlen=0;
-	DecRef();
+	RDecRef<CharBuffer>(Data);
 	RChar* ptr=Latin1ToUnicode(text.c_str(),len,maxlen);
 	Data=new CharBuffer(ptr,len,maxlen);
 	return(*this);
@@ -218,8 +207,8 @@ void RString::Clear(void)
 {
 	if(Data!=DataNull)
 	{
-		DecRef();
-		DataNull->IncRef();
+		RDecRef<CharBuffer>(Data);
+		RIncRef<CharBuffer>(DataNull);
 		Data=DataNull;
 	}
 }
@@ -228,7 +217,7 @@ void RString::Clear(void)
 //------------------------------------------------------------------------------
 void RString::Copy(const char* text,unsigned int nb)
 {
-	DecRef();
+	RDecRef<CharBuffer>(Data);
 	if(text)
 	{
 		unsigned int len,maxlen=nb;
@@ -243,7 +232,7 @@ void RString::Copy(const char* text,unsigned int nb)
 //------------------------------------------------------------------------------
 void RString::Copy(const RChar* text,unsigned int nb)
 {
-	DecRef();
+	RDecRef<CharBuffer>(Data);
 	if(text&&(!text->IsNull()))
 	{
 		unsigned int len=RChar::StrLen(text);
@@ -262,14 +251,14 @@ void RString::Copy(const RChar* text,unsigned int nb)
 //------------------------------------------------------------------------------
 void RString::Copy(void)
 {
-	if(Data&&(Data->Refs!=1))
+	if(Data&&(Data->GetRefs()!=1))
 	{
 		if(Data!=DataNull)
 		{
 			RChar* ptr=new RChar[Data->MaxLen+1];
 			unsigned int len=Data->Len,maxlen=Data->MaxLen;
 			memcpy(ptr,Data->Text,sizeof(RChar)*(len+1));
-			DecRef();
+			RDecRef<CharBuffer>(Data);
 			Data=new CharBuffer(ptr,len,maxlen);
 		}
 	}
@@ -344,7 +333,7 @@ void RString::SetLen(unsigned int len)
 		if(Data==DataNull)
 		{
 			RChar* ptr=new RChar[len+1];
-			DecRef();
+			RDecRef<CharBuffer>(Data);
 			Data=new CharBuffer(ptr,len,len);
 		}
 		else
@@ -602,7 +591,7 @@ RString& RString::operator+=(const char c) throw(std::bad_alloc)
 		{
 			unsigned int maxlen=1,len=1;
 			char tab[2]={c,0};
-			DecRef();
+			RDecRef<CharBuffer>(Data);
 			RChar* ptr=Latin1ToUnicode(tab,len,maxlen);
 			Data=new CharBuffer(ptr,len,maxlen);
 		}
@@ -628,7 +617,7 @@ RString& RString::operator+=(const RChar c) throw(std::bad_alloc)
 		if(Data==DataNull)
 		{
 			unsigned int maxlen=1,len=1;
-			DecRef();
+			RDecRef<CharBuffer>(Data);
 			RChar* ptr=new RChar[2];
 			ptr[0]=c;
 			ptr[1]=0;
@@ -870,10 +859,7 @@ char* RString::UnicodeToLatin1(const RChar* tab,unsigned int len)
 //------------------------------------------------------------------------------
 RString::~RString(void)
 {
-	if(Data&&Data->DecRef())
-	{
-		delete Data;
-	}
+	RDecRef<CharBuffer>(Data);
 }
 
 

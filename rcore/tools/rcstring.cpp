@@ -160,18 +160,7 @@ RCString::RCString(const unsigned int maxlen) throw(std::bad_alloc)
 RCString::RCString(const RCString& str) throw(std::bad_alloc)
 	: Data(str.Data)
 {
-	Data->IncRef();
-}
-
-
-//------------------------------------------------------------------------------
-void RCString::DecRef(void)
-{
-	if (Data&&Data->DecRef())
-	{
-		delete Data;
-		Data = 0;
-	}
+	RIncRef<CharBuffer>(Data);
 }
 
 
@@ -185,7 +174,7 @@ RCString::CharBuffer* RCString::GetDataNull(void)
 		ptr->Data = RCString::DataNull;
 	}
 	else
-		RCString::DataNull->IncRef();
+		RIncRef<CharBuffer>(RCString::DataNull);
 	return(RCString::DataNull);
 }
 
@@ -193,8 +182,8 @@ RCString::CharBuffer* RCString::GetDataNull(void)
 //------------------------------------------------------------------------------
 RCString& RCString::operator=(const RCString& str) throw(std::bad_alloc)
 {
-	str.Data->IncRef();
-	DecRef();
+	RIncRef(str.Data);
+	RDecRef<CharBuffer>(Data);
 	Data=str.Data;
 	return(*this);
 }
@@ -205,7 +194,7 @@ RCString& RCString::operator=(const char* text) throw(std::bad_alloc)
 {
 	unsigned int len,maxlen;
 
-	DecRef();
+	RDecRef<CharBuffer>(Data);
 	maxlen=len=strlen(text);
 	char* ptr=new char[maxlen+1];
 	memcpy(ptr,text,sizeof(char)*len);
@@ -228,8 +217,8 @@ void RCString::Clear(void)
 {
 	if(Data!=DataNull)
 	{
-		DecRef();
-		DataNull->IncRef();
+		RDecRef<CharBuffer>(Data);
+		RIncRef<CharBuffer>(DataNull);
 		Data=DataNull;
 	}
 }
@@ -238,7 +227,7 @@ void RCString::Clear(void)
 //------------------------------------------------------------------------------
 void RCString::Copy(const char* text,unsigned int nb)
 {
-	DecRef();
+	RDecRef<CharBuffer>(Data);
 	if(text)
 	{
 		unsigned int len=strlen(text);
@@ -257,14 +246,14 @@ void RCString::Copy(const char* text,unsigned int nb)
 //------------------------------------------------------------------------------
 void RCString::Copy(void)
 {
-	if(Data&&(Data->Refs!=1))
+	if(Data&&(Data->GetRefs()!=1))
 	{
 		if(Data!=DataNull)
 		{
 			char* ptr=new char[Data->MaxLen+1];
 			unsigned int len=Data->Len,maxlen=Data->MaxLen;
 			memcpy(ptr,Data->Text,sizeof(char)*(len+1));
-			DecRef();
+			RDecRef<CharBuffer>(Data);
 			Data=new CharBuffer(ptr,len,maxlen);
 		}
 	}
@@ -339,7 +328,7 @@ void RCString::SetLen(unsigned int len)
 		if(Data==DataNull)
 		{
 			char* ptr=new char[len+1];
-			DecRef();
+			RDecRef<CharBuffer>(Data);
 			Data=new CharBuffer(ptr,len,len);
 		}
 		else
@@ -608,7 +597,7 @@ RCString& RCString::operator+=(const char c) throw(std::bad_alloc)
 		if(Data==DataNull)
 		{
 			unsigned int maxlen=1,len=1;
-			DecRef();
+			RDecRef<CharBuffer>(Data);
 			char* ptr=new char[2];
 			ptr[0]=c; ptr[1]=0;
 			Data=new CharBuffer(ptr,len,maxlen);
@@ -743,10 +732,7 @@ int RCString::HashIndex2(const char* str)
 //------------------------------------------------------------------------------
 RCString::~RCString(void)
 {
-	if(Data&&Data->DecRef())
-	{
-		delete Data;
-	}
+	RDecRef<CharBuffer>(Data);
 }
 
 

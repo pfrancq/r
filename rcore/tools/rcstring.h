@@ -43,6 +43,7 @@
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rcursor.h>
+#include <rstd/rshareddata.h>
 
 
 //------------------------------------------------------------------------------
@@ -61,20 +62,17 @@ class RCString
 protected:
 
 	// Internal Class representing a buffer of ascii characters.
-	class CharBuffer
+	class CharBuffer : public RSharedData
 	{
 	public:
-		char* Text;         // Text
+		char* Text;          // Text
 		unsigned int Len;    // Actual length
 		unsigned int MaxLen; // Maximum length
-		unsigned int Refs;   // Number of references of the string.
 
 		CharBuffer(void)
-			: Text(0), Len(0), MaxLen(0), Refs(1) {}
+			: RSharedData(), Text(0), Len(0), MaxLen(0) {}
 		CharBuffer(char* tab,unsigned int len,unsigned int maxlen)
-		: Text(tab), Len(len), MaxLen(maxlen), Refs(1) {}
-		void IncRef(void) {Refs++;}
-		bool DecRef(void) {return(!--Refs);}
+			: RSharedData(), Text(tab), Len(len), MaxLen(maxlen) {}
 		void Verify(const unsigned int maxlen) throw(std::bad_alloc);
 		~CharBuffer(void) {if(Text) delete[] Text;}
 	};
@@ -136,12 +134,6 @@ public:
 	RCString(const RCString& str) throw(std::bad_alloc);
 
 private:
-
-	/**
-	* Function called when the string must not reference its internal buffer
-	* anymore. If no string points to this buffer, it is desallocated.
-	*/
-	void DecRef(void);
 
 	/**
 	* Return the pointer to the "null" buffer. If it is not created, create it.

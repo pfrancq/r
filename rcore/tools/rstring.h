@@ -34,6 +34,7 @@
 #ifndef RString_H
 #define RString_H
 
+
 //------------------------------------------------------------------------------
 // include file for ANSI C/C++
 #include <string>
@@ -45,6 +46,7 @@
 #include <rstd/rcstring.h>
 #include <rstd/rcursor.h>
 #include <rstd/rchar.h>
+#include <rstd/rshareddata.h>
 
 
 //------------------------------------------------------------------------------
@@ -63,21 +65,18 @@ class RString
 protected:
 
 	// Internal Class representing a buffer of unicode characters.
-	class CharBuffer
+	class CharBuffer : public RSharedData
 	{
 	public:
 		RChar* Text;         // Text
 		unsigned int Len;    // Actual length
 		unsigned int MaxLen; // Maximum length
-		unsigned int Refs;   // Number of references of the string.
 		char* Latin1;        // Latin1 version of the string.
 
 		CharBuffer(void)
-			: Text(0), Len(0), MaxLen(0), Refs(1), Latin1(0) {}
+			: RSharedData(), Text(0), Len(0), MaxLen(0), Latin1(0) {}
 		CharBuffer(RChar* tab,unsigned int len,unsigned int maxlen)
-		: Text(tab), Len(len), MaxLen(maxlen), Refs(1), Latin1(0) {}
-		void IncRef(void) {Refs++;}
-		bool DecRef(void) {return(!--Refs);}
+			: RSharedData(), Text(tab), Len(len), MaxLen(maxlen), Latin1(0) {}
 		void InvalidLatin1(void) {if(Latin1) {delete[] Latin1; Latin1=0;}}
 		void Verify(const unsigned int maxlen) throw(std::bad_alloc);
 		~CharBuffer(void)
@@ -138,12 +137,6 @@ public:
 	RString(const RString& str) throw(std::bad_alloc);
 
 private:
-
-	/**
-	* Function called when the string must not reference its internal buffer
-	* anymore. If no string points to this buffer, it is desallocated.
-	*/
-	void DecRef(void);
 
 	/**
 	* Return the pointer to the "null" buffer. If it is not created, create it.
