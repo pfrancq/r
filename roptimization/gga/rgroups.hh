@@ -39,7 +39,7 @@
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RGroups<cGroup,cObj,cGroupData,cGroups>::RGroups(RStd::RCursor<cObj,unsigned int>* objs,const unsigned max) throw(bad_alloc)
-		: RStd::RContainer<cGroup,unsigned int,true,false>(max), Used(max),
+		: RStd::RContainer<cGroup,unsigned int,true,false>(max,max<20?20:max/2), Used(max,max<20?20:max/2),
 		  GroupData(0), Objs(objs), ObjsAss(objs->GetNb()), ObjsNoAss(objs->GetNb()),
 		  OrdObjectsAss(0), NewUsedId(0)
 {
