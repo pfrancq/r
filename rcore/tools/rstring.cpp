@@ -213,7 +213,7 @@ char RStd::RString::ToLower(const char c)
 	if((c>='A')&&(c<='Z')) return(c+'a'-'A');
 	if((c>='À')&&(c<='Ö')) return(c+'à'-'À');
 	if((c>='Ø')&&(c<='ß')) return(c+'ø'-'Ø');
-	#if __BORLANDC__
+	#ifdef __BORLANDC__
 		#pragma warn .sig
 	#endif
 	return(c);
@@ -229,7 +229,7 @@ char RStd::RString::ToUpper(const char c)
 	if((c>='a')&&(c<='z')) return(c-'a'+'A');
 	if((c>='à')&&(c<='ö')) return(c-'à'+'À');
 	if((c>='ø')&&(c<='ÿ')) return(c-'ø'+'Ø');
-	#if __BORLANDC__
+	#ifdef __BORLANDC__
 		#pragma warn .sig
 	#endif
 	return(c);

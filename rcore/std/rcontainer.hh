@@ -38,6 +38,11 @@
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+#ifdef __BORLANDC__
+#endif
+
+
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>::RContainer(T M,T I) throw(bad_alloc)
 		: Current(0), ActPtr(0), NbPtr(0), MaxPtr(M), LastPtr(0), IncPtr(I)
@@ -727,3 +732,8 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	}
 	delete[] Tab;
 }
+
+
+//-----------------------------------------------------------------------------
+#ifdef __BORLANDC__
+#endif

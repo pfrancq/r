@@ -43,6 +43,12 @@ using namespace std;
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
+#include <rstd/rstd.h>
+#include <rstd/rcursor.h>
+
+
+//-----------------------------------------------------------------------------
 // Generic defines
 #ifndef __RMAXSTRING__
 	#define __RMAXSTRING__ 30
@@ -377,6 +383,14 @@ RString& ftoa(const float nb);
 * Transform a double to a string.
 */
 RString& dtoa(const double nb);
+
+
+//-----------------------------------------------------------------------------
+/**
+* The RStringCursor class provides a way to go trough a set of strings.
+* @short Strings Cursor
+*/
+CLASSCURSOR(RStringCursor,RString,unsigned int)
 
 
 }  //-------- End of namespace RStd -------------------------------------------
