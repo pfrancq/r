@@ -248,7 +248,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 			if(*ptr)
 				delete (*ptr);
 	}
-	ActPtr=NbPtr=0;
+	LastPtr=ActPtr=NbPtr=0;
 	Current=0;
 	memset(Tab,0,MaxPtr*sizeof(C*));
 }
@@ -268,7 +268,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 				delete (*ptr);
 		}
 	}
-	ActPtr=NbPtr=0;
+	LastPtr=ActPtr=NbPtr=0;
 	Current=0;
 	IncPtr=I;
 	VerifyTab(M);
