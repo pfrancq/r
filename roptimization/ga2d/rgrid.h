@@ -42,19 +42,23 @@
 using namespace RStd;
 #include <rgeometry/rpoint.h>
 using namespace RGeometry2D;
-#include "robj2d.h"
+#include <rga/robj2d.h>
+#include <rga/rfreepolygon.h>
+#include <rga/rfreepolygons.h>
+using namespace RGA;
 
 
 //-----------------------------------------------------------------------------
 namespace RGA{
 //-----------------------------------------------------------------------------
 
+
 //-----------------------------------------------------------------------------
 /**
 * \ingroup 2DGA
 * The RGrid class provides some functions to manipulate a grid of geometric
 * points.
-*	@author Pascal Francq
+* @author Pascal Francq
 * @short Grid class.
 */
 class RGrid
@@ -63,6 +67,11 @@ class RGrid
 	* Limits for the construction.
 	*/
 	RPoint Limits;
+
+	/**
+	* Internal Limits.
+	*/
+	RPoint InternalLimits;
 
 	/**
 	* Grid with X as entry.
@@ -128,53 +137,53 @@ public:
 	* Find the left most x coordinates that is free of a reference.
 	* @param pt		Point used as reference.
 	*/
-	RCoord LookLeft(RPoint pt);
+	RCoord LookLeft(RPoint& pt);
 
 	/**
 	* Find the right most x coordinates that is free of a reference.
 	* @param pt		Point used as reference.
 	*/
-	RCoord LookRight(RPoint pt);
+	RCoord LookRight(RPoint& pt);
 
 	/**
 	* Find the up most x coordinates that is free of a reference.
 	* @param pt		Point used as reference.
 	*/
-	RCoord LookUp(RPoint pt);
+	RCoord LookUp(RPoint& pt);
 
 	/**
 	* Find the down most x coordinates that is free of a reference.
 	* @param pt		Point used as reference.
 	*/
-	RCoord LookDown(RPoint pt);
+	RCoord LookDown(RPoint& pt);
 
 	/**
 	* Find the left most x coordinates that is free and that skirt an edge.
 	* @param pt			Point used as reference.
 	* @param bound	   The rectangle which limits the research.
 	*/
-	RCoord SkirtLeft(RPoint pt,RRect &bound);
+	RCoord SkirtLeft(RPoint& pt,RRect &bound);
 
 	/**
 	* Find the right most x coordinates that is free and that skirt an edge.
-	* @param pt		Point used as reference.
+	* @param pt			Point used as reference.
 	* @param bound	   The rectangle which limits the research.
 	*/
-	RCoord SkirtRight(RPoint pt,RRect &bound);
+	RCoord SkirtRight(RPoint& pt,RRect &bound);
 
 	/**
 	* Find the up most x coordinates that is free and that skirt an edge.
-	* @param pt		Point used as reference.
+	* @param pt			Point used as reference.
 	* @param bound	   The rectangle which limits the research.
 	*/
-	RCoord SkirtUp(RPoint pt,RRect &bound);
+	RCoord SkirtUp(RPoint& pt,RRect &bound);
 
 	/**
 	* Find the down most x coordinates that is free and that skirt an edge.
 	* @param pt		Point used as reference.
 	* @param bound	   The rectangle which limits the research.
 	*/
-	RCoord SkirtDown(RPoint pt,RRect &bound);
+	RCoord SkirtDown(RPoint& pt,RRect &bound);
 
 	/**
 	* Calculate a free polygon from a given position and a given direction.
@@ -187,7 +196,7 @@ public:
 	*				, or false if not.
 	*
 	*/
-	bool CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect &boud,RPolygon *poly);
+	bool CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect &boud,RPolygon& poly);
 
 	/**
 	* Add all the polygons representing free spaces that are closed and resulting
@@ -198,7 +207,7 @@ public:
 	*								calculated must be add.
 	* @param bound	The bounding rectangle of the objects already placed.
 	*/
-	void AddFreePolygons(RGeoInfo *ins,RPolygons *polys,RRect &bound);
+	void AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &bound);
 
 	/**
 	* Destruct the Grid.
