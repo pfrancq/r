@@ -63,13 +63,13 @@ template<class cInst,class cChromo>
 	switch(Owner->GetHeuristic())
 	{
 		case BottomLeft:
-			Heuristic = new RPlacementBottomLeft(NbObjs+2);
+			Heuristic = new RPlacementBottomLeft(NbObjs+2,false);
 			break;
 		case Edge:
-			Heuristic = new RPlacementEdge(NbObjs+2);
+			Heuristic = new RPlacementEdge(NbObjs+2,false);
 			break;
 		case Center:
-			Heuristic = new RPlacementCenter(NbObjs+2);
+			Heuristic = new RPlacementCenter(NbObjs+2,false);
 			break;
 	}
 }
