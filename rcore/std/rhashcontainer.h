@@ -50,7 +50,7 @@ namespace RStd{
 /**
 * @param C                  The class of the element to be contained.
 * @param T                  The type of the iterator used.
-* @param tSize              Size of the hash table
+* @param tSize              Size of the hash table.
 * @param bAlloc             Specify if the elements are desallocated by the
 *                           container.
 * This class represent a container of elements (class C) with a hash table.
@@ -82,7 +82,7 @@ namespace RStd{
 * variable c:
 * <pre>
 * #include <string.h>
-* #include <rstd/hashcontainer.h>
+* #include <rstd/rhashcontainer.h>
 * using namespace RStd;
 *
 *
@@ -116,17 +116,16 @@ namespace RStd{
 * </pre>
 *
 * @author Pascal Francq
-* @short Hash Container Template.
+* @short Container Template with Hash Table.
 */
 template<class C,class T,T tSize,bool bAlloc>
 	class RHashContainer
 {
+public:
 	/**
 	* This container represents the hash table of the elements.
 	*/
 	RContainer<C,T,bAlloc,true>** Hash;
-
-public:
 
 	/**
 	* Construct a Hash container.
@@ -135,7 +134,7 @@ public:
 	*/
 	RHashContainer(T M,T I) throw(bad_alloc)
 	{
-		RContainer<C,T,bAlloc,true> **ptr;
+		RContainer<C,T,bAlloc,true>** ptr;
 		T i;
 
 		Hash= new RContainer<C,T,bAlloc,true>*[tSize];
@@ -148,7 +147,7 @@ public:
 	*/
 	void Clear(void)
 	{
-		RContainer<C,T,bAlloc,true> **ptr;
+		RContainer<C,T,bAlloc,true>** ptr;
 		T i;
 
 		for(i=tSize+1,ptr=Hash;--i;ptr++)	(*ptr)->Clear();
@@ -216,7 +215,7 @@ public:
 	inline void DeletePtr(C* del)
 	{
 		RReturnIfFail(del);
-		Hash[C::HashIndex(ins)]->DeletePtr(del);
+		Hash[C::HashIndex(del)]->DeletePtr(del);
 	}
 
 	/**
@@ -238,7 +237,7 @@ public:
 	*/
 	virtual ~RHashContainer(void)
 	{
-		RContainer<C,T,bAlloc,true> **ptr;
+		RContainer<C,T,bAlloc,true>** ptr;
 		T i;
 
 		for(i=tSize+1,ptr=Hash;--i;ptr++)	delete (*ptr);
