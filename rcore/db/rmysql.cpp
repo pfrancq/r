@@ -109,9 +109,9 @@ RQuery::RQuery(RDb* db,const char* sql) throw(RMySQLError)
 		size++;
 	}
 
-	// It is a SELECT command -> retrieve results
+	// It is a SELECT or a SHOW command -> retrieve results
 
-	if((size<7)&&(!strncmp(cmd,"SELECT",6)))
+	if((size<7)&&((!strncmp(cmd,"SELECT",6))||(!strncmp(cmd,"SHOW",4))))
 	{
 		result=mysql_store_result(db->connection);
 		nbrows=mysql_num_rows(result);
