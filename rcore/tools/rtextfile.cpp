@@ -512,6 +512,7 @@ void RTextFile::WriteStr(const char *c) throw(RString)
   if(!NewLine)
     write(handle,Separator(),Separator.GetLen());
   l=strlen(c);
+	if(!l) return;
   write(handle,c,l);
 	#ifdef windows
 	  flushall();
@@ -541,6 +542,7 @@ void RTextFile::WriteStr(const RString &str) throw(RString)
   if(!NewLine)
     write(handle,Separator(),Separator.GetLen());
   l=str.GetLen();
+	if(!l) return;
   if(str[l-1]!='\n'&&str[l-1]!='\r')
     NewLine=false;
   else
