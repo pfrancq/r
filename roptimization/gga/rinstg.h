@@ -152,6 +152,12 @@ public:
 	inline HeuristicType GetHeuristic(void) { return(Heuristic); }
 
 	/**
+	* Get the Objects to group.
+	* @return Pointer to the objects.
+	*/
+	RStd::RCursor<cObj,unsigned int>* GetObjs(void) const {return(Objs);};
+
+	/**
 	* Create a heuristic object.
 	*/
 	virtual RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* CreateHeuristic(void) throw(bad_alloc);
