@@ -85,6 +85,9 @@ RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
 		default:
 			throw(RString("No Valid Mode"));
 	};
+	#if !unix
+		localmode|=O_BINARY;
+	#endif
 	if(Mode==Read)
     	handle=open(Name,localmode);
 	else
@@ -100,7 +103,11 @@ RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
   : Mode(Read), Name(name), All(all), NewLine(false), Rem("%"), BeginRem("/*"),
 		EndRem("*/"),CommentType(SingleLineComment),Line(0)
 {
-	handle=open(Name,O_RDONLY);
+	#if unix
+		handle=open(Name,O_RDONLY);
+	#else
+		handle=open(Name,O_RDONLY | O_BINARY);	
+	#endif
 	Init();
 }
 
