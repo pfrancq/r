@@ -31,16 +31,17 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #ifndef GeometryH
 #define GeometryH
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// include files for ANSI C/C++
 #include <limits.h>
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
 #include <rstd/rstd.h>
 #include <rstd/rcontainer.h>
@@ -48,12 +49,20 @@
 using namespace RStd;
 
 
-//---------------------------------------------------------------------------
+/**
+* \namespace RGeometry2D
+* \brief 2D-Geometry Classes.
+*
+* This namespace declares classes to manipulate geometric entities in 2D.
+*/
+
+
+//-----------------------------------------------------------------------------
 namespace RGeometry2D{
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Forward class declaration
 class RPoint;
 class RPoints;
@@ -64,14 +73,14 @@ class RPolygon;
 class RPolygons;
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * The RCoord type represents a coordinate.
 */
 typedef int RCoord;
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * The MaxCoord constante represent the maximal positive value that a
 * coordinate can have. It is often used to indicate an invalid coordinate.
@@ -79,28 +88,28 @@ typedef int RCoord;
 const RCoord MaxCoord=INT_MAX;
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * Represent the different orientation of a given polygon.
 */
 enum ROrientation {Normal=0,NormalX=1,NormalY=2,NormalYX=3,Rota90=4,Rota90X=5,Rota90Y=6,Rota90YX=7};
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * Represent different directions.
 */
 enum RDirection {NoDirection,Left,Right,Down,Up};
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * This variable represents a tolerance for calculations.
 */
 extern double Epsi;
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * Affect the coordinates in function of a given direction.
 *	@param x				X Coordinate.
@@ -109,9 +118,18 @@ extern double Epsi;
 */
 void AdaptXY(RCoord &x,RCoord &y,RDirection from);
 
+//-----------------------------------------------------------------------------
+/**
+* Calculate the coordinates to test in function of a given direction.
+* @param x				X Coordinate.
+* @param y				Y Coordinate.
+* @param from			The direction from where "it" is coming.
+*/
+void AdaptTestXY(RCoord &x,RCoord &y,RDirection from);
 
-}  //-------- End of namespace RGeometry2D ----------------------------------
+
+}  //-------- End of namespace RGeometry2D ------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif

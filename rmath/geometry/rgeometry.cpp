@@ -31,15 +31,16 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
 #include "geometry.h"
 using namespace RGeometry2D;
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Global variables
 double RGeometry2D::Epsi=0.0001;
+
 
 
 //---------------------------------------------------------------------------
@@ -61,6 +62,38 @@ void RGeometry2D::AdaptXY(RCoord &x,RCoord &y,RDirection from)
 
 		case Up:
 			y--;
+			break;
+
+		case NoDirection:
+			RAssertMsg("Direction can't be undefined");
+			break;
+	}
+}
+
+
+//---------------------------------------------------------------------------
+void RGeometry2D::AdaptTestXY(RCoord &x,RCoord &y,RDirection from)
+{
+	switch(from)
+	{
+		case Left:
+			y--;
+			break;
+
+		case Right:
+			y++;
+			break;
+
+		case Down:
+			x++;
+			break;
+
+		case Up:
+			x--;
+			break;
+
+		case NoDirection:
+			RAssertMsg("Direction can't be undefined");
 			break;
 	}
 }
