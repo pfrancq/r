@@ -1221,6 +1221,18 @@ RString R::ltou(const unsigned long nb)
 
 
 //------------------------------------------------------------------------------
+RString R::lltou(const unsigned long long nb)
+{
+	char Tmp[20];
+	RString res;
+
+	sprintf(Tmp,"%llu",nb);
+	res=Tmp;
+	return(res);
+}
+
+
+//------------------------------------------------------------------------------
 RString R::ftou(const float nb)
 {
 	char Tmp[20];

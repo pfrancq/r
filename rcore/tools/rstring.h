@@ -505,6 +505,11 @@ RString chrtou(const unsigned char c);
 RString ltou(const unsigned long nb);
 
 /**
+* Transform an unsigned long to a string.
+*/
+RString lltou(const unsigned long long nb);
+
+/**
 * Transform a float to a string.
 */
 RString ftou(const float nb);
