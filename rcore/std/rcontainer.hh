@@ -45,6 +45,38 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 
 //---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	RContainer<C,T,bAlloc,bOrder>::RContainer(RContainer<C,T,bAlloc,bOrder> *container) throw(bad_alloc)
+{
+	T i;
+	C **tab;
+
+	NbPtr=0;
+	MaxPtr=container.MaxPtr;
+	IncPtr=container.IncPtr;
+  Tab = new C*[MaxPtr];
+  memset(Tab,0,MaxPtr*sizeof(C*));
+	for(i=container.NbPtr+1,tab=container.Tab;--i;tab++)
+		InsertPtr(new C(*tab));	
+}
+
+
+//---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	RContainer<C,T,bAlloc,bOrder>& RContainer<C,T,bAlloc,bOrder>::
+		operator=(const RContainer<C,T,bAlloc,bOrder>& container) throw(bad_alloc)
+{
+	T i;
+	C **tab;
+
+	Clear();
+	for(i=container.NbPtr+1,tab=container.Tab;--i;tab++)
+		InsertPtr(new C(*tab));
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	T RContainer<C,T,bAlloc,bOrder>::GetId(const TUse &tag,bool &Find)
 {
@@ -121,6 +153,20 @@ template<class C,class T,bool bAlloc,bool bOrder>
     Tab=ptr;
     memset(&Tab[NbPtr],0,IncPtr*sizeof(C*));
   }
+}
+
+
+//---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	void RContainer<C,T,bAlloc,bOrder>::Clear(void)
+{
+  if(bAlloc)
+  {
+    C **ptr;
+
+    for(NbPtr++,ptr=Tab;--NbPtr;ptr++) delete (*ptr);
+  }
+	memset(Tab,0,MaxPtr*sizeof(C*));
 }
 
 
