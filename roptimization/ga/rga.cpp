@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RGA.cpp
 
@@ -38,7 +38,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for Rainbow
-#include "rga.h"
+#include <rga/rga.h>
 using namespace RGA;
 
 

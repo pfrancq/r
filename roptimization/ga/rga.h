@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RGA.h
 
@@ -48,7 +48,7 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rstd/rstring.h>								// Strings
 #include <rstd/rcontainer.h>							// Container
 #include <rstd/rtextfile.h>								// Text files
@@ -71,11 +71,11 @@ namespace RGA
 
 //-----------------------------------------------------------------------------
 // include files for GA
-#include "rgasignals.h"
-#include "rdebug.h"
-#include "rfitness.h"
-#include "rinst.h"
-#include "rchromo.h"
+#include <rga/rgasignals.h>
+#include <rga/rdebug.h>
+#include <rga/rfitness.h>
+#include <rga/rinst.h>
+#include <rga/rchromo.h>
 using namespace RGA;
 
 
@@ -193,9 +193,9 @@ bool Examine(int argc, char *argv[],const char* Prj,const char *Ver);
 
 //-----------------------------------------------------------------------------
 // Definitions of templates
-#include "rfitness.hh"
-#include "rinst.hh"
-#include "rchromo.hh"
+#include <rga/rfitness.hh>
+#include <rga/rinst.hh>
+#include <rga/rchromo.hh>
 
 
 }  //------- End of namespace RGA ---------------------------------------------

@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RInst.h
 
@@ -42,8 +42,8 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rga.h"
+// include files for R project
+#include <rga/rga.h>
 using namespace RGA;
 
 

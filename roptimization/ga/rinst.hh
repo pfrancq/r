@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R ProjectLibrary
 
 	RInst.hh
 

@@ -1,16 +1,16 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
-  RGASignals.h
+	RGASignals.h
 
-  Signals for Genetic Algorithms - Header
+	Signals for Genetic Algorithms - Header
 
-  (C) 1998-2000 by P. Francq.
+	(C) 1998-2000 by P. Francq.
 
-  Version $Revision$
+	Version $Revision$
 
-  Last Modify: $Date$
+	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public

@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RChromo.h
 
@@ -37,8 +37,8 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rga.h"
+// include files for R Project
+#include <rga/rga.h>
 using namespace RGA;
 
 

@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RDebug.cpp
 
@@ -48,8 +48,8 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rdebug.h"
+// include files for R Project
+#include <rga/rdebug.h>
 using namespace RGA;
 
 
