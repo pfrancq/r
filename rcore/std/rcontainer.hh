@@ -739,6 +739,6 @@ template<class C,bool bAlloc,bool bOrder>
 		{
 			delete(*ptr);
 		}
-		delete[] Tab;
 	}
+	delete[] Tab;
 }
