@@ -337,13 +337,21 @@ public:
 	* @param del            Specify if the object that was previously at Pos
 	*                       must be shift or deleted.
 	*/
-	void InsertPtrAt(const C *ins,unsigned int Pos,bool del=true) throw(std::bad_alloc);
+	void InsertPtrAt(const C *ins,unsigned int Pos,bool del=bAlloc) throw(std::bad_alloc);
 
 	/**
 	* Insert an element in the container.
 	* @param ins            A pointer to the element to insert.
 	*/
 	void InsertPtr(const C* ins) throw(std::bad_alloc);
+
+	/**
+	* Exchange two elements in the container. The method does not verify if the
+	* exchange is compatible with the ordering of the container.
+	* @param pos1           Position of the first element.
+	* @param pos2           Position of the second element.
+	*/
+	void Exchange(unsigned int pos1,unsigned int pos2) throw(std::bad_alloc);
 	//@}
 
 public:
@@ -393,7 +401,7 @@ public:
 	*         container.
 	*/
 	C* operator[](int idx) const;
-
+	
 	/**
 	* Get a pointer to a certain element in the container.
 	* @param TUse           The type of tag, the container uses the Compare(TUse &)

@@ -520,6 +520,18 @@ template<class C,bool bAlloc,bool bOrder>
 
 
 //------------------------------------------------------------------------------
+template<class C,bool bAlloc,bool bOrder> 
+	void RContainer<C,bAlloc,bOrder>::Exchange(unsigned int pos1,unsigned int pos2) throw(std::bad_alloc)
+{
+	if((pos1>MaxPtr)||(pos2>MaxPtr))
+		return;
+	C* ptr=Tab[pos1];
+	Tab[pos1]=Tab[pos2];
+	Tab[pos2]=ptr;
+}
+
+
+//------------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<class TUse>
 	bool RContainer<C,bAlloc,bOrder>::IsIn(const TUse tag,bool sortkey) const
 {
