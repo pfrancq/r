@@ -39,7 +39,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
-using namespace RStd;
+#include <rio/rtextfile.h>
 
 
 //-----------------------------------------------------------------------------
@@ -81,12 +81,12 @@ protected:
 	/**
 	* Name of the application to debug.
 	*/
-	RString App;
+	RStd::RString App;
 
 	/**
 	* Name of the person which is generating the debug.
 	*/
-	RString Author;
+	RStd::RString Author;
 
 public:
 
@@ -186,27 +186,17 @@ class RDebugXML : public RDebug
 	/**
 	* The name of the file.
 	*/
-	RString Name;
+	RStd::RString Name;
 
 	/**
 	* The handle of the file.
 	*/
-	int Handle;
+	RIO::RTextFile File;
 
 	/**
 	* Temporary Variables for Internal use.
 	*/
 	char tmpTab[50];
-
-	/**
-	* Temporary Variables for Internal use.
-	*/
-	char tmpNL[3];
-
-	/**
-	* Temporary Variables for Internal use.
-	*/
-	char tmpLenNL;	
 
 public:
 
@@ -216,7 +206,7 @@ public:
 	* @param app            The name of the application.
 	* @param author         The auhtor of the application.
 	*/
-	RDebugXML(const RString &name,const char* app,const char* author) throw(bad_alloc);	
+	RDebugXML(const char* name,const char* app,const char* author) throw(bad_alloc);
 
 protected:
 

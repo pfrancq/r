@@ -49,8 +49,9 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
 #include <rga/rdebug.h>
+using namespace RStd;
+using namespace RIO;
 using namespace RGA;
 
 
@@ -99,7 +100,7 @@ void RGA::RDebug::AddAttribute(const char* Value,const char* Attr)
 //-----------------------------------------------------------------------------
 void RGA::RDebug::PrintComment(const char* Text)
 {
-	LevelOutput[Deep]=true;	
+	LevelOutput[Deep]=true;
 	WriteText(Text);
 }
 
@@ -172,16 +173,14 @@ RGA::RDebug::~RDebug(void)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGA::RDebugXML::RDebugXML(const RString &name,const char* app,const char* author) throw(bad_alloc)
-	: RDebug(app,author),Name(name)
+RGA::RDebugXML::RDebugXML(const char* name,const char* app,const char* author) throw(bad_alloc)
+	: RDebug(app,author),Name(name), File(name,RTextFile::Create)
 {
 	unsigned int i;
 	char *ptr;
 
-	Handle=open(Name(),O_WRONLY	| O_CREAT | O_TRUNC);
-	RAssert(!Handle)
-	strcpy(tmpNL,"\n");
-	tmpLenNL=strlen(tmpNL);
+	File.WriteStr("<!DOCTYPE "+RString(app)+">");
+	File.WriteLine();
 	for(i=50,ptr=tmpTab;--i;ptr++)
 		(*ptr)='\t';
 	(*ptr)=0;
@@ -193,17 +192,17 @@ void RGA::RDebugXML::WriteBeginTag(const char *tag,const char *options)
 {
 	if(Deep)
 	{
-		write(Handle,tmpNL,tmpLenNL);
-		write(Handle,tmpTab,Deep);
+		File.WriteLine();
+		File.WriteStr(tmpTab,Deep);
 	}
-	write(Handle,"<",1);
-	write(Handle,tag,strlen(tag));	
+	File.WriteStr("<",1);
+	File.WriteStr(tag,strlen(tag));
 	if(options&&(*options))
 	{
-		write(Handle," ",1);
-		write(Handle,options,strlen(options));
+		File.WriteStr(" ",1);
+		File.WriteStr(options,strlen(options));
 	}
-	write(Handle,">",1);
+	File.WriteStr(">",1);
 }
 
 
@@ -212,31 +211,25 @@ void RGA::RDebugXML::WriteEndTag(const char *tag)
 {
 	if(Deep&&LevelOutput[Deep-1])
 	{
-		write(Handle,tmpNL,tmpLenNL);
-		write(Handle,tmpTab,Deep);
+		File.WriteLine();
+		File.WriteStr(tmpTab,Deep);
 	}
-	write(Handle,"</",2);
-	write(Handle,tag,strlen(tag));
-	write(Handle,">",1);
+	File.WriteStr("</",2);
+	File.WriteStr(tag,strlen(tag));
+	File.WriteStr(">",1);
 }
 
 
 //-----------------------------------------------------------------------------
 void RGA::RDebugXML::WriteText(const char *text)
 {
-	write(Handle,tmpNL,tmpLenNL);
-	write(Handle,tmpTab,Deep+1);
-	write(Handle,text,strlen(text));
+	File.WriteLine();
+	File.WriteStr(tmpTab,Deep+1);
+	File.WriteStr(text,strlen(text));
 }
 
 
 //-----------------------------------------------------------------------------
 RGA::RDebugXML::~RDebugXML(void)
 {
-	close(Handle);
-	int access=S_IREAD | S_IWRITE;
-	#ifdef unix
-		access|= S_IRGRP | S_IROTH;
-	#endif
-	chmod(Name(),access);
 }
