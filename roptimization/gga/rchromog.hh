@@ -93,12 +93,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	{
 		bInsertIt=true;
 		for(j=len1+1,grps1=&parent1->Used.Tab[pos1];(--j)&&bInsertIt;grps1++)
-			if((*grps1)->CommonObjs(*grps2))
+			if(((*grps1)->CommonObjs(*grps2))&&(!((*grps1)->IsCompatible(*grps2))))
 				bInsertIt=false;
 		if(bInsertIt)
 		{
 			grp=ReserveGroup();
 			grp->Insert(Objs,*grps2);
+			(*grp)=(**grps2);
 		}
 	}
 
@@ -107,6 +108,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	{
 			grp=ReserveGroup();
 			grp->Insert(Objs,*grps1);
+			(*grp)=(**grps1);
 	}
 
 	// Insert groups from parent2<pos2 and verify that they dont contains "new"
@@ -115,12 +117,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	{
 		bInsertIt=true;
 		for(j=len1+1,grps1=&parent1->Used.Tab[pos1];(--j)&&bInsertIt;grps1++)
-			if((*grps1)->CommonObjs(*grps2))
+			if(((*grps1)->CommonObjs(*grps2))&&(!((*grps1)->IsCompatible(*grps2))))
 				bInsertIt=false;
 		if(bInsertIt)
 		{
 			grp=ReserveGroup();
 			grp->Insert(Objs,*grps2);
+			(*grp)=(**grps2);
 		}
 	}
 

@@ -93,7 +93,10 @@ public:
 
 	/**
 	* Do a crossover by using the chromosome as child. The crossover
-	* implemented is the BPX (bin packing crossover).
+	* implemented is the BPX (bin packing crossover). The groups of parent1
+	* containing objects that are inserted from parent2 are removed. Also, if
+	* a group of parent1 is not compatible (IsCompatible) with one of the
+	* groups inseeted from parent2 it is also removed.
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
 	* @return The function must return true if the crossover has been done.

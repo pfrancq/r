@@ -195,10 +195,18 @@ public:
 	bool IsIn(const unsigned int id) const;
 
 	/**
-	* Return true if the two groups have common objects.
+	* Look if the two groups have common objects.
 	* @param grp            Pointer to the group.
+	* @return boolean.
 	*/
 	bool CommonObjs(const cGroup* grp) const;
+
+	/**
+	* Look if two groups are "compatible".
+	* @param grp            Pointer to the group.
+	* @return boolean.
+	*/
+	virtual bool IsCompatible(const cGroup* /*grp*/) const {return(true);}
 
 	/**
 	* Return true if the two groups have the same objects.
