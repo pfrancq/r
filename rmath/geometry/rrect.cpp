@@ -29,7 +29,7 @@
 
 //---------------------------------------------------------------------------
 #include "rrect.h"
-using namespace RGeometry;
+using namespace RGeometry2D;
 
 
 
@@ -67,6 +67,15 @@ RRect::RRect(RCoord MinX,RCoord MinY,RCoord MaxX,RCoord MaxY) : Pt1(MinX,MinY),P
 double RRect::Area(void)
 {
   return(static_cast<double>(Height())*static_cast<double>(Width()));
+}
+
+
+//---------------------------------------------------------------------------
+RRect& RRect::operator+=(const RPoint &pt) throw(bad_alloc)
+{
+	Pt1+=pt;
+	Pt2+=pt;
+  return(*this);
 }
 
 
@@ -121,6 +130,44 @@ bool RRect::Clip(const RRect &clip)
 	{
 		bClip=true;
 		Pt2.Y=clip.Pt2.Y;
+	}
+
+	// Return value
+	return(bClip);
+}
+
+
+//---------------------------------------------------------------------------
+bool RRect::Clip(const RPoint &limits)
+{
+	bool bClip=false;
+
+	// Test Min X
+	if(Pt1.X>limits.X)
+	{
+		bClip=true;
+		Pt1.X=limits.X;
+	}
+
+	// Test Min Y
+	if(Pt1.Y>limits.Y)
+	{
+		bClip=true;
+		Pt1.Y=limits.Y;
+	}
+
+	// Test Max X
+	if(Pt2.X>limits.X)
+	{
+		bClip=true;
+		Pt2.X=limits.X;
+	}
+
+	// Test Max Y
+	if(Pt2.Y>limits.Y)
+	{
+		bClip=true;
+		Pt2.Y=limits.Y;
 	}
 
 	// Return value

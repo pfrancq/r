@@ -41,11 +41,11 @@ using namespace RStd;
 //---------------------------------------------------------------------------
 // include files for RGeometry
 #include "geometry.h"
-using namespace RGeometry;
+using namespace RGeometry2D;
 
 
 //---------------------------------------------------------------------------
-namespace RGeometry{
+namespace RGeometry2D{
 //---------------------------------------------------------------------------
 
 
@@ -67,7 +67,7 @@ public:
   RPoint(void);
 
 	/** Construct a point at (x,y). */
-  RPoint(RCoord x,RCoord y);
+  RPoint(const RCoord x,const RCoord y);
 
 	/** Construct a point from pt.
 		* @param pt		The point used as reference.
@@ -77,7 +77,7 @@ public:
 	/** Construct a point from pt.
 		* @param pt		The point used as reference.
 		*/
-  RPoint(RPoint *pt);
+  RPoint(const RPoint *pt);
 
 	/** The equal operator.*/
   inline bool operator==(const RPoint &pt) {return((X==pt.X)&&(Y==pt.Y));}
@@ -85,12 +85,16 @@ public:
 	/** The non-equal operator.*/
   inline bool operator!=(const RPoint &pt) {return((X!=pt.X)||(Y!=pt.Y));}
 
+	/** Make a translation of the point.
+		* @param pt 	The point representing the vector used.
+		*/
+	RPoint& operator+=(const RPoint &pt) {X+=pt.X;Y+=pt.Y;return(*this);}
 
 	/** Compare two points and return 0 if there are at the same position. This function
 		* is used with the class RContainer.
 		*	@param pt		Point used for the comparaison.
 		*/
-  inline int Compare(RPoint *pt) { return((*this)!=(*pt)); }
+  inline int Compare(const RPoint *pt) { return((*this)!=(*pt)); }
 
 	/** Compare two points and return 0 if there are at the same position. This function
 		* is used with the class RContainer.
@@ -102,7 +106,13 @@ public:
   inline RPoint& operator=(const RPoint &pt) {X=pt.X;Y=pt.Y;return(*this);}
 
 	/** This function returns true if the two points are side by side.*/
-	inline bool Near(RPoint *pt) {return((labs(X-pt->X)<=1)&&(labs(Y-pt->Y)<=1));}
+	inline bool Near(const RPoint *pt) {return((labs(X-pt->X)<=1)&&(labs(Y-pt->Y)<=1));}
+
+	/** Set the point to the given position.
+		* @param x	X Position;
+		* @param y	Y Position;
+		*/
+	void Set(const RCoord x,const RCoord y) {X=x; Y=y;}
 
 	/** Return a pointer to a temporary object of class point.*/
 	static RPoint* GetPoint(void);
@@ -115,7 +125,7 @@ public:
 	*	@author Pascal Francq
 	*	@short Container of points.
   */
-class RPoints : public RContainer<RPoint,unsigned int,true,false>
+class RPoints : public RStd::RContainer<RPoint,unsigned int,true,false>
 {
 public:
 

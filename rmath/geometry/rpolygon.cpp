@@ -37,7 +37,7 @@
 // include files for RGeometry
 #include "polygons.h"
 #include "rline.h"
-using namespace RGeometry;
+using namespace RGeometry2D;
 
 
 
@@ -614,7 +614,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 			}
 			tmpPoly.Clear();
 
-			// Add All Points
+			// Add All other Points
 			Nb=work.NbPtr;
 			tmpPoly.InsertPtr(new RPoint(Test));
 			work.DeletePtr(Test);
@@ -637,8 +637,30 @@ void RPolygon::RectDecomposition(RRects *rects)
 				}
 			}
 			Test=(*point);
+			tmp=(*Test);
 			tmpPoly.InsertPtr(new RPoint(Test));
 			work.DeletePtr(Test);
+	
+			// Verify if no points left under the last inserted
+			point=work.Tab;
+			i=work.NbPtr+1;
+			bFind=false;
+			while(--i)
+			{
+				Test=(*point);
+				if((Test->X==X2)&&(Test->Y>tmp.Y))
+					bFind=false;
+				if(((Test->X==X2)&&(Test->Y<tmp.Y))||bFind)
+				{
+					tmpPoly.InsertPtr(new RPoint(Test));
+					work.DeletePtr(Test);
+					bFind=true;
+				}
+				else
+					point++;
+			}
+
+			// Calculate the rectangular decomposition of the sub-polygon and add them
 			tmpPoly.RectDecomposition(&tmpRects);
 			(*rects)+=tmpRects;
 		}

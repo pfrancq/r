@@ -26,10 +26,6 @@
 
 */
 
-/*
-		The followind defines are used;
-		RGEOMETRY_TYPE : by default it is long
-*/
 
 
 //---------------------------------------------------------------------------
@@ -42,7 +38,7 @@
 
 
 //---------------------------------------------------------------------------
-namespace RGeometry{
+namespace RGeometry2D{
 //---------------------------------------------------------------------------
 
 
@@ -58,15 +54,8 @@ class RPolygons;
 
 
 //---------------------------------------------------------------------------
-// Defines
-#ifndef RGEOMETRY_TYPE
-	#define RGEOMETRY_TYPE int
-#endif
-
-
-//---------------------------------------------------------------------------
 // Typedefs
-typedef RGEOMETRY_TYPE RCoord;                 // A coordinate type
+typedef int RCoord;                 // A coordinate type
 
 
 //---------------------------------------------------------------------------

@@ -42,11 +42,11 @@ using namespace RStd;
 // include files for RGeometry
 #include "rpoint.h"
 #include "rrect.h"
-using namespace RGeometry;
+using namespace RGeometry2D;
 
 
 //---------------------------------------------------------------------------
-namespace RGeometry{
+namespace RGeometry2D{
 //---------------------------------------------------------------------------
 
 
@@ -56,7 +56,7 @@ namespace RGeometry{
 	*	@author Pascal FRancq
 	* @short Polygon class.
 	*/
-class RPolygon : public RContainer<RPoint,unsigned int,true,false>
+class RPolygon : public RStd::RContainer<RPoint,unsigned int,true,false>
 {
 public:
 	
@@ -184,7 +184,7 @@ public:
 	*	@author Pascal Francq
 	*	@short Container of polygons.
   */
-class RPolygons : public RContainer<RPolygon,unsigned int,true,false>
+class RPolygons : public RStd::RContainer<RPolygon,unsigned int,true,false>
 {
 public:
 	/** Construct a container of polygons.*/

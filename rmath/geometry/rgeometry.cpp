@@ -31,9 +31,9 @@
 //---------------------------------------------------------------------------
 // include files for Rainbow
 #include "geometry.h"
-using namespace RGeometry;
+using namespace RGeometry2D;
 
 
 //---------------------------------------------------------------------------
 // Global variables
-double RGeometry::Epsi=0.0001;
+double RGeometry2D::Epsi=0.0001;

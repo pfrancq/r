@@ -41,11 +41,11 @@ using namespace RStd;
 //---------------------------------------------------------------------------
 // include files for RGeometry
 #include "rpoint.h"
-using namespace RGeometry;
+using namespace RGeometry2D;
 
 
 //---------------------------------------------------------------------------
-namespace RGeometry{
+namespace RGeometry2D{
 //---------------------------------------------------------------------------
 
 
@@ -99,6 +99,11 @@ public:
 	/** The non-equal operator.*/
   inline bool operator!=(const RRect &rect) {return((Pt1!=rect.Pt1)||(Pt2!=rect.Pt2));}
 
+	/** Make a translation of the rectangle.
+		* @param pt 	The point representing the vector used.
+		*/
+  RRect& operator+=(const RPoint &pt) throw(bad_alloc);
+
 	/** Compare two rectangles and return 0 if there are at the same. This function
 		* is used with the class RContainer.
 		*	@param rect		Rectangle used for the comparaison.
@@ -106,10 +111,16 @@ public:
 	int Compare(RRect *rect) { return((*this)!=(*rect)); }
 
 	/** Adapt the rectangle to be contained in a given region.
-		* @param clip		Th eregion used as reference.
+		* @param clip		The region used as reference.
 		* @returns 	The function returns true if the rectangle was clipped.
 		*/
 	bool Clip(const RRect &clip);
+
+	/** Adapt the rectangle to be contained in a given region.
+		* @param limits		The point representing the limits of the region.
+		* @returns 	The function returns true if the rectangle was clipped.
+		*/
+	bool Clip(const RPoint &limits);
 
 	/** Make a translation of the rectangle.
 		* @param x		The x to add.
@@ -136,7 +147,7 @@ public:
 	*	@author Pascal Francq
 	* @short Rectangles container.
 	*/
-class RRects : public RContainer<RRect,unsigned int,true,false>
+class RRects : public RStd::RContainer<RRect,unsigned int,true,false>
 {
 public:
 

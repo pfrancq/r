@@ -29,7 +29,7 @@
 
 //---------------------------------------------------------------------------
 #include "rline.h"
-using namespace RGeometry;
+using namespace RGeometry2D;
 
 
 

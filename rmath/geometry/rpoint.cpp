@@ -34,7 +34,7 @@
 using namespace RStd;
 #include "rpoint.h"
 #include "polygons.h"
-using namespace RGeometry;
+using namespace RGeometry2D;
 
 
 
@@ -52,7 +52,7 @@ RPoint::RPoint(void)
 
 
 //---------------------------------------------------------------------------
-RPoint::RPoint(RCoord x,RCoord y)
+RPoint::RPoint(const RCoord x,const RCoord y)
 {
   X=x;
   Y=y;
@@ -68,7 +68,7 @@ RPoint::RPoint(const RPoint& pt)
 
 
 //---------------------------------------------------------------------------
-RPoint::RPoint(RPoint *pt)
+RPoint::RPoint(const RPoint *pt)
 {
   X=pt->X;
   Y=pt->Y;
