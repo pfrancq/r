@@ -52,11 +52,11 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	C **tab;
 
 	NbPtr=0;
-	MaxPtr=container.MaxPtr;
-	IncPtr=container.IncPtr;
+	MaxPtr=container->MaxPtr;
+	IncPtr=container->IncPtr;
   Tab = new C*[MaxPtr];
   memset(Tab,0,MaxPtr*sizeof(C*));
-	for(i=container.NbPtr+1,tab=container.Tab;--i;tab++)
+	for(i=container->NbPtr+1,tab=container->Tab;--i;tab++)
 		InsertPtr(new C(*tab));	
 }
 
