@@ -211,24 +211,14 @@ void RXMLTag::Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RString)
 
 
 //------------------------------------------------------------------------------
-RString& RXMLTag::GetName(void)
-{
-	RString *tmp=RString::GetString();
-
-	(*tmp)=Name;
-	return(*tmp);
-}
-
-
-//------------------------------------------------------------------------------
-RString& RXMLTag::GetAttrValue(const char* name)
+const RString& RXMLTag::GetAttrValue(const char* name)
 {
 	RString *tmp=RString::GetString();
 	RXMLAttr *attr;
 
 	attr=Attrs.GetPtr<const char*>(name);
 	if(attr)
-		(*tmp)=attr->GetValue();
+		return(attr->GetValue());
 	else
 		(*tmp)="";
 	return(*tmp);
@@ -293,6 +283,13 @@ RXMLTag* RXMLTag::GetTag(const char* name)
 
 //------------------------------------------------------------------------------
 void RXMLTag::AddContent(const char* text)
+{
+	Contains+=text;
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLTag::AddContent(const RChar* text)
 {
 	Contains+=text;
 }

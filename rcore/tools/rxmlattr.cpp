@@ -48,7 +48,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RXMLAttr::RXMLAttr(const char *name,const char *value)
+RXMLAttr::RXMLAttr(const RString& name,const RString& value)
 	: Name(name), Value(value)
 {
 }
@@ -61,26 +61,6 @@ RXMLAttr::RXMLAttr(const char *name,const double value)
 	char Str[30];
 	sprintf(Str,"%f",value);
 	Value=Str;
-}
-
-
-//-------------------------------------------------------------------------------
-RString& RXMLAttr::GetName(void)
-{
-	RString *tmp=RString::GetString();
-
-	(*tmp)=Name;
-	return(*tmp);
-}
-
-
-//------------------------------------------------------------------------------
-RString& RXMLAttr::GetValue(void)
-{
-	RString* tmp=RString::GetString();
-
-	(*tmp)=Value;
-	return(*tmp);
 }
 
 

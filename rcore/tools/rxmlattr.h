@@ -76,7 +76,7 @@ public:
 	* @param name           The name of the attribute.
 	* @param value          The value of the attribute.
 	*/
-	RXMLAttr(const char* name,const char* value);
+	RXMLAttr(const RString& name,const RString& value);
 
 	/**
 	* Construct a XML Attribute.
@@ -124,13 +124,13 @@ public:
 	* Return the name of the tag.
 	* @returns a string containing the name.
 	*/
-	RString& GetName(void);
+	const RString& GetName(void) const {return(Name);}
 
 	/**
 	* Returns the value of the attribute.
 	* @returns a string containing the value;
 	*/
-	RString& GetValue(void);
+	const RString& GetValue(void) const {return(Value);}
 
 	/**
 	* Destruct the attribute.

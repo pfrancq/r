@@ -142,14 +142,14 @@ public:
 	* Return the name of the tag.
 	* @returns a string containing the name.
 	*/
-	RString& GetName(void);
+	const RString& GetName(void) const {return(Name);}
 
 	/**
 	* Return the name of the tag.
 	* param name            Name of the attribute.
 	* @returns a string containing the name.
 	*/
-	RString& GetAttrValue(const char* name);
+	const RString& GetAttrValue(const char* name);
 
 	/**
 	* Test if an attribute is defined.
@@ -212,9 +212,15 @@ public:
 	void AddContent(const char* text);
 
 	/**
+	* Add a string to the content of the tag.
+	* @param text           Text to add.
+	*/
+	void AddContent(const RChar* text);
+
+	/**
 	* @returns the text containning in the tag.
 	*/
-	const char* GetContent(void) const {return(Contains);}
+	const RString& GetContent(void) const {return(Contains);}
 
 	/**
 	* See if the tag has a content.
