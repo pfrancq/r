@@ -110,6 +110,12 @@ public:
 	RCursor(const RContainer<C,true,true>& c);
 
 	/**
+	* Construct the cursor.
+	* param c               Smart pointer to the container to iterate.
+	*/
+	RCursor(const std::auto_ptr<RContainer<C,true,true> >& c);
+
+	/**
 	* Construct the cursor. If the pointer passed is null, the cursor will parse
 	* zero elements.
 	* param c               Pointer to the container to iterate.
@@ -121,6 +127,12 @@ public:
 	* param c               Container to iterate.
 	*/
 	RCursor(const RContainer<C,false,true>& c);
+
+	/**
+	* Construct the cursor.
+	* param c               Smart pointer to the container to iterate.
+	*/
+	RCursor(const std::auto_ptr<RContainer<C,false,true> >& c);
 
 	/**
 	* Construct the cursor. If the pointer passed is null, the cursor will parse
@@ -136,6 +148,12 @@ public:
 	RCursor(const RContainer<C,true,false>& c);
 
 	/**
+	* Construct the cursor.
+	* param c               Smart pointer to the container to iterate.
+	*/
+	RCursor(const std::auto_ptr<RContainer<C,true,false> >& c);
+
+	/**
 	* Construct the cursor. If the pointer passed is null, the cursor will parse
 	* zero elements.
 	* param c               Pointer to the container to iterate.
@@ -147,6 +165,12 @@ public:
 	* param c               Container to iterate.
 	*/
 	RCursor(const RContainer<C,false,false>& c);
+
+	/**
+	* Construct the cursor.
+	* param c               Smart pointer to the container to iterate.
+	*/
+	RCursor(const std::auto_ptr<RContainer<C,false,false> >& c);
 
 	/**
 	* Construct the cursor. If the pointer passed is null, the cursor will parse
@@ -177,6 +201,12 @@ public:
 	void Set(const RContainer<C,true,true>& c);
 
 	/**
+	* Set the container.
+	* param c               Smart pointer to the container to iterate.
+	*/
+	void Set(const std::auto_ptr<RContainer<C,true,true> >& c);
+
+	/**
 	* Set the container. If the pointer passed is null, the cursor will parse
 	* zero elements.
 	* param c               Pointer to the container to iterate.
@@ -188,6 +218,12 @@ public:
 	* param c               Container to iterate.
 	*/
 	void Set(const RContainer<C,false,true>& c);
+
+	/**
+	* Set the container.
+	* param c               Smart pointer to the container to iterate.
+	*/
+	void Set(const std::auto_ptr<RContainer<C,false,true> >& c);
 
 	/**
 	* Set the container. If the pointer passed is null, the cursor will parse
@@ -203,6 +239,12 @@ public:
 	void Set(const RContainer<C,true,false>& c);
 
 	/**
+	* Set the container.
+	* param c               Smart pointer to the container to iterate.
+	*/
+	void Set(const std::auto_ptr<RContainer<C,true,false> >& c);
+
+	/**
 	* Set the container. If the pointer passed is null, the cursor will parse
 	* zero elements.
 	* param c               Pointer to the container to iterate.
@@ -214,6 +256,12 @@ public:
 	* param c               Container to iterate.
 	*/
 	void Set(const RContainer<C,false,false>& c);
+
+	/**
+	* Set the container.
+	* param c               Smart pointer to the container to iterate.
+	*/
+	void Set(const std::auto_ptr<RContainer<C,false,false> >& c);
 
 	/**
 	* Set the container. If the pointer passed is null, the cursor will parse
@@ -262,31 +310,34 @@ public:
 * directly the template class RContainerCursor.
 * @param name               Name of the class representing the cursor.
 * @param C                  The class of the elements that are contained.
-* @param T                  The type of the iterator used.
 */
-#define CLASSCURSOR(name,C)                                                \
-class name : public R::RCursor<C>                                          \
-{                                                                          \
-public:                                                                    \
-	name(void) : R::RCursor<C>() {}                                        \
-	name(const R::RContainer<C,true,true>& c) : R::RCursor<C>(c) {}        \
-	name(const R::RContainer<C,true,true>* c) : R::RCursor<C>(c) {}        \
-	name(const R::RContainer<C,true,false>& c) : R::RCursor<C>(c) {}       \
-	name(const R::RContainer<C,true,false>* c) : R::RCursor<C>(c) {}       \
-	name(const R::RContainer<C,false,true>& c) : R::RCursor<C>(c) {}       \
-	name(const R::RContainer<C,false,true>* c) : R::RCursor<C>(c) {}       \
-	name(const R::RContainer<C,false,false>& c) : R::RCursor<C>(c) {}      \
-	name(const R::RContainer<C,false,false>* c) : R::RCursor<C>(c) {}      \
-	name& operator=(const name& c) throw(std::bad_alloc)                   \
-	{                                                                      \
-		R::RCursor<C>::operator=(c);                                       \
-		return(*this);                                                     \
-	}                                                                      \
-	name& operator=(const R::RCursor<C>& c) throw(std::bad_alloc)          \
-	{                                                                      \
-		R::RCursor<C>::operator=(c);                                       \
-		return(*this);                                                     \
-	}                                                                      \
+#define CLASSCURSOR(name,C)                                                          \
+class name : public R::RCursor<C>                                                    \
+{                                                                                    \
+public:                                                                              \
+	name(void) : R::RCursor<C>() {}                                                  \
+	name(const R::RContainer<C,true,true>& c) : R::RCursor<C>(c) {}                  \
+	name(const std::auto_ptr<R::RContainer<C,true,true> >& c) : R::RCursor<C>(c) {}  \
+	name(const R::RContainer<C,true,true>* c) : R::RCursor<C>(c) {}                  \
+	name(const R::RContainer<C,true,false>& c) : R::RCursor<C>(c) {}                 \
+	name(const std::auto_ptr<R::RContainer<C,true,false> >& c) : R::RCursor<C>(c) {} \
+	name(const R::RContainer<C,true,false>* c) : R::RCursor<C>(c) {}                 \
+	name(const R::RContainer<C,false,true>& c) : R::RCursor<C>(c) {}                 \
+	name(const std::auto_ptr<R::RContainer<C,false,true> >& c) : R::RCursor<C>(c) {} \
+	name(const R::RContainer<C,false,true>* c) : R::RCursor<C>(c) {}                 \
+	name(const R::RContainer<C,false,false>& c) : R::RCursor<C>(c) {}                \
+	name(const std::auto_ptr<R::RContainer<C,false,false> >& c) : R::RCursor<C>(c) {}\
+	name(const R::RContainer<C,false,false>* c) : R::RCursor<C>(c) {}                \
+	name& operator=(const name& c) throw(std::bad_alloc)                             \
+	{                                                                                \
+		R::RCursor<C>::operator=(c);                                                 \
+		return(*this);                                                               \
+	}                                                                                \
+	name& operator=(const R::RCursor<C>& c) throw(std::bad_alloc)                    \
+	{                                                                                \
+		R::RCursor<C>::operator=(c);                                                 \
+		return(*this);                                                               \
+	}                                                                                \
 }
 
 
