@@ -115,7 +115,7 @@ public:
 		register T *p1;
 		register T *p2;
 
-		#if __BORLANDC__
+		#ifdef __BORLANDC__
 			#pragma warn -pia
 		#endif
 		if(size>1)
@@ -124,7 +124,7 @@ public:
 				if(jump=RRand(i)) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
 				if(!--i) break;
 			}
-		#if __BORLANDC__
+		#ifdef __BORLANDC__
 			#pragma warn +pia
 		#endif
 	}
@@ -141,7 +141,7 @@ public:
 		register T* p1;
 		register T* p2;
 
-		#if __BORLANDC__
+		#ifdef __BORLANDC__
 			#pragma warn -pia
 		#endif
 		if(size>1)
@@ -150,7 +150,7 @@ public:
 				if(jump=Value(i)) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
 				if(!--i) break;
 			}
-		#if __BORLANDC__
+		#ifdef __BORLANDC__
 			#pragma warn +pia
 		#endif
 	}

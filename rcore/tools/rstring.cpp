@@ -207,7 +207,7 @@ char* RStd::RString::StrDup(void) const throw(bad_alloc)
 //-----------------------------------------------------------------------------
 char RStd::RString::ToLower(const char c)
 {
-	#if __BORLANDC__
+	#ifdef __BORLANDC__
 		#pragma warn -sig
 	#endif
 	if((c>='A')&&(c<='Z')) return(c+'a'-'A');
@@ -223,7 +223,7 @@ char RStd::RString::ToLower(const char c)
 //-----------------------------------------------------------------------------
 char RStd::RString::ToUpper(const char c)
 {
-	#if __BORLANDC__
+	#ifdef __BORLANDC__
 		#pragma warn -sig
 	#endif
 	if((c>='a')&&(c<='z')) return(c-'a'+'A');

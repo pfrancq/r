@@ -194,7 +194,7 @@ public:
 	/**
 	* Return the character at position i. The first letter is at position 0.
 	*/
-	inline char operator[](unsigned int i) const	{return(Text[i]);}
+//	inline char operator[](unsigned int i) const	{return(Text[i]);}
 
 	/**
 	* Return the "C string" containing the string.

@@ -134,7 +134,7 @@ template<class cGroup,class cObj,class cGroupData>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData>
-	void RGroup<cGroup,cObj,cGroupData>::Insert(RGA::RObjs<cObj>* objs,const cGroup* grp)
+	void RGroup<cGroup,cObj,cGroupData>::Insert(RGA::RObjs<cObj>* /*objs*/,const cGroup* grp)
 {
 	unsigned int i;
 	cObj** ptr;
@@ -152,10 +152,10 @@ template<class cGroup,class cObj,class cGroupData>
 {
 	if(this!=&grp)
 	{
-		SubObjects=node.SubObjects;
-		NbSubObjects=node.NbSubObjects;
-		Reserved=node.Reserved;
-		Id=node.Id;
+		SubObjects=grp.SubObjects;
+		NbSubObjects=grp.NbSubObjects;
+		Reserved=grp.Reserved;
+		Id=grp.Id;
 	}
 	return(*this);
 }

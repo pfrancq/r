@@ -145,13 +145,13 @@ public:
 	* Method call after an object was inserted in the group.
 	* @param obj            Pointer to the object to insert.
 	*/
-	virtual void PostInsert(const cObj* obj) {}
+	virtual void PostInsert(const cObj* /*obj*/) {}
 
 	/**
 	* Method call after an object was deleted from the group.
 	* @param obj            Pointer to the object to delete.
 	*/
-	virtual void PostDelete(const cObj* obj) {}
+	virtual void PostDelete(const cObj* /*obj*/) {}
 
 	/**
 	* Look if an object can be insert in the group.

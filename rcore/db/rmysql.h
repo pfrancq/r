@@ -40,13 +40,10 @@
 
 //---------------------------------------------------------------------------
 // include files for MySQL
-#ifdef unix
-	#include <mysql/mysql.h>
-#else
-	#define WIN32
+#ifdef WIN32
 	#include <winsock.h>
-	#include <mysql/mysql.h>
 #endif
+#include <mysql/mysql.h>
 
 
 //---------------------------------------------------------------------------
