@@ -105,12 +105,13 @@ template<class cGroup,class cObj,class cGroupData>
 {
 	unsigned int tmp,i,j;
 	cGroup** G;
-	cObj** o;
+//	cObj** o;
 
 	if(to->NbSubObjects)
 	{
-		for(i=0,o=&ObjsAss.Tab[to->SubObjects];(i<to->NbSubObjects)&&((*o)<obj);o++,i++);
-		tmp=to->SubObjects+i;
+//		for(i=0,o=&ObjsAss.Tab[to->SubObjects];(i<to->NbSubObjects)&&((*o)<obj);o++,i++);
+//		tmp=to->SubObjects+i;
+		tmp=to->SubObjects+to->NbSubObjects;
 		j=to->SubObjects;
 		for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
 			if(((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
@@ -192,7 +193,7 @@ template<class cGroup,class cObj,class cGroupData>
 			nbobjs++;
 	if(ObjsAss.NbPtr+ObjsNoAss.NbPtr!=Objs->NbPtr)
 	{
-		cout<<"Problem with the number of objects."<<endl;
+		cout<<"Problem with the number of objects: ObjsAss="<<ObjsAss.NbPtr<<" and ObjsNoAss="<<ObjsNoAss.NbPtr<<endl;
 		return(false);
 	}
 	return(true);
