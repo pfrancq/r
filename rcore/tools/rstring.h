@@ -130,6 +130,18 @@ public:
 	char* StrDup(void) const throw(bad_alloc);
 
 	/**
+	* Transform a character to lowercase. This function takes care of the
+	* special characters like 'é'.
+	*/
+	static char ToLower(const char c);
+
+	/**
+	* Transform a character to uppercase. This function takes care of the
+	* special characters like 'é'.
+	*/
+	static char ToUpper(const char c);
+
+	/**
 	* Transform the string to uppercase.
 	*/
 	inline void StrUpr(void);

@@ -205,21 +205,43 @@ char* RStd::RString::StrDup(void) const throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
+char RStd::RString::ToLower(const char c)
+{
+	#if __BORLANDC__
+		#pragma warn -sig
+	#endif
+	if((c>='A')&&(c<='Z')) return(c+'a'-'A');
+	if((c>='À')&&(c<='Ö')) return(c+'à'-'À');
+	if((c>='Ø')&&(c<='ß')) return(c+'ø'-'Ø');
+	#if __BORLANDC__
+		#pragma warn .sig
+	#endif
+	return(c);
+}
+
+
+//-----------------------------------------------------------------------------
+char RStd::RString::ToUpper(const char c)
+{
+	#if __BORLANDC__
+		#pragma warn -sig
+	#endif
+	if((c>='a')&&(c<='z')) return(c-'a'+'A');
+	if((c>='à')&&(c<='ö')) return(c-'à'+'À');
+	if((c>='ø')&&(c<='ÿ')) return(c-'ø'+'Ø');
+	#if __BORLANDC__
+		#pragma warn .sig
+	#endif
+	return(c);
+}
+
+
+//-----------------------------------------------------------------------------
 inline void RStd::RString::StrUpr(void)
 {
 	char *ptr=Text;
 	while(*ptr)
-	{
-		#if __BORLANDC__
-			#pragma warn -sig
-		#endif
-		if(((*ptr)>='a')&&((*ptr)<='z'))
-			(*ptr)-='a'-'A';
-		#if __BORLANDC__
-			#pragma warn .sig
-		#endif
-		ptr++;
-	}
+		(*(ptr++))=ToUpper(*ptr);
 }
 
 
@@ -235,19 +257,23 @@ void RStd::RString::StrUpr(const char *text) throw(bad_alloc)
 	Verify(Len);
 	ptr2=Text;
 	while(*ptr1)
-		(*(ptr2++))=(*(ptr1++));
+		(*(ptr2++))=ToUpper(*(ptr1++));
 	(*ptr2)=0;
-	StrUpr();
 }
 
 
 //-----------------------------------------------------------------------------
 void RStd::RString::StrUpr(const RString &str) throw(bad_alloc)
 {
+	const char *ptr1;
+	char *ptr2;
+
 	Verify(str.MaxLen);
 	Len=str.Len;
-	memcpy(Text,str.Text,(Len+1)*sizeof(char));
-	StrUpr();
+	ptr2=str.Text;
+	while(*ptr1)
+		(*(ptr2++))=ToUpper(*(ptr1++));
+	(*ptr2)=0;
 }
 
 
@@ -257,17 +283,7 @@ inline void RStd::RString::StrLwr(void)
 	char *ptr=Text;
 
 	while(*ptr)
-	{
-		#if __BORLANDC__
-			#pragma warn -sig
-		#endif
-		if(((*ptr)>='A')&&((*ptr)<='Z'))
-			(*ptr)+='a'-'A';
-		#if __BORLANDC__
-			#pragma warn .sig
-		#endif
-		ptr++;
-	}
+		(*(ptr++))=ToLower(*ptr);
 }
 
 
@@ -282,19 +298,24 @@ void RStd::RString::StrLwr(const char *text) throw(bad_alloc)
 	Verify(Len);
 	ptr2=Text;
 	while(*ptr1)
-		(*(ptr2++))=(*(ptr1++));
+		(*(ptr2++))=ToLower(*(ptr1++));
 	(*ptr2)=0;
-	StrLwr();
 }
 
 
 //-----------------------------------------------------------------------------
 void RStd::RString::StrLwr(const RString &str) throw(bad_alloc)
 {
+	const char *ptr1;
+	char *ptr2;
+
 	Verify(str.MaxLen);
 	Len=str.Len;
 	memcpy(Text,str.Text,(Len+1)*sizeof(char));
-	StrLwr();
+	ptr2=str.Text;
+	while(*ptr1)
+		(*(ptr2++))=ToLower(*(ptr1++));
+	(*ptr2)=0;
 }
 
 
