@@ -556,7 +556,7 @@ RTextFile& RIO::RTextFile::operator<<(const long nb) throw(RString)
 
 
 //-----------------------------------------------------------------------------
-void RTextFile::WriteULong(const unsigned long nb) throw(RString)
+void RIO::RTextFile::WriteULong(const unsigned long nb) throw(RString)
 {
 	char Str[25];
 
@@ -588,8 +588,9 @@ RTextFile& RIO::RTextFile::operator<<(const unsigned int nb) throw(RString)
 	return(*this);
 }
 
+
 //-----------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const unsigned long nb) throw(RString)
+RTextFile& RIO::RTextFile::operator<<(const unsigned long nb) throw(RString)
 {
 	WriteULong(nb);
 	return(*this);
