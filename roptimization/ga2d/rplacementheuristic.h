@@ -62,6 +62,19 @@ namespace RGA2D{
 
 //-----------------------------------------------------------------------------
 /**
+*/
+class RPlacementHeuristicException
+{
+public:
+	RString Msg;
+	
+	RPlacementHeuristicException(const RString& msg) : Msg(msg) {}
+	RPlacementHeuristicException(const char* msg) : Msg(msg) {}	
+};
+
+
+//-----------------------------------------------------------------------------
+/**
 * The RPlacementHeuristic class provides an abstract class for placement
 * heuristics.
 * @author Pascal Francq
@@ -69,6 +82,12 @@ namespace RGA2D{
 */
 class RPlacementHeuristic
 {
+	struct ObjectPos
+	{
+		RPoint Pos;
+		char Ori;
+	};
+	
 protected:
 
 	/**
@@ -135,27 +154,37 @@ protected:
 	* All possible orientation must be tested.
 	*/
 	bool AllOri;
-	
-	/**
-	* All the bounding rectangles for the different orientation.
-	*/
-	RRect OriResult[8];
-	
-	/**
-	* All the position for the different orientation.
-	*/
-	RPoint OriPos[8];
 
 	/**
-	* All the orientation.
+	* Maximal number of solutions that can be evaluated.
 	*/
-	char Ori[8]	;
-	
+	unsigned int MaxPromSol;
+
 	/**
-	* Number of orientations tested.
+	* Number of solutions to be evaluated.
 	*/
-	char NbOri;
-	
+	unsigned int NbPromSol;
+
+	/**
+	* Array representing different solutions.
+	*/
+	ObjectPos* Sols;
+
+	/**
+	* Prométhée Kernel
+	*/
+	RPromKernel* Prom;
+
+	/**
+	* Pointer to the area criteria.
+	*/
+	RPromCriterion* area;
+
+	/**
+	* Pointer to the distance criteria.
+	*/
+	RPromCriterion* dist;
+
 	/**
 	* Prométhée Parameters for the distance.
 	*/
@@ -164,7 +193,7 @@ protected:
 	/**
 	* Prométhée Parameters for the area.
 	*/
-	RPromCriterionParams AreaParams;						
+	RPromCriterionParams AreaParams;
 	
 public:
 
@@ -226,21 +255,19 @@ public:
 	* The CurInfo must pointed to the geometric information representing the
 	* object to place.
 	*/
-	virtual void SelectNextObject(void);
+	virtual void SelectNextObject(void) throw(RPlacementHeuristicException);
 		
 	/**
-	* Place the next object.	
+	* Place the next object.
 	*/
-	RGeoInfo* NextObject(void);
+	RGeoInfo* NextObject(void) throw(RPlacementHeuristicException);
 
 	/**
 	* Calculate the position to place the next object for a specific geometric
-	* information.
-	* @return	The function returns the position where the object can be
-	*				placed with the current orientation. The position returned
-	*				can be invalid if nothing was found.
+	* information. The function have to register the valid positions with the
+	* 'AddValidPosition' method.
 	*/
-	virtual RPoint& NextObjectOri(void)=0;
+	virtual void NextObjectOri(void) throw(RPlacementHeuristicException)=0;
 
 	/**
 	* Place the current object to a specific position. This function is called
@@ -248,7 +275,7 @@ public:
 	* This function is responsible to update Result.
 	* @param pos	The position where to place it.
 	*/
-	virtual void Place(RPoint& pos)=0;
+	virtual void Place(RPoint& pos) throw(RPlacementHeuristicException)=0;
 	
 	/**
 	* Run the heuristic.
@@ -256,7 +283,7 @@ public:
 	* @param infos			Pointer to the geometric information.
 	* @param grid			Pointer to the grid.		
 	*/
-	void Run(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
+	void Run(RProblem2D* prob,RGeoInfo** infos,RGrid* grid) throw(RPlacementHeuristicException);
 	
 	/**
 	* Run the heuristic.
@@ -264,7 +291,13 @@ public:
 	* @param infos			Pointer to the geometric information.
 	* @param grid			Pointer to the grid.		
 	*/
-	void Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
+	void Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid) throw(RPlacementHeuristicException);
+
+	/**
+	* Add a valid position fot the current geometric information to place.
+	* @param pos	Position to be a valid.
+	*/
+	void AddValidPosition(RPoint& pos);
 
 	/**
 	*	Do some operations after the run.

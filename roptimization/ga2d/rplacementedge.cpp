@@ -73,66 +73,67 @@ void RGA2D::RPlacementEdge::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 
 
 //-----------------------------------------------------------------------------
-RPoint& RGA2D::RPlacementEdge::NextObjectOri(void)
+void RGA2D::RPlacementEdge::NextObjectOri(void) throw(RPlacementHeuristicException)
 {
 	double FactorX,FactorY;
-	RPoint* Pos=RPoint::GetPoint();	
+	RPoint Pos;
 
- 	// Verify if add normally or on bottom
- 	if(((Result.Pt2.X+1)<Limits.X)&&(CurLevel==NbLevels))
- 	{
- 		FactorX=(static_cast<double>(Result.Pt2.X))/(static_cast<double>(Limits.X));
+	// Verify if add normally or on bottom
+	if(((Result.Pt2.X+1)<Limits.X)&&(CurLevel==NbLevels))
+	{
+		FactorX=(static_cast<double>(Result.Pt2.X))/(static_cast<double>(Limits.X));
 		FactorY=(static_cast<double>(Result.Pt2.Y))/(static_cast<double>(Limits.Y));
 		if(FactorX<FactorY)
 		{
 			Levels[CurLevel++]=Actual;
 			if(CurLevel>=NbLevels)
- 				NbLevels=CurLevel;
- 			Actual.Set(Result.Pt2.X,0);
+				NbLevels=CurLevel;
+			Actual.Set(Result.Pt2.X,0);
 			Max.X=Result.Pt2.X+CurInfo->Width()+1;
 			if(Max.X>Limits.X)
-  			Max.X=Limits.X;
- 			CurLevel=0;
+			Max.X=Limits.X;
+			CurLevel=0;
 		}
-  }
-					
+	}
 
- 	// Do a local optimisationn at actual position
-	(*Pos)=Last;
-	CurInfo->PushBottomLeft(*Pos,Limits,Grid);
-	if((Pos->Y+CurInfo->Height()>Levels[CurLevel].Y)||(Pos->X+CurInfo->Width()>Actual.X))
+	// Do a local optimisationn at actual position
+	Pos=Last;
+	CurInfo->PushBottomLeft(Pos,Limits,Grid);
+	if((Pos.Y+CurInfo->Height()>Levels[CurLevel].Y)||(Pos.X+CurInfo->Width()>Actual.X))
 	{
- 		(*Pos)=Actual;
-		CurInfo->PushBottomLeft(*Pos,Limits,Grid);
-  }
+		Pos=Actual;
+		CurInfo->PushBottomLeft(Pos,Limits,Grid);
+	}
 
-
- 	// If to long than begin from left again
- 	while((Pos->X>0)&&(Pos->X+CurInfo->Width()>Max.X))
- 	{
+	// If to long than begin from left again
+	while((Pos.X>0)&&(Pos.X+CurInfo->Width()>Max.X))
+	{
 		Levels[CurLevel++]=Actual;
 		if(CurLevel>=NbLevels)
 		{
- 			NbLevels=CurLevel;
- 			Actual.Set(0,Max.Y);
- 		}
- 		else
- 			Actual=Levels[CurLevel];									
- 		(*Pos)=Actual;
-		CurInfo->PushBottomLeft(*Pos,Limits,Grid);
-  }
+			NbLevels=CurLevel;
+			Actual.Set(0,Max.Y);
+		}
+		else
+			Actual=Levels[CurLevel];
+		Pos=Actual;
+		CurInfo->PushBottomLeft(Pos,Limits,Grid);
+	}
 
 
- 	// If to high than try to switch objects and place another one
- 	if(Pos->Y+CurInfo->Height()>Limits.Y) 	
-		Pos->Set(MaxCoord,MaxCoord);
+	// If to high than try to switch objects and place another one
+	if(Pos.Y+CurInfo->Height()>Limits.Y)
+	{
+		Pos.Set(MaxCoord,MaxCoord);
+		return;
+	}
 
-	return(*Pos);
+	AddValidPosition(Pos);
 }
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RPlacementEdge::Place(RPoint& pos)
+void RGA2D::RPlacementEdge::Place(RPoint& pos) throw(RPlacementHeuristicException)
 {
 	unsigned int i,l;
 
@@ -163,8 +164,7 @@ void RGA2D::RPlacementEdge::Place(RPoint& pos)
  		NbLevels--;
  		for(l=i;l<NbLevels;l++)
  			Levels[l]=Levels[l+1];
-  }
-
+	}
 
 	// Verify ActLimits
  	if(pos.X+CurInfo->Width()>Result.Pt2.X)

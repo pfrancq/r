@@ -53,6 +53,8 @@ RGA2D::RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,b
 	: Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori)
 {
 	Order=new unsigned int[maxobjs];
+	MaxPromSol=500;
+	Sols=new ObjectPos[MaxPromSol];
 }
 
 
@@ -68,7 +70,7 @@ void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfo** infos,RGrid *g
 	
 	// Init the data for a placement
 	NbObjsOk=0;
-	Grid->Clear();	
+	Grid->Clear();
 	Free.Clear();
 	Result.Pt1.Set(0,0);
 	Result.Pt2.Set(0,0);
@@ -120,7 +122,7 @@ void RGA2D::RPlacementHeuristic::SetAreaParams(double p,double q,double w)
 
 	
 //-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::SelectNextObject(void)
+void RGA2D::RPlacementHeuristic::SelectNextObject(void) throw(RPlacementHeuristicException)
 {
 	if(!NbObjsOk)
 	{
@@ -131,79 +133,123 @@ void RGA2D::RPlacementHeuristic::SelectNextObject(void)
 	// Find the most connected object
 	CurInfo=Connections->GetMostConnected(Infos,NbObjs,Order,NbObjsOk);
 }
-	
-	
+
+
 //-----------------------------------------------------------------------------
-RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void)
+void RGA2D::RPlacementHeuristic::AddValidPosition(RPoint& pos)
+{
+	RRect CurRect(Result);
+	ObjectPos *p;
+	RPromSol *sol;
+	unsigned int i;
+
+	// Verify if solution not already exists
+	for(i=NbPromSol+1,p=Sols;--i;p++)
+		if((p->Pos==pos)&&(p->Ori==CurInfo->GetOri()))
+			return;
+
+	// Verify CalcPos
+	if(NbPromSol==MaxPromSol)
+	{
+		// Allocate new Sols
+	}
+	
+	// Compute the bounding rectangle of all placed objects and the current
+	// one at the given position
+	if(pos.X<CurRect.Pt1.X) CurRect.Pt1.X=pos.X;
+	if(pos.Y<CurRect.Pt1.Y) CurRect.Pt1.Y=pos.Y;
+	if(pos.X+CurInfo->Width()>CurRect.Pt2.X) CurRect.Pt2.X=pos.X+CurInfo->Width();
+	if(pos.Y+CurInfo->Height()>CurRect.Pt2.Y) CurRect.Pt2.Y=pos.Y+CurInfo->Height();
+	if((CurRect.Pt1.X<0)||(CurRect.Pt1.Y<0)||(CurRect.Pt2.X>=Limits.X)||(CurRect.Pt2.Y>=Limits.Y))
+	{
+		return;
+	}
+	
+	// Add new solution for Prométhée
+	p=&Sols[NbPromSol];
+	p->Ori=CurInfo->GetOri();
+	p->Pos=pos;
+	sol=Prom->NewSol();
+	Prom->Assign(sol,area,CurRect.Width()*CurRect.Height());
+	Prom->Assign(sol,dist,Connections->GetDistances(Infos));
+//	cout<<NbPromSol<<": Pos=("<<pos.X<<","<<pos.Y<<") ; Area="<<CurRect.Width()*CurRect.Height();
+//	cout<<" ; Dist="<<Connections->GetDistances(Infos)<<endl;
+	NbPromSol++;
+}
+
+
+//-----------------------------------------------------------------------------
+RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristicException)
 {
 	RPoint pos;
-	char nb;
 	RObj2D* obj;	
-	
+	unsigned int best;
+
 	SelectNextObject();
+	CurInfo->SetOrder(NbObjsOk);
 	obj=CurInfo->GetObj();
-	
+	NbPromSol=0;
+
 	// Choose best free polygon (if any).
 	pos.Set(MaxCoord,MaxCoord);
 	if(UseFree)
 		pos=Free.CanPlace(CurInfo);
 
-  	// Find the best position for current orientation if not already found.	
-	if(!pos.IsValid())		
+//	cout<<NbObjsOk<<endl;
+	// Find the best position for current orientation if not already found.
+	if(!pos.IsValid())
 	{
-	   	if(AllOri&&(obj->NbPossOri>1))
-   		{
-   			RPromKernel Prom("Orientations",8,2);
-	   		RPromCriterion *area,*dist;
-   			RPromSol *sol;
-   			char o;
+		// Init Part
+		Prom=new RPromKernel("Orientations",200,2);
+		area=Prom->NewCriterion(Minimize,AreaParams);
+		dist=Prom->NewCriterion(Minimize,DistParams);
 
-	   		// Init Part
-   			area=Prom.NewCriterion(Minimize,AreaParams);
-   			dist=Prom.NewCriterion(Minimize,DistParams);
-			nb=0;
-			   		
-	   		// Compute all orientations
-   			for(o=0;o<obj->NbPossOri;o++)
-   			{
-	   			// Set an orientation & Find a position
-	   			CurInfo->SetOri(o);
-				pos=NextObjectOri();
-   				if(pos.IsValid())
-   				{
-   					Ori[nb]=o;
-	   				OriPos[nb]=pos;
-   					OriResult[nb++]=Result;
-   					CurInfo->Assign(pos);		// Temporary assignement
-   					sol=Prom.NewSol();
-	   				Prom.Assign(sol,area,Result.Width()*Result.Height());
-   					Prom.Assign(sol,dist,Connections->GetDistances(Infos));
-   				}
-	   		}
-   			
-   			// Run Prométhée
-	  		Prom.ComputePrometheeII();
-  			nb=Prom.GetBestSolId();
-			pos=OriPos[nb];	
-			Result=OriResult[nb];
-			CurInfo->SetOri(Ori[nb]);
-	   	}
-   		else
-	   	{
-   			// Set an orientation & Find a position
-   			CurInfo->SetOri(0);
-			pos=NextObjectOri();
-	   	}
+		if(AllOri&&(obj->NbPossOri>1))
+		{
+			// Compute all orientations
+			for(char o=0;o<obj->NbPossOri;o++)
+			{
+				// Set an orientation & Find a position
+				CurInfo->SetOri(o);
+				NextObjectOri();
+			}
+		}
+		else
+		{
+			// Set an orientation & Find a position
+			CurInfo->SetOri(0);
+			NextObjectOri();
+		}
+
+		// Run Prométhée
+		if(NbPromSol)
+		{
+			if(NbPromSol>1)
+			{
+				Prom->ComputePrometheeII();
+				best=Prom->GetBestSolId();
+//				cout<<endl<<"Best="<<best<<endl;
+				pos=Sols[best].Pos;
+				CurInfo->SetOri(Sols[best].Ori);
+			}
+			else
+			{
+				pos=Sols[0].Pos;
+				CurInfo->SetOri(Sols[0].Ori);
+			}
+		}
+		delete Prom;
 	}
-			
+//	cout<<endl<<endl;
+
 	// Place it	
 	if(!pos.IsValid())
 	{
-		cout<<"Problem"<<endl;
-		throw;
+		throw RPlacementHeuristicException("Can't place an object!");
 	}
 	Place(pos);
-
+	CurInfo->Assign(pos);
+	
 	// Look for free polygons
 	if(CalcFree)
 		Grid->AddFreePolygons(CurInfo,&Free,Result);
@@ -215,7 +261,7 @@ RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void)
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfo** infos,RGrid* grid)
+void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfo** infos,RGrid* grid) throw(RPlacementHeuristicException)
 {
 	Init(prob,infos,grid);
 	while(NbObjsOk<NbObjs)
@@ -227,7 +273,7 @@ void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfo** infos,RGrid* gr
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid) throw(RPlacementHeuristicException)
 {
 	Run(prob,infos->Tab,grid);
 }

@@ -63,21 +63,6 @@ namespace RGA2D{
 class RPlacementCenter : public RPlacementHeuristic
 {
 	/**
-	* An array of calculate position for an element.
-	*/
-   RPoint *CalcPos;
-	
-   /**
-   * Maximal number of the CalcPos array.
-   */
-	unsigned int MaxCalcPos;
-	
-   /**
-	* Number of calculated position.
-	*/
-	unsigned int NbCalcPos;
-
-	/**
 	* The list of all the polygons representing objects already placed.
 	*/
 	RPolygons Sol;
@@ -115,24 +100,15 @@ public:
 	RPlacementCenter(unsigned int maxobjs,bool calc,bool use,bool ori=false);
 
 	virtual void Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
-	
+
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
-	
-	/**
-	* Add the parameters for a solution for Prométhée.
-	* @param k		Kernel for Prométhée.
-	* @param area	Represent the "area" criterion.
-	* @param dist	Represent the "manhattan distance" criterion.
-	* @param pos	Position to be a valid.
-	*/
-	void AddPosition(RPromKernel& k,RPromCriterion *area,RPromCriterion *dist,RPoint& pos);
-	
-	virtual RPoint& NextObjectOri(void);
-		
-	virtual void Place(RPoint& pos);
+
+	virtual void NextObjectOri(void) throw(RPlacementHeuristicException);
+
+	virtual void Place(RPoint& pos) throw(RPlacementHeuristicException);
 
 	/**
-	*	Do some operations after the run.
+	* Do some operations after the run.
 	*/
 	virtual void PostRun(RPoint &limits);
 

@@ -85,9 +85,9 @@ public:
 	
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
 	
-	virtual RPoint& NextObjectOri(void);
+	virtual void NextObjectOri(void) throw(RPlacementHeuristicException);
 	
-	virtual void Place(RPoint& pos);
+	virtual void Place(RPoint& pos) throw(RPlacementHeuristicException);
 };
 
 
