@@ -41,7 +41,6 @@
 template<class C,class T,bool bAlloc,bool bOrder>
 	RStd::RContainer<C,T,bAlloc,bOrder>::RContainer(T M,T I) throw(bad_alloc)
 		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(M),IncPtr(I)
-
 {
 	if(MaxPtr)
 	{
@@ -67,9 +66,9 @@ template<class C,class T,bool bAlloc,bool bOrder>
 {
 	T i;
 	C **tab;
-	
+
 	if(container)
-	{	
+	{
 		Tab = new C*[MaxPtr];
 		memset(Tab,0,MaxPtr*sizeof(C*));
 		for(i=container->NbPtr+1,tab=container->Tab;--i;tab++)
@@ -90,12 +89,12 @@ template<class C,class T,bool bAlloc,bool bOrder>
 {
 	T i;
 	C **tab;
-	
+
 	MaxPtr=container.MaxPtr;
 	Tab = new C*[MaxPtr];
 	memset(Tab,0,MaxPtr*sizeof(C*));
 	for(i=container.NbPtr+1,tab=container.Tab;--i;tab++)
-		InsertPtr(new C(*tab));	
+		InsertPtr(new C(*tab));
 }
 
 
@@ -139,8 +138,8 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	bool Cont=true,NotLast=true;
 	C *ptr,**ptr2;
 
-  	if(bOrder)
-  	{
+	if(bOrder)
+	{
 		Find=false;
 		if(!NbPtr)
 		return(0);
@@ -188,7 +187,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 		for(i=0,ptr2=Tab;i<NbPtr;ptr2++,i++)
 			if(!((*ptr2)->Compare(tag))) return(i);
 		Find=false;
-    	return(i);
+		return(i);
 	}
 }
 
@@ -206,6 +205,8 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		delete[] Tab;
 		Tab=ptr;
 		memset(&Tab[NbPtr],0,IncPtr*sizeof(C*));
+		if(Current&&(ActPtr<NbPtr))
+			Current=&Tab[ActPtr];
 	}
 }
 
@@ -227,6 +228,8 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		delete[] Tab;
 		Tab=ptr;
 		memset(&Tab[OldSize],0,(MaxPtr-OldSize)*sizeof(C*));
+		if(Current&&(ActPtr<NbPtr))
+			Current=&Tab[ActPtr];
 	}
 }
 
@@ -239,9 +242,11 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		C **ptr;
 
-		for(NbPtr++,ptr=Tab;--NbPtr;ptr++) delete (*ptr);
+		for(NbPtr++,ptr=Tab;--NbPtr;ptr++)
+			delete (*ptr);
 	}
-	NbPtr=0;
+	ActPtr=NbPtr=0;
+	Current=0;
 	memset(Tab,0,MaxPtr*sizeof(C*));
 }
 
@@ -254,9 +259,11 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	{
 		C **ptr;
 
-		for(NbPtr++,ptr=Tab;--NbPtr;ptr++) delete (*ptr);
+		for(NbPtr++,ptr=Tab;--NbPtr;ptr++)
+			delete (*ptr);
 	}
-	NbPtr=0;
+	ActPtr=NbPtr=0;
+	Current=0;
 	IncPtr=I;
 	VerifyTab(M);
 	memset(Tab,0,MaxPtr*sizeof(C*));
@@ -274,7 +281,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	VerifyTab(Pos+1);
 	ptr=&Tab[Pos];
 	if(Pos<NbPtr)
-		memmove(ptr+1,ptr,(NbPtr-Pos)*sizeof(C*));	
+		memmove(ptr+1,ptr,(NbPtr-Pos)*sizeof(C*));
 	(*ptr)=ins;
 	if(Pos>=NbPtr)
 		NbPtr=Pos+1;
@@ -328,7 +335,8 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 		C **ptr;
 
 		for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-			if(!((*ptr)->Compare(tag))) return(true);
+			if(!((*ptr)->Compare(tag)))
+				return(true);
 		return(false);
 	}
 }
@@ -353,7 +361,8 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 		C **ptr;
 
 		for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-			if(!((*ptr)->Compare(tag))) return(*ptr);
+			if(!((*ptr)->Compare(tag)))
+				return(*ptr);
 		return(0);
 	}
 }
@@ -377,7 +386,8 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 		C **ptr;
 
 		for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-			if(!((*ptr)->Compare(tag))) return(*ptr);
+			if(!((*ptr)->Compare(tag)))
+				return(*ptr);
 		VerifyTab();
 		(*ptr)=new C(tag);
 		InsertPtr(*ptr);
@@ -441,18 +451,21 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	{
 		bool Find;
 		Index=GetId<TUse>(tag,Find);
-		if(!Find) return;
+		if(!Find)
+			return;
 		ptr=&Tab[Index];
 	}
 	else
 	{
 		for(Index=0,ptr=Tab;((*ptr)->Compare(tag))&&(Index<Nbptr);Index++,ptr++);
-		if(Index==NbPtr) return;
+		if(Index==NbPtr)
+			return;
 	}
 	del=*ptr;
 	memcpy(ptr,ptr+1,((--NbPtr)-Index)*sizeof(C*));
 	Tab[NbPtr]=0;
-	if(bAlloc) delete(del);
+	if(bAlloc)
+		delete(del);
 }
 
 

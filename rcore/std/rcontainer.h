@@ -49,17 +49,19 @@ namespace RStd{
 
 //---------------------------------------------------------------------------
 /**
-* @param C  			The class of the elements to be contained.
-* @param T				The type of the iterator used.
-* @param bAlloc    Specify if the elements are desallocated by the container.
-* @param bOrder		Specify if the elements are ordered in the container.
+* @param C                  The class of the elements to be contained.
+* @param T                  The type of the iterator used.
+* @param bAlloc             Specify if the elements are desallocated by the
+*                           container.
+* @param bOrder             Specify if the elements are ordered in the
+*                           container.
 * This class represent a container of elements (class C). This elements are
 * store in an array of pointers which will be increase when necessary. The
 * container can be responsible for the desallocation of the elements
 * (bAlloc), and the elements can be ordered (bOrder). It is also possible to
 * indicate an iterator (class T) for the container.
 *
-*	To make the necessary comparaisons, the container used member functions of
+* To make the necessary comparaisons, the container used member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
 * <pre>
@@ -117,7 +119,7 @@ namespace RStd{
 *
 * @author Pascal Francq
 * @short Container template.
-*/	
+*/
 template<class C,class T,bool bAlloc,bool bOrder=false>
 	class RContainer
 {
@@ -155,21 +157,21 @@ public:
 
 	/**
 	* Construct the container.
-	* @param M		The initial maximal size of the array.
-	* @param I		The value used when increasing the array.
+	* @param M              The initial maximal size of the array.
+	* @param I              The value used when increasing the array.
 	*/
 	RContainer(T M,T I) throw(bad_alloc);
 
 	/** Construct the container from another container.
-	* @param container		The container used as reference.
+	* @param container      The container used as reference.
 	*/
 	RContainer(const RContainer *container) throw(bad_alloc);
 
 	/** Construct the container from another container.
-	* @param container		The container used as reference.
+	* @param container      The container used as reference.
 	*/
 	RContainer(const RContainer &container) throw(bad_alloc);
-
+	
 	/**
 	* The assignement operator.
 	*/
@@ -183,13 +185,13 @@ public:
 	/**
 	* This function returns the index of an element represented by tag, and it
 	* is used when the elements are to be ordered.
-	* @param TUse			The type of tag, the container uses the Compare(TUse &)
-	*									member function of the elements.
-	* @param tag			The tag used.
-	* @param Find			If the element represented by tag exist, bFind is set to
-	*									true.
-	* @return					Returns the index of the element if it exists orthe index
-	*									where is has to inserted.
+	* @param TUse           The type of tag, the container uses the Compare(TUse &)
+	*                       member function of the elements.
+	* @param tag            The tag used.
+	* @param Find           If the element represented by tag exist, bFind is set to
+	*                       true.
+	* @return Returns the index of the element if it exists orthe index where
+	* is has to inserted.
 	*/
 	template<class TUse> T GetId(const TUse &tag,bool &Find);
 
@@ -202,7 +204,7 @@ public:
 	/**
 	* Verify if the container can hold a certain nujmber of elements. If not,
 	* the container is extended.
-    * @param MaxSize		The number of elements that must be contained.
+    * @param MaxSize        The number of elements that must be contained.
 	*/
 	void VerifyTab(T MaxSize) throw(bad_alloc);
 
@@ -215,8 +217,8 @@ public:
 	/**
 	* Clear the container and destruct the elements if he is responsible for
 	* the desallocation.
-	* @param M		The initial maximal size of the array.
-	* @param I		The value used when increasing the array.
+	* @param M              The initial maximal size of the array.
+	* @param I              The value used when increasing the array.
 	*/
 	void Clear(T M,T I);
 
@@ -227,44 +229,43 @@ public:
 
 	/**
 	* Insert an element at a certain position. Two remarks must be made :
-	* -#	The function verify not if the index used is compatible with the order
-	*		in case of the elements are treated in ascending order.
-	* -#	By using this function, the user can leave "blanks" in the container,
-	*		in other words, some "valid" pointers could be null. This situation is
-	*		not handle by the other functions of the container.
-	* @param ins		A pointer to the element to insert.
-	* @param Pos		The position where to insert it.
+	* -#    The function verify not if the index used is compatible with the order
+	*       in case of the elements are treated in ascending order.
+	* -#    By using this function, the user can leave "blanks" in the container,
+	*       in other words, some "valid" pointers could be null. This situation is
+	*       not handle by the other functions of the container.
+	* @param ins            A pointer to the element to insert.
+	* @param Pos            The position where to insert it.
 	*/
 	void InsertPtrAt(C *ins,T Pos) throw(bad_alloc);
 
 	/**
 	* Insert an element in the container.
-	* @param ins		A pointer to the element to insert.
+	* @param ins            A pointer to the element to insert.
 	*/
 	void InsertPtr(C* ins) throw(bad_alloc);
 
 	/**
 	* Look if a certain element is in the container.
-	* @param TUse			The type of tag, the container uses the Compare(TUse &)
-	*							member function of the elements.
-	* @param tag			The tag used.
-	* @param sortkey		The tag represents the sorting key. The default value
-	*							depends if the container is ordered (true) or not
-	*							(false).
-	* @return				Return true if the element is in the container.
+	* @param TUse           The type of tag, the container uses the Compare(TUse &)
+	*                       member function of the elements.
+	* @param tag            The tag used.
+	* @param sortkey        The tag represents the sorting key. The default value
+	*                       depends if the container is ordered (true) or not
+	*                       (false).
+	* @return Return true if the element is in the container.
 	*/
 	template<class TUse> bool IsIn(const TUse &tag,bool sortkey=bOrder);
 
 	/**
 	* Get a pointer to a certain element in the container.
-	* @param TUse			The type of tag, the container uses the Compare(TUse &)
-	*							member function of the elements.
-	* @param tag			The tag used.
-	* @param sortkey		The tag represents the sorting key. The default value
-	*							depends if the container is ordered (true) or not
-	*							(false).
-	* @return				Return the pointer or 0 if the element is not in the
-	*							container.
+	* @param TUse           The type of tag, the container uses the Compare(TUse &)
+	*                       member function of the elements.
+	* @param tag            The tag used.
+	* @param sortkey        The tag represents the sorting key. The default value
+	*                       depends if the container is ordered (true) or not
+	*                       (false).
+	* @return Return the pointer or 0 if the element is not in the container.
 	*/
 	template<class TUse> C* GetPtr(const TUse &tag,bool sortkey=bOrder);
 
@@ -272,28 +273,26 @@ public:
 	* Get a pointer to a certain element in the container. If the element is
 	* not existing, the container creates it by using the constructor with TUse
 	* as parameter.
-	* @param TUse			The type of tag, the container uses the Compare(TUse &)
-	*							member function of the elements.
-	* @param tag			The tag used.
-	* @param sortkey		The tag represents the sorting key. The default value
-	*							depends if the container is ordered (true) or not
-	*							(false).
-	* @return				The function returns a pointer to the element of the
-	*							container.
+	* @param TUse           The type of tag, the container uses the Compare(TUse &)
+	*                       member function of the elements.
+	* @param tag            The tag used.
+	* @param sortkey        The tag represents the sorting key. The default value
+	*                       depends if the container is ordered (true) or not
+	*                       (false).
+	* @return The function returns a pointer to the element of the container.
 	*/
 	template<class TUse> C* GetInsertPtr(const TUse &tag,bool sortkey=bOrder) throw(bad_alloc);
-
 
 	/**
 	* This function returns a container of all the elements that are responding
 	* to the given criteria.
-	* @param TUse			The type of tag, the container uses the Compare(TUse &)
-								member function of the elements.
-	* @param tag			The tag used.
-	* @return				The function returns a pointer to the result container.		
+	* @param TUse           The type of tag, the container uses the Compare(TUse &)
+	*                       member function of the elements.
+	* @param tag            The tag used.
+	* @return The function returns a pointer to the result container.
 	*/
 	template<class TUse> RContainer<C,T,false,bOrder>* GetPtrs(const TUse &tag) throw(bad_alloc);
- 	//@}
+	//@}
 
 	/**
 	* @name Deleting elements.
@@ -303,16 +302,16 @@ public:
 	/**
 	* Delete an element from the container. The element is destruct if the
 	* container is responsible of the desallocation.
-	* @param del		A pointer to the element to delete.
+	* @param del            A pointer to the element to delete.
 	*/
 	void DeletePtr(C* del) throw(bad_alloc);
 
 	/**
 	* Delete an element from the container. The element is destruct if the
 	* container is responsible of the desallocation.
-	* @param TUse			The type of tag, the container uses the Compare(TUse &)
-	*							member function of the elements.
-	* @param tag			The tag used.
+	* @param TUse           The type of tag, the container uses the Compare(TUse &)
+	*                       member function of the elements.
+	* @param tag            The tag used.
 	*/
 	template<class TUse> void DeletePtr(const TUse &tag,bool sortkey=bOrder) throw(bad_alloc);
 	//@}
