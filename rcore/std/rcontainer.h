@@ -86,21 +86,16 @@ template<class C> class RCursor;
 * To iterate through the container, a RCursor can be used. Here is an example
 * of class MyElement that will be contained in the variable c:
 * @code
-* #include<rstd/rcontainer.h>
-* #include<rstd/rcursor.h>
-* using namespace R;
-*
-*
 * class MyElement
 * {
 * 	unsigned int Id;
 * public:
 * 	MyElement(unsigned int id) : Id(id) {}
-* 	MyElement(MyElement *e) : Id(e->Id) {}
+* 	MyElement(MyElement* e) : Id(e->Id) {}
 * 	void DoSomething(double d) {cout<<d<<endl;}
-* 	int Compare(const MyElement *e) const {return(Id-e->Id);}
+* 	int Compare(const MyElement* e) const {return(Id-e->Id);}
 * 	int Compare(const unsigned int id) const {return(Id-id);}
-* 	int Compare(const char *text) const
+* 	int Compare(const char* text) const
 * 	{
 * 		unsigned int id=atoi(text);
 * 		return(Compare(id));
@@ -110,13 +105,13 @@ template<class C> class RCursor;
 *
 * int main()
 * {
-* 	RContainer<MyElement,true,true> c(20,10);
+* 	R::RContainer<MyElement,true,true> c(20,10);
 *
 * 	c.InsertPtr(new MyElement(5));
 * 	if(c.IsIn<char*>("5"))
 * 		cout<<"An element of value 5 is in the container"<<endl;
 * 	c.InsertPtr(new MyElement(10));
-* 	RCursor<MyElement> cur(c);
+* 	R::RCursor<MyElement> cur(c);
 * 	for(cur.Start();!cur.End();cur.Next())
 * 		cur()->DoSomething(2.3);
 * }
@@ -180,10 +175,10 @@ public:
 
 	/**
 	* Construct the container.
-	* @param M              The initial maximal size of the array.
-	* @param I              The value used when increasing the array.
+	* @param m              The initial maximal size of the array.
+	* @param i              The value used when increasing the array.
 	*/
-	RContainer(unsigned int M,unsigned int I=0) throw(std::bad_alloc);
+	RContainer(unsigned int m,unsigned int i=0) throw(std::bad_alloc);
 
 	/**
 	* Construct the container from another container.
@@ -356,9 +351,9 @@ public:
 	/**
 	* Verify if the container can hold a certain nujmber of elements. If not,
 	* the container is extended.
-    * @param MaxSize        The number of elements that must be contained.
+    * @param max            The number of elements that must be contained.
 	*/
-	void VerifyTab(unsigned int MaxSize) throw(std::bad_alloc);
+	void VerifyTab(unsigned int max) throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -375,10 +370,10 @@ public:
 	/**
 	* Clear the container and destruct the elements if he is responsible for
 	* the desallocation.
-	* @param M              The initial maximal size of the array.
-	* @param I              The value used when increasing the array.
+	* @param m              The initial maximal size of the array.
+	* @param i              The value used when increasing the array.
 	*/
-	void Clear(unsigned int M,unsigned int I);
+	void Clear(unsigned int m,unsigned int i);
 	//@}
 
 	/**
@@ -424,9 +419,9 @@ public:
 	* Insert an element in an ordered container. Used by InsertPtr and
 	* GetInsertPtr.
 	* @param ins            A pointer to the element to insert.
-	* @param Pos            The position where to insert it.
+	* @param pos            The position where to insert it.
 	*/
-	void InsertPtrOrderAt(const C *ins,unsigned int Pos) throw(std::bad_alloc);
+	void InsertPtrOrderAt(const C* ins,unsigned int pos) throw(std::bad_alloc);
 
 	/**
 	* Insert an element at a certain position. Two remarks must be made :
@@ -436,11 +431,11 @@ public:
 	*       in other words, some "valid" pointers could be null. This situation is
 	*       not handle by the other functions of the container.
 	* @param ins            A pointer to the element to insert.
-	* @param Pos            The position where to insert it.
+	* @param pos            The position where to insert it.
 	* @param del            Specify if the object that was previously at Pos
 	*                       must be shift or deleted.
 	*/
-	void InsertPtrAt(const C *ins,unsigned int Pos,bool del=bAlloc) throw(std::bad_alloc);
+	void InsertPtrAt(const C* ins,unsigned int pos,bool del=bAlloc) throw(std::bad_alloc);
 
 	/**
 	* Insert an element in the container. If the container is ordered and if
@@ -473,12 +468,12 @@ public:
 	* @param TUse           The type of tag, the container uses the Compare(TUse &)
 	*                       member function of the elements.
 	* @param tag            The tag used.
-	* @param Find           If the element represented by tag exist, bFind is set to
+	* @param find           If the element represented by tag exist, find is set to
 	*                       true.
-	* @return Returns the index of the element if it exists orthe index where
+	* @return Returns the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
-	template<class TUse> unsigned int GetId(const TUse tag,bool &Find) const;
+	template<class TUse> unsigned int GetId(const TUse& tag,bool& find) const;
 
 	/**
 	* Look if a certain element is in the container.
@@ -490,7 +485,7 @@ public:
 	*                       (false).
 	* @return Return true if the element is in the container.
 	*/
-	template<class TUse> bool IsIn(const TUse tag,bool sortkey=bOrder) const;
+	template<class TUse> bool IsIn(const TUse& tag,bool sortkey=bOrder) const;
 
 	/**
 	* Get a pointer to the ith element in the container.
@@ -518,7 +513,7 @@ public:
 	*                       (false).
 	* @return Return the pointer or 0 if the element is not in the container.
 	*/
-	template<class TUse> C* GetPtr(const TUse tag,bool sortkey=bOrder) const;
+	template<class TUse> C* GetPtr(const TUse& tag,bool sortkey=bOrder) const;
 
 	/**
 	* Get a pointer to a certain element in the container. If the element is
@@ -532,7 +527,7 @@ public:
 	*                       (false).
 	* @return The function returns a pointer to the element of the container.
 	*/
-	template<class TUse> C* GetInsertPtr(const TUse tag,bool sortkey=bOrder) throw(std::bad_alloc);
+	template<class TUse> C* GetInsertPtr(const TUse& tag,bool sortkey=bOrder) throw(std::bad_alloc);
 
 	/**
 	* This function returns a container of all the elements that are responding
@@ -542,7 +537,7 @@ public:
 	* @param tag            The tag used.
 	* @return The function returns a pointer to the result container.
 	*/
-	template<class TUse> RContainer<C,false,bOrder>* GetPtrs(const TUse tag) const throw(std::bad_alloc);
+	template<class TUse> RContainer<C,false,bOrder>* GetPtrs(const TUse& tag) const throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -567,7 +562,7 @@ public:
 	*                       depends if the container is ordered (true) or not
 	*                       (false).
 	*/
-	template<class TUse> void DeletePtr(const TUse tag,bool sortkey=bOrder) throw(std::bad_alloc);
+	template<class TUse> void DeletePtr(const TUse& tag,bool sortkey=bOrder) throw(std::bad_alloc);
 	//@}
 
 private:
