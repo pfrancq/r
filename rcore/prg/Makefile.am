@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/include/r
-lib_LTLIBRARIES =  librprg.la
+pkglib_LTLIBRARIES =  librprg.la
 AM_CFLAGS =
 AM_CXXFLAGS =
 AM_FFLAGS =

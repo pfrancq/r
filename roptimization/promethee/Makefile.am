@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)
-lib_LTLIBRARIES =  librpromethee.la
+pkglib_LTLIBRARIES =  librpromethee.la
 AM_CFLAGS =
 AM_CXXFLAGS =
 AM_FFLAGS =

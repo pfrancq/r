@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/include/r
-lib_LTLIBRARIES =  librdb.la
+pkglib_LTLIBRARIES = librdb.la
 AM_CFLAGS =
 AM_CXXFLAGS =
 AM_FFLAGS =

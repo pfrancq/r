@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)
-lib_LTLIBRARIES =  librstd.la
+pkglib_LTLIBRARIES =  librstd.la
 AM_CFLAGS =
 AM_CXXFLAGS =
 AM_FFLAGS =

@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)
-lib_LTLIBRARIES =  librmath.la
+pkglib_LTLIBRARIES =  librmath.la
 AM_CFLAGS =
 AM_CXXFLAGS =
 AM_FFLAGS =
