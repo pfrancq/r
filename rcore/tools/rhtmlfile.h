@@ -6,7 +6,7 @@
 
 	HTML file - Header.
 
-	Copyright 2004 by the Université Libre de Bruxelles.
+	Copyright 2004 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -102,7 +102,7 @@ public:
 
 	/**
 	* Function called each time a tag will be treated when reading a XML file.
-	* Acutally, a XMLTag is created and inserted as child of the current tag. At
+	* Actually, a XMLTag is created and inserted as child of the current tag. At
 	* the end, the current tag is set to the new created one.
 	* @param namespaceURI  Name of the namespace (if any).
 	* @param lName         Local name of the tag.
@@ -115,7 +115,7 @@ public:
 
 	/**
 	* Function called each time a tag was treated when reading a XML file.
-	* Acutally, the current tag is set its parent.
+	* Actually, the current tag is set its parent.
 	* @param namespaceURI  Name of the namespace (if any).
 	* @param lName         Local name of the tag.
 	* @param name          Complete name of the tag.
@@ -136,7 +136,7 @@ public:
 	* @param tag           The name of the tag to close
 	*/
 	virtual void SkipTagContent(const RString& tag)throw(RIOException);
-	
+
 	/**
 	* Function that specify if only quotes are allowed to delimit a parameter in
 	* a tag. This function return false since quote can be omitted in HTML.
@@ -145,15 +145,15 @@ public:
 
 	/**
 	* Function that specify if invalid XML codes (sequences beginning with a '&'
-	* are accepted. This function return true since it is allowed in HTML.
+	* are accepted). This function return true since it is allowed in HTML.
 	*/
 	virtual bool InvalidXMLCodeAccept(void);
-       
+
 	/**
 	* Destruct the XML file.
 	*/
 	~RHTMLFile(void);
-};                          
+};
 
 
 }  //-------- End of namespace R -----------------------------------------------

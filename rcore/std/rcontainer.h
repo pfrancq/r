@@ -6,7 +6,7 @@
 
 	Container - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -97,10 +97,10 @@ template<class C> class RCursor;
 * public:
 * 	MyElement(unsigned int id) : Id(id) {}
 * 	MyElement(MyElement *e) : Id(e->Id) {}
-* 	void DoSomething(double d);
-* 	int Compare(MyElement *e) {return(Id-e->Id);}
-* 	int Compare(unsigned int id) {return(Id-id);}
-* 	int Compare(char *text)
+* 	void DoSomething(double d) {cout<<d<<endl;}
+* 	int Compare(const MyElement *e) const {return(Id-e->Id);}
+* 	int Compare(const unsigned int id) const {return(Id-id);}
+* 	int Compare(const char *text) const
 * 	{
 * 		unsigned int id=atoi(text);
 * 		return(Compare(id));
@@ -111,12 +111,12 @@ template<class C> class RCursor;
 * int main()
 * {
 * 	RContainer<MyElement,true,true> c(20,10);
-* 	RCursor<MyElement> cur(c);
 *
 * 	c.InsertPtr(new MyElement(5));
 * 	if(c.IsIn<char*>("5"))
 * 		cout<<"An element of value 5 is in the container"<<endl;
 * 	c.InsertPtr(new MyElement(10));
+* 	RCursor<MyElement> cur(c);
 * 	for(cur.Start();!cur.End();cur.Next())
 * 		cur()->DoSomething(2.3);
 * }
@@ -402,7 +402,7 @@ public:
 	* @return unsigned int.
 	*/
 	unsigned int GetIncNb(void) const {return(IncPtr);}
-	
+
 	/**
 	* ReOrder the container. This method must be used with caution, because it
 	* can crash the container:
@@ -503,7 +503,7 @@ public:
 	*         container.
 	*/
 	C* operator[](int idx) const;
-	
+
 	/**
 	* Get a pointer to a certain element in the container.
 	* @param TUse           The type of tag, the container uses the Compare(TUse &)
@@ -657,7 +657,7 @@ public:
 	*/
 	virtual ~RContainer(void);
 	//@}
-	
+
 	friend class RCursor<C>;
 };
 

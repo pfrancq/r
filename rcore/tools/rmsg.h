@@ -6,7 +6,7 @@
 
 	Message systems - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2004 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -72,7 +72,7 @@ public:
 	* @param msg            Contain.
 	*/
 	RMsg(const char* msg);
-	
+
 	/**
 	* Compare two messages by comparing their content.
 	* @see R::RContainer
@@ -132,26 +132,28 @@ public:
 	/**
 	* Look after a specific message.
 	* @param msg            String.
-	* @returns Pointer to the specific message, or 0 if not found.
+	* @return Pointer to the specific message, or 0 if not found.
 	*/
 	static RMsg* LookMsg(const RString& msg);
 
 	/**
 	* Look after a specific message.
 	* @param msg            C string.
-	* @returns Pointer to the specific message, or 0 if not found.
+	* @return Pointer to the specific message, or 0 if not found.
 	*/
 	static RMsg* LookMsg(const char* msg);
 
 	/**
 	* Insert a new message.
 	* @param msg            String representing the message.
+	* @return Pointer to the message inserted.
 	*/
 	static RMsg* InsertMsg(const RString& msg) throw(std::bad_alloc);
 
 	/**
 	* Insert a new message.
 	* @param msg            C string representing a message.
+	* @return Pointer to the message inserted.
 	*/
 	static RMsg* InsertMsg(const char* msg) throw(std::bad_alloc);
 

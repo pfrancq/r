@@ -6,7 +6,7 @@
 
 	Single Hash Table Container - Header
 
-	Copyright 2000-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -79,20 +79,27 @@ namespace R{
 * Here is an example of class MyElement that will be contained in the
 * variable c:
 * @code
-* #include <rstd/string.h>
+* #include <string.h>
 * #include <rstd/rhashcontainer.h>
 * using namespace R;
 *
 *
 * class MyElement
 * {
-* 	char Text[25];
+* 	char *Text;
 * public:
 * 	MyElement(const char* text) {Text=strdup(text);}
 * 	MyElement(MyElement *e) {Text=strdup(e->Text);}
-* 	int Compare(MyElement *e) {return(strcmp(Text,e->Text));}
-* 	int Compare(const char* text) {return(strcmp(Text,text));}
-* 	static int HashIndex(MyElement *e)
+* 	int Compare(const MyElement *e) const {return(strcmp(Text,e->Text));}
+* 	int Compare(const char* text) const {return(strcmp(Text,text));}
+* 	static int HashIndex(const char *u)
+* 	{
+* 		int c=*u;
+* 		if(c>='a'&&c<='z') return(c-'a');
+* 		if(c>='A'&&c<='Z') return(c-'A');
+* 		return(26);
+* 	}
+* 	static int HashIndex(const MyElement *e)
 * 	{
 * 		int c=(*e->Text);
 * 		if(c>='a'&&c<='z') return(c-'a');
@@ -108,7 +115,7 @@ namespace R{
 *
 * 	c.InsertPtr(new MyElement("Coucou"));
 * 	if(c.IsIn<const char*>("Coucou"))
-* 		cout<<"An element of value 5 is in the container"<<endl;
+* 		cout<<"An element of value \"Coucou\" is in the container"<<endl;
 * 	c.InsertPtr(new MyElement("Autre"));
 * }
 * @endcode
