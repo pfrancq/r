@@ -6,7 +6,7 @@
 
 	Instance of Genetic Algorithms - Inline Implementation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -285,7 +285,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			}
 		#endif
 		(*C1)->Crossover(*C2,C3);
-		(*C1)->Optimisation();
 		(*C1)->ToEval=true;
 		#ifdef RGADEBUG
 			(*C1)->Verify();
@@ -302,7 +301,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			}
 		#endif
 		(*C1)->Crossover(C3,*C2);
-		(*C1)->Optimisation();
 		(*C1)->ToEval=true;
 		#ifdef RGADEBUG
 		(*C1)->Verify();
@@ -353,7 +351,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		#endif
 		emitInteractSig();
 		p->Mutation();
-		p->Optimisation();
 		p->ToEval=true;
 		#ifdef RGADEBUG
 			p->Verify();
@@ -383,7 +380,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		#endif
 		emitInteractSig();
 		p->Mutation();
-		p->Optimisation();
 		p->ToEval=true;
 		#ifdef RGADEBUG
 			p->Verify();
@@ -416,7 +412,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		#endif
 		emitInteractSig();
 		p->Inversion();
-		p->Optimisation();
 		p->ToEval=true;
 		#ifdef RGADEBUG
 			p->Verify();

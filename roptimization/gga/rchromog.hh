@@ -4,7 +4,7 @@
 
 	Class representing a chromosome for a GGA - Inline implementation
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -188,9 +188,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		ReleaseGroup(this->Instance->RRand(this->Used.NbPtr));
 
 	// Insert missing objects after a local optimisation
-	LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
-	Optimisation();
 	this->ComputeOrd();
 }
 
