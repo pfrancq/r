@@ -150,8 +150,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	ObjectsAss[obj->GetId()]=NoGroup;
 	ObjsNoAss.InsertPtr(obj);
 	ObjsAss.DeletePtr(obj);
-	from->NbSubObjects--;
-	if(!from->NbSubObjects)
+	if(!(--from->NbSubObjects))
 		from->SubObjects=NoObject;
 	from->PostDelete(obj);
 	for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
@@ -177,12 +176,11 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		ObjectsAss[(*obj)->GetId()]=NoGroup;
 		ObjsNoAss.InsertPtr(*obj);
 		ObjsAss.DeletePtr(*obj);
-		from->NbSubObjects--;
-		if(from->NbSubObjects)
+		if(!(--from->NbSubObjects))
 			from->SubObjects=NoObject;
 		from->PostDelete(*obj);
 	}
-	for(i=NbPtr+1,G=Tab;--i;G++)
+	for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
 		if(((*G)->Reserved)&&((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
 			(*G)->SubObjects-=tmp;
 }
