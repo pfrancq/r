@@ -70,11 +70,12 @@ protected:
 	/**
 	* The length of the string.
 	*/
-	int Len;
+	unsigned int Len;
+
 	/**
 	* The maximal length of the string. When necessary, the class increase his size.
 	*/
-	int MaxLen;
+	unsigned int MaxLen;
 
 public:
 
@@ -93,7 +94,7 @@ public:
 	* Construct an empty string with a maximal size.
 	* @param maxlen         Initial maximal length of the string.
 	*/
-	RString(const int maxlen) throw(bad_alloc);
+	RString(const unsigned int maxlen) throw(bad_alloc);
 
 	/**
 	* Construct a string from another string.
@@ -193,7 +194,7 @@ public:
 	/**
 	* Return the character at position i. The first letter is at position 0.
 	*/
-	inline char operator[](int i) const	{return(Text[i]);}
+	inline char operator[](unsigned int i) const	{return(Text[i]);}
 
 	/**
 	* Return the "C string" containing the string.
@@ -279,12 +280,12 @@ public:
 	/**
 	* Return the length of the string.
 	*/
-	inline int GetLen(void) const {return(Len);}
+	inline unsigned int GetLen(void) const {return(Len);}
 
 	/**
 	* Return the maximal length of the string.
 	*/
-	inline int GetMaxLen(void) const {return(MaxLen);}
+	inline unsigned int GetMaxLen(void) const {return(MaxLen);}
 
 	/**
 	* Look if the string is empty.
@@ -308,7 +309,7 @@ protected:
 	* Verify if the string can hold maxlen characters and extend the array if
 	* necessary.
 	*/
-	inline void Verify(const int maxlen) throw(bad_alloc);	
+	inline void Verify(const unsigned int maxlen) throw(bad_alloc);	
 
 public:
 

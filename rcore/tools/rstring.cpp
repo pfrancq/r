@@ -81,7 +81,7 @@ RStd::RString::RString(const char *text) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-RStd::RString::RString(const int maxlen) throw(bad_alloc)
+RStd::RString::RString(const unsigned int maxlen) throw(bad_alloc)
 {
 	if(maxlen)
 	{
@@ -133,7 +133,7 @@ RStd::RString::RString(const RString* str) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-inline void RStd::RString::Verify(const int maxlen) throw(bad_alloc)
+inline void RStd::RString::Verify(const unsigned int maxlen) throw(bad_alloc)
 {
 	if(MaxLen<maxlen)
 	{
@@ -337,7 +337,7 @@ RString& RStd::RString::operator+=(const char *text) throw(bad_alloc)
 
 	RReturnValIfFail(text,*this);
 	ptr1=text;
-	int len=strlen(text);
+	unsigned int len=strlen(text);
 	Verify(len+Len);
 	ptr2=&Text[Len];
 	while(*ptr1)
