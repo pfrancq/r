@@ -60,7 +60,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 {
 //	EmitSig(sigGAInit);
 	#ifdef RGADEBUG
-		if(Debug) Debug->BeginApp("HGA","Pascal Francq");
+		if(Debug) Debug->BeginApp();
 		if(Debug) Debug->BeginFunc("RInst","RInst");
 	#endif
 	MaxBestPopAge=5;
@@ -143,7 +143,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreaData>
-	inline void RGA::RInst<cInst,cChromo,cFit,cThreaData>::Evaluate(void) throw(eGA)
+	void RGA::RInst<cInst,cChromo,cFit,cThreaData>::Evaluate(void) throw(eGA)
 {
 	cChromo **C=Chromosomes,*p,*tmp;
 	unsigned int i;
@@ -207,7 +207,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	inline void RGA::RInst<cInst,cChromo,cFit,cThreadData>::Crossover(void) throw(eGA)
+	void RGA::RInst<cInst,cChromo,cFit,cThreadData>::Crossover(void) throw(eGA)
 {
 	unsigned int i,idx1,idx2;
 	cChromo **C1,**C2,*C3,*s1,*s2;
@@ -305,7 +305,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	inline void RGA::RInst<cInst,cChromo,cFit,cThreadData>::Mutation(void) throw(eGA)
+	void RGA::RInst<cInst,cChromo,cFit,cThreadData>::Mutation(void) throw(eGA)
 {
 	unsigned int i;
 	cFit *WorstFitness=new cFit();
@@ -382,7 +382,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	inline void RGA::RInst<cInst,cChromo,cFit,cThreadData>::Inversion(void) throw(eGA)
+	void RGA::RInst<cInst,cChromo,cFit,cThreadData>::Inversion(void) throw(eGA)
 {
 	cChromo *p;
 
@@ -558,7 +558,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(tmpChrom2) delete[] tmpChrom2;
 	delete RRandom::RandomGen;
 	#ifdef RGADEBUG
-		if(Debug) Debug->EndApp("HGA","Pascal Francq");
+		if(Debug) Debug->EndApp();
 	#endif
 	if(thDatas)
 	{
