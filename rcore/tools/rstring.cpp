@@ -324,7 +324,7 @@ RString& RStd::RString::operator+=(const char c) throw(bad_alloc)
 
 	Verify(Len+1);
 	ptr=&Text[Len++];
-	((*ptr)++)=c;
+	(*(ptr++))=c;
 	(*ptr)=0;
 	return(*this);
 }
@@ -473,6 +473,7 @@ RString& RStd::operator+(const char *arg1,const RString &arg2)
 	(*res)=arg1;
 	return((*res)+=arg2);
 }
+
 
 //-----------------------------------------------------------------------------
 RString& RStd::itoa(const int nb)
