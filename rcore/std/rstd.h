@@ -170,7 +170,7 @@ using namespace std;
 #endif 		// !__RDISABLECHECKS__
 
 /**
-* \namespace RStd
+* \namespace R
 * \brief Standard Classes.
 *
 * This namespace declares some generic classes.
