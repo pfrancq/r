@@ -157,6 +157,15 @@ public:
 	RDb(RString host,RString user,RString pwd,RString db,RString coding="latin1") throw(RMySQLError);
 
 	/**
+	* Create a new database 
+	* @param host           Host of the database server.
+	* @param user           User to connect with.
+	* @param pwd            Password of the user.
+	* @param name           The name of the new database
+	*/
+	static void CreateDatabase(RString host,RString user,RString pwd,RString name) throw(RMySQLError);
+	
+	/**
 	* Get the protocol version used.
 	* @return a identifier.
 	*/

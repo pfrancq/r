@@ -6,7 +6,7 @@
 
 	MySQL C++ Classes - Implementation.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -69,6 +69,27 @@ RDb::RDb(RString host,RString user,RString pwd,RString db,RString coding) throw(
 	connection=mysql_real_connect(&mysql,host,user,pwd,db,0,"",0);
 	if((!connection)||(mysql_errno(&mysql)))
 		throw RMySQLError(mysql_error(&mysql));
+}
+
+
+//------------------------------------------------------------------------------
+void RDb::CreateDatabase(RString host,RString user,RString pwd,RString name) throw(RMySQLError)
+{
+	MYSQL* ret;
+	MYSQL ms;
+
+	ret=mysql_init(&ms);
+	if((!ret)||(mysql_errno(&ms)))
+		throw RMySQLError(mysql_error(&ms));
+
+	ret=mysql_real_connect(&ms,host,user,pwd,0,0,0,0);
+	if((!ret)||(mysql_errno(&ms)))
+		throw RMySQLError(mysql_error(&ms));
+
+	RString sql="CREATE DATABASE ";
+	sql+=name;
+	if(mysql_query(&ms,sql.Latin1()))
+		throw RMySQLError(mysql_error(&ms));
 }
 
 
