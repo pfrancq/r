@@ -90,7 +90,7 @@ int RTimeDate::RDate::Compare(const RDate* d) const
 //-----------------------------------------------------------------------------
 bool RTimeDate::RDate::operator==(const RDate& d) const
 {
-	return((Year==d.Year)&&(Month==d.Month)&&(Day=d.day));
+	return((Year==d.Year)&&(Month==d.Month)&&(Day==d.Day));
 }
 
 
