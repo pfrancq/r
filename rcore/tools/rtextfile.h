@@ -98,7 +98,7 @@ public:
 	*/
 	enum RemType {NoComment,SingleLineComment,MultiLineComment};
 
-private:
+protected:
 
 	/**
 	* How to file has to be used.
@@ -186,16 +186,66 @@ public:
 	*/
 	void Init(void) throw(bad_alloc,RString);
 
-
 	/**
 	* Go to the begining of the file.
 	*/
 	void Begin(void) throw(RString);
 
+protected:
+
+	/**
+	* This function skip spaces (Only used if read mode).
+	*/
+	void SkipSpaces(void);
+
+	/**
+	* This function returns true if the current position is the beginning of a
+	* comment (Only used if in read mode).
+	*/
+	bool BeginComment(void);
+
+	/**
+	* This function returns true if hte current position is the ending of a
+	* comment and skip the end characters if MultiLineComment.
+	*/
+	bool EndComment(void);
+
+	/**
+	* Return a temporary C string.
+	* @returns the C string.
+	*/
+	char* GetCharPtr(void);
+
+public:
+
 	/**
 	* Return true if the file is been treated.
 	*/
 	inline bool Eof(void) { return(!(*ptr)); }
+
+	/**
+	* Return the next character.
+	*/
+	char GetNextChar(void) {return(*ptr);}
+
+	/**
+	* Set the style of comments.
+	* @param style		The Style.
+	*/
+	void SetRemStyle(RemType style) {CommentType=style;}
+
+	/**
+	* Set the string of comments when single line.
+	* @param c		This string represent the begin of a comment.
+	*/
+	void SetRem(const char *c) {Rem=c;}
+
+	/**
+	* Set the begin and the end strings of comments when in multiline.
+	* @param b		This string represent the begin of a comment.
+	* @param e		This string represent the end of a comment.
+	*/
+	void SetRem(const char *b,const char *e) {BeginRem=b; EndRem=e; }
 
 	/**
 	* Return the next integer contained in the file.
@@ -375,27 +425,6 @@ public:
 	* Specify the set of characters used as separator.
 	*/
 	void SetSeparator(const char* str) {Separator=str;}
-
-protected:
-
-	/**
-	* This function skip spaces (Only used if read mode).
-	*/
-	void SkipSpaces(void);
-
-	/**
-	* This function returns true if the current position is the beginning of a
-	* comment (Only used if in read mode).
-	*/
-	bool BeginComment(void);
-
-	/**
-	* This function returns true if hte current position is the ending of a
-	* comment and skip the end characters if MultiLineComment.
-	*/
-	bool EndComment(void);
-
-public:
 
 	/**
 	* Destructs the file.

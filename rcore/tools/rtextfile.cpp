@@ -244,6 +244,17 @@ void RTextFile::SkipSpaces(void)
 
 
 //---------------------------------------------------------------------------
+char* RTextFile::GetCharPtr(void)
+{
+	static char tab[25][300];
+	static long act=0;
+
+	if(act==25) act=0;
+	return(tab[act++]);
+}
+
+
+//---------------------------------------------------------------------------
 long RTextFile::GetInt(void) throw(RString)
 {
 	char *ptr2=ptr;
