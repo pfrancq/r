@@ -79,6 +79,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	double cost, subcostfunction;
 	int r,finalcentersid;
 	unsigned int nbsubprofpersubsamp = static_cast <int> (Objs->NbPtr*level/100);
+	if (nbsubprofpersubsamp==0)
+		cout << "---------------------->    WARNING !!! Number of elements per subsamples = 0 !!! "<<endl;
 	RStd::RContainer<cGroup,unsigned int,true,true>* subsamples;
 	subsamples=new RStd::RContainer<cGroup,unsigned int,true,true>(10,5);
 	RStd::RContainer<cGroup,unsigned int,true,true>* initialcenters;
@@ -99,17 +101,19 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		}
 		subsamples->InsertPtr(g);
 
-		//init the clustering over the subsample                 
+		//init the clustering over the subsample
 		RandomInitObjects(g, GroupsNumber);
 		for (protos->Start(); !protos->End(); protos->Next())
 			startingprotos->InsertPtr((*protos)());
 
 		// executes the clustering
 		bool okkmeans=false;
-		while(okkmeans==false)
+		unsigned int kmeanstry=0;
+		while(okkmeans==false&&kmeanstry<VerifyKMeansMaxIters)
 		{
 			Execute(g, 1);
 			okkmeans=VerifyKMeansMod();
+			kmeanstry++;
 		}
 		cout << k<< "ieme  subsample OK . "<<endl;
 		// save the centers
@@ -146,7 +150,6 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	for (g->Start(); !g->End(); g->Next())
 	{
 		protos->InsertPtr((*g)());
-		cout << "protos initial ="<<(*g)()->GetId()<<endl;;
 	}
 
 }
@@ -157,6 +160,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::VerifyKMeansMod()
 {
 	int r;
+	unsigned int nbprotos=protos->NbPtr;
 	RStd::RContainer<cObj,unsigned int,false,true>* wrongprotos;
 	wrongprotos= new RStd::RContainer<cObj,unsigned int,false,true>(10,5);
 
@@ -167,7 +171,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 	for (wrongprotos->Start(); !wrongprotos->End(); wrongprotos->Next())
 		protos->DeletePtr((*wrongprotos)());
-	while (protos->NbPtr<GroupsNumber)
+	while (protos->NbPtr<nbprotos)
 	{
 		r=int(Rand->Value(Objs->NbPtr));
 		cObj* sub=Objs->GetPtrAt(r);
@@ -254,15 +258,30 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::RandomInitObjects(RContainer<cObj,unsigned int,false,true>* dataset, unsigned int nbgroups)
 {
+	cObj **tab, **ptr;
+	unsigned int i;
 	protos->Clear();
-	while (protos->NbPtr!=nbgroups)
+//	while (protos->NbPtr!=nbgroups)
+//	{
+//		int u = Rand->Value(dataset->NbPtr);
+//		cObj* randomobj=dataset->GetPtrAt(u);
+//		 if (IsValidProto(protos, randomobj))
+//			protos->InsertPtr(randomobj);
+//	}
+
+	// mix the dataset
+	tab=new cObj*[dataset->NbPtr];
+	memcpy(tab,dataset->Tab,sizeof(cObj*)*(dataset->NbPtr));
+	Rand->RandOrder(tab,dataset->NbPtr);
+
+
+	for (ptr=tab, i=dataset->NbPtr; (protos->NbPtr<nbgroups)&&(i); ptr++,i--)
 	{
-		int u = Rand->Value(dataset->NbPtr);
-		cObj* randomobj=dataset->GetPtrAt(u);
+		cObj* randomobj=(*ptr);
 		 if (IsValidProto(protos, randomobj))
 			protos->InsertPtr(randomobj);
 	}
-
+//	GroupsNumber=protos->NbPtr;
 }
 
 
@@ -309,7 +328,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	double RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::CostFunction(RContainer<cGroup,unsigned int,false,false>* grps)     // calculates the intra/min(inter)
 {
 	unsigned int i, j;
-	double intra=0.0, mininter=1.0;
+	double intra=0.0, mininter=2.0;
 	cObj **s1, **s2;
 
 	for (protos->Start(); !protos->End(); protos->Next())
@@ -323,6 +342,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		}
 	}
 	intra=intra/Objs->NbPtr;
+//	cout << "nombre de protos ====== "<< protos->NbPtr<<endl;
 	for(s1=protos->Tab,i=protos->NbPtr;--i;s1++)
 	{
 		for(s2=s1+1,j=i+1;--j;s2++)

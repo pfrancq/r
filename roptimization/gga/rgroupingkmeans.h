@@ -59,7 +59,7 @@ namespace RGGA{
 * @short Generic Grouping Heuristic class.
 */
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	class RGroupingKMeans  
+	class RGroupingKMeans
 {
 
 public:
@@ -91,6 +91,11 @@ protected:
 	* rate of subprofiles in each subsamples
 	*/
 	unsigned int SubSamplesRate;
+
+	/**
+	* maximum number of KMeans verification in refineing procedure
+	*/
+	 unsigned int VerifyKMeansMaxIters;
 
 	/**
 	* Objects to be grouped.
@@ -208,6 +213,12 @@ public:
 	*  Set theSubSamples rate
 	*/
 	void SetSubSamplesRate(unsigned int i) {SubSamplesRate=i;};
+
+	/**
+	*  Set VerifyKMeansMaxIters limt
+	*/
+	void SetVerifyKMeansMaxIters(unsigned int i) {VerifyKMeansMaxIters=i;};
+
 
 	/**
 	* Set the Refined parameter.
