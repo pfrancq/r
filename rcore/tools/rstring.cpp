@@ -307,7 +307,7 @@ RString& RString::operator+=(const char *text) throw(bad_alloc)
 	ptr1=text;
 	int len=strlen(text);
 	Verify(len+Len);
-	ptr2=&Text[len];
+	ptr2=&Text[Len];
 	while(*ptr1)
 		(*(ptr2++))=(*(ptr1++));
 	(*ptr2)=0;
