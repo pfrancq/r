@@ -92,7 +92,7 @@ namespace R{
 * <pre>
 * #include<rstd/rcontainer.h>
 * #include<rstd/rcontainercursor.h>
-* using namespace RStd;
+* using namespace R;
 *
 *
 * class MyElement

@@ -84,9 +84,9 @@ namespace R{
 * Here is an example of class MyElement that will be contained in the
 * variable c:
 * <pre>
-* #include <string.h>
+* #include <rstd/string.h>
 * #include <rstd/rhashcontainer.h>
-* using namespace RStd;
+* using namespace R;
 *
 *
 * class MyElement

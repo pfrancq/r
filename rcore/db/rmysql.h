@@ -97,7 +97,7 @@ public:
 * <pre>
 * #include <iostream>
 * #include <rmysql/rmysql.h>
-* using namespace RMySQL;
+* using namespace R;
 *
 *
 * //---------------------------------------------------------------------------

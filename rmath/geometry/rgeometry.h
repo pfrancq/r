@@ -50,7 +50,6 @@
 #include <rstd/rstd.h>
 #include <rstd/rcontainer.h>
 #include <rstd/rtextfile.h>
-using namespace R;
 
 
 //------------------------------------------------------------------------------

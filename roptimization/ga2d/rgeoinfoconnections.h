@@ -43,8 +43,6 @@
 #include <rga2d/rconnections.h>
 #include <rga2d/rgeoinfoconnection.h>
 #include <rga2d/rgeoinfo.h>
-using namespace R;
-
 
 
 //------------------------------------------------------------------------------
