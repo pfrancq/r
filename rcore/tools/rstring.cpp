@@ -1,8 +1,8 @@
 /*
 
-  RString.h
+  RString.cpp
 
-  String - Header.
+  String - Implementation.
 
   (C) 1999-2000 by P. Francq.
 
@@ -28,244 +28,228 @@
 
 
 //---------------------------------------------------------------------------
-#ifndef RStringH
-#define RStringH
-
-
-//---------------------------------------------------------------------------
-#ifdef unix
-	#ifndef NULL
-		#define NULL 0
-	#endif
-	#include <string.h>
-#else
-	#include <mem.h>
-#endif
-#include <new.h>
-#include <string.h>
+#include <rstring.h>
+using namespace RStd;
 #include <stdio.h>
-#ifndef __RMAXSTRING__
-	#define __RMAXSTRING__ 30
-#endif
+#include <string.h>
 
 
 //---------------------------------------------------------------------------
-namespace RStd{
+//
+// RString
+//
 //---------------------------------------------------------------------------
 
-
 //---------------------------------------------------------------------------
-inline char* StrDup(char *Origin) throw(bad_alloc)
+RString::RString(void) throw(bad_alloc)
 {
-  char *Dest;
-  int i=strlen(Origin)+1;
-  Dest=new char[i];
-  memcpy(Dest,Origin,i);
-  return(Dest);
+	MaxLen=200;
+  Len=0;
+  Text=new char[MaxLen+1];
+  (*Text)=0;
 }
 
 
 //---------------------------------------------------------------------------
-class RString
+RString::RString(const char *text) throw(bad_alloc)
 {
-  char *Text;
-  int Len,MaxLen;
-public:
-
-  // Default Constructor
-  RString(void)
-  {
-		MaxLen=200;
-    Len=0;
-    Text=new char[MaxLen+1];
-    (*Text)=0;
-  }
-  // Constructor with a text
-  RString(const char *text) throw(bad_alloc)
-  {
-    MaxLen=Len=strlen(text);
-    Text=new char[MaxLen+1];
-    memcpy(Text,text,Len+1);
-  }
-  // Constructor with a maximum
-  RString(const int maxlen) throw(bad_alloc)
-  {
-    MaxLen=maxlen;
-    Len=0;
-    Text=new char[MaxLen+1];
-    (*Text)=0;
-  }
-  // Constructor with a copy
-  RString(const RString& str)
-  {
-    MaxLen=str.MaxLen;
-    Len=str.Len;
-    Text=new char[MaxLen+1];
-    memcpy(Text,str.Text,Len+1);
-  }
-  // Verify MaxLen
-  inline void Verify(const int maxlen) throw(bad_alloc)
-  {
-    if(MaxLen<maxlen)
-    {
-      char *tmp;
-      MaxLen=maxlen;
-      tmp=new char[MaxLen+1];
-      if(Text)
-      {
-        memcpy(tmp,Text,Len+1);
-        delete[] Text;
-      }
-      Text=tmp;
-    }
-  }
-  // Assignment
-  RString& operator=(const RString &str)
-  {
-    Verify(str.MaxLen);
-    Len=str.Len;
-    memcpy(Text,str.Text,Len+1);
-    return(*this);
-  }
-  RString& operator=(const char *text)
-  {
-    Len=strlen(text),
-    Verify(Len);
-    memcpy(Text,text,Len+1);
-    return(*this);
-  }
-  // Transform to uppercase
-  inline void StrUpr(void)
-  {
-		char *ptr=Text;
-  	while(*ptr)
-  	{
-  		if(((*ptr)>='a')&&((*ptr)<='z'))
-  			(*ptr)-='a'-'A';
-  		ptr++;
-  	}
-  }
-  inline void StrUpr(char *text)
-  {
-    Len=strlen(text),
-    Verify(Len);
-    memcpy(Text,text,Len+1);		
-    StrUpr();
-  }
-  inline void StrUpr(RString &str)
-  {
-    Verify(str.MaxLen);
-    Len=str.Len;
-    memcpy(Text,str.Text,Len+1);
-    StrUpr();
-  }
-  // Transform to lowercase
-  inline void StrLwr(void)
-  {
-  	char *ptr=Text;
-  	
-  	while(*ptr)
-  	{
-  		if(((*ptr)>='A')&&((*ptr)<='Z'))
-  			(*ptr)+='a'-'A';
-  		ptr++;
-  	}
-  }
-  inline void StrLwr(char *text)
-  {
-    Len=strlen(text),
-    Verify(Len);
-    memcpy(Text,text,Len+1);
-    StrLwr();
-  }
-  inline void StrLwr(RString &str)
-  {
-    Verify(str.MaxLen);
-    Len=str.Len;
-    memcpy(Text,str.Text,Len+1);
-    StrLwr();
-  }
-  // Addition
-  RString& operator+=(const RString &str)
-  {
-    Verify(str.Len+Len);
-    memcpy(&Text[Len],str.Text,str.Len+1);
-    Len+=str.Len;
-    return(*this);
-  }
-  RString& operator+=(const char *text)
-  {
-    int len=strlen(text);
-    Verify(len+Len);
-    memcpy(&Text[Len],text,len+1);
-    Len+=len;
-    return(*this);
-  }
-  // Find a string
-  inline char* FindStr(char *text)
-  {
-    return(strstr(Text,text));
-  }
-  // Index operator
-  inline char& operator[](int i)		        // str[i] = 'x'; l-value
-  {
-    return(Text[i]);
-  }
-  inline char operator[](int i) const	    // x = str[i]; r-value
-  {
-    return(Text[i]);
-  }
-  // Return a pointer
-  inline char* operator()(void)
-  {
-    return(Text);
-  }
-  inline bool operator==(const RString &str)
-  {
-    return(!strcmp(Text,str.Text));
-  }
-  inline bool operator!=(const RString &str)
-  {
-    return(strcmp(Text,str.Text));
-  }
-  // Compare
-  inline int Compare(const RString &str) throw(bad_alloc)
-  {
-    return(strcmp(Text,str.Text));
-  }
-  inline int Compare(const RString *str) throw(bad_alloc)
-  {
-    return(strcmp(Text,str->Text));
-  }
-  inline char HashIndex(void)
-  {
-  	char c=(*Text);
-  	if(c>='a'&&c<='z') return(c-'a');
-		if(c>='A'&&c<='Z') return(c-'A');  	
-		return(26);
-  }
-  // Return the length
-  inline int GetLen(void)
-  {
-    return(Len);
-  }
-  inline int GetMaxLen(void)
-  {
-    return(MaxLen);
-  }
-  // Destructor
-  ~RString(void)
-  {
-    if(Text) delete[] Text;
-  }
-
-  // friend functions
-	friend inline RString& operator+(const RString &arg1,const RString &arg2);
-};
+  MaxLen=Len=strlen(text);
+  Text=new char[MaxLen+1];
+  memcpy(Text,text,Len+1);
+}
 
 
 //---------------------------------------------------------------------------
-inline RString* GetString(void)
+RString::RString(const int maxlen) throw(bad_alloc)
+{
+  MaxLen=maxlen;
+  Len=0;
+  Text=new char[MaxLen+1];
+  (*Text)=0;
+}
+
+
+//---------------------------------------------------------------------------
+RString::RString(const RString& str)
+{
+  MaxLen=str.MaxLen;
+  Len=str.Len;
+  Text=new char[MaxLen+1];
+  memcpy(Text,str.Text,Len+1);
+}
+
+
+//---------------------------------------------------------------------------
+inline void RString::Verify(const int maxlen) throw(bad_alloc)
+{
+  if(MaxLen<maxlen)
+  {
+    char *tmp;
+    MaxLen=maxlen;
+    tmp=new char[MaxLen+1];
+    if(Text)
+    {
+      memcpy(tmp,Text,Len+1);
+      delete[] Text;
+    }
+    Text=tmp;
+  }
+}
+
+
+//---------------------------------------------------------------------------
+RString& RString::operator=(const RString &str)
+{
+  Verify(str.MaxLen);
+  Len=str.Len;
+  memcpy(Text,str.Text,Len+1);
+  return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RString& RString::operator=(const char *text)
+{
+  Len=strlen(text),
+  Verify(Len);
+  memcpy(Text,text,Len+1);
+  return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+inline void RString::StrUpr(void)
+{
+	char *ptr=Text;
+	while(*ptr)
+	{
+		if(((*ptr)>='a')&&((*ptr)<='z'))
+			(*ptr)-='a'-'A';
+		ptr++;
+	}
+}
+
+
+//---------------------------------------------------------------------------
+void RString::StrUpr(char *text)
+{
+  Len=strlen(text),
+  Verify(Len);
+  memcpy(Text,text,Len+1);		
+  StrUpr();
+}
+
+
+//---------------------------------------------------------------------------
+void RString::StrUpr(RString &str)
+{
+  Verify(str.MaxLen);
+  Len=str.Len;
+  memcpy(Text,str.Text,Len+1);
+  StrUpr();
+}
+
+
+//---------------------------------------------------------------------------
+inline void RString::StrLwr(void)
+{
+	char *ptr=Text;
+  	
+	while(*ptr)
+	{
+		if(((*ptr)>='A')&&((*ptr)<='Z'))
+			(*ptr)+='a'-'A';
+		ptr++;
+	}
+}
+
+
+//---------------------------------------------------------------------------
+void RString::StrLwr(char *text)
+{
+  Len=strlen(text),
+  Verify(Len);
+  memcpy(Text,text,Len+1);
+  StrLwr();
+}
+
+
+//---------------------------------------------------------------------------
+void RString::StrLwr(RString &str)
+{
+  Verify(str.MaxLen);
+  Len=str.Len;
+  memcpy(Text,str.Text,Len+1);
+  StrLwr();
+}
+
+
+//---------------------------------------------------------------------------
+RString& RString::operator+=(const RString &str)
+{
+  Verify(str.Len+Len);
+  memcpy(&Text[Len],str.Text,str.Len+1);
+  Len+=str.Len;
+  return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RString& RString::operator+=(const char *text)
+{
+  int len=strlen(text);
+  Verify(len+Len);
+  memcpy(&Text[Len],text,len+1);
+  Len+=len;
+  return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+bool RString::operator==(const RString &str)
+{
+  return(!strcmp(Text,str.Text));
+}
+
+
+//---------------------------------------------------------------------------
+bool RString::operator!=(const RString &str)
+{
+  return(strcmp(Text,str.Text));
+}
+
+
+//---------------------------------------------------------------------------
+int RString::Compare(const RString &str)
+{
+  return(strcmp(Text,str.Text));
+}
+
+
+//---------------------------------------------------------------------------
+int RString::Compare(const RString *str)
+{
+  return(strcmp(Text,str->Text));
+}
+
+
+//---------------------------------------------------------------------------
+char* RString::FindStr(char *text)
+{
+	return(strstr(Text,text));
+}
+
+
+
+//---------------------------------------------------------------------------
+//
+// Global Functions and Operators
+//
+//---------------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------------
+inline RString* RStd::GetString(void)
 {
   static RString tab[__RMAXSTRING__];
   static long act=0;
@@ -276,7 +260,7 @@ inline RString* GetString(void)
 
 
 //---------------------------------------------------------------------------
-inline RString& operator+(const RString &arg1,const RString &arg2)
+RString& RStd::operator+(const RString &arg1,const RString &arg2)
 {
   RString *res=GetString();
   (*res)=arg1;
@@ -285,7 +269,7 @@ inline RString& operator+(const RString &arg1,const RString &arg2)
 
 
 //---------------------------------------------------------------------------
-inline RString& operator+(const RString &arg1,const char *arg2)
+RString& RStd::operator+(const RString &arg1,const char *arg2)
 {
   RString *res=GetString();
   (*res)=arg1;
@@ -294,7 +278,7 @@ inline RString& operator+(const RString &arg1,const char *arg2)
 
 
 //---------------------------------------------------------------------------
-inline RString& operator+(const char *arg1,const RString &arg2)
+RString& RStd::operator+(const char *arg1,const RString &arg2)
 {
   RString *res=GetString();
   (*res)=arg1;
@@ -302,7 +286,7 @@ inline RString& operator+(const char *arg1,const RString &arg2)
 }
 
 //---------------------------------------------------------------------------
-inline RString& itoa(const int nb)
+RString& RStd::itoa(const int nb)
 {
 	char Tmp[20];	
 	RString *res=GetString();
@@ -314,7 +298,7 @@ inline RString& itoa(const int nb)
 
 
 //---------------------------------------------------------------------------
-inline RString& itoa(const unsigned int nb)
+RString& RStd::itoa(const unsigned int nb)
 {
 	char Tmp[20];	
 	RString *res=GetString();
@@ -326,7 +310,7 @@ inline RString& itoa(const unsigned int nb)
 
 
 //---------------------------------------------------------------------------
-inline RString& ltoa(const long nb)
+RString& RStd::ltoa(const long nb)
 {
 	char Tmp[20];	
 	RString *res=GetString();
@@ -338,7 +322,7 @@ inline RString& ltoa(const long nb)
 
 
 //---------------------------------------------------------------------------
-inline RString& chr(const unsigned char c)
+RString& RStd::chr(const unsigned char c)
 {
 	char Tmp[2];	
 	RString *res=GetString();
@@ -351,7 +335,7 @@ inline RString& chr(const unsigned char c)
 
 
 //---------------------------------------------------------------------------
-inline RString& ltoa(const unsigned long nb)
+RString& RStd::ltoa(const unsigned long nb)
 {
 	char Tmp[20];	
 	RString *res=GetString();
@@ -363,7 +347,7 @@ inline RString& ltoa(const unsigned long nb)
 
 
 //---------------------------------------------------------------------------
-inline RString& ftoa(const float nb)
+RString& RStd::ftoa(const float nb)
 {
 	char Tmp[20];	
 	RString *res=GetString();
@@ -375,7 +359,7 @@ inline RString& ftoa(const float nb)
 
 
 //---------------------------------------------------------------------------
-inline RString& dtoa(const double nb)
+RString& RStd::dtoa(const double nb)
 {
 	char Tmp[20];	
 	RString *res=GetString();
@@ -385,8 +369,5 @@ inline RString& dtoa(const double nb)
 	return((*res));
 }
 
-}  //-------- End of namespace RStd ---------------------------------------
-
 
 //---------------------------------------------------------------------------
-#endif
