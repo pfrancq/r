@@ -60,14 +60,21 @@ RInter::RLang::RLang(const RString& lang,const char* code) throw(bad_alloc)
 //---------------------------------------------------------------------------
 int RInter::RLang::Compare(const RLang& lang) const
 {
-  return(Lang.Compare(lang.Lang));
+  return(strcmp(Code,lang.Code));
 }
 
 
 //---------------------------------------------------------------------------
 int RInter::RLang::Compare(const RLang *lang) const
 {
-  return(Lang.Compare(lang->Lang));
+  return(strcmp(Code,lang->Code));
+}
+
+
+//---------------------------------------------------------------------------
+int RInter::RLang::Compare(const char* code) const
+{
+  return(strcmp(Code,code));
 }
 
 

@@ -54,6 +54,8 @@ namespace RInter{
 */
 class RLang
 {
+public:
+
 	/**
 	* Name of the Language.
 	*/
@@ -82,6 +84,12 @@ public:
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
 	int Compare(const RLang* lang) const;
+
+	/**
+	* Compare function like strcmp used in particular for RContainer class.
+	* @param code           Code used for the comparaison.
+	*/
+	int Compare(const char* code) const;
 
 	/**
 	* Destructor of the language.
