@@ -82,14 +82,18 @@ protected:
 	unsigned int *thOrder;		// Array (ref)
 	unsigned int *thInObj;		// Array of object if (ref)
 	cInfo **thInfos;					// Geometric information for temporary objects (Crossover & Mutation) (ref)
+	RObj2D **thObjs;					// Temporary Objects (Crossover & Mutation) (ref)
 
 public:
   cInfo **Infos;						// Geometric information of the objects
 
   RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc);
 	virtual void Init(void) throw(bad_alloc);
-  bool Heuristic(RObj2D **objs,cInfo **infos,unsigned int nbobjs);
+	bool GetSetOfObjs(RObj2D **objs,unsigned int &nbobjs,unsigned int *inobj);
+  bool Heuristic(RObj2D **objs,cInfo **infos,unsigned int nbobjs,unsigned int **OccX,unsigned int **OccY);
   virtual bool RandomConstruct(void);
+  virtual bool Crossover(cChromo *parent1,cChromo *parent2);
+  virtual bool Mutation(void);
   virtual RChromo2D& operator=(const RChromo2D &chromo);
   virtual ~RChromo2D(void);
 

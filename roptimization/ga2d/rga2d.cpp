@@ -61,5 +61,39 @@ using namespace RGA;
 
 
 //---------------------------------------------------------------------------
+//
 // General Variables
+//
+//---------------------------------------------------------------------------
 RRect RGA::Limits;
+RCoord RGA::AvLen;
+RCoord RGA::AvWidth;
+
+
+
+//---------------------------------------------------------------------------
+//
+// General Functions
+//
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+void RGA::RandomPlace(RCoord& X,RCoord& Y)
+{
+	bool IncX,IncY;
+
+	IncX=RRand(1);
+	IncY=RRand(1);
+
+	// Change X et Y
+	if(IncX) X+=AvLen; else	X-=AvLen;
+	if(IncY) Y+=AvWidth; else	Y-=AvWidth;
+
+	// Verify if X in Limits
+	if(X<Limits.Pt1.X) X=Limits.Pt2.X-(Limits.Pt1.X-X);
+	if(X>Limits.Pt2.X) X=Limits.Pt1.X+(X-Limits.Pt2.X);
+
+	// Verify if Y in Limits
+	if(Y<Limits.Pt1.Y) Y=Limits.Pt2.Y-(Limits.Pt1.Y-Y);
+	if(Y>Limits.Pt2.Y) Y=Limits.Pt1.Y+(Y-Limits.Pt2.Y);
+}

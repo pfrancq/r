@@ -76,14 +76,17 @@ class RObj2D
 {
 public:
 	unsigned int Id;						// Id of the object
-  char *PossOri,NbPossOri;
-  RPolygon **Polygons;
-  RPolygon *Polygon;
+  char PossOri[8];
+	char NbPossOri;
+  RPolygon Polygons[8];
+  RPolygon Polygon;
   bool Deformable;            // If not deformable -> unique cGeoInfo for all chromosomes
 
   RObj2D(unsigned int id,bool deformable);
 	bool CalcPolygons(void);	  // Calc all the orientations based on Polygon
 	void SetOri(char ori);			// Set a specific orientation possible
+	bool IsOriSet(char ori);		// Is a specific orientation sets?
+  RObj2D& operator=(const RObj2D &obj);
   virtual ~RObj2D(void);
 };
 

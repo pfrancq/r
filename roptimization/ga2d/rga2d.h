@@ -96,6 +96,13 @@ namespace RGA{
 //---------------------------------------------------------------------------
 // General Variables
 extern RRect Limits; 						// Define the min/max of hight/width of the placement
+extern RCoord AvLen;						// Average Length of objects to place
+extern RCoord AvWidth;					// Average Width of objects to place
+
+
+//---------------------------------------------------------------------------
+// General functions
+void RandomPlace(RCoord& X,RCoord& Y);
 
 
 //---------------------------------------------------------------------------

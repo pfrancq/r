@@ -65,7 +65,8 @@ template<class cInfo>
 {
  	unsigned int i;
  	cInfo **ptr;
-		
+	RObj2D **obj;
+	
 	if(NbObjs)
 	{
 		tmpInfos=new cInfo*[NbObjs];
@@ -73,6 +74,9 @@ template<class cInfo>
    			(*ptr)=new cInfo();  		
  		Order=new unsigned int[NbObjs];
  		InObj=new unsigned int[NbObjs];
+		tmpObjs=new RObj2D*[NbObjs];
+		for(i=0,obj=tmpObjs;i<NbObjs;obj++,i++)
+			(*obj)=new RObj2D(i,false);	
   }
 }
 
@@ -83,11 +87,17 @@ template<class cInfo>
 {
   cInfo **ptr;
   unsigned int i;
+	RObj2D **obj;
 	
 	if(tmpInfos)
 	{
   	for(i=NbObjs+1,ptr=tmpInfos;--i;ptr++)	delete(*ptr);
 	  delete[] tmpInfos;
+	}
+	if(tmpObjs)
+	{
+		for(i=NbObjs,obj=tmpObjs;--i;obj++) delete (*obj);
+		delete[] tmpObjs;
 	}
  	if(Order) delete[] Order;
 	if(InObj) delete[] InObj;
@@ -106,9 +116,30 @@ template<class cInst,class cChromo,class cFit,class cInfo>
 	RInst2D<cInst,cChromo,cFit,cInfo>::RInst2D(unsigned int popsize,RObj2D **objs,unsigned int nbobjs) throw(bad_alloc)
 		: RInst<cInst,cChromo,cFit>(popsize), Objs(objs), NbObjs(nbobjs), thDatas(NULL)
 {
+	RObj2D **obj;
   cChromo **C;
-  unsigned int i;
+  unsigned int i,nb;
+	RRect Rect;
 
+	AvLen=AvWidth=0;
+	if(NbObjs)
+	{
+		for(i=NbObjs+1,obj=Objs,nb=0;--i;obj++)
+		{		
+			(*obj)->Polygon.Boundary(Rect);
+			AvLen+=Rect.Pt2.X;
+			AvWidth+=Rect.Pt2.Y;
+			nb++;
+			if((*obj)->IsOriSet(orRota90)||(*obj)->IsOriSet(orRota90MirrorX)||(*obj)->IsOriSet(orRota90MirrorY)||(*obj)->IsOriSet(orRota90MirrorYX))
+			{
+				AvLen+=Rect.Pt2.Y;
+				AvWidth+=Rect.Pt2.X;
+				nb++;
+			}
+		}
+		AvLen/=nb;
+		AvWidth/=nb;
+	}
   for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		(*C)->Objs=Objs;
@@ -133,6 +164,7 @@ template<class cInst,class cChromo,class cFit,class cInfo>
 		(*C)->thInfos=thDatas->tmpInfos;
 		(*C)->thOrder=thDatas->Order;
 		(*C)->thInObj=thDatas->InObj;
+		(*C)->thObjs=thDatas->tmpObjs;
 	}
 }
 

@@ -84,7 +84,7 @@ public:
 	virtual void Init(void) throw(bad_alloc);
   virtual bool RandomConstruct(void) {return(true);}
   virtual void Evaluate(void) {}
-  virtual bool Crossover(RChromo *parent1,RChromo *parent2) {return(true);}
+  virtual bool Crossover(cChromo *parent1,cChromo *parent2) {return(true);}
   virtual bool Mutation(void) {return(true);}
   virtual void Print(void) {}
   virtual bool Verify(void) {return(true);}

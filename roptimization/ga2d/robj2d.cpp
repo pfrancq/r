@@ -69,9 +69,8 @@ using namespace RGA;
 
 //---------------------------------------------------------------------------
 RObj2D::RObj2D(unsigned int id,bool deformable)
-	: Id(id),NbPossOri(0),Polygons(NULL),Polygon(NULL),Deformable(deformable)
+	: Id(id),NbPossOri(0),Deformable(deformable)
 {
-	PossOri=new char[8];
 }
 
 
@@ -79,14 +78,13 @@ RObj2D::RObj2D(unsigned int id,bool deformable)
 bool RObj2D::CalcPolygons(void)
 {
 	char i,*ori;
-	RPolygon **ptr;
+	RPolygon *ptr;
 
-	if((!NbPossOri)||(!Polygon)) return(false);
-	Polygons=new RPolygon*[NbPossOri];
+	if(!NbPossOri) return(false);
 	for(i=NbPossOri+1,ptr=Polygons,ori=PossOri;--i;ptr++,ori++)
 	{
-		(*ptr)=new RPolygon(Polygon);
-		(*ptr)->Orientation(*ori);
+		(*ptr)=Polygon;
+		ptr->Orientation(*ori);
 	}
 	return(true);
 }
@@ -104,17 +102,35 @@ void RObj2D::SetOri(char ori)
 
 
 //---------------------------------------------------------------------------
+bool RObj2D::IsOriSet(char ori)
+{
+	char i,*ptr;
+
+	for(i=NbPossOri+1,ptr=PossOri;--i;ptr++)
+		if((*ptr)==ori) return(true);
+	return(false);
+}
+
+
+//---------------------------------------------------------------------------
+RObj2D& RObj2D::operator=(const RObj2D &obj)
+{
+	char i;
+	RPolygon *ptr;
+	const RPolygon *ptr2;
+
+	Id=obj.Id;
+	NbPossOri=obj.NbPossOri;
+	Deformable=obj.Deformable;
+	memcpy(PossOri,obj.PossOri,sizeof(char)*8);
+	Polygon=obj.Polygon;
+	for(i=NbPossOri+1,ptr=Polygons,ptr2=obj.Polygons;--i;ptr++,ptr2++)
+		(*ptr)=(*ptr2);
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
 RObj2D::~RObj2D(void)
 {
-	RPolygon **ptr;
-	char i;	
-	
-	if(Polygons)
-	{
-		for(i=NbPossOri+1,ptr=Polygons;--i;ptr++)
-			delete (*ptr);
-		delete[] Polygons;
-	}
-	if(Polygon) delete Polygon;
-	if(PossOri) delete[] PossOri;
 }

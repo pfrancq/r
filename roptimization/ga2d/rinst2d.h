@@ -78,7 +78,8 @@ public:
 	unsigned int NbObjs;			// Nb Objects to place
 	unsigned int *Order;			// Array
 	unsigned int *InObj;			// Id of the object containing an object (Crossover & Mutation)
-	cInfo **tmpInfos;					// Geometric information of the tempory objects (Crossover & Mutation)
+	cInfo **tmpInfos;					// Geometric information of the temporary objects (Crossover & Mutation)
+	RObj2D **tmpObjs;					// Temporary Objects (Crossover & Mutation)
 
 	RThreadData2D(unsigned int nbobjs);
 	~RThreadData2D(void);

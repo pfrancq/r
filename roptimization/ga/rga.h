@@ -63,6 +63,7 @@
 // include files for AINSI C/C++
 #include <new.h>
 #include <values.h>
+#include <limits.h>
 #ifndef NULL
 	const long int NULL=0;
 #endif
@@ -103,8 +104,12 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
+// Constances for objects manipulation
+const unsigned int NoObject=UINT_MAX;				// Reference to no object
+
+
+//---------------------------------------------------------------------------
 // Constances for Instance type
-const unsigned int NoObject=0xFFFFFFFF;
 const char instMaster=0;                   	// The instance is a master
 const char instSlave=1;                    	// The instance is a slave
 const char instMultiProcess=2;             	// The instance can use multi-processors

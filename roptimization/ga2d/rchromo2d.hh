@@ -63,7 +63,7 @@
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cInfo>
 	RChromo2D<cInst,cChromo,cFit,cInfo>::RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc)
-		: RChromo<cInst,cChromo,cFit>(inst,id), Objs(NULL),NbObjs(0),OccupiedX(NULL),OccupiedY(NULL),thOrder(NULL),thInObj(NULL),thInfos(NULL),Infos(NULL)
+		: RChromo<cInst,cChromo,cFit>(inst,id), Objs(NULL),NbObjs(0),OccupiedX(NULL),OccupiedY(NULL),thOrder(NULL),thInObj(NULL),thInfos(NULL),thObjs(NULL),Infos(NULL)
 {
  	RCoord j;
 	unsigned int **bptr;
@@ -103,8 +103,33 @@ template<class cInst,class cChromo,class cFit,class cInfo>
 
 
 //---------------------------------------------------------------------------
+// Regroup a set of object from Objs in obj and add it to objs
+// Make sure that the objects already assigned (through inobj) are not used
 template<class cInst,class cChromo,class cFit,class cInfo>
-  bool RChromo2D<cInst,cChromo,cFit,cInfo>::Heuristic(RObj2D **objs,cInfo **infos,unsigned int nbobjs)
+	bool RChromo2D<cInst,cChromo,cFit,cInfo>::GetSetOfObjs(RObj2D **objs,unsigned int &nbobjs,unsigned int *inobj)
+{
+	RCoord X,Y;
+	unsigned int idx;
+	RObj2D *obj=objs[nbobjs];								// obj to generate
+	
+	// Find an object not used
+	X=Limits.Pt1.X+RRand(Limits.Length());
+	Y=Limits.Pt1.Y+RRand(Limits.Width());
+	idx=OccupiedX[X][Y];
+	while(idx==NoObject||inobj[idx]!=NoObject)
+	{
+		RandomPlace(X,Y);
+		idx=OccupiedX[X][Y];
+	}
+
+	// Construct obj
+	return(true);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cInfo>
+  bool RChromo2D<cInst,cChromo,cFit,cInfo>::Heuristic(RObj2D **objs,cInfo **infos,unsigned int nbobjs,unsigned int **OccX,unsigned int **OccY)
 {
   unsigned int i,*ptr;
 	RCoord j;								// counter
@@ -119,9 +144,9 @@ template<class cInst,class cChromo,class cFit,class cInfo>
   RGeoInfo *info,*FirstInfo;
 
   // Initialisation
-  for(j=Limits.Pt2.X+1,bptr=OccupiedX;--j;bptr++)
+  for(j=Limits.Pt2.X+1,bptr=OccX;--j;bptr++)
     memset(*bptr,NoObject,sizeof(unsigned int)*Limits.Pt2.Y);
-  for(j=Limits.Pt2.Y+1,bptr=OccupiedY;--j;bptr++)
+  for(j=Limits.Pt2.Y+1,bptr=OccY;--j;bptr++)
     memset(*bptr,NoObject,sizeof(unsigned int)*Limits.Pt2.X);
   for(i=0,ptr=thOrder;i<nbobjs;ptr++,i++) (*ptr)=i;
   randorder<unsigned int>(thOrder,nbobjs);
@@ -132,8 +157,8 @@ template<class cInst,class cChromo,class cFit,class cInfo>
     Current=objs[thOrder[nbobjs]];
 		info=infos[Current->Id];
     Ori = Current->PossOri[RRand(Current->NbPossOri)];
-    info->Bound=(*Current->Polygons[Ori]);
-    info->PosX=info->PosX=0;
+    info->AssignBound(Current->Polygons[Ori]);
+    info->Pos.X=info->Pos.Y=0;
     if(!First)
     {
       First=Current;
@@ -151,7 +176,7 @@ template<class cInst,class cChromo,class cFit,class cInfo>
       NextPosY=0;
       First=NULL;
     }
-    info->Assign(OccupiedX,OccupiedY,PosX,PosY,Current->Id);
+    info->Assign(OccX,OccY,PosX,PosY,Current->Id);
     info->Boundary(Rect);
     PosX=Rect.Pt2.X+1;
   }
@@ -164,7 +189,25 @@ template<class cInst,class cChromo,class cFit,class cInfo>
 template<class cInst,class cChromo,class cFit,class cInfo>
 	bool RChromo2D<cInst,cChromo,cFit,cInfo>::RandomConstruct(void)
 {
-	return(Heuristic(Instance->Objs,Infos,NbObjs));
+	return(Heuristic(Instance->Objs,Infos,NbObjs,OccupiedX,OccupiedY));
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cInfo>
+	bool RChromo2D<cInst,cChromo,cFit,cInfo>::Crossover(cChromo *parent1,cChromo *parent2)
+{
+	memset(thInObj,0xFF,sizeof(unsigned int)*NbObjs);
+	return(true);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cInfo>
+	bool RChromo2D<cInst,cChromo,cFit,cInfo>::Mutation(void)
+{
+	memset(thInObj,0xFF,sizeof(unsigned int)*NbObjs);
+	return(true);
 }
 
 
