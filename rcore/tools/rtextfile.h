@@ -52,6 +52,10 @@ namespace RStd{
 	* single line, beginning with a given set of characters ('%', by default) and
 	* ending at the end of the line, or be multi-line, beginning and ending with
 	* corresponding set of characters (C comments delimeters by default).
+  *
+	* When multiple elements are inserted on the same text line, before each
+	* insertion, and except for the first one, a set of characters representing
+	* a separator (' ' by default) are added.
 	*
 	* The user can write his own operators to read and write with RTextFile. Here
 	* is an example:
@@ -104,6 +108,9 @@ private:
 	RString EndRem;
 	/** The type of comments that are using for this file.*/
 	RemType CommentType;
+	/** This string represent a separator for different elements on the same line
+		*/
+	RString Separator;
 	/** This variable is holding the current line number.*/
 	unsigned long Line;
 
@@ -235,6 +242,12 @@ public:
 
 	/** Return the actual line number.*/
 	unsigned long ActualLine(void) {return(Line);}
+
+	/** Specify the set of characters used as separator.*/
+	void SetSeparator(const RString& str) {Separator=str;}
+
+	/** Specify the set of characters used as separator.*/
+	void SetSeparator(const char* str) {Separator=str;}
 
 protected:
 

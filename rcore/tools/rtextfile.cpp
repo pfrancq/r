@@ -61,7 +61,7 @@ using namespace RStd;
 //---------------------------------------------------------------------------
 RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
   : Mode(mode), Name(name), All(true), NewLine(true), Rem("%"),BeginRem("/*"),
-		EndRem("*/"),	CommentType(SingleLineComment),Line(0)
+		EndRem("*/"),	CommentType(SingleLineComment), Separator(" "), Line(0)
 {
 	int localmode;
 
@@ -418,7 +418,7 @@ void RTextFile::WriteLong(const long nb) throw(RString)
   if(Mode==Read)
     throw(RString("File Mode is Read"));
   if(!NewLine)
-    write(handle," ",1);
+    write(handle,Separator(),Separator.GetLen());
   sprintf(Str,"%li",nb);
   write(handle,Str,strlen(Str));
 	#ifdef windows
@@ -469,7 +469,7 @@ void RTextFile::WriteULong(const unsigned long nb) throw(RString)
     throw(RString("File Mode is Read"));
 
   if(!NewLine)
-    write(handle," ",1);
+    write(handle,Separator(),Separator.GetLen());
   sprintf(Str,"%lu",nb);
   write(handle,Str,strlen(Str));
 	#ifdef windows
@@ -510,7 +510,7 @@ void RTextFile::WriteStr(const char *c) throw(RString)
   if(Mode==Read)
     throw(RString("File Mode is Read"));
   if(!NewLine)
-    write(handle," ",1);
+    write(handle,Separator(),Separator.GetLen());
   l=strlen(c);
   write(handle,c,l);
 	#ifdef windows
@@ -539,7 +539,7 @@ void RTextFile::WriteStr(const RString &str) throw(RString)
   if(Mode==Read)
     throw(RString("File Mode is Read"));
   if(!NewLine)
-    write(handle," ",1);
+    write(handle,Separator(),Separator.GetLen());
   l=str.GetLen();
   if(str[l-1]!='\n'&&str[l-1]!='\r')
     NewLine=false;
@@ -573,7 +573,7 @@ void RTextFile::WriteBool(const bool b) throw(RString)
   if(Mode==Read)
     throw(RString("File Mode is Read"));
   if(!NewLine)
-    write(handle," ",1);
+    write(handle,Separator(),Separator.GetLen());
   if(b) strcpy(Str,"1"); else strcpy(Str,"0");
   write(handle,Str,strlen(Str));
 	#ifdef windows
@@ -604,7 +604,7 @@ void RTextFile::WriteTime(void) throw(RString)
   timer = time(NULL);
   tblock = localtime(&timer);
   if(!NewLine)
-    write(handle," ",1);
+    write(handle,Separator(),Separator.GetLen());
   strcpy(Str,asctime(tblock));
   Str[strlen(Str)-1]=0;
   write(handle,Str,strlen(Str));
