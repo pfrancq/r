@@ -176,7 +176,9 @@ public:
 	cGroup* GetGroup(const unsigned int id) {return(Tab[ObjectsAss[id]]);}
 
 	/**
-	* Return a pointer to an object at a given position of a group.
+	* Get a pointer to an object at a given index.
+	* @param idx            Global Index.
+	* @returns cObj*
 	*/
 	cObj* GetObj(const unsigned int idx) {return(ObjsAss.Tab[idx]);}
 

@@ -231,6 +231,13 @@ public:
 	int Compare(const cGroup* grp) const {return(Id-grp->Id);}
 
 	/**
+	* Get a pointer to an object at a given position in the group.
+	* @param pos            Position.
+	* @returns cObj*
+	*/
+	cObj* GetObjPos(const unsigned int pos) {return(Owner->GetObj(SubObjects+pos));}
+
+	/**
 	* Destruct the group.
 	*/
 	virtual ~RGroup(void);
