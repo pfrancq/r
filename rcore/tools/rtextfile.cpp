@@ -843,7 +843,7 @@ RTextFile& RTextFile::operator<<(const long nb) throw(RIOException)
 void RTextFile::WriteULong(const unsigned long nb) throw(RIOException)
 {
 	RString res=ltou(nb);
-	WriteStr(nb);
+	WriteStr(res);
 }
 
 
@@ -899,7 +899,7 @@ RTextFile& RTextFile::operator<<(const bool b) throw(RIOException)
 void RTextFile::WriteChar(const char c) throw(RIOException)
 {
 	RString res(c);
-	WriteStr(c);
+	WriteStr(res);
 }
 
 
