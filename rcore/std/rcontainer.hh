@@ -258,7 +258,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
   if(bOrder)
   {
     bool Find;
-    T Index=GetId<C*>(del,Find);
+    Index=GetId<C*>(del,Find);
     if(!Find) return;
     ptr=&Tab[Index];
   }
@@ -267,7 +267,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
     for(Index=0,ptr=Tab;(*ptr)!=del;Index++,ptr++);
   }
   memcpy(ptr,ptr+1,((--NbPtr)-Index)*sizeof(C*));
-  if(bAlloc) delete(ptr);
+  if(bAlloc) delete(del);
 }
 
 //---------------------------------------------------------------------------
@@ -275,22 +275,24 @@ template<class C,class T,bool bAlloc,bool bOrder>
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	void RContainer<C,T,bAlloc,bOrder>::DeletePtr(const TUse &tag)
 {
-  C **ptr;
+  C **ptr,*del;
   T Index;
 
   if(bOrder)
   {
     bool Find;
-    T Index=GetId<TUse>(tag,Find);
+    Index=GetId<TUse>(tag,Find);
     if(!Find) return;
     ptr=&Tab[Index];
   }
   else
   {
     for(Index=0,ptr=Tab;(*ptr)->Compare(tag);Index++,ptr++);
+
   }
+  del=*ptr;
   memcpy(ptr,ptr+1,((--NbPtr)-Index)*sizeof(C*));
-  if(bAlloc) delete(ptr);
+  if(bAlloc) delete(del);
 }
 
 
