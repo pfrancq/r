@@ -101,7 +101,7 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCr
 	if(Type==Minimize)
 	{
 		P=-params.P;
-		Q=-params.Q;	
+		Q=-params.Q;
 	}
 	else
 	{
@@ -139,7 +139,7 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCr
 	if(Type==Minimize)
 	{
 		P=-params.P;
-		Q=-params.Q;	
+		Q=-params.Q;
 	}
 	else
 	{
@@ -155,7 +155,7 @@ void RPromethee::RPromCriterion::SetParams(const RPromCriterionParams& params)
 	if(Type==Minimize)
 	{
 		P=-params.P;
-		Q=-params.Q;	
+		Q=-params.Q;
 	}
 	else
 	{

@@ -130,9 +130,14 @@ public:
 	int Compare(const char* name) {return(Name.Compare(name));}
 
 	/**
+	* @return Fi of the solution.
+	*/
+	double GetFi(void) const {return(Fi);}
+
+	/**
 	* @return Identificator of the solution.
 	*/
-	unsigned int GetId(void) {return(Id);}
+	unsigned int GetId(void) const {return(Id);}
 
 	/**
 	* Return the name of the solution.

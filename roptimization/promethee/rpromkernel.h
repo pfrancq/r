@@ -102,8 +102,8 @@ public:
 	/**
 	* Create a new criterion.
 	* @param type           Type of the criterion.
-	* @param p              Indifference's threshold.
-	* @param q              Preference's threshold.
+	* @param p              Preference's threshold.
+	* @param q              Indifference's threshold.
 	* @param w              Weight of the criterion.
 	*/
 	virtual RPromCriterion* NewCriterion(const CriteriaType t,const double p,const double q,const double w) throw(bad_alloc);
@@ -119,21 +119,19 @@ public:
 	* Create a new criterion.
 	* @param type           Type of the criterion.
 	* @param name           Name of the criterion.
-	* @param p              Indifference's threshold.
-	* @param q              Preference's threshold.
+	* @param p              Preference's threshold.
+	* @param q              Indifference's threshold.
 	* @param w              Weight of the criterion.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const double p,
-	const double q,const double w) throw(bad_alloc);
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const double p,const double q,const double w) throw(bad_alloc);
 
 	/**
 	* Create a new criterion.
 	* @param type           Type of the criterion.
-	* @param name           Name of the criterion.	
+	* @param name           Name of the criterion.
 	* @param params         Parameters.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,
-		const RPromCriterionParams& params) throw(bad_alloc);
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const RPromCriterionParams& params) throw(bad_alloc);
 
 	/**
 	* Create a new solution.
@@ -142,7 +140,7 @@ public:
 
 	/**
 	* Create a new solution.
-	* @param name           Name of the solution.	
+	* @param name           Name of the solution.
 	*/
 	virtual RPromSol* NewSol(const char* name) throw(bad_alloc);
 

@@ -68,8 +68,8 @@ void RPromethee::RPromKernel::ComputePrometheeII(void)
 {
 	RPromCriterion **crit;
 	RPromSol **sol;
-	RPromCritValue **value;	
-	unsigned int i,j;	
+	RPromCritValue **value;
+	unsigned int i,j;
 	double SumWTot = 0.0;
 
 	// Calculation of Fit Crit fot the criteria.
@@ -211,13 +211,9 @@ int RPromethee::RPromKernel::sort_function_solutions( const void *a, const void 
 //-----------------------------------------------------------------------------
 RPromSol** RPromethee::RPromKernel::GetSols(void)
 {
-	RPromSol **Sols=new RPromSol*[Solutions.NbPtr];
-	RPromSol **sol1,**sol2;
-	unsigned int i;	
-
-	for(i=Solutions.NbPtr+1,sol1=Sols,sol2=Solutions.Tab;--i;sol1++,sol2++)
-		(*sol1)=(*sol2);
-	qsort(static_cast<void*>(Sols),Solutions.NbPtr,sizeof(RPromSol*),sort_function_solutions);	
+	RPromSol** Sols=new RPromSol*[Solutions.NbPtr];
+	memcpy(Sols,Solutions.Tab,Solutions.NbPtr*sizeof(RPromSol*));
+	qsort(static_cast<void*>(Sols),Solutions.NbPtr,sizeof(RPromSol*),sort_function_solutions);
 	return(Sols);
 }
 
