@@ -79,7 +79,7 @@ RDate::RDate(const char* date)
 	char* begin;
 	char num[10];
 
-	if(date)
+	if((date)&&(*date))
 	{
 		ptr=date;
 
@@ -103,7 +103,7 @@ RDate::RDate(const char* date)
 		ptr++; // Skip "-"
 		Month=atoi(num);
 
-		// Read Year
+		// Read Date
 		begin=num;
 		while(*ptr)
 			(*(begin++)) = (*(ptr++));

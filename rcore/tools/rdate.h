@@ -81,7 +81,7 @@ public:
 	RDate(const int day,const int month,const int year);
 
 	/**
-	* Construct a date.
+	* Construct a date. If string is null, then the current date is used.
 	* @param date                     String representing a date in (yy-mm-dd).
 	*/
 	RDate(const char* date);
