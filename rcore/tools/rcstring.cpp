@@ -6,7 +6,7 @@
 
 	C String - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the UniversitÃ© libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -401,7 +401,7 @@ int RCString::Find(char car,int pos,bool CaseSensitive) const
 
 
 //------------------------------------------------------------------------------
-int RCString::FindStr(RCString str,int pos,bool CaseSensitive) const
+int RCString::FindStr(const RCString str,int pos,bool CaseSensitive) const
 {
 	char* start;
 	const char* toFind;
@@ -409,52 +409,65 @@ int RCString::FindStr(RCString str,int pos,bool CaseSensitive) const
 	int avanct;
 	int maxlen;  //max number of char contained in the string to search
 	int incr;
+	RCString search(str);
 
 	// Initialise the search
 	if(!CaseSensitive)
-		str=str.ToUpper();
+		search=search.ToUpper();
 	if(pos<0)
 	{
 		// From right
 		incr=-1;
+
 		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=Data->Len+pos-1;
+		pos=Data->Len+pos+search.GetLen()-1;
 		if(pos<=0) return(-1);
 		start=&Data->Text[pos];
 		max=pos+1;
-		//Init string to find
-		toFind=str();
-		toFind+=str.GetLen()-1;
+
+		// Init string to find (here the last character)
+		toFind=search();
+		toFind+=search.GetLen()-1;
 	}
 	else
 	{
 		// From left
 		incr=+1;
+
 		// Start from 0 with maximal Len-pos+1 character to test.
 		start=&Data->Text[pos];
 		max=Data->Len-pos+1;
-		//Init string to find
-		toFind=str();
+
+		// Init string to find
+		toFind=search();
 	}
-	//If string to find is longer than the string return -1
-	if(str.GetLen()>max)return(-1);
+
+	// If string to find is longer than the string return -1
+	if(search.GetLen()>max)
+		return(-1);
 
 	// Search for the maximal number of character
 	for(max++;--max;)
 	{
 		if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(toupper(*start)==(*toFind))))
 		{
-			if(max>=str.GetLen())
+			if(max>=search.GetLen())
 			{
 				avanct=0;
-				maxlen=str.GetLen();
+				maxlen=search.GetLen();
 				bool found=true;
 				for(maxlen++;--maxlen,found;)
 				{
 					if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(toupper(*start)==(*toFind))))
 					{
 						if(!(maxlen-1))
-							return pos;
+						{
+							// String found
+							if(incr>0)
+								return(pos);
+							else
+								return(pos-search.GetLen());
+						}
 						start+=incr;
 						toFind+=incr;
 						avanct+=incr;
@@ -467,7 +480,13 @@ int RCString::FindStr(RCString str,int pos,bool CaseSensitive) const
 					}
 				}
 				if(found)
-					return pos;
+				{
+					// String found
+					if(incr>0)
+						return(pos);
+					else
+						return(pos-search.GetLen());
+				}
 			}
 		}
 		start+=incr;
@@ -475,53 +494,6 @@ int RCString::FindStr(RCString str,int pos,bool CaseSensitive) const
 	}
 	return(-1);
 
-	/*char* start;
-	bool left;
-	unsigned int max;        // Maximal number of character to search.
-
-
-	// Initialise the search
-	if(!CaseSensitive)
-		car=toupper(car);
-	if(pos<0)
-	{
-		// From right
-		left=false;
-
-		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=Len+pos-1;
-		if(pos<=0) return(-1);
-		start=&Text[pos];
-		max=pos+1;
-	}
-	else
-	{
-		// From left
-		left=true;
-
-		// Start from 0 with maximal Len-pos+1 character to test.
-		start=&Text[pos];
-		max=Len-pos+1;
-	}
-
-	// Search for the maximal number of character
-	for(max++;--max;)
-	{
-		if(((CaseSensitive)&&((*start)==car)) || ((!CaseSensitive)&&(toupper(*start)==car)))
-			return(pos);
-		if(left)
-		{
-			start++;
-			pos++;
-		}
-		else
-		{
-			pos--;
-			start--;
-		}
-	}
-	return(-1);
-	*/
 }
 
 
@@ -534,7 +506,7 @@ RCString RCString::Mid(unsigned int idx,unsigned int len) const
 
 	// If the index is greather than the length -> return a null string.
 	if(Data->Len<=idx) return(res);
-	
+
 	// Computed the number of caracters to copied
 	if(Data->Len-idx+1<len) len=Data->Len-idx+1;
 

@@ -6,7 +6,7 @@
 
 	Unicode String - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the UniversitÃ© libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -451,12 +451,14 @@ int RString::FindStr(const RString str,int pos,bool CaseSensitive) const
 	{
 		// From right
 		incr=-1;
+
 		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=Data->Len+pos-1;
+		pos=Data->Len+pos+search.GetLen()-1;
 		if(pos<=0) return(-1);
 		start=&Data->Text[pos];
 		max=pos+1;
-		//Init string to find
+
+		// Init string to find (here the last character)
 		toFind=search();
 		toFind+=search.GetLen()-1;
 	}
@@ -464,14 +466,18 @@ int RString::FindStr(const RString str,int pos,bool CaseSensitive) const
 	{
 		// From left
 		incr=+1;
+
 		// Start from 0 with maximal Len-pos+1 character to test.
 		start=&Data->Text[pos];
 		max=Data->Len-pos+1;
-		//Init string to find
+
+		// Init string to find
 		toFind=search();
 	}
-	//If string to find is longer than the string return -1
-	if (search.GetLen()>max)return(-1);
+
+	// If string to find is longer than the string return -1
+	if (search.GetLen()>max)
+		return(-1);
 
 	// Search for the maximal number of character
 	for(max++;--max;)
@@ -488,7 +494,13 @@ int RString::FindStr(const RString str,int pos,bool CaseSensitive) const
 					if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(RChar::ToUpper(*start)==(*toFind))))
 					{
 						if(!(maxlen-1))
-							return pos;
+						{
+							// String found
+							if(incr>0)
+								return(pos);
+							else
+								return(pos-search.GetLen());
+						}
 						start+=incr;
 						toFind+=incr;
 						avanct+=incr;
@@ -501,7 +513,13 @@ int RString::FindStr(const RString str,int pos,bool CaseSensitive) const
 					}
 				}
 				if(found)
-					return pos;
+				{
+					// String found
+					if(incr>0)
+						return(pos);
+					else
+						return(pos-search.GetLen());
+				}
 			}
 		}
 		start+=incr;

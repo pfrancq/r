@@ -6,7 +6,7 @@
 
 	C String - Header.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2004 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -242,7 +242,7 @@ public:
 	* @return The position of the first occurence or -1 if the character was not
 	*         found.
 	*/
-	int FindStr(RCString str,int pos=0,bool CaseSensitive=true) const;
+	int FindStr(const RCString str,int pos=0,bool CaseSensitive=true) const;
 
 	/**
 	* Get a sub-string of a given string.
