@@ -137,7 +137,7 @@ inline void RStd::RString::Verify(const unsigned int maxlen) throw(bad_alloc)
 {
 	if(MaxLen<maxlen)
 	{
-		char *tmp;
+		char* tmp;
 		MaxLen=maxlen;
 		tmp=new char[MaxLen+1];
 		if(Text)

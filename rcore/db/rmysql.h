@@ -186,7 +186,6 @@ class RQuery
 	*/
 	MYSQL_RES *result;
 
-
 	/**
 	* Actual row.
 	*/
