@@ -122,10 +122,19 @@ public:
 	int Compare(const RString& name) const;
 
 	/**
-	* Return the name of the file.
+	* Return the fullname of the file including the path.
+	* @returns a string containing the full name.
+	*/
+	const RString GetName(void) const;
+
+	/**
+	* Return the name of the file. If the fullname doesn't have a slash at the
+	* end, the part between the last slash and the end of the fullname is
+	* considered to be the file name. If the fullname has a slash at the end,
+	* an empty string is returned here.
 	* @returns a string containing the name.
 	*/
-	const RString& GetName(void) const;
+	const RString GetFileName(void) const;
 
 	/**
 	* Get the separator used for the directories.

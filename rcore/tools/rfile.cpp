@@ -110,9 +110,23 @@ int RFile::Compare(const RString& name) const
 
 
 //------------------------------------------------------------------------------
-const RString& RFile::GetName(void) const
+const RString RFile::GetName(void) const
 {
 	return(this->Name);
+}
+
+
+//------------------------------------------------------------------------------
+const RString RFile::GetFileName(void) const
+{
+	RString res;
+
+	int pos=Name.Find('/',-1)+1;
+	if(pos==0)
+		res=Name;
+	else if(pos<Name.GetLen())
+		res=Name.Mid(pos);
+	return(res);
 }
 
 
