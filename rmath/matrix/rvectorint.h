@@ -35,15 +35,14 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RVectorInt_H
-#define RVectorInt_H
+#ifndef RVectorIntH
+#define RVectorIntH
 
 
 //------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <limits.h>
 #include <new>
-using namespace std;
 
 
 //------------------------------------------------------------------------------
