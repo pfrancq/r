@@ -140,7 +140,7 @@ public:
   void WriteLog(char *entry) throw(RString);
   
 	/** Destructs the file.*/
-	~RTextFile(void);
+	virtual ~RTextFile(void);
 };
 
 
