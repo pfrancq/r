@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/stat.h>
-#if unix
+#ifdef _BSD_SOURCE
 	#include <unistd.h>
 #else
 	#include <io.h>
@@ -87,7 +87,7 @@ RIO::RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RSt
 		default:
 			throw(RString("No Valid Mode"));
 	};
-	#if !unix
+	#ifndef _BSD_SOURCE
 		localmode|=O_BINARY;
 	#endif
 	if(Mode==Read)
@@ -105,7 +105,7 @@ RIO::RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
   : Mode(Read), Name(name), All(all), NewLine(false), Rem("%"), BeginRem("/*"),
 		EndRem("*/"),CommentType(SingleLineComment),Line(0)
 {
-	#if unix
+	#ifdef _BSD_SOURCE
 		handle=open(Name,O_RDONLY);
 	#else
 		handle=open(Name,O_RDONLY | O_BINARY);	

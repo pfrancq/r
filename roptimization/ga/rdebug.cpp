@@ -35,7 +35,7 @@
 // include files for ANSI C/C++
 #include <new.h>
 #include <string.h>
-#ifdef unix
+#ifdef _BSD_SOURCE
 	#include <unistd.h>
 #else
 	#include <io.h>
