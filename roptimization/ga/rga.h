@@ -204,6 +204,7 @@ bool Examine(int argc, char *argv[],const char* Prj,const char *Ver);
 template<class cVal,bool Max> class RFitness;
 template<class cInst,class cChromo,class cFit,class cThreadData> class RChromo;
 template<class cInst,class cChromo,class cFit,class cThreadData> class RInst;
+template<class cObj> class RObjs;
 
 
 }  //------- End of namespace RGA ---------------------------------------------
