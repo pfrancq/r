@@ -1,10 +1,10 @@
 /*
 
-  RChromo.hh
+  RInst2D.cpp
 
-  Chromosomes of Genetic Algorithms - Inline Implementation
+  Instance for 2D placement GA - Inline Implementation
 
-  (C) 1998-2000 by P. Francq.
+  (C) 1999-2000 by P. Francq.
 
   Version $Revision$
 
@@ -30,16 +30,14 @@
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit>
-	RChromo<cInst,cChromo,cFit>::RChromo(cInst *inst,unsigned id) throw(bad_alloc)
-		: Instance(inst),Id(id),ToEval(true)
+	RInst2D<cInst,cChromo,cFit>::RInst2D(unsigned popsize,RObj2D **objs) throw(bad_alloc)
+		: RInst<cInst,cChromo,cFit>(popsize), Objs(objs)
 {
-  Fitness=new cFit();
 }
 
 
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit>
-	RChromo<cInst,cChromo,cFit>::~RChromo(void)
+	RInst2D<cInst,cChromo,cFit>::~RInst2D(void)
 {
-  if(Fitness) delete Fitness;
 }

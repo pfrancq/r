@@ -28,6 +28,7 @@
 
 //---------------------------------------------------------------------------
 // Includes
+#include <iostream.h>
 #include "rga.h"
 using namespace RGA;
 
@@ -54,3 +55,69 @@ unsigned RGA::NbCross;
 unsigned RGA::AgeNextMutation;
 unsigned RGA::AgeNextBestMutation;
 unsigned long RGA::AgeBestPop;
+
+
+//---------------------------------------------------------------------------
+bool RGA::Examine(int argc, char *argv[],const char* Prj,const char *Ver)
+{
+	char **args;	
+	bool bVersion=false;
+	bool bHelp=false;
+	bool bMaster=false;
+	bool bSlave=false;
+	char MasterIP[20];
+	char HostIP[20];
+			
+ 	// Verify if parameters
+ 	if(argc==1)
+ 	{
+ 		cout<<Prj<<": Not input file\n";
+ 		return(true);
+ 	}
+ 	
+ 	// Analyse parameters
+ 	for(args=argv+1;--argc;args++)
+ 	{
+		if(!strcmp(*args,"--version"))
+			bVersion=true;
+		else
+		if(!strcmp(*args,"--help"))
+			bHelp=true;
+  }
+
+  // Treats parameters
+	if(bVersion)
+	{
+	  cout<<Prj<<" Version "<<Ver<<"  (C) 1999-2000 by Pascal Francq\n";	
+	  return(true);
+	}
+	if(bHelp)
+	{
+		cout<<"Usage: "<<Prj<<" [options] file\nOptions:\n";
+		cout<<"--help\t\t\tDisplay this information\n";
+		cout<<"--version\t\tDisplay the version information\n";		
+		cout<<"-o <file>\t\tPut output into <file>\n";
+		cout<<"-s <ip>\t\t\tSlave mode with master address <ip>\n";
+		cout<<"-m <ip>\t\t\tMaster mode\n";
+		cout<<"-h <ip>\t\t\tIP address of host (DISPLAY)\n";
+		return(true);
+	}
+
+	// Treat if Stand-alone
+	if((!bSlave)&&(!bMaster))
+	{
+	}
+	
+	// Treat if Master
+	if(bMaster)
+	{
+	}
+	
+	// Treat if Slave
+	if(bSlave)
+	{
+	}
+	
+	// End
+  return(true);
+}

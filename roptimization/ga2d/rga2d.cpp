@@ -1,10 +1,10 @@
 /*
 
-  RChromo.hh
+  RGA2D.cpp
 
-  Chromosomes of Genetic Algorithms - Inline Implementation
+  2D Placement Genetic Algorithm - Header
 
-  (C) 1998-2000 by P. Francq.
+  (C) 1999-2000 by P. Francq.
 
   Version $Revision$
 
@@ -27,19 +27,12 @@
 */
 
 
-
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	RChromo<cInst,cChromo,cFit>::RChromo(cInst *inst,unsigned id) throw(bad_alloc)
-		: Instance(inst),Id(id),ToEval(true)
-{
-  Fitness=new cFit();
-}
+// Includes
+#include "rga2d.h"
+using namespace RGA;
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	RChromo<cInst,cChromo,cFit>::~RChromo(void)
-{
-  if(Fitness) delete Fitness;
-}
+// General Variables
+unsigned int RGA::NbObjects=0;

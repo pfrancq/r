@@ -1,10 +1,10 @@
 /*
 
-  RFitness.hh
+  RObj2D.h
 
-  Fitness for Chromsomes of Genetic Algorithms - Inline Implementation
+  Object for 2D placement GA - Header
 
-  (C) 1998-2000 by P. Francq.
+  (C) 1999-2000 by P. Francq.
 
   Version $Revision$
 
@@ -27,56 +27,39 @@
 */
 
 
-
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	RFitness<cVal,Max>::RFitness(void)
-{
-  Value=0;
-}
+#ifndef RObj2DH
+#define RObj2DH
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline RFitness<cVal,Max>& RFitness<cVal,Max>::operator=(const RFitness &f)
-{
-  Value=f.Value;
-}
+// Standard libraries includes
+#include "rgeometry/polygons.h"
+#include "rgeometry/rgeoinfo.h"
+using namespace RGeometry;
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator==(const RFitness &f)
-{
-  return(Value==f.Value);
-}
+namespace RGA{
+//---------------------------------------------------------------------------
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator!=(const RFitness &f)
+class RObj2D
 {
-  return(Value!=f.Value);
-}
+public:
+  char *PossOri,NbPossOri;
+  RPolygon *Polygon;
+  bool Deformable;            // If not deformable -> unique cGeoInfo for all chromosomes
+
+  RObj2D(bool);
+  virtual ~RObj2D(void);
+};
+
+
+}//------- End of namespace RGA ---------------------------------------------
+
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator>(const RFitness &f)
-{
-  if(Max)
-    return(Value>f.Value);
-  else
-    return(Value<f.Value);
-}
-
-
-//---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator<(const RFitness &f)
-{
-  if(Max)
-    return(Value<f.Value);
-  else
-    return(Value>f.Value);
-}
+#endif

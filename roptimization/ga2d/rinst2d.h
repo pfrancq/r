@@ -1,16 +1,16 @@
 /*
 
-  RFitness.hh
+  RInst2D.h
 
-  Fitness for Chromsomes of Genetic Algorithms - Inline Implementation
+  Instance for 2D placement GA - Header
 
-  (C) 1998-2000 by P. Francq.
+  (C) 1999-2000 by P. Francq.
 
   Version $Revision$
 
   Last Modify: $Date$
 
-  This program is free software; you can redistribute it and/or modify
+ This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   any later version.
@@ -27,56 +27,49 @@
 */
 
 
-
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	RFitness<cVal,Max>::RFitness(void)
-{
-  Value=0;
-}
+#ifndef RInst2DH
+#define RInst2DH
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline RFitness<cVal,Max>& RFitness<cVal,Max>::operator=(const RFitness &f)
-{
-  Value=f.Value;
-}
+// Standard libraries includes
+#include "rga.h"
+#include "rga2d.h"
+#include "robj2d.h"
+using namespace RGA;
+#include "rgeometry/polygons.h"
+#include "rgeometry/rgeoinfo.h"
+using namespace RGeometry;
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator==(const RFitness &f)
-{
-  return(Value==f.Value);
-}
+namespace RGA{
+//---------------------------------------------------------------------------
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator!=(const RFitness &f)
+template<class cInst,class cChromo,class cFit>
+	class RInst2D	: public RInst<cInst,cChromo,cFit>
 {
-  return(Value!=f.Value);
-}
+public:
+	RObj2D **Objs;	
+	
+  RInst2D(unsigned popsize,RObj2D** objs) throw(bad_alloc);
+  virtual ~RInst2D(void);
+
+};
+
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator>(const RFitness &f)
-{
-  if(Max)
-    return(Value>f.Value);
-  else
-    return(Value<f.Value);
-}
+// RInst2D codes
+#include "rinst2d.hh"
+
+
+}//------- End of namespace RGA ---------------------------------------------
+
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator<(const RFitness &f)
-{
-  if(Max)
-    return(Value<f.Value);
-  else
-    return(Value>f.Value);
-}
+#endif

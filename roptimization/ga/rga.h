@@ -36,8 +36,17 @@
 // Standard libraries includes
 #include <new.h>
 #include <values.h>
+#ifndef NULL
+	const long int NULL=0;
+#endif
+
+//---------------------------------------------------------------------------
+// Standard Rainbow libraries includes
 #include "rstd/random.h"        // Random numbers generator
 using namespace RStd;
+
+//---------------------------------------------------------------------------
+// GA Rainbow libraries includes
 #include "rfitness.h"
 #include "rinst.h"
 #include "rchromo.h"
@@ -84,6 +93,11 @@ extern unsigned long AgeBestPop;
 // Errors
 class eGA : public exception {};
 class eGAVerify : public eGA {};
+
+
+//---------------------------------------------------------------------------
+// Examine
+bool Examine(int argc, char *argv[],const char* Prj,const char *Ver);
 
 
 }//------- End of namespace rrlGA -------------------------------------------

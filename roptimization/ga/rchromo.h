@@ -44,7 +44,8 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> class RChromo
+template<class cInst,class cChromo,class cFit>
+	class RChromo
 {
 public:
   cInst *Instance;
@@ -52,14 +53,14 @@ public:
   cFit *Fitness;
   bool ToEval;
 
-  RChromo(cInst *,unsigned) throw(bad_alloc);
+  RChromo(cInst *inst,unsigned id) throw(bad_alloc);
   virtual bool RandomConstruct(void) {return(true);}
   virtual void Evaluate(void) {}
-  virtual bool Crossover(RChromo *,RChromo *) {return(true);}
+  virtual bool Crossover(RChromo *parent1,RChromo *parent2) {return(true);}
   virtual bool Mutation(void) {return(true);}
   virtual void Print(void) {}
   virtual bool Verify(void) {return(true);}
-  virtual RChromo& operator=(const RChromo &) {return(*this);}
+  virtual RChromo& operator=(const RChromo &chromo) {return(*this);}
   virtual ~RChromo(void);
 };
 

@@ -1,10 +1,10 @@
 /*
 
-  RFitness.hh
+  RChromo2D.h
 
-  Fitness for Chromsomes of Genetic Algorithms - Inline Implementation
+  Chromosome for 2D placement GA - Header
 
-  (C) 1998-2000 by P. Francq.
+  (C) 1999-2000 by P. Francq.
 
   Version $Revision$
 
@@ -27,56 +27,47 @@
 */
 
 
-
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	RFitness<cVal,Max>::RFitness(void)
-{
-  Value=0;
-}
+#ifndef RChromo2DH
+#define RChromo2DH
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline RFitness<cVal,Max>& RFitness<cVal,Max>::operator=(const RFitness &f)
-{
-  Value=f.Value;
-}
+// Standard libraries includes
+#include "rga.h"
+#include "rga2d.h"
+using namespace RGA;
+#include "rgeometry/polygons.h"
+#include "rgeometry/rgeoinfo.h"
+using namespace RGeometry;
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator==(const RFitness &f)
-{
-  return(Value==f.Value);
-}
+namespace RGA{
+//---------------------------------------------------------------------------
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator!=(const RFitness &f)
+template<class cInst,class cChromo,class cFit,class cInfo>
+	class RChromo2D : public RChromo<cInst,cChromo,cFit>
 {
-  return(Value!=f.Value);
-}
+public:
+  cInfo **Infos;
+
+  RChromo2D(cInst *inst,unsigned id) throw(bad_alloc);
+  virtual bool RandomConstruct(void);
+  virtual ~RChromo2D(void);
+};
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator>(const RFitness &f)
-{
-  if(Max)
-    return(Value>f.Value);
-  else
-    return(Value<f.Value);
-}
+// RChromo2D codes
+#include "rchromo2d.hh"
+
+
+}//------- End of namespace RGA ---------------------------------------------
+
 
 
 //---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator<(const RFitness &f)
-{
-  if(Max)
-    return(Value<f.Value);
-  else
-    return(Value>f.Value);
-}
+#endif

@@ -34,6 +34,10 @@
 
 //---------------------------------------------------------------------------
 // Standard libraries includes
+#include <stdlib.h>
+
+//---------------------------------------------------------------------------
+// GA Rainbow libraries includes
 #include "rga.h"
 using namespace RGA;
 
@@ -44,7 +48,8 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> class RInst
+template<class cInst,class cChromo,class cFit>
+	class RInst
 {
 public:
   cChromo **Chromosomes;
@@ -53,7 +58,7 @@ public:
   unsigned long Gen;
   unsigned long AgeBest;
 
-  RInst(unsigned) throw(bad_alloc);
+  RInst(unsigned popsize) throw(bad_alloc);
   virtual bool RandomConstruct(void);
   virtual bool StopCondition(void)=0;
   virtual void PostRun(void) {}

@@ -27,27 +27,20 @@
 */
 
 
-
 //---------------------------------------------------------------------------
-//
-// RInst
-//
-//---------------------------------------------------------------------------
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> RInst<cInst,cChromo,cFit>::RInst(unsigned P) throw(bad_alloc)
+template<class cInst,class cChromo,class cFit>
+	RInst<cInst,cChromo,cFit>::RInst(unsigned popsize) throw(bad_alloc)
+		: PopSize(popsize),AgeBest(0),Gen(0)
 {
   cChromo **C;
   unsigned i;
-
+	
   #ifdef DEBUG
     DebugOutput.Init(DebugOutputFileName);
     DebugOutput.BeginApp("HGA","Pascal Francq");
     DebugOutput.BeginFunc("RInst","RInst");
   #endif
-  PopSize=P;
-  AgeBestPop=AgeBest=Gen=0;
+  MaxBestPopAge=0;
   AgeNextMutation=MaxBestPopAge;
   AgeNextBestMutation=MaxBestAge;
   Chromosomes=new cChromo*[PopSize];
@@ -59,8 +52,8 @@ template<class cInst,class cChromo,class cFit> RInst<cInst,cChromo,cFit>::RInst(
   BestChromosome=NULL;
   RandomGen = new RRandomGood(12345);
   for(i=0,C=Chromosomes;i<PopSize;C++,i++)
-    (*C)=new cChromo(((cInst*)this),i);
-  BestChromosome=new cChromo(((cInst*)this),PopSize);
+    (*C)=new cChromo(static_cast<cInst*>(this),i);
+  BestChromosome=new cChromo(static_cast<cInst*>(this),PopSize);
   #ifdef DEBUG
     DebugOutput.EndFunc("RInst","RInst");
   #endif
@@ -68,7 +61,8 @@ template<class cInst,class cChromo,class cFit> RInst<cInst,cChromo,cFit>::RInst(
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> bool RInst<cInst,cChromo,cFit>::RandomConstruct(void)
+template<class cInst,class cChromo,class cFit>
+	bool RInst<cInst,cChromo,cFit>::RandomConstruct(void)
 {
   cChromo **C=Chromosomes,*p;
 
@@ -97,7 +91,8 @@ template<class cInst,class cChromo,class cFit> bool RInst<cInst,cChromo,cFit>::R
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> inline void RInst<cInst,cChromo,cFit>::Evaluate(void)
+template<class cInst,class cChromo,class cFit>
+	inline void RInst<cInst,cChromo,cFit>::Evaluate(void)
 {
   cChromo **C=Chromosomes,*p,*tmp;
 
@@ -136,10 +131,13 @@ template<class cInst,class cChromo,class cFit> inline void RInst<cInst,cChromo,c
 
 
 //--------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> int RInst<cInst,cChromo,cFit>::sort_function_cChromosome( const void *a, const void *b)
+template<class cInst,class cChromo,class cFit>
+	int RInst<cInst,cChromo,cFit>::sort_function_cChromosome( const void *a, const void *b)
 {
-  cFit *af=(*((cChromo**)a))->Fitness;
-  cFit *bf=(*((cChromo**)b))->Fitness;
+  cFit *af=(*(static_cast<cChromo**>(a)))->Fitness;
+  cFit *bf=(*(static_cast<cChromo**>(b)))->Fitness;
+
+		
 
   if((*af)==(*bf)) return(0);
   if((*af)>(*bf))
@@ -151,7 +149,8 @@ template<class cInst,class cChromo,class cFit> int RInst<cInst,cChromo,cFit>::so
 
 //---------------------------------------------------------------------------
 // The bests chromosomes are crossovered
-template<class cInst,class cChromo,class cFit> inline void RInst<cInst,cChromo,cFit>::Crossover(void)
+template<class cInst,class cChromo,class cFit>
+	inline void RInst<cInst,cChromo,cFit>::Crossover(void)
 {
   unsigned i;
   cChromo **C1,**C2,*C3;
@@ -162,7 +161,7 @@ template<class cInst,class cChromo,class cFit> inline void RInst<cInst,cChromo,c
   // Determine the childs (end of tmpChrom) and the parents (begin of tmpChrom)
   if(PopSize<4) return;
   memcpy(tmpChrom,Chromosomes,sizeof(cChromo*)*PopSize);
-  qsort((void*)tmpChrom,PopSize,sizeof(cChromo*),sort_function_cChromosome);
+  qsort(static_cast<void*>(tmpChrom),PopSize,sizeof(cChromo*),sort_function_cChromosome);
 
   // Make the crossovers
   randorder<cChromo*>(tmpChrom,2*NbCross);
@@ -188,7 +187,8 @@ template<class cInst,class cChromo,class cFit> inline void RInst<cInst,cChromo,c
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> inline void RInst<cInst,cChromo,cFit>::Mutation(void)
+template<class cInst,class cChromo,class cFit>
+	inline void RInst<cInst,cChromo,cFit>::Mutation(void)
 {
   unsigned i;
   cFit *WorstFitness=BestChromosome->NewFitness();
@@ -241,7 +241,8 @@ template<class cInst,class cChromo,class cFit> inline void RInst<cInst,cChromo,c
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> void RInst<cInst,cChromo,cFit>::Generation(void)
+template<class cInst,class cChromo,class cFit>
+	void RInst<cInst,cChromo,cFit>::Generation(void)
 {
   #ifdef DEBUG
     DebugOutput.BeginFunc("Generation","RInst");
@@ -264,7 +265,8 @@ template<class cInst,class cChromo,class cFit> void RInst<cInst,cChromo,cFit>::G
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> void RInst<cInst,cChromo,cFit>::Run(void)
+template<class cInst,class cChromo,class cFit>
+	void RInst<cInst,cChromo,cFit>::Run(void)
 {
   #ifdef DEBUG
     DebugOutput.BeginFunc("Run","RInst");
@@ -284,7 +286,8 @@ template<class cInst,class cChromo,class cFit> void RInst<cInst,cChromo,cFit>::R
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> bool RInst<cInst,cChromo,cFit>::Verify(void)
+template<class cInst,class cChromo,class cFit>
+	bool RInst<cInst,cChromo,cFit>::Verify(void)
 {
   unsigned i;
   cChromo **C;
@@ -305,7 +308,8 @@ template<class cInst,class cChromo,class cFit> bool RInst<cInst,cChromo,cFit>::V
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit> RInst<cInst,cChromo,cFit>::~RInst(void)
+template<class cInst,class cChromo,class cFit>
+	RInst<cInst,cChromo,cFit>::~RInst(void)
 {
   cChromo **C;
   unsigned i;

@@ -1,17 +1,14 @@
 /*
 
-  RFitness.h
+  RObj2D.hh
 
-  Fitness for Chromosomes of Genetic Algorithms - Header
+  Object for 2D placement GA - Inline Implementation
 
-  (C) 1998-2000 by P. Francq.
+  (C) 1999-2000 by P. Francq.
 
   Version $Revision$
 
   Last Modify: $Date$
-
-  GA.cpp  : Code of this module
-  GA.hh   : Implementation of templates
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,36 +27,22 @@
 */
 
 
+
 //---------------------------------------------------------------------------
-#ifndef RFitnessH
-#define RFitnessH
+// Includes
+#include "robj2d.h"
+using namespace RGA;
 
 
 //---------------------------------------------------------------------------
-namespace RGA{
-//---------------------------------------------------------------------------
-
-
-//---------------------------------------------------------------------------
-template<class cVal,bool Max>
-	class RFitness
+RObj2D::RObj2D(bool d) : Deformable(d)
 {
-public:
-  cVal Value;
-
-  RFitness(void);
-  inline RFitness& operator=(const RFitness &);
-  inline bool operator==(const RFitness &);
-  inline bool operator!=(const RFitness &);
-  inline bool operator>(const RFitness &);
-  inline bool operator<(const RFitness &);
-};
+	Polygon=NULL;
+}
 
 
 //---------------------------------------------------------------------------
-// rrlGA classes codes
-#include "rfitness.hh"
-
-
-}//------- End of namespace RGA ---------------------------------------------
-#endif
+RObj2D::~RObj2D(void)
+{
+	if(Polygon) delete Polygon;
+}
