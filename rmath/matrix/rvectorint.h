@@ -67,20 +67,33 @@ namespace R{
 */
 class RVectorInt
 {
+protected:
 	/**
 	* Number of Integer value in the list.
 	*/
-	unsigned int NbAttr;
+	unsigned int NbInt;
 
 	/**
 	* Maximal Number of Integer value in the list.
 	*/
-	unsigned int MaxAttr;
+	unsigned int MaxInt;
 
 	/**
 	* The array representing the Integer values.
 	*/
 	unsigned int* List;
+
+private:
+
+	/**
+	* Pointer used to parse a list.
+	*/
+	unsigned int* Parse;
+
+	/**
+	* Current position parsed.
+	*/
+	unsigned int Pos;
 
 public:
 
@@ -110,8 +123,7 @@ public:
 	*/
 	bool IsIn(const unsigned int In) const;
 
-
- 	/**
+	/**
 	* Insert an Integer value in the list.
 	* @param Ins            The Integer value to insert.
 	*/
@@ -151,7 +163,27 @@ public:
 	* Get the number of Integer value in the list.
 	* @return unsigned int
 	*/
-	unsigned int GetNbAttr(void) const;
+	unsigned int GetNbInt(void) const;
+
+	/**
+	* Start the iterator to go trough the list.
+	*/
+	void Start(void) {Pos=0; Parse=List;}
+
+	/**
+	* Test if the end of the list is reached.
+	*/
+	bool End(void) const {return(Pos==NbInt);}
+
+	/**
+	* Goto the next element of the list.
+	*/
+	void Next(void) {Pos++; Parse++;}
+
+	/**
+	* Return the current element.
+	*/
+	unsigned int operator()(void) const {return(*Parse);}
 
 	/**
 	* Destructor of the list.
