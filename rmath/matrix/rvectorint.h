@@ -6,7 +6,7 @@
 
 	Class representing a list of Integer values - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Vandaele Valery(vvandaele@ulb.ac.be).
@@ -42,8 +42,8 @@
 
 
 //------------------------------------------------------------------------------
-// include files for RProject
-#include <rstd/random.h>
+// include files for R Project
+#include <rstd/rstd.h>
 
 
 //------------------------------------------------------------------------------
@@ -54,13 +54,13 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RVectorInt class provides a representation of vector of integers, each
-* integer is represented by a number (int).
+* The RVectorInt class provides a representation of ordered vector of integers.
 
 * @author Vandaele Valery
-* @short List of Integers.
+* @short Ordered Integers Vector.
 */
-class RVectorInt
+template<bool bOrder=true>
+	class RVectorInt
 {
 protected:
 	/**
@@ -103,6 +103,34 @@ public:
 	* @param lst            List to copy.
 	*/
 	RVectorInt(const RVectorInt* lst) throw(std::bad_alloc);
+
+private:
+
+	/**
+	* Verify if the container can hold the next element to be inserted. If not,
+	* the container is extended.
+	*/
+	void Verify(void) throw(std::bad_alloc);
+
+	/**
+	* Verify if the container can hold a certain nujmber of elements. If not,
+	* the container is extended.
+    * @param max            The number of elements that must be contained.
+	*/
+	void Verify(unsigned int max) throw(std::bad_alloc);
+
+	/**
+	* This function returns the index of an element represented by tag, and it
+	* is used when the elements are to be ordered.
+	* @param nb             Number to find.
+	* @param find           If the element represented by tag exist, find is set to
+	*                       true.
+	* @return Returns the index of the element if it exists or the index where
+	* is has to inserted.
+	*/
+	unsigned int GetId(unsigned int nb,bool& find) const;
+
+public:
 
 	/**
 	* Test if two lists have exactly the same Integers.
@@ -186,6 +214,11 @@ public:
 	*/
 	virtual ~RVectorInt(void);
 };
+
+
+//------------------------------------------------------------------------------
+// Template implementation
+#include <rmath/rvectorint.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------
