@@ -4,7 +4,7 @@
 
 	Class representing a chromosome for a GGA - Inline implementation
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,8 +37,8 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RGroups<cGroup,cObj,cGroupData,cGroups>::RGroups(RCursor<cObj,unsigned int>* objs,const unsigned max) throw(std::bad_alloc)
-		: RContainer<cGroup,unsigned int,true,false>(max,max<20?20:max/2), Used(max,max<20?20:max/2),
+	RGroups<cGroup,cObj,cGroupData,cGroups>::RGroups(RCursor<cObj>* objs,const unsigned max) throw(std::bad_alloc)
+		: RContainer<cGroup,true,false>(max,max<20?20:max/2), Used(max,max<20?20:max/2),
 		  GroupData(0), Objs(objs), ObjsAss(objs->GetNb()), ObjsNoAss(objs->GetNb()),
 		  OrdObjectsAss(0), NewUsedId(0)
 {

@@ -6,7 +6,7 @@
 
 	Rectangle - Implemtation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -45,21 +45,21 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RRects::RRects(void)
-	: RContainer<RRect,unsigned int,true,false>(20,10)
+	: RContainer<RRect,true,false>(20,10)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RRects::RRects(unsigned int max)
-	: RContainer<RRect,unsigned int,true,false>(max,10)
+	: RContainer<RRect,true,false>(max,10)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RRects::RRects(RRects* rects)
-	: RContainer<RRect,unsigned int,true,false>(rects)
+	: RContainer<RRect,true,false>(rects)
 {
 }
 

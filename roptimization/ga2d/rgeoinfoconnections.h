@@ -6,7 +6,7 @@
 
 	Connections for the 2D Placement (Geometric Information Part) - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -53,7 +53,7 @@ namespace R{
 * @short Connections for Geometric Information.
 * @author Pascal Francq
 */
-class RGeoInfoConnections : public RContainer<RGeoInfoConnection,unsigned int,true,false>
+class RGeoInfoConnections : public RContainer<RGeoInfoConnection,true,false>
 {
 	/**
 	* Pointer to the connections.

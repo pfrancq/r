@@ -6,7 +6,7 @@
 
 	Promethee Solutions - Implementation.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -45,14 +45,14 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RPromSol::RPromSol(const unsigned int id,const unsigned int nbcrit)
-	: RContainer<RPromCritValue,unsigned int,true,false>(nbcrit,nbcrit/2), Id(id)
+	: RContainer<RPromCritValue,true,false>(nbcrit,nbcrit/2), Id(id)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RPromSol::RPromSol(const unsigned int id,const char* name,const unsigned int nbcrit)
-	: RContainer<RPromCritValue,unsigned int,true,false>(nbcrit,nbcrit/2), Id(id), Name(name)
+	: RContainer<RPromCritValue,true,false>(nbcrit,nbcrit/2), Id(id), Name(name)
 {
 }
 

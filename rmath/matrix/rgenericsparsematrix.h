@@ -5,7 +5,7 @@
 
 	Generic Sparse Matrix  containing generic Sparse vector - Header.
 
-	Copyright 2003 by the Université Libre de Bruxelles.
+	Copyright 2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors
 		 Vandaele Valery(vavdaele@ulb.ac.be)
@@ -57,7 +57,7 @@ namespace R{
 * @short Generic Sparse Matrix.
 */
 template<class C,bool bAlloc>
-	class RGenericSparseMatrix  :  public R::RContainer<RGenericSparseVector<C,bAlloc>,unsigned int, bAlloc,true>
+	class RGenericSparseMatrix  :  public R::RContainer<RGenericSparseVector<C,bAlloc>, bAlloc,true>
 {
 public :
 

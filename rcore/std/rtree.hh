@@ -6,7 +6,7 @@
 
 	Generic Tree - Inline Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -39,9 +39,9 @@
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
 	RTree<N,bAlloc,bOrder>::RTree(unsigned int max,unsigned int inc) throw(std::bad_alloc)
-		: RContainer<N,unsigned int,bAlloc,bOrder>(max,inc), Top(0)
+		: RContainer<N,bAlloc,bOrder>(max,inc), Top(0)
 {
-	Top = new RContainer<N,unsigned int,false,bOrder>(10,5);
+	Top = new RContainer<N,false,bOrder>(10,5);
 }
 
 
@@ -51,14 +51,14 @@ template<class N,bool bAlloc,bool bOrder>
 {
 	RReturnIfFail(node);
 	if(!node) return;
-	RContainer<N,unsigned int,bAlloc,bOrder>::InsertPtr(node);
+	RContainer<N,bAlloc,bOrder>::InsertPtr(node);
 	if(parent)
 	{
 		node->Parent=parent;
-		parent->RContainer<N,unsigned int,false,bOrder>::InsertPtr(node);
+		parent->RContainer<N,false,bOrder>::InsertPtr(node);
 	}
 	else
-		Top->RContainer<N,unsigned int,false,bOrder>::InsertPtr(node);
+		Top->RContainer<N,false,bOrder>::InsertPtr(node);
 }
 
 
@@ -70,12 +70,12 @@ template<class N,bool bAlloc,bool bOrder>
 	if(!node) return;
 	if(node->Parent)
 	{
-		node->Parent->RContainer<N,unsigned int,false,bOrder>::DeletePtr(node);
+		node->Parent->RContainer<N,false,bOrder>::DeletePtr(node);
 		node->Parent=0;
 	}
 	else
-		Top->RContainer<N,unsigned int,false,bOrder>::DeletePtr(node);
-	RContainer<N,unsigned int,bAlloc,bOrder>::DeletePtr(node);
+		Top->RContainer<N,false,bOrder>::DeletePtr(node);
+	RContainer<N,bAlloc,bOrder>::DeletePtr(node);
 }
 
 

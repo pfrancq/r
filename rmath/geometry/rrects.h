@@ -6,7 +6,7 @@
 
 	Rectangle - Header
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -50,7 +50,7 @@ namespace R{
 * @author Pascal Francq
 * @short Rectangles container.
 */
-class RRects : public RContainer<RRect,unsigned int,true,false>
+class RRects : public RContainer<RRect,true,false>
 {
 public:
 

@@ -6,7 +6,7 @@
 
 	Polygons - Header.
 
-	Copyright 1999-2004 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -52,7 +52,7 @@ namespace R{
 *	@author Pascal Francq
 *	@short Container of polygons.
  */
-class RPolygons : public RContainer<RPolygon,unsigned int,true,false>
+class RPolygons : public RContainer<RPolygon,true,false>
 {
 public:
 

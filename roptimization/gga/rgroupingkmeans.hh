@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Grouping - Inline Implemenation
 
-	Copyright 1998-2001 by the Université Libre de Bruxelles.
+	Copyright 1998-2001 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -39,25 +39,25 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::RGroupingKMeans(RContainer<cObj,unsigned int,false,true>* objs)
+	RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::RGroupingKMeans(RContainer<cObj,false,true>* objs)
 {
 	Rand= new RRandomGood(1);
 	Rand->Reset(1);
 	Objs=objs;
 	Groups=0;
 
-	protos = new RContainer<cObj,unsigned int,false,false>(10, 5);
-	protoserror = new RContainer<cObj,unsigned int,false,false>(10, 5);
-	grpstemp2 = new RContainer<cGroup,unsigned int,false,false>(10, 5);
-	grpstemp = new RContainer<cGroup,unsigned int,false,false>(10, 5);
-	grpsfinal = new RContainer<cGroup,unsigned int,false,false>(10, 5);
+	protos = new RContainer<cObj,false,false>(10, 5);
+	protoserror = new RContainer<cObj,false,false>(10, 5);
+	grpstemp2 = new RContainer<cGroup,false,false>(10, 5);
+	grpstemp = new RContainer<cGroup,false,false>(10, 5);
+	grpsfinal = new RContainer<cGroup,false,false>(10, 5);
 }
 
 
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::IsValidProto(R::RContainer<cObj,unsigned int,false,false>* prototypes,cObj* obj) throw(std::bad_alloc)
+	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::IsValidProto(R::RContainer<cObj,false,false>* prototypes,cObj* obj) throw(std::bad_alloc)
 {
 	if (prototypes->GetPtr(obj))
 		return(false);
@@ -75,8 +75,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::RefiningCenters(int nbsub, int level)
 {
-	RCursor<cObj, unsigned int> curs;
-	RContainer<cObj,unsigned int,false,true>* tmpobjs;
+	RCursor<cObj> curs;
+	RContainer<cObj,false,true>* tmpobjs;
 	cGroup*g;
 	double cost, subcostfunction;
 	int r,finalcentersid;
@@ -84,18 +84,18 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 	if (nbsubprofpersubsamp==0)
 		cout << "---------------------->    WARNING !!! Number of elements per subsamples = 0 !!! "<<endl;
-	RContainer<cGroup,unsigned int,true,true>* subsamples;
-	subsamples=new RContainer<cGroup,unsigned int,true,true>(10,5);
-	RContainer<cGroup,unsigned int,true,true>* initialcenters;
-	initialcenters=new RContainer<cGroup,unsigned int,true,true>(10,5);
-	RContainer<cObj, unsigned int, false,true>* allcenters;
-	allcenters= new RContainer<cObj,unsigned int,false,true> (20,10);
-	tmpobjs= new RContainer<cObj,unsigned int,false,true> (20,10);
+	RContainer<cGroup,true,true>* subsamples;
+	subsamples=new RContainer<cGroup,true,true>(10,5);
+	RContainer<cGroup,true,true>* initialcenters;
+	initialcenters=new RContainer<cGroup,true,true>(10,5);
+	RContainer<cObj,false,true>* allcenters;
+	allcenters= new RContainer<cObj,false,true> (20,10);
+	tmpobjs= new RContainer<cObj,false,true> (20,10);
 
 	for (int k=0; k<nbsub; k++)
 	{
-		RContainer<cObj,unsigned int,true,true>* startingprotos ;
-		startingprotos = new RContainer<cObj,unsigned int,true,true> (10,5);
+		RContainer<cObj,true,true>* startingprotos ;
+		startingprotos = new RContainer<cObj,true,true> (10,5);
 		g=new cGroup(subsamples->NbPtr,0,0);
 		curs=g->GetCursor();
 		while (curs.GetNb()<nbsubprofpersubsamp)
@@ -172,9 +172,9 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 {
 	cObj** ptr;
 	unsigned int i, nbprotos;
-	RContainer<cObj,unsigned int,false,true>* wrongprotos;
-	wrongprotos= new RContainer<cObj,unsigned int,false,true>(10,5);
-	RCursor<cObj, unsigned int> curs;
+	RContainer<cObj,false,true>* wrongprotos;
+	wrongprotos= new RContainer<cObj,false,true>(10,5);
+	RCursor<cObj> curs;
 
 	nbprotos=protos->NbPtr;
 	// check for 'empty' clusters.
@@ -272,7 +272,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::RandomInitObjects(RContainer<cObj,unsigned int,false,true>* dataset, unsigned int nbgroups) throw(RException)
+	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::RandomInitObjects(RContainer<cObj,false,true>* dataset, unsigned int nbgroups) throw(RException)
 {
 	cObj **ptr;
 	unsigned int i;
@@ -299,7 +299,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::Execute(RContainer<cObj, unsigned int, false, true>* dataset, unsigned int nbtests)
+	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::Execute(RContainer<cObj,false,true>* dataset, unsigned int nbtests)
 {
 	unsigned int iter, error;
 	double cost, finalcost;
@@ -339,12 +339,12 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	double RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::CostFunction(RContainer<cGroup,unsigned int,false,false>* grps)     // calculates the intra/min(inter)
+	double RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::CostFunction(RContainer<cGroup,false,false>* grps)     // calculates the intra/min(inter)
 {
 	unsigned int i, j;
 	double intra=0.0, mininter=2.0;
 	cObj **s1, **s2;
-	RCursor<cObj,unsigned int> curs;
+	RCursor<cObj> curs;
 
 	for (protos->Start(); !protos->End(); protos->Next())
 	{
@@ -376,7 +376,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::ReAllocate(RContainer<cObj,unsigned int,false,true>* dataset)
+	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::ReAllocate(RContainer<cObj,false,true>* dataset)
 {
 	cout << " re-allocating"<<endl;
 	int i=0;
@@ -443,7 +443,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	cGroup* RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::FindGroup(RContainer<cGroup,unsigned int,false,false>* grps,cObj* obj)
+	cGroup* RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::FindGroup(RContainer<cGroup,false,false>* grps,cObj* obj)
 {
 	for (grps->Start(); !grps->End(); grps->Next())
 		if( (*grps)()->IsIn(obj))
@@ -481,10 +481,10 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	double RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::Distortion(RContainer<cGroup,unsigned int,false,false>* grps)     // calculates the intra/min(inter)
+	double RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::Distortion(RContainer<cGroup,false,false>* grps)     // calculates the intra/min(inter)
 {
 	double var=0;
-	RCursor<cObj, unsigned int> curs;
+	RCursor<cObj> curs;
 
 
 	// calculation of variance

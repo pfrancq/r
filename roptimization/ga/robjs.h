@@ -6,7 +6,7 @@
 
 	Container of objectss used as input for Genetic Algorithms - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -54,7 +54,7 @@ namespace R{
 * @short Objects.
 */
 template<class cObj>
-	class RObjs : public RContainer<cObj,unsigned int,true,true>
+	class RObjs : public RContainer<cObj,true,true>
 {
 public:
 
@@ -62,7 +62,7 @@ public:
 	* Construct the objects.
 	* @param max            Maximum objects that wilk be created.
 	*/
-	RObjs(const unsigned int max) : RContainer<cObj,unsigned int,true,true>(max,max/2) {}
+	RObjs(const unsigned int max) : RContainer<cObj,true,true>(max,max/2) {}
 };
 
 

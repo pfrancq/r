@@ -6,7 +6,7 @@
 
 	Connection for the 2D Placement (RGeoInfo Part) - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -125,7 +125,7 @@ public:
 * @author Pascal Francq
 * @short Connection for Geometric Information.
 */
-class RGeoInfoConnection : public RContainer<RGeoInfoConnectionPart,unsigned int,true,false>
+class RGeoInfoConnection : public RContainer<RGeoInfoConnectionPart,true,false>
 {
 public:
 

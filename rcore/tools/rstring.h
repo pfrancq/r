@@ -6,7 +6,7 @@
 
 	Unicode String - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -626,7 +626,7 @@ public:
 * The RStringCursor class provides a way to go trough a set of strings.
 * @short Unicode Strings Cursor
 */
-CLASSCURSOR(RStringCursor,RString,unsigned int);
+CLASSCURSOR(RStringCursor,RString);
 
 
 }  //-------- End of namespace R -----------------------------------------------

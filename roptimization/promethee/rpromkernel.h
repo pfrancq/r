@@ -6,7 +6,7 @@
 
 	Promethee Kernel - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -49,8 +49,8 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RPromKernel provides a kernel to manage Prométhée session.
-* @short Prométhée Kernel.
+* The RPromKernel provides a kernel to manage Promï¿½hï¿½ session.
+* @short Promï¿½hï¿½ Kernel.
 * @author Pascal Francq & Thomas L'Eglise.
 */
 class RPromKernel
@@ -63,12 +63,12 @@ class RPromKernel
 	/**
 	* Solutions.
 	*/
-	RContainer<RPromSol,unsigned int,true,true> Solutions;
+	RContainer<RPromSol,true,true> Solutions;
 
 	/**
 	* Criteria.
 	*/
-	RContainer<RPromCriterion,unsigned int,true,true> Criteria;
+	RContainer<RPromCriterion,true,true> Criteria;
 
 	/**
 	* Define if a normalisation of the values for the different criteria must be
@@ -100,7 +100,7 @@ public:
 	void ComputeEvalFunc(void);
 
 	/**
-	* Calculate Prométhée II.
+	* Calculate Promï¿½hï¿½ II.
 	*/
 	virtual void ComputePrometheeII(void);
 

@@ -6,7 +6,7 @@
 
 	2D Placement Problem - Implementation.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -64,7 +64,7 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	RXMLTag *tag,**tab;
 	unsigned int i,X,Y;
 	RString Attr;
-	RContainer<RObj2D,unsigned int,true,true> Templates(50,25);
+	RContainer<RObj2D,true,true> Templates(50,25);
 	RPoint Tr;
 	RXMLTagCursor Cur;
 	
@@ -140,7 +140,7 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,unsigned int,true,true>& ts)
+void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 {
 	RObj2D *obj,*t;
 	bool IsObj;

@@ -5,7 +5,7 @@
 
 	[Description of the class] - Implementation.
 
-	Copyright 2003 by the Université Libre de Bruxelles.
+	Copyright 2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors
 		 Vandaele Valery(name@email.be)
@@ -38,28 +38,28 @@
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
 	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(unsigned int id) throw(std::bad_alloc)
-		: RContainer<C,unsigned int,bAlloc,true>(3,2) , Id(id)
+		: RContainer<C,bAlloc,true>(3,2) , Id(id)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
 	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(unsigned int id,unsigned int nbElem, unsigned int increase) throw(std::bad_alloc)
-		: RContainer<C,unsigned int,bAlloc,true>(nbElem,increase) , Id(id)
+		: RContainer<C,bAlloc,true>(nbElem,increase) , Id(id)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
 	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(const RGenericSparseVector<C,bAlloc>* src) throw(std::bad_alloc)
-		: RContainer<C,unsigned int,bAlloc,true>::RContainer(src), Id(src->GetId()) 
+		: RContainer<C,bAlloc,true>::RContainer(src), Id(src->GetId()) 
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
 	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(const RGenericSparseVector<C,bAlloc>& src) throw(std::bad_alloc)
-		: RContainer<C,unsigned int,bAlloc,true>::RContainer(src),Id(src.GetId())
+		: RContainer<C,bAlloc,true>::RContainer(src),Id(src.GetId())
 {}
 
 
@@ -67,7 +67,7 @@ template<class C,bool bAlloc>
 template<class C,bool bAlloc>
 	RGenericSparseVector<C,bAlloc>& RGenericSparseVector<C,bAlloc>::operator=(const RGenericSparseVector<C,bAlloc>& src) throw(std::bad_alloc)
 {
-	RContainer<C,unsigned int,bAlloc,true>::operator=(src);
+	RContainer<C,bAlloc,true>::operator=(src);
 	Id= src.GetId();
 	return(*this);
 }

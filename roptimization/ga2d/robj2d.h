@@ -6,7 +6,7 @@
 
 	Object for 2D placement GA - Header
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -102,7 +102,7 @@ public:
 	/**
 	* Connections of which the connector is involved.
 	*/
-	RContainer<RConnection,unsigned int,false,false> Connections;
+	RContainer<RConnection,false,false> Connections;
 
 	/**
 	* Construct a connector.
@@ -321,7 +321,7 @@ public:
 	/**
 	* The connectors of this object
 	*/
-	RContainer<RObj2DConnector,unsigned int,true,true> Connectors;
+	RContainer<RObj2DConnector,true,true> Connectors;
 
 	/**
 	* Construct an 2D object.

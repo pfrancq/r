@@ -44,7 +44,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RConnections::RConnections(void)
-	: RContainer<RConnection,unsigned int,true,false>(50,25), Random(0)
+	: RContainer<RConnection,true,false>(50,25), Random(0)
 {
 }
 
@@ -145,7 +145,7 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 		d=GetDistances(infos->Tab,*info);
 		if((w>0.0)&&(d>0.0))
 		{
-			// If both are not null -> Create a Prométhée solution
+			// If both are not null -> Create a Promï¿½hï¿½ solution
 			sol=Prom.NewSol();
 			Prom.Assign(sol,weight,w);
 			Prom.Assign(sol,dist,d);
@@ -168,7 +168,7 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 	}
 	else
 	{
-		Prom.ComputePrometheeII();         // Compute Prométhée
+		Prom.ComputePrometheeII();         // Compute Promï¿½hï¿½
 		sols=best=Prom.GetSols();          // Get the solutions
 		b=treat[(*(best++))->GetId()];     // The first one is the best
 		bProm=true;

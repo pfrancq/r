@@ -57,7 +57,7 @@ class RXMLStruct : private RTree<RXMLTag,true,false>
 	/**
 	* The entities of the structure.
 	*/
-	RContainer<RXMLAttr,unsigned,true,true> Entities;
+	RContainer<RXMLAttr,true,true> Entities;
 
 	/**
 	* Top tag of the XML structure.

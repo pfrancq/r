@@ -6,7 +6,7 @@
 
 	Connection for the 2D Placement - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -63,7 +63,7 @@ public:
 	/**
 	* The connectors involved in the connections.
 	*/
-	RContainer<RObj2DConnector,unsigned int,false,false> Connect;
+	RContainer<RObj2DConnector,false,false> Connect;
 
 	/**
 	* Construct a connection.

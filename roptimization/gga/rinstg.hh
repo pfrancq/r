@@ -4,7 +4,7 @@
 
 	Class representing an instance of a HGA - Implementation
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -73,7 +73,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
 		  Heuristic(h), Objs(0)
 {
-	Objs=new RCursor<cObj,unsigned int>();
+	Objs=new RCursor<cObj>();
 	Objs->Set(objs);
 	if(Objs->GetNb()<11)
 		MaxGroups=10;
@@ -84,11 +84,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
 		  Heuristic(h), Objs(0)
 {
-	Objs=new RCursor<cObj,unsigned int>();
+	Objs=new RCursor<cObj>();
 	Objs->Set(objs);
 	if(Objs->GetNb()<11)
 		MaxGroups=10;
@@ -99,11 +99,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
 		  Heuristic(h), Objs(0)
 {
-	Objs=new RCursor<cObj,unsigned int>();
+	Objs=new RCursor<cObj>();
 	Objs->Set(objs);
 	if(Objs->GetNb()<11)
 		MaxGroups=10;

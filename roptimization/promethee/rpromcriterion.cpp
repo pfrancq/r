@@ -6,7 +6,7 @@
 
 	Promethee Criterion - Implementation.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -108,7 +108,7 @@ RPromCriterionParams& RPromCriterionParams::operator=(const RPromCriterionParams
 
 //------------------------------------------------------------------------------
 RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,unsigned int nb)
-	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id),
+	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(id),
 	  Type(type), P(p), Q(q), Weight(w)
 {
 	if(Type==Minimize)
@@ -126,7 +126,7 @@ RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,double w,unsi
 
 //------------------------------------------------------------------------------
 RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,unsigned int nb)
-	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id),
+	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(id),
 	  Type(type), P(params.P), Q(params.Q), Weight(params.Weight)
 {
 	if(Type==Minimize)
@@ -144,7 +144,7 @@ RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterionParams& par
 
 //------------------------------------------------------------------------------
 RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,const char* name,unsigned int nb)
-	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
+	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(id), Name(name),
 	  Type(type), P(p), Q(q), Weight(w)
 {
 	if(Type==Minimize)
@@ -162,7 +162,7 @@ RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,double w,unsi
 
 //------------------------------------------------------------------------------
 RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,const char* name,unsigned int nb)
-	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
+	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(id), Name(name),
 	  Type(type), Weight(params.Weight)
 {
 	if(Type==Minimize)

@@ -6,7 +6,7 @@
 
 	Vertex of a graph - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -75,7 +75,7 @@ public:
 	/**
 	* All the edges connecting the given vertex.
 	*/
-	RContainer<REdge,unsigned int,false,false> Edges;
+	RContainer<REdge,false,false> Edges;
 
 	/**
 	* Constructor of the vertex.

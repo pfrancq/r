@@ -6,7 +6,7 @@
 
 	Set of geometric informations - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -55,7 +55,7 @@ namespace R{
 * @author Pascal Francq
 * @short Container of geometric information.
 */
-class RGeoInfos : public RContainer<RGeoInfo,unsigned int,true,false>
+class RGeoInfos : public RContainer<RGeoInfo,true,false>
 {
 public:
 

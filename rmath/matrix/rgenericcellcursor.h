@@ -57,7 +57,7 @@ namespace R{
 * @short Cursor for Generic Cell Elements.
 */
 template<class C>
-	class RGenericCellCursor : public R::RCursor<RGenericCell<C>,unsigned int>
+	class RGenericCellCursor : public R::RCursor< RGenericCell<C> >
 {
 
 public :

@@ -48,7 +48,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * @param C                  The class of the element to be contained.
-* @param T                  The type of the iterator used.
 * @param tSize1             First Size of the hash table.
 * @param tSize2             Second Size of the hash table.
 * @param bAlloc             Specify if the elements are desallocated by the
@@ -119,7 +118,7 @@ namespace R{
 *
 * int main()
 * {
-* 	RDblHashContainer<MyElement,unsigned int,27,true> c(20,10);
+* 	RDblHashContainer<MyElement,27,27,true> c(20,10);
 *
 * 	c.InsertPtr(new MyElement("Coucou"));
 * 	if(c.IsIn<const char*>("Coucou"))
@@ -131,32 +130,32 @@ namespace R{
 * @author Pascal Francq
 * @short Double Hash Table Container.
 */
-template<class C,class T,T tSize1,T tSize2,bool bAlloc>
+template<class C,unsigned int tSize1,unsigned int tSize2,bool bAlloc>
 	class RDblHashContainer
 {
 public:
 	/**
 	* This container represents the hash table of the elements.
 	*/
-	RContainer<C,T,bAlloc,true>*** Hash;
+	RContainer<C,bAlloc,true>*** Hash;
 
 	/**
 	* Construct a Hash container.
 	* @param M              Default maximum number of elements.
 	* @param I              Incremental number of elements.
 	*/
-	RDblHashContainer(T M,T I) throw(std::bad_alloc)
+	RDblHashContainer(unsigned int M,unsigned int I) throw(std::bad_alloc)
 	{
-		RContainer<C,T,bAlloc,true>*** ptr;
-		RContainer<C,T,bAlloc,true>** ptr2;
-		T i,j;
+		RContainer<C,bAlloc,true>*** ptr;
+		RContainer<C,bAlloc,true>** ptr2;
+		unsigned int i,j;
 
-		Hash= new RContainer<C,T,bAlloc,true>**[tSize1];
+		Hash= new RContainer<C,bAlloc,true>**[tSize1];
 		for(i=tSize1+1,ptr=Hash;--i;ptr++)
 		{
-			(*ptr)=new RContainer<C,T,bAlloc,true>*[tSize2];
+			(*ptr)=new RContainer<C,bAlloc,true>*[tSize2];
 			for(j=tSize2+1,ptr2=*ptr;--j;ptr2++)
-				(*ptr2)=new RContainer<C,T,bAlloc,true>(M,I);
+				(*ptr2)=new RContainer<C,bAlloc,true>(M,I);
 		}
 	}
 
@@ -165,9 +164,9 @@ public:
 	*/
 	void Clear(void)
 	{
-		RContainer<C,T,bAlloc,true>*** ptr;
-		RContainer<C,T,bAlloc,true>** ptr2;
-		T i,j;
+		RContainer<C,bAlloc,true>*** ptr;
+		RContainer<C,bAlloc,true>** ptr2;
+		unsigned int i,j;
 
 		for(i=tSize1+1,ptr=Hash;--i;ptr++)
 			for(j=tSize2+1,ptr2=*ptr;--j;ptr2++)
@@ -191,9 +190,9 @@ public:
 	inline unsigned int GetNb(void) const
 	{
 		unsigned int nb=0;
-		RContainer<C,T,bAlloc,true>*** ptr;
-		RContainer<C,T,bAlloc,true>** ptr2;
-		T i,j;
+		RContainer<C,bAlloc,true>*** ptr;
+		RContainer<C,bAlloc,true>** ptr2;
+		unsigned int i,j;
 
 		for(i=tSize1+1,ptr=Hash;--i;ptr++)
 		{
@@ -282,9 +281,9 @@ public:
 	{
 		try
 		{
-			RContainer<C,T,bAlloc,true>*** ptr;
-			RContainer<C,T,bAlloc,true>** ptr2;
-			T i,j;
+			RContainer<C,bAlloc,true>*** ptr;
+			RContainer<C,bAlloc,true>** ptr2;
+			unsigned int i,j;
 
 			for(i=tSize1+1,ptr=Hash;--i;ptr++)
 			{

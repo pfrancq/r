@@ -6,7 +6,7 @@
 
 	Class representing an instance of a GGA - Header
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -104,7 +104,7 @@ protected:
 	/**
 	* Objects to group.
 	*/
-	RCursor<cObj,unsigned int>* Objs;
+	RCursor<cObj>* Objs;
 
 	/**
 	* Maximal number of groups to allocate by default.
@@ -129,7 +129,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RDebug *debug=0) throw(std::bad_alloc);
+	RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,RDebug *debug=0) throw(std::bad_alloc);
 
 	/**
 	* Construct the instance.
@@ -138,7 +138,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RDebug *debug=0) throw(std::bad_alloc);
+	RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,RDebug *debug=0) throw(std::bad_alloc);
 
 	/**
 	* Initialisation of the instance.
@@ -155,7 +155,7 @@ public:
 	* Get the Objects to group.
 	* @return Pointer to the objects.
 	*/
-	RCursor<cObj,unsigned int>* GetObjs(void) const {return(Objs);}
+	RCursor<cObj>* GetObjs(void) const {return(Objs);}
 
 	/**
 	* Create a heuristic object.

@@ -58,7 +58,7 @@ class RHTMLFile : public RXMLFile
 	/**
 	* HTML Tags.
 	*/
-	R::RContainer<Tag,unsigned int,true,true> Tags;
+	R::RContainer<Tag,true,true> Tags;
 
 	/**
 	* Is the </html> found?
@@ -111,7 +111,7 @@ public:
 	* @remarks The namespace are not treated for the moment, so the namespaceURI
 	*          and lname parameters are always empty.
 	*/
-	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,unsigned,true,true>& attrs) throw(RIOException);
+	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs) throw(RIOException);
 
 	/**
 	* Function called each time a tag was treated when reading a XML file.

@@ -6,7 +6,7 @@
 
 	Polygon - Implentation.
 
-	Copyright 1999-2004 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -55,28 +55,28 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 RPolygon::RPolygon(void)
-	: RContainer<RPoint,unsigned int,true,false>(20,10)
+	: RContainer<RPoint,true,false>(20,10)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RPolygon::RPolygon(const int Max)
-	: RContainer<RPoint,unsigned int,true,false>(Max,10)
+	: RContainer<RPoint,true,false>(Max,10)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RPolygon::RPolygon(const RPolygon* poly)
-	: RContainer<RPoint,unsigned int,true,false>(poly)
+	: RContainer<RPoint,true,false>(poly)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RPolygon::RPolygon(const RPolygon& poly)
-	: RContainer<RPoint,unsigned int,true,false>(poly)
+	: RContainer<RPoint,true,false>(poly)
 {
 }
 
@@ -84,7 +84,7 @@ RPolygon::RPolygon(const RPolygon& poly)
 //------------------------------------------------------------------------------
 RPolygon& RPolygon::operator=(const RPolygon& poly)
 {
-	RContainer<RPoint,unsigned int,true,false>::operator=(poly);
+	RContainer<RPoint,true,false>::operator=(poly);
 	return(*this);
 }
 

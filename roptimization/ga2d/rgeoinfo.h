@@ -6,7 +6,7 @@
 
 	Geometric information - Header
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -285,7 +285,7 @@ public:
 	/**
 	* The connectors of this object
 	*/
-	RContainer<RGeoInfoConnector,unsigned int,true,true> Connectors;
+	RContainer<RGeoInfoConnector,true,true> Connectors;
 	
 	/**
 	* Construct a geometric information.

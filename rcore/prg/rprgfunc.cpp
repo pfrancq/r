@@ -6,7 +6,7 @@
 
 	Generic function - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -72,7 +72,7 @@ int RPrgFunc::Compare(const char* f) const
 
 
 //------------------------------------------------------------------------------
-void RPrgFunc::Run(RPrg*,RPrgOutput*,RContainer<RPrgVar,unsigned int,true,false>*) throw(RException)
+void RPrgFunc::Run(RPrg*,RPrgOutput*,RContainer<RPrgVar,true,false>*) throw(RException)
 {
 }
 

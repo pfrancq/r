@@ -171,7 +171,7 @@ private:
 	* @param EndTag1        Character than can delimited the tag.               
 	* @param EndTag2        Another character than can delimited the tag.
 	*/
-	void LoadAttributes(RContainer<RXMLAttr,unsigned,true,true>& attrs,RChar EndTag1='/',RChar EndTag2='>') throw(RIOException);
+	void LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag1='/',RChar EndTag2='>') throw(RIOException);
 
 	/**
 	* Save the next XML tag into the XML file.
@@ -198,7 +198,7 @@ protected:
 	* @remarks The namespace are not treated for the moment, so the namespaceURI
 	*          and lname parameters are always empty.
 	*/
-	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,unsigned,true,true>& attrs) throw(RIOException);
+	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs) throw(RIOException);
 
 	/**
 	* Function called each time a tag was treated when reading a XML file.

@@ -6,7 +6,7 @@
 
 	Connections for the 2D Placement - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -60,7 +60,7 @@ class RGeoInfos;
 * @short Connections.
 * @author Pascal Francq
 */
-class RConnections : public RContainer<RConnection,unsigned int,true,false>
+class RConnections : public RContainer<RConnection,true,false>
 {
 	/**
 	* Random number generator to use.
@@ -68,12 +68,12 @@ class RConnections : public RContainer<RConnection,unsigned int,true,false>
 	RRandom* Random;
 
 	/**
-	* Prométhée Parameters for the distance.
+	* Promï¿½hï¿½ Parameters for the distance.
 	*/
 	RPromCriterionParams DistParams;
 	
 	/**
-	* Prométhée Parameters for the weight.
+	* Promï¿½hï¿½ Parameters for the weight.
 	*/
 	RPromCriterionParams WeightParams;
 
@@ -90,9 +90,9 @@ public:
 	void Init(void);
 	
 	/**
-	* Set the parameters for Prométhée.
-	* @param dist           Prométhée Parameters for the distance.
-	* @param weight         Prométhée Parameters for the weight.
+	* Set the parameters for Promï¿½hï¿½.
+	* @param dist           Promï¿½hï¿½ Parameters for the distance.
+	* @param weight         Promï¿½hï¿½ Parameters for the weight.
 	* @param r              Pointer to the random generator.
 	*/
 	void SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight,RRandom* r);

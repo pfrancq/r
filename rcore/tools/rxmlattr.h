@@ -6,7 +6,7 @@
 
 	Attribute for a XML Tag - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -140,7 +140,7 @@ public:
 * The RXMLAttrCursor class provides a way to go trough a set of XML attributes.
 * @short XML attributes Cursor
 */
-CLASSCURSOR(RXMLAttrCursor,RXMLAttr,unsigned int);
+CLASSCURSOR(RXMLAttrCursor,RXMLAttr);
 
 
 }  //-------- End of namespace R -----------------------------------------------

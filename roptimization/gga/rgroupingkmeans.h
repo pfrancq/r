@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Grouping - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -98,7 +98,7 @@ protected:
 	/**
 	* Objects to be grouped.
 	*/
-	RContainer<cObj,unsigned int,false,true>* Objs;
+	RContainer<cObj,false,true>* Objs;
 
 	/**
 	* Groups.
@@ -153,28 +153,28 @@ protected:
 	/**
 	* Container of cObj considered as prototypes
 	*/
-	RContainer<cObj,unsigned int,false,false>* protos;
+	RContainer<cObj,false,false>* protos;
 
 	/**
 	* Temporary container of groupment, needed to run tests
 	*/
-	RContainer<cGroup,unsigned int,false,false>* grpstemp2;
+	RContainer<cGroup,false,false>* grpstemp2;
 
 	/**
 	* Container of subprofiles considered as prototypes,
 	* needed to calculate the error between two iterations
 	*/
-	RContainer<cObj,unsigned int,false,false>* protoserror;
+	RContainer<cObj,false,false>* protoserror;
 
 	/**
 	* Temporary container of groupment, needed to run tests
 	*/
-	RContainer<cGroup,unsigned int,false,false>* grpstemp;
+	RContainer<cGroup,false,false>* grpstemp;
 
 	/**
 	* Container of the final groupment
 	*/
-	RContainer<cGroup,unsigned int,false,false>* grpsfinal;
+	RContainer<cGroup,false,false>* grpsfinal;
 
 public:
 
@@ -182,7 +182,7 @@ public:
 	* Construct the grouping heuristic.
 	* @param Objs           Pointer to the objects.
 	*/
-	RGroupingKMeans(RContainer<cObj,unsigned int,false,true>* Objs);
+	RGroupingKMeans(RContainer<cObj,false,true>* Objs);
 
 	/**
 	* Get the name of the heuristic.
@@ -249,7 +249,7 @@ public:
 	* @param obj            Object to test.
 	* @return bool.
 	*/
-	bool IsValidProto(RContainer<cObj,unsigned int,false,false>* prototypes,cObj* obj) throw(std::bad_alloc);
+	bool IsValidProto(RContainer<cObj,false,false>* prototypes,cObj* obj) throw(std::bad_alloc);
 
 	/**
 	* Verify wether the initializing kmeans is ok.
@@ -260,7 +260,7 @@ public:
 	* Calulates the distortion of a grouping.
 	* @param grps           Groups.
 	*/
-	double Distortion(RContainer<cGroup,unsigned int,false,false>* grps);
+	double Distortion(RContainer<cGroup,false,false>* grps);
 
 	/**
 	* Calculates the variance of a group.
@@ -272,7 +272,7 @@ public:
 	* Re-Allocation step.
 	* @param dataset        Dataset to re-allocate.
 	*/
-	void ReAllocate(RContainer<cObj,unsigned int,false,true>* dataset);
+	void ReAllocate(RContainer<cObj,false,true>* dataset);
 
 	/**
 	* Re-Centering step.
@@ -283,7 +283,7 @@ public:
 	* Calculates the cost function.
 	* @param grps           Groups.
 	*/
-	double CostFunction(RContainer<cGroup,unsigned int,false,false>* grps);
+	double CostFunction(RContainer<cGroup,false,false>* grps);
 
 	/**
 	* Calculate the distance between an object and a prototype.
@@ -302,7 +302,7 @@ public:
 	* @param dataset         Set of all objects to group.
 	* @param nbtests         Number of tests.
 	*/
-	void Execute(RContainer<cObj, unsigned int, false, true>* dataset, unsigned int nbtests);
+	void Execute(RContainer<cObj,false,true>* dataset, unsigned int nbtests);
 
 	/**
 	* Couts many informations on K-Means configuration.
@@ -314,7 +314,7 @@ public:
 	* @param dataset         Set of all objects to group.
 	* @param nbobjects       Number of objects to choose.
 	*/
-	void RandomInitObjects(RContainer<cObj,unsigned int,false,true>* dataset, unsigned int nbobjects) throw(RException);
+	void RandomInitObjects(RContainer<cObj,false,true>* dataset, unsigned int nbobjects) throw(RException);
 
 	/**
 	* Function to evaluates the number of groups.
@@ -326,7 +326,7 @@ public:
 	* @param grps           List of all groups.
 	* @param obj            Object.
 	*/
-	cGroup* FindGroup(RContainer<cGroup,unsigned int,false,false>* grps, cObj* obj);
+	cGroup* FindGroup(RContainer<cGroup,false,false>* grps, cObj* obj);
 
 	/**
 	* Calculates the similarity between two objects.
@@ -338,7 +338,7 @@ public:
 	/**
 	* Gets the final grouping, result of the K-Means procedure.
 	*/
-	RContainer<cGroup,unsigned int,false,false>* GetGrouping(void){return(grpsfinal);}
+	RContainer<cGroup,false,false>* GetGrouping(void){return(grpsfinal);}
 
 	/**
 	* Init the protos to the refined points.

@@ -48,7 +48,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * @param C                  The class of the elements that are contained.
-* @param T                  The type of the iterator used.
 *
 * This class represent a cursor to iterate a RContainer. The parameters are
 * those of the container. When an element is added or removed from the container
@@ -56,9 +55,9 @@ namespace R{
 *
 * Here is an example of a cursor used:
 * @code
-* int example(RContainer<MyElement,unsigned int> *c)
+* int example(RContainer<MyElement,true,true> *c)
 * {
-* 	RCursor<MyElement,unsigned int> Cur;
+* 	RCursor<MyElement> Cur;
 *
 * 	Cur.Set(c);
 * 	for(Cur.Start();!Cur.End();Cur.Next())
@@ -69,7 +68,7 @@ namespace R{
 * @author Pascal Francq
 * @short Container Cursor.
 */
-template<class C,class T>
+template<class C>
 	class RCursor
 {
 	/**
@@ -80,7 +79,7 @@ template<class C,class T>
 	/**
 	* This variable is used to see if the end of the container is reached.
 	*/
-	T ActPtr;
+	unsigned int ActPtr;
 
 	/**
 	* The array of pointers for the elements.
@@ -90,12 +89,12 @@ template<class C,class T>
 	/**
 	* The number of elements in the container.
 	*/
-	T NbPtr;
+	unsigned int NbPtr;
 
 	/**
 	* The last position in the array used by an object.
 	*/
-	T LastPtr;
+	unsigned int LastPtr;
 
 public:
 
@@ -108,54 +107,58 @@ public:
 	* Construct the cursor.
 	* param c               Container to iterate.
 	*/
-	RCursor(RContainer<C,T,true,true>& c);
+	RCursor(const RContainer<C,true,true>& c);
+
+	/**
+	* Construct the cursor. If the pointer passed is null, the cursor will parse
+	* zero elements.
+	* param c               Pointer to the container to iterate.
+	*/
+	RCursor(const RContainer<C,true,true>* c);
 
 	/**
 	* Construct the cursor.
 	* param c               Container to iterate.
 	*/
-	RCursor(RContainer<C,T,true,true>* c);
+	RCursor(const RContainer<C,false,true>& c);
+
+	/**
+	* Construct the cursor. If the pointer passed is null, the cursor will parse
+	* zero elements.
+	* param c               Pointer to the container to iterate.
+	*/
+	RCursor(const RContainer<C,false,true>* c);
 
 	/**
 	* Construct the cursor.
 	* param c               Container to iterate.
 	*/
-	RCursor(RContainer<C,T,false,true>& c);
+	RCursor(const RContainer<C,true,false>& c);
+
+	/**
+	* Construct the cursor. If the pointer passed is null, the cursor will parse
+	* zero elements.
+	* param c               Pointer to the container to iterate.
+	*/
+	RCursor(const RContainer<C,true,false>* c);
 
 	/**
 	* Construct the cursor.
 	* param c               Container to iterate.
 	*/
-	RCursor(RContainer<C,T,false,true>* c);
+	RCursor(const RContainer<C,false,false>& c);
 
 	/**
-	* Construct the cursor.
-	* param c               Container to iterate.
+	* Construct the cursor. If the pointer passed is null, the cursor will parse
+	* zero elements.
+	* param c               Pointer to the container to iterate.
 	*/
-	RCursor(RContainer<C,T,true,false>& c);
-
-	/**
-	* Construct the cursor.
-	* param c               Container to iterate.
-	*/
-	RCursor(RContainer<C,T,true,false>* c);
-
-	/**
-	* Construct the cursor.
-	* param c               Container to iterate.
-	*/
-	RCursor(RContainer<C,T,false,false>& c);
-
-	/**
-	* Construct the cursor.
-	* param c               Container to iterate.
-	*/
-	RCursor(RContainer<C,T,false,false>* c);
+	RCursor(const RContainer<C,false,false>* c);
 
 	/**
 	* Assignment operator using a "Cursor".
 	*/
-	RCursor<C,T>& operator=(const RCursor<C,T>& c) throw(std::bad_alloc);
+	RCursor<C>& operator=(const RCursor<C>& c) throw(std::bad_alloc);
 
 	/**
 	* Clear the cursor.
@@ -171,49 +174,53 @@ public:
 	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Set(RContainer<C,T,true,true>& c);
+	void Set(const RContainer<C,true,true>& c);
+
+	/**
+	* Set the container. If the pointer passed is null, the cursor will parse
+	* zero elements.
+	* param c               Pointer to the container to iterate.
+	*/
+	void Set(const RContainer<C,true,true>* c);
 
 	/**
 	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Set(RContainer<C,T,true,true>* c);
+	void Set(const RContainer<C,false,true>& c);
+
+	/**
+	* Set the container. If the pointer passed is null, the cursor will parse
+	* zero elements.
+	* param c               Pointer to the container to iterate.
+	*/
+	void Set(const RContainer<C,false,true>* c);
 
 	/**
 	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Set(RContainer<C,T,false,true>& c);
+	void Set(const RContainer<C,true,false>& c);
+
+	/**
+	* Set the container. If the pointer passed is null, the cursor will parse
+	* zero elements.
+	* param c               Pointer to the container to iterate.
+	*/
+	void Set(const RContainer<C,true,false>* c);
 
 	/**
 	* Set the container.
 	* param c               Container to iterate.
 	*/
-	void Set(RContainer<C,T,false,true>* c);
+	void Set(const RContainer<C,false,false>& c);
 
 	/**
-	* Set the container.
-	* param c               Container to iterate.
+	* Set the container. If the pointer passed is null, the cursor will parse
+	* zero elements.
+	* param c               Pointer to the container to iterate.
 	*/
-	void Set(RContainer<C,T,true,false>& c);
-
-	/**
-	* Set the container.
-	* param c               Container to iterate.
-	*/
-	void Set(RContainer<C,T,true,false>* c);
-
-	/**
-	* Set the container.
-	* param c               Container to iterate.
-	*/
-	void Set(RContainer<C,T,false,false>& c);
-
-	/**
-	* Set the container.
-	* param c               Container to iterate.
-	*/
-	void Set(RContainer<C,T,false,false>* c);
+	void Set(const RContainer<C,false,false>* c);
 
 	/**
 	* Go to the i-th element of the container.
@@ -257,29 +264,29 @@ public:
 * @param C                  The class of the elements that are contained.
 * @param T                  The type of the iterator used.
 */
-#define CLASSCURSOR(name,C,T)                                        \
-class name : public R::RCursor<C,T>                                  \
-{                                                                    \
-public:                                                              \
-	name(void) : R::RCursor<C,T>() {}                                \
-	name(R::RContainer<C,T,true,true>& c) : R::RCursor<C,T>(c) {}    \
-	name(R::RContainer<C,T,true,true>* c) : R::RCursor<C,T>(c) {}    \
-	name(R::RContainer<C,T,true,false>& c) : R::RCursor<C,T>(c) {}   \
-	name(R::RContainer<C,T,true,false>* c) : R::RCursor<C,T>(c) {}   \
-	name(R::RContainer<C,T,false,true>& c) : R::RCursor<C,T>(c) {}   \
-	name(R::RContainer<C,T,false,true>* c) : R::RCursor<C,T>(c) {}   \
-	name(R::RContainer<C,T,false,false>& c) : R::RCursor<C,T>(c) {}  \
-	name(R::RContainer<C,T,false,false>* c) : R::RCursor<C,T>(c) {}  \
-	name& operator=(const name& c) throw(std::bad_alloc)             \
-	{                                                                \
-		R::RCursor<C,T>::operator=(c);                               \
-		return(*this);                                               \
-	}                                                                \
-	name& operator=(const R::RCursor<C,T>& c) throw(std::bad_alloc)  \
-	{                                                                \
-		R::RCursor<C,T>::operator=(c);                               \
-		return(*this);                                               \
-	}                                                                \
+#define CLASSCURSOR(name,C)                                                \
+class name : public R::RCursor<C>                                          \
+{                                                                          \
+public:                                                                    \
+	name(void) : R::RCursor<C>() {}                                        \
+	name(const R::RContainer<C,true,true>& c) : R::RCursor<C>(c) {}        \
+	name(const R::RContainer<C,true,true>* c) : R::RCursor<C>(c) {}        \
+	name(const R::RContainer<C,true,false>& c) : R::RCursor<C>(c) {}       \
+	name(const R::RContainer<C,true,false>* c) : R::RCursor<C>(c) {}       \
+	name(const R::RContainer<C,false,true>& c) : R::RCursor<C>(c) {}       \
+	name(const R::RContainer<C,false,true>* c) : R::RCursor<C>(c) {}       \
+	name(const R::RContainer<C,false,false>& c) : R::RCursor<C>(c) {}      \
+	name(const R::RContainer<C,false,false>* c) : R::RCursor<C>(c) {}      \
+	name& operator=(const name& c) throw(std::bad_alloc)                   \
+	{                                                                      \
+		R::RCursor<C>::operator=(c);                                       \
+		return(*this);                                                     \
+	}                                                                      \
+	name& operator=(const R::RCursor<C>& c) throw(std::bad_alloc)          \
+	{                                                                      \
+		R::RCursor<C>::operator=(c);                                       \
+		return(*this);                                                     \
+	}                                                                      \
 }
 
 

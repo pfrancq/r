@@ -92,7 +92,7 @@ class QPromCriteria : public QGroupBox
 	/**
 	* All criteria handled by this widget.
 	*/
-	R::RContainer<QPromCriterion,unsigned int,true,false> Crits;
+	R::RContainer<QPromCriterion,true,false> Crits;
 
 public:
 

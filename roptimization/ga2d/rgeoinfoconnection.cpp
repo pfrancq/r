@@ -63,7 +63,7 @@ RGeoInfoConnectionPart::RGeoInfoConnectionPart(const RGeoInfoConnectionPart* p)
 
 //------------------------------------------------------------------------------
 RGeoInfoConnection::RGeoInfoConnection(RConnection* con)
-	: RContainer<RGeoInfoConnectionPart,unsigned int,true,false>(con->Connect.NbPtr,con->Connect.NbPtr/2),
+	: RContainer<RGeoInfoConnectionPart,true,false>(con->Connect.NbPtr,con->Connect.NbPtr/2),
 		Con(con), Complete(false), Dist(0)
 {
 }
@@ -71,7 +71,7 @@ RGeoInfoConnection::RGeoInfoConnection(RConnection* con)
 
 //------------------------------------------------------------------------------
 RGeoInfoConnection::RGeoInfoConnection(const RGeoInfoConnection& con)
-	: RContainer<RGeoInfoConnectionPart,unsigned int,true,false>(con),
+	: RContainer<RGeoInfoConnectionPart,true,false>(con),
 	  Con(con.Con), Complete(con.Complete), Dist(con.Dist)
 {
 }
@@ -79,7 +79,7 @@ RGeoInfoConnection::RGeoInfoConnection(const RGeoInfoConnection& con)
 
 //------------------------------------------------------------------------------
 RGeoInfoConnection::RGeoInfoConnection(const RGeoInfoConnection* con)
-	: RContainer<RGeoInfoConnectionPart,unsigned int,true,false>(con),
+	: RContainer<RGeoInfoConnectionPart,true,false>(con),
 	  Con(con->Con), Complete(con->Complete), Dist(con->Dist)
 {
 }
@@ -125,7 +125,7 @@ void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 	REdge **e;
 	RPoint pt1,pt2;
 	RGraph T(Con->Connect.NbPtr),S(Con->Connect.NbPtr);
-	RContainer<RGeoInfoConnectionPart,unsigned int,true,false> Local(Con->Connect.NbPtr,Con->Connect.NbPtr/2);
+	RContainer<RGeoInfoConnectionPart,true,false> Local(Con->Connect.NbPtr,Con->Connect.NbPtr/2);
 	RGeoInfoConnectionPart::sSearch s;
 
 	// Init

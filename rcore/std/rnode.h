@@ -6,7 +6,7 @@
 
 	Generic Node - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -61,7 +61,7 @@ namespace R{
 * @short Generic Node.
 */
 template<class N,bool bOrder>
-	class RNode : public RContainer<N,unsigned int,false,bOrder>
+	class RNode : public RContainer<N,false,bOrder>
 {
 public:
 	/**

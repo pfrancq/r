@@ -43,7 +43,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RGeoInfoConnections::RGeoInfoConnections(RConnections* c,RGeoInfos* i)
-	: RContainer<RGeoInfoConnection,unsigned int,true,false>(c->NbPtr,c->IncPtr),
+	: RContainer<RGeoInfoConnection,true,false>(c->NbPtr,c->IncPtr),
 	  Cons(c), Infos(i)
 {
 	for(Cons->Start();!Cons->End();Cons->Next())
@@ -113,7 +113,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 		d=GetDistances(*info);
 		if((w>0.0)&&(d>0.0))
 		{
-			// If both are not null -> Create a Prométhée solution
+			// If both are not null -> Create a Promï¿½hï¿½ solution
 			sol=Prom.NewSol();
 			Prom.Assign(sol,weight,w);
 			Prom.Assign(sol,dist,d);
@@ -153,7 +153,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 	}
 	else
 	{
-		Prom.ComputePrometheeII();           // Compute Prométhée
+		Prom.ComputePrometheeII();           // Compute Promï¿½hï¿½
 		best=sols=Prom.GetSols();            // Get the solutions
 		i1=treat[(*(best++))->GetId()];      // The first one is the best
 
@@ -185,7 +185,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 //------------------------------------------------------------------------------
 RGeoInfoConnections& RGeoInfoConnections::operator=(const RGeoInfoConnections& cons) throw(std::bad_alloc)
 {
-	RContainer<RGeoInfoConnection,unsigned int,true,false>::operator=(cons);
+	RContainer<RGeoInfoConnection,true,false>::operator=(cons);
 	Cons=cons.Cons;
 	Infos=cons.Infos;
 	return(*this);

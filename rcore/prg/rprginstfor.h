@@ -6,7 +6,7 @@
 
 	"for" Instruction - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -70,12 +70,12 @@ class RPrgInstFor : public RPrgInst
 	/**
 	* Values of the variable.
 	*/
-	RContainer<RPrgVar,unsigned int,true,false> Values;
+	RContainer<RPrgVar,true,false> Values;
 
 	/**
 	* List of all "Instructions" to execute.
 	*/
-	R::RContainer<RPrgInst,unsigned int,true,false> Insts;
+	R::RContainer<RPrgInst,true,false> Insts;
 
 	/**
 	* Identation of for.

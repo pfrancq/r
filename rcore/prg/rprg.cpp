@@ -6,7 +6,7 @@
 
 	Generic script program - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -201,7 +201,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(std::bad_alloc,RException)
 
 //-----------------------------------------------------------------------------
 
-void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,unsigned int,true,false>* values) throw(std::bad_alloc,RException)
+void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* values) throw(std::bad_alloc,RException)
 {
 	unsigned int len;
 	unsigned int pos;

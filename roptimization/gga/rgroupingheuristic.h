@@ -73,7 +73,7 @@ protected:
 	/**
 	* Objects to be grouped.
 	*/
-	RCursor<cObj,unsigned int>* Objs;
+	RCursor<cObj>* Objs;
 
 	/**
 	* Number of objects to be grouped.
@@ -119,7 +119,7 @@ public:
 	* @param objs           Pointer to the objects.
 	* @param debug          Debugger.
 	*/
-	RGroupingHeuristic(const char* n,RRandom* r,RCursor<cObj,unsigned int>* objs,RDebug* debug=0);
+	RGroupingHeuristic(const char* n,RRandom* r,RCursor<cObj>* objs,RDebug* debug=0);
 
 	/**
 	* Get the name of the heuristic.

@@ -37,7 +37,7 @@
 //-----------------------------------------------------------------------------
 template<class C>
 	RGenericCellCursor<C>::RGenericCellCursor(void)
-		:  R::RCursor<RGenericCell<C>,unsigned int>()
+		:  R::RCursor< RGenericCell<C> >()
 {
 }
 
@@ -46,7 +46,7 @@ template<class C>
 //-----------------------------------------------------------------------------
 template<class C>
 	RGenericCellCursor<C>::RGenericCellCursor(RGenericSparseVector<RGenericCell<C>,true>& v)
-		: R::RCursor<RGenericCell<C>,unsigned int>(v)
+		: R::RCursor< RGenericCell<C> >(v)
 {
 }
 
@@ -54,7 +54,7 @@ template<class C>
 //-----------------------------------------------------------------------------
 template<class C>
 	RGenericCellCursor<C>::RGenericCellCursor(RGenericSparseVector<RGenericCell<C>,true>* v)
-		: R::RCursor<RGenericCell<C>,unsigned int>(v)
+		: R::RCursor< RGenericCell<C> >(v)
 {
 }
 
@@ -62,7 +62,7 @@ template<class C>
 //-----------------------------------------------------------------------------
 template<class C>
 	RGenericCellCursor<C>::RGenericCellCursor(RGenericSparseVector<RGenericCell<C>,false>& v)
-		: R::RCursor<RGenericCell<C>,unsigned int>(v)
+		: R::RCursor< RGenericCell<C> >(v)
 {
 }
 
@@ -70,7 +70,7 @@ template<class C>
 //-----------------------------------------------------------------------------
 template<class C>
 	RGenericCellCursor<C>::RGenericCellCursor(RGenericSparseVector<RGenericCell<C>,false>* v)
-		: R::RCursor<RGenericCell<C>,unsigned int>(v)
+		: R::RCursor< RGenericCell<C> >(v)
 {
 }
 
@@ -78,7 +78,7 @@ template<class C>
 template<class C>
 	RGenericCellCursor<C>& RGenericCellCursor<C>::operator=(const RGenericCellCursor<C>& c) throw(std::bad_alloc)
 {
-	R::RCursor<RGenericCell<C>,unsigned int>::operator=(c);
+	R::RCursor< RGenericCell<C> >::operator=(c);
 	return(*this);
 }
 
@@ -87,7 +87,7 @@ template<class C>
 template<class C>
 	void RGenericCellCursor<C>::Set(RGenericSparseVector<RGenericCell<C>,true>* c)
 {
-	R::RCursor<RGenericCell<C>,unsigned int>::Set(c);
+	R::RCursor< RGenericCell<C> >::Set(c);
 }
 
 
@@ -95,7 +95,7 @@ template<class C>
 template<class C>
 	void RGenericCellCursor<C>::Set(RGenericSparseVector<RGenericCell<C>,true>& c)
 {
-	R::RCursor<RGenericCell<C>,unsigned int>::Set(c);
+	R::RCursor< RGenericCell<C> >::Set(c);
 }
 
 
@@ -103,7 +103,7 @@ template<class C>
 template<class C>
 	void RGenericCellCursor<C>::Set(RGenericSparseVector<RGenericCell<C>,false>* c)
 {
-	R::RCursor<RGenericCell<C>,unsigned int>::Set(c);
+	R::RCursor< RGenericCell<C> >::Set(c);
 }
 
 
@@ -111,6 +111,6 @@ template<class C>
 template<class C>
 	void RGenericCellCursor<C>::Set(RGenericSparseVector<RGenericCell<C>,false>& c)
 {
-	R::RCursor<RGenericCell<C>,unsigned int>::Set(c);
+	R::RCursor< RGenericCell<C> >::Set(c);
 }
 

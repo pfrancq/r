@@ -261,12 +261,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		if((*s1->Fitness)>(*s2->Fitness))
 		{
 			tmpChrom2[NbTreated--]=s2;
-			memcpy(&tmpChrom1[idx2],&tmpChrom1[idx2+1],((--NbToTreat)-idx2)*sizeof(cChromo*));
+			memmove(&tmpChrom1[idx2],&tmpChrom1[idx2+1],((--NbToTreat)-idx2)*sizeof(cChromo*));
 		}
 		else
 		{
 			tmpChrom2[NbTreated--]=s1;
-			memcpy(&tmpChrom1[idx1],&tmpChrom1[idx1+1],((--NbToTreat)-idx1)*sizeof(cChromo*));
+			memmove(&tmpChrom1[idx1],&tmpChrom1[idx1+1],((--NbToTreat)-idx1)*sizeof(cChromo*));
 		}
 	}
 	tmpChrom2[0]=tmpChrom1[0];

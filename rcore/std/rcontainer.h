@@ -38,7 +38,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
-
+#undef PRIVATE
 
 //------------------------------------------------------------------------------
 namespace R{
@@ -46,9 +46,13 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
+// forward declaration of the cursor template
+template<class C> class RCursor;
+
+
+//------------------------------------------------------------------------------
 /**
 * @param C                  The class of the elements to be contained.
-* @param T                  The type of the iterator used.
 * @param bAlloc             Specify if the elements are desallocated by the
 *                           container.
 * @param bOrder             Specify if the elements are ordered in the
@@ -56,8 +60,7 @@ namespace R{
 * This class represent a container of elements (class C). This elements are
 * store in an array of pointers which will be increase when necessary. The
 * container can be responsible for the desallocation of the elements
-* (bAlloc), and the elements can be ordered (bOrder). It is also possible to
-* indicate an iterator (class T) for the container.
+* (bAlloc), and the elements can be ordered (bOrder).
 *
 * To make the necessary comparaisons, the container used member functions of
 * the class representing the elements (class C). These functions have the
@@ -107,8 +110,8 @@ namespace R{
 *
 * int main()
 * {
-* 	RContainer<MyElement,unsigned int,true,true> c(20,10);
-* 	RCursor<MyElement,unsigned int> cur(c);
+* 	RContainer<MyElement,true,true> c(20,10);
+* 	RCursor<MyElement> cur(c);
 *
 * 	c.InsertPtr(new MyElement(5));
 * 	if(c.IsIn<char*>("5"))
@@ -122,7 +125,7 @@ namespace R{
 * @author Pascal Francq
 * @short Container template.
 */
-template<class C,class T,bool bAlloc,bool bOrder=false>
+template<class C,bool bAlloc,bool bOrder=false>
 	class RContainer
 {
 	/**
@@ -133,9 +136,13 @@ template<class C,class T,bool bAlloc,bool bOrder=false>
 	/**
 	* This variable is used to see if the end of the container is reached.
 	*/
-	T ActPtr;
+	unsigned int ActPtr;
 
+#ifdef PRIVATE
+protected:
+#else
 public:
+#endif
 
 	/**
 	* The array of pointers for the elements.
@@ -145,23 +152,23 @@ public:
 	/**
 	* The number of elements in the container.
 	*/
-	T NbPtr;
+	unsigned int NbPtr;
 
 	/**
 	* The maximal number of elements that can be hold by the container
 	* actually.
 	*/
-	T MaxPtr;
+	unsigned int MaxPtr;
 
 	/**
 	* The last position in the array used by an object.
 	*/
-	T LastPtr;
+	unsigned int LastPtr;
 
 	/**
 	* When the array is increased, this value is used.
 	*/
-	T IncPtr;
+	unsigned int IncPtr;
 
 public:
 
@@ -175,31 +182,31 @@ public:
 	* @param M              The initial maximal size of the array.
 	* @param I              The value used when increasing the array.
 	*/
-	RContainer(T M,T I=0) throw(std::bad_alloc);
+	RContainer(unsigned int M,unsigned int I=0) throw(std::bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,true,bOrder>* src) throw(std::bad_alloc);
+	RContainer(const RContainer<C,true,bOrder>* src) throw(std::bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,false,bOrder>* src) throw(std::bad_alloc);
+	RContainer(const RContainer<C,false,bOrder>* src) throw(std::bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,true,bOrder>& src) throw(std::bad_alloc);
+	RContainer(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,false,bOrder>& src) throw(std::bad_alloc);
+	RContainer(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -211,25 +218,25 @@ public:
 	* The assignement operator.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator=(const RContainer<C,T,true,bOrder>& src) throw(std::bad_alloc);
+	RContainer& operator=(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc);
 
 	/**
 	* The assignement operator.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator=(const RContainer<C,T,false,bOrder>& src) throw(std::bad_alloc);
+	RContainer& operator=(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
 
 	/**
 	* Add the elements of a container.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,T,true,bOrder>& src) throw(std::bad_alloc);
+	RContainer& operator+=(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc);
 
 	/**
 	* Add the elements of a container.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,T,false,bOrder>& src) throw(std::bad_alloc);
+	RContainer& operator+=(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -248,7 +255,7 @@ public:
 	* the container is extended.
     * @param MaxSize        The number of elements that must be contained.
 	*/
-	void VerifyTab(T MaxSize) throw(std::bad_alloc);
+	void VerifyTab(unsigned int MaxSize) throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -268,11 +275,45 @@ public:
 	* @param M              The initial maximal size of the array.
 	* @param I              The value used when increasing the array.
 	*/
-	void Clear(T M,T I);
+	void Clear(unsigned int M,unsigned int I);
 	//@}
 
 	/**
-	* @name Insert elements.
+	* @name Read methods.
+	*/
+	//@{
+
+	/**
+	* Get the number of elements in the container.
+	* @return unsigned int.
+	*/
+	unsigned int GetNb(void) const {return(NbPtr);}
+
+	/**
+	* Get the maximum number of elements in the container.
+	* @return unsigned int.
+	*/
+	unsigned int GetMaxNb(void) const {return(MaxPtr);}
+
+	/**
+	* Get the increment used to resize the container.
+	* @return unsigned int.
+	*/
+	unsigned int GetIncNb(void) const {return(IncPtr);}
+	
+	/**
+	* ReOrder the container. This method must be used with caution, because it
+	* can crash the container:
+	* -# The container contains null pointers.
+	* -# The container is ordered and the method does not use the same criterion
+	*    for the ordering.
+	* @param sortOrder      Pointer to a (static) funtion used for the ordering.
+	*/
+	void ReOrder(int sortOrder(const void*,const void*)) throw(std::bad_alloc);
+	//@}
+
+	/**
+	* @name Insert methods.
 	*/
 	//@{
 
@@ -282,7 +323,7 @@ public:
 	* @param ins            A pointer to the element to insert.
 	* @param Pos            The position where to insert it.
 	*/
-	void InsertPtrOrderAt(const C *ins,T Pos) throw(std::bad_alloc);
+	void InsertPtrOrderAt(const C *ins,unsigned int Pos) throw(std::bad_alloc);
 
 	/**
 	* Insert an element at a certain position. Two remarks must be made :
@@ -296,7 +337,7 @@ public:
 	* @param del            Specify if the object that was previously at Pos
 	*                       must be shift or deleted.
 	*/
-	void InsertPtrAt(const C *ins,T Pos,bool del=true) throw(std::bad_alloc);
+	void InsertPtrAt(const C *ins,unsigned int Pos,bool del=true) throw(std::bad_alloc);
 
 	/**
 	* Insert an element in the container.
@@ -310,8 +351,8 @@ public:
 	/**
 	* @name Accessing elements.
 	*/
-
 	//@{
+
 	/**
 	* This function returns the index of an element represented by tag, and it
 	* is used when the elements are to be ordered.
@@ -323,7 +364,7 @@ public:
 	* @return Returns the index of the element if it exists orthe index where
 	* is has to inserted.
 	*/
-	template<class TUse> T GetId(const TUse tag,bool &Find) const;
+	template<class TUse> unsigned int GetId(const TUse tag,bool &Find) const;
 
 	/**
 	* Look if a certain element is in the container.
@@ -341,9 +382,17 @@ public:
 	* Get a pointer to the ith element in the container.
 	* @param idx            Index of the element to get.
 	* @return Return the pointer or 0 if the index is outside the scope of the
-*             container.
+	*         container.
 	*/
 	C* GetPtrAt(unsigned int idx) const;
+
+	/**
+	* Get a pointer to the ith element in the container.
+	* @param idx            Index of the element to get.
+	* @return Return the pointer or 0 if the index is outside the scope of the
+	*         container.
+	*/
+	C* operator[](int idx) const;
 
 	/**
 	* Get a pointer to a certain element in the container.
@@ -379,13 +428,7 @@ public:
 	* @param tag            The tag used.
 	* @return The function returns a pointer to the result container.
 	*/
-	template<class TUse> RContainer<C,T,false,bOrder>* GetPtrs(const TUse tag) const throw(std::bad_alloc);
-
-	/**
-	* Get the number of elements in the container.
-	* @return unsigned int.
-	*/
-	unsigned int GetNb(void) const {return(NbPtr);}
+	template<class TUse> RContainer<C,false,bOrder>* GetPtrs(const TUse tag) const throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -420,6 +463,12 @@ public:
 	*/
 	//@{
 
+#ifdef PRIVATE
+private:
+#else
+public:
+#endif
+
 	/**
 	* Start the iterator to go trough the container.
 	* \deprecated
@@ -449,6 +498,8 @@ public:
 	inline C* operator()(void) const;
 	//@}
 
+public:
+
 	/**
 	* @name Destructor.
 	*/
@@ -458,6 +509,8 @@ public:
 	*/
 	virtual ~RContainer(void);
 	//@}
+	
+	friend class RCursor<C>;
 };
 
 

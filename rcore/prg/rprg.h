@@ -6,7 +6,7 @@
 
 	Generic script program - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -76,17 +76,17 @@ protected:
 	/**
 	* List of all "Instructions" to execute.
 	*/
-	R::RContainer<RPrgInst,unsigned int,true,false> Insts;
+	R::RContainer<RPrgInst,true,false> Insts;
 
 	/**
 	* List of all "Variables" defined in the program.
 	*/
-	R::RContainer<RPrgVar,unsigned int,true,false> Vars;
+	R::RContainer<RPrgVar,true,false> Vars;
 
 	/**
 	* List of all "Classes" defined in the program.
 	*/
-	R::RContainer<RPrgClass,unsigned int,true,false> Classes;
+	R::RContainer<RPrgClass,true,false> Classes;
 
 	/**
 	* Program file.
@@ -140,7 +140,7 @@ public:
 	* @param params         Parameter to analyse.
 	* @param values         Values of the paramter.
 	*/
-	static void AnalyseParam(const RString& params,RContainer<RPrgVar,unsigned int,true,false>* values) throw(std::bad_alloc,RException);
+	static void AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* values) throw(std::bad_alloc,RException);
 
 	/**
 	* Execute a "program".

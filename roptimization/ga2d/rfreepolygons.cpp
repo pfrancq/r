@@ -42,14 +42,14 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RFreePolygons::RFreePolygons(void)
-	: RContainer<RFreePolygon,unsigned int,true,false>(30,15)
+	: RContainer<RFreePolygon,true,false>(30,15)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RFreePolygons::RFreePolygons(RFreePolygons* cont)
-	: RContainer<RFreePolygon,unsigned int,true,false>(cont)
+	: RContainer<RFreePolygon,true,false>(cont)
 {
 }
 

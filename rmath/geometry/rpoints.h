@@ -6,7 +6,7 @@
 
 	Points - Header
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -51,7 +51,7 @@ namespace R{
 * @author Pascal Francq
 * @short Container of points.
 */
-class RPoints : public RContainer<RPoint,unsigned int,true,false>
+class RPoints : public RContainer<RPoint,true,false>
 {
 public:
 

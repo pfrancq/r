@@ -6,7 +6,7 @@
 
 	Promethee Solutions - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -49,12 +49,12 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RPromSol class provides a representation of a solution in the Prométhée
+* The RPromSol class provides a representation of a solution in the Promï¿½hï¿½
 * method.
-* @short Prométhée Solution.
+* @short Promï¿½hï¿½ Solution.
 * @author Pascal Francq & Thomas L'Eglise
 */
-class RPromSol : protected RContainer<RPromCritValue,unsigned int,true,false>
+class RPromSol : protected RContainer<RPromCritValue,true,false>
 {
 	/**
 	* The identifier of the solution.
@@ -84,14 +84,14 @@ class RPromSol : protected RContainer<RPromCritValue,unsigned int,true,false>
 public:
 
 	/*
-	* Construct a prométhée solution.
+	* Construct a promï¿½hï¿½ solution.
 	* @param id             Identifier of the solution.
 	* @param nbcrit         Number of criterions.
 	*/
 	RPromSol(const unsigned int id,const unsigned int nbcrit=30);
 
 	/*
-	* Construct a prométhée solution.
+	* Construct a promï¿½hï¿½ solution.
 	* @param id             Identifier of the solution.
 	* @param name           Name of the solution
 	* @param nbcrit         Number of criterions.
@@ -99,7 +99,7 @@ public:
 	RPromSol(const unsigned int id,const char* name,const unsigned int nbcrit=30);
 
 	/**
-	* Compare two prométhée solutions.
+	* Compare two promï¿½hï¿½ solutions.
 	* @param sol            The solution used for the comparaison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
@@ -107,7 +107,7 @@ public:
 	int Compare(const RPromSol& sol) const {return(Id-sol.Id);}
 
 	/**
-	* Compare two prométhée solutions.
+	* Compare two promï¿½hï¿½ solutions.
 	* @param sol            The solution used for the comparaison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
@@ -115,7 +115,7 @@ public:
 	int Compare(const RPromSol* sol) const {return(Id-sol->Id);}
 
 	/**
-	* Compare the identifier of the prométhée solution with another identificator.
+	* Compare the identifier of the promï¿½hï¿½ solution with another identificator.
 	* @param id             The identifier used for the comparaison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
@@ -123,7 +123,7 @@ public:
 	int Compare(const unsigned int id) const {return(Id-id);}
 
 	/**
-	* Compare the name of the prométhée solution with another string.
+	* Compare the name of the promï¿½hï¿½ solution with another string.
 	* @param name           The string used for the comparaison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
@@ -131,7 +131,7 @@ public:
 	int Compare(const RString& name) const {return(Name.Compare(name));}
 
 	/**
-	* Compare the name of the prométhée solution with another string.
+	* Compare the name of the promï¿½hï¿½ solution with another string.
 	* @param name           The string used for the comparaison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
@@ -164,7 +164,7 @@ public:
 	RString GetName(void) const {return(Name);}
 
 	/**
-	* Destruct a prométhée solution.
+	* Destruct a promï¿½hï¿½ solution.
 	*/
 	virtual ~RPromSol(void);
 

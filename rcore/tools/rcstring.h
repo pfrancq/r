@@ -388,7 +388,7 @@ RCString operator+(const char* arg1,const RCString& arg2);
 * The RCStringCursor class provides a way to go trough a set of C strings.
 * @short C Strings Cursor
 */
-CLASSCURSOR(RCStringCursor,RCString,unsigned int);
+CLASSCURSOR(RCStringCursor,RCString);
 
 
 }  //-------- End of namespace R -----------------------------------------------

@@ -6,7 +6,7 @@
 
 	Groups - Header
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -56,14 +56,14 @@ namespace R{
 * @short Groups.
 */
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	class RGroups : public RContainer<cGroup,unsigned int,true,false>
+	class RGroups : public RContainer<cGroup,true,false>
 {
 public:
 
 	/**
 	* Groups used.
 	*/
-	RContainer<cGroup,unsigned int,false,false> Used;
+	RContainer<cGroup,false,false> Used;
 
 	/**
 	* Data used to construct a group.
@@ -75,7 +75,7 @@ protected:
 	/**
 	* The Objects to group.
 	*/
-	RCursor<cObj,unsigned int>* Objs;
+	RCursor<cObj>* Objs;
 
 	/**
 	* Assignment of the objects.
@@ -85,12 +85,12 @@ protected:
 	/**
 	* Container of objects already assigned.
 	*/
-	RContainer<cObj,unsigned int,false,false> ObjsAss;
+	RContainer<cObj,false,false> ObjsAss;
 
 	/**
 	* Container of objects not assigned.
 	*/
-	RContainer<cObj,unsigned int,false,false> ObjsNoAss;
+	RContainer<cObj,false,false> ObjsNoAss;
 
 	/**
 	* Assignment of the objects where the identificator of the first group
@@ -112,7 +112,7 @@ public:
 	* @param objs           Objects to group.
 	* @param max            Maximal number of groups to create.
 	*/
-	RGroups(RCursor<cObj,unsigned int>* objs,const unsigned int max) throw(std::bad_alloc);
+	RGroups(RCursor<cObj>* objs,const unsigned int max) throw(std::bad_alloc);
 
 	/**
 	* Init the groups.

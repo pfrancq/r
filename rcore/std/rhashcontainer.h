@@ -48,7 +48,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * @param C                  The class of the element to be contained.
-* @param T                  The type of the iterator used.
 * @param tSize              Size of the hash table.
 * @param bAlloc             Specify if the elements are desallocated by the
 *                           container.
@@ -105,7 +104,7 @@ namespace R{
 *
 * int main()
 * {
-* 	RHashContainer<MyElement,unsigned int,27,true> c(20,10);
+* 	RHashContainer<MyElement,27,true> c(20,10);
 *
 * 	c.InsertPtr(new MyElement("Coucou"));
 * 	if(c.IsIn<const char*>("Coucou"))
@@ -117,24 +116,24 @@ namespace R{
 * @author Pascal Francq
 * @short Single Hash Table Container.
 */
-template<class C,class T,T tSize,bool bAlloc>
+template<class C,unsigned int tSize,bool bAlloc>
 	class RHashContainer
 {
 public:
 	/**
 	* This container represents the hash table of the elements.
 	*/
-	RContainer<C,T,bAlloc,true>** Hash;
+	RContainer<C,bAlloc,true>** Hash;
 
 	/**
 	* Construct a Hash container.
 	* @param M              Default maximum number of elements.
 	* @param I              Incremental number of elements.
 	*/
-	RHashContainer(T M,T I) throw(std::bad_alloc)
+	RHashContainer(unsigned int M,unsigned int I) throw(std::bad_alloc)
 	{
-		RContainer<C,T,bAlloc,true>** ptr;
-		T i;
+		RContainer<C,bAlloc,true>** ptr;
+		unsigned int i;
 
 		Hash= new RContainer<C,T,bAlloc,true>*[tSize];
 		for(i=tSize+1,ptr=Hash;--i;ptr++)
@@ -146,8 +145,8 @@ public:
 	*/
 	void Clear(void)
 	{
-		RContainer<C,T,bAlloc,true>** ptr;
-		T i;
+		RContainer<C,bAlloc,true>** ptr;
+		unsigned int i;
 
 		for(i=tSize+1,ptr=Hash;--i;ptr++)	(*ptr)->Clear();
 	}
@@ -241,8 +240,8 @@ public:
 	{
 		try
 		{
-			RContainer<C,T,bAlloc,true>** ptr;
-			T i;
+			RContainer<C,bAlloc,true>** ptr;
+			unsigned int i;
 
 			for(i=tSize+1,ptr=Hash;--i;ptr++)
 				delete (*ptr);

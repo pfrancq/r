@@ -6,7 +6,7 @@
 
 	Point - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -48,21 +48,21 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RPoints::RPoints(void)
-	: RContainer<RPoint,unsigned int,true,false>(10,5)
+	: RContainer<RPoint,true,false>(10,5)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RPoints::RPoints(const unsigned int max)
-	: RContainer<RPoint,unsigned int,true,false>(max,5)
+	: RContainer<RPoint,true,false>(max,5)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RPoints::RPoints(const RPoints* points)
-	: RContainer<RPoint,unsigned int,true,false>(points->MaxPtr,points->IncPtr)
+	: RContainer<RPoint,true,false>(points->MaxPtr,points->IncPtr)
 {
 	RPoint **pts;
 	unsigned int i;
@@ -270,6 +270,6 @@ bool RPoints::DuplicatePoints(void) const
 //------------------------------------------------------------------------------
 RPoints& RPoints::operator=(const RPoints& points)
 {
-	RContainer<RPoint,unsigned int,true,false>::operator=(points);
+	RContainer<RPoint,true,false>::operator=(points);
 	return(*this);
 }

@@ -787,7 +787,7 @@ void RHTMLFile::InitValidTags(void) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,unsigned,true,true>& attrs) throw(RIOException)
+void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs) throw(RIOException)
 {
 	RString htmlName=name;
 	Tag* tag;

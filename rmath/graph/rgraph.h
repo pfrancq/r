@@ -6,7 +6,7 @@
 
 	A Graph - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -59,12 +59,12 @@ public:
 	/**
 	* The vertices of the graph.
 	*/
-	RContainer<RVertex,unsigned int,true,false> Vertices;
+	RContainer<RVertex,true,false> Vertices;
 
 	/**
 	* The edges of the graph.
 	*/
-	RContainer<REdge,unsigned int,true,false> Edges;
+	RContainer<REdge,true,false> Edges;
 
 	/**
 	* Constructor of the graph.

@@ -6,7 +6,7 @@
 
 	Genereic Text Encoding Scheme - Implementation.
 
-	Copyright 2004 by the Université Libre de Bruxelles.
+	Copyright 2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -45,7 +45,7 @@ const size_t BufSize=2048;
 
 //------------------------------------------------------------------------------
 // General Variables
-RContainer<RTextEncoding,unsigned int,true,true> Encodings(20,10);
+RContainer<RTextEncoding,true,true> Encodings(20,10);
 
 
 

@@ -6,7 +6,7 @@
 
 	XML tag - Header.
 
-	Copyright 2000-2004 by the Université Libre de Bruxelles.
+	Copyright 2000-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -77,7 +77,7 @@ class RXMLTag : public RNode<RXMLTag,false>
 	/**
 	* The attributes of the tag.
 	*/
-	RContainer<RXMLAttr,unsigned,true,true> Attrs;
+	RContainer<RXMLAttr,true,true> Attrs;
 
 public:
 
@@ -277,7 +277,7 @@ public:
 * The RXMLTagCursor class provides a way to go trough a set of XML tags.
 * @short XML Tags Cursor
 */
-CLASSCURSOR(RXMLTagCursor,RXMLTag,unsigned int);
+CLASSCURSOR(RXMLTagCursor,RXMLTag);
 
 
 }  //-------- End of namespace R -----------------------------------------------

@@ -6,7 +6,7 @@
 
 	Generic function - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -110,7 +110,7 @@ public:
 	* @param o              Output.
 	* @param args           Parameters of the function.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o,RContainer<RPrgVar,unsigned int,true,false>* args) throw(RException);
+	virtual void Run(RPrg* prg,RPrgOutput* o,RContainer<RPrgVar,true,false>* args) throw(RException);
 
 	/**
 	* Destructor of a function.

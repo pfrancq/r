@@ -6,7 +6,7 @@
 
 	Set of geometric informations - Implementation.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -44,7 +44,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RGeoInfos::RGeoInfos(RProblem2D* prob,bool create) throw(std::bad_alloc)
-	: RContainer<RGeoInfo,unsigned int,true,false>(prob->Objs.NbPtr+3,prob->Objs.NbPtr/2),
+	: RContainer<RGeoInfo,true,false>(prob->Objs.NbPtr+3,prob->Objs.NbPtr/2),
 	  Problem(prob), Cons(&prob->Cons,this), RealNb(prob->Objs.NbPtr), Selected(0)
 {
 	if(create)
@@ -144,7 +144,7 @@ void RGeoInfos::ClearInfos(void)
 //------------------------------------------------------------------------------
 RGeoInfos& RGeoInfos::operator=(const RGeoInfos& infos) throw(std::bad_alloc)
 {
-	RContainer<RGeoInfo,unsigned int,true,false>::operator=(infos);
+	RContainer<RGeoInfo,true,false>::operator=(infos);
 	Problem=infos.Problem;
 	Cons=infos.Cons;
 	Cons.Infos=this;

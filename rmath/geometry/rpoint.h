@@ -6,7 +6,7 @@
 
 	Point - Header
 
-	Copyright 1999-2004 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -211,7 +211,7 @@ RPoint operator-(const RPoint& arg1,const RPoint& arg2);
 * The RPointCursor class provides a way to go trough a set of points.
 * @short Points Cursor
 */
-CLASSCURSOR(RPointCursor,RPoint,unsigned int);
+CLASSCURSOR(RPointCursor,RPoint);
 
 
 }  //-------- End of namespace R -----------------------------------------------

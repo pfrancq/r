@@ -5,7 +5,7 @@
 
 	Generic Sparse Vector containing generic Cells- Header.
 
-	Copyright 2003 by the Université Libre de Bruxelles.
+	Copyright 2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors
 		 Vandaele Valery(vavdaele@ulb.ac.be)
@@ -56,7 +56,7 @@ namespace R{
 * @short [short description].
 */
 template<class C,bool bAlloc>
-	class RGenericSparseVector : public R::RContainer<C,unsigned int,bAlloc,true>
+	class RGenericSparseVector : public R::RContainer<C,bAlloc,true>
 {
 private :
 

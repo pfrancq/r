@@ -6,7 +6,7 @@
 
 	Polygons - Implentation.
 
-	Copyright 1999-2004 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -54,7 +54,7 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 RPolygons::RPolygons(void)
-	: RContainer<RPolygon,unsigned int,true,false>(20,10)
+	: RContainer<RPolygon,true,false>(20,10)
 {
 }
 
@@ -297,7 +297,7 @@ bool RPolygons::IsIn(const RPoint& pt) const
 //------------------------------------------------------------------------------
 RPolygons& RPolygons::operator=(const RPolygons& poly)
 {
-	RContainer<RPolygon,unsigned int,true,false>::operator=(poly);
+	RContainer<RPolygon,true,false>::operator=(poly);
 	return(*this);
 }
 

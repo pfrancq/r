@@ -6,7 +6,7 @@
 
 	Generic Class - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -69,12 +69,12 @@ protected:
 	/**
 	* Variables defined in the class.
 	*/
-	RContainer<RPrgVar,unsigned int,true,true> Vars;
+	RContainer<RPrgVar,true,true> Vars;
 
 	/**
 	* Methods defined in the class.
 	*/
-	R::RContainer<RPrgFunc,unsigned int,true,true> Methods;
+	R::RContainer<RPrgFunc,true,true> Methods;
 
 public:
 

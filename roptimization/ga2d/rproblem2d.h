@@ -6,7 +6,7 @@
 
 	2D Placement Problem - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -81,7 +81,7 @@ public:
 	/**
 	* Objects.
 	*/
-	RContainer<RObj2D,unsigned int,true,true> Objs;
+	RContainer<RObj2D,true,true> Objs;
 
 	/**
 	* Connections.
@@ -116,7 +116,7 @@ protected:
 	* @param o              Tag representing an object.
 	* @param ts             Container holding the templates.
 	*/
-	void CreateObj(RXMLTag* o,RContainer<RObj2D,unsigned int,true,true>& ts);
+	void CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts);
 
 	/**
 	* Create a connector from a tag.

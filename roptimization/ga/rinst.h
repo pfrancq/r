@@ -6,7 +6,7 @@
 
 	Instance of Genetic Algorithms - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -133,7 +133,7 @@ protected:
 	/**
 	* Container of all objects that will be receive signals from the GA.
 	*/
-	RContainer<RGASignalsReceiver<cInst,cChromo,cFit>,unsigned int,false,false> Receivers;
+	RContainer<RGASignalsReceiver<cInst,cChromo,cFit>,false,false> Receivers;
 
 	/**
 	* This variable is true if the random construction where done.

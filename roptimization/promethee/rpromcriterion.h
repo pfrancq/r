@@ -6,7 +6,7 @@
 
 	Promethee Criterion - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -52,7 +52,7 @@ namespace R{
 /**
 * The RPromCriterionParams is use to hold the parameters that can influence a
 * criterion in Promethee.
-* @short Prométhée Criterion.
+* @short Promï¿½hï¿½ Criterion.
 * @author Pascal Francq.
 */
 class RPromCriterionParams
@@ -60,12 +60,12 @@ class RPromCriterionParams
 public:
 
 	/**
-	* Value for the preference threshold of the Prométhée method.
+	* Value for the preference threshold of the Promï¿½hï¿½ method.
 	*/
 	double P;
 
 	/**
-	* Value for the indifference threshold of the Prométhée method.
+	* Value for the indifference threshold of the Promï¿½hï¿½ method.
 	*/
 	double Q;
 
@@ -116,11 +116,11 @@ public:
 
 //------------------------------------------------------------------------------
 /**
-* The RPromCriterion class provides a representation for a Prométhée Criterion.
-* @short Prométhée Criterion.
+* The RPromCriterion class provides a representation for a Promï¿½hï¿½ Criterion.
+* @short Promï¿½hï¿½ Criterion.
 * @author Pascal Francq & Thomas L'Eglise.
 */
-class RPromCriterion : protected RContainer<RPromCritValue,unsigned int,false,false>
+class RPromCriterion : protected RContainer<RPromCritValue,false,false>
 {
 	/**
 	* The identifier of the criterion.
@@ -138,12 +138,12 @@ class RPromCriterion : protected RContainer<RPromCritValue,unsigned int,false,fa
 	CriteriaType Type;
 
 	/**
-	* Value for the preference threshold of the Prométhée method.
+	* Value for the preference threshold of the Promï¿½hï¿½ method.
 	*/
 	double P;
 
 	/**
-	* Value for the indifference threshold of the Prométhée method.
+	* Value for the indifference threshold of the Promï¿½hï¿½ method.
 	*/
 	double Q;
 
@@ -309,7 +309,7 @@ public:
 * The RPromCriterionCursor class provides a way to go trough a set of criterion.
 * @short Criterion Cursor.
 */
-CLASSCURSOR(RPromCriterionCursor,RPromCriterion,unsigned int);
+CLASSCURSOR(RPromCriterionCursor,RPromCriterion);
 
 
 }  //-------- End of namespace R -----------------------------------------------

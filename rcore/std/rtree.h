@@ -6,7 +6,7 @@
 
 	Generic Tree - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -63,13 +63,13 @@ namespace R{
 * @short Generic Tree.
 */
 template<class N,bool bAlloc,bool bOrder>
-	class RTree : public RContainer<N,unsigned int,bAlloc,bOrder>
+	class RTree : public RContainer<N,bAlloc,bOrder>
 {
 public:
 	/**
 	* This container hold the top nodes.
 	*/
-	RContainer<N,unsigned int,false,bOrder>* Top;
+	RContainer<N,false,bOrder>* Top;
 
 	/**
 	* Construct the tree.

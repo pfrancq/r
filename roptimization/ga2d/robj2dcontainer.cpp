@@ -6,7 +6,7 @@
 
 	Geometric information - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -47,7 +47,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RObj2DContainer::RObj2DContainer(const unsigned int id,const char* name,const unsigned int nb)
-	: RObj2D(id,name,false), RContainer<RGeoInfo,unsigned int,false,false>(nb,nb/2)
+	: RObj2D(id,name,false), RContainer<RGeoInfo,false,false>(nb,nb/2)
 {
 }
 

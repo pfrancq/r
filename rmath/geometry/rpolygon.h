@@ -6,7 +6,7 @@
 
 	Polygon - Header.
 
-	Copyright 1999-2004 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -55,7 +55,7 @@ namespace R{
 * @author Pascal Francq
 * @short Polygon class.
 */
-class RPolygon : public RContainer<RPoint,unsigned int,true,false>
+class RPolygon : public RContainer<RPoint,true,false>
 {
 public:
 
@@ -306,7 +306,7 @@ public:
 * The RPolygonCursor class provides a way to go trough a set of polygons.
 * @short Polygons Cursor
 */
-CLASSCURSOR(RPolygonCursor,RPolygon,unsigned int);
+CLASSCURSOR(RPolygonCursor,RPolygon);
 
 
 }  //-------- End of namespace R -----------------------------------------------

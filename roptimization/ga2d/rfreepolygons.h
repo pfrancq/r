@@ -6,7 +6,7 @@
 
 	List of polygons representing a free space - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -56,7 +56,7 @@ class RGeoInfo;
 * @author Pascal Francq
 * @short Container of free polygons.
 */
-class RFreePolygons : public RContainer<RFreePolygon,unsigned int,true,false>
+class RFreePolygons : public RContainer<RFreePolygon,true,false>
 {
 public:
 

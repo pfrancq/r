@@ -260,7 +260,7 @@ RString RXMLFile::StringToXML(const RString& str,bool strict)
 void RXMLFile::LoadHeader(void) throw(RIOException)
 {
 	RString Content;
-	RContainer<RXMLAttr,unsigned,true,true> Attrs(10);
+	RContainer<RXMLAttr,true,true> Attrs(10);
 	RXMLAttr* Attr;
 
 	// Skip Spaces and comments
@@ -321,7 +321,7 @@ void RXMLFile::LoadNextTag(void) throw(RIOException)
 	RString attrn,attrv;
 	RString TagName;
 	RString Contains;
-	RContainer<RXMLAttr,unsigned,true,true> Attrs(10);
+	RContainer<RXMLAttr,true,true> Attrs(10);
 	RChar What;
 	RString Code;
 	bool CDATA;
@@ -438,7 +438,7 @@ void RXMLFile::LoadNextTag(void) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::LoadAttributes(RContainer<RXMLAttr,unsigned,true,true>& attrs,RChar EndTag1,RChar EndTag2) throw(RIOException)
+void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag1,RChar EndTag2) throw(RIOException)
 {
 	RString attrn,attrv;
 	RChar What;
@@ -584,7 +584,7 @@ void RXMLFile::AddNextCharacter(RString& str) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RContainer<RXMLAttr,unsigned,true,true>& attrs) throw(RIOException)
+void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RContainer<RXMLAttr,true,true>& attrs) throw(RIOException)
 {
 	RXMLTag* tag;
 	RXMLAttrCursor Cur;

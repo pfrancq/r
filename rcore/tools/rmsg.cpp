@@ -6,7 +6,7 @@
 
 	Message systems - Implementation.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,7 +37,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 // Global variable
-RContainer<RMsg,unsigned int,true,false> Msgs(30,15);
+RContainer<RMsg,true,false> Msgs(30,15);
 
 
 
