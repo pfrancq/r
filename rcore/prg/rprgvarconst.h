@@ -63,7 +63,7 @@ public:
 	* Constructor of a const variable.
 	* @param value          Name.
 	*/
-	RPrgVarConst(const char* value) throw(bad_alloc);
+	RPrgVarConst(const char* value) throw(std::bad_alloc);
 
 	/**
 	* Assign some data to the const variable.

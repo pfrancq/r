@@ -93,12 +93,12 @@ public:
 	* @param line           Rest of the line.
 	* @param t              Identation.
 	*/
-	RPrgInstFor(char* line,unsigned int t) throw(bad_alloc);
+	RPrgInstFor(char* line,unsigned int t) throw(std::bad_alloc);
 
 	/**
 	* Add an instruction to the for.
 	*/
-	void AddInst(RPrgInst* ins) throw(bad_alloc);
+	void AddInst(RPrgInst* ins) throw(std::bad_alloc);
 
 	/**
 	* Run the instructions in the for for the different values of its variable.

@@ -49,7 +49,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVarRef::RPrgVarRef(const char* ref) throw(bad_alloc)
+RPrgVarRef::RPrgVarRef(const char* ref) throw(std::bad_alloc)
 	: RPrgVar(ref)
 {
 }

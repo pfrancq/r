@@ -94,7 +94,7 @@ class RMatrix
 	/**
 	* Initialise the matrix.
 	*/
-	void Init(void) throw(bad_alloc);
+	void Init(void) throw(std::bad_alloc);
 
 public:
 
@@ -152,30 +152,30 @@ public:
 	* Construct a square matrix(Size,Size).
 	* @param Size		Initial size of the matrix.
 	*/
-	RMatrix(tSize Size) throw(bad_alloc);
+	RMatrix(tSize Size) throw(std::bad_alloc);
 
 	/**
 	* Construct a matrix (L,C).
 	* @param L	Initial number of lines.
 	* @param C  Initial number of columns.
 	*/
-	RMatrix(tSize L,tSize C) throw(bad_alloc);
+	RMatrix(tSize L,tSize C) throw(std::bad_alloc);
 
 	/**
 	* Construct a matrix from another one.
 	*/
-	RMatrix(const RMatrix &Matrix) throw(bad_alloc);
+	RMatrix(const RMatrix &Matrix) throw(std::bad_alloc);
 
 	/**
 	* Construct a matrix from another one.
 	*/
-	RMatrix(const RMatrix *Matrix) throw(bad_alloc);
+	RMatrix(const RMatrix *Matrix) throw(std::bad_alloc);
 
 	/**
 	* Verify if the matrix has a given size, and increase them if necessary.
 	* @param NewLin		New line number.
 	* @param NewCol		New column number.*/
-	inline void VerifySize(tSize NewLin,tSize NewCol) throw(bad_alloc);
+	inline void VerifySize(tSize NewLin,tSize NewCol) throw(std::bad_alloc);
 
 	/**
 	* Symetrize the matrix.
@@ -187,27 +187,27 @@ public:
 	* @param m	Line number of the element.
 	* @param n	Column number of the element.
 	*/
- 	tNumber& operator()(int m, int n) const throw(errMatrix,bad_alloc);
+ 	tNumber& operator()(int m, int n) const throw(errMatrix,std::bad_alloc);
 
 	/**
 	* Make the transitive closure for the matrix.
 	*/
-	char TransitiveClosure(RMatrix *Matrix) throw(errMatrix,bad_alloc);
+	char TransitiveClosure(RMatrix *Matrix) throw(errMatrix,std::bad_alloc);
 
 	/**
 	* Assign operator.
 	*/
-	RMatrix& operator=(const RMatrix) throw(errMatrix,bad_alloc);
+	RMatrix& operator=(const RMatrix) throw(errMatrix,std::bad_alloc);
 
 	/**
 	* Add a matrix to the current one.
 	*/
-	RMatrix& operator+=(const RMatrix) throw(errMatrix,bad_alloc);
+	RMatrix& operator+=(const RMatrix) throw(errMatrix,std::bad_alloc);
 
 	/**
 	* Substract a matrix from the current one.
 	*/
-  	RMatrix& operator-=(const RMatrix) throw(errMatrix,bad_alloc);
+  	RMatrix& operator-=(const RMatrix) throw(errMatrix,std::bad_alloc);
 
 	/**
 	* Multiply a matrix with the current one. It is important to remember that
@@ -224,12 +224,12 @@ public:
 	* }
 	* </pre>
 	*/
-	RMatrix& operator*=(const RMatrix) throw(errMatrix,bad_alloc);
+	RMatrix& operator*=(const RMatrix) throw(errMatrix,std::bad_alloc);
 
 	/**
 	* Multiply a matrix with a given number.
 	*/
-	RMatrix& operator*=(const tNumber) throw(errMatrix,bad_alloc);
+	RMatrix& operator*=(const tNumber) throw(errMatrix,std::bad_alloc);
 
 	/**
 	* Return a temporary matrix. This function is needed for the operators.
@@ -250,31 +250,31 @@ public:
 /**
 * Multiplication of a matrix and a number.
 */
-RMatrix& operator*(const RMatrix&,const tNumber) throw(bad_alloc);
+RMatrix& operator*(const RMatrix&,const tNumber) throw(std::bad_alloc);
 
 //------------------------------------------------------------------------------
 /**
 * Multiplication of a matrix and a number.
 */
-RMatrix& operator*(const tNumber,const RMatrix&) throw(bad_alloc);
+RMatrix& operator*(const tNumber,const RMatrix&) throw(std::bad_alloc);
 
 //------------------------------------------------------------------------------
 /**
 * Addition of two matrixes.
 */
-RMatrix& operator+(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,bad_alloc);
+RMatrix& operator+(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,std::bad_alloc);
 
 //------------------------------------------------------------------------------
 /**
 * Substraction of two matrixes.
 */
-RMatrix& operator-(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,bad_alloc);
+RMatrix& operator-(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,std::bad_alloc);
 
 //------------------------------------------------------------------------------
 /**
 * Multiplication of two matrixes.
 */
-RMatrix& operator*(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,bad_alloc);
+RMatrix& operator*(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,std::bad_alloc);
 
 
 }  //-------- End of namespace R -----------------------------------------------

@@ -52,7 +52,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RLang::RLang(const RString& lang,const char* code) throw(bad_alloc)
+RLang::RLang(const RString& lang,const char* code) throw(std::bad_alloc)
   : Lang(lang)
 {
   memcpy(Code,code,2*sizeof(char));

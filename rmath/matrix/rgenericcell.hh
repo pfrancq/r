@@ -41,35 +41,35 @@
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>::RGenericCell(unsigned int id) throw(bad_alloc)
+	RGenericCell<C>::RGenericCell(unsigned int id) throw(std::bad_alloc)
 		: Id(id) , Value(0)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>::RGenericCell(unsigned int id, C value) throw(bad_alloc)
+	RGenericCell<C>::RGenericCell(unsigned int id, C value) throw(std::bad_alloc)
 		: Id(id) , Value(value)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>::RGenericCell(const RGenericCell<C>* src) throw(bad_alloc)
+	RGenericCell<C>::RGenericCell(const RGenericCell<C>* src) throw(std::bad_alloc)
 		: Id(src->GetId()) , Value(src->GetValue())
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>::RGenericCell(const RGenericCell<C>& src) throw(bad_alloc)
+	RGenericCell<C>::RGenericCell(const RGenericCell<C>& src) throw(std::bad_alloc)
 		: Id(src.GetId()) , Value(src.GetValue())
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>& RGenericCell<C>::operator=(const RGenericCell<C>& src) throw(bad_alloc)
+	RGenericCell<C>& RGenericCell<C>::operator=(const RGenericCell<C>& src) throw(std::bad_alloc)
 {
 	Id= src.Id;
 	Value=src.Value;

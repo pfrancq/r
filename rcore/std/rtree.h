@@ -60,7 +60,7 @@ namespace R{
 * class MyOrderResponsibleTree : public RTree<MyNode,true,true>
 *	{
 *	public:
-*		MyOrderResponsibleTree(unsigned int max,unsigned int inc) throw(bad_alloc);
+*		MyOrderResponsibleTree(unsigned int max,unsigned int inc) throw(std::bad_alloc);
 *	};
 * </pre>
 * @author Pascal Francq
@@ -80,14 +80,14 @@ public:
 	* @param max            Initial size of the array of top nodes.
 	* @param inc            Increment size of the array.
 	*/
-	RTree(unsigned int max,unsigned int inc) throw(bad_alloc);
+	RTree(unsigned int max,unsigned int inc) throw(std::bad_alloc);
 
 	/**
 	* Add the node to the parent.
 	* @param parent         The parent node.
 	* @param node           The node to add to the tree.
 	*/
-	void AddNode(N* parent,N* node) throw(bad_alloc);
+	void AddNode(N* parent,N* node) throw(std::bad_alloc);
 
 	/**
 	* Delete the node from the tree.

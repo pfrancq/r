@@ -41,35 +41,35 @@
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(void) throw(bad_alloc)
+	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(void) throw(std::bad_alloc)
 		: RContainer<RGenericSparseVector<C,bAlloc>,unsigned int, bAlloc,true>(3,2)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(unsigned int nbElem, unsigned int increase) throw(bad_alloc)
+	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(unsigned int nbElem, unsigned int increase) throw(std::bad_alloc)
 		: RContainer<RGenericSparseVector<C,bAlloc>,unsigned int, bAlloc,true>(nbElem,increase) 
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>* src) throw(bad_alloc)
+	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>* src) throw(std::bad_alloc)
 		: RContainer<RGenericSparseVector<C,bAlloc>,unsigned int, bAlloc,true>::RContainer(src)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>& src) throw(bad_alloc)
+	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>& src) throw(std::bad_alloc)
 		: RContainer<RGenericSparseVector<C,bAlloc>,unsigned int, bAlloc,true>::RContainer(src)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>& RGenericSparseMatrix<C,bAlloc>::operator=(const RGenericSparseMatrix<C,bAlloc>& src) throw(bad_alloc)
+	RGenericSparseMatrix<C,bAlloc>& RGenericSparseMatrix<C,bAlloc>::operator=(const RGenericSparseMatrix<C,bAlloc>& src) throw(std::bad_alloc)
 {
 	RContainer<RGenericSparseVector<C,bAlloc>,unsigned int,bAlloc,true>::operator=(src);
 	return(*this);

@@ -78,32 +78,32 @@ public :
 	* constructor of RGenericCell
 	* @param id                The Id of the cell.
 	*/
-	RGenericCell(unsigned int id) throw(bad_alloc);
+	RGenericCell(unsigned int id) throw(std::bad_alloc);
 
 	/**
 	* constructor of RGenericCell
 	* @param id                The Id of the cell.
 	* @param value             The value of type T
 	*/
-	RGenericCell(unsigned int id, C value)throw(bad_alloc);
+	RGenericCell(unsigned int id, C value)throw(std::bad_alloc);
 
 	/**
 	* Construct the generic cell from another one.
 	* @param src            Generic Cell used as source.
 	*/
-	RGenericCell(const RGenericCell<C>* src) throw(bad_alloc);
+	RGenericCell(const RGenericCell<C>* src) throw(std::bad_alloc);
 
 	/**
 	* Construct the generic cell from another one.
 	* @param src            Generic Cell used as source.
 	*/
-	RGenericCell(const RGenericCell<C>& src) throw(bad_alloc);
+	RGenericCell(const RGenericCell<C>& src) throw(std::bad_alloc);
 
 	/**
 	* The assignement operator.
 	* @param src            Generic Cell used as source.
 	*/
-	RGenericCell& operator=(const RGenericCell<C>& src) throw(bad_alloc);
+	RGenericCell& operator=(const RGenericCell<C>& src) throw(std::bad_alloc);
 
 	/**
 	* Method used by the container

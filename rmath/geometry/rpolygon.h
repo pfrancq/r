@@ -105,13 +105,13 @@ public:
 	* Make a translation of the polygon.
 	* @param pt             The point representing the vector used.
 	*/
-	RPolygon& operator+=(const RPoint& pt) throw(bad_alloc);
+	RPolygon& operator+=(const RPoint& pt) throw(std::bad_alloc);
 
 	/**
 	* Make a translation of the polygon.
 	* @param pt             The point representing the vector used.
 	*/
-	RPolygon& operator-=(const RPoint& pt) throw(bad_alloc);
+	RPolygon& operator-=(const RPoint& pt) throw(std::bad_alloc);
 
 	/**
 	* This function compares two polygons and returns 0 if there have the same

@@ -99,7 +99,7 @@ void RPromKernel::ComputePrometheeII(void)
 
 
 //------------------------------------------------------------------------------
-RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const double p,const double q,const double w) throw(bad_alloc)
+RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const double p,const double q,const double w) throw(std::bad_alloc)
 {
 	RPromCriterion* crit=new RPromCriterion(t,p,q,w,Criteria.NbPtr,Solutions.MaxPtr);
 	Criteria.InsertPtr(crit);
@@ -108,7 +108,7 @@ RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const double p,co
 
 
 //------------------------------------------------------------------------------
-RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const RPromCriterionParams& params) throw(bad_alloc)
+RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const RPromCriterionParams& params) throw(std::bad_alloc)
 {
 	RPromCriterion* crit=new RPromCriterion(t,params,Criteria.NbPtr,Solutions.MaxPtr);
 	Criteria.InsertPtr(crit);
@@ -118,7 +118,7 @@ RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const RPromCriter
 
 //------------------------------------------------------------------------------
 RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const char* name,
-		const double p,const double q,const double w) throw(bad_alloc)
+		const double p,const double q,const double w) throw(std::bad_alloc)
 {
 	RPromCriterion* crit=new RPromCriterion(t,p,q,w,Criteria.NbPtr,name,Solutions.MaxPtr);
 	Criteria.InsertPtr(crit);
@@ -128,7 +128,7 @@ RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const char* name,
 
 //------------------------------------------------------------------------------
 RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const char* name,
-		const RPromCriterionParams& params) throw(bad_alloc)
+		const RPromCriterionParams& params) throw(std::bad_alloc)
 {
 	RPromCriterion* crit=new RPromCriterion(t,params,Criteria.NbPtr,name,Solutions.MaxPtr);
 	Criteria.InsertPtr(crit);
@@ -137,7 +137,7 @@ RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const char* name,
 
 
 //------------------------------------------------------------------------------
-RPromSol* RPromKernel::NewSol(void) throw(bad_alloc)
+RPromSol* RPromKernel::NewSol(void) throw(std::bad_alloc)
 {
 	RPromSol* sol=new RPromSol(Solutions.NbPtr,Criteria.MaxPtr);
 	Solutions.InsertPtr(sol);
@@ -146,7 +146,7 @@ RPromSol* RPromKernel::NewSol(void) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RPromSol* RPromKernel::NewSol(const char* name) throw(bad_alloc)
+RPromSol* RPromKernel::NewSol(const char* name) throw(std::bad_alloc)
 {
 	RPromSol* sol=new RPromSol(Solutions.NbPtr,name,Criteria.MaxPtr);
 	Solutions.InsertPtr(sol);
@@ -155,7 +155,7 @@ RPromSol* RPromKernel::NewSol(const char* name) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-void RPromKernel::Assign(RPromSol* sol,RPromCriterion* crit,const double v) throw(bad_alloc)
+void RPromKernel::Assign(RPromSol* sol,RPromCriterion* crit,const double v) throw(std::bad_alloc)
 {
 	RPromCritValue* val;
 
@@ -177,21 +177,21 @@ void RPromKernel::Assign(RPromSol* sol,RPromCriterion* crit,const double v) thro
 
 
 //------------------------------------------------------------------------------
-void RPromKernel::Assign(const char* sol,RPromCriterion* crit,const double v) throw(bad_alloc)
+void RPromKernel::Assign(const char* sol,RPromCriterion* crit,const double v) throw(std::bad_alloc)
 {
 	Assign(Solutions.GetPtr<RString>(sol),crit,v);
 }
 
 
 //------------------------------------------------------------------------------
-void RPromKernel::Assign(RPromSol* sol,const char* crit,const double v) throw(bad_alloc)
+void RPromKernel::Assign(RPromSol* sol,const char* crit,const double v) throw(std::bad_alloc)
 {
 	Assign(sol,Criteria.GetPtr<RString>(crit),v);
 }
 
 
 //------------------------------------------------------------------------------
-void RPromKernel::Assign(const char* sol,const char* crit,const double v) throw(bad_alloc)
+void RPromKernel::Assign(const char* sol,const char* crit,const double v) throw(std::bad_alloc)
 {
 	Assign(Solutions.GetPtr<RString>(sol),Criteria.GetPtr<RString>(crit),v);
 }

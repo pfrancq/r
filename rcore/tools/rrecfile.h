@@ -123,7 +123,7 @@ public:
 	* @param name           The name of the file.
 	* @param mode           The open mode for the file.
 	*/
-	RRecFile(const RString &name,ModeType mode) throw(bad_alloc,RString);
+	RRecFile(const RString &name,ModeType mode) throw(std::bad_alloc,RString);
 
 public:
 

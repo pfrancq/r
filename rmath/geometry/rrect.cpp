@@ -101,7 +101,7 @@ RCoord RRect::Height(void) const
 
 
 //------------------------------------------------------------------------------
-RRect& RRect::operator+=(const RPoint& pt) throw(bad_alloc)
+RRect& RRect::operator+=(const RPoint& pt) throw(std::bad_alloc)
 {
 	Pt1+=pt;
 	Pt2+=pt;
@@ -110,7 +110,7 @@ RRect& RRect::operator+=(const RPoint& pt) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RRect& RRect::operator-=(const RPoint& pt) throw(bad_alloc)
+RRect& RRect::operator-=(const RPoint& pt) throw(std::bad_alloc)
 {
 	Pt1-=pt;
 	Pt2-=pt;

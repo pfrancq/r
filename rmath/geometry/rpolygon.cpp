@@ -118,7 +118,7 @@ bool RPolygon::operator!=(const RPolygon& poly) const
 
 
 //------------------------------------------------------------------------------
-RPolygon& RPolygon::operator+=(const RPoint& pt) throw(bad_alloc)
+RPolygon& RPolygon::operator+=(const RPoint& pt) throw(std::bad_alloc)
 {
 	unsigned int i;
 	RPoint** tab;
@@ -129,7 +129,7 @@ RPolygon& RPolygon::operator+=(const RPoint& pt) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RPolygon& RPolygon::operator-=(const RPoint& pt) throw(bad_alloc)
+RPolygon& RPolygon::operator-=(const RPoint& pt) throw(std::bad_alloc)
 {
 	unsigned int i;
 	RPoint** tab;

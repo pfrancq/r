@@ -42,7 +42,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	RThreadData<cInst,cChromo>::RThreadData(cInst *owner) throw(bad_alloc)
+	RThreadData<cInst,cChromo>::RThreadData(cInst *owner) throw(std::bad_alloc)
 		: Owner(owner)
 {
 }
@@ -57,7 +57,7 @@ template<class cInst,class cChromo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,RDebug *debug) throw(bad_alloc)
+	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,RDebug *debug) throw(std::bad_alloc)
 		: Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),Receivers(10,5),bRandomConstruct(false),
 			Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0),AgeBestPop(0)
 {
@@ -82,7 +82,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Init(void) throw(bad_alloc)
+	void RInst<cInst,cChromo,cFit,cThreadData>::Init(void) throw(std::bad_alloc)
 {
 	cChromo **C;
 	unsigned int i;

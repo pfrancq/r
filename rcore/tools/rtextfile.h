@@ -179,19 +179,19 @@ public:
 	* @param name           The name of the file.
 	* @param mode           The open mode for the file.
 	*/
-	RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString);
+	RTextFile(const RString &name,ModeType mode) throw(std::bad_alloc,RString);
 
 	/**
 	* Construct a text file in read mode.
 	* @param name           The name of the file.
 	* @param all            The text file is open in one time (Only Supported yet).
 	*/
-	RTextFile(const RString &name,bool all=true) throw(bad_alloc,RString);
+	RTextFile(const RString &name,bool all=true) throw(std::bad_alloc,RString);
 
 	/**
 	* Re-initialise the file.
 	*/
-	void Init(void) throw(bad_alloc,RString);
+	void Init(void) throw(std::bad_alloc,RString);
 
 	/**
 	* Go to the begining of the file.

@@ -4,7 +4,7 @@
 
 	RStd.h
 
-	Rainbow Standard Library - Header.
+	R Standard Library - Header.
 
 	Copyright 1999-2003 by the Université Libre de Bruxelles.
 
@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RStd_H
-#define RStd_H
+#ifndef RStdH
+#define RStdH
 
 
 //------------------------------------------------------------------------------
@@ -45,7 +45,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
-using namespace std;
 
 
 //------------------------------------------------------------------------------
@@ -62,26 +61,26 @@ using namespace std;
 		#define RAssert(expr)                                                 \
 		if(!(expr))                                                           \
 		{                                                                     \
-			cerr  <<"file "<<__FILE__                                         \
-				  <<": line "<<__LINE__                                       \
-				  <<" ("<<__PRETTY_FUNCTION__                                 \
-				  <<"): assertion failed: "<<#expr<<endl;                     \
+			std::cerr	<<"file "<<__FILE__                                   \
+						<<": line "<<__LINE__                                 \
+						<<" ("<<__PRETTY_FUNCTION__                           \
+						<<"): assertion failed: "<<#expr<<std::endl;          \
 		}
 
 		#define RAssertNotReached()                                           \
 		{                                                                     \
-			cerr  <<"file "<<__FILE__                                         \
-				  <<": line "<<__LINE__                                       \
-				  <<" ("<<__PRETTY_FUNCTION__                                 \
-				  <<"): should not be reached"<<endl;                         \
+			std::cerr	<<"file "<<__FILE__                                   \
+						<<": line "<<__LINE__                                 \
+						<<" ("<<__PRETTY_FUNCTION__                           \
+						<<"): should not be reached"<<std::endl;              \
 		}
 
 		#define RAssertMsg(msg)                                               \
 		{                                                                     \
-			cerr  <<"file "<<__FILE__                                         \
-				  <<": line "<<__LINE__                                       \
-				  <<" ("<<__PRETTY_FUNCTION__                                 \
-				  <<"): "<<#msg<<endl;                                        \
+			std::cerr	<<"file "<<__FILE__                                   \
+						<<": line "<<__LINE__                                 \
+						<<" ("<<__PRETTY_FUNCTION__                           \
+						<<"): "<<#msg<<std::endl;                             \
 		}
 
 	#else 	// !__GNUC__
@@ -89,23 +88,23 @@ using namespace std;
 		#define RAssert(expr)                                                 \
 		if(!(expr))                                                           \
 		{                                                                     \
-			cerr  <<"file "<<__FILE__                                         \
-				  <<": line "<<__LINE__                                       \
-				  <<" : assertion failed: "<<#expr<<endl;                     \
+			std::cerr	<<"file "<<__FILE__                                   \
+						<<": line "<<__LINE__                                 \
+						<<" : assertion failed: "<<#expr<<std::endl;          \
 		}
 
 		#define RAssertNotReached()                                           \
 		{                                                                     \
-			cerr  <<"file "<<__FILE__                                         \
-				  <<": line "<<__LINE__                                       \
-				  <<" : should not be reached"<<endl;                         \
+			std::cerr	<<"file "<<__FILE__                                   \
+						<<": line "<<__LINE__                                 \
+						<<" : should not be reached"<<std::endl;              \
 		}
 
 		#define RAssertMsg(msg)                                               \
 		{                                                                     \
-			cerr  <<"file "<<__FILE__                                         \
-				  <<": line "<<__LINE__                                       \
-				  <<": "<<#msg<<endl;                                         \
+			std::cerr	<<"file "<<__FILE__                                   \
+						<<": line "<<__LINE__                                 \
+						<<": "<<#msg<<std::endl;                              \
 		}
 
 	#endif 	// __GNUC__
@@ -127,20 +126,20 @@ using namespace std;
 		#define RReturnIfFail(expr)                                           \
 		if(!(expr))                                                           \
 		{                                                                     \
-			cerr  <<"file "<<__FILE__                                         \
-				  <<": line "<<__LINE__                                       \
-				  <<" ("<<__PRETTY_FUNCTION__                                 \
-				  <<"): check failed: "<<#expr<<endl;                         \
+			std::cerr	<<"file "<<__FILE__                                   \
+						<<": line "<<__LINE__                                 \
+						<<" ("<<__PRETTY_FUNCTION__                           \
+						<<"): check failed: "<<#expr<<std::endl;              \
 			return;                                                           \
 		}
 
 		#define RReturnValIfFail(expr,val)                                    \
 		if(!(expr))                                                           \
 		{                                                                     \
-			cerr  <<"file "<<__FILE__                                         \
-				  <<": line "<<__LINE__                                       \
-				  <<" ("<<__PRETTY_FUNCTION__                                 \
-				  <<"): check failed: "<<#expr<<endl;                         \
+			std::cerr	<<"file "<<__FILE__                                   \
+						<<": line "<<__LINE__                                 \
+						<<" ("<<__PRETTY_FUNCTION__                           \
+						<<"): check failed: "<<#expr<<std::endl;              \
 			return(val);                                                      \
 		}
 
@@ -149,18 +148,18 @@ using namespace std;
 		#define RReturnIfFail(expr)                                           \
 		if(!(expr))                                                           \
 		{                                                                     \
-			cerr  <<"file "<<__FILE__                                         \
-				<<": line "<<__LINE__                                         \
-				<<" : check failed: "<<#expr<<endl;                           \
+			std::cerr	<<"file "<<__FILE__                                   \
+						<<": line "<<__LINE__                                 \
+						<<" : check failed: "<<#expr<<std::endl;              \
 			return;                                                           \
 		}
 
 		#define RReturnValIfFail(expr,val)                                    \
 		if(!(expr))                                                           \
 		{                                                                     \
-			cerr  <<"file "<<__FILE__                                         \
-				  <<": line "<<__LINE__                                       \
-				  <<" : check failed: "<<#expr<<endl;                         \
+			std::cerr	<<"file "<<__FILE__                                   \
+						<<": line "<<__LINE__                                 \
+						<<" : check failed: "<<#expr<<std::endl;              \
 			return(val);                                                      \
 		}
 

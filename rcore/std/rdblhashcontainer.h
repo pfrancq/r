@@ -4,7 +4,7 @@
 
 	RDblHashContainer.h
 
-	Container with a double hash table
+	Double Hash Table Container - Header
 
 	Copyright 2001-2003 by the Université Libre de Bruxelles.
 
@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RDblHashContainer_H
-#define RDblHashContainer_H
+#ifndef RDblHashContainerH
+#define RDblHashContainerH
 
 
 //------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ namespace R{
 * </pre>
 *
 * @author Pascal Francq
-* @short Container Template with Double Hash Table.
+* @short Double Hash Table Container.
 */
 template<class C,class T,T tSize1,T tSize2,bool bAlloc>
 	class RDblHashContainer
@@ -149,7 +149,7 @@ public:
 	* @param M              Default maximum number of elements.
 	* @param I              Incremental number of elements.
 	*/
-	RDblHashContainer(T M,T I) throw(bad_alloc)
+	RDblHashContainer(T M,T I) throw(std::bad_alloc)
 	{
 		RContainer<C,T,bAlloc,true>*** ptr;
 		RContainer<C,T,bAlloc,true>** ptr2;
@@ -182,7 +182,7 @@ public:
 	* Insert an element.
 	* @param ins            Pointer to the element to insert.
 	*/
-	inline void InsertPtr(C *ins) throw(bad_alloc)
+	inline void InsertPtr(C *ins) throw(std::bad_alloc)
 	{
 		RReturnIfFail(ins);
 		Hash[C::HashIndex(ins)][C::HashIndex2(ins)]->InsertPtr(ins);
@@ -247,7 +247,7 @@ public:
 	*                       not (false).
 	* @return The function returns a pointer to the element of the container.
 	*/
-	template<class TUse> inline C* GetInsertPtr(const TUse tag,bool sortkey=true) throw(bad_alloc)
+	template<class TUse> inline C* GetInsertPtr(const TUse tag,bool sortkey=true) throw(std::bad_alloc)
 	{
 		return(Hash[C::HashIndex(tag)][C::HashIndex2(tag)]->GetInsertPtr<TUse>(tag,sortkey));
 	}

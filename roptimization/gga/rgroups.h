@@ -116,7 +116,7 @@ public:
 	* @param objs           Objects to group.
 	* @param max            Maximal number of groups to create.
 	*/
-	RGroups(RCursor<cObj,unsigned int>* objs,const unsigned int max) throw(bad_alloc);
+	RGroups(RCursor<cObj,unsigned int>* objs,const unsigned int max) throw(std::bad_alloc);
 
 	/**
 	* Init the groups.

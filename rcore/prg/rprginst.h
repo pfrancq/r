@@ -71,7 +71,7 @@ public:
 	/**
 	* Constructor of a generic instruction.
 	*/
-	RPrgInst(void) throw(bad_alloc);
+	RPrgInst(void) throw(std::bad_alloc);
 
 	/**
 	* This method compares two instructions.

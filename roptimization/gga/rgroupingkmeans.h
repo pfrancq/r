@@ -242,7 +242,7 @@ public:
 	/**
 	* return true if the subprofile is a valid proto ;
 	*/
-	bool IsValidProto(RContainer<cObj,unsigned int,false,false>* prototypes,cObj* s) throw(bad_alloc);
+	bool IsValidProto(RContainer<cObj,unsigned int,false,false>* prototypes,cObj* s) throw(std::bad_alloc);
 
 	/**
 	* Verify wether the initializing kmeans is ok.

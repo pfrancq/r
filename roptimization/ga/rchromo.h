@@ -86,13 +86,13 @@ public:
 	* @param inst           Pointer to the instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	RChromo(cInst* inst,unsigned int id) throw(bad_alloc);
+	RChromo(cInst* inst,unsigned int id) throw(std::bad_alloc);
 
 	/**
 	* Initialisation of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
 	*/
-	virtual void Init(cThreadData* thData) throw(bad_alloc);
+	virtual void Init(cThreadData* thData) throw(std::bad_alloc);
 
 	/**
 	* Construct a valid solution.

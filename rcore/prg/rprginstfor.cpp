@@ -50,7 +50,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstFor::RPrgInstFor(char* line,unsigned int t) throw(bad_alloc)
+RPrgInstFor::RPrgInstFor(char* line,unsigned int t) throw(std::bad_alloc)
 	: RPrgInst(), Values(20,10), Insts(50,25), Tabs(t)
 {
 	char* var;
@@ -81,7 +81,7 @@ RPrgInstFor::RPrgInstFor(char* line,unsigned int t) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-void RPrgInstFor::AddInst(RPrgInst* ins) throw(bad_alloc)
+void RPrgInstFor::AddInst(RPrgInst* ins) throw(std::bad_alloc)
 {
 	Insts.InsertPtr(ins);
 }

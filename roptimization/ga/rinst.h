@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RInst_H
-#define RInst_H
+#ifndef RInstH
+#define RInstH
 
 
 //------------------------------------------------------------------------------
@@ -71,12 +71,12 @@ public:
 	* Construct the data.
 	* @param owner          The instance of the problem.
 	*/
-	RThreadData(cInst *owner) throw(bad_alloc);
+	RThreadData(cInst *owner) throw(std::bad_alloc);
 
 	/**
 	* Initialise the data.
 	*/
-	virtual void Init(void) throw(bad_alloc) {}
+	virtual void Init(void) throw(std::bad_alloc) {}
 
 	/**
 	* Destruct the data.
@@ -223,12 +223,12 @@ public:
 	* @param popsize        The size of the population.
 	* @param debug          Debugger.
 	*/
-	RInst(unsigned int popsize,RDebug* debug=0) throw(bad_alloc);
+	RInst(unsigned int popsize,RDebug* debug=0) throw(std::bad_alloc);
 
 	/**
 	* Initialisation of the instance.
 	*/
-	virtual void Init(void) throw(bad_alloc);
+	virtual void Init(void) throw(std::bad_alloc);
 
 	/**
 	* Random construction of the chromosomes.

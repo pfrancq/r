@@ -63,7 +63,7 @@ public:
 	* Constructor of a variable.
 	* @param ref            Name of the variable referenced.
 	*/
-	RPrgVarRef(const char* ref) throw(bad_alloc);
+	RPrgVarRef(const char* ref) throw(std::bad_alloc);
 
 	/**
 	* Assign some data to the variable.

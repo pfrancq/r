@@ -75,7 +75,7 @@ public:
 	* Constructor of a variable.
 	* @param name           Name.
 	*/
-	RPrgVar(const char* name) throw(bad_alloc);
+	RPrgVar(const char* name) throw(std::bad_alloc);
 
 	/**
 	* This methods compares two variables using their names and works like the

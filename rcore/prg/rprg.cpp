@@ -60,14 +60,14 @@ using namespace R;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPrg::RPrg(RString f,RPrgOutput* o) throw(bad_alloc)
+RPrg::RPrg(RString f,RPrgOutput* o) throw(std::bad_alloc)
 	: FileName(f), Cout(o), Insts(40), Vars(10,5), Classes(10,5), Prg(FileName)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-void RPrg::Load(void) throw(bad_alloc,RException)
+void RPrg::Load(void) throw(std::bad_alloc,RException)
 {
 	RPrgInst* i;
 
@@ -101,7 +101,7 @@ unsigned int RPrg::CountTabs(char* line)
 
 
 //-----------------------------------------------------------------------------
-RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(bad_alloc,RException)
+RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(std::bad_alloc,RException)
 {
 	RString l;
 	char* ptr;
@@ -206,7 +206,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(bad_alloc,RException)
 
 
 //-----------------------------------------------------------------------------
-RPrgVar* RPrg::AnalyseParam(char* &param) throw(bad_alloc,RException)
+RPrgVar* RPrg::AnalyseParam(char* &param) throw(std::bad_alloc,RException)
 {
 	char* ptr;
 
@@ -254,14 +254,14 @@ void RPrg::Exec(void) throw(RException)
 
 
 //-----------------------------------------------------------------------------
-void RPrg::AddVar(RPrgVar* var) throw(bad_alloc,RException)
+void RPrg::AddVar(RPrgVar* var) throw(std::bad_alloc,RException)
 {
 	Vars.InsertPtr(var);
 }
 
 
 //-----------------------------------------------------------------------------
-void RPrg::DelVar(RPrgVar* var) throw(bad_alloc,RException)
+void RPrg::DelVar(RPrgVar* var) throw(std::bad_alloc,RException)
 {
 	Vars.DeletePtr(var);
 }

@@ -144,14 +144,14 @@ public:
 	* @param inst           Pointer to the instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	RChromo2D(cInst* inst,unsigned int id) throw(bad_alloc);
+	RChromo2D(cInst* inst,unsigned int id) throw(std::bad_alloc);
 
 	/**
 	* This function initialises some important data, in particular Infos and
 	* Selected.
 	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
 	*/
-	virtual void Init(cThreadData* thData) throw(bad_alloc);
+	virtual void Init(cThreadData* thData) throw(std::bad_alloc);
 
 	/**
 	* The random construction uses the heuristic to place all the objects.

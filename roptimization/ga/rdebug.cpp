@@ -171,7 +171,7 @@ RDebug::~RDebug(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDebugXML::RDebugXML(const char* name,const char* app,const char* author) throw(bad_alloc)
+RDebugXML::RDebugXML(const char* name,const char* app,const char* author) throw(std::bad_alloc)
 	: RDebug(app,author),Name(name), File(name,Create)
 {
 	unsigned int i;

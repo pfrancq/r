@@ -48,7 +48,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVarConst::RPrgVarConst(const char* value) throw(bad_alloc)
+RPrgVarConst::RPrgVarConst(const char* value) throw(std::bad_alloc)
 	: RPrgVar(value)
 {
 }

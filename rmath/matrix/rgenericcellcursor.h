@@ -97,7 +97,7 @@ public :
 	/**
 	* Assignment operator using a "GenericCellCursor".
 	*/
-	RGenericCellCursor<C>& operator=(const RGenericCellCursor<C>& c) throw(bad_alloc);
+	RGenericCellCursor<C>& operator=(const RGenericCellCursor<C>& c) throw(std::bad_alloc);
 
 	/**
 	* Set the container.
@@ -147,12 +147,12 @@ public:                                                              \
 	{                                                                \
 		return(R::GetTemporaryObject<name,20>());                 \
 	}                                                                \
-	name& operator=(const name& c) throw(bad_alloc)                  \
+	name& operator=(const name& c) throw(std::bad_alloc)                  \
 	{                                                                \
 		R::RGenericCellCursor<C>::operator=(c);                            \
 		return(*this);                                               \
 	}                                                                \
-	name& operator=(const R::RGenericCellCursor<C>& c) throw(bad_alloc)    \
+	name& operator=(const R::RGenericCellCursor<C>& c) throw(std::bad_alloc)    \
 	{                                                                \
 		R::RGenericCellCursor<C>::operator=(c);                            \
 		return(*this);                                               \

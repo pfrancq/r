@@ -113,14 +113,14 @@ public:
 	* @param q              Indifference's threshold.
 	* @param w              Weight of the criterion.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const double p,const double q,const double w) throw(bad_alloc);
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const double p,const double q,const double w) throw(std::bad_alloc);
 
 	/**
 	* Create a new criterion.
 	* @param type           Type of the criterion.
 	* @param params         Parameters.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RPromCriterionParams& params) throw(bad_alloc);
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RPromCriterionParams& params) throw(std::bad_alloc);
 
 	/**
 	* Create a new criterion.
@@ -130,7 +130,7 @@ public:
 	* @param q              Indifference's threshold.
 	* @param w              Weight of the criterion.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const double p,const double q,const double w) throw(bad_alloc);
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const double p,const double q,const double w) throw(std::bad_alloc);
 
 	/**
 	* Create a new criterion.
@@ -138,18 +138,18 @@ public:
 	* @param name           Name of the criterion.
 	* @param params         Parameters.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const RPromCriterionParams& params) throw(bad_alloc);
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const RPromCriterionParams& params) throw(std::bad_alloc);
 
 	/**
 	* Create a new solution.
 	*/
-	virtual RPromSol* NewSol(void) throw(bad_alloc);
+	virtual RPromSol* NewSol(void) throw(std::bad_alloc);
 
 	/**
 	* Create a new solution.
 	* @param name           Name of the solution.
 	*/
-	virtual RPromSol* NewSol(const char* name) throw(bad_alloc);
+	virtual RPromSol* NewSol(const char* name) throw(std::bad_alloc);
 
 	/**
 	* Assign a value to a criterion.
@@ -157,7 +157,7 @@ public:
 	* @param crit           Pointer to the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(RPromSol* sol,RPromCriterion* crit,const double v) throw(bad_alloc);
+	virtual void Assign(RPromSol* sol,RPromCriterion* crit,const double v) throw(std::bad_alloc);
 
 	/**
 	* Assign a value to a criterion.
@@ -165,7 +165,7 @@ public:
 	* @param crit           Pointer to the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(const char* sol,RPromCriterion* crit,const double v) throw(bad_alloc);
+	virtual void Assign(const char* sol,RPromCriterion* crit,const double v) throw(std::bad_alloc);
 
 	/**
 	* Assign a value to a criterion.
@@ -173,7 +173,7 @@ public:
 	* @param crit           Name of the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(RPromSol* sol,const char* crit,const double v) throw(bad_alloc);
+	virtual void Assign(RPromSol* sol,const char* crit,const double v) throw(std::bad_alloc);
 
 	/**
 	* Assign a value to a criterion.
@@ -181,7 +181,7 @@ public:
 	* @param crit           Name of the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(const char* sol,const char* crit,const double v) throw(bad_alloc);
+	virtual void Assign(const char* sol,const char* crit,const double v) throw(std::bad_alloc);
 
 	/**
 	* Return the best solution.

@@ -77,7 +77,7 @@ public:
 	* Construct an IO exception.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const char* str) throw(bad_alloc);
+	RIOException(const char* str) throw(std::bad_alloc);
 };
 
 

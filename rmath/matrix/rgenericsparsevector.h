@@ -75,7 +75,7 @@ public :
 	* constructor of RGenericSparseVector
 	* @param id                The Id of the vector.
 	*/
-	RGenericSparseVector(unsigned int id) throw (bad_alloc);
+	RGenericSparseVector(unsigned int id) throw (std::bad_alloc);
 
 	/**
 	* constructor of RGenericSparseVector
@@ -83,25 +83,25 @@ public :
 	* @param nbElem            The initial number of element in the container
 	* @param increment         The number of new element each increase
 	*/
-	RGenericSparseVector(unsigned int id, unsigned int nbElem,unsigned int  increment) throw (bad_alloc);
+	RGenericSparseVector(unsigned int id, unsigned int nbElem,unsigned int  increment) throw (std::bad_alloc);
 
 	/**
 	* Construct the generic cell from another one.
 	* @param src            Generic Sparse Vector used as source.
 	*/
-	RGenericSparseVector(const RGenericSparseVector<C,bAlloc>* src) throw(bad_alloc);
+	RGenericSparseVector(const RGenericSparseVector<C,bAlloc>* src) throw(std::bad_alloc);
 
 	/**
 	* Construct the generic cell from another one.
 	* @param src            Generic Sparse Vector used as source.
 	*/
-	RGenericSparseVector(const RGenericSparseVector<C,bAlloc>& src) throw(bad_alloc);
+	RGenericSparseVector(const RGenericSparseVector<C,bAlloc>& src) throw(std::bad_alloc);
 
 	/**
 	* The assignement operator.
 	* @param src            Generic Sparse Vector used as source.
 	*/
-	RGenericSparseVector& operator=(const RGenericSparseVector<C,bAlloc>& src) throw(bad_alloc);
+	RGenericSparseVector& operator=(const RGenericSparseVector<C,bAlloc>& src) throw(std::bad_alloc);
 
 	/**
 	* Method used by the container

@@ -80,7 +80,7 @@ RMsg* RMsg::LookMsg(const char* msg)
 
 
 //------------------------------------------------------------------------------
-RMsg* RMsg::InsertMsg(const RString& msg) throw(bad_alloc)
+RMsg* RMsg::InsertMsg(const RString& msg) throw(std::bad_alloc)
 {
 	RMsg* Msg=new RMsg(msg);
 	Msgs.InsertPtr(Msg);
@@ -89,7 +89,7 @@ RMsg* RMsg::InsertMsg(const RString& msg) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RMsg* RMsg::InsertMsg(const char* msg) throw(bad_alloc)
+RMsg* RMsg::InsertMsg(const char* msg) throw(std::bad_alloc)
 {
 	RMsg* Msg=new RMsg(msg);
 	Msgs.InsertPtr(Msg);
@@ -98,7 +98,7 @@ RMsg* RMsg::InsertMsg(const char* msg) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-void RMsg::DeleteMsg(RMsg* msg) throw(bad_alloc)
+void RMsg::DeleteMsg(RMsg* msg) throw(std::bad_alloc)
 {
 	Msgs.DeletePtr(msg);
 }

@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RContainer_H
-#define RContainer_H
+#ifndef RContainerH
+#define RContainerH
 
 
 //------------------------------------------------------------------------------
@@ -182,31 +182,31 @@ public:
 	* @param M              The initial maximal size of the array.
 	* @param I              The value used when increasing the array.
 	*/
-	RContainer(T M,T I=0) throw(bad_alloc);
+	RContainer(T M,T I=0) throw(std::bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,true,bOrder>* src) throw(bad_alloc);
+	RContainer(const RContainer<C,T,true,bOrder>* src) throw(std::bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,false,bOrder>* src) throw(bad_alloc);
+	RContainer(const RContainer<C,T,false,bOrder>* src) throw(std::bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,true,bOrder>& src) throw(bad_alloc);
+	RContainer(const RContainer<C,T,true,bOrder>& src) throw(std::bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,false,bOrder>& src) throw(bad_alloc);
+	RContainer(const RContainer<C,T,false,bOrder>& src) throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -218,25 +218,25 @@ public:
 	* The assignement operator.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator=(const RContainer<C,T,true,bOrder>& src) throw(bad_alloc);
+	RContainer& operator=(const RContainer<C,T,true,bOrder>& src) throw(std::bad_alloc);
 
 	/**
 	* The assignement operator.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator=(const RContainer<C,T,false,bOrder>& src) throw(bad_alloc);
+	RContainer& operator=(const RContainer<C,T,false,bOrder>& src) throw(std::bad_alloc);
 
 	/**
 	* Add the elements of a container.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,T,true,bOrder>& src) throw(bad_alloc);
+	RContainer& operator+=(const RContainer<C,T,true,bOrder>& src) throw(std::bad_alloc);
 
 	/**
 	* Add the elements of a container.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,T,false,bOrder>& src) throw(bad_alloc);
+	RContainer& operator+=(const RContainer<C,T,false,bOrder>& src) throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -248,14 +248,14 @@ public:
 	* Verify if the container can hold the next element to be inserted. If not,
 	* the container is extended.
 	*/
-	void VerifyTab(void) throw(bad_alloc);
+	void VerifyTab(void) throw(std::bad_alloc);
 
 	/**
 	* Verify if the container can hold a certain nujmber of elements. If not,
 	* the container is extended.
     * @param MaxSize        The number of elements that must be contained.
 	*/
-	void VerifyTab(T MaxSize) throw(bad_alloc);
+	void VerifyTab(T MaxSize) throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -289,7 +289,7 @@ public:
 	* @param ins            A pointer to the element to insert.
 	* @param Pos            The position where to insert it.
 	*/
-	void InsertPtrOrderAt(const C *ins,T Pos) throw(bad_alloc);
+	void InsertPtrOrderAt(const C *ins,T Pos) throw(std::bad_alloc);
 	//@}
 
 public:
@@ -324,13 +324,13 @@ public:
 	* @param del            Specify if the object that was previously at Pos
 	*                       must be shift or deleted.
 	*/
-	void InsertPtrAt(const C *ins,T Pos,bool del=true) throw(bad_alloc);
+	void InsertPtrAt(const C *ins,T Pos,bool del=true) throw(std::bad_alloc);
 
 	/**
 	* Insert an element in the container.
 	* @param ins            A pointer to the element to insert.
 	*/
-	void InsertPtr(const C* ins) throw(bad_alloc);
+	void InsertPtr(const C* ins) throw(std::bad_alloc);
 
 	/**
 	* Look if a certain element is in the container.
@@ -376,7 +376,7 @@ public:
 	*                       (false).
 	* @return The function returns a pointer to the element of the container.
 	*/
-	template<class TUse> C* GetInsertPtr(const TUse tag,bool sortkey=bOrder) throw(bad_alloc);
+	template<class TUse> C* GetInsertPtr(const TUse tag,bool sortkey=bOrder) throw(std::bad_alloc);
 
 	/**
 	* This function returns a container of all the elements that are responding
@@ -386,7 +386,7 @@ public:
 	* @param tag            The tag used.
 	* @return The function returns a pointer to the result container.
 	*/
-	template<class TUse> RContainer<C,T,false,bOrder>* GetPtrs(const TUse tag) const throw(bad_alloc);
+	template<class TUse> RContainer<C,T,false,bOrder>* GetPtrs(const TUse tag) const throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -399,7 +399,7 @@ public:
 	* container is responsible of the desallocation.
 	* @param del            A pointer to the element to delete.
 	*/
-	void DeletePtr(C*& del) throw(bad_alloc);
+	void DeletePtr(C*& del) throw(std::bad_alloc);
 
 	/**
 	* Delete an element from the container. The element is destruct if the
@@ -408,13 +408,13 @@ public:
 	*                       member function of the elements.
 	* @param tag            The tag used.
 	*/
-	template<class TUse> void DeletePtr(const TUse tag,bool sortkey=bOrder) throw(bad_alloc);
+	template<class TUse> void DeletePtr(const TUse tag,bool sortkey=bOrder) throw(std::bad_alloc);
 	//@}
 
 	/**
 	* @name Iterator functions.
 	* \deprecated
-	* Use the RContainerCursor class instead of this methods.
+	* Use the RCursor class instead of this methods.
 	*/
 	//@{
 

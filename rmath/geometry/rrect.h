@@ -123,13 +123,13 @@ public:
 	* Make a translation of the rectangle.
 	* @param pt             The point representing the vector used.
 	*/
-	RRect& operator+=(const RPoint& pt) throw(bad_alloc);
+	RRect& operator+=(const RPoint& pt) throw(std::bad_alloc);
 
 	/**
 	* Make a minus translation of the rectangle.
 	* @param pt             The point representing the vector used.
 	*/
-	RRect& operator-=(const RPoint& pt) throw(bad_alloc);
+	RRect& operator-=(const RPoint& pt) throw(std::bad_alloc);
 
 	/**
 	* Compare two rectangles and return 0 if there are at the same. This function

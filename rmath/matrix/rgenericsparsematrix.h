@@ -69,7 +69,7 @@ public :
 	* constructor of RGenericSparseMatrix
 	* @param id                The Id of the vector.
 	*/
-	RGenericSparseMatrix() throw(bad_alloc) ;
+	RGenericSparseMatrix() throw(std::bad_alloc) ;
 
 	/**
 	* constructor of RGenericSparseMatrix
@@ -77,25 +77,25 @@ public :
 	* @param nbElem            The initial number of element in the container
 	* @param increment         The number of new element each increase
 	*/
-	RGenericSparseMatrix(unsigned int nbElem,unsigned int increment) throw(bad_alloc) ;
+	RGenericSparseMatrix(unsigned int nbElem,unsigned int increment) throw(std::bad_alloc) ;
 
 	/**
 	* Construct the generic cell from another one.
 	* @param src            Generic Sparse Matrix used as source.
 	*/
-	RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>* src) throw(bad_alloc);
+	RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>* src) throw(std::bad_alloc);
 
 	/**
 	* Construct the generic cell from another one.
 	* @param src            Generic Sparse Matrix used as source.
 	*/
-	RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>& src) throw(bad_alloc);
+	RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>& src) throw(std::bad_alloc);
 
 	/**
 	* The assignement operator.
 	* @param src            Generic Sparse Matrix used as source.
 	*/
-	RGenericSparseMatrix& operator=(const RGenericSparseMatrix<C,bAlloc>& src) throw(bad_alloc);
+	RGenericSparseMatrix& operator=(const RGenericSparseMatrix<C,bAlloc>& src) throw(std::bad_alloc);
 
 	/**
 	* destructor of RGenericSparseMatrix

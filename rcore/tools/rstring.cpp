@@ -4,7 +4,7 @@
 
 	RString.cpp
 
-	String - Implementation.
+	Unicode String - Implementation.
 
 	Copyright 1999-2003 by the Université Libre de Bruxelles.
 
@@ -38,6 +38,7 @@
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rstring.h>
+using namespace std;
 using namespace R;
 
 
@@ -68,7 +69,7 @@ public:
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RString::RString(void) throw(bad_alloc)
+RString::RString(void) throw(std::bad_alloc)
 {
 	MaxLen=200;
 	Len=0;
@@ -78,7 +79,7 @@ RString::RString(void) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-inline void RString::Verify(const unsigned int maxlen) throw(bad_alloc)
+inline void RString::Verify(const unsigned int maxlen) throw(std::bad_alloc)
 {
 	if(MaxLen<maxlen)
 	{
@@ -96,7 +97,7 @@ inline void RString::Verify(const unsigned int maxlen) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(const char* text) throw(bad_alloc)
+RString::RString(const char* text) throw(std::bad_alloc)
 {
 	const char *ptr1=text;
 	RChar *ptr2;
@@ -121,7 +122,7 @@ RString::RString(const char* text) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(const RChar* text) throw(bad_alloc)
+RString::RString(const RChar* text) throw(std::bad_alloc)
 {
 	const RChar *ptr1=text;
 	RChar *ptr2;
@@ -146,7 +147,7 @@ RString::RString(const RChar* text) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(const std::string& text) throw(bad_alloc)
+RString::RString(const std::string& text) throw(std::bad_alloc)
 {
 	MaxLen=50;
 	Text=Latin1ToUnicode(text.c_str(),Len,MaxLen);
@@ -154,7 +155,7 @@ RString::RString(const std::string& text) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(const unsigned int maxlen) throw(bad_alloc)
+RString::RString(const unsigned int maxlen) throw(std::bad_alloc)
 {
 	if(maxlen)
 	{
@@ -175,7 +176,7 @@ RString::RString(const unsigned int maxlen) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(const RString& str) throw(bad_alloc)
+RString::RString(const RString& str) throw(std::bad_alloc)
 {
 	MaxLen=str.MaxLen;
 	Len=str.Len;
@@ -185,7 +186,7 @@ RString::RString(const RString& str) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(const RString* str) throw(bad_alloc)
+RString::RString(const RString* str) throw(std::bad_alloc)
 {
 	if(str)
 	{
@@ -206,7 +207,7 @@ RString::RString(const RString* str) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator=(const RString& str) throw(bad_alloc)
+RString& RString::operator=(const RString& str) throw(std::bad_alloc)
 {
 	Verify(str.MaxLen);
 	Len=str.Len;
@@ -216,7 +217,7 @@ RString& RString::operator=(const RString& str) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator=(const char* text) throw(bad_alloc)
+RString& RString::operator=(const char* text) throw(std::bad_alloc)
 {
 	const char* ptr1;
 	RChar* ptr2;
@@ -236,7 +237,7 @@ RString& RString::operator=(const char* text) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator=(const std::string& text) throw(bad_alloc)
+RString& RString::operator=(const std::string& text) throw(std::bad_alloc)
 {
 	const char* ptr1;
 	RChar* ptr2;
@@ -283,7 +284,7 @@ void RString::Copy(const RChar* text,unsigned int nb)
 
 
 //------------------------------------------------------------------------------
-RChar* RString::StrDup(void) const throw(bad_alloc)
+RChar* RString::StrDup(void) const throw(std::bad_alloc)
 {
 	RChar* text,*ptr1;
 	const RChar* ptr2=Text;
@@ -317,7 +318,7 @@ RString& RString::GetUpr(void) const
 
 
 //------------------------------------------------------------------------------
-void RString::StrUpr(const char* text) throw(bad_alloc)
+void RString::StrUpr(const char* text) throw(std::bad_alloc)
 {
 	const char* ptr1=text;
 	RChar* ptr2;
@@ -332,7 +333,7 @@ void RString::StrUpr(const char* text) throw(bad_alloc)
 }
 
 //------------------------------------------------------------------------------
-void RString::StrUpr(const RChar* text) throw(bad_alloc)
+void RString::StrUpr(const RChar* text) throw(std::bad_alloc)
 {
 	const RChar* ptr1=text;
 	RChar* ptr2;
@@ -348,7 +349,7 @@ void RString::StrUpr(const RChar* text) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-void RString::StrUpr(const RString& str) throw(bad_alloc)
+void RString::StrUpr(const RString& str) throw(std::bad_alloc)
 {
 	const RChar* ptr1=str.Text;
 	RChar* ptr2;
@@ -384,7 +385,7 @@ RString& RString::GetLwr(void) const
 
 
 //------------------------------------------------------------------------------
-void RString::StrLwr(const RChar* text) throw(bad_alloc)
+void RString::StrLwr(const RChar* text) throw(std::bad_alloc)
 {
 	const RChar* ptr1=text;
 	RChar* ptr2;
@@ -400,7 +401,7 @@ void RString::StrLwr(const RChar* text) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-void RString::StrLwr(const char* text) throw(bad_alloc)
+void RString::StrLwr(const char* text) throw(std::bad_alloc)
 {
 	const char* ptr1=text;
 	RChar* ptr2;
@@ -416,7 +417,7 @@ void RString::StrLwr(const char* text) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-void RString::StrLwr(const RString& str) throw(bad_alloc)
+void RString::StrLwr(const RString& str) throw(std::bad_alloc)
 {
 	const RChar* ptr1=str.Text;
 	RChar* ptr2;
@@ -457,7 +458,7 @@ char* RString::Latin1(void) const
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator+=(const RString& str) throw(bad_alloc)
+RString& RString::operator+=(const RString& str) throw(std::bad_alloc)
 {
 	Verify(str.Len+Len);
 	memcpy(&Text[Len],str.Text,(str.Len+1)*sizeof(RChar));
@@ -467,7 +468,7 @@ RString& RString::operator+=(const RString& str) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator+=(const RChar* text) throw(bad_alloc)
+RString& RString::operator+=(const RChar* text) throw(std::bad_alloc)
 {
 	const RChar* ptr1;
 	RChar* ptr2;
@@ -486,7 +487,7 @@ RString& RString::operator+=(const RChar* text) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator+=(const char* text) throw(bad_alloc)
+RString& RString::operator+=(const char* text) throw(std::bad_alloc)
 {
 	const char* ptr1;
 	RChar* ptr2;
@@ -505,7 +506,7 @@ RString& RString::operator+=(const char* text) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator+=(const char c) throw(bad_alloc)
+RString& RString::operator+=(const char c) throw(std::bad_alloc)
 {
 	RChar* ptr;
 
@@ -518,7 +519,7 @@ RString& RString::operator+=(const char c) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator+=(const RChar c) throw(bad_alloc)
+RString& RString::operator+=(const RChar c) throw(std::bad_alloc)
 {
 	RChar* ptr;
 

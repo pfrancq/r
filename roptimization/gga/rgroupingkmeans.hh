@@ -61,7 +61,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::IsValidProto(R::RContainer<cObj,unsigned int,false,false>* prototypes,cObj* s) throw(bad_alloc)
+	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::IsValidProto(R::RContainer<cObj,unsigned int,false,false>* prototypes,cObj* s) throw(std::bad_alloc)
 {
 	if (prototypes->GetPtr(s))
 		return(false);

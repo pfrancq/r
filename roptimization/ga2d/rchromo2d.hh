@@ -43,7 +43,7 @@
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc)
+		RChromo2D(cInst *inst,unsigned int id) throw(std::bad_alloc)
 			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
 			  RGeoInfos(inst->Problem,true),
 			  Heuristic(0), Grid(0),
@@ -56,7 +56,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		Init(cThreadData *thData) throw(bad_alloc)
+		Init(cThreadData *thData) throw(std::bad_alloc)
 {
 	// Call the initialisation of the parent
 	RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);

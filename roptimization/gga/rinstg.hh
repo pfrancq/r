@@ -40,7 +40,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RThreadDataG(cInst *owner) throw(bad_alloc)
+	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RThreadDataG(cInst *owner) throw(std::bad_alloc)
 		: RThreadData<cInst,cChromo>(owner), Heuristic(0)
 {
 }
@@ -48,7 +48,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(void) throw(bad_alloc)
+	void RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(void) throw(std::bad_alloc)
 {
 	RThreadData<cInst,cChromo>::Init();
 	Heuristic=Owner->CreateHeuristic();
@@ -73,7 +73,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,RDebug *debug) throw(bad_alloc)
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
 		  Heuristic(h), Objs(0)
 {
@@ -88,7 +88,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RDebug *debug) throw(bad_alloc)
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
 		  Heuristic(h), Objs(0)
 {
@@ -103,7 +103,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RDebug *debug) throw(bad_alloc)
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
 		  Heuristic(h), Objs(0)
 {
@@ -118,7 +118,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(cGroupData* gdata) throw(bad_alloc)
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(cGroupData* gdata) throw(std::bad_alloc)
 {
 	cChromo **C;
 	unsigned int i;
@@ -132,7 +132,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::CreateHeuristic(void) throw(bad_alloc)
+	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::CreateHeuristic(void) throw(std::bad_alloc)
 {
 	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* h;
 

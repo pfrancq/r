@@ -85,7 +85,7 @@ public:
 	/**
 	* Construct a empty string. It is a string with a maximal length of 200.
 	*/
-	RString(void) throw(bad_alloc);
+	RString(void) throw(std::bad_alloc);
 
 protected:
 
@@ -93,7 +93,7 @@ protected:
 	* Verify if the string can hold maxlen characters and extend the array if
 	* necessary.
 	*/
-	inline void Verify(const unsigned int maxlen) throw(bad_alloc);
+	inline void Verify(const unsigned int maxlen) throw(std::bad_alloc);
 
 public:
 
@@ -101,52 +101,52 @@ public:
 	* Construct a string from a "C string".
 	* @param text           The "C string" used as reference.
 	*/
-	RString(const char* text) throw(bad_alloc);
+	RString(const char* text) throw(std::bad_alloc);
 
 	/**
 	* Construct a string from a Unicode array.
 	* @param text           The array used as reference.
 	*/
-	RString(const RChar* text) throw(bad_alloc);
+	RString(const RChar* text) throw(std::bad_alloc);
 
 	/**
 	* Construct a string from a string.
 	* @param text           The string used as reference.
 	*/
-	RString(const std::string& text) throw(bad_alloc);
+	RString(const std::string& text) throw(std::bad_alloc);
 
 	/**
 	* Construct an empty string with a maximal size.
 	* @param maxlen         Initial maximal length of the string.
 	*/
-	RString(const unsigned int maxlen) throw(bad_alloc);
+	RString(const unsigned int maxlen) throw(std::bad_alloc);
 
 	/**
 	* Construct a string from another string.
 	* @param str            The string used as reference.
 	*/
-	RString(const RString& str) throw(bad_alloc);
+	RString(const RString& str) throw(std::bad_alloc);
 
 	/**
 	* Construct a string from another string.
 	* @param str            The string used as reference.
 	*/
-	RString(const RString* str) throw(bad_alloc);
+	RString(const RString* str) throw(std::bad_alloc);
 
 	/**
 	* Assignment operator using another string.
 	*/
-	RString& operator=(const RString &str) throw(bad_alloc);
+	RString& operator=(const RString &str) throw(std::bad_alloc);
 
 	/**
 	* Assignment operator using a "C string".
 	*/
-	RString& operator=(const char* text) throw(bad_alloc);
+	RString& operator=(const char* text) throw(std::bad_alloc);
 
 	/**
 	* Assignment operator using a string.
 	*/
-	RString& operator=(const string& text) throw(bad_alloc);
+	RString& operator=(const std::string& text) throw(std::bad_alloc);
 
 	/**
 	* Copy a certain number of characters in the string.
@@ -165,7 +165,7 @@ public:
 	/**
 	* Make a copy a return a pointer to it.
 	*/
-	RChar* StrDup(void) const throw(bad_alloc);
+	RChar* StrDup(void) const throw(std::bad_alloc);
 
 	/**
 	* Transform the string to uppercase.
@@ -182,19 +182,19 @@ public:
 	* Assign the uppercase version of a "C string".
 	* @param text           The "C string" used.
 	*/
-	void StrUpr(const char* text) throw(bad_alloc);
+	void StrUpr(const char* text) throw(std::bad_alloc);
 
 	/**
 	* Assign the uppercase version of a string.
 	* @param text           The string used.
 	*/
-	void StrUpr(const RChar* text) throw(bad_alloc);
+	void StrUpr(const RChar* text) throw(std::bad_alloc);
 
 	/**
 	* Assign the uppercase version of a string.
 	* @param str            The string used.
 	*/
-	void StrUpr(const RString &str) throw(bad_alloc);
+	void StrUpr(const RString& str) throw(std::bad_alloc);
 
 	/**
 	* Transform the string to lowercase.
@@ -211,19 +211,19 @@ public:
 	* Assign the lowercase version of a "C string".
 	* @param text           The "C string" used.
 	*/
-	void StrLwr(const char* text) throw(bad_alloc);
+	void StrLwr(const char* text) throw(std::bad_alloc);
 
 	/**
 	* Assign the lowercase version of a string.
 	* @param text           The string used.
 	*/
-	void StrLwr(const RChar* text) throw(bad_alloc);
+	void StrLwr(const RChar* text) throw(std::bad_alloc);
 
 	/**
 	* Assign the lowercase version of a string.
 	* @param str            The string used.
 	*/
-	void StrLwr(const RString &str) throw(bad_alloc);
+	void StrLwr(const RString& str) throw(std::bad_alloc);
 
 	/**
 	* Return the length of the string.
@@ -252,27 +252,27 @@ public:
 	/**
 	* Add another string.
 	*/
-	RString& operator+=(const RString &str) throw(bad_alloc);
+	RString& operator+=(const RString& str) throw(std::bad_alloc);
 
 	/**
 	* Add a "C string" to the string.
 	*/
-	RString& operator+=(const char* text) throw(bad_alloc);
+	RString& operator+=(const char* text) throw(std::bad_alloc);
 
 	/**
 	* Add a string to the string.
 	*/
-	RString& operator+=(const RChar* text) throw(bad_alloc);
+	RString& operator+=(const RChar* text) throw(std::bad_alloc);
 
 	/**
 	* Add a character to the string.
 	*/
-	RString& operator+=(const char c) throw(bad_alloc);
+	RString& operator+=(const char c) throw(std::bad_alloc);
 
 	/**
 	* Add a character to the string.
 	*/
-	RString& operator+=(const RChar c) throw(bad_alloc);
+	RString& operator+=(const RChar c) throw(std::bad_alloc);
 
 	/**
 	* Return the string containing the string.

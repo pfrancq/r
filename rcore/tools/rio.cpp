@@ -48,7 +48,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const char* str) throw(bad_alloc)
+RIOException::RIOException(const char* str) throw(std::bad_alloc)
 	: RException(str)
 {
 }

@@ -187,7 +187,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 
 
 //------------------------------------------------------------------------------
-RGeoInfoConnections& RGeoInfoConnections::operator=(const RGeoInfoConnections& cons) throw(bad_alloc)
+RGeoInfoConnections& RGeoInfoConnections::operator=(const RGeoInfoConnections& cons) throw(std::bad_alloc)
 {
 	RContainer<RGeoInfoConnection,unsigned int,true,false>::operator=(cons);
 	Cons=cons.Cons;

@@ -59,7 +59,7 @@
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>::RRecFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
+	RRecFile<C,S,bOrder>::RRecFile(const RString &name,ModeType mode) throw(std::bad_alloc,RString)
 		: Mode(mode), Name(name), NbRecs(0)
 {
 	int localmode;

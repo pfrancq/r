@@ -69,7 +69,7 @@ public:
 	* @param name           Name.
 	* @param value          Value.
 	*/
-	RPrgVarVal(const char* name,const char* value) throw(bad_alloc);
+	RPrgVarVal(const char* name,const char* value) throw(std::bad_alloc);
 
 	/**
 	* Assign some data to the variable.

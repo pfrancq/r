@@ -111,12 +111,12 @@ public:
 	* Construct the data.
 	* @param owner          The instance of the problem.
 	*/
-	RThreadData2D(cInst* owner) throw(bad_alloc);
+	RThreadData2D(cInst* owner) throw(std::bad_alloc);
 
 	/**
 	* Initialise thje data.
 	*/
-	virtual void Init(void) throw(bad_alloc);
+	virtual void Init(void) throw(std::bad_alloc);
 
 	/**
 	* Destruct the data.
@@ -183,12 +183,12 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug* debug=0) throw(bad_alloc);
+	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug* debug=0) throw(std::bad_alloc);
 
 	/**
 	* Initialisation of the instance.
 	*/
-	virtual void Init(void) throw(bad_alloc);
+	virtual void Init(void) throw(std::bad_alloc);
 
 	/**
 	* Return the limits for the placement.

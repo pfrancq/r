@@ -101,13 +101,13 @@ public:
 	* Construct the list of Integer value.
 	* @param MaxSize        The maximum number of Integer value.
 	*/
-	RVectorInt(const unsigned int MaxSize) throw(bad_alloc);
+	RVectorInt(const unsigned int MaxSize) throw(std::bad_alloc);
 
 	/**
 	* Copy constructor.
 	* @pram lst              List to copy.
 	*/
-	RVectorInt(const RVectorInt* lst) throw(bad_alloc);
+	RVectorInt(const RVectorInt* lst) throw(std::bad_alloc);
 
 	/**
 	* Test if two lists have exactly the same Integers.

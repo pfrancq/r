@@ -56,7 +56,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGrid::RGrid(RPoint &limits) throw(bad_alloc)
+RGrid::RGrid(RPoint &limits) throw(std::bad_alloc)
 	: Limits(limits), OccupiedX(0), OccupiedY(0)
 {
 	#ifdef DOUBLESPACE

@@ -4,7 +4,7 @@
 
 	RCursor.h
 
-	Cursor for Containers - Header.
+	Container Cursor - Header.
 
 	Copyright 1999-2003 by the Université Libre de Bruxelles.
 
@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RCursor_H
-#define RCursor_H
+#ifndef RCursorH
+#define RCursorH
 
 
 //------------------------------------------------------------------------------
@@ -55,10 +55,8 @@ namespace R{
 * @param T                  The type of the iterator used.
 *
 * This class represent a cursor to iterate a RContainer. The parameters are
-* those of the container.
-*
-* The difference with RContainerCursor is that if the array changed (elements
-* are added or deleted), RCursor wouldn't be updated while RContainerCursor would.
+* those of the container. When an element is added or removed from the container
+* parsed by the cursor, the cursor is not valid anymore.
 *
 * Here is an example of a cursor used:
 * <pre>
@@ -73,7 +71,7 @@ namespace R{
 * </pre>
 *
 * @author Pascal Francq
-* @short Cursor for Elements.
+* @short Container Cursor.
 */
 template<class C,class T>
 	class RCursor
@@ -161,7 +159,7 @@ public:
 	/**
 	* Assignment operator using a "Cursor".
 	*/
-	RCursor<C,T>& operator=(const RCursor<C,T>& c) throw(bad_alloc);
+	RCursor<C,T>& operator=(const RCursor<C,T>& c) throw(std::bad_alloc);
 
 	/**
 	* Clear the cursor.
@@ -224,7 +222,7 @@ public:
 	/**
 	* Go to the i-th element of the container.
 	*/
-	void GoTo(const unsigned int i) throw(bad_alloc);
+	void GoTo(const unsigned int i) throw(std::bad_alloc);
 
 	/**
 	* Return the number of elements in the container.
@@ -272,12 +270,12 @@ public:                                                              \
 	{                                                                \
 		return(R::GetTemporaryObject<name,20>());                    \
 	}                                                                \
-	name& operator=(const name& c) throw(bad_alloc)                  \
+	name& operator=(const name& c) throw(std::bad_alloc)             \
 	{                                                                \
 		R::RCursor<C,T>::operator=(c);                               \
 		return(*this);                                               \
 	}                                                                \
-	name& operator=(const R::RCursor<C,T>& c) throw(bad_alloc)       \
+	name& operator=(const R::RCursor<C,T>& c) throw(std::bad_alloc)  \
 	{                                                                \
 		R::RCursor<C,T>::operator=(c);                               \
 		return(*this);                                               \

@@ -50,7 +50,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstMethod::RPrgInstMethod(RPrgFunc* inst) throw(bad_alloc)
+RPrgInstMethod::RPrgInstMethod(RPrgFunc* inst) throw(std::bad_alloc)
 	: RPrgInst(), Method(inst), Params(10,5)
 {
 }
@@ -64,7 +64,7 @@ void RPrgInstMethod::Run(RPrg* prg,RPrgOutput* r) throw(RException)
 
 
 //------------------------------------------------------------------------------
-void RPrgInstMethod::AddParam(RPrgVar* var) throw(bad_alloc)
+void RPrgInstMethod::AddParam(RPrgVar* var) throw(std::bad_alloc)
 {
 	Params.InsertPtr(var);
 }

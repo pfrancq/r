@@ -42,7 +42,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,unsigned int id) throw(bad_alloc)
+	RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,unsigned int id) throw(std::bad_alloc)
 		: Instance(inst),Id(id),ToEval(true)
 {
 	Fitness=new cFit();
@@ -51,7 +51,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RChromo<cInst,cChromo,cFit,cThreadData>::Init(cThreadData*) throw(bad_alloc)
+	void RChromo<cInst,cChromo,cFit,cThreadData>::Init(cThreadData*) throw(std::bad_alloc)
 {
 }
 

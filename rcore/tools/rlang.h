@@ -76,7 +76,7 @@ public:
 	* @param lang                     Name of the language.
 	* @param code                     Code of the language.
 	*/
-	RLang(const RString& lang,const char* code) throw(bad_alloc);
+	RLang(const RString& lang,const char* code) throw(std::bad_alloc);
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.

@@ -34,8 +34,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RMsg_H
-#define RMsg_H
+#ifndef RMsgH
+#define RMsgH
 
 
 //------------------------------------------------------------------------------
@@ -78,74 +78,92 @@ public:
 	RMsg(const char* msg);
 	
 	/**
-	* Compare function like strcmp used in particular for RContainer class.
+	* Compare two messages by comparing their content.
+	* @see R::RContainer
+	* @param msg            Message.
+	* @return int
 	*/
-	int Compare(const RMsg& msg) {return(Msg.Compare(msg.Msg));}
+	int Compare(const RMsg& msg) const {return(Msg.Compare(msg.Msg));}
 
 	/**
-	* Compare function like strcmp used in particular for RContainer class.
+	* Compare two messages by comparing their content.
+	* @see R::RContainer
+	* @param msg            Pointer to a message.
+	* @return int
 	*/
-	int Compare(const RMsg* msg) {return(Msg.Compare(msg->Msg));}
+	int Compare(const RMsg* msg) const {return(Msg.Compare(msg->Msg));}
 
 	/**
-	* Compare function like strcmp used in particular for RContainer class.
+	* Compare a message with a given string.
+	* @see R::RContainer
+	* @param msg            RString.
+	* @return int
 	*/
-	int Compare(const RString& msg) {return(Msg.Compare(msg));}
+	int Compare(const RString& msg) const {return(Msg.Compare(msg));}
 
 	/**
-	* Compare function like strcmp used in particular for RContainer class.
+	* Compare a message with a given string.
+	* @see R::RContainer
+	* @param msg            C string.
+	* @return int
 	*/
-	int Compare(const char* msg) {return(Msg.Compare(msg));}
+	int Compare(const char* msg) const {return(Msg.Compare(msg));}
 
 	/**
-	* Equal operator.
+	* Equal operator between messages.
+	* @param msg            Message.
+	* @return true if equal, false else.
 	*/
 	bool operator==(const RMsg& msg) const
 		{return(Msg==msg.Msg);}
 
 	/**
-	* Equal operator.
+	* Equal operator between a message and a string.
+	* @param msg            RString.
+	* @return true if equal, false else.
 	*/
 	bool operator==(const RString& msg) const
 		{return(Msg==msg);}
 
 	/**
-	* Equal operator.
+	* Equal operator between a message and a string.
+	* @param msg            C string.
+	* @return true if equal, false else.
 	*/
 	bool operator==(const char* msg) const
 		{return(Msg==msg);}
 
 	/**
 	* Look after a specific message.
-	* @param msg	Message.
+	* @param msg            String.
 	* @returns Pointer to the specific message, or 0 if not found.
 	*/
 	static RMsg* LookMsg(const RString& msg);
 
 	/**
 	* Look after a specific message.
-	* @param msg	Message.
+	* @param msg            C string.
 	* @returns Pointer to the specific message, or 0 if not found.
 	*/
 	static RMsg* LookMsg(const char* msg);
 
 	/**
 	* Insert a new message.
-	* @param msg	Message.
+	* @param msg            String representing the message.
 	*/
-	static RMsg* InsertMsg(const RString& msg) throw(bad_alloc);
+	static RMsg* InsertMsg(const RString& msg) throw(std::bad_alloc);
 
 	/**
 	* Insert a new message.
-	* @param msg	Message.
+	* @param msg            C string representing a message.
 	*/
-	static RMsg* InsertMsg(const char* msg) throw(bad_alloc);
+	static RMsg* InsertMsg(const char* msg) throw(std::bad_alloc);
 
 	/**
 	* Delete a message.
-	* @param msg	Message.
+	* @param msg            Message.
 	*/
-	static void DeleteMsg(RMsg* msg) throw(bad_alloc);
+	static void DeleteMsg(RMsg* msg) throw(std::bad_alloc);
 
 	/**
 	* Destruct the message.

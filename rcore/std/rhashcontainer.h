@@ -4,7 +4,7 @@
 
 	RHashContainer.h
 
-	Container with an hash table
+	Single Hash Table Container - Header
 
 	Copyright 2000-2003 by the Université Libre de Bruxelles.
 
@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RHashContainer_H
-#define RHashContainer_H
+#ifndef RHashContainerH
+#define RHashContainerH
 
 
 //------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ namespace R{
 * </pre>
 *
 * @author Pascal Francq
-* @short Container Template with Hash Table.
+* @short Single Hash Table Container.
 */
 template<class C,class T,T tSize,bool bAlloc>
 	class RHashContainer
@@ -135,7 +135,7 @@ public:
 	* @param M              Default maximum number of elements.
 	* @param I              Incremental number of elements.
 	*/
-	RHashContainer(T M,T I) throw(bad_alloc)
+	RHashContainer(T M,T I) throw(std::bad_alloc)
 	{
 		RContainer<C,T,bAlloc,true>** ptr;
 		T i;
@@ -160,7 +160,7 @@ public:
 	* Insert an element.
 	* @param ins            Pointer to the element to insert.
 	*/
-	inline void InsertPtr(C *ins) throw(bad_alloc)
+	inline void InsertPtr(C *ins) throw(std::bad_alloc)
 	{
 		RReturnIfFail(ins);
 		Hash[C::HashIndex(ins)]->InsertPtr(ins);
@@ -206,7 +206,7 @@ public:
 	*                       not (false).
 	* @return The function returns a pointer to the element of the container.
 	*/
-	template<class TUse> inline C* GetInsertPtr(const TUse tag,bool sortkey=true) throw(bad_alloc)
+	template<class TUse> inline C* GetInsertPtr(const TUse tag,bool sortkey=true) throw(std::bad_alloc)
 	{
 		return(Hash[C::HashIndex(tag)]->GetInsertPtr<TUse>(tag,sortkey));
 	}

@@ -86,7 +86,7 @@ public:
 	* Concstructor of a class.
 	* @param name           Name.
 	*/
-	RPrgClass(const char* name) throw(bad_alloc);
+	RPrgClass(const char* name) throw(std::bad_alloc);
 
 	/**
 	* This methods compares two classes using their names and works like the

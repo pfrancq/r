@@ -114,12 +114,12 @@ public:
 	* @param f              Name of the file.
 	* @param r              Output.
 	*/
-	RPrg(R::RString f,RPrgOutput* o) throw(bad_alloc);
+	RPrg(R::RString f,RPrgOutput* o) throw(std::bad_alloc);
 
 	/**
 	* Load the script file.
 	*/
-	void Load(void) throw(bad_alloc,RException);
+	void Load(void) throw(std::bad_alloc,RException);
 
 protected :
 
@@ -137,14 +137,14 @@ public:
 	* @param prg            File containing the program.
 	* @returns Instruction to insert.
 	*/
-	RPrgInst* AnalyseLine(R::RTextFile& prg) throw(bad_alloc,RException);
+	RPrgInst* AnalyseLine(R::RTextFile& prg) throw(std::bad_alloc,RException);
 
 	/**
 	* Analyse a parameter.
 	* @param param          Parameter to analyse.
 	* @returns Variable created.
 	*/
-	static RPrgVar* AnalyseParam(char* &param) throw(bad_alloc,RException);
+	static RPrgVar* AnalyseParam(char* &param) throw(std::bad_alloc,RException);
 
 	/**
 	* Execute a "program".
@@ -155,13 +155,13 @@ public:
 	* Add a variable.
 	* @param var             Pointer to the variable.
 	*/
-	void AddVar(RPrgVar* var) throw(bad_alloc,RException);
+	void AddVar(RPrgVar* var) throw(std::bad_alloc,RException);
 
 	/**
 	* Remove a variable.
 	* @param var             Pointer to the variable.
 	*/
-	void DelVar(RPrgVar* var) throw(bad_alloc,RException);
+	void DelVar(RPrgVar* var) throw(std::bad_alloc,RException);
 
 	/**
 	* Get the value of the variable.
@@ -174,13 +174,13 @@ public:
 	* Add a class.
 	* @param c               Pointer to the class.
 	*/
-	void AddVar(RPrgClass* c) throw(bad_alloc,RException);
+	void AddVar(RPrgClass* c) throw(std::bad_alloc,RException);
 
 	/**
 	* Remove a class.
 	* @param c               Pointer to the class.
 	*/
-	void DelVar(RPrgClass* c) throw(bad_alloc,RException);
+	void DelVar(RPrgClass* c) throw(std::bad_alloc,RException);
 
 	/**
 	* Destructor of the program.

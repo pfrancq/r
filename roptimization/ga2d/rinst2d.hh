@@ -42,7 +42,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner) throw(bad_alloc)
+	RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner) throw(std::bad_alloc)
 		: RThreadData<cInst,cChromo>(owner),NbObjs(0),Order(0),tmpObj1(0),
 			tmpObj2(0), tmpInfos(0), Heuristic(0)
 {
@@ -51,7 +51,7 @@ template<class cInst,class cChromo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	void RThreadData2D<cInst,cChromo>::Init(void) throw(bad_alloc)
+	void RThreadData2D<cInst,cChromo>::Init(void) throw(std::bad_alloc)
 {
 	RThreadData<cInst,cChromo>::Init();
 	NbObjs=Owner->NbObjs;
@@ -102,7 +102,7 @@ template<class cInst,class cChromo>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug *debug) throw(bad_alloc)
+		RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
 			: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug), Problem(prob), Objs(prob->Objs.Tab),
 			 NbObjs(prob->Objs.NbPtr), bLocalOpti(true), Heuristic(h), Limits(prob->Limits)
 {
@@ -111,7 +111,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::Init(void) throw(bad_alloc)
+	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::Init(void) throw(std::bad_alloc)
 {
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
 	BestChromosome->Objs=Objs;

@@ -82,12 +82,12 @@ public:
 	* Constructor of a class method.
 	* @param inst           Function to execute.
 	*/
-	RPrgInstMethod(RPrgFunc* inst) throw(bad_alloc);
+	RPrgInstMethod(RPrgFunc* inst) throw(std::bad_alloc);
 
 	/**
 	* Add a parameter to the method.
 	*/
-	void AddParam(RPrgVar* var) throw(bad_alloc);
+	void AddParam(RPrgVar* var) throw(std::bad_alloc);
 
 	/**
 	* Run the method.

@@ -88,7 +88,7 @@ public:
 	* @param prob           The instance of the problem.
 	* @param create         If true, nb geometric information are created.
 	*/
-	RGeoInfos(RProblem2D* prob,bool create) throw(bad_alloc);
+	RGeoInfos(RProblem2D* prob,bool create) throw(std::bad_alloc);
 
 	/**
 	* Select a "good" set of geometric informations. This is used by the
@@ -114,7 +114,7 @@ public:
 	/**
 	* The assignement operator.
 	*/
-	RGeoInfos& operator=(const RGeoInfos& infos) throw(bad_alloc);
+	RGeoInfos& operator=(const RGeoInfos& infos) throw(std::bad_alloc);
 
 	/**
 	* Destruct the geometric information.

@@ -79,7 +79,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericVectorCursor<C>& RGenericVectorCursor<C>::operator=(const RGenericVectorCursor<C>& c) throw(bad_alloc)
+	RGenericVectorCursor<C>& RGenericVectorCursor<C>::operator=(const RGenericVectorCursor<C>& c) throw(std::bad_alloc)
 {
 	R::RCursor<RGenericSparseVector<RGenericCell<C>,true>,unsigned int>::operator=(c);
 	return(*this);

@@ -76,12 +76,12 @@ public:
 	* Construct the data.
 	* @param data           Owner of the data.
 	*/
-	RThreadDataG(cInst *owner) throw(bad_alloc);
+	RThreadDataG(cInst *owner) throw(std::bad_alloc);
 
 	/**
 	* Initialise thje data.
 	*/
-	virtual void Init(void) throw(bad_alloc);
+	virtual void Init(void) throw(std::bad_alloc);
 
 	/**
 	* Destruct the data.
@@ -123,7 +123,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,RDebug *debug=0) throw(std::bad_alloc);
 
 	/**
 	* Construct the instance.
@@ -132,7 +132,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RDebug *debug=0) throw(std::bad_alloc);
 
 	/**
 	* Construct the instance.
@@ -141,13 +141,13 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RDebug *debug=0) throw(std::bad_alloc);
 
 	/**
 	* Initialisation of the instance.
 	* @param gdata          The Data to use for the construction of the groups.
 	*/
-	virtual void Init(cGroupData* gdata) throw(bad_alloc);
+	virtual void Init(cGroupData* gdata) throw(std::bad_alloc);
 
 	/**
 	* Return the heuristic type.
@@ -163,7 +163,7 @@ public:
 	/**
 	* Create a heuristic object.
 	*/
-	virtual RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* CreateHeuristic(void) throw(bad_alloc);
+	virtual RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* CreateHeuristic(void) throw(std::bad_alloc);
 
 	/**
 	* Handle the chromosomes that are representing the same solutions. If two

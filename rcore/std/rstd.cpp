@@ -4,7 +4,7 @@
 
 	RStd.cpp
 
-	Rainbow Standard Library - Implementation.
+	R Standard Library - Implementation.
 
 	Copyright 1999-2003 by the Université Libre de Bruxelles.
 

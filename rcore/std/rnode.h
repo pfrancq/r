@@ -78,7 +78,7 @@ public:
 	* @param max            The size of initial array of pointer to child.
 	* @param inc            The increment size for the array.
 	*/
-	RNode(unsigned int max,unsigned int inc) throw(bad_alloc);
+	RNode(unsigned int max,unsigned int inc) throw(std::bad_alloc);
 
 	/**
 	* Is used to compare two nodes. The function returns the same type of

@@ -65,7 +65,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
+RTextFile::RTextFile(const RString &name,ModeType mode) throw(std::bad_alloc,RString)
   : Mode(mode), Name(name), All(true), NewLine(true), Rem("%"),BeginRem("/*"),
 		EndRem("*/"), CommentType(SingleLineComment), ActivComment(NoComment),
 		Separator(" "), Line(0), LastLine(0)
@@ -103,7 +103,7 @@ RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
 
 
 //------------------------------------------------------------------------------
-RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
+RTextFile::RTextFile(const RString &name,bool all) throw(std::bad_alloc,RString)
   : Mode(Read), Name(name), All(all), NewLine(false), Rem("%"), BeginRem("/*"),
 		EndRem("*/"),CommentType(SingleLineComment),Line(0)
 {
@@ -117,7 +117,7 @@ RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::Init(void) throw(bad_alloc,RString)
+void RTextFile::Init(void) throw(std::bad_alloc,RString)
 {
 	struct stat statbuf;
 

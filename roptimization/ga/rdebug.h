@@ -220,7 +220,7 @@ public:
 	* @param app            The name of the application.
 	* @param author         The auhtor of the application.
 	*/
-	RDebugXML(const char* name,const char* app,const char* author) throw(bad_alloc);
+	RDebugXML(const char* name,const char* app,const char* author) throw(std::bad_alloc);
 
 protected:
 

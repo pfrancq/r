@@ -47,7 +47,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGeoInfos::RGeoInfos(RProblem2D* prob,bool create) throw(bad_alloc)
+RGeoInfos::RGeoInfos(RProblem2D* prob,bool create) throw(std::bad_alloc)
 	: RContainer<RGeoInfo,unsigned int,true,false>(prob->Objs.NbPtr+3,prob->Objs.NbPtr/2),
 	  Problem(prob), Cons(&prob->Cons,this), RealNb(prob->Objs.NbPtr), Selected(0)
 {
@@ -146,7 +146,7 @@ void RGeoInfos::ClearInfos(void)
 
 
 //------------------------------------------------------------------------------
-RGeoInfos& RGeoInfos::operator=(const RGeoInfos& infos) throw(bad_alloc)
+RGeoInfos& RGeoInfos::operator=(const RGeoInfos& infos) throw(std::bad_alloc)
 {
 	RContainer<RGeoInfo,unsigned int,true,false>::operator=(infos);
 	Problem=infos.Problem;

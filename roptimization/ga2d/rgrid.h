@@ -90,7 +90,7 @@ public:
 	*                       internally, the grid is allocate 2x the size to be used
 	*                       by the "center" heuristic.
 	*/
-	RGrid(RPoint &limits) throw(bad_alloc);
+	RGrid(RPoint &limits) throw(std::bad_alloc);
 
 	/**
 	* This function returns true if the position (x,y) is free or if it is out

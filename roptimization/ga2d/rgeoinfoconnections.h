@@ -110,7 +110,7 @@ public:
 	/**
 	* The assignement operator.
 	*/
-	RGeoInfoConnections& operator=(const RGeoInfoConnections& cons) throw(bad_alloc);
+	RGeoInfoConnections& operator=(const RGeoInfoConnections& cons) throw(std::bad_alloc);
 
 	// friend classes
 	friend class RConnections;

@@ -79,7 +79,7 @@ public:
 	* Costructor of a function.
 	* @param name           Name.
 	*/
-	RPrgFunc(const char* name) throw(bad_alloc);
+	RPrgFunc(const char* name) throw(std::bad_alloc);
 
 	/**
 	* This methods compares two functions using their names and works like the

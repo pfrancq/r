@@ -5,7 +5,7 @@ AM_CXXFLAGS =
 AM_FFLAGS =
 SUBDIRS =
 rstdincludedir = $(includedir)/r/rstd
-rstdinclude_HEADERS =  rstd.h rcontainer.h rcontainer.hh rcursor.h rcursor.hh rcontainercursor.h rcontainercursor.hh \
+rstdinclude_HEADERS =  rstd.h rcontainer.h rcontainer.hh rcursor.h rcursor.hh \
 					rhashcontainer.h rdblhashcontainer.h rmsg.h rstring.h rchar.h \
 					random.h rio.h rtextfile.h rrecfile.h rrecfile.hh rdate.h \
 					rlang.h rlocale.h rmsg.h rnode.h rnode.hh rtree.h rtree.hh \
