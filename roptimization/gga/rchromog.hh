@@ -79,6 +79,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	cGroup* grp;
 	bool bInsertIt;
 
+	#ifdef RGADEBUG
+		if(Instance->Debug) Instance->Debug->BeginFunc("Crossover","RChromoG");
+	#endif
+
 	// Clear the chromosome
 	Clear();
 	
@@ -131,6 +135,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
 	ComputeOrd();
+
+	#ifdef RGADEBUG
+		if(Instance->Debug) Instance->Debug->EndFunc("Crossover","RChromoG");
+	#endif
 
 	return(true);
 }
