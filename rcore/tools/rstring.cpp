@@ -316,7 +316,7 @@ RString& RString::operator+=(const char *text) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-bool RString::operator==(const RString &str) const
+bool RString::operator==(const RString& str) const
 {
 	const char *ptr1=str.Text;
 	char *ptr2=Text;
@@ -333,7 +333,14 @@ bool RString::operator==(const RString &str) const
 
 
 //-----------------------------------------------------------------------------
-bool RString::operator!=(const RString &str) const
+bool RString::operator==(const char* str) const
+{
+	return(!strcmp(Text,str));
+}
+
+
+//-----------------------------------------------------------------------------
+bool RString::operator!=(const RString& str) const
 {
 	const char *ptr1=str.Text;
 	char *ptr2=Text;
@@ -346,6 +353,13 @@ bool RString::operator!=(const RString &str) const
 		ptr2++;
 	}
 	return(false);
+}
+
+
+//-----------------------------------------------------------------------------
+bool RString::operator!=(const char* str) const
+{
+	return(strcmp(Text,str));
 }
 
 

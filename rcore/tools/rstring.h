@@ -101,7 +101,7 @@ public:
 
 	/**
 	* Construct a string from another string.
-	*	@param str		The string used as reference.
+	* @param str		The string used as reference.
 	*/
 	RString(const RString* str) throw(bad_alloc);
 
@@ -182,12 +182,22 @@ public:
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const RString &str) const;
+	bool operator==(const RString& str) const;
+
+	/**
+	* Equal operator.
+	*/
+	bool operator==(const char* str) const;
 
 	/**
 	* Non-equal operator.
 	*/
-	bool operator!=(const RString &str) const;
+	bool operator!=(const RString& str) const;
+	
+	/**
+	* Non-equal operator.
+	*/
+	bool operator!=(const char* str) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
