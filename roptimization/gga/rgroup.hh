@@ -33,14 +33,25 @@
 
 //-----------------------------------------------------------------------------
 //
-// class RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>
+// class RGroup<cGroup,cObj,cGroupData>
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RGroup(RGroups<cGroup>* owner,unsigned id)
-		: Id(id), Owner(owner), Groups(owner->Groups)
+template<class cGroup,class cObj,class cGroupData>
+	RGroup<cGroup,cObj,cGroupData>::RGroup(RGroup* grp)
+		: Id(grp->Id), Owner(grp->Owner)
+{
+	NbSubObjects= grp->NbSubObjects;
+	SubObjects = grp->SubObjects;
+	Reserved=grp->Reserved;
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData>
+	RGroup<cGroup,cObj,cGroupData>::RGroup(RGroups<cGroup,cObj,cGroupData>* owner,const unsigned int id,const cGroupData*)
+		: Id(id), Owner(owner)
 {
 	NbSubObjects= 0;
 	SubObjects = NoObject;
@@ -49,76 +60,75 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	bool RGGA::RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Verify(void)
+template<class cGroup,class cObj,class cGroupData>
+	bool RGroup<cGroup,cObj,cGroupData>::Verify(void)
 {
-	unsigned int j,*obj;
-	unsigned int NbObjects=Owner->Instance->NbObjects;
-	unsigned int NbGroups=Owner->NbGroups;
-	bool Ok=true;
+	unsigned int i,*obj;
+	unsigned int NbObjects=Owner->NbObjectsList;
+	unsigned int NbGroups=Owner->Used.NbPtr;
 	
 	// Each group must have a parent.
 	if(!Owner)
-		throw(new eGAVerify);
-
-	// The groups array must always pointed to the one of the parent.
-	if(Owner->Groups!=Groups)
-		Ok=false;
+		return(false);
 
 	// Verify objects attached.
 	if(SubObjects!=NoObject)
 	{
 		// The number of objects attached can't be null.
 		if(!NbSubObjects)
-			Ok=false;
+			return(false);
 
-		// The index of the first objects attached can npt exceed the total number of objects.
+		// The index of the first objects attached can not exceed the total number of objects.
 		if(SubObjects>NbObjects)
-			Ok=false;
+			return(false);
 
-		// The index of the last objects attached can npt exceed the total number of objects.
+		// The index of the last objects attached can not exceed the total number of objects.
 		if(SubObjects+NbSubObjects>NbObjects+1)
-			Ok=false;
+			return(false);
 	}
 	else
 	{
 		// The number of objects attached must be null.
 		if(NbSubObjects)
-			Ok=false;
+			return(false);
 	}
 
 	// Verify coherence with the objects.
-	for(j=NbSubObjects+1,obj=&(Owner->ObjectsList[SubObjects]);--j;obj++)
+	for(i=NbSubObjects+1,obj=&(Owner->ObjectsList[SubObjects]);--i;obj++)
 		if(Owner->ObjectsAss[*obj]!=Id)
-			Ok=false;
+			return(false);
 
 	// return the value of the verification.
-	return(Ok);
-}
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RGGA::RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Clear(void)
-{
-	Reserved=false;
-	SubObjects=NoObjects;
-	NbSubObjects=0;
-}
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	bool RGGA::RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::IsSameObjs(const RGroup* /*grp*/) const
-{
 	return(true);
 }
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>& RGGA::RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::operator=(const RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>& grp)
+template<class cGroup,class cObj,class cGroupData>
+	void RGroup<cGroup,cObj,cGroupData>::Clear(void)
+{
+	Reserved=false;
+	SubObjects=NoObject;
+	NbSubObjects=0;
+}
 
+
+//---------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData>
+	void RGroup<cGroup,cObj,cGroupData>::Insert(cObj** objs,const cGroup* grp)
+{
+	unsigned int i;
+	unsigned int* list;
+
+	RReturnIfFail(Owner!=grp->Owner);
+	for(i=grp->NbSubObjects+1,list=&grp->Owner->ObjectsList[grp->SubObjects];--i;list++)
+		Insert(objs[*list]);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData>
+	RGroup<cGroup,cObj,cGroupData>& RGGA::RGroup<cGroup,cObj,cGroupData>::operator=(const RGroup<cGroup,cObj,cGroupData>& grp)
 {
 	if(this!=&grp)
 	{
@@ -132,7 +142,58 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RGroup(void)
+template<class cGroup,class cObj,class cGroupData>
+	bool RGroup<cGroup,cObj,cGroupData>::IsIn(const unsigned int id) const
+{
+	unsigned int i;
+	unsigned int* list;
+
+	for(i=NbSubObjects+1,list=&Owner->ObjectsList[SubObjects];--i;list++)
+		if((*list)==id) return(true);
+	return(false);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData>
+	bool RGroup<cGroup,cObj,cGroupData>::CommonObjs(const cGroup* grp) const
+{
+	unsigned int i;
+	unsigned int* list;
+
+	for(i=NbSubObjects+1,list=&Owner->ObjectsList[SubObjects];--i;list++)
+		if(grp->IsIn(*list)) return(true);
+	return(false);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData>
+	bool RGroup<cGroup,cObj,cGroupData>::SameObjs(const cGroup* grp) const
+{
+	unsigned int i;
+	unsigned int* list;
+
+	if(NbSubObjects!=grp->NbSubObjects) return(false);
+	for(i=NbSubObjects+1,list=&Owner->ObjectsList[SubObjects];--i;list++)
+		if(!grp->IsIn(*list)) return(false);
+	return(true);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData>
+	unsigned int* RGroup<cGroup,cObj,cGroupData>::GetObjectsId(void) const
+{
+	unsigned int* tmp=new unsigned int[NbSubObjects+1];
+	memcpy(tmp,&Owner->ObjectsList[SubObjects],NbSubObjects*sizeof(unsigned int));
+	tmp[NbSubObjects]=NoObject;
+	return(tmp);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData>
+	RGroup<cGroup,cObj,cGroupData>::~RGroup(void)
 {
 }

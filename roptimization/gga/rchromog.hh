@@ -30,311 +30,184 @@
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RChromoG(cInst *inst,unsigned id) throw(bad_alloc)
-		: RGA::RChromo<cInst,cChromo,cFit,cThreadData>(inst,id)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RChromoG(cInst *inst,unsigned id) throw(bad_alloc)
+		: RGA::RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
+		  RGroups<cGroup,cObj,cGroupData>(inst->NbObjs,inst->MaxGroups),
+		  Heuristic(0)
 {
-	NbGroups=0;
-	NbGroupsList=0;
-	NbObjectsList=0;
-	Groups=0;
 }
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(cThreadData *thData) throw(bad_alloc)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(cThreadData *thData) throw(bad_alloc)
 {
-	cGroup** G;
-	unsigned int i;
-
 	// Initialisation of the parent
 	RGA::RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
 
-	// General Initalisation
-	MaxGroups=Instance->MaxGroups;
-	Objects=Instance->Objects;
-	Groups=new cGroup*[MaxGroups];
-	memset(Groups,0,MaxGroups*sizeof(cGroup*));
-	for(i=0,G=Groups;i<MaxGroups;G++,i++)
-		(*G) = new cGroup(static_cast<cChromo*>(this),i);
-	ObjectsAss = new unsigned int[Instance->NbObjects];
-	memset(ObjectsAss,0xFF,Instance->NbObjects*sizeof(unsigned int));
-	GroupsList = new unsigned int[MaxGroups];
-	memset(GroupsList,0,MaxGroups*sizeof(unsigned int));
-	ObjectsList = new unsigned int[Instance->NbObjects];
-	memset(ObjectsList,0,Instance->NbObjects*sizeof(unsigned int));
-
 	// Init "thread-dependent" data
+	Heuristic=thData->Heuristic;
 }
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Clear(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Clear(void)
 {
-	cGroup **G;
-	unsigned int i;
+	RGroups<cGroup,cObj,cGroupData>::ClearGroups();
+}
 
-	for(i=NbGroups+1,G=Groups;--i;G++)
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void)
+{
+	Heuristic->Run(Objs,this,NbObjs);
+	return(true);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Crossover(cChromo* parent1,cChromo* parent2)
+{
+	unsigned int pos1,len1,pos2,i,j;
+	cGroup** grps2;
+	cGroup** grps1;
+	cGroup* grp;
+	bool bInsertIt;
+
+	// Clear the chromosome
+	Clear();
+
+	// Select two crossing sites
+	pos1=Instance->RRand(parent1->Used.NbPtr);
+	len1=Instance->RRand(parent1->Used.NbPtr-pos1-1)+1;
+	pos2=Instance->RRand(parent2->Used.NbPtr);
+
+	// Insert groups from parent2<pos2 and verify that they dont contains "new"
+	// objects inseert from parent1.
+	for(i=pos2+1,grps2=parent2->Used.Tab;--i;grps2++)
 	{
-		(*G)->Reserved=false;
-		(*G)->NbSubObjects = 0;
-		(*G)->SubObjects=NoObject;
+		bInsertIt=true;
+		for(j=len1+1,grps1=&parent1->Used.Tab[pos1];(--j)&&bInsertIt;grps1++)
+			if((*grps1)->CommonObjs(*grps2))
+				bInsertIt=false;
+		if(bInsertIt)
+		{
+			grp=ReserveGroup();
+			grp->Insert(Objs,*grps2);
+			if(!grp->Verify())
+				cout<<"????"<<endl;
+		}
 	}
-	NbGroups = 0;
-	NbNodesList=0;
-	NbObjectsList=0;
-	memset(ObjectsAss,0xFF,Instance->NbObjects*sizeof(unsigned int));
-}
 
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	cGroup* RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::ReserveGroup(void)
-{
-	cGroup **ptr=Groups;
-
-	if(NbGroups+1>MaxGroups)
-		return(0);
-	while((*ptr)->Reserved)
-		ptr++;
-	(*ptr)->Reserved=true;
-	NbGroups++;
-	return((*ptr));
-}
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::ReleaseGroup(const unsigned int grp)
-{
-	cGroup *G=Groups[grp];
-
-	N->Reserved=false;
-	NbGroups--;
-	N->NbSubObjects = 0;
-	N->SubObjects=NoObject;
-}
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::InsertObj(cGroup* to,const unsigned int obj)
-{
-	unsigned int *ptr,tmp,i,j;
-	cGroup** G;
-
-	if(to->NbSubObjects)
+	// Insert the selected group from parent1
+	for(i=len1+1,grps1=&parent1->Used.Tab[pos1];--i;grps1++)
 	{
-		for(i=0,ptr=&ObjectsList[to->SubObjects];(i<to->NbSubObjects)&&((*ptr)<obj);ptr++,i++);
-		tmp=to->SubObjects+i;
-		if(to->SubObjects+i<Instance->NbObjects-1)
-			memmove(ptr+1,ptr,(NbObjectsList-tmp)*sizeof(unsigned int));
-		(*ptr)=obj;
-		j=to->SubObjects;
-		NbObjectsList++;
-		for(i=MaxGroups+1,G=Groups;--i;G++)
-			if(((*G)->Reserved)&&((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
-				(*G)->SubObjects++;
+			grp=ReserveGroup();
+			grp->Insert(Objs,*grps1);
+			if(!grp->Verify())
+				cout<<"????"<<endl;
 	}
+
+	// Insert groups from parent2<pos2 and verify that they dont contains "new"
+	// objects inseert from parent1.
+	for(i=parent2->Used.NbPtr-pos2+1,grps2=&parent2->Used.Tab[pos2];--i;grps2++)
+	{
+		bInsertIt=true;
+		for(j=len1+1,grps1=&parent1->Used.Tab[pos1];(--j)&&bInsertIt;grps1++)
+			if((*grps1)->CommonObjs(*grps2))
+				bInsertIt=false;
+		if(bInsertIt)
+		{
+			grp=ReserveGroup();
+			grp->Insert(Objs,*grps2);
+			if(!grp->Verify())
+				cout<<"????"<<endl;
+		}
+	}
+
+	// Insert missing objects
+	Heuristic->Run(Objs,this,NbObjs);
+
+	return(true);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Mutation(void)
+{
+	unsigned int nb;
+
+	// Compute number of groups to eliminate
+	if(Used.NbPtr>10)
+		nb=Instance->RRand(Used.NbPtr/10-3)+4;
 	else
-		ObjectsList[to->SubObjects=NbObjectsList++]=obj;
-	to->NbSubObjects++;
-	ObjectsAss[obj]=to->Id;
-//	Verify();
+		nb=2;
+	while(--nb)
+		ReleaseGroup(Instance->RRand(Used.NbPtr));
+
+	// Insert missing objects
+	Heuristic->Run(Objs,this,NbObjs);
+
+	return(true);
 }
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::DeleteObj(cGroup* from,const unsigned int obj)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Inversion(void)
 {
-	unsigned int *ptr,j,i;
-	cGroup** G;
+	unsigned int grp1,grp2,hold;
+	cGroup* ptr;
 
-	for(i=0,ptr=&ObjectsList[from->SubObjects];(*ptr)!=obj;ptr++,i++);
-	memcpy(ptr,ptr+1,(NbObjectsList-from->SubObjects-i)*sizeof(unsigned int));
-	j=from->SubObjects;
-	for(i=MaxGroups+1,G=Groups;--i;G++)
-		if(((*G)->Reserved)&&((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
-			(*G)->SubObjects--;
-	if(!(--(from->NbSubObjects)))
-		from->SubObjects=NoObject;
-	NbObjectsList--;
-	ObjectsAss[obj]=NoGroup;
-//	Verify();
-}
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::DeleteObjs(cGroup* from)
-{
-	unsigned int *ptr,j,i;
-	cGroup** G;
-
-	if(!(from->NbSubObjects)) return;
-	for(i=from->NbSubObjects+1,ptr=&ObjectsList[from->SubObjects];--i;ptr++)
-		ObjectsAss[*ptr]=NoGroup;
-	j=from->SubObjects;
-	ptr=&ObjectsList[j];
-	memcpy(ptr,ptr+from->NbSubObjects,(NbObjectsList-j)*sizeof(unsigned int));
-	for(i=MaxGroups+1,G=Groups;--i;G++)
-		if(((*G)->Reserved)&&((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
-			(*G)->SubObjects-=from->NbSubObjects;
-	NbObjectsList-=from->NbSubObjects;
-	from->NbSubObjects=0;
-	from->SubObjects=NoObject;
-//	Verify();
-}
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::MoveObjs(cGroup* to,cGroup* from)
-{
-	unsigned int nbt=to->NbSubObjects,nbf=from->NbSubObjects,nbtemp,nbtemp2;
-	unsigned int *ptrf=&ObjectsList[from->SubObjects],*ptrt=&ObjectsList[to->SubObjects];
-	unsigned int *ptr;
-	cGroup** G;
-	unsigned int i;
-
-	if(!nbf) return;
-	for(nbtemp=from->NbSubObjects+1,ptr=&ObjectsList[from->SubObjects];--nbtemp;ptr++)
-		ObjectsAss[*ptr]=to->Id;
-
-	// if To has no objects, use the same the subobjects
-	if(!nbt)
+	if(Used.NbPtr<2) return(true);
+	grp1=Instance->RRand(Used.NbPtr);
+	hold=grp2=grp1+Instance->RRand(Used.NbPtr-1);
+	if(grp2>Used.NbPtr-1)
+		grp2-=Used.NbPtr-1;
+	if(grp1==grp2)
 	{
-		to->SubObjects=from->SubObjects;
-		to->NbSubObjects=from->NbSubObjects;
-		from->SubObjects=NoObject;
-		from->NbSubObjects=0;
-		return;
+		cout<<grp1<<"  -  "<<hold<<endl;
 	}
-	ptr=tmpObjs;
-	nbtemp2=nbf;
-	nbtemp=nbt+nbf;
-	while(nbtemp)
-	{
-		while(nbf&&((!nbt)||((*ptrf)<(*ptrt))))
-		{
-			nbf--;
-			nbtemp--;
-			(*(ptr++))=(*(ptrf++));
-		}
-		while(nbt&&((!nbf)||((*ptrt)<(*ptrf))))
-		{
-			nbt--;
-			nbtemp--;
-			(*(ptr++))=(*(ptrt++));
-		}
-	}
-	nbtemp=from->SubObjects;
-	ptr=&ObjectsList[nbtemp];
-	memcpy(ptr,ptr+from->NbSubObjects,(NbObjectsList-nbtemp)*sizeof(unsigned int));
-	for(i=MaxGroups+1,N=Groups;--i;G++)
-		if(((*G)->Reserved)&&((*G)->SubObjects>nbtemp)&&((*G)->SubObjects!=NoObject))
-			(*G)->SubObjects-=from->NbSubObjects;
-	from->NbSubObjects=0;
-	from->SubObjects=NoObject;
-	nbtemp=to->SubObjects+to->NbSubObjects;
-	to->NbSubObjects+=nbtemp2;
-	if(nbtemp+nbtemp2<Instance->NbObjects-1)
-	{
-		ptr=&ObjectsList[nbtemp];
-		memmove(ptr+nbtemp2,ptr,(NbObjectsList-to->NbSubObjects-to->SubObjects)*sizeof(unsigned int));
-		for(i=MaxGroups+1,N=Groups;--i;N++)
-			if(((*G)->Reserved)&&((*G)->SubObjects>to->SubObjects)&&((*G)->SubObjects!=NoObject))
-				(*G)->SubObjects+=nbtemp2;
-	}
-	memcpy(&ObjectsList[to->SubObjects],tmpObjs,to->NbSubObjects*sizeof(unsigned int));
-//	Verify();
-}
+	RReturnValIfFail(grp2!=grp1,false);
 
+	// Exchange them in Used
+	ptr=Used.Tab[grp1];
+	Used.Tab[grp1]=Used.Tab[grp2];
+	Used.Tab[grp2]=ptr;
 
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	bool RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RandomConstruct(void)
-{
-	ToEval=true;
 	return(true);
 }
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	bool RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(cChromo* parent1,cChromo* parent2)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Verify(void)
 {
-	ToEval=true;
+	if(!RGroups<cGroup,cObj,cGroupData>::Verify())
+		return(false);
+	if(!Used.NbPtr)
+		return(false);
 	return(true);
 }
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	bool RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Mutation(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>& RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::operator=(const RChromoG& chromo)
 {
-	ToEval=true;
-	return(true);
-}
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	bool RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Verify(void)
-{
-	unsigned int i;
-	cGroup** G;
-
-	for(i=NbGroups+1,G=Groups;--i;G++)
-		if(!(*G)->Verify())
-			return(false);
-	return(true);
-}
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>& RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::operator=(const RChromoG& chromo)
-{
-//	cNode **N1,**N2;
-//	unsigned int i;
-//
-//	if(this==&chromo) return(*this);
-//	Clear();
-//	for(i=chromo.MaxNodes+1,N1=Nodes,N2=chromo.Nodes;--i;N1++,N2++)
-//		(**N1)=(**N2);
-//	TopNodes=chromo.TopNodes;
-//	NbTopNodes=chromo.NbTopNodes;
-//	NbNodes=chromo.NbNodes;
-//	NbNodesList=chromo.NbNodesList;
-//	memcpy(NodesList,chromo.NodesList,sizeof(unsigned int)*NbNodesList);
-//	NbObjectsList=chromo.NbObjectsList;
-//	memcpy(ObjectsList,chromo.ObjectsList,sizeof(unsigned int)*NbObjectsList);
-//	memcpy(ObjectsAss,chromo.ObjectsAss,sizeof(unsigned int)*NbObjectsList);
-//	(*Fitness)=(*(chromo.Fitness));
-//  Verify();
 	RGA::RChromo<cInst,cChromo,cFit,cThreadData>::operator=(chromo);
+	RGroups<cGroup,cObj,cGroupData>::operator=(chromo);
 	return(*this);
 }
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RChromoG(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::~RChromoG(void)
 {
-	unsigned int i;
-	cGroup **G;
-
-	if(Groups)
-	{
-		for(i=MaxGroups+1,G=Groups;--i;G++)
-			if(*G) delete (*G);
-		delete[] Nodes;
-	}
-	delete[] NodesList;
-	delete[] ObjectsAss;
-	delete[] ObjectsList;
 }

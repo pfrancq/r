@@ -42,6 +42,7 @@
 using namespace RStd;
 #include <rmath/random.h>
 using namespace RMath;
+#include <rgga/rgroups.h>
 
 
 //-----------------------------------------------------------------------------
@@ -69,7 +70,7 @@ public:
 * @author Pascal Francq
 * @short Generic Grouping Heuristic class.
 */
-template<class cGroup,class cObj>
+template<class cGroup,class cObj,class cGroupData>
 	class RGroupingHeuristic
 {
 protected:
@@ -92,7 +93,7 @@ protected:
 	/**
 	* Groups.
 	*/
-	cGroup** Groups;
+	RGroups<cGroup,cObj,cGroupData>* Groups;
 	
 	/**
 	* Objects are to be treated.
@@ -109,6 +110,10 @@ protected:
 	*/
 	cObj* CurObj;
 
+	/**
+	* Current group manipulated.
+	*/
+	cGroup* CurGroup;
 
 public:
 
@@ -123,23 +128,31 @@ public:
 	* @param objs           Pointer to the objects.
 	* @param groups         Pointer to the groups.
 	*/
-	virtual void Init(cObj** objs,cGroup** groups,const unsigned int nbobjs);
+	virtual void Init(cObj** objs,RGroups<cGroup,cObj,cGroupData>* groups,const unsigned int nbobjs);
 
 	/**
 	* Select the next object to place.
-	* The CurObj must pointed to the geometric information representing the
-	* object to place.
+	* The CurObj must pointed to object to place.
 	*/
 	virtual void SelectNextObject(void) throw(RGroupingHeuristicException);
 
 	/**
-	* Find a group for the next object.
+	* Return the current object to place.
 	*/
-	virtual cGroup* NextObject(void) throw(RGroupingHeuristicException)=0;
+	cObj* GetNextObject(void) {return(CurObj);}
 
 	/**
-	* Put the current object into a group.
-	* @param grp            The group where to put it.
+	* Return the current group.
+	*/
+	cGroup* GetGroup(void) {return(CurGroup);}
+
+	/**
+	* Find a group for the next object.
+	*/
+	virtual cGroup* FindGroup(void) throw(RGroupingHeuristicException)=0;
+
+	/**
+	* Put the next object into a group.
 	*/
 	void PutNextObject(void) throw(RGroupingHeuristicException);
 
@@ -148,7 +161,7 @@ public:
 	* @param objs           Pointer to the objects.
 	* @param groups         Pointer to the groups.
 	*/
-	void Run(cObj** objs,cGroup** groups,const unsigned int nbobjs) throw(RGroupingHeuristicException);
+	void Run(cObj** objs,RGroups<cGroup,cObj,cGroupData>* groups,const unsigned int nbobjs) throw(RGroupingHeuristicException);
 
 	/**
 	* Do some operations after the run.
@@ -166,6 +179,20 @@ public:
 	inline unsigned int GetNbObjsOk(void) {return(NbObjsOk);}
 
 	/**
+	* Return a number in the interval [0,max[ using the current random generator.
+	* @param max            Variable used to calculate the number.
+	*/
+	long RRand(long max) {return(Random->Value(max));}
+
+	/**
+	* Random the position of elements of a vector using the current random generator.
+	* @param arr            A pointer to the array representing the vector.
+	* @param size           The size of the vector.
+	*/
+	template<class T> inline void RandOrder(T* arr,unsigned int size)
+		{Random->RandOrder<T>(arr,size);}
+
+	/**
 	* Destruct the grouping heuristic.
 	*/
 	virtual ~RGroupingHeuristic(void);
@@ -177,7 +204,7 @@ public:
 #include <rgga/rgroupingheuristic.hh>
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace RGGA --------------------------------------------
 
 
 //-----------------------------------------------------------------------------

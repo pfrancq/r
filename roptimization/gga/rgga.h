@@ -43,24 +43,12 @@ using namespace RGA;
 
 
 //-----------------------------------------------------------------------------
-// Forward class declaration
-namespace RGGA
-{
-	class RObjG;
-	template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj> class RGroup;
-	template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj> class RThreadDataG;
-	template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj> class RChromoG;
-	template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj> class RInstG;
-}
-
-
-//-----------------------------------------------------------------------------
-// include files for GGA
-#include <rgga/robjg.h>
-#include <rgga/rgroup.h>
-#include <rgga/rinstg.h>
-#include <rgga/rchromog.h>
-using namespace RGGA;
+/**
+* \namespace RGGA
+* \brief Generic Grouping Genetic Algorithm Classes.
+*
+* This namespace declares classes for working with Grouping Genetic Algorithms.
+*/
 
 
 //-----------------------------------------------------------------------------
@@ -69,10 +57,19 @@ namespace RGGA{
 
 
 //-----------------------------------------------------------------------------
-// Definitions of templates
-#include <rgga/rgroup.hh>
-#include <rgga/rchromog.hh>
-#include <rgga/rinstg.hh>
+// Forward class declaration
+class RObjG;
+template<class cGroup,class cObj,class cGroupData> class RGroup;
+template<class cGroup,class cObj,class cGroupData> class RGroups;
+template<class cGroup,class cObj,class cGroupData> class RGroupingHeuristic;
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData> class RThreadDataG;
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData> class RChromoG;
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData> class RInstG;
+
+
+//-----------------------------------------------------------------------------
+// Heuristic Types
+enum HeuristicType{FirstFit=0};
 
 
 }//------- End of namespace RGGA ----------------------------------------------

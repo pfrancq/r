@@ -36,17 +36,33 @@
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RThreadDataG(cInst *owner) throw(bad_alloc)
-		: RThreadData<cInst,cChromo>(owner)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RThreadDataG(cInst *owner) throw(bad_alloc)
+		: RThreadData<cInst,cChromo>(owner), Heuristic(0)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RThreadDataG(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	void RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(void) throw(bad_alloc)
 {
+	RThreadData<cInst,cChromo>::Init();
+	switch(Owner->GetHeuristic())
+	{
+		case FirstFit:
+			Heuristic = new RFirstFitHeuristic<cGroup,cObj,cGroupData>(Owner->Random,Owner->NbObjs);
+			break;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::~RThreadDataG(void)
+{
+	if(Heuristic)
+		delete Heuristic;
 }
 
 
@@ -58,28 +74,31 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 //-----------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,cObj** objs,unsigned int nbobjs,RDebug *debug) throw(bad_alloc)
-		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,cObj** objs,unsigned int nbobjs,HeuristicType h,RDebug *debug) throw(bad_alloc)
+		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
+		  Heuristic(h), Objs(objs), NbObjs(nbobjs)
 {
-	cObj **ptr;
-	unsigned int tmp,tmp2,n;
-
-	Objects=objs;
-	MaxGroups=NbObjects=nbobjs;
+	MaxGroups=NbObjs/2;
 }
 
 
 //-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RGGA::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(void) throw(bad_alloc)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(cGroupData* gdata) throw(bad_alloc)
 {
+	cChromo **C;
+	unsigned int i;
+
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
+	for(i=PopSize+1,C=Chromosomes;--i;C++)
+		(static_cast<RGroups<cGroup,cObj,cGroupData>*>(*C))->Init(Objs,gdata);
+	(static_cast<RGroups<cGroup,cObj,cGroupData>*>(BestChromosome))->Init(Objs,gdata);
 }
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RInstG(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::~RInstG(void)
 {
 }

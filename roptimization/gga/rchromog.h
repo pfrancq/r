@@ -30,13 +30,17 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RChromogH
-#define RChromogH
+#ifndef RChromoGH
+#define RChromoGH
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rstd/rcontainer.h>
 #include <rga/rchromo.h>
+#include <rgga/rgga.h>
+#include <rgga/rgroups.h>
+#include <rgga/rgroupingheuristic.h>
 
 
 //-----------------------------------------------------------------------------
@@ -45,53 +49,18 @@ namespace RGGA{
 
 
 //-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	class RChromoG : public RGA::RChromo<cInst,cChromo,cFit,cThreadData>
+/**
+* The RChromoG class provides a representation for a chromosome for the GGA.
+* @author Pascal Francq
+* @short GGA Chromosome.
+*/
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	class RChromoG : public RGA::RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cGroupData>
 {
 	/**
-	* The Objects to group.
+	* Heuristic used for the placement.
 	*/
-	cObj** Objects;
-
-	/**
-	* The groups of the chromosomes.
-	*/
-	cGroup** Groups;
-
-	/**
-	* Total number of groups used.
-	*/
-	unsigned int NbGroups;
-
-	/**
-	* Maximal number of groups to allocate.
-	*/
-	unsigned int MaxGroups;
-
-	/**
-	*  Array of idenfiticators of groups.
-	*/
-	unsigned int* GroupsList;
-
-	/**
-	* Number of groups in the list.
-	*/
-	unsigned int NbGroupsList;
-
-	/**
-	* Assignment of the objects.
-	*/
-	unsigned int* ObjectsAss;
-
-	/**
-	* Array of identificator of objects.
-	*/
-	unsigned int* ObjectsList;
-
-	/**
-	* Number of objects in the list.
-	*/
-	unsigned int NbObjectsList;
+	RGroupingHeuristic<cGroup,cObj,cGroupData>* Heuristic;
 
 public:
 
@@ -115,52 +84,14 @@ public:
 	void Clear(void);
 
 	/**
-	* Reserve a Node.
-	* @returns A pointer to the node reserved.
-	*/
-	cGroup* ReserveGroup(void);
-
-	/**
-	* Release a node.
-	* @param node           Identificator of the node.
-	*/
-	void ReleaseGroup(const unsigned int group);
-
-	/**
-	* Insert an object to a node.
-	* @param to             Pointer of the destination node.
-	* @param obj            Identificator of the object to insert.
-	*/
-	void InsertObj(cGroup* to,const unsigned int obj);
-
-	/**
-	* Delete an object from a node.
-	* @param from           Pointer of the node.
-	* @param obj            Identificator of the object to insert.
-	*/
-	void DeleteObj(cGroup* from,const unsigned int obj);
-
-	/**
-	* Delete all the objects attached to a given node.
-	* @param node           Pointer to the node.
-	*/
-	void DeleteObjs(cGroup* node);
-
-	/**
-	* Move all the objects of a node to another.
-	* @param to             Pointer of the destination node.
-	* @param from           Pointer of the origin node.
-	*/
-	void MoveObjs(cGroup* to,cGroup* from);
-
-	/**
 	* Construct a valid solution.
 	* @return The function must retrun true if a solution has been constructed.
 	*/
 	virtual bool RandomConstruct(void);
 
 	/**
-	* Do a crossover by using the chromosome as child.
+	* Do a crossover by using the chromosome as child. The crossover
+	* implemented is the BPX (bin packing crossover).
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
 	* @return The function must return true if the crossover has been done.
@@ -168,10 +99,16 @@ public:
 	virtual bool Crossover(cChromo* parent1,cChromo* parent2);
 
 	/**
-	* Do a mutation with the chromosome.
-	* @return               The function must return true if the mutation has been done.
+	* Do a mutation of the chromosome, by choosing randomly groups and
+	* destroy them.
 	*/
 	virtual bool Mutation(void);
+
+	/**
+	* Do a inversion of the chromosome, by exchanging two groups in list
+	* representing all the used one.
+	*/
+	virtual bool Inversion(void);
 
 	/**
 	* Verify the validity of the chromosome.
@@ -190,9 +127,13 @@ public:
 	*/
 	virtual ~RChromoG(void);
 	
-	friend class RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>;
-	friend class RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>;
+	friend class RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
 };
+
+
+//-----------------------------------------------------------------------------
+// inline implementation
+#include <rgga/rchromog.hh>
 
 
 }//------- End of namespace RGGA ----------------------------------------------

@@ -37,6 +37,8 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
+#include <rgga/rgga.h>
+#include <rgga/rgroup.h>
 
 
 //-----------------------------------------------------------------------------
@@ -45,28 +47,73 @@ namespace RGGA{
 
 
 //-----------------------------------------------------------------------------
-template<class cGroup>
+/**
+* The RGroups class provides a representation for a set of groups that have to
+* contain objects.
+* @author Pascal Francq
+* @short Groups.
+*/
+template<class cGroup,class cObj,class cGroupData>
 	class RGroups : public RStd::RContainer<cGroup,unsigned int,true,false>
 {
-protected:
+public:
 
 	/**
 	*  Groups used.
 	*/
 	RStd::RContainer<cGroup,unsigned int,false,false> Used;
 
+	/**
+	* Data used to construct a group.
+	*/
+	cGroupData* GroupData;
+
+protected:
+
+	/**
+	* Total number of objects.
+	*/
+	unsigned int NbObjs;
+
+	/**
+	* Assignment of the objects.
+	*/
+	unsigned int* ObjectsAss;
+
+	/**
+	* Array of identificator of objects.
+	*/
+	unsigned int* ObjectsList;
+
+	/**
+	* Number of objects in the list.
+	*/
+	unsigned int NbObjectsList;
+
+	/**
+	* The Objects to group.
+	*/
+	cObj** Objs;
+
 public:
 
 	/**
 	* Construct the groups.
-	* @param max            Maximal number of groups.
+	* @param nbobjs         Number of objects.
+	* @param max            Maximal number of groups to create.
 	*/
-	RGroups(const unsigned int max) throw(bad_alloc);
+	RGroups(const unsigned int nbobjs,const unsigned int max) throw(bad_alloc);
+
+	/**
+	* Init the groups.
+	* @param data           Data used to construct the groups.
+	*/
+	void Init(cObj** objs,cGroupData* data);
 
 	/**
 	* Clear all the information of the chromosome.
 	*/
-	void Clear(void);
+	void ClearGroups(void);
 
 	/**
 	* Reserve a Node.
@@ -76,15 +123,48 @@ public:
 
 	/**
 	* Release a node.
-	* @param node           Identificator of the node.
+	* @param node           Identificator of the group.
 	*/
 	void ReleaseGroup(const unsigned int group);
 
 	/**
-	* Verify the validity of the chromosome.
-	* @return True if the chromosome is a valid one, false else.
+	* Insert an object to a group.
+	* @param to             Pointer of the group.
+	* @param obj            Pointer of the object to insert.
+	*/
+	void InsertObj(cGroup* to,const cObj* obj);
+
+	/**
+	* Delete an object from a node.
+	* @param from           Pointer of the node.
+	* @param obj            Pointer of the object to insert.
+	*/
+	void DeleteObj(cGroup* from,const cObj* obj);
+
+	/**
+	* Delete all the objects attached to a given group.
+	* @param node           Pointer to the group.
+	*/
+	void DeleteObjs(cGroup* node);
+
+	/**
+	* Move all the objects of a group to another.
+	* @param to             Pointer of the destination group.
+	* @param from           Pointer of the origin group.
+	*/
+	void MoveObjs(cGroup* to,cGroup* from);
+
+	/**
+	* Verify the validity of the groups.
+	* @return True if the groups are valid one, false else.
 	*/
 	virtual bool Verify(void);
+
+	/**
+	* Return a pointer of the group of an object.
+	* @param id             Identificator of the object.
+	*/
+	cGroup* GetGroup(const unsigned int id) {return(Tab[ObjectsAss[obj]]);}
 
 	/**
 	* The assigment operator.
@@ -96,7 +176,17 @@ public:
 	* Destruct the chromosome.
 	*/
 	virtual ~RGroups(void);
+
+	// friend classes
+	friend class RGroup<cGroup,cObj,cGroupData>;
+	friend class RGroupingHeuristic<cGroup,cObj,cGroupData>;
 };
+
+
+//-----------------------------------------------------------------------------
+// inline implementation
+#include <rgga/rgroup.hh>
+#include <rgga/rgroups.hh>
 
 
 }//------- End of namespace RGGA ----------------------------------------------

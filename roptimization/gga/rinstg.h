@@ -38,11 +38,11 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rstd/rcontainer.h>
 #include <rga/rinst.h>
 using namespace RGA;
 #include <rgga/robjg.h>
-#include <rgga/rgroupingheuristic.h>
-using namespace RGGA;
+#include <rgga/rfirstfitheuristic.h>
 
 
 //-----------------------------------------------------------------------------
@@ -56,9 +56,16 @@ namespace RGGA{
 * @author Pascal Francq
 * @short GGA "thread-dependent" Data.
 */
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	class RThreadDataG : public RThreadData<cInst,cChromo>
 {
+protected:
+
+	/**
+	* Heuristic Used.
+	*/
+	RGroupingHeuristic<cGroup,cObj,cGroupData>* Heuristic;
+
 public:
 	
 	/**
@@ -68,20 +75,44 @@ public:
 	RThreadDataG(cInst *owner) throw(bad_alloc);
 
 	/**
+	* Initialise thje data.
+	*/
+	virtual void Init(void) throw(bad_alloc);
+
+	/**
 	* Destruct the data.
 	*/
 	virtual ~RThreadDataG(void);
 	
-	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>;
+	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
 };
 
 
 //-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	class RInstG : public RInst<cInst,cChromo,cFit,cThreadData>
 {
-	cObj** Objects;
-	unsigned int NbObjects;
+
+protected:
+
+	/**
+	* Type of the heuristic that used.
+	*/
+	HeuristicType Heuristic;
+
+	/**
+	* Objects to group.
+	*/
+	cObj** Objs;
+
+	/**
+	* Number of objects to group.
+	*/
+	unsigned int NbObjs;
+
+	/**
+	* Maximal number of groups to allocate by default.
+	*/
 	unsigned int MaxGroups;
 
 public:
@@ -91,22 +122,36 @@ public:
 	* @param popsize        Size of the population.
 	* @param objs           Objects to place in the tree.
 	* @param nbobjs         Number of objects to place.
+	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,cObj** objs,unsigned int nbobjs,RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,cObj** objs,unsigned int nbobjs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
 
 	/**
 	* Initialisation of the instance.
+	* @param gdata          The Data to use for the construction of the groups.
 	*/
-	virtual void Init(void) throw(bad_alloc);
+	virtual void Init(cGroupData* gdata) throw(bad_alloc);
+
+	/**
+	* Return the heuristic type.
+	*/
+	inline HeuristicType GetHeuristic(void) { return(Heuristic); }
 
 	/**
 	* Destruct the instance.
 	*/
 	virtual ~RInstG(void);
 
-	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>;
+	// friend classes
+	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
+	friend class RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
 };
+
+
+//-----------------------------------------------------------------------------
+// inline implementation
+#include <rgga/rinstg.hh>
 
 
 }//------- End of namespace RGGA ----------------------------------------------

@@ -38,7 +38,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rgga/rgroups.h>
+#include <rgga/robjg.h>
 
 
 //-----------------------------------------------------------------------------
@@ -47,14 +47,27 @@ namespace RGGA{
 
 
 //-----------------------------------------------------------------------------
+// forward class declaration
+template<class cGroup,class cObj,class cGroupData> class RGroups;
+
+
+//-----------------------------------------------------------------------------
 // Constance
 const unsigned int NoGroup=0xFFFFFFFF;
 
 
 //-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+/**
+* The RGroup class provides a representation for a group that will contain
+* objects.
+* @author Pascal Francq.
+* @short Group.
+*/
+template<class cGroup,class cObj,class cGroupData>
 	class RGroup
 {
+protected:
+
 	/**
 	* Identificator of the Group.
 	*/
@@ -63,12 +76,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	/**
 	* Owner of the group.
 	*/
-	RGroups<cGroup>* Owner;
-
-	/**
-	* Array of groups for the current chromosome (Reference).
-	*/
-	cGroup** Groups;
+	RGroups<cGroup,cObj,cGroupData>* Owner;
 
 	/**
 	* Index of the first object attached to the group.
@@ -89,51 +97,72 @@ public:
 
 	/**
 	* Construct the group.
+	* @param grp            Group used as source.
+	*/
+	RGroup(RGroup* grp);
+
+	/**
+	* Construct the group.
 	* @param owner          Owner of the group.
 	* @param id             Identificator of the group.
+	* @param data           Specific data to construct the group.
 	*/
-	RGroup(RGroups<cGroup>* owner,unsigned id);
+	RGroup(RGroups<cGroup,cObj,cGroupData>* owner,const unsigned int id,const cGroupData* data=0);
 
 	/**
 	* Verify if the group is not violating the integrity of the system.
 	* @return true if the group is correct, false else.
 	*/
-	bool Verify(void);
+	virtual bool Verify(void);
 
 	/**
 	* Clear the information container in a group.
 	*/
-	void Clear(void);
-
-	/**
-	* Compare two groups.
-	* @returns always true.
-	*/
-	bool IsSameObjs(const RGroup* grp) const;
+	virtual void Clear(void);
 
 	/**
 	* Put an object in the group.
 	* @param obj            Pointer to the object to insert.
 	*/
-	void Insert(const cObj* obj) {Owner->InsertObj(this,obj->GetId());}
+	void Insert(const cObj* obj) {Owner->InsertObj(static_cast<cGroup*>(this),obj);}
+
+	/**
+	* Put all the objects of a group. The two groups have to be of two
+	* different owner.
+	* @param objs           Objects manipulated.
+	* @param grp            Group to copy from.
+	*/
+	void Insert(cObj** objs,const cGroup* grp);
 
 	/**
 	* Delete an object in the group.
 	* @param obj            Pointer to the object to delete.
 	*/
-	void Delete(const cObj* obj) {Owner->DeleteObj(this,obj->GetId());}
+	void Delete(const cObj* obj) {Owner->DeleteObj(static_cast<cGroup*>(this),obj);}
+
+	/**
+	* Method call after an object was inserted in the group.
+	* @param obj            Pointer to the object to insert.
+	*/
+	virtual void PostInsert(const cObj* obj) {}
+
+	/**
+	* Method call after an object was deleted from the group.
+	* @param obj            Pointer to the object to delete.
+	*/
+	virtual void PostDelete(const cObj* obj) {}
 
 	/**
 	* Look if an object can be insert in the group.
 	* @param obj            Pointer to the object to insert.
 	*/
-	bool CanInsert(const cObj* /*obj*/) {return(true);}
+	virtual bool CanInsert(const cObj* /*obj*/) {return(true);}
 
 	/**
 	* Look if an object can be delete from the group.
 	* @param obj            Pointer to the object to delete.
 	*/
-	bool CanDelete(const cObj* /*obj*/) {return(true);}
+	virtual bool CanDelete(const cObj* /*obj*/) {return(true);}
 
 	/**
 	* Assignment operator.
@@ -141,12 +170,47 @@ public:
 	*/
 	RGroup& operator=(const RGroup& grp);
 
-    /**
-    * Destruct the group.
-    */
+	/**
+	* Return the identificator of the group.
+	*/
+	unsigned int GetId(void) const {return(Id);}
+
+	/**
+	* Return true if an object is in the group.
+	* @param id             Identificator of the object to test.
+	*/
+	bool IsIn(const unsigned int id) const;
+
+	/**
+	* Return true if the two groups have common objects.
+	* @param grp            Pointer to the group.
+	*/
+	bool CommonObjs(const cGroup* grp) const;
+
+	/**
+	* Return true if the two groups have the same objects.
+	* @param grp            Pointer to the group.
+	*/
+	bool SameObjs(const cGroup* grp) const;
+
+	/**
+	* Return the list of the objects. The list is created by RGroup, but must
+	* be deleted by the caller. The list is ended by a NoObject value.
+	*/
+	unsigned int* GetObjectsId(void) const;
+
+	/**
+	* Compare two groups. Used for RContainer.
+	*/
+	int Compare(const cGroup* grp) const {return(Id-grp->Id);}
+
+	/**
+	* Destruct the group.
+	*/
 	virtual ~RGroup(void);
-	
-	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>;
+
+	// friend classes
+	friend RGroups<cGroup,cObj,cGroupData>;
 };
 
 
