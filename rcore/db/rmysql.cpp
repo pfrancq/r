@@ -230,7 +230,7 @@ RString RQuery::operator[](unsigned int index) const throw(RMySQLError)
 	val=row[index];
 	if(val)
 	{
-		res=val;//UTF8->ToUnicode(val,strlen(val));
+		res=DB->Coding->ToUnicode(val,strlen(val));
 	}
 	return(res);
 }
@@ -248,9 +248,9 @@ RString RQuery::SQLValue(const RString val)
 			ret+='\'';
 		if((*ptr)==RChar('\\'))
 			ret+='\\';
-		ret+=ptr->Latin1();
+		ret+=(*ptr);
 	}
-	ret+='\'';
+	ret+=RChar('\'');
 	return(ret);
 }
 
