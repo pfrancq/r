@@ -42,21 +42,42 @@ using namespace RGGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RObjG::RObjG(const unsigned int id,const RString& name)
+RGGA::RObjG::RObjG(const unsigned int id,const RString& name)
 	: Id(id), Name(name)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RObjG::RObjG(const RObjG* obj)
+RGGA::RObjG::RObjG(const RObjG* obj)
 	: Id(obj->Id), Name(obj->Name)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RString& RObjG::GetName(void) const
+int RGGA::RObjG::Compare(const unsigned int& id) const
+{
+	return(Id-id);
+}
+
+
+//-----------------------------------------------------------------------------
+int RGGA::RObjG::Compare(const RObjG& obj) const
+{
+  return(Id-obj.Id);
+}
+
+
+//-----------------------------------------------------------------------------
+int RGGA::RObjG::Compare(const RObjG* obj) const
+{
+  return(Id-obj->Id);
+}
+
+
+//-----------------------------------------------------------------------------
+RString& RGGA::RObjG::GetName(void) const
 {
 	RString *str=RString::GetString();
 
@@ -66,6 +87,6 @@ RString& RObjG::GetName(void) const
 
 
 //-----------------------------------------------------------------------------
-RObjG::~RObjG(void)
+RGGA::RObjG::~RObjG(void)
 {
 }

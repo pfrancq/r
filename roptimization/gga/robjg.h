@@ -87,6 +87,21 @@ public:
 	RObjG(const RObjG* obj);
 
 	/**
+	* Comparaison function
+	*/
+	int Compare(const unsigned int &id) const;
+	
+	/**
+	* Comparaison function
+	*/
+	int Compare(const RObjG& obj) const;
+	
+	/**
+	* Comparaison function
+	*/
+	int Compare(const RObjG* obj) const;
+
+	/**
 	* Return the identificator of the object.
 	*/
 	unsigned int GetId(void) const {return(Id);}
