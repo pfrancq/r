@@ -47,6 +47,11 @@ namespace RGA{
 
 
 //-----------------------------------------------------------------------------
+// Forward declaration
+class RGeoInfo;
+
+
+//-----------------------------------------------------------------------------
 /**
 * \ingroup RGA
 * The RFreePolygons provides a representation for a container of polygons.
@@ -61,6 +66,19 @@ public:
 	* Construct the container.
 	*/
 	RFreePolygons(void);
+
+	/**
+	* Construct the container from another one.
+	*/
+	RFreePolygons(RFreePolygons *cont);
+
+	/**
+	* Calculate a position for the given geometric information.
+	* @param info	The object to place.
+	* @return	The function returns a valid position the object could be
+	*				placed.
+	*/
+	RPoint& CanPlace(RGeoInfo *info);
 
 	/**
 	* Derstruct the container.

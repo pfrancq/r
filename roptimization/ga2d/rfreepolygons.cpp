@@ -30,6 +30,7 @@
 
 //-----------------------------------------------------------------------------
 #include <rga/rfreepolygons.h>
+#include <rga/rgeoinfo.h>
 using namespace RGA;
 
 
@@ -44,6 +45,40 @@ using namespace RGA;
 RFreePolygons::RFreePolygons(void)
 	: RContainer<RFreePolygon,unsigned int,true,false>(30,15)
 {
+}
+
+
+//-----------------------------------------------------------------------------
+RFreePolygons::RFreePolygons(RFreePolygons *cont)
+	: RContainer<RFreePolygon,unsigned int,true,false>(cont)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RFreePolygons::CanPlace(RGeoInfo *info)
+{
+	char o;
+	unsigned int i;
+	RFreePolygon **tab;
+	RPoint* pt=RPoint::GetPoint();
+	RObj2D* obj=info->GetObj();
+	
+  	for(i=NbPtr+1,tab=Tab;--i;tab++)	
+	{	
+		for(o=0;o<obj->NbPossOri;o++)
+   	{
+	   	info->SetOri(o);   		
+   		if((*tab)->CanContain(info))
+   		{
+   			(*pt)=(*tab)->GetPos();
+   			DeletePtr(*tab);
+   			return(*pt);
+   		}
+   	}
+	}
+	pt->Set(MaxCoord,MaxCoord);
+	return(*pt);
 }
 
 
