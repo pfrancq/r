@@ -92,6 +92,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 }
 
 
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RStd::RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RDebug *debug) throw(bad_alloc)
+		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
+		  Heuristic(h), Objs(0)
+{
+	Objs=new RStd::RCursor<cObj,unsigned int>();
+	Objs->Set(objs);
+	MaxGroups=Objs->GetNb()/2;
+}
+
+
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(cGroupData* gdata) throw(bad_alloc)
