@@ -78,84 +78,92 @@ protected:
 	*/
 	bool LevelOutput[50];
 
+	/**
+	* Name of the application to debug.
+	*/
+	RString App;
+
+	/**
+	* Name of the person which is generating the debug.
+	*/
+	RString Author;
+
 public:
 
 	/**
 	* Construct a debugger output.
+	* @param app            The name of the application.
+	* @param author         The auhtor of the application.
 	*/
-	RDebug(void);
+	RDebug(const char* app,const char* author);
 
 	/**
 	* Begin a Tag with attributes. The attributes are added after.
 	* @param Text           The name of the Tag.
 	* @param NbAttr         The number of attributes.
 	*/
-	void BeginTag(const char *Text,unsigned NbAttr=0,...);
+	void BeginTag(const char* Text,unsigned NbAttr=0,...);
 
 	/**
 	* Print some Text in the current tag.
 	*/
-	void PrintComment(const char *Text);
+	void PrintComment(const char* Text);
 
 	/**
 	* End a Tag.
 	*/
-	void EndTag(const char *Text);
+	void EndTag(const char* Text);
 
 	/**
 	* Print an Info Tag.
 	*/
-	void PrintInfo(const char *Text);
+	void PrintInfo(const char* Text);
 
 	/**
 	* Begin a member function tag.
 	* @param Name           The name of the member function.
 	* @param Object         The name of the object.
 	*/
-	void BeginFunc(const char *Name,const char *Object);
+	void BeginFunc(const char* Name,const char* Object);
 
 	/**
 	* End a member function tag.
 	* @param Name           The name of the member function.
 	* @param Object         The name of the object.
 	*/
-	void EndFunc(const char *Name,const char *Object);
+	void EndFunc(const char* Name,const char* Object);
 
 	/**
 	* Begin an application tag.
-	* @param App            The name of the application.
-	* @param Author         The auhtor of the application.
 	*/
-	void BeginApp(const char *App,const char *Author);
+	void BeginApp(void);
 
 	/**
 	* End an application tag.
-	* @param App            The name of the application.
-	* @param Author         The auhtor of the application.
 	*/
-	void EndApp(const char *App,const char *Author);
+	void EndApp(void);
 
 protected:
 
 	/**
 	* Add an attribute to buf.
 	*/
-	void AddAttribute(const char *Value,const char *Att);
+	void AddAttribute(const char* Value,const char* Att);
 
 	/**
 	* Begin to write a Tag. This function must be implement.
 	*/
-	virtual void WriteBeginTag(const char *tag,const char* options=0)=0;
+	virtual void WriteBeginTag(const char* tag,const char* options=0)=0;
 
 	/**
 	* Write Text associate with current tag. This function must be implement.
 	*/
-	virtual void WriteText(const char *text)=0;
+	virtual void WriteText(const char* text)=0;
 
 	/**
 	* End to write a Tag. This function must be implement.
 	*/
-	virtual void WriteEndTag(const char *tag)=0;
+	virtual void WriteEndTag(const char* tag)=0;
 
 public:
 
@@ -205,8 +213,10 @@ public:
 	/**
 	* Construct the debug file.
 	* @param name           The name of the file.
+	* @param app            The name of the application.
+	* @param author         The auhtor of the application.
 	*/
-	RDebugXML(const RString &name) throw(bad_alloc);	
+	RDebugXML(const RString &name,const char* app,const char* author) throw(bad_alloc);	
 
 protected:
 

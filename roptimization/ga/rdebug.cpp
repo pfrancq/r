@@ -62,13 +62,14 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGA::RDebug::RDebug(void) : Deep(-1)
+RGA::RDebug::RDebug(const char* app,const char* author)
+	: Deep(-1), App(app), Author(author)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-void RGA::RDebug::BeginTag(const char *Text,unsigned NbAttr,...)
+void RGA::RDebug::BeginTag(const char* Text,unsigned NbAttr,...)
 {
 	va_list ap;
 
@@ -84,7 +85,7 @@ void RGA::RDebug::BeginTag(const char *Text,unsigned NbAttr,...)
 
 
 //-----------------------------------------------------------------------------
-void RGA::RDebug::AddAttribute(const char *Value,const char *Attr)
+void RGA::RDebug::AddAttribute(const char* Value,const char* Attr)
 {
 	if(NbOptions++)
 		strcat(tmpOpt," ");
@@ -96,7 +97,7 @@ void RGA::RDebug::AddAttribute(const char *Value,const char *Attr)
 
 
 //-----------------------------------------------------------------------------
-void RGA::RDebug::PrintComment(const char *Text)
+void RGA::RDebug::PrintComment(const char* Text)
 {
 	LevelOutput[Deep]=true;	
 	WriteText(Text);
@@ -104,7 +105,7 @@ void RGA::RDebug::PrintComment(const char *Text)
 
 
 //-----------------------------------------------------------------------------
-void RGA::RDebug::EndTag(const char *Text)
+void RGA::RDebug::EndTag(const char* Text)
 {
 	if(!LevelOutput[Deep])
 		WriteText("No Special Information");
@@ -115,7 +116,7 @@ void RGA::RDebug::EndTag(const char *Text)
 
 
 //-----------------------------------------------------------------------------
-void RGA::RDebug::PrintInfo(const char *Text)
+void RGA::RDebug::PrintInfo(const char* Text)
 {
 	BeginTag("Info");
 	PrintComment(Text);
@@ -124,21 +125,21 @@ void RGA::RDebug::PrintInfo(const char *Text)
 
 
 //-----------------------------------------------------------------------------
-void RGA::RDebug::BeginFunc(const char *Name,const char *Object)
+void RGA::RDebug::BeginFunc(const char* Name,const char* Object)
 {
 	BeginTag(Name,1,"Object",Object);
 }
 
 
 //-----------------------------------------------------------------------------
-void RGA::RDebug::EndFunc(const char *Name,const char *)
+void RGA::RDebug::EndFunc(const char* Name,const char*)
 {
 	EndTag(Name);
 }
 
                                
 //-----------------------------------------------------------------------------
-void RGA::RDebug::BeginApp(const char *App,const char *Author)
+void RGA::RDebug::BeginApp(void)
 {
 	time_t t;
 	char TempString[50];
@@ -146,12 +147,12 @@ void RGA::RDebug::BeginApp(const char *App,const char *Author)
 	time(&t);
 	strcpy(TempString,ctime(&t));
 	TempString[strlen(TempString)-1]=0;
-	BeginTag(App,2,"Author",Author,"Date",TempString);
+	BeginTag(App(),2,"Author",Author(),"Date",TempString);
 }
 
 
 //-----------------------------------------------------------------------------
-void RGA::RDebug::EndApp(const char *App,const char *)
+void RGA::RDebug::EndApp(void)
 {
 	EndTag(App);
 }
@@ -171,8 +172,8 @@ RGA::RDebug::~RDebug(void)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGA::RDebugXML::RDebugXML(const RString &name) throw(bad_alloc)
-	: RDebug(),Name(name)
+RGA::RDebugXML::RDebugXML(const RString &name,const char* app,const char* author) throw(bad_alloc)
+	: RDebug(app,author),Name(name)
 {
 	unsigned int i;
 	char *ptr;
