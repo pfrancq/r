@@ -56,6 +56,8 @@ namespace RGraphs{
 */
 class RGraph
 {
+public:
+
 	/**
 	* The vertices of the graph.
 	*/
@@ -66,10 +68,9 @@ class RGraph
 	*/
 	RContainer<REdge,unsigned int,true,false> Edges;
 
-public:
 	/**
 	* Constructor of the graph.
-	* @param nb		Number of edges.
+	* @param nb	            Number of edges.
 	*/
 	RGraph(unsigned int nb);
 
@@ -86,22 +87,30 @@ public:
 
 	/**
 	* Create a vertex with a given identificator.
-	* @param id		Identficator.
+	* @param id             Identficator.
 	* @returns Pointer to the new created vertex.
 	*/
 	RVertex* CreateVertex(const unsigned int id);
 
 	/**
+	* Get the vertex with a given identificator. If the vertex doesn't exist,
+	* it's created.
+	* @param id             Identficator.
+	* @returns Pointer to the vertex.
+	*/
+	RVertex* GetVertex(const unsigned int id);
+
+	/**
 	* Create an edge.
-	* @param v1		First Vertex.
-	* @param v2		First Vertex.
-	* @param w		Weight.
+	* @param v1             First Vertex.
+	* @param v2             First Vertex.
+	* @param w              Weight.
 	*/
 	REdge* CreateEdge(RVertex* v1,RVertex* v2,double w);
 
 	/**
 	* Compute the minimum spanning trees using the Prim's algorithm.
-	* @param g		The graph that will hold the result.
+	* @param g              The graph that will hold the result.
 	*/
 	void MinSpanningTree(RGraph* g);
 	

@@ -183,7 +183,7 @@ RPromSol* RPromethee::RPromKernel::GetBestSol(void)
 {
 	RPromSol *best,**sol;
 	unsigned int i;
-	
+
 	best=(*Solutions.Tab);
 	for(i=Solutions.NbPtr,sol=&Solutions.Tab[1];--i;sol++)
 		if(best->Fi<(*sol)->Fi)
@@ -198,7 +198,7 @@ int RPromethee::RPromKernel::sort_function_solutions( const void *a, const void 
 	RPromSol* as=(*(static_cast<RPromSol**>(a)));
 	RPromSol* bs=(*(static_cast<RPromSol**>(b)));
 	double d;
-	
+
 	d=bs->Fi-as->Fi;
 	if(d<=0.000001) return(0);
 	if(d<0)

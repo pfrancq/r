@@ -76,16 +76,16 @@ class RPromKernel
 	* Define if a normalisation of the values for the different criteria must be
 	* done.
 	*/
-   bool Normalize;
+	bool Normalize;
 
 public:
 
 	/**
 	* Construct the kernel.
-	* @param name			The name of the kernel.
-	* @param sol			Number of solutions.
-	* @param crit			Number of criteria.
-	* @param norm			Normlisation activ.
+	* @param name           The name of the kernel.
+	* @param sol            Number of solutions.
+	* @param crit           Number of criteria.
+	* @param norm           Normlisation activ.
 	*/
 	RPromKernel(const RString& name,const unsigned int sol,const unsigned int crit,const bool norm=true);
 
@@ -101,118 +101,114 @@ public:
 
 	/**
 	* Create a new criterion.
-	* @param type	Type of the criterion.
-	* @param p		Indifference's threshold.
-	* @param q		Preference's threshold.
-	* @param w		Weight of the criterion.
+	* @param type           Type of the criterion.
+	* @param p              Indifference's threshold.
+	* @param q              Preference's threshold.
+	* @param w              Weight of the criterion.
 	*/
 	virtual RPromCriterion* NewCriterion(const CriteriaType t,const double p,const double q,const double w) throw(bad_alloc);
-	
+
 	/**
 	* Create a new criterion.
-	* @param type		Type of the criterion.
-	* @param params		Parameters.
+	* @param type           Type of the criterion.
+	* @param params         Parameters.
 	*/
 	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RPromCriterionParams& params) throw(bad_alloc);
-	
+
 	/**
 	* Create a new criterion.
-	* @param type	Type of the criterion.
-	* @param name	Name of the criterion.
-	* @param p		Indifference's threshold.
-	* @param q		Preference's threshold.
-	* @param w		Weight of the criterion.
+	* @param type           Type of the criterion.
+	* @param name           Name of the criterion.
+	* @param p              Indifference's threshold.
+	* @param q              Preference's threshold.
+	* @param w              Weight of the criterion.
 	*/
 	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RString& name,const double p,
-			const double q,const double w) throw(bad_alloc);
-	
+	const double q,const double w) throw(bad_alloc);
+
 	/**
 	* Create a new criterion.
-	* @param type		Type of the criterion.
-	* @param name		Name of the criterion.	
-	* @param params		Parameters.
+	* @param type           Type of the criterion.
+	* @param name           Name of the criterion.	
+	* @param params         Parameters.
 	*/
 	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RString& name,
-			const RPromCriterionParams& params) throw(bad_alloc);
-		
+		const RPromCriterionParams& params) throw(bad_alloc);
+
 	/**
 	* Create a new solution.
 	*/
 	virtual RPromSol* NewSol(void) throw(bad_alloc);
-	
+
 	/**
 	* Create a new solution.
-	* @param name		Name of the solution.	
+	* @param name           Name of the solution.	
 	*/
 	virtual RPromSol* NewSol(const RString& name) throw(bad_alloc);
-	
+
 	/**
 	* Assign a value to a criterion.
-	* @param sol	Pointer to the solution.
-	* @param crit	Pointer to the criterion.
-	* @param v		Value.
+	* @param sol            Pointer to the solution.
+	* @param crit           Pointer to the criterion.
+	* @param v              Value.
 	*/
 	virtual void Assign(RPromSol *sol,RPromCriterion *crit,const double v) throw(bad_alloc);
 	
 	/**
 	* Assign a value to a criterion.
-	* @param sol	Name of to the solution.
-	* @param crit	Pointer to the criterion.
-	* @param v		Value.
+	* @param sol            Name of to the solution.
+	* @param crit           Pointer to the criterion.
+	* @param v              Value.
 	*/
 	virtual void Assign(const RString& sol,RPromCriterion *crit,const double v) throw(bad_alloc);
-	
+
 	/**
 	* Assign a value to a criterion.
-	* @param sol	Pointer to the solution.
-	* @param crit	name of the criterion.
-	* @param v		Value.
+	* @param sol            Pointer to the solution.
+	* @param crit           Name of the criterion.
+	* @param v              Value.
 	*/
 	virtual void Assign(RPromSol *sol,const RString& crit,const double v) throw(bad_alloc);
-	
+
 	/**
 	* Assign a value to a criterion.
-	* @param sol	name of the solution.
-	* @param crit	name of the criterion.
-	* @param v		Value.
+	* @param sol            Name of the solution.
+	* @param crit           Name of the criterion.
+	* @param v              Value.
 	*/
 	virtual void Assign(const RString& sol,const RString& crit,const double v) throw(bad_alloc);
-	
+
 	/**
 	* Return the best solution.
 	*/
 	RPromSol* GetBestSol(void);
-	
+
 	/**
 	* Function used to sort the solutions by fit.
 	*/
 	static int sort_function_solutions( const void *a, const void *b);	
-	
+
 	/**
 	* Return the solutions order by fit increase.
 	*/
 	RPromSol** GetSols(void);
 
 	/**
-	* Return the solutions order by fit increase.
-	*/
-	RContainer<RPromSol,unsigned int,false,false>* GetContSols(void);
-
-	/**
 	* Return the best solution identifier.
 	*/
 	unsigned int GetBestSolId(void) {return(GetBestSol()->Id);}
-	
+
 	/**
 	* Clear the kernel.
 	*/
 	void Clear(void);
 
-   /**
+	/**
 	* Destruct the kernel.
 	*/
 	virtual ~RPromKernel(void);
-	
+
+	// friend classes
 	friend RPromCriterion;
 };
 

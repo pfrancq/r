@@ -54,6 +54,8 @@ class RVertex;
 */
 class REdge
 {
+public:
+
 	/**
 	* First vertex that the edge connect.
 	*/
@@ -69,8 +71,6 @@ class REdge
 	*/
 	double Weight;
 
-public:
-
 	/**
 	* Constructor of the edge.
 	*/
@@ -78,23 +78,23 @@ public:
 
 	/**
 	* Constructor of the edge.
-	* @param _v1		First Vertex.
-	* @param _v2		First Vertex.
-	* @param w			Weight
+	* @param _v1            First Vertex.
+	* @param _v2            First Vertex.
+	* @param w              Weight
 	*/
 	REdge(RVertex* _v1,RVertex* _v2,double w);
 
 	/**
 	* Is used to compare two edges. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param e		Edge used for the comparaison.
+	* @param e              Edge used for the comparaison.
 	*/
 	int Compare(const REdge& e) {return(this!=&e);}
 
 	/**
 	* Is used to compare two edges. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param e		Edge used for the comparaison.	
+	* @param e              Edge used for the comparaison.	
 	*/
 	int Compare(const REdge* e) {return(this!=e);}
 

@@ -66,7 +66,7 @@ RPromCriterionParams& RPromethee::RPromCriterionParams::operator=(const RPromCri
 	Weight=params.Weight;
 	return(*this);
 }
-	
+
 
 
 //-----------------------------------------------------------------------------
@@ -88,8 +88,7 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const double 
 	else
 	{
 		P=p;
-		Q=q;	
-
+		Q=q;
 	}
 }
 
@@ -107,8 +106,7 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCr
 	else
 	{
 		P=params.P;
-		Q=params.Q;	
-
+		Q=params.Q;
 	}
 }
 
@@ -127,8 +125,7 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const double 
 	else
 	{
 		P=p;
-		Q=q;	
-
+		Q=q;
 	}
 }
 
@@ -147,8 +144,7 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCr
 	else
 	{
 		P=params.P;
-		Q=params.Q;	
-
+		Q=params.Q;
 	}
 }
 
@@ -164,8 +160,7 @@ void RPromethee::RPromCriterion::SetParams(const RPromCriterionParams& params)
 	else
 	{
 		P=params.P;
-		Q=params.Q;	
-
+		Q=params.Q;
 	}
 	Weight=params.Weight;
 }
@@ -207,9 +202,9 @@ void RPromethee::RPromCriterion::Normalize(void)
 			max=(*ptr)->Value;
 		if(min>(*ptr)->Value)
 			min=(*ptr)->Value;
-   }
+	}
+	diff=max-min;
 
-	diff=max-min;	
 	// Normalize
 	if(diff)
 	{
@@ -236,7 +231,7 @@ double RPromethee::RPromCriterion::ComputePref(const double u,const double v)
 			}
 			if(d<=Q)
 				y=0.0;
-			else			
+			else
 			{
 				if(d>P)
 					y=1.0;
@@ -281,8 +276,8 @@ void RPromethee::RPromCriterion::ComputeFiCrit(RPromKernel *kern)
 	// Init all value to 0
 	for(a=NbPtr+1,ptr=Tab;--a;ptr++)
 		(*ptr)->FiCrit=0.0;
-		
-	// Calculation of Fi Crit		
+
+	// Calculation of Fi Crit
 	for(a=NbPtr+1,ptr=Tab,sol=kern->Solutions.Tab;--a;ptr++,sol++)
 	{
 		for(b=NbPtr+1,ptr1=Tab,sol1=kern->Solutions.Tab;--b;ptr1++,sol1++)

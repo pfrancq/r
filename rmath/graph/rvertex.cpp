@@ -65,6 +65,13 @@ RGraphs::RVertex::RVertex(const RVertex& v)
 
 
 //-----------------------------------------------------------------------------
+RGraphs::RVertex::RVertex(const VertexStruct& s)
+	: Id(s.id), Index(s.idx), Edges(s.nb,s.nb/2)
+{
+}
+
+
+//-----------------------------------------------------------------------------
 RGraphs::RVertex::~RVertex(void)
 {
 }

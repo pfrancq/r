@@ -60,10 +60,10 @@ class RPromCritValue
 	* The Fi crit used by Prométhée.
 	*/
 	double FiCrit;
-	
+
 protected:
-	
-   /**
+
+	/**
 	* The value of the solution/criterion.
 	*/
 	double Value;
@@ -77,7 +77,7 @@ public:
 
 	/**
 	* Construct a value for a solution.
-	* @param value		The value for the solution/criterion.
+	* @param value          The value for the solution/criterion.
 	*/
 	RPromCritValue(double value);
 

@@ -67,7 +67,7 @@ void RGraphs::RGraph::Clear(void)
 RVertex* RGraphs::RGraph::CreateVertex(void)
 {
 	RVertex *ptr;
-	
+
 	Vertices.InsertPtr(ptr=new RVertex(Vertices.NbPtr,Vertices.NbPtr,Vertices.MaxPtr));
 	return(ptr);
 }
@@ -77,8 +77,22 @@ RVertex* RGraphs::RGraph::CreateVertex(void)
 RVertex* RGraphs::RGraph::CreateVertex(const unsigned int id)
 {
 	RVertex *ptr;
-	
+
 	Vertices.InsertPtr(ptr=new RVertex(id,Vertices.NbPtr,Vertices.MaxPtr));
+	return(ptr);
+}
+
+
+//-----------------------------------------------------------------------------
+RVertex* RGraphs::RGraph::GetVertex(const unsigned int id)
+{
+	RVertex *ptr;
+	RVertex::VertexStruct s;
+
+	s.id=id;
+	s.idx=Vertices.NbPtr;
+	s.nb=Vertices.NbPtr;
+	ptr=Vertices.GetInsertPtr<RVertex::VertexStruct>(s);
 	return(ptr);
 }
 
@@ -87,7 +101,7 @@ RVertex* RGraphs::RGraph::CreateVertex(const unsigned int id)
 REdge* RGraphs::RGraph::CreateEdge(RVertex* v1,RVertex* v2,double w)
 {
 	REdge *ptr;
-	
+
 	Edges.InsertPtr(ptr=new REdge(v1,v2,w));
 	v1->Edges.InsertPtr(ptr);
 	v2->Edges.InsertPtr(ptr);	

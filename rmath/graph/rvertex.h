@@ -55,6 +55,16 @@ namespace RGraphs{
 */
 class RVertex
 {
+public:
+
+	struct VertexStruct
+	{
+		unsigned int id;
+		unsigned int idx;
+		unsigned int nb;
+	};
+
+
 	/**
 	* Identificator of the vertex.
 	*/
@@ -70,39 +80,42 @@ class RVertex
 	*/
 	RContainer<REdge,unsigned int,false,false> Edges;
 
-public:
-
 	/**
 	* Constructor of the vertex.
-	* @param id		Identificator.
-	* @param idx	Index.
-	* @param nb		Number of edges.
+	* @param id             Identificator.
+	* @param idx            Index.
+	* @param nb             Number of edges.
 	*/
 	RVertex(const unsigned int id,const unsigned int idx,const unsigned int nb);
 
 	/**
 	* Copy constructor.
-	* @param v		Vertex used.
+	* @param v              Vertex used.
 	*/
 	RVertex(const RVertex* v);
 
 	/**
 	* Copy constructor.
-	* @param v		Vertex used.
+	* @param v              Vertex used.
 	*/
 	RVertex(const RVertex& v);
 
 	/**
+	* Construct a vertex from a structure.
+	*/
+	RVertex(const VertexStruct& s);
+
+	/**
 	* Is used to compare two vertices. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param e		Edge used for the comparaison.
+	* @param e              Edge used for the comparaison.
 	*/
 	int Compare(const RVertex& v) {return(this!=&v);}
 
 	/**
 	* Is used to compare two vertices. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param e		Edge used for the comparaison.	
+	* @param e              Edge used for the comparaison.	
 	*/
 	int Compare(const RVertex* v) {return(this!=v);}
 	
@@ -110,9 +123,17 @@ public:
 	* Is used to compare a vertex and an identificator. The function returns
 	* the same type of information than the strcmp function from the standard
 	* C library.
-	* @param i		Identificator used for the comparaison.
+	* @param i              Identificator used for the comparaison.
 	*/
 	int Compare(const unsigned int i) {return(Id-i);}
+
+	/**
+	* Is used to compare a vertex and a structure. The function returns
+	* the same type of information than the strcmp function from the standard
+	* C library.
+	* @param s              Structure used for the comparaison.
+	*/
+	int Compare(const VertexStruct& s) {return(Id-s.id);}
 
 	/**
 	* Destructor of the vertex.

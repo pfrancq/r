@@ -59,7 +59,6 @@ namespace RPromethee{
 */
 class RPromCriterionParams
 {
-
 public:
 
 	/**
@@ -71,17 +70,17 @@ public:
 	* Value for the indifference's threshold of the Prométhée method.
 	*/
 	double Q;
-	
+
 	/**
 	* Weight of this criterion.
 	*/
 	double Weight;
-	
+
 	/**
 	* Return a pointer to a temporary object of class point.
 	*/
 	static RPromCriterionParams* GetParams(void);
-	
+
 	/**
 	* Assignment operator.
 	*/
@@ -98,7 +97,6 @@ public:
 */
 class RPromCriterion : protected RContainer<RPromCritValue,unsigned int,false,false>
 {
-
 	/**
 	* The identifier of the criterion.
 	*/
@@ -112,7 +110,7 @@ class RPromCriterion : protected RContainer<RPromCritValue,unsigned int,false,fa
 	/**
 	* The type of criteria.
 	*/
-   	CriteriaType Type;
+	CriteriaType Type;
 
 	/**
 	* Value for the preference's threshold of the Prométhée method.
@@ -123,7 +121,7 @@ class RPromCriterion : protected RContainer<RPromCritValue,unsigned int,false,fa
 	* Value for the indifference's threshold of the Prométhée method.
 	*/
 	double Q;
-	
+
 	/**
 	* Weight of this criterion.
 	*/
@@ -133,103 +131,98 @@ public:
 	
 	/**
 	* Construct a criterion.
-	* @param type	Type of the criterion.
-	* @param p		Preference's threshold.
-	* @param q		Indifference's threshold.
-	* @param w		Weight of the criterion.
-	* @param id		Identifier of the criterion.
-	* @param nb		Number of solution.
+	* @param type           Type of the criterion.
+	* @param p              Preference's threshold.
+	* @param q              Indifference's threshold.
+	* @param w              Weight of the criterion.
+	* @param id             Identifier of the criterion.
+	* @param nb             Number of solution.
 	*/
 	RPromCriterion(const CriteriaType type,const double p,const double q,const double w,const unsigned int id,const unsigned int nb=30);
-	
+
 	/**
 	* Construct a criterion.
-	* @param type		Type of the criterion.
-	* @param params		Parameters.
-	* @param id			Identifier of the criterion.
-	* @param nb			Number of solution.
+	* @param type           Type of the criterion.
+	* @param params         Parameters.
+	* @param id             Identifier of the criterion.
+	* @param nb             Number of solution.
 	*/
 	RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,const unsigned int id,const unsigned int nb=30);
-	
+
 	/**
 	* Construct a criterion.
-	* @param type		Type of the criterion.
-	* @param p			Preference's threshold.
-	* @param q			Indifference's threshold.
-	* @param w			Weight of the criterion.
-	* @param id			Identifier of the criterion.
-	* @param name		Name of the criterion.
-	* @param nb			Number of solution.
+	* @param type           Type of the criterion.
+	* @param p              Preference's threshold.
+	* @param q              Indifference's threshold.
+	* @param w              Weight of the criterion.
+	* @param id             Identifier of the criterion.
+	* @param name           Name of the criterion.
+	* @param nb             Number of solution.
 	*/
 	RPromCriterion(const CriteriaType type,const double p,const double q,const double w,const unsigned int id,
-				const RString& name,const unsigned int nb=30);
-	
+		const RString& name,const unsigned int nb=30);
+
 	/**
 	* Construct a criterion.
-	* @param type		Type of the criterion.
-	* @param params		Parameters.
-	* @param id			Identifier of the criterion.
-	* @param name		Name of the criterion.	
-	* @param nb			Number of solution.
+	* @param type           Type of the criterion.
+	* @param params         Parameters.
+	* @param id             Identifier of the criterion.
+	* @param name           Name of the criterion.
+	* @param nb             Number of solution.
 	*/
 	RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,const unsigned int id,
-				const RString& name,const unsigned int nb=30);
-	
+		const RString& name,const unsigned int nb=30);
+
 	/**
 	* Compare the identifier of two criteria.
-	* @param crit		The criterion used for the comparaison.
-	* @return	The function returns -1,0,+1 depends if the identifier of the
-	*				current criteria is less, equal or greater than the one given as
-	*				parameter.
+	* @param crit           The criterion used for the comparaison.
+	* @return The function returns -1,0,+1 depends if the identifier of the
+	* current criteria is less, equal or greater than the one given as parameter.
 	*/
 	int Compare(const RPromCriterion& crit) { return(Id-crit.Id);}
 
 	/**
 	* Compare the identifier of two criteria.
-	* @param crit		The criterion used for the comparaison.
-	* @return	The function returns -1,0,+1 depends if the identifier of the
-	*				current criteria is less, equal or greater than the one given as
-	*				parameter.
+	* @param crit           The criterion used for the comparaison.
+	* @return The function returns -1,0,+1 depends if the identifier of the
+	* current criteria is less, equal or greater than the one given as parameter.
 	*/
 	int Compare(const RPromCriterion* crit) { return(Id-crit->Id);}
 
 	/**
 	* Compare the identifier of the criterion with a parameter.
-	* @param id		The identifier used for the comparaison.
-	* @return	The function returns -1,0,+1 depends if the identifier of the
-	*				current criteria is less, equal or greater than the one given as
-	*				parameter.
+	* @param id             The identifier used for the comparaison.
+	* @returnThe function returns -1,0,+1 depends if the identifier of the
+	* current criteria is less, equal or greater than the one given as parameter.
 	*/
 	int Compare(const unsigned int id) { return(Id-id);}
-	
+
 	/**
 	* Compare the name of the criterion with a string.
-	* @param name		The string used for the comparaison.
-	* @return	The function returns -1,0,+1 depends if the identifier of the
-	*				current criteria is less, equal or greater than the one given as
-	*				parameter.
+	* @param name           The string used for the comparaison.
+	* @return The function returns -1,0,+1 depends if the identifier of the
+	* current criteria is less, equal or greater than the one given as parameter.
 	*/
 	int Compare(const RString& name) { return(Name.Compare(name));}
-	
+
 	/**
 	* Compare the name of the criterion with a string.
-	* @param name		The string used for the comparaison.
-	* @return	The function returns -1,0,+1 depends if the identifier of the
-	*				current criteria is less, equal or greater than the one given as
-	*				parameter.
+	* @param name           The string used for the comparaison.
+	* @return The function returns -1,0,+1 depends if the identifier of the
+	* current criteria is less, equal or greater than the one given as parameter.
 	*/
 	int Compare(const char* name) { return(Name.Compare(name));}
-	
+
 	/**
 	* Set the preference's threshold.
 	*/
 	void SetP(double p) {P=p;}
-	
+
 	/**
 	* Get the preference's threshold.
 	*/
 	double GetP(void) {return(P);}	
-	
+
 	/**
 	* Set the indifference's threshold.
 	*/
@@ -244,7 +237,7 @@ public:
 	* Set the parameters.
 	*/
 	void SetParams(const RPromCriterionParams& params);
-	
+
 	/**
 	* Get the parameters.
 	*/
@@ -254,12 +247,12 @@ public:
 	* Set the weight.
 	*/
 	void SetWeight(double w) {Weight=w;}
-	
+
 	/**
 	* Get the weight.
 	*/
 	double GetWeight(void) {return(Weight);}	
-	
+
 	/**
 	* Normalize the values for the solution.
 	*/
@@ -267,9 +260,9 @@ public:
 
 	/**
 	* Compare two values representing two different solutions.
-	* @param u		Value of the first solution.
-	* @param v		Value of the second solution.
-	* @return	The result of the preference function defined.
+	* @param u              Value of the first solution.
+	* @param v              Value of the second solution.
+	* @return The result of the preference function defined.
 	*/
 	double ComputePref(const double u,const double v);
 
