@@ -48,7 +48,8 @@ using namespace RGA2D;
 RGA2D::RGeoInfoConnector::RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner)
 	: Con(con), Owner(owner)
 {
-	Pos=0;
+	Pos=new RPoint[con->NbPos];
+	NbPos=con->NbPos;
 }
 
 
@@ -56,9 +57,20 @@ RGA2D::RGeoInfoConnector::RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner
 RGA2D::RGeoInfoConnector::RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner,const RPoint& pos)
 	: Con(con), Owner(owner)
 {
-	Pos=new RPoint[1];
+	Pos=new RPoint[con->NbPos];
 	Pos[0]=pos;
+	NbPos=0;
+}
 
+
+//-----------------------------------------------------------------------------
+RGA2D::RGeoInfoConnector::RGeoInfoConnector(RGeoInfoConnector *con,RGeoInfo* owner)
+	: Con(con->Con), Owner(owner)
+{
+	Pos=new RPoint[con->NbPos];
+	NbPos=con->NbPos;
+	for(unsigned int i=0;i<NbPos;i++)
+		Pos[i]=con->Pos[i];
 }
 
 
@@ -82,7 +94,7 @@ RPoint& RGA2D::RGeoInfoConnector::GetPos(void)
 //-----------------------------------------------------------------------------	
 RGA2D::RGeoInfo::RGeoInfo(void)
 	: Obj(0), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(0),
-		Rects(0), Connectors(10,5)
+		Rects(0), Order(NoObject), Connectors(10,5)
 {
 }
 
@@ -90,7 +102,7 @@ RGA2D::RGeoInfo::RGeoInfo(void)
 //-----------------------------------------------------------------------------
 RGA2D::RGeoInfo::RGeoInfo(RPolygon* poly)
 	: Obj(0), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(poly),
-		Rects(0), Connectors(10,5)
+		Rects(0), Order(NoObject), Connectors(10,5)
 {
 }
 
@@ -98,7 +110,7 @@ RGA2D::RGeoInfo::RGeoInfo(RPolygon* poly)
 //-----------------------------------------------------------------------------
 RGA2D::RGeoInfo::RGeoInfo(RObj2D *obj)
 	: Obj(obj), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(0),
-		Rects(0), Connectors(10,5)
+		Rects(0), Order(NoObject), Connectors(10,5)
 {
 	for(obj->Connectors.Start();!obj->Connectors.End();obj->Connectors.Next())
 		Connectors.InsertPtr(new RGeoInfoConnector(obj->Connectors(),this));
@@ -117,8 +129,9 @@ RGA2D::RGeoInfo::RGeoInfo(RGeoInfo& info)
 	Rects=info.Rects;
 	Rect=info.Rect;
 	Selected=info.Selected;
+	Order=info.Order;
 	for(info.Connectors.Start();!info.Connectors.End();info.Connectors.Next())
-		Connectors.InsertPtr(new RGeoInfoConnector(info.Connectors()->Con,this,info.Connectors()->Pos));	
+		Connectors.InsertPtr(new RGeoInfoConnector(info.Connectors(),this));
 }
 
 
@@ -134,8 +147,9 @@ RGA2D::RGeoInfo::RGeoInfo(RGeoInfo *info)
 	Rects=info->Rects;
 	Rect=info->Rect;
 	Selected=info->Selected;
+	Order=info->Order;
 	for(info->Connectors.Start();!info->Connectors.End();info->Connectors.Next())
-		Connectors.InsertPtr(new RGeoInfoConnector(info->Connectors()->Con,this,info->Connectors()->Pos));	
+		Connectors.InsertPtr(new RGeoInfoConnector(info->Connectors(),this));
 }
 
 
@@ -147,6 +161,7 @@ void RGA2D::RGeoInfo::Clear(void)
 	Bound=0;
 	Rects=0;	
 	Ori=-1;
+	Order=NoObject;
 }
 
 
@@ -158,7 +173,12 @@ void RGA2D::RGeoInfo::SetOri(char i)
 	Rects=Obj->GetRects(i);
 	Bound->Boundary(Rect);
 	for(Connectors.Start(),Obj->Connectors.Start();!Connectors.End();Connectors.Next(),Obj->Connectors.Next())
-		Connectors()->Pos[0]=Obj->Connectors()->GetPos(i);
+	{
+		for(unsigned j=0;j<Obj->Connectors()->NbPos;j++)
+		{
+			Connectors()->Pos[j]=Obj->Connectors()->GetPos(j,i);
+		}
+	}
 }
 
 
@@ -195,19 +215,13 @@ void RGA2D::RGeoInfo::Assign(const RPoint &pos,RGrid *grid)
 
 
 //-----------------------------------------------------------------------------
-bool RGA2D::RGeoInfo::Test(RPoint &pos,RPoint &limits,RGrid *grid)
+bool RGA2D::RGeoInfo::Test(RPoint &pos,RGrid *grid)
 {
 	RRect Test;
 	RPoint *start,*end;
 	unsigned int nbpts;
 	RDirection FromDir;
 	RCoord X,Y;
-
-	// Test % limits
-	if((pos.X<0)||(pos.Y<0)) return(false);
-	Test=Rect;
-	Test+=pos;
-	if(Test.Clip(limits)) return(false);	
 
 	// Test it and go through the other
 	start=Bound->GetBottomLeft();
@@ -220,13 +234,14 @@ bool RGA2D::RGeoInfo::Test(RPoint &pos,RPoint &limits,RGrid *grid)
 	// Test it and go through the other
 	while(nbpts)
 	{
-		if(grid->IsOcc(X,Y)) return(false);
+		if(grid->IsOcc(X,Y))
+			return(false);
 
 		// If end of an edge
 		if((X==end->X+pos.X)&&(Y==end->Y+pos.Y))
 		{
 			start=end;
-			nbpts--;			// Next point
+			nbpts--;        // Next point
 			X=start->X+pos.X;
 			Y=start->Y+pos.Y;
 			if((FromDir==Left)||(FromDir==Right))
@@ -257,26 +272,25 @@ void RGA2D::RGeoInfo::PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid)
 	{
 		change=false;
 
-   	// Push Bottom
-   	TestPos=pos;
-  		TestPos.Y--;
-   	while((TestPos.Y>=0)&&Test(TestPos,limits,grid))
-   	{
+		// Push Bottom
+		TestPos=pos;
+		TestPos.Y--;
+		while((TestPos.Y>=0)&&Test(TestPos,grid))
+		{
 			change=true;
-   		pos=TestPos;
-   		TestPos.Y--;
-   	}
+			pos=TestPos;
+			TestPos.Y--;
+		}
 
-   	// Push Left
-   	TestPos=pos;
-  		TestPos.X--;
-   	while((TestPos.X>=0)&&Test(TestPos,limits,grid))
-   	{
+		// Push Left
+		TestPos=pos;
+		TestPos.X--;
+		while((TestPos.X>=0)&&Test(TestPos,grid))
+		{
 			change=true;
-   		pos=TestPos;
-   		TestPos.X--;
-	  	}	
-
+			pos=TestPos;
+			TestPos.X--;
+		}
 	}
 }
 
@@ -297,28 +311,26 @@ void RGA2D::RGeoInfo::PushCenter(RPoint &pos,RPoint &limits,RGrid *grid)
 	{
 		change=false;
 
-   	// Push Bottom/Up
-   	TestPos=pos;
-   	if(PushBottom) TestPos.Y--; else TestPos.Y++;
-   	while((TestPos.Y!=Center.Y)&&Test(TestPos,limits,grid))
-   	{
-   		change=true;
-   		pos=TestPos;
-   		if(PushBottom) TestPos.Y--; else TestPos.Y++;
-   	}
+		// Push Bottom/Up
+		TestPos=pos;
+		if(PushBottom) TestPos.Y--; else TestPos.Y++;
+		while((TestPos.Y!=Center.Y)&&Test(TestPos,grid))
+		{
+			change=true;
+			pos=TestPos;
+			if(PushBottom) TestPos.Y--; else TestPos.Y++;
+		}
 
-   	// Push Left/Right
-   	TestPos=pos;
-   	if(PushLeft) TestPos.X--; else TestPos.X++;
-   	while((TestPos.X!=Center.X)&&Test(TestPos,limits,grid))
-   	{
-   		pos=TestPos;
-   		change=true;
-   		if(PushLeft) TestPos.X--; else TestPos.X++;
-   	}	
-
+		// Push Left/Right
+		TestPos=pos;
+		if(PushLeft) TestPos.X--; else TestPos.X++;
+		while((TestPos.X!=Center.X)&&Test(TestPos,grid))
+		{
+			pos=TestPos;
+			change=true;
+			if(PushLeft) TestPos.X--; else TestPos.X++;
+		}
 	}
-
 }
 
 
@@ -388,9 +400,10 @@ RGeoInfo& RGA2D::RGeoInfo::operator=(const RGeoInfo &info)
 	Obj=info.Obj;
 	Rects=info.Rects;
 	Rect=info.Rect;
+	Order=info.Order;
 	Connectors.Clear();
 	for(i=info.Connectors.NbPtr+1,tab=info.Connectors.Tab;--i;tab++)
-		Connectors.InsertPtr(new RGeoInfoConnector((*tab)->Con,this,(*tab)->Pos));		
+		Connectors.InsertPtr(new RGeoInfoConnector((*tab),this));
 	return(*this);
 }
 

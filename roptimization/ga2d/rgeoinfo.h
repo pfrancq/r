@@ -81,6 +81,8 @@ class RGeoInfoConnector
 	*/
 	RGeoInfo* Owner;
 
+public:
+
 	/**
 	* Number of position for the connector.
 	*/
@@ -91,15 +93,20 @@ class RGeoInfoConnector
 	*/
 	RPoint* Pos;
 
-public:
-
 	/**
 	* Constructor of the connector.
 	* @param con		"Real" Connector of this one.
 	* @param owner		Geometric Information of the connector.
 	*/	
 	RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner);
-	
+
+	/**
+	* Constructor of the connector.
+	* @param con		"Real" Connector of this one.
+	* @param owner		Geometric Information of the connector.
+	*/	
+	RGeoInfoConnector(RGeoInfoConnector *con,RGeoInfo* owner);
+
 	/**
 	* Constructor of the connector.
 	* @param con		"Real" Connector of this one.
@@ -188,6 +195,11 @@ class RGeoInfo
 	* Rectangle holding the polygon.
 	*/
 	RRect Rect;
+
+	/**
+	* Order of the geometric information.
+	*/
+	unsigned int Order;
 
 public:
 	
@@ -293,10 +305,9 @@ public:
 	* Test if the object can be placed at a specific position in regards of the
 	* occupation.
 	* @param pos				The position to test.
-	* @param limits    	The limits for the placement.
 	* @param grid				Grid.
 	*/
-	bool Test(RPoint &pos,RPoint &limits,RGrid *grid);
+	bool Test(RPoint &pos,RGrid *grid);
 
 	/**
 	* Calculate the position where the object represented can be placed, if it
@@ -422,7 +433,17 @@ public:
 	* Return the current connection.
 	*/
 	RConnection* GetCurrentCon(void);
-	
+
+	/**
+	* Set the order.
+	*/
+	void SetOrder(unsigned int o) {Order=o;}
+
+	/**
+	* Get the order.
+	*/
+	unsigned int GetOrder(void) {return(Order);}
+
 	// friend classes
 	friend class RGeoInfos;
 };
