@@ -86,7 +86,7 @@ protected:
 		CharBuffer(RChar* tab,unsigned int len,unsigned int maxlen)
 			: RSharedData(), Text(tab), Len(len), MaxLen(maxlen), Latin1(0) {}
 		void InvalidLatin1(void) {if(Latin1) {delete[] Latin1; Latin1=0;}}
-		void Verify(const unsigned int maxlen) throw(std::bad_alloc);
+		void Verify(const unsigned int maxlen);
 		~CharBuffer(void)
 			{if(Text) delete[] Text;
 			 if(Latin1) delete[] Latin1;}
@@ -112,43 +112,43 @@ public:
 	/**
 	* Construct a empty string.
 	*/
-	RString(void) throw(std::bad_alloc);
+	RString(void);
 
 	/**
 	* Construct a string from a "C string".
 	* @param text           The "C string" used as reference.
 	*/
-	RString(const char* text) throw(std::bad_alloc);
+	RString(const char* text);
 
 	/**
 	* Construct a string from a Unicode array.
 	* @param text           The array used as reference.
 	*/
-	RString(const RChar* text) throw(std::bad_alloc);
+	RString(const RChar* text);
 
 	/**
 	* Construct a string from a string.
 	* @param text           The string used as reference.
 	*/
-	RString(const std::string& text) throw(std::bad_alloc);
+	RString(const std::string& text);
 
 	/**
 	* Construct an empty string with a maximal size.
 	* @param maxlen         Initial maximal length of the string.
 	*/
-	RString(unsigned int maxlen) throw(std::bad_alloc);
+	RString(unsigned int maxlen);
 
 	/**
 	* Construct a string from another string.
 	* @param str            String used.
 	*/
-	RString(const RString& str) throw(std::bad_alloc);
+	RString(const RString& str);
 
 	/**
 	* Construct a string from another string.
 	* @param str            Pointer to the string.
 	*/
-	RString(const RString* str) throw(std::bad_alloc);
+	RString(const RString* str);
 
 private:
 
@@ -163,17 +163,17 @@ public:
 	/**
 	* Assignment operator using another string.
 	*/
-	RString& operator=(const RString& str) throw(std::bad_alloc);
+	RString& operator=(const RString& str);
 
 	/**
 	* Assignment operator using a "C string".
 	*/
-	RString& operator=(const char* text) throw(std::bad_alloc);
+	RString& operator=(const char* text);
 
 	/**
 	* Assignment operator using a string.
 	*/
-	RString& operator=(const std::string& text) throw(std::bad_alloc);
+	RString& operator=(const std::string& text);
 
 	/**
 	* Clear the content of the string.
@@ -302,27 +302,27 @@ public:
 	/**
 	* Add another string.
 	*/
-	RString& operator+=(const RString& str) throw(std::bad_alloc);
+	RString& operator+=(const RString& str);
 
 	/**
 	* Add a "C string" to the string.
 	*/
-	RString& operator+=(const char* text) throw(std::bad_alloc);
+	RString& operator+=(const char* text);
 
 	/**
 	* Add a string to the string.
 	*/
-	RString& operator+=(const RChar* text) throw(std::bad_alloc);
+	RString& operator+=(const RChar* text);
 
 	/**
 	* Add a character to the string.
 	*/
-	RString& operator+=(const char c) throw(std::bad_alloc);
+	RString& operator+=(const char c);
 
 	/**
 	* Add a character to the string.
 	*/
-	RString& operator+=(const RChar c) throw(std::bad_alloc);
+	RString& operator+=(const RChar c);
 
 	/**
 	* Return the string in UTF16.
@@ -354,52 +354,52 @@ public:
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const RString& str) const {return(RChar::StrCmp(Data->Text,str.Data->Text)==0);}
+	bool operator==(const RString& str) const;
 
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const char* str) const {return(RChar::StrCmp(Data->Text,str)==0);}
+	bool operator==(const char* str) const;
 
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const RChar* str) const {return(RChar::StrCmp(Data->Text,str)==0);}
+	bool operator==(const RChar* str) const;
 
 	/**
 	* Non-equal operator.
 	*/
-	bool operator!=(const RString& str) const {return(RChar::StrCmp(Data->Text,str.Data->Text));}
+	bool operator!=(const RString& str) const;
 
 	/**
 	* Non-equal operator.
 	*/
-	bool operator!=(const char* str) const {return(RChar::StrCmp(Data->Text,str));}
+	bool operator!=(const char* str) const;
 
 	/**
 	* Non-equal operator.
 	*/
-	bool operator!=(const RChar* str) const {return(RChar::StrCmp(Data->Text,str));}
+	bool operator!=(const RChar* str) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RString &str) const {return(RChar::StrCmp(Data->Text,str.Data->Text));}
+	int Compare(const RString& str) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RString* str) const {return(RChar::StrCmp(Data->Text,str->Data->Text));}
+	int Compare(const RString* str) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const char* str) const {return(RChar::StrCmp(Data->Text,str));}
+	int Compare(const char* str) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RChar* str) const {return(RChar::StrCmp(Data->Text,str));}
+	int Compare(const RChar* str) const;
 
 	/**
 	* Return a number between 0 and 26 according to the first character of the

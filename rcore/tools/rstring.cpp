@@ -57,7 +57,7 @@ const RString RString::Null;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-void RString::CharBuffer::Verify(const unsigned int maxlen) throw(std::bad_alloc)
+void RString::CharBuffer::Verify(const unsigned int maxlen)
 {
 	if(MaxLen<maxlen)
 	{
@@ -82,14 +82,14 @@ void RString::CharBuffer::Verify(const unsigned int maxlen) throw(std::bad_alloc
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RString::RString(void) throw(std::bad_alloc)
+RString::RString(void)
 	: Data(GetDataNull())
 {
 }
 
 
 //------------------------------------------------------------------------------
-RString::RString(const char* text) throw(std::bad_alloc)
+RString::RString(const char* text)
 	: Data(0)
 {
 	if(text)
@@ -104,7 +104,7 @@ RString::RString(const char* text) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(const RChar* text) throw(std::bad_alloc)
+RString::RString(const RChar* text)
 	: Data(0)
 {
 	if(text&&(!text->IsNull()))
@@ -121,7 +121,7 @@ RString::RString(const RChar* text) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(const std::string& text) throw(std::bad_alloc)
+RString::RString(const std::string& text)
 	: Data(0)
 {
 	unsigned int len,maxlen=0;
@@ -133,7 +133,7 @@ RString::RString(const std::string& text) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(unsigned int maxlen) throw(std::bad_alloc)
+RString::RString(unsigned int maxlen)
 	: Data(0)
 {
 	if(maxlen)
@@ -148,7 +148,7 @@ RString::RString(unsigned int maxlen) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(const RString& str) throw(std::bad_alloc)
+RString::RString(const RString& str)
 	: Data(str.Data)
 {
 	RIncRef<CharBuffer>(Data);
@@ -156,7 +156,7 @@ RString::RString(const RString& str) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString::RString(const RString* str) throw(std::bad_alloc)
+RString::RString(const RString* str)
 	: Data(0)
 {
 	if(str)
@@ -187,7 +187,7 @@ RString::CharBuffer* RString::GetDataNull(void)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator=(const RString& str) throw(std::bad_alloc)
+RString& RString::operator=(const RString& str)
 {
 	RIncRef(str.Data);
 	RDecRef<CharBuffer>(Data);
@@ -197,7 +197,7 @@ RString& RString::operator=(const RString& str) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator=(const char* text) throw(std::bad_alloc)
+RString& RString::operator=(const char* text)
 {
 	unsigned int len,maxlen=0;
 	RDecRef<CharBuffer>(Data);
@@ -208,7 +208,7 @@ RString& RString::operator=(const char* text) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator=(const std::string& text) throw(std::bad_alloc)
+RString& RString::operator=(const std::string& text)
 {
 	unsigned int len,maxlen=0;
 	RDecRef<CharBuffer>(Data);
@@ -615,7 +615,7 @@ void RString::Split(RContainer<RString,true,false>& elements,const RChar car) co
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator+=(const RString& str) throw(std::bad_alloc)
+RString& RString::operator+=(const RString& str)
 {
 	if(str.Data==DataNull)
 		return(*this);
@@ -636,7 +636,7 @@ RString& RString::operator+=(const RString& str) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator+=(const RChar* text) throw(std::bad_alloc)
+RString& RString::operator+=(const RChar* text)
 {
 	RReturnValIfFail(text,*this);
 	if(Data==DataNull)
@@ -657,7 +657,7 @@ RString& RString::operator+=(const RChar* text) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator+=(const char* text) throw(std::bad_alloc)
+RString& RString::operator+=(const char* text)
 {
 
 	RReturnValIfFail(text,*this);
@@ -683,7 +683,7 @@ RString& RString::operator+=(const char* text) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator+=(const char c) throw(std::bad_alloc)
+RString& RString::operator+=(const char c)
 {
 	if(c)
 	{
@@ -710,7 +710,7 @@ RString& RString::operator+=(const char c) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RString& RString::operator+=(const RChar c) throw(std::bad_alloc)
+RString& RString::operator+=(const RChar c)
 {
 	if(!c.IsNull())
 	{
@@ -757,6 +757,107 @@ RString::operator std::string () const
 		ptr++;
 	}
 	return(text);
+}
+
+
+//------------------------------------------------------------------------------
+bool RString::operator==(const RString& str) const
+{
+	return(Compare(str)==0);
+}
+
+
+//------------------------------------------------------------------------------
+bool RString::operator==(const char* str) const
+{
+	return(Compare(str)==0);
+}
+
+
+//------------------------------------------------------------------------------
+bool RString::operator==(const RChar* str) const
+{
+	return(Compare(str)==0);
+}
+
+
+//------------------------------------------------------------------------------
+bool RString::operator!=(const RString& str) const
+{
+	return(Compare(str));
+}
+
+
+//------------------------------------------------------------------------------
+bool RString::operator!=(const char* str) const
+{
+	return(Compare(str));
+}
+
+
+//------------------------------------------------------------------------------
+bool RString::operator!=(const RChar* str) const
+{
+	return(Compare(str));
+}
+
+
+//------------------------------------------------------------------------------
+int RString::Compare(const RString& str) const
+{
+	if(!Data)
+	{
+		if(!str.Data)
+			return(0);
+		return(-1);
+	}
+	else if(!str.Data)
+		return(1);
+	return(RChar::StrCmp(Data->Text,str.Data->Text));
+}
+
+//------------------------------------------------------------------------------
+int RString::Compare(const RString* str) const
+{
+	if(!Data)
+	{
+		if((!str)||(!str->Data))
+			return(0);
+		return(-1);
+	}
+	else if((!str)||(!str->Data))
+		return(1);
+	return(RChar::StrCmp(Data->Text,str->Data->Text));
+}
+
+
+//------------------------------------------------------------------------------
+int RString::Compare(const char* str) const
+{
+	if(!Data)
+	{
+		if(!str)
+			return(0);
+		return(-1);
+	}
+	else if(!str)
+		return(1);
+	return(RChar::StrCmp(Data->Text,str));
+}
+
+
+//------------------------------------------------------------------------------
+int RString::Compare(const RChar* str) const
+{
+	if(!Data)
+	{
+		if(!str)
+			return(0);
+		return(-1);
+	}
+	else if(!str)
+		return(1);
+	return(RChar::StrCmp(Data->Text,str));
 }
 
 

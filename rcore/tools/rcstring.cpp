@@ -56,7 +56,7 @@ const RCString RCString::Null;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-void RCString::CharBuffer::Verify(const unsigned int maxlen) throw(std::bad_alloc)
+void RCString::CharBuffer::Verify(const unsigned int maxlen)
 {
 	if(MaxLen<maxlen)
 	{
@@ -81,14 +81,14 @@ void RCString::CharBuffer::Verify(const unsigned int maxlen) throw(std::bad_allo
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RCString::RCString(void) throw(std::bad_alloc)
+RCString::RCString(void)
 	: Data(GetDataNull())
 {
 }
 
 
 //------------------------------------------------------------------------------
-RCString::RCString(const char* text) throw(std::bad_alloc)
+RCString::RCString(const char* text)
 	: Data(0)
 {
 	if(text)
@@ -105,7 +105,7 @@ RCString::RCString(const char* text) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RCString::RCString(const char* text,unsigned int len) throw(std::bad_alloc)
+RCString::RCString(const char* text,unsigned int len)
 	: Data(0)
 {
 	if(text)
@@ -123,7 +123,7 @@ RCString::RCString(const char* text,unsigned int len) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RCString::RCString(const std::string& text) throw(std::bad_alloc)
+RCString::RCString(const std::string& text)
 	: Data(0)
 {
 	const char* tab=text.c_str();
@@ -142,7 +142,7 @@ RCString::RCString(const std::string& text) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RCString::RCString(const unsigned int maxlen) throw(std::bad_alloc)
+RCString::RCString(const unsigned int maxlen)
 	: Data(0)
 {
 	if(maxlen)
@@ -157,7 +157,7 @@ RCString::RCString(const unsigned int maxlen) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RCString::RCString(const RCString& str) throw(std::bad_alloc)
+RCString::RCString(const RCString& str)
 	: Data(str.Data)
 {
 	RIncRef<CharBuffer>(Data);
@@ -182,7 +182,7 @@ RCString::CharBuffer* RCString::GetDataNull(void)
 
 
 //------------------------------------------------------------------------------
-RCString& RCString::operator=(const RCString& str) throw(std::bad_alloc)
+RCString& RCString::operator=(const RCString& str)
 {
 	RIncRef(str.Data);
 	RDecRef<CharBuffer>(Data);
@@ -192,7 +192,7 @@ RCString& RCString::operator=(const RCString& str) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RCString& RCString::operator=(const char* text) throw(std::bad_alloc)
+RCString& RCString::operator=(const char* text)
 {
 	unsigned int len,maxlen;
 
@@ -207,7 +207,7 @@ RCString& RCString::operator=(const char* text) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RCString& RCString::operator=(const std::string& text) throw(std::bad_alloc)
+RCString& RCString::operator=(const std::string& text)
 {
 	(*this)=text.c_str();
 	return(*this);
@@ -587,7 +587,7 @@ void RCString::Split(RContainer<RCString,true,false>& elements,const char car) c
 
 
 //------------------------------------------------------------------------------
-RCString& RCString::operator+=(const RCString& str) throw(std::bad_alloc)
+RCString& RCString::operator+=(const RCString& str)
 {
 	if(str.Data==DataNull)
 		return(*this);
@@ -607,7 +607,7 @@ RCString& RCString::operator+=(const RCString& str) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RCString& RCString::operator+=(const char* text) throw(std::bad_alloc)
+RCString& RCString::operator+=(const char* text)
 {
 	RReturnValIfFail(text,*this);
 	if(Data==DataNull)
@@ -627,7 +627,7 @@ RCString& RCString::operator+=(const char* text) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RCString& RCString::operator+=(const char c) throw(std::bad_alloc)
+RCString& RCString::operator+=(const char c)
 {
 	if(c)
 	{
@@ -649,6 +649,79 @@ RCString& RCString::operator+=(const char c) throw(std::bad_alloc)
 		}
 	}
 	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+bool RCString::operator==(const RCString& str) const
+{
+	return(Compare(str)==0);
+}
+
+
+//------------------------------------------------------------------------------
+bool RCString::operator==(const char* str) const
+{
+	return(Compare(str)==0);
+}
+
+
+//------------------------------------------------------------------------------
+bool RCString::operator!=(const RCString& str) const
+{
+	return(Compare(str));
+}
+
+
+//------------------------------------------------------------------------------
+bool RCString::operator!=(const char* str) const
+{
+	return(Compare(str));
+}
+
+
+//------------------------------------------------------------------------------
+int RCString::Compare(const RCString& str) const
+{
+	if(!Data)
+	{
+		if(!str.Data)
+			return(0);
+		return(-1);
+	}
+	else if(!str.Data)
+		return(1);
+	return(strcmp(Data->Text,str.Data->Text));
+}
+
+
+//------------------------------------------------------------------------------
+int RCString::Compare(const RCString* str) const
+{
+	if(!Data)
+	{
+		if((!str)||(!str->Data))
+			return(0);
+		return(-1);
+	}
+	else if((!str)||(!str->Data))
+		return(1);
+	return(strcmp(Data->Text,str->Data->Text));
+}
+
+
+//------------------------------------------------------------------------------
+int RCString::Compare(const char* str) const
+{
+	if(!Data)
+	{
+		if(!str)
+			return(0);
+		return(-1);
+	}
+	else if(!str)
+		return(1);
+	return(strcmp(Data->Text,str));
 }
 
 

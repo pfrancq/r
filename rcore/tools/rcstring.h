@@ -73,7 +73,7 @@ protected:
 			: RSharedData(), Text(0), Len(0), MaxLen(0) {}
 		CharBuffer(char* tab,unsigned int len,unsigned int maxlen)
 			: RSharedData(), Text(tab), Len(len), MaxLen(maxlen) {}
-		void Verify(const unsigned int maxlen) throw(std::bad_alloc);
+		void Verify(const unsigned int maxlen);
 		~CharBuffer(void) {if(Text) delete[] Text;}
 	};
 
@@ -97,7 +97,7 @@ public:
 	/**
 	* Construct a empty string.
 	*/
-	RCString(void) throw(std::bad_alloc);
+	RCString(void);
 
 public:
 
@@ -105,7 +105,7 @@ public:
 	* Construct a string from a "C string".
 	* @param text           The "C string" used as reference.
 	*/
-	RCString(const char* text) throw(std::bad_alloc);
+	RCString(const char* text);
 
 	/**
 	* Construct a string by doing a deep copy of the first caracters of a "C"
@@ -113,25 +113,25 @@ public:
 	* @param text           The "C string" used as reference.
 	* @param len            Length.
 	*/
-	RCString(const char* text,unsigned int len) throw(std::bad_alloc);
+	RCString(const char* text,unsigned int len);
 
 	/**
 	* Construct a string from a "C string".
 	* @param text           The "C string" used as reference.
 	*/
-	RCString(const std::string& text) throw(std::bad_alloc);
+	RCString(const std::string& text);
 
 	/**
 	* Construct an empty string with a maximal size.
 	* @param maxlen         Initial maximal length of the string.
 	*/
-	RCString(const unsigned int maxlen) throw(std::bad_alloc);
+	RCString(const unsigned int maxlen);
 
 	/**
 	* Construct a string from another string.
 	* @param str            The string used as reference.
 	*/
-	RCString(const RCString& str) throw(std::bad_alloc);
+	RCString(const RCString& str);
 
 private:
 
@@ -146,17 +146,17 @@ public:
 	/**
 	* Assignment operator using another string.
 	*/
-	RCString& operator=(const RCString &str) throw(std::bad_alloc);
+	RCString& operator=(const RCString &str);
 
 	/**
 	* Assignment operator using a "C string".
 	*/
-	RCString& operator=(const char* text) throw(std::bad_alloc);
+	RCString& operator=(const char* text);
 
 	/**
 	* Assignment operator using a string.
 	*/
-	RCString& operator=(const std::string& text) throw(std::bad_alloc);
+	RCString& operator=(const std::string& text);
 
 	/**
 	* Clear the content of the string.
@@ -270,17 +270,17 @@ public:
 	/**
 	* Add another string.
 	*/
-	RCString& operator+=(const RCString& str) throw(std::bad_alloc);
+	RCString& operator+=(const RCString& str);
 
 	/**
 	* Add a "C string" to the string.
 	*/
-	RCString& operator+=(const char* text) throw(std::bad_alloc);
+	RCString& operator+=(const char* text);
 
 	/**
 	* Add a character to the string.
 	*/
-	RCString& operator+=(const char c) throw(std::bad_alloc);
+	RCString& operator+=(const char c);
 
 	/**
 	* Return the string containing the string.
@@ -300,37 +300,37 @@ public:
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const RCString& str) const {return(strcmp(Data->Text,str.Data->Text)==0);}
+	bool operator==(const RCString& str) const;
 
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const char* str) const {return(strcmp(Data->Text,str)==0);}
+	bool operator==(const char* str) const;
 
 	/**
 	* Non-equal operator.
 	*/
-	bool operator!=(const RCString& str) const {return(strcmp(Data->Text,str.Data->Text));}
+	bool operator!=(const RCString& str) const;
 
 	/**
 	* Non-equal operator.
 	*/
-	bool operator!=(const char* str) const {return(strcmp(Data->Text,str));}
+	bool operator!=(const char* str) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RCString &str) const {return(strcmp(Data->Text,str.Data->Text));}
+	int Compare(const RCString& str) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RCString* str) const {return(strcmp(Data->Text,str->Data->Text));}
+	int Compare(const RCString* str) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const char* str) const {return(strcmp(Data->Text,str));}
+	int Compare(const char* str) const;
 
 	/**
 	* Return a number between 0 and 26 according to the first character of the
