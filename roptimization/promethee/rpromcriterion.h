@@ -298,6 +298,14 @@ public:
 };
 
 
+//-----------------------------------------------------------------------------
+/**
+* The RPromCriterionCursor class provides a way to go trough a set of criterion.
+* @short Criterion Cursor.
+*/
+CLASSCURSOR(RPromCriterionCursor,RPromCriterion,unsigned int)
+
+
 }  //-------- End of namespace RPromethee -------------------------------------
 
 
