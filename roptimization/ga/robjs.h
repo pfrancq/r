@@ -55,7 +55,7 @@ namespace RGA{
 * @short Objects.
 */
 template<class cObj>
-	class RObjs : public RStd::RContainer<cObj,unsigned int,true,false>
+	class RObjs : public RStd::RContainer<cObj,unsigned int,true,true>
 {
 public:
 
@@ -63,7 +63,7 @@ public:
 	* Construct the objects.
 	* @param max            Maximum objects that wilk be created.
 	*/
-	RObjs(const unsigned int max) : RStd::RContainer<cObj,unsigned int,true,false>(max,max/2) {}
+	RObjs(const unsigned int max) : RStd::RContainer<cObj,unsigned int,true,true>(max,max/2) {}
 };
 
 
