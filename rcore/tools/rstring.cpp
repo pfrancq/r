@@ -371,7 +371,7 @@ int RString::Compare(const RString *str) const
 	const char *ptr1;
 	char *ptr2=Text;
 
-	RReturnValIfFail(ptr1,1);
+	RReturnValIfFail(Text,1);
 	if(!ptr1) return(1);
 	ptr1=str->Text;
 	if(Len!=str->Len) return(Len-str->Len);
