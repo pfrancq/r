@@ -77,80 +77,80 @@ public:
 	* Copy constructor.
 	* @param c               ASCII/Latin-1 character.
 	*/
-	RChar(char c) : Car((unsigned char)c) {}
+	RChar(const char c) : Car((const unsigned char)c) {}
 
 	/**
 	* Copy constructor.
 	* @param c               ASCII/Latin-1 character.
 	*/
-	explicit RChar(unsigned char c)  : Car(c) {}
+	explicit RChar(const unsigned char c)  : Car(c) {}
 
 	/**
 	* Copy constructor.
 	* @param c               Unicode character.
 	*/
-	explicit RChar(UChar c) : Car(c) {}
+	explicit RChar(const UChar c) : Car(c) {}
 
 	/**
 	* Copy constructor.
 	* @param c               Unicode character.
 	*/
-	explicit RChar(long c) : Car((UChar)c) {}
+	explicit RChar(const long c) : Car((UChar)c) {}
 
 	/**
 	* Copy constructor.
 	* @param c               Unicode character.
 	*/
-	explicit RChar(unsigned int c) : Car((UChar)(c&0xFFFF)) {}
+	explicit RChar(const unsigned int c) : Car((UChar)(c&0xFFFF)) {}
 
 	/**
 	* Copy constructor.
 	* @param c               Unicode character.
 	*/
-	explicit RChar(int c) : Car((UChar)(c&0xFFFF)) {}
+	explicit RChar(const int c) : Car((UChar)(c&0xFFFF)) {}
 
 
 	/**
 	* Assignment operator.
 	* @param c               ASCII/Latin-1 character.
 	*/
-	RChar& operator=(char c) { Car=(unsigned char)c; return(*this); }
+	RChar& operator=(const char c) { Car=(unsigned char)c; return(*this); }
 
 	/**
 	* Assignment operator.
 	* @param c               ASCII/Latin-1 character.
 	*/
-	RChar& operator=(unsigned char c) { Car=c; return(*this); }
+	RChar& operator=(const unsigned char c) { Car=c; return(*this); }
 
 	/**
 	* Assignment operator.
 	* @param c               Unicode character.
 	*/
-	RChar& operator=(unsigned short c) { Car=c; return(*this); }
+	RChar& operator=(const unsigned short c) { Car=c; return(*this); }
 
 	/**
 	* Assignment operator.
 	* @param c               Unicode character.
 	*/
-	RChar& operator=(short c) { Car=(UChar)c; return(*this); }
+	RChar& operator=(const short c) { Car=(UChar)c; return(*this); }
 
 	/**
 	* Assignment operator.
 	* @param c               Unicode character.
 	*/
-	RChar& operator=(unsigned int c) { Car=(UChar)(c&0xFFFF); return(*this); }
+	RChar& operator=(const unsigned int c) { Car=(UChar)(c&0xFFFF); return(*this); }
 
 	/**
 	* Assignment operator.
 	* @param c               Unicode character.
 	*/
-	RChar& operator=(int c) { Car=(UChar)(c&0xFFFF); return(*this); }
+	RChar& operator=(const int c) { Car=(UChar)(c&0xFFFF); return(*this); }
 
 	/**
 	* Assignment operator.
 	* @param c               Character.
 	*/
-	bool operator==(char c) const {return(((unsigned char)c)==Car);}
+	bool operator==(const char c) const {return(((unsigned char)c)==Car);}
 
 	/**
 	* Comparison == operator.
@@ -162,7 +162,7 @@ public:
 	* Comparison != operator.
 	* @param c               Character.
 	*/
-	bool operator!=(char c) const {return(((unsigned char)c)!=Car);}
+	bool operator!=(const char c) const {return(((unsigned char)c)!=Car);}
 
 	/**
 	* Comparison != operator.
@@ -174,49 +174,49 @@ public:
 	* Comparison < operator.
 	* @param c               Character.
 	*/
-	bool operator<(char c) const {return(((unsigned char)c)<Car);}
+	bool operator<(const char c) const {return(((unsigned char)c)<Car);}
 
 	/**
 	* Comparison < operator.
 	* @param c               Character.
 	*/
-	bool operator<(RChar c) const {return(Car<c.Car);}
+	bool operator<(const RChar c) const {return(Car<c.Car);}
 
 	/**
 	* Comparison <= operator.
 	* @param c               Character.
 	*/
-	bool operator<=(char c) const {return(((unsigned char)c)<=Car);}
+	bool operator<=(const char c) const {return(((unsigned char)c)<=Car);}
 
 	/**
 	* Comparison <= operator.
 	* @param c               Character.
 	*/
-	bool operator<=(RChar c) const {return(Car<=c.Car);}
+	bool operator<=(const RChar c) const {return(Car<=c.Car);}
 
 	/**
 	* Comparison > operator.
 	* @param c               Character.
 	*/
-	bool operator>(char c) const {return(((unsigned char)c)>Car);}
+	bool operator>(const char c) const {return(((unsigned char)c)>Car);}
 
 	/**
 	* Comparison > operator.
 	* @param c               Character.
 	*/
-	bool operator>(RChar c) const {return(Car>c.Car);}
+	bool operator>(const RChar c) const {return(Car>c.Car);}
 
 	/**
 	* Comparison >= operator.
 	* @param c               Character.
 	*/
-	bool operator>=(char c) const {return(((unsigned char)c)>=Car);}
+	bool operator>=(const char c) const {return(((unsigned char)c)>=Car);}
 
 	/**
 	* Comparison >= operator.
 	* @param c               Character.
 	*/
-	bool operator>=(RChar c) const {return(Car>=c.Car);}
+	bool operator>=(const RChar c) const {return(Car>=c.Car);}
 
 	/**
 	* Get a Latin1 character.
@@ -283,14 +283,14 @@ public:
 	* @param c               Character.
 	* return RChar.
 	*/
-	static RChar ToLower(RChar c)                 { return(RChar(towlower(c.Unicode()))); }
+	static RChar ToLower(const RChar c)                 { return(RChar(towlower(c.Unicode()))); }
 
 	/**
 	* Transform an Unicode character in upperrcase.
 	* @param c               Character.
 	* return RChar.
 	*/
-	static RChar ToUpper(RChar c)                 { return(RChar((UChar)towupper(c.Unicode()))); }
+	static RChar ToUpper(const RChar c)                 { return(RChar((UChar)towupper(c.Unicode()))); }
 
 	/**
 	* Compute the length of an array of RChar.

@@ -378,16 +378,18 @@ RChar RString::operator[](int pos) const
 
 
 //------------------------------------------------------------------------------
-int RString::Find(RChar car,int pos,bool CaseSensitive) const
+int RString::Find(const RChar car,int pos,bool CaseSensitive) const
 {
 	RChar* start;
 	bool left;
 	unsigned int max;        // Maximal number of character to search.
-
+	RChar search;
 
 	// Initialise the search
 	if(!CaseSensitive)
-		car=RChar::ToUpper(car);
+		search=RChar::ToUpper(car);
+	else
+		search=car;
 	if(pos<0)
 	{
 		// From right
@@ -412,7 +414,7 @@ int RString::Find(RChar car,int pos,bool CaseSensitive) const
 	// Search for the maximal number of character
 	for(max++;--max;)
 	{
-		if(((CaseSensitive)&&((*start)==car)) || ((!CaseSensitive)&&(RChar::ToUpper(*start)==car)))
+		if(((CaseSensitive)&&((*start)==search)) || ((!CaseSensitive)&&(RChar::ToUpper(*start)==search)))
 			return(pos);
 		if(left)
 		{
@@ -430,7 +432,7 @@ int RString::Find(RChar car,int pos,bool CaseSensitive) const
 
 
 //------------------------------------------------------------------------------
-int RString::FindStr(RString str,int pos,bool CaseSensitive) const
+int RString::FindStr(const RString str,int pos,bool CaseSensitive) const
 {
 	RChar* start;
 	const RChar* toFind;
@@ -438,10 +440,11 @@ int RString::FindStr(RString str,int pos,bool CaseSensitive) const
 	int avanct;
 	int maxlen;  //max number of char contained in the string to search
 	int incr;
+	RString search(str);
 
 	// Initialise the search
 	if(!CaseSensitive)
-		str=str.ToUpper();
+		search=search.ToUpper();
 	if(pos<0)
 	{
 		// From right
@@ -452,8 +455,8 @@ int RString::FindStr(RString str,int pos,bool CaseSensitive) const
 		start=&Data->Text[pos];
 		max=pos+1;
 		//Init string to find
-		toFind=str();
-		toFind+=str.GetLen()-1;
+		toFind=search();
+		toFind+=search.GetLen()-1;
 	}
 	else
 	{
@@ -463,20 +466,20 @@ int RString::FindStr(RString str,int pos,bool CaseSensitive) const
 		start=&Data->Text[pos];
 		max=Data->Len-pos+1;
 		//Init string to find
-		toFind=str();
+		toFind=search();
 	}
 	//If string to find is longer than the string return -1
-	if (str.GetLen()>max)return(-1);
+	if (search.GetLen()>max)return(-1);
 
 	// Search for the maximal number of character
 	for(max++;--max;)
 	{
 		if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(RChar::ToUpper(*start)==(*toFind))))
 		{
-			if(max>=str.GetLen())
+			if(max>=search.GetLen())
 			{
 				avanct=0;
-				maxlen=str.GetLen();
+				maxlen=search.GetLen();
 				bool found=true;
 				for(maxlen++;--maxlen,found;)
 				{

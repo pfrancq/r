@@ -264,7 +264,7 @@ public:
 	* @return The position of the first occurence or -1 if the character was not
 	*         found. 
 	*/
-	int Find(RChar car,int pos=0,bool CaseSensitive=true) const;
+	int Find(const RChar car,int pos=0,bool CaseSensitive=true) const;
 
 	/**
 	* Find the position of a given string in the string.
@@ -275,7 +275,7 @@ public:
 	* @return The position of the first occurence or -1 if the character was not
 	*         found.
 	*/
-	int FindStr(RString str,int pos=0,bool CaseSensitive=true) const;
+	int FindStr(const RString str,int pos=0,bool CaseSensitive=true) const;
 
 	/**
 	* Get a sub-string of a given string.
