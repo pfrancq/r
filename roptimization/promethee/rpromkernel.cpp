@@ -41,6 +41,7 @@
 #include <rpromethee/rpromkernel.h>
 #include <rpromethee/rpromcritvalue.h>
 using namespace RPromethee;
+using namespace RStd;
 
 
 
@@ -209,10 +210,10 @@ RPromSol* RPromethee::RPromKernel::GetBestSol(void)
 
 
 //-----------------------------------------------------------------------------
-int RPromethee::RPromKernel::sort_function_solutions( const void *a, const void *b)
+int RPromethee::RPromKernel::sort_function_solutions(const void *a,const void *b)
 {
-	const RPromSol* as=(*(( RPromSol**)(a)));
-	const RPromSol* bs=(*(( RPromSol**)(b)));
+	const RPromSol* as=(*((RPromSol**)(a)));
+	const RPromSol* bs=(*((RPromSol**)(b)));
 	double d;
 
 	d=bs->Fi-as->Fi;

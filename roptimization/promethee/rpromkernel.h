@@ -41,13 +41,11 @@
 #include <rpromethee/rpromethee.h>
 #include <rpromethee/rpromsol.h>
 #include <rpromethee/rpromcriterion.h>
-using namespace RStd;
 
 
 //-----------------------------------------------------------------------------
 namespace RPromethee{
 //-----------------------------------------------------------------------------
-
 
 //-----------------------------------------------------------------------------
 /**
@@ -60,23 +58,28 @@ class RPromKernel
 	/**
 	* The name of the kernel.
 	*/
-	RString Name;
+	RStd::RString Name;
 
 	/**
 	* Solutions.
 	*/
-	RContainer<RPromSol,unsigned int,true,true> Solutions;
+	RStd::RContainer<RPromSol,unsigned int,true,true> Solutions;
 
 	/**
 	* Criteria.
 	*/
-	RContainer<RPromCriterion,unsigned int,true,true> Criteria;
+	RStd::RContainer<RPromCriterion,unsigned int,true,true> Criteria;
 
 	/**
 	* Define if a normalisation of the values for the different criteria must be
 	* done.
 	*/
 	bool Normalize;
+
+	/**
+	* Function used to sort the solutions by fit.
+	*/
+	static int sort_function_solutions( const void *a, const void *b);	
 
 public:
 
@@ -180,11 +183,6 @@ public:
 	* Return the best solution.
 	*/
 	RPromSol* GetBestSol(void);
-
-	/**
-	* Function used to sort the solutions by fit.
-	*/
-	static int sort_function_solutions( const void *a, const void *b);	
 
 	/**
 	* Return the solutions order by fit increase. The resulting arry must be

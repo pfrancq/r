@@ -151,7 +151,7 @@ public:
 	* @param id             Identifier of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromCriterion(const CriteriaType type,const double p,const double q,const double w,const unsigned int id,const unsigned int nb=30);
+	RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,unsigned int nb=30);
 
 	/**
 	* Construct a criterion.
@@ -160,7 +160,7 @@ public:
 	* @param id             Identifier of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,const unsigned int id,const unsigned int nb=30);
+	RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,unsigned int nb=30);
 
 	/**
 	* Construct a criterion.
@@ -172,8 +172,7 @@ public:
 	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromCriterion(const CriteriaType type,const double p,const double q,const double w,const unsigned int id,
-		const char* name,const unsigned int nb=30);
+	RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,const char* name,unsigned int nb=30);
 
 	/**
 	* Construct a criterion.
@@ -183,8 +182,7 @@ public:
 	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,const unsigned int id,
-		const char* name,const unsigned int nb=30);
+	RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,const char* name,unsigned int nb=30);
 
 	/**
 	* Compare the identifier of two criteria.
@@ -234,7 +232,7 @@ public:
 	/**
 	* Get the preference's threshold.
 	*/
-	double GetP(void) {return(P);}	
+	double GetP(void) const {return(P);}	
 
 	/**
 	* Set the indifference's threshold.
@@ -244,7 +242,7 @@ public:
 	/**
 	* Get the indifference's threshold.
 	*/
-	double GetQ(void) {return(Q);}	
+	double GetQ(void) const {return(Q);}	
 
 	/**
 	* Set the parameters.
@@ -264,7 +262,7 @@ public:
 	/**
 	* Get the weight.
 	*/
-	double GetWeight(void) {return(Weight);}	
+	double GetWeight(void) const {return(Weight);}	
 
 	/**
 	* Normalize the values for the solution.
@@ -277,7 +275,7 @@ public:
 	* @param v              Value of the second solution.
 	* @return The result of the preference function defined.
 	*/
-	double ComputePref(const double u,const double v);
+	double ComputePref(double u,double v) const;
 
 	/**
 	* Calculate the Fi Crit for the different solutions.
