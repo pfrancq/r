@@ -173,14 +173,14 @@ public:
 	* @param id             Identificator of the object.
 	* @returns Pointer to cGroup*.
 	*/
-	cGroup* GetGroup(const unsigned int id) {return(Tab[ObjectsAss[id]]);}
+	cGroup* GetGroup(const unsigned int id);
 
 	/**
 	* Get the group of an object.
 	* @param obj            Pionter to the object.
 	* @returns Pointer to cGroup*.
 	*/
-	cGroup* GetGroup(const cObj* obj) {return(Tab[ObjectsAss[obj->GetId()]]);}
+	cGroup* GetGroup(const cObj* obj);
 
 	/**
 	* Get a pointer to an object at a given index.

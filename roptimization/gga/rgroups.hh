@@ -237,6 +237,27 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	}
 }
 
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::GetGroup(const unsigned int id)
+{
+	unsigned int idx=ObjectsAss[id];
+
+	if(idx==NoObject) return(0);
+	return(Tab[idx]);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::GetGroup(const cObj* obj)
+{
+	unsigned int idx=ObjectsAss[obj->GetId()];
+
+	if(idx==NoObject) return(0);
+	return(Tab[idx]);
+}
+
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
