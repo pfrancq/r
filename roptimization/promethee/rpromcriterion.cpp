@@ -52,6 +52,20 @@ using namespace RPromethee;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+RPromethee::RPromCriterionParams::RPromCriterionParams(void)
+	: P(0.2), Q(0.05), Weight(1.0)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+RPromethee::RPromCriterionParams::RPromCriterionParams(double p,double q,double w)
+	: P(p), Q(q), Weight(w)
+{
+}
+
+
+//-----------------------------------------------------------------------------
 RPromCriterionParams* RPromethee::RPromCriterionParams::GetParams(void)
 {
 	return(GetTemporaryObject<RPromCriterionParams,30>());

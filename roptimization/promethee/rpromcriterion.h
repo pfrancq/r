@@ -62,12 +62,12 @@ class RPromCriterionParams
 public:
 
 	/**
-	* Value for the preference's threshold of the Prométhée method.
+	* Value for the preference threshold of the Prométhée method.
 	*/
 	double P;
 
 	/**
-	* Value for the indifference's threshold of the Prométhée method.
+	* Value for the indifference threshold of the Prométhée method.
 	*/
 	double Q;
 
@@ -75,6 +75,19 @@ public:
 	* Weight of this criterion.
 	*/
 	double Weight;
+
+	/**
+	* Construct a list of parameters for acriterion.
+	*/
+	RPromCriterionParams(void);
+
+	/**
+	* Construct a list of parameters for acriterion.
+	* @param p              Preference's threshold.
+	* @param q              Indifference's threshold.
+	* @param w              Weight of the criterion.
+	*/
+	RPromCriterionParams(double p,double q,double w);
 
 	/**
 	* Return a pointer to a temporary object of class point.
