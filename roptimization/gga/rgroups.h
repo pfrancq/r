@@ -91,6 +91,20 @@ protected:
 	*/
 	RStd::RContainer<cObj,unsigned int,false,false> ObjsNoAss;
 
+	/**
+	* Assignment of the objects where the identificator of the first group
+	* found is always 1. This array is used to compare if two solutions are
+	* representing the same "real" groupment.
+	*/
+	unsigned int* OrdObjectsAss;
+
+	/**
+	* Array representing the identificators assigned to each group to compute
+	* OrdObjectsAss.
+	*/
+	unsigned int* NewUsedId;
+
+
 public:
 
 	/**
@@ -170,6 +184,18 @@ public:
 	* @param chromo         The chromosome used as source.
 	*/
 	RGroups& operator=(const RGroups& grps);
+
+	/**
+	* Compute OrdObjectsAss.
+	*/
+	void ComputeOrd(void);
+
+	/**
+	* This method look if the two configurations are representing the same
+	* groupement.
+	* @param grps           Configuration used for the comparaison.
+	*/
+	bool SameGroupment(const RGroups* grps) const;
 
 	/**
 	* Destruct the chromosome.

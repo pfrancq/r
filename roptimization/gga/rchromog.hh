@@ -34,7 +34,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RChromoG(cInst *inst,unsigned id) throw(bad_alloc)
 		: RGA::RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
 		  RGroups<cGroup,cObj,cGroupData,cChromo>(inst->Objs,inst->MaxGroups),
-		  Heuristic(0), OrdObjectsAss(0), NewUsedId(0)
+		  Heuristic(0)
 {
 }
 
@@ -46,30 +46,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	// Initialisation of the parent
 	RGA::RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
 
-	// Init of the arrays needed.
-	OrdObjectsAss=new unsigned int[ObjsAss.MaxPtr];
-	NewUsedId=new unsigned int[MaxPtr];
-
 	// Init "thread-dependent" data
 	Heuristic=thData->Heuristic;
-}
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::ComputeOrd(void)
-{
-	unsigned int *oldo,*newo;
-	unsigned int i,id,nbgrp;
-
-	memset(NewUsedId,0xFF,sizeof(unsigned int)*MaxPtr);
-	for(i=ObjsAss.NbPtr+1,oldo=ObjectsAss,newo=OrdObjectsAss,nbgrp=0;--i;oldo++,newo++)
-	{
-		id=NewUsedId[*oldo];
-		if(id==NoGroup)
-			id=NewUsedId[*oldo]=(nbgrp++);
-		(*newo)=id;
-	}
 }
 
 
@@ -78,19 +56,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Clear(void)
 {
 	RGroups<cGroup,cObj,cGroupData,cChromo>::ClearGroups();
-}
-
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::SameGroupment(const cChromo* c) const
-{
-	unsigned int i,*ass,*cass;
-
-	for(i=ObjsAss.NbPtr+1,ass=OrdObjectsAss,cass=c->OrdObjectsAss;--i;ass++,cass++)
-		if((*ass)!=(*cass))
-			return(false);
-	return(true);
 }
 
 
@@ -243,8 +208,4 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::~RChromoG(void)
 {
-	if(OrdObjectsAss)
-		delete[] OrdObjectsAss;
-	if(NewUsedId)
-		delete[] NewUsedId;
 }

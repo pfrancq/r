@@ -40,10 +40,15 @@
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RGroups<cGroup,cObj,cGroupData,cGroups>::RGroups(RStd::RCursor<cObj,unsigned int>* objs,const unsigned max) throw(bad_alloc)
 		: RStd::RContainer<cGroup,unsigned int,true,false>(max), Used(max),
-		  GroupData(0), Objs(objs), ObjsAss(objs->GetNb()), ObjsNoAss(objs->GetNb())
+		  GroupData(0), Objs(objs), ObjsAss(objs->GetNb()), ObjsNoAss(objs->GetNb()),
+		  OrdObjectsAss(0), NewUsedId(0)
 {
 	ObjectsAss = new unsigned int[Objs->GetNb()];
 	memset(ObjectsAss,0xFF,Objs->GetNb()*sizeof(unsigned int));
+
+	// Init of the arrays needed.
+	OrdObjectsAss=new unsigned int[Objs->GetNb()];
+	NewUsedId=new unsigned int[MaxPtr];
 }
 
 
@@ -82,12 +87,21 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::ReserveGroup(void)
 {
 	cGroup **ptr;
-	unsigned int i,j;
+	unsigned int i,NewSize;
+	unsigned int* n;
 
 	if(Used.NbPtr+1>MaxPtr)
 	{
-		j=MaxPtr+IncPtr;
-		for(i=MaxPtr;i<j;i++)
+		NewSize=MaxPtr+IncPtr;
+
+		// Recreate a new NewUsedId array with the new size
+		n=new unsigned int[NewSize];
+		memcpy(n,NewUsedId,sizeof(unsigned int)*MaxPtr);
+		delete[] NewUsedId;
+		NewUsedId=n;
+
+		// Create New groups
+		for(i=MaxPtr;i<NewSize;i++)
 			InsertPtr(new cGroup(static_cast<cGroups*>(this),i,GroupData));
 	}
 	ptr=Tab;
@@ -222,10 +236,45 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
+//---------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroups<cGroup,cObj,cGroupData,cGroups>::ComputeOrd(void)
+{
+	unsigned int *oldo,*newo;
+	unsigned int i,id,nbgrp;
+
+	memset(NewUsedId,0xFF,sizeof(unsigned int)*MaxPtr);
+	for(i=ObjsAss.NbPtr+1,oldo=ObjectsAss,newo=OrdObjectsAss,nbgrp=0;--i;oldo++,newo++)
+	{
+		id=NewUsedId[*oldo];
+		if(id==NoGroup)
+			id=NewUsedId[*oldo]=(nbgrp++);
+		(*newo)=id;
+	}
+}
+
+
+//---------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	bool RGroups<cGroup,cObj,cGroupData,cGroups>::SameGroupment(const RGroups* grps) const
+{
+	unsigned int i,*ass,*cass;
+
+	for(i=ObjsAss.NbPtr+1,ass=OrdObjectsAss,cass=grps->OrdObjectsAss;--i;ass++,cass++)
+		if((*ass)!=(*cass))
+			return(false);
+	return(true);
+}
+
+
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RGroups<cGroup,cObj,cGroupData,cGroups>::~RGroups(void)
 {
 	if(ObjectsAss)
 		delete[] ObjectsAss;
+	if(OrdObjectsAss)
+		delete[] OrdObjectsAss;
+	if(NewUsedId)
+		delete[] NewUsedId;
 }
