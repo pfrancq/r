@@ -69,6 +69,11 @@ class RDebug
 	*/
 	unsigned int NbOptions;
 
+	/**
+	* String containing the current tag.
+	*/
+	RString CurTag;
+
 protected:
 
 	/**
@@ -116,6 +121,12 @@ public:
 	* End a Tag.
 	*/
 	void EndTag(const char* Text);
+
+	/**
+	* Get the name of the current tag.
+	* @return const char*
+	*/
+	const char* GetCurrentTag(void) const;
 
 	/**
 	* Print an Info Tag.
@@ -180,7 +191,7 @@ public:
 //------------------------------------------------------------------------------
 /**
 * \ingroup GA
-* This class implement a debuuger file in XML format.
+* This class implement a debugger file in XML format.
 * @author Pascal Francq
 * @short Debug XML file.
 */

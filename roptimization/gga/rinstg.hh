@@ -139,7 +139,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	switch(Heuristic)
 	{
 		case FirstFit:
-			h = new RFirstFitHeuristic<cGroup,cObj,cGroupData,cChromo>(Random,Objs);
+			h = new RFirstFitHeuristic<cGroup,cObj,cGroupData,cChromo>(Random,Objs,Debug);
 			break;
 		default:
 			h=0;

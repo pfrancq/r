@@ -72,6 +72,14 @@ void RDebug::BeginTag(const char* Text,unsigned NbAttr,...)
 		AddAttribute(va_arg(ap,char*),va_arg(ap,char*));
 	va_end(ap);
 	WriteBeginTag(Text,tmpOpt);
+	CurTag=Text;
+}
+
+
+//------------------------------------------------------------------------------
+const char* RDebug::GetCurrentTag(void) const
+{
+	return(CurTag());
 }
 
 

@@ -42,6 +42,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rgga/rgroupingheuristic.h>
+#include <rga/rdebug.h>
 
 
 //------------------------------------------------------------------------------
@@ -65,8 +66,9 @@ public:
 	* Construct the grouping heuristic.
 	* @param r              The random genrator to use.
 	* @param objs           Pointer to the objects.
+	* @param debug          Debugger.
 	*/
-	RFirstFitHeuristic(RRandom* r,RCursor<cObj,unsigned int>* objs);
+	RFirstFitHeuristic(RRandom* r,RCursor<cObj,unsigned int>* objs,RDebug* debug=0);
 
 	/**
 	* Find a group for the next object.

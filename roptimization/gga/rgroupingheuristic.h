@@ -45,6 +45,7 @@
 #include <rstd/random.h>
 #include <rga/robjs.h>
 #include <rgga/rgroups.h>
+#include <rga/rdebug.h>
 
 
 //------------------------------------------------------------------------------
@@ -108,6 +109,11 @@ protected:
 	*/
 	cGroup* CurGroup;
 
+	/**
+	* Pointer to a "debugger" holding information about the GA when it is running.
+	*/
+	RDebug* Debug;
+
 public:
 
 	/**
@@ -115,8 +121,9 @@ public:
 	* @param n              Name of the heuristic.
 	* @param r              The random genrator to use.
 	* @param objs           Pointer to the objects.
+	* @param debug          Debugger.
 	*/
-	RGroupingHeuristic(const char* n,RRandom* r,RCursor<cObj,unsigned int>* objs);
+	RGroupingHeuristic(const char* n,RRandom* r,RCursor<cObj,unsigned int>* objs,RDebug* debug=0);
 
 	/**
 	* Get the name of the heuristic.
