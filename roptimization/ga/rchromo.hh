@@ -55,8 +55,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-  RGA::RChromo<cInst,cChromo,cFit,cThreadData>& RGA::RChromo<cInst,cChromo,cFit,cThreadData>::
-		operator=(const RChromo &chromo)
+  RGA::RChromo<cInst,cChromo,cFit,cThreadData>& RGA::RChromo<cInst,cChromo,cFit,cThreadData>::operator=(const RChromo &chromo)
 {
 	Id=chromo.Id;
 	(*Fitness)=(*(chromo.Fitness));

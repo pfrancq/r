@@ -61,7 +61,7 @@ public:
 	/**
 	* Pointer to the instance.
 	*/
-	cInst *Instance;
+	cInst* Instance;
 
 	/**
 	* Identificator of the chromosome.
@@ -71,7 +71,7 @@ public:
 	/**
 	* Pointer to the fitness of the chromosome.
 	*/
-	cFit *Fitness;
+	cFit* Fitness;
 
 	/**
 	* Variable to indicate if the chromosome has to be evaluated again,
@@ -83,13 +83,13 @@ public:
 	* @param inst           Pointer to the instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	RChromo(cInst *inst,unsigned int id) throw(bad_alloc);
+	RChromo(cInst* inst,unsigned int id) throw(bad_alloc);
 
 	/**
 	* Initialisation of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
 	*/
-	virtual void Init(cThreadData *thData) throw(bad_alloc);
+	virtual void Init(cThreadData* thData) throw(bad_alloc);
 
 	/**
 	* Construct a valid solution.
@@ -115,6 +115,12 @@ public:
 	* @return               The function must return true if the mutation has been done.
 	*/
 	virtual bool Mutation(void) {return(true);}
+
+	/**
+	* Do an inversion with the chromosome.
+	* @return               The function must return true if the inversion has been done.
+	*/
+	virtual bool Inversion(void) {return(true);}
 
 	/**
 	* Print information on screen.
