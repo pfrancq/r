@@ -101,7 +101,7 @@ enum ROrientation {Normal=0,NormalX=1,NormalY=2,NormalYX=3,Rota90=4,Rota90X=5,Ro
 /**
 * Represent different directions.
 */
-enum RDirection {NoDirection,Left,Right,Down,Up};
+enum RDirection {NoDirection,Left,Right,Down,Up,Behind,Beyond,Origin,Destination,Between};
 
 
 //-----------------------------------------------------------------------------

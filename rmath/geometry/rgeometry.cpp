@@ -67,6 +67,10 @@ void RGeometry2D::AdaptXY(RCoord &x,RCoord &y,RDirection from)
 		case NoDirection:
 			RAssertMsg("Direction can't be undefined");
 			break;
+
+		default:
+			RAssertMsg("Not a valid Direction in this context");
+			break;
 	}
 }
 
@@ -94,6 +98,10 @@ void RGeometry2D::AdaptTestXY(RCoord &x,RCoord &y,RDirection from)
 
 		case NoDirection:
 			RAssertMsg("Direction can't be undefined");
+			break;
+
+		default:
+			RAssertMsg("Not a valid Direction in this context");
 			break;
 	}
 }
