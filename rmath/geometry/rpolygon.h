@@ -117,7 +117,15 @@ public:
 	* class RContainer.
 	* @param poly           Polygon used for the comparaison.
 	*/
-	int Compare(RPolygon *poly) const {return((*this)!=(*poly));}
+	int Compare(const RPolygon* poly) const {return((*this)!=(*poly));}
+
+	/**
+	* This function compares two polygons and returns 0 if there have the same
+	* number of points and at the same positions. This function is used for the
+	* class RContainer.
+	* @param poly           Polygon used for the comparaison.
+	*/
+	int Compare(const RPolygon& poly) const {return((*this)!=poly);}
 
 	/**
 	* This function returns a pointer to the point on the same horizontal vertex.
