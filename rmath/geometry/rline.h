@@ -87,27 +87,30 @@ public:
 	* @param pt2            The second point used.
 	* @param seg            Is the line a segment.
 	*/
-	RLine(RPoint *pt1,RPoint *pt2,bool seg=true);
+	RLine(const RPoint* pt1,const RPoint* pt2,const bool seg=true);
 
 	/**
 	* Return the length of the line.
 	*/
-	float Length(void);
+	float Length(void) const;
 
 	/**
 	* Determine if there is an intersection between two lines (To verify!!!).
+	* @param line           Line used for the comparaison.
 	*/
-	bool Inter(RLine *);
+	bool Inter(const RLine* line) const;
 
 	/**
 	* Determine if there is an intersection between two lines (To verify!!!).
+	* @param line           Line used for the comparaison.
 	*/
-	bool Inter(RLine &);
+	bool Inter(const RLine& line) const;
 
 	/**
 	* Determine if a point is on the line/segment.
+	* @param pt             Point used for the comparaison.
 	*/
-	bool IsIn(const RPoint &);
+	bool IsIn(const RPoint& pt) const;
 };
 
 

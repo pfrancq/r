@@ -118,7 +118,7 @@ extern double Epsi;
 * @param y                  Y Coordinate.
 * @param from               The direction from where "it" is coming.
 */
-void AdaptXY(RCoord &x,RCoord &y,RDirection from);
+void AdaptXY(RCoord &x,RCoord &y,const RDirection from);
 
 
 //-----------------------------------------------------------------------------
@@ -128,7 +128,7 @@ void AdaptXY(RCoord &x,RCoord &y,RDirection from);
 * @param y                  Y Coordinate.
 * @param from               The direction from where "it" is coming.
 */
-void AdaptTestXY(RCoord &x,RCoord &y,RDirection from);
+void AdaptTestXY(RCoord &x,RCoord &y,const RDirection from);
 
 
 }  //-------- End of namespace RGeometry2D ------------------------------------

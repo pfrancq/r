@@ -170,23 +170,24 @@ public:
 	* Return the classification of the current point relative to the segment
 	* formed by two points.
 	*/
-	RDirection Classify(const RPoint& p0,const RPoint& p1);
+	RDirection Classify(const RPoint& p0,const RPoint& p1) const
+		{ return(Classify(&p0,&p1)); }
 
 	/**
 	* Return the classification of the current point relative to the segment
 	* formed by two points.
 	*/
-	RDirection Classify(const RPoint* p0,const RPoint* p1);
+	RDirection Classify(const RPoint* p0,const RPoint* p1) const;
 
 	/**
 	* Change the "orientation" of the point.
 	*/
-	void ChangeOrientation(ROrientation o);
+	void ChangeOrientation(const ROrientation o);
 
 	/**
 	* Save the point in a file.
 	*/
-	void Save(RTextFile& f);
+	void Save(RTextFile& f) const;
 };
 
 

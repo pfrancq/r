@@ -44,7 +44,7 @@ double RGeometry2D::Epsi=0.0001;
 
 
 //---------------------------------------------------------------------------
-void RGeometry2D::AdaptXY(RCoord &x,RCoord &y,RDirection from)
+void RGeometry2D::AdaptXY(RCoord &x,RCoord &y,const RDirection from)
 {
 	switch(from)
 	{
@@ -76,7 +76,7 @@ void RGeometry2D::AdaptXY(RCoord &x,RCoord &y,RDirection from)
 
 
 //---------------------------------------------------------------------------
-void RGeometry2D::AdaptTestXY(RCoord &x,RCoord &y,RDirection from)
+void RGeometry2D::AdaptTestXY(RCoord &x,RCoord &y,const RDirection from)
 {
 	switch(from)
 	{

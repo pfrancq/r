@@ -60,7 +60,7 @@ RGeometry2D::RPolygons::RPolygons(void)
 
 
 //-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::Edge(RPoint *pt)
+bool RGeometry2D::RPolygons::Edge(const RPoint *pt) const
 {
 	RPolygon **poly;
 	unsigned int i;
@@ -74,7 +74,7 @@ bool RGeometry2D::RPolygons::Edge(RPoint *pt)
 
 
 //-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::Edge(RPoint *pt,RPolygon *poly)
+bool RGeometry2D::RPolygons::Edge(const RPoint *pt,const RPolygon *poly) const
 {
 	RPolygon **ptr;
 	unsigned int i;
@@ -88,7 +88,7 @@ bool RGeometry2D::RPolygons::Edge(RPoint *pt,RPolygon *poly)
 
 
 //-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::Edge(RPoint *pt1,RPoint *pt2)
+bool RGeometry2D::RPolygons::Edge(const RPoint *pt1,const RPoint *pt2) const
 {
 	RPolygon **poly;
 	unsigned int i;
@@ -102,7 +102,7 @@ bool RGeometry2D::RPolygons::Edge(RPoint *pt1,RPoint *pt2)
 
 
 //-----------------------------------------------------------------------------
-void RGeometry2D::RPolygons::PutPoints(RPoints *points)
+void RGeometry2D::RPolygons::PutPoints(RPoints *points) const
 {
 	RPolygon **poly;
 	RPoint **point;
@@ -139,7 +139,7 @@ void RGeometry2D::RPolygons::PutPoints(RPoints *points)
 
 
 //-----------------------------------------------------------------------------
-void RGeometry2D::RPolygons::Union(RPolygon *upoly)
+void RGeometry2D::RPolygons::Union(RPolygon *upoly) const
 {
 	RPoint *next,*first,*ins,*last;
 	RDirection FromDir;
@@ -259,7 +259,7 @@ void RGeometry2D::RPolygons::Union(RPolygon *upoly)
 
 
 //-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::DuplicatePoints(void)
+bool RGeometry2D::RPolygons::DuplicatePoints(void) const
 {
 	RPoints tmp(500);
 
@@ -269,7 +269,7 @@ bool RGeometry2D::RPolygons::DuplicatePoints(void)
 
 
 //-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::IsIn(const RCoord X,const RCoord Y)
+bool RGeometry2D::RPolygons::IsIn(const RCoord X,const RCoord Y) const
 {
 	RPolygon **tab;
 	unsigned int i;
@@ -282,7 +282,7 @@ bool RGeometry2D::RPolygons::IsIn(const RCoord X,const RCoord Y)
 
 
 //-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::IsIn(const RPoint &pt)
+bool RGeometry2D::RPolygons::IsIn(const RPoint &pt) const
 {
 	RPolygon **tab;
 	unsigned int i;

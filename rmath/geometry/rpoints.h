@@ -66,13 +66,13 @@ public:
 	* Construct a container of points with an initial maximal size.
 	* @param max            Initial maximal size of the container.
 	*/
-	RPoints(unsigned int max);
+	RPoints(const unsigned int max);
 
 	/**
 	* Construct a container of points from another one.
 	* @param points         The container used as reeference.
 	*/
-	RPoints(RPoints *points);
+	RPoints(const RPoints *points);
 
 	/**
 	* Find the next point to the left and that is on a vertex of a polygon from
@@ -80,7 +80,7 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindLeft(RPoint *pt,RPolygons *polys);
+	RPoint* FindLeft(const RPoint *pt,const RPolygons *polys) const;
 
 	/**
 	* Find the next point to the right and that is on a vertex of a polygon from
@@ -88,7 +88,7 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindRight(RPoint *pt,RPolygons *polys);
+	RPoint* FindRight(const RPoint *pt,const RPolygons *polys) const;
 
 	/**
 	* Find the next point to the bottom and that is on a vertex of a polygon from
@@ -96,7 +96,7 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindBottom(RPoint *pt,RPolygons *polys); // in rpoint.cpp
+	RPoint* FindBottom(const RPoint *pt,const RPolygons *polys) const;
 
 	/**
 	* Find the next point to the up and that is on a vertex of a polygon from
@@ -104,17 +104,17 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindUp(RPoint *pt,RPolygons *polys);
+	RPoint* FindUp(const RPoint *pt,const RPolygons *polys) const;
 
 	/**
 	* Find the most bottom-left point of the container.
 	*/
-	RPoint* FindBottomLeft(void);
+	RPoint* FindBottomLeft(void) const;
 
 	/**
 	* This function returns true when there are duplicate points.
 	*/
-	bool DuplicatePoints(void);
+	bool DuplicatePoints(void) const;
 
 	/**
 	* Assignment operator.

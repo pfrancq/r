@@ -101,24 +101,7 @@ RPoint* RGeometry2D::RPoint::GetPoint(void)
 
 
 //-----------------------------------------------------------------------------
-RDirection RGeometry2D::RPoint::Classify(const RPoint& p0,const RPoint& p1)
-{
-	RPoint a=p1-p0;
-	RPoint b=(*this)-p0;
-	double sa=a.X*b.Y-b.X*a.Y;
-
-	if(sa>Epsi) return(Left);
-	if(sa<-Epsi) return(Right);
-	if(((a.X*b.X)<Epsi)||((a.Y*b.Y)<Epsi)) return(Behind);
-	if(a.Length()<b.Length()) return(Beyond);
-	if((*this)==p0) return(Origin);
-	if((*this)==p1) return(Destination);
-	return(Between);
-}
-
-
-//-----------------------------------------------------------------------------
-RDirection RGeometry2D::RPoint::Classify(const RPoint* p0,const RPoint* p1)
+RDirection RGeometry2D::RPoint::Classify(const RPoint* p0,const RPoint* p1) const
 {
 	RPoint a=(*p1)-(*p0);
 	RPoint b=(*this)-(*p0);
@@ -135,7 +118,7 @@ RDirection RGeometry2D::RPoint::Classify(const RPoint* p0,const RPoint* p1)
 
 
 //-----------------------------------------------------------------------------
-void RGeometry2D::RPoint::ChangeOrientation(ROrientation o)
+void RGeometry2D::RPoint::ChangeOrientation(const ROrientation o)
 {
 	RCoord factx=1,facty=1,oldx,oldy;
 	double co=1,si=0;
@@ -160,56 +143,9 @@ void RGeometry2D::RPoint::ChangeOrientation(ROrientation o)
 
 
 //-----------------------------------------------------------------------------
-void RGeometry2D::RPoint::Save(RTextFile& f)
+void RGeometry2D::RPoint::Save(RTextFile& f) const
 {
 	f<<X<<Y<<endl;
-}
-
-
-
-//-----------------------------------------------------------------------------
-//
-// Class "RPoints"
-// Problem: can't remove this function to rpoints.cpp -> linker problem?
-//
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoints::FindBottom(RPoint *pt,RPolygons *polys)
-{
-	RPoint *Activ,**point;
-	unsigned int i;
-	RCoord X,Y;
-	RCoord AY;
-
-	RReturnValIfFail(pt&&polys,0);
-	if(!NbPtr) return(0);
-	X=pt->X;
-	Y=pt->Y;
-	Activ=0;
-	point=Tab;
-	i=NbPtr+1;
-	// Find first point on bottom
-	while((!Activ)&&(--i))
-	{
-		if(((*point)->X==X)&&((*point)->Y==Y-1)) return(*point);
-		if(((*point)->X==X)&&(polys->Edge(*point,pt))&&((*point)->Y<Y))
-			Activ=(*point);
-		point++;
-	}
-	if(!Activ) return(0);
-	// Find up most point on bottom
-	AY=Activ->Y;
-	for(;--i;point++)
-	{
-		if(((*point)->X==X)&&((*point)->Y==Y-1)) return(*point);
-		if(((*point)->X==X)&&(polys->Edge(*point,pt))&&((*point)->Y>AY)&&((*point)->Y<Y))
-		{
-			Activ=(*point);	
-			AY=Activ->Y;
-    }
-	}
-	return(Activ);
 }
 
 

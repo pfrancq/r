@@ -56,14 +56,14 @@ RGeometry2D::RPoints::RPoints(void)
 
 
 //-----------------------------------------------------------------------------
-RGeometry2D::RPoints::RPoints(unsigned int max)
+RGeometry2D::RPoints::RPoints(const unsigned int max)
 	: RContainer<RPoint,unsigned int,true,false>(max,5)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RGeometry2D::RPoints::RPoints(RPoints *points)
+RGeometry2D::RPoints::RPoints(const RPoints *points)
 	: RContainer<RPoint,unsigned int,true,false>(points->MaxPtr,points->IncPtr)
 {
 	RPoint **pts;
@@ -77,7 +77,46 @@ RGeometry2D::RPoints::RPoints(RPoints *points)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoints::FindLeft(RPoint *pt,RPolygons *polys)
+RPoint* RGeometry2D::RPoints::FindBottom(const RPoint *pt,const RPolygons *polys) const
+{
+	RPoint *Activ,**point;
+	unsigned int i;
+	RCoord X,Y;
+	RCoord AY;
+
+	RReturnValIfFail(pt&&polys,0);
+	if(!NbPtr) return(0);
+	X=pt->X;
+	Y=pt->Y;
+	Activ=0;
+	point=Tab;
+	i=NbPtr+1;
+	// Find first point on bottom
+	while((!Activ)&&(--i))
+	{
+		if(((*point)->X==X)&&((*point)->Y==Y-1)) return(*point);
+		if(((*point)->X==X)&&(polys->Edge(*point,pt))&&((*point)->Y<Y))
+			Activ=(*point);
+		point++;
+	}
+	if(!Activ) return(0);
+	// Find up most point on bottom
+	AY=Activ->Y;
+	for(;--i;point++)
+	{
+		if(((*point)->X==X)&&((*point)->Y==Y-1)) return(*point);
+		if(((*point)->X==X)&&(polys->Edge(*point,pt))&&((*point)->Y>AY)&&((*point)->Y<Y))
+		{
+			Activ=(*point);	
+			AY=Activ->Y;
+    }
+	}
+	return(Activ);
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint* RGeometry2D::RPoints::FindLeft(const RPoint *pt,const RPolygons *polys) const
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -116,7 +155,7 @@ RPoint* RGeometry2D::RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoints::FindRight(RPoint *pt,RPolygons *polys)
+RPoint* RGeometry2D::RPoints::FindRight(const RPoint *pt,const RPolygons *polys) const
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -155,7 +194,7 @@ RPoint* RGeometry2D::RPoints::FindRight(RPoint *pt,RPolygons *polys)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoints::FindUp(RPoint *pt,RPolygons *polys)
+RPoint* RGeometry2D::RPoints::FindUp(const RPoint *pt,const RPolygons *polys) const
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -194,7 +233,7 @@ RPoint* RGeometry2D::RPoints::FindUp(RPoint *pt,RPolygons *polys)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoints::FindBottomLeft(void)
+RPoint* RGeometry2D::RPoints::FindBottomLeft(void) const
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -217,7 +256,7 @@ RPoint* RGeometry2D::RPoints::FindBottomLeft(void)
 
 
 //-----------------------------------------------------------------------------
-bool RGeometry2D::RPoints::DuplicatePoints(void)
+bool RGeometry2D::RPoints::DuplicatePoints(void) const
 {
 	unsigned int i,j;
 	RPoint **point1,**point2;

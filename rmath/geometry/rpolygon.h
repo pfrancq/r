@@ -70,7 +70,7 @@ public:
 	* Construct a polygon with an initial maxiam size.
 	* @param Max            Initial maximal size.
 	*/
-	RPolygon(int Max);
+	RPolygon(const int Max);
 
 	/**
 	* Construct a polygon from another.
@@ -92,12 +92,12 @@ public:
 	/**
 	* The equal operator.
 	*/
-	bool operator==(const RPolygon &poly);
+	bool operator==(const RPolygon &poly) const;
 
 	/**
 	* The non-equal operator.
 	*/
-	bool operator!=(const RPolygon &poly);
+	bool operator!=(const RPolygon &poly) const;
 
 	/**
 	* Make a translation of the polygon.
@@ -117,18 +117,18 @@ public:
 	* class RContainer.
 	* @param poly           Polygon used for the comparaison.
 	*/
-	int Compare(RPolygon *poly) {return((*this)!=(*poly));}
+	int Compare(RPolygon *poly) const {return((*this)!=(*poly));}
 
 	/**
 	* This function returns a pointer to the point on the same horizontal vertex.
 	* @param pt             Point used as reference.
 	*/
-	RPoint* GetConX(RPoint *pt) const;
+	RPoint* GetConX(const RPoint *pt) const;
 
 	/** This function returns a pointer to the point on the same vertital vertex.
 	* @param pt             Point used as reference.
 	*/
-	RPoint* GetConY(RPoint *pt) const;
+	RPoint* GetConY(const RPoint *pt) const;
 
 	/**
 	* Return a pointer to the most bottom-left point of the polygon.
@@ -142,7 +142,7 @@ public:
 	* @param MinY           Minimal Y position of the point to search.
 	* @param MaxX           Maximal X position of the point to search.
 	*/
-	RPoint* GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX) const;
+	RPoint* GetBottomLeft(const RCoord MinX,const RCoord MinY,const RCoord MaxX) const;
 
 	/**
 	* Return a pointer to the most left-bottom point of the polygon.
@@ -156,7 +156,7 @@ public:
 	* @param MinY           Minimal Y position of the point to search.
 	* @param MaxY           Maximal Y position of the point to search.
 	*/
-	RPoint* GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY) const;
+	RPoint* GetLeftBottom(const RCoord MinX,const RCoord MinY,const RCoord MaxY) const;
 
 	/**
 	* Return true if the point is on an edge.
@@ -182,7 +182,7 @@ public:
 	* @param pt1            The first point used.
 	* @param pt2            The second point used.
 	*/
-	bool Edge(RPoint *pt1,RPoint *pt2) const;
+	bool Edge(const RPoint *pt1,const RPoint *pt2) const;
 
 	/**
 	* Return true if the point is a vertice.
@@ -240,7 +240,7 @@ public:
 	* @param min            The vector that has been substracted to have the
 	*                       bottom-left point at (0,0).
 	*/
-	void ChangeOrientation(ROrientation o,RPoint& min);
+	void ChangeOrientation(const ROrientation o,RPoint& min);
 
 	/**
 	* Decompose the polygon in a container of rectangles.
@@ -252,7 +252,7 @@ public:
 	* Add the points of the polygon to a container of points.
 	* @param points         A pointer to the container of points.
 	*/
-	void AddPoints(RPoints *points);
+	void AddPoints(RPoints *points) const;
 
 	/**
 	* Shift the points of the polygon to make the bottom-left point be the first
@@ -263,7 +263,7 @@ public:
 	/**
 	* This function returns when there are duplicate points.
 	*/
-	bool DuplicatePoints(void);
+	bool DuplicatePoints(void) const;
 
 	/**
 	* Return a pointer to a temporary object of class rpolygon.
