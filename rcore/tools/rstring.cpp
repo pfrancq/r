@@ -181,6 +181,16 @@ RString& RStd::RString::operator=(const char *text) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
+void RStd::RString::Copy(const char* text,unsigned int nb)
+{
+	Verify(nb);
+	Len=nb;
+	memcpy(Text,text,nb*sizeof(char));
+	Text[nb]=0;
+}
+
+
+//-----------------------------------------------------------------------------
 char* RStd::RString::StrDup(void) const throw(bad_alloc)
 {
 	char *text,*ptr1;

@@ -115,7 +115,14 @@ public:
 	/**
 	* Assignment operator using a "C string".
 	*/
-	RString& operator=(const char *text) throw(bad_alloc);
+	RString& operator=(const char* text) throw(bad_alloc);
+
+	/**
+	* Copy a certain number of characters in the string.
+	* @param text           Text to copy.
+	* @param nb             Numbre of characters to copy.
+	*/
+	void Copy(const char* text,unsigned int nb);
 
 	/**
 	* Make a copy a return a pointer to it.
