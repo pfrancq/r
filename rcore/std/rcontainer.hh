@@ -31,7 +31,7 @@
 	#pragma warn -rch
 #endif
 
-
+			
 //---------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>::RContainer(T M,T I) throw(bad_alloc)
