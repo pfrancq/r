@@ -608,6 +608,32 @@ RTextFile& RTextFile::operator<<(const bool b) throw(RString)
 
 
 //-----------------------------------------------------------------------------
+void RTextFile::WriteDouble(const double d) throw(RString)
+{
+	char Str[25];
+
+	if(Mode==Read)
+		throw(RString("File Mode is Read"));
+	if(!NewLine)
+		write(handle,Separator,Separator.GetLen());
+	sprintf(Str,"%f",d);
+	write(handle,Str,strlen(Str));
+	#ifdef windows
+		flushall();
+	#endif
+	NewLine=false;
+}
+
+
+//-----------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const double d) throw(RString)
+{
+	WriteDouble(d);
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
 void RTextFile::WriteTime(void) throw(RString)
 {
 	char Str[30];

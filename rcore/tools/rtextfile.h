@@ -398,6 +398,16 @@ public:
 	*/
 	RTextFile& operator<<(const bool b) throw(RString);
 
+ 	/**
+	* Write a double
+	*/
+	void WriteDouble(const double d) throw(RString);
+
+	/**
+	* << Operator for double.
+	*/
+	RTextFile& operator<<(const double d) throw(RString);
+
 	/**
 	* Write the time in the file. If the time is not the first thing on the line,
 	*	a separator is add before it.
