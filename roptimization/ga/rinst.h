@@ -83,10 +83,9 @@ public:
 
 //------------------------------------------------------------------------------
 /**
-* \ingroup GA
 * Instance for the generic GA.
 * @author Pascal Francq
-* @short Generic instance.
+* @short Generic GA instance.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	class RInst
@@ -277,7 +276,7 @@ public:
 	* This function does the necessary mutations for a generation.
 	*/
 	virtual void Mutation(void) throw(eGA);
-	
+
 	/**
 	* This function does the necessary inversions for a generation.
 	*/
@@ -351,7 +350,7 @@ public:
 	* The instance is a slave.
 	*/
 	static const char instSlave=1;
-	
+
 	/**
 	* The instance can use multi-processors.
 	*/

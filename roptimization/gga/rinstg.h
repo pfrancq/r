@@ -90,10 +90,14 @@ public:
 
 
 //------------------------------------------------------------------------------
+/**
+* Generic instance for a GGA.
+* @author Pascal Francq
+* @short Generic GGA instance.
+*/
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	class RInstG : public RInst<cInst,cChromo,cFit,cThreadData>
 {
-
 protected:
 
 	/**

@@ -71,7 +71,7 @@ class RTextEncoding;
 * {
 * public:
 * 	int X,Y;
-* }
+* };
 *
 * RTextFile& operator<<(RTextFile &f,Point &pt)
 * {

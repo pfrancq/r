@@ -49,6 +49,9 @@ namespace R{
 
 
 /**
+* The RDir class represents a generic directory.
+* @author Pascal Francq
+* @short Directory.
 */
 class RDir : public RFile
 {

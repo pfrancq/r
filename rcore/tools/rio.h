@@ -53,6 +53,11 @@ class RTextFile;
 
 
 //------------------------------------------------------------------------------
+/**
+* The RIO class provides some I/O types.
+* @author Pascal Francq
+* @short I/O Types.
+*/
 class RIO
 {
 public:
