@@ -108,6 +108,54 @@ public:
 	RCursor(void);
 
 	/**
+	* Construct the cursor.
+	* param c               Container to iterate.
+	*/
+	RCursor(RContainer<C,T,true,true>& c);
+
+	/**
+	* Construct the cursor.
+	* param c               Container to iterate.
+	*/
+	RCursor(RContainer<C,T,true,true>* c);
+
+	/**
+	* Construct the cursor.
+	* param c               Container to iterate.
+	*/
+	RCursor(RContainer<C,T,false,true>& c);
+
+	/**
+	* Construct the cursor.
+	* param c               Container to iterate.
+	*/
+	RCursor(RContainer<C,T,false,true>* c);
+
+	/**
+	* Construct the cursor.
+	* param c               Container to iterate.
+	*/
+	RCursor(RContainer<C,T,true,false>& c);
+
+	/**
+	* Construct the cursor.
+	* param c               Container to iterate.
+	*/
+	RCursor(RContainer<C,T,true,false>* c);
+
+	/**
+	* Construct the cursor.
+	* param c               Container to iterate.
+	*/
+	RCursor(RContainer<C,T,false,false>& c);
+
+	/**
+	* Construct the cursor.
+	* param c               Container to iterate.
+	*/
+	RCursor(RContainer<C,T,false,false>* c);
+
+	/**
 	* Assignment operator using a "Cursor".
 	*/
 	RCursor<C,T>& operator=(const RCursor<C,T>& c) throw(bad_alloc);
