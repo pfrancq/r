@@ -68,7 +68,7 @@ public:
 	/**
 	* Parent Node.
 	*/
-	N *Parent;
+	N* Parent;
 
 	/**
 	* Construct the node.
@@ -87,7 +87,7 @@ public:
 	* Insert a subnode.
 	* @param node           The node to insert.
 	*/
-	void InsertNode(RNode<N,bOrder> *node);
+	void InsertNode(N* node);
 
 	/**
 	* Destruct the node.

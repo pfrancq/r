@@ -55,10 +55,10 @@ template<class N,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class N,bool bOrder>
-	void RStd::RNode<N,bOrder>::InsertNode(RNode<N,bOrder> *node)
+	void RStd::RNode<N,bOrder>::InsertNode(N* node)
 {
 	InsertPtr(node);
-	node->Parent=this;
+	node->Parent=static_cast<N*>(this);
 }
 
 
