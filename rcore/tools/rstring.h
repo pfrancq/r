@@ -167,6 +167,11 @@ public:
 	RString& operator+=(const char *text) throw(bad_alloc);
 
 	/**
+	* Add a character to the string.
+	*/
+	RString& operator+=(const char c) throw(bad_alloc);
+
+	/**
 	* Return the character at position i. The first letter is at position 0.
 	*/
 	inline char operator[](int i) const	{return(Text[i]);}

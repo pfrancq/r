@@ -318,6 +318,19 @@ RString& RStd::RString::operator+=(const char *text) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
+RString& RStd::RString::operator+=(const char c) throw(bad_alloc)
+{
+	char* ptr;
+
+	Verify(Len+1);
+	ptr=&Text[Len++];
+	((*ptr)++)=c;
+	(*ptr)=0;
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
 bool RStd::RString::operator==(const RString& str) const
 {
 	const char *ptr1=str.Text;
