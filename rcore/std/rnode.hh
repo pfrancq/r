@@ -55,6 +55,15 @@ template<class N,bool bOrder>
 
 //---------------------------------------------------------------------------
 template<class N,bool bOrder>
+	void RNode<N,bOrder>::InsertNode(RNode<N,bOrder> *node)
+{
+	InsertPtr(node);
+	node->Parent=this;
+}
+
+
+//---------------------------------------------------------------------------
+template<class N,bool bOrder>
 	RNode<N,bOrder>::~RNode(void)
 {
 }

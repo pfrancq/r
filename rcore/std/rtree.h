@@ -38,6 +38,7 @@
 
 //---------------------------------------------------------------------------
 #include "rstd/rstd.h"
+#include "rstd/rcontainer.h"
 using namespace RStd;
 
 

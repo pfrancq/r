@@ -85,6 +85,12 @@ public:
 	virtual int Compare(RNode*);
 
 	/**
+	* Insert a subnode.
+	* @param node 	The node to insert.
+	*/
+	void InsertNode(RNode<N,bOrder> *node);
+
+	/**
 	* Destruct the node.
 	*/
   virtual ~RNode(void);
