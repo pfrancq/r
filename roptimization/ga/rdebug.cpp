@@ -28,20 +28,27 @@
 */
 
 
+
 //---------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <new.h>
+#include <string.h>
+#ifdef unix
+	#include <unistd.h>
+#else
+	#include <io.h>
+#endif
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <stdarg.h>
+
+
+//---------------------------------------------------------------------------
+// include files for Rainbow
 #include "rdebug.h"
 using namespace RGA;
-
-
-//---------------------------------------------------------------------------
-// Variables
-char TempString[2000];
-char TempString2[2000];
-char TempBlank[200];
-char TempNL[5];
-bool LevelOutput[50];
-unsigned LenBlank;
-unsigned LenNL;
 
 
 
@@ -52,62 +59,8 @@ unsigned LenNL;
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-RDebug::RDebug(void)
+RDebug::RDebug(void) : Deep(-1)
 {
-  memset(TempBlank,' ',200);
-  strcpy(TempNL,"\n");
-  FileName=NULL;
-  LenNL=strlen(TempNL);
-  FileHandle=0;
-  Inc=0;
-}
-
-
-//---------------------------------------------------------------------------
-void RDebug::Init(char *Name) throw(bad_alloc)
-{
-  if(Name)
-  {
-    FileName=new char[strlen(Name)+1];
-    strcpy(FileName,Name);
-  }
-  FileHandle=open(FileName,O_WRONLY	| O_CREAT | O_TRUNC/* | O_TEXT*/); // O_TEXT no support on UNIX
-}
-
-
-//---------------------------------------------------------------------------
-inline void RDebug::PrintBlanks(void)
-{
-  write(FileHandle,TempBlank,Inc*2);
-}
-
-
-//---------------------------------------------------------------------------
-inline void RDebug::PrintNL(void)
-{
-  write(FileHandle,TempNL,LenNL);
-}
-
-
-//---------------------------------------------------------------------------
-void RDebug::Print(char *Text)
-{
-  LevelOutput[Inc-1]=true;
-  PrintNL();
-  PrintBlanks();
-  write(FileHandle,&"<Info>",6);
-  write(FileHandle,Text,strlen(Text));
-  write(FileHandle,&"</Info>",7);  
-}
-
-
-//---------------------------------------------------------------------------
-void RDebug::PrintTag(char *Text)
-{
-  LevelOutput[Inc-1]=true;
-  PrintBlanks();
-  write(FileHandle,Text,strlen(Text));
-  PrintNL();
 }
 
 
@@ -115,47 +68,54 @@ void RDebug::PrintTag(char *Text)
 void RDebug::BeginTag(char *Text,unsigned NbAttr,...)
 {
   va_list ap;
-    
-  if(Inc) PrintNL();
-  PrintBlanks();
-  write(FileHandle,"<",1);
-  write(FileHandle,Text,strlen(Text));
+
+  LevelOutput[++Deep]=false;	// For the moment nothing as child
+	NbOptions=0;
+	(*tmpOpt)=0;
   va_start(ap, NbAttr);
   while(NbAttr--)
-    AddAttribute(va_arg(ap,char*),va_arg(ap,char*));
+    AddAttribute(tmpOpt,va_arg(ap,char*),va_arg(ap,char*));
   va_end(ap);
-  write(FileHandle,">",1);
-  LevelOutput[Inc++]=false;
+	WriteBeginTag(Text,tmpOpt);
+}
+
+
+//---------------------------------------------------------------------------
+void RDebug::AddAttribute(char *buf,char *Value,char *Attr)
+{
+	if(NbOptions++) strcat(buf," ");
+	strcat(buf,Attr);
+	strcat(buf,"=\"");
+	strcat(buf,Value);
+	strcat(buf,"\"");
+}
+
+
+//---------------------------------------------------------------------------
+void RDebug::PrintComment(char *Text)
+{
+	LevelOutput[Deep]=true;	
+	WriteText(Text);
 }
 
 
 //---------------------------------------------------------------------------
 void RDebug::EndTag(char *Text)
 {
-  Inc--;
-  if(!LevelOutput[Inc])
-    write(FileHandle,"No Special Information",22);
-  else
-  {
-    PrintNL();
-    PrintBlanks();
-  }
-  if(Inc)
-    LevelOutput[Inc-1]=true;
-  write(FileHandle,"</",2);
-  write(FileHandle,Text,strlen(Text));
-  write(FileHandle,">",1);
+  if(!LevelOutput[Deep])
+    WriteText("No Special Information");
+  if(Deep) LevelOutput[Deep-1]=true;
+	WriteEndTag(Text);
+	Deep--;
 }
 
 
 //---------------------------------------------------------------------------
-void RDebug::AddAttribute(char *Value,char *Attr)
+void RDebug::PrintInfo(char *Text)
 {
-  write(FileHandle,&" ",1);
-  write(FileHandle,Attr,strlen(Attr));
-  write(FileHandle,&"=\"",2);
-  write(FileHandle,Value,strlen(Value));
-  write(FileHandle,&"\"",1);
+	BeginTag("Info");
+	PrintComment(Text);
+	EndTag("Info");
 }
 
 
@@ -167,8 +127,7 @@ void RDebug::BeginFunc(char *Name,char *Object)
 
 
 //---------------------------------------------------------------------------
-#pragma argsused
-void RDebug::EndFunc(char *Name,char *Object)
+void RDebug::EndFunc(char *Name,char *)
 {
   EndTag(Name);
 }
@@ -178,6 +137,7 @@ void RDebug::EndFunc(char *Name,char *Object)
 void RDebug::BeginApp(char *App,char *Author)
 {
   time_t t;
+	char TempString[50];
 
   time(&t);
   strcpy(TempString,ctime(&t));
@@ -187,30 +147,92 @@ void RDebug::BeginApp(char *App,char *Author)
 
 
 //---------------------------------------------------------------------------
-#pragma argsused
-void RDebug::EndApp(char *App,char *Author)
+void RDebug::EndApp(char *App,char *)
 {
   EndTag(App);
 }
 
 
 //---------------------------------------------------------------------------
-void RDebug::Done(void)
+RDebug::~RDebug(void)
 {
-  if(FileHandle)
-  {
-    close(FileHandle);
-    chmod(FileName,S_IREAD|S_IWRITE);
-    FileHandle=0;
-  }
+}
+
+
+
+//---------------------------------------------------------------------------
+//
+// Class RDebugXML
+//
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+RDebugXML::RDebugXML(const RString &name) throw(bad_alloc)
+	: RDebug(),Name(name)
+{
+	unsigned int i;
+	char *ptr;
+
+	Handle=open(Name(),O_WRONLY	| O_CREAT | O_TRUNC);
+	if(!Handle) throw(new bad_alloc);
+	strcpy(tmpNL,"\n");
+	tmpLenNL=strlen(tmpNL);
+	for(i=50,ptr=tmpTab;--i;ptr++)	(*ptr)='\t';
+	(*ptr)=0;
 }
 
 
 //---------------------------------------------------------------------------
-RDebug::~RDebug(void)
+void RDebugXML::WriteBeginTag(char *tag,char *options)
 {
-  Done();
-  delete[] FileName;
+  if(Deep)
+	{
+		write(Handle,tmpNL,tmpLenNL);
+		write(Handle,tmpTab,Deep);
+	}
+	write(Handle,"<",1);
+	write(Handle,tag,strlen(tag));	
+	if(options&&(*options))
+	{
+		write(Handle," ",1);
+		write(Handle,options,strlen(options));
+	}
+	write(Handle,">",1);
+}
+
+
+//---------------------------------------------------------------------------
+void RDebugXML::WriteEndTag(char *tag)
+{
+  if(Deep&&LevelOutput[Deep-1])
+	{
+		write(Handle,tmpNL,tmpLenNL);
+		write(Handle,tmpTab,Deep);
+	}
+  write(Handle,"</",2);
+  write(Handle,tag,strlen(tag));
+  write(Handle,">",1);
+}
+
+
+//---------------------------------------------------------------------------
+void RDebugXML::WriteText(char *text)
+{	
+	write(Handle,tmpNL,tmpLenNL);
+	write(Handle,tmpTab,Deep+1);
+	write(Handle,text,strlen(text));
+}
+
+
+//---------------------------------------------------------------------------
+RDebugXML::~RDebugXML(void)
+{
+	close(Handle);
+	int access=S_IREAD | S_IWRITE;
+	#ifdef unix
+		access|= S_IRGRP | S_IROTH;
+	#endif
+	chmod(Name(),access);
 }
 
 

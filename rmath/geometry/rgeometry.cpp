@@ -1,10 +1,10 @@
 /*
 
-  RRect.h
+  Geometry.cpp
 
-  Rectangle - Header
+  Geometry base classes - Basic definition - Implementation.
 
-  (C) 1999-2000 by P. Francq.
+  (c) 2000 by P. Francq.
 
   Version $Revision$
 
@@ -27,40 +27,13 @@
 */
 
 
-//---------------------------------------------------------------------------
-#ifndef RRectH
-#define RRectH
-
 
 //---------------------------------------------------------------------------
-#include "rpoint.h"
+// include files for Rainbow
+#include "geometry.h"
 using namespace RGeometry;
 
 
 //---------------------------------------------------------------------------
-namespace RGeometry{
-//---------------------------------------------------------------------------
-
-
-//---------------------------------------------------------------------------
-// Rectangle
-class RRect
-{
-public:
-  RPoint Pt1,Pt2;
-
-  RRect(void);
-  RRect(RPoint *,RPoint *);
-  RRect(RCoord MinX,RCoord MinY,RCoord MaxX,RCoord MaxY);
-  RCoord Area(void);
-  inline RCoord Length(void);
-  inline RCoord Width(void);
-	~RRect(void) {}
-};
-
-
-#include "rrect.hh"
-
-
-}  //-------- End of namespace RStd ---------------------------------------
-#endif
+// Global variables
+double RGeometry::Epsi=0.0001;

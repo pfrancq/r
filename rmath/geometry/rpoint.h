@@ -34,7 +34,7 @@
 
 //---------------------------------------------------------------------------
 // Includes
-#include <geometry.h>
+#include "geometry.h"
 using namespace RGeometry;
 
 
@@ -61,6 +61,7 @@ public:
   inline RPoint& operator=(const RPoint &pt);
   inline bool operator==(const RPoint &pt);
   inline bool operator!=(const RPoint &pt);
+	~RPoint(void) {}
 };
 
 #include "rpoint.hh"

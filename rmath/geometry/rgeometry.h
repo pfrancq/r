@@ -50,7 +50,7 @@ namespace RGeometry{
 //---------------------------------------------------------------------------
 // Defines
 #ifndef RGEOMETRY_TYPE
-	#define RGEOMETRY_TYPE long
+	#define RGEOMETRY_TYPE int
 #endif
 #ifndef RGEOMETRY_DIMS
 	#define RGEOMETRY_DIMS 2
@@ -67,7 +67,7 @@ typedef RGEOMETRY_TYPE RCoord;                 // A coordinate type
 
 //---------------------------------------------------------------------------
 // Const
-const RCoord MaxCoord=ULONG_MAX;
+const RCoord MaxCoord=INT_MAX;
 const char orNormal=0;
 const char orNormalMirrorX=1;
 const char orNormalMirrorY=2;
@@ -78,6 +78,10 @@ const char orRota90MirrorY=6;
 const char orRota90MirrorYX=7;
 
 
+//---------------------------------------------------------------------------
+// General Varaibles
+extern double Epsi;														// tolerance for calculations
 
-}  //-------- End of namespace RStd ---------------------------------------
+
+}  //-------- End of namespace RGeometry ------------------------------------
 #endif

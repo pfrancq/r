@@ -36,7 +36,7 @@
 #include "rpoint.h"
 #include "rrect.h"
 using namespace RGeometry;
-#include "rcontainer.h"
+#include "rstd/rcontainer.h"
 using namespace RStd;
 
 
@@ -57,11 +57,11 @@ public:
   int Compare(RPolygon*);
   inline void AddPoint(RPoint* pt);
   inline void AddPoint(RCoord x,RCoord y,RCoord z=0);
-  bool IsIn(RPoint *pt);
+  bool IsIn(const RPoint &pt);
   RRect* Boundary(void);
   void Boundary(RRect&);
-  void Fill(bool **Occupied,RPoint Pt);
-  void Orientation(char Ori);  
+  void Orientation(char Ori);
+	~RPolygon(void) {}
 };
 
 
@@ -72,6 +72,7 @@ class RPolygons : public RContainer<RPolygon,unsigned,true,false>
 public:
   RPolygons(void);
   void Union(RPolygon *poly);
+	~RPolygons(void) {}
 };
 
 

@@ -1,5 +1,7 @@
 /*
 
+	Rainbow Library Project
+
   RChromo2D.h
 
   Chromosome for 2D placement GA - Header
@@ -24,7 +26,32 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+	As a special exception to the GNU General Public License, permission is
+	granted for additional uses of the text contained in its release
+	of the Rainbow Library.
+
+	The exception is that, if you link the Rainbow with other files
+	to produce an executable, this does not by itself cause the
+	resulting executable to be covered by the GNU General Public License.
+	Your use of that executable is in no way restricted on account of
+	linking the Rainbow library code into it.
+
+	This exception does not however invalidate any other reasons why
+	the executable file might be covered by the GNU General Public License.
+
+	This exception applies only to the code released under the
+	name Rainbow.  If you copy code from other releases into a copy of
+	RAinbow, as the General Public License permits, the exception does
+	not apply to the code that you add in this way.  To avoid misleading
+	anyone as to the status of such modified files, you must delete
+	this exception notice from them.
+
+	If you write modifications of your own for Rainbow, it is your choice
+	whether to permit this exception to apply to your modifications.
+	If you do not wish that, delete this exception notice.
+
 */
+
 
 
 //---------------------------------------------------------------------------
@@ -33,13 +60,9 @@
 
 
 //---------------------------------------------------------------------------
-// Standard libraries includes
-#include "rga.h"
+// include files for Rainbow
 #include "rga2d.h"
 using namespace RGA;
-#include "rgeometry/polygons.h"
-#include "rgeometry/rgeoinfo.h"
-using namespace RGeometry;
 
 
 //---------------------------------------------------------------------------
@@ -51,18 +74,27 @@ namespace RGA{
 template<class cInst,class cChromo,class cFit,class cInfo>
 	class RChromo2D : public RChromo<cInst,cChromo,cFit>
 {
+protected:
+	RObj2D **Objs;						// Objects to place (ref)
+	unsigned int NbObjs;			// Nb Objects to place
+	unsigned int **OccupiedX;	// Grid with X as entry
+	unsigned int **OccupiedY;	// Grid with Y as entry
+	unsigned int *thOrder;		// Array (ref)
+	unsigned int *thInObj;		// Array of object if (ref)
+	cInfo **thInfos;					// Geometric information for temporary objects (Crossover & Mutation) (ref)
+
 public:
-  cInfo **Infos;
+  cInfo **Infos;						// Geometric information of the objects
 
-  RChromo2D(cInst *inst,unsigned id) throw(bad_alloc);
+  RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc);
+	virtual void Init(void) throw(bad_alloc);
+  bool Heuristic(RObj2D **objs,cInfo **infos,unsigned int nbobjs);
   virtual bool RandomConstruct(void);
+  virtual RChromo2D& operator=(const RChromo2D &chromo);
   virtual ~RChromo2D(void);
+
+	friend RInst2D<cInst,cChromo,cFit,cInfo>;
 };
-
-
-//---------------------------------------------------------------------------
-// RChromo2D codes
-#include "rchromo2d.hh"
 
 
 }//------- End of namespace RGA ---------------------------------------------

@@ -29,6 +29,7 @@
 
 //---------------------------------------------------------------------------
 #include "polygons.h"
+#include "rline.h"
 using namespace RGeometry;
 
 
@@ -83,18 +84,29 @@ int RPolygon::Compare(RPolygon*)
 
 
 //---------------------------------------------------------------------------
-bool RPolygon::IsIn(RPoint *pt)
+// Trace a line from point to the infini
+// Calc nb intersections between this line and each segment of the polygon
+// If nb intersections is odd -> point is in the polygon
+bool RPolygon::IsIn(const RPoint &point)
 {
-/*  RLine lt,lp;
-ss  RPoint **ptr;
-  int i;
-
-  long count=0;
-  lt.Pt1=(*pt);
-  lt.Pt1.X=DBL_MAX;
-  lt.Pt1.Y=pt->Y;
-  return(count%1);*/
-  return(true);
+  RLine lt,lp;
+  RPoint **pt,*last;
+  unsigned int i;
+	long count=0;
+	
+  lt.Pt1=point;
+  lt.Pt1.X=MaxCoord;
+  lt.Pt1.Y=point.Y;
+	last=Tab[NbPtr-1];	// Point last to ending point of Polygon
+	for(i=NbPtr+1,pt=Tab;--i;pt++)
+	{
+		if(lt.IsIn(**pt)) continue;
+		lp.Pt1=(**pt);
+		lp.Pt2=(*last);
+		last=(*pt);
+		if(lp.Inter(lt)) count++;
+  }
+  return(count%1);
 }
 
 
@@ -144,7 +156,7 @@ void RPolygon::Boundary(RRect &rect)
 //---------------------------------------------------------------------------
 void RPolygon::Orientation(char Ori)
 {
-  int factx=1,facty=1,i,minx,miny,oldx,oldy;
+  RCoord factx=1,facty=1,i,minx,miny,oldx,oldy;
   RPoint **ptr;
   double co=1,si=0;
 
@@ -165,8 +177,8 @@ void RPolygon::Orientation(char Ori)
   {
     oldx = factx*(*ptr)->X;
     oldy = facty*(*ptr)->Y;
-    (*ptr)->X = (RCoord)(co*oldx - si*oldy);
-    (*ptr)->Y= (RCoord)(si*oldx + co*oldy);
+    (*ptr)->X = RCoord(co*oldx - si*oldy);
+    (*ptr)->Y = RCoord(si*oldx + co*oldy);
     if((*ptr)->X<minx) minx=(*ptr)->X;
     if((*ptr)->Y<miny) miny=(*ptr)->Y;
   }
@@ -176,32 +188,6 @@ void RPolygon::Orientation(char Ori)
   {
     (*ptr)->X -= minx;
     (*ptr)->Y -= miny;
-  }
-}
-
-
-//---------------------------------------------------------------------------
-void RPolygon::Fill(bool **Occupied,RPoint Pt)
-{
-  RCoord i;
-  bool **ptr;
-  RPoint **pts,*pt1,*pt2;
-  unsigned Nb=NbPtr;
-
-  // Suppose the hole Region is Occupated
-  for(i=Pt.X+1,ptr=Occupied;--i;ptr++)
-    memset(*ptr,Pt.Y*sizeof(bool),1);
-
-  // Substract the non Occupied Regions
-  pts=Tab;
-  pt1=*pts;
-  while(--Nb)
-  {
-    pts++;
-    pt2=(*pts);
-
-
-    pt1=pt2;
   }
 }
 

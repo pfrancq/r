@@ -2,7 +2,7 @@
 
   RDebug.h
 
-  Debugging file in XML format (eXtended Markup Language) - Header
+  Debugging structure and file in XML format (eXtended Markup Language) - Header
 
   (C) 1998-2000 by P. Francq.
 
@@ -33,20 +33,15 @@
 #define RDebugH
 
 
-//---------------------------------------------------------------------------
-// Standard libraries includes
-#include <new.h>
-#include <string.h>
-#ifdef unix
-	#include <unistd.h>
-#else
-	#include <io.h>
+#ifndef NULL
+	#define NULL 0
 #endif
-#include <stdio.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <time.h>
-#include <stdarg.h>
+
+
+//---------------------------------------------------------------------------
+// include files for Rainbow
+#include "rstring.h"
+using namespace RStd;
 
 
 //---------------------------------------------------------------------------
@@ -55,28 +50,52 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
-// Generic Debug File (XML format)
+// Generic Debug File
 class RDebug
 {
-  char *FileName;
-  int FileHandle;
-  unsigned Inc;
+	char tmpOpt[2000];
+	unsigned int NbOptions;
+protected:
+	int Deep;																													// Deep Level (if -1 -> Nothing)
+	bool LevelOutput[50];																							// If LevelOutput[i]=true -> i+1 not null
 public:
   RDebug(void);
-  void Init(char*) throw(bad_alloc);
-  inline void PrintBlanks(void);
-  inline void PrintNL(void);
-  void Print(char*);                                // Print an Info
-  void PrintTag(char*);                             // Print in a Tag
-  void BeginTag(char *,unsigned NbAttr=0,...);      // Begin a Tag
-  void EndTag(char *);                              // End a Tag
-  void AddAttribute(char *Value,char *Att);         // Add an attribute
-  void BeginFunc(char *Name,char *Object);          // Begin a Tag "Object.Name"
-  void EndFunc(char *Name,char *Object);            // End a Tag "Object.Name"
-  void BeginApp(char *App,char *Author);            // Begin a Tag "App"
-  void EndApp(char *App,char *Author);              // End a Tag "App"
-  void Done(void);
-  ~RDebug(void);
+  void BeginTag(char *,unsigned NbAttr=0,...);  	   								// Begin a Tag with attributes
+	void PrintComment(char*);																					// Print a comment for the tag
+  void EndTag(char *);                              								// End a Tag
+  void PrintInfo(char*);                             								// Print an Info
+  void BeginFunc(char *Name,char *Object);          								// Begin a Tag "Object.Name"
+  void EndFunc(char *Name,char *Object);            								// End a Tag "Object.Name"
+  void BeginApp(char *App,char *Author);            								// Begin a Tag "App"
+  void EndApp(char *App,char *Author);              								// End a Tag "App"
+protected:
+  void AddAttribute(char* buf,char *Value,char *Att);								// Add an attribute to buf
+  virtual void WriteBeginTag(char *tag,char* options=NULL)=0;				// Begin a Tag
+	virtual void WriteText(char *text)=0;															// Write Text associate with current tag
+  virtual void WriteEndTag(char *tag)=0;														// End a Tag
+public:
+  virtual ~RDebug(void);
+};
+
+
+//---------------------------------------------------------------------------
+// Generic Debug File
+class RDebugXML : public RDebug
+{
+	RString Name;
+	int Handle;
+	char tmpTab[50],tmpNL[3],tmpLenNL;	
+
+public:
+	RDebugXML(const RString &name) throw(bad_alloc);	
+
+protected:
+  virtual void WriteBeginTag(char *tag,char* options=NULL);					// Begin a Tag
+	virtual void WriteText(char *text);																// Write Text associate with current tag
+  virtual void WriteEndTag(char *tag);															// End a Tag
+
+public:
+	virtual ~RDebugXML(void);
 };
 
 

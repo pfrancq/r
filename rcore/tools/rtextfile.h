@@ -59,7 +59,7 @@ public:
 	float GetFloat(void) throw(RString);
 	char *GetWord(void);
 	char *GetLine(void);		
-	~RTextFile();
+	~RTextFile(void);
 };
 
 

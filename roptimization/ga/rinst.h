@@ -1,5 +1,7 @@
 /*
 
+	Rainbow Library Project
+
   RInst.h
 
   Instance of Genetic Algorithms - Header
@@ -24,7 +26,33 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+
+	As a special exception to the GNU General Public License, permission is
+	granted for additional uses of the text contained in its release
+	of the Rainbow Library.
+
+	The exception is that, if you link the Rainbow with other files
+	to produce an executable, this does not by itself cause the
+	resulting executable to be covered by the GNU General Public License.
+	Your use of that executable is in no way restricted on account of
+	linking the Rainbow library code into it.
+
+	This exception does not however invalidate any other reasons why
+	the executable file might be covered by the GNU General Public License.
+
+	This exception applies only to the code released under the
+	name Rainbow.  If you copy code from other releases into a copy of
+	RAinbow, as the General Public License permits, the exception does
+	not apply to the code that you add in this way.  To avoid misleading
+	anyone as to the status of such modified files, you must delete
+	this exception notice from them.
+
+	If you write modifications of your own for Rainbow, it is your choice
+	whether to permit this exception to apply to your modifications.
+	If you do not wish that, delete this exception notice.
+
 */
+
 
 
 //---------------------------------------------------------------------------
@@ -33,11 +61,12 @@
 
 
 //---------------------------------------------------------------------------
-// Standard libraries includes
+// include files for ANSI C/C++
 #include <stdlib.h>
 
+
 //---------------------------------------------------------------------------
-// GA Rainbow libraries includes
+// include files for Rainbow
 #include "rga.h"
 using namespace RGA;
 
@@ -54,11 +83,12 @@ template<class cInst,class cChromo,class cFit>
 public:
   cChromo **Chromosomes;
   cChromo *BestChromosome,*BestInPop;
-  unsigned PopSize;
-  unsigned long Gen;
-  unsigned long AgeBest;
+  unsigned int PopSize;
+  unsigned int Gen;
+  unsigned int AgeBest;
 
-  RInst(unsigned popsize) throw(bad_alloc);
+  RInst(unsigned int popsize) throw(bad_alloc);
+	virtual void Init(void) throw(bad_alloc);
   virtual bool RandomConstruct(void);
   virtual bool StopCondition(void)=0;
   virtual void PostRun(void) {}
@@ -72,14 +102,9 @@ public:
   virtual ~RInst(void);
 
 private:
-  int sort_function_cChromosome( const void *a, const void *b);
+  static int sort_function_cChromosome( const void *a, const void *b);
   cChromo **Parents,**Childs,**tmpChrom;
 };
-
-
-//---------------------------------------------------------------------------
-// RInst classes codes
-#include "rinst.hh"
 
 
 }//------- End of namespace RGA ---------------------------------------------

@@ -92,6 +92,17 @@ bool RLine::Inter(const RLine &line)
 }
 
 
+//---------------------------------------------------------------------------
+bool RLine::IsIn(const RPoint &pt)
+{
+	double a,b;			// y=ax+b	
+	double eq;			// y(pt);
+
+	a=static_cast<double>(Pt2.Y-Pt1.Y)/static_cast<double>(Pt2.X-Pt1.X);
+	b=static_cast<double>(Pt1.Y+Pt2.Y-a*(Pt1.X+Pt2.X))/2.0;
+	eq=a*pt.X+b-pt.Y;
+	return(eq<=Epsi);
+}
 
 
 //---------------------------------------------------------------------------

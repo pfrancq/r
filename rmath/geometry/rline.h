@@ -56,6 +56,8 @@ public:
   int CCW(const RPoint &) const;
   bool Inter(RLine *);
   bool Inter(const RLine &);
+	bool IsIn(const RPoint &);
+	~RLine(void) {}
 };
 
 
