@@ -156,9 +156,9 @@ public:
   void Boundary(RRect &rect);
 
 	/** Modify the polygon to a certain orientation.
-		* @param Ori		The orientation.
+		* @param o		The orientation.
 		*/
-  void Orientation(char Ori);
+  void ChangeOrientation(ROrientation o);
 
 	/** Decompose the polygon in a container of rectangles.
 		* @param rects	A pointer to the container of rectangles.
@@ -220,6 +220,8 @@ public:
 	/**	This function returns true when there are duplicate points.	
 		*/
 	bool DuplicatePoints(void);
+
+	/** Assign operator.*/
   RPolygons& operator=(const RPolygons &poly);
 };
 

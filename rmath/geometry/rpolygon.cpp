@@ -469,18 +469,18 @@ void RPolygon::Boundary(RRect &rect)
 
 
 //---------------------------------------------------------------------------
-void RPolygon::Orientation(char Ori)
+void RPolygon::ChangeOrientation(ROrientation o)
 {
   RCoord factx=1,facty=1,i,minx,miny,oldx,oldy;
   RPoint **ptr;
   double co=1,si=0;
 
   // Determine scale and roration
-  if(Ori==orNormalMirrorX||Ori==orNormalMirrorYX||Ori==orRota90MirrorX||Ori==orRota90MirrorYX)
+  if((o==NormalX)||(o==NormalYX)||(o==Rota90X)||(o==Rota90YX))
     facty=-1;
-  if(Ori==orNormalMirrorY||Ori==orNormalMirrorYX||Ori==orRota90MirrorY||Ori==orRota90MirrorYX)
+  if((o==NormalY)||(o==Normal)||(o==Rota90Y)||(o==Rota90YX))
     factx=-1;
-  if(Ori==orRota90||Ori==orRota90MirrorX||Ori==orRota90MirrorY||Ori==orRota90MirrorYX)
+  if((o==Rota90)||(o==Rota90X)||(o==Rota90Y)||(o==Rota90YX))
   {
    co=0;
    si=1;
