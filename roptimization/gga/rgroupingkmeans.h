@@ -47,6 +47,7 @@
 #include <rstd/random.h>
 #include <rga/robjs.h>
 #include <rgga/rgroups.h>
+#include <rstd/rcursor.h>
 
 
 //------------------------------------------------------------------------------
