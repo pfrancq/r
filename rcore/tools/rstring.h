@@ -88,8 +88,8 @@ public:
   inline char* operator()(void) const {return(Text);}
 
   // Comparaison
-  bool operator==(const RString &str);
-  bool operator!=(const RString &str);
+  bool operator==(const RString &str) const;
+  bool operator!=(const RString &str) const;
   int Compare(const RString &str);
   int Compare(const RString *str);
   inline char HashIndex(void) const

@@ -216,14 +216,14 @@ RString& RString::operator+=(const char *text)
 
 
 //---------------------------------------------------------------------------
-bool RString::operator==(const RString &str)
+bool RString::operator==(const RString &str) const
 {
   return(!strcmp(Text,str.Text));
 }
 
 
 //---------------------------------------------------------------------------
-bool RString::operator!=(const RString &str)
+bool RString::operator!=(const RString &str) const
 {
   return(strcmp(Text,str.Text));
 }
