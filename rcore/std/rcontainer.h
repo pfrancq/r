@@ -229,26 +229,60 @@ public:
 	/**
 	* The assignement operator.
 	* @param src            Container used as source.
+	* \warning If the container is not a responsible for the allocation, the
+	* elements of src are just copied and not re-created. Use Copy if you want a
+	* "deep" copy of src.
 	*/
 	RContainer& operator=(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc);
 
 	/**
 	* The assignement operator.
 	* @param src            Container used as source.
+	* \warning The elements of src are just copied and not re-created. Use
+	* Copy if you want a "deep" copy of src.
 	*/
 	RContainer& operator=(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
 
 	/**
 	* The assignement operator.
 	* @param src            Smart pointer to the container used as source.
+	* \warning If the container is not a responsible for the allocation, the
+	* elements of src are just copied and not re-created. Use Copy if you want a
+	* "deep" copy of src.
 	*/
 	RContainer& operator=(const std::auto_ptr<RContainer<C,true,bOrder> >& src) throw(std::bad_alloc);
 
 	/**
 	* The assignement operator.
 	* @param src            Smart pointer to the container used as source.
+	* \warning The elements of src are just copied and not re-created. Use
+	* Copy if you want a "deep" copy of src.
 	*/
 	RContainer& operator=(const std::auto_ptr<RContainer<C,false,bOrder> >& src) throw(std::bad_alloc);
+
+	/**
+	* Deep copy of a container.
+	* @param src            Container used as source.
+	*/
+	void Copy(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
+
+	/**
+	* Deep copy of a container.
+	* @param src            Container used as source.
+	*/
+	void Copy(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc);
+
+	/**
+	* Deep copy of a container.
+	* @param src            Container used as source.
+	*/
+	void Copy(const std::auto_ptr<RContainer<C,false,bOrder> >& src) throw(std::bad_alloc);
+
+	/**
+	* Deep copy of a container.
+	* @param src            Container used as source.
+	*/
+	void Copy(const std::auto_ptr<RContainer<C,true,bOrder> >& src) throw(std::bad_alloc);
 
 	/**
 	* Add the elements of a container. If the source container contains null
@@ -551,7 +585,14 @@ private:
 	* null, the container is just emptied.
 	* @param src            Pointer to the source container.
 	*/
-	template<bool b> RContainer& Copy(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc);
+	template<bool b> RContainer& NormalCopy(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc);
+
+	/**
+	* Deep copy of a container in another one. If the pointer to the container is
+	* null, the container is just emptied.
+	* @param src            Pointer to the source container.
+	*/
+	template<bool b> void DeepCopy(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc);
 
 	/**
 	* Add a container (if the pointer is not null) from another one.

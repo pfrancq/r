@@ -117,7 +117,7 @@ template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::
 		operator=(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc)
 {
-	return(Copy<true>(&src));
+	return(NormalCopy<true>(&src));
 }
 
 
@@ -126,7 +126,7 @@ template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::
 		operator=(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc)
 {
-	return(Copy<false>(&src));
+	return(NormalCopy<false>(&src));
 }
 
 
@@ -135,7 +135,7 @@ template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::
 		operator=(const std::auto_ptr<RContainer<C,true,bOrder> >& src) throw(std::bad_alloc)
 {
-	return(Copy<true>(src.get()));
+	return(NormalCopy<true>(src.get()));
 }
 
 
@@ -144,7 +144,39 @@ template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::
 		operator=(const std::auto_ptr<RContainer<C,false,bOrder> >& src) throw(std::bad_alloc)
 {
-	return(Copy<false>(src.get()));
+	return(NormalCopy<false>(src.get()));
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,bool bAlloc,bool bOrder>
+	void RContainer<C,bAlloc,bOrder>::Copy(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc)
+{
+	DeepCopy<true>(&src);
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,bool bAlloc,bool bOrder>
+	void RContainer<C,bAlloc,bOrder>::Copy(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc)
+{
+	DeepCopy<false>(&src);
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,bool bAlloc,bool bOrder>
+	void RContainer<C,bAlloc,bOrder>::Copy(const std::auto_ptr<RContainer<C,true,bOrder> >& src) throw(std::bad_alloc)
+{
+	DeepCopy<true>(src.get());
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,bool bAlloc,bool bOrder>
+	void RContainer<C,bAlloc,bOrder>::Copy(const std::auto_ptr<RContainer<C,false,bOrder> >& src) throw(std::bad_alloc)
+{
+	DeepCopy<false>(src.get());
 }
 
 
@@ -676,7 +708,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 		LastPtr=src->LastPtr;
 		Tab = new C*[MaxPtr];
 		memset(Tab,0,MaxPtr*sizeof(C*));
-		if(bAlloc)
+		if(bAlloc&&b)
 		{
 			for(i=src->LastPtr+1,tab=src->Tab,tab2=Tab;--i;tab++,tab2++)
 			{
@@ -698,7 +730,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 
 //------------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder> template<bool b>
-	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::Copy(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc)
+	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::NormalCopy(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc)
 {
 	unsigned int i;
 	C** tab;
@@ -708,7 +740,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 	if(!src)
 		return(*this);
 	VerifyTab(src->LastPtr);
-	if(bAlloc)
+	if(bAlloc&&b)
 	{
 		for(i=src->LastPtr+1,tab=src->Tab,tab2=Tab;--i;tab++,tab2++)
 		{
@@ -723,6 +755,28 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 	NbPtr=src->NbPtr;
 	LastPtr=src->LastPtr;
 	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,bool bAlloc,bool bOrder> template<bool b>
+	void RContainer<C,bAlloc,bOrder>::DeepCopy(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc)
+{
+	unsigned int i;
+	C** tab;
+	C** tab2;
+
+	Clear();
+	if(!src)
+		return(*this);
+	VerifyTab(src->LastPtr);
+	for(i=src->LastPtr+1,tab=src->Tab,tab2=Tab;--i;tab++,tab2++)
+	{
+		if(*tab)
+			(*tab2)=new C(*tab);
+	}
+	NbPtr=src->NbPtr;
+	LastPtr=src->LastPtr;
 }
 
 
