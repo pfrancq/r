@@ -166,6 +166,7 @@ template<class cGroup,class cObj,class cGroupData>
 		ObjectsAss[(*obj)->GetId()]=NoGroup;
 		ObjsNoAss.InsertPtr(*obj);
 		ObjsAss.DeletePtr(*obj);
+		from->PostDelete(*obj);
 	}
 	j=from->SubObjects;
 	for(i=NbPtr+1,G=Tab;--i;G++)
