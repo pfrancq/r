@@ -61,12 +61,12 @@ class RDate
 	/**
 	* The day.
 	*/
-	char Day;
+	int Day;
 
 	/**
 	* The month.
 	*/
-	char Month;
+	int Month;
 
 	/**
 	* The Year
@@ -86,17 +86,28 @@ public:
 	* @param month                    The month.
 	* @param year                     The year.
 	*/
-	RDate(const char day,const char month,const int year);
+	RDate(const int day,const int month,const int year);
 
 	/**
-	* Compare function like strcmp used in particular for RContainer class.
+	* Construct a date.
+	* @param date                     String representing a date in (yy-mm-dd).
+	*/
+	RDate(const char* date);
+
+	/**
+	* Compare function like strcmp used in particular for RStd::RContainer class.
 	*/
 	int Compare(const RDate& d) const;
 
 	/**
-	* Compare function like strcmp used in particular for RContainer class.
+	* Compare function like strcmp used in particular for RStd::RContainer class.
 	*/
 	int Compare(const RDate* d) const;
+
+	/**
+	* Assignment operator using another date.
+	*/
+	RDate& operator=(const RDate& date);
 
 	/**
 	* Equal operator.
@@ -122,6 +133,29 @@ public:
 	* Greather or equal operator.
 	*/
 	bool operator>=(const RDate& d) const;
+
+	/**
+	* Get the day of the date.
+	* @returns Integer.
+	*/
+	int GetDay(void) const {return(Day);}
+
+	/**
+	* Get the month of the date.
+	* @returns Integer.
+	*/
+	int GetMonth(void) const {return(Month);}
+
+	/**
+	* Get the year of the date.
+	* @returns Integer.
+	*/
+	int GetYear(void) const {return(Year);}
+
+	/**
+	* Set the date to the one given by the system.
+	*/
+	void SetToday(void);
 
 	/**
 	* Destruct the date.

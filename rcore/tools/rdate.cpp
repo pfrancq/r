@@ -31,6 +31,10 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <stdlib.h>
+
+//-----------------------------------------------------------------------------
 // include files for R Project
 #include <rtimedate/rdate.h>
 using namespace RTimeDate;
@@ -46,24 +50,56 @@ using namespace RTimeDate;
 //-----------------------------------------------------------------------------
 RTimeDate::RDate::RDate(void)
 {
-	time_t now;
-	struct tm *l_time;
-
-	now=time((time_t *)0);
-	l_time = localtime(&now);
-	Year=l_time->tm_year+1900;
-	Month=l_time->tm_mon+1;
-	Day=l_time->tm_mday;
+	SetToday();
 }
 
 
 //-----------------------------------------------------------------------------
-RTimeDate::RDate::RDate(const char day,const char month,const int year)
+RTimeDate::RDate::RDate(const int day,const int month,const int year)
+	: Day(day), Month(month), Year(year)
+{
+}
+
+
+//-----------------------------------------------------------------------------
+RTimeDate::RDate::RDate(const char* date)
 	: Day(0), Month(0), Year(0)
 {
-	Day=day;
-	Month=month;
-	Year=year;
+	const char* ptr;
+	char* begin;
+	char num[10];
+
+	if(date)
+	{
+		ptr=date;
+
+		// Read Year
+		begin=num;
+		while((*ptr)&&((*ptr)!='-'))
+			(*(begin++)) = (*(ptr++));
+		(*begin)=0;
+		ptr++; // Skip "-"
+		Year=atol(num);
+		if(Year<1000)
+		{
+			if(Year<70) Year+=1970; else Year+=2000;
+		}
+
+		// Read Month
+		begin=num;
+		while((*ptr)&&((*ptr)!='-'))
+			(*(begin++)) = (*(ptr++));
+		(*begin)=0;
+		ptr++; // Skip "-"
+		Month=atol(num);
+
+		// Read Year
+		begin=num;
+		while(*ptr)
+			(*(begin++)) = (*(ptr++));
+		(*begin)=0;
+		Day=atol(num);
+	}
 }
 
 
@@ -72,8 +108,7 @@ int RTimeDate::RDate::Compare(const RDate& d) const
 {
 	if(Year!=d.Year) return(Year-d.Year);
 	if(Month!=d.Month) return(Month-d.Month);
-	if(Day!=d.Day) return(Day-d.Day);
-	return(0);
+	return(Day-d.Day);
 }
 
 
@@ -82,8 +117,17 @@ int RTimeDate::RDate::Compare(const RDate* d) const
 {
 	if(Year!=d->Year) return(Year-d->Year);
 	if(Month!=d->Month) return(Month-d->Month);
-	if(Day!=d->Day) return(Day-d->Day);
-	return(0);
+	return(Day-d->Day);
+}
+
+
+//-----------------------------------------------------------------------------
+RDate& RTimeDate::RDate::operator=(const RDate& date)
+{
+	Year=date.Year;
+	Month=date.Month;
+	Day=date.Day;
+	return(*this);
 }
 
 
@@ -163,6 +207,20 @@ bool RTimeDate::RDate::operator>=(const RDate& d) const
 			return(Day>=d.Day);
 	}
 	return(false);
+}
+
+
+//-----------------------------------------------------------------------------
+void RTimeDate::RDate::SetToday(void)
+{
+	time_t now;
+	struct tm *l_time;
+
+	now=time((time_t *)0);
+	l_time = localtime(&now);
+	Year=l_time->tm_year+1900;
+	Month=l_time->tm_mon+1;
+	Day=l_time->tm_mday;
 }
 
 
