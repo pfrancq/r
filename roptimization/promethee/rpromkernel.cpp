@@ -212,8 +212,8 @@ int RPromethee::RPromKernel::sort_function_solutions( const void *a, const void 
 	double d;
 
 	d=bs->Fi-as->Fi;
-	if(d<=0.000001) return(0);
-	if(d<0)
+	if(d==0.0) return(0);
+	if(d<0.0)
 		return(-1);
 	else
 		return(1);
