@@ -266,9 +266,16 @@ public:
 	virtual void Evaluate(void) throw(eGA);
 
 	/**
-	* This function goes through the chromosomes to determine the best one.
+	* Do some post evluation traitment. It can be used to implement a
+	* multi-criteria approach like PROMETHEE to classify the chromosomes.
 	*/
-	virtual void PostEvaluate(void) throw(eGA);
+	virtual void PostEvaluate(void) throw(eGA) {}
+
+	/**
+	* Analyse the population to find the best chromosome of the population and
+	* to verify if the best chromosome ever calculated has to replaced.
+	*/
+	virtual void AnalysePop(void) throw(eGA);
 
 	/**
 	* This function does the crossovers for a generation. Actually, the

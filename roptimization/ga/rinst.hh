@@ -156,7 +156,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreaData>
-	void RGA::RInst<cInst,cChromo,cFit,cThreaData>::PostEvaluate(void) throw(eGA)
+	void RGA::RInst<cInst,cChromo,cFit,cThreaData>::AnalysePop(void) throw(eGA)
 {
 	unsigned int i;
 	cChromo **C;
@@ -432,6 +432,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	Evaluate();
 	emitInteractSig();
 	PostEvaluate();
+	emitInteractSig();
+	AnalysePop();
 	emitGenSig();
 	emitInteractSig();
 	#ifdef RGADEBUG
@@ -454,6 +456,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		Evaluate();
 		emitInteractSig();
 		PostEvaluate();
+		emitInteractSig();
+		AnalysePop();
 		emitBestSig();
 		emitGenSig();
 	}
