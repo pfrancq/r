@@ -274,6 +274,35 @@ void RXML::RXMLTag::AddContent(const char* text)
 
 
 //------------------------------------------------------------------------------
+bool RXML::RXMLTag::IsEmpty(void)
+{
+	return((!Contains.GetLen())&&(!NbPtr)&&(!Attrs.NbPtr));
+}
+
+
+//------------------------------------------------------------------------------
+void RXML::RXMLTag::DeleteEmptyTags(void)
+{
+	RXMLTag **ptr;
+	unsigned int i;
+
+	// Go through the subtags.
+	for(i=0,ptr=Tab;i<NbPtr;i++)
+	{
+		(*ptr)->DeleteEmptyTags();
+		if((*ptr)->IsEmpty())
+		{
+			// If the tags is empty -> Delete it but don't increase ptr
+			// because DeletePtr will move everything to the left
+			DeletePtr(*ptr);
+		}
+		else
+			ptr++;  // No empty tag -> Go to the next.
+	}
+}
+
+
+//------------------------------------------------------------------------------
 RXML::RXMLTag::~RXMLTag(void)
 {
 }

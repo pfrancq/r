@@ -220,6 +220,17 @@ public:
 	bool HasContent(void) const {return(Contains.GetLen());}
 
 	/**
+	* Test if the tag is empty, i.e. it has no subnodes, no parameters and np
+	* content.
+	*/
+	bool IsEmpty(void);
+
+	/**
+	* Delete all the empty subtags attached to the current tag.
+	*/
+	void DeleteEmptyTags(void);
+
+	/**
 	* Start the iterator to go trough the word.
 	*/
 	inline void AttrsStart(void)
