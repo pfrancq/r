@@ -44,6 +44,9 @@
 #include <new.h>
 #include <string.h>
 #include <stdio.h>
+#ifndef __RMAXSTRING__
+	#define __RMAXSTRING__ 30
+#endif
 
 
 //---------------------------------------------------------------------------
@@ -67,14 +70,14 @@ class RString
 {
   char *Text;
   int Len,MaxLen;
-
 public:
 
   // Default Constructor
   RString(void)
   {
-    MaxLen=Len=0;
-    Text=new char[1];
+		MaxLen=200;
+    Len=0;
+    Text=new char[MaxLen+1];
     (*Text)=0;
   }
   // Constructor with a text
@@ -99,15 +102,6 @@ public:
     Len=str.Len;
     Text=new char[MaxLen+1];
     memcpy(Text,str.Text,Len+1);
-  }
-  // Constructor with a number
-  RString(const long nb)
-  {
-    char text[20];
-    text=itoa(nb);
-    MaxLen=Len=strlen(text);
-    Text=new char[MaxLen+1];
-    memcpy(Text,text,Len+1);
   }
   // Verify MaxLen
   inline void Verify(const int maxlen) throw(bad_alloc)
@@ -264,25 +258,131 @@ public:
   {
     if(Text) delete[] Text;
   }
+
+  // friend functions
+	friend inline RString& operator+(const RString &arg1,const RString &arg2);
 };
 
+
+//---------------------------------------------------------------------------
+inline RString* GetString(void)
+{
+  static RString tab[__RMAXSTRING__];
+  static long act=0;
+
+	if(act==__RMAXSTRING__) act=0;
+	return(&tab[act++]);
+}
+
+
+//---------------------------------------------------------------------------
 inline RString& operator+(const RString &arg1,const RString &arg2)
 {
-  static RString res(200);
-  res=arg1;
-  return(res+=arg2);
+  RString *res=GetString();
+  (*res)=arg1;
+  return((*res)+=arg2);
 }
+
+
+//---------------------------------------------------------------------------
 inline RString& operator+(const RString &arg1,const char *arg2)
 {
-  static RString res(200);
-  res=arg1;
-  return(res+=arg2);
+  RString *res=GetString();
+  (*res)=arg1;
+  return((*res)+=arg2);
 }
+
+
+//---------------------------------------------------------------------------
 inline RString& operator+(const char *arg1,const RString &arg2)
 {
-  static RString res(200);
-  res=arg1;
-  return(res+=arg2);
+  RString *res=GetString();
+  (*res)=arg1;
+  return((*res)+=arg2);
+}
+
+//---------------------------------------------------------------------------
+inline RString& itoa(const int nb)
+{
+	char Tmp[20];	
+	RString *res=GetString();
+	
+	sprintf(Tmp,"%i",nb);
+	(*res)=Tmp;
+	return((*res));
+}
+
+
+//---------------------------------------------------------------------------
+inline RString& itoa(const unsigned int nb)
+{
+	char Tmp[20];	
+	RString *res=GetString();
+	
+	sprintf(Tmp,"%i",nb);
+	(*res)=Tmp;
+	return((*res));
+}
+
+
+//---------------------------------------------------------------------------
+inline RString& ltoa(const long nb)
+{
+	char Tmp[20];	
+	RString *res=GetString();
+	
+	sprintf(Tmp,"%i",nb);
+	(*res)=Tmp;
+	return((*res));
+}
+
+
+//---------------------------------------------------------------------------
+inline RString& chr(const unsigned char c)
+{
+	char Tmp[2];	
+	RString *res=GetString();
+	
+	(*Tmp)=c;
+	(*(Tmp+1))=0;
+	(*res)=Tmp;
+	return((*res));
+}
+
+
+//---------------------------------------------------------------------------
+inline RString& ltoa(const unsigned long nb)
+{
+	char Tmp[20];	
+	RString *res=GetString();
+	
+	sprintf(Tmp,"%i",nb);
+	(*res)=Tmp;
+	return((*res));
+}
+
+
+//---------------------------------------------------------------------------
+inline RString& ftoa(const float nb)
+{
+	char Tmp[20];	
+	RString *res=GetString();
+	
+	sprintf(Tmp,"%f",nb);
+	(*res)=Tmp;
+	return((*res));
+}
+
+
+//---------------------------------------------------------------------------
+inline RString& dtoa(const double nb)
+{
+	char Tmp[20];	
+	RString *res=GetString();
+	
+	sprintf(Tmp,"%d",nb);
+	(*res)=Tmp;
+	return((*res));
 }
 
 }  //-------- End of namespace RStd ---------------------------------------
