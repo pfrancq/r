@@ -117,10 +117,10 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(std::bad_alloc,RException)
 	while((!Cur.End())&&(Cur().IsSpace()))
 		Cur.Next();
 
-	// Read if it is an Object or instruction
+	// Read if it is an Object or instruction or something dummy
 	pos=Cur.GetPos();
 	len=0;
-	while((!Cur.End())&&(Cur()!=RChar('.'))&&(Cur()!=RChar('='))&&(Cur()!=RChar('(')))
+	while((!Cur.End())&&(Cur()!=RChar('.'))&&(Cur()!=RChar('='))&&(Cur()!=RChar('('))&&(!Cur().IsSpace()))
 	{
 		Cur.Next();
 		len++;
@@ -137,7 +137,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(std::bad_alloc,RException)
 		if(obj=="for")
 		{
 			RPrgInstFor* f=new RPrgInstFor(buf.Mid(Cur.GetPos(),buf.GetLen()-Cur.GetPos()+1),tabs);
-	
+
 			// Read the next lines
 			buf=Prg.GetLine();
 			if(buf.IsEmpty()) return(f);
@@ -194,7 +194,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(std::bad_alloc,RException)
 		return(inst);
 	}
 
-	ReadLine=true;  
+	ReadLine=true;
 	return(0);
 }
 
@@ -227,7 +227,7 @@ void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* va
 				Cur.Next();
 				len++;
 			}
-	
+
 			// Value
 			values->InsertPtr(new RPrgVarConst(params.Mid(pos,len)));
 
@@ -250,7 +250,7 @@ void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* va
 			Cur.Next();
 		}
 	}
-}   
+}
 
 
 //-----------------------------------------------------------------------------
