@@ -56,15 +56,17 @@ namespace RPromethee{
 */
 class RPromCritValue
 {
-   /**
-	* The value of the solution/criterion.
-	*/
-	double Value;
-
 	/**
 	* The Fi crit used by Prométhée.
 	*/
 	double FiCrit;
+	
+protected:
+	
+   /**
+	* The value of the solution/criterion.
+	*/
+	double Value;
 
 public:
 
