@@ -102,6 +102,12 @@ public:
 	RPolygon& operator+=(const RPoint &pt) throw(bad_alloc);
 
 	/**
+	* Make a translation of the polygon.
+	* @param pt 	The point representing the vector used.
+	*/
+	RPolygon& operator-=(const RPoint &pt) throw(bad_alloc);
+
+	/**
 	* This function compares two polygons and returns 0 if there have the same
 	* number of points and at the same positions. This function is used for the
 	* class RContainer.

@@ -38,9 +38,9 @@
 
 //-----------------------------------------------------------------------------
 // include files for RGeometry
-#include "rpolygon.h"
-#include "rrect.h"
-#include "rline.h"
+#include <rgeometry/rpolygon.h>
+#include <rgeometry/rrect.h>
+#include <rgeometry/rline.h>
 using namespace RGeometry2D;
 
 
@@ -119,6 +119,17 @@ RPolygon& RPolygon::operator+=(const RPoint &pt) throw(bad_alloc)
 	RPoint **tab;
 
 	for(i=NbPtr+1,tab=Tab;--i;tab++) (**tab)+=pt;
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+RPolygon& RPolygon::operator-=(const RPoint &pt) throw(bad_alloc)
+{
+	unsigned int i;
+	RPoint **tab;
+
+	for(i=NbPtr+1,tab=Tab;--i;tab++) (**tab)-=pt;
 	return(*this);
 }
 
