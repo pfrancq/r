@@ -34,6 +34,7 @@
 
 
 //---------------------------------------------------------------------------
+// include files for Rainbow
 #include "rstring.h"
 using namespace RStd;
 
@@ -44,11 +45,33 @@ namespace RStd{
 
 
 //---------------------------------------------------------------------------
-/** This class implements some basic functions needed when working with text files.
+/** The RTextFile class implements some basic functions needed when working
+	* with text files.
   *
-	* The spaces (spaces, ends of line, tabs, feeds) are skipped when reading. The file
-	* can contain some comments that are not treated when reading the file. This comments
-	* bezgin with a character '%' and ending at the end of the current line.
+	* The file can contain some comments. These comments can be either on a
+	* single line, beginning with a given set of characters ('%', by default) and
+	* ending at the end of the line, or be multi-line, beginning and ending with
+	* corresponding set of characters (C comments delimeters by default).
+	*
+	* The user can write his own operators to read and write with RTextFile. Here
+	* is an example:
+	* <pre>
+	* class Point
+	* {
+	* public:
+	* 	int X,Y;
+	* }
+	*
+	* RTextFile& operator<<(RTextFile &f,Point &pt)
+	* {
+	* 	return(f<<pt.X<<pt.Y);
+	* }
+	*
+	* RTextFile& operator>>(RTextFile &f,Point &pt)
+	* {
+	* 	return(f>>pt.X>>pt.Y);
+	* }
+	* </pre>
 	* @author Pascal Francq
 	* @short Text File.
 	*/
@@ -56,6 +79,7 @@ class RTextFile
 {
 public:
 	enum ModeType{Append,Read,Create};
+	enum RemType{NoComment,SingleLineComment,MultiLineComment,AllComment};
 
 private:
 	/** How to file has to be used. */
@@ -72,9 +96,17 @@ private:
 	bool All;
 	/** At NewLine? (Used only if created or append mode).*/
   bool NewLine;
+	/** This string represent a single line comment.*/
+	RString Rem;
+	/** This string represent the beginning of a comment. */
+	RString BeginRem;
+	/** This string represent the ending of a comment. */
+	RString EndRem;
+	/** The type of comments that are using for this file.*/
+	RemType CommentType;
+	/** This variable is holding the current line number.*/
+	unsigned long Line;
 
-	/** This function skip spaces (Only used if read mode).*/
-	void SkipSpaces(void);
 public:
 
 	/** Construct a text file.
@@ -100,7 +132,34 @@ public:
 	inline bool Eof(void) { return(!(*ptr)); }
 
 	/** Return the next integer contained in the file.*/
-	long int GetInt(void) throw(RString);
+	long GetInt(void) throw(RString);
+
+	/** Return the next unsigned integer contained in the file.*/
+	unsigned long GetUInt(void) throw(RString);
+
+	/** >> Operator for char.*/
+	RTextFile& operator>>(char &nb) throw(RString);
+
+	/** >> Operator for unsigned char.*/
+	RTextFile& operator>>(unsigned char &nb) throw(RString);
+
+	/** >> Operator for short.*/
+	RTextFile& operator>>(short &nb) throw(RString);
+
+	/** >> Operator for unsigned short.*/
+	RTextFile& operator>>(unsigned short &nb) throw(RString);
+
+	/** >> Operator for int.*/
+	RTextFile& operator>>(int &nb) throw(RString);
+
+	/** >> Operator for unsigned int.*/
+	RTextFile& operator>>(unsigned int &nb) throw(RString);
+
+	/** >> Operator for long.*/
+	RTextFile& operator>>(long &nb) throw(RString);
+
+	/** >> Operator for unsigned long.*/
+	RTextFile& operator>>(unsigned long &nb) throw(RString);
 
 	/** Return the next float contained in the file.*/
 	float GetFloat(void) throw(RString);
@@ -112,25 +171,58 @@ public:
 	/** Return the next entire line in the file.*/
 	char *GetLine(void) throw(RString);
 
-
 	/** Write an end of line in the file.*/
   void WriteLine(void) throw(RString);
-
+	
 	/** Write a long in the file. If the number is not the first thing on the line,
 		*	a space is add before it.*/
   void WriteLong(const long nb) throw(RString);
+
+	/** << Operator for char.*/
+	RTextFile& operator<<(const char nb) throw(RString);
+
+	/** << Operator for short.*/
+	RTextFile& operator<<(const short nb) throw(RString);
+
+	/** << Operator for int.*/
+	RTextFile& operator<<(const int nb) throw(RString);
+
+	/** << Operator for long.*/
+	RTextFile& operator<<(const long nb) throw(RString);
 
 	/** Write a unsigned long in the file. If the number is not the first thing on
 		* the line,	a space is add before it.*/
   void WriteULong(const unsigned long nb) throw(RString);
 
+	/** << Operator for unsigned char.*/
+	RTextFile& operator<<(const unsigned char nb) throw(RString);
+
+	/** << Operator for unsigned int.*/
+	RTextFile& operator<<(const unsigned int nb) throw(RString);
+
+	/** << Operator for unsigned long.*/
+	RTextFile& operator<<(const unsigned long nb) throw(RString);
+
 	/** Write a string in the file. If the string is not the first thing on the line,
 		*	a space is add before it.*/
   void WriteStr(const char *c) throw(RString);
 
+	/** << Operator for char *.*/
+	RTextFile& operator<<(const char *c) throw(RString);
+
+	/** Write a string in the file. If the string is not the first thing on the line,
+		*	a space is add before it.*/
+  void WriteStr(const RString &str) throw(RString);
+
+	/** << Operator for RString.*/
+	RTextFile& operator<<(const RString &str) throw(RString);
+
 	/** Write a bool in the file as '1' or '0' depend on his value. If the number is
 		* not the first thing on the line, a space is add before it.*/
   void WriteBool(const bool b) throw(RString);
+
+	/** << Operator for long.*/
+	RTextFile& operator<<(const bool b) throw(RString);
 
 	/** Write the time in the file. If the time is not the first thing on the line,
 		*	a space is add before it.*/
@@ -140,13 +232,41 @@ public:
 		* The entry is alone on a line, so end-of-lines are inserted if ncessary before
 		* or after it.*/
   void WriteLog(const char *entry) throw(RString);
-  
+
+	/** Return the actual line number.*/
+	unsigned long ActualLine(void) {return(Line);}
+
+protected:
+
+	/** This function skip spaces (Only used if read mode).*/
+	void SkipSpaces(void);
+	/** This function returns true if the current position is the beginning of a
+		* comment (Only used if in read mode).*/
+	bool BeginComment(void);
+	/** This function returns true if hte current position is the ending of a
+		* comment and skip the end characters if MultiLineComment.*/
+	bool EndComment(void);
+
+public:
 	/** Destructs the file.*/
 	virtual ~RTextFile(void);
 };
 
 
 }  //-------- End of namespace RStd ---------------------------------------
+
+// end of line
+extern "C++"
+{
+	/** Write an end-of-line in a RTextFile.*/
+	extern RStd::RTextFile& endl(RStd::RTextFile &file);
+
+	/** Write the current time and date in a RTextFile.*/
+	extern RStd::RTextFile& Time(RStd::RTextFile &file);
+
+	/** Operator needed for using generic writing functions.*/
+	inline RStd::RTextFile& operator<<(RStd::RTextFile& o, RStd::RTextFile& (&f)(RStd::RTextFile&)) {return(f(o));}
+}
 
 
 //---------------------------------------------------------------------------

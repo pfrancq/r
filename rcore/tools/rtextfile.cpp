@@ -60,7 +60,8 @@ using namespace RStd;
 
 //---------------------------------------------------------------------------
 RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
-  : Mode(mode), Name(name), All(true), NewLine(true)
+  : Mode(mode), Name(name), All(true), NewLine(true), Rem("%"),BeginRem("/*"),
+		EndRem("*/"),	CommentType(SingleLineComment),Line(0)
 {
 	int localmode;
 
@@ -93,7 +94,8 @@ RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
 
 //---------------------------------------------------------------------------
 RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
-  : Mode(Read), Name(name), All(all), NewLine(false)
+  : Mode(Read), Name(name), All(all), NewLine(false), Rem("%"), BeginRem("/*"),
+		EndRem("*/"),CommentType(SingleLineComment),Line(0)
 {
 	handle=open(Name(),O_RDONLY);
   Init();
@@ -105,7 +107,8 @@ void RTextFile::Init(void) throw(bad_alloc,RString)
 {
 	struct stat statbuf;
 
-	ptr=Buffer=NULL;
+	Line=0;
+	ptr=Buffer=0;
 	if(Mode==Read)
 	{
    	if(All)
@@ -133,6 +136,54 @@ void RTextFile::Begin(void) throw(RString)
   if(Mode!=Read)
     throw(RString("File Mode is not Read"));
   ptr=Buffer;
+	Line=0;
+}
+
+
+//---------------------------------------------------------------------------
+bool RTextFile::BeginComment(void)
+{
+	switch(CommentType)
+	{
+		case NoComment:
+			return(false);
+			break;
+
+		case SingleLineComment:
+			return(!strncmp(ptr,Rem(),Rem.GetLen()));
+			break;
+
+		case MultiLineComment:
+			return(!strncmp(ptr,BeginRem(),BeginRem.GetLen()));
+			break;
+	}
+	return(false);
+
+}
+
+
+//---------------------------------------------------------------------------
+bool RTextFile::EndComment(void)
+{
+	switch(CommentType)
+	{
+		case NoComment:
+			return(false);
+			break;
+
+		case SingleLineComment:
+			if(((*ptr)=='\n')||((*ptr)=='\r')) return(true);
+			break;
+
+		case MultiLineComment:
+			if(!strncmp(ptr,EndRem(),EndRem.GetLen()))
+			{
+				ptr+=EndRem.GetLen();
+				return(true);
+			}
+			break;
+	}
+	return(false);
 }
 
 
@@ -140,36 +191,152 @@ void RTextFile::Begin(void) throw(RString)
 void RTextFile::SkipSpaces(void)
 {
 	// Read Spaces
-	while((*ptr)&&((*ptr)==' '||(*ptr)=='\t'||(*ptr)=='\n'||(*ptr)=='\r'))
-		ptr++;
-	// Read Comments
-	while((*ptr)=='%')
+	while((*ptr)&&isspace(*ptr))
 	{
+		switch(*ptr)
+		{
+			case '\n':
+				Line++;
+				if((*(ptr+1))=='\r') ptr++;
+				break;
+			case '\r':
+				Line++;
+				if((*(ptr+1))=='\n') ptr++;
+				break;
+		}
+		ptr++;
+	}
+
+	// Read Comments
+	while(BeginComment())
+	{
+		// Skip Begin Comment
+		if(CommentType==SingleLineComment)
+			ptr+=Rem.GetLen();	
+		if(CommentType==MultiLineComment)
+			ptr+=BeginRem.GetLen();
+
 		// Read a Comment
-		while((*ptr)&&(*ptr)!='\n'&&(*ptr)!='\r')
+		while((*ptr)&&(!EndComment()))
 			ptr++;
+
 		// Read Spaces
-		while((*ptr)&&((*ptr)==' '||(*ptr)=='\t'||(*ptr)=='\n'||(*ptr)=='\r'))
+		while((*ptr)&&isspace(*ptr))
+    {
+  		switch(*ptr)
+  		{
+  			case '\n':
+  				Line++;
+  				if((*(ptr+1))=='\r') ptr++;
+  				break;
+  			case '\r':
+  				Line++;
+  				if((*(ptr+1))=='\n') ptr++;
+  				break;
+  		}
 			ptr++;
+		}
 	}
 }
 
 
 //---------------------------------------------------------------------------
-long int RTextFile::GetInt(void) throw(RString)
+long RTextFile::GetInt(void) throw(RString)
 {
 	char *ptr2=ptr;
 
   if(Mode!=Read)
     throw(RString("File Mode is not Read"));
-	while((*ptr)&&(*ptr)!=' '&&(*ptr)!='\t'&&(*ptr)!='\n'&&(*ptr)!='\r')
+	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment()))
 		if(!isdigit(*(ptr++))) throw(RString("No Int"));
 	if(*ptr)
 	{
 		(*(ptr++))=0;
 		SkipSpaces();
 	}
-	return(atol(ptr2));
+	return(strtol(ptr2,0,10));
+}
+
+
+//---------------------------------------------------------------------------
+unsigned long RTextFile::GetUInt(void) throw(RString)
+{
+	char *ptr2=ptr;
+
+  if(Mode!=Read)
+    throw(RString("File Mode is not Read"));
+	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment()))
+		if(!isdigit(*(ptr++))) throw(RString("No Int"));
+	if(*ptr)
+	{
+		(*(ptr++))=0;
+		SkipSpaces();
+	}
+	return(strtoul(ptr2,0,10));
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator>>(char &nb) throw(RString)
+{
+	nb=GetInt();
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator>>(unsigned char &nb) throw(RString)
+{
+	nb=GetUInt();
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator>>(short &nb) throw(RString)
+{
+	nb=GetInt();
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator>>(unsigned short &nb) throw(RString)
+{
+	nb=GetUInt();
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator>>(int &nb) throw(RString)
+{
+	nb=GetInt();
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator>>(unsigned int &nb) throw(RString)
+{
+	nb=GetUInt();
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator>>(long &nb) throw(RString)
+{
+	nb=GetInt();
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator>>(unsigned long &nb) throw(RString)
+{
+	nb=GetUInt();
+	return(*this);
 }
 
 
@@ -180,7 +347,7 @@ float RTextFile::GetFloat(void) throw(RString)
 
   if(Mode!=Read)
     throw(RString("File Mode is not Read"));
-	while((*ptr)&&(*ptr)!=' '&&(*ptr)!='\t'&&(*ptr)!='\n'&&(*ptr)!='\r')
+	while((*ptr)&&isspace(*ptr)&&(!BeginComment()))
 	{
 		if((!isdigit(*ptr))&&(*ptr)!='.'&&(*ptr)!='e'&&(*ptr)!='E')
       throw(RString("No float"));
@@ -202,7 +369,7 @@ char* RTextFile::GetWord(void) throw(RString)
 
   if(Mode!=Read)
     throw(RString("File Mode is not Read"));
-	while((*ptr)&&(*ptr)!=' '&&(*ptr)!='\t'&&(*ptr)!='\n'&&(*ptr)!='\r') ptr++;
+	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment())) ptr++;
 	if(*ptr)
 	{
 		(*(ptr++))=0;
@@ -219,7 +386,7 @@ char* RTextFile::GetLine(void) throw(RString)
 
   if(Mode!=Read)
     throw(RString("File Mode is not Read"));
-	while((*ptr)&&(*ptr)!='\n'&&(*ptr)!='\r') ptr++;
+	while((*ptr)&&(*ptr)!='\n'&&(*ptr)!='\r'&&(!BeginComment())) ptr++;
 	if(*ptr)
 	{
 		(*(ptr++))=0;
@@ -235,6 +402,7 @@ void RTextFile::WriteLine(void) throw(RString)
   if(Mode==Read)
     throw(RString("File Mode is Read"));
   write(handle,"\n",strlen("\n"));
+	Line++;
 	#ifdef windows
 	  flushall();
 	#endif
@@ -261,6 +429,38 @@ void RTextFile::WriteLong(const long nb) throw(RString)
 
 
 //---------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const char nb) throw(RString)
+{
+	WriteLong(nb);
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const short nb) throw(RString)
+{
+	WriteLong(nb);
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const int nb) throw(RString)
+{
+	WriteLong(nb);
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const long nb) throw(RString)
+{
+	WriteLong(nb);
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
 void RTextFile::WriteULong(const unsigned long nb) throw(RString)
 {
   char Str[25];
@@ -276,6 +476,29 @@ void RTextFile::WriteULong(const unsigned long nb) throw(RString)
 	  flushall();
 	#endif
   NewLine=false;
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const unsigned char nb) throw(RString)
+{
+	WriteULong(nb);
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const unsigned int nb) throw(RString)
+{
+	WriteULong(nb);
+	return(*this);
+}
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const unsigned long nb) throw(RString)
+{
+	WriteULong(nb);
+	return(*this);
 }
 
 
@@ -301,6 +524,48 @@ void RTextFile::WriteStr(const char *c) throw(RString)
 
 
 //---------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const char *c) throw(RString)
+{
+	WriteStr(c);
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+void RTextFile::WriteStr(const RString &str) throw(RString)
+{
+  int l;
+
+  if(Mode==Read)
+    throw(RString("File Mode is Read"));
+  if(!NewLine)
+    write(handle," ",1);
+  l=str.GetLen();
+  if(str[l-1]!='\n'&&str[l-1]!='\r')
+    NewLine=false;
+  else
+	{
+    NewLine=true;
+		l--;
+		if(str[l-1]!='\n'&&str[l-1]!='\r') l--;
+	}
+  write(handle,str(),l);
+	if(NewLine) WriteLine();
+	#ifdef windows
+	  flushall();
+	#endif
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const RString &str) throw(RString)
+{
+	WriteStr(str);
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
 void RTextFile::WriteBool(const bool b) throw(RString)
 {
   char Str[10];
@@ -319,9 +584,17 @@ void RTextFile::WriteBool(const bool b) throw(RString)
 
 
 //---------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const bool b) throw(RString)
+{
+	WriteBool(b);
+	return(*this);
+}
+
+
+//---------------------------------------------------------------------------
 void RTextFile::WriteTime(void) throw(RString)
 {
-  char Str[20];
+  char Str[30];
   time_t timer;
   struct tm *tblock;
 
@@ -372,4 +645,20 @@ RTextFile::~RTextFile(void)
 {
 	if(Buffer) delete[] Buffer;
 	if(handle!=-1) close(handle);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& endl(RTextFile &file)
+{
+	file.WriteLine();
+	return(file);
+}
+
+
+//---------------------------------------------------------------------------
+RTextFile& Time(RTextFile &file)
+{
+	file.WriteTime();
+	return(file);
 }
