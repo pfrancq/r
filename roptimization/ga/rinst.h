@@ -311,6 +311,14 @@ public:
 	long RRand(long max) {return(Random->Value(max));}
 
 	/**
+	* Random the position of elements of a vector using the current random generator.
+	* @param arr            A pointer to the array representing the vector.
+	* @param size           The size of the vector.
+	*/
+	template<class T> inline void RandOrder(T* arr,unsigned int size)
+		{Random->RandOrder<T>(arr,size);}
+
+	/**
 	* Destruct the instance.
 	*/
 	virtual ~RInst(void);
