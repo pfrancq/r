@@ -135,8 +135,8 @@ template<class C,class T,bool bAlloc,bool bOrder>
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	T RStd::RContainer<C,T,bAlloc,bOrder>::GetId(const TUse &tag,bool &Find)
 {
-	T NbMin,NbMax,i;
-	int Comp;
+	T NbMin,NbMax,i=0;
+	int Comp=0;
 	bool Cont=true,NotLast=true;
 	C *ptr,**ptr2;
 

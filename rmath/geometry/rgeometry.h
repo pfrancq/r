@@ -87,7 +87,7 @@ typedef int RCoord;
 * The MaxCoord constante represent the maximal positive value that a
 * coordinate can have. It is often used to indicate an invalid coordinate.
 */
-const RCoord MaxCoord=0xFFFFFFFF;
+const RCoord MaxCoord=2147483647;
 
 
 //-----------------------------------------------------------------------------

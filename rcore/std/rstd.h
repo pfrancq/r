@@ -61,7 +61,6 @@
 				  <<": line "<<__LINE__                                       \
 				  <<" ("<<__PRETTY_FUNCTION__                                 \
 				  <<"): assertion failed: "<<#expr<<endl;                     \
-			throw;                                                            \
 		}
 
 		#define RAssertNotReached()                                           \
@@ -70,7 +69,6 @@
 				  <<": line "<<__LINE__                                       \
 				  <<" ("<<__PRETTY_FUNCTION__                                 \
 				  <<"): should not be reached"<<endl;                         \
-			throw;                                                            \
 		}
 
 		#define RAssertMsg(msg)                                               \
@@ -79,7 +77,6 @@
 				  <<": line "<<__LINE__                                       \
 				  <<" ("<<__PRETTY_FUNCTION__                                 \
 				  <<"): "<<#msg<<endl;                                        \
-			throw;                                                            \
 		}
 
 	#else 	// !__GNUC__
@@ -90,7 +87,6 @@
 			cerr  <<"file "<<__FILE__                                         \
 				  <<": line "<<__LINE__                                       \
 				  <<" : assertion failed: "<<#expr<<endl;                     \
-			throw;                                                            \
 		}
 
 		#define RAssertNotReached()                                           \
@@ -98,7 +94,6 @@
 			cerr  <<"file "<<__FILE__                                         \
 				  <<": line "<<__LINE__                                       \
 				  <<" : should not be reached"<<endl;                         \
-			throw;                                                            \
 		}
 
 		#define RAssertMsg(msg)                                               \
@@ -106,7 +101,6 @@
 			cerr  <<"file "<<__FILE__                                         \
 				  <<": line "<<__LINE__                                       \
 				  <<": "<<#msg<<endl;                                         \
-			throw;                                                            \
 		}
 
 	#endif 	// __GNUC__
@@ -136,7 +130,7 @@
 		}
 
 		#define RReturnValIfFail(expr,val)                                    \
-    	if(!(expr))                                                           \
+		if(!(expr))                                                           \
 		{                                                                     \
 			cerr  <<"file "<<__FILE__                                         \
 				  <<": line "<<__LINE__                                       \
@@ -151,8 +145,8 @@
 		if(!(expr))                                                           \
 		{                                                                     \
 			cerr  <<"file "<<__FILE__                                         \
-				  <<": line "<<__LINE__                                       \
-				  <<" : check failed: "<<#expr<<endl;                         \
+				<<": line "<<__LINE__                                         \
+				<<" : check failed: "<<#expr<<endl;                           \
 			return;                                                           \
 		}
 

@@ -639,7 +639,7 @@ void RGeometry2D::RPolygon::RectDecomposition(RRects *rects) const
 	RPoint *Pt2Y;                               // Point at (X2,?)
 	RPoint **point,*Test,tmp;
 	RCoord X1,Y1,X2,Y2;                         // Vertices of the rectangle to insert
-	unsigned int i,Count,Nb;
+	unsigned int i=0,Count,Nb;
 	bool bFind;                                 // To use with GetId
 	bool bFind21;                               // True if Point (X2,?) is (X2,Y1)
 
