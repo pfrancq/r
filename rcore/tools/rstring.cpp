@@ -80,6 +80,16 @@ RString::RString(const RString& str)
 
 
 //---------------------------------------------------------------------------
+RString::RString(RString* str)
+{
+  MaxLen=str->MaxLen;
+  Len=str->Len;
+  Text=new char[MaxLen+1];
+  memcpy(Text,str->Text,Len+1);
+}
+
+
+//---------------------------------------------------------------------------
 inline void RString::Verify(const int maxlen) throw(bad_alloc)
 {
   if(MaxLen<maxlen)

@@ -63,6 +63,7 @@ public:
   RString(const char *text) throw(bad_alloc);
   RString(const int maxlen) throw(bad_alloc);
   RString(const RString& str);
+	RString(RString* str);
 
 	// Assignation
   RString& operator=(const RString &str);
