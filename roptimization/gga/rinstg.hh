@@ -76,7 +76,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 {
 	Objs=new RStd::RCursor<cObj,unsigned int>();
 	Objs->Set(objs);
-	MaxGroups=Objs->GetNb()/2;
+	if(Objs->GetNb()<11)
+		MaxGroups=10;
+	else
+		MaxGroups=Objs->GetNb()/4;
 }
 
 
@@ -88,7 +91,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 {
 	Objs=new RStd::RCursor<cObj,unsigned int>();
 	Objs->Set(objs);
-	MaxGroups=Objs->GetNb()/2;
+	if(Objs->GetNb()<11)
+		MaxGroups=10;
+	else
+		MaxGroups=Objs->GetNb()/4;
 }
 
 
@@ -100,7 +106,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 {
 	Objs=new RStd::RCursor<cObj,unsigned int>();
 	Objs->Set(objs);
-	MaxGroups=Objs->GetNb()/2;
+	if(Objs->GetNb()<11)
+		MaxGroups=10;
+	else
+		MaxGroups=Objs->GetNb()/4;
 }
 
 
