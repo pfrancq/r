@@ -49,6 +49,10 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	// Init of the arrays needed.
 	OrdObjectsAss=new unsigned int[Objs->GetNb()];
 	NewUsedId=new unsigned int[MaxPtr];
+
+	// Suppose no object is assigned
+	for(Objs->Start();!Objs->End();Objs->Next())
+		ObjsNoAss.InsertPtr((*Objs)());
 }
 
 
@@ -58,6 +62,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 {
 	unsigned int i;
 
+	// Create the groups
 	GroupData=data;
 	for(i=0;i<MaxPtr;i++)
 		InsertPtr(new cGroup(static_cast<cGroups*>(this),i,GroupData));
