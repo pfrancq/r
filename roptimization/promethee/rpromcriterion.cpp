@@ -73,6 +73,13 @@ RPromCriterionParams* RPromethee::RPromCriterionParams::GetParams(void)
 
 
 //-----------------------------------------------------------------------------
+void RPromethee::RPromCriterionParams::Set(const char* values)
+{
+	sscanf(values,"%lf %lf %lf",&P,&Q,&Weight);
+}
+
+
+//-----------------------------------------------------------------------------
 RPromCriterionParams& RPromethee::RPromCriterionParams::operator=(const RPromCriterionParams &params)
 {
 	P=params.P;

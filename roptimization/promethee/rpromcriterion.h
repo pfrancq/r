@@ -95,6 +95,12 @@ public:
 	static RPromCriterionParams* GetParams(void);
 
 	/**
+	* Set the parameters using a string with the format "P Q W".
+	* @param values         Values of the parameter.
+	*/
+	void Set(const char* values);
+
+	/**
 	* Assignment operator.
 	*/
 	RPromCriterionParams& operator=(const RPromCriterionParams &params);
