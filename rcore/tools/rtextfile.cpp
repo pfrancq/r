@@ -47,7 +47,7 @@
 
 //---------------------------------------------------------------------------
 // include files for Rainbow
-#include "rtextfile.h"
+#include <rstd/rstd.h>
 using namespace RStd;
 
 
@@ -83,9 +83,9 @@ RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
       throw(RString("No Valid Mode"));
   };
   if(Mode==Read)
-    handle=open(Name(),localmode);
+    handle=open(Name,localmode);
   else
-    handle=open(Name(),localmode,S_IREAD|S_IWRITE);
+    handle=open(Name,localmode,S_IREAD|S_IWRITE);
   if(handle==-1)
     throw(RString("Can't open file """+Name+""""));
   Init();
@@ -97,7 +97,7 @@ RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
   : Mode(Read), Name(name), All(all), NewLine(false), Rem("%"), BeginRem("/*"),
 		EndRem("*/"),CommentType(SingleLineComment),Line(0)
 {
-	handle=open(Name(),O_RDONLY);
+	handle=open(Name,O_RDONLY);
   Init();
 }
 
@@ -150,11 +150,11 @@ bool RTextFile::BeginComment(void)
 			break;
 
 		case SingleLineComment:
-			return(!strncmp(ptr,Rem(),Rem.GetLen()));
+			return(!strncmp(ptr,Rem,Rem.GetLen()));
 			break;
 
 		case MultiLineComment:
-			return(!strncmp(ptr,BeginRem(),BeginRem.GetLen()));
+			return(!strncmp(ptr,BeginRem,BeginRem.GetLen()));
 			break;
 	}
 	return(false);
@@ -176,7 +176,7 @@ bool RTextFile::EndComment(void)
 			break;
 
 		case MultiLineComment:
-			if(!strncmp(ptr,EndRem(),EndRem.GetLen()))
+			if(!strncmp(ptr,EndRem,EndRem.GetLen()))
 			{
 				ptr+=EndRem.GetLen();
 				return(true);
@@ -418,7 +418,7 @@ void RTextFile::WriteLong(const long nb) throw(RString)
   if(Mode==Read)
     throw(RString("File Mode is Read"));
   if(!NewLine)
-    write(handle,Separator(),Separator.GetLen());
+    write(handle,Separator,Separator.GetLen());
   sprintf(Str,"%li",nb);
   write(handle,Str,strlen(Str));
 	#ifdef windows
@@ -467,9 +467,8 @@ void RTextFile::WriteULong(const unsigned long nb) throw(RString)
 
   if(Mode==Read)
     throw(RString("File Mode is Read"));
-
   if(!NewLine)
-    write(handle,Separator(),Separator.GetLen());
+    write(handle,Separator,Separator.GetLen());
   sprintf(Str,"%lu",nb);
   write(handle,Str,strlen(Str));
 	#ifdef windows
@@ -510,8 +509,9 @@ void RTextFile::WriteStr(const char *c) throw(RString)
   if(Mode==Read)
     throw(RString("File Mode is Read"));
   if(!NewLine)
-    write(handle,Separator(),Separator.GetLen());
+    write(handle,Separator,Separator.GetLen());
   l=strlen(c);
+	RReturnIfFail(strlen(c)>0);
 	if(!l) return;
   write(handle,c,l);
 	#ifdef windows
@@ -539,8 +539,9 @@ void RTextFile::WriteStr(const RString &str) throw(RString)
 
   if(Mode==Read)
     throw(RString("File Mode is Read"));
+	RReturnIfFail(str.GetLen()>0);
   if(!NewLine)
-    write(handle,Separator(),Separator.GetLen());
+    write(handle,Separator,Separator.GetLen());
   l=str.GetLen();
 	if(!l) return;
   if(str[l-1]!='\n'&&str[l-1]!='\r')
@@ -551,7 +552,7 @@ void RTextFile::WriteStr(const RString &str) throw(RString)
 		l--;
 		if(str[l-1]!='\n'&&str[l-1]!='\r') l--;
 	}
-  write(handle,str(),l);
+  write(handle,str,l);
 	if(NewLine) WriteLine();
 	#ifdef windows
 	  flushall();
@@ -575,7 +576,7 @@ void RTextFile::WriteBool(const bool b) throw(RString)
   if(Mode==Read)
     throw(RString("File Mode is Read"));
   if(!NewLine)
-    write(handle,Separator(),Separator.GetLen());
+    write(handle,Separator,Separator.GetLen());
   if(b) strcpy(Str,"1"); else strcpy(Str,"0");
   write(handle,Str,strlen(Str));
 	#ifdef windows
@@ -606,7 +607,7 @@ void RTextFile::WriteTime(void) throw(RString)
   timer = time(NULL);
   tblock = localtime(&timer);
   if(!NewLine)
-    write(handle,Separator(),Separator.GetLen());
+    write(handle,Separator,Separator.GetLen());
   strcpy(Str,asctime(tblock));
   Str[strlen(Str)-1]=0;
   write(handle,Str,strlen(Str));
@@ -626,6 +627,7 @@ void RTextFile::WriteLog(const char *entry) throw(RString)
 
   if(Mode==Read)
     throw(RString("File Mode is Read"));
+	RReturnIfFail(strlen(entry)>0);
   if(!NewLine) WriteLine();
   strcpy(Str,"[");
   timer = time(NULL);
@@ -649,6 +651,13 @@ RTextFile::~RTextFile(void)
 	if(handle!=-1) close(handle);
 }
 
+
+
+//---------------------------------------------------------------------------
+//
+// General functions
+//
+//---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 RTextFile& endl(RTextFile &file)

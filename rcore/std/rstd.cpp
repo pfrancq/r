@@ -1,8 +1,8 @@
 /*
 
-  RFunc.cpp
+  RStd.cpp
 
-  Some important functions - Implementation.
+  Rainbow Standard Library - Implementation.
 
   (C) 1999-2000 by P. Francq.
 
@@ -28,5 +28,5 @@
 
 
 //---------------------------------------------------------------------------
-#include "rfunc.h"
+#include "rstd.h"
 using namespace RStd;

@@ -29,15 +29,8 @@
 
 
 //---------------------------------------------------------------------------
-// include files for Standard C/C++ libraries
-#include <stdio.h>
-#include <string.h>
-
-
-//---------------------------------------------------------------------------
 // include files for Rainbow
-#include "rfunc.h"
-#include "rstring.h"
+#include "rstd.h"
 using namespace RStd;
 
 
@@ -61,19 +54,46 @@ RString::RString(void) throw(bad_alloc)
 //---------------------------------------------------------------------------
 RString::RString(const char *text) throw(bad_alloc)
 {
-  MaxLen=Len=strlen(text);
-  Text=new char[MaxLen+1];
-  memcpy(Text,text,Len+1);
+	const char *ptr1=text;
+	char *ptr2;
+
+	if(text)
+	{	
+  	MaxLen=Len=strlen(text);
+  	ptr2=Text=new char[MaxLen+1];
+		while(*ptr1)
+			(*(ptr2++))=(*(ptr1++));
+		(*ptr2)=0;
+	}
+	else
+	{
+		MaxLen=200;
+  	Len=0;
+	  Text=new char[MaxLen+1];
+  	(*Text)=0;
+		RReturnIfFail(text);
+	}
 }
 
 
 //---------------------------------------------------------------------------
 RString::RString(const int maxlen) throw(bad_alloc)
 {
-  MaxLen=maxlen;
-  Len=0;
-  Text=new char[MaxLen+1];
-  (*Text)=0;
+	if(maxlen)
+	{
+  	MaxLen=maxlen;
+  	Len=0;
+  	Text=new char[MaxLen+1];
+  	(*Text)=0;
+	}
+	else
+	{
+		MaxLen=200;
+  	Len=0;
+  	Text=new char[MaxLen+1];
+	  (*Text)=0;
+		RReturnIfFail(maxlen!=0);
+  }
 }
 
 
@@ -83,23 +103,35 @@ RString::RString(const RString& str) throw(bad_alloc)
   MaxLen=str.MaxLen;
   Len=str.Len;
   Text=new char[MaxLen+1];
-  memcpy(Text,str.Text,Len+1);
+  memcpy(Text,str.Text,(Len+1)*sizeof(char));
 }
 
 
 //---------------------------------------------------------------------------
 RString::RString(const RString* str) throw(bad_alloc)
 {
-  MaxLen=str->MaxLen;
-  Len=str->Len;
-  Text=new char[MaxLen+1];
-  memcpy(Text,str->Text,Len+1);
+	if(str)
+	{	
+  	MaxLen=str->MaxLen;
+  	Len=str->Len;
+  	Text=new char[MaxLen+1];
+  	memcpy(Text,str->Text,(Len+1)*sizeof(char));
+	}
+	else
+	{
+		MaxLen=200;
+  	Len=0;
+  	Text=new char[MaxLen+1];
+	  (*Text)=0;
+		RReturnIfFail(str);
+	}
 }
 
 
 //---------------------------------------------------------------------------
 inline void RString::Verify(const int maxlen) throw(bad_alloc)
 {
+	RReturnIfFail(maxlen!=0);
   if(MaxLen<maxlen)
   {
     char *tmp;
@@ -107,7 +139,7 @@ inline void RString::Verify(const int maxlen) throw(bad_alloc)
     tmp=new char[MaxLen+1];
     if(Text)
     {
-      memcpy(tmp,Text,Len+1);
+      memcpy(tmp,Text,(Len+1)*sizeof(char));
       delete[] Text;
     }
     Text=tmp;
@@ -120,7 +152,7 @@ RString& RString::operator=(const RString &str) throw(bad_alloc)
 {
   Verify(str.MaxLen);
   Len=str.Len;
-  memcpy(Text,str.Text,Len+1);
+  memcpy(Text,str.Text,(Len+1)*sizeof(char));
   return(*this);
 }
 
@@ -128,10 +160,32 @@ RString& RString::operator=(const RString &str) throw(bad_alloc)
 //---------------------------------------------------------------------------
 RString& RString::operator=(const char *text) throw(bad_alloc)
 {
-  Len=strlen(text),
+	const char *ptr1;
+	char *ptr2;
+
+	RReturnValIfFail(text,*this);
+	ptr1=text;
+  Len=strlen(text);
   Verify(Len);
-  memcpy(Text,text,Len+1);
+	ptr2=Text;
+	while(*ptr1)
+		(*(ptr2++))=(*(ptr1++));
+	(*ptr2)=0;
   return(*this);
+}
+
+
+//---------------------------------------------------------------------------
+char* RString::StrDup(void) const throw(bad_alloc)
+{
+	char *text,*ptr1;
+	const char *ptr2=Text;
+
+	ptr1=text=new char[Len+1];
+	while(*ptr2)
+		(*(ptr1++))=(*(ptr2++));
+	(*ptr1)=0;
+	return(text);
 }
 
 
@@ -157,9 +211,17 @@ inline void RString::StrUpr(void)
 //---------------------------------------------------------------------------
 void RString::StrUpr(const char *text) throw(bad_alloc)
 {
-  Len=strlen(text),
+	const char *ptr1;
+	char *ptr2;
+
+	RReturnIfFail(text);
+	ptr1=text;
+  Len=strlen(text);
   Verify(Len);
-  memcpy(Text,text,Len+1);
+	ptr2=Text;
+	while(*ptr1)
+		(*(ptr2++))=(*(ptr1++));
+	(*ptr2)=0;
   StrUpr();
 }
 
@@ -169,7 +231,7 @@ void RString::StrUpr(const RString &str) throw(bad_alloc)
 {
   Verify(str.MaxLen);
   Len=str.Len;
-  memcpy(Text,str.Text,Len+1);
+  memcpy(Text,str.Text,(Len+1)*sizeof(char));
   StrUpr();
 }
 
@@ -197,9 +259,16 @@ inline void RString::StrLwr(void)
 //---------------------------------------------------------------------------
 void RString::StrLwr(const char *text) throw(bad_alloc)
 {
-  Len=strlen(text),
+	const char *ptr1=text;
+	char *ptr2;
+
+	RReturnIfFail(text);
+  Len=strlen(text);
   Verify(Len);
-  memcpy(Text,text,Len+1);
+	ptr2=Text;
+	while(*ptr1)
+		(*(ptr2++))=(*(ptr1++));
+	(*ptr2)=0;
   StrLwr();
 }
 
@@ -209,7 +278,7 @@ void RString::StrLwr(const RString &str) throw(bad_alloc)
 {
   Verify(str.MaxLen);
   Len=str.Len;
-  memcpy(Text,str.Text,Len+1);
+  memcpy(Text,str.Text,(Len+1)*sizeof(char));
   StrLwr();
 }
 
@@ -218,7 +287,7 @@ void RString::StrLwr(const RString &str) throw(bad_alloc)
 RString& RString::operator+=(const RString &str) throw(bad_alloc)
 {
   Verify(str.Len+Len);
-  memcpy(&Text[Len],str.Text,str.Len+1);
+  memcpy(&Text[Len],str.Text,(str.Len+1)*sizeof(char*));
   Len+=str.Len;
   return(*this);
 }
@@ -227,9 +296,17 @@ RString& RString::operator+=(const RString &str) throw(bad_alloc)
 //---------------------------------------------------------------------------
 RString& RString::operator+=(const char *text) throw(bad_alloc)
 {
+	const char *ptr1;
+	char *ptr2;
+
+	RReturnValIfFail(text,*this);
+	ptr1=text;
   int len=strlen(text);
   Verify(len+Len);
-  memcpy(&Text[Len],text,len+1);
+	ptr2=&Text[len];
+	while(*ptr1)
+		(*(ptr2++))=(*(ptr1++));
+	(*ptr2)=0;
   Len+=len;
   return(*this);
 }
@@ -238,35 +315,85 @@ RString& RString::operator+=(const char *text) throw(bad_alloc)
 //---------------------------------------------------------------------------
 bool RString::operator==(const RString &str) const
 {
-  return(!strcmp(Text,str.Text));
+	const char *ptr1=str.Text;
+	char *ptr2=Text;
+
+	if(Len!=str.Len) return(false);
+	while((*ptr1)&&(*ptr2))
+	{
+		if((*ptr1)!=(*ptr2)) return(false);
+		ptr1++;
+		ptr2++;
+	}
+	return(true);
 }
 
 
 //---------------------------------------------------------------------------
 bool RString::operator!=(const RString &str) const
 {
-  return(strcmp(Text,str.Text));
+	const char *ptr1=str.Text;
+	char *ptr2=Text;
+
+	if(Len!=str.Len) return(true);
+	while((*ptr1)&&(*ptr2))
+	{
+		if((*ptr1)!=(*ptr2)) return(true);
+		ptr1++;
+		ptr2++;
+	}
+	return(false);
 }
 
 
 //---------------------------------------------------------------------------
 int RString::Compare(const RString &str) const
 {
-  return(strcmp(Text,str.Text));
+	const char *ptr1=str.Text;
+	char *ptr2=Text;
+
+	if(Len!=str.Len)	return(Len-str.Len);
+	while((*ptr1)==(*ptr2))
+	{
+		ptr1++;
+		ptr2++;
+	}
+	return((*ptr1)-(*ptr2));
 }
 
 
 //---------------------------------------------------------------------------
 int RString::Compare(const RString *str) const
 {
-  return(strcmp(Text,str->Text));
+	const char *ptr1;
+	char *ptr2=Text;
+
+	RReturnValIfFail(ptr1,1);
+	if(!ptr1) return(1);
+	ptr1=str->Text;
+	if(Len!=str->Len)	return(Len-str->Len);
+	while((*ptr1)==(*ptr2))
+	{
+		ptr1++;
+		ptr2++;
+	}
+	return((*ptr1)-(*ptr2));
 }
 
 
 //---------------------------------------------------------------------------
-const char* RString::FindStr(const char *text) const
+char RString::HashIndex(void) const
 {
-	return(strstr(Text,text));
+	int c=(*Text);
+	#ifdef __BORLANDC__
+    #pragma warn -sig
+	#endif
+	if(c>='a'&&c<='z') return(c-'a');
+	if(c>='A'&&c<='Z') return(c-'A');
+	#ifdef __BORLANDC__
+    #pragma warn .sig	
+	#endif
+	return(26);
 }
 
 
@@ -274,6 +401,13 @@ const char* RString::FindStr(const char *text) const
 RString* RString::GetString(void)
 {
 	return(GetTemporaryObject<RString,__RMAXSTRING__>());
+}
+
+
+//---------------------------------------------------------------------------
+char* RString::GetCString(void)
+{
+	return(*GetTemporaryObject<char*,__RMAXSTRING__>());
 }
 
 

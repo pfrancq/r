@@ -33,15 +33,7 @@
 
 
 //---------------------------------------------------------------------------
-#ifdef unix
-	#ifndef NULL
-		#define NULL 0
-	#endif
-	#include <string.h>
-#else
-	#include <mem.h>
-#endif
-#include <new.h>
+// Generic defines
 #ifndef __RMAXSTRING__
 	#define __RMAXSTRING__ 30
 #endif
@@ -65,7 +57,9 @@ class RString
   int Len;
 	/** The maximal length of the string. When necessary, the class increase his size.*/
 	int MaxLen;
+
 public:
+
 	/** Construct a empty string. It is a string with a maximal length of 200.*/
   RString(void) throw(bad_alloc);
 
@@ -89,16 +83,15 @@ public:
 		*/
 	RString(const RString* str) throw(bad_alloc);
 
-
-	// Assignation
 	/** Assignment operator using another string.*/
   RString& operator=(const RString &str) throw(bad_alloc);
 
 	/** Assignment operator using a "C string".*/
   RString& operator=(const char *text) throw(bad_alloc);
 
+	/** Make a copy a return a pointer to it.*/
+	char* StrDup(void) const throw(bad_alloc);
 
-  // Transform to uppercase
 	/** Transform the string to uppercase.*/
   inline void StrUpr(void);
 
@@ -112,8 +105,6 @@ public:
 		*/
 	void StrUpr(const RString &str) throw(bad_alloc);
 
-
-  // Transform to lowercase
 	/** Transform the string to lowercase.*/
   inline void StrLwr(void);
 
@@ -136,8 +127,11 @@ public:
 	/** Return the character at position i. The first letter is at position 0.*/
   inline char operator[](int i) const	{return(Text[i]);}
 
-	/** Return the "C string" containing teh string.*/
+	/** Return the "C string" containing the string.*/
   inline const char* operator()(void) const {return(Text);}
+
+	/** Return the "C string" containing the string.*/
+  inline operator const char* () const {return(Text);}
 
 	/** Equal operator.*/
   bool operator==(const RString &str) const;
@@ -153,23 +147,7 @@ public:
 
 	/** Return a number between 0 and 26 according to the first character of the
 		* string. It is used for the RHashContainer class.*/
-  inline char HashIndex(void) const
-  {
-  	char c=(*Text);
-		#ifdef __BORLANDC__
-	    #pragma warn -sig
-		#endif
-  	if(c>='a'&&c<='z') return(c-'a');
-		if(c>='A'&&c<='Z') return(c-'A');
-		#ifdef __BORLANDC__
-	    #pragma warn .sig	
-		#endif
-		return(26);
-  }
-
-	/** This funnction return a pointer in the string where text is beginning if
-		* exist in the string.*/
-  const char* FindStr(const char *text) const;
+  char HashIndex(void) const;
 
 	/** Return the length of the string.*/
   inline int GetLen(void) const {return(Len);}
@@ -179,6 +157,9 @@ public:
 
 	/** Need to manage temporary strings.*/
 	static RString* GetString(void);
+
+	/** Need to manage temporary C strings.*/
+	static char* GetCString(void);
 
 protected:
 	/** Verify if the string can hold maxlen characters and extend the array if

@@ -93,6 +93,7 @@ public:
   // Get & Insert
   inline void InsertPtr(C *ins) throw(bad_alloc)
   {
+		RReturnIfFail(ins);
 	  Hash[ins->HashIndex()]->InsertPtr(ins);
   }
   template<class TUse> inline bool IsIn(const TUse &tag)
@@ -111,19 +112,12 @@ public:
   // Delete
   inline void DeletePtr(C* del)
   {
+		RReturnIfFail(del);
 		Hash[ins->HashIndex()]->DeletePtr(del);
   }
   template<class TUse> inline void DeletePtr(const TUse &tag)
   {
 		Hash[tag.HashIndex()]->DeletePtr<TUse>(tag);
-  }
-
-  // For each
-  template<class TUse> void ForEach(void f(TUse),const TUse &tag)
-  {
-		RContainer<C,T,bAlloc,true> **ptr;
-		T i;
-		for(i=tSize+1,ptr=Hash;--i;ptr++)	(*ptr)->ForEach<TUse>(f,tag);
   }
 
   // Destructor

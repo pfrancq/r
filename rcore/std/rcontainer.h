@@ -34,12 +34,9 @@
 
 
 //---------------------------------------------------------------------------
-#ifdef unix
-	#include <string.h>
-#else
-	#include <mem.h>
-#endif
-#include <new.h>
+// include files for Rainbow
+#include <rstd/rstd.h>
+using namespace RStd;
 
 
 //---------------------------------------------------------------------------
@@ -145,7 +142,12 @@ public:
 	/** Construct the container from another container.
 		* @param container		The container used as reference.
 		*/
-	RContainer(RContainer *container) throw(bad_alloc);
+	RContainer(const RContainer *container) throw(bad_alloc);
+
+	/** Construct the container from another container.
+		* @param container		The container used as reference.
+		*/
+	RContainer(const RContainer &container) throw(bad_alloc);
 
 	/** The assignement operator.*/
 	RContainer& operator=(const RContainer& container) throw(bad_alloc);

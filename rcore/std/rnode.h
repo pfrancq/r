@@ -34,11 +34,7 @@
 
 
 //---------------------------------------------------------------------------
-#pragma warn -rch
-#pragma warn -ccc
-    #include "rcontainer.h"
-#pragma warn .rch
-#pragma warn .ccc
+#include "rcontainer.h"
 using namespace RStd;
 
 
@@ -74,10 +70,12 @@ public:
   	* @param inc	The increment size for the array.
   	*/
   RNode(unsigned int max,unsigned int inc) throw(bad_alloc);
+
   /** Is used to compare two nodes. The function returns the same type of
   	* information than the strcmp function from the standard C library.
   	*/
   virtual int Compare(RNode*);
+
   /** Destruct the node.*/
   virtual ~RNode(void);
 };

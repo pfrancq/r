@@ -1,8 +1,8 @@
 /*
 
-  RFunc.h
+  RStd.h
 
-  Some important functions - Header.
+  Rainbow Standard Library - Header.
 
   (C) 1999-2000 by P. Francq.
 
@@ -29,14 +29,15 @@
 
 
 //---------------------------------------------------------------------------
-#ifndef RFuncH
-#define RFuncH
+#ifndef RStdH
+#define RStdH
 
 
 //---------------------------------------------------------------------------
 // include files for Standard C/C++
+#include <stdio.h>					// for sprintf
+#include <string.h>					// for memcpy
 #include <iostream.h>				// for cerr
-
 
 
 //---------------------------------------------------------------------------
@@ -54,28 +55,30 @@
     	if(!(expr))																							\
 			{																												\
        	cerr	<<"file "<<__FILE__                             \
-							<<": line "<<__LINE                             \
+							<<": line "<<__LINE__                           \
 							<<" ("<<__PRETTY_FUNCTION__                     \
 							<<"): assertion failed: "<<#expr<<endl;         \
+				throw;																		\
 			}
 
 		#define RAssertNotReached()																\
 			cerr	<<"file "<<__FILE__                             	\
-						<<": line "<<__LINE                           	  \
+						<<": line "<<__LINE__                          	  \
 						<<" ("<<__PRETTY_FUNCTION__                 	    \
-						<<"): should not be reached"<<endl;       	
+						<<"): should not be reached"<<endl;       				\
+				throw;																		
 
 	#else 	// !__GNUC__
 
 		#define RAssert(expr)																			\
     	if(!(expr))																							\
        	cerr	<<"file "<<__FILE__															\
-							<<": line "<<__LINE															\
+							<<": line "<<__LINE__														\
 							<<" : assertion failed: "<<#expr<<endl;
 
 		#define RAssertNotReached()																\
     	cerr	<<"file "<<__FILE__																\
-						<<": line "<<__LINE																\
+						<<": line "<<__LINE__															\
 						<<" : should not be reached"<<endl;
 
 	#endif 	// __GNUC__
@@ -98,7 +101,7 @@
     	if(!(expr))																							\
 			{																												\
        	cerr	<<"file "<<__FILE__                             \
-							<<": line "<<__LINE                             \
+							<<": line "<<__LINE__                           \
 							<<" ("<<__PRETTY_FUNCTION__                     \
 							<<"): assertion failed: "<<#expr<<endl;         \
 				return;																								\
@@ -108,7 +111,7 @@
     	if(!(expr))																							\
 			{																												\
        	cerr	<<"file "<<__FILE__                             \
-							<<": line "<<__LINE                             \
+							<<": line "<<__LINE__                           \
 							<<" ("<<__PRETTY_FUNCTION__                     \
 							<<"): assertion failed: "<<#expr<<endl;         \
 				return(val);																					\
@@ -120,7 +123,7 @@
     	if(!(expr))																							\
 			{																												\
        	cerr	<<"file "<<__FILE__                             \
-							<<": line "<<__LINE                             \
+							<<": line "<<__LINE__                           \
 							<<" : assertion failed: "<<#expr<<endl;         \
 				return;																								\
 			}
@@ -129,7 +132,7 @@
     	if(!(expr))																							\
 			{																												\
        	cerr	<<"file "<<__FILE__                             \
-							<<": line "<<__LINE                             \
+							<<": line "<<__LINE__                           \
 							<<" : assertion failed: "<<#expr<<endl;         \
 				return(val);																					\
 			}
@@ -174,6 +177,7 @@ template<class C,unsigned long Max>
 #include <rstd/rtextfile.h>
 #include <rstd/rnode.h>
 #include <rstd/rtree.h>
+
 
 //---------------------------------------------------------------------------
 #endif

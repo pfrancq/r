@@ -26,36 +26,67 @@
 
 */
 
-#ifdef __BORLANDC__
-	#pragma warn -ccc
-	#pragma warn -rch
-#endif
 
-			
+
 //---------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>::RContainer(T M,T I) throw(bad_alloc)
 		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(M),IncPtr(I)
 
 {
-  Tab = new C*[MaxPtr];
-  memset(Tab,0,MaxPtr*sizeof(C*));
-  if(!IncPtr) IncPtr=1;
+	if(MaxPtr)
+	{
+  	Tab = new C*[MaxPtr];
+  	memset(Tab,0,MaxPtr*sizeof(C*));
+	  if(!IncPtr) IncPtr=10;
+	}
+	else
+	{
+		MaxPtr=10;
+  	Tab = new C*[MaxPtr];
+  	memset(Tab,0,MaxPtr*sizeof(C*));
+	  if(!IncPtr) IncPtr=10;
+		RReturnIfFail(M>0);
+	}
 }
 
 
 //---------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
-	RContainer<C,T,bAlloc,bOrder>::RContainer(RContainer<C,T,bAlloc,bOrder> *container) throw(bad_alloc)
+	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,bAlloc,bOrder> *container) throw(bad_alloc)
 		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(container->MaxPtr),IncPtr(container->IncPtr)
 {
 	T i;
 	C **tab;
+	
+	if(container)
+	{	
+  	Tab = new C*[MaxPtr];
+	  memset(Tab,0,MaxPtr*sizeof(C*));
+		for(i=container->NbPtr+1,tab=container->Tab;--i;tab++)
+			InsertPtr(new C(*tab));	
+	}
+	else
+	{
+		RContainer(10,10);
+		RReturnIfFail(container);
+	}
+}
 
-  Tab = new C*[MaxPtr];
-  memset(Tab,0,MaxPtr*sizeof(C*));
-	for(i=container->NbPtr+1,tab=container->Tab;--i;tab++)
-		InsertPtr(new C(*tab));	
+
+//---------------------------------------------------------------------------
+template<class C,class T,bool bAlloc,bool bOrder>
+	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,bAlloc,bOrder> &container) throw(bad_alloc)
+		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(0),IncPtr(container.IncPtr)
+{
+	T i;
+	C **tab;
+	
+ 	MaxPtr=container.MaxPtr;
+ 	Tab = new C*[MaxPtr];
+   memset(Tab,0,MaxPtr*sizeof(C*));
+ 	for(i=container.NbPtr+1,tab=container.Tab;--i;tab++)
+ 		InsertPtr(new C(*tab));	
 }
 
 
@@ -174,6 +205,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::VerifyTab(T MaxSize) throw(bad_alloc)
 {
+	RReturnIfFail(MaxSize>0);
   if(MaxSize>MaxPtr)
   {
     C **ptr;
@@ -213,6 +245,9 @@ template<class C,class T,bool bAlloc,bool bOrder>
   T i;
   C **ptr;
 
+	RReturnIfFail(ins);
+	RReturnIfFail(Pos<=NbPtr);
+	if(!ins) return;
   if(Pos>NbPtr) return;
   NbPtr++;
   VerifyTab();
@@ -227,6 +262,8 @@ template<class C,class T,bool bAlloc,bool bOrder>
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::InsertPtr(C* ins) throw(bad_alloc)
 {
+	RReturnIfFail(ins);
+	if(!ins) return;
   if(bOrder)
   {
     bool Find;
@@ -355,6 +392,8 @@ template<class C,class T,bool bAlloc,bool bOrder>
   C **ptr;
   T Index;
 
+	RReturnIfFail(del);
+	if(!del) return;
   if(bOrder)
   {
     bool Find;
@@ -451,8 +490,3 @@ template<class C,class T,bool bAlloc,bool bOrder>
   }
   delete[] Tab;
 }
-
-#ifdef __BORLANDC__
-	#pragma warn .ccc
-	#pragma warn .rch
-#endif

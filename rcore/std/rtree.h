@@ -34,12 +34,7 @@
 
 
 //---------------------------------------------------------------------------
-#pragma warn -rch
-#pragma warn -ccc
-    #include "rcontainer.h"
-#pragma warn .rch
-#pragma warn .ccc
-#include "rnode.h"
+#include "rstd/rstd.h"
 using namespace RStd;
 
 
@@ -75,15 +70,18 @@ public:
   	* @param inc	Increment size of the array.
   	*/
   RTree(unsigned int max,unsigned int inc) throw(bad_alloc);
+
 	/** Add the node to the parent.
 		*	@param parent		The parent node.
 		* @param node			The node to add to the tree.
 		*/
   void AddNode(N *parent,N *node) throw(bad_alloc);
+
 	/** Delete the node from the tree.
 		* @param	node		The node to be delete from the tree.
 		*/
   void DeleteNode(N *node);
+
   /** Destruct the tree.*/
   ~RTree(void);
 };

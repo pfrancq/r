@@ -83,7 +83,7 @@ class RTextFile
 {
 public:
 	enum ModeType{Append,Read,Create};
-	enum RemType{NoComment,SingleLineComment,MultiLineComment,AllComment};
+	enum RemType{NoComment,SingleLineComment,MultiLineComment};
 
 private:
 	/** How to file has to be used. */

@@ -47,6 +47,8 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	void RTree<N,bAlloc,bOrder>::AddNode(N *parent,N *node) throw(bad_alloc)
 {
+	RReturnIfFail(node);
+	if(!node) return;
   InsertPtr(node);
   if(parent)
   {
@@ -62,6 +64,8 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	void RTree<N,bAlloc,bOrder>::DeleteNode(N *node)
 {
+	RReturnIfFail(node);
+	if(!node) return;
   if(node->Top)
   {
     node->Top->DeletePtr(node);
