@@ -430,11 +430,16 @@ public:
 	void WriteBool(const bool b) throw(RString);
 
 	/**
-	* << Operator for long.
+	* << Operator for bool.
 	*/
 	RTextFile& operator<<(const bool b) throw(RString);
 
- 	/**
+	/**
+	* Write a char in the file.
+	*/
+	void WriteChar(const char c) throw(RString);
+
+	/**
 	* Write a double
 	*/
 	void WriteDouble(const double d) throw(RString);

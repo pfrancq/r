@@ -532,14 +532,6 @@ void RIO::RTextFile::WriteLong(const long nb) throw(RString)
 
 
 //-----------------------------------------------------------------------------
-RTextFile& RIO::RTextFile::operator<<(const char nb) throw(RString)
-{
-	WriteLong(nb);
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
 RTextFile& RIO::RTextFile::operator<<(const short nb) throw(RString)
 {
 	WriteLong(nb);
@@ -705,6 +697,30 @@ void RIO::RTextFile::WriteBool(const bool b) throw(RString)
 RTextFile& RIO::RTextFile::operator<<(const bool b) throw(RString)
 {
 	WriteBool(b);
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+void RIO::RTextFile::WriteChar(const char c) throw(RString)
+{
+	char Str[10];
+
+	if(Mode==Read)
+		throw(RString("File Mode is Read"));
+	sprintf(Str,"%c",c);
+	write(handle,Str,1);
+	#ifdef windows
+		flushall();
+	#endif
+	NewLine=false;
+}
+
+
+//-----------------------------------------------------------------------------
+RTextFile& RIO::RTextFile::operator<<(const char c) throw(RString)
+{
+	WriteChar(c);
 	return(*this);
 }
 
