@@ -320,13 +320,16 @@ template<class C,bool bAlloc,bool bOrder>
 {
 	if(LastPtr==MaxPtr)
 	{
+		unsigned int OldSize;
+
+		OldSize=MaxPtr;
 		C **ptr;
 		MaxPtr+=IncPtr;
 		ptr=new C*[MaxPtr];
-		memcpy(ptr,Tab,LastPtr*sizeof(C*));
+		memcpy(ptr,Tab,OldSize*sizeof(C*));
 		delete[] Tab;
 		Tab=ptr;
-		memset(&Tab[LastPtr],0,IncPtr*sizeof(C*));
+		memset(&Tab[OldSize],0,IncPtr*sizeof(C*));
 		if(Current&&(ActPtr<LastPtr))
 			Current=&Tab[ActPtr];
 	}
@@ -346,7 +349,7 @@ template<class C,bool bAlloc,bool bOrder>
 		OldSize=MaxPtr;
 		MaxPtr=MaxSize;
 		ptr=new C*[MaxPtr];
-		memcpy(ptr,Tab,LastPtr*sizeof(C*));
+		memcpy(ptr,Tab,OldSize*sizeof(C*));
 		delete[] Tab;
 		Tab=ptr;
 		memset(&Tab[OldSize],0,(MaxPtr-OldSize)*sizeof(C*));
@@ -453,7 +456,7 @@ template<class C,bool bAlloc,bool bOrder>
 	{
 		if(del)
 		{
-			if(*ptr)
+			if((*ptr)&&(bAlloc))
 				delete(*ptr);
 		}
 		else
