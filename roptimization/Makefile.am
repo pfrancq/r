@@ -10,7 +10,7 @@ rgainclude_HEADERS =  rchromo.h rchromo.hh rdebug.h rfitness.h rfitness.hh rga.h
 					rchromog.h rchromog.hh rfirstfitheuristic.h rfirstfitheuristic.hh \
 					rgga.h rgroup.h rgroup.hh rgroupingheuristic.h rgroupingheuristic.hh \
 					rgroupingkmeans.h rgroupingkmeans.hh rgroups.h rgroups.hh rinstg.h \
-					rinstg.hh robjg.h \
+					rinstg.hh robjg.h rconnection.h rconnections.h \
 					rchromo2d.h rchromo2d.hh rfreepolygon.h rfreepolygons.h rga2d.h \
 					rga2dimplementation.h rgeoinfoconnection.h rgeoinfoconnections.h \
 					rgeoinfo.h rgeoinfos.h rgrid.h rinst2d.h rinst2d.hh robj2dcontainer.h \
