@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RTextFile.h
 
@@ -37,8 +37,8 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
-#include "rstring.h"
+// include files for R Project
+#include <rstd/rstring.h>
 using namespace RStd;
 
 
@@ -133,7 +133,7 @@ protected:
 	/**
 	* At NewLine? (Used only if created or append mode).
 	*/
-  bool NewLine;
+    bool NewLine;
 
 	/**
 	* This string represent a single line comment.
