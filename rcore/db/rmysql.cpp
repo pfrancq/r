@@ -342,7 +342,7 @@ RTransactionTable::RTransactionTable(RDb* db,RString name,unsigned int nb,...)
 
 
 //------------------------------------------------------------------------------
-unsigned int RTransactionTable::WriteTransaction(unsigned int id,...)
+size_raw RTransactionTable::WriteTransaction(unsigned int id,...)
 {
 	va_list ap;
 	RString sSql;
@@ -369,19 +369,19 @@ unsigned int RTransactionTable::WriteTransaction(unsigned int id,...)
 	sSql="SELECT LAST_INSERT_ID() FROM "+Name;
 	RQuery select(DB,sSql);
 	select.Start();
-	return(atoi(select[0]));
+	return(atoll(select[0]));
 }
 
 
 //------------------------------------------------------------------------------
-RQuery* RTransactionTable::ReadTransaction(unsigned int id,bool wait)
+RQuery* RTransactionTable::ReadTransaction(size_raw id,bool wait)
 {
 	RString sSql;
 	RQuery* Access=0;
 
 	sSql="SELECT * FROM "+Name;
 	if(id)
-		sSql+=" WHERE transid="+itou(id);
+		sSql+=" WHERE transid="+lltou(id);
 	try
 	{
 		do
@@ -408,14 +408,14 @@ RQuery* RTransactionTable::ReadTransaction(unsigned int id,bool wait)
 
 
 //------------------------------------------------------------------------------
-void RTransactionTable::WaitTransaction(unsigned int id)
+void RTransactionTable::WaitTransaction(size_raw id)
 {
 	RString sSql;
 	RQuery* Access=0;
 
 	sSql="SELECT * FROM "+Name;
 	if(id)
-		sSql+=" WHERE transid="+itou(id);
+		sSql+=" WHERE transid="+lltou(id);
 	try
 	{
 		do
@@ -440,13 +440,13 @@ void RTransactionTable::WaitTransaction(unsigned int id)
 
 
 //------------------------------------------------------------------------------
-void RTransactionTable::RemoveTransaction(unsigned int id)
+void RTransactionTable::RemoveTransaction(size_raw id)
 {
 	RString sSql;
 
 	sSql="DELETE FROM "+Name;
 	if(id)
-		sSql+=" WHERE transid="+itou(id);
+		sSql+=" WHERE transid="+lltou(id);
 	try
 	{
 		RQuery del(DB,sSql);

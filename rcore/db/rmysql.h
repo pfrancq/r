@@ -62,6 +62,11 @@ class RTextEncoding;
 
 
 //------------------------------------------------------------------------------
+// Type representing an identifier in a database row
+typedef unsigned long long size_raw;
+
+
+//------------------------------------------------------------------------------
 /**
 * The RMySQL class provides a representation of an error that occurs while
 * working with a MySQL database.
@@ -213,12 +218,12 @@ class RQuery
 	/**
 	* Total number of rows returned by the query.
 	*/
-	unsigned int nbrows;
+	size_raw nbrows;
 
 	/**
 	* Number of columns of the query.
 	*/
-	unsigned int nbcols;
+	size_raw nbcols;
 
 	/**
 	* SQL query.
@@ -267,14 +272,14 @@ public:
 	* @returns Number of row.
 	* \deprecated
 	*/
-	unsigned int GetNbRows(void)
+	size_raw GetNbRows(void)
 		{ return(nbrows); }
 
 	/**
 	* Get the total number of rows of the query.
 	* @returns Number of row.
 	*/
-	unsigned int GetNb(void)
+	size_raw GetNb(void)
 		{ return(nbrows); }
 
 	/**
@@ -395,7 +400,7 @@ public:
 	                        is reserved).
 	* @return The identificator of the transaction.
 	*/
-	unsigned int WriteTransaction(unsigned int id,...);
+	size_raw WriteTransaction(unsigned int id,...);
 
 	/**
 	* Get a transaction.
@@ -406,20 +411,20 @@ public:
 	* @return Pointer to a query containing the loaded transactions. This query
 	*         should be destroyed by the caller.
 	*/
-	RQuery* ReadTransaction(unsigned int id,bool wait);
+	RQuery* ReadTransaction(size_raw id,bool wait);
 
 	/**
 	* Wait that a given transaction arrived.
 	* @param id             Identificator of the transaction.
 	*/
-	void WaitTransaction(unsigned int id);
+	void WaitTransaction(size_raw id);
 
 	/**
 	* Remove a given transaction.
 	* @param id             Identificator of the transaction. If null, all the
 	*                       existing transactions are removed.
 	*/
-	void RemoveTransaction(unsigned int id);
+	void RemoveTransaction(size_raw id);
 
 	/**
 	* Destructor.
