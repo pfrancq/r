@@ -313,7 +313,6 @@ void RString::StrLwr(const RString& str) throw(bad_alloc)
 
 	Verify(str.MaxLen);
 	Len=str.Len;
-	memcpy(Text,str.Text,(Len+1)*sizeof(char));
 	ptr2=Text;
 	while(*ptr1)
 		(*(ptr2++))=ToLower(*(ptr1++));
