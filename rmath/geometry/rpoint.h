@@ -91,12 +91,12 @@ public:
 	/**
 	* The equal operator.
 	*/
-	inline bool operator==(const RPoint &pt) {return((X==pt.X)&&(Y==pt.Y));}
+	inline bool operator==(const RPoint &pt) const {return((X==pt.X)&&(Y==pt.Y));}
 
 	/**
 	* The non-equal operator.
 	*/
-	inline bool operator!=(const RPoint &pt) {return((X!=pt.X)||(Y!=pt.Y));}
+	inline bool operator!=(const RPoint &pt) const {return((X!=pt.X)||(Y!=pt.Y));}
 
 	/**
 	* Make a translation of the point.
@@ -115,14 +115,14 @@ public:
 	* is used with the class RContainer.
 	* @param pt		Point used for the comparaison.
 	*/
-	inline int Compare(const RPoint *pt) { return((*this)!=(*pt)); }
+	inline int Compare(const RPoint *pt) const { return((*this)!=(*pt)); }
 
 	/**
 	* Compare two points and return 0 if there are at the same position. This function
 	* is used with the class RContainer.
 	* @param pt		Point used for the comparaison.
 	*/
-	inline int Compare(const RPoint &pt) { return((*this)!=pt); }
+	inline int Compare(const RPoint &pt) const { return((*this)!=pt); }
 
 	/**
 	* Assignment operator.
@@ -132,7 +132,7 @@ public:
 	/**
 	* This function returns true if the two points are side by side.
 	*/
-	inline bool Near(const RPoint *pt) {return((labs(X-pt->X)<=1)&&(labs(Y-pt->Y)<=1));}
+	inline bool Near(const RPoint *pt) const {return((labs(X-pt->X)<=1)&&(labs(Y-pt->Y)<=1));}
 
 	/**
 	* Set the point to the given position.
@@ -144,12 +144,34 @@ public:
 	/**
 	* Return the manhatan distance from a given point.
 	*/
-	inline RCoord ManhattanDist(const RPoint &pt) {return(labs(X-pt.X)+labs(Y-pt.Y));}
+	inline RCoord ManhattanDist(const RPoint &pt) const {return(labs(X-pt.X)+labs(Y-pt.Y));}
+
+	/**
+	* Return the length of the vector represented by the current point.
+	*/
+	inline double Length(void) const {return(sqrt((X*X)+(Y*Y)));}
 
 	/**
 	* Return a pointer to a temporary object of class point.
 	*/
 	static RPoint* GetPoint(void);
+
+	/**
+	* Test if the point is a valid one.
+	*/
+	bool IsValid(void) const { return((X!=MaxCoord)&&(Y!=MaxCoord));}
+
+	/**
+	* Return the classification of the current point relative to the segment
+	* formed by two points.
+	*/
+	RDirection Classify(const RPoint& p0,const RPoint& p1);
+
+	/**
+	* Return the classification of the current point relative to the segment
+	* formed by two points.
+	*/
+	RDirection Classify(const RPoint* p0,const RPoint* p1);
 };
 
 

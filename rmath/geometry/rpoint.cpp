@@ -89,6 +89,40 @@ RPoint* RPoint::GetPoint(void)
 }
 
 
+//-----------------------------------------------------------------------------
+RDirection RPoint::Classify(const RPoint& p0,const RPoint& p1)
+{
+	RPoint a=p1-p0;
+	RPoint b=(*this)-p0;
+	double sa=a.X*b.Y-b.X*a.Y;
+
+	if(sa>Epsi) return(Left);
+	if(sa<-Epsi) return(Right);
+	if(((a.X*b.X)<Epsi)||((a.Y*b.Y)<Epsi)) return(Behind);
+	if(a.Length()<b.Length()) return(Beyond);
+	if((*this)==p0) return(Origin);
+	if((*this)==p1) return(Destination);
+	return(Between);
+}
+
+
+//-----------------------------------------------------------------------------
+RDirection RPoint::Classify(const RPoint* p0,const RPoint* p1)
+{
+	RPoint a=(*p1)-(*p0);
+	RPoint b=(*this)-(*p0);
+	double sa=a.X*b.Y-b.X*a.Y;
+
+	if(sa>Epsi) return(Left);
+	if(sa<-Epsi) return(Right);
+	if(((a.X*b.X)<Epsi)||((a.Y*b.Y)<Epsi)) return(Behind);
+	if(a.Length()<b.Length()) return(Beyond);
+	if((*this)==(*p0)) return(Origin);
+	if((*this)==(*p1)) return(Destination);
+	return(Between);
+}
+
+
 
 //-----------------------------------------------------------------------------
 //
