@@ -37,16 +37,7 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <stdlib.h>
-
-
-//-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-using namespace RStd;
-#include <rmath/random.h>
-using namespace RMath;
 #include <rga/rga.h>
 #include <rga/rdebug.h>
 #include <rga/rgasignals.h>
