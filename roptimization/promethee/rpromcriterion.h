@@ -79,17 +79,29 @@ public:
 	double Weight;
 
 	/**
-	* Construct a list of parameters for acriterion.
+	* Construct a list of parameters for a criterion.
 	*/
 	RPromCriterionParams(void);
 
 	/**
-	* Construct a list of parameters for acriterion.
+	* Construct a list of parameters for a criterion.
 	* @param p              Preference's threshold.
 	* @param q              Indifference's threshold.
 	* @param w              Weight of the criterion.
 	*/
 	RPromCriterionParams(double p,double q,double w);
+
+	/**
+	* Construct a list of parameters for acriterion.
+	* @param p               Params used for the initialisation.
+	*/
+	RPromCriterionParams(const RPromCriterionParams& p);
+
+	/**
+	* Construct a list of parameters for acriterion.
+	* @param p               Params used for the initialisation.
+	*/
+	RPromCriterionParams(const RPromCriterionParams* p);
 
 	/**
 	* Return a pointer to a temporary object of class point.

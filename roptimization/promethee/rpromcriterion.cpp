@@ -69,6 +69,24 @@ RPromCriterionParams::RPromCriterionParams(double p,double q,double w)
 
 
 //------------------------------------------------------------------------------
+RPromCriterionParams::RPromCriterionParams(const RPromCriterionParams& p)
+	: P(p.P), Q(p.Q), Weight(p.Weight)
+{
+}
+
+
+//------------------------------------------------------------------------------
+RPromCriterionParams::RPromCriterionParams(const RPromCriterionParams* p)
+	: P(0.2), Q(0.05), Weight(1.0)
+{
+	if(!p) return;
+	P=p->P;
+	Q=p->Q;
+	Weight=p->Weight;
+}
+
+
+//------------------------------------------------------------------------------
 RPromCriterionParams* RPromCriterionParams::GetParams(void)
 {
 	return(GetTemporaryObject<RPromCriterionParams,30>());
