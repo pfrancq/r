@@ -68,22 +68,33 @@ using namespace RGA;
 //---------------------------------------------------------------------------
 // General Variables
 bool RGA::ExternBreak=false;
-//cInstance *rrlGA::Instance=NULL;
-unsigned int RGA::MaxBestPopAge=5;
-unsigned int RGA::MaxBestAge=10;
-RDebug *RGA::Debug=NULL;
-typeSigFunc *RGA::SigFunc=NULL;
+RDebug *RGA::Debug=0;
+
 
 
 //---------------------------------------------------------------------------
-// Local Variables for this module
-unsigned int RGA::NbCross;
-unsigned int RGA::AgeNextMutation;
-unsigned int RGA::AgeNextBestMutation;
-unsigned int RGA::AgeBestPop;
+//
+// Exceptions
+//
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+eGA::eGA(const RString &msg)
+	: Msg(msg)
+{
+	cerr<<Msg()<<endl;
+}
+
 
 
 //---------------------------------------------------------------------------
+//
+// General functions
+//
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// Examine Command Line arguments
 bool RGA::Examine(int argc, char *argv[],const char* Prj,const char *Ver)
 {
 	char **args;	

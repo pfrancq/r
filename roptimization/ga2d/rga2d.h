@@ -65,7 +65,6 @@
 using namespace RGA;
 #include "rgeometry/rrect.h"
 #include "rgeometry/polygons.h"
-#include "rgeometry/rgeoinfo.h"
 using namespace RGeometry;
 
 
@@ -73,15 +72,18 @@ using namespace RGeometry;
 // Forward class declaration
 namespace RGA
 {
+	class RGeoInfo;
 	class RObj2D;
-	template<class cInfo>	class RThreadData2D;
-	template<class cInst,class cChromo,class cFit,class cInfo> class RInst2D;
-	template<class cInst,class cChromo,class cFit,class cInfo> class RChromo2D;
+	class RObj2DContainer;
+	template<class cInst,class cChromo>	class RThreadData2D;
+	template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RInst2D;
+	template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RChromo2D;
 }
 
 
 //---------------------------------------------------------------------------
 // include files for GA
+#include "rgeoinfo.h"
 #include "robj2d.h"
 #include "rinst2d.h"
 #include "rchromo2d.h"
@@ -91,19 +93,6 @@ using namespace RGA;
 //---------------------------------------------------------------------------
 namespace RGA{
 //---------------------------------------------------------------------------
-
-
-//---------------------------------------------------------------------------
-// General Variables
-extern RRect Limits; 						// Define the min/max of hight/width of the placement
-extern RCoord AvLen;						// Average Length of objects to place
-extern RCoord AvWidth;					// Average Width of objects to place
-
-
-//---------------------------------------------------------------------------
-// General functions
-void RandomPlace(RCoord& X,RCoord& Y);
-void LocalOptimisation(const RRects &Rects,RCoord &PosX,RCoord &PosY,unsigned int **OccX,unsigned int **OccY);
 
 
 //---------------------------------------------------------------------------

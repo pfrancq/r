@@ -54,28 +54,45 @@
 
 //---------------------------------------------------------------------------
 //
+// RThreadData<cInst,cChromo>
+//
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo>
+	RThreadData<cInst,cChromo>::RThreadData(cInst *owner) throw(bad_alloc)
+		: Owner(owner)
+{
+}
+
+
+
+//---------------------------------------------------------------------------
+//
 // RInst<cInst,cChromo,cFit>
 //
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	RInst<cInst,cChromo,cFit>::RInst(unsigned int popsize) throw(bad_alloc)
-		: Chromosomes(NULL),PopSize(popsize),Gen(0),AgeBest(0),Parents(NULL),Childs(NULL),tmpChrom(NULL)
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize) throw(bad_alloc)
+		: Parents(0),Childs(0),tmpChrom(0),Receivers(10,5),Chromosomes(0),PopSize(popsize),
+			Gen(0),AgeBest(0)
 {
   cChromo **C;
   unsigned int i;
 	
-	EmitSig(sigGAInit);
+//	EmitSig(sigGAInit);
   #ifdef RGADEBUG
     if(Debug) Debug->BeginApp("HGA","Pascal Francq");
 		if(Debug) Debug->BeginFunc("RInst","RInst");
   #endif
-  MaxBestPopAge=0;
+	MaxBestPopAge=5;
+	MaxBestAge=10;
   AgeNextMutation=MaxBestPopAge;
   AgeNextBestMutation=MaxBestAge;
   BestChromosome=NULL;
-  RandomGen = new RRandomGood(12345);
+  RRandom::RandomGen = new RRandomGood(12345);
 	if(PopSize)
 	{
   	Chromosomes=new cChromo*[PopSize];
@@ -88,6 +105,8 @@ template<class cInst,class cChromo,class cFit>
   	  (*C)=new cChromo(static_cast<cInst*>(this),i);
 	}
   BestChromosome=new cChromo(static_cast<cInst*>(this),PopSize);
+	thDatas=new cThreadData*[1];
+	thDatas[0]=new cThreadData(static_cast<cInst*>(this));
   #ifdef RGADEBUG
     if(Debug) Debug->EndFunc("RInst","RInst");
   #endif
@@ -95,21 +114,22 @@ template<class cInst,class cChromo,class cFit>
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	void RInst<cInst,cChromo,cFit>::Init(void) throw(bad_alloc)
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	void RInst<cInst,cChromo,cFit,cThreadData>::Init(void) throw(bad_alloc)
 {
   cChromo **C;
   unsigned int i;
 	
+	thDatas[0]->Init();
   for(i=0,C=Chromosomes;i<PopSize;C++,i++)
- 	  (*C)->Init();
-	BestChromosome->Init();
+ 	  (*C)->Init(thDatas[0]);
+	BestChromosome->Init(thDatas[0]);
 }
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	bool RInst<cInst,cChromo,cFit>::RandomConstruct(void)
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	bool RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct(void) throw(eGA)
 {
   cChromo **C=Chromosomes,*p;
 
@@ -138,8 +158,8 @@ template<class cInst,class cChromo,class cFit>
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	inline void RInst<cInst,cChromo,cFit>::Evaluate(void)
+template<class cInst,class cChromo,class cFit,class cThreaData>
+	inline void RInst<cInst,cChromo,cFit,cThreaData>::Evaluate(void) throw(eGA)
 {
   cChromo **C=Chromosomes,*p,*tmp;
 	unsigned int i;
@@ -174,7 +194,7 @@ template<class cInst,class cChromo,class cFit>
   {
     (*BestChromosome)=(*BestInPop);
     AgeBest=0;
-		EmitSig(sigNewBest);
+		emitBestSig();
   }
   #ifdef RGADEBUG
     if(Debug) Debug->EndFunc("Evaluate","RInst");
@@ -183,13 +203,11 @@ template<class cInst,class cChromo,class cFit>
 
 
 //--------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	int RInst<cInst,cChromo,cFit>::sort_function_cChromosome( const void *a, const void *b)
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	int RInst<cInst,cChromo,cFit,cThreadData>::sort_function_cChromosome( const void *a, const void *b)
 {
   cFit *af=(*(static_cast<cChromo**>(a)))->Fitness;
   cFit *bf=(*(static_cast<cChromo**>(b)))->Fitness;
-
-		
 
   if((*af)==(*bf)) return(0);
   if((*af)>(*bf))
@@ -201,8 +219,8 @@ template<class cInst,class cChromo,class cFit>
 
 //---------------------------------------------------------------------------
 // The bests chromosomes are crossovered
-template<class cInst,class cChromo,class cFit>
-	inline void RInst<cInst,cChromo,cFit>::Crossover(void)
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	inline void RInst<cInst,cChromo,cFit,cThreadData>::Crossover(void) throw(eGA)
 {
   unsigned i;
   cChromo **C1,**C2,*C3;
@@ -216,7 +234,7 @@ template<class cInst,class cChromo,class cFit>
   qsort(static_cast<void*>(tmpChrom),PopSize,sizeof(cChromo*),sort_function_cChromosome);
 
   // Make the crossovers
-  randorder<cChromo*>(tmpChrom,2*NbCross);
+  RRandom::randorder<cChromo*>(tmpChrom,2*NbCross);
   for(C1=&tmpChrom[PopSize-1],C2=tmpChrom,i=NbCross+1;--i;C1--,C2++) // A changer au cas où crossover pas possible
   {
     C3=(*(C2++));
@@ -225,12 +243,14 @@ template<class cInst,class cChromo,class cFit>
       sprintf(Tmp,"Parent %u + Parent %u -> Child %u",(*C2)->Id,C3->Id,(*C1)->Id);
 	    if(Debug) Debug->PrintInfo(Tmp);
     #endif
-    (*(C1--))->Crossover(*C2,C3);
+    if(!((*(C1--))->Crossover(*C2,C3)))
+			throw eGACrossover();
     #ifdef RGADEBUG
       sprintf(Tmp,"Parent %u + Parent %u -> Child %u",C3->Id,(*C2)->Id,(*C1)->Id);
 	    if(Debug) Debug->PrintInfo(Tmp);
     #endif
-    (*C1)->Crossover(C3,*C2);
+    if(!((*C1)->Crossover(C3,*C2)))
+			throw eGACrossover();
   }
   #ifdef RGADEBUG
     if(Debug) Debug->EndFunc("Crossover","RInst");
@@ -239,8 +259,8 @@ template<class cInst,class cChromo,class cFit>
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	inline void RInst<cInst,cChromo,cFit>::Mutation(void)
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	inline void RInst<cInst,cChromo,cFit,cThreadData>::Mutation(void) throw(eGA)
 {
   unsigned int i;
   cFit *WorstFitness=new cFit();
@@ -293,8 +313,8 @@ template<class cInst,class cChromo,class cFit>
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	void RInst<cInst,cChromo,cFit>::Generation(void)
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	void RInst<cInst,cChromo,cFit,cThreadData>::Generation(void) throw(eGA)
 {
   #ifdef RGADEBUG
     if(Debug) Debug->BeginFunc("Generation","RInst");
@@ -308,9 +328,14 @@ template<class cInst,class cChromo,class cFit>
     if(Debug) Debug->PrintComment(tmp);
   #endif
   Crossover();
+	emitInteractSig();
   Mutation();
+	emitInteractSig();
 	Verify();
+	emitInteractSig();
   Evaluate();
+	emitGenSig();
+	emitInteractSig();
   #ifdef RGADEBUG
     if(Debug) Debug->EndFunc("Generation","RInst");
   #endif
@@ -318,22 +343,20 @@ template<class cInst,class cChromo,class cFit>
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	void RInst<cInst,cChromo,cFit>::Run(void)
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	void RInst<cInst,cChromo,cFit,cThreadData>::Run(void) throw(eGA)
 {
   #ifdef RGADEBUG
     if(Debug&&(!ExternBreak)) Debug->BeginFunc("Run","RInst");
   #endif
-	EmitSig(sigGARun);
+//	EmitSigRun();
   if(!Gen) RandomConstruct();
-	EmitSig(sigInteract);
+	emitInteractSig();
   ExternBreak = false;
   while((!StopCondition())&&(!ExternBreak))
   {
     Generation();
-    DisplayInfos();
-		EmitSig(sigGAGen);
-		EmitSig(sigInteract);
+    DisplayInfos();		
   }
   PostRun();
   #ifdef RGADEBUG
@@ -343,8 +366,8 @@ template<class cInst,class cChromo,class cFit>
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	bool RInst<cInst,cChromo,cFit>::Verify(void)
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	bool RInst<cInst,cChromo,cFit,cThreadData>::Verify(void) throw(eGA)
 {
   unsigned int i;
   cChromo **C;
@@ -371,13 +394,67 @@ template<class cInst,class cChromo,class cFit>
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit>
-	RInst<cInst,cChromo,cFit>::~RInst(void)
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	inline void RInst<cInst,cChromo,cFit,cThreadData>::AddReceiver(RGASignalsReceiver<cInst,cChromo,cFit> *rec)
+{
+	Receivers.InsertPtr(rec);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	inline void RInst<cInst,cChromo,cFit,cThreadData>::DelReceiver(RGASignalsReceiver<cInst,cChromo,cFit> *rec)
+{
+	Receivers.DeletePtr(rec);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	void RInst<cInst,cChromo,cFit,cThreadData>::emitGenSig(void)
+{
+	unsigned int i;
+	RGASignalsReceiver<cInst,cChromo,cFit> **r;
+	RGASignalsReceiver<cInst,cChromo,cFit>::GenSig s(Gen,AgeBest,Chromosomes,BestChromosome);
+
+	for(i=Receivers.NbPtr+1,r=Receivers.Tab;--i;r++)
+		(*r)->receiveGenSig(&s);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	void RInst<cInst,cChromo,cFit,cThreadData>::emitInteractSig(void)
+{
+	unsigned int i;
+	RGASignalsReceiver<cInst,cChromo,cFit> **r;
+	RGASignalsReceiver<cInst,cChromo,cFit>::InteractSig s;
+
+	for(i=Receivers.NbPtr+1,r=Receivers.Tab;--i;r++)
+		(*r)->receiveInteractSig(&s);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	void RInst<cInst,cChromo,cFit,cThreadData>::emitBestSig(void)
+{
+	unsigned int i;
+	RGASignalsReceiver<cInst,cChromo,cFit> **r;
+	RGASignalsReceiver<cInst,cChromo,cFit>::BestSig s(BestChromosome);
+
+	for(i=Receivers.NbPtr+1,r=Receivers.Tab;--i;r++)
+		(*r)->receiveBestSig(&s);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	RInst<cInst,cChromo,cFit,cThreadData>::~RInst(void)
 {
   cChromo **C;
   unsigned int i;
 
-	EmitSig(sigGADone);
 	if(Chromosomes)
 	{
   	for(i=PopSize+1,C=Chromosomes;--i;C++)
@@ -388,8 +465,13 @@ template<class cInst,class cChromo,class cFit>
   if(Childs) delete[] Childs;
   if(Parents) delete[] Parents;
   if(tmpChrom) delete[] tmpChrom;
-  delete RandomGen;
+  delete RRandom::RandomGen;
   #ifdef RGADEBUG
     if(Debug) Debug->EndApp("HGA","Pascal Francq");
   #endif
+	if(thDatas)
+	{
+		delete thDatas[0];
+		delete[] thDatas;
+	}
 }

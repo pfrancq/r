@@ -62,8 +62,9 @@
 //---------------------------------------------------------------------------
 // include files for Rainbow
 #include "rgeometry/polygons.h"
-#include "rgeometry/rgeoinfo.h"
 using namespace RGeometry;
+#include "rga2d.h"
+using namespace RGA;
 
 
 //---------------------------------------------------------------------------
@@ -72,22 +73,96 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
+/** This basic class represent an object to place by using the 2D placement GA.
+	*	@author Pascal Francq
+	* @short 2D Object.
+	*/
 class RObj2D
 {
 public:
-	unsigned int Id;						// Id of the object
-  char PossOri[8];
+	/** Id of the object.*/
+	unsigned int Id;
+	/** Number of possible Orientations.*/
 	char NbPossOri;
-  RPolygon Polygons[8];
+	/** Different Orientations accepted.*/
+  char PossOri[8];
+	/** Polygon that define the object.*/
   RPolygon Polygon;
-  bool Deformable;            // If not deformable -> unique cGeoInfo for all chromosomes
+	/** Polygons corresponding to the possible orientations.*/
+  RPolygon Polygons[8];
+	/** Specify if the object is deformable or rigid.*/
+  bool Deformable;
 
+	/** Construct an 2D object.
+		* @param id						The identificator of the object.
+		* @param deformable   Specify if the object is deformable.
+		*/
   RObj2D(unsigned int id,bool deformable);
-	bool CalcPolygons(void);	  // Calc all the orientations based on Polygon
-	void SetOri(char ori);			// Set a specific orientation possible
-	bool IsOriSet(char ori);		// Is a specific orientation sets?
+
+	/** Calculate all the polygons based on the possible orientations of the object.
+		*	@return The function returns true if the calculation has be done without errors.
+		*/
+	bool CalcPolygons(void);
+
+	/** Set a specific orientation as possible.*/
+	void SetOri(char ori);
+
+	/** Return true if the orientation is possible.*/
+	bool IsOriSet(char ori);
+
+	/** The assignment operator.*/
   RObj2D& operator=(const RObj2D &obj);
-  virtual ~RObj2D(void);
+};
+
+
+//---------------------------------------------------------------------------
+/** This class represent an object containg other objects to place. It is use,
+	* for example, in the 2D placement GA crossover.
+	* @author Pascal Francq
+	* @short Container of objects.
+	*/
+class RObj2DContainer : public RObj2D
+{
+public:
+	/** Ids of the objects contained.*/
+	unsigned int *Ids;					
+	/** Pointer to all geometric infos of the objects.*/
+	RGeoInfo** Infos;						
+	/** Maximum number of objects contained.*/
+	unsigned int NbMax;					
+	/** Number of objects contained.*/
+	unsigned int Nb;						
+	/** Polygons of the objects.*/
+	RPolygons SPolygons;				
+	/** Point the most left-bottom.*/
+	RCoord MinX,MinY;						
+	/** Point the most left-bottom.*/
+  double Area;							
+
+	/** Construct the container of objects.
+		* @param id		The identificator of the object.
+		* @param max	Maxmimum number of objects that can be contained.
+		*/
+	RObj2DContainer(unsigned int id,unsigned int max);
+
+	/** Clear the container.*/
+	void Clear(void);
+
+	/** Add an object and his information to the container.
+		* @param obj		The object to add.
+		* @param info		The geometric information of the object.
+		*/
+	void AddObj(RObj2D *obj,RGeoInfo *info);
+
+	/** Does some calculation after each objects were added to the container.*/
+	void EndObjs(void);
+
+	/** Assign this container to a position and replace it in the grid with all the
+		* identificators of the objects contained.*/
+	void Assign(RGeoInfo **infos,unsigned int **OccX,unsigned int **OccY,RCoord x,RCoord y);
+
+	/** Destruct the container.*/
+	~RObj2DContainer(void);
 };
 
 

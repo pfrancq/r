@@ -28,14 +28,10 @@
 */
 
 
+
 //---------------------------------------------------------------------------
 #ifndef RDebugH
 #define RDebugH
-
-
-#ifndef NULL
-	#define NULL 0
-#endif
 
 
 //---------------------------------------------------------------------------
@@ -50,56 +46,125 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
-// Generic Debug File
+/** This file represent a generic debug output for the GA.
+	* @author Pascal Francq
+	* @short Generic Debug Output.
+	*/
 class RDebug
 {
+	/** Temporay Data for internal use.*/
 	char tmpOpt[2000];
+
+	/** Number of options.*/
 	unsigned int NbOptions;
 protected:
-	int Deep;																													// Deep Level (if -1 -> Nothing)
-	bool LevelOutput[50];																							// If LevelOutput[i]=true -> i+1 not null
+	/** Deep Level (if -1 -> Nothing).*/
+	int Deep;
+	/** If LevelOutput[i]=true -> i+1 not null.*/
+	bool LevelOutput[50];
 public:
+
+	/** Construct a debugger output.*/
   RDebug(void);
-  void BeginTag(char *,unsigned NbAttr=0,...);  	   								// Begin a Tag with attributes
-	void PrintComment(char*);																					// Print a comment for the tag
-  void EndTag(char *);                              								// End a Tag
-  void PrintInfo(char*);                             								// Print an Info
-  void BeginFunc(char *Name,char *Object);          								// Begin a Tag "Object.Name"
-  void EndFunc(char *Name,char *Object);            								// End a Tag "Object.Name"
-  void BeginApp(char *App,char *Author);            								// Begin a Tag "App"
-  void EndApp(char *App,char *Author);              								// End a Tag "App"
+
+	/** Begin a Tag with attributes
+		* @param Text			The name of the Tag.
+		* @param NbAttr		The number of attributes.
+		* The attributes are added after.
+		*/
+  void BeginTag(char *Text,unsigned NbAttr=0,...);
+
+	/** Print some Text in the current tag.*/
+	void PrintComment(char *Text);
+
+	/** End a Tag.*/
+  void EndTag(char *Text);
+
+	/** Print an Info Tag.*/
+  void PrintInfo(char *Text);                             								
+
+	/** Begin a member function tag.
+		* @param Name 		The name of the member function.
+		*	@param Object		The name of the object.		
+		*/
+  void BeginFunc(char *Name,char *Object);
+
+	/** End a member function tag.
+		* @param Name 		The name of the member function.
+		*	@param Object		The name of the object.		
+		*/
+  void EndFunc(char *Name,char *Object);
+
+	/** Begin an application tag.
+		* @param App		The name of the application.
+		* @param Author	The auhtor of the application.
+		*/
+  void BeginApp(char *App,char *Author);
+
+	/** End an application tag.
+		* @param App		The name of the application.
+		* @param Author	The auhtor of the application.
+		*/
+  void EndApp(char *App,char *Author);
 protected:
-  void AddAttribute(char* buf,char *Value,char *Att);								// Add an attribute to buf
-  virtual void WriteBeginTag(char *tag,char* options=NULL)=0;				// Begin a Tag
-	virtual void WriteText(char *text)=0;															// Write Text associate with current tag
-  virtual void WriteEndTag(char *tag)=0;														// End a Tag
+	/** Add an attribute to buf.*/
+  void AddAttribute(char* buf,char *Value,char *Att);
+
+	/** Begin to write a Tag. This function must be implement.*/
+  virtual void WriteBeginTag(char *tag,char* options=NULL)=0;
+
+	/** Write Text associate with current tag. This function must be implement.*/
+	virtual void WriteText(char *text)=0;
+
+	/** End to write a Tag. This function must be implement.*/
+  virtual void WriteEndTag(char *tag)=0;
 public:
+	/** Destruct the debugger output.*/
   virtual ~RDebug(void);
 };
 
 
 //---------------------------------------------------------------------------
-// Generic Debug File
+/** This class implement a debuuger file in XML format.
+	* @author Pascal Francq
+	* @short Debug XML file.
+	*/
 class RDebugXML : public RDebug
 {
+	/** The name of the file.*/
 	RString Name;
+	/** The handle of the file.*/
 	int Handle;
-	char tmpTab[50],tmpNL[3],tmpLenNL;	
-
+	/** Temporary Variables for Internal use.*/
+	char tmpTab[50];
+	/** Temporary Variables for Internal use.*/
+	char tmpNL[3];
+	/** Temporary Variables for Internal use.*/
+	char tmpLenNL;	
 public:
+
+	/** Construct the debug file.
+		* @param name		The name of the file.
+		*/
 	RDebugXML(const RString &name) throw(bad_alloc);	
 
 protected:
-  virtual void WriteBeginTag(char *tag,char* options=NULL);					// Begin a Tag
-	virtual void WriteText(char *text);																// Write Text associate with current tag
-  virtual void WriteEndTag(char *tag);															// End a Tag
+	/** Begin to write a Tag..*/
+  virtual void WriteBeginTag(char *tag,char* options=NULL);
+
+	/** Write Text associate with current tag.*/
+	virtual void WriteText(char *text);
+
+	/** End to write a Tag.*/
+  virtual void WriteEndTag(char *tag);
 
 public:
+	/** Destruct the debug file.*/
 	virtual ~RDebugXML(void);
 };
 
 
-}//------- End of namespace nDGA --------------------------------------------
+}//------- End of namespace RGA ---------------------------------------------
 
 
 //---------------------------------------------------------------------------

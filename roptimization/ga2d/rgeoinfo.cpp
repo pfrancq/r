@@ -40,16 +40,20 @@ using namespace RGA;
 
 //---------------------------------------------------------------------------
 RGeoInfo::RGeoInfo(void)
-	: Id(NoObject),Pos(MaxCoord,MaxCoord),Bound(), Rects()
+	: Id(NoObject),Selected(false),Pos(MaxCoord,MaxCoord),Bound(), Rects()
 {
 }
 
-/*
+
 //---------------------------------------------------------------------------
-RGeoInfo::RGeoInfo(RPolygon *poly)
-	: Pos(),Bound(poly->NbPtr), Rects()
+void RGeoInfo::Clear(void)
 {
-}  */
+	Id=NoObject;
+	Selected=false;
+	Pos.Y=Pos.X=MaxCoord;
+	Bound.Clear();
+	Rects.Clear();	
+}
 
 
 //---------------------------------------------------------------------------

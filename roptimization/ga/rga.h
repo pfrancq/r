@@ -41,7 +41,7 @@
 
 	This exception applies only to the code released under the
 	name Rainbow.  If you copy code from other releases into a copy of
-	RAinbow, as the General Public License permits, the exception does
+	Rainbow, as the General Public License permits, the exception does
 	not apply to the code that you add in this way.  To avoid misleading
 	anyone as to the status of such modified files, you must delete
 	this exception notice from them.
@@ -61,12 +61,10 @@
 
 //---------------------------------------------------------------------------
 // include files for AINSI C/C++
+#include <iostream.h>
 #include <new.h>
 #include <values.h>
 #include <limits.h>
-#ifndef NULL
-	const long int NULL=0;
-#endif
 #ifndef RGADEBUG
 	#define RGADEBUG 1
 #endif
@@ -75,6 +73,8 @@
 //---------------------------------------------------------------------------
 // include files for Rainbow
 #include "rstd/random.h"        // Random numbers generator
+#include "rstd/rstring.h"       // Strings
+#include "rstd/rcontainer.h"    // Container
 using namespace RStd;
 
 
@@ -84,13 +84,15 @@ namespace RGA
 {
 	class RDebug;
 	template<class cVal,bool Max>	class RFitness;
-	template<class cInst,class cChromo,class cFit> class RChromo;
-	template<class cInst,class cChromo,class cFit> class RInst;
+	template<class cInst,class cChromo,class cFit,class cThreadData> class RChromo;
+	template<class cInst,class cChromo,class cFit,class cThreadData> class RInst;
+	class eGA;
 }
 
 
 //---------------------------------------------------------------------------
 // include files for GA
+#include "rgasignals.h"
 #include "rdebug.h"
 #include "rfitness.h"
 #include "rinst.h"
@@ -109,62 +111,61 @@ const unsigned int NoObject=UINT_MAX;				// Reference to no object
 
 
 //---------------------------------------------------------------------------
-// Constances for Instance type
-const char instMaster=0;                   	// The instance is a master
-const char instSlave=1;                    	// The instance is a slave
-const char instMultiProcess=2;             	// The instance can use multi-processors
-const char instMultiComputers=4;           	// The instance can use slaves on other computers
-const char instMultiEchos=8;               	// The echo of the slaves is received by the master
-
-
-//---------------------------------------------------------------------------
-// Constances for Signals
-const unsigned int sigNothing=0;						// Nothing
-const unsigned int sigInteract=1;						// Gives the world possibility to Interact
-const unsigned int sigGAInit=2;							// GA is initialise
-const unsigned int sigGARun=3;							// GA starts to run
-const unsigned int sigGADone=4;							// GA is done
-const unsigned int sigGAPostRun=5;					// GA starts the post-run step
-const unsigned int sigGAEndRun=6;						// GA stops to run
-const unsigned int sigGAGen=7;							// One generation generated
-const unsigned int sigNewBest=8;						// A new best chromosome
-
-
-//---------------------------------------------------------------------------
 // General Variables
 extern bool ExternBreak;										// If true, GA stops
-extern unsigned int MaxBestPopAge;
-extern unsigned int MaxBestAge;
 extern RDebug *Debug;
 
 
 //---------------------------------------------------------------------------
-// Signal Macanism
-#ifdef RGANOSIGNALS
-	inline void EmitSig(void) {}
-#else
-	typedef void typeSigFunc(unsigned int);
-	extern typeSigFunc *SigFunc;								// Signal Function
-	inline void EmitSig(unsigned int sig) {if(SigFunc) SigFunc(sig);}
-#endif
+/** This class is a basic exception for the GA.
+	* @author Pascal Francq
+	* @short Basic GA Exception.
+	*/
+class eGA
+{
+public:
+	/** A String to hold a message */
+	RString Msg;
+
+	/** Construct the exception.
+		* @param msg	The message.
+		*/
+	eGA(const RString &msg);
+};
 
 
 //---------------------------------------------------------------------------
-// Local Variables for this module
-extern unsigned int NbCross;
-extern unsigned int AgeNextMutation;
-extern unsigned int AgeNextBestMutation;
-extern unsigned int AgeBestPop;
+/** This class represent a verify exception, when a chromosome is not valid
+	* after a generation.
+	* @author Pascal Francq
+	* @short Verify GA Exception
+	*/
+class eGAVerify : public eGA
+{
+public:
+	/** Construct the verify exception.*/
+	eGAVerify(void) : eGA("Error when verify chromosomes") {}
+};
 
 
 //---------------------------------------------------------------------------
-// Errors
-class eGA : public exception {};
-class eGAVerify : public eGA {};
+/** This class represent a crossover exception, when a crossover can't be done.
+	* @author Pascal Francq
+	* @short Crossover GA Exception
+	*/
+class eGACrossover : public eGA
+{
+public:
+	/** Construct the crossover esception.*/
+	eGACrossover(void) : eGA("Error when doing a crossover") {}
+};
 
 
 //---------------------------------------------------------------------------
-// Examine
+/* Examine the program parameters for a GA use in a non-graphical way.
+	* @author Pascal Francq
+	* @short Examine program parameters.
+	*/
 bool Examine(int argc, char *argv[],const char* Prj,const char *Ver);
 
 

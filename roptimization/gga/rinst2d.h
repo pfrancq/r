@@ -71,40 +71,75 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
-template<class cInfo>
-	class RThreadData2D
+/** This is a class that holds all data needed by each thread for the 2D GA.
+	*	@author Pascal Francq
+	*	@short 2D GA "thread-dependent" data.
+	*/
+template<class cInst,class cChromo>
+	class RThreadData2D : public RThreadData<cInst,cChromo>
 {
 public:
-	unsigned int NbObjs;			// Nb Objects to place
-	unsigned int *Order;			// Array
-	unsigned int *InObj;			// Id of the object containing an object (Crossover & Mutation)
-	cInfo **tmpInfos;					// Geometric information of the temporary objects (Crossover & Mutation)
-	RObj2D **tmpObjs;					// Temporary Objects (Crossover & Mutation)
+	/** Number of objects to place. */
+	unsigned int NbObjs;				
+	/** Array of identificators for objects. */
+	unsigned int *Order;				
+	/** Array of identificators for objects. */
+	unsigned int *Order2;
+	/** Temporary array of pointers to Objects (Crossover & Mutation). */
+	RObj2D **tmpObjs;						
+	/** Temporary objects container. */
+  RObj2DContainer *tmpObj1; 	
+	/** Temporary objects container. */
+  RObj2DContainer *tmpObj2;
 
-	RThreadData2D(unsigned int nbobjs);
-	~RThreadData2D(void);
+	/** Construct the data.
+		* @param owner		The instance of the problem.
+		*/
+	RThreadData2D(cInst *owner) throw(bad_alloc);
+
+	/** Initialise thje data.*/
+	virtual void Init(void) throw(bad_alloc);
+
+	/** Destruct the data.*/
+	virtual ~RThreadData2D(void);
 };
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cInfo>
-	class RInst2D	: public RInst<cInst,cChromo,cFit>
+/**	Instance for the 2D placement GA.
+	*	@author Pascal Francq
+	*	@short 2D GA Instance.
+	*/
+template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo>
+	class RInst2D	: public RInst<cInst,cChromo,cFit,cThreaData>
 {
 public:
-	RObj2D **Objs;											// Objects to place (ref)
-	unsigned int NbObjs;								// Nb Objects to place
-	RThreadData2D<cInfo> *thDatas;			// Thread dependant data
-	bool bLocalOpti;										// Local Optimization
+	/** Objects to place.*/
+	RObj2D **Objs;
+	/** Number of objects.*/
+	unsigned int NbObjs;
+	/** Local Optimisation.*/
+	bool bLocalOpti;
+	/** Use a Left-Bottom heuristic with a control of the bound.*/
+	bool bControlBottomLeft;
+	/** Point representing the limits for the placement.*/
+	RPoint Limits;
 
-  RInst2D(unsigned int popsize,RObj2D** objs,unsigned int nbobjs) throw(bad_alloc);
-	virtual void Init(void) throw(bad_alloc);
-  virtual ~RInst2D(void);
+	/** Construct the instance. The instance is not responsible for the desallocation
+		* of the objects to place.
+		* @param popsize		The size of the population.
+		* @param objs				The objects to place.
+		* @param nbobjs			Number of objects to place.
+		* @param limits			The limits for the placement.
+		*/
+  RInst2D(unsigned int popsize,RObj2D** objs,unsigned int nbobjs,RPoint &limits) throw(bad_alloc);
+
+	/** Return the limits for the placement.*/
+	RPoint& GetLimits(void);
 };
 
 
 }//------- End of namespace RGA ---------------------------------------------
-
-
 
 //---------------------------------------------------------------------------
 #endif

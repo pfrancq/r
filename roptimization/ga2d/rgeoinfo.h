@@ -27,6 +27,7 @@
 */
 
 
+
 //---------------------------------------------------------------------------
 #ifndef RGeoInfoH
 #define RGeoInfoH
@@ -44,7 +45,8 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
-/** This class represent a geometric information concerning a polygon place.
+/** The RGeoInfo class provides a geometric information concerning the placement
+	* of an object.
 	* @author Pascal Francq
 	* @short Geometric Information.
 	*/
@@ -53,6 +55,8 @@ class RGeoInfo
 public:
 	/** Identificator of the object.*/
 	unsigned int Id;
+	/** Indicate if the object was selected for the crossover.*/
+	bool Selected;
 	/** Position of the object.*/
 	RPoint Pos;    			
 	/** Polygon representing the object.*/
@@ -62,6 +66,9 @@ public:
 
 	/** Construct a geometric information.*/
   RGeoInfo(void);
+
+	/** Clears the geometric information.*/
+	void Clear(void);
 
 	/** This function adpat the rectangles according to the position of the polygon.*/
 	void AdaptPos(void);
@@ -106,11 +113,21 @@ public:
 
 
 //---------------------------------------------------------------------------
-// Geometric Information
+/** This class implements a container of geometric information.
+	* @author Pascal Francq
+	* @short Container of geometric information.
+	*/
 class RGeoInfos : public RContainer<RGeoInfo,unsigned int,false,false>
 {
 public:
+	/** Construct the container.
+		* @param nb		Number of geometric information that will contained.
+		*/
 	RGeoInfos(unsigned int nb);
+
+	/** Calculate the boundary rectangle of all the geometric information.
+		* @param rect		The rectangle that will be hold the result.
+		*/
 	void Boundary(RRect &rect);
 };
 

@@ -54,53 +54,43 @@
 
 //---------------------------------------------------------------------------
 //
-// RThreadData2D<cInfo>
+// RThreadData2D<cInst,cChromo>
 //
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-template<class cInfo>
-	RThreadData2D<cInfo>::RThreadData2D(unsigned int nbobjs)
-		: NbObjs(nbobjs),Order(NULL),InObj(NULL),tmpInfos(NULL)
+template<class cInst,class cChromo>
+	RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner) throw(bad_alloc)
+		: RThreadData<cInst,cChromo>(owner),NbObjs(0),Order(NULL),tmpObj1(NULL),tmpObj2(NULL)
 {
- 	unsigned int i;
- 	cInfo **ptr;
-	RObj2D **obj;
-	
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo>
+	void RThreadData2D<cInst,cChromo>::Init(void) throw(bad_alloc)
+{
+	RThreadData<cInst,cChromo>::Init();
+	NbObjs=Owner->NbObjs;
 	if(NbObjs)
 	{
-		tmpInfos=new cInfo*[NbObjs];
-   	for(i=NbObjs+1,ptr=tmpInfos;--i;ptr++)
-   			(*ptr)=new cInfo();  		
  		Order=new unsigned int[NbObjs];
- 		InObj=new unsigned int[NbObjs];
+		Order2=new unsigned int[NbObjs];
 		tmpObjs=new RObj2D*[NbObjs];
-		for(i=0,obj=tmpObjs;i<NbObjs;obj++,i++)
-			(*obj)=new RObj2D(i,false);	
+ 		tmpObj1=new RObj2DContainer(NbObjs,NbObjs);
+ 		tmpObj2=new RObj2DContainer(NbObjs+1,NbObjs);
   }
 }
 
 
 //---------------------------------------------------------------------------
-template<class cInfo>
-	RThreadData2D<cInfo>::~RThreadData2D(void)
+template<class cInst,class cChromo>
+	RThreadData2D<cInst,cChromo>::~RThreadData2D(void)
 {
-  cInfo **ptr;
-  unsigned int i;
-	RObj2D **obj;
-	
-	if(tmpInfos)
-	{
-  	for(i=NbObjs+1,ptr=tmpInfos;--i;ptr++)	delete(*ptr);
-	  delete[] tmpInfos;
-	}
-	if(tmpObjs)
-	{
-		for(i=NbObjs,obj=tmpObjs;--i;obj++) delete (*obj);
-		delete[] tmpObjs;
-	}
  	if(Order) delete[] Order;
-	if(InObj) delete[] InObj;
+	if(tmpObjs)	delete[] tmpObjs;
+	if(tmpObj1) delete tmpObj1;
+	if(tmpObj2) delete tmpObj2;
 }
 
 
@@ -112,34 +102,15 @@ template<class cInfo>
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cInfo>
-	RInst2D<cInst,cChromo,cFit,cInfo>::RInst2D(unsigned int popsize,RObj2D **objs,unsigned int nbobjs) throw(bad_alloc)
-		: RInst<cInst,cChromo,cFit>(popsize), Objs(objs), NbObjs(nbobjs), thDatas(NULL), bLocalOpti(true)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
+	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+		RInst2D(unsigned int popsize,RObj2D **objs,unsigned int nbobjs,RPoint &limits) throw(bad_alloc)
+			: RInst<cInst,cChromo,cFit,cThreadData>(popsize), Objs(objs), NbObjs(nbobjs),
+				bLocalOpti(true), bControlBottomLeft(true), Limits(limits)
 {
-	RObj2D **obj;
   cChromo **C;
-  unsigned int i,nb;
-	RRect Rect;
+  unsigned int i;
 
-	AvLen=AvWidth=0;
-	if(NbObjs)
-	{
-		for(i=NbObjs+1,obj=Objs,nb=0;--i;obj++)
-		{		
-			(*obj)->Polygon.Boundary(Rect);
-			AvLen+=Rect.Pt2.X;
-			AvWidth+=Rect.Pt2.Y;
-			nb++;
-			if((*obj)->IsOriSet(orRota90)||(*obj)->IsOriSet(orRota90MirrorX)||(*obj)->IsOriSet(orRota90MirrorY)||(*obj)->IsOriSet(orRota90MirrorYX))
-			{
-				AvLen+=Rect.Pt2.Y;
-				AvWidth+=Rect.Pt2.X;
-				nb++;
-			}
-		}
-		AvLen/=nb;
-		AvWidth/=nb;
-	}
   for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		(*C)->Objs=Objs;
@@ -151,27 +122,11 @@ template<class cInst,class cChromo,class cFit,class cInfo>
 
 
 //---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cInfo>
-	void RInst2D<cInst,cChromo,cFit,cInfo>::Init(void) throw(bad_alloc)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
+	RPoint& RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLimits(void)
 {
-  cChromo **C;
-  unsigned int i;
-	
-	RInst<cInst,cChromo,cFit>::Init();
-	thDatas=new RThreadData2D<cInfo>(NbObjs);
-  for(i=PopSize+1,C=Chromosomes;--i;C++)
-	{
-		(*C)->thInfos=thDatas->tmpInfos;
-		(*C)->thOrder=thDatas->Order;
-		(*C)->thInObj=thDatas->InObj;
-		(*C)->thObjs=thDatas->tmpObjs;
-	}
-}
+	RPoint *pt=RPoint::GetPoint();
 
-
-//---------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cInfo>
-	RInst2D<cInst,cChromo,cFit,cInfo>::~RInst2D(void)
-{
-	if(thDatas) delete thDatas;
+	(*pt)=Limits;
+	return(*pt);
 }

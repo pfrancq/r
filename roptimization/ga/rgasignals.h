@@ -2,18 +2,15 @@
 
 	Rainbow Library Project
 
-  RFitness.h
+  RGASignals.h
 
-  Fitness for Chromosomes of Genetic Algorithms - Header
+  Signals for Genetic Algorithms - Header
 
   (C) 1998-2000 by P. Francq.
 
   Version $Revision$
 
   Last Modify: $Date$
-
-  GA.cpp  : Code of this module
-  GA.hh   : Implementation of templates
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,6 +25,7 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
 
 	As a special exception to the GNU General Public License, permission is
 	granted for additional uses of the text contained in its release
@@ -58,8 +56,9 @@
 
 
 //---------------------------------------------------------------------------
-#ifndef RFitnessH
-#define RFitnessH
+#ifndef RRASignalsH
+#define RRASignalsH
+
 
 
 //---------------------------------------------------------------------------
@@ -68,78 +67,103 @@ namespace RGA{
 
 
 //---------------------------------------------------------------------------
-/** This class represents a fitness for a specific problem. the cVal parameter
-	* is used to specify the nature of the fitness, and the max parameter is used
-	* to indicate if the fitness is to maximised or minimised.
-	*
-	*	This example implements a fitness that is represented by a integer value and
-	* that has to be minimized.
-	* <pre>
-	* class MyFitness : public RFitness<int,false>
-	* {
-	*	public:
-	*		MyFitness(void);
-	*	};
-	* </pre>
+/** This class represent a basic reveicer for GA signals. By default, it does
+	* nothing.
 	* @author Pascal Francq
-	* @short Generic Fitness.
+	* @short Basic signal receiver.
 	*/
-template<class cVal,bool Max>
-	class RFitness
+template<class cInst,class cChromo,class cFit>
+	class RGASignalsReceiver
 {
 public:
-	/** The value of the fitness.*/
-  cVal Value;
-
-	/** Construct the fitness. The value is set to 0, so if cVal is an object,
-		* an assignment operator with 0 has to be implemented.*/
-  RFitness(void);
-
-	/**	Assignment operator.
-		*	@param f	The fitness used for the assignment.
-		*	@return	The function returns (*this).
+	/** This class represent a basic reveicer for GA signals. By default, it does
+		* @author Pascal Francq
+		* @short Best Signal.
 		*/
-  inline RFitness& operator=(const RFitness &f);
+	class BestSig
+	{
+	public:
+		cChromo *Best;	
 
-	/**	Assignment operator.
-		*	@param value	The value used for the assignment.
-		*	@return	The function returns (*this).
+		BestSig(cChromo *best) : Best(best) {}
+	};
+
+  /**	This class represent a signal to gives the user-interface the hand.
+  	* @author Pascal Francq
+  	* @short Interact Signal.
+  	*/
+  class InteractSig
+  {
+  public:
+  	/** Construct this signal.*/
+  	InteractSig(void) {}
+  };
+
+  /**	This class represent a signal to indicate that the GA is running.
+  	* @author Pascal Francq
+  	* @short Run Signal.
+  	*/
+  class RunSig
+  {
+  public:
+
+  	/** Construct this signal.*/
+  	RunSig(void) {}
+  };
+
+  /**	This class represent a signal to indicate that the GA is stopped.
+  	* @author Pascal Francq
+  	* @short Stop Signal.
+  	*/
+  class StopSig
+  {
+  public:
+  	/** Indicate if the GA stops after an external break.*/
+  	bool bExternBreak;						
+
+  	/** Construct this signal.*/
+  	StopSig(bool externbreak) : bExternBreak(externbreak) {}
+  };
+
+	/** This class represent a signal to indicate that a generation is
+		*	finished.
+		* @author Pascal Francq
+		* @short Generation Signal.
 		*/
-	inline RFitness& operator=(const cVal value);
+	class GenSig
+	{
+	public:
+		unsigned int Gen;
+		unsigned int BestGen;
+		cChromo **Pop;
+		cChromo *Best;
+		
+		GenSig(unsigned int gen,unsigned int bestgen,cChromo **pop,cChromo *best)
+			: Gen(gen), BestGen(bestgen), Pop(pop), Best(best) {}	
+	};
 
-	/** The equal operator.
-		* @param	f	The fitness used for the compraraison.
-		* @return The function returns true if the value of the two fitnesses are equal.
-		*/
-  inline bool operator==(const RFitness &f);
+	/** Construct the receiver.*/
+	RGASignalsReceiver(void) {}
 
-	/** The different operator.
-		* @param	f	The fitness used for the compraraison.
-		* @return The function returns true if the value of the two fitnesses are different.
-		*/
-  inline bool operator!=(const RFitness &f);
+	/** Respond to a interact signal.*/
+	virtual void receiveInteractSig(InteractSig*) {}
 
-	/** The greater operator.
-		* @param	f	The fitness used for the compraraison.
-		* @return The function returns true if the value of the fitness is greater than the value of f.
-		*/
-  inline bool operator>(const RFitness &f);
+	/** Respond to a run signal.*/
+	virtual void receiveRunSig(RunSig*) {}
 
-	/** The less-than operator.
-		* @param	f	The fitness used for the compraraison.
-		* @return The function returns true if the value of the fitness is less than the value of f.
-		*/
-  inline bool operator<(const RFitness &f);
+	/** Respond to a stop signal.*/
+	virtual void receiveStopSig(StopSig*) {}
 
-	/** Returns true if the fitness is to maximize.*/
-	inline bool ToMaximize(void);
+	/** Respond to a stop signal.*/
+	virtual void receiveBestSig(BestSig*) {}
 
-	/** Returns true if the fitness is to minimize.*/
-	inline bool ToMinimize(void);
+	/** Respond to a gen signal.*/
+	virtual void receiveGenSig(GenSig*) {}
+
+	/** Compare function. */
+	int Compare(RGASignalsReceiver*) { return(1); }
 };
 
 
 }//------- End of namespace RGA ---------------------------------------------
-
-//---------------------------------------------------------------------------
 #endif
