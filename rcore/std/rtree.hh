@@ -83,7 +83,7 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	unsigned int RTree<N,bAlloc,bOrder>::GetNbNodes(void) const
 {
-	return(NbPtr);
+	return(this->NbPtr);
 }
 
 

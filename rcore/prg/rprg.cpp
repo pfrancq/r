@@ -59,6 +59,7 @@ using namespace R;
 RPrg::RPrg(RString f,RPrgOutput* o) throw(std::bad_alloc)
 	: FileName(f), Cout(o), Insts(40), Vars(10,5), Classes(10,5), Prg(FileName)
 {
+	Prg.Open(Read);
 }
 
 

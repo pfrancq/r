@@ -143,6 +143,7 @@ protected:
 #else
 public:
 #endif
+public:
 
 	/**
 	* The array of pointers for the elements.

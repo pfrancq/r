@@ -37,13 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstring.h>
-#include <rstd/rio.h>
-
-
-//------------------------------------------------------------------------------
-// New exceptions
-NEWRIOEXCEPTION(InvalidFile);
+#include <rstd/rfile.h>
 
 
 //------------------------------------------------------------------------------
@@ -92,7 +86,7 @@ class RTextEncoding;
 * @author Pascal Francq
 * @short Text File.
 */
-class RTextFile
+class RTextFile : public RFile
 {
 public:
 	/**
@@ -108,23 +102,6 @@ public:
 	};
 
 protected:
-
-	/**
-	* How to file has to be used.
-	*/
-	ModeType Mode;
-
-	/**
-	* Name of the File.
-	*/
-	RString Name;
-
-private:
-
-	/**
-	* Internal Handle of the file.
-	*/
-	int handle;
 
 	/**
 	* Buffer containing the file (Used only if read mode).
@@ -218,21 +195,20 @@ public:
 	/**
 	* Construct a text file.
 	* @param name           The name of the file.
-	* @param mode           The open mode for the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RTextFile(const RString &name,ModeType mode=Read,const RString& encoding="Latin1") throw(std::bad_alloc,RIOException,RException);
+	RTextFile(const RString &name,const RString& encoding="Latin1") throw(std::bad_alloc,RIOException,RException);
 
 	/**
-	* Return the name of the file.
-	* @returns a string containing the name.
+	* Open the file
+	* @param mode           The open mode for the file.
 	*/
-	const RString& GetName(void) const {return(Name);}
+	virtual void Open(ModeType mode=Read);
 
 	/**
-	* Re-initialise the file.
+	* Close the file.
 	*/
-	void Init(void) throw(std::bad_alloc,RIOException);
+	virtual void Close(void);
 
 	/**
 	* Go to the begining of the file.

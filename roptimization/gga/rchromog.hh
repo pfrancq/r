@@ -63,7 +63,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void) throw(eGA)
 {
 	Heuristic->Run(static_cast<cChromo*>(this));
-	ComputeOrd();
+	this->ComputeOrd();
 }
 
 
@@ -78,16 +78,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	bool bInsertIt;
 
 	#ifdef RGADEBUG
-		if(Instance->Debug) Instance->Debug->BeginFunc("Crossover","RChromoG");
+		if(this->Instance->Debug) this->Instance->Debug->BeginFunc("Crossover","RChromoG");
 	#endif
 
 	// Clear the chromosome
 	Clear();
 
 	// Select two crossing sites
-	pos1=Instance->RRand(parent1->Used.NbPtr);
-	len1=Instance->RRand(parent1->Used.NbPtr-pos1-1)+1;
-	pos2=Instance->RRand(parent2->Used.NbPtr);
+	pos1=this->Instance->RRand(parent1->Used.NbPtr);
+	len1=this->Instance->RRand(parent1->Used.NbPtr-pos1-1)+1;
+	pos2=this->Instance->RRand(parent2->Used.NbPtr);
 
 	// Insert groups from parent2<pos2 and verify that they dont contains "new"
 	// objects insert from parent1.
@@ -99,7 +99,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 				bInsertIt=false;
 		if(bInsertIt)
 		{
-			grp=ReserveGroup();
+			grp=this->ReserveGroup();
 			grp->Copy(*grps2);
 			(*grp)=(**grps2);
 		}
@@ -108,7 +108,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	// Insert the selected group from parent1
 	for(i=len1+1,grps1=&parent1->Used.Tab[pos1];--i;grps1++)
 	{
-			grp=ReserveGroup();
+			grp=this->ReserveGroup();
 			grp->Copy(*grps1);
 			(*grp)=(**grps1);
 	}
@@ -123,7 +123,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 				bInsertIt=false;
 		if(bInsertIt)
 		{
-			grp=ReserveGroup();
+			grp=this->ReserveGroup();
 			grp->Copy(*grps2);
 			(*grp)=(**grps2);
 		}
@@ -132,10 +132,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	// Insert missing objects after a local optimisation
 	LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
-	ComputeOrd();
+	this->ComputeOrd();
 
 	#ifdef RGADEBUG
-		if(Instance->Debug) Instance->Debug->EndFunc("Crossover","RChromoG");
+		if(this->Instance->Debug) this->Instance->Debug->EndFunc("Crossover","RChromoG");
 	#endif
 }
 
@@ -147,17 +147,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	unsigned int nb;
 
 	// Compute number of groups to eliminate
-	if(Used.NbPtr>10)
-		nb=Used.NbPtr/5;
+	if(this->Used.NbPtr>10)
+		nb=this->Used.NbPtr/5;
 	else
 		nb=2;
 	while(--nb)
-		ReleaseGroup(Instance->RRand(Used.NbPtr));
+		ReleaseGroup(this->Instance->RRand(this->Used.NbPtr));
 
 	// Insert missing objects after a local optimisation
 	LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
-	ComputeOrd();
+	this->ComputeOrd();
 }
 
 
@@ -168,17 +168,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	unsigned int g1,g2,hold;
 	cGroup* ptr;
 
-	if(Used.NbPtr<3) return;
-	g1=Instance->RRand(Used.NbPtr);
-	hold=g2=g1+Instance->RRand(Used.NbPtr-2)+1;
-	if(g2>Used.NbPtr-1)
-		g2-=Used.NbPtr-1;
+	if(this->Used.NbPtr<3) return;
+	g1=this->Instance->RRand(this->Used.NbPtr);
+	hold=g2=g1+this->Instance->RRand(this->Used.NbPtr-2)+1;
+	if(g2>this->Used.NbPtr-1)
+		g2-=this->Used.NbPtr-1;
 	RReturnIfFail(g2!=g1);
 
 	// Exchange them in Used
-	ptr=Used.Tab[g1];
-	Used.Tab[g1]=Used.Tab[g2];
-	Used.Tab[g2]=ptr;
+	ptr=this->Used.Tab[g1];
+	this->Used.Tab[g1]=this->Used.Tab[g2];
+	this->Used.Tab[g2]=ptr;
 }
 
 
@@ -195,7 +195,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Verify(void) throw(eGA)
 {
 	RGroups<cGroup,cObj,cGroupData,cChromo>::Verify();
-	if(!Used.NbPtr)
+	if(!this->Used.NbPtr)
 		throw eGAVerify("No Group used.");
 }
 

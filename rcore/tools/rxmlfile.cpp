@@ -45,8 +45,8 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RXMLFile::RXMLFile(const RString& name,RXMLStruct* xmlstruct,ModeType mode,const RString& encoding) throw(bad_alloc,RIOException)
- : RTextFile(name,mode,encoding), XMLStruct(xmlstruct), CurTag(0)
+RXMLFile::RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding) throw(bad_alloc,RIOException)
+ : RTextFile(name,encoding), XMLStruct(xmlstruct), CurTag(0)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -55,8 +55,8 @@ RXMLFile::RXMLFile(const RString& name,RXMLStruct* xmlstruct,ModeType mode,const
 
 
 //------------------------------------------------------------------------------
-RXMLFile::RXMLFile(const RString& name,RXMLStruct& xmlstruct,ModeType mode,const RString& encoding) throw(bad_alloc,RIOException)
- : RTextFile(name,mode,encoding), XMLStruct(&xmlstruct), CurTag(0)
+RXMLFile::RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding) throw(bad_alloc,RIOException)
+ : RTextFile(name,encoding), XMLStruct(&xmlstruct), CurTag(0)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -80,12 +80,13 @@ void RXMLFile::SetDocType(const RString& docType) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::Process(void) throw(RIOException)
+void RXMLFile::Open(ModeType mode)
 {
 	RXMLTag *top;
 	RCursor<RXMLAttr> Cur;
 	RString Header;
 
+	RTextFile::Open(mode);
 	switch(Mode)
 	{
 		case Read:

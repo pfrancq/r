@@ -69,7 +69,7 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	RCursor<RXMLTag> Cur;
 
 	// Clear the Problem
-	f.Process();
+	f.Open(Read);
 	Clear();
 
 	// Take the Limits

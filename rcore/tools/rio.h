@@ -6,7 +6,7 @@
 
 	Generic Class - Header.
 
-	Copyright 2002-2004 by the Université Libre de Bruxelles.
+	Copyright 2002-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -48,6 +48,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // Forward declaration
+class RFile;
 class RTextFile;
 
 
@@ -62,7 +63,8 @@ enum ModeType
 	                                 does not exist, it is created.*/,
 	Read                         /** Open a file to read it.*/,
 	Create                       /** Create a new file. If the file already
-	                                 exists, it is destruct.*/
+	                                 exists, it is destruct.*/,
+	Undefined                    /** The mode of the file is undefined.*/
 };
 
 
@@ -81,6 +83,13 @@ public:
 	* @param str                      Message of the error.
 	*/
 	RIOException(const char* str) throw(std::bad_alloc);
+
+	/**
+	* Construct an IO exception.
+	* @param file                     File process when the error occurs.
+	* @param str                      Message of the error.
+	*/
+	RIOException(const RFile* file,const char* str) throw(std::bad_alloc);
 
 	/**
 	* Construct an IO exception.

@@ -50,10 +50,10 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 {
 	cGroup* grp;
 
-	for(Groups->Used.Start();!Groups->Used.End();Groups->Used.Next())
-		if(Groups->Used()->CanInsert(CurObj))
-			return(Groups->Used());
-	grp=Groups->ReserveGroup();
+	for(this->Groups->Used.Start();!this->Groups->Used.End();this->Groups->Used.Next())
+		if(this->Groups->Used()->CanInsert(this->CurObj))
+			return(this->Groups->Used());
+	grp=this->Groups->ReserveGroup();
 	return(grp);
 }
 

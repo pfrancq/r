@@ -47,7 +47,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	void RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(void) throw(std::bad_alloc)
 {
 	RThreadData<cInst,cChromo>::Init();
-	Heuristic=Owner->CreateHeuristic();
+	Heuristic=this->Owner->CreateHeuristic();
 }
 
 
@@ -120,9 +120,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	unsigned int i;
 
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
-	for(i=PopSize+1,C=Chromosomes;--i;C++)
+	for(i=this->PopSize+1,C=this->Chromosomes;--i;C++)
 		(static_cast<RGroups<cGroup,cObj,cGroupData,cChromo>*>(*C))->Init(gdata);
-	(static_cast<RGroups<cGroup,cObj,cGroupData,cChromo>*>(BestChromosome))->Init(gdata);
+	(static_cast<RGroups<cGroup,cObj,cGroupData,cChromo>*>(this->BestChromosome))->Init(gdata);
 }
 
 
@@ -135,7 +135,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	switch(Heuristic)
 	{
 		case FirstFit:
-			h = new RFirstFitHeuristic<cGroup,cObj,cGroupData,cChromo>(Random,Objs,Debug);
+			h = new RFirstFitHeuristic<cGroup,cObj,cGroupData,cChromo>(this->Random,Objs,this->Debug);
 			break;
 		default:
 			h=0;
@@ -152,9 +152,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	cChromo **C,**C1,*p;
 	unsigned int i,j;
 
-	for(i=0,C=Chromosomes;i<PopSize-1;C++,i++)
+	for(i=0,C=this->Chromosomes;i<this->PopSize-1;C++,i++)
 	{
-		for(j=i+1,C1=C+1;j<PopSize;C1++,j++)
+		for(j=i+1,C1=C+1;j<this->PopSize;C1++,j++)
 		{
 			if((*C)->SameGroupment(*C1))
 			{
@@ -162,12 +162,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 					p=(*C1);
 				else
 					p=(*C);
-				if(RRand(100)<90)
+				if(this->RRand(100)<90)
 				{
 					p->Modify();
-					emitInteractSig();
+					this->emitInteractSig();
 					p->Evaluate();
-					emitInteractSig();
+					this->emitInteractSig();
 					p->ToEval=false;
 				}
 			}

@@ -6,7 +6,7 @@
 
 	Generic Class - Implementation.
 
-	Copyright 2002-2004 by the Université Libre de Bruxelles.
+	Copyright 2002-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -33,6 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rio.h>
+#include <rstd/rfile.h>
 #include <rstd/rtextfile.h>
 using namespace R;
 
@@ -48,6 +49,17 @@ using namespace R;
 RIOException::RIOException(const char* str) throw(std::bad_alloc)
 	: RException(str)
 {
+}
+
+
+//------------------------------------------------------------------------------
+RIOException::RIOException(const RFile* file,const char* str) throw(std::bad_alloc)
+	: RException()
+{
+	if(file)
+		strcpy(Msg,file->GetName()+": "+str);
+	else
+		strcpy(Msg,str);
 }
 
 

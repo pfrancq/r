@@ -47,7 +47,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 	// Init of the arrays needed.
 	OrdObjectsAss=new unsigned int[Objs->GetNb()];
-	NewUsedId=new unsigned int[MaxPtr];
+	NewUsedId=new unsigned int[this->MaxPtr];
 
 	// Suppose no object is assigned
 	for(Objs->Start();!Objs->End();Objs->Next())
@@ -63,7 +63,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 	// Create the groups
 	GroupData=data;
-	for(i=0;i<MaxPtr;i++)
+	for(i=0;i<this->MaxPtr;i++)
 		InsertPtr(new cGroup(static_cast<cGroups*>(this),i,GroupData));
 }
 
@@ -75,7 +75,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	cGroup **G;
 	unsigned int i;
 
-	for(i=NbPtr+1,G=Tab;--i;G++)
+	for(i=this->NbPtr+1,G=this->Tab;--i;G++)
 		(*G)->Clear();
 	Used.Clear();
 	ObjsAss.Clear();
@@ -94,21 +94,21 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	unsigned int i,NewSize;
 	unsigned int* n;
 
-	if(Used.NbPtr+1>MaxPtr)
+	if(Used.NbPtr+1>this->MaxPtr)
 	{
-		NewSize=MaxPtr+IncPtr;
+		NewSize=this->MaxPtr+this->IncPtr;
 
 		// Recreate a new NewUsedId array with the new size
 		n=new unsigned int[NewSize];
-		memcpy(n,NewUsedId,sizeof(unsigned int)*MaxPtr);
+		memcpy(n,NewUsedId,sizeof(unsigned int)*this->MaxPtr);
 		delete[] NewUsedId;
 		NewUsedId=n;
 
 		// Create New groups
-		for(i=MaxPtr;i<NewSize;i++)
+		for(i=this->MaxPtr;i<NewSize;i++)
 			InsertPtr(new cGroup(static_cast<cGroups*>(this),i,GroupData));
 	}
-	ptr=Tab;
+	ptr=this->Tab;
 	while((*ptr)->Reserved)
 		ptr++;
 	(*ptr)->Reserved=true;
@@ -121,7 +121,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroups<cGroup,cObj,cGroupData,cGroups>::ReleaseGroup(const unsigned int grp)
 {
-	cGroup *G=Tab[grp];
+	cGroup *G=this->Tab[grp];
 
 	DeleteObjs(G);
 	Used.DeletePtr(G);
@@ -244,7 +244,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	unsigned int idx=ObjectsAss[id];
 
 	if(idx==NoObject) return(0);
-	return(Tab[idx]);
+	return(this->Tab[idx]);
 }
 
 
@@ -255,7 +255,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	unsigned int idx=ObjectsAss[obj->GetId()];
 
 	if(idx==NoObject) return(0);
-	return(Tab[idx]);
+	return(this->Tab[idx]);
 }
 
 
@@ -285,7 +285,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	unsigned int *oldo,*newo;
 	unsigned int i,id,nbgrp;
 
-	memset(NewUsedId,0xFF,sizeof(unsigned int)*MaxPtr);
+	memset(NewUsedId,0xFF,sizeof(unsigned int)*this->MaxPtr);
 	for(i=ObjsAss.NbPtr+1,oldo=ObjectsAss,newo=OrdObjectsAss,nbgrp=0;--i;oldo++,newo++)
 	{
 		id=NewUsedId[*oldo];

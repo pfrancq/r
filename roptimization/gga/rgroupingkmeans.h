@@ -188,7 +188,7 @@ public:
 	* Get the name of the heuristic.
 	* @return Pointer to a C String.
 	*/
-	const char* GetName(void) const {return(Name());}
+	const char* GetName(void) const {return(this->Name());}
 
 	/**
 	* Set the maximum number of iterations for kmeans.

@@ -6,7 +6,7 @@
 
 	XML file - Header.
 
-	Copyright 2000-2004 by the Université Libre de Bruxelles.
+	Copyright 2000-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -81,19 +81,17 @@ public:
 	* Construct a XML file.
 	* @param name           Name of the file.
 	* @param xmlstruct      The XML tree associated with the file
-	* @param mode           The open mode for the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RXMLFile(const RString& name,RXMLStruct* xmlstruct,ModeType mode=Read,const RString& encoding="UTF-8") throw(std::bad_alloc,RIOException);
+	RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding="UTF-8") throw(std::bad_alloc,RIOException);
 
 	/**
 	* Construct a XML file.
 	* @param name           Name of the file.
 	* @param xmlstruct      The XML tree associated with the file
-	* @param mode           The open mode for the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RXMLFile(const RString& name,RXMLStruct& xmlstruct,ModeType mode=Read,const RString& encoding="UTF-8") throw(std::bad_alloc,RIOException);
+	RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding="UTF-8") throw(std::bad_alloc,RIOException);
 
 	/**
 	* Set the encoding of the XML document.
@@ -108,9 +106,10 @@ public:
 	virtual void SetDocType(const RString& docType) throw(RIOException);
 
 	/**
-	* Process the XML file.
+	* Open the file
+	* @param mode           The open mode for the file.
 	*/
-	void Process(void) throw(RIOException);
+	virtual void Open(ModeType mode=Read);
 
 	/**
 	* This function transform a given string that is supposed to represent a
@@ -168,7 +167,7 @@ private:
 	* Load the attributes and put them in a container. By default, the tag is
 	* supposed to be a normal XML tag ending with either '/>' or '>'.
 	* @param attrs          Container that will hold the attributes.
-	* @param EndTag1        Character than can delimited the tag.               
+	* @param EndTag1        Character than can delimited the tag.
 	* @param EndTag2        Another character than can delimited the tag.
 	*/
 	void LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag1='/',RChar EndTag2='>') throw(RIOException);

@@ -34,6 +34,7 @@
 #include <rstd/rcontainer.h>
 #include <rstd/rcursor.h>
 #include <rstd/rtextencoding.h>
+#include <errno.h>
 using namespace R;
 using namespace std;
 
