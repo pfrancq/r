@@ -115,7 +115,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 			okkmeans=VerifyKMeansMod();
 			kmeanstry++;
 		}
-		cout << k<< "ieme  subsample OK . "<<endl;
+//		cout << k<< "ieme  subsample OK . "<<endl;
 		// save the centers
 		cGroup* centers= new cGroup(initialcenters->NbPtr,0);
 		initialcenters->InsertPtr(centers);
@@ -206,14 +206,14 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	EvaluateGroupsNumber();
 
 	//temp   - display KmeansCosinus parameters
-	DisplayInfos();
+//	DisplayInfos();
 
 	for (GroupsNumber=MinNbGroups; GroupsNumber<(MaxNbGroups+1); GroupsNumber++)
 	{
-		cout <<" ------------------------------------------------------------------------ init " <<endl;
+//		cout <<" ------------------------------------------------------------------------ init " <<endl;
 		if (initial==Refined)
 			Init();
-		cout <<" ------------------------------------------------------------------------Run " <<endl;
+//		cout <<" ------------------------------------------------------------------------Run " <<endl;
 		Execute(Objs, NbTests);
 
 
@@ -233,8 +233,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	 	}
 	}
 	GroupsNumber--;
-	cout << "----------------->>>>>>end final cost function: "<<var<<endl;
-	cout << "----------------->>>>>>end final nbgroup: "<< grnumber<<endl;
+//	cout << "----------------->>>>>>end final cost function: "<<var<<endl;
+//	cout << "----------------->>>>>>end final nbgroup: "<< grnumber<<endl;
 }
 
 
