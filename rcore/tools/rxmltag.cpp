@@ -299,7 +299,7 @@ void RXML::RXMLTag::DeleteEmptyTags(RXMLStruct* s)
 	unsigned int i;
 
 	// Go through the subtags.
-	for(i=0,ptr=Tab;i<NbPtr;i++)
+	for(i=NbPtr+1,ptr=Tab;--i;)
 	{
 		(*ptr)->DeleteEmptyTags(s);
 		if((*ptr)->IsEmpty())
