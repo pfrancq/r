@@ -97,9 +97,15 @@ class RTextFile
 public:
 	/**
 	* The RemType enum represents the different style of comments used wich text
-	* files.
+	* files. The comments are skipped when the file is read.
 	*/
-	enum RemType {NoComment,SingleLineComment,MultiLineComment,SingleMultiLineComment};
+	enum RemType
+	{
+		NoComment                /** No comments are possible. */,
+		SingleLineComment        /** Only single line comments are possible. */,
+		MultiLineComment         /** Only multiple line comments are possible. */,
+		SingleMultiLineComment  /** Both type of comments are possible. */
+	};
 
 protected:
 
