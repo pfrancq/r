@@ -26,22 +26,118 @@
     
 */
 
+
+
 //---------------------------------------------------------------------------
 #ifndef RFuncH
 #define RFuncH
 
 
 //---------------------------------------------------------------------------
-#ifdef unix
-	#ifndef NULL
-		#define NULL 0
-	#endif
-#else
-	#include <mem.h>
-#endif
-#include <new.h>
-#include <string.h>
-#include <stdio.h>
+// include files for Standard C/C++
+#include <iostream.h>				// for cerr
+
+
+
+//---------------------------------------------------------------------------
+// Assertion macros
+#ifdef __RDISABLEASSERT__
+
+	#define RAssert(expr)
+	#define RAssertNotReached()
+
+#else 		// !__RDISABLEASSERT__
+
+	#ifdef __GNUC__
+
+		#define RAssert(expr)																			\
+    	if(!(expr))																							\
+			{																												\
+       	cerr	<<"file "<<__FILE__                             \
+							<<": line "<<__LINE                             \
+							<<" ("<<__PRETTY_FUNCTION__                     \
+							<<"): assertion failed: "<<#expr<<endl;         \
+			}
+
+		#define RAssertNotReached()																\
+			cerr	<<"file "<<__FILE__                             	\
+						<<": line "<<__LINE                           	  \
+						<<" ("<<__PRETTY_FUNCTION__                 	    \
+						<<"): should not be reached"<<endl;       	
+
+	#else 	// !__GNUC__
+
+		#define RAssert(expr)																			\
+    	if(!(expr))																							\
+       	cerr	<<"file "<<__FILE__															\
+							<<": line "<<__LINE															\
+							<<" : assertion failed: "<<#expr<<endl;
+
+		#define RAssertNotReached()																\
+    	cerr	<<"file "<<__FILE__																\
+						<<": line "<<__LINE																\
+						<<" : should not be reached"<<endl;
+
+	#endif 	// __GNUC__
+
+#endif 		// !__RDISABLEASSERT__
+
+
+//---------------------------------------------------------------------------
+// Check macros
+#ifdef __RDISABLECHECKS__
+
+	#define RReturnIfFail(expr)
+	#define RReturnValIfFail(expr,val)
+
+#else 		// !__RDISABLECHECKS__
+
+	#ifdef __GNUC__
+
+		#define RReturnIfFail(expr)																\
+    	if(!(expr))																							\
+			{																												\
+       	cerr	<<"file "<<__FILE__                             \
+							<<": line "<<__LINE                             \
+							<<" ("<<__PRETTY_FUNCTION__                     \
+							<<"): assertion failed: "<<#expr<<endl;         \
+				return;																								\
+			}
+
+		#define RReturnValIfFail(expr,val)												\
+    	if(!(expr))																							\
+			{																												\
+       	cerr	<<"file "<<__FILE__                             \
+							<<": line "<<__LINE                             \
+							<<" ("<<__PRETTY_FUNCTION__                     \
+							<<"): assertion failed: "<<#expr<<endl;         \
+				return(val);																					\
+			}
+
+	#else 	// !__GNUC__
+
+		#define RReturnIfFail(expr)																\
+    	if(!(expr))																							\
+			{																												\
+       	cerr	<<"file "<<__FILE__                             \
+							<<": line "<<__LINE                             \
+							<<" : assertion failed: "<<#expr<<endl;         \
+				return;																								\
+			}
+
+		#define RReturnValIfFail(expr,val)												\
+    	if(!(expr))																							\
+			{																												\
+       	cerr	<<"file "<<__FILE__                             \
+							<<": line "<<__LINE                             \
+							<<" : assertion failed: "<<#expr<<endl;         \
+				return(val);																					\
+			}
+
+
+	#endif 	// !__GNUC__
+
+#endif 		// !__RDISABLECHECKS__
 
 
 //---------------------------------------------------------------------------
@@ -69,6 +165,15 @@ template<class C,unsigned long Max>
 
 }  //-------- End of namespace RStd ---------------------------------------
 
+
+//---------------------------------------------------------------------------
+// include files for Rainbow/RStd
+#include <rstd/rcontainer.h>
+#include <rstd/rhashcontainer.h>
+#include <rstd/rstring.h>
+#include <rstd/rtextfile.h>
+#include <rstd/rnode.h>
+#include <rstd/rtree.h>
 
 //---------------------------------------------------------------------------
 #endif
