@@ -161,6 +161,11 @@ public:
 	* Destruct the date.
 	*/
 	~RDate(void);
+
+	/**
+	* Represents a null date.
+	*/
+	static RDate null;
 };
 
 

@@ -34,6 +34,7 @@
 // include files for ANSI C/C++
 #include <stdlib.h>
 
+
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rtimedate/rdate.h>
@@ -46,6 +47,11 @@ using namespace RTimeDate;
 // class RDate
 //
 //-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// static instance
+RDate RTimeDate::RDate::null(0,0,0);
+
 
 //-----------------------------------------------------------------------------
 RTimeDate::RDate::RDate(void)
