@@ -210,6 +210,12 @@ public:
 	inline int GetMaxLen(void) const {return(MaxLen);}
 
 	/**
+	* Look if the string is empty.
+	* @returns true if the length is null, false else.
+	*/
+	inline bool IsEmpty(void) const {return(Len);}
+
+	/**
 	* Need to manage temporary strings.
 	*/
 	static RString* GetString(void);

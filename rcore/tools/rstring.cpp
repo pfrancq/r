@@ -357,7 +357,7 @@ int RString::Compare(const RString &str) const
 	char *ptr2=Text;
 
 	if(Len!=str.Len)	return(Len-str.Len);
-	while((*ptr1)==(*ptr2))
+	while((*ptr1)&&(*ptr2)&&(*ptr1)==(*ptr2))
 	{
 		ptr1++;
 		ptr2++;
@@ -376,7 +376,7 @@ int RString::Compare(const RString *str) const
 	if(!ptr1) return(1);
 	ptr1=str->Text;
 	if(Len!=str->Len) return(Len-str->Len);
-	while((*ptr1)==(*ptr2))
+	while((*ptr1)&&(*ptr2)&&(*ptr1)==(*ptr2))
 	{
 		ptr1++;
 		ptr2++;
@@ -404,7 +404,11 @@ char RString::HashIndex(void) const
 //---------------------------------------------------------------------------
 RString* RString::GetString(void)
 {
-	return(GetTemporaryObject<RString,__RMAXSTRING__>());
+	RString *str=GetTemporaryObject<RString,__RMAXSTRING__>();
+
+	str->Len=0;
+	(*str->Text)=0;
+	return(str);
 }
 
 
