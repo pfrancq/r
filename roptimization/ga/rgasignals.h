@@ -170,7 +170,7 @@ public:
 	/**
 	* Compare function.
 	*/
-	int Compare(RGASignalsReceiver* s) { return(this!=s); }
+	int Compare(const RGASignalsReceiver* s) const { return(this!=s); }
 };
 
 

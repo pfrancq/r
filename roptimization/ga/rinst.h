@@ -59,7 +59,6 @@ namespace RGA{
 
 //-----------------------------------------------------------------------------
 /**
-* \ingroup GA
 * This class represent "thread-dependent" data for the GA.
 * @author Pascal Francq
 * @short GA "thread-dependent" Data.
