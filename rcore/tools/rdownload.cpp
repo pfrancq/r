@@ -60,7 +60,7 @@ struct DwnFile
 
 
 //------------------------------------------------------------------------------
-int WriteTmpFile(void* buffer, size_t size, size_t nmemb, void* stream)
+int RDownload::WriteTmpFile(void* buffer, size_t size, size_t nmemb, void* stream)
 {
 	struct DwnFile* out=(struct DwnFile*)stream;
 	if(out && !out->stream)
@@ -111,7 +111,7 @@ void RDownload::Download(const char* URL,RString& tmpFile) throw(RException)
 
 	// Download the file
 	curl_easy_setopt(Lib, CURLOPT_URL, URL);
-	curl_easy_setopt(Lib, CURLOPT_WRITEFUNCTION,WriteTmpFile);
+	curl_easy_setopt(Lib, CURLOPT_WRITEFUNCTION,RDownload::WriteTmpFile);
 	curl_easy_setopt(Lib, CURLOPT_FILE, &tmpfile);
 	//curl_easy_setopt(Lib, CURLOPT_CONNECTTIMEOUT,120);
 	//curl_easy_setopt(Lib, CURLOPT_TIMEOUT,120);

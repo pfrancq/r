@@ -6,7 +6,7 @@
 
 	Class to download files (using the CURL library) - Header.
 
-	Copyright 2004 by the Université Libre de Bruxelles.
+	Copyright 2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Valery Vandaele (vavdaele@ulb.ac.be)
@@ -78,6 +78,15 @@ public:
 	* @param dlg             Should the dialog box be loaded.
 	*/
 	RDownload(void) throw(std::bad_alloc);
+
+protected:
+
+	/**
+	* Parameter function gived to curl_easy_setopt
+	*/
+	static int WriteTmpFile(void* buffer, size_t size, size_t nmemb, void* stream);
+
+public:
 
 	/**
 	* Download and store locally a document given by an URL. If the tmpFile contains 
