@@ -186,7 +186,7 @@ RPromSol* RPromethee::RPromKernel::GetBestSol(void)
 	
 	best=(*Solutions.Tab);
 	for(i=Solutions.NbPtr,sol=&Solutions.Tab[1];--i;sol++)
-		if(best->Fi>(*sol)->Fi)
+		if(best->Fi<(*sol)->Fi)
 			best=(*sol);
 	return(best);
 }

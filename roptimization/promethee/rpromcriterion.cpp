@@ -32,6 +32,11 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <math.h>
+
+
+//-----------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromcriterion.h>
 #include <rpromethee/rpromcritvalue.h>
@@ -75,6 +80,17 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const double 
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id),
 	  Type(type), P(p), Q(q), Weight(w)
 {
+	if(Type==Minimize)
+	{
+		P=-p;
+		Q=-q;
+	}
+	else
+	{
+		P=p;
+		Q=q;	
+
+	}
 }
 
 
@@ -83,6 +99,17 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCr
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id),
 	  Type(type), P(params.P), Q(params.Q), Weight(params.Weight)
 {
+	if(Type==Minimize)
+	{
+		P=-params.P;
+		Q=-params.Q;	
+	}
+	else
+	{
+		P=params.P;
+		Q=params.Q;	
+
+	}
 }
 
 
@@ -92,6 +119,17 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const double 
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
 	  Type(type), P(p), Q(q), Weight(w)
 {
+	if(Type==Minimize)
+	{
+		P=-p;
+		Q=-q;
+	}
+	else
+	{
+		P=p;
+		Q=q;	
+
+	}
 }
 
 
@@ -99,16 +137,36 @@ RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const double 
 RPromethee::RPromCriterion::RPromCriterion(const CriteriaType type,const RPromCriterionParams& params,
 		const unsigned int id,const RString& name,const unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
-	  Type(type), P(params.P), Q(params.Q), Weight(params.Weight)
+	  Type(type), Weight(params.Weight)
 {
+	if(Type==Minimize)
+	{
+		P=-params.P;
+		Q=-params.Q;	
+	}
+	else
+	{
+		P=params.P;
+		Q=params.Q;	
+
+	}
 }
 
 
 //-----------------------------------------------------------------------------
 void RPromethee::RPromCriterion::SetParams(const RPromCriterionParams& params)
 {
-	P=params.P;
-	Q=params.Q;	
+	if(Type==Minimize)
+	{
+		P=-params.P;
+		Q=-params.Q;	
+	}
+	else
+	{
+		P=params.P;
+		Q=params.Q;	
+
+	}
 	Weight=params.Weight;
 }
 
@@ -117,9 +175,17 @@ void RPromethee::RPromCriterion::SetParams(const RPromCriterionParams& params)
 RPromCriterionParams& RPromethee::RPromCriterion::GetParams(void)
 {
 	RPromCriterionParams* tmp=RPromCriterionParams::GetParams();
-	
-	tmp->P=P;
-	tmp->Q=Q;
+
+	if(Type==Minimize)
+	{
+		tmp->P=-P;
+		tmp->Q=-Q;
+	}
+	else
+	{
+		tmp->P=P;
+		tmp->Q=Q;
+	}
 	tmp->Weight=Weight;
 	return(*tmp);
 }
@@ -145,8 +211,11 @@ void RPromethee::RPromCriterion::Normalize(void)
 
 	diff=max-min;	
 	// Normalize
-	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-		(*ptr)->Value=((*ptr)->Value-min)/diff;
+	if(diff)
+	{
+		for(i=NbPtr+1,ptr=Tab;--i;ptr++)
+			(*ptr)->Value=((*ptr)->Value-min)/diff;
+	}
 }
 
 
@@ -177,7 +246,7 @@ double RPromethee::RPromCriterion::ComputePref(const double u,const double v)
 			break;
 
 		case Minimize:
-			if(Q<P) return(0.0);
+			if(P>Q) return(0.0);
 			if((P>0.0)||(Q>0.0)) return(0.0);
 			if(P==Q)
 			{
