@@ -48,9 +48,11 @@ using namespace std;
 //-----------------------------------------------------------------------------
 double R::Factorial(unsigned int n)
 {
-	if(n==1)
-		return(1.0);
-	return(n*Factorial(n-1));
+	double res=1.0;
+
+	for(;n>1;n--)
+		res*=static_cast<double>(n);
+	return(res);
 }
 
 
