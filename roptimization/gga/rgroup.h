@@ -221,6 +221,11 @@ public:
 	unsigned int* GetObjectsId(void) const;
 
 	/**
+	* Return a pointer to the begin of the list of the objects.
+	*/
+	cObj** GetObjects(void) const;
+
+	/**
 	* Compare two groups. Used for RContainer.
 	*/
 	int Compare(const cGroup* grp) const {return(Id-grp->Id);}

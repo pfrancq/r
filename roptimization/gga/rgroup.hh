@@ -219,6 +219,14 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
+	cObj** RGroup<cGroup,cObj,cGroupData,cGroups>::GetObjects(void) const
+{
+	return(&Owner->ObjsAss.Tab[SubObjects]);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RGroup<cGroup,cObj,cGroupData,cGroups>::~RGroup(void)
 {
 }
