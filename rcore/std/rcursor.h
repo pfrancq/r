@@ -161,6 +161,11 @@ public:
 	RCursor<C,T>& operator=(const RCursor<C,T>& c) throw(bad_alloc);
 
 	/**
+	* Clear the cursor.
+	*/
+	void Clear(void);
+
+	/**
 	* Start the iterator to go trough the container.
 	*/
 	inline void Start(void);
