@@ -231,9 +231,11 @@ void RPromethee::RPromCriterion::Normalize(void)
 //-----------------------------------------------------------------------------
 double RPromethee::RPromCriterion::ComputePref(const double u,const double v)
 {
-	double d=u-v;
+	double d=(u-v);
 	double y;
 
+	if(u!=0.0)
+		d/=u;
 	switch(Type)
 	{
 		case Maximize:
@@ -241,7 +243,7 @@ double RPromethee::RPromCriterion::ComputePref(const double u,const double v)
 			if((P<0.0)||(Q<0.0)) return(0.0);
 			if(P==Q)
 			{
-				if(d<=P) return(0.0); else return(1.0);
+				if(d<=Q) return(0.0); else return(1.0);
 			}
 			if(d<=Q)
 				y=0.0;
@@ -259,7 +261,7 @@ double RPromethee::RPromCriterion::ComputePref(const double u,const double v)
 			if((P>0.0)||(Q>0.0)) return(0.0);
 			if(P==Q)
 			{
-				if(d>=P) return(0.0); else return(1.0);
+				if(d>=Q) return(0.0); else return(1.0);
 			}
 			if(d>=Q)
 				y=0.0;
@@ -289,18 +291,23 @@ void RPromethee::RPromCriterion::ComputeFiCrit(RPromKernel *kern)
 
 	// Init all value to 0
 	for(a=NbPtr+1,ptr=Tab;--a;ptr++)
-		(*ptr)->FiCrit=0.0;
+		(*ptr)->FiCritPlus=(*ptr)->FiCritMinus=0.0;
 
-	// Calculation of Fi Crit
+	// Calculation of Fi Crit + & -
 	for(a=NbPtr+1,ptr=Tab,sol=kern->Solutions.Tab;--a;ptr++,sol++)
 	{
 		for(b=NbPtr+1,ptr1=Tab,sol1=kern->Solutions.Tab;--b;ptr1++,sol1++)
 		{
 			// Only if secondary solution is not the same than the primary one.
-			if((*sol)!=(*sol1))
-				(*ptr)->FiCrit+=(ComputePref((*ptr)->Value,(*ptr1)->Value)-ComputePref((*ptr1)->Value,(*ptr)->Value))/(NbPtr-1);
+			if((*sol)==(*sol1)) continue;
+			(*ptr)->FiCritPlus+=ComputePref((*ptr)->Value,(*ptr1)->Value)/((double)(NbPtr-1));
+			(*ptr)->FiCritMinus+=ComputePref((*ptr1)->Value,(*ptr)->Value)/((double)(NbPtr-1));
 		}
 	}
+
+	// Compute Fi Crit
+	for(a=NbPtr+1,ptr=Tab;--a;ptr++)
+		(*ptr)->FiCrit=(*ptr)->FiCritPlus-(*ptr)->FiCritMinus;
 }
 
 

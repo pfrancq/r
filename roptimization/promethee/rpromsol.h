@@ -71,7 +71,17 @@ class RPromSol : protected RContainer<RPromCritValue,unsigned int,true,false>
 	* The fi of the solution.
 	*/
 	double Fi;
-	
+
+	/**
+	* The fi+ of the solution.
+	*/
+	double FiPlus;
+
+	/**
+	* The fi- of the solution.
+	*/
+	double FiMinus;
+
 public:
 
 	/*
@@ -133,6 +143,16 @@ public:
 	* @return Fi of the solution.
 	*/
 	double GetFi(void) const {return(Fi);}
+
+	/**
+	* @return Fi+ of the solution.
+	*/
+	double GetFiPlus(void) const {return(FiPlus);}
+
+	/**
+	* @return Fi- of the solution.
+	*/
+	double GetFiMinus(void) const {return(FiMinus);}
 
 	/**
 	* @return Identificator of the solution.

@@ -61,6 +61,16 @@ class RPromCritValue
 	*/
 	double FiCrit;
 
+	/**
+	* The Fi+ crit used by Prométhée.
+	*/
+	double FiCritPlus;
+
+	/**
+	* The Fi- crit used by Prométhée.
+	*/
+	double FiCritMinus;
+
 protected:
 
 	/**

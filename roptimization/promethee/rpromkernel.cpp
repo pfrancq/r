@@ -84,9 +84,13 @@ void RPromethee::RPromKernel::ComputePrometheeII(void)
 	// Calculation of the flux.
 	for(i=Solutions.NbPtr+1,sol=Solutions.Tab;--i;sol++)
 	{
-		(*sol)->Fi=0.0;
+		(*sol)->FiPlus=(*sol)->FiMinus=0.0;
 		for(j=(*sol)->NbPtr+1,value=(*sol)->Tab,crit=Criteria.Tab;--j;value++,crit++)
-			(*sol)->Fi+=(((*crit)->Weight)*((*value)->FiCrit))/SumWTot;
+		{
+			(*sol)->FiPlus+=(((*crit)->Weight)*((*value)->FiCritPlus))/SumWTot;
+			(*sol)->FiMinus+=(((*crit)->Weight)*((*value)->FiCritMinus))/SumWTot;
+		}
+		(*sol)->Fi=(*sol)->FiPlus-(*sol)->FiMinus;
 	}
 }
 
