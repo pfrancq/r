@@ -54,7 +54,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		Tab = new C*[MaxPtr];
 		memset(Tab,0,MaxPtr*sizeof(C*));
 		if(!IncPtr) IncPtr=10;
-			RReturnIfFail(M>0);
+		RReturnIfFail(M>0);
 	}
 }
 
