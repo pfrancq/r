@@ -122,7 +122,7 @@ public:
 	* @returns The function returns true if the element is in the hash
 	* container, else false.
 	*/
-	template<class TUse> inline bool IsIn(const TUse &tag,bool sortkey=true) const
+	template<class TUse> inline bool IsIn(const TUse tag,bool sortkey=true) const
 	{
 		return(Hash[tag.HashIndex()]->IsIn<TUse>(tag,sortkey));
 	}
@@ -137,7 +137,7 @@ public:
 	*                       (false).
 	* @return Return the pointer or 0 if the element is not in the container.
 	*/
-	template<class TUse> inline C* GetPtr(const TUse &tag,bool sortkey=true) const
+	template<class TUse> inline C* GetPtr(const TUse tag,bool sortkey=true) const
 	{
 		return(Hash[tag.HashIndex()]->GetPtr<TUse>(tag,sortkey));
 	}
@@ -154,7 +154,7 @@ public:
 	*                       not (false).
 	* @return The function returns a pointer to the element of the container.
 	*/
-	template<class TUse> inline C* GetInsertPtr(const TUse &tag,bool sortkey=true) throw(bad_alloc)
+	template<class TUse> inline C* GetInsertPtr(const TUse tag,bool sortkey=true) throw(bad_alloc)
 	{
 		return(Hash[tag.HashIndex()]->GetInsertPtr<TUse>(tag,sortkey));
 	}
@@ -178,7 +178,7 @@ public:
 	*                       value depends if the container is ordered (true) or
 	*                       not (false).
 	*/
-	template<class TUse> inline void DeletePtr(const TUse &tag,bool sortkey=true)
+	template<class TUse> inline void DeletePtr(const TUse tag,bool sortkey=true)
 	{
 		Hash[tag.HashIndex()]->DeletePtr<TUse>(tag,sortkey);
 	}
