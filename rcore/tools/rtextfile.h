@@ -393,6 +393,11 @@ public:
 	void WriteStr(const char *c) throw(RString);
 
 	/**
+	* Write a string of a give length in the file.
+	*/
+	void WriteStr(const char *c,unsigned int l) throw(RString);
+
+	/**
 	* << Operator for char *.
 	*/
 	RTextFile& operator<<(const char *c) throw(RString);

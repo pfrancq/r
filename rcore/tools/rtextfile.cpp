@@ -598,8 +598,7 @@ void RIO::RTextFile::WriteStr(const char *c) throw(RString)
 	if(!NewLine)
 		write(handle,Separator,Separator.GetLen());
 	l=strlen(c);
-	RReturnIfFail(strlen(c)>0);
-	if(!l) return;
+	RReturnIfFail(l);
 	write(handle,c,l);
 	#ifdef windows
 		flushall();
@@ -608,6 +607,19 @@ void RIO::RTextFile::WriteStr(const char *c) throw(RString)
 		NewLine=false;
 	else
 		NewLine=true;
+}
+
+
+//-----------------------------------------------------------------------------
+void RIO::RTextFile::WriteStr(const char *c,unsigned int l) throw(RString)
+{
+	if(Mode==Read)
+		throw(RString("File Mode is Read"));
+	if(!l) return;
+	write(handle,c,l);
+	#ifdef windows
+		flushall();
+	#endif
 }
 
 
