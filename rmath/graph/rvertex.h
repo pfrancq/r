@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -66,7 +62,6 @@ public:
 		unsigned int nb;
 	};
 
-
 	/**
 	* Identificator of the vertex.
 	*/
@@ -104,20 +99,21 @@ public:
 
 	/**
 	* Construct a vertex from a structure.
+	* @param s              Structure.
 	*/
 	RVertex(const VertexStruct& s);
 
 	/**
 	* Is used to compare two vertices. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param e              Edge used for the comparaison.
+	* @param v              Vertex used for the comparaison.
 	*/
 	int Compare(const RVertex& v) {return(this!=&v);}
 
 	/**
 	* Is used to compare two vertices. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param e              Edge used for the comparaison.	
+	* @param v              Vertex used for the comparaison.
 	*/
 	int Compare(const RVertex* v) {return(this!=v);}
 	

@@ -8,10 +8,6 @@
 
 	(c) 2000-2003 by P. Francq.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -104,10 +100,7 @@ int RFreePolygon::CanContain(RGeoInfo* info,RPoint& pos)
 
 
 //------------------------------------------------------------------------------
-RPoint& RFreePolygon::GetPos(void)
+RPoint RFreePolygon::GetPos(void)
 {
-	RPoint *pt=RPoint::GetPoint();
-
-	(*pt)=Pos;
-	return(*pt);
+	return(Pos);
 }

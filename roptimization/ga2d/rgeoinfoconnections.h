@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -52,9 +48,9 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RConnections class provides a representation for the connections of the
-* problem.
-* @short Connections.
+* The RGeoInfoConnections class provides a representation for the connections of
+* the placed objects of the problem.
+* @short Connections for Geometric Information.
 * @author Pascal Francq
 */
 class RGeoInfoConnections : public RContainer<RGeoInfoConnection,unsigned int,true,false>
@@ -73,7 +69,7 @@ public:
 
 	/**
 	* Construct the connections.
-	* @param o              General connections.
+	* @param c              General connections.
 	* @param i              Geometric information.
 	*/
 	RGeoInfoConnections(RConnections* c,RGeoInfos* i);
@@ -109,6 +105,7 @@ public:
 
 	/**
 	* The assignement operator.
+	* @param cons           Connections.
 	*/
 	RGeoInfoConnections& operator=(const RGeoInfoConnections& cons) throw(std::bad_alloc);
 

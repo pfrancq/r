@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -290,12 +286,9 @@ void RPlacementHeuristic::PostRun(RPoint&)
 
 
 //------------------------------------------------------------------------------
-RRect& RPlacementHeuristic::GetResult(void)
+RRect RPlacementHeuristic::GetResult(void)
 {
-	RRect *rect=RRect::GetRect();
-	
-	(*rect)=Result;
-	return(*rect);
+	return(Result);
 }
 
 
@@ -304,7 +297,6 @@ void RPlacementHeuristic::CreateProblem(void)
 {
 	
 }
-
 
 
 //------------------------------------------------------------------------------

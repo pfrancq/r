@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -101,7 +97,7 @@ public:
 	* Load a problem from a XML file.
 	* @param name           Name of the XML file.
 	*/
-	void Load(const char* name);
+	void Load(const char* name) throw(RIOException);
 
 	/**
 	* Clears the problem.

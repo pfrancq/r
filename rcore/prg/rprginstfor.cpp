@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -50,33 +46,30 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstFor::RPrgInstFor(char* line,unsigned int t) throw(std::bad_alloc)
+RPrgInstFor::RPrgInstFor(const RString& line,unsigned int t) throw(std::bad_alloc)
 	: RPrgInst(), Values(20,10), Insts(50,25), Tabs(t)
 {
-	char* var;
-	RPrgVar* r;
+	unsigned int pos;
+	int len;
+	RString Params;
+	RCharCursor Cur(line);
 
 	// Read name of variable
-	var=line;
-	while((*line)&&((*line)!=' '))
-		line++;
-	(*(line++))=0;
-	Var=var;
+	pos=0;
+	len=line.Find(' ');
+	Var=line.Mid(0,len);
 
 	// Skip "in "
-	while((*line)&&((*line)!=' '))
-		line++;
-	(*(line++))=0;
-	while((*line)&&((*line)==' '))
-		line++;
+	pos=len+1;
+	Cur.GoTo(len+1);
+	while((!Cur.End())&&(!Cur().IsSpace()))
+		Cur.Next();
+	while((!Cur.End())&&(Cur().IsSpace()))
+		Cur.Next();
 
 	// Read Values
-	while((*line))
-	{
-		r=RPrg::AnalyseParam(line);
-		if(r)
-			Values.InsertPtr(r);
-	}
+	Params=line.Mid(Cur.GetPos(),line.GetLen()-Cur.GetPos()+1);
+	RPrg::AnalyseParam(Params,&Values);
 }
 
 

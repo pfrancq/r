@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -121,12 +117,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RPoint& RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLimits(void)
+	RPoint RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLimits(void)
 {
-	RPoint *pt=RPoint::GetPoint();
-
-	(*pt)=Limits;
-	return(*pt);
+	return(Limits);
 }
 
 

@@ -12,10 +12,6 @@
 		Pascal Francq (pfrancq@ulb.ac.be).
 		Thomas L'Eglise.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -104,11 +100,6 @@ public:
 	RPromCriterionParams(const RPromCriterionParams* p);
 
 	/**
-	* Return a pointer to a temporary object of class point.
-	*/
-	static RPromCriterionParams* GetParams(void);
-
-	/**
 	* Set the parameters using a string with the format "P Q W".
 	* @param values         Values of the parameter.
 	*/
@@ -116,8 +107,9 @@ public:
 
 	/**
 	* Assignment operator.
+	* @param params         Source object.
 	*/
-	RPromCriterionParams& operator=(const RPromCriterionParams &params);
+	RPromCriterionParams& operator=(const RPromCriterionParams& params);
 };
 
 
@@ -223,7 +215,7 @@ public:
 	/**
 	* Compare the identifier of the criterion with a parameter.
 	* @param id             The identifier used for the comparaison.
-	* @returnThe function returns -1,0,+1 depends if the identifier of the
+	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
 	int Compare(const unsigned int id) const {return(Id-id);}
@@ -272,7 +264,7 @@ public:
 	/**
 	* Get the parameters.
 	*/
-	RPromCriterionParams& GetParams(void);
+	RPromCriterionParams GetParams(void);
 
 	/**
 	* Set the weight.
@@ -317,7 +309,7 @@ public:
 * The RPromCriterionCursor class provides a way to go trough a set of criterion.
 * @short Criterion Cursor.
 */
-CLASSCURSOR(RPromCriterionCursor,RPromCriterion,unsigned int)
+CLASSCURSOR(RPromCriterionCursor,RPromCriterion,unsigned int);
 
 
 }  //-------- End of namespace R -----------------------------------------------

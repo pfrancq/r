@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -63,14 +59,14 @@ namespace R{
 * To make the necessary comparaisons, the container used member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
-* <pre>
+* @code
 * int Compare(const TUse& tag) const;
 * int Compare(const TUse* tag) const;
 * static int HashIndex(const TUse& tag);
 * static int HashIndex(const TUse* tag);
 * static int HashIndex2(const TUse& tag);
 * static int HashIndex2(const TUse* tag);
-* </pre>
+* @endcode
 *
 * The TUse represent a class or a structure used for the comparaisons. The
 * Compare methods are working like the strcmp function from the standard C/C++
@@ -82,15 +78,15 @@ namespace R{
 *
 * At least, a compare function and a HashIndex and HashIndex2 method must be
 * implemented in the class C:
-* <pre>
+* @code
 * int Compare(const C*) const;
 * static int HashIndex(const C*);
 * static int HashIndex2(const C*);
-* </pre>
+* @endcode
 *
 * Here is an example of class MyElement that will be contained in the
 * variable c:
-* <pre>
+* @code
 * #include <rstd/string.h>
 * #include <rstd/rdblhashcontainer.h>
 * using namespace R;
@@ -130,7 +126,7 @@ namespace R{
 * 		cout<<"An element of value 5 is in the container"<<endl;
 * 	c.InsertPtr(new MyElement("Autre"));
 * }
-* </pre>
+* @endcode
 *
 * @author Pascal Francq
 * @short Double Hash Table Container.
@@ -212,6 +208,9 @@ public:
 	* @param TUse           The type of tag, the hash container uses the
 	*                       Compare(TUse &) member function of the elements.
 	* @param tag            The tag used.
+	* @param sortkey        The tag represents the sorting key. The default value
+	*                       depends if the container is ordered (true) or not
+	*                       (false).
 	* @returns The function returns true if the element is in the hash
 	* container, else false.
 	*/
@@ -281,17 +280,23 @@ public:
 	*/
 	virtual ~RDblHashContainer(void)
 	{
-		RContainer<C,T,bAlloc,true>*** ptr;
-		RContainer<C,T,bAlloc,true>** ptr2;
-		T i,j;
-
-		for(i=tSize1+1,ptr=Hash;--i;ptr++)
+		try
 		{
-			for(j=tSize2+1,ptr2=*ptr;--j;ptr2++)
-				delete (*ptr2);
-			delete[] (*ptr);
+			RContainer<C,T,bAlloc,true>*** ptr;
+			RContainer<C,T,bAlloc,true>** ptr2;
+			T i,j;
+
+			for(i=tSize1+1,ptr=Hash;--i;ptr++)
+			{
+				for(j=tSize2+1,ptr2=*ptr;--j;ptr2++)
+					delete (*ptr2);
+				delete[] (*ptr);
+			}
+			delete[] Hash;
 		}
-		delete[] Hash;
+		catch(...)
+		{
+		}
 	}
 };
 

@@ -10,10 +10,6 @@
 	Authors
 		 Vandaele Valery(vavdaele@ulb.ac.be)
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -122,7 +118,6 @@ public :
 	* param v               GenericSparseVector to iterate.
 	*/
 	void Set(RGenericSparseVector<RGenericCell<C>,false>* v);
-
 };
 
 
@@ -131,32 +126,29 @@ public :
 
 }  //-------- End of namespace RMath --------------------------------
 
+
 //-----------------------------------------------------------------------------
 /**
-* The CLASSGENERICCELLCURSOR macro defines a way to create a cursor for a given class with
-* a name.
+* The CLASSGENERICCELLCURSOR macro defines a way to create a cursor for a given
+* class with a name.
 * @param name            Name of the class representing the cursor.
 * @param C                  The class of the elements that are contained.
 */
-#define CLASSGENERICCELLCURSOR(name,C)                                        \
-class name : public R::RGenericCellCursor<C>                              \
-{                                                                    \
-public:                                                              \
-	name(void) : R::RGenericCellCursor<C>() {}                             \
-	static name* GetTmpCursor(void)                                  \
-	{                                                                \
-		return(R::GetTemporaryObject<name,20>());                 \
-	}                                                                \
-	name& operator=(const name& c) throw(std::bad_alloc)                  \
-	{                                                                \
-		R::RGenericCellCursor<C>::operator=(c);                            \
-		return(*this);                                               \
-	}                                                                \
+#define CLASSGENERICCELLCURSOR(name,C)                                          \
+class name : public R::RGenericCellCursor<C>                                    \
+{                                                                               \
+public:                                                                         \
+	name(void) : R::RGenericCellCursor<C>() {}                                  \
+	name& operator=(const name& c) throw(std::bad_alloc)                        \
+	{                                                                           \
+		R::RGenericCellCursor<C>::operator=(c);                                 \
+		return(*this);                                                          \
+	}                                                                           \
 	name& operator=(const R::RGenericCellCursor<C>& c) throw(std::bad_alloc)    \
-	{                                                                \
-		R::RGenericCellCursor<C>::operator=(c);                            \
-		return(*this);                                               \
-	}                                                                \
+	{                                                                           \
+		R::RGenericCellCursor<C>::operator=(c);                                 \
+		return(*this);                                                          \
+	}                                                                           \
 };
 
 

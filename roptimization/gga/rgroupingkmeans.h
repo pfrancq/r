@@ -12,10 +12,6 @@
 		Pascal Francq (pfrancq@ulb.ac.be).
 		David Wartel (dwartel@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -72,7 +68,6 @@ public:
 	*/
 	enum Initial {Refined,Random};
 
-
 protected:
 
 	/**
@@ -114,6 +109,11 @@ protected:
 	* Current object to place.
 	*/
 	cObj* CurObj;
+		
+	/**
+	* random table of objects;
+	*/
+	cObj **RandObjects;
 
 	/**
 	* Current group manipulated.
@@ -180,9 +180,7 @@ public:
 
 	/**
 	* Construct the grouping heuristic.
-	* @param n              Name of the heuristic.
-	* @param r              The random genrator to use.
-	* @param objs           Pointer to the objects.
+	* @param Objs           Pointer to the objects.
 	*/
 	RGroupingKMeans(RContainer<cObj,unsigned int,false,true>* Objs);
 
@@ -194,73 +192,85 @@ public:
 
 	/**
 	* Set the maximum number of iterations for kmeans.
+	* @param i              Number of iterations.
 	*/
 	void SetIterNumber(unsigned int i) {IterNumber=i;}
 
 	/**
 	* Set the number of tests.
+	* @param i              Number of tests.
 	*/
 	void SetNbTests(unsigned int i) {NbTests=i;}
 
 	/**
 	* Set the number of Groups.
+	* @param i              Number of groups.
 	*/
 	void SetGroupsNumber(unsigned int i) {GroupsNumber=i;}
 
 	/**
-	*  Set the number of SubSamples.
+	* Set the number of sub-samples.
+	* @param i              Number of sub-samples.
 	*/
 	void SetSubSamplesNumber(unsigned int i) {NbSubSamples=i;}
 
 	/**
-	*  Set theSubSamples rate.
+	* Set the sub-samples rate.
+	* @param i              Sub-samples rate.
 	*/
 	void SetSubSamplesRate(unsigned int i) {SubSamplesRate=i;}
 
 	/**
-	*  Set VerifyKMeansMaxIters limt.
+	* Set VerifyKMeansMaxIters limit.
+	* @param i              Maximum number of k-Means iterations.
 	*/
 	void SetVerifyKMeansMaxIters(unsigned int i) {VerifyKMeansMaxIters=i;}
 
-
 	/**
-	* Set the Refined parameter.
+	* Set the refined parameter.
+	* @param i              Refined parameter.
 	*/
 	void SetInitial(Initial i) {initial=i;}
 
 	/**
 	* Set the value of Epsilon.
+	* @param d              Value of epsilon.
 	*/
 	void SetEpsilon(double d) {Epsilon=d;}
 
 	/**
 	* Initialize the heuristic.
-	* @param groups         Pointer to the groups.
 	*/
 	void Init(void);
 
 	/**
-	* return true if the subprofile is a valid proto ;
+	* Test if an object is a valid prototype.
+	* @param prototypes     List of prototypes.
+	* @param obj            Object to test.
+	* @return bool.
 	*/
-	bool IsValidProto(RContainer<cObj,unsigned int,false,false>* prototypes,cObj* s) throw(std::bad_alloc);
+	bool IsValidProto(RContainer<cObj,unsigned int,false,false>* prototypes,cObj* obj) throw(std::bad_alloc);
 
 	/**
 	* Verify wether the initializing kmeans is ok.
 	*/
-	bool VerifyKMeansMod(void);
+	bool VerifyKMeansMod(void) throw(RException);
 
 	/**
-	* calulates the distortion of a grouping.
+	* Calulates the distortion of a grouping.
+	* @param grps           Groups.
 	*/
 	double Distortion(RContainer<cGroup,unsigned int,false,false>* grps);
 
 	/**
-	*  calculates the variance of a group.
+	* Calculates the variance of a group.
+	* @param grp            Group.
 	*/
 	double GroupVariance(cGroup* grp);
 
 	/**
 	* Re-Allocation step.
+	* @param dataset        Dataset to re-allocate.
 	*/
 	void ReAllocate(RContainer<cObj,unsigned int,false,true>* dataset);
 
@@ -271,13 +281,16 @@ public:
 
 	/**
 	* Calculates the cost function.
+	* @param grps           Groups.
 	*/
 	double CostFunction(RContainer<cGroup,unsigned int,false,false>* grps);
 
 	/**
-	* Calculates the distance between two objects.
+	* Calculate the distance between an object and a prototype.
+	* @param obj            Object.
+	* @param proto          Prototype.
 	*/
-	double Distance(cObj *s1, cObj *proto);
+	double Distance(cObj* obj, cObj* proto);
 
 	/**
 	* Calculates the error between two iterations of K-Means.
@@ -286,8 +299,8 @@ public:
 
 	/**
 	* Execute the K-Means.
-	* @param dataset         set of all objects to group.
-	* @param nbtests         number of tests.
+	* @param dataset         Set of all objects to group.
+	* @param nbtests         Number of tests.
 	*/
 	void Execute(RContainer<cObj, unsigned int, false, true>* dataset, unsigned int nbtests);
 
@@ -298,10 +311,10 @@ public:
 
 	/**
 	* Chooses subprofiles among the dataset to initialize the K-Means
-	* @param dataset         set of all objects to group.
-	* @param nbsubprofiles   number of objects to choose.
+	* @param dataset         Set of all objects to group.
+	* @param nbobjects       Number of objects to choose.
 	*/
-	void RandomInitObjects(RContainer<cObj,unsigned int,false,true>* dataset, unsigned int nbobjects);
+	void RandomInitObjects(RContainer<cObj,unsigned int,false,true>* dataset, unsigned int nbobjects) throw(RException);
 
 	/**
 	* Function to evaluates the number of groups.
@@ -309,15 +322,18 @@ public:
 	void EvaluateGroupsNumber(void);
 
 	/**
-	*  Finds the group containing a given object.
+	* Finds the group containing a given object.
+	* @param grps           List of all groups.
+	* @param obj            Object.
 	*/
-	cGroup* FindGroup(RContainer<cGroup,unsigned int,false,false>* grps, cObj* s);
+	cGroup* FindGroup(RContainer<cGroup,unsigned int,false,false>* grps, cObj* obj);
 
 	/**
 	* Calculates the similarity between two objects.
+	* @param obj1           First object.
+	* @param obj2           Second object.
 	*/
-	double Similarity(cObj *s1, cObj *s2);
-
+	double Similarity(cObj* obj1, cObj* obj2);
 
 	/**
 	* Gets the final grouping, result of the K-Means procedure.
@@ -325,7 +341,7 @@ public:
 	RContainer<cGroup,unsigned int,false,false>* GetGrouping(void){return(grpsfinal);}
 
 	/**
-	* init the protos to the refined points.
+	* Init the protos to the refined points.
 	* @param nbsub           number of subsamples to get.
 	* @param level           level  (in %) of the full dataset for the subsamples
 	*/
@@ -339,7 +355,6 @@ public:
 
 	/**
 	* Run the heuristic.
-	* @param groups          Pointer to the groups.
 	*/
 	void Run(void);
 

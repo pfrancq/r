@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -41,6 +37,11 @@
 //------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// forward declaration
+class RString;
+
 
 //------------------------------------------------------------------------------
 /**
@@ -74,17 +75,17 @@ public:
 
 	/**
 	* Construct a date.
-	* @param day                      The day.
-	* @param month                    The month.
-	* @param year                     The year.
+	* @param day            The day.
+	* @param month          The month.
+	* @param year           The year.
 	*/
 	RDate(const int day,const int month,const int year);
 
 	/**
 	* Construct a date. If string is null, then the current date is used.
-	* @param date                     String representing a date in (yy-mm-dd).
+	* @param date           String representing a date in (yy-mm-dd).
 	*/
-	RDate(const char* date);
+	RDate(const RString& date);
 
 	/**
 	* Compare function like strcmp used in particular for RStd::RContainer class.
@@ -145,19 +146,28 @@ public:
 	int GetYear(void) const {return(Year);}
 
 	/**
+	* Set the date.
+	* @param day            The day.
+	* @param month          The month.
+	* @param year           The year.
+	*/
+	void SetDate(const int day,const int month,const int year);
+
+	/**
+	* Set the date. If string is null, then the current date is used.
+	* @param date           String representing a date in (yy-mm-dd).
+	*/
+	void SetDate(const RString& date);
+
+	/**
 	* Set the date to the one given by the system.
 	*/
 	void SetToday(void);
 
 	/**
-	* Need to manage temporary dates.
-	*/
-	static RDate* GetDate(void);
-
-	/**
 	* Get the current date.
 	*/
-	static RDate& GetToday(void);
+	static RDate GetToday(void);
 
 	/**
 	* Destruct the date.

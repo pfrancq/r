@@ -6,14 +6,10 @@
 
 	Polygons - Implentation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -46,6 +42,7 @@
 #include <rmath/rrect.h>
 #include <rmath/rline.h>
 using namespace R;
+using namespace std;
 
 
 
@@ -311,4 +308,12 @@ void RPolygons::Save(RTextFile& f)
 	f<<NbPtr<<endl;
 	for(Start();!End();Next())
 		(*this)()->Save(f);
+}
+
+
+//------------------------------------------------------------------------------
+RPolygonCursor RPolygons::GetPolygonsCursor(void)
+{
+	RPolygonCursor cur(this);
+	return(cur);
 }

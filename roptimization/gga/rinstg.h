@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -74,9 +70,9 @@ public:
 
 	/**
 	* Construct the data.
-	* @param data           Owner of the data.
+	* @param owner          Owner of the data.
 	*/
-	RThreadDataG(cInst *owner) throw(std::bad_alloc);
+	RThreadDataG(cInst* owner) throw(std::bad_alloc);
 
 	/**
 	* Initialise thje data.
@@ -88,6 +84,7 @@ public:
 	*/
 	virtual ~RThreadDataG(void);
 
+	// friend class
 	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
 };
 

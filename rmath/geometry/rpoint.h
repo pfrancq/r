@@ -6,14 +6,10 @@
 
 	Point - Header
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -164,11 +160,6 @@ public:
 	inline double Length(void) const {return(sqrt(static_cast<double>((X*X)+(Y*Y))));}
 
 	/**
-	* Return a pointer to a temporary object of class point.
-	*/
-	static RPoint* GetPoint(void);
-
-	/**
 	* Test if the point is a valid one.
 	*/
 	bool IsValid(void) const { return((X!=MaxCoord)&&(Y!=MaxCoord));}
@@ -200,18 +191,27 @@ public:
 
 //------------------------------------------------------------------------------
 // Operators
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 /**
 * Add two points.
 */
-RPoint& operator+(const RPoint& arg1,const RPoint& arg2);
+RPoint operator+(const RPoint& arg1,const RPoint& arg2);
 
 //------------------------------------------------------------------------------
 /**
 * Substract two points.
 */
-RPoint& operator-(const RPoint& arg1,const RPoint& arg2);
+RPoint operator-(const RPoint& arg1,const RPoint& arg2);
+
+
+//------------------------------------------------------------------------------
+/**
+* The RPointCursor class provides a way to go trough a set of points.
+* @short Points Cursor
+*/
+CLASSCURSOR(RPointCursor,RPoint,unsigned int);
 
 
 }  //-------- End of namespace R -----------------------------------------------

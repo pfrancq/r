@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -61,7 +57,7 @@ namespace R{
 *
 * The user can write his own operators to read and write with RTextFile. Here
 * is an example:
-* <pre>
+* @code
 * class Point
 * {
 * public:
@@ -77,7 +73,7 @@ namespace R{
 * {
 * 	return(f>>pt.X>>pt.Y);
 * }
-* </pre>
+* @endcode
 * @author Pascal Francq
 * @short Text File.
 */

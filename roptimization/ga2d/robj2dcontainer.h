@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -106,7 +102,7 @@ public:
 
 	/**
 	* Verify if a given object is in the container or not.
-	* @unsigned id          Identificator of the object.
+	* @param id             Identificator of the object.
 	* @return true if the object is in, else false.
 	*/
 	virtual bool IsIn(unsigned int id);

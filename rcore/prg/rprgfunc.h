@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -94,7 +90,7 @@ public:
 	* This methods compares the name of a function with a string and works like
 	* the "strcpy" function of the ANSI C/C++ library.
 	* @see R::RContainer.
-	* @param n               String representing the name of the function.
+	* @param f               String representing the name of the function.
 	* @return int
 	*/
 	int Compare(const RString& f) const;
@@ -103,7 +99,7 @@ public:
 	* This methods compares the name of a function with a string and works like
 	* the "strcpy" function of the ANSI C/C++ library.
 	* @see R::RContainer.
-	* @param n               String representing the name of the function.
+	* @param f               String representing the name of the function.
 	* @return int
 	*/
 	int Compare(const char* f) const;
@@ -114,7 +110,7 @@ public:
 	* @param o              Output.
 	* @param args           Parameters of the function.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* r,RContainer<RPrgVar,unsigned int,true,false>* args) throw(RException);
+	virtual void Run(RPrg* prg,RPrgOutput* o,RContainer<RPrgVar,unsigned int,true,false>* args) throw(RException);
 
 	/**
 	* Destructor of a function.

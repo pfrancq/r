@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -65,7 +61,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 public:
 
 	/**
-	*  Groups used.
+	* Groups used.
 	*/
 	RContainer<cGroup,unsigned int,false,false> Used;
 
@@ -163,9 +159,9 @@ public:
 
 	/**
 	* Delete all the objects attached to a given group.
-	* @param node           Pointer to the group.
+	* @param grp            Pointer to the group.
 	*/
-	void DeleteObjs(cGroup* node);
+	void DeleteObjs(cGroup* grp);
 
 	/**
 	* Verify the validity of the groups.
@@ -178,7 +174,7 @@ public:
 	* @param id             Identificator of the object.
 	* @returns Pointer to cGroup*.
 	*/
-	cGroup* GetGroup(const unsigned int id);
+	cGroup* GetGroup(unsigned int id);
 
 	/**
 	* Get the group of an object.
@@ -192,16 +188,17 @@ public:
 	* @param idx            Global Index.
 	* @returns cObj*
 	*/
-	cObj* GetObj(const unsigned int idx) {return(ObjsAss.Tab[idx]);}
+	cObj* GetObj(unsigned int idx) {return(ObjsAss.Tab[idx]);}
 
 	/**
 	* Return a pointer to the objects of a group.
+	* @param idx            Global Index.
 	*/
-	cObj** GetObjs(const unsigned int idx) {return(&ObjsAss.Tab[idx]);}
+	cObj** GetObjs(unsigned int idx) {return(&ObjsAss.Tab[idx]);}
 
 	/**
 	* The assigment operator.
-	* @param chromo         The chromosome used as source.
+	* @param grps           Source groups.
 	*/
 	RGroups& operator=(const RGroups& grps);
 
@@ -218,7 +215,7 @@ public:
 	bool SameGroupment(const RGroups* grps) const;
 
 	/**
-	* Destruct the chromosome.
+	* Destruct the groups.
 	*/
 	virtual ~RGroups(void);
 

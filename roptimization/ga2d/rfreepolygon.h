@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -126,7 +122,7 @@ public:
 	/**
 	* Return the position of the free polygon.
 	*/
-	RPoint& GetPos(void);
+	RPoint GetPos(void);
 };
 
 

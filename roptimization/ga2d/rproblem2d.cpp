@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -61,7 +57,7 @@ RProblem2D::RProblem2D(void)
 
 
 //------------------------------------------------------------------------------
-void RProblem2D::Load(const char* name)
+void RProblem2D::Load(const char* name) throw(RIOException)
 {
 	RXMLStruct s;
 	RXMLFile f(name,&s);
@@ -70,24 +66,26 @@ void RProblem2D::Load(const char* name)
 	RString Attr;
 	RContainer<RObj2D,unsigned int,true,true> Templates(50,25);
 	RPoint Tr;
-
+	RXMLTagCursor Cur;
+	
 	// Clear the Problem
+	f.Process();
 	Clear();
 
 	// Take the Limits
 	tag=s.GetTag("Shape",s.GetTop());
 	if(tag)
 	{
-		// Read the points but the last
-		for(i=tag->NbPtr,tab=tag->Tab;--i;tab++)
+		// Read the points but the last	
+		Cur.Set(tag);
+		for(Cur.Start(),i=Cur.GetNb();--i;Cur.Next())  // Last point = first point
 		{
-			if((*tab)->GetName()=="Point")
-			{
-				// Point
-				X = atoi((*tab)->GetAttrValue("X"));
-				Y = atoi((*tab)->GetAttrValue("Y"));
-				Problem.Polygon.InsertPtr(new RPoint(X,Y));
-			}
+			if(Cur()->GetName()!="Point")
+				throw RIOException("Wrong sub-tags in tag 'Shape'");
+			// Point
+			X = atoi(Cur()->GetAttrValue("X"));
+			Y = atoi(Cur()->GetAttrValue("Y"));
+			Problem.Polygon.InsertPtr(new RPoint(X,Y));
 		}
 		Tr=Problem.Polygon.Calibrate();
 		Problem.Polygon.ReOrder();

@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/include/r
+INCLUDES = -I$(top_srcdir)  $(all_includes)
 pkglib_LTLIBRARIES =  librprg.la
 AM_CFLAGS =
 AM_CXXFLAGS =

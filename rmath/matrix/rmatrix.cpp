@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision: 1.4 $
-
-	Last Modify: $Date: 2000/11/29 09:23:50 $
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -170,13 +166,14 @@ void RMatrix::Symetrize(void)
 
 
 //------------------------------------------------------------------------------
-char RMatrix::TransitiveClosure(RMatrix *Matrix) throw(RMatrix::errMatrix,std::bad_alloc)
+char RMatrix::TransitiveClosure(RMatrix *Matrix) throw(RException,std::bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM,**ptrLT,*ptrCT;
 	tSize i,j,k;
 	char Ok=1;
 
-	if(Col!=Lin) throw errNotQuadraticMatrix();
+	if(Col!=Lin)
+		throw RException("Not Quadratic Matrix");
 	if(Matrix)
 	{
 		Matrix->VerifySize(Lin,Col);
@@ -200,15 +197,16 @@ char RMatrix::TransitiveClosure(RMatrix *Matrix) throw(RMatrix::errMatrix,std::b
 
 
 //------------------------------------------------------------------------------
-tNumber& RMatrix::operator()(int m, int n) const throw(RMatrix::errMatrix,std::bad_alloc)
+tNumber& RMatrix::operator()(int m, int n) const throw(RException,std::bad_alloc)
 {
-	if(m<0||m>Lin||n<0||n>Col) throw errBadIndex();
+	if(m<0||m>Lin||n<0||n>Col)
+		throw RException("Bad Index");
 	return(M[m][n]);
 }
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator=(const RMatrix Matrix) throw(RMatrix::errMatrix,std::bad_alloc)
+RMatrix& RMatrix::operator=(const RMatrix Matrix) throw(RException,std::bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
@@ -223,13 +221,13 @@ RMatrix& RMatrix::operator=(const RMatrix Matrix) throw(RMatrix::errMatrix,std::
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator+=(const RMatrix Matrix) throw(RMatrix::errMatrix,std::bad_alloc)
+RMatrix& RMatrix::operator+=(const RMatrix Matrix) throw(RException,std::bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
 
 	if((Lin!=Matrix.Lin)||(Col!=Matrix.Col))
-		throw RMatrix::errNotCompatibleSize();
+		throw RException("Not Compatible Sizes");
 	VerifySize(Matrix.Lin,Matrix.Col);
 	for(i=Lin+1,ptrL=M,ptrLM=Matrix.M;--i;ptrL++,ptrLM++)
 		for(j=Col+1,ptrC=*ptrL,ptrCM=*ptrLM;--j;ptrC++,ptrCM++)
@@ -239,13 +237,13 @@ RMatrix& RMatrix::operator+=(const RMatrix Matrix) throw(RMatrix::errMatrix,std:
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator-=(const RMatrix Matrix) throw(RMatrix::errMatrix,std::bad_alloc)
+RMatrix& RMatrix::operator-=(const RMatrix Matrix) throw(RException,std::bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
 
 	if((Lin!=Matrix.Lin)||(Col!=Matrix.Col))
-		throw RMatrix::errNotCompatibleSize();
+		throw RException("Not Compatible Sizes");
 	VerifySize(Matrix.Lin,Matrix.Col);
 	for(i=Lin+1,ptrL=M,ptrLM=Matrix.M;--i;ptrL++,ptrLM++)
 		for(j=Col+1,ptrC=*ptrL,ptrCM=*ptrLM;--j;ptrC++,ptrCM++)
@@ -255,7 +253,7 @@ RMatrix& RMatrix::operator-=(const RMatrix Matrix) throw(RMatrix::errMatrix,std:
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator*=(const tNumber arg) throw(RMatrix::errMatrix,std::bad_alloc)
+RMatrix& RMatrix::operator*=(const tNumber arg) throw(RException,std::bad_alloc)
 {
 	tNumber **ptrL,*ptrC;
 	tSize i,j;
@@ -268,15 +266,16 @@ RMatrix& RMatrix::operator*=(const tNumber arg) throw(RMatrix::errMatrix,std::ba
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator*=(const RMatrix Matrix) throw(RMatrix::errMatrix,std::bad_alloc)
+RMatrix& RMatrix::operator*=(const RMatrix Matrix) throw(RException,std::bad_alloc)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM,**ptrLR,*ptrCR,Sum;
 	tSize i,j,k;
-	RMatrix *res=GetMatrix();
+	RMatrix res;
 
-	if(Lin!=Matrix.Col) throw RMatrix::errNotCompatibleSize();
-	res->VerifySize(Lin,Matrix.Col);
-	for(i=Lin+1,ptrL=M,ptrLR=res->M;--i;ptrL++,ptrLR++)
+	if(Lin!=Matrix.Col)
+		throw RException("Not Compatible Sizes");
+	res.VerifySize(Lin,Matrix.Col);
+	for(i=Lin+1,ptrL=M,ptrLR=res.M;--i;ptrL++,ptrLR++)
 	{
 		for(j=0,ptrCR=(*ptrLR),ptrCM=(*Matrix.M);j<Matrix.Col+1;j++,ptrCR++,ptrCM++)
 		{
@@ -285,17 +284,10 @@ RMatrix& RMatrix::operator*=(const RMatrix Matrix) throw(RMatrix::errMatrix,std:
 			(*ptrCR)=Sum;
 		}
 	}
-	for(i=Lin+1,ptrL=M,ptrLM=res->M;--i;ptrL++,ptrLM++)
+	for(i=Lin+1,ptrL=M,ptrLM=res.M;--i;ptrL++,ptrLM++)
 		for(j=Col+1,ptrC=*ptrL,ptrCM=*ptrLM;--j;ptrC++,ptrCM++)
 			(*ptrC)=(*ptrCM);
 	return(*this);
-}
-
-
-//------------------------------------------------------------------------------
-RMatrix* RMatrix::GetMatrix(void)
-{
-	return(GetTemporaryObject<RMatrix,30>());
 }
 
 
@@ -321,55 +313,50 @@ RMatrix::~RMatrix(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RMatrix& operator+(const RMatrix &arg1,const RMatrix &arg2) throw(RMatrix::errMatrix,std::bad_alloc)
+RMatrix operator+(const RMatrix &arg1,const RMatrix &arg2) throw(RException,std::bad_alloc)
 {
-	RMatrix *res=RMatrix::GetMatrix();
+	RMatrix res(arg1);
 
-	(*res)=arg1;
-	(*res)+=arg2;
-	return(*res);
+	res+=arg2;
+	return(res);
 }
 
 
 //------------------------------------------------------------------------------
-RMatrix& operator-(const RMatrix &arg1,const RMatrix &arg2) throw(RMatrix::errMatrix,std::bad_alloc)
+RMatrix operator-(const RMatrix &arg1,const RMatrix &arg2) throw(RException,std::bad_alloc)
 {
-	RMatrix *res=RMatrix::GetMatrix();
+	RMatrix res(arg1);
 
-	(*res)=arg1;
-	(*res)-=arg2;
-	return(*res);
+	res-=arg2;
+	return(res);
 }
 
 
 //------------------------------------------------------------------------------
-RMatrix& operator*(const RMatrix& arg1,const RMatrix& arg2) throw(RMatrix::errMatrix,std::bad_alloc)
+RMatrix operator*(const RMatrix& arg1,const RMatrix& arg2) throw(RException,std::bad_alloc)
 {
-	RMatrix *res=RMatrix::GetMatrix();
+	RMatrix res(arg1);
 
-	(*res)=arg1;
-	(*res)*=arg2;
-	return(*res);
+	res*=arg2;
+	return(res);
 }
 
 
 //------------------------------------------------------------------------------
-RMatrix& operator*(const tNumber arg1,const RMatrix& arg2) throw(std::bad_alloc)
+RMatrix operator*(const tNumber arg1,const RMatrix& arg2) throw(std::bad_alloc)
 {
-	RMatrix *res=RMatrix::GetMatrix();
+	RMatrix res(arg2);
 
-	(*res)=arg2;
-	(*res)*=arg1;
-	return(*res);
+	res*=arg1;
+	return(res);
 }
 
 
 //------------------------------------------------------------------------------
-RMatrix& operator*(const RMatrix& arg1,const tNumber arg2) throw(std::bad_alloc)
+RMatrix operator*(const RMatrix& arg1,const tNumber arg2) throw(std::bad_alloc)
 {
-	RMatrix *res=RMatrix::GetMatrix();
+	RMatrix res(arg1);
 
-	(*res)=arg1;
-	(*res)*=arg2;
-	return(*res);
+	res*=arg2;
+	return(res);
 }

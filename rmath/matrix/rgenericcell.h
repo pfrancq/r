@@ -10,10 +10,6 @@
 	Authors
 		 Vandaele Valery(vavdaele@ulb.ac.be)
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -76,14 +72,14 @@ public :
 
 	/**
 	* constructor of RGenericCell
-	* @param id                The Id of the cell.
+	* @param id             The Id of the cell.
 	*/
 	RGenericCell(unsigned int id) throw(std::bad_alloc);
 
 	/**
 	* constructor of RGenericCell
-	* @param id                The Id of the cell.
-	* @param value             The value of type T
+	* @param id             The Id of the cell.
+	* @param value          The value of type T
 	*/
 	RGenericCell(unsigned int id, C value)throw(std::bad_alloc);
 
@@ -107,19 +103,19 @@ public :
 
 	/**
 	* Method used by the container
-	* param c                  The pointer to the RGenericCell to be compared.
+	* param c               The pointer to the RGenericCell to be compared.
 	*/
 	int Compare(const RGenericCell<C>* c) const; 
 
 	/**
 	* Method used by the container
-	* param c                  The RGenericCell to be compared.
+	* param c               The RGenericCell to be compared.
 	*/
 	int Compare(const RGenericCell<C>& c) const;
 
 	/**
 	* Method used by the container
-	* param id                  The id to be compared.
+	* param id              The id to be compared.
 	*/
 	int Compare(const unsigned int id) const;
 	
@@ -127,23 +123,22 @@ public :
 	* Get the id of the cell.
 	* @return id                Int descibing the id of the cell.
 	*/
-	unsigned int GetId() const {return Id;}
+	unsigned int GetId(void) const {return Id;}
 
 	/**
 	* Get The value contained in the cell.
-	* @return C                 The value of the cell (of type C).
+	* @return C             The value of the cell (of type C).
 	*/
 	C GetValue(void) const {return Value;}
 
 	/**
 	* Set the value of the cell.
-	* @params value            The value to be contained in the cell (of type C).
+	* @param value          The value to be contained in the cell (of type C).
 	*/
 	void SetValue(C value) { Value=value;}
 	
 	/**
-	* destructor of RGenericCell
-	* @param1 [param1 name]    [param1 description]
+	* Destructor of RGenericCell
 	*/
 	virtual ~RGenericCell(void);
 };

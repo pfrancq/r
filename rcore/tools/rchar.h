@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -54,11 +50,12 @@ namespace R{
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-typedef unsigned char UChar;
+typedef unsigned short UChar; // Unicode code for a character.
 
 
 //------------------------------------------------------------------------------
-/** This class implements a unicode character as a class.
+/**
+* This class implements a unicode character as a class.
 * @author Pascal Francq
 * @short Unicode Character
 */
@@ -86,31 +83,31 @@ public:
 	* Copy constructor.
 	* @param c               ASCII/Latin-1 character.
 	*/
-	RChar(unsigned char c)  : Car(c) {}
+	explicit RChar(unsigned char c)  : Car(c) {}
 
 	/**
 	* Copy constructor.
 	* @param c               Unicode character.
 	*/
-	RChar(unsigned short c) : Car(c) {}
+	explicit RChar(UChar c) : Car(c) {}
 
 	/**
 	* Copy constructor.
 	* @param c               Unicode character.
 	*/
-	RChar(short c) : Car((UChar)c) {}
+	explicit RChar(long c) : Car((UChar)c) {}
 
 	/**
 	* Copy constructor.
 	* @param c               Unicode character.
 	*/
-	RChar(unsigned int c) : Car((UChar)(c&0xFFFF)) {}
+	explicit RChar(unsigned int c) : Car((UChar)(c&0xFFFF)) {}
 
 	/**
 	* Copy constructor.
 	* @param c               Unicode character.
 	*/
-	RChar(int c) : Car((UChar)(c&0xFFFF)) {}
+	explicit RChar(int c) : Car((UChar)(c&0xFFFF)) {}
 
 
 	/**
@@ -153,14 +150,7 @@ public:
 	* Assignment operator.
 	* @param c               Character.
 	*/
-	bool operator==(char c) {return(((unsigned char)c)==Car);}
-
-	/**
-	* Comparison == operator.
-	* @param c1              First Character.
-	* @param c2              Second Character.
-	*/
-	friend bool operator==(char c1,RChar c2) {return(((unsigned char)c1)==c2.Car);}
+	bool operator==(char c) const {return(((unsigned char)c)==Car);}
 
 	/**
 	* Comparison == operator.
@@ -172,103 +162,61 @@ public:
 	* Comparison != operator.
 	* @param c               Character.
 	*/
-	bool operator!=(char c) {return(((unsigned char)c)!=Car);}
-
-	/**
-	* Comparison != operator.
-	* @param c1              First Character.
-	* @param c2              Second Character.
-	*/
-	friend bool operator!=(char c1,RChar c2) {return(((unsigned char)c1)!=c2.Car);}
-
-	/**
-	* Comparison != operator.
-	* @param c1              First Character.
-	* @param c2              Second Character.
-	*/
-	friend bool operator!=(RChar c1,char c2) {return(c1.Car!=(UChar)c2);}
+	bool operator!=(char c) const {return(((unsigned char)c)!=Car);}
 
 	/**
 	* Comparison != operator.
 	* @param c               Character.
 	*/
-	bool operator!=(const RChar c) const {return(Car<c);}
+	bool operator!=(const RChar c) const {return(Car!=c.Car);}
 
 	/**
 	* Comparison < operator.
 	* @param c               Character.
 	*/
-	bool operator<(char c) {return(((unsigned char)c)<Car);}
-
-	/**
-	* Comparison < operator.
-	* @param c1              First Character.
-	* @param c2              Second Character.
-	*/
-	friend bool operator<(char c1,RChar c2) {return(((unsigned char)c1)<c2.Car);}
+	bool operator<(char c) const {return(((unsigned char)c)<Car);}
 
 	/**
 	* Comparison < operator.
 	* @param c               Character.
 	*/
-	bool operator<(RChar c) {return(Car<c.Car);}
+	bool operator<(RChar c) const {return(Car<c.Car);}
 
 	/**
 	* Comparison <= operator.
 	* @param c               Character.
 	*/
-	bool operator<=(char c) {return(((unsigned char)c)<=Car);}
-
-	/**
-	* Comparison <= operator.
-	* @param c1              First Character.
-	* @param c2              Second Character.
-	*/
-	friend bool operator<=(char c1,RChar c2) {return(((unsigned char)c1)<=c2.Car);}
+	bool operator<=(char c) const {return(((unsigned char)c)<=Car);}
 
 	/**
 	* Comparison <= operator.
 	* @param c               Character.
 	*/
-	bool operator<=(RChar c) {return(Car<=c.Car);}
+	bool operator<=(RChar c) const {return(Car<=c.Car);}
 
 	/**
 	* Comparison > operator.
 	* @param c               Character.
 	*/
-	bool operator>(char c) {return(((unsigned char)c)>Car);}
-
-	/**
-	* Comparison > operator.
-	* @param c1              First Character.
-	* @param c2              Second Character.
-	*/
-	friend bool operator>(char c1,RChar c2) {return(((unsigned char)c1)>c2.Car);}
+	bool operator>(char c) const {return(((unsigned char)c)>Car);}
 
 	/**
 	* Comparison > operator.
 	* @param c               Character.
 	*/
-	bool operator>(RChar c) {return(Car>c.Car);}
+	bool operator>(RChar c) const {return(Car>c.Car);}
 
 	/**
 	* Comparison >= operator.
 	* @param c               Character.
 	*/
-	bool operator>=(char c) {return(((unsigned char)c)>=Car);}
-
-	/**
-	* Comparison >= operator.
-	* @param c1              First Character.
-	* @param c2              Second Character.
-	*/
-	friend bool operator>=(char c1,RChar c2) {return(((unsigned char)c1)>=c2.Car);}
+	bool operator>=(char c) const {return(((unsigned char)c)>=Car);}
 
 	/**
 	* Comparison >= operator.
 	* @param c               Character.
 	*/
-	bool operator>=(RChar c) {return(Car>=c.Car);}
+	bool operator>=(RChar c) const {return(Car>=c.Car);}
 
 	/**
 	* Get a Latin1 character.
@@ -280,13 +228,7 @@ public:
 	* Get a Unicode character.
 	* @return UChar.
 	*/
-	UChar Unicode(void) const                     { return(Car); }
-
-	/**
-	* Get a Unicode character.
-	* @return UChar&.
-	*/
-	UChar& Unicode(void)                          { return(Car); }
+	UChar Unicode(void) const            { return(Car); }
 
 	/**
 	* Test if the character is a null one.
@@ -316,7 +258,7 @@ public:
 	* Test if the character is a letter.
 	* @return bool.
 	*/
-	bool IsAlpha(void) const                      { return(iswalpha((wchar_t)Unicode())); }
+	bool IsAlpha(void) const                      { return(iswalpha(Unicode())); }
 
 	/**
 	* Test if the character is a digit.

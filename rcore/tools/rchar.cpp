@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -68,6 +64,13 @@ int RChar::StrCmp(const RChar* str1,const RChar* str2)
 {
 	UChar u1,u2;
 
+	if(!str1)
+	{
+		if(!str2) return(0);
+		return(-1);
+	}
+	else if(!str2)
+		return(1);
 	while((!str1->IsNull())&&(!str2->IsNull()))
 	{
 		u1=(*str1).Unicode();
@@ -86,6 +89,13 @@ int RChar::StrCmp(const RChar* str1,const char* str2)
 {
 	UChar u1,u2;
 
+	if(!str1)
+	{
+		if(!str2) return(0);
+		return(-1);
+	}
+	else if(!str2)
+		return(1);
 	while((!str1->IsNull())&&(*str2))
 	{
 		u1=(*str1).Unicode();
@@ -104,6 +114,13 @@ int RChar::StrCmp(const char* str1,const RChar* str2)
 {
 	UChar u1,u2;
 
+	if(!str1)
+	{
+		if(!str2) return(0);
+		return(-1);
+	}
+	else if(!str2)
+		return(1);
 	while((*str1)&&(!str2->IsNull()))
 	{
 		u1=RChar(*str1).Unicode();
@@ -122,6 +139,8 @@ const RChar* RChar::StrChr(const RChar* str1,const RChar c)
 {
 	UChar u1,u2;
 
+	if(!str1)
+		return(0);
 	u2=c.Unicode();
 	while(!str1->IsNull())
 	{

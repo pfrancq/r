@@ -6,14 +6,10 @@
 
 	Generic Class - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -37,6 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rio.h>
+#include <rstd/rtextfile.h>
 using namespace R;
 
 
@@ -51,4 +48,15 @@ using namespace R;
 RIOException::RIOException(const char* str) throw(std::bad_alloc)
 	: RException(str)
 {
+}
+
+
+//------------------------------------------------------------------------------
+RIOException::RIOException(const RTextFile* file,const char* str) throw(std::bad_alloc)
+	: RException()
+{
+	if(file)
+		strcpy(Msg,file->GetName()+" ("+ltou(file->ActualLine())+"): "+str);
+	else
+		strcpy(Msg,str);
 }

@@ -8,10 +8,6 @@
 
 	(c) 2000-2003 by P. Francq.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -59,12 +55,12 @@ RFreePolygons::RFreePolygons(RFreePolygons* cont)
 
 
 //------------------------------------------------------------------------------
-RPoint& RFreePolygons::CanPlace(RGeoInfo* info)
+RPoint RFreePolygons::CanPlace(RGeoInfo* info)
 {
 	char o;
 	unsigned int i;
 	RFreePolygon **tab;
-	RPoint* pt=RPoint::GetPoint();
+	RPoint pt;
 	RObj2D* obj=info->GetObj();
 
 	for(i=NbPtr+1,tab=Tab;--i;tab++)	
@@ -72,15 +68,15 @@ RPoint& RFreePolygons::CanPlace(RGeoInfo* info)
 		for(o=0;o<obj->NbPossOri;o++)
 		{
 			info->SetOri(o);
-			if((*tab)->CanContain(info,*pt))
+			if((*tab)->CanContain(info,pt))
 			{
 				DeletePtr(*tab);
-				return(*pt);
+				return(pt);
 			}
 		}
 	}
-	pt->Set(MaxCoord,MaxCoord);
-	return(*pt);
+	pt.Set(MaxCoord,MaxCoord);
+	return(pt);
 }
 
 

@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -59,16 +55,16 @@ namespace R{
 * parsed by the cursor, the cursor is not valid anymore.
 *
 * Here is an example of a cursor used:
-* <pre>
+* @code
 * int example(RContainer<MyElement,unsigned int> *c)
 * {
-* 	RCursor<MyElement,unsigned int> Cur();
+* 	RCursor<MyElement,unsigned int> Cur;
 *
-* 	Cur->Set(c);
+* 	Cur.Set(c);
 * 	for(Cur.Start();!Cur.End();Cur.Next())
 * 		Cur()->DoSomething(2.3);
 * }
-* </pre>
+* @endcode
 *
 * @author Pascal Francq
 * @short Container Cursor.
@@ -257,7 +253,7 @@ public:
 * The CLASSCURSOR macro defines a way to create a cursor for a given class with
 * a name. It is sometimes easier to create a specific class rather than using
 * directly the template class RContainerCursor.
-* @param name               Nmae of the class representing the cursor.
+* @param name               Name of the class representing the cursor.
 * @param C                  The class of the elements that are contained.
 * @param T                  The type of the iterator used.
 */
@@ -266,10 +262,14 @@ class name : public R::RCursor<C,T>                                  \
 {                                                                    \
 public:                                                              \
 	name(void) : R::RCursor<C,T>() {}                                \
-	static name* GetTmpCursor(void)                                  \
-	{                                                                \
-		return(R::GetTemporaryObject<name,20>());                    \
-	}                                                                \
+	name(R::RContainer<C,T,true,true>& c) : R::RCursor<C,T>(c) {}    \
+	name(R::RContainer<C,T,true,true>* c) : R::RCursor<C,T>(c) {}    \
+	name(R::RContainer<C,T,true,false>& c) : R::RCursor<C,T>(c) {}   \
+	name(R::RContainer<C,T,true,false>* c) : R::RCursor<C,T>(c) {}   \
+	name(R::RContainer<C,T,false,true>& c) : R::RCursor<C,T>(c) {}   \
+	name(R::RContainer<C,T,false,true>* c) : R::RCursor<C,T>(c) {}   \
+	name(R::RContainer<C,T,false,false>& c) : R::RCursor<C,T>(c) {}  \
+	name(R::RContainer<C,T,false,false>* c) : R::RCursor<C,T>(c) {}  \
 	name& operator=(const name& c) throw(std::bad_alloc)             \
 	{                                                                \
 		R::RCursor<C,T>::operator=(c);                               \
@@ -280,7 +280,7 @@ public:                                                              \
 		R::RCursor<C,T>::operator=(c);                               \
 		return(*this);                                               \
 	}                                                                \
-};
+}
 
 
 //------------------------------------------------------------------------------

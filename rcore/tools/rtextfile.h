@@ -6,14 +6,10 @@
 
 	Text File - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -46,8 +42,18 @@
 
 
 //------------------------------------------------------------------------------
+// New exceptions
+NEWRIOEXCEPTION(InvalidFile);
+
+
+//------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// Forward class declaration
+class RTextEncoding;
 
 
 //------------------------------------------------------------------------------
@@ -66,7 +72,7 @@ namespace R{
 *
 * The user can write his own operators to read and write with RTextFile. Here
 * is an example:
-* <pre>
+* @code
 * class Point
 * {
 * public:
@@ -82,7 +88,7 @@ namespace R{
 * {
 * 	return(f>>pt.X>>pt.Y);
 * }
-* </pre>
+* @endcode
 * @author Pascal Francq
 * @short Text File.
 */
@@ -101,11 +107,13 @@ protected:
 	* How to file has to be used.
 	*/
 	ModeType Mode;
-
+	
 	/**
 	* Name of the File.
 	*/
 	RString Name;
+
+private:
 
 	/**
 	* Internal Handle of the file.
@@ -157,6 +165,8 @@ protected:
 	*/
 	RemType ActivComment;
 
+protected:
+
 	/**
 	* This string represent a separator for different elements on the same line
 	*/
@@ -172,33 +182,113 @@ protected:
 	*/
 	unsigned int LastLine;
 
+	/**
+	* Enconding of the text file.
+	*/
+	RTextEncoding* Codec;
+
+	/**
+	* Current character in the buffer.
+	*/
+	RChar Cur;
+
+	/**
+	* Number of bytes used to code the current character.
+	*/
+	unsigned int CurLen;
+
+	/**
+	* Number of bytes left in the file.
+	*/
+	unsigned int Len;
+
+	/**
+	* Total number of bytes in the file.
+	*/
+	unsigned int TotalLen;
+
 public:
 
 	/**
 	* Construct a text file.
 	* @param name           The name of the file.
 	* @param mode           The open mode for the file.
+	* @param encoding       The encoding scheme of the file.
 	*/
-	RTextFile(const RString &name,ModeType mode) throw(std::bad_alloc,RString);
+	RTextFile(const RString &name,ModeType mode=Read,const RString& encoding="Latin1") throw(std::bad_alloc,RIOException,RException);
 
 	/**
-	* Construct a text file in read mode.
-	* @param name           The name of the file.
-	* @param all            The text file is open in one time (Only Supported yet).
+	* Return the name of the file.
+	* @returns a string containing the name.
 	*/
-	RTextFile(const RString &name,bool all=true) throw(std::bad_alloc,RString);
+	const RString& GetName(void) const {return(Name);}
 
 	/**
 	* Re-initialise the file.
 	*/
-	void Init(void) throw(std::bad_alloc,RString);
+	void Init(void) throw(std::bad_alloc,RIOException);
 
 	/**
 	* Go to the begining of the file.
 	*/
-	void Begin(void) throw(RString);
+	void Begin(void) throw(RIOException);
+
+	/**
+	* Return the current character.
+	*/
+	RChar GetCur(void) const {return(Cur);}
+
+	/**
+	* Goes to the next character.
+	*/
+	void Next(void) throw(RIOException);
+
+	/**
+	* Return the next character but without to move internal pointer of the
+	* file.
+	*/
+	RChar GetNextCur(void);
+
+	/**
+	* Get the rest of the file.
+	* @return A RString containing the file.
+	*/
+	RString GetUntilEnd(void);
 
 protected:
+
+	/**
+	* Read a character of variable size and store the resulting char in a RChar.
+	* If the character to be read is Invalid, it is skipped and the function
+	* returns the number of characters skipped.
+	* @param ptr            Pointer to a buffer of character to read.
+	* @param len            Number of character in the buffer. After the call, 
+	*                       this parameter contains the number bytes read.
+	* @param read           The resulting character
+	* @return unsigned int  return the number of bytes that have been skipped.
+	*			0 is returned when the char has been read
+	*			x is returned : the number of char that have been skipped.
+	*/
+	unsigned int ReadCar(char* &ptr,unsigned int &len,RChar& read) const throw(InvalidFile);
+
+	/**
+	* Return true if a string begin with a end of line.
+	* @param ptr            Pointer to a string.
+	*/
+	static bool Eol(RChar car);
+	
+	/**
+	* This function skip a end of line.
+	*/
+	void SkipEol(void);
+
+	/**
+	* Verify if a string is the next one in the buffer.
+	* @param str           The string to find
+	* @param CaseSensitive  Is the search case sensitive.
+	* @return bool         return true if the string is found.
+	*/
+	bool CurString(const RString& str,bool CaseSensitive=true) const;
 
 	/**
 	* This function skip spaces (Only used if read mode).
@@ -222,29 +312,24 @@ protected:
 	*/
 	bool EndComment(void);
 
-	/**
-	* Return a temporary C string.
-	* @returns the C string.
-	*/
-	char* GetCharPtr(void);
-
 public:
+
+	/**
+	* Set the encoding of the file.
+	* @param name           Name of the encoding.
+	*/
+	void SetEncoding(const RString& name) throw(RIOException);
+
+	/**
+	* Get the encoding of the file.
+	* @return RString.
+	*/
+	RString GetEncoding(void) const;
 
 	/**
 	* Return true if the file is been treated.
 	*/
-	inline bool Eof(void) { return(!(*ptr)); }
-
-	/**
-	* Return the next character.
-	*/
-	char GetNextChar(void) {return(*ptr);}
-
-	/**
-	* Get the rest of the file.
-	* @param buffer         Buffer that will hold the rest of the file.
-	*/
-	void GetUntilEnd(char* &buffer);
+	inline bool Eof(void) { return(Len==0); }
 
 	/**
 	* Set the style of comments.
@@ -256,218 +341,233 @@ public:
 	* Set the string of comments when single line.
 	* @param c              This string represent the begin of a comment.
 	*/
-	void SetRem(const char *c) {Rem=c;}
+	void SetRem(RString c) {Rem=c;}
 
 	/**
 	* Set the begin and the end strings of comments when in multiline.
 	* @param b              This string represent the begin of a comment.
 	* @param e              This string represent the end of a comment.
 	*/
-	void SetRem(const char *b,const char *e) {BeginRem=b; EndRem=e; }
-
-	/**
-	* Return the next integer contained in the file.
-	*/
-	long GetInt(void) throw(RString);
-
-	/**
-	* Return the next unsigned integer contained in the file.
-	*/
-	unsigned long GetUInt(void) throw(RString);
-
-	/**
-	* >> Operator for char.
-	*/
-	RTextFile& operator>>(char& nb) throw(RString);
-
-	/**
-	* >> Operator for unsigned char.
-	*/
-	RTextFile& operator>>(unsigned char& nb) throw(RString);
-
-	/**
-	* >> Operator for short.
-	*/
-	RTextFile& operator>>(short& nb) throw(RString);
-
-	/**
-	* >> Operator for unsigned short.
-	*/
-	RTextFile& operator>>(unsigned short& nb) throw(RString);
-
-	/**
-	* >> Operator for int.
-	*/
-	RTextFile& operator>>(int& nb) throw(RString);
-
-	/**
-	* >> Operator for unsigned int.
-	*/
-	RTextFile& operator>>(unsigned int& nb) throw(RString);
-
-	/**
-	* >> Operator for long.
-	*/
-	RTextFile& operator>>(long& nb) throw(RString);
-
-	/**
-	* >> Operator for unsigned long.
-	*/
-	RTextFile& operator>>(unsigned long& nb) throw(RString);
-
-	/**
-	* Return the next float contained in the file.
-	*/
-	float GetFloat(void) throw(RString);
-
-	/**
-	* >> Operator for float.
-	*/
-	RTextFile& operator>>(float& nb) throw(RString);
-
-	/**
-	* >> Operator for a double.
-	*/
-	RTextFile& operator>>(double& nb) throw(RString);
+	void SetRem(RString b,RString e) {BeginRem=b; EndRem=e; }
 
 	/**
 	* Return the next word contained in the file. A word is a suite of characters
 	* delemited by spaces.
 	*/
-	char *GetWord(void) throw(RString);
+	RString GetWord(void) throw(RIOException);
 
 	/**
 	* Return the next entire line in the file.
 	*/
-	char *GetLine(void) throw(RString);
+	RString GetLine(bool SkipEmpty=true) throw(RIOException);
+
+	/**
+	* Return the next integer contained in the file.
+	*/
+	long GetInt(void) throw(RIOException);
+
+	/**
+	* Return the next unsigned integer contained in the file.
+	*/
+	unsigned long GetUInt(void) throw(RIOException);
+
+	/**
+	* >> Operator for string.
+	*/
+	RTextFile& operator>>(RString& str) throw(RIOException);
+
+	/**
+	* >> Operator for char.
+	*/
+	RTextFile& operator>>(char& nb) throw(RIOException);
+
+	/**
+	* >> Operator for unsigned char.
+	*/
+	RTextFile& operator>>(unsigned char& nb) throw(RIOException);
+
+	/**
+	* >> Operator for short.
+	*/
+	RTextFile& operator>>(short& nb) throw(RIOException);
+
+	/**
+	* >> Operator for unsigned short.
+	*/
+	RTextFile& operator>>(unsigned short& nb) throw(RIOException);
+
+	/**
+	* >> Operator for int.
+	*/
+	RTextFile& operator>>(int& nb) throw(RIOException);
+
+	/**
+	* >> Operator for unsigned int.
+	*/
+	RTextFile& operator>>(unsigned int& nb) throw(RIOException);
+
+	/**
+	* >> Operator for long.
+	*/
+	RTextFile& operator>>(long& nb) throw(RIOException);
+
+	/**
+	* >> Operator for unsigned long.
+	*/
+	RTextFile& operator>>(unsigned long& nb) throw(RIOException);
+
+	/**
+	* Return the next float contained in the file.
+	*/
+	float GetFloat(void) throw(RIOException);
+
+	/**
+	* >> Operator for float.
+	*/
+	RTextFile& operator>>(float& nb) throw(RIOException);
+
+	/**
+	* >> Operator for a double.
+	*/
+	RTextFile& operator>>(double& nb) throw(RIOException);
 
 	/**
 	* Write an end of line in the file.
 	*/
-	void WriteLine(void) throw(RString);
+	void WriteLine(void) throw(RIOException);
+
+protected:
+
+	/**
+	* Write a separator if the current pointer of the file is not at the
+	* beginning of a new line.
+	*/
+	void WriteSeparator(void);
+
+public:
+
+	/**
+	* Write a string in the file. If the string is not the first thing on the
+	* line, a separator is add before it.
+	*/
+	void WriteStr(const RString& str) throw(RIOException);
+
+	/**
+	* Write a string in the file. If the string is not the first thing on the
+	* line, a separator is add before it.
+	*/
+	void WriteStr(const char* c) throw(RIOException);
+
+	/**
+	* Write a string of a give length in the file.
+	*/
+	void WriteStr(const char* c,unsigned int l) throw(RIOException);
+
+	/**
+	* << Operator for char *.
+	*/
+	RTextFile& operator<<(const char* c) throw(RIOException);
+
+	/**
+	* << Operator for RString.
+	*/
+	RTextFile& operator<<(const RString& str) throw(RIOException);
 
 	/**
 	* Write a long in the file. If the number is not the first thing on the line,
 	* a space is add before it.
 	*/
-	void WriteLong(const long nb) throw(RString);
+	void WriteLong(const long nb) throw(RIOException);
 
 	/**
 	* << Operator for char.
 	*/
-	RTextFile& operator<<(const char nb) throw(RString);
+	RTextFile& operator<<(const char nb) throw(RIOException);
 
 	/**
 	* << Operator for short.
 	*/
-	RTextFile& operator<<(const short nb) throw(RString);
+	RTextFile& operator<<(const short nb) throw(RIOException);
 
 	/**
 	* << Operator for int.
 	*/
-	RTextFile& operator<<(const int nb) throw(RString);
+	RTextFile& operator<<(const int nb) throw(RIOException);
 
 	/**
 	* << Operator for long.
 	*/
-	RTextFile& operator<<(const long nb) throw(RString);
+	RTextFile& operator<<(const long nb) throw(RIOException);
 
 	/**
 	* Write a unsigned long in the file. If the number is not the first thing on
 	* the line, a separator is add before it.
 	*/
-	void WriteULong(const unsigned long nb) throw(RString);
+	void WriteULong(const unsigned long nb) throw(RIOException);
 
 	/**
 	* << Operator for unsigned char.
 	*/
-	RTextFile& operator<<(const unsigned char nb) throw(RString);
+	RTextFile& operator<<(const unsigned char nb) throw(RIOException);
 
 	/**
 	* << Operator for unsigned int.
 	*/
-	RTextFile& operator<<(const unsigned int nb) throw(RString);
+	RTextFile& operator<<(const unsigned int nb) throw(RIOException);
 
 	/**
 	* << Operator for unsigned long.
 	*/
-	RTextFile& operator<<(const unsigned long nb) throw(RString);
-
-	/**
-	* Write a string in the file. If the string is not the first thing on the
-	* line, a separator is add before it.
-	*/
-	void WriteStr(const char *c) throw(RString);
-
-	/**
-	* Write a string of a give length in the file.
-	*/
-	void WriteStr(const char *c,unsigned int l) throw(RString);
-
-	/**
-	* << Operator for char *.
-	*/
-	RTextFile& operator<<(const char *c) throw(RString);
-
-	/**
-	* Write a string in the file. If the string is not the first thing on the
-	* line, a separator is add before it.
-	*/
-	void WriteStr(const RString &str) throw(RString);
-
-	/**
-	* << Operator for RString.
-	*/
-	RTextFile& operator<<(const RString &str) throw(RString);
+	RTextFile& operator<<(const unsigned long nb) throw(RIOException);
 
 	/**
 	* Write a bool in the file as '1' or '0' depend on his value. If the number
 	* is not the first thing on the line, a separator is add before it.
 	*/
-	void WriteBool(const bool b) throw(RString);
+	void WriteBool(const bool b) throw(RIOException);
 
 	/**
 	* << Operator for bool.
 	*/
-	RTextFile& operator<<(const bool b) throw(RString);
+	RTextFile& operator<<(const bool b) throw(RIOException);
 
 	/**
 	* Write a char in the file.
 	*/
-	void WriteChar(const char c) throw(RString);
+	void WriteChar(const char c) throw(RIOException);
 
 	/**
 	* Write a double
 	*/
-	void WriteDouble(const double d) throw(RString);
+	void WriteDouble(const double d) throw(RIOException);
 
 	/**
 	* << Operator for double.
 	*/
-	RTextFile& operator<<(const double d) throw(RString);
+	RTextFile& operator<<(const double d) throw(RIOException);
 
 	/**
 	* Write the time in the file. If the time is not the first thing on the line,
 	* a separator is add before it.
 	*/
-	void WriteTime(void) throw(RString);
+	void WriteTime(void) throw(RIOException);
 
 	/**
 	* Write a log entry in the file. First the time is written, and then the
 	* entry. The entry is alone on a line, so end-of-lines are inserted if
 	* ncessary before or after it.
 	*/
-	void WriteLog(const char *entry) throw(RString);
+	void WriteLog(const RString& entry) throw(RIOException);
 
 	/**
 	* Return the actual line number.
 	*/
-	unsigned long ActualLine(void) {return(Line);}
+	unsigned long ActualLine(void) const {return(Line);}
 
 	/**
 	* Return the last line number where something was read.
 	*/
-	unsigned long GetLastLine(void) {return(LastLine);}
+	unsigned long GetLastLine(void) const {return(LastLine);}
 
 	/**
 	* Specify the set of characters used as separator.
@@ -490,6 +590,11 @@ public:
 
 
 //------------------------------------------------------------------------------
+namespace std{
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
 // Global functions
 extern "C++"
 {
@@ -508,6 +613,9 @@ extern "C++"
 	*/
 	inline R::RTextFile& operator<<(R::RTextFile& o, R::RTextFile& (&f)(R::RTextFile&)) {return(f(o));}
 }
+
+
+}  //-------- End of namespace std ---------------------------------------------
 
 
 //------------------------------------------------------------------------------

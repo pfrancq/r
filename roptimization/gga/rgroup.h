@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -146,31 +142,31 @@ public:
 	* Method call after an object was inserted in the group.
 	* @param obj            Pointer to the object to insert.
 	*/
-	virtual void PostInsert(const cObj* /*obj*/) {}
+	virtual void PostInsert(const cObj* obj);
 
 	/**
 	* Method call after an object was deleted from the group.
 	* @param obj            Pointer to the object to delete.
 	*/
-	virtual void PostDelete(const cObj* /*obj*/) {}
+	virtual void PostDelete(const cObj* obj);
 
 	/**
 	* Look if an object can be insert in the group.
 	* @param obj            Pointer to the object to insert.
 	*/
-	virtual bool CanInsert(const cObj* /*obj*/) const {return(true);}
+	virtual bool CanInsert(const cObj* obj) const;
 
 	/**
 	* Look if an object is "compatible" with a specific group.
 	* @param obj            Pointer to the object to verify.
 	*/
-	virtual bool IsCompatible(const cObj* /*obj*/) const {return(true);}
+	virtual bool IsCompatible(const cObj* obj) const;
 
 	/**
 	* Look if an object can be delete from the group.
 	* @param obj            Pointer to the object to delete.
 	*/
-	virtual bool CanDelete(const cObj* /*obj*/) const {return(true);}
+	virtual bool CanDelete(const cObj* obj) const;
 
 	/**
 	* Assignment operator.
@@ -207,7 +203,7 @@ public:
 	* @param grp            Pointer to the group.
 	* @return boolean.
 	*/
-	virtual bool IsCompatible(const cGroup* /*grp*/) const {return(true);}
+	virtual bool IsCompatible(const cGroup* grp) const;
 
 	/**
 	* Return true if the two groups have the same objects.

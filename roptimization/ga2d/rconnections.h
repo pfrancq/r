@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -59,7 +55,8 @@ class RGeoInfos;
 
 //------------------------------------------------------------------------------
 /**
-* The RConnections class provides a representation for the connections of the problem.
+* The RConnections class provides a representation for the connections of the
+* problem.
 * @short Connections.
 * @author Pascal Francq
 */
@@ -94,6 +91,9 @@ public:
 	
 	/**
 	* Set the parameters for Prométhée.
+	* @param dist           Prométhée Parameters for the distance.
+	* @param weight         Prométhée Parameters for the weight.
+	* @param r              Pointer to the random generator.
 	*/
 	void SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight,RRandom* r);
 
@@ -107,11 +107,13 @@ public:
 	double GetCon(RGeoInfos* infos,RGeoInfo* cur);
 
 	/**
-	* Return the object that have the most connected objects go
-	* placed and that isn't selected.
+	* Return the object that have the most connected objects go placed and that
+	* isn't selected.
 	* @param infos          The geometric information of all the objects.
 	* @param nb             Number of objects.
 	* @param selected       Array to hold which objects are selected.
+	* @param bound          Boundary rectangle representing the objects to
+	*                       analyse.
 	* @return               The geometric information of the object to place.
 	*/
 	RGeoInfo* GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* selected,RRect& bound);
@@ -137,7 +139,8 @@ public:
 	/**
 	* Calculate the sum of the Manhattant distance between all placed objects
 	* representing by the geometric informations and a given one.
-	* @param infos          The goemetric informations.
+	* @param infos          Goemetric information of the objects.
+	* @param info           Geometric information info of the single object.
 	*/
 	double GetDistances(RGeoInfo** infos,RGeoInfo* info);
 

@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision: 1.4 $
-
-	Last Modify: $Date: 2000/11/29 09:23:50 $
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -69,7 +65,7 @@ typedef float tNumber;
 *
 * Most of the operators where defined for the matrixes. Here are some
 * examples:
-* <pre>
+* @code
 * int main()
 * {
 * 	RMatrix a(2,2);
@@ -85,7 +81,7 @@ typedef float tNumber;
 *	c=a*b;
 *	  c=(2*a)+(b*a);
 * }
-* </pre>
+* @endcode
 * @short Matrix class.
 * @author Pascal Francq
 */
@@ -123,26 +119,6 @@ public:
 	*/
 	tNumber **M;
 
-    /**
-	* Basic Exception for matrixes.
-	*/
-    class errMatrix {};
-
-	/**
-	* Two matrixes evolved in an operation, haven't compatible sizes.
-	*/
-    class errNotCompatibleSize : public errMatrix {};
-
-	/**
-	* The matrix is not a quadratic one.
-	*/
-    class errNotQuadraticMatrix : public errMatrix {};
-
-	/**
-	* Bad indexes where passed to the matrix.
-	*/
-    class errBadIndex : public errMatrix {};
-
 	/**
 	* Construct a empty matrix.
 	*/
@@ -164,12 +140,12 @@ public:
 	/**
 	* Construct a matrix from another one.
 	*/
-	RMatrix(const RMatrix &Matrix) throw(std::bad_alloc);
+	RMatrix(const RMatrix& Matrix) throw(std::bad_alloc);
 
 	/**
 	* Construct a matrix from another one.
 	*/
-	RMatrix(const RMatrix *Matrix) throw(std::bad_alloc);
+	RMatrix(const RMatrix* Matrix) throw(std::bad_alloc);
 
 	/**
 	* Verify if the matrix has a given size, and increase them if necessary.
@@ -187,33 +163,33 @@ public:
 	* @param m	Line number of the element.
 	* @param n	Column number of the element.
 	*/
- 	tNumber& operator()(int m, int n) const throw(errMatrix,std::bad_alloc);
+ 	tNumber& operator()(int m, int n) const throw(RException,std::bad_alloc);
 
 	/**
 	* Make the transitive closure for the matrix.
 	*/
-	char TransitiveClosure(RMatrix *Matrix) throw(errMatrix,std::bad_alloc);
+	char TransitiveClosure(RMatrix *Matrix) throw(RException,std::bad_alloc);
 
 	/**
 	* Assign operator.
 	*/
-	RMatrix& operator=(const RMatrix) throw(errMatrix,std::bad_alloc);
+	RMatrix& operator=(const RMatrix) throw(RException,std::bad_alloc);
 
 	/**
 	* Add a matrix to the current one.
 	*/
-	RMatrix& operator+=(const RMatrix) throw(errMatrix,std::bad_alloc);
+	RMatrix& operator+=(const RMatrix) throw(RException,std::bad_alloc);
 
 	/**
 	* Substract a matrix from the current one.
 	*/
-  	RMatrix& operator-=(const RMatrix) throw(errMatrix,std::bad_alloc);
+  	RMatrix& operator-=(const RMatrix) throw(RException,std::bad_alloc);
 
 	/**
 	* Multiply a matrix with the current one. It is important to remember that
 	* the matrix multiplication is not communitativ. So the next code defines
 	* two different matrixes TempA et TempB.
-	* <pre>
+	* @code
 	* void Test(RMatrix &A,RMatrix &B)
 	* {
 	* 	RMatrix TempA(A);
@@ -222,19 +198,14 @@ public:
 	* 	TempA*=B;
 	* 	TempB*=A;
 	* }
-	* </pre>
+	* @endcode
 	*/
-	RMatrix& operator*=(const RMatrix) throw(errMatrix,std::bad_alloc);
+	RMatrix& operator*=(const RMatrix) throw(RException,std::bad_alloc);
 
 	/**
 	* Multiply a matrix with a given number.
 	*/
-	RMatrix& operator*=(const tNumber) throw(errMatrix,std::bad_alloc);
-
-	/**
-	* Return a temporary matrix. This function is needed for the operators.
-	*/
-	static RMatrix* GetMatrix(void);
+	RMatrix& operator*=(const tNumber) throw(RException,std::bad_alloc);
 
 	/**
 	* Destruct the matrix.
@@ -245,36 +216,37 @@ public:
 
 //------------------------------------------------------------------------------
 // Operators
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 /**
 * Multiplication of a matrix and a number.
 */
-RMatrix& operator*(const RMatrix&,const tNumber) throw(std::bad_alloc);
+RMatrix operator*(const RMatrix&,const tNumber) throw(std::bad_alloc);
 
 //------------------------------------------------------------------------------
 /**
 * Multiplication of a matrix and a number.
 */
-RMatrix& operator*(const tNumber,const RMatrix&) throw(std::bad_alloc);
+RMatrix operator*(const tNumber,const RMatrix&) throw(std::bad_alloc);
 
 //------------------------------------------------------------------------------
 /**
 * Addition of two matrixes.
 */
-RMatrix& operator+(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,std::bad_alloc);
+RMatrix operator+(const RMatrix& ,const RMatrix&) throw(RException,std::bad_alloc);
 
 //------------------------------------------------------------------------------
 /**
 * Substraction of two matrixes.
 */
-RMatrix& operator-(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,std::bad_alloc);
+RMatrix operator-(const RMatrix& ,const RMatrix&) throw(RException,std::bad_alloc);
 
 //------------------------------------------------------------------------------
 /**
 * Multiplication of two matrixes.
 */
-RMatrix& operator*(const RMatrix& ,const RMatrix&) throw(RMatrix::errMatrix,std::bad_alloc);
+RMatrix operator*(const RMatrix& ,const RMatrix&) throw(RException,std::bad_alloc);
 
 
 }  //-------- End of namespace R -----------------------------------------------

@@ -9,10 +9,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -243,7 +239,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::GetGroup(const unsigned int id)
+	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::GetGroup(unsigned int id)
 {
 	unsigned int idx=ObjectsAss[id];
 

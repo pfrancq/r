@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -61,7 +57,6 @@ class RGrid;
 class RGeoInfo;
 
 
-
 //------------------------------------------------------------------------------
 /**
 * The RGeoInfoConnector class provides a connector of a geometric information
@@ -94,37 +89,37 @@ public:
 
 	/**
 	* Constructor of the connector.
-	* @param con		"Real" Connector of this one.
-	* @param owner		Geometric Information of the connector.
+	* @param con            "Real" Connector of this one.
+	* @param owner          Geometric Information of the connector.
 	*/
 	RGeoInfoConnector(RObj2DConnector* con,RGeoInfo* owner);
 
 	/**
 	* Constructor of the connector.
-	* @param con		"Real" Connector of this one.
-	* @param owner		Geometric Information of the connector.
+	* @param con            "Real" Connector of this one.
+	* @param owner          Geometric Information of the connector.
 	*/	
 	RGeoInfoConnector(RGeoInfoConnector* con,RGeoInfo* owner);
 
 	/**
 	* Constructor of the connector.
-	* @param con		"Real" Connector of this one.
-	* @param owner		Geometric Information of the connector.
-	* @param pos		The position of the connector
+	* @param con            "Real" Connector of this one.
+	* @param owner          Geometric Information of the connector.
+	* @param pos            The position of the connector
 	*/
 	RGeoInfoConnector(RObj2DConnector* con,RGeoInfo* owner,const RPoint& pos);
 
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param c		Connector used for the comparaison.
+	* @param c              Connector used for the comparaison.
 	*/
 	int Compare(const RGeoInfoConnector* c) {return(Con->Id-c->Con->Id);}
 
 	/**	
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param c		Connector used for the comparaison.
+	* @param c              Connector used for the comparaison.
 	*/
 	int Compare(const RGeoInfoConnector& c) {return(Con->Id-c.Con->Id);}
 
@@ -132,7 +127,7 @@ public:
 	* This function compares a connector and an identificator and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param id		Identificator used for the comparaison.
+	* @param id             Identificator used for the comparaison.
 	*/
 	int Compare(const unsigned int id) {return(Con->Id-id);}
 
@@ -140,7 +135,7 @@ public:
 	* Return the position of the connector in absolute (not relativ to the
 	* object).
 	*/
-	RPoint& GetPos(void);
+	RPoint GetPos(void);
 
 	// friend classes
 	friend class RGeoInfo;
@@ -148,10 +143,94 @@ public:
 };
 
 
+//------------------------------------------------------------------------------
+/**
+* The RBoundCursor class provides a way to go trough a set of points 
+* representing a boundary of a RGeoInfo.
+* @short Relative Points Cursor
+*/
+class RRelPointCursor : public RPointCursor
+{
+	/**
+	* Base point.
+	*/
+	RPoint Base;
+
+public:
+
+	/**
+	* Construct the cursor.
+	*/
+	RRelPointCursor(void);
+
+	/**
+	* Construct the cursor.
+	* param c               Container to iterate.
+	*/
+	RRelPointCursor(RGeoInfo& info);
+
+	/**
+	* Construct the cursor.
+	* param c               Container to iterate.
+	*/
+	RRelPointCursor(RGeoInfo* info);
+
+	/**
+	* Assignment operator using a "Cursor".
+	*/
+	RRelPointCursor& operator=(const RRelPointCursor& c) throw(std::bad_alloc);
+
+	/**
+	* Clear the cursor.
+	*/
+	void Clear(void);
+
+	/**
+	* Start the iterator to go trough the container.
+	*/
+	void Start(void);
+
+	/**
+	* Set the container.
+	* param c               Container to iterate.
+	*/
+	void Set(RGeoInfo& info);
+
+	/**
+	* Set the container.
+	* param c               Container to iterate.
+	*/
+	void Set(RGeoInfo* info);
+
+	/**
+	* Go to the i-th element of the container.
+	*/
+	void GoTo(const unsigned int i) throw(std::bad_alloc);
+
+	/**
+	* Return the number of elements in the container.
+	*/
+	unsigned int GetNb(void);
+
+	/**
+	* Test if the end of the container is reached.
+	*/
+	bool End(void) const;
+
+	/**
+	* Goto the next element, if the end is reached, go to the beginning.
+	*/
+	void Next(void);
+
+	/**
+	* Return the current element.
+	*/
+	RPoint operator()(void) const;
+};
+
 
 //------------------------------------------------------------------------------
 /**
-* \ingroup 2DGA
 * The RGeoInfo class provides a geometric information concerning the placement
 * of an object.
 * @author Pascal Francq
@@ -365,7 +444,7 @@ public:
 	/**
 	* Return the position of the geometric information.
 	*/
-	RPoint& GetPos(void);
+	RPoint GetPos(void);
 
 	/**
 	* Make a translation of the point.
@@ -382,26 +461,6 @@ public:
 		Pos-=pt;
 		return(*this);
 	}
-
-	/**
-	* Start the iterator to go trough the points.
-	*/
-	inline void Start(void) {Bound->Start();}
-
-	/**
-	* Test if the end of the points is reached.
-	*/
-	inline bool End(void) {return(Bound->End());}
-
-	/**
-	* Goto the next point, if the end is reached, go to the beginning.
-	*/
-	inline void Next(void) {Bound->Next();}
-
-	/**
-	* Return the current point.
-	*/
-	RPoint& operator()(void);
 
 	/**
 	* Assignment Operator.
@@ -428,7 +487,7 @@ public:
 	/**
 	* Return the polygon representing the object placed.
 	*/
-	RPolygon& GetPolygon(void);
+	RPolygon GetPolygon(void);
 
 	/**
 	* Return the polygon representing the object to place.
@@ -474,6 +533,7 @@ public:
 	friend class RGeoInfos;
 	friend class RGeoInfoConnection;
 	friend class RObj2DContainer;
+	friend class RRelPointCursor;
 };
 
 

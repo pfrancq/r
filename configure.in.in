@@ -7,7 +7,7 @@
 #------------------------------------------------------------------------------#
 
 
-AM_INIT_AUTOMAKE(r, 1.0)
+AM_INIT_AUTOMAKE(r, 1.86)
 AC_PROG_CXX
 
 AC_C_BIGENDIAN
@@ -28,6 +28,7 @@ if test "$enable_kde" != "no"; then
 	AC_CHECK_KDEMAXPATHLEN
 	
 	FRONTEND="kde"
+	CXXFLAGS="$CXXFLAGS -D_USE_KDE"
 	echo " -----------------------------------"
 	echo " -- KDE Frontend will be compiled --"
 	echo " -----------------------------------"
@@ -90,6 +91,13 @@ AC_CHECK_LIB(mysqlclient, mysql_thread_init, [],
 
 # ----- end of check for libmysqlclient.la on the system ------
 
+
+#--------------------- CHECK FOR RDEBUG ----------------------
+#---------------------Test if enable-debug is used -----------
+if test "$enable_debug" != "no"; then
+	CXXFLAGS="$CXXFLAGS -D_RDEBUG"
+fi
+#----------------- END CHECK FOR RDEBUG ----------------------
 
 
 CXXFLAGS="$CXXFLAGS $USE_EXCEPTIONS"

@@ -6,10 +6,6 @@
 
 	(c) 2000-2001 by P. Francq.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -28,12 +24,12 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef QDrawPolygonsH
 #define QDrawPolygonsH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rmath/rpoint.h>
 #include <rga2d/rgeoinfos.h>
@@ -43,18 +39,19 @@
 #include <rga2d/rgeoinfoconnection.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for Qt
 #include <qwidget.h>
 #include <qpixmap.h>
 #include <qpopupmenu.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 namespace R{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 /**
 * The QInfoBox class provides a popupmenu that display informartion about a
 * specific object and geometric information.
@@ -83,33 +80,33 @@ class QInfoBox : public QPopupMenu
 	*/
 	QWidget* afterFocus;
 
-
 public:
 
 	/**
 	* Constructor of the popup.
-	* @param parent        Parent of the widget.
-	* @param info          Geometric information to represent.
+	* @param parent         Parent of the widget.
+	* @param info           Geometric information to represent.
 	*/
 	QInfoBox(QWidget* parent,RGeoInfo* info);
 
 	/**
 	* Constructor of the popup.
-	* @param parent        Parent of the widget.
-	* @param con           Connector to represent.
+	* @param parent         Parent of the widget.
+	* @param con            Connector to represent.
 	*/
 	QInfoBox(QWidget* parent,RGeoInfoConnector* con);
 
 	/**
 	* Constructor of the popup.
-	* @param parent        Parent of the widget.
-	* @param p             Pixmap to show on close.
-	* @param tp            Pixmap to delete on close.
+	* @param parent         Parent of the widget.
+	* @param p              Pixmap to show on close.
+	* @param tp             Pixmap to delete on close.
 	*/
 	QInfoBox(QWidget* parent,QPixmap* p,QPixmap* tp);
 
 	/**
 	* Add a connection info.
+	* @param con            Connector to add.
 	*/
 	void AddConnectionInfo(RGeoInfoConnection* con);
 
@@ -123,7 +120,7 @@ protected:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The QDrawPolygons class provides a widget to display some polygons given by
 * a set of geometric information.
@@ -229,27 +226,27 @@ class QDrawPolygons : public QWidget
 
 	/**
 	* Transform the coordinates for the external connectors.
-	* @param x             X Coordinate.
-	* @param y             Y Coordinate.
+	* @param x              X Coordinate.
+	* @param y              Y Coordinate.
 	*/
 	void TransformExternCon(RCoord& x,RCoord& y);
 
 	/**
 	* Adapt the coordinates for the external connectors.
-	* @param x             X Coordinate.
-	* @param y             Y Coordinate.
+	* @param x              X Coordinate.
+	* @param y              Y Coordinate.
 	*/
 	void AdaptExternCon(RCoord& x,RCoord& y);
 
 	/**
 	* Transform a Real X coordinate to a Screen one.
-	* @param x             X Coordinate.
+	* @param x              X Coordinate.
 	*/
 	int RealToScreenX(const RCoord x) {return(static_cast<int>(x*FactorX));}
 
 	/**
 	* Transform a Real Y coordinate to a Screen one.
-	* @param y             Y Coordinate.
+	* @param y              Y Coordinate.
 	*/
 	int RealToScreenY(const RCoord y) {return(static_cast<int>((Limits.Y-y)*FactorY));}
 
@@ -277,43 +274,43 @@ public:
 
 	/**
 	* Set the connections.
-	* @param c             Pointer to the connections.
+	* @param c              Pointer to the connections.
 	*/
 	void setCons(RConnections* c) {Cons=c;}
 
 	/**
 	* Add Polygons to paint.
-	* @param p             Pointer to the free polygons.
+	* @param p              Pointer to the free polygons.
 	*/
 	void setPolys(RFreePolygons* p) {FreePolygons=p;}
 
 	/**
 	* Add a geometric information "on the fly".
-	* @param info          Geometric Info to add.
+	* @param info           Geometric Info to add.
 	*/
 	void addInfo(RGeoInfo* info);
 
 	/**
 	* Add a free polygon "on the fly".
-	* @param poly          Free Polygon to add.
+	* @param poly           Free Polygon to add.
 	*/
 	void addFree(RFreePolygon* poly);
 
 	/**
 	* Set new limits.
-	* @param limits        The limits.
+	* @param limits         The limits.
 	*/
 	void setLimits(const RPoint& limits);
 
 	/**
 	* Set the Geometric Information.
-	* param infos          Pointer to the Geometric Infos.
+	* param infos           Pointer to the Geometric Infos.
 	*/
 	inline void setInfos(RGeoInfos* infos) {Infos=infos;}
 
 	/**
 	* Set number of geometric information.
-	* @param nbinfos       Number of geometric information.
+	* @param nbinfos        Number of geometric information.
 	*/
 	inline void setNbInfos(const unsigned int nbinfos) {NbInfos=nbinfos;}
 
@@ -361,13 +358,13 @@ protected:
 
 	/**
 	* Mouse button release event method.
-	* @param e             MouseEvent info.
+	* @param e              MouseEvent info.
 	*/
 	virtual void mouseReleaseEvent(QMouseEvent* e);
 
 	/**
 	* Mouse button press event method.
-	* @param e             MouseEvent info.
+	* @param e              MouseEvent info.
 	*/
 	virtual void mousePressEvent(QMouseEvent* e);
 
@@ -380,8 +377,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

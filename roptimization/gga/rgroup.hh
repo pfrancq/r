@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -155,9 +151,55 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RGroup<cGroup,cObj,cGroupData,cGroups>& RGroup<cGroup,cObj,cGroupData,cGroups>::operator=(const RGroup<cGroup,cObj,cGroupData,cGroups>& /*grp*/)
+	void RGroup<cGroup,cObj,cGroupData,cGroups>::PostInsert(const cObj*)
+{
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroup<cGroup,cObj,cGroupData,cGroups>::PostDelete(const cObj*)
+{
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	bool RGroup<cGroup,cObj,cGroupData,cGroups>::CanInsert(const cObj*) const
+{
+	return(true);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	bool RGroup<cGroup,cObj,cGroupData,cGroups>::IsCompatible(const cObj*) const
+{
+	return(true);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	bool RGroup<cGroup,cObj,cGroupData,cGroups>::CanDelete(const cObj*) const
+{
+	return(true);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	RGroup<cGroup,cObj,cGroupData,cGroups>& RGroup<cGroup,cObj,cGroupData,cGroups>::operator=(const RGroup<cGroup,cObj,cGroupData,cGroups>&)
 {
 	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	bool RGroup<cGroup,cObj,cGroupData,cGroups>::IsCompatible(const cGroup*) const
+{
+	return(true);
 }
 
 

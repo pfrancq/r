@@ -6,15 +6,11 @@
 
 	XML tag - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 		Thomas L'Eglise.
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -97,66 +93,65 @@ public:
 	RXMLTag(RString _name);
 
 	/**
-	* Load a XML tag from a XML file.
-	* @param f              The XML file.
-	* @param xmlstruct      The XML Structure of the tag.
+	* Compare a tag with a given name.
+	* @param name           Name used for the comparaison.
+	* @returns 0 if the same, -1 or +1 if different.
 	*/
-	void Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RString);
-
-	/**
-	* Save a XML tag to a XML file.
-	* @param f              The XML file.
-	* @param xmlstruct      The XML Structure of the tag.
-	*/
-	void Save(RXMLFile* f,int depth) throw(RString);
+	int Compare(const RString& name) const {return(Name.Compare(name));}
 
 	/**
 	* Compare a tag with a given name.
 	* @param name           Name used for the comparaison.
 	* @returns 0 if the same, -1 or +1 if different.
 	*/
-	int Compare(const RString &name) {return(Name.Compare(name));}
-
-	/**
-	* Compare a tag with a given name.
-	* @param name           Name used for the comparaison.
-	* @returns 0 if the same, -1 or +1 if different.
-	*/
-	int Compare(const char* name) {return(Name.Compare(name));}
+	int Compare(const char* name) const {return(Name.Compare(name));}
 
 	/**
 	* Compare two tags.
 	* @param tag            Tag used for the comparaison.
 	* @returns 0 if the same, -1 or +1 if different.
 	*/
-	int Compare(const RXMLTag* tag) {return(Name.Compare(tag->Name));}
+	int Compare(const RXMLTag* tag) const {return(Name.Compare(tag->Name));}
 
 	/**
 	* Compare two tags.
 	* @param tag            Tag used for the comparaison.
 	* @returns 0 if the same, -1 or +1 if different.
 	*/
-	int Compare(const RXMLTag& tag) {return(Name.Compare(tag.Name));}
+	int Compare(const RXMLTag& tag) const {return(Name.Compare(tag.Name));}
 
 	/**
 	* Return the name of the tag.
 	* @returns a string containing the name.
 	*/
-	const RString& GetName(void) const {return(Name);}
+	RString GetName(void) const {return(Name);}
+
+	/**
+	* Set the name of the tag.
+	* @param name           Name of the tag.
+	*/
+	void SetName(const RString& name);
 
 	/**
 	* Return the name of the tag.
 	* param name            Name of the attribute.
 	* @returns a string containing the name.
 	*/
-	const RString& GetAttrValue(const char* name);
+	RString GetAttrValue(const char* name);
+
+	/**
+	* Return the name of the tag.
+	* param name            Name of the attribute.
+	* @returns a string containing the name.
+	*/
+	RString GetAttrValue(RString name);
 
 	/**
 	* Test if an attribute is defined.
 	* param name            Name of the attribute.
 	* @returns True if the attribute exists.
 	*/
-	bool IsAttrDefined(const char* name);
+	bool IsAttrDefined(RString name);
 
 	/**
 	* Find the first tag with a gtiven name.
@@ -164,6 +159,13 @@ public:
 	* @return Pointer to the element.
 	*/
 	RXMLTag* GetTag(const char* name);
+
+	/**
+	* Find the first tag with a gtiven name.
+	* @param name           Name of the tag to find.
+	* @return Pointer to the element.
+	*/
+	RXMLTag* GetTag(RString name);
 
 	/**
 	* Insert an attribute.
@@ -207,12 +209,6 @@ public:
 	void InsertAttr(const RChar* name,const RChar* value);
 
 	/**
-	* Add a tag to this one.
-	* @param tag            Tag to add.
-	*/
-	void AddTag(RXMLTag* tag);
-
-	/**
 	* Add a string to the content of the tag.
 	* @param text           Text to add.
 	*/
@@ -225,9 +221,15 @@ public:
 	void AddContent(const RChar* text);
 
 	/**
+	* Add a string to the content of the tag.
+	* @param text           Text to add.
+	*/
+	void AddContent(RString text);
+
+	/**
 	* @returns the text containning in the tag.
 	*/
-	const RString& GetContent(void) const {return(Contains);}
+	RString GetContent(void) const {return(Contains);}
 
 	/**
 	* See if the tag has a content.
@@ -236,7 +238,7 @@ public:
 	bool HasContent(void) const {return(Contains.GetLen());}
 
 	/**
-	* Test if the tag is empty, i.e. it has no subnodes, no parameters and np
+	* Test if the tag is empty, i.e. it has no subnodes, no parameters and no
 	* content.
 	*/
 	bool IsEmpty(void);
@@ -248,40 +250,16 @@ public:
 	void DeleteEmptyTags(RXMLStruct* s);
 
 	/**
-	* Start the iterator to go trough the word.
-	*/
-	inline void AttrsStart(void)
-		{Attrs.Start();}
-
-	/**
-	* Test if the end of the container of words is reached.
-	*/
-	inline bool AttrsEnd(void) const
-		{return(Attrs.End());}
-
-	/**
-	* Goto the next element, if the end is reached, go to the beginning.
-	*/
-	inline void AttrsNext(void)
-		{Attrs.Next();}
-
-	/**
-	* Get the current word.
-	* @returns Pointer to the current word.
-	*/
-	RXMLAttr* GetCurAttrs(void) {return(Attrs());}
-
-	/**
 	* Get a Cursor on the attributes.
 	* @return GXMLAttrCursor.
 	*/
-	RXMLAttrCursor& GetXMLAttrCursor(void);
+	RXMLAttrCursor GetXMLAttrCursor(void);
 
 	/**
 	* Get a Cursor on the sub tags.
 	* @return GXMLTagCursor.
 	*/
-	RXMLTagCursor& GetXMLTagsCursor(void);
+	RXMLTagCursor GetXMLTagsCursor(void);
 
 	/**
 	* Destruct the XML Tag.
@@ -290,6 +268,7 @@ public:
 
 	// friend classes
 	friend class RXMLStruct;
+	friend class RXMLTagCursor;
 };
 
 
@@ -298,7 +277,7 @@ public:
 * The RXMLTagCursor class provides a way to go trough a set of XML tags.
 * @short XML Tags Cursor
 */
-CLASSCURSOR(RXMLTagCursor,RXMLTag,unsigned int)
+CLASSCURSOR(RXMLTagCursor,RXMLTag,unsigned int);
 
 
 }  //-------- End of namespace R -----------------------------------------------

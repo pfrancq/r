@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -83,13 +79,6 @@ RPromCriterionParams::RPromCriterionParams(const RPromCriterionParams* p)
 	P=p->P;
 	Q=p->Q;
 	Weight=p->Weight;
-}
-
-
-//------------------------------------------------------------------------------
-RPromCriterionParams* RPromCriterionParams::GetParams(void)
-{
-	return(GetTemporaryObject<RPromCriterionParams,30>());
 }
 
 
@@ -207,22 +196,22 @@ void RPromCriterion::SetParams(const RPromCriterionParams& params)
 
 
 //------------------------------------------------------------------------------
-RPromCriterionParams& RPromCriterion::GetParams(void)
+RPromCriterionParams RPromCriterion::GetParams(void)
 {
-	RPromCriterionParams* tmp=RPromCriterionParams::GetParams();
+	RPromCriterionParams tmp;
 
 	if(Type==Minimize)
 	{
-		tmp->P=-P;
-		tmp->Q=-Q;
+		tmp.P=-P;
+		tmp.Q=-Q;
 	}
 	else
 	{
-		tmp->P=P;
-		tmp->Q=Q;
+		tmp.P=P;
+		tmp.Q=Q;
 	}
-	tmp->Weight=Weight;
-	return(*tmp);
+	tmp.Weight=Weight;
+	return(tmp);
 }
 
 

@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -46,6 +42,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
+#include <rstd/rcstring.h>
 #include <rstd/rcursor.h>
 #include <rstd/rchar.h>
 
@@ -65,37 +62,50 @@ class RString
 {
 protected:
 
-	/**
-	* The Text containing the string.
-	*/
-	RChar* Text;
+	// Internal Class representing a buffer of unicode characters.
+	class CharBuffer
+	{
+	public:
+		RChar* Text;         // Text
+		unsigned int Len;    // Actual length
+		unsigned int MaxLen; // Maximum length
+		unsigned int Refs;   // Number of references of the string.
+		char* Latin1;        // Latin1 version of the string.
+
+		CharBuffer(void)
+			: Text(0), Len(0), MaxLen(0), Refs(1), Latin1(0) {}
+		CharBuffer(RChar* tab,unsigned int len,unsigned int maxlen)
+		: Text(tab), Len(len), MaxLen(maxlen), Refs(1), Latin1(0) {}
+		void IncRef(void) {Refs++;}
+		bool DecRef(void) {return(!--Refs);}
+		void InvalidLatin1(void) {if(Latin1) {delete[] Latin1; Latin1=0;}}
+		void Verify(const unsigned int maxlen) throw(std::bad_alloc);
+		~CharBuffer(void)
+			{if(Text) delete[] Text;
+			 if(Latin1) delete[] Latin1;}
+	};
 
 	/**
-	* The length of the string.
+	* Pointer to the buffer of the string.
 	*/
-	unsigned int Len;
+	CharBuffer* Data;
 
 	/**
-	* The maximal length of the string. When necessary, the class increase his size.
+	* Pointer to the buffer representing the null string.
 	*/
-	unsigned int MaxLen;
+	static CharBuffer* DataNull;
 
 public:
 
 	/**
-	* Construct a empty string. It is a string with a maximal length of 200.
+	* Null string.
+	*/
+	static const RString Null;
+
+	/**
+	* Construct a empty string.
 	*/
 	RString(void) throw(std::bad_alloc);
-
-protected:
-
-	/**
-	* Verify if the string can hold maxlen characters and extend the array if
-	* necessary.
-	*/
-	inline void Verify(const unsigned int maxlen) throw(std::bad_alloc);
-
-public:
 
 	/**
 	* Construct a string from a "C string".
@@ -119,7 +129,7 @@ public:
 	* Construct an empty string with a maximal size.
 	* @param maxlen         Initial maximal length of the string.
 	*/
-	RString(const unsigned int maxlen) throw(std::bad_alloc);
+	RString(unsigned int maxlen) throw(std::bad_alloc);
 
 	/**
 	* Construct a string from another string.
@@ -127,11 +137,21 @@ public:
 	*/
 	RString(const RString& str) throw(std::bad_alloc);
 
+private:
+
 	/**
-	* Construct a string from another string.
-	* @param str            The string used as reference.
+	* Function called when the string must not reference its internal buffer
+	* anymore. If no string points to this buffer, it is desallocated.
 	*/
-	RString(const RString* str) throw(std::bad_alloc);
+	void DecRef(void);
+
+	/**
+	* Return the pointer to the "null" buffer. If it is not created, create it.
+	* @return Pointer to the "null" buffer.
+	*/
+	static CharBuffer* GetDataNull(void);
+
+public:
 
 	/**
 	* Assignment operator using another string.
@@ -149,6 +169,11 @@ public:
 	RString& operator=(const std::string& text) throw(std::bad_alloc);
 
 	/**
+	* Clear the content of the string.
+	*/
+	void Clear(void);
+
+	/**
 	* Copy a certain number of characters in the string.
 	* @param text           Text to copy.
 	* @param nb             Numbre of characters to copy.
@@ -162,92 +187,97 @@ public:
 	*/
 	void Copy(const RChar* text,unsigned int nb);
 
-	/**
-	* Make a copy a return a pointer to it.
-	*/
-	RChar* StrDup(void) const throw(std::bad_alloc);
+private:
 
 	/**
-	* Transform the string to uppercase.
+	* Deep copy of the string if necessary, i.e. when the string points to an
+	* internal buffer referenced by other strings, make a copy of it.
 	*/
-	void StrUpr(void);
+	void Copy(void);
+
+public:
 
 	/**
 	* Get a uppercase version of the string.
 	* @return RString.
 	*/
-	RString& GetUpr(void) const;
-
-	/**
-	* Assign the uppercase version of a "C string".
-	* @param text           The "C string" used.
-	*/
-	void StrUpr(const char* text) throw(std::bad_alloc);
-
-	/**
-	* Assign the uppercase version of a string.
-	* @param text           The string used.
-	*/
-	void StrUpr(const RChar* text) throw(std::bad_alloc);
-
-	/**
-	* Assign the uppercase version of a string.
-	* @param str            The string used.
-	*/
-	void StrUpr(const RString& str) throw(std::bad_alloc);
-
-	/**
-	* Transform the string to lowercase.
-	*/
-	void StrLwr(void);
+	RString ToUpper(void) const;
 
 	/**
 	* Get a lowercase version of the string.
 	* @return RString.
 	*/
-	RString& GetLwr(void) const;
-
-	/**
-	* Assign the lowercase version of a "C string".
-	* @param text           The "C string" used.
-	*/
-	void StrLwr(const char* text) throw(std::bad_alloc);
-
-	/**
-	* Assign the lowercase version of a string.
-	* @param text           The string used.
-	*/
-	void StrLwr(const RChar* text) throw(std::bad_alloc);
-
-	/**
-	* Assign the lowercase version of a string.
-	* @param str            The string used.
-	*/
-	void StrLwr(const RString& str) throw(std::bad_alloc);
+	RString ToLower(void) const;
 
 	/**
 	* Return the length of the string.
 	*/
-	inline unsigned int GetLen(void) const {return(Len);}
+	inline unsigned int GetLen(void) const {return(Data->Len);}
+
+	/**
+	* Set the length of the string. If the length is greater than the current
+	* one, the internal buffer is updated. Any new space allocated contains
+	* arbitrary data.
+	*/
+	void SetLen(unsigned int len);
 
 	/**
 	* Return the maximal length of the string.
 	*/
-	inline unsigned int GetMaxLen(void) const {return(MaxLen);}
+	inline unsigned int GetMaxLen(void) const {return(Data->MaxLen);}
 
 	/**
 	* Look if the string is empty.
 	* @returns true if the length is null, false else.
 	*/
-	inline bool IsEmpty(void) const {return(!Len);}
+	inline bool IsEmpty(void) const {return(!Data->Len);}
 
 	/**
 	* Transform the string into a "C String" in Latin1 encoding. The resulting
 	* array should be copied (and not destroyed) since it is an internal
 	* structure.
-	* @return "C String" (char*)
+	* @return C String
 	*/
-	char* Latin1(void) const;
+	const char* Latin1(void);
+
+	/**
+	* This function returns the character at a given position in the string. If
+	* the position is outside the string, the null character is returned.
+	* @param pos            Position of the character.
+	* @returns RChar.
+	*/
+	RChar operator[](int pos) const;
+
+	/**
+	* Find the position of a given character in the string.
+	* @param car            Character to find.
+	* @param pos            Position to start the search. Negative values start
+	*                       the search from the end.
+	* @param CaseSensitive  Is the search case sensitive.
+	* @return The position of the first occurence or -1 if the character was not
+	*         found. 
+	*/
+	int Find(RChar car,int pos=0,bool CaseSensitive=true) const;
+
+	/**
+	* Find the position of a given string in the string.
+	* @param str            String to find.
+	* @param pos            Position to start the search. Negative values start
+	*                       the search from the end.
+	* @param CaseSensitive  Is the search case sensitive.
+	* @return The position of the first occurence or -1 if the character was not
+	*         found.
+	*/
+	int FindStr(RString str,int pos=0,bool CaseSensitive=true) const;
+
+	/**
+	* Get a sub-string of a given string.
+	* @param idx            Index of the first character.
+	* @param len            Length of the sub-string. If the legnth is not
+	*                      specified, the end of the string is copied.
+	* @returns A RString containing the substring.
+	*/
+	RString Mid(unsigned int idx,unsigned int len = 0xFFFFFFFF) const;
 
 	/**
 	* Add another string.
@@ -275,69 +305,81 @@ public:
 	RString& operator+=(const RChar c) throw(std::bad_alloc);
 
 	/**
-	* Return the string containing the string.
+	* Return the string in UTF16.
 	*/
-	inline const RChar* operator()(void) const {return(Text);}
+	inline const RChar* UTF16(void) const {return(Data->Text);}
 
 	/**
-	* Return the string containing the string.
+	* Return the string.
 	*/
-	inline operator const char* () const {return(Latin1());}
+	inline const RChar* operator()(void) const {return(Data->Text);}
 
 	/**
-	* Return the string containing the string.
+	* Return the string.
 	*/
-	inline operator std::string () const {return(Latin1());}
+	operator const char* ();
+
+	/**
+	* Get a normal C++ string representring the current string.
+	* @return std::string.
+	*/
+	operator std::string () const;
+
+	/**
+	* Get a normal C++ string representring the current string.
+	* @return std::string.
+	*/
+	std::string ToString(void) const {return(operator std::string());}
 
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const RString& str) const {return(RChar::StrCmp(Text,str.Text)==0);}
+	bool operator==(const RString& str) const {return(RChar::StrCmp(Data->Text,str.Data->Text)==0);}
 
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const char* str) const {return(RChar::StrCmp(Text,str)==0);}
+	bool operator==(const char* str) const {return(RChar::StrCmp(Data->Text,str)==0);}
 
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const RChar* str) const {return(RChar::StrCmp(Text,str)==0);}
+	bool operator==(const RChar* str) const {return(RChar::StrCmp(Data->Text,str)==0);}
 
 	/**
 	* Non-equal operator.
 	*/
-	bool operator!=(const RString& str) const {return(RChar::StrCmp(Text,str.Text));}
+	bool operator!=(const RString& str) const {return(RChar::StrCmp(Data->Text,str.Data->Text));}
 
 	/**
 	* Non-equal operator.
 	*/
-	bool operator!=(const char* str) const {return(RChar::StrCmp(Text,str));}
+	bool operator!=(const char* str) const {return(RChar::StrCmp(Data->Text,str));}
 
 	/**
 	* Non-equal operator.
 	*/
-	bool operator!=(const RChar* str) const {return(RChar::StrCmp(Text,str));}
+	bool operator!=(const RChar* str) const {return(RChar::StrCmp(Data->Text,str));}
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RString &str) const {return(RChar::StrCmp(Text,str.Text));}
+	int Compare(const RString &str) const {return(RChar::StrCmp(Data->Text,str.Data->Text));}
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RString* str) const {return(RChar::StrCmp(Text,str->Text));}
+	int Compare(const RString* str) const {return(RChar::StrCmp(Data->Text,str->Data->Text));}
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const char* str) const {return(RChar::StrCmp(Text,str));}
+	int Compare(const char* str) const {return(RChar::StrCmp(Data->Text,str));}
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RChar* str) const {return(RChar::StrCmp(Text,str));}
+	int Compare(const RChar* str) const {return(RChar::StrCmp(Data->Text,str));}
 
 	/**
 	* Return a number between 0 and 26 according to the first character of the
@@ -388,25 +430,29 @@ public:
 	static int HashIndex2(const RChar* str);
 
 	/**
-	* Need to manage temporary strings.
-	*/
-	static RString* GetString(void);
-
-	/**
-	* Transfrom a C string into an array of RChar. The resulting arrey should be
+	* Transform a C string into an array of RChar. The resulting array should be
 	* destroyed by the caller of the function.
 	* @param str             Source "C String".
 	* @param len             Length of the string (computed by the function).
 	* @param maxlen          Maximum length (may be updated by the function).
 	*/
-	static RChar* Latin1ToUnicode(const char *str,unsigned int& len, unsigned int& maxlen);
+	static RChar* Latin1ToUnicode(const char* str,unsigned int& len, unsigned int& maxlen);
 
-public:
+	/**
+	* Transform an array of RChar into C string. The resulting C string should
+	* be destroyed by the caller of the function.
+	* @param tab             Source array of RChar.
+	* @param len             Number of characters in the array.
+	*/
+	static char* UnicodeToLatin1(const RChar* tab,unsigned int len);
 
 	/**
 	* Destruct the string.
 	*/
 	virtual ~RString(void);
+
+	// friend classes
+	friend class RCharCursor;
 };
 
 
@@ -416,17 +462,17 @@ public:
 /**
 * Add two strings together.
 */
-RString& operator+(const RString& arg1,const RString& arg2);
+RString operator+(const RString& arg1,const RString& arg2);
 
 /**
 * Add a string and a "C string" together.
 */
-RString& operator+(const RString& arg1,const char* arg2);
+RString operator+(const RString& arg1,const char* arg2);
 
 /**
 * Add a "C string" and a string together.
 */
-RString& operator+(const char* arg1,const RString& arg2);
+RString operator+(const char* arg1,const RString& arg2);
 
 
 //------------------------------------------------------------------------------
@@ -435,37 +481,151 @@ RString& operator+(const char* arg1,const RString& arg2);
 /**
 * Transform an int to a string.
 */
-RString& itou(const int nb);
+RString itou(const int nb);
 
 /**
 * Transform an unsigned int to a string.
 */
-RString& itou(const unsigned int nb);
+RString itou(const unsigned int nb);
 
 /**
 * Transform a long to a string.
 */
-RString& ltou(const long nb);
+RString ltou(const long nb);
 
 /**
 * Transform an unsigned char to a string.
 */
-RString& chrtou(const unsigned char c);
+RString chrtou(const unsigned char c);
 
 /**
 * Transform an unsigned long to a string.
 */
-RString& ltou(const unsigned long nb);
+RString ltou(const unsigned long nb);
 
 /**
 * Transform a float to a string.
 */
-RString& ftou(const float nb);
+RString ftou(const float nb);
 
 /**
 * Transform a double to a string.
 */
-RString& dtou(const double nb);
+RString dtou(const double nb);
+
+
+//------------------------------------------------------------------------------
+/**
+* This class represent a cursor to iterate a RString. When the string parsed by
+* the cursor is modified, the cursor is not valid anymore.
+*
+* Here is an example of a cursor used:
+* @code
+* int example(RString& str)
+* {
+* 	RCharCursor Cur();
+*
+* 	Cur.Set(str);
+* 	for(Cur.Start();!Cur.End();Cur.Next())
+* 		cout<<Cur()->Latin1();
+* }
+* @endcode
+*
+* @author Pascal Francq
+* @short Characters Cursor.
+*/
+class RCharCursor
+{
+	/**
+	* This variable is used to go through the container.
+	*/
+	const RChar* Current;
+
+	/**
+	* This variable is used to see if the end of the string is reached.
+	*/
+	unsigned int ActPtr;
+
+	/**
+	* A Pointer to the string used.
+	*/
+	const RString* Str;
+
+public:
+
+	/**
+	* Construct the cursor.
+	*/
+	RCharCursor(void);
+
+	/**
+	* Construct the cursor.
+	* param str             String to iterate.
+	*/
+	RCharCursor(const RString& str);
+
+	/**
+	* Construct the cursor.
+	* param str             String to iterate.
+	*/
+	RCharCursor(const RString* str);
+
+	/**
+	* Start the iterator to go trough the string.
+	*/
+	void Start(void) throw(RException);
+
+	/**
+	* Set the string and start the iterator.
+	* param str             String to iterate.
+	*/
+	void Set(const RString& str);
+
+	/**
+	* Set the string and start the iterator.
+	* param str             String to iterate.
+	*/
+	void Set(const RString* str);
+
+	/**
+	* Go to the i-th character of the string.
+	*/
+	void GoTo(const unsigned int i) throw(RException);
+
+	/**
+	* Return the number of characters in the string.
+	*/
+	unsigned int GetNb(void)  throw(RException);
+
+	/**
+	* Return the position of the cursor in the string.
+	*/
+	unsigned int GetPos(void) throw(RException);
+
+	/**
+	* Test if the end of the string is reached.
+	*/
+	bool End(void) const throw(RException);
+
+	/**
+	* Goto the next character, if the end is reached, go to the beginning.
+	*/
+	void Next(void) throw(RException);
+
+	/**
+	* Return the current character.
+	*/
+	RChar operator()(void) const throw(RException);
+
+	/**
+	* This function returns the character at a given position in the string
+	* iterated. If the position is outside this string, an exception
+	* is generated.
+	* @param pos            Position of the character.
+	* @returns RChar.
+	*/
+	RChar operator[](unsigned int pos) const throw(RException);
+};
 
 
 //------------------------------------------------------------------------------
@@ -473,7 +633,7 @@ RString& dtou(const double nb);
 * The RStringCursor class provides a way to go trough a set of strings.
 * @short Unicode Strings Cursor
 */
-CLASSCURSOR(RStringCursor,RString,unsigned int)
+CLASSCURSOR(RStringCursor,RString,unsigned int);
 
 
 }  //-------- End of namespace R -----------------------------------------------

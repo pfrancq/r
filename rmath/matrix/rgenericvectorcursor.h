@@ -10,10 +10,6 @@
 	Authors
 		 Vandaele Valery(vavdaele@ulb.ac.be)
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -33,22 +29,24 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RGenericVectorCursor_H
 #define RGenericVectorCursor_H
 
-//-----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rmath/rgenericsparsevector.h>
 #include <rmath/rgenericsparsematrix.h>
 #include <rstd/rcursor.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 namespace R{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 /**
 * @param C                  The class of the elements that are contained.
 *
@@ -119,41 +117,37 @@ public :
 	* param v               GenericSparseMatrix to iterate.
 	*/
 	void Set(RGenericSparseMatrix<RGenericCell<C>,false>* v);
-
 };
 
 
 #include <rmath/rgenericvectorcursor.hh> // implementation
 
 
-}  //-------- End of namespace R --------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
-//-----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 /**
 * The CLASSGENERICCELLCURSOR macro defines a way to create a cursor for a given class with
 * a name.
 * @param name            Name of the class representing the cursor.
 * @param C                  The class of the elements that are contained.
 */
-#define CLASSGENERICVECTORCURSOR(name,C)                                        \
-class name : public R::RGenericVectorCursor<C>                              \
-{                                                                    \
-public:                                                              \
-	name(void) : R::RGenericVectorCursor<C>() {}                             \
-	static name* GetTmpCursor(void)                                  \
-	{                                                                \
-		return(R::GetTemporaryObject<name,20>());                 \
-	}                                                                \
-	name& operator=(const name& c) throw(std::bad_alloc)                  \
-	{                                                                \
-		R::RGenericVectorCursor<C>::operator=(c);                            \
-		return(*this);                                               \
-	}                                                                \
-	name& operator=(const R::RGenericVectorCursor<C>& c) throw(std::bad_alloc)    \
-	{                                                                \
-		R::RGenericVectorCursor<C>::operator=(c);                            \
-		return(*this);                                               \
-	}                                                                \
+#define CLASSGENERICVECTORCURSOR(name,C)                                         \
+class name : public R::RGenericVectorCursor<C>                                   \
+{                                                                                \
+public:                                                                          \
+	name(void) : R::RGenericVectorCursor<C>() {}                                 \
+	name& operator=(const name& c) throw(std::bad_alloc)                         \
+	{                                                                            \
+		R::RGenericVectorCursor<C>::operator=(c);                                \
+		return(*this);                                                           \
+	}                                                                            \
+	name& operator=(const R::RGenericVectorCursor<C>& c) throw(std::bad_alloc)   \
+	{                                                                            \
+		R::RGenericVectorCursor<C>::operator=(c);                                \
+		return(*this);                                                           \
+	}                                                                            \
 };
 
 

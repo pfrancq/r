@@ -1,4 +1,4 @@
-               /*
+/*
 
 	R Project Library
 
@@ -10,10 +10,6 @@
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -83,18 +79,17 @@ void RPrg::Load(void) throw(std::bad_alloc,RException)
 
 
 //-----------------------------------------------------------------------------
-unsigned int RPrg::CountTabs(char* line)
+unsigned int RPrg::CountTabs(const RString& line)
 {
 	int tabs;
-	char* ptr;
+	RCharCursor Cur(line);
 
 	// Count tabs
-	ptr=line;
 	tabs=0;
-	while((*ptr)&&((*ptr)=='\t'))
+	while((!Cur.End())&&(Cur()=='\t'))
 	{
 		tabs++;
-		ptr++;
+		Cur.Next();
 	}
 	return(tabs);
 }
@@ -104,62 +99,60 @@ unsigned int RPrg::CountTabs(char* line)
 RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(std::bad_alloc,RException)
 {
 	RString l;
-	char* ptr;
-	char* obj;
-	char* line;
-	char* name;
-	char what;
+	RString obj;
+	RString name;
+	RChar what;
 	char tabs;
-	RPrgVar* r;
-	char buf[200];
-	char* tbuf;
+	unsigned int pos;
+	unsigned int len;
+	RCharCursor Cur;
 
 	// Read the line
 	if(ReadLine)
-	{
-		tbuf=prg.GetLine();
-		strcpy(tmp,tbuf);
-	}
-	line=tmp;
+		buf=prg.GetLine();
+	Cur.Set(buf);
 
 	// Skip Spaces and count tabs
-	tabs=CountTabs(line);
-	ptr=line;
-	while((*ptr)&&(isspace(*ptr)))
-	{
-		ptr++;
-	}
+	tabs=CountTabs(buf);
+	while((!Cur.End())&&(Cur().IsSpace()))
+		Cur.Next();
 
 	// Read if it is an Object or instruction
-	obj=ptr;
-	while((*ptr)&&((*ptr)!='.')&&((*ptr)!='=')&&((*ptr)!='('))
-		ptr++;
-	what=(*ptr);
-	(*(ptr++))=0;
+	pos=Cur.GetPos();
+	len=0;
+	while((!Cur.End())&&(Cur()!=RChar('.'))&&(Cur()!=RChar('='))&&(Cur()!=RChar('(')))
+	{
+		Cur.Next();
+		len++;
+	}
+	obj=buf.Mid(pos,len);
+	what=Cur();
+	Cur.Next();
+	pos=Cur.GetPos();
 
 	// Look if instruction
 	if(what=='(')
 	{
 		// If is "for"
-		if(!strcmp(obj,"for"))
+		if(obj=="for")
 		{
-			RPrgInstFor* f=new RPrgInstFor(ptr,tabs);
-
+			RPrgInstFor* f=new RPrgInstFor(buf.Mid(Cur.GetPos(),buf.GetLen()-Cur.GetPos()+1),tabs);
+	
 			// Read the next lines
-			tbuf=Prg.GetLine();
-			if(!tbuf) return(f);
-			strcpy(tmp,tbuf);
+			buf=Prg.GetLine();
+			if(buf.IsEmpty()) return(f);
+			pos=0;
 			ReadLine=false;
 			while((!ReadLine)||(!Prg.Eof()&&(ReadLine)))
 			{
-				if(CountTabs(tmp)<=f->GetTabs())
+				if(CountTabs(buf)<=f->GetTabs())
 					break;
 				f->AddInst(AnalyseLine(prg));
 				if(ReadLine)
 				{
-					tbuf=prg.GetLine();
-					if(!tbuf) return(f);
-					strcpy(tmp,tbuf);
+					buf=prg.GetLine();
+					if(buf.IsEmpty()) return(f);
+					pos=0;
 					ReadLine=false;
 				}
 			}
@@ -172,77 +165,92 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(std::bad_alloc,RException)
 	if(what=='.')
 	{
 		// Look if the object is known
-		RPrgClass* c=Classes.GetPtr<const char*>(obj);
+		RPrgClass* c=Classes.GetPtr<RString>(obj);
 		if(!c)
 			throw RException(RString("Object \"")+obj+"\" unknown");
 
 		// Read the methods name
-		name=ptr;
-		while((*ptr)&&((*ptr)!='('))
-			ptr++;
-		(*(ptr++))=0;
-		RPrgFunc* method=c->GetMethod(name);
+		len=0;
+		pos=Cur.GetPos();
+		while((!Cur.End())&&(Cur()!=RChar('(')))
+		{
+			//ptr++;
+			Cur.Next();
+			len++;
+		}
+		RPrgFunc* method=c->GetMethod(buf.Mid(pos,len));
+		Cur.Next();
 		if(!method)
 		{
-			sprintf(buf,"Method \"%s\" unknown for object \"%s\"",name,obj);
-			throw RException(buf);
+			RString msg("Method \"");
+			msg+=name+"\" unknown for object \""+obj+"\"";
+			throw RException(msg);
 		}
 
 		// Create the instruction
 		RPrgInstMethod* inst=new RPrgInstMethod(method);
-		while((*ptr))
-		{
-			r=RPrg::AnalyseParam(ptr);
-			if(r)
-				inst->AddParam(r);
-		}
+		inst->AnalyseParam(buf.Mid(Cur.GetPos(),buf.GetLen()-Cur.GetPos()+1));
 		ReadLine=true;
 		return(inst);
 	}
 
-	ReadLine=true;
+	ReadLine=true;  
 	return(0);
 }
 
 
 //-----------------------------------------------------------------------------
-RPrgVar* RPrg::AnalyseParam(char* &param) throw(std::bad_alloc,RException)
+
+void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,unsigned int,true,false>* values) throw(std::bad_alloc,RException)
 {
-	char* ptr;
+	unsigned int len;
+	unsigned int pos;
+	RCharCursor Cur(params);
 
-	// Skip before something
-	while((*param)&&((*param)!='"')&&(!isalpha(*param)))
-		param++;
-	if(!(*param))
-		return(0);
-
-	if((*param)=='"')
+	while(!Cur.End())
 	{
-		// Skip "
-		param++;
+		// Skip before something
+		while((!Cur.End())&&(Cur()!=RChar('"'))&&(!Cur().IsAlpha()))
+			Cur.Next();
+		if(Cur.End())
+			return;
 
-		// Read Value and skip " and next thing
-		ptr=param;
-		while((*param)&&((*param)!='"'))
-			param++;
-		(*(param++))=0;
-		param++;
+		if(Cur()==RChar('"'))
+		{
+			Cur.Next();
 
-		// Value
-		return(new RPrgVarConst(ptr));
+			// Read Value and skip " and next thing
+			len=0;
+			pos=Cur.GetPos();
+			while((!Cur.End())&&(Cur()!=RChar('"')))
+			{
+				Cur.Next();
+				len++;
+			}
+	
+			// Value
+			values->InsertPtr(new RPrgVarConst(params.Mid(pos,len)));
+
+			Cur.Next();
+		}
+		else
+		{
+			// Look until , or )
+			len=0;
+			pos=Cur.GetPos();
+			while((!Cur.End())&&(Cur()!=RChar(','))&&(Cur()!=RChar(')')))
+			{
+				Cur.Next();
+				len++;
+			}
+
+			// Ref
+			values->InsertPtr(new RPrgVarRef(params.Mid(pos,len)));
+
+			Cur.Next();
+		}
 	}
-	else
-	{
-		// Look until , or )
-		ptr=param;
-		while((*param)&&((*param)!=',')&&((*param)!=')'))
-			param++;
-		(*(param++))=0;
-
-		// Ref
-		return(new RPrgVarRef(ptr));
-	}
-}
+}   
 
 
 //-----------------------------------------------------------------------------

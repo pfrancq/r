@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -132,22 +128,16 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const char* name
 
 
 //------------------------------------------------------------------------------
-RPoint& RObj2DConnector::GetPos(void)
+RPoint RObj2DConnector::GetPos(void)
 {
-	RPoint *pt=RPoint::GetPoint();
-
-	(*pt)=Pos[0];
-	return(*pt);
+	return(Pos[0]);
 }
 
 
 //------------------------------------------------------------------------------
-RPoint& RObj2DConnector::GetPos(unsigned int i,char o)
+RPoint RObj2DConnector::GetPos(unsigned int i,char o)
 {
-	RPoint *pt=RPoint::GetPoint();
-
-	(*pt)=Poss[i][o];
-	return(*pt);
+	return(Poss[i][o]);
 }
 
 
@@ -245,7 +235,7 @@ void RObj2D::Init(void)
 //------------------------------------------------------------------------------
 void RObj2D::CalcPolygons(void)
 {
-	char i,idx;
+	int i,idx;
 	ROrientation *o;
 	RPolygon *ptr;
 	bool bNormal,bRota90;
@@ -332,7 +322,7 @@ void RObj2D::CalcPolygons(void)
 //------------------------------------------------------------------------------
 void RObj2D::SetOri(ROrientation o)
 {
-	char i;
+	int i;
 	ROrientation *ptr;
 
 	for(i=NbPossOri+1,ptr=PossOri;--i;ptr++)
@@ -354,7 +344,7 @@ bool RObj2D::IsOriSet(ROrientation o)
 
 
 //------------------------------------------------------------------------------
-RPolygon* RObj2D::GetPolygon(char i)
+RPolygon* RObj2D::GetPolygon(int i)
 {
 	if(i<NbPossOri) return(&Polygons[i]);
 	return(0);
@@ -362,7 +352,7 @@ RPolygon* RObj2D::GetPolygon(char i)
 
 
 //------------------------------------------------------------------------------
-RRects* RObj2D::GetRects(char i)
+RRects* RObj2D::GetRects(int i)
 {
 	if(i<NbPossOri) return(&Rects[i]);
 	return(0);

@@ -6,14 +6,10 @@
 
 	Geometry base classes - Basic definition - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -49,6 +45,7 @@
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rcontainer.h>
+#include <rstd/rcursor.h>
 #include <rstd/rtextfile.h>
 
 

@@ -12,10 +12,6 @@
 		Pascal Francq (pfrancq@ulb.ac.be).
 		Thomas L'Eglise.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -165,7 +161,7 @@ public:
 	/**
 	* Return the name of the solution.
 	*/
-	const char* GetName(void) const {return(Name);}
+	RString GetName(void) const {return(Name);}
 
 	/**
 	* Destruct a prométhée solution.

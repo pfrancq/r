@@ -6,10 +6,6 @@
 
 	(c) 2000-2002 by P. Francq.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -28,26 +24,27 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdio.h>
 
 
-//-----------------------------------------------------------------------------
-// include files for Qt Widgets
-#include <qxmlcontainer.h>
+//------------------------------------------------------------------------------
+// include files for R Library
+#include <frontend/kde/qxmlcontainer.h>
+#include <frontend/kde/rqt.h>
 using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // QXMLContainer
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-QXMLContainer::QXMLContainer(QWidget* parent,const char* app,const char* author,const char* name)
+//------------------------------------------------------------------------------
+QXMLContainer::QXMLContainer(QWidget* parent,RString app,RString author,RString name)
 	: QListView(parent,name),RDebug(app,author)
 {
 	memset(Items,0,50*sizeof(QListViewItem *));
@@ -60,7 +57,7 @@ QXMLContainer::QXMLContainer(QWidget* parent,const char* app,const char* author,
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QXMLContainer::clear(void)
 {
 	QListView::clear();
@@ -69,8 +66,8 @@ void QXMLContainer::clear(void)
 }
 
 
-//-----------------------------------------------------------------------------
-void QXMLContainer::WriteBeginTag(const char* tag,const char* options)
+//------------------------------------------------------------------------------
+void QXMLContainer::WriteBeginTag(RString tag,RString options)
 {
 	QListViewItem *ptr;
 
@@ -78,35 +75,35 @@ void QXMLContainer::WriteBeginTag(const char* tag,const char* options)
 	{
 		ptr=Items[Deep];
 		if(ptr)
-			Items[Deep]=new QListViewItem(Items[Deep-1],ptr,tag);
+			Items[Deep]=new QListViewItem(Items[Deep-1],ptr,ToQString(tag));
 		else
-			Items[Deep]=new QListViewItem(Items[Deep-1],tag);
+			Items[Deep]=new QListViewItem(Items[Deep-1],ToQString(tag));
 	}
 	else
-		Items[Deep]=new QListViewItem(this,tag);
-	if(options)
+		Items[Deep]=new QListViewItem(this,ToQString(tag));
+	if(!options.IsEmpty())
 	{
-		Items[Deep]->setText(1,options);
+		Items[Deep]->setText(1,ToQString(options));
 	}
 	Items[Deep+1]=0;
 }
 
 
-//-----------------------------------------------------------------------------
-void QXMLContainer::WriteEndTag(const char* /*tag*/)
+//------------------------------------------------------------------------------
+void QXMLContainer::WriteEndTag(RString /*tag*/)
 {
 	Items[Deep+1]=0;
 }
 
 
-//-----------------------------------------------------------------------------
-void QXMLContainer::WriteText(const char* text)
+//------------------------------------------------------------------------------
+void QXMLContainer::WriteText(RString text)
 {
-	Items[Deep]->setText(2,text);
+	Items[Deep]->setText(2,ToQString(text));
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 QXMLContainer::~QXMLContainer(void)
 {
 	emit signalXMLClose();

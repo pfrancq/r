@@ -6,10 +6,6 @@
 
 	(c) 2000-2001 by P. Francq.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -28,46 +24,49 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdio.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for Qt
 #include <qpainter.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for Qt widgets
 #include <qdrawpolygons.h>
+#include <frontend/kde/rqt.h>
 using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // QInfoBox
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 QInfoBox::QInfoBox(QWidget* parent,RGeoInfo* info)
 	: QPopupMenu(0,"Info Box"), Empty(true), pixmap(0), tmppixmap(0)
 {
-	char Tmp[50];
+	QString Tmp;
 
-	sprintf(Tmp,"Object '%s'",info->GetObj()->Name.Latin1());
+	Tmp="Object '"+ToQString(info->GetObj()->Name)+"'";
 	insertItem(Tmp);
 	if(info->GetOrder()!=NoObject)
 	{
-		sprintf(Tmp,"Order: %u",info->GetOrder());
+		Tmp="Order: "+QString::number(info->GetOrder());
 		insertItem(Tmp);
 	}
 	insertItem("Points:");
-	for(info->Start();!info->End();info->Next())
+
+	RRelPointCursor Cur(info);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		sprintf(Tmp,"    (%i,%i)",(*info)().X,(*info)().Y);
+		Tmp="    ("+QString::number(Cur().X)+","+QString::number(Cur().Y)+")";
 		insertItem(Tmp);
 	}
 	afterFocus=parent;
@@ -75,20 +74,20 @@ QInfoBox::QInfoBox(QWidget* parent,RGeoInfo* info)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 QInfoBox::QInfoBox(QWidget* parent,RGeoInfoConnector* con)
 	: QPopupMenu(0,"Info Box"), Empty(true), pixmap(0), tmppixmap(0)
 {
-	char Tmp[50];
+	QString Tmp;
 
-	sprintf(Tmp,"Connector '%s'",con->Con->Name.Latin1());
+	Tmp="Connector '"+ToQString(con->Con->Name)+"'";
 	insertItem(Tmp);
 	afterFocus=parent;
 	afterFocus->parentWidget()->setFocus();
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 QInfoBox::QInfoBox(QWidget* parent, QPixmap* p,QPixmap* pt)
 	: QPopupMenu(0,"Info Box"), Empty(true), pixmap(p), tmppixmap(pt)
 {
@@ -97,10 +96,10 @@ QInfoBox::QInfoBox(QWidget* parent, QPixmap* p,QPixmap* pt)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QInfoBox::AddConnectionInfo(RGeoInfoConnection* con)
 {
-	char Tmp[50];
+	QString Tmp;
 
 	if(Empty)
 		Empty=false;
@@ -108,13 +107,13 @@ void QInfoBox::AddConnectionInfo(RGeoInfoConnection* con)
 		insertSeparator();
 	for(con->Con->Connect.Start();!con->Con->Connect.End();con->Con->Connect.Next())
 	{
-		sprintf(Tmp,"Connector '%s\t|\t%s'",con->Con->Connect()->Owner->Name.Latin1(),con->Con->Connect()->Name.Latin1());
+		Tmp="Connector '"+ToQString(con->Con->Connect()->Owner->Name)+"\t|\t"+ToQString(con->Con->Connect()->Name)+"'";
 		insertItem(Tmp);
 	}
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QInfoBox::mouseReleaseEvent(QMouseEvent*)
 {
 	if(pixmap)
@@ -128,13 +127,13 @@ void QInfoBox::mouseReleaseEvent(QMouseEvent*)
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // QDrawPolygons
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 QDrawPolygons::QDrawPolygons(QWidget* parent,const char* name)
 	: QWidget(parent,name), Problem(0), Limits(1,1), pixmap(0), tmppixmap(0),Changed(false), Last(0),
 	  NbInfos(0), Infos(0), Painter(0), FreePolygons(0), brBlack(black,BDiagPattern),
@@ -145,7 +144,7 @@ QDrawPolygons::QDrawPolygons(QWidget* parent,const char* name)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 QDrawPolygons::QDrawPolygons(RProblem2D* prob,QWidget* parent,const char* name)
 	: QWidget(parent,name), Problem(prob), Limits(1,1), pixmap(0), tmppixmap(0),Changed(false),
 	  Last(0), NbInfos(0), Infos(0), Painter(0), FreePolygons(0), brBlack(black,BDiagPattern),
@@ -157,13 +156,14 @@ QDrawPolygons::QDrawPolygons(RProblem2D* prob,QWidget* parent,const char* name)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::addInfo(RGeoInfo* info)
 {
 	unsigned int j;
 	QPoint Null(0,0);
 	QPointArray Pts;
 	RPoint Pt;
+	RRelPointCursor Cur;
 
 	if(!pixmap)
 	{
@@ -180,18 +180,20 @@ void QDrawPolygons::addInfo(RGeoInfo* info)
 	{
 		Painter->setBrush(brBlue);
 		Pts.fill(Null,Last->NbPoints());
-		for(Last->Start(),j=0;!Last->End();Last->Next(),j++)
+		Cur.Set(Last);
+		for(Cur.Start(),j=0;!Cur.End();Cur.Next(),j++)
 		{
-			Pt=(*Last)();
+			Pt=Cur();
 			Pts.setPoint(j,RealToScreenX(Pt.X+Translation.X),RealToScreenY(Pt.Y+Translation.Y));
 		}
 		Painter->drawPolygon(Pts);
 	}
 	Painter->setBrush(brBlack);
 	Pts.fill(Null,info->NbPoints());
-	for(info->Start(),j=0;!info->End();info->Next(),j++)
+	Cur.Set(info);
+	for(Cur.Start(),j=0;!Cur.End();Cur.Next(),j++)
 	{
-		Pt=(*info)();
+		Pt=Cur();
 		Pts.setPoint(j,RealToScreenX(Pt.X+Translation.X),RealToScreenY(Pt.Y+Translation.Y));
 	}
 	Painter->drawPolygon(Pts);
@@ -203,7 +205,7 @@ void QDrawPolygons::addInfo(RGeoInfo* info)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::addFree(RFreePolygon* poly)
 {
 	unsigned int j;
@@ -237,7 +239,7 @@ void QDrawPolygons::addFree(RFreePolygon* poly)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::setLimits(const RPoint& limits)
 {
 	Limits.Set(limits.X+20,limits.Y+20);
@@ -252,7 +254,7 @@ void QDrawPolygons::setLimits(const RPoint& limits)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 QPainter* QDrawPolygons::begin(void)
 {
 	Painter=new QPainter(pixmap);
@@ -261,7 +263,7 @@ QPainter* QDrawPolygons::begin(void)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::end(void)
 {
 	delete Painter;
@@ -269,7 +271,7 @@ void QDrawPolygons::end(void)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::paintConnectors(RGeoInfo* info,QPainter* Painter)
 {
 	unsigned i,j;
@@ -290,7 +292,7 @@ void QDrawPolygons::paintConnectors(RGeoInfo* info,QPainter* Painter)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::TransformExternCon(RCoord& x,RCoord& y)
 {
 	// X-Axis
@@ -335,7 +337,7 @@ void QDrawPolygons::TransformExternCon(RCoord& x,RCoord& y)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::AdaptExternCon(RCoord& x,RCoord& y)
 {
 	// Absolute Adaptation
@@ -384,7 +386,7 @@ void QDrawPolygons::AdaptExternCon(RCoord& x,RCoord& y)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::paintConnection(RGeoInfoConnection* con,QPainter* Painter,bool c)
 {
 	RGeoInfoConnectionPart *p;
@@ -433,7 +435,7 @@ void QDrawPolygons::paintConnection(RGeoInfoConnection* con,QPainter* Painter,bo
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::paintEvent(QPaintEvent*)
 {
 	QRect r=rect();
@@ -474,9 +476,10 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 				if((*o)->IsValid())
 				{
 					Pts.fill(Null,(*o)->NbPoints());
-					for((*o)->Start(),j=0;!(*o)->End();(*o)->Next(),j++)
+					RRelPointCursor Cur(*o);
+					for(Cur.Start(),j=0;!Cur.End();Cur.Next(),j++)
 					{
-						Pos=(**o)();
+						Pos=Cur();
 						Pts.setPoint(j,RealToScreenX(Pos.X+Translation.X),RealToScreenY(Pos.Y+Translation.Y));
 					}
 					Painter->drawPolygon(Pts);
@@ -536,7 +539,7 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::resizeEvent(QResizeEvent*)
 {
 	if(pixmap)
@@ -550,7 +553,7 @@ void QDrawPolygons::resizeEvent(QResizeEvent*)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::mouseReleaseEvent(QMouseEvent* e)
 {
 	if((tmppixmap)&&(e->button()==RightButton))
@@ -564,7 +567,7 @@ void QDrawPolygons::mouseReleaseEvent(QMouseEvent* e)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 {
 	if(e->button()==RightButton)
@@ -677,7 +680,7 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 QDrawPolygons::~QDrawPolygons(void)
 {
 	if(pixmap) delete pixmap;

@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -42,6 +38,7 @@
 #include <rmath/rpolygon.h>
 #include <rmath/rpolygons.h>
 using namespace R;
+using namespace std;
 
 
 
@@ -110,13 +107,6 @@ double RPoint::EuclideanDist(const RPoint& pt) const
 
 
 //------------------------------------------------------------------------------
-RPoint* RPoint::GetPoint(void)
-{
-	return(GetTemporaryObject<RPoint,30>());
-}
-
-
-//------------------------------------------------------------------------------
 RDirection RPoint::Classify(const RPoint* p0,const RPoint* p1) const
 {
 	RPoint a=(*p1)-(*p0);
@@ -173,18 +163,16 @@ void RPoint::Save(RTextFile& f) const
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPoint& R::operator+(const RPoint& arg1,const RPoint& arg2)
+RPoint R::operator+(const RPoint& arg1,const RPoint& arg2)
 {
-	RPoint *res=RPoint::GetPoint();
-	(*res)=arg1;
-	return((*res)+=arg2);
+	RPoint res(arg1);
+	return(res+=arg2);
 }
 
 
 //------------------------------------------------------------------------------
-RPoint& R::operator-(const RPoint& arg1,const RPoint& arg2)
+RPoint R::operator-(const RPoint& arg1,const RPoint& arg2)
 {
-	RPoint *res=RPoint::GetPoint();
-	(*res)=arg1;
-	return((*res)-=arg2);
+	RPoint res(arg1);
+	return(res-=arg2);
 }

@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -53,23 +49,23 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDebug::RDebug(const char* app,const char* author)
+RDebug::RDebug(RString app,RString author)
 	: Deep(-1), App(app), Author(author)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RDebug::BeginTag(const char* Text,unsigned NbAttr,...)
+void RDebug::BeginTag(RString Text,unsigned NbAttr,...)
 {
 	va_list ap;
 
 	LevelOutput[++Deep]=false;      // For the moment nothing as child
 	NbOptions=0;
-	(*tmpOpt)=0;
+	tmpOpt.Clear();
 	va_start(ap, NbAttr);
 	while(NbAttr--)
-		AddAttribute(va_arg(ap,char*),va_arg(ap,char*));
+		AddAttribute(va_arg(ap,RString*),va_arg(ap,RString*));
 	va_end(ap);
 	WriteBeginTag(Text,tmpOpt);
 	CurTag=Text;
@@ -77,26 +73,16 @@ void RDebug::BeginTag(const char* Text,unsigned NbAttr,...)
 
 
 //------------------------------------------------------------------------------
-const char* RDebug::GetCurrentTag(void) const
-{
-	return(CurTag);
-}
-
-
-//------------------------------------------------------------------------------
-void RDebug::AddAttribute(const char* Value,const char* Attr)
+void RDebug::AddAttribute(RString* Value,RString* Attr)
 {
 	if(NbOptions++)
-		strcat(tmpOpt," ");
-	strcat(tmpOpt,Attr);
-	strcat(tmpOpt,"=\"");
-	strcat(tmpOpt,Value);
-	strcat(tmpOpt,"\"");
+		tmpOpt+=" ";
+	tmpOpt+=(*Attr)+"=\""+(*Value)+"\"";
 }
 
 
 //------------------------------------------------------------------------------
-void RDebug::PrintComment(const char* Text)
+void RDebug::PrintComment(RString Text)
 {
 	LevelOutput[Deep]=true;
 	WriteText(Text);
@@ -104,7 +90,7 @@ void RDebug::PrintComment(const char* Text)
 
 
 //------------------------------------------------------------------------------
-void RDebug::EndTag(const char* Text)
+void RDebug::EndTag(RString Text)
 {
 	if(!LevelOutput[Deep])
 		WriteText("No Special Information");
@@ -115,7 +101,7 @@ void RDebug::EndTag(const char* Text)
 
 
 //------------------------------------------------------------------------------
-void RDebug::PrintInfo(const char* Text)
+void RDebug::PrintInfo(RString Text)
 {
 	BeginTag("Info");
 	PrintComment(Text);
@@ -124,14 +110,14 @@ void RDebug::PrintInfo(const char* Text)
 
 
 //------------------------------------------------------------------------------
-void RDebug::BeginFunc(const char* Name,const char* Object)
+void RDebug::BeginFunc(RString Name,RString Object)
 {
-	BeginTag(Name,1,"Object",Object);
+	BeginTag(Name,1,&RString("Object"),&Object);
 }
 
 
 //------------------------------------------------------------------------------
-void RDebug::EndFunc(const char* Name,const char*)
+void RDebug::EndFunc(RString Name,RString)
 {
 	EndTag(Name);
 }
@@ -141,12 +127,12 @@ void RDebug::EndFunc(const char* Name,const char*)
 void RDebug::BeginApp(void)
 {
 	time_t t;
-	char TempString[50];
+	char TempString[20];
 
 	time(&t);
 	strcpy(TempString,ctime(&t));
 	TempString[strlen(TempString)-1]=0;
-	BeginTag(App.Latin1(),2,"Author",Author.Latin1(),"Date",TempString);
+	BeginTag(App,2,&RString("Author"),&Author,&RString("Date"),&RString(TempString));
 }
 
 
@@ -171,22 +157,18 @@ RDebug::~RDebug(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDebugXML::RDebugXML(const char* name,const char* app,const char* author) throw(std::bad_alloc)
+RDebugXML::RDebugXML(RString name,RString app,RString author) throw(std::bad_alloc)
 	: RDebug(app,author),Name(name), File(name,Create)
 {
-	unsigned int i;
-	char *ptr;
-
 	File.WriteStr("<!DOCTYPE "+RString(app)+">");
 	File.WriteLine();
-	for(i=50,ptr=tmpTab;--i;ptr++)
-		(*ptr)='\t';
-	(*ptr)=0;
+	for(int i=51;--i;)
+		tmpTab+=RChar('\t');
 }
 
 
 //------------------------------------------------------------------------------
-void RDebugXML::WriteBeginTag(const char *tag,const char *options)
+void RDebugXML::WriteBeginTag(RString tag,RString options)
 {
 	if(Deep)
 	{
@@ -205,7 +187,7 @@ void RDebugXML::WriteBeginTag(const char *tag,const char *options)
 
 
 //------------------------------------------------------------------------------
-void RDebugXML::WriteEndTag(const char *tag)
+void RDebugXML::WriteEndTag(RString tag)
 {
 	if(Deep&&LevelOutput[Deep-1])
 	{
@@ -213,17 +195,17 @@ void RDebugXML::WriteEndTag(const char *tag)
 		File.WriteStr(tmpTab,Deep);
 	}
 	File.WriteStr("</",2);
-	File.WriteStr(tag,strlen(tag));
+	File.WriteStr(tag);
 	File.WriteStr(">",1);
 }
 
 
 //------------------------------------------------------------------------------
-void RDebugXML::WriteText(const char *text)
+void RDebugXML::WriteText(RString text)
 {
 	File.WriteLine();
 	File.WriteStr(tmpTab,Deep+1);
-	File.WriteStr(text,strlen(text));
+	File.WriteStr(text);
 }
 
 

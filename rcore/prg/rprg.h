@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -100,7 +96,7 @@ protected:
 	/**
 	* Temporary string.
 	*/
-	char tmp[5000];
+	RString buf;
 
 	/**
 	* Must a line be readed;
@@ -112,7 +108,7 @@ public:
 	/**
 	* Constructor of a program.
 	* @param f              Name of the file.
-	* @param r              Output.
+	* @param o              Output.
 	*/
 	RPrg(R::RString f,RPrgOutput* o) throw(std::bad_alloc);
 
@@ -128,7 +124,7 @@ protected :
 	* @param line           Line to analyze.
 	* @returns unsigned int.
 	*/
-	static unsigned int CountTabs(char* line);
+	static unsigned int CountTabs(const RString& line);
 
 public:
 
@@ -141,10 +137,10 @@ public:
 
 	/**
 	* Analyse a parameter.
-	* @param param          Parameter to analyse.
-	* @returns Variable created.
+	* @param params         Parameter to analyse.
+	* @param values         Values of the paramter.
 	*/
-	static RPrgVar* AnalyseParam(char* &param) throw(std::bad_alloc,RException);
+	static void AnalyseParam(const RString& params,RContainer<RPrgVar,unsigned int,true,false>* values) throw(std::bad_alloc,RException);
 
 	/**
 	* Execute a "program".

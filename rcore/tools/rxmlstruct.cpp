@@ -6,15 +6,11 @@
 
 	XML Structure - Implementation.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 		Thomas L'Eglise.
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -49,24 +45,25 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RXMLStruct::RXMLStruct(void)
- : RTree<RXMLTag,true,false>(100,50), Entities(20,10), TopTag(0)
+	: RTree<RXMLTag,true,false>(100,50), Entities(20,10), TopTag(0),
+	  Version("1.0"), Encoding("UTF-8")
 {
 }
 
 
 //------------------------------------------------------------------------------
-RXMLTag* RXMLStruct::GetTag(const char* name)
+RXMLTag* RXMLStruct::GetTag(RString name)
 {
-	return(GetPtr<const char*>(name,false));
+	return(GetPtr<RString>(name,false));
 }
 
 
 //------------------------------------------------------------------------------
-RXMLTag* RXMLStruct::GetTag(const char* name,RXMLTag* parent)
+RXMLTag* RXMLStruct::GetTag(RString name,RXMLTag* parent)
 {
 	if(!parent)
 		return(0);
-	return(parent->GetPtr<const char*>(name,false));
+	return(parent->GetPtr<RString>(name,false));
 }
 
 
@@ -78,19 +75,73 @@ RXMLTag* RXMLStruct::GetTop(void)
 
 
 //-------------------------------------------------------------------------------
-void RXMLStruct::InsertEntity(const char* name,const char* value)
+void RXMLStruct::AddTag(RXMLTag* parent,RXMLTag* tag) throw(std::bad_alloc)
+{
+	RTree<RXMLTag,true,false>::AddNode(parent,tag);
+	if(!parent)
+	{
+		//if(TopTag) throw RException("Problem");
+		TopTag=tag;
+	}
+}
+
+
+//-------------------------------------------------------------------------------
+void RXMLStruct::DeleteTag(RXMLTag* tag)
+{
+	RTree<RXMLTag,true,false>::DeleteNode(tag);
+}
+
+
+//-------------------------------------------------------------------------------
+void RXMLStruct::InsertEntity(RString name,RString value)
 {
 	Entities.InsertPtr(new RXMLAttr(name,value));
 }
 
 
 //------------------------------------------------------------------------------
-RXMLAttrCursor& RXMLStruct::GetXMLEntitiesCursor(void)
+void RXMLStruct::Clear(void)
 {
-	RXMLAttrCursor *cur=RXMLAttrCursor::GetTmpCursor();
-	cur->Set(Entities);
-	return(*cur);
+	RTree<RXMLTag,true,false>::Clear();
 }
+
+
+//------------------------------------------------------------------------------
+RXMLAttrCursor RXMLStruct::GetXMLEntitiesCursor(void)
+{
+	RXMLAttrCursor cur(Entities);
+	return(cur);
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLStruct::SetVersion(const RString& version)
+{
+	Version=version;
+}
+
+
+//------------------------------------------------------------------------------
+RString RXMLStruct::GetVersion(void) const
+{
+	return(Version);
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLStruct::SetEncoding(const RString& encoding)
+{
+	Encoding=encoding;
+}
+
+
+//------------------------------------------------------------------------------
+RString RXMLStruct::GetEncoding(void) const
+{
+	return(Encoding);
+}
+
 
 //------------------------------------------------------------------------------
 RXMLStruct::~RXMLStruct(void)

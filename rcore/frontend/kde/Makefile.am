@@ -1,4 +1,4 @@
-INCLUDES = -I$(R_LIB) -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir) $(all_includes)
 pkglib_LTLIBRARIES =  libkde_r.la
 
 libkde_r_la_METASOURCES = AUTO
@@ -9,6 +9,6 @@ AM_FFLAGS =
 SUBDIRS =
 rincludedir = $(includedir)/r/frontend/kde
 rinclude_HEADERS = qgamonitor.h qxmlcontainer.h qdrawpolygons.h \
-			qpromcriteria.h
+			qpromcriteria.h rqt.h
 libkde_r_la_SOURCES =  qgamonitor.cpp qxmlcontainer.cpp qdrawpolygons.cpp \
-			qpromcriteria.cpp
+			qpromcriteria.cpp rqt.cpp

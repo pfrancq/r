@@ -10,10 +10,6 @@
 	Authors
 		 Vandaele Valery(vavdaele@ulb.ac.be)
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -66,14 +62,12 @@ template<class C,bool bAlloc>
 public :
 
 	/**
-	* constructor of RGenericSparseMatrix
-	* @param id                The Id of the vector.
+	* Constructor of RGenericSparseMatrix
 	*/
-	RGenericSparseMatrix() throw(std::bad_alloc) ;
+	RGenericSparseMatrix(void) throw(std::bad_alloc) ;
 
 	/**
-	* constructor of RGenericSparseMatrix
-	* @param id                The Id of the vector
+	* Constructor of RGenericSparseMatrix
 	* @param nbElem            The initial number of element in the container
 	* @param increment         The number of new element each increase
 	*/

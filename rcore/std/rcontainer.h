@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -66,10 +62,10 @@ namespace R{
 * To make the necessary comparaisons, the container used member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
-* <pre>
+* @code
 * int Compare(const TUse& tag) const;
 * int Compare(const TUse* tag) const;
-* </pre>
+* @endcode
 *
 * The TUse represent a class or a structure used for the comparaisons. These
 * functions are working like the strcmp function from the standard C/C++
@@ -80,16 +76,13 @@ namespace R{
 * sorting one or not.
 *
 * At least, a compare function must be implemented in the class C:
-* <pre>
+* @code
 * int Compare(const C*) const;
-* </pre>
+* @endcode
 *
-* The functions Start, End, Next and the operator () are used to go through
-* the container.
-*
-* Here is an example of class MyElement that will be contained in the
-* variable c:
-* <pre>
+* To iterate through the container, a RCursor can be used. Here is an example
+* of class MyElement that will be contained in the variable c:
+* @code
 * #include<rstd/rcontainer.h>
 * #include<rstd/rcursor.h>
 * using namespace R;
@@ -124,7 +117,7 @@ namespace R{
 * 	for(cur.Start();!cur.End();cur.Next())
 * 		cur()->DoSomething(2.3);
 * }
-* </pre>
+* @endcode
 *
 * @author Pascal Francq
 * @short Container template.
@@ -279,7 +272,7 @@ public:
 	//@}
 
 	/**
-	* @name Accessing elements.
+	* @name Insert elements.
 	*/
 	//@{
 
@@ -290,6 +283,26 @@ public:
 	* @param Pos            The position where to insert it.
 	*/
 	void InsertPtrOrderAt(const C *ins,T Pos) throw(std::bad_alloc);
+
+	/**
+	* Insert an element at a certain position. Two remarks must be made :
+	* -#    The function verify not if the index used is compatible with the order
+	*       in case of the elements are treated in ascending order.
+	* -#    By using this function, the user can leave "blanks" in the container,
+	*       in other words, some "valid" pointers could be null. This situation is
+	*       not handle by the other functions of the container.
+	* @param ins            A pointer to the element to insert.
+	* @param Pos            The position where to insert it.
+	* @param del            Specify if the object that was previously at Pos
+	*                       must be shift or deleted.
+	*/
+	void InsertPtrAt(const C *ins,T Pos,bool del=true) throw(std::bad_alloc);
+
+	/**
+	* Insert an element in the container.
+	* @param ins            A pointer to the element to insert.
+	*/
+	void InsertPtr(const C* ins) throw(std::bad_alloc);
 	//@}
 
 public:
@@ -311,26 +324,6 @@ public:
 	* is has to inserted.
 	*/
 	template<class TUse> T GetId(const TUse tag,bool &Find) const;
-
-	/**
-	* Insert an element at a certain position. Two remarks must be made :
-	* -#    The function verify not if the index used is compatible with the order
-	*       in case of the elements are treated in ascending order.
-	* -#    By using this function, the user can leave "blanks" in the container,
-	*       in other words, some "valid" pointers could be null. This situation is
-	*       not handle by the other functions of the container.
-	* @param ins            A pointer to the element to insert.
-	* @param Pos            The position where to insert it.
-	* @param del            Specify if the object that was previously at Pos
-	*                       must be shift or deleted.
-	*/
-	void InsertPtrAt(const C *ins,T Pos,bool del=true) throw(std::bad_alloc);
-
-	/**
-	* Insert an element in the container.
-	* @param ins            A pointer to the element to insert.
-	*/
-	void InsertPtr(const C* ins) throw(std::bad_alloc);
 
 	/**
 	* Look if a certain element is in the container.
@@ -387,6 +380,12 @@ public:
 	* @return The function returns a pointer to the result container.
 	*/
 	template<class TUse> RContainer<C,T,false,bOrder>* GetPtrs(const TUse tag) const throw(std::bad_alloc);
+
+	/**
+	* Get the number of elements in the container.
+	* @return unsigned int.
+	*/
+	unsigned int GetNb(void) const {return(NbPtr);}
 	//@}
 
 	/**
@@ -407,6 +406,9 @@ public:
 	* @param TUse           The type of tag, the container uses the Compare(TUse &)
 	*                       member function of the elements.
 	* @param tag            The tag used.
+	* @param sortkey        The tag represents the sorting key. The default value
+	*                       depends if the container is ordered (true) or not
+	*                       (false).
 	*/
 	template<class TUse> void DeletePtr(const TUse tag,bool sortkey=bOrder) throw(std::bad_alloc);
 	//@}

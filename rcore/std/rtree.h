@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -56,13 +52,13 @@ namespace R{
 * derived from the RNode<N,bool> class. The paremeter bAlloc specify if the
 * tree is responsible for the desallocation of the nodes. The parameter bOrder
 * specify if the nodes are ordered. Here is a example:
-* <pre>
+* @code
 * class MyOrderResponsibleTree : public RTree<MyNode,true,true>
 *	{
 *	public:
 *		MyOrderResponsibleTree(unsigned int max,unsigned int inc) throw(std::bad_alloc);
 *	};
-* </pre>
+* @endcode
 * @author Pascal Francq
 * @short Generic Tree.
 */

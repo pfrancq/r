@@ -6,10 +6,6 @@
 
 	(c) 2000-2002 by P. Francq.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -28,12 +24,12 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef QGAMonitorH
 #define QGAMonitorH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for Qt
 #include <qlist.h>
 #include <qwidget.h>
@@ -44,11 +40,12 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 namespace R{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 /**
 * The QGAMonitorStats provides the widget that will display statistics about
 * the running GA.
@@ -71,26 +68,26 @@ public:
 
 	/**
 	* Constructor for the statistics viewer.
-	* @param parent        Parent of the widget.
-	* @param name          Name of the instance.
+	* @param parent         Parent of the widget.
+	* @param name           Name of the instance.
 	*/
 	QGAMonitorStats(QWidget* parent=0,const char* name=0);
 
 	/**
 	* Set the Gen label.
-	* @param text         Text.
+	* @param text          Text.
 	*/
 	void setGen(const char* text) {Gen->setText(text);}
 
 	/**
 	* Set the Best label.
-	* @param text         Text.
+	* @param text          Text.
 	*/
 	void setBest(const char* text) {Best->setText(text);}
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The QGAMonitorGraph provides the widget to display a graph with the evolution
 * of the fitness function represent by double.
@@ -150,8 +147,8 @@ public:
 
 	/**
 	* Constructor of the graph display.
-	* @param parent        Parent of the widget.
-	* @param name          Name of the instance.
+	* @param parent         Parent of the widget.
+	* @param name           Name of the instance.
 	*/
 	QGAMonitorGraph(QWidget* parent=0,const char* name=0);
 
@@ -167,19 +164,19 @@ public:
 
 	/**
 	* Set the maximal value for the Y axis.
-	* @param v             Maximal Y value.
+	* @param v              Maximal Y value.
 	*/
 	void setVScale(const double v);
 
 	/**
 	* Set the maximal value for the X axis.
-	* @param h             Maximal X value.
+	* @param h              Maximal X value.
 	*/
 	void setHScale(const unsigned int h);
 
 	/**
 	* Add a new value.
-	* @param value         Value to add.
+	* @param value          Value to add.
 	*/
 	void AddValue(const double value);
 
@@ -197,7 +194,7 @@ protected:
 
 	/**
 	* Mouse button press event method.
-	* @param e             MouseEvent info.
+	* @param e              MouseEvent info.
 	*/
 	virtual void mousePressEvent(QMouseEvent* e);
 
@@ -210,7 +207,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The QGAMonitor class provides a widget to display information about the GA
 * who is working, like the number of generation or a graph with the evolution
@@ -236,20 +233,20 @@ public:
 
 	/**
 	* Construct the information display.
-	* @param parent        Parent of the widget.
-	* @param name          Name of the instance.
+	* @param parent         Parent of the widget.
+	* @param name           Name of the instance.
 	*/
 	QGAMonitor(QWidget* parent=0,const char* name=0);
 
 	/**
 	* Set the maximal number of generations.
-	* @param m             Maximum number of generation.
+	* @param m              Maximum number of generation.
 	*/
 	void setMaxGen(const unsigned int m) { Graph->setHScale(m); }
 
 	/**
 	* Set the maximal value of the fitness function.
-	* @param m             Maximum number of generation.
+	* @param m              Maximum number of generation.
 	*/
 	void setMaxFitness(const double m) {Graph->setVScale(m);}
 
@@ -262,16 +259,16 @@ public slots:
 
 	/**
 	* Receive generation information.
-	* @param gen           Actual Generation.
-	* @param best          Age of the best chromosome.
-	* @param value         Value of the best chromosmome.
+	* @param gen            Actual Generation.
+	* @param best           Age of the best chromosome.
+	* @param value          Value of the best chromosmome.
 	*/
 	void slotSetGen(const unsigned int gen,const unsigned int best,const double value);
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

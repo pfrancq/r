@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -62,7 +58,7 @@ class RDebug
 	/**
 	* Temporay Data for internal use.
 	*/
-	char tmpOpt[2000];
+	RString tmpOpt;
 
 	/**
 	* Number of options.
@@ -103,49 +99,49 @@ public:
 	* @param app            The name of the application.
 	* @param author         The auhtor of the application.
 	*/
-	RDebug(const char* app,const char* author);
+	RDebug(RString app,RString author);
 
 	/**
 	* Begin a Tag with attributes. The attributes are added after.
 	* @param Text           The name of the Tag.
 	* @param NbAttr         The number of attributes.
 	*/
-	void BeginTag(const char* Text,unsigned NbAttr=0,...);
+	void BeginTag(RString Text,unsigned NbAttr=0,...);
 
 	/**
 	* Print some Text in the current tag.
 	*/
-	void PrintComment(const char* Text);
+	void PrintComment(RString Text);
 
 	/**
 	* End a Tag.
 	*/
-	void EndTag(const char* Text);
+	void EndTag(RString Text);
 
 	/**
 	* Get the name of the current tag.
 	* @return const char*
 	*/
-	const char* GetCurrentTag(void) const;
+	RString GetCurrentTag(void) const { return(CurTag);}
 
 	/**
 	* Print an Info Tag.
 	*/
-	void PrintInfo(const char* Text);
+	void PrintInfo(RString Text);
 
 	/**
 	* Begin a member function tag.
 	* @param Name           The name of the member function.
 	* @param Object         The name of the object.
 	*/
-	void BeginFunc(const char* Name,const char* Object);
+	void BeginFunc(RString Name,RString Object);
 
 	/**
 	* End a member function tag.
 	* @param Name           The name of the member function.
 	* @param Object         The name of the object.
 	*/
-	void EndFunc(const char* Name,const char* Object);
+	void EndFunc(RString Name,RString Object);
 
 	/**
 	* Begin an application tag.
@@ -162,22 +158,22 @@ protected:
 	/**
 	* Add an attribute to buf.
 	*/
-	void AddAttribute(const char* Value,const char* Att);
+	void AddAttribute(RString* Value,RString* Att);
 
 	/**
 	* Begin to write a Tag. This function must be implement.
 	*/
-	virtual void WriteBeginTag(const char* tag,const char* options=0)=0;
+	virtual void WriteBeginTag(RString tag,RString options=RString::Null)=0;
 
 	/**
 	* Write Text associate with current tag. This function must be implement.
 	*/
-	virtual void WriteText(const char* text)=0;
+	virtual void WriteText(RString text)=0;
 
 	/**
 	* End to write a Tag. This function must be implement.
 	*/
-	virtual void WriteEndTag(const char* tag)=0;
+	virtual void WriteEndTag(RString tag)=0;
 
 public:
 
@@ -210,7 +206,7 @@ class RDebugXML : public RDebug
 	/**
 	* Temporary Variables for Internal use.
 	*/
-	char tmpTab[50];
+	RString tmpTab;
 
 public:
 
@@ -220,24 +216,24 @@ public:
 	* @param app            The name of the application.
 	* @param author         The auhtor of the application.
 	*/
-	RDebugXML(const char* name,const char* app,const char* author) throw(std::bad_alloc);
+	RDebugXML(RString name,RString app,RString author) throw(std::bad_alloc);
 
 protected:
 
 	/**
 	* Begin to write a Tag.
 	*/
-	virtual void WriteBeginTag(const char *tag,const char* options=0);
+	virtual void WriteBeginTag(RString tag,RString options=RString::Null);
 
 	/**
 	* Write Text associate with current tag.
 	*/
-	virtual void WriteText(const char *text);
+	virtual void WriteText(RString text);
 
 	/**
 	* End to write a Tag.
 	*/
-	virtual void WriteEndTag(const char *tag);
+	virtual void WriteEndTag(RString tag);
 
 public:
 

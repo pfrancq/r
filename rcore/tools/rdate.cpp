@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -43,6 +39,7 @@
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rdate.h>
+#include <rstd/rstring.h>
 using namespace R;
 
 
@@ -73,46 +70,10 @@ RDate::RDate(const int day,const int month,const int year)
 
 
 //------------------------------------------------------------------------------
-RDate::RDate(const char* date)
+RDate::RDate(const RString& date)
 	: Day(0), Month(0), Year(0)
 {
-	const char* ptr;
-	char* begin;
-	char num[10];
-
-	if((date)&&(*date))
-	{
-		ptr=date;
-
-		// Read Year
-		begin=num;
-		while((*ptr)&&((*ptr)!='-'))
-			(*(begin++)) = (*(ptr++));
-		(*begin)=0;
-		ptr++; // Skip "-"
-		Year=atoi(num);
-		if(Year<1000)
-		{
-			if(Year<70) Year+=1970; else Year+=2000;
-		}
-
-		// Read Month
-		begin=num;
-		while((*ptr)&&((*ptr)!='-'))
-			(*(begin++)) = (*(ptr++));
-		(*begin)=0;
-		ptr++; // Skip "-"
-		Month=atoi(num);
-
-		// Read Date
-		begin=num;
-		while(*ptr)
-			(*(begin++)) = (*(ptr++));
-		(*begin)=0;
-		Day=atoi(num);
-	}
-	else
-		SetToday();
+	SetDate(date);
 }
 
 
@@ -238,20 +199,71 @@ void RDate::SetToday(void)
 
 
 //------------------------------------------------------------------------------
-RDate* RDate::GetDate(void)
+void RDate::SetDate(const int day,const int month,const int year)
 {
-	RDate *d=GetTemporaryObject<RDate,20>();
-
-	d->SetToday();
-	return(d);
+	Year=year;
+	Month=month;
+	Day=day;
 }
 
 
 //------------------------------------------------------------------------------
-RDate& RDate::GetToday(void)
+void RDate::SetDate(const RString& date)
 {
-	RDate *d=GetDate();
-	return(*d);
+	const RChar* ptr;
+	char* begin;
+	char num[10];
+
+	if(!date.IsEmpty())
+	{
+		ptr=date();
+
+		// Read Year
+		begin=num;
+		while((!ptr->IsNull())&&((*ptr)!='-'))
+		{
+			(*(begin++)) = ptr->Latin1();
+			ptr++;
+		}
+		(*begin)=0;
+		ptr++; // Skip "-"
+		Year=atoi(num);
+		if(Year<1000)
+		{
+			if(Year<70) Year+=1970; else Year+=2000;
+		}
+
+		// Read Month
+		begin=num;
+		while((!ptr->IsNull())&&((*ptr)!='-'))
+		{
+			(*(begin++)) = ptr->Latin1();
+			ptr++;
+		}
+		(*begin)=0;
+		ptr++; // Skip "-"
+		Month=atoi(num);
+
+		// Read Day
+		begin=num;
+		while((!ptr->IsNull()))
+		{
+			(*(begin++)) = ptr->Latin1();
+			ptr++;
+		}
+		(*begin)=0;
+		Day=atoi(num);
+	}
+	else
+		SetToday();
+}
+
+
+//------------------------------------------------------------------------------
+RDate RDate::GetToday(void)
+{
+	RDate d;
+	return(d);
 }
 
 

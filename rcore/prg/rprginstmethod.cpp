@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -38,6 +34,7 @@
 // include files for R Project
 #include <rprg/rprginstmethod.h>
 #include <rprg/rprgvar.h>
+#include <rprg/rprg.h>
 #include <rprg/rprgfunc.h>
 using namespace R;
 
@@ -67,6 +64,13 @@ void RPrgInstMethod::Run(RPrg* prg,RPrgOutput* r) throw(RException)
 void RPrgInstMethod::AddParam(RPrgVar* var) throw(std::bad_alloc)
 {
 	Params.InsertPtr(var);
+}
+
+
+//------------------------------------------------------------------------------
+void RPrgInstMethod::AnalyseParam(const RString& params) throw(std::bad_alloc,RException)
+{
+	RPrg::AnalyseParam(params,&Params);
 }
 
 

@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -97,18 +93,37 @@ public:
 	* @param maxobjs        The maximal number of objects to place.
 	* @param calc           Must free polygons be calculated.
 	* @param use            Must free polygons be used.
+	* @param r              The random genrator to use.
 	* @param ori            Must all orientation be tested.
 	*/
 	RPlacementCenter(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 
+	/**
+	* Initialize the heuristic.
+	* @param prob           The problem.
+	* @param infos          Pointer to the geometric information.
+	* @param grid           Pointer to the grid.
+	*/
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
 
+	/**
+	* Calculate the position to place the next object for a specific geometric
+	* information. The function have to register the valid positions with the
+	* 'AddValidPosition' method.
+	*/
 	virtual void NextObjectOri(void) throw(RPlacementHeuristicException);
 
+	/**
+	* Place the current object to a specific position. This function is called
+	* by the NextObject method.<BR>
+	* This function is responsible to update Result.
+	* @param pos            The position where to place it.
+	*/
 	virtual void Place(RPoint& pos) throw(RPlacementHeuristicException);
 
 	/**
 	* Do some operations after the run.
+	* @param limits         Limits of the area.
 	*/
 	virtual void PostRun(RPoint& limits);
 

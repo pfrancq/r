@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -93,7 +89,7 @@ public:
 	* @param line           Rest of the line.
 	* @param t              Identation.
 	*/
-	RPrgInstFor(char* line,unsigned int t) throw(std::bad_alloc);
+	RPrgInstFor(const RString& line,unsigned int t) throw(std::bad_alloc);
 
 	/**
 	* Add an instruction to the for.

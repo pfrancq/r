@@ -15,11 +15,7 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision: 1.5 $
-
-	Last Modify: $Date: 2000/11/29 09:23:50 $
-
- 	This library is free software; you can redistribute it and/or
+	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
 	version 2.0 of the License, or (at your option) any later version.
@@ -33,6 +29,7 @@
 	License along with this library, as a file COPYING.LIB; if not, write
 	to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 	Boston, MA  02111-1307  USA
+	
 */
 
 

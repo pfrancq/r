@@ -12,10 +12,6 @@
 		Pascal Francq (pfrancq@ulb.ac.be).
 		Thomas L'Eglise.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -124,13 +120,13 @@ public:
 	* Return the name of the tag.
 	* @returns a string containing the name.
 	*/
-	const RString& GetName(void) const {return(Name);}
+	RString GetName(void) const {return(Name);}
 
 	/**
 	* Returns the value of the attribute.
 	* @returns a string containing the value;
 	*/
-	const RString& GetValue(void) const {return(Value);}
+	RString GetValue(void) const {return(Value);}
 
 	/**
 	* Destruct the attribute.
@@ -144,7 +140,7 @@ public:
 * The RXMLAttrCursor class provides a way to go trough a set of XML attributes.
 * @short XML attributes Cursor
 */
-CLASSCURSOR(RXMLAttrCursor,RXMLAttr,unsigned int)
+CLASSCURSOR(RXMLAttrCursor,RXMLAttr,unsigned int);
 
 
 }  //-------- End of namespace R -----------------------------------------------

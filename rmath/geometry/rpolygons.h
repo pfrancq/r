@@ -6,14 +6,10 @@
 
 	Polygons - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -119,8 +115,15 @@ public:
 
 	/**
 	* Save the polygons in a file.
+	* param f               Text file where the information must be written.
 	*/
 	void Save(RTextFile& f);
+
+	/**
+	* Get a cursor on the polygons.
+	* @return RPolygonCursor.
+	*/
+	RPolygonCursor GetPolygonsCursor(void);
 };
 
 

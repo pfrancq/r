@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -41,6 +37,9 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
+#include <rstd/rcstring.h>
+#include <rstd/rstring.h>
+#include <rstd/rdate.h>
 
 
 //------------------------------------------------------------------------------
@@ -54,6 +53,11 @@
 //------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// Forward class declaration
+class RTextEncoding;
 
 
 //------------------------------------------------------------------------------
@@ -89,13 +93,13 @@ public:
 *
 * Here is a example:
 *
-* <pre>
+* @code
 * #include <iostream>
 * #include <rmysql/rmysql.h>
 * using namespace R;
 *
 *
-* //---------------------------------------------------------------------------
+* //----------------------------------------------------------------------------
 * void Load(void) throw(RMySQLError)
 * {
 * 	RDb db("host","me","mypassword","thedb");
@@ -106,7 +110,7 @@ public:
 * }
 *
 *
-* //---------------------------------------------------------------------------
+* //----------------------------------------------------------------------------
 * int main(void)
 * {
 * 	try
@@ -118,7 +122,7 @@ public:
 * 		cout<<"Error: "<<e.GetError()<<endl;
 * 	}
 * }
-* </pre>
+* @endcode
 *
 * @author Pascal Francq
 * @short MySQL Database.
@@ -135,6 +139,11 @@ class RDb
 	*/
 	MYSQL mysql;
 
+	/**
+	* Coding used to read/write to MySQL.
+	*/
+	RTextEncoding* Coding;
+
 public:
 
 	/**
@@ -143,8 +152,9 @@ public:
 	* @param user           User to connect with.
 	* @param pwd            Password of the uzer.
 	* @param db             Name of the database.
+	* @param coding         Name of the coding.
 	*/
-	RDb(const char* host,const char* user,const char* pwd,const char* db) throw(RMySQLError);
+	RDb(RString host,RString user,RString pwd,RString db,RString coding="latin1") throw(RMySQLError);
 
 	/**
 	* Get the protocol version used.
@@ -192,6 +202,16 @@ class RQuery
 	*/
 	unsigned int nbcols;
 
+	/**
+	* SQL query.
+	*/
+	RString SQL;
+
+	/**
+	* Database.
+	*/
+	RDb* DB;
+
 public:
 
 	/**
@@ -199,7 +219,30 @@ public:
 	* @param db             Pointer to the corresponding database.
 	* @param sql            String containing a SQL query.
 	*/
-	RQuery(RDb* db,const char* sql) throw(RMySQLError);
+	RQuery(RDb* db,RString sql) throw(RMySQLError);
+
+	/**
+	* Construct a query.
+	* @param db             Reference to the corresponding database.
+	* @param sql            String containing a SQL query.
+	*/
+	RQuery(RDb& db,RString sql) throw(RMySQLError);
+
+	/**
+	* Construct a query.
+	* @param db             Smart pointer to the corresponding database.
+	* @param sql            String containing a SQL query.
+	*/
+	RQuery(std::auto_ptr<R::RDb>& db,RString sql) throw(RMySQLError);
+
+protected:
+
+	/**
+	* Does the work of initializing the query.
+	*/
+	void Init(void) throw(RMySQLError);
+
+public:
 
 	/**
 	* Get the total number of rows of the query.
@@ -252,7 +295,22 @@ public:
 	* Return a specific field of the current row.
 	* @param index          Index of the field in the query.
 	*/
-	const char* operator[](unsigned int index) const throw(RMySQLError);
+	RString operator[](unsigned int index) const throw(RMySQLError);
+
+	/**
+	* Transform a string to be used in a SQL (add quotes before and after,
+	* double quotes inside the string).
+	* @param val            String containing the value.
+	* @return a RString.
+	*/
+	static RString SQLValue(const RString val);
+
+	/**
+	* Transform a date into a SQL date (with quotes).
+	* @param d              Date.
+	* @return a RString.
+	*/
+	static RString SQLValue(const RDate& d);
 
 	/**
 	* Destruct the query.

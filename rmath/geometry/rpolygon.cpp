@@ -2,18 +2,14 @@
 
 	R Project Library
 
-	Polygons.cpp
+	Polygon.cpp
 
-	Polygons - Implentation.
+	Polygon - Implentation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -47,6 +43,7 @@
 #include <rmath/rrects.h>
 #include <rmath/rline.h>
 using namespace R;
+using namespace std;
 
 
 
@@ -892,20 +889,9 @@ bool RPolygon::DuplicatePoints(void) const
 
 
 //------------------------------------------------------------------------------
-RPolygon* RPolygon::GetPolygon(void)
+RPoint RPolygon::GetCentralPoint(void)
 {
-	RPolygon *tmp;
-
-	tmp=GetTemporaryObject<RPolygon,30>();
-	tmp->Clear();
-	return(tmp);
-}
-
-
-//------------------------------------------------------------------------------
-RPoint& RPolygon::GetCentralPoint(void)
-{
-	RPoint* pt=RPoint::GetPoint();
+	RPoint pt;
 	RPoint Middle;
 	RRect r;
 	double min,act;
@@ -913,22 +899,20 @@ RPoint& RPolygon::GetCentralPoint(void)
 	Boundary(r);
 	Middle.Set(r.Width()/2,r.Height()/2);
 	if(IsIn(Middle))
-		(*pt)=Middle;
-	else
+		return(Middle);
+
+	// Find the Vertice the most closed to Middle
+	min=MaxCoord;
+	for(Start();!End();Next())
 	{
-		// Find the Vertice the most closed to Middle
-		min=MaxCoord;
-		for(Start();!End();Next())
+		act=Middle.EuclideanDist((*this)());
+		if(act<min)
 		{
-			act=Middle.EuclideanDist((*this)());
-			if(act<min)
-			{
-				(*pt)=((*this)());
-				min=act;
-			}
+			pt=((*this)());
+			min=act;
 		}
 	}
-	return(*pt);
+	return(pt);
 }
 
 
@@ -942,19 +926,27 @@ void RPolygon::Save(RTextFile& f)
 
 
 //------------------------------------------------------------------------------
-RPoint& RPolygon::Calibrate(void)
+RPoint RPolygon::Calibrate(void)
 {
-	RPoint* pt=RPoint::GetPoint(),**tab;
+	RPoint pt,**tab;
 	unsigned int i;
 
-	pt->Set(MaxCoord,MaxCoord);
+	pt.Set(MaxCoord,MaxCoord);
 	for(i=NbPtr+1,tab=Tab;--i;tab++)
 	{
-		if((*tab)->X<pt->X) pt->X=(*tab)->X;
-		if((*tab)->Y<pt->Y) pt->Y=(*tab)->Y;
+		if((*tab)->X<pt.X) pt.X=(*tab)->X;
+		if((*tab)->Y<pt.Y) pt.Y=(*tab)->Y;
 	}
 
 	for(i=NbPtr+1,tab=Tab;--i;tab++)
-		(**tab)-=(*pt);
-	return(*pt);
+		(**tab)-=pt;
+	return(pt);
+}
+
+
+//------------------------------------------------------------------------------
+RPointCursor RPolygon::GetPointsCursor(void)
+{
+	RPointCursor cur(this);
+	return(cur);
 }

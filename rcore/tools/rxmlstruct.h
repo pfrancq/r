@@ -6,15 +6,11 @@
 
 	XML structure - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 		Thomas L'Eglise.
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -56,7 +52,7 @@ namespace R{
 * @short XML Structure.
 * @author Pascal Francq and Thomas L'Eglise.
 */
-class RXMLStruct : public RTree<RXMLTag,true,false>
+class RXMLStruct : private RTree<RXMLTag,true,false>
 {
 	/**
 	* The entities of the structure.
@@ -67,6 +63,16 @@ class RXMLStruct : public RTree<RXMLTag,true,false>
 	* Top tag of the XML structure.
 	*/
 	RXMLTag* TopTag;
+
+	/**
+	* Version of the XML standard.
+	*/
+	RString Version;
+
+	/**
+	* Encoding of the corresponding XML file.
+	*/
+	RString Encoding;
 
 public:
 
@@ -80,14 +86,14 @@ public:
 	* @param name           Name of the tag to find.
 	* @returns a pointer to the tag of 0 if no tag exists.
 	*/
-	RXMLTag* GetTag(const char* name);
+	RXMLTag* GetTag(RString name);
 
 	/**
 	* Find the first tag with a gtiven name and a given parent.
 	* @param name           Name of the tag to find.
 	* @param parent         Parent of the tag to find.
 	*/
-	RXMLTag* GetTag(const char* name,RXMLTag* parent);
+	RXMLTag* GetTag(RString name,RXMLTag* parent);
 
 	/**
 	* Return the Top Nodes of the XML struct.
@@ -95,24 +101,63 @@ public:
 	RXMLTag* GetTop(void);
 
 	/**
+	* Add a tag to the a given one which will be the parent. If the parent is
+	* null the tag is considered as the root tag in the XML structure.
+	* @param parent         The parent tag.
+ 	* @param tag            The tag to add.
+	*/
+	void AddTag(RXMLTag* parent,RXMLTag* tag) throw(std::bad_alloc);
+
+	/**
+	* Delete a tag from the XML structure.
+	* @param tag            The tag to delete.
+	*/
+	void DeleteTag(RXMLTag* tag);
+
+	/**
 	* Insert an entity.
 	* @param name           Name of thae entity.
 	* @param value          Value of thae entity.
 	*/
-	void InsertEntity(const char* name,const char* value);
+	void InsertEntity(RString name,RString value);
+
+	/**
+	* Clear the tree XML structure.
+	*/
+	void Clear(void);
 
 	/**
 	* Get a Cursor on the entities.
 	* @return GXMLAttrCursor.
 	*/
-	RXMLAttrCursor& GetXMLEntitiesCursor(void);
+	RXMLAttrCursor GetXMLEntitiesCursor(void);
+
+	/**
+	* Set the version of the XML standard.
+	*/
+	void SetVersion(const RString& version);
+
+	/**
+	* Get the version of the XML standard.
+	* @return RString.
+	*/
+	RString GetVersion(void) const;
+
+	/**
+	* Set the encoding of the corresponding XML file.
+	*/
+	void SetEncoding(const RString& encoding);
+
+	/**
+	* Get the encoding of the corresponding XML file.
+	* @return RString.
+	*/
+	RString GetEncoding(void) const;
 
 	/**
 	* Destruct the XML Structure.
 	*/
 	~RXMLStruct(void);
-
-	friend class RXMLTag;
 };
 
 

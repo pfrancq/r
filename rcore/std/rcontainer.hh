@@ -6,14 +6,10 @@
 
 	Container - Inline Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -88,7 +84,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		}
 	}
 	else
-		RContainer(10,10);
+		RContainer<C,T,bAlloc,bOrder>(10,10);
 }
 
 
@@ -118,7 +114,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		}
 	}
 	else
-		RContainer(10,10);
+		RContainer<C,T,bAlloc,bOrder>(10,10);
 }
 
 
@@ -636,7 +632,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		for(Index=0,ptr=Tab;((*ptr)!=del)&&(Index<LastPtr);Index++,ptr++);
 		if(Index==LastPtr) return;
 	}
-	memcpy(ptr,ptr+1,((--LastPtr)-Index)*sizeof(C*));
+	memmove(ptr,ptr+1,((--LastPtr)-Index)*sizeof(C*));
 	Tab[LastPtr]=0;
 	NbPtr--;
 	if(bAlloc) delete(del);
@@ -669,7 +665,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 			return;
 	}
 	del=*ptr;
-	memcpy(ptr,ptr+1,((--LastPtr)-Index)*sizeof(C*));
+	memmove(ptr,ptr+1,((--LastPtr)-Index)*sizeof(C*));
 	Tab[LastPtr]=0;
 	NbPtr--;
 	if(bAlloc)
@@ -734,15 +730,21 @@ template<class C,class T,bool bAlloc,bool bOrder>
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>::~RContainer(void)
 {
-	if(bAlloc)
+	try
 	{
-		C **ptr;
-
-		for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
+		if(bAlloc)
 		{
-			if(*ptr)
-				delete(*ptr);
+			C** ptr;
+	
+			for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
+			{
+				if(*ptr)
+					delete(*ptr);
+			}
 		}
+		delete[] Tab;
 	}
-	delete[] Tab;
+	catch(...)
+	{
+	}
 }

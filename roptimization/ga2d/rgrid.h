@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -90,7 +86,7 @@ public:
 	*                       internally, the grid is allocate 2x the size to be used
 	*                       by the "center" heuristic.
 	*/
-	RGrid(RPoint &limits) throw(std::bad_alloc);
+	RGrid(RPoint& limits) throw(std::bad_alloc);
 
 	/**
 	* This function returns true if the position (x,y) is free or if it is out
@@ -130,7 +126,7 @@ public:
 	* @param pos            The position.
 	* @param id             The identificator to put.
 	*/
-	void Assign(RRect &rect,RPoint &pos,unsigned int id);
+	void Assign(RRect& rect,RPoint& pos,unsigned int id);
 
 	/**
 	* Find the left most x coordinates that is free of a reference.
@@ -161,28 +157,28 @@ public:
 	* @param pt             Point used as reference.
 	* @param bound          The rectangle which limits the research.
 	*/
-	RCoord SkirtLeft(RPoint& pt,RRect &bound);
+	RCoord SkirtLeft(RPoint& pt,RRect& bound);
 
 	/**
 	* Find the right most x coordinates that is free and that skirt an edge.
 	* @param pt             Point used as reference.
 	* @param bound          The rectangle which limits the research.
 	*/
-	RCoord SkirtRight(RPoint& pt,RRect &bound);
+	RCoord SkirtRight(RPoint& pt,RRect& bound);
 
 	/**
 	* Find the up most x coordinates that is free and that skirt an edge.
 	* @param pt             Point used as reference.
 	* @param bound          The rectangle which limits the research.
 	*/
-	RCoord SkirtUp(RPoint& pt,RRect &bound);
+	RCoord SkirtUp(RPoint& pt,RRect& bound);
 
 	/**
 	* Find the down most x coordinates that is free and that skirt an edge.
 	* @param pt             Point used as reference.
 	* @param bound          The rectangle which limits the research.
 	*/
-	RCoord SkirtDown(RPoint& pt,RRect &bound);
+	RCoord SkirtDown(RPoint& pt,RRect& bound);
 
 	/**
 	* Calculate a free polygon from a given position and a given direction.
@@ -194,18 +190,18 @@ public:
 	* @returns The function returns true if a close polygon has been calculated
 	* or false if not.
 	*/
-	bool CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect &boud,RPolygon& poly);
+	bool CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect& bound,RPolygon& poly);
 
 	/**
 	* Add all the polygons representing free spaces that are closed and resulting
 	* of the placement of an object.
 	* @param ins            The geometric information representing the last inserted
 	*                       object.
-	* @param polys          The container of polygons where all the free spaces
+	* @param free           The container of polygons where all the free spaces
 	*                       calculated must be add.
 	* @param bound          The bounding rectangle of the objects already placed.
 	*/
-	void AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &bound);
+	void AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,RRect& bound);
 
 	/**
 	* Destruct the Grid.

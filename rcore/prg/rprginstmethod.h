@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -43,6 +39,7 @@
 // include files for R Project
 #include <rstd/rcontainer.h>
 #include <rprg/rprginst.h>
+#include <rstd/rstring.h>
 
 
 //------------------------------------------------------------------------------
@@ -86,8 +83,16 @@ public:
 
 	/**
 	* Add a parameter to the method.
+	* @param var            Parameter to add.
 	*/
 	void AddParam(RPrgVar* var) throw(std::bad_alloc);
+
+	/**
+	* Analyse a list of parameters.
+	* @param params         Parameters to analyse.
+	* @returns Variable created.
+	*/
+	void AnalyseParam(const RString& params) throw(std::bad_alloc,RException);
 
 	/**
 	* Run the method.

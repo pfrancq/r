@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -224,24 +220,25 @@ public:
 	/**
 	* Return the position of the connector relativ to the object.
 	*/
-	RPoint& GetPos(void);
+	RPoint GetPos(void);
 
 	/**
 	* Return the position of the connector of the oth orientation.
-	* @return i             The number.
-	* @return o             The orientation.
+	* @param i             The number.
+	* @param o             The orientation.
 	*/
-	RPoint& GetPos(unsigned int i,char o);
+	RPoint GetPos(unsigned int i,char o);
 
 	/**
 	* Add a connection to this connector.
+	* @param con            Connection.
 	*/
 	void AddConnection(RConnection* con);
 
 	/**
 	* Return the name of the connector.
 	*/
-	const char* GetName(void) {return(Name);}
+	RString GetName(void) {return(Name);}
 
 	/**
 	* Return the minimum distance between two connectors.
@@ -299,7 +296,7 @@ public:
 	/**
 	* Number of possible Orientations.
 	*/
-	char NbPossOri;
+	int NbPossOri;
 
 	/**
 	* Different Orientations accepted.
@@ -402,11 +399,13 @@ public:
 
 	/**
 	* Set a specific orientation as possible.
+	* @param o              Orientation.
 	*/
 	void SetOri(ROrientation o);
 
 	/**
 	* Return true if the orientation is possible.
+	* @param o              Orientation.
 	*/
 	bool IsOriSet(ROrientation o);
 
@@ -422,16 +421,21 @@ public:
 
 	/**
 	* Return a pointer to the polygon representing the ith orientation.
+	* @param i              Index of the orientation.
+	* @return Pointer to a RPolygon.
 	*/
-	RPolygon* GetPolygon(char i);
+	RPolygon* GetPolygon(int i);
 
 	/**
 	* Return a pointer to the rectangular decomposition of the ith orientation.
+	* @param i              Index of the orientation.
+	* @return pointer to a RRects.
 	*/
-	RRects* GetRects(char i);
+	RRects* GetRects(int i);
 
 	/**
 	* The assignment operator.
+	* @param obj            Source object.
 	*/
 	RObj2D& operator=(const RObj2D &obj);
 
@@ -451,12 +455,13 @@ public:
 
 	/**
 	* Copy the connectors from a given object.
+	* @param obj            Source object.
 	*/
-	void CopyConnectors(RObj2D* o);
+	void CopyConnectors(RObj2D* obj);
 
 	/**
 	* Verify if a given object is in the container or not.
-	* @unsigned id          Identificator of the object.
+	* @param id             Identificator of the object.
 	* @return true if the object is in, else false.
 	*/
 	virtual bool IsIn(unsigned int id) {return(Id==id);}

@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -42,6 +38,7 @@
 // include files for R Library
 #include <rstd/rstring.h>
 #include <rdb/rmysql.h>
+#include <rstd/rtextencoding.h>
 using namespace R;
 
 
@@ -53,10 +50,19 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDb::RDb(const char* host,const char* user,const char* pwd,const char* db) throw(RMySQLError)
+RDb::RDb(RString host,RString user,RString pwd,RString db,RString coding) throw(RMySQLError)
+	: Coding(0)
 {
 	MYSQL* ret;
 
+	try
+	{
+		Coding=RTextEncoding::GetTextEncoding(coding);
+	}
+	catch(EncodingNotSupported e)
+	{
+		throw RMySQLError(RString(e.GetMsg())+" for database "+db);
+	}
 	ret=mysql_init(&mysql);
 	if((!ret)||(mysql_errno(&mysql)))
 		throw RMySQLError(mysql_error(&mysql));
@@ -81,39 +87,74 @@ RDb::~RDb(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RQuery::RQuery(RDb* db,const char* sql) throw(RMySQLError)
+RQuery::RQuery(RDb* db,const RString sql) throw(RMySQLError)
+	: SQL(sql), DB(db)
 {
-	const char* ptr;
-	char* tmp;
-	unsigned int size;
-	char cmd[10];
-
-	if((!db)||!(db->connection))
+	if(!DB)
 		throw RMySQLError("Database not initialize");
-	if(mysql_real_query(db->connection,sql,strlen(sql)))
-		throw RMySQLError(mysql_error(&db->mysql));
+	Init();
+}
 
-	ptr=sql;
-	if(!(*ptr))
+
+//------------------------------------------------------------------------------
+RQuery::RQuery(RDb& db,const RString sql) throw(RMySQLError)
+	: SQL(sql), DB(&db)
+{
+	Init();
+}
+
+
+//------------------------------------------------------------------------------
+RQuery::RQuery(std::auto_ptr<R::RDb>& db,RString sql) throw(RMySQLError)
+	: SQL(sql), DB(db.get())
+{
+	Init();
+}
+
+
+//------------------------------------------------------------------------------
+void RQuery::Init(void) throw(RMySQLError)
+{
+	const RChar* ptr;
+	unsigned int size,pos;
+	RCString SQL_utf8;
+	RString cmd;
+
+ 	if(!DB->connection)
+		throw RMySQLError("Database not initialize");
+	if(SQL.IsEmpty())
 		throw RMySQLError("Empty SQL");
-
-	// Skip spaces
-	while((*ptr)&&(isspace(*ptr))) ptr++;
-
-	// Find the command
-	tmp=cmd;
-	size=0;
-	while((*ptr)&&(isalpha(*ptr))&&(size<7))
+	try
 	{
-		(*(tmp++))=(*(ptr++));
+		SQL_utf8=DB->Coding->FromUnicode(SQL);
+	}
+	catch(...)
+	{
+		throw RMySQLError("Error in encoded data");
+	}
+	if(mysql_real_query(DB->connection,SQL_utf8,SQL_utf8.GetLen()))
+		throw RMySQLError(mysql_error(&DB->mysql));
+
+	// Find the SQL cmd
+	ptr=SQL();
+	pos=0;
+	while((!ptr->IsNull())&&(ptr->IsSpace()))  // Skip Spaces
+	{
+		ptr++;
+		pos++;
+	}
+	size=0;
+	while((!ptr->IsNull())&&(ptr->IsAlpha())&&(size<7))
+	{
+		ptr++;
 		size++;
 	}
+	cmd=SQL.Mid(pos,size);
 
 	// It is a SELECT or a SHOW command -> retrieve results
-
-	if((size<7)&&((!strncmp(cmd,"SELECT",6))||(!strncmp(cmd,"SHOW",4))))
+	if((size<7)&&((cmd=="SELECT")||(cmd=="SHOW")))
 	{
-		result=mysql_store_result(db->connection);
+		result=mysql_store_result(DB->connection);
 		nbrows=mysql_num_rows(result);
 		nbcols=mysql_num_fields(result);
 	}
@@ -156,13 +197,50 @@ void RQuery::Next(void)
 
 
 //------------------------------------------------------------------------------
-const char* RQuery::operator[](unsigned int index) const throw(RMySQLError)
+RString RQuery::operator[](unsigned int index) const throw(RMySQLError)
 {
+	const char* val;
+	RString res;
+
 	if(index>=nbcols)
 		throw RMySQLError("Index out of range");
 	if(!row)
 		throw RMySQLError("Treated set");
-	return(row[index]);
+	val=row[index];
+	if(val)
+	{
+		res=val;//UTF8->ToUnicode(val,strlen(val));
+	}
+	return(res);
+}
+
+
+//------------------------------------------------------------------------------
+RString RQuery::SQLValue(const RString val)
+{
+	RString ret("'");
+	const RChar* ptr;
+
+	for(ptr=val();!ptr->IsNull();ptr++)
+	{
+		if((*ptr)==RChar('\''))
+			ret+='\'';
+		if((*ptr)==RChar('\\'))
+			ret+='\\';
+		ret+=ptr->Latin1();
+	}
+	ret+='\'';
+	return(ret);
+}
+
+
+//------------------------------------------------------------------------------
+RString RQuery::SQLValue(const RDate& d)
+{
+	RString res;
+
+	res="'"+itou(d.GetYear())+"-"+itou(d.GetMonth())+"-"+itou(d.GetDay())+"'";
+	return(res);
 }
 
 

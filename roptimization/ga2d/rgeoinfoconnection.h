@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
@@ -53,10 +49,10 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RGeoInfoConnectionPart class provides a representation for an edge of a
+* The RGeoInfoConnection class provides a representation for an edge of a
 * connection.
 * @author Pascal Francq
-* @short Connection's Part for Geometric Information
+* @short Connection Part for Geometric Information
 */
 class RGeoInfoConnectionPart
 {
@@ -90,20 +86,30 @@ public:
 
 	/**
 	* Constructor of the connection part.
+	* @param pt1            Position of the first connector.
+	* @param id1            Identifier of the first connector.
+	* @param pt2            Position of the second connector.
+	* @param id2            Identifier of the second connector.
 	*/
 	RGeoInfoConnectionPart(const RPoint& pt1,unsigned int id1,const RPoint& pt2,unsigned int id2);
 
 	/**
 	* Copy contructor.
+	* @param p              Source object.
 	*/
 	RGeoInfoConnectionPart(const RGeoInfoConnectionPart* p);
 
 	/**
 	* Compare function.
+	* @param p              Object used for the search.
 	*/
 	int Compare(const RGeoInfoConnectionPart* p)
 		{return(!(((p->Id1==Id1)&&(p->Id2==Id2))||((p->Id1==Id2)&&(p->Id2==Id1))));}
-		
+
+	/**
+	* Compare function.
+	* @param s              Search criteria.
+	*/
 	int Compare(const sSearch& s)
 			{return(!(((s.id1==Id1)&&(s.id2==Id2))||((s.id1==Id2)&&(s.id2==Id1))));}
 
@@ -122,6 +128,7 @@ public:
 class RGeoInfoConnection : public RContainer<RGeoInfoConnectionPart,unsigned int,true,false>
 {
 public:
+
 	/**
 	* The connection.
 	*/
@@ -139,16 +146,19 @@ public:
 
 	/**
 	* Construct a connection.
+	* @param con            Original connection.
 	*/
 	RGeoInfoConnection(RConnection* con);
 
 	/**
-	* Construct a connection.
+	* Copy constructor.
+	* @param con            Source object.
 	*/
 	RGeoInfoConnection(const RGeoInfoConnection& con);
 
 	/**
-	* Construct a connection.
+	* Copy constructor.
+	* @param con            Source object.
 	*/
 	RGeoInfoConnection(const RGeoInfoConnection* con);
 
@@ -171,13 +181,14 @@ public:
 
 	/**
 	* Verify that at least two objects of the connection are placed.
+	* @param infos           List of geometric information.
 	*/
 	bool MinObjPlaced(RGeoInfos* infos);
 
 	/**
 	* Compute the distance of the net for a given set of geometric information.
 	* The "Prim's Algorithm for Minimum Spanning Trees" is used.
-	* @param infos          Geometric informations.
+	* @param infos          List of geometric information.
 	* @returns The "minimal" distance of the net.
 	*/
 	void ComputeMinDist(RGeoInfos* infos);
@@ -185,7 +196,7 @@ public:
 	/**
 	* Return the distance of the nets. The geometric information cur must be
 	* considered as placed at a gicen position.
-	* @param infos          Geometric informations.
+	* @param infos          List of geometric information.
 	* @param cur            The geometric information to place.
 	* @param pos            Position where to placed the geometric information.
 	*/
@@ -199,12 +210,16 @@ public:
 	double GetDist(RGeoInfos* infos,RGeoInfo* cur);
 
 	/**
-	* Return true if a geometric information is in the connection.
+	* Test if a a geometric information is in the connection.
+	* @param info           Geometric information.
+	* Return bool.
 	*/
 	bool IsIn(const RGeoInfo* info);
 
 	/**
-	* Return true if a connector is in the connection.
+	* Test if a connector is in the connection.
+	* @param con            Connector.
+	* @return bool.
 	*/
 	bool IsIn(const RGeoInfoConnector* con);
 };

@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -65,7 +61,6 @@ namespace R{
 class RPlacementHeuristicException : public eGA
 {
 public:
-	RPlacementHeuristicException(const RString& msg) : eGA(msg) {}
 	RPlacementHeuristicException(const char* msg) : eGA(msg) {}
 };
 
@@ -293,13 +288,14 @@ public:
 
 	/**
 	* Do some operations after the run.
+	* @param limits         Limits of the area.
 	*/
-	virtual void PostRun(RPoint &);
+	virtual void PostRun(RPoint& limits);
 
 	/**
 	* Return the bound rectangle containing all the objects.
 	*/
-	RRect& GetResult(void);
+	RRect GetResult(void);
 
 	/**
 	* Return the sum of the distances of all the connections.
@@ -323,8 +319,6 @@ public:
 
 	/**
 	* Create a problem file for a specific configuration.
-	* @seek                 Actual "seek" value for the random number
-	*                       generator.
 	*/
 	void CreateProblem(void);
 	

@@ -12,10 +12,6 @@
 		Pascal Francq (pfrancq@ulb.ac.be).
 		David Wartel (dwartel@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -61,13 +57,13 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::IsValidProto(R::RContainer<cObj,unsigned int,false,false>* prototypes,cObj* s) throw(std::bad_alloc)
+	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::IsValidProto(R::RContainer<cObj,unsigned int,false,false>* prototypes,cObj* obj) throw(std::bad_alloc)
 {
-	if (prototypes->GetPtr(s))
+	if (prototypes->GetPtr(obj))
 		return(false);
 	for (prototypes->Start(); !prototypes->End(); prototypes->Next())
 	 {
-		double sim=Similarity(s, (*prototypes)());
+		double sim=Similarity(obj, (*prototypes)());
 		if ((sim<=1+Epsilon)&&(sim>=1-Epsilon))
 			return(false);
 	}
@@ -100,7 +96,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	{
 		RContainer<cObj,unsigned int,true,true>* startingprotos ;
 		startingprotos = new RContainer<cObj,unsigned int,true,true> (10,5);
-		g=new cGroup(subsamples->NbPtr,0,true);
+		g=new cGroup(subsamples->NbPtr,0,0);
 		curs=g->GetCursor();
 		while (curs.GetNb()<nbsubprofpersubsamp)
 		{
@@ -108,6 +104,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 			cObj* sub = Objs->GetPtrAt(r);
 			g->InsertPtr(sub);
 			curs=g->GetCursor();
+			cout << curs.GetNb()<<" data set into sample"<<endl;
 		}
 		subsamples->InsertPtr(g);
 
@@ -171,15 +168,15 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::VerifyKMeansMod(void)
+	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::VerifyKMeansMod(void) throw(RException)
 {
-	int r;
-	unsigned int nbprotos=protos->NbPtr;
+	cObj** ptr;
+	unsigned int i, nbprotos;
 	RContainer<cObj,unsigned int,false,true>* wrongprotos;
 	wrongprotos= new RContainer<cObj,unsigned int,false,true>(10,5);
 	RCursor<cObj, unsigned int> curs;
 
-
+	nbprotos=protos->NbPtr;
 	// check for 'empty' clusters.
 	for (grpstemp2->Start(); !grpstemp2->End(); grpstemp2->Next())
 	{
@@ -190,13 +187,14 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 	for (wrongprotos->Start(); !wrongprotos->End(); wrongprotos->Next())
 		protos->DeletePtr((*wrongprotos)());
-	while (protos->NbPtr<nbprotos)
+
+	for (ptr=RandObjects, i=Objs->NbPtr; (protos->NbPtr<nbprotos)&&(i); ptr++,i--)
 	{
-		r=int(Rand->Value(Objs->NbPtr));
-		cObj* sub=Objs->GetPtrAt(r);
-		if (IsValidProto(protos, sub))
-			protos->InsertPtr(sub);
+		if (IsValidProto(protos, (*ptr)))
+			protos->InsertPtr((*ptr));
 	}
+	if (protos->NbPtr!=nbprotos)
+		throw RException("KMeans: VerifyKMeans : cannot find valid protos");
 
 	return(wrongprotos->NbPtr==0);
 }
@@ -224,21 +222,21 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	EvaluateGroupsNumber();
 
 	//temp   - display KmeansCosinus parameters
-//	DisplayInfos();
+	DisplayInfos();
 
 	for (GroupsNumber=MinNbGroups; GroupsNumber<(MaxNbGroups+1); GroupsNumber++)
 	{
-//		cout <<" ------------------------------------------------------------------------ init " <<endl;
+		cout <<" ------------------------------------------------------------------------ init " <<endl;
 		if (initial==Refined)
 			Init();
-//		cout <<" ------------------------------------------------------------------------Run " <<endl;
+		cout <<" ------------------------------------------------------------------------Run " <<endl;
 		Execute(Objs, NbTests);
 
 
 		// evaluate the clustering / each clutering for each number of group
 		double finalcost=CostFunction(grpstemp2)/protos->NbPtr;
 //		double distortion=Distortion(grpstemp2);
-//		cout << "----------------->>>>>> "<<GroupsNumber<< " goupes -   final cost function: "<< finalcost<<endl;
+		cout << "----------------->>>>>> "<<GroupsNumber<< " goupes -   final cost function: "<< finalcost<<endl;
 //		cout << "----------------->>>>>> "<<GroupsNumber<< " goupes -   final distortion: "<< distortion<<endl;
 
 		if ((GroupsNumber==MinNbGroups)||(finalcost<var))
@@ -251,8 +249,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	 	}
 	}
 	GroupsNumber--;
-//	cout << "----------------->>>>>>end final cost function: "<<var<<endl;
-//	cout << "----------------->>>>>>end final nbgroup: "<< grnumber<<endl;
+	cout << "----------------->>>>>>end final cost function: "<<var<<endl;
+	cout << "----------------->>>>>>end final nbgroup: "<< grnumber<<endl;
 }
 
 
@@ -274,28 +272,28 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::RandomInitObjects(RContainer<cObj,unsigned int,false,true>* dataset, unsigned int nbgroups)
+	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::RandomInitObjects(RContainer<cObj,unsigned int,false,true>* dataset, unsigned int nbgroups) throw(RException)
 {
-	cObj **tab, **ptr;
+	cObj **ptr;
 	unsigned int i;
-	RCursor<cObj, unsigned int> curs;
 
 	protos->Clear();
 
-
 	// mix the dataset
-	tab=new cObj*[dataset->NbPtr];
-	memcpy(tab,dataset->Tab,sizeof(cObj*)*(dataset->NbPtr));
-	Rand->RandOrder(tab,dataset->NbPtr);
+	RandObjects=new cObj*[dataset->NbPtr];
+	memcpy(RandObjects,dataset->Tab,sizeof(cObj*)*(dataset->NbPtr));
+	Rand->RandOrder(RandObjects,dataset->NbPtr);
 
-
-	for (ptr=tab, i=curs.GetNb(); (protos->NbPtr<nbgroups)&&(i); ptr++,i--)
+	for (ptr=RandObjects, i=dataset->NbPtr; (protos->NbPtr<nbgroups)&&(i); ptr++,i--)
 	{
+		cout <<" i="<<i<<endl;
 		cObj* randomobj=(*ptr);
 		 if (IsValidProto(protos, randomobj))
 			protos->InsertPtr(randomobj);
 	}
-//	GroupsNumber=protos->NbPtr;
+	cout <<" Random Init : "<<protos->NbPtr<< " centers found !"<<endl;
+	if(nbgroups!=protos->NbPtr)
+		throw RException("KMeans : Can not find valid protypes");
 }
 
 
@@ -311,12 +309,14 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	// initialization
 	for (unsigned int test=0; test<nbtests; test++)
 	{
+		cout <<" ********************* TEST "<<test<<"/"<<nbtests<<" ********************"<<endl;
 		if (initial==Random)
 			RandomInitObjects(Objs, GroupsNumber); // cycle
 		iter=0;
 		error=1;
 		while ((iter<IterNumber)&&(error!=0))
 		{
+			cout << " running iteration "<<iter<<"/"<<IterNumber<<endl;
 			grpstemp->Clear();
 			ReAllocate(dataset);
 			ReCenter();
@@ -378,6 +378,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::ReAllocate(RContainer<cObj,unsigned int,false,true>* dataset)
 {
+	cout << " re-allocating"<<endl;
 	int i=0;
 	cGroup * g;
 	for (protos->Start(); !protos->End(); protos->Next())  // groupscontaining one proto are created
@@ -407,6 +408,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		cGroup* gr=FindGroup(grpstemp, parent);
 		gr->InsertPtr(s);
 	}
+	cout << " re-allocation done !"<<endl;
+
 }
 
 
@@ -414,23 +417,25 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::ReCenter(void)
 {
+	cout <<" Re centering..."<<endl;
 	protoserror->Clear();
 	for (grpstemp->Start(); !grpstemp->End(); grpstemp->Next())
 	{
 		cObj* tmp=(*grpstemp)()->RelevantObj();
 		protoserror->InsertPtr(tmp);
 	}
+	cout <<" Re centering done !"<<endl;
 }
 
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	double RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::Distance(cObj *s1, cObj *proto)
+	double RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::Distance(cObj* obj, cObj* proto)
 {
 	double dist;
 	cGroup* gr;
 	gr=FindGroup(grpstemp, proto);
-	dist=(1.0-Similarity(s1,proto));
+	dist=(1.0-Similarity(obj,proto));
 
 	return(dist);
 }
@@ -438,10 +443,10 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	cGroup*  RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::FindGroup(RContainer<cGroup,unsigned int,false,false>* grps,cObj* s)
+	cGroup* RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::FindGroup(RContainer<cGroup,unsigned int,false,false>* grps,cObj* obj)
 {
 	for (grps->Start(); !grps->End(); grps->Next())
-		if( (*grps)()->IsIn(s))
+		if( (*grps)()->IsIn(obj))
 			return((*grps)());
 	return(0);
 }
@@ -453,6 +458,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 {
 	RefiningCenters(NbSubSamples,SubSamplesRate);
 }
+
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
@@ -470,7 +476,6 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		protos->InsertPtr((*protoserror)());
 	}
 	return(err);
-
 }
 
 
@@ -512,9 +517,9 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	double RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::Similarity(cObj* s1, cObj* s2)
+	double RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::Similarity(cObj* obj1, cObj* obj2)
 {
-	    return (s1->Similarity(s2));
+	return (obj1->Similarity(obj2));
 }
 
 

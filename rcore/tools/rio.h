@@ -6,14 +6,10 @@
 
 	Generic Class - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -51,6 +47,11 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
+// Forward declaration
+class RTextFile;
+
+
+//------------------------------------------------------------------------------
 /**
 * The ModeType enum represents the different mode that can be used to open a
 * file.
@@ -78,11 +79,29 @@ public:
 	* @param str                      Message of the error.
 	*/
 	RIOException(const char* str) throw(std::bad_alloc);
+
+	/**
+	* Construct an IO exception.
+	* @param file                     File process when the error occurs.
+	* @param str                      Message of the error.
+	*/
+	RIOException(const RTextFile* file,const char* str) throw(std::bad_alloc);
 };
 
 
-
 }  //-------- End of namespace R -----------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// Macro to create a new exception directlty derived from RIOException
+#define NEWRIOEXCEPTION(name)                                                 \
+class name : public R::RIOException                                           \
+{                                                                             \
+public:                                                                       \
+	name(const char* str) throw() : R::RIOException(str) {}                   \
+	name(const R::RTextFile* file,const char* str) throw()                    \
+		: R::RIOException(file,str) {}                                        \
+}
 
 
 //------------------------------------------------------------------------------

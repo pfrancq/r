@@ -12,10 +12,6 @@
 		Pascal Francq (pfrancq@ulb.ac.be).
 		Thomas L'Eglise.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -82,6 +78,8 @@ class RPromKernel
 
 	/**
 	* Function used to sort the solutions by fit.
+	* @param a              Pointer to the first solution.
+	* @param b              Pointer to the second solution.
 	*/
 	static int sort_function_solutions( const void *a, const void *b);
 
@@ -102,13 +100,13 @@ public:
 	void ComputeEvalFunc(void);
 
 	/**
-	* Calculate Prométhée II
+	* Calculate Prométhée II.
 	*/
 	virtual void ComputePrometheeII(void);
 
 	/**
 	* Create a new criterion.
-	* @param type           Type of the criterion.
+	* @param t              Type of the criterion.
 	* @param p              Preference's threshold.
 	* @param q              Indifference's threshold.
 	* @param w              Weight of the criterion.
@@ -117,14 +115,14 @@ public:
 
 	/**
 	* Create a new criterion.
-	* @param type           Type of the criterion.
+	* @param t             Type of the criterion.
 	* @param params         Parameters.
 	*/
 	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RPromCriterionParams& params) throw(std::bad_alloc);
 
 	/**
 	* Create a new criterion.
-	* @param type           Type of the criterion.
+	* @param t              Type of the criterion.
 	* @param name           Name of the criterion.
 	* @param p              Preference's threshold.
 	* @param q              Indifference's threshold.
@@ -134,7 +132,7 @@ public:
 
 	/**
 	* Create a new criterion.
-	* @param type           Type of the criterion.
+	* @param t              Type of the criterion.
 	* @param name           Name of the criterion.
 	* @param params         Parameters.
 	*/

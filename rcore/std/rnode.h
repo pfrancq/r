@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -53,14 +49,14 @@ namespace R{
 * This class represent a generic node. The user has to derived from this class
 * and implement the Compare function. The paramter N specify the real class and
 * the parameter bOrder specify if the nodes has to be ordered. Here is an example:
-* <pre>
+* @code
 * class MyNoOrderNode : public RNode<MyNoOrderNode,false>
 *	{
 *	public:
 *		MyNoOrderNode(unsigned int max,unsigned int inc);
 *		int Compare(MyNoOrderNode *node);
 *	};
-* </pre>
+* @endcode
 * @author Pascal Francq
 * @short Generic Node.
 */
@@ -87,10 +83,10 @@ public:
 	virtual int Compare(RNode*);
 
 	/**
-	* Insert a subnode.
-	* @param node           The node to insert.
+	* Return the parent of the node.
+	* @returns Pointer to N.
 	*/
-	void InsertNode(N* node);
+	N* GetParent(void);
 
 	/**
 	* Destruct the node.

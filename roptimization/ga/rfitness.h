@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -55,13 +51,13 @@ namespace R{
 *
 * This example implements a fitness that is represented by a integer value and
 * that has to be minimized.
-* <pre>
+* @code
 * class MyFitness : public RFitness<int,false>
 * {
 *	public:
 *		MyFitness(void);
 *	};
-* </pre>
+* @endcode
 * @author Pascal Francq
 * @short Generic Fitness.
 */

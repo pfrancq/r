@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -81,7 +77,7 @@ public:
 	* This methods compares two variables using their names and works like the
 	* "strcpy" function of the ANSI C/C++ library.
 	* @see R::RContainer.
-	* @param f               Pointer to a variable.
+	* @param v               Pointer to a variable.
 	* @return int
 	*/
 	int Compare(const RPrgVar* v) const;
@@ -90,7 +86,7 @@ public:
 	* This methods compares the name of a variable with a string and works like
 	* the "strcpy" function of the ANSI C/C++ library.
 	* @see R::RContainer.
-	* @param n               String representing the name of the variable.
+	* @param v               String representing the name of the variable.
 	* @return int
 	*/
 	int Compare(const RString& v) const;
@@ -99,7 +95,7 @@ public:
 	* This methods compares the name of a variable with a string and works like
 	* the "strcpy" function of the ANSI C/C++ library.
 	* @see R::RContainer.
-	* @param n               String representing the name of the variable.
+	* @param v               String representing the name of the variable.
 	* @return int
 	*/
 	int Compare(const char* v) const;

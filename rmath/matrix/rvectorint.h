@@ -11,10 +11,6 @@
 	Authors:
 		Vandaele Valery(vvandaele@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -104,13 +100,13 @@ public:
 
 	/**
 	* Copy constructor.
-	* @pram lst              List to copy.
+	* @param lst            List to copy.
 	*/
 	RVectorInt(const RVectorInt* lst) throw(std::bad_alloc);
 
 	/**
 	* Test if two lists have exactly the same Integers.
-	* @param vi        The list used for the comparaison.
+	* @param vi             The list used for the comparaison.
 	* @return True if the lists are the same.
 	*/
 	bool IsSame(const RVectorInt& vi) const;
@@ -155,6 +151,7 @@ public:
 
 	/**
 	* Return the Integer value at position i. The first Integer value is at position 0.
+	* @param i              Index.
 	*/
 	unsigned int operator[](int i) const;
 

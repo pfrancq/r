@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -193,11 +189,6 @@ public:
 	* The assign Operator.
 	*/
 	inline RRect& operator=(const RRect& rect) {Pt1=rect.Pt1;Pt2=rect.Pt2;return(*this);}
-
-	/**
-	* Return a pointer to a temporary object of class rectangle.
-	*/
-	static RRect* GetRect(void);
 };
 
 

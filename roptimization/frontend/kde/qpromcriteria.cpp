@@ -8,10 +8,6 @@
 
 	(C) 2002 by P. Francq.
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -31,14 +27,14 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromcriterion.h>
 #include <qpromcriteria.h>
 using namespace R;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for Qt
 #include <qlabel.h>
 #include <qlineedit.h>
@@ -49,16 +45,16 @@ using namespace R;
 #include <qlayout.h>
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for KDE
 #include <klocale.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class QPromCriterion
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 class QPromCriteria::QPromCriterion
 {
@@ -78,13 +74,13 @@ public:
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class QPromCriteria
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 QPromCriteria::QPromCriteria(QWidget* parent,const char* name)
 	: QGroupBox(parent,name), Current(-1), Crits(10,5)
 {
@@ -156,7 +152,7 @@ QPromCriteria::QPromCriteria(QWidget* parent,const char* name)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QPromCriteria::InsertCriterion(const char* crit)
 {
 	QPromCriterion* ptr;
@@ -176,7 +172,7 @@ void QPromCriteria::InsertCriterion(const char* crit)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QPromCriteria::SetCriterionParam(const char* crit,double p,double q,double w)
 {
 	QPromCriterion* ptr;
@@ -205,7 +201,7 @@ void QPromCriteria::SetCriterionParam(const char* crit,double p,double q,double 
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QPromCriteria::SetCriterionParam(const char* crit,RPromCriterionParams& p)
 {
 	QPromCriterion* ptr;
@@ -234,7 +230,7 @@ void QPromCriteria::SetCriterionParam(const char* crit,RPromCriterionParams& p)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QPromCriteria::GetCriterionParam(const char* crit,double& p,double& q,double& w)
 {
 	QPromCriterion* ptr;
@@ -266,7 +262,7 @@ void QPromCriteria::GetCriterionParam(const char* crit,double& p,double& q,doubl
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QPromCriteria::GetCriterionParam(const char* crit,RPromCriterionParams& p)
 {
 	QPromCriterion* ptr;
@@ -290,7 +286,7 @@ void QPromCriteria::GetCriterionParam(const char* crit,RPromCriterionParams& p)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QPromCriteria::slotActivated(int index)
 {
 	QString tmp;
@@ -322,14 +318,14 @@ void QPromCriteria::slotActivated(int index)
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void QPromCriteria::slotChanged(void)
 {
 	emit valueChanged();
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 QPromCriteria::~QPromCriteria(void)
 {
 }

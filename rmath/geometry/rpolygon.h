@@ -2,18 +2,14 @@
 
 	R Project Library
 
-	RPolygons.h
+	RPolygon.h
 
-	Polygons - Header.
+	Polygon - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
-
-	Version $Revision$
-
-	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -281,17 +277,13 @@ public:
 	bool DuplicatePoints(void) const;
 
 	/**
-	* Return a pointer to a temporary object of class rpolygon.
-	*/
-	static RPolygon* GetPolygon(void);
-
-	/**
 	* Compute a point in the polygon which represents a sort of "Mass Point".
 	*/
-	RPoint& GetCentralPoint(void);
+	RPoint GetCentralPoint(void);
 
 	/**
 	* Save the polygon in a file.
+	* param f               Text file where the information must be written.
 	*/
 	void Save(RTextFile& f);
 
@@ -299,8 +291,22 @@ public:
 	* Calibrate the polygon, make the bottom-left point at (0,0).
 	* @return The translation that has be done.
 	*/
-	RPoint& Calibrate(void);
+	RPoint Calibrate(void);
+
+	/**
+	* Get a cursor on the points of the polygon.
+	* @return RPointCursor.
+	*/
+	RPointCursor GetPointsCursor(void);
 };
+
+
+//------------------------------------------------------------------------------
+/**
+* The RPolygonCursor class provides a way to go trough a set of polygons.
+* @short Polygons Cursor
+*/
+CLASSCURSOR(RPolygonCursor,RPolygon,unsigned int);
 
 
 }  //-------- End of namespace R -----------------------------------------------

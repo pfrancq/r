@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -109,7 +105,7 @@ public:
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
 	*/
-	virtual void Crossover(cChromo* /*parent1*/,cChromo* /*parent2*/) throw(eGA) {}
+	virtual void Crossover(cChromo* parent1,cChromo* parent2) throw(eGA);
 
 	/**
 	* Do a mutation with the chromosome.

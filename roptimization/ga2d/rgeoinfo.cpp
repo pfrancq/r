@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -79,12 +75,103 @@ RGeoInfoConnector::RGeoInfoConnector(RGeoInfoConnector* con,RGeoInfo* owner)
 
 
 //------------------------------------------------------------------------------
-RPoint& RGeoInfoConnector::GetPos(void)
+RPoint RGeoInfoConnector::GetPos(void)
 {
-	RPoint* pt=RPoint::GetPoint();
-	
-	(*pt)=Pos[0]+Owner->GetPos();
-	return(*pt);
+	return(Pos[0]+Owner->GetPos());
+}
+
+
+
+//------------------------------------------------------------------------------
+//
+// class RRelPointCursor
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+RRelPointCursor::RRelPointCursor(void)
+	: RPointCursor(), Base()
+{
+}
+
+
+//------------------------------------------------------------------------------
+RRelPointCursor::RRelPointCursor(RGeoInfo& info)
+	: RPointCursor(info.Bound), Base(info.Pos)
+{
+}
+
+//------------------------------------------------------------------------------
+RRelPointCursor::RRelPointCursor(RGeoInfo* info)
+	: RPointCursor(info->Bound), Base(info->Pos)
+{
+}
+
+
+//------------------------------------------------------------------------------
+void RRelPointCursor::Clear(void)
+{
+	RPointCursor::Clear();
+}
+
+
+//------------------------------------------------------------------------------
+void RRelPointCursor::Start(void)
+{
+	RPointCursor::Start();
+}
+
+
+//------------------------------------------------------------------------------
+void RRelPointCursor::Set(RGeoInfo& info)
+{
+	RPointCursor::Set(info.Bound);
+	Base=info.Pos;
+}
+
+
+//------------------------------------------------------------------------------
+void RRelPointCursor::Set(RGeoInfo* info)
+{
+	RPointCursor::Set(info->Bound);
+	Base=info->Pos;
+}
+
+
+//------------------------------------------------------------------------------
+void RRelPointCursor::GoTo(const unsigned int i) throw(std::bad_alloc)
+{
+	RPointCursor::GoTo(i);
+}
+
+
+//------------------------------------------------------------------------------
+unsigned int RRelPointCursor::GetNb(void)
+{
+	return(RPointCursor::GetNb());
+}
+
+
+//------------------------------------------------------------------------------
+bool RRelPointCursor::End(void) const
+{
+	return(RPointCursor::End());
+}
+
+
+//------------------------------------------------------------------------------
+void RRelPointCursor::Next(void)
+{
+	RPointCursor::Next();
+}
+
+
+//------------------------------------------------------------------------------
+RPoint RRelPointCursor::operator()(void) const
+{
+	RPoint Pt((*(dynamic_cast<const RPointCursor*>(this)))());
+	Pt+=Base;
+	return(Pt);
 }
 
 
@@ -361,23 +448,9 @@ bool RGeoInfo::Overlap(RGeoInfo* info)
 
 
 //------------------------------------------------------------------------------
-RPoint& RGeoInfo::GetPos(void)
+RPoint RGeoInfo::GetPos(void)
 {
-	RPoint *pt=RPoint::GetPoint();
-
-	(*pt)=Pos;
-	return(*pt);
-}
-
-
-//------------------------------------------------------------------------------
-RPoint& RGeoInfo::operator()(void)
-{
-	RPoint *Pt=RPoint::GetPoint();
-
-	(*Pt)=(*(*Bound)());
-	(*Pt)+=Pos;
-	return(*Pt);
+	return(Pos);
 }
 
 
@@ -468,13 +541,13 @@ void RGeoInfo::Add(RPolygons& polys)
 
 
 //------------------------------------------------------------------------------
-RPolygon& RGeoInfo::GetPolygon(void)
+RPolygon RGeoInfo::GetPolygon(void)
 {
-	RPolygon* poly=RPolygon::GetPolygon();
+	RPolygon poly;
 
-	(*poly)=(*Bound);
-	(*poly)+=Pos;
-	return(*poly);
+	poly=(*Bound);
+	poly+=Pos;
+	return(poly);
 }
 
 

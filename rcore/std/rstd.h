@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -197,25 +193,6 @@ const tId NullId=0xFFFFFFFF;
 
 //------------------------------------------------------------------------------
 /**
-* This function provides a way to handle temporary objects needed when using
-* standard operators with non standard classes.
-* @author Pascal Francq
-* @param C                  The type of class.
-* @param Max                Maximal size of the array (neested operators).
-*/
-template<class C,unsigned long Max>
-	inline C* GetTemporaryObject(void)
-{
-	static C tab[Max];
-	static long act=0;
-
-	if(act==Max) act=0;
-	return(&tab[act++]);
-}
-
-
-//------------------------------------------------------------------------------
-/**
 * The RException class provides a basic representation for an exception.
 * @author Pascal Francq
 * @short Basic Exception.
@@ -262,6 +239,17 @@ public:
 
 
 }  //-------- End of namespace R -----------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// Macro to create a new exception directlty derived from RException
+#define NEWREXCEPTION(name)                                                   \
+class name : public R::RException                                             \
+{                                                                             \
+public:                                                                       \
+	name(void) throw() : R::RException() {}                                   \
+	name(const char* str) throw() : R::RException(str) {}                     \
+}
 
 
 //------------------------------------------------------------------------------

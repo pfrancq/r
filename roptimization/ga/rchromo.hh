@@ -11,10 +11,6 @@
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
 
-	Version $Revision$
-
-	Last Modify: $Date$
-
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
 	License as published by the Free Software Foundation; either
@@ -52,6 +48,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RChromo<cInst,cChromo,cFit,cThreadData>::Init(cThreadData*) throw(std::bad_alloc)
+{
+}
+
+
+//------------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	void RChromo<cInst,cChromo,cFit,cThreadData>::Crossover(cChromo*,cChromo*) throw(eGA)
 {
 }
 
