@@ -194,7 +194,7 @@ void RQuery::Init(void) throw(RMySQLError)
 		ptr++;
 		size++;
 	}
-	cmd=SQL.Mid(pos,size);
+	cmd=SQL.Mid(pos,size).ToUpper();
 
 	// It is a SELECT or a SHOW command -> retrieve results
 	if((size<7)&&((cmd=="SELECT")||(cmd=="SHOW")))
