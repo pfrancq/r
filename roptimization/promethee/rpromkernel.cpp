@@ -186,7 +186,7 @@ RPromSol* RPromKernel::GetBestSol(void)
 	
 	best=(*Solutions.Tab);
 	for(i=Solutions.NbPtr,sol=&Solutions.Tab[1];--i;sol++)
-		if(best->Fi<(*sol)->Fi)
+		if(best->Fi>(*sol)->Fi)
 			best=(*sol);
 	return(best);
 }
@@ -199,7 +199,7 @@ int RPromKernel::sort_function_solutions( const void *a, const void *b)
 	RPromSol* bs=(*(static_cast<RPromSol**>(b)));
 	double d;
 	
-	d=as->Fi-bs->Fi;
+	d=bs->Fi-as->Fi;
 	if(d<=0.000001) return(0);
 	if(d<0)
 		return(-1);
