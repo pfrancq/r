@@ -133,12 +133,23 @@ public:
 	*				as	argument.
 	*/
 	int Compare(const char* name) {return(Name.Compare(name));}
-		
+
 	/**
 	* @return Identificator of the solution.
 	*/
 	unsigned int GetId(void) {return(Id);}
-	
+
+	/**
+	* @return Fi of the solution.
+	*/
+	double GetFi(void) {return(Fi);}
+
+	/**
+    * Return the name of the tag.
+    * @returns a string containing the name.
+    */
+	RString& RPromSol::GetName(void);
+
 	/**
 	* Destruct a prométhée solution.
 	*/

@@ -192,7 +192,12 @@ public:
 	* Return the solutions order by fit increase.
 	*/
 	RPromSol** GetSols(void);
-	
+
+	/**
+	* Return the solutions order by fit increase.
+	*/
+	RContainer<RPromSol,unsigned int,false,false>* GetContSols(void);
+
 	/**
 	* Return the best solution identifier.
 	*/

@@ -63,6 +63,7 @@ namespace RPromethee{
 * Different types for criteria.
 */
 enum CriteriaType{Minimize,Maximize};
+enum FilterType{Low, LowEqual, Equal, GreatEqual, Great};
 
 
 //-----------------------------------------------------------------------------
