@@ -138,8 +138,8 @@ public:
     {
 		register unsigned i,jump;
 		T aux;
-		register T *p1;
-		register T *p2;
+		register T* p1;
+		register T* p2;
 
 		#if __BORLANDC__
 			#pragma warn -pia
