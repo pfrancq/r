@@ -157,6 +157,7 @@ void RPromethee::RPromKernel::Assign(RPromSol* sol,RPromCriterion* crit,const do
 {
 	RPromCritValue* val;
 
+	if((!val)||(!crit)) return;
 	val=sol->GetPtrAt(crit->Id);
 	if(!val)
 	{
