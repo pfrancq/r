@@ -293,7 +293,7 @@ bool RXML::RXMLTag::IsEmpty(void)
 
 
 //------------------------------------------------------------------------------
-void RXML::RXMLTag::DeleteEmptyTags(void)
+void RXML::RXMLTag::DeleteEmptyTags(RXMLStruct* s)
 {
 	RXMLTag **ptr;
 	unsigned int i;
@@ -301,12 +301,12 @@ void RXML::RXMLTag::DeleteEmptyTags(void)
 	// Go through the subtags.
 	for(i=0,ptr=Tab;i<NbPtr;i++)
 	{
-		(*ptr)->DeleteEmptyTags();
+		(*ptr)->DeleteEmptyTags(s);
 		if((*ptr)->IsEmpty())
 		{
 			// If the tags is empty -> Delete it but don't increase ptr
 			// because DeletePtr will move everything to the left
-			DeletePtr(*ptr);
+			s->DeleteNode(*ptr);
 		}
 		else
 			ptr++;  // No empty tag -> Go to the next.

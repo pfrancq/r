@@ -226,8 +226,9 @@ public:
 
 	/**
 	* Delete all the empty subtags attached to the current tag.
+	* @param s              Structure of the node.
 	*/
-	void DeleteEmptyTags(void);
+	void DeleteEmptyTags(RXMLStruct* s);
 
 	/**
 	* Start the iterator to go trough the word.
