@@ -69,7 +69,8 @@ public:
 //---------------------------------------------------------------------------
 class RDb
 {
-	MYSQL *connection,mysql;
+	MYSQL* connection;
+	MYSQL mysql;
 public:
 	RDb(const RString &host,const RString &user,const RString &pwd,const RString &db) throw(RError);
 	int GetProtocolVersion(void) {return(mysql.protocol_version);}
