@@ -115,3 +115,11 @@ template<class cVal,bool Max>
 {
 	return(!Max);
 }
+
+
+//-----------------------------------------------------------------------------
+template<class cVal,bool Max>
+	inline bool operator>(const RGA::RFitness<cVal,Max>& f1,const RGA::RFitness<cVal,Max>&  f2)
+{
+	return(f2<f1);
+}
