@@ -38,7 +38,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rga.h>
-using namespace RGA;
+//using namespace RGA;
 #include <rga2d/robj2d.h>
 #include <rga2d/rgeoinfo.h>
 #include <rga2d/rconnection.h>
@@ -64,7 +64,7 @@ class RGeoInfos;
 * @short Connections.
 * @author Pascal Francq
 */
-class RConnections : public RContainer<RConnection,unsigned int,true,false>
+class RConnections : public RStd::RContainer<RConnection,unsigned int,true,false>
 {
 	/**
 	* Random number generator to use.

@@ -55,7 +55,7 @@ namespace RGA2D{
 * @short 2D GA chromosome.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	class RChromo2D : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGeoInfos
+	class RChromo2D : public RGA::RChromo<cInst,cChromo,cFit,cThreadData>, public RGA2D::RGeoInfos
 {
 protected:
 

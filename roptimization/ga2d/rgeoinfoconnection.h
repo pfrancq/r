@@ -108,7 +108,7 @@ public:
 			{return(!(((s.id1==Id1)&&(s.id2==Id2))||((s.id1==Id2)&&(s.id2==Id1))));}
 
 	// friend classes
-	class RGeoInfoConnection;
+	friend class RGeoInfoConnection;
 };
 
 

@@ -36,6 +36,11 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <stdlib.h>
+
+
+//-----------------------------------------------------------------------------
 // include files for RGeometry
 #include <rgeometry/geometry.h>
 using namespace RGeometry2D;
@@ -132,7 +137,7 @@ public:
 	/**
 	* This function returns true if the two points are side by side.
 	*/
-	inline bool Near(const RPoint *pt) const {return((labs(X-pt->X)<=1)&&(labs(Y-pt->Y)<=1));}
+	inline bool Near(const RPoint *pt) const;
 
 	/**
 	* Set the point to the given position.
@@ -144,7 +149,7 @@ public:
 	/**
 	* Return the manhatan distance from a given point.
 	*/
-	inline RCoord ManhattanDist(const RPoint &pt) const {return(labs(X-pt.X)+labs(Y-pt.Y));}
+	RCoord ManhattanDist(const RPoint &pt) const;
 	
 	/**
 	* Return the euclidean distance from a given point.

@@ -84,6 +84,20 @@ RGeometry2D::RRect::RRect(const RCoord MinX,const RCoord MinY,const RCoord MaxX,
 
 
 //-----------------------------------------------------------------------------
+RCoord RGeometry2D::RRect::Width(void) const
+{
+	return(labs(Pt2.X-Pt1.X+1));
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RGeometry2D::RRect::Height(void) const
+{
+	return(labs(Pt2.Y-Pt1.Y+1));
+}
+
+
+//-----------------------------------------------------------------------------
 RRect& RGeometry2D::RRect::operator+=(const RPoint &pt) throw(bad_alloc)
 {
 	Pt1+=pt;

@@ -45,7 +45,6 @@ using namespace RXML;
 using namespace RGeometry2D;
 #include <rga2d/robj2d.h>
 #include <rga2d/rconnections.h>
-using namespace RGA;
 
 
 //-----------------------------------------------------------------------------

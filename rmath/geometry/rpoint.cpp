@@ -83,6 +83,20 @@ RGeometry2D::RPoint::RPoint(const RPoint *pt)
 
 
 //-----------------------------------------------------------------------------
+bool RGeometry2D::RPoint::Near(const RPoint *pt) const
+{
+	return((labs(X-pt->X)<=1)&&(labs(Y-pt->Y)<=1));
+}
+
+
+//-----------------------------------------------------------------------------
+RCoord RGeometry2D::RPoint::ManhattanDist(const RPoint &pt) const
+{
+	return(labs(X-pt.X)+labs(Y-pt.Y));
+}
+
+
+//-----------------------------------------------------------------------------
 double RGeometry2D::RPoint::EuclideanDist(const RPoint &pt) const
 {
 	double dx,dy;

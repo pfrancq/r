@@ -67,8 +67,7 @@ class RConnection;
 * specify that a variable containing an identificator of an object. is
 * referencing no object.
 */
-const unsigned int NoObject=UINT_MAX;
-
+const unsigned int NoObject=0xFFFFFFFF;
 
 
 //-----------------------------------------------------------------------------

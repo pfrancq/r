@@ -129,7 +129,7 @@ public:
 * @short 2D GA Instance.
 */
 template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo>
-	class RInst2D	: public RInst<cInst,cChromo,cFit,cThreaData>
+	class RInst2D	: public RGA::RInst<cInst,cChromo,cFit,cThreaData>
 {
 public:
 

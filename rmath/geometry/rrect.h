@@ -95,12 +95,12 @@ public:
 	/**
 	* Return the width of the rectangle.
 	*/
-	inline RCoord Width(void) const {return(labs(Pt2.X-Pt1.X+1));}
+	RCoord Width(void) const;
 	
 	/**
 	* Return the height of the rectangle.
 	*/
-	inline RCoord Height(void) const {return(labs(Pt2.Y-Pt1.Y+1));}
+	RCoord Height(void) const;
 
 	/**
 	* Return the area of the rectangle.

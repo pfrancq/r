@@ -160,6 +160,7 @@ RGeoInfos& RGA2D::RGeoInfos::operator=(const RGeoInfos& infos) throw(bad_alloc)
 //-----------------------------------------------------------------------------
 void RGA2D::RGeoInfos::CreateProblem(unsigned long seek)
 {
+
 }
 
 
