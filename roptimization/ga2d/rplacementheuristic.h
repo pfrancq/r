@@ -6,7 +6,10 @@
 
 	Generic Heuristic for Placement - Header
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,18 +34,16 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RPlacementHeuristicH
 #define RPlacementHeuristicH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
-using namespace RStd;
-#include <rgeometry/rpoint.h>
-#include <rgeometry/rrect.h>
-using namespace RGeometry2D;
+#include <rmath/rpoint.h>
+#include <rmath/rrect.h>
 #include <rga2d/robj2d.h>
 #include <rga2d/rgeoinfo.h>
 #include <rga2d/rgeoinfos.h>
@@ -50,28 +51,26 @@ using namespace RGeometry2D;
 #include <rga2d/rfreepolygons.h>
 #include <rga2d/rconnections.h>
 #include <rga2d/rproblem2d.h>
-using namespace RGA2D;
 #include <rpromethee/rpromcriterion.h>
-using namespace RPromethee;
 
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 */
-class RPlacementHeuristicException : public RGA::eGA
+class RPlacementHeuristicException : public eGA
 {
 public:
-	RPlacementHeuristicException(const RString& msg) : RGA::eGA(msg) {}
-	RPlacementHeuristicException(const char* msg) : RGA::eGA(msg) {}
+	RPlacementHeuristicException(const RString& msg) : eGA(msg) {}
+	RPlacementHeuristicException(const char* msg) : eGA(msg) {}
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RPlacementHeuristic class provides an abstract class for placement
 * heuristics.
@@ -336,8 +335,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

@@ -6,7 +6,10 @@
 
 	Set of geometric informations - Implementation.
 
-	(c) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,21 +33,21 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga2d/rgeoinfos.h>
-using namespace RGA2D;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-// RGeoInfos
+// class RGeoInfos
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RGeoInfos::RGeoInfos(RProblem2D* prob,bool create) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RGeoInfos::RGeoInfos(RProblem2D* prob,bool create) throw(bad_alloc)
 	: RContainer<RGeoInfo,unsigned int,true,false>(prob->Objs.NbPtr+3,prob->Objs.NbPtr/2),
 	  Problem(prob), Cons(&prob->Cons,this), RealNb(prob->Objs.NbPtr), Selected(0)
 {
@@ -66,8 +69,8 @@ RGA2D::RGeoInfos::RGeoInfos(RProblem2D* prob,bool create) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* selected)
+//------------------------------------------------------------------------------
+void RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* selected)
 {
 //	RGeoInfo* best;
 	RRect bound,r;
@@ -113,8 +116,8 @@ void RGA2D::RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* s
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RGeoInfos::Boundary(RRect &rect)
+//------------------------------------------------------------------------------
+void RGeoInfos::Boundary(RRect& rect)
 {
 	RGeoInfo **ptr;
 	unsigned int i;
@@ -133,8 +136,8 @@ void RGA2D::RGeoInfos::Boundary(RRect &rect)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RGeoInfos::ClearInfos(void)
+//------------------------------------------------------------------------------
+void RGeoInfos::ClearInfos(void)
 {
 	for(Start();!End();Next())
 		(*this)()->ClearInfo();
@@ -142,8 +145,8 @@ void RGA2D::RGeoInfos::ClearInfos(void)
 }
 
 
-//-----------------------------------------------------------------------------
-RGeoInfos& RGA2D::RGeoInfos::operator=(const RGeoInfos& infos) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RGeoInfos& RGeoInfos::operator=(const RGeoInfos& infos) throw(bad_alloc)
 {
 	RContainer<RGeoInfo,unsigned int,true,false>::operator=(infos);
 	Problem=infos.Problem;
@@ -155,8 +158,8 @@ RGeoInfos& RGA2D::RGeoInfos::operator=(const RGeoInfos& infos) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA2D::RGeoInfos::~RGeoInfos(void)
+//------------------------------------------------------------------------------
+RGeoInfos::~RGeoInfos(void)
 {
 	if(Selected)
 		delete[] Selected;

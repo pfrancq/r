@@ -6,7 +6,10 @@
 
 	Edge Heuristic for Placement - Implementation
 
-	(C) 1998-2001 by By P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,28 +34,28 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga2d/rplacementedge.h>
-using namespace RGA2D;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-//	RPlacementEdge
+// class RPlacementEdge
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RPlacementEdge::RPlacementEdge(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+//------------------------------------------------------------------------------
+RPlacementEdge::RPlacementEdge(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementEdge::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+//------------------------------------------------------------------------------
+void RPlacementEdge::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 {
 	RPlacementHeuristic::Init(prob,infos,grid);
 	for(unsigned i=0;i<40;i++)
@@ -65,8 +68,8 @@ void RGA2D::RPlacementEdge::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementEdge::NextObjectOri(void) throw(RPlacementHeuristicException)
+//------------------------------------------------------------------------------
+void RPlacementEdge::NextObjectOri(void) throw(RPlacementHeuristicException)
 {
 	double FactorX,FactorY;
 	RPoint Pos;
@@ -124,8 +127,8 @@ void RGA2D::RPlacementEdge::NextObjectOri(void) throw(RPlacementHeuristicExcepti
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementEdge::Place(RPoint& pos) throw(RPlacementHeuristicException)
+//------------------------------------------------------------------------------
+void RPlacementEdge::Place(RPoint& pos) throw(RPlacementHeuristicException)
 {
 	unsigned int i,l;
 

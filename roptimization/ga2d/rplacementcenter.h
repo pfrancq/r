@@ -6,7 +6,10 @@
 
 	Center Heuristic for Placement - Header
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,24 +34,23 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RPlacementCenterH
 #define RPlacementCenterH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromethee.h>
-using namespace RPromethee;
 #include <rga2d/rplacementheuristic.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RPlacementCenter class provides the center heuristic.
 * The heuristic places the first object in the center of the rectangle
@@ -108,7 +110,7 @@ public:
 	/**
 	* Do some operations after the run.
 	*/
-	virtual void PostRun(RPoint &limits);
+	virtual void PostRun(RPoint& limits);
 
 	/**
 	* Destruct the heuristic.
@@ -117,8 +119,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

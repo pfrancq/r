@@ -6,7 +6,10 @@
 
 	Generic Heuristic for Grouping - Header
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,22 +34,22 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RFirstFitHeuristicH
 #define RFirstFitHeuristicH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rgga/rgroupingheuristic.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGGA{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RFitstFitHeuristic class provides a first fit heuristic.
 * @author Pascal Francq
@@ -63,12 +66,12 @@ public:
 	* @param r              The random genrator to use.
 	* @param objs           Pointer to the objects.
 	*/
-	RFirstFitHeuristic(RRandom* r,RStd::RCursor<cObj,unsigned int>* objs);
+	RFirstFitHeuristic(RRandom* r,RCursor<cObj,unsigned int>* objs);
 
 	/**
 	* Find a group for the next object.
 	*/
-	virtual cGroup* FindGroup(void) throw(RGA::eGA);
+	virtual cGroup* FindGroup(void) throw(eGA);
 
 	/**
 	* Destruct the grouping heuristic.
@@ -77,13 +80,13 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Definitions of templates
 #include <rgga/rfirstfitheuristic.hh>
 
 
-}  //------- End of namespace RGGA --------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

@@ -6,7 +6,10 @@
 
 	Class representing an instance of a GGA - Header
 
-	(C) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,12 +34,12 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RInstgH
 #define RInstgH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
 #include <rstd/rcursor.h>
@@ -46,19 +49,19 @@
 #include <rgga/rfirstfitheuristic.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGGA{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class represent "thread-dependent" data for the GGA.
 * @author Pascal Francq
 * @short GGA "thread-dependent" Data.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	class RThreadDataG : public RGA::RThreadData<cInst,cChromo>
+	class RThreadDataG : public RThreadData<cInst,cChromo>
 {
 protected:
 
@@ -68,7 +71,7 @@ protected:
 	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* Heuristic;
 
 public:
-	
+
 	/**
 	* Construct the data.
 	* @param data           Owner of the data.
@@ -84,14 +87,14 @@ public:
 	* Destruct the data.
 	*/
 	virtual ~RThreadDataG(void);
-	
+
 	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	class RInstG : public RGA::RInst<cInst,cChromo,cFit,cThreadData>
+	class RInstG : public RInst<cInst,cChromo,cFit,cThreadData>
 {
 
 protected:
@@ -104,7 +107,7 @@ protected:
 	/**
 	* Objects to group.
 	*/
-	RStd::RCursor<cObj,unsigned int>* Objs;
+	RCursor<cObj,unsigned int>* Objs;
 
 	/**
 	* Maximal number of groups to allocate by default.
@@ -120,7 +123,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RGA::RObjs<cObj>* objs,HeuristicType h,RGA::RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
 
 	/**
 	* Construct the instance.
@@ -129,7 +132,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RStd::RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RGA::RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
 
 	/**
 	* Construct the instance.
@@ -138,7 +141,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RStd::RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RGA::RDebug *debug=0) throw(bad_alloc);
+	RInstG(unsigned int popsize,RContainer<cObj,unsigned int,true,true>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
 
 	/**
 	* Initialisation of the instance.
@@ -149,13 +152,13 @@ public:
 	/**
 	* Return the heuristic type.
 	*/
-	inline HeuristicType GetHeuristic(void) { return(Heuristic); }
+	inline HeuristicType GetHeuristic(void) {return(Heuristic);}
 
 	/**
 	* Get the Objects to group.
 	* @return Pointer to the objects.
 	*/
-	RStd::RCursor<cObj,unsigned int>* GetObjs(void) const {return(Objs);};
+	RCursor<cObj,unsigned int>* GetObjs(void) const {return(Objs);}
 
 	/**
 	* Create a heuristic object.
@@ -167,31 +170,31 @@ public:
 	* same chromosomes are detect, one of them is replace a random based one
 	* with a probability of 90%.
 	*/
-	virtual void HandleSameChromosomes(void) throw(RGA::eGA);
+	virtual void HandleSameChromosomes(void) throw(eGA);
 
 	/**
 	* Random construction of the chromosomes. Call the method of RInst and
 	* handles the same solutions after.
 	*/
-	virtual void RandomConstruct(void) throw(RGA::eGA);
+	virtual void RandomConstruct(void) throw(eGA);
 
 	/**
 	* This function does the crossovers for a generation. Call the method of
 	* RInst and handles the same solutions after.
 	*/
-	virtual void Crossover(void) throw(RGA::eGA);
+	virtual void Crossover(void) throw(eGA);
 
 	/**
 	* This function does the necessary mutations for a generation. Call the
 	* method of RInst and handles the same solutions after.
 	*/
-	virtual void Mutation(void) throw(RGA::eGA);
-	
+	virtual void Mutation(void) throw(eGA);
+
 	/**
 	* This function does the necessary inversions for a generation. Call the
 	* method of RInst and handles the same solutions after.
 	*/
-	virtual void Inversion(void) throw(RGA::eGA);
+	virtual void Inversion(void) throw(eGA);
 
 	/**
 	* Destruct the instance.
@@ -204,13 +207,13 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // inline implementation
 #include <rgga/rinstg.hh>
 
 
-}//------- End of namespace RGGA ----------------------------------------------
+}//------- End of namespace R --------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

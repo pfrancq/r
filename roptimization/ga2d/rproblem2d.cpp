@@ -6,7 +6,10 @@
 
 	2D Placement Problem - Implementation.
 
-	(c) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,36 +33,35 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdlib.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rxml/rxmlstruct.h>
-#include <rxml/rxmlfile.h>
-using namespace RXML;
+#include <rstd/rxmlstruct.h>
+#include <rstd/rxmlfile.h>
 #include <rga2d/rproblem2d.h>
-using namespace RGA2D;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RProblem2D
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RProblem2D::RProblem2D(void)
+//------------------------------------------------------------------------------
+RProblem2D::RProblem2D(void)
 	: Problem(NoObject,"Problem",false), Objs(100,50), Cons()
 {
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RProblem2D::Load(const char* name)
+//------------------------------------------------------------------------------
+void RProblem2D::Load(const char* name)
 {
 	RXMLStruct s;
 	RXMLFile f(name,&s);
@@ -139,8 +141,8 @@ void RGA2D::RProblem2D::Load(const char* name)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,unsigned int,true,true>& ts)
+//------------------------------------------------------------------------------
+void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,unsigned int,true,true>& ts)
 {
 	RObj2D *obj,*t;
 	bool IsObj;
@@ -216,8 +218,8 @@ void RGA2D::RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,unsigned int,true
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RProblem2D::CreateConnector(RXMLTag* c,RObj2D* obj,const RPoint& t)
+//------------------------------------------------------------------------------
+void RProblem2D::CreateConnector(RXMLTag* c,RObj2D* obj,const RPoint& t)
 {
 	RObj2DConnector* con;
 	unsigned int i;
@@ -236,8 +238,8 @@ void RGA2D::RProblem2D::CreateConnector(RXMLTag* c,RObj2D* obj,const RPoint& t)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RProblem2D::CreateNet(RXMLTag* n)
+//------------------------------------------------------------------------------
+void RProblem2D::CreateNet(RXMLTag* n)
 {
 	double w;
 	RXMLTag** tab;
@@ -273,16 +275,16 @@ void RGA2D::RProblem2D::CreateNet(RXMLTag* n)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RProblem2D::Clear(void)
+//------------------------------------------------------------------------------
+void RProblem2D::Clear(void)
 {	
 	Objs.Clear();
 	Cons.Clear();
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RProblem2D::DetermineLimit(void)
+//------------------------------------------------------------------------------
+void RProblem2D::DetermineLimit(void)
 {
 	RRect r;
 	bool Cont=true;
@@ -319,7 +321,7 @@ void RGA2D::RProblem2D::DetermineLimit(void)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA2D::RProblem2D::~RProblem2D(void)
+//------------------------------------------------------------------------------
+RProblem2D::~RProblem2D(void)
 {
 }

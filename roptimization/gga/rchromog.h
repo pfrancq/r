@@ -4,7 +4,10 @@
 
 	Class representing a chromosome of a GGA - Header
 
-	(C) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -29,12 +32,12 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RChromoGH
 #define RChromoGH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
 #include <rga/rchromo.h>
@@ -43,19 +46,19 @@
 #include <rgga/rgroupingheuristic.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGGA{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RChromoG class provides a representation for a chromosome for the GGA.
 * @author Pascal Francq
 * @short GGA Chromosome.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	class RChromoG : public RGA::RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cGroupData,cChromo>
+	class RChromoG : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cGroupData,cChromo>
 {
 protected:
 
@@ -89,7 +92,7 @@ public:
 	* Construct a valid solution.
 	* @return The function must retrun true if a solution has been constructed.
 	*/
-	virtual void RandomConstruct(void) throw(RGA::eGA);
+	virtual void RandomConstruct(void) throw(eGA);
 
 	/**
 	* Do a crossover by using the chromosome as child. The crossover
@@ -100,38 +103,38 @@ public:
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
 	*/
-	virtual void Crossover(cChromo* parent1,cChromo* parent2) throw(RGA::eGA);
+	virtual void Crossover(cChromo* parent1,cChromo* parent2) throw(eGA);
 
 	/**
 	* Do a mutation of the chromosome, by choosing randomly groups and
 	* destroy them.
 	*/
-	virtual void Mutation(void) throw(RGA::eGA);
+	virtual void Mutation(void) throw(eGA);
 
 	/**
 	* Do a inversion of the chromosome, by exchanging two groups in list
 	* representing all the used one.
 	*/
-	virtual void Inversion(void) throw(RGA::eGA);
+	virtual void Inversion(void) throw(eGA);
 
 	/**
 	* Perform a local optimisation. This function is called by the crossover
 	* and the mutation operators just before the use of the heuristic to find
 	* a group for the objects not yet assigned.
 	*/
-	virtual void LocalOptimisation(void) throw(RGA::eGA) {}
+	virtual void LocalOptimisation(void) throw(eGA) {}
 
 	/**
 	* Modify a given chromosome when it is identical to another one. By
 	* default, the mutation operator of the chromosome is called.
 	* destroy them.
 	*/
-	virtual void Modify(void) throw(RGA::eGA);
+	virtual void Modify(void) throw(eGA);
 
 	/**
 	* Verify the validity of the chromosome.
 	*/
-	virtual void Verify(void) throw(RGA::eGA);
+	virtual void Verify(void) throw(eGA);
 
 	/**
 	* The assigment operator.
@@ -143,18 +146,18 @@ public:
 	* Destruct the chromosome.
 	*/
 	virtual ~RChromoG(void);
-	
+
 	friend class RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // inline implementation
 #include <rgga/rchromog.hh>
 
 
-}//------- End of namespace RGGA ----------------------------------------------
+}//------- End of namespace R --------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

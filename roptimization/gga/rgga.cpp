@@ -6,7 +6,10 @@
 
 	Grouping Genetic Algorithms - Implementation
 
-	(C) 2001 by By P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,21 +34,21 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rgga/rgga.h>
-using namespace RGA;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // Exceptions
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGGA::eGAModify::eGAModify(const unsigned int g,const unsigned int c)
+//------------------------------------------------------------------------------
+eGAModify::eGAModify(const unsigned int g,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];
@@ -55,8 +58,8 @@ RGGA::eGAModify::eGAModify(const unsigned int g,const unsigned int c)
 }
 
 
-//-----------------------------------------------------------------------------
-RGGA::eGALocalOptimisation::eGALocalOptimisation(const unsigned int g,const unsigned int c)
+//------------------------------------------------------------------------------
+eGALocalOptimisation::eGALocalOptimisation(const unsigned int g,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];

@@ -2,12 +2,14 @@
 
 	R Project Library
 
-
 	RFreePolygons.h
 
-	Description - Header.
+	List of polygons representing a free space - Header.
 
-	(c) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,30 +33,28 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RFreePolygonsH
 #define RFreePolygonsH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
-using namespace RStd;
 #include <rga2d/rfreepolygon.h>
-using namespace RGA2D;
 
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Forward declaration
 class RGeoInfo;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RFreePolygons provides a representation for a container of polygons.
 * @author Pascal Francq
@@ -72,7 +72,7 @@ public:
 	/**
 	* Construct the container from another one.
 	*/
-	RFreePolygons(RFreePolygons *cont);
+	RFreePolygons(RFreePolygons* cont);
 
 	/**
 	* Calculate a position for the given geometric information.
@@ -80,7 +80,7 @@ public:
 	* @return The function returns a valid position the object could be
 	* placed.
 	*/
-	RPoint& CanPlace(RGeoInfo *info);
+	RPoint& CanPlace(RGeoInfo* info);
 
 	/**
 	* Derstruct the container.
@@ -89,8 +89,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

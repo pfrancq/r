@@ -4,9 +4,12 @@
 
 	RFreePolygon.h
 
-	Description - Header.
+	Polygon representing a free space - Header.
 
-	(c) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,29 +33,28 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RFreePolygonH
 #define RFreePolygonH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rgeometry/rpoint.h>
-#include <rgeometry/rpolygon.h>
-using namespace RGeometry2D;
+#include <rmath/rpoint.h>
+#include <rmath/rpolygon.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Forward declaration
 class RGeoInfo;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RFreePolygon class provides a representation of a "free" polygon on the
 * grid.
@@ -86,12 +88,12 @@ public:
 	/**
 	* The equal operator.
 	*/
-	bool operator==(const RFreePolygon &poly) {return(RPolygon::operator==(poly));}
+	bool operator==(const RFreePolygon& poly) {return(RPolygon::operator==(poly));}
 
 	/**
 	* The non-equal operator.
 	*/
-	bool operator!=(const RFreePolygon &poly) {return(RPolygon::operator!=(poly));}
+	bool operator!=(const RFreePolygon& poly) {return(RPolygon::operator!=(poly));}
 
 	/**
 	* This function compares two polygons and returns 0 if there have the same
@@ -128,8 +130,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

@@ -6,7 +6,10 @@
 
 	Grouping Genetic Algorithms - Header.
 
-	(C) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,31 +34,22 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RGGAH
 #define RGGAH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for RProject
 #include <rga/rga.h>
 
 
-//-----------------------------------------------------------------------------
-/**
-* \namespace RGGA
-* \brief Generic Grouping Genetic Algorithm Classes.
-*
-* This namespace declares classes for working with Grouping Genetic Algorithms.
-*/
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
-namespace RGGA{
-//-----------------------------------------------------------------------------
-
-
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Forward class declaration
 class RObjG;
 template<class cGroup,class cObj,class cGroupData,class cChromo> class RGroup;
@@ -66,18 +60,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData> class RInstG;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Heuristic Types
 enum HeuristicType{Nothing,FirstFit,FirstFitDes};
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGAModify class provides an exception fot the modify operator.
 * @author Pascal Francq
 * @short Modify GA Exception
 */
-class eGAModify : public RGA::eGA
+class eGAModify : public eGA
 {
 public:
 
@@ -96,14 +90,14 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGALocalOptimisation class provides an exception for the local
 * optimisation process.
 * @author Pascal Francq
 * @short Local Optimisation GA Exception
 */
-class eGALocalOptimisation : public RGA::eGA
+class eGALocalOptimisation : public eGA
 {
 public:
 
@@ -122,8 +116,8 @@ public:
 };
 
 
-}//------- End of namespace RGGA ----------------------------------------------
+}//------- End of namespace R --------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

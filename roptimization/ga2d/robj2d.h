@@ -6,7 +6,10 @@
 
 	Object for 2D placement GA - Header
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,29 +34,27 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RObj2DH
 #define RObj2DH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
-using namespace RStd;
-#include <rgeometry/rpoint.h>
-#include <rgeometry/rrect.h>
-#include <rgeometry/rrects.h>
-#include <rgeometry/rpolygon.h>
-#include <rgeometry/rpolygons.h>
-using namespace RGeometry2D;
+#include <rmath/rpoint.h>
+#include <rmath/rrect.h>
+#include <rmath/rrects.h>
+#include <rmath/rpolygon.h>
+#include <rmath/rpolygons.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Forward class declaration
 class RGeoInfo;
 class RGeoInfos;
@@ -61,16 +62,7 @@ class RObj2D;
 class RConnection;
 
 
-//-----------------------------------------------------------------------------
-/**
-* This constance represent a non-identificator. It is used, for example, to
-* specify that a variable containing an identificator of an object. is
-* referencing no object.
-*/
-const unsigned int NoObject=0xFFFFFFFF;
-
-
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This basic class represent a connection point for an object to place by using
 * the 2D placement GA.
@@ -274,7 +266,7 @@ public:
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This basic class represent an object to place by using the 2D placement GA.
 * @author Pascal Francq
@@ -476,8 +468,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

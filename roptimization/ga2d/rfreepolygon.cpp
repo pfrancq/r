@@ -6,7 +6,7 @@
 
 	Free Polygons are hole in a construction - Implementation.
 
-	(c) 2000-2001 by P. Francq.
+	(c) 2000-2003 by P. Francq.
 
 	Version $Revision$
 
@@ -30,22 +30,22 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga2d/rfreepolygon.h>
 #include <rga2d/rgeoinfo.h>
-using namespace RGA2D;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RFreePolygon
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RFreePolygon::RFreePolygon(RPolygon& poly)
+//------------------------------------------------------------------------------
+RFreePolygon::RFreePolygon(RPolygon& poly)
 	: RPolygon(poly), Pos(MaxCoord,MaxCoord)
 {
 	unsigned int i;
@@ -61,16 +61,16 @@ RGA2D::RFreePolygon::RFreePolygon(RPolygon& poly)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA2D::RFreePolygon::RFreePolygon(RFreePolygon* poly)
+//------------------------------------------------------------------------------
+RFreePolygon::RFreePolygon(RFreePolygon* poly)
 	: RPolygon(poly)
 {
 	Pos=poly->Pos;
 }
 
 
-//-----------------------------------------------------------------------------
-int RGA2D::RFreePolygon::CanContain(RGeoInfo* info,RPoint &pos)
+//------------------------------------------------------------------------------
+int RFreePolygon::CanContain(RGeoInfo* info,RPoint& pos)
 {
 	RPoint *act,*e1,*e2;
 	unsigned int nbpts;
@@ -103,8 +103,8 @@ int RGA2D::RFreePolygon::CanContain(RGeoInfo* info,RPoint &pos)
 }
 
 
-//-----------------------------------------------------------------------------
-RPoint& RGA2D::RFreePolygon::GetPos(void)
+//------------------------------------------------------------------------------
+RPoint& RFreePolygon::GetPos(void)
 {
 	RPoint *pt=RPoint::GetPoint();
 

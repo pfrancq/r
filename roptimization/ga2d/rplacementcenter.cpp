@@ -6,7 +6,10 @@
 
 	Center Heuristic for Placement - Implemenation
 
-	(C) 1998-2001 by By P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,38 +34,37 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromkernel.h>
-using namespace RPromethee;
 #include <rga2d/rplacementcenter.h>
-using namespace RGA2D;
+using namespace R;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // defines
 //#define DOUBLESPACE
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-//	RPlacementCenter
+// class RPlacementCenter
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+//------------------------------------------------------------------------------
+RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
 	AreaParams.P=AreaParams.Q=DistParams.P=DistParams.Q=0.0;
 	AreaParams.Weight=2.0;
-	DistParams.Weight=1.0;	
+	DistParams.Weight=1.0;
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementCenter::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+//------------------------------------------------------------------------------
+void RPlacementCenter::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 {
 	RPlacementHeuristic::Init(prob,infos,grid);
 	HoldLimits=Limits;
@@ -77,8 +79,8 @@ void RGA2D::RPlacementCenter::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
+//------------------------------------------------------------------------------
+void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 {
 	RPoint Pos;                     // Position to test (X,Y).
 	unsigned int NbPos;
@@ -97,7 +99,7 @@ void RGA2D::RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicExcep
 
 	// Find the Bottom-Left coordinate of the boundary rectangle
 	Actual=Union.GetBottomLeft();
-	i=Union.NbPtr+1;	
+	i=Union.NbPtr+1;
 	LookX=true;                 // Go anti-clockwise, begin with X-Axis and then right.
 	LookBottom=true;            // Look (X,Y-1) or (X,Y+1) ?
 	LookLeft=true;              // Look (X-1,Y) or (X+1,Y) ?
@@ -109,7 +111,7 @@ void RGA2D::RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicExcep
 		NbPos=0;
 		if(LookLeft)
 		{
-			
+
 			// Look to the Left -> Test (X-1,Y)
 			if(Grid->IsFree(Actual->X-1,Actual->Y))
 			{
@@ -168,7 +170,6 @@ void RGA2D::RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicExcep
 		}
 		else
 		{
-
 			// Look to the right -> Test (X+1,Y)
 			if(Grid->IsFree(Actual->X+1,Actual->Y))
 			{
@@ -262,8 +263,8 @@ void RGA2D::RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicExcep
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementCenter::Place(RPoint& pos) throw(RPlacementHeuristicException)
+//------------------------------------------------------------------------------
+void RPlacementCenter::Place(RPoint& pos) throw(RPlacementHeuristicException)
 {
 	// Assign it
 	CurInfo->Assign(pos,Grid);
@@ -275,8 +276,8 @@ void RGA2D::RPlacementCenter::Place(RPoint& pos) throw(RPlacementHeuristicExcept
 }
 
 
-//----------------------------------------------------------------------------
-void RGA2D::RPlacementCenter::PostRun(RPoint &limits)
+//------------------------------------------------------------------------------
+void RPlacementCenter::PostRun(RPoint& limits)
 {
 	RGeoInfo **info;
 	unsigned int i;
@@ -291,7 +292,7 @@ void RGA2D::RPlacementCenter::PostRun(RPoint &limits)
 }
 
 
-//----------------------------------------------------------------------------
-RGA2D::RPlacementCenter::~RPlacementCenter(void)
+//------------------------------------------------------------------------------
+RPlacementCenter::~RPlacementCenter(void)
 {
 }

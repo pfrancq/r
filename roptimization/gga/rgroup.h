@@ -6,7 +6,10 @@
 
 	Group of a GGA - Header.
 
-	(C) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,33 +34,33 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RGroupH
 #define RGroupH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga/robjs.h>
 #include <rgga/robjg.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGGA{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // forward class declaration
 template<class cGroup,class cObj,class cGroupData,class cGroups> class RGroups;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Constance
 const unsigned int NoGroup=0xFFFFFFFF;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RGroup class provides a representation for a group that will contain
 * objects.
@@ -113,7 +116,7 @@ public:
 	/**
 	* Verify if the group is not violating the integrity of the system.
 	*/
-	virtual void Verify(void) throw(RGA::eGA);
+	virtual void Verify(void) throw(eGA);
 
 	/**
 	* Clear the information container in a group.
@@ -132,7 +135,7 @@ public:
 	* @param objs           Objects manipulated.
 	* @param grp            Group to copy from.
 	*/
-	void Insert(RStd::RCursor<cObj,unsigned int>* objs,const cGroup* grp);
+	void Insert(RCursor<cObj,unsigned int>* objs,const cGroup* grp);
 
 	/**
 	* Delete an object in the group.
@@ -246,8 +249,13 @@ public:
 };
 
 
-}  //------- End of namespace RGGA --------------------------------------------
+//------------------------------------------------------------------------------
+// inline implementation
+#include <rgga/rgroup.hh>
 
 
-//-----------------------------------------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
+
+
+//------------------------------------------------------------------------------
 #endif

@@ -6,7 +6,10 @@
 
 	Instance for 2D placement GA - Header
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,15 +34,14 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RInst2DH
 #define RInst2DH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rinst.h>
-using namespace RGA;
 #include <rga2d/rga2d.h>
 #include <rga2d/rplacementheuristic.h>
 #include <rga2d/rplacementbottomleft.h>
@@ -47,15 +49,14 @@ using namespace RGA;
 #include <rga2d/rplacementcenter.h>
 #include <rga2d/rconnections.h>
 #include <rga2d/rproblem2d.h>
-using namespace RGA2D;
 
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This is a class that holds all data needed by each thread for the 2D GA.
 * @author Pascal Francq
@@ -124,14 +125,14 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * Instance for the 2D placement GA.
 * @author Pascal Francq
 * @short 2D GA Instance.
 */
 template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo>
-	class RInst2D : public RGA::RInst<cInst,cChromo,cFit,cThreaData>
+	class RInst2D : public RInst<cInst,cChromo,cFit,cThreaData>
 {
 public:
 
@@ -182,7 +183,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
+	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug* debug=0) throw(bad_alloc);
 
 	/**
 	* Initialisation of the instance.
@@ -218,13 +219,13 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Template implementation
 #include <rga2d/rinst2d.hh>
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

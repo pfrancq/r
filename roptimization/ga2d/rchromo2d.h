@@ -6,7 +6,10 @@
 
 	Chromosome for 2D placement GA - Header
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,33 +34,32 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RChromo2DH
 #define RChromo2DH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rchromo.h>
-using namespace RGA;
 #include <rga2d/rga2d.h>
 #include <rga2d/rgeoinfos.h>
 #include <rga2d/rplacementheuristic.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class represents a chromosome for the 2D placement GA.
 * @author Pascal Francq
 * @short 2D GA chromosome.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	class RChromo2D : public RGA::RChromo<cInst,cChromo,cFit,cThreadData>, public RGA2D::RGeoInfos
+	class RChromo2D : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGeoInfos
 {
 protected:
 
@@ -69,19 +71,19 @@ protected:
 	/**
 	* Heuristic used for the placement.
 	*/
-	RPlacementHeuristic *Heuristic;
+	RPlacementHeuristic* Heuristic;
 
 	/**
 	* A Grid representing the current placement.
 	*/
-	RGrid *Grid;
+	RGrid* Grid;
 
 public:
 
 	/**
 	* Objects to place.
 	*/
-	RObj2D **Objs;
+	RObj2D** Objs;
 
 	/**
 	* Number of objects to place.
@@ -90,23 +92,23 @@ public:
 
 protected:
 
-	unsigned int **OccupiedY;
+	unsigned int** OccupiedY;
 
 	/**
 	* Array to hold objects id. This is a "thread-dependent" data.
 	*/
-	unsigned int *thOrder;
+	unsigned int* thOrder;
 
 	/**
 	* Array to hold objects id. This is a "thread-dependent" data.
 	*/
-	unsigned int *thOrder2;
+	unsigned int* thOrder2;
 
 	/**
 	* Temporary objects used in crossover and mutation. This is a
 	* "thread-dependent" data.
 	*/
-	RObj2D **thObjs;
+	RObj2D** thObjs;
 
 	/**
 	* Number of temporary objects.
@@ -117,18 +119,18 @@ protected:
 	* Temporary object container used for the crossover. This is a
 	* "thread-dependent" data.
 	*/
-	RObj2DContainer *thObj1;
+	RObj2DContainer* thObj1;
 
 	/**
 	* Temporary object container used for the crossover. This is a
 	* "thread-dependent" data.
 	*/
-	RObj2DContainer *thObj2;
+	RObj2DContainer* thObj2;
 
 	/**
 	* Temporary geometric informations. This is a "thread-dependent" data.
 	*/
-	RGeoInfos *thInfos;
+	RGeoInfos* thInfos;
 
 public:
 
@@ -142,19 +144,19 @@ public:
 	* @param inst           Pointer to the instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc);
+	RChromo2D(cInst* inst,unsigned int id) throw(bad_alloc);
 
 	/**
 	* This function initialises some important data, in particular Infos and
 	* Selected.
 	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
 	*/
-	virtual void Init(cThreadData *thData) throw(bad_alloc);
+	virtual void Init(cThreadData* thData) throw(bad_alloc);
 
 	/**
 	* The random construction uses the heuristic to place all the objects.
 	*/
-	virtual void RandomConstruct(void) throw(RGA::eGA);
+	virtual void RandomConstruct(void) throw(eGA);
 
 	/**
 	* Make the crossover for the chromosome. A set of objects is taken from the
@@ -163,23 +165,23 @@ public:
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
 	*/
-	virtual void Crossover(cChromo *parent1,cChromo *parent2) throw(RGA::eGA);
+	virtual void Crossover(cChromo* parent1,cChromo* parent2) throw(eGA);
 
 	/**
 	* The mutation simply calls the heuristic with all the objects.
 	*/
-	virtual void Mutation(void) throw(RGA::eGA);
+	virtual void Mutation(void) throw(eGA);
 
 	/**
 	* This function verify the validity of the chromosome, in particular that
 	* no polygons are overlaped.
 	*/
-	virtual void Verify(void) throw(RGA::eGA);
+	virtual void Verify(void) throw(eGA);
 
 	/**
 	* The assignment operator.
 	*/
-	virtual RChromo2D& operator=(const RChromo2D &chromo);
+	virtual RChromo2D& operator=(const RChromo2D& chromo);
 
 	/**
 	* Gives the object at position (X,Y).
@@ -219,13 +221,13 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Template implementation
 #include <rga2d/rchromo2d.hh>
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

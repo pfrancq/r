@@ -6,7 +6,10 @@
 
 	Instance for 2D placement GA - Inline Implementation
 
-	 (C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,24 +34,24 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-// RThreadData2D<cInst,cChromo>
+// class RThreadData2D<cInst,cChromo>
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	RGA2D::RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner) throw(bad_alloc)
+	RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner) throw(bad_alloc)
 		: RThreadData<cInst,cChromo>(owner),NbObjs(0),Order(0),tmpObj1(0),
 			tmpObj2(0), tmpInfos(0), Heuristic(0)
 {
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	void RGA2D::RThreadData2D<cInst,cChromo>::Init(void) throw(bad_alloc)
+	void RThreadData2D<cInst,cChromo>::Init(void) throw(bad_alloc)
 {
 	RThreadData<cInst,cChromo>::Init();
 	NbObjs=Owner->NbObjs;
@@ -76,9 +79,9 @@ template<class cInst,class cChromo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	RGA2D::RThreadData2D<cInst,cChromo>::~RThreadData2D(void)
+	RThreadData2D<cInst,cChromo>::~RThreadData2D(void)
 {
 	if(Order) delete[] Order;
 	if(tmpObjs)	delete[] tmpObjs;
@@ -90,15 +93,15 @@ template<class cInst,class cChromo>
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-// RInst2D<cInst,cChromo,cFit>
+// class RInst2D<cInst,cChromo,cFit>
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug *debug) throw(bad_alloc)
 			: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug), Problem(prob), Objs(prob->Objs.Tab),
 			 NbObjs(prob->Objs.NbPtr), bLocalOpti(true), Heuristic(h), Limits(prob->Limits)
@@ -106,9 +109,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::Init(void) throw(bad_alloc)
+	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::Init(void) throw(bad_alloc)
 {
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
 	BestChromosome->Objs=Objs;
@@ -116,9 +119,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RPoint& RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLimits(void)
+	RPoint& RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLimits(void)
 {
 	RPoint *pt=RPoint::GetPoint();
 
@@ -127,17 +130,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetAreaParams(const RPromCriterionParams& params)
+	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetAreaParams(const RPromCriterionParams& params)
 {
 	thDatas[0]->Heuristic->SetAreaParams(params);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetDistParams(const RPromCriterionParams& params)
+	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetDistParams(const RPromCriterionParams& params)
 {
 	thDatas[0]->Heuristic->SetDistParams(params);
 }

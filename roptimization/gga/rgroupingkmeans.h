@@ -6,7 +6,11 @@
 
 	Generic Heuristic for Grouping - Header
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		David Wartel (dwartel@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,27 +35,25 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RGroupingKMeansH
 #define RGroupingKMeansH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
 #include <rstd/rcontainer.h>
-#include <rmath/random.h>
-using namespace RMath;
+#include <rstd/random.h>
 #include <rga/robjs.h>
-using namespace RGA;
 #include <rgga/rgroups.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGGA{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RGroupingKMeans class provides an abstract class for grouping
 * heuristics.
@@ -100,7 +102,7 @@ protected:
 	/**
 	* Objects to be grouped.
 	*/
-	RStd::RContainer<cObj,unsigned int,false,true>* Objs;
+	RContainer<cObj,unsigned int,false,true>* Objs;
 
 	/**
 	* Groups.
@@ -155,7 +157,7 @@ protected:
 	/**
 	* Temporary container of groupment, needed to run tests
 	*/
-	RContainer<cGroup,unsigned int,false,false> *grpstemp2;
+	RContainer<cGroup,unsigned int,false,false>* grpstemp2;
 
 	/**
 	* Container of subprofiles considered as prototypes,
@@ -166,7 +168,7 @@ protected:
 	/**
 	* Temporary container of groupment, needed to run tests
 	*/
-	RContainer<cGroup,unsigned int,false,false>*grpstemp;
+	RContainer<cGroup,unsigned int,false,false>* grpstemp;
 
 	/**
 	* Container of the final groupment
@@ -192,43 +194,43 @@ public:
 	/**
 	* Set the maximum number of iterations for kmeans.
 	*/
-	void SetIterNumber(unsigned int i) {IterNumber=i;};
+	void SetIterNumber(unsigned int i) {IterNumber=i;}
 
 	/**
-	* Set the number of tests..
+	* Set the number of tests.
 	*/
-	void SetNbTests(unsigned int i) {NbTests=i;};
+	void SetNbTests(unsigned int i) {NbTests=i;}
 
 	/**
 	* Set the number of Groups.
 	*/
-	void SetGroupsNumber(unsigned int i) {GroupsNumber=i;};
+	void SetGroupsNumber(unsigned int i) {GroupsNumber=i;}
 
 	/**
-	*  Set the number of SubSamples
+	*  Set the number of SubSamples.
 	*/
-	void SetSubSamplesNumber(unsigned int i) {NbSubSamples=i;};
+	void SetSubSamplesNumber(unsigned int i) {NbSubSamples=i;}
 
 	/**
-	*  Set theSubSamples rate
+	*  Set theSubSamples rate.
 	*/
-	void SetSubSamplesRate(unsigned int i) {SubSamplesRate=i;};
+	void SetSubSamplesRate(unsigned int i) {SubSamplesRate=i;}
 
 	/**
-	*  Set VerifyKMeansMaxIters limt
+	*  Set VerifyKMeansMaxIters limt.
 	*/
-	void SetVerifyKMeansMaxIters(unsigned int i) {VerifyKMeansMaxIters=i;};
+	void SetVerifyKMeansMaxIters(unsigned int i) {VerifyKMeansMaxIters=i;}
 
 
 	/**
 	* Set the Refined parameter.
 	*/
-	void SetInitial(Initial i) {initial=i;};
+	void SetInitial(Initial i) {initial=i;}
 
 	/**
 	* Set the value of Epsilon.
 	*/
-	void SetEpsilon(double d) {Epsilon=d;};
+	void SetEpsilon(double d) {Epsilon=d;}
 
 	/**
 	* Initialize the heuristic.
@@ -239,7 +241,7 @@ public:
 	/**
 	* return true if the subprofile is a valid proto ;
 	*/
-	bool IsValidProto(RStd::RContainer<cObj,unsigned int,false,false>* prototypes,cObj* s) throw(bad_alloc);
+	bool IsValidProto(RContainer<cObj,unsigned int,false,false>* prototypes,cObj* s) throw(bad_alloc);
 
 	/**
 	* Verify wether the initializing kmeans is ok.
@@ -252,14 +254,14 @@ public:
 	double Distortion(RContainer<cGroup,unsigned int,false,false>* grps);
 
 	/**
-	*  calculates the variance of a group
+	*  calculates the variance of a group.
 	*/
-	double GroupVariance(cGroup* grp) ;
+	double GroupVariance(cGroup* grp);
 
 	/**
-	* Re-Allocation step
+	* Re-Allocation step.
 	*/
-	void ReAllocate(RContainer<cObj,unsigned int,false,true>* dataset) ;
+	void ReAllocate(RContainer<cObj,unsigned int,false,true>* dataset);
 
 	/**
 	* Re-Centering step.
@@ -269,7 +271,7 @@ public:
 	/**
 	* Calculates the cost function.
 	*/
-	double CostFunction(RContainer<cGroup,unsigned int,false,false>* grps) ;
+	double CostFunction(RContainer<cGroup,unsigned int,false,false>* grps);
 
 	/**
 	* Calculates the distance between two objects.
@@ -277,14 +279,14 @@ public:
 	double Distance(cObj *s1, cObj *proto);
 
 	/**
-	* Calculates the error between two iterations of K-Means
+	* Calculates the error between two iterations of K-Means.
 	*/
 	int CalcError(void);
 
 	/**
-	* Execute the K-Means
-	* @param dataset        set of all objects to group.
-	* @param nbtests        number of tests.
+	* Execute the K-Means.
+	* @param dataset         set of all objects to group.
+	* @param nbtests         number of tests.
 	*/
 	void Execute(RContainer<cObj, unsigned int, false, true>* dataset, unsigned int nbtests);
 
@@ -295,8 +297,8 @@ public:
 
 	/**
 	* Chooses subprofiles among the dataset to initialize the K-Means
-	* @param dataset        set of all objects to group.
-	* @param nbsubprofiles        number of objects to choose..
+	* @param dataset         set of all objects to group.
+	* @param nbsubprofiles   number of objects to choose.
 	*/
 	void RandomInitObjects(RContainer<cObj,unsigned int,false,true>* dataset, unsigned int nbobjects);
 
@@ -319,11 +321,11 @@ public:
 	/**
 	* Gets the final grouping, result of the K-Means procedure.
 	*/
-	RContainer<cGroup,unsigned int,false,false>* GetGrouping(void){return(grpsfinal);};
+	RContainer<cGroup,unsigned int,false,false>* GetGrouping(void){return(grpsfinal);}
 
 	/**
 	* init the protos to the refined points.
-	* @param nbsub         number of subsamples to get.
+	* @param nbsub           number of subsamples to get.
 	* @param level           level  (in %) of the full dataset for the subsamples
 	*/
 	void RefiningCenters(int nbsub, int level);
@@ -332,13 +334,13 @@ public:
 	/**
 	* Find a group for the next object.
 	*/
-	virtual cGroup* FindGroup(void) throw(RGA::eGA) {return(0);};
+	virtual cGroup* FindGroup(void) throw(eGA) {return(0);};
 
 	/**
 	* Run the heuristic.
-	* @param groups         Pointer to the groups.
+	* @param groups          Pointer to the groups.
 	*/
-	void Run(void) ;
+	void Run(void);
 
 	/**
 	* Destruct the grouping heuristic.
@@ -347,13 +349,13 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Definitions of templates
 #include <rgga/rgroupingkmeans.hh>
 
 
-}  //------- End of namespace RGGA --------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

@@ -6,7 +6,7 @@
 
 	Connections for the 2D Placement - Implementation.
 
-	(c) 2000-2001 by P. Francq.
+	(c) 2000-2003 by P. Francq.
 
 	Version $Revision$
 
@@ -30,33 +30,31 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/random.h>
-using namespace RMath;
+#include <rstd/random.h>
 #include <rga2d/rconnections.h>
 #include <rga2d/rgeoinfos.h>
-using namespace RGA2D;
 #include <rpromethee/rpromkernel.h>
-using namespace RPromethee;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RConnections
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RConnections::RConnections(void)
+//------------------------------------------------------------------------------
+RConnections::RConnections(void)
 	: RContainer<RConnection,unsigned int,true,false>(50,25), Random(0)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RConnections::Init(void)
+//------------------------------------------------------------------------------
+void RConnections::Init(void)
 {
 	RConnection **tab;
 	RObj2DConnector **con;
@@ -74,8 +72,8 @@ void RGA2D::RConnections::Init(void)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RConnections::SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight,RRandom* r)
+//------------------------------------------------------------------------------
+void RConnections::SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight,RRandom* r)
 {
 	DistParams=dist;
 	WeightParams=weight;
@@ -83,8 +81,8 @@ void RGA2D::RConnections::SetParams(const RPromCriterionParams& dist,const RProm
 }
 
 
-//-----------------------------------------------------------------------------
-double RGA2D::RConnections::GetCon(RGeoInfos* infos,RGeoInfo* cur)
+//------------------------------------------------------------------------------
+double RConnections::GetCon(RGeoInfos* infos,RGeoInfo* cur)
 {
 	double sum=0.0;
 	unsigned int i,j,k;
@@ -117,12 +115,14 @@ double RGA2D::RConnections::GetCon(RGeoInfos* infos,RGeoInfo* cur)
 }
 
 
-//-----------------------------------------------------------------------------	
-RGeoInfo* RGA2D::RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* selected,RRect& bound)
+//------------------------------------------------------------------------------
+RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* selected,RRect& bound)
 {
 	RPromKernel Prom("PlacementCenter",nb,2);
 	RPromCriterion *weight,*dist;
-	RPromSol *sol,**sols,**best;	
+	RPromSol* sol;
+	RPromSol** sols=0;
+	RPromSol** best=0;
 	RGeoInfo **info,**treat,*b;
 	unsigned int i,Nb=0;
 	double w,d;
@@ -173,13 +173,13 @@ RGeoInfo* RGA2D::RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb
 	else
 	{
 		Prom.ComputePrometheeII();         // Compute Prométhée
-		best=sols=Prom.GetSols();          // Get the solutions
+		sols=best=Prom.GetSols();          // Get the solutions
 		b=treat[(*(best++))->GetId()];     // The first one is the best
 		bProm=true;
-		
+
 	}
 		b->Boundary(r1);                   // Get The boundary rectangle
-	
+
 		// Go through the others and find the best one that can go in bound
 		bFound=false;
 		while((--Nb)&&(!bFound))
@@ -219,8 +219,8 @@ RGeoInfo* RGA2D::RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb
 }
 
 
-//-----------------------------------------------------------------------------
-RGeoInfo* RGA2D::RConnections::GetMostConnected(RGeoInfos* infos,unsigned int nb,RGeoInfo** order,unsigned int nbok)
+//------------------------------------------------------------------------------
+RGeoInfo* RConnections::GetMostConnected(RGeoInfos* infos,unsigned int nb,RGeoInfo** order,unsigned int nbok)
 {
 	RGeoInfo **ptr=&order[nbok],*best;
 	unsigned int bestpos,i=nbok+1;
@@ -246,8 +246,8 @@ RGeoInfo* RGA2D::RConnections::GetMostConnected(RGeoInfos* infos,unsigned int nb
 }
 
 
-//-----------------------------------------------------------------------------
-//double RGA2D::RConnections::GetDistances(RGeoInfo** /*infos*/)
+//------------------------------------------------------------------------------
+//double RConnections::GetDistances(RGeoInfo** /*infos*/)
 //{
 //	RConnection* c;
 //	RGeoInfo *f,*t;
@@ -268,8 +268,8 @@ RGeoInfo* RGA2D::RConnections::GetMostConnected(RGeoInfos* infos,unsigned int nb
 //}
 
 
-//-----------------------------------------------------------------------------
-double RGA2D::RConnections::GetDistances(RGeoInfo** /*infos*/,RGeoInfo* /*info*/)
+//------------------------------------------------------------------------------
+double RConnections::GetDistances(RGeoInfo** /*infos*/,RGeoInfo* /*info*/)
 {
 //	RConnection* c;
 //	RGeoInfo *f,*t;
@@ -291,7 +291,7 @@ double RGA2D::RConnections::GetDistances(RGeoInfo** /*infos*/,RGeoInfo* /*info*/
 }
 
 
-//-----------------------------------------------------------------------------
-RGA2D::RConnections::~RConnections(void)
+//------------------------------------------------------------------------------
+RConnections::~RConnections(void)
 {
 }

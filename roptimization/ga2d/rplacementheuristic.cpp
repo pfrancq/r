@@ -6,7 +6,10 @@
 
 	Generic Heuristic for Placement - Implemenation
 
-	(C) 1998-2001 by By P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,27 +34,24 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromkernel.h>
-using namespace RPromethee;
 #include <rga2d/rplacementheuristic.h>
-using namespace RGA2D;
-#include <rmath/random.h>
-using namespace RMath;
-#include <rxml/rxmlstruct.h>
-using namespace RXML;
+#include <rstd/random.h>
+#include <rstd/rxmlstruct.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-//	RPlacementHeuristic
+// class RPlacementHeuristic
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+//------------------------------------------------------------------------------
+RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: Random(r), Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori)
 {
 	Order=new RGeoInfo*[maxobjs];
@@ -60,8 +60,8 @@ RGA2D::RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,b
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfos* infos,RGrid *grid)
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 {
 	// Assign
 	Limits=prob->Limits;
@@ -85,8 +85,8 @@ void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfos* infos,RGrid *g
 }
 
 
-//----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::SetDistParams(double p,double q,double w)
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::SetDistParams(double p,double q,double w)
 {
 	DistParams.P=p;
 	DistParams.Q=q;
@@ -94,22 +94,22 @@ void RGA2D::RPlacementHeuristic::SetDistParams(double p,double q,double w)
 }
 
 
-//-----------------------------------------------------------------------------	
-void RGA2D::RPlacementHeuristic::SetDistParams(const RPromCriterionParams& params)
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::SetDistParams(const RPromCriterionParams& params)
 {
 	DistParams=params;
 }
 
 
-//----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::SetAreaParams(const RPromCriterionParams& params)
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::SetAreaParams(const RPromCriterionParams& params)
 {
 	AreaParams=params;
 }
 
 
-//----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::SetAreaParams(double p,double q,double w)
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::SetAreaParams(double p,double q,double w)
 {
 	AreaParams.P=p;
 	AreaParams.Q=q;
@@ -117,8 +117,8 @@ void RGA2D::RPlacementHeuristic::SetAreaParams(double p,double q,double w)
 }
 
 	
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::SelectNextObject(void) throw(RPlacementHeuristicException)
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::SelectNextObject(void) throw(RPlacementHeuristicException)
 {
 	if(!NbObjsOk)
 	{
@@ -131,8 +131,8 @@ void RGA2D::RPlacementHeuristic::SelectNextObject(void) throw(RPlacementHeuristi
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::AddValidPosition(RPoint& pos)
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 {
 	RRect CurRect(Result);
 	ObjectPos *p;
@@ -174,8 +174,8 @@ void RGA2D::RPlacementHeuristic::AddValidPosition(RPoint& pos)
 }
 
 
-//-----------------------------------------------------------------------------
-RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristicException)
+//------------------------------------------------------------------------------
+RGeoInfo* RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristicException)
 {
 	RPoint pos;
 	RObj2D* obj;	
@@ -263,8 +263,8 @@ RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristic
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid) throw(RPlacementHeuristicException)
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid) throw(RPlacementHeuristicException)
 {
 	Init(prob,infos,grid);
 	while(NbObjsOk<NbObjs)
@@ -275,8 +275,8 @@ void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* gr
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::PostRun(RPoint&)
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::PostRun(RPoint&)
 {
 	// Compute all connections part again
 	Distances=0.0;
@@ -289,8 +289,8 @@ void RGA2D::RPlacementHeuristic::PostRun(RPoint&)
 }
 
 
-//-----------------------------------------------------------------------------
-RRect& RGA2D::RPlacementHeuristic::GetResult(void)
+//------------------------------------------------------------------------------
+RRect& RPlacementHeuristic::GetResult(void)
 {
 	RRect *rect=RRect::GetRect();
 	
@@ -299,16 +299,16 @@ RRect& RGA2D::RPlacementHeuristic::GetResult(void)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::CreateProblem(void)
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::CreateProblem(void)
 {
 	
 }
 
 
 
-//-----------------------------------------------------------------------------
-RGA2D::RPlacementHeuristic::~RPlacementHeuristic(void)
+//------------------------------------------------------------------------------
+RPlacementHeuristic::~RPlacementHeuristic(void)
 {
 	if(Order) delete[] Order;
 }

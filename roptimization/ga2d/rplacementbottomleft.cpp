@@ -6,7 +6,10 @@
 
 	Bottom Left Heuristic for Placement - Implementation
 
-	(C) 1998-2001 by By P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,28 +34,28 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga2d/rplacementbottomleft.h>
-using namespace RGA2D;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 //	RPlacementBottomLeft
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+//------------------------------------------------------------------------------
+RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementBottomLeft::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+//------------------------------------------------------------------------------
+void RPlacementBottomLeft::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 {
 	RPlacementHeuristic::Init(prob,infos,grid);
 	Actual.Set(0,0);
@@ -60,8 +63,8 @@ void RGA2D::RPlacementBottomLeft::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* 
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementBottomLeft::NextObjectOri(void) throw(RPlacementHeuristicException)
+//------------------------------------------------------------------------------
+void RPlacementBottomLeft::NextObjectOri(void) throw(RPlacementHeuristicException)
 {
 	RPoint Pos;
 
@@ -90,8 +93,8 @@ void RGA2D::RPlacementBottomLeft::NextObjectOri(void) throw(RPlacementHeuristicE
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementBottomLeft::Place(RPoint& pos) throw(RPlacementHeuristicException)
+//------------------------------------------------------------------------------
+void RPlacementBottomLeft::Place(RPoint& pos) throw(RPlacementHeuristicException)
 {
 	// Assign the object to the current position
 	CurInfo->Assign(pos,Grid);

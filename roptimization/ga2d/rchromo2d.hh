@@ -6,7 +6,10 @@
 
 	Chromosome for 2D placement GA - Inline Implementation
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,15 +34,15 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // RChromo2D<cInst,cChromo,cFit,cInfo>
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc)
 			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
 			  RGeoInfos(inst->Problem,true),
@@ -50,9 +53,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
+	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		Init(cThreadData *thData) throw(bad_alloc)
 {
 	// Call the initialisation of the parent
@@ -87,9 +90,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::RandomConstruct(void) throw(RGA::eGA)
+	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::RandomConstruct(void) throw(eGA)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
 	Heuristic->Run(Instance->Problem,this,Grid);
@@ -98,9 +101,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Crossover(cChromo* parent1,cChromo* parent2) throw(RGA::eGA)
+	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Crossover(cChromo* parent1,cChromo* parent2) throw(eGA)
 {
 	unsigned int NbRealInfos,i;
 	RGeoInfo *info,*info1=0,*info2=0,*infoprob;
@@ -195,9 +198,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void) throw(RGA::eGA)
+	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void) throw(eGA)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
 	Heuristic->Run(Instance->Problem,this,Grid);
@@ -206,9 +209,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void) throw(RGA::eGA)
+	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void) throw(eGA)
 {
 	unsigned int i,j;
 	RGeoInfo **infoi,**infoj;
@@ -227,7 +230,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 						if(Instance->Debug)
 							Instance->Debug->PrintInfo(Tmp);
 					#endif
-					throw RGA::eGAVerify(Tmp);
+					throw eGAVerify(Tmp);
 				}
 			}
 		}
@@ -235,10 +238,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
   RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>&
-		RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::operator=(const RChromo2D &chromo)
+		RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::operator=(const RChromo2D &chromo)
 {
 	RChromo<cInst,cChromo,cFit,cThreadData>::operator=(chromo);
 	RGeoInfos::operator=(chromo);
@@ -247,9 +250,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RObj2D* RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetObj(RCoord X,RCoord Y)
+	RObj2D* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetObj(RCoord X,RCoord Y)
 {
 	unsigned int obj;
 
@@ -262,9 +265,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	cInfo* RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetInfo(RCoord X,RCoord Y)
+	cInfo* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetInfo(RCoord X,RCoord Y)
 {
 	unsigned int obj;
 
@@ -277,9 +280,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RPoint& RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetActLimits(void)
+	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetActLimits(void)
 {
 	RPoint *pt=RPoint::GetPoint();
 
@@ -288,9 +291,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RPoint& RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLevel(unsigned int i)
+	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLevel(unsigned int i)
 {
 	RPoint *pt=RPoint::GetPoint();
 
@@ -299,9 +302,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::~RChromo2D(void)
+	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::~RChromo2D(void)
 {
 	if(Grid) delete Grid;
 }

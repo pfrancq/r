@@ -6,7 +6,10 @@
 
 	Geometric information - Header
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,30 +34,27 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RGeoInfoH
 #define RGeoInfoH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
-using namespace RStd;
-#include <rgeometry/rpoint.h>
-#include <rgeometry/rrect.h>
-#include <rgeometry/rpolygon.h>
-using namespace RGeometry2D;
+#include <rmath/rpoint.h>
+#include <rmath/rrect.h>
+#include <rmath/rpolygon.h>
 #include <rga2d/robj2d.h>
 #include <rga2d/rgrid.h>
-using namespace RGA2D;
 
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Forward class declaration
 class RObj2D;
 class RGrid;
@@ -62,7 +62,7 @@ class RGeoInfo;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RGeoInfoConnector class provides a connector of a geometric information
 * concerning the placement of an object.
@@ -96,23 +96,23 @@ public:
 	* Constructor of the connector.
 	* @param con		"Real" Connector of this one.
 	* @param owner		Geometric Information of the connector.
-	*/	
-	RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner);
+	*/
+	RGeoInfoConnector(RObj2DConnector* con,RGeoInfo* owner);
 
 	/**
 	* Constructor of the connector.
 	* @param con		"Real" Connector of this one.
 	* @param owner		Geometric Information of the connector.
 	*/	
-	RGeoInfoConnector(RGeoInfoConnector *con,RGeoInfo* owner);
+	RGeoInfoConnector(RGeoInfoConnector* con,RGeoInfo* owner);
 
 	/**
 	* Constructor of the connector.
 	* @param con		"Real" Connector of this one.
 	* @param owner		Geometric Information of the connector.
 	* @param pos		The position of the connector
-	*/	
-	RGeoInfoConnector(RObj2DConnector *con,RGeoInfo* owner,const RPoint& pos);
+	*/
+	RGeoInfoConnector(RObj2DConnector* con,RGeoInfo* owner,const RPoint& pos);
 
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
@@ -141,7 +141,7 @@ public:
 	* object).
 	*/
 	RPoint& GetPos(void);
-	
+
 	// friend classes
 	friend class RGeoInfo;
 	friend class RConnections;
@@ -149,7 +149,7 @@ public:
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * \ingroup 2DGA
 * The RGeoInfo class provides a geometric information concerning the placement
@@ -164,7 +164,7 @@ class RGeoInfo
 	* A geometric information with no corresponding object is considered not to
 	* be treated.
 	*/
-	RObj2D *Obj;
+	RObj2D* Obj;
 
 	/**
 	* Indicate if the object was selected for the crossover.
@@ -184,12 +184,12 @@ class RGeoInfo
 	/**
 	* Polygon representing the object.
 	*/
-	RPolygon *Bound;
+	RPolygon* Bound;
 
 	/**
 	* Rectangles Decomposition of the polygon.
 	*/
-	RRects *Rects;
+	RRects* Rects;
 
 	/**
 	* Rectangle holding the polygon.
@@ -221,7 +221,7 @@ public:
 	/**
 	* Construct a geometric information.
 	*/
-	RGeoInfo(RObj2D *obj);
+	RGeoInfo(RObj2D* obj);
 	
 	/**
 	* Construct a geometric information from another one.
@@ -231,7 +231,7 @@ public:
 	/**
 	* Construct a geometric information from another one.
 	*/
-	RGeoInfo(RGeoInfo *info);
+	RGeoInfo(RGeoInfo* info);
 
 	/**
 	* Clears the geometric information.
@@ -257,7 +257,7 @@ public:
 	* Calculate the boundary rectangle of the polygon according to the position.
 	* @param rect           Rectangle that will hold the result.
 	*/
-	void Boundary(RRect &rect);
+	void Boundary(RRect& rect);
 
 	/**
 	* Return true if the geometric information is a valid one.
@@ -293,20 +293,20 @@ public:
 	* @param pos            Position to place.
 	* @param grid           Grid.
 	*/
-	void Assign(const RPoint &pos,RGrid *grid);
+	void Assign(const RPoint& pos,RGrid* grid);
 
 	/**
 	* Assign the geometric information to the position.
 	* @param pos            Position to place.
 	*/
-	void Assign(const RPoint &pos) {Pos=pos;}
+	void Assign(const RPoint& pos) {Pos=pos;}
 
 	/**
 	* Compare function use for the RContainer class. Compare only the adress of the
 	* pointers.
 	* @param info           Pointer used for the comparaison.
 	*/
-	int Compare(const RGeoInfo *info) { return(info!=this); }
+	int Compare(const RGeoInfo* info) { return(info!=this); }
 
 	/**
 	* Compare function use for the RContainer class. Compare the identificator
@@ -321,7 +321,7 @@ public:
 	* @param pos            Position to test.
 	* @param grid           Grid.
 	*/
-	bool Test(RPoint &pos,RGrid *grid);
+	bool Test(RPoint& pos,RGrid* grid);
 
 	/**
 	* Calculate the position where the object represented can be placed, if it
@@ -330,7 +330,7 @@ public:
 	* @param limits         Limits for the placement.
 	* @param grid           Grid.
 	*/
-	void PushBottomLeft(RPoint &pos,RPoint &limits,RGrid *grid);
+	void PushBottomLeft(RPoint& pos,RPoint& limits,RGrid* grid);
 
 	/**
 	* Calculate the position where the object represented can be placed, if it
@@ -339,13 +339,13 @@ public:
 	* @param limits         Limits for the placement.
 	* @param grid           Grid.
 	*/
-	void PushCenter(RPoint &pos,RPoint &limits,RGrid *grid);
+	void PushCenter(RPoint& pos,RPoint& limits,RGrid* grid);
 	
 	/**
 	* This function returns true if the two objects represented by this geometric information
 	* overlap (Rects have to be calculated.
 	*/
-	bool Overlap(RGeoInfo *info);
+	bool Overlap(RGeoInfo* info);
 
 	/**
 	* Return the Width of the object represented.
@@ -371,13 +371,13 @@ public:
 	* Make a translation of the point.
 	* @param pt             Point representing the vector used.
 	*/
-	RGeoInfo& operator+=(const RPoint &pt) {Pos+=pt;return(*this);}
+	RGeoInfo& operator+=(const RPoint& pt) {Pos+=pt;return(*this);}
 
 	/**
 	* Make a translation of the point.
 	* @param pt             The point representing the vector used.
 	*/
-	RGeoInfo& operator-=(const RPoint &pt)
+	RGeoInfo& operator-=(const RPoint& pt)
 	{
 		Pos-=pt;
 		return(*this);
@@ -406,7 +406,7 @@ public:
 	/**
 	* Assignment Operator.
 	*/
-	RGeoInfo& operator=(const RGeoInfo &info);
+	RGeoInfo& operator=(const RGeoInfo& info);
 
 	/**
 	* Return true if a point is in the polygon.
@@ -423,7 +423,7 @@ public:
 	/**
 	* Add the polygon representing the object in the container of polygons.
 	*/
-	void Add(RPolygons &polys);
+	void Add(RPolygons& polys);
 
 	/**
 	* Return the polygon representing the object placed.
@@ -477,8 +477,8 @@ public:
 };
 
 
-}  //-------- End of namespace RGA2D ------------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

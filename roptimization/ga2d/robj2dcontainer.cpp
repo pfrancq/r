@@ -6,7 +6,10 @@
 
 	Geometric information - Implementation.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,31 +34,30 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga2d/robj2dcontainer.h>
 #include <rga2d/rgeoinfo.h>
 #include <rga2d/rgeoinfos.h>
-using namespace RGA2D;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-// Class "RObj2DContainer"
+// Class RObj2DContainer
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-
-//-----------------------------------------------------------------------------
-RGA2D::RObj2DContainer::RObj2DContainer(const unsigned int id,const char* name,const unsigned int nb)
+//------------------------------------------------------------------------------
+RObj2DContainer::RObj2DContainer(const unsigned int id,const char* name,const unsigned int nb)
 	: RObj2D(id,name,false), RContainer<RGeoInfo,unsigned int,false,false>(nb,nb/2)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RObj2DContainer::ClearInfo(void)
+//------------------------------------------------------------------------------
+void RObj2DContainer::ClearInfo(void)
 {
 	unsigned int i;
 
@@ -71,11 +73,11 @@ void RGA2D::RObj2DContainer::ClearInfo(void)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RObj2DContainer::Add(RGeoInfos* infos,RGeoInfo* info)
+//------------------------------------------------------------------------------
+void RObj2DContainer::Add(RGeoInfos* infos,RGeoInfo* info)
 {
 	RGeoInfo* ptr;
-	
+
 	ptr=infos->GetPtr<unsigned int>(info->GetObj()->GetId());
 	InsertPtr(ptr);
 	if(ptr->Pos.X<Translation.X)
@@ -85,14 +87,14 @@ void RGA2D::RObj2DContainer::Add(RGeoInfos* infos,RGeoInfo* info)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RObj2DContainer::Complete(void)
+//------------------------------------------------------------------------------
+void RObj2DContainer::Complete(void)
 {
 	RPolygons Polys;
-	RPolygon *p;
-	RGeoInfo **info;
-	RGeoInfoConnector **tab;
-	RObj2DConnector *con;
+	RPolygon* p;
+	RGeoInfo** info;
+	RGeoInfoConnector** tab;
+	RObj2DConnector* con;
 	unsigned int i,j,k;
 
 	// Go through all geometric information to make the translation
@@ -120,8 +122,8 @@ void RGA2D::RObj2DContainer::Complete(void)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RObj2DContainer::Assign(RGeoInfos* infos,const RPoint &pos,RGrid *grid,const unsigned int order)
+//------------------------------------------------------------------------------
+void RObj2DContainer::Assign(RGeoInfos* infos,const RPoint& pos,RGrid* grid,const unsigned int order)
 {
 	RGeoInfo **info,*ptr;
 	unsigned int i,j,k;
@@ -151,8 +153,8 @@ void RGA2D::RObj2DContainer::Assign(RGeoInfos* infos,const RPoint &pos,RGrid *gr
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGA2D::RObj2DContainer::IsIn(unsigned int id)
+//------------------------------------------------------------------------------
+bool RObj2DContainer::IsIn(unsigned int id)
 {
 	RGeoInfo **info;
 	unsigned int i;
@@ -166,7 +168,7 @@ bool RGA2D::RObj2DContainer::IsIn(unsigned int id)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA2D::RObj2DContainer::~RObj2DContainer(void)
+//------------------------------------------------------------------------------
+RObj2DContainer::~RObj2DContainer(void)
 {
 }

@@ -6,7 +6,10 @@
 
 	Set of geometric informations - Header.
 
-	(c) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,36 +33,33 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RGeoInfosH
 #define RGeoInfosH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
-using namespace RStd;
 #include <rga2d/robj2d.h>
 #include <rga2d/rgeoinfo.h>
 #include <rga2d/rgeoinfoconnections.h>
 #include <rga2d/robj2dcontainer.h>
 #include <rga2d/rproblem2d.h>
-using namespace RGA2D;
 
 
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
 
-
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class implements a container of geometric information.
 * @author Pascal Francq
 * @short Container of geometric information.
 */
-class RGeoInfos : public RStd::RContainer<RGeoInfo,unsigned int,true,false>
+class RGeoInfos : public RContainer<RGeoInfo,unsigned int,true,false>
 {
 public:
 
@@ -104,7 +104,7 @@ public:
 	* Calculate the boundary rectangle of all the geometric information.
 	* @param rect           The rectangle that will be hold the result.
 	*/
-	void Boundary(RRect &rect);
+	void Boundary(RRect& rect);
 
 	/**
 	* Clear all the geometric informations.
@@ -123,8 +123,8 @@ public:
 };
 
 
-}  //-------- End of namespace RGA2D ------------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

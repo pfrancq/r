@@ -6,7 +6,10 @@
 
 	Connections for the 2D Placement - Header.
 
-	(c) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,41 +33,37 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RConnectionsH
 #define RConnectionsH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rga.h>
-//using namespace RGA;
 #include <rga2d/robj2d.h>
 #include <rga2d/rgeoinfo.h>
 #include <rga2d/rconnection.h>
-using namespace RGA2D;
 #include <rpromethee/rpromcriterion.h>
-using namespace RPromethee;
 
 
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
 
-
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // forward class declaration
 class RGeoInfos;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RConnections class provides a representation for the connections of the problem.
 * @short Connections.
 * @author Pascal Francq
 */
-class RConnections : public RStd::RContainer<RConnection,unsigned int,true,false>
+class RConnections : public RContainer<RConnection,unsigned int,true,false>
 {
 	/**
 	* Random number generator to use.
@@ -152,8 +151,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

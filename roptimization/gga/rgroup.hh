@@ -2,11 +2,14 @@
 
 	R Project Library
 
-	RNodeGA.hh
+	RGroup.hh
 
-	GA Node - Header.
+	Group of a GGA - Header.
 
-	(C) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,13 +34,13 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RGroup<cGroup,cObj,cGroupData,cGroups>
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RGroup<cGroup,cObj,cGroupData,cGroups>::RGroup(RGroup* grp)
 		: Id(grp->Id), Owner(grp->Owner)
@@ -48,7 +51,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RGroup<cGroup,cObj,cGroupData,cGroups>::RGroup(cGroups* owner,const unsigned int id,const cGroupData*)
 		: Id(id), Owner(owner)
@@ -59,9 +62,9 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroup<cGroup,cObj,cGroupData,cGroups>::Verify(void) throw(RGA::eGA)
+	void RGroup<cGroup,cObj,cGroupData,cGroups>::Verify(void) throw(eGA)
 {
 	unsigned int i;
 	cObj** obj;
@@ -72,7 +75,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	if(!Owner)
 	{
 		sprintf(tmp,"No Owner for group %u",Id);
-		throw RGA::eGAVerify(tmp);
+		throw eGAVerify(tmp);
 	}
 
 	// Verify objects attached.
@@ -82,21 +85,21 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		if(!NbSubObjects)
 		{
 			sprintf(tmp,"!NbSubObjects for group %u",Id);
-			throw RGA::eGAVerify(tmp);
+			throw eGAVerify(tmp);
 		}
 
 		// The index of the first objects attached can not exceed the total number of objects.
 		if(SubObjects>NbObjects)
 		{
 			sprintf(tmp,"SubObjects>NbObjects for group %u",Id);
-			throw RGA::eGAVerify(tmp);
+			throw eGAVerify(tmp);
 		}
 
 		// The index of the last objects attached can not exceed the total number of objects.
 		if(SubObjects+NbSubObjects>NbObjects+1)
 		{
 			sprintf(tmp,"SubObjects+NbSubObjects>NbObjects+1 for group %u",Id);
-			throw RGA::eGAVerify(tmp);
+			throw eGAVerify(tmp);
 		}
 	}
 	else
@@ -105,7 +108,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		if(NbSubObjects)
 		{
 			sprintf(tmp,"NbSubObjects for group %u",Id);
-			throw RGA::eGAVerify(tmp);
+			throw eGAVerify(tmp);
 		}
 	}
 
@@ -115,18 +118,18 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		if(!(*obj))
 		{
 			sprintf(tmp,"Owner->ObjsAss is null for group %u",Id);
-			throw RGA::eGAVerify(tmp);
+			throw eGAVerify(tmp);
 		}
 		if(Owner->ObjectsAss[(*obj)->GetId()]!=Id)
 		{
 			sprintf(tmp,"Owner->ObjsAss[(*obj)->GetId()]!=Id for group %u",Id);
-			throw RGA::eGAVerify(tmp);
+			throw eGAVerify(tmp);
 		}
 	}
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroup<cGroup,cObj,cGroupData,cGroups>::Clear(void)
 {
@@ -136,9 +139,9 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroup<cGroup,cObj,cGroupData,cGroups>::Insert(RStd::RCursor<cObj,unsigned int>* /*objs*/,const cGroup* grp)
+	void RGroup<cGroup,cObj,cGroupData,cGroups>::Insert(RCursor<cObj,unsigned int>* /*objs*/,const cGroup* grp)
 {
 	unsigned int i;
 	cObj** ptr;
@@ -150,15 +153,15 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RGroup<cGroup,cObj,cGroupData,cGroups>& RGGA::RGroup<cGroup,cObj,cGroupData,cGroups>::operator=(const RGroup<cGroup,cObj,cGroupData,cGroups>& /*grp*/)
+	RGroup<cGroup,cObj,cGroupData,cGroups>& RGroup<cGroup,cObj,cGroupData,cGroups>::operator=(const RGroup<cGroup,cObj,cGroupData,cGroups>& /*grp*/)
 {
 	return(*this);
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	bool RGroup<cGroup,cObj,cGroupData,cGroups>::IsIn(const unsigned int id) const
 {
@@ -171,7 +174,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	bool RGroup<cGroup,cObj,cGroupData,cGroups>::CommonObjs(const cGroup* grp) const
 {
@@ -184,7 +187,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	bool RGroup<cGroup,cObj,cGroupData,cGroups>::SameObjs(const cGroup* grp) const
 {
@@ -198,7 +201,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	unsigned int* RGroup<cGroup,cObj,cGroupData,cGroups>::GetObjectsId(void) const
 {
@@ -215,7 +218,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	cObj** RGroup<cGroup,cObj,cGroupData,cGroups>::GetObjects(void) const
 {
@@ -223,7 +226,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RGroup<cGroup,cObj,cGroupData,cGroups>::~RGroup(void)
 {

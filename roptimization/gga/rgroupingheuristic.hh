@@ -6,7 +6,10 @@
 
 	Generic Heuristic for Grouping - Inline Implemenation
 
-	(C) 1998-2001 by By P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		
 
 	Version $Revision$
 
@@ -31,22 +34,22 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::RGroupingHeuristic(const char* n,RRandom* r,RStd::RCursor<cObj,unsigned int>* objs)
+	RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::RGroupingHeuristic(const char* n,RRandom* r,RCursor<cObj,unsigned int>* objs)
 		: Name(n), Random(r), Objs(objs), Groups(0)
 {
 	Order=new cObj*[Objs->GetNb()];
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::Init(cGroups* groups)
 {
@@ -55,7 +58,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	// Assign
 	Groups=groups;
 	NbObjs=0;
-	
+
 	// Init the data for a grouping
 	NbObjsOk=0;
 
@@ -70,17 +73,17 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::SelectNextObject(void) throw(RGA::eGA)
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::SelectNextObject(void) throw(eGA)
 {
 	CurObj=Order[NbObjsOk];
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::PutNextObject(void) throw(RGA::eGA)
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::PutNextObject(void) throw(eGA)
 {
 	SelectNextObject();
 	CurGroup=FindGroup();
@@ -89,9 +92,9 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::Run(cGroups* groups) throw(RGA::eGA)
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::Run(cGroups* groups) throw(eGA)
 {
 	Init(groups);
 	while(NbObjsOk<NbObjs)
@@ -102,14 +105,14 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::PostRun(void) throw(RGA::eGA)
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::PostRun(void) throw(eGA)
 {
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::~RGroupingHeuristic(void)
 {

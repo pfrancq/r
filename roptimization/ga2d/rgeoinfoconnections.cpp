@@ -6,7 +6,7 @@
 
 	Connections for the 2D Placement (Geometric Information Part) - Implementation.
 
-	(c) 2000-2001 by P. Francq.
+	(c) 2000-2003 by P. Francq.
 
 	Version $Revision$
 
@@ -30,24 +30,23 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromkernel.h>
-using namespace RPromethee;
 #include <rga2d/rgeoinfoconnections.h>
 #include <rga2d/rgeoinfos.h>
-using namespace RGA2D;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RGeoInfoConnections
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RGeoInfoConnections::RGeoInfoConnections(RConnections* c,RGeoInfos* i)
+//------------------------------------------------------------------------------
+RGeoInfoConnections::RGeoInfoConnections(RConnections* c,RGeoInfos* i)
 	: RContainer<RGeoInfoConnection,unsigned int,true,false>(c->NbPtr,c->IncPtr),
 	  Cons(c), Infos(i)
 {
@@ -58,8 +57,8 @@ RGA2D::RGeoInfoConnections::RGeoInfoConnections(RConnections* c,RGeoInfos* i)
 }
 
 
-//-----------------------------------------------------------------------------
-double RGA2D::RGeoInfoConnections::GetDistances(RGeoInfo* info,const RPoint& pos)
+//------------------------------------------------------------------------------
+double RGeoInfoConnections::GetDistances(RGeoInfo* info,const RPoint& pos)
 {
 	double sum=0.0;
 	unsigned int i;
@@ -73,8 +72,8 @@ double RGA2D::RGeoInfoConnections::GetDistances(RGeoInfo* info,const RPoint& pos
 }
 
 
-//-----------------------------------------------------------------------------
-double RGA2D::RGeoInfoConnections::GetDistances(RGeoInfo* info)
+//------------------------------------------------------------------------------
+double RGeoInfoConnections::GetDistances(RGeoInfo* info)
 {
 	double sum=0.0;
 	unsigned int i;
@@ -88,8 +87,8 @@ double RGA2D::RGeoInfoConnections::GetDistances(RGeoInfo* info)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,const bool* selected)
+//------------------------------------------------------------------------------
+void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,const bool* selected)
 {
 	RPromKernel Prom("PlacementCenter",Infos->NbPtr,2);
 	RPromCriterion *weight,*dist;
@@ -187,8 +186,8 @@ void RGA2D::RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i
 }
 
 
-//-----------------------------------------------------------------------------
-RGeoInfoConnections& RGA2D::RGeoInfoConnections::operator=(const RGeoInfoConnections& cons) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RGeoInfoConnections& RGeoInfoConnections::operator=(const RGeoInfoConnections& cons) throw(bad_alloc)
 {
 	RContainer<RGeoInfoConnection,unsigned int,true,false>::operator=(cons);
 	Cons=cons.Cons;
@@ -197,8 +196,8 @@ RGeoInfoConnections& RGA2D::RGeoInfoConnections::operator=(const RGeoInfoConnect
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RGeoInfoConnections::UnComplete(void)
+//------------------------------------------------------------------------------
+void RGeoInfoConnections::UnComplete(void)
 {
 	unsigned int i;
 	RGeoInfoConnection** cur;

@@ -6,7 +6,10 @@
 
 	Bottom Left Heuristic for Placement - Header
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,22 +34,22 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RPlacementBottomLeftH
 #define RPlacementBottomLeftH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga2d/rplacementheuristic.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class implements a bottom-left heuristic.
 * This heuristic handles objects "line after line". The first object is place
@@ -82,15 +85,15 @@ public:
 	RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
-	
+
 	virtual void NextObjectOri(void) throw(RPlacementHeuristicException);
-	
+
 	virtual void Place(RPoint& pos) throw(RPlacementHeuristicException);
 };
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

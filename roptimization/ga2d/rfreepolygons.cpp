@@ -6,7 +6,7 @@
 
 	Description - Implementation.
 
-	(c) 2000-2001 by P. Francq.
+	(c) 2000-2003 by P. Francq.
 
 	Version $Revision$
 
@@ -30,36 +30,36 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga2d/rfreepolygons.h>
 #include <rga2d/rgeoinfo.h>
-using namespace RGA2D;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RFreePolygons
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RFreePolygons::RFreePolygons(void)
+//------------------------------------------------------------------------------
+RFreePolygons::RFreePolygons(void)
 	: RContainer<RFreePolygon,unsigned int,true,false>(30,15)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGA2D::RFreePolygons::RFreePolygons(RFreePolygons *cont)
+//------------------------------------------------------------------------------
+RFreePolygons::RFreePolygons(RFreePolygons* cont)
 	: RContainer<RFreePolygon,unsigned int,true,false>(cont)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RPoint& RGA2D::RFreePolygons::CanPlace(RGeoInfo *info)
+//------------------------------------------------------------------------------
+RPoint& RFreePolygons::CanPlace(RGeoInfo* info)
 {
 	char o;
 	unsigned int i;
@@ -84,7 +84,7 @@ RPoint& RGA2D::RFreePolygons::CanPlace(RGeoInfo *info)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA2D::RFreePolygons::~RFreePolygons(void)
+//------------------------------------------------------------------------------
+RFreePolygons::~RFreePolygons(void)
 {
 }

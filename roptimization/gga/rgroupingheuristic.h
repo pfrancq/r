@@ -6,7 +6,10 @@
 
 	Generic Heuristic for Grouping - Header
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,26 +34,24 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RGroupingHeuristicH
 #define RGroupingHeuristicH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
-using namespace RStd;
-#include <rmath/random.h>
-using namespace RMath;
+#include <rstd/random.h>
 #include <rga/robjs.h>
 #include <rgga/rgroups.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGGA{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RGroupingHeuristic class provides an abstract class for grouping
 * heuristics.
@@ -65,17 +66,17 @@ protected:
 	/**
 	* Name of the heuristic.
 	*/
-	RStd::RString Name;
+	RString Name;
 
 	/**
 	* The random number generator to use.
 	*/
-	RMath::RRandom* Random;
+	RRandom* Random;
 
 	/**
 	* Objects to be grouped.
 	*/
-	RStd::RCursor<cObj,unsigned int>* Objs;
+	RCursor<cObj,unsigned int>* Objs;
 
 	/**
 	* Number of objects to be grouped.
@@ -91,7 +92,7 @@ protected:
 	* Groups.
 	*/
 	cGroups* Groups;
-	
+
 	/**
 	* Order in which the objects are to be treated.
 	*/
@@ -115,14 +116,14 @@ public:
 	* @param r              The random genrator to use.
 	* @param objs           Pointer to the objects.
 	*/
-	RGroupingHeuristic(const char* n,RRandom* r,RStd::RCursor<cObj,unsigned int>* objs);
+	RGroupingHeuristic(const char* n,RRandom* r,RCursor<cObj,unsigned int>* objs);
 
 	/**
 	* Get the name of the heuristic.
 	* @return Pointer to a C String.
 	*/
 	const char* GetName(void) const {return(Name());}
-	
+
 	/**
 	* Initialize the heuristic.
 	* @param groups         Pointer to the groups.
@@ -133,7 +134,7 @@ public:
 	* Select the next object to place.
 	* The CurObj must pointed to object to place.
 	*/
-	virtual void SelectNextObject(void) throw(RGA::eGA);
+	virtual void SelectNextObject(void) throw(eGA);
 
 	/**
 	* Return the current object to place.
@@ -148,23 +149,23 @@ public:
 	/**
 	* Find a group for the next object.
 	*/
-	virtual cGroup* FindGroup(void) throw(RGA::eGA)=0;
+	virtual cGroup* FindGroup(void) throw(eGA)=0;
 
 	/**
 	* Put the next object into a group.
 	*/
-	void PutNextObject(void) throw(RGA::eGA);
+	void PutNextObject(void) throw(eGA);
 
 	/**
 	* Run the heuristic.
 	* @param groups         Pointer to the groups.
 	*/
-	void Run(cGroups* groups) throw(RGA::eGA);
+	void Run(cGroups* groups) throw(eGA);
 
 	/**
 	* Do some operations after the run.
 	*/
-	virtual void PostRun(void) throw(RGA::eGA);
+	virtual void PostRun(void) throw(eGA);
 
 	/**
 	* Return true if all the objects are grouped.
@@ -197,13 +198,13 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Definitions of templates
 #include <rgga/rgroupingheuristic.hh>
 
 
-}  //------- End of namespace RGGA --------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

@@ -6,7 +6,10 @@
 
 	Connection for the 2D Placement (RGeoInfo Part) - Header.
 
-	(c) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,29 +33,25 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RGeoInfoConnectionH
 #define RGeoInfoConnectionH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
-using namespace RStd;
-#include <rgraph/rgraph.h>
-using namespace RGraphs;
+#include <rmath/rgraph.h>
 #include <rga2d/rgeoinfo.h>
 #include <rga2d/rconnection.h>
-using namespace RGA2D;
 
 
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-namespace RGA2D{
-//-----------------------------------------------------------------------------
 
-
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RGeoInfoConnectionPart class provides a representation for an edge of a
 * connection.
@@ -68,6 +67,7 @@ class RGeoInfoConnectionPart
 	};
 
 public:
+
 	/**
 	* Identificator of the first object.
 	*/
@@ -112,7 +112,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RGeoInfoConnection class provides a representation for a connection
 * between two geometric information.
@@ -210,8 +210,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA2D -------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

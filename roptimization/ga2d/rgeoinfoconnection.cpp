@@ -6,7 +6,7 @@
 
 	Connections for the 2D Placement (Geometric Information Part) - Implementation.
 
-	(c) 2000-2001 by P. Francq.
+	(c) 2000-2003 by P. Francq.
 
 	Version $Revision$
 
@@ -30,28 +30,28 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga2d/rgeoinfoconnection.h>
 #include <rga2d/rgeoinfos.h>
-using namespace RGA2D;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RGeoInfoConnectionPart
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 RGeoInfoConnectionPart::RGeoInfoConnectionPart(const RPoint& pt1,unsigned int id1,const RPoint& pt2,unsigned int id2)
 	: Id1(id1), PosCon1(pt1), Id2(id2), PosCon2(pt2)
 {
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 RGeoInfoConnectionPart::RGeoInfoConnectionPart(const RGeoInfoConnectionPart* p)
 	: Id1(p->Id1), PosCon1(p->PosCon1), Id2(p->Id2), PosCon2(p->PosCon2)
 {
@@ -59,46 +59,46 @@ RGeoInfoConnectionPart::RGeoInfoConnectionPart(const RGeoInfoConnectionPart* p)
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RGeoInfoConnection
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RGeoInfoConnection::RGeoInfoConnection(RConnection* con)
+//------------------------------------------------------------------------------
+RGeoInfoConnection::RGeoInfoConnection(RConnection* con)
 	: RContainer<RGeoInfoConnectionPart,unsigned int,true,false>(con->Connect.NbPtr,con->Connect.NbPtr/2),
 		Con(con), Complete(false), Dist(0)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGA2D::RGeoInfoConnection::RGeoInfoConnection(const RGeoInfoConnection& con)
+//------------------------------------------------------------------------------
+RGeoInfoConnection::RGeoInfoConnection(const RGeoInfoConnection& con)
 	: RContainer<RGeoInfoConnectionPart,unsigned int,true,false>(con),
 	  Con(con.Con), Complete(con.Complete), Dist(con.Dist)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGA2D::RGeoInfoConnection::RGeoInfoConnection(const RGeoInfoConnection* con)
+//------------------------------------------------------------------------------
+RGeoInfoConnection::RGeoInfoConnection(const RGeoInfoConnection* con)
 	: RContainer<RGeoInfoConnectionPart,unsigned int,true,false>(con),
 	  Con(con->Con), Complete(con->Complete), Dist(con->Dist)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RGeoInfoConnection::UnComplete(void)
+//------------------------------------------------------------------------------
+void RGeoInfoConnection::UnComplete(void)
 {
 	Complete=false;
 	Dist=0.0;
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGA2D::RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
+//------------------------------------------------------------------------------
+bool RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
 {
 	unsigned int i,count;
 	RObj2DConnector **con;
@@ -118,8 +118,8 @@ bool RGA2D::RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA2D::RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
+//------------------------------------------------------------------------------
+void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 {
 	RObj2DConnector **con,**con2;
 	RGeoInfo *g1,*g2;
@@ -127,7 +127,7 @@ void RGA2D::RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 	unsigned int id1,id2;
 	RVertex *v1,*v2;
 	REdge **e;
-	RPoint pt1,pt2;	
+	RPoint pt1,pt2;
 	RGraph T(Con->Connect.NbPtr),S(Con->Connect.NbPtr);
 	RContainer<RGeoInfoConnectionPart,unsigned int,true,false> Local(Con->Connect.NbPtr,Con->Connect.NbPtr/2);
 	RGeoInfoConnectionPart::sSearch s;
@@ -176,8 +176,8 @@ void RGA2D::RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 }
 
 
-//-----------------------------------------------------------------------------
-double RGA2D::RGeoInfoConnection::GetDist(RGeoInfos* infos,RGeoInfo* cur,const RPoint& pos)
+//------------------------------------------------------------------------------
+double RGeoInfoConnection::GetDist(RGeoInfos* infos,RGeoInfo* cur,const RPoint& pos)
 {
 	// Make the current geometric information temporary valid
 	cur->Pos=pos;
@@ -197,8 +197,8 @@ double RGA2D::RGeoInfoConnection::GetDist(RGeoInfos* infos,RGeoInfo* cur,const R
 }
 
 
-//-----------------------------------------------------------------------------
-double RGA2D::RGeoInfoConnection::GetDist(RGeoInfos* infos,RGeoInfo* cur)
+//------------------------------------------------------------------------------
+double RGeoInfoConnection::GetDist(RGeoInfos* infos,RGeoInfo* cur)
 {
 	if(IsIn(cur))
 	{
@@ -215,8 +215,8 @@ double RGA2D::RGeoInfoConnection::GetDist(RGeoInfos* infos,RGeoInfo* cur)
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGA2D::RGeoInfoConnection::IsIn(const RGeoInfo* info)
+//------------------------------------------------------------------------------
+bool RGeoInfoConnection::IsIn(const RGeoInfo* info)
 {
 	RObj2DConnector **con;
 	RObj2D* owner;
@@ -233,8 +233,8 @@ bool RGA2D::RGeoInfoConnection::IsIn(const RGeoInfo* info)
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGA2D::RGeoInfoConnection::IsIn(const RGeoInfoConnector* con)
+//------------------------------------------------------------------------------
+bool RGeoInfoConnection::IsIn(const RGeoInfoConnector* con)
 {
 	RObj2DConnector **cons;
 	unsigned int id;

@@ -4,9 +4,12 @@
 
 	RObjg.h
 
-	Object to place in a specific group - Header.
+	Object to place in a specific node - Header.
 
-	(c) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,28 +33,22 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RObjGH
 #define RObjGH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
-using namespace RStd;
 
 
-//-----------------------------------------------------------------------------
-namespace RGGA{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
-// Constance
-const unsigned int NoObject=0xFFFFFFFF;
-
-
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The Robjg class provides a representation of an object to place in a group.
 * @author Pascal Francq
@@ -90,12 +87,12 @@ public:
 	* Comparaison function
 	*/
 	int Compare(const unsigned int &id) const;
-	
+
 	/**
 	* Comparaison function
 	*/
 	int Compare(const RObjG& obj) const;
-	
+
 	/**
 	* Comparaison function
 	*/
@@ -118,8 +115,8 @@ public:
 };
 
 
-}  //------- End of namespace RGGA --------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

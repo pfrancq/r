@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RCons.cpp
+	RConnection.cpp
 
-	Connections for the 2D Placement - Implementation.
+	Connection for the 2D Placement - Implementation.
 
-	(c) 2000-2001 by P. Francq.
+	(c) 2000-2003 by P. Francq.
 
 	Version $Revision$
 
@@ -30,23 +30,22 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/random.h>
-using namespace RMath;
+#include <rstd/random.h>
 #include <rga2d/rconnection.h>
-using namespace RGA2D;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RConnection
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA2D::RConnection::RConnection(unsigned int nb,double weight)
+//------------------------------------------------------------------------------
+RConnection::RConnection(unsigned int nb,double weight)
 	: Weight(weight), Connect(nb,nb/2)
 {
 }
