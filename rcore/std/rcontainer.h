@@ -310,7 +310,7 @@ public:
 	* @return Returns the index of the element if it exists orthe index where
 	* is has to inserted.
 	*/
-	template<class TUse> T GetId(const TUse &tag,bool &Find);
+	template<class TUse> T GetId(const TUse &tag,bool &Find) const;
 
 	/**
 	* Insert an element at a certain position. Two remarks must be made :
@@ -342,7 +342,7 @@ public:
 	*                       (false).
 	* @return Return true if the element is in the container.
 	*/
-	template<class TUse> bool IsIn(const TUse &tag,bool sortkey=bOrder);
+	template<class TUse> bool IsIn(const TUse &tag,bool sortkey=bOrder) const;
 
 	/**
 	* Get a pointer to a certain element in the container.
@@ -354,7 +354,7 @@ public:
 	*                       (false).
 	* @return Return the pointer or 0 if the element is not in the container.
 	*/
-	template<class TUse> C* GetPtr(const TUse &tag,bool sortkey=bOrder);
+	template<class TUse> C* GetPtr(const TUse &tag,bool sortkey=bOrder) const;
 
 	/**
 	* Get a pointer to a certain element in the container. If the element is
@@ -378,7 +378,7 @@ public:
 	* @param tag            The tag used.
 	* @return The function returns a pointer to the result container.
 	*/
-	template<class TUse> RContainer<C,T,false,bOrder>* GetPtrs(const TUse &tag) throw(bad_alloc);
+	template<class TUse> RContainer<C,T,false,bOrder>* GetPtrs(const TUse &tag) const throw(bad_alloc);
 	//@}
 
 	/**

@@ -269,7 +269,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	T RStd::RContainer<C,T,bAlloc,bOrder>::GetId(const TUse &tag,bool &Find)
+	T RStd::RContainer<C,T,bAlloc,bOrder>::GetId(const TUse &tag,bool &Find) const
 {
 	T NbMin,NbMax,i=0;
 	int Comp=0;
@@ -504,7 +504,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	bool RStd::RContainer<C,T,bAlloc,bOrder>::IsIn(const TUse &tag,bool sortkey)
+	bool RStd::RContainer<C,T,bAlloc,bOrder>::IsIn(const TUse &tag,bool sortkey) const
 {
 	if(bOrder&&sortkey)
 	{
@@ -527,7 +527,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	C* RStd::RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag,bool sortkey)
+	C* RStd::RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag,bool sortkey) const
 {
 	if(bOrder&&sortkey)
 	{
@@ -582,7 +582,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
   template<class TUse> RStd::RContainer<C,T,false,bOrder>* RContainer<C,T,bAlloc,bOrder>::
-		GetPtrs(const TUse &tag) throw(bad_alloc)
+		GetPtrs(const TUse &tag) const throw(bad_alloc)
 {
 	C **ptr;
 	T i;

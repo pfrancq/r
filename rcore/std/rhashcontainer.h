@@ -80,8 +80,8 @@ public:
 
 	/**
 	* Construct a Hash container.
-	* @param M		Default maximum number of elements.
-	* @param I		Incremental number of elements.
+	* @param M              Default maximum number of elements.
+	* @param I              Incremental number of elements.
 	*/
 	RHashContainer(T M,T I) throw(bad_alloc)
 	{
@@ -106,7 +106,7 @@ public:
 
 	/**
 	* Insert an element.
-	* @param ins		Pointer to the element to insert.
+	* @param ins            Pointer to the element to insert.
 	*/
 	inline void InsertPtr(C *ins) throw(bad_alloc)
 	{
@@ -116,46 +116,43 @@ public:
 
 	/**
 	* Verify if an element is in the hash container.
-	* @param TUse			The type of tag, the hash container uses the
-	*							Compare(TUse &) member function of the elements.
-	* @param tag			The tag used.
-	* @returns	The function returns true if the element is in the hash
-	*				container, else false.
-
+	* @param TUse           The type of tag, the hash container uses the
+	*                       Compare(TUse &) member function of the elements.
+	* @param tag            The tag used.
+	* @returns The function returns true if the element is in the hash
+	* container, else false.
 	*/
-	template<class TUse> inline bool IsIn(const TUse &tag,bool sortkey=true)
+	template<class TUse> inline bool IsIn(const TUse &tag,bool sortkey=true) const
 	{
 		return(Hash[tag.HashIndex()]->IsIn<TUse>(tag,sortkey));
 	}
 
 	/**
 	* Get a pointer to a certain element in the hash container.
-	* @param TUse			The type of tag, the hash container uses the
-	*							Compare(TUse &) member function of the elements.
-	* @param tag			The tag used.
-	* @param sortkey		The tag represents the sorting key. The default value
-	*							depends if the container is ordered (true) or not
-	*							(false).
-	* @return					Return the pointer or 0 if the element is not in the
-	*									container.
+	* @param TUse           The type of tag, the hash container uses the
+	*                       Compare(TUse &) member function of the elements.
+	* @param tag            The tag used.
+	* @param sortkey        The tag represents the sorting key. The default value
+	*                       depends if the container is ordered (true) or not
+	*                       (false).
+	* @return Return the pointer or 0 if the element is not in the container.
 	*/
-  template<class TUse> inline C* GetPtr(const TUse &tag,bool sortkey=true)
-  {
+	template<class TUse> inline C* GetPtr(const TUse &tag,bool sortkey=true) const
+	{
 		return(Hash[tag.HashIndex()]->GetPtr<TUse>(tag,sortkey));
-  }
+	}
 
 	/**
 	* Get a pointer to a certain element in the container. If the element is
 	* not existing, the container creates it by using the constructor with TUse
 	* as parameter.
-	* @param TUse			The type of tag, the container uses the Compare(TUse &)
-	*							member function of the elements.
-	* @param tag			The tag used.
-	* @param sortkey		The tag represents the sorting key. The default value
-	*							depends if the container is ordered (true) or not
-	*							(false).
-	* @return				The function returns a pointer to the element of the
-	*							container.
+	* @param TUse           The type of tag, the container uses the
+	*                       Compare(TUse &) member function of the elements.
+	* @param tag            The tag used.
+	* @param sortkey        The tag represents the sorting key. The default
+	*                       value depends if the container is ordered (true) or
+	*                       not (false).
+	* @return The function returns a pointer to the element of the container.
 	*/
 	template<class TUse> inline C* GetInsertPtr(const TUse &tag,bool sortkey=true) throw(bad_alloc)
 	{
@@ -164,7 +161,7 @@ public:
 
 	/**
 	* Delete an element of the hash container.
-	* @param del		Pointer to the element to delete.
+	* @param del            Pointer to the element to delete.
 	*/
 	inline void DeletePtr(C* del)
 	{
@@ -174,12 +171,12 @@ public:
 
 	/**
 	* Delete an element of the hash container.
-	* @param TUse			The type of tag, the container uses the Compare(TUse &)
-	*							member function of the elements.
-	* @param tag			The tag used.
-	* @param sortkey		The tag represents the sorting key. The default value
-	*							depends if the container is ordered (true) or not
-	*							(false).
+	* @param TUse           The type of tag, the container uses the
+	*                       Compare(TUse &) member function of the elements.
+	* @param tag            The tag used.
+	* @param sortkey        The tag represents the sorting key. The default
+	*                       value depends if the container is ordered (true) or
+	*                       not (false).
 	*/
 	template<class TUse> inline void DeletePtr(const TUse &tag,bool sortkey=true)
 	{
