@@ -176,7 +176,7 @@ public:
 	/**
 	* Construct the random generator.
 	*/
-	RRandomGood(const int seed) : RRandom() {Reset(seed);}
+	RRandomGood(const int seed=0) : RRandom() {_seed=seed;}
 
 	/**
 	* Restart the sequence.
@@ -225,7 +225,7 @@ public:
 	/**
 	* Construct the random generator.
 	*/
-	RRandomBetter(const int& seed) : RRandom() {Reset(seed);}
+	RRandomBetter(const int seed=0) : RRandom() {_seed=seed;}
 
 	/**
 	* Restart the sequence.
@@ -284,7 +284,7 @@ public:
 	/**
 	* Construct the random generator.
 	*/
-	RRandomBest(const int& seed) : RRandom() {Reset(seed);}
+	RRandomBest(const int seed=0) : RRandom() {_seed=seed;}
 
 	/**
 	* Restart the sequence.
@@ -299,7 +299,7 @@ public:
 };
 
 
-}  //-------- End of namespace RStd -------------------------------------------
+}  //-------- End of namespace RMath ------------------------------------------
 
 
 //-----------------------------------------------------------------------------
