@@ -482,6 +482,7 @@ char* RIO::RTextFile::GetLine(void) throw(RString)
 
 	if(Mode!=RIO::Read)
 		throw(RString("File Mode is not Read"));
+	if(!(*ptr)) return(0);
 	while((*ptr)&&(*ptr)!='\n'&&(*ptr)!='\r'&&(!BeginComment())) ptr++;
 	LastLine=Line;
 	if(*ptr)
