@@ -38,6 +38,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for AINSI C/C++
+#include <stdlib.h>
 #include <iostream.h>
 #include <new.h>
 #ifndef RGADEBUG
