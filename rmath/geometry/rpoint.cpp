@@ -35,8 +35,8 @@
 // include files for Rainbow
 #include <rstd/rstd.h>
 using namespace RStd;
-#include "rpoint.h"
-#include "rpolygon.h"
+#include <rgeometry/rpoint.h>
+#include <rgeometry/rpolygon.h>
 using namespace RGeometry2D;
 
 

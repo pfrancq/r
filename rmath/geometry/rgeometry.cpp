@@ -33,7 +33,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for Rainbow
-#include "geometry.h"
+#include <rgeometry/geometry.h>
 using namespace RGeometry2D;
 
 

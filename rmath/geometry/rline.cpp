@@ -31,7 +31,7 @@
 
 
 //-----------------------------------------------------------------------------
-#include "rline.h"
+#include <rgeometry/rline.h>
 using namespace RGeometry2D;
 
 

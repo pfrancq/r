@@ -32,7 +32,7 @@
 
 
 //-----------------------------------------------------------------------------
-#include "rrect.h"
+#include <rgeometry/rrect.h>
 using namespace RGeometry2D;
 
 
