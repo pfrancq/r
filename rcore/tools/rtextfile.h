@@ -342,7 +342,7 @@ public:
 	* Write an end of line in the file.
 	*/
 	void WriteLine(void) throw(RStd::RString);
-	
+
 	/**
 	* Write a long in the file. If the number is not the first thing on the line,
 	* a space is add before it.
