@@ -6,7 +6,7 @@
 
 	Debugging file in XML format (eXtended Markup Language) - Implementation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -122,7 +122,7 @@ void RDebug::EndFunc(RString Name,RString)
 	EndTag(Name);
 }
 
-                               
+
 //------------------------------------------------------------------------------
 void RDebug::BeginApp(void)
 {
@@ -158,8 +158,9 @@ RDebug::~RDebug(void)
 
 //------------------------------------------------------------------------------
 RDebugXML::RDebugXML(RString name,RString app,RString author) throw(std::bad_alloc)
-	: RDebug(app,author),Name(name), File(name,Create)
+	: RDebug(app,author),Name(name), File(name)
 {
+	File.Open(Create);
 	File.WriteStr("<!DOCTYPE "+RString(app)+">");
 	File.WriteLine();
 	for(int i=51;--i;)
