@@ -818,6 +818,7 @@ void RPolygon::ReOrder(void)
 	unsigned int i;
 	bool bX;            // Next Vertice is horizontal
 
+	if(!NbPtr) return;
 	point=tmp=new RPoint*[MaxPtr];
 	next=GetBottomLeft();
 	(*(point++))=next;
