@@ -108,7 +108,7 @@ RIO::RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
 	#ifdef _BSD_SOURCE
 		handle=open(Name,O_RDONLY);
 	#else
-		handle=open(Name,O_RDONLY | O_BINARY);	
+		handle=open(Name,O_RDONLY | O_BINARY);
 	#endif
 	Init();
 }
