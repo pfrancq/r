@@ -162,7 +162,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	cChromo **C;
 
 	#ifdef RGADEBUG
-		if(Debug) Debug->BeginFunc("PostEvaluate","RInst");
+		if(Debug) Debug->BeginFunc("AnalysePop","RInst");
 	#endif
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
@@ -180,19 +180,17 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 		emitBestSig();
 	}
 	#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("PostEvaluate","RInst");
+		if(Debug) Debug->EndFunc("AnalysePop","RInst");
 	#endif
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	int RGA::RInst<cInst,cChromo,cFit,cThreadData>::sort_function_cChromosome( const void *a, const void *b)
+	int RGA::RInst<cInst,cChromo,cFit,cThreadData>::sort_function_cChromosome(const void* a,const void* b)
 {
-//	cFit *af=(*(static_cast<cChromo**>(a)))->Fitness;
-//	cFit *bf=(*(static_cast<cChromo**>(b)))->Fitness;
-	cFit *af=(*((cChromo**)(a)))->Fitness;
-	cFit *bf=(*((cChromo**)(b)))->Fitness;
+	cFit* af=(*(static_cast<cChromo**>(a)))->Fitness;
+	cFit* bf=(*(static_cast<cChromo**>(b)))->Fitness;
 
 	if((*af)==(*bf)) return(0);
 	if((*af)>(*bf))
@@ -257,10 +255,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		}
 	}
 	tmpChrom2[0]=tmpChrom1[0];
-
-	// Sort Chromosomes by best fitness
-//	memcpy(tmpChrom,Chromosomes,sizeof(cChromo*)*PopSize);
-//	qsort(static_cast<void*>(tmpChrom),PopSize,sizeof(cChromo*),sort_function_cChromosome);
 	emitInteractSig();
 
 	// Make the crossovers

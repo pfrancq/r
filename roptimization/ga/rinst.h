@@ -107,7 +107,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	* @param b              The second chromosome.
 	* @return a-b
 	*/
-	static int sort_function_cChromosome( const void *a, const void *b);
+	static int sort_function_cChromosome(const void *a,const void *b);
 
 public:
 
