@@ -269,7 +269,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	T RStd::RContainer<C,T,bAlloc,bOrder>::GetId(const TUse &tag,bool &Find) const
+	T RStd::RContainer<C,T,bAlloc,bOrder>::GetId(const TUse tag,bool &Find) const
 {
 	T NbMin,NbMax,i=0;
 	int Comp=0;
@@ -504,7 +504,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	bool RStd::RContainer<C,T,bAlloc,bOrder>::IsIn(const TUse &tag,bool sortkey) const
+	bool RStd::RContainer<C,T,bAlloc,bOrder>::IsIn(const TUse tag,bool sortkey) const
 {
 	if(bOrder&&sortkey)
 	{
@@ -527,7 +527,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	C* RStd::RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag,bool sortkey) const
+	C* RStd::RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse tag,bool sortkey) const
 {
 	if(bOrder&&sortkey)
 	{
@@ -553,7 +553,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	C* RStd::RContainer<C,T,bAlloc,bOrder>::GetInsertPtr(const TUse &tag,bool sortkey) throw(bad_alloc)
+	C* RStd::RContainer<C,T,bAlloc,bOrder>::GetInsertPtr(const TUse tag,bool sortkey) throw(bad_alloc)
 {
 	if(bOrder&&sortkey)
 	{
@@ -582,7 +582,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
   template<class TUse> RStd::RContainer<C,T,false,bOrder>* RContainer<C,T,bAlloc,bOrder>::
-		GetPtrs(const TUse &tag) const throw(bad_alloc)
+		GetPtrs(const TUse tag) const throw(bad_alloc)
 {
 	C **ptr;
 	T i;
@@ -626,7 +626,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	void RStd::RContainer<C,T,bAlloc,bOrder>::DeletePtr(const TUse &tag,bool sortkey) throw(bad_alloc)
+	void RStd::RContainer<C,T,bAlloc,bOrder>::DeletePtr(const TUse tag,bool sortkey) throw(bad_alloc)
 {
 	C **ptr,*del;
 	T Index;
