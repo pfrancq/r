@@ -303,7 +303,7 @@ RString& RStd::itoa(const unsigned int nb)
 	char Tmp[20];	
 	RString *res=GetString();
 	
-	sprintf(Tmp,"%i",nb);
+	sprintf(Tmp,"%u",nb);
 	(*res)=Tmp;
 	return((*res));
 }
@@ -315,7 +315,7 @@ RString& RStd::ltoa(const long nb)
 	char Tmp[20];	
 	RString *res=GetString();
 	
-	sprintf(Tmp,"%i",nb);
+	sprintf(Tmp,"%li",nb);
 	(*res)=Tmp;
 	return((*res));
 }
@@ -340,7 +340,7 @@ RString& RStd::ltoa(const unsigned long nb)
 	char Tmp[20];	
 	RString *res=GetString();
 	
-	sprintf(Tmp,"%i",nb);
+	sprintf(Tmp,"%lu",nb);
 	(*res)=Tmp;
 	return((*res));
 }
@@ -364,7 +364,7 @@ RString& RStd::dtoa(const double nb)
 	char Tmp[20];	
 	RString *res=GetString();
 	
-	sprintf(Tmp,"%d",nb);
+	sprintf(Tmp,"%f",nb);
 	(*res)=Tmp;
 	return((*res));
 }
