@@ -244,6 +244,12 @@ public:
 	char GetNextChar(void) {return(*ptr);}
 
 	/**
+	* Get the rest of the file.
+	* @param buffer         Buffer that will hold the rest of the file.
+	*/
+	void GetUntilEnd(char* &buffer);
+
+	/**
 	* Set the style of comments.
 	* @param style          The Style.
 	*/

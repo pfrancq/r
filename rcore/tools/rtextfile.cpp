@@ -302,6 +302,13 @@ char* RIO::RTextFile::GetCharPtr(void)
 
 
 //-----------------------------------------------------------------------------
+void RIO::RTextFile::GetUntilEnd(char* &buffer)
+{
+	buffer=strdup(ptr);
+}
+
+
+//-----------------------------------------------------------------------------
 long RIO::RTextFile::GetInt(void) throw(RString)
 {
 	char *ptr2=ptr;
