@@ -79,7 +79,7 @@ class RPromKernel
 	/**
 	* Function used to sort the solutions by fit.
 	*/
-	static int sort_function_solutions( const void *a, const void *b);	
+	static int sort_function_solutions( const void *a, const void *b);
 
 public:
 
@@ -199,6 +199,11 @@ public:
 	* Clear the kernel.
 	*/
 	void Clear(void);
+
+	/**
+	* Clear the solutions of the kernel.
+	*/
+	void ClearSols(void);
 
 	/**
 	* Destruct the kernel.

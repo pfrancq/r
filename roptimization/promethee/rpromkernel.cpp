@@ -245,6 +245,18 @@ void RPromethee::RPromKernel::Clear(void)
 
 
 //-----------------------------------------------------------------------------
+void RPromethee::RPromKernel::ClearSols(void)
+{
+	RPromCriterionCursor Cur;
+
+	Cur.Set(Criteria);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Cur()->Clear();
+	Solutions.Clear();
+}
+
+
+//-----------------------------------------------------------------------------
 RPromethee::RPromKernel::~RPromKernel(void)
 {
 }
