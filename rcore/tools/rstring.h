@@ -199,11 +199,6 @@ public:
 	RString& operator+=(const char c) throw(bad_alloc);
 
 	/**
-	* Return the character at position i. The first letter is at position 0.
-	*/
-//	inline char operator[](unsigned int i) const	{return(Text[i]);}
-
-	/**
 	* Return the "C string" containing the string.
 	*/
 	inline const char* operator()(void) const {return(Text);}
