@@ -75,14 +75,14 @@ public:
 	* Construct a rectangle from another one.
 	* @param rect           The rectangle used as reference.
 	*/
-	RRect(RRect *rect);
+	RRect(const RRect *rect);
 
 	/**
 	* Construct a rectangle with two points.
 	* @param pt1            Point used as (left,bottom) edge.
 	* @param pt2            Point used as (right,up) edge.
 	*/
-	RRect(RPoint *pt1,RPoint *pt2);
+	RRect(const RPoint *pt1,const RPoint *pt2);
 
 	/** Construct a rectangle from four coordinates.
 	* @param MinX           The most left position.
@@ -90,32 +90,32 @@ public:
 	* @param MaxX           The most right position.
 	* @param MaxY           The most up position.
 	*/
-	RRect(RCoord MinX,RCoord MinY,RCoord MaxX,RCoord MaxY);
+	RRect(const RCoord MinX,const RCoord MinY,const RCoord MaxX,const RCoord MaxY);
 
 	/**
 	* Return the width of the rectangle.
 	*/
-	inline RCoord Width(void) {return(labs(Pt2.X-Pt1.X+1));}
+	inline RCoord Width(void) const {return(labs(Pt2.X-Pt1.X+1));}
 	
 	/**
 	* Return the height of the rectangle.
 	*/
-	inline RCoord Height(void) {return(labs(Pt2.Y-Pt1.Y+1));}
+	inline RCoord Height(void) const {return(labs(Pt2.Y-Pt1.Y+1));}
 
 	/**
 	* Return the area of the rectangle.
 	*/
-	inline RCoord Area(void) {return(Height()*Width());}
+	inline RCoord Area(void) const {return(Height()*Width());}
 
 	/**
 	* The equal operator.
 	*/
-	inline bool operator==(const RRect &rect) {return((Pt1==rect.Pt1)&&(Pt2==rect.Pt2));}
+	inline bool operator==(const RRect &rect) const {return((Pt1==rect.Pt1)&&(Pt2==rect.Pt2));}
 
 	/**
 	* The non-equal operator.
 	*/
-	inline bool operator!=(const RRect &rect) {return((Pt1!=rect.Pt1)||(Pt2!=rect.Pt2));}
+	inline bool operator!=(const RRect &rect) const {return((Pt1!=rect.Pt1)||(Pt2!=rect.Pt2));}
 
 	/**
 	* Make a translation of the rectangle.
@@ -134,7 +134,7 @@ public:
 	* is used with the class RContainer.
 	* @param rect           Rectangle used for the comparaison.
 	*/
-	int Compare(const RRect *rect) { return((*this)!=(*rect)); }
+	int Compare(const RRect *rect) const { return((*this)!=(*rect)); }
 
 	/**
 	* Adapt the rectangle to be contained in a given region.
@@ -155,24 +155,37 @@ public:
 	* @param x              The x to add.
 	* @param y              The y to add.
 	*/
-	void Translation(RCoord x,RCoord y);
+	void Translation(const RCoord x,const RCoord y);
 
 	/**
 	* This function returns true if the two rectangles overlapped.
 	*/
-	bool Overlap(const RRect *rect);
+	bool Overlap(const RRect *rect) const;
 
 	/**
 	* This function returns true if a given point is in the rectangle.
 	* @param X              X position of the point.
 	* @param Y              Y position of the point.
 	*/
-	bool IsIn(const RCoord X,const RCoord Y);
+	bool IsIn(const RCoord X,const RCoord Y) const;
 
 	/**
 	* This function returns true if a given point is in the rectangle.
 	*/
-	inline bool IsIn(const RPoint& pos) {return(IsIn(pos.X,pos.Y));}
+	inline bool IsIn(const RPoint& pos) const {return(IsIn(pos.X,pos.Y));}
+
+	/**
+	* Return true if the polygon poly is inside the rectangle.
+	* @param poly           The polygon to known if is in.
+	*/
+	bool IsIn(const RPolygon& poly) const
+		{return(IsIn(&poly));}
+
+	/**
+	* Return true if the polygon poly is inside the rectangle.
+	* @param poly           The polygon to known if is in.
+	*/
+	bool IsIn(const RPolygon* poly) const;
 
 	/**
 	* The assign Operator.

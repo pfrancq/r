@@ -34,6 +34,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rgeometry/rrect.h>
+#include <rgeometry/rpolygon.h>
 using namespace RGeometry2D;
 
 
@@ -52,7 +53,7 @@ RGeometry2D::RRect::RRect(void)
 
 
 //-----------------------------------------------------------------------------
-RGeometry2D::RRect::RRect(RRect *rect)
+RGeometry2D::RRect::RRect(const RRect *rect)
 	: Pt1(),Pt2()
 {
 	if(rect)
@@ -66,7 +67,7 @@ RGeometry2D::RRect::RRect(RRect *rect)
 
 
 //-----------------------------------------------------------------------------
-RGeometry2D::RRect::RRect(RPoint *pt1,RPoint *pt2)
+RGeometry2D::RRect::RRect(const RPoint *pt1,const RPoint *pt2)
 	: Pt1(), Pt2()
 {
 	RReturnIfFail(pt1&&pt2);
@@ -76,7 +77,7 @@ RGeometry2D::RRect::RRect(RPoint *pt1,RPoint *pt2)
 
 
 //-----------------------------------------------------------------------------
-RGeometry2D::RRect::RRect(RCoord MinX,RCoord MinY,RCoord MaxX,RCoord MaxY)
+RGeometry2D::RRect::RRect(const RCoord MinX,const RCoord MinY,const RCoord MaxX,const RCoord MaxY)
 	: Pt1(MinX,MinY),Pt2(MaxX,MaxY)
 {
 }
@@ -197,7 +198,7 @@ bool RGeometry2D::RRect::Clip(const RPoint &limits)
 
 
 //-----------------------------------------------------------------------------
-void RGeometry2D::RRect::Translation(RCoord x,RCoord y)
+void RGeometry2D::RRect::Translation(const RCoord x,const RCoord y)
 {
 	Pt1.X+=x;
 	Pt1.Y+=y;
@@ -207,7 +208,7 @@ void RGeometry2D::RRect::Translation(RCoord x,RCoord y)
 
 
 //-----------------------------------------------------------------------------
-bool RGeometry2D::RRect::Overlap(const RRect *rect)
+bool RGeometry2D::RRect::Overlap(const RRect *rect) const
 {
 	RReturnValIfFail(rect,false);
 	
@@ -222,7 +223,7 @@ bool RGeometry2D::RRect::Overlap(const RRect *rect)
 
 
 //-----------------------------------------------------------------------------
-bool RGeometry2D::RRect::IsIn(const RCoord X,const RCoord Y)
+bool RGeometry2D::RRect::IsIn(const RCoord X,const RCoord Y) const
 {
 	// Is up or bottom of rect
 	if((Y>Pt2.Y)||(Y<Pt1.Y)) return(false);
@@ -230,6 +231,21 @@ bool RGeometry2D::RRect::IsIn(const RCoord X,const RCoord Y)
 	// Is left or right of rect
 	if((X>Pt2.X)||(X<Pt1.X)) return(false);
 
+	return(true);
+}
+
+
+//-----------------------------------------------------------------------------
+bool RGeometry2D::RRect::IsIn(const RPolygon* poly) const
+{
+	RPoint **tab;
+	unsigned int i;
+
+	for(i=poly->NbPtr+1,tab=poly->Tab;--i;tab++)
+	{
+		if(!IsIn(*tab))
+			return(false);
+	}
 	return(true);
 }
 
