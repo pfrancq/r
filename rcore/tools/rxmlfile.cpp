@@ -42,7 +42,7 @@ using namespace RStd;
  * Returns:
  *
  *---------------------------------------------------------------------------*/
-RXMLFile::RXMLFile(char *name,RXMLStruct *xmlstruct)
+RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct)
  : RTextFile(name), XMLStruct(xmlstruct)
 {
 	RXMLTag *top;

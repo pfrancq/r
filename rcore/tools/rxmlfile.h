@@ -66,7 +66,7 @@ public:
 	* Construct a XML file.
 	* @param name		Name of the file.
 	*/	
-	RXMLFile(char* name,RXMLStruct *xmlstruct);
+	RXMLFile(const char* name,RXMLStruct *xmlstruct);
 
 	/**
 	* Test if a new tag begins.
