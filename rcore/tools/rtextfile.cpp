@@ -631,13 +631,13 @@ void RIO::RTextFile::WriteStr(const RString &str) throw(RString)
 		write(handle,Separator,Separator.GetLen());
 	l=str.GetLen();
 	if(!l) return;
-	if(str[l-1]!='\n'&&str[l-1]!='\r')
+	if((str()[l-1]!='\n')&&(str()[l-1]!='\r'))
 		NewLine=false;
 	else
 	{
 		NewLine=true;
 		l--;
-		if(str[l-1]!='\n'&&str[l-1]!='\r') l--;
+		if((str()[l-1]!='\n')&&(str()[l-1]!='\r')) l--;
 	}
 	write(handle,str,l);
 	if(NewLine) WriteLine();
