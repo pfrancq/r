@@ -4,9 +4,13 @@
 
 	RXMLStruct.cpp
 
-	Description - Implementation.
+	XML Structure - Implementation.
 
-	(c) 2000-2001 by P. Francq and T. L'Eglise.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
 	Version $Revision$
 
@@ -30,36 +34,35 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rxml/rxmlstruct.h>
-using namespace RXML;
-using namespace RStd;
+#include <rstd/rxmlstruct.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RXMLStruct
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RXML::RXMLStruct::RXMLStruct(void)
+//------------------------------------------------------------------------------
+RXMLStruct::RXMLStruct(void)
  : RTree<RXMLTag,true,false>(100,50), Entities(20,10)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RXMLTag* RXML::RXMLStruct::GetTag(const char* name)
+//------------------------------------------------------------------------------
+RXMLTag* RXMLStruct::GetTag(const char* name)
 {
 	return(GetPtr<const char*>(name,false));
 }
 
 
-//-----------------------------------------------------------------------------
-RXMLTag* RXML::RXMLStruct::GetTag(const char* name,RXMLTag* parent)
+//------------------------------------------------------------------------------
+RXMLTag* RXMLStruct::GetTag(const char* name,RXMLTag* parent)
 {
 	if(!parent)
 		return(0);
@@ -67,22 +70,22 @@ RXMLTag* RXML::RXMLStruct::GetTag(const char* name,RXMLTag* parent)
 }
 
 
-//------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void RXMLStruct::InsertEntity(const char* name,const char* value)
 {
 	Entities.InsertPtr(new RXMLAttr(name,value));
 }
 
 
-//-----------------------------------------------------------------------------
-RXMLAttrCursor& RXML::RXMLStruct::GetXMLEntitiesCursor(void)
+//------------------------------------------------------------------------------
+RXMLAttrCursor& RXMLStruct::GetXMLEntitiesCursor(void)
 {
 	RXMLAttrCursor *cur=RXMLAttrCursor::GetTmpCursor();
 	cur->Set(Entities);
 	return(*cur);
 }
 
-//-----------------------------------------------------------------------------
-RXML::RXMLStruct::~RXMLStruct(void)
+//------------------------------------------------------------------------------
+RXMLStruct::~RXMLStruct(void)
 {
 }

@@ -6,7 +6,10 @@
 
 	Rectangle - Implemtation.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,42 +34,42 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rgeometry/rrects.h>
-using namespace RGeometry2D;
+#include <rmath/rrects.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-// RRects
+// class RRects
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RRects::RRects(void)
+//------------------------------------------------------------------------------
+RRects::RRects(void)
 	: RContainer<RRect,unsigned int,true,false>(20,10)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RRects::RRects(unsigned int max)
+//------------------------------------------------------------------------------
+RRects::RRects(unsigned int max)
 	: RContainer<RRect,unsigned int,true,false>(max,10)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RRects::RRects(RRects *rects)
+//------------------------------------------------------------------------------
+RRects::RRects(RRects* rects)
 	: RContainer<RRect,unsigned int,true,false>(rects)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RCoord RGeometry2D::RRects::Area(void)
+//------------------------------------------------------------------------------
+RCoord RRects::Area(void)
 {
 	unsigned i;
 	RRect **rect;

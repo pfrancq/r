@@ -6,7 +6,11 @@
 
 	Promethee Solutions - Header.
 
-	(C) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
 	Version $Revision$
 
@@ -31,24 +35,23 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RPromSolH
 #define RPromSolH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromethee.h>
 #include <rpromethee/rpromcritvalue.h>
-using namespace RStd;
 
 
-//-----------------------------------------------------------------------------
-namespace RPromethee{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RPromSol class provides a representation of a solution in the Prométhée
 * method.
@@ -105,7 +108,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
-	int Compare(const RPromSol& sol) {return(Id-sol.Id);}
+	int Compare(const RPromSol& sol) const {return(Id-sol.Id);}
 
 	/**
 	* Compare two prométhée solutions.
@@ -113,7 +116,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
-	int Compare(const RPromSol* sol) {return(Id-sol->Id);}
+	int Compare(const RPromSol* sol) const {return(Id-sol->Id);}
 
 	/**
 	* Compare the identifier of the prométhée solution with another identificator.
@@ -121,7 +124,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
-	int Compare(const unsigned int id) {return(Id-id);}
+	int Compare(const unsigned int id) const {return(Id-id);}
 
 	/**
 	* Compare the name of the prométhée solution with another string.
@@ -129,7 +132,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
-	int Compare(const RString& name) {return(Name.Compare(name));}
+	int Compare(const RString& name) const {return(Name.Compare(name));}
 
 	/**
 	* Compare the name of the prométhée solution with another string.
@@ -137,7 +140,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
-	int Compare(const char* name) {return(Name.Compare(name));}
+	int Compare(const char* name) const {return(Name.Compare(name));}
 
 	/**
 	* @return Fi of the solution.
@@ -175,8 +178,8 @@ public:
 };
 
 
-}  //-------- End of namespace RPromethee -------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

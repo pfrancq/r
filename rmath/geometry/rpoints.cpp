@@ -6,7 +6,10 @@
 
 	Point - Implementation.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,39 +34,38 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
-using namespace RStd;
-#include <rgeometry/rpoints.h>
-#include <rgeometry/rpolygon.h>
-#include <rgeometry/rpolygons.h>
-using namespace RGeometry2D;
+#include <rmath/rpoints.h>
+#include <rmath/rpolygon.h>
+#include <rmath/rpolygons.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // RPoints
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RPoints::RPoints(void)
+//------------------------------------------------------------------------------
+RPoints::RPoints(void)
 	: RContainer<RPoint,unsigned int,true,false>(10,5)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RPoints::RPoints(const unsigned int max)
+//------------------------------------------------------------------------------
+RPoints::RPoints(const unsigned int max)
 	: RContainer<RPoint,unsigned int,true,false>(max,5)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RPoints::RPoints(const RPoints *points)
+//------------------------------------------------------------------------------
+RPoints::RPoints(const RPoints* points)
 	: RContainer<RPoint,unsigned int,true,false>(points->MaxPtr,points->IncPtr)
 {
 	RPoint **pts;
@@ -76,8 +78,8 @@ RGeometry2D::RPoints::RPoints(const RPoints *points)
 }
 
 
-//-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoints::FindBottom(const RPoint *pt,const RPolygons *polys) const
+//------------------------------------------------------------------------------
+RPoint* RPoints::FindBottom(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -107,7 +109,7 @@ RPoint* RGeometry2D::RPoints::FindBottom(const RPoint *pt,const RPolygons *polys
 		if(((*point)->X==X)&&((*point)->Y==Y-1)) return(*point);
 		if(((*point)->X==X)&&(polys->Edge(*point,pt))&&((*point)->Y>AY)&&((*point)->Y<Y))
 		{
-			Activ=(*point);	
+			Activ=(*point);
 			AY=Activ->Y;
     }
 	}
@@ -115,8 +117,8 @@ RPoint* RGeometry2D::RPoints::FindBottom(const RPoint *pt,const RPolygons *polys
 }
 
 
-//-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoints::FindLeft(const RPoint *pt,const RPolygons *polys) const
+//------------------------------------------------------------------------------
+RPoint* RPoints::FindLeft(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -154,8 +156,8 @@ RPoint* RGeometry2D::RPoints::FindLeft(const RPoint *pt,const RPolygons *polys) 
 }
 
 
-//-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoints::FindRight(const RPoint *pt,const RPolygons *polys) const
+//------------------------------------------------------------------------------
+RPoint* RPoints::FindRight(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -193,8 +195,8 @@ RPoint* RGeometry2D::RPoints::FindRight(const RPoint *pt,const RPolygons *polys)
 }
 
 
-//-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoints::FindUp(const RPoint *pt,const RPolygons *polys) const
+//------------------------------------------------------------------------------
+RPoint* RPoints::FindUp(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -232,8 +234,8 @@ RPoint* RGeometry2D::RPoints::FindUp(const RPoint *pt,const RPolygons *polys) co
 }
 
 
-//-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoints::FindBottomLeft(void) const
+//------------------------------------------------------------------------------
+RPoint* RPoints::FindBottomLeft(void) const
 {
 	RPoint *Activ,**point;
 	unsigned int i;
@@ -255,8 +257,8 @@ RPoint* RGeometry2D::RPoints::FindBottomLeft(void) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RPoints::DuplicatePoints(void) const
+//------------------------------------------------------------------------------
+bool RPoints::DuplicatePoints(void) const
 {
 	unsigned int i,j;
 	RPoint **point1,**point2;
@@ -269,8 +271,8 @@ bool RGeometry2D::RPoints::DuplicatePoints(void) const
 }
 
 
-//-----------------------------------------------------------------------------
-RPoints& RGeometry2D::RPoints::operator=(const RPoints &points)
+//------------------------------------------------------------------------------
+RPoints& RPoints::operator=(const RPoints& points)
 {
 	RContainer<RPoint,unsigned int,true,false>::operator=(points);
 	return(*this);

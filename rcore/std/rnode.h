@@ -6,7 +6,10 @@
 
 	Generic Node - Header.
 
-	(C) 1999-2002 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,21 +34,21 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RNodeH
 #define RNodeH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #include <rstd/rcontainer.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RStd{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class represent a generic node. The user has to derived from this class
 * and implement the Compare function. The paramter N specify the real class and
@@ -62,7 +65,7 @@ namespace RStd{
 * @short Generic Node.
 */
 template<class N,bool bOrder>
-	class RNode	: public RContainer<N,unsigned int,false,bOrder>
+	class RNode : public RContainer<N,unsigned int,false,bOrder>
 {
 public:
 	/**
@@ -96,11 +99,13 @@ public:
 };
 
 
-#include <rstd/rnode.hh>    // Template implementation
+//------------------------------------------------------------------------------
+// Template implementation
+#include <rstd/rnode.hh>
 
 
-}	//---- End namespace RStd -------------------------------------------------
+}	//---- End namespace R -----------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

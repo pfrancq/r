@@ -6,7 +6,10 @@
 
 	Language - Implementation.
 
-	(c) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,26 +33,26 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <string.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include "rinter/rlang.h"
-using namespace RInter;
+#include <rstd/rlang.h>
+using namespace R;
 
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RLang
 //
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
-RInter::RLang::RLang(const RString& lang,const char* code) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RLang::RLang(const RString& lang,const char* code) throw(bad_alloc)
   : Lang(lang)
 {
   memcpy(Code,code,2*sizeof(char));
@@ -57,28 +60,28 @@ RInter::RLang::RLang(const RString& lang,const char* code) throw(bad_alloc)
 }
 
 
-//---------------------------------------------------------------------------
-int RInter::RLang::Compare(const RLang& lang) const
+//------------------------------------------------------------------------------
+int RLang::Compare(const RLang& lang) const
 {
   return(strcmp(Code,lang.Code));
 }
 
 
-//---------------------------------------------------------------------------
-int RInter::RLang::Compare(const RLang *lang) const
+//------------------------------------------------------------------------------
+int RLang::Compare(const RLang *lang) const
 {
   return(strcmp(Code,lang->Code));
 }
 
 
-//---------------------------------------------------------------------------
-int RInter::RLang::Compare(const char* code) const
+//------------------------------------------------------------------------------
+int RLang::Compare(const char* code) const
 {
   return(strcmp(Code,code));
 }
 
 
-//---------------------------------------------------------------------------
-RInter::RLang::~RLang(void)
+//------------------------------------------------------------------------------
+RLang::~RLang(void)
 {
 }

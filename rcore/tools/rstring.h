@@ -6,7 +6,10 @@
 
 	String - Header.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,35 +34,30 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RStringH
 #define RStringH
 
 
-//-----------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <rstd/rstd.h>
-
-
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rcursor.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Generic defines
 #ifndef __RMAXSTRING__
 	#define __RMAXSTRING__ 30
 #endif
 
 
-//-----------------------------------------------------------------------------
-namespace RStd{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /** This class implements the traditional "C string" (char*) as a class.
 * @author Pascal Francq
 * @short String Class
@@ -71,7 +69,7 @@ protected:
 	/**
 	* The Text containing the string.
 	*/
-	char *Text;
+	char* Text;
 
 	/**
 	* The length of the string.
@@ -94,7 +92,7 @@ public:
 	* Construct a string from a "C string".
 	* @param text           The "C string" used as reference.
 	*/
-	RString(const char *text) throw(bad_alloc);
+	RString(const char* text) throw(bad_alloc);
 
 	/**
 	* Construct an empty string with a maximal size.
@@ -157,7 +155,7 @@ public:
 	* Assign the uppercase version of a "C string".
 	* @param text           The "C string" used.
 	*/
-	void StrUpr(const char *text) throw(bad_alloc);
+	void StrUpr(const char* text) throw(bad_alloc);
 
 	/**
 	* Assign the uppercase version of a string.
@@ -174,7 +172,7 @@ public:
 	* Assign the lowercase version of a "C string".
 	* @param text           The "C string" used.
 	*/
-	void StrLwr(const char *text) throw(bad_alloc);
+	void StrLwr(const char* text) throw(bad_alloc);
 
 	/**
 	* Assign the lowercase version of a string.
@@ -235,12 +233,12 @@ public:
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RString *str) const;
+	int Compare(const RString* str) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const char *str) const;
+	int Compare(const char* str) const;
 
 	/**
 	* Return a number between 0 and 26 according to the first character of the
@@ -310,7 +308,7 @@ protected:
 	* Verify if the string can hold maxlen characters and extend the array if
 	* necessary.
 	*/
-	inline void Verify(const unsigned int maxlen) throw(bad_alloc);	
+	inline void Verify(const unsigned int maxlen) throw(bad_alloc);
 
 public:
 
@@ -321,26 +319,26 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Operators
 
 /**
 * Add two strings together.
 */
-RString& operator+(const RString &arg1,const RString &arg2);
+RString& operator+(const RString& arg1,const RString& arg2);
 
 /**
 * Add a string and a "C string" together.
 */
-RString& operator+(const RString &arg1,const char *arg2);
+RString& operator+(const RString& arg1,const char* arg2);
 
 /**
 * Add a "C string" and a string together.
 */
-RString& operator+(const char *arg1,const RString &arg2);
+RString& operator+(const char* arg1,const RString& arg2);
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Conversion functions
 
 /**
@@ -379,7 +377,7 @@ RString& ftoa(const float nb);
 RString& dtoa(const double nb);
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RStringCursor class provides a way to go trough a set of strings.
 * @short Strings Cursor
@@ -387,8 +385,8 @@ RString& dtoa(const double nb);
 CLASSCURSOR(RStringCursor,RString,unsigned int)
 
 
-}  //-------- End of namespace RStd -------------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

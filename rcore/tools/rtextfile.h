@@ -6,7 +6,10 @@
 
 	Text File - Header.
 
-	(C) 1999-2002 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,23 +34,23 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RTextFileH
 #define RTextFileH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
-#include <rio/rio.h>
+#include <rstd/rio.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RIO{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RTextFile class implements some basic functions needed when working
 * with text files.
@@ -97,12 +100,12 @@ protected:
 	/**
 	* How to file has to be used.
 	*/
-	RIO::ModeType Mode;
+	ModeType Mode;
 
 	/**
 	* Name of the File.
 	*/
-	RStd::RString Name;
+	RString Name;
 
 	/**
 	* Internal Handle of the file.
@@ -112,12 +115,12 @@ protected:
 	/**
 	* Buffer containing the file (Used only if read mode).
 	*/
-	char *Buffer;
+	char* Buffer;
 
 	/**
 	* Internal pointer used to read the file (Used only if read mode).
 	*/
-	char *ptr;
+	char* ptr;
 
 	/**
 	* All the file reads at once  (Only true is supported yet).
@@ -132,17 +135,17 @@ protected:
 	/**
 	* This string represent a single line comment.
 	*/
-	RStd::RString Rem;
+	RString Rem;
 
 	/**
 	* This string represent the beginning of a multi-line comment.
 	*/
-	RStd::RString BeginRem;
+	RString BeginRem;
 
 	/**
 	* This string represent the ending of a multi-line comment.
 	*/
-	RStd::RString EndRem;
+	RString EndRem;
 
 	/**
 	* The type of comments that are using for this file.
@@ -157,7 +160,7 @@ protected:
 	/**
 	* This string represent a separator for different elements on the same line
 	*/
-	RStd::RString Separator;
+	RString Separator;
 
 	/**
 	* This variable is holding the current line number.
@@ -176,24 +179,24 @@ public:
 	* @param name           The name of the file.
 	* @param mode           The open mode for the file.
 	*/
-	RTextFile(const RStd::RString &name,RIO::ModeType mode) throw(bad_alloc,RStd::RString);
+	RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString);
 
 	/**
 	* Construct a text file in read mode.
 	* @param name           The name of the file.
 	* @param all            The text file is open in one time (Only Supported yet).
 	*/
-	RTextFile(const RStd::RString &name,bool all=true) throw(bad_alloc,RStd::RString);
+	RTextFile(const RString &name,bool all=true) throw(bad_alloc,RString);
 
 	/**
 	* Re-initialise the file.
 	*/
-	void Init(void) throw(bad_alloc,RStd::RString);
+	void Init(void) throw(bad_alloc,RString);
 
 	/**
 	* Go to the begining of the file.
 	*/
-	void Begin(void) throw(RStd::RString);
+	void Begin(void) throw(RString);
 
 protected:
 
@@ -265,196 +268,196 @@ public:
 	/**
 	* Return the next integer contained in the file.
 	*/
-	long GetInt(void) throw(RStd::RString);
+	long GetInt(void) throw(RString);
 
 	/**
 	* Return the next unsigned integer contained in the file.
 	*/
-	unsigned long GetUInt(void) throw(RStd::RString);
+	unsigned long GetUInt(void) throw(RString);
 
 	/**
 	* >> Operator for char.
 	*/
-	RTextFile& operator>>(char& nb) throw(RStd::RString);
+	RTextFile& operator>>(char& nb) throw(RString);
 
 	/**
 	* >> Operator for unsigned char.
 	*/
-	RTextFile& operator>>(unsigned char& nb) throw(RStd::RString);
+	RTextFile& operator>>(unsigned char& nb) throw(RString);
 
 	/**
 	* >> Operator for short.
 	*/
-	RTextFile& operator>>(short& nb) throw(RStd::RString);
+	RTextFile& operator>>(short& nb) throw(RString);
 
 	/**
 	* >> Operator for unsigned short.
 	*/
-	RTextFile& operator>>(unsigned short& nb) throw(RStd::RString);
+	RTextFile& operator>>(unsigned short& nb) throw(RString);
 
 	/**
 	* >> Operator for int.
 	*/
-	RTextFile& operator>>(int& nb) throw(RStd::RString);
+	RTextFile& operator>>(int& nb) throw(RString);
 
 	/**
 	* >> Operator for unsigned int.
 	*/
-	RTextFile& operator>>(unsigned int& nb) throw(RStd::RString);
+	RTextFile& operator>>(unsigned int& nb) throw(RString);
 
 	/**
 	* >> Operator for long.
 	*/
-	RTextFile& operator>>(long& nb) throw(RStd::RString);
+	RTextFile& operator>>(long& nb) throw(RString);
 
 	/**
 	* >> Operator for unsigned long.
 	*/
-	RTextFile& operator>>(unsigned long& nb) throw(RStd::RString);
+	RTextFile& operator>>(unsigned long& nb) throw(RString);
 
 	/**
 	* Return the next float contained in the file.
 	*/
-	float GetFloat(void) throw(RStd::RString);
+	float GetFloat(void) throw(RString);
 
 	/**
 	* >> Operator for float.
 	*/
-	RTextFile& operator>>(float& nb) throw(RStd::RString);
+	RTextFile& operator>>(float& nb) throw(RString);
 
 	/**
 	* >> Operator for a double.
 	*/
-	RTextFile& operator>>(double& nb) throw(RStd::RString);
+	RTextFile& operator>>(double& nb) throw(RString);
 
 	/**
 	* Return the next word contained in the file. A word is a suite of characters
 	* delemited by spaces.
 	*/
-	char *GetWord(void) throw(RStd::RString);
+	char *GetWord(void) throw(RString);
 
 	/**
 	* Return the next entire line in the file.
 	*/
-	char *GetLine(void) throw(RStd::RString);
+	char *GetLine(void) throw(RString);
 
 	/**
 	* Write an end of line in the file.
 	*/
-	void WriteLine(void) throw(RStd::RString);
+	void WriteLine(void) throw(RString);
 
 	/**
 	* Write a long in the file. If the number is not the first thing on the line,
 	* a space is add before it.
 	*/
-	void WriteLong(const long nb) throw(RStd::RString);
+	void WriteLong(const long nb) throw(RString);
 
 	/**
 	* << Operator for char.
 	*/
-	RTextFile& operator<<(const char nb) throw(RStd::RString);
+	RTextFile& operator<<(const char nb) throw(RString);
 
 	/**
 	* << Operator for short.
 	*/
-	RTextFile& operator<<(const short nb) throw(RStd::RString);
+	RTextFile& operator<<(const short nb) throw(RString);
 
 	/**
 	* << Operator for int.
 	*/
-	RTextFile& operator<<(const int nb) throw(RStd::RString);
+	RTextFile& operator<<(const int nb) throw(RString);
 
 	/**
 	* << Operator for long.
 	*/
-	RTextFile& operator<<(const long nb) throw(RStd::RString);
+	RTextFile& operator<<(const long nb) throw(RString);
 
 	/**
 	* Write a unsigned long in the file. If the number is not the first thing on
 	* the line, a separator is add before it.
 	*/
-	void WriteULong(const unsigned long nb) throw(RStd::RString);
+	void WriteULong(const unsigned long nb) throw(RString);
 
 	/**
 	* << Operator for unsigned char.
 	*/
-	RTextFile& operator<<(const unsigned char nb) throw(RStd::RString);
+	RTextFile& operator<<(const unsigned char nb) throw(RString);
 
 	/**
 	* << Operator for unsigned int.
 	*/
-	RTextFile& operator<<(const unsigned int nb) throw(RStd::RString);
+	RTextFile& operator<<(const unsigned int nb) throw(RString);
 
 	/**
 	* << Operator for unsigned long.
 	*/
-	RTextFile& operator<<(const unsigned long nb) throw(RStd::RString);
+	RTextFile& operator<<(const unsigned long nb) throw(RString);
 
 	/**
 	* Write a string in the file. If the string is not the first thing on the
 	* line, a separator is add before it.
 	*/
-	void WriteStr(const char *c) throw(RStd::RString);
+	void WriteStr(const char *c) throw(RString);
 
 	/**
 	* Write a string of a give length in the file.
 	*/
-	void WriteStr(const char *c,unsigned int l) throw(RStd::RString);
+	void WriteStr(const char *c,unsigned int l) throw(RString);
 
 	/**
 	* << Operator for char *.
 	*/
-	RTextFile& operator<<(const char *c) throw(RStd::RString);
+	RTextFile& operator<<(const char *c) throw(RString);
 
 	/**
 	* Write a string in the file. If the string is not the first thing on the
 	* line, a separator is add before it.
 	*/
-	void WriteStr(const RStd::RString &str) throw(RStd::RString);
+	void WriteStr(const RString &str) throw(RString);
 
 	/**
-	* << Operator for RStd::RString.
+	* << Operator for RString.
 	*/
-	RTextFile& operator<<(const RStd::RString &str) throw(RStd::RString);
+	RTextFile& operator<<(const RString &str) throw(RString);
 
 	/**
 	* Write a bool in the file as '1' or '0' depend on his value. If the number
 	* is not the first thing on the line, a separator is add before it.
 	*/
-	void WriteBool(const bool b) throw(RStd::RString);
+	void WriteBool(const bool b) throw(RString);
 
 	/**
 	* << Operator for bool.
 	*/
-	RTextFile& operator<<(const bool b) throw(RStd::RString);
+	RTextFile& operator<<(const bool b) throw(RString);
 
 	/**
 	* Write a char in the file.
 	*/
-	void WriteChar(const char c) throw(RStd::RString);
+	void WriteChar(const char c) throw(RString);
 
 	/**
 	* Write a double
 	*/
-	void WriteDouble(const double d) throw(RStd::RString);
+	void WriteDouble(const double d) throw(RString);
 
 	/**
 	* << Operator for double.
 	*/
-	RTextFile& operator<<(const double d) throw(RStd::RString);
+	RTextFile& operator<<(const double d) throw(RString);
 
 	/**
 	* Write the time in the file. If the time is not the first thing on the line,
 	* a separator is add before it.
 	*/
-	void WriteTime(void) throw(RStd::RString);
+	void WriteTime(void) throw(RString);
 
 	/**
 	* Write a log entry in the file. First the time is written, and then the
 	* entry. The entry is alone on a line, so end-of-lines are inserted if
 	* ncessary before or after it.
 	*/
-	void WriteLog(const char *entry) throw(RStd::RString);
+	void WriteLog(const char *entry) throw(RString);
 
 	/**
 	* Return the actual line number.
@@ -469,7 +472,7 @@ public:
 	/**
 	* Specify the set of characters used as separator.
 	*/
-	void SetSeparator(const RStd::RString& str) {Separator=str;}
+	void SetSeparator(const RString& str) {Separator=str;}
 
 	/**
 	* Specify the set of characters used as separator.
@@ -483,29 +486,29 @@ public:
 };
 
 
-}  //-------- End of namespace RIO --------------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Global functions
 extern "C++"
 {
 	/**
 	* Write an end-of-line in a RTextFile.
 	*/
-	extern RIO::RTextFile& endl(RIO::RTextFile &file);
+	extern R::RTextFile& endl(R::RTextFile &file);
 
 	/**
 	* Write the current time and date in a RTextFile.
 	*/
-	extern RIO::RTextFile& Time(RIO::RTextFile &file);
+	extern R::RTextFile& Time(R::RTextFile &file);
 
 	/**
 	* Operator needed for using generic writing functions.
 	*/
-	inline RIO::RTextFile& operator<<(RIO::RTextFile& o, RIO::RTextFile& (&f)(RIO::RTextFile&)) {return(f(o));}
+	inline R::RTextFile& operator<<(R::RTextFile& o, R::RTextFile& (&f)(R::RTextFile&)) {return(f(o));}
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

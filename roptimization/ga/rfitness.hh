@@ -6,7 +6,10 @@
 
 	Fitness for Chromsomes of Genetic Algorithms - Inline Implementation
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,57 +34,57 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // RFitness<cVal,bool>
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	RGA::RFitness<cVal,Max>::RFitness(void)
+	RFitness<cVal,Max>::RFitness(void)
 {
 	Value=0;
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline RGA::RFitness<cVal,Max>& RGA::RFitness<cVal,Max>::operator=(const RFitness<cVal,Max> &f)
+	inline RFitness<cVal,Max>& RFitness<cVal,Max>::operator=(const RFitness<cVal,Max> &f)
 {
 	Value=f.Value;
 	return(*this);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline RGA::RFitness<cVal,Max>& RGA::RFitness<cVal,Max>::operator=(const cVal value)
+	inline RFitness<cVal,Max>& RFitness<cVal,Max>::operator=(const cVal value)
 {
 	Value=value;
 	return(*this);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RGA::RFitness<cVal,Max>::operator==(const RFitness &f)
+	inline bool RFitness<cVal,Max>::operator==(const RFitness &f)
 {
 	return(Value==f.Value);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RGA::RFitness<cVal,Max>::operator!=(const RFitness &f)
+	inline bool RFitness<cVal,Max>::operator!=(const RFitness &f)
 {
 	return(Value!=f.Value);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RGA::RFitness<cVal,Max>::operator>(const RFitness &f)
+	inline bool RFitness<cVal,Max>::operator>(const RFitness &f)
 {
 	if(Max)
 		return(Value>f.Value);
@@ -90,9 +93,9 @@ template<class cVal,bool Max>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RGA::RFitness<cVal,Max>::operator<(const RFitness &f)
+	inline bool RFitness<cVal,Max>::operator<(const RFitness &f)
 {
 	if(Max)
 		return(Value<f.Value);
@@ -101,25 +104,25 @@ template<class cVal,bool Max>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RGA::RFitness<cVal,Max>::ToMaximize(void)
+	inline bool RFitness<cVal,Max>::ToMaximize(void)
 {
 	return(Max);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RGA::RFitness<cVal,Max>::ToMinimize(void)
+	inline bool RFitness<cVal,Max>::ToMinimize(void)
 {
 	return(!Max);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool operator>(const RGA::RFitness<cVal,Max>& f1,const RGA::RFitness<cVal,Max>&  f2)
+	inline bool operator>(const RFitness<cVal,Max>& f1,const RFitness<cVal,Max>&  f2)
 {
 	return(f2<f1);
 }

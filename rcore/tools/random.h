@@ -5,12 +5,15 @@
 	RRandom
 
 	Class representing random number generators:
-    RRandom       A pure base class
-    RRandomGood	  Park & Miller minimal standard congruential generator
-    RRandomBetter	Park & Miller with a Bays & Durham shuffle
-    RRandomBest	  L'Ecuyer's two-series combo plus a shuffle for a period > 2e18
+	RRandom       A pure base class
+	RRandomGood	  Park & Miller minimal standard congruential generator
+	RRandomBetter Park & Miller with a Bays & Durham shuffle
+	RRandomBest   L'Ecuyer's two-series combo plus a shuffle for a period > 2e18
 
-	(C) 1999-2000 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision: 1.5 $
 
@@ -34,17 +37,17 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RRandomH
 #define RRandomH
 
 
-//-----------------------------------------------------------------------------
-namespace RMath{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This is a abstract class for random number generation classes.
 * @author Pascal Francq
@@ -157,7 +160,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * A good and fast random generator using the Park & Miller minimal standard
 *	congruential generator.
@@ -191,7 +194,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * A better but slower random generator using the Park & Miller with a Bays &
 * Durham shuffle.
@@ -240,7 +243,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The best but also the slower random generator using the L'Ecuyer's two-series
 * combo plus a shuffle for a period > 2e18.
@@ -299,8 +302,8 @@ public:
 };
 
 
-}  //-------- End of namespace RMath ------------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

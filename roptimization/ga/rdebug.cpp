@@ -6,7 +6,10 @@
 
 	Debugging file in XML format (eXtended Markup Language) - Implementation
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,46 +34,33 @@
 
 
 
-//-----------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <new>
-#include <string.h>
-#ifdef _BSD_SOURCE
-	#include <unistd.h>
-#else
-	#include <io.h>
-#endif
-#include <stdio.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <time.h>
+//------------------------------------------------------------------------------
+// include files for C/C++ ANSI
 #include <stdarg.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rdebug.h>
-using namespace RStd;
-using namespace RIO;
-using namespace RGA;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // Class RDebug
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA::RDebug::RDebug(const char* app,const char* author)
+//------------------------------------------------------------------------------
+RDebug::RDebug(const char* app,const char* author)
 	: Deep(-1), App(app), Author(author)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebug::BeginTag(const char* Text,unsigned NbAttr,...)
+//------------------------------------------------------------------------------
+void RDebug::BeginTag(const char* Text,unsigned NbAttr,...)
 {
 	va_list ap;
 
@@ -85,8 +75,8 @@ void RGA::RDebug::BeginTag(const char* Text,unsigned NbAttr,...)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebug::AddAttribute(const char* Value,const char* Attr)
+//------------------------------------------------------------------------------
+void RDebug::AddAttribute(const char* Value,const char* Attr)
 {
 	if(NbOptions++)
 		strcat(tmpOpt," ");
@@ -97,16 +87,16 @@ void RGA::RDebug::AddAttribute(const char* Value,const char* Attr)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebug::PrintComment(const char* Text)
+//------------------------------------------------------------------------------
+void RDebug::PrintComment(const char* Text)
 {
 	LevelOutput[Deep]=true;
 	WriteText(Text);
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebug::EndTag(const char* Text)
+//------------------------------------------------------------------------------
+void RDebug::EndTag(const char* Text)
 {
 	if(!LevelOutput[Deep])
 		WriteText("No Special Information");
@@ -116,8 +106,8 @@ void RGA::RDebug::EndTag(const char* Text)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebug::PrintInfo(const char* Text)
+//------------------------------------------------------------------------------
+void RDebug::PrintInfo(const char* Text)
 {
 	BeginTag("Info");
 	PrintComment(Text);
@@ -125,22 +115,22 @@ void RGA::RDebug::PrintInfo(const char* Text)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebug::BeginFunc(const char* Name,const char* Object)
+//------------------------------------------------------------------------------
+void RDebug::BeginFunc(const char* Name,const char* Object)
 {
 	BeginTag(Name,1,"Object",Object);
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebug::EndFunc(const char* Name,const char*)
+//------------------------------------------------------------------------------
+void RDebug::EndFunc(const char* Name,const char*)
 {
 	EndTag(Name);
 }
 
                                
-//-----------------------------------------------------------------------------
-void RGA::RDebug::BeginApp(void)
+//------------------------------------------------------------------------------
+void RDebug::BeginApp(void)
 {
 	time_t t;
 	char TempString[50];
@@ -152,29 +142,29 @@ void RGA::RDebug::BeginApp(void)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebug::EndApp(void)
+//------------------------------------------------------------------------------
+void RDebug::EndApp(void)
 {
 	EndTag(App);
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::RDebug::~RDebug(void)
+//------------------------------------------------------------------------------
+RDebug::~RDebug(void)
 {
 }
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // Class RDebugXML
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA::RDebugXML::RDebugXML(const char* name,const char* app,const char* author) throw(bad_alloc)
-	: RDebug(app,author),Name(name), File(name,RIO::Create)
+//------------------------------------------------------------------------------
+RDebugXML::RDebugXML(const char* name,const char* app,const char* author) throw(bad_alloc)
+	: RDebug(app,author),Name(name), File(name,Create)
 {
 	unsigned int i;
 	char *ptr;
@@ -187,8 +177,8 @@ RGA::RDebugXML::RDebugXML(const char* name,const char* app,const char* author) t
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebugXML::WriteBeginTag(const char *tag,const char *options)
+//------------------------------------------------------------------------------
+void RDebugXML::WriteBeginTag(const char *tag,const char *options)
 {
 	if(Deep)
 	{
@@ -206,8 +196,8 @@ void RGA::RDebugXML::WriteBeginTag(const char *tag,const char *options)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebugXML::WriteEndTag(const char *tag)
+//------------------------------------------------------------------------------
+void RDebugXML::WriteEndTag(const char *tag)
 {
 	if(Deep&&LevelOutput[Deep-1])
 	{
@@ -220,8 +210,8 @@ void RGA::RDebugXML::WriteEndTag(const char *tag)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::RDebugXML::WriteText(const char *text)
+//------------------------------------------------------------------------------
+void RDebugXML::WriteText(const char *text)
 {
 	File.WriteLine();
 	File.WriteStr(tmpTab,Deep+1);
@@ -229,7 +219,7 @@ void RGA::RDebugXML::WriteText(const char *text)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::RDebugXML::~RDebugXML(void)
+//------------------------------------------------------------------------------
+RDebugXML::~RDebugXML(void)
 {
 }

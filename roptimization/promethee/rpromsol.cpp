@@ -6,7 +6,10 @@
 
 	Promethee Solutions - Implementation.
 
-	(C) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,34 +34,34 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromsol.h>
-using namespace RPromethee;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RPromSol
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromSol::RPromSol(const unsigned int id,const unsigned int nbcrit)
+//------------------------------------------------------------------------------
+RPromSol::RPromSol(const unsigned int id,const unsigned int nbcrit)
 	: RContainer<RPromCritValue,unsigned int,true,false>(nbcrit,nbcrit/2), Id(id)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromSol::RPromSol(const unsigned int id,const char* name,const unsigned int nbcrit)
+//------------------------------------------------------------------------------
+RPromSol::RPromSol(const unsigned int id,const char* name,const unsigned int nbcrit)
 	: RContainer<RPromCritValue,unsigned int,true,false>(nbcrit,nbcrit/2), Id(id), Name(name)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromSol::~RPromSol(void)
+//------------------------------------------------------------------------------
+RPromSol::~RPromSol(void)
 {
 }

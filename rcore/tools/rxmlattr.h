@@ -6,7 +6,11 @@
 
 	Attribute for a XML Tag - Header.
 
-	(c) 2000-2001 by P. Francq and T. L'Eglise.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
 	Version $Revision$
 
@@ -30,23 +34,23 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RXMLAttrH
 #define RXMLAttrH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // incluce files for R Project
 #include <rstd/rcursor.h>
 #include <rstd/rstring.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RXML{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class provides a representation for a attribute of a XML tag.
 * @short XML Tag.
@@ -58,12 +62,12 @@ class RXMLAttr
 	/**
 	* The name of the attribute.
 	*/
-	RStd::RString Name;
+	RString Name;
 
 	/**
 	* The value of the attribute.
 	*/
-	RStd::RString Value;
+	RString Value;
 
 public:
 
@@ -72,14 +76,14 @@ public:
 	* @param name           The name of the attribute.
 	* @param value          The value of the attribute.
 	*/
-	RXMLAttr(const char *name,const char *value);
+	RXMLAttr(const char* name,const char* value);
 
 	/**
 	* Construct a XML Attribute.
 	* @param name           The name of the attribute.
 	* @param value          The value of the attribute.
 	*/
-	RXMLAttr(const char *name,const double value);
+	RXMLAttr(const char* name,const double value);
 
 	/**
 	* Compare the name of the attribute with a given string. This function is
@@ -89,7 +93,7 @@ public:
 	* parameter.
 	* @see RContainer
 	*/
-	int Compare(const char *name) {return(Name.Compare(name));}
+	int Compare(const char* name) {return(Name.Compare(name));}
 
 	/**
 	* Compare the name of the attribute with a given string. This function is
@@ -98,7 +102,7 @@ public:
 	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
 	* parameter.
 	*/
-	int Compare(const RStd::RString &name) {return(Name.Compare(name));}
+	int Compare(const RString &name) {return(Name.Compare(name));}
 
 	/**
 	* Compare the names of two attributes. This function is used by RContainer.
@@ -114,19 +118,19 @@ public:
 	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
 	* parameter.
 	*/
-    int Compare(const RXMLAttr *attr) { return(Name.Compare(attr->Name)); }
+    int Compare(const RXMLAttr* attr) { return(Name.Compare(attr->Name)); }
 
 	/**
 	* Return the name of the tag.
 	* @returns a string containing the name.
 	*/
-	RStd::RString& GetName(void);
+	RString& GetName(void);
 
 	/**
 	* Returns the value of the attribute.
 	* @returns a string containing the value;
 	*/
-	RStd::RString& GetValue(void);
+	RString& GetValue(void);
 
 	/**
 	* Destruct the attribute.
@@ -135,7 +139,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RXMLAttrCursor class provides a way to go trough a set of XML attributes.
 * @short XML attributes Cursor
@@ -143,8 +147,8 @@ public:
 CLASSCURSOR(RXMLAttrCursor,RXMLAttr,unsigned int)
 
 
-}  //-------- End of namespace RXML -------------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

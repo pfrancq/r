@@ -1,44 +1,49 @@
 /*
 
-  RMySQL.h
+	R Project Library
 
-  MySQL C++ Classes - Header.
+	RMySQL.h
 
-  (C) 2000 by P. Francq.
+	MySQL C++ Classes - Header.
 
-  Version $Revision$
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
 
-  Last Modify: $Date$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Version $Revision$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	Last Modify: $Date$
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-    
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
 */
 
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RMySQLH
 #define RMySQLH
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for MySQL
 #ifdef WIN32
 	#include <winsock.h>
@@ -46,12 +51,46 @@
 #include <mysql/mysql.h>
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
 /**
-* \namespace RMySQL
-* \brief MySQL Classes.
-*
-* This namespace declares classes needed to work with a MySQL database.
+* The RMySQL class provides a representation of an error that occurs while
+* working with a MySQL database.
+* @author Pascal Francq
+* @short MySQL Error.
+*/
+class RMySQLError
+{
+	/**
+	* Description of the error.
+	*/
+	RString Error;
+
+public:
+
+	/**
+	* Constructor.
+	* @param error          Description.
+	*/
+	RMySQLError(const char* error);
+
+	/**
+	* Get the description of the error.
+	* @returns Pointer to a C string.
+	*/
+	const char* GetError(void) const
+		{return(Error());}
+};
+
+
+
+//------------------------------------------------------------------------------
+/**
+* The RDb class provides a representation of a MySQL database.
 *
 * Here is a example:
 *
@@ -85,50 +124,7 @@
 * 	}
 * }
 * </pre>
-*/
-
-
-
-//---------------------------------------------------------------------------
-namespace RMySQL{
-//---------------------------------------------------------------------------
-
-
-//---------------------------------------------------------------------------
-/**
-* The RMySQL class provides a representation of an error that occurs while
-* working with a MySQL database.
-* @author Pascal Francq
-* @short MySQL Error.
-*/
-class RMySQLError
-{
-	/**
-	* Description of the error.
-	*/
-	RStd::RString Error;
-
-public:
-
-	/**
-	* Constructor.
-	* @param error          Description.
-	*/
-	RMySQLError(const char* error);
-
-	/**
-	* Get the description of the error.
-	* @returns Pointer to a C string.
-	*/
-	const char* GetError(void) const
-		{return(Error());}
-};
-
-
-
-//---------------------------------------------------------------------------
-/**
-* The RDb class provides a representation of a MySQL database.
+*
 * @author Pascal Francq
 * @short MySQL Database.
 */
@@ -173,7 +169,7 @@ public:
 
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RQuery class provides a representation of a query.
 * @author Pascal Francq
@@ -195,7 +191,7 @@ class RQuery
 	* Total number of rows returned by the query.
 	*/
 	unsigned int nbrows;
-	
+
 	/**
 	* Number of columns of the query.
 	*/
@@ -270,8 +266,8 @@ public:
 };
 
 
-}  //-------- End of namespace RMySQL ---------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

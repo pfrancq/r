@@ -6,7 +6,10 @@
 
 	Message systems - Implementation.
 
-	(c) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,84 +33,83 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rinter/rlocale.h>
-using namespace RStd;
-using namespace RInter;
+#include <rstd/rlocale.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RLocale
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RInter::RLocale::RLocale(const RString& name)
+//------------------------------------------------------------------------------
+RLocale::RLocale(const RString& name)
 	: Name(name)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RInter::RLocale::RLocale(const char* name)
+//------------------------------------------------------------------------------
+RLocale::RLocale(const char* name)
 	: Name(name)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-int RInter::RLocale::Compare(const RLocale& l) const
+//------------------------------------------------------------------------------
+int RLocale::Compare(const RLocale& l) const
 {
 	return(Name.Compare(l.Name));
 }
 
 
-//-----------------------------------------------------------------------------
-int RInter::RLocale::Compare(const RLocale* l) const
+//------------------------------------------------------------------------------
+int RLocale::Compare(const RLocale* l) const
 {
 	return(Name.Compare(l->Name));
 }
 
 
-//-----------------------------------------------------------------------------
-int RInter::RLocale::Compare(const RStd::RString& n) const
+//------------------------------------------------------------------------------
+int RLocale::Compare(const RString& n) const
 {
 	return(Name.Compare(n));
 }
 
 
-//-----------------------------------------------------------------------------
-int RInter::RLocale::Compare(const char* n) const
+//------------------------------------------------------------------------------
+int RLocale::Compare(const char* n) const
 {
 	return(Name.Compare(n));
 }
 
 
-//-----------------------------------------------------------------------------
-bool RInter::RLocale::operator==(const RLocale& l) const
+//------------------------------------------------------------------------------
+bool RLocale::operator==(const RLocale& l) const
 {
 	return(Name==l.Name);
 }
 
 
-//-----------------------------------------------------------------------------
-bool RInter::RLocale::operator==(const RString& n) const
+//------------------------------------------------------------------------------
+bool RLocale::operator==(const RString& n) const
 {
 	return(Name==n);
 }
 
 
-//-----------------------------------------------------------------------------
-bool RInter::RLocale::operator==(const char* n) const
+//------------------------------------------------------------------------------
+bool RLocale::operator==(const char* n) const
 {
 	return(Name==n);
 }
 
 
-//-----------------------------------------------------------------------------
-RInter::RLocale::~RLocale(void)
+//------------------------------------------------------------------------------
+RLocale::~RLocale(void)
 {
 }

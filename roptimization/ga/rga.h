@@ -6,7 +6,10 @@
 
 	Genetic Algorithms - Header
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,12 +34,12 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RGAH
 #define RGAH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for AINSI C/C++
 #include <stdlib.h>
 #ifndef RGADEBUG
@@ -44,34 +47,31 @@
 #endif
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rstring.h>
 #include <rstd/rcontainer.h>
 #include <rstd/rmsg.h>
-using namespace RStd;
-#include <rio/rtextfile.h>
-using namespace RIO;
-#include <rmath/random.h>
-using namespace RMath;
+#include <rstd/rtextfile.h>
+#include <rstd/random.h>
+
+
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
 /**
-* \namespace RGA
-* \brief Generic Genetic Algorithm Classes.
-*
-* This namespace declares classes for working with Genetic Algorithms.
+* This constance represent a non-identificator. It is used, for example, to
+* specify that a variable containing an identificator of an object. is
+* referencing no object.
 */
+const unsigned int NoObject=0xFFFFFFFF;
 
 
-//-----------------------------------------------------------------------------
-namespace RGA{
-//-----------------------------------------------------------------------------
-
-
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // General Variables
 /**
 * If true, GA stops
@@ -79,7 +79,7 @@ namespace RGA{
 extern bool ExternBreak;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGA class provides a basic exception for the GA.
 * @author Pascal Francq
@@ -119,7 +119,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGAVerify class provides an exception for the verification.
 * @author Pascal Francq
@@ -144,7 +144,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGACrossover class provides an exception for the crossover operator.
 * @author Pascal Francq
@@ -171,7 +171,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGAMutation class provides an exception for the mutation operator.
 * @author Pascal Francq
@@ -196,7 +196,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGAInversion class provides an exception for the inversion operator.
 * @author Pascal Francq
@@ -221,7 +221,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGAOptimisation class provides an exception for the optimisation
 * operator.
@@ -247,7 +247,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGARancomConstruct class provides a exception for the random
 * construction operator.
@@ -273,7 +273,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGAEvaluate class provides a exeception for the evaluation operator.
 * @author Pascal Francq
@@ -298,7 +298,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The eGAPostEvaluation class provides a exeception for the post evaluation
 * operator.
@@ -324,7 +324,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /*
 * Examine the program parameters for a GA use in a non-graphical way.
 * @author Pascal Francq
@@ -333,7 +333,7 @@ public:
 bool Examine(int argc, char *argv[],const char* Prj,const char *Ver);
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Forward declaration
 template<class cVal,bool Max> class RFitness;
 template<class cInst,class cChromo,class cFit,class cThreadData> class RChromo;
@@ -341,8 +341,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData> class RInst;
 template<class cObj> class RObjs;
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

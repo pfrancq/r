@@ -6,7 +6,10 @@
 
 	Point - Implementation.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,49 +34,48 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
-using namespace RStd;
-#include <rgeometry/rpoint.h>
-#include <rgeometry/rpoints.h>
-#include <rgeometry/rpolygon.h>
-#include <rgeometry/rpolygons.h>
-using namespace RGeometry2D;
+#include <rmath/rpoint.h>
+#include <rmath/rpoints.h>
+#include <rmath/rpolygon.h>
+#include <rmath/rpolygons.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // Class "RPoint"
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RPoint::RPoint(void)
+//------------------------------------------------------------------------------
+RPoint::RPoint(void)
 {
 	X=Y=0;
 }
 
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RPoint::RPoint(const RCoord x,const RCoord y)
+//------------------------------------------------------------------------------
+RPoint::RPoint(const RCoord x,const RCoord y)
 {
 	X=x;
 	Y=y;
 }
 
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RPoint::RPoint(const RPoint& pt)
+//------------------------------------------------------------------------------
+RPoint::RPoint(const RPoint& pt)
 {
 	X=pt.X;
 	Y=pt.Y;
 }
 
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RPoint::RPoint(const RPoint *pt)
+//------------------------------------------------------------------------------
+RPoint::RPoint(const RPoint* pt)
 {
 	RReturnIfFail(pt);
 	if(!pt) return;
@@ -82,40 +84,40 @@ RGeometry2D::RPoint::RPoint(const RPoint *pt)
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RPoint::Near(const RPoint *pt) const
+//------------------------------------------------------------------------------
+bool RPoint::Near(const RPoint* pt) const
 {
 	return((labs(X-pt->X)<=1)&&(labs(Y-pt->Y)<=1));
 }
 
 
-//-----------------------------------------------------------------------------
-RCoord RGeometry2D::RPoint::ManhattanDist(const RPoint &pt) const
+//------------------------------------------------------------------------------
+RCoord RPoint::ManhattanDist(const RPoint& pt) const
 {
 	return(labs(X-pt.X)+labs(Y-pt.Y));
 }
 
 
-//-----------------------------------------------------------------------------
-double RGeometry2D::RPoint::EuclideanDist(const RPoint &pt) const
+//------------------------------------------------------------------------------
+double RPoint::EuclideanDist(const RPoint& pt) const
 {
 	double dx,dy;
-	
+
 	dx=X-pt.X;
-	dy=Y-pt.Y;	
+	dy=Y-pt.Y;
 	return(sqrt(dx*dx+dy*dy));
 }
 
 
-//-----------------------------------------------------------------------------
-RPoint* RGeometry2D::RPoint::GetPoint(void)
+//------------------------------------------------------------------------------
+RPoint* RPoint::GetPoint(void)
 {
 	return(GetTemporaryObject<RPoint,30>());
 }
 
 
-//-----------------------------------------------------------------------------
-RDirection RGeometry2D::RPoint::Classify(const RPoint* p0,const RPoint* p1) const
+//------------------------------------------------------------------------------
+RDirection RPoint::Classify(const RPoint* p0,const RPoint* p1) const
 {
 	RPoint a=(*p1)-(*p0);
 	RPoint b=(*this)-(*p0);
@@ -131,8 +133,8 @@ RDirection RGeometry2D::RPoint::Classify(const RPoint* p0,const RPoint* p1) cons
 }
 
 
-//-----------------------------------------------------------------------------
-void RGeometry2D::RPoint::ChangeOrientation(const ROrientation o)
+//------------------------------------------------------------------------------
+void RPoint::ChangeOrientation(const ROrientation o)
 {
 	RCoord factx=1,facty=1,oldx,oldy;
 	double co=1,si=0;
@@ -156,22 +158,22 @@ void RGeometry2D::RPoint::ChangeOrientation(const ROrientation o)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGeometry2D::RPoint::Save(RTextFile& f) const
+//------------------------------------------------------------------------------
+void RPoint::Save(RTextFile& f) const
 {
 	f<<X<<Y<<endl;
 }
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // Global Functions and Operators
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RPoint& RGeometry2D::operator+(const RPoint &arg1,const RPoint &arg2)
+//------------------------------------------------------------------------------
+RPoint& R::operator+(const RPoint& arg1,const RPoint& arg2)
 {
 	RPoint *res=RPoint::GetPoint();
 	(*res)=arg1;
@@ -179,8 +181,8 @@ RPoint& RGeometry2D::operator+(const RPoint &arg1,const RPoint &arg2)
 }
 
 
-//-----------------------------------------------------------------------------
-RPoint& RGeometry2D::operator-(const RPoint &arg1,const RPoint &arg2)
+//------------------------------------------------------------------------------
+RPoint& R::operator-(const RPoint& arg1,const RPoint& arg2)
 {
 	RPoint *res=RPoint::GetPoint();
 	(*res)=arg1;

@@ -6,7 +6,11 @@
 
 	XML tag - Header.
 
-	(c) 2000-2001 by P. Francq and T. L'Eglise.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
 	Version $Revision$
 
@@ -30,54 +34,54 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RXMLTagH
 #define RXMLTagH
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
 #include <rstd/rnode.h>
 #include <rstd/rcursor.h>
-#include <rxml/rxmlattr.h>
+#include <rstd/rxmlattr.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RXML{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Forward class declaration
 class RXMLStruct;
 class RXMLFile;
 class RXMLTagCursor;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class provides a representation for a XML tag.
 * @short XML Tag.
 * @author Pascal Francq and Thomas L'Eglise.
 */
-class RXMLTag : public RStd::RNode<RXMLTag,false>
+class RXMLTag : public RNode<RXMLTag,false>
 {
 	/**
 	* The name of the tag.
 	*/
-	RStd::RString Name;
+	RString Name;
 
 	/**
 	* The contain of the tag
 	*/
-	RStd::RString Contains;
+	RString Contains;
 
 	/**
 	* The attributes of the tag.
 	*/
-	RStd::RContainer<RXMLAttr,unsigned,true,true> Attrs;
+	RContainer<RXMLAttr,unsigned,true,true> Attrs;
 
 public:
 
@@ -90,28 +94,28 @@ public:
 	* Construct a XML Tag.
 	* @param _name          The name of the tag.
 	*/
-	RXMLTag(RStd::RString _name);
+	RXMLTag(RString _name);
 
 	/**
 	* Load a XML tag from a XML file.
 	* @param f              The XML file.
 	* @param xmlstruct      The XML Structure of the tag.
 	*/
-	void Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RStd::RString);
+	void Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RString);
 
 	/**
 	* Save a XML tag to a XML file.
 	* @param f              The XML file.
 	* @param xmlstruct      The XML Structure of the tag.
 	*/
-	void Save(RXMLFile* f,int depth) throw(RStd::RString);
+	void Save(RXMLFile* f,int depth) throw(RString);
 
 	/**
 	* Compare a tag with a given name.
 	* @param name           Name used for the comparaison.
 	* @returns 0 if the same, -1 or +1 if different.
 	*/
-	int Compare(const RStd::RString &name) {return(Name.Compare(name));}
+	int Compare(const RString &name) {return(Name.Compare(name));}
 
 	/**
 	* Compare a tag with a given name.
@@ -138,14 +142,14 @@ public:
 	* Return the name of the tag.
 	* @returns a string containing the name.
 	*/
-	RStd::RString& GetName(void);
+	RString& GetName(void);
 
 	/**
 	* Return the name of the tag.
 	* param name            Name of the attribute.
 	* @returns a string containing the name.
 	*/
-	RStd::RString& GetAttrValue(const char* name);
+	RString& GetAttrValue(const char* name);
 
 	/**
 	* Test if an attribute is defined.
@@ -172,21 +176,21 @@ public:
 	* @param name           Name of thae attribute.
 	* @param value          Value of thae attribute.
 	*/
-	void InsertAttr(const RStd::RString& name,const RStd::RString& value);
+	void InsertAttr(const RString& name,const RString& value);
 
 	/**
 	* Insert an attribute.
 	* @param name           Name of thae attribute.
 	* @param value          Value of thae attribute.
 	*/
-	void InsertAttr(const char* name,const RStd::RString& value);
+	void InsertAttr(const char* name,const RString& value);
 
 	/**
 	* Insert an attribute.
 	* @param name           Name of thae attribute.
 	* @param value          Value of thae attribute.
 	*/
-	void InsertAttr(const RStd::RString& name,const char* value);
+	void InsertAttr(const RString& name,const char* value);
 
 	/**
 	* Insert an attribute.
@@ -276,7 +280,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RXMLTagCursor class provides a way to go trough a set of XML tags.
 * @short XML Tags Cursor
@@ -284,8 +288,8 @@ public:
 CLASSCURSOR(RXMLTagCursor,RXMLTag,unsigned int)
 
 
-}  //-------- End of namespace RXML -----------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

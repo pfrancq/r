@@ -6,7 +6,10 @@
 
 	Genetic Algorithms - Implementation
 
-	(C) 1998-2001 by By P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,61 +34,62 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for AINSI C/C++
 #include <iostream>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rga/rga.h>
+using namespace R;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // General Variables
-bool RGA::ExternBreak=false;
+bool R::ExternBreak=false;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // Exceptions
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGA::eGA::eGA(void)
+//------------------------------------------------------------------------------
+eGA::eGA(void)
 	: Msg()
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::eGA::eGA(const RString& msg)
+//------------------------------------------------------------------------------
+eGA::eGA(const RString& msg)
 	: Msg(msg)
 {
 	cerr<<Msg()<<endl;
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::eGA::eGA(const char* msg)
+//------------------------------------------------------------------------------
+eGA::eGA(const char* msg)
 	: Msg(msg)
 {
 	cerr<<Msg()<<endl;
 }
 
 
-//-----------------------------------------------------------------------------
-void RGA::eGA::SetMsg(const char* m)
+//------------------------------------------------------------------------------
+void eGA::SetMsg(const char* m)
 {
 	Msg=m;
 	cerr<<Msg()<<endl;
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::eGAVerify::eGAVerify(const unsigned int g,const unsigned int c)
+//------------------------------------------------------------------------------
+eGAVerify::eGAVerify(const unsigned int g,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];
@@ -95,8 +99,8 @@ RGA::eGAVerify::eGAVerify(const unsigned int g,const unsigned int c)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::eGACrossover::eGACrossover(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c)
+//------------------------------------------------------------------------------
+eGACrossover::eGACrossover(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];
@@ -106,8 +110,8 @@ RGA::eGACrossover::eGACrossover(const unsigned int g,const unsigned p1,const uns
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::eGAMutation::eGAMutation(const unsigned int g,const unsigned int c)
+//------------------------------------------------------------------------------
+eGAMutation::eGAMutation(const unsigned int g,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];
@@ -117,8 +121,8 @@ RGA::eGAMutation::eGAMutation(const unsigned int g,const unsigned int c)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::eGAInversion::eGAInversion(const unsigned int g,const unsigned int c)
+//------------------------------------------------------------------------------
+eGAInversion::eGAInversion(const unsigned int g,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];
@@ -128,8 +132,8 @@ RGA::eGAInversion::eGAInversion(const unsigned int g,const unsigned int c)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::eGAOptimisation::eGAOptimisation(const unsigned int g,const unsigned int c)
+//------------------------------------------------------------------------------
+eGAOptimisation::eGAOptimisation(const unsigned int g,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];
@@ -139,8 +143,8 @@ RGA::eGAOptimisation::eGAOptimisation(const unsigned int g,const unsigned int c)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::eGARandomConstruct::eGARandomConstruct(const unsigned int g,const unsigned int c)
+//------------------------------------------------------------------------------
+eGARandomConstruct::eGARandomConstruct(const unsigned int g,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];
@@ -150,8 +154,8 @@ RGA::eGARandomConstruct::eGARandomConstruct(const unsigned int g,const unsigned 
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::eGAEvaluation::eGAEvaluation(const unsigned int g,const unsigned int c)
+//------------------------------------------------------------------------------
+eGAEvaluation::eGAEvaluation(const unsigned int g,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];
@@ -161,8 +165,8 @@ RGA::eGAEvaluation::eGAEvaluation(const unsigned int g,const unsigned int c)
 }
 
 
-//-----------------------------------------------------------------------------
-RGA::eGAPostEvaluation::eGAPostEvaluation(const unsigned int g,const unsigned int c)
+//------------------------------------------------------------------------------
+eGAPostEvaluation::eGAPostEvaluation(const unsigned int g,const unsigned int c)
 	: eGA()
 {
 	char tmp[200];
@@ -173,16 +177,16 @@ RGA::eGAPostEvaluation::eGAPostEvaluation(const unsigned int g,const unsigned in
 
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // General functions
 //
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-bool RGA::Examine(int argc, char *argv[],const char* Prj,const char *Ver)
+//------------------------------------------------------------------------------
+bool Examine(int argc, char *argv[],const char* Prj,const char *Ver)
 {
-	char **args;	
+	char **args;
 	bool bVersion=false;
 	bool bHelp=false;
 	bool bMaster=false;

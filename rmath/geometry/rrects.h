@@ -6,7 +6,10 @@
 
 	Rectangle - Header
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,29 +33,28 @@
 */
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RRectsH
 #define RRectsH
 
 
-//---------------------------------------------------------------------------
-// include files for RGeometry
-#include "rrect.h"
-using namespace RGeometry2D;
+//------------------------------------------------------------------------------
+// include files for R Project
+#include <rmath/rrect.h>
 
 
-//---------------------------------------------------------------------------
-namespace RGeometry2D{
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class implements a container of rectangles.
 * @author Pascal Francq
 * @short Rectangles container.
 */
-class RRects : public RStd::RContainer<RRect,unsigned int,true,false>
+class RRects : public RContainer<RRect,unsigned int,true,false>
 {
 public:
 
@@ -71,7 +73,7 @@ public:
 	* Construct a container of rectangles from another.
 	* @param rects          The container used as reference.
 	*/
-	RRects(RRects *rects);
+	RRects(RRects* rects);
 
 	/**
 	* Return the area of all the rectangles.
@@ -80,8 +82,8 @@ public:
 };
 
 
-}  //-------- End of namespace RStd ---------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

@@ -4,9 +4,12 @@
 
 	RPoint.h
 
-	Point - Header
+	Points - Header
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,30 +33,29 @@
 */
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RPointsH
 #define RPointsH
 
 
-//-----------------------------------------------------------------------------
-// include files for RGeometry
-#include <rgeometry/geometry.h>
-#include <rgeometry/rpoint.h>
-using namespace RGeometry2D;
+//------------------------------------------------------------------------------
+// include files for R Project
+#include <rmath/geometry.h>
+#include <rmath/rpoint.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGeometry2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class represents a set of points regrouped in a container.
 * @author Pascal Francq
 * @short Container of points.
 */
-class RPoints : public RStd::RContainer<RPoint,unsigned int,true,false>
+class RPoints : public RContainer<RPoint,unsigned int,true,false>
 {
 public:
 
@@ -72,7 +74,7 @@ public:
 	* Construct a container of points from another one.
 	* @param points         The container used as reeference.
 	*/
-	RPoints(const RPoints *points);
+	RPoints(const RPoints* points);
 
 	/**
 	* Find the next point to the left and that is on a vertex of a polygon from
@@ -80,7 +82,7 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindLeft(const RPoint *pt,const RPolygons *polys) const;
+	RPoint* FindLeft(const RPoint* pt,const RPolygons* polys) const;
 
 	/**
 	* Find the next point to the right and that is on a vertex of a polygon from
@@ -88,7 +90,7 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindRight(const RPoint *pt,const RPolygons *polys) const;
+	RPoint* FindRight(const RPoint* pt,const RPolygons* polys) const;
 
 	/**
 	* Find the next point to the bottom and that is on a vertex of a polygon from
@@ -96,7 +98,7 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindBottom(const RPoint *pt,const RPolygons *polys) const;
+	RPoint* FindBottom(const RPoint* pt,const RPolygons* polys) const;
 
 	/**
 	* Find the next point to the up and that is on a vertex of a polygon from
@@ -104,7 +106,7 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindUp(const RPoint *pt,const RPolygons *polys) const;
+	RPoint* FindUp(const RPoint* pt,const RPolygons* polys) const;
 
 	/**
 	* Find the most bottom-left point of the container.
@@ -119,12 +121,12 @@ public:
 	/**
 	* Assignment operator.
 	*/
-	RPoints& operator=(const RPoints &points);
+	RPoints& operator=(const RPoints& points);
 };
 
 
-}  //-------- End of namespace RGeometry2D ------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

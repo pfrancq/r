@@ -6,7 +6,10 @@
 
 	Rectangle - Implemtation.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,29 +34,29 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rgeometry/rrect.h>
-#include <rgeometry/rpolygon.h>
-using namespace RGeometry2D;
+#include <rmath/rrect.h>
+#include <rmath/rpolygon.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-// Class "RRect"
+// Class RRect
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RRect::RRect(void)
+//------------------------------------------------------------------------------
+RRect::RRect(void)
 	: Pt1(),Pt2()
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RRect::RRect(const RRect *rect)
+//------------------------------------------------------------------------------
+RRect::RRect(const RRect* rect)
 	: Pt1(),Pt2()
 {
 	if(rect)
@@ -66,8 +69,8 @@ RGeometry2D::RRect::RRect(const RRect *rect)
 }
 
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RRect::RRect(const RPoint *pt1,const RPoint *pt2)
+//------------------------------------------------------------------------------
+RRect::RRect(const RPoint* pt1,const RPoint* pt2)
 	: Pt1(), Pt2()
 {
 	RReturnIfFail(pt1&&pt2);
@@ -76,29 +79,29 @@ RGeometry2D::RRect::RRect(const RPoint *pt1,const RPoint *pt2)
 }
 
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RRect::RRect(const RCoord MinX,const RCoord MinY,const RCoord MaxX,const RCoord MaxY)
+//------------------------------------------------------------------------------
+RRect::RRect(const RCoord MinX,const RCoord MinY,const RCoord MaxX,const RCoord MaxY)
 	: Pt1(MinX,MinY),Pt2(MaxX,MaxY)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RCoord RGeometry2D::RRect::Width(void) const
+//------------------------------------------------------------------------------
+RCoord RRect::Width(void) const
 {
 	return(labs(Pt2.X-Pt1.X+1));
 }
 
 
-//-----------------------------------------------------------------------------
-RCoord RGeometry2D::RRect::Height(void) const
+//------------------------------------------------------------------------------
+RCoord RRect::Height(void) const
 {
 	return(labs(Pt2.Y-Pt1.Y+1));
 }
 
 
-//-----------------------------------------------------------------------------
-RRect& RGeometry2D::RRect::operator+=(const RPoint &pt) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RRect& RRect::operator+=(const RPoint& pt) throw(bad_alloc)
 {
 	Pt1+=pt;
 	Pt2+=pt;
@@ -106,8 +109,8 @@ RRect& RGeometry2D::RRect::operator+=(const RPoint &pt) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RRect& RGeometry2D::RRect::operator-=(const RPoint &pt) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RRect& RRect::operator-=(const RPoint& pt) throw(bad_alloc)
 {
 	Pt1-=pt;
 	Pt2-=pt;
@@ -115,8 +118,8 @@ RRect& RGeometry2D::RRect::operator-=(const RPoint &pt) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RRect::Clip(const RRect &clip)
+//------------------------------------------------------------------------------
+bool RRect::Clip(const RRect& clip)
 {
 	bool bClip=false;
 
@@ -173,8 +176,8 @@ bool RGeometry2D::RRect::Clip(const RRect &clip)
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RRect::Clip(const RPoint &limits)
+//------------------------------------------------------------------------------
+bool RRect::Clip(const RPoint& limits)
 {
 	bool bClip=false;
 
@@ -211,8 +214,8 @@ bool RGeometry2D::RRect::Clip(const RPoint &limits)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGeometry2D::RRect::Translation(const RCoord x,const RCoord y)
+//------------------------------------------------------------------------------
+void RRect::Translation(const RCoord x,const RCoord y)
 {
 	Pt1.X+=x;
 	Pt1.Y+=y;
@@ -221,8 +224,8 @@ void RGeometry2D::RRect::Translation(const RCoord x,const RCoord y)
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RRect::Overlap(const RRect *rect) const
+//------------------------------------------------------------------------------
+bool RRect::Overlap(const RRect* rect) const
 {
 	RReturnValIfFail(rect,false);
 	
@@ -236,8 +239,8 @@ bool RGeometry2D::RRect::Overlap(const RRect *rect) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RRect::IsIn(const RCoord X,const RCoord Y) const
+//------------------------------------------------------------------------------
+bool RRect::IsIn(const RCoord X,const RCoord Y) const
 {
 	// Is up or bottom of rect
 	if((Y>Pt2.Y)||(Y<Pt1.Y)) return(false);
@@ -249,8 +252,8 @@ bool RGeometry2D::RRect::IsIn(const RCoord X,const RCoord Y) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RRect::IsIn(const RPolygon* poly) const
+//------------------------------------------------------------------------------
+bool RRect::IsIn(const RPolygon* poly) const
 {
 	RPoint **tab;
 	unsigned int i;
@@ -264,8 +267,8 @@ bool RGeometry2D::RRect::IsIn(const RPolygon* poly) const
 }
 
 
-//-----------------------------------------------------------------------------
-RRect* RGeometry2D::RRect::GetRect(void)
+//------------------------------------------------------------------------------
+RRect* RRect::GetRect(void)
 {
 	return(GetTemporaryObject<RRect,30>());
 }

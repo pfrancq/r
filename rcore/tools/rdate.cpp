@@ -6,7 +6,10 @@
 
 	Date - Implementation.
 
-	(c) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,46 +33,46 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdlib.h>
 #include <time.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rtimedate/rdate.h>
-using namespace RTimeDate;
+#include <rstd/rdate.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RDate
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // static instance
-RDate RTimeDate::RDate::null(0,0,0);
+RDate RDate::null(0,0,0);
 
 
-//-----------------------------------------------------------------------------
-RTimeDate::RDate::RDate(void)
+//------------------------------------------------------------------------------
+RDate::RDate(void)
 {
 	SetToday();
 }
 
 
-//-----------------------------------------------------------------------------
-RTimeDate::RDate::RDate(const int day,const int month,const int year)
+//------------------------------------------------------------------------------
+RDate::RDate(const int day,const int month,const int year)
 	: Day(day), Month(month), Year(year)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RTimeDate::RDate::RDate(const char* date)
+//------------------------------------------------------------------------------
+RDate::RDate(const char* date)
 	: Day(0), Month(0), Year(0)
 {
 	const char* ptr;
@@ -110,8 +113,8 @@ RTimeDate::RDate::RDate(const char* date)
 }
 
 
-//-----------------------------------------------------------------------------
-int RTimeDate::RDate::Compare(const RDate& d) const
+//------------------------------------------------------------------------------
+int RDate::Compare(const RDate& d) const
 {
 	if(Year!=d.Year) return(Year-d.Year);
 	if(Month!=d.Month) return(Month-d.Month);
@@ -119,8 +122,8 @@ int RTimeDate::RDate::Compare(const RDate& d) const
 }
 
 
-//-----------------------------------------------------------------------------
-int RTimeDate::RDate::Compare(const RDate* d) const
+//------------------------------------------------------------------------------
+int RDate::Compare(const RDate* d) const
 {
 	if(Year!=d->Year) return(Year-d->Year);
 	if(Month!=d->Month) return(Month-d->Month);
@@ -128,8 +131,8 @@ int RTimeDate::RDate::Compare(const RDate* d) const
 }
 
 
-//-----------------------------------------------------------------------------
-RDate& RTimeDate::RDate::operator=(const RDate& date)
+//------------------------------------------------------------------------------
+RDate& RDate::operator=(const RDate& date)
 {
 	Year=date.Year;
 	Month=date.Month;
@@ -138,15 +141,15 @@ RDate& RTimeDate::RDate::operator=(const RDate& date)
 }
 
 
-//-----------------------------------------------------------------------------
-bool RTimeDate::RDate::operator==(const RDate& d) const
+//------------------------------------------------------------------------------
+bool RDate::operator==(const RDate& d) const
 {
 	return((Year==d.Year)&&(Month==d.Month)&&(Day==d.Day));
 }
 
 
-//-----------------------------------------------------------------------------
-bool RTimeDate::RDate::operator<(const RDate& d) const
+//------------------------------------------------------------------------------
+bool RDate::operator<(const RDate& d) const
 {
 	int diff;
 
@@ -163,8 +166,8 @@ bool RTimeDate::RDate::operator<(const RDate& d) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RTimeDate::RDate::operator<=(const RDate& d) const
+//------------------------------------------------------------------------------
+bool RDate::operator<=(const RDate& d) const
 {
 	int diff;
 
@@ -181,8 +184,8 @@ bool RTimeDate::RDate::operator<=(const RDate& d) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RTimeDate::RDate::operator>(const RDate& d) const
+//------------------------------------------------------------------------------
+bool RDate::operator>(const RDate& d) const
 {
 	int diff;
 
@@ -199,8 +202,8 @@ bool RTimeDate::RDate::operator>(const RDate& d) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RTimeDate::RDate::operator>=(const RDate& d) const
+//------------------------------------------------------------------------------
+bool RDate::operator>=(const RDate& d) const
 {
 	int diff;
 
@@ -217,8 +220,8 @@ bool RTimeDate::RDate::operator>=(const RDate& d) const
 }
 
 
-//-----------------------------------------------------------------------------
-void RTimeDate::RDate::SetToday(void)
+//------------------------------------------------------------------------------
+void RDate::SetToday(void)
 {
 	time_t now;
 	struct tm *l_time;
@@ -231,7 +234,7 @@ void RTimeDate::RDate::SetToday(void)
 }
 
 
-//-----------------------------------------------------------------------------
-RTimeDate::RDate::~RDate(void)
+//------------------------------------------------------------------------------
+RDate::~RDate(void)
 {
 }

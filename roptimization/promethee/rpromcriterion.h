@@ -6,7 +6,11 @@
 
 	Promethee Criterion - Header.
 
-	(C) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
 	Version $Revision$
 
@@ -31,26 +35,24 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RPromCriterionH
 #define RPromCriterionH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
-using namespace RStd;
 #include <rpromethee/rpromethee.h>
 #include <rpromethee/rpromcritvalue.h>
-using namespace RPromethee;
 
 
-//-----------------------------------------------------------------------------
-namespace RPromethee{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RPromCriterionParams is use to hold the parameters that can influence a
 * criterion in Promethee.
@@ -108,7 +110,7 @@ public:
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RPromCriterion class provides a representation for a Prométhée Criterion.
 * @short Prométhée Criterion.
@@ -125,7 +127,7 @@ class RPromCriterion : protected RContainer<RPromCritValue,unsigned int,false,fa
 	* Name of the criterion
 	*/
 	RString Name;
-	
+
 	/**
 	* The type of criteria.
 	*/
@@ -146,8 +148,8 @@ class RPromCriterion : protected RContainer<RPromCritValue,unsigned int,false,fa
 	*/
 	double Weight;
 
-public:                                                          	
-	
+public:
+
 	/**
 	* Construct a criterion.
 	* @param type           Type of the criterion.
@@ -196,7 +198,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
-	int Compare(const RPromCriterion& crit) { return(Id-crit.Id);}
+	int Compare(const RPromCriterion& crit) const {return(Id-crit.Id);}
 
 	/**
 	* Compare the identifier of two criteria.
@@ -204,7 +206,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
-	int Compare(const RPromCriterion* crit) { return(Id-crit->Id);}
+	int Compare(const RPromCriterion* crit) const {return(Id-crit->Id);}
 
 	/**
 	* Compare the identifier of the criterion with a parameter.
@@ -212,7 +214,7 @@ public:
 	* @returnThe function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
-	int Compare(const unsigned int id) { return(Id-id);}
+	int Compare(const unsigned int id) const {return(Id-id);}
 
 	/**
 	* Compare the name of the criterion with a string.
@@ -220,7 +222,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
-	int Compare(const RString& name) { return(Name.Compare(name));}
+	int Compare(const RString& name) const {return(Name.Compare(name));}
 
 	/**
 	* Compare the name of the criterion with a string.
@@ -228,7 +230,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
-	int Compare(const char* name) { return(Name.Compare(name));}
+	int Compare(const char* name) const {return(Name.Compare(name));}
 
 	/**
 	* Set the preference's threshold.
@@ -238,7 +240,7 @@ public:
 	/**
 	* Get the preference's threshold.
 	*/
-	double GetP(void) const {return(P);}	
+	double GetP(void) const {return(P);}
 
 	/**
 	* Set the indifference's threshold.
@@ -248,7 +250,7 @@ public:
 	/**
 	* Get the indifference's threshold.
 	*/
-	double GetQ(void) const {return(Q);}	
+	double GetQ(void) const {return(Q);}
 
 	/**
 	* Set the parameters.
@@ -268,7 +270,7 @@ public:
 	/**
 	* Get the weight.
 	*/
-	double GetWeight(void) const {return(Weight);}	
+	double GetWeight(void) const {return(Weight);}
 
 	/**
 	* Normalize the values for the solution.
@@ -298,7 +300,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RPromCriterionCursor class provides a way to go trough a set of criterion.
 * @short Criterion Cursor.
@@ -306,8 +308,8 @@ public:
 CLASSCURSOR(RPromCriterionCursor,RPromCriterion,unsigned int)
 
 
-}  //-------- End of namespace RPromethee -------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

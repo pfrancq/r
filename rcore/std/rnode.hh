@@ -6,7 +6,10 @@
 
 	Generic Node - Inline implementation.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,40 +34,40 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 //		class RNode
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class N,bool bOrder>
-	RStd::RNode<N,bOrder>::RNode(unsigned int max,unsigned int inc) throw(bad_alloc)
+	RNode<N,bOrder>::RNode(unsigned int max,unsigned int inc) throw(bad_alloc)
 		: RContainer<N,unsigned int,false,bOrder>(max,inc), Parent(0)
 {
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class N,bool bOrder>
-	int RStd::RNode<N,bOrder>::Compare(RNode*)
+	int RNode<N,bOrder>::Compare(RNode*)
 {
 	return(-1);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class N,bool bOrder>
-	void RStd::RNode<N,bOrder>::InsertNode(N* node)
+	void RNode<N,bOrder>::InsertNode(N* node)
 {
 	InsertPtr(node);
 	node->Parent=static_cast<N*>(this);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class N,bool bOrder>
-	RStd::RNode<N,bOrder>::~RNode(void)
+	RNode<N,bOrder>::~RNode(void)
 {
 }
 

@@ -2,11 +2,14 @@
 
 	R Project Library
 
-	Polygons.h
+	RPolygons.h
 
 	Polygons - Header.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,30 +34,29 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RPolygonsH
 #define RPolygonsH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for RGeometry
-#include <rgeometry/geometry.h>
-#include <rgeometry/rpolygon.h>
-using namespace RGeometry2D;
+#include <rmath/geometry.h>
+#include <rmath/rpolygon.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGeometry2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class represents a set of polygons regrouped in a container.
 *	@author Pascal Francq
 *	@short Container of polygons.
  */
-class RPolygons : public RStd::RContainer<RPolygon,unsigned int,true,false>
+class RPolygons : public RContainer<RPolygon,unsigned int,true,false>
 {
 public:
 
@@ -67,36 +69,36 @@ public:
 	* Return true if the point is on an edge of one of the polygon contained.
 	* @param pt             The point used.
 	*/
-	bool Edge(const RPoint *pt) const;
+	bool Edge(const RPoint* pt) const;
 
 	/**
 	* Return true if the point is on an edge of a certain polygon.
 	* @param pt             The point used.
 	* @param poly           The polygon to look in.
 	*/
-	bool Edge(const RPoint *pt,const RPolygon *poly) const;
+	bool Edge(const RPoint* pt,const RPolygon* poly) const;
 
 	/**
 	* Return true if two points are on the same edge of one of the polygon contained.
 	* @param pt1            The first point used.
 	* @param pt2            The second point used.
 	*/
-	bool Edge(const RPoint *pt1,const RPoint *pt2) const;
+	bool Edge(const RPoint* pt1,const RPoint* pt2) const;
 
 	/**
 	* Add the points of the polygons contained to a container of points.
 	* @param points         A pointer to the container of points.
 	*/
-	void PutPoints(RPoints *points) const;
+	void PutPoints(RPoints* points) const;
 
 	/**
 	* This function calculate the union of the polygons contained.
 	* @param upoly          A pointer to the polygon representing the union.
 	*/
-	void Union(RPolygon *upoly) const;
+	void Union(RPolygon* upoly) const;
 
 	/**
-	* This function returns true when there are duplicate points.	
+	* This function returns true when there are duplicate points.
 	*/
 	bool DuplicatePoints(void) const;
 
@@ -108,12 +110,12 @@ public:
 	/**
 	* Return true if the point is inside one of the polygons.
 	*/
-	bool IsIn(const RPoint &pt) const;
+	bool IsIn(const RPoint& pt) const;
 
 	/**
 	* Assign operator.
 	*/
-	RPolygons& operator=(const RPolygons &poly);
+	RPolygons& operator=(const RPolygons& poly);
 
 	/**
 	* Save the polygons in a file.
@@ -122,8 +124,8 @@ public:
 };
 
 
-}  //-------- End of namespace RGeometry2D ------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

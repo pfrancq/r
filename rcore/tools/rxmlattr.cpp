@@ -6,7 +6,11 @@
 
 	Attribute for a XML Tag - Implementation.
 
-	(c) 2000-2001 by P. Francq and T. L'Eglise.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
 	Version $Revision$
 
@@ -31,43 +35,27 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <stdlib.h>
-#include <ctype.h>
-#include <sys/stat.h>
-#ifdef _BSD_SOURCE
-	#include <unistd.h>
-#else
-	#include <io.h>
-#endif
-#include <fcntl.h>
-#include <string.h>
-#include <time.h>
-
-
-//-----------------------------------------------------------------------------
 // include files for R Project
-#include <rxml/rxmlattr.h>
-using namespace RXML;
-using namespace RStd;
+#include <rstd/rxmlattr.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RXMLAttr
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RXML::RXMLAttr::RXMLAttr(const char *name,const char *value)
+//------------------------------------------------------------------------------
+RXMLAttr::RXMLAttr(const char *name,const char *value)
 	: Name(name), Value(value)
 {
 }
 
 
-//------------------------------------------------------------------------------
-RXML::RXMLAttr::RXMLAttr(const char *name,const double value)
+//-------------------------------------------------------------------------------
+RXMLAttr::RXMLAttr(const char *name,const double value)
 	: Name(name), Value(30)
 {
 	char Str[30];
@@ -76,8 +64,8 @@ RXML::RXMLAttr::RXMLAttr(const char *name,const double value)
 }
 
 
-//------------------------------------------------------------------------------
-RString& RXML::RXMLAttr::GetName(void)
+//-------------------------------------------------------------------------------
+RString& RXMLAttr::GetName(void)
 {
 	RString *tmp=RString::GetString();
 
@@ -86,8 +74,8 @@ RString& RXML::RXMLAttr::GetName(void)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RXML::RXMLAttr::GetValue(void)
+//------------------------------------------------------------------------------
+RString& RXMLAttr::GetValue(void)
 {
 	RString* tmp=RString::GetString();
 
@@ -96,7 +84,7 @@ RString& RXML::RXMLAttr::GetValue(void)
 }
 
 
-//-----------------------------------------------------------------------------
-RXML::RXMLAttr::~RXMLAttr(void)
+//------------------------------------------------------------------------------
+RXMLAttr::~RXMLAttr(void)
 {
 }

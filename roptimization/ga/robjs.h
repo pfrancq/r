@@ -6,7 +6,10 @@
 
 	Container of objectss used as input for Genetic Algorithms - Header
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,22 +34,22 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RObjsH
 #define RObjsH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGA{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The Robjs class provides a container for objects on which a genetic
 * algorithms has to work.
@@ -55,7 +58,7 @@ namespace RGA{
 * @short Objects.
 */
 template<class cObj>
-	class RObjs : public RStd::RContainer<cObj,unsigned int,true,true>
+	class RObjs : public RContainer<cObj,unsigned int,true,true>
 {
 public:
 
@@ -63,12 +66,12 @@ public:
 	* Construct the objects.
 	* @param max            Maximum objects that wilk be created.
 	*/
-	RObjs(const unsigned int max) : RStd::RContainer<cObj,unsigned int,true,true>(max,max/2) {}
+	RObjs(const unsigned int max) : RContainer<cObj,unsigned int,true,true>(max,max/2) {}
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

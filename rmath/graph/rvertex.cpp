@@ -6,7 +6,10 @@
 
 	Vertex of a graph - Implementation.
 
-	(c) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,48 +33,48 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rgraph/rvertex.h>
-using namespace RGraphs;
+#include <rmath/rvertex.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RVertex
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGraphs::RVertex::RVertex(const unsigned int id,const unsigned int idx,const unsigned int nb)
+//------------------------------------------------------------------------------
+RVertex::RVertex(const unsigned int id,const unsigned int idx,const unsigned int nb)
 	: Id(id), Index(idx), Edges(nb,nb/2)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGraphs::RVertex::RVertex(const RVertex* v)
+//------------------------------------------------------------------------------
+RVertex::RVertex(const RVertex* v)
 	: Edges(v->Edges.MaxPtr,v->Edges.IncPtr)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGraphs::RVertex::RVertex(const RVertex& v)
+//------------------------------------------------------------------------------
+RVertex::RVertex(const RVertex& v)
 	: Edges(v.Edges.MaxPtr,v.Edges.IncPtr)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGraphs::RVertex::RVertex(const VertexStruct& s)
+//------------------------------------------------------------------------------
+RVertex::RVertex(const VertexStruct& s)
 	: Id(s.id), Index(s.idx), Edges(s.nb,s.nb/2)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RGraphs::RVertex::~RVertex(void)
+//------------------------------------------------------------------------------
+RVertex::~RVertex(void)
 {
 }

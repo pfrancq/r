@@ -6,7 +6,11 @@
 
 	XML tag - Implementation.
 
-	(c) 2000-2001 by P. Francq and T. L'Eglise.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
 	Version $Revision$
 
@@ -30,41 +34,41 @@
 
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <ctype.h>
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files foor R Project
-#include <rxml/rxmltag.h>
-#include <rxml/rxmlfile.h>
-using namespace RXML;
+#include <rstd/rxmltag.h>
+#include <rstd/rxmlfile.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RXMLTag
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RXML::RXMLTag::RXMLTag(void)
- : RNode<RXMLTag,false>(100,50), Attrs(20,10)
+RXMLTag::RXMLTag(void)
+	: RNode<RXMLTag,false>(100,50), Attrs(20,10)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RXML::RXMLTag::RXMLTag(RString _name)
- : RNode<RXMLTag,false>(100,50), Name(_name), Attrs(20,10)
+RXMLTag::RXMLTag(RString _name)
+	: RNode<RXMLTag,false>(100,50), Name(_name), Attrs(20,10)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RXML::RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
+void RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
 {
 	int i;
 	RString text;
@@ -113,7 +117,7 @@ void RXML::RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
 
 
 //------------------------------------------------------------------------------
-void RXML::RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
+void RXMLTag::Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RString)
 {
 	char *ptr,*ptr2,c;
 	char *attrn,*attrv;
@@ -198,7 +202,7 @@ void RXML::RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 
 
 //------------------------------------------------------------------------------
-RString& RXML::RXMLTag::GetName(void)
+RString& RXMLTag::GetName(void)
 {
 	RString *tmp=RString::GetString();
 
@@ -208,7 +212,7 @@ RString& RXML::RXMLTag::GetName(void)
 
 
 //------------------------------------------------------------------------------
-RString& RXML::RXMLTag::GetAttrValue(const char *name)
+RString& RXMLTag::GetAttrValue(const char* name)
 {
 	RString *tmp=RString::GetString();
 	RXMLAttr *attr;
@@ -223,7 +227,7 @@ RString& RXML::RXMLTag::GetAttrValue(const char *name)
 
 
 //------------------------------------------------------------------------------
-void RXMLTag::InsertAttr(RXMLAttr *Attr)
+void RXMLTag::InsertAttr(RXMLAttr* Attr)
 {
 	Attrs.InsertPtr(Attr);
 }
@@ -258,42 +262,42 @@ void RXMLTag::InsertAttr(const char* name,const char* value)
 
 
 //------------------------------------------------------------------------------
-bool RXML::RXMLTag::IsAttrDefined(const char *name)
+bool RXMLTag::IsAttrDefined(const char *name)
 {
 	return(Attrs.IsIn<const char*>(name));
 }
 
 
-//-----------------------------------------------------------------------------
-void RXML::RXMLTag::AddTag(RXMLTag* tag)
+//------------------------------------------------------------------------------
+void RXMLTag::AddTag(RXMLTag* tag)
 {
 	InsertPtr(tag);
 }
 
 
-//-----------------------------------------------------------------------------
-RXMLTag* RXML::RXMLTag::GetTag(const char* name)
+//------------------------------------------------------------------------------
+RXMLTag* RXMLTag::GetTag(const char* name)
 {
 	return(GetPtr<const char*>(name,false));
 }
 
 
 //------------------------------------------------------------------------------
-void RXML::RXMLTag::AddContent(const char* text)
+void RXMLTag::AddContent(const char* text)
 {
 	Contains+=text;
 }
 
 
 //------------------------------------------------------------------------------
-bool RXML::RXMLTag::IsEmpty(void)
+bool RXMLTag::IsEmpty(void)
 {
 	return((!Contains.GetLen())&&(!NbPtr)&&(!Attrs.NbPtr));
 }
 
 
 //------------------------------------------------------------------------------
-void RXML::RXMLTag::DeleteEmptyTags(RXMLStruct* s)
+void RXMLTag::DeleteEmptyTags(RXMLStruct* s)
 {
 	RXMLTag **ptr;
 	unsigned int i;
@@ -314,8 +318,8 @@ void RXML::RXMLTag::DeleteEmptyTags(RXMLStruct* s)
 }
 
 
-//-----------------------------------------------------------------------------
-RXMLAttrCursor& RXML::RXMLTag::GetXMLAttrCursor(void)
+//------------------------------------------------------------------------------
+RXMLAttrCursor& RXMLTag::GetXMLAttrCursor(void)
 {
 	RXMLAttrCursor *cur=RXMLAttrCursor::GetTmpCursor();
 	cur->Set(Attrs);
@@ -323,8 +327,8 @@ RXMLAttrCursor& RXML::RXMLTag::GetXMLAttrCursor(void)
 }
 
 
-//-----------------------------------------------------------------------------
-RXMLTagCursor& RXML::RXMLTag::GetXMLTagsCursor(void)
+//------------------------------------------------------------------------------
+RXMLTagCursor& RXMLTag::GetXMLTagsCursor(void)
 {
 	RXMLTagCursor *cur=RXMLTagCursor::GetTmpCursor();
 	cur->Set(this);
@@ -333,6 +337,6 @@ RXMLTagCursor& RXML::RXMLTag::GetXMLTagsCursor(void)
 
 
 //------------------------------------------------------------------------------
-RXML::RXMLTag::~RXMLTag(void)
+RXMLTag::~RXMLTag(void)
 {
 }

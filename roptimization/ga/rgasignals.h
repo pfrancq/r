@@ -6,7 +6,10 @@
 
 	Signals for Genetic Algorithms - Header
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,17 +34,17 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RRASignalsH
 #define RRASignalsH
 
 
-//-----------------------------------------------------------------------------
-namespace RGA{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * \ingroup GA
 * This class represent a basic reveicer for GA signals. By default, it does
@@ -63,7 +66,7 @@ public:
 	class BestSig
 	{
 	public:
-		cChromo *Best;	
+		cChromo *Best;
 
 		BestSig(cChromo *best) : Best(best) {}
 	};
@@ -130,11 +133,11 @@ public:
 	public:
 		unsigned int Gen;
 		unsigned int BestGen;
-		cChromo **Pop;
-		cChromo *Best;
+		cChromo** Pop;
+		cChromo* Best;
 
 		GenSig(unsigned int gen,unsigned int bestgen,cChromo **pop,cChromo *best)
-			: Gen(gen), BestGen(bestgen), Pop(pop), Best(best) {}	
+			: Gen(gen), BestGen(bestgen), Pop(pop), Best(best) {}
 	};
 
 	/**
@@ -174,8 +177,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

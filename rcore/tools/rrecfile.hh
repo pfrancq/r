@@ -2,11 +2,14 @@
 
 	R Project Library
 
-	RRecFile.cpp
+	RRecFile.hh
 
 	Binary file for records  - Implementation.
 
-	(C) 2002 by P. Francq.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,7 +34,7 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdlib.h>
 #include <stdio.h>
@@ -48,30 +51,30 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // RRecFile
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RIO::RRecFile<C,S,bOrder>::RRecFile(const RString &name,RIO::ModeType mode) throw(bad_alloc,RString)
+	RRecFile<C,S,bOrder>::RRecFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
 		: Mode(mode), Name(name), NbRecs(0)
 {
 	int localmode;
 
 	switch(Mode)
 	{
-		case RIO::Read:
+		case R::Read:
 			localmode=O_RDONLY;
 			break;
 
-		case RIO::Append:
+		case Append:
 			localmode=O_WRONLY | O_CREAT | O_APPEND;
 			break;
 
-		case RIO::Create:
+		case Create:
 			localmode=O_WRONLY | O_CREAT | O_TRUNC;
 			break;
 
@@ -81,11 +84,11 @@ template<class C,unsigned int S,bool bOrder>
 	#ifndef _BSD_SOURCE
 		localmode|=O_BINARY;
 	#endif
-	if(Mode==RIO::Read)
+	if(Mode==R::Read)
 		handle=open(Name,localmode);
 	else
 		handle=open(Name,localmode,S_IREAD|S_IWRITE);
-	if(Mode!=RIO::Create)
+	if(Mode!=Create)
 	{
 		struct stat statbuf;
 		fstat(handle, &statbuf);
@@ -97,11 +100,11 @@ template<class C,unsigned int S,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator>>(double& nb) throw(RStd::RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(double& nb) throw(RString)
 {
-	if(Mode!=RIO::Read)
+	if(Mode!=R::Read)
 		throw(RString("File Mode is not Read"));
 	if(eof)
 		throw(RString("End of File"));
@@ -110,11 +113,11 @@ template<class C,unsigned int S,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator>>(unsigned int& nb) throw(RStd::RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(unsigned int& nb) throw(RString)
 {
-	if(Mode!=RIO::Read)
+	if(Mode!=R::Read)
 		throw(RString("File Mode is not Read"));
 	if(eof)
 		throw(RString("End of File"));
@@ -123,11 +126,11 @@ template<class C,unsigned int S,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator<<(const unsigned char nb) throw(RStd::RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const unsigned char nb) throw(RString)
 {
-	if(Mode==RIO::Read)
+	if(Mode==R::Read)
 		throw(RString("File Mode is Read"));
 	write(handle,&nb,sizeof(unsigned char));
 	#ifdef windows
@@ -137,11 +140,11 @@ template<class C,unsigned int S,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator<<(const unsigned int nb) throw(RStd::RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const unsigned int nb) throw(RString)
 {
-	if(Mode==RIO::Read)
+	if(Mode==R::Read)
 		throw(RString("File Mode is Read"));
 	write(handle,&nb,sizeof(unsigned int));
 	#ifdef windows
@@ -150,11 +153,11 @@ template<class C,unsigned int S,bool bOrder>
 	return(*this);
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator<<(const unsigned long nb) throw(RStd::RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const unsigned long nb) throw(RString)
 {
-	if(Mode==RIO::Read)
+	if(Mode==R::Read)
 		throw(RString("File Mode is Read"));
 	write(handle,&nb,sizeof(unsigned long));
 	#ifdef windows
@@ -164,11 +167,11 @@ template<class C,unsigned int S,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RIO::RRecFile<C,S,bOrder>& RIO::RRecFile<C,S,bOrder>::operator<<(const double d) throw(RString)
+	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(const double d) throw(RString)
 {
-	if(Mode==RIO::Read)
+	if(Mode==R::Read)
 		throw(RString("File Mode is Read"));
 	write(handle,&d,sizeof(double));
 	#ifdef windows
@@ -178,28 +181,28 @@ template<class C,unsigned int S,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	void RIO::RRecFile<C,S,bOrder>::Seek(unsigned int nb) throw(RStd::RString)
+	void RRecFile<C,S,bOrder>::Seek(unsigned int nb) throw(RString)
 {
 	lseek(handle,nb*S,SEEK_SET);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	void RIO::RRecFile<C,S,bOrder>::SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc) throw(RStd::RString)
+	void RRecFile<C,S,bOrder>::SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc) throw(RString)
 {
 	lseek(handle,(c+(l*maxc))*S,SEEK_SET);
 }
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	bool RIO::RRecFile<C,S,bOrder>::Read(C& rec) throw(RStd::RString)
+	bool RRecFile<C,S,bOrder>::Read(C& rec) throw(RString)
 {
-	if(Mode!=RIO::Read)
+	if(Mode!=R::Read)
 		throw(RString("File Mode is not Read"));
 	if(eof)
 		throw(RString("End of File"));
@@ -216,10 +219,10 @@ template<class C,unsigned int S,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
 	template<class TUse>
-		unsigned int RIO::RRecFile<C,S,bOrder>::GetId(const TUse tag,bool &Find)
+		unsigned int RRecFile<C,S,bOrder>::GetId(const TUse tag,bool &Find)
 {
 	unsigned int NbMin,NbMax,i=0;
 	int Comp=0;
@@ -274,9 +277,9 @@ template<class C,unsigned int S,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	bool RIO::RRecFile<C,S,bOrder>::GetRec(C& Rec) throw(RStd::RString)
+	bool RRecFile<C,S,bOrder>::GetRec(C& Rec) throw(RString)
 {
 	bool Find;
 	unsigned id;
@@ -288,9 +291,9 @@ template<class C,unsigned int S,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RIO::RRecFile<C,S,bOrder>::~RRecFile(void)
+	RRecFile<C,S,bOrder>::~RRecFile(void)
 {
 	if(handle!=-1) close(handle);
 }

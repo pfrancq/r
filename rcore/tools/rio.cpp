@@ -6,7 +6,10 @@
 
 	Generic Class - Implementation.
 
-	(C) 2002 by P. Francq.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,36 +34,20 @@
 
 
 
-//-----------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <sys/stat.h>
-#ifdef _BSD_SOURCE
-	#include <unistd.h>
-#else
-	#include <io.h>
-#endif
-#include <fcntl.h>
-#include <string.h>
-#include <time.h>
-
-
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rio/rio.h>
-using namespace RIO;
+#include <rstd/rio.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RIOException
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 RIOException::RIOException(const char* str) throw(bad_alloc)
 	: RException(str)
 {

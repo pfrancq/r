@@ -6,7 +6,10 @@
 
 	Binary file for records - Header.
 
-	(C) 2002 by P. Francq.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,23 +34,23 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RRecFileH
 #define RRecFileH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
-#include <rio/rio.h>
+#include <rstd/rio.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RIO{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RRecFile class implements some basic functions needed when working
 * with binary files for records.
@@ -86,12 +89,12 @@ protected:
 	/**
 	* How to file has to be used.
 	*/
-	RIO::ModeType Mode;
+	ModeType Mode;
 
 	/**
 	* Name of the File.
 	*/
-	RStd::RString Name;
+	RString Name;
 
 	/**
 	* Internal Handle of the file.
@@ -120,7 +123,7 @@ public:
 	* @param name           The name of the file.
 	* @param mode           The open mode for the file.
 	*/
-	RRecFile(const RStd::RString &name,RIO::ModeType mode) throw(bad_alloc,RStd::RString);
+	RRecFile(const RString &name,ModeType mode) throw(bad_alloc,RString);
 
 public:
 
@@ -132,38 +135,38 @@ public:
 	/**
 	* >> Operator for unsigned int.
 	*/
-	RRecFile& operator>>(unsigned int& nb) throw(RStd::RString);
+	RRecFile& operator>>(unsigned int& nb) throw(RString);
 
 	/**
 	* >> Operator for a double.
 	*/
-	RRecFile& operator>>(double& nb) throw(RStd::RString);
+	RRecFile& operator>>(double& nb) throw(RString);
 
 	/**
 	* << Operator for unsigned char.
 	*/
-	RRecFile& operator<<(const unsigned char nb) throw(RStd::RString);
+	RRecFile& operator<<(const unsigned char nb) throw(RString);
 
 	/**
 	* << Operator for unsigned int.
 	*/
-	RRecFile& operator<<(const unsigned int nb) throw(RStd::RString);
+	RRecFile& operator<<(const unsigned int nb) throw(RString);
 
 	/**
 	* << Operator for unsigned long.
 	*/
-	RRecFile& operator<<(const unsigned long nb) throw(RStd::RString);
+	RRecFile& operator<<(const unsigned long nb) throw(RString);
 
 	/**
 	* << Operator for double.
 	*/
-	RRecFile& operator<<(const double d) throw(RStd::RString);
+	RRecFile& operator<<(const double d) throw(RString);
 
 	/**
 	* Seek the file to a specific record number.
 	* @param nb             Number of record.
 	*/
-	void Seek(unsigned int nb) throw(RStd::RString);
+	void Seek(unsigned int nb) throw(RString);
 
 	/**
 	* Seek the file to a specific record number if the file represent a matrix.
@@ -172,13 +175,13 @@ public:
 	* @param maxc          Number of Columns.
 	* \remarks It is presume that the file is store lines by lines.
 	*/
-	void SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc) throw(RStd::RString);
+	void SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc) throw(RString);
 
 	/**
 	* Read a record.
 	* @return true if the record could be read.
 	*/
-	bool Read(C& rec) throw(RStd::RString);
+	bool Read(C& rec) throw(RString);
 
 	/**
 	* This function returns the index of an element represented by tag, and it
@@ -197,7 +200,7 @@ public:
 	* Get the Record in the parameter.
 	* @returns true if the record was found.
 	*/
-	bool GetRec(C& Rec) throw(RStd::RString);
+	bool GetRec(C& Rec) throw(RString);
 
 	/**
 	* Destructs the file.
@@ -206,13 +209,13 @@ public:
 };
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // inline implementation
-#include <rio/rrecfile.hh>
+#include <rstd/rrecfile.hh>
 
 
-}  //-------- End of namespace RIO --------------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

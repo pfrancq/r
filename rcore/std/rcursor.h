@@ -6,7 +6,10 @@
 
 	Cursor for Containers - Header.
 
-	(C) 1999-2002 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,22 +34,22 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RCursorH
 #define RCursorH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RStd{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * @param C                  The class of the elements that are contained.
 * @param T                  The type of the iterator used.
@@ -248,10 +251,10 @@ public:
 #include <rstd/rcursor.hh> // implementation
 
 
-}  //-------- End of namespace RStd -------------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The CLASSCURSOR macro defines a way to create a cursor for a given class with
 * a name. It is sometimes easier to create a specific class rather than using
@@ -261,26 +264,26 @@ public:
 * @param T                  The type of the iterator used.
 */
 #define CLASSCURSOR(name,C,T)                                        \
-class name : public RStd::RCursor<C,T>                               \
+class name : public R::RCursor<C,T>                                  \
 {                                                                    \
 public:                                                              \
-	name(void) : RStd::RCursor<C,T>() {}                             \
+	name(void) : R::RCursor<C,T>() {}                                \
 	static name* GetTmpCursor(void)                                  \
 	{                                                                \
-		return(RStd::GetTemporaryObject<name,20>());                 \
+		return(R::GetTemporaryObject<name,20>());                    \
 	}                                                                \
 	name& operator=(const name& c) throw(bad_alloc)                  \
 	{                                                                \
-		RStd::RCursor<C,T>::operator=(c);                            \
+		R::RCursor<C,T>::operator=(c);                               \
 		return(*this);                                               \
 	}                                                                \
-	name& operator=(const RStd::RCursor<C,T>& c) throw(bad_alloc)    \
+	name& operator=(const R::RCursor<C,T>& c) throw(bad_alloc)       \
 	{                                                                \
-		RStd::RCursor<C,T>::operator=(c);                            \
+		R::RCursor<C,T>::operator=(c);                               \
 		return(*this);                                               \
 	}                                                                \
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

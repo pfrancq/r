@@ -6,7 +6,10 @@
 
 	Chromosomes of Genetic Algorithms - inline Implementation
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,40 +34,40 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // RChromo<cInst,cChromo,cFit,cThreadData>
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RGA::RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,unsigned int id) throw(bad_alloc)
+	RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,unsigned int id) throw(bad_alloc)
 		: Instance(inst),Id(id),ToEval(true)
 {
 	Fitness=new cFit();
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RGA::RChromo<cInst,cChromo,cFit,cThreadData>::Init(cThreadData*) throw(bad_alloc)
+	void RChromo<cInst,cChromo,cFit,cThreadData>::Init(cThreadData*) throw(bad_alloc)
 {
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-  RGA::RChromo<cInst,cChromo,cFit,cThreadData>& RGA::RChromo<cInst,cChromo,cFit,cThreadData>::operator=(const RChromo &chromo)
+  RChromo<cInst,cChromo,cFit,cThreadData>& RChromo<cInst,cChromo,cFit,cThreadData>::operator=(const RChromo &chromo)
 {
 	(*Fitness)=(*(chromo.Fitness));
 	return(*this);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RGA::RChromo<cInst,cChromo,cFit,cThreadData>::~RChromo(void)
+	RChromo<cInst,cChromo,cFit,cThreadData>::~RChromo(void)
 {
 	if(Fitness) delete Fitness;
 }

@@ -6,7 +6,10 @@
 
 	Promethee Criterion - Implementation.
 
-	(C) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,56 +34,56 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <math.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromcriterion.h>
 #include <rpromethee/rpromcritvalue.h>
 #include <rpromethee/rpromkernel.h>
-using namespace RPromethee;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RPromCriterionParams
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromCriterionParams::RPromCriterionParams(void)
+//------------------------------------------------------------------------------
+RPromCriterionParams::RPromCriterionParams(void)
 	: P(0.2), Q(0.05), Weight(1.0)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromCriterionParams::RPromCriterionParams(double p,double q,double w)
+//------------------------------------------------------------------------------
+RPromCriterionParams::RPromCriterionParams(double p,double q,double w)
 	: P(p), Q(q), Weight(w)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RPromCriterionParams* RPromethee::RPromCriterionParams::GetParams(void)
+//------------------------------------------------------------------------------
+RPromCriterionParams* RPromCriterionParams::GetParams(void)
 {
 	return(GetTemporaryObject<RPromCriterionParams,30>());
 }
 
 
-//-----------------------------------------------------------------------------
-void RPromethee::RPromCriterionParams::Set(const char* values)
+//------------------------------------------------------------------------------
+void RPromCriterionParams::Set(const char* values)
 {
 	sscanf(values,"%lf %lf %lf",&P,&Q,&Weight);
 }
 
 
-//-----------------------------------------------------------------------------
-RPromCriterionParams& RPromethee::RPromCriterionParams::operator=(const RPromCriterionParams &params)
+//------------------------------------------------------------------------------
+RPromCriterionParams& RPromCriterionParams::operator=(const RPromCriterionParams &params)
 {
 	P=params.P;
 	Q=params.Q;
@@ -90,14 +93,14 @@ RPromCriterionParams& RPromethee::RPromCriterionParams::operator=(const RPromCri
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RPromCriterion
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,unsigned int nb)
+//------------------------------------------------------------------------------
+RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id),
 	  Type(type), P(p), Q(q), Weight(w)
 {
@@ -114,8 +117,8 @@ RPromethee::RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,d
 }
 
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,unsigned int nb)
+//------------------------------------------------------------------------------
+RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id),
 	  Type(type), P(params.P), Q(params.Q), Weight(params.Weight)
 {
@@ -132,8 +135,8 @@ RPromethee::RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterio
 }
 
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,const char* name,unsigned int nb)
+//------------------------------------------------------------------------------
+RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,const char* name,unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
 	  Type(type), P(p), Q(q), Weight(w)
 {
@@ -150,8 +153,8 @@ RPromethee::RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,d
 }
 
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,const char* name,unsigned int nb)
+//------------------------------------------------------------------------------
+RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,const char* name,unsigned int nb)
 	: RContainer<RPromCritValue,unsigned int,false,false>(nb,nb/2), Id(id), Name(name),
 	  Type(type), Weight(params.Weight)
 {
@@ -168,8 +171,8 @@ RPromethee::RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterio
 }
 
 
-//-----------------------------------------------------------------------------
-void RPromethee::RPromCriterion::SetParams(const RPromCriterionParams& params)
+//------------------------------------------------------------------------------
+void RPromCriterion::SetParams(const RPromCriterionParams& params)
 {
 	if(Type==Minimize)
 	{
@@ -185,8 +188,8 @@ void RPromethee::RPromCriterion::SetParams(const RPromCriterionParams& params)
 }
 
 
-//-----------------------------------------------------------------------------
-RPromCriterionParams& RPromethee::RPromCriterion::GetParams(void)
+//------------------------------------------------------------------------------
+RPromCriterionParams& RPromCriterion::GetParams(void)
 {
 	RPromCriterionParams* tmp=RPromCriterionParams::GetParams();
 
@@ -205,8 +208,8 @@ RPromCriterionParams& RPromethee::RPromCriterion::GetParams(void)
 }
 
 
-//-----------------------------------------------------------------------------
-void RPromethee::RPromCriterion::Normalize(void)
+//------------------------------------------------------------------------------
+void RPromCriterion::Normalize(void)
 {
 	unsigned int i;
 	RPromCritValue **ptr;
@@ -233,8 +236,8 @@ void RPromethee::RPromCriterion::Normalize(void)
 }
 
 
-//-----------------------------------------------------------------------------
-double RPromethee::RPromCriterion::ComputePref(double u,double v) const
+//------------------------------------------------------------------------------
+double RPromCriterion::ComputePref(double u,double v) const
 {
 	double d;
 	double y;
@@ -291,8 +294,8 @@ double RPromethee::RPromCriterion::ComputePref(double u,double v) const
 }
 
 
-//-----------------------------------------------------------------------------
-void RPromethee::RPromCriterion::ComputeFiCrit(RPromKernel *kern)
+//------------------------------------------------------------------------------
+void RPromCriterion::ComputeFiCrit(RPromKernel* kern)
 {
 	RPromCritValue **ptr,**ptr1;
 	RPromSol **sol,**sol1;
@@ -320,7 +323,7 @@ void RPromethee::RPromCriterion::ComputeFiCrit(RPromKernel *kern)
 }
 
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromCriterion::~RPromCriterion(void)
+//------------------------------------------------------------------------------
+RPromCriterion::~RPromCriterion(void)
 {
 }

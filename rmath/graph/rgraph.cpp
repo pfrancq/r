@@ -6,7 +6,10 @@
 
 	A Graph - Implementation.
 
-	(c) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,41 +33,41 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <math.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rgraph/rgraph.h>
-using namespace RGraphs;
+#include <rmath/rgraph.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // clas RGraph
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGraphs::RGraph::RGraph(unsigned int nb)
+//------------------------------------------------------------------------------
+RGraph::RGraph(unsigned int nb)
 	: Vertices(nb,nb/2), Edges(nb*(nb-1)/2,nb*(nb-1)/4)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-void RGraphs::RGraph::Clear(void)
+//------------------------------------------------------------------------------
+void RGraph::Clear(void)
 {
 	Vertices.Clear();
 	Edges.Clear();
 }
 
 
-//-----------------------------------------------------------------------------
-RVertex* RGraphs::RGraph::CreateVertex(void)
+//------------------------------------------------------------------------------
+RVertex* RGraph::CreateVertex(void)
 {
 	RVertex *ptr;
 
@@ -73,8 +76,8 @@ RVertex* RGraphs::RGraph::CreateVertex(void)
 }
 
 
-//-----------------------------------------------------------------------------
-RVertex* RGraphs::RGraph::CreateVertex(const unsigned int id)
+//------------------------------------------------------------------------------
+RVertex* RGraph::CreateVertex(const unsigned int id)
 {
 	RVertex *ptr;
 
@@ -83,8 +86,8 @@ RVertex* RGraphs::RGraph::CreateVertex(const unsigned int id)
 }
 
 
-//-----------------------------------------------------------------------------
-RVertex* RGraphs::RGraph::GetVertex(const unsigned int id)
+//------------------------------------------------------------------------------
+RVertex* RGraph::GetVertex(const unsigned int id)
 {
 	RVertex *ptr;
 	RVertex::VertexStruct s;
@@ -97,8 +100,8 @@ RVertex* RGraphs::RGraph::GetVertex(const unsigned int id)
 }
 
 
-//-----------------------------------------------------------------------------
-REdge* RGraphs::RGraph::CreateEdge(RVertex* v1,RVertex* v2,double w)
+//------------------------------------------------------------------------------
+REdge* RGraph::CreateEdge(RVertex* v1,RVertex* v2,double w)
 {
 	REdge *ptr;
 
@@ -109,8 +112,8 @@ REdge* RGraphs::RGraph::CreateEdge(RVertex* v1,RVertex* v2,double w)
 }
 
 
-//-----------------------------------------------------------------------------
-void RGraphs::RGraph::MinSpanningTree(RGraph* g)
+//------------------------------------------------------------------------------
+void RGraph::MinSpanningTree(RGraph* g)
 {
 	RVertex *v1, *v2;
 	REdge **e,*best=0;
@@ -161,7 +164,7 @@ void RGraphs::RGraph::MinSpanningTree(RGraph* g)
 }
 
 
-//-----------------------------------------------------------------------------
-RGraphs::RGraph::~RGraph(void)
+//------------------------------------------------------------------------------
+RGraph::~RGraph(void)
 {
 }

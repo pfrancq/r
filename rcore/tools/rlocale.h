@@ -6,7 +6,10 @@
 
 	Internationalisation - Header.
 
-	(c) 2001 by P. Francq.
+	Copyright 2001-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,23 +33,23 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RLocaleH
 #define RLocaleH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
 
 
 
-//-----------------------------------------------------------------------------
-namespace RInter{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RLocale class provides a representation for a particular location.
 * @author Pascal Francq
@@ -57,7 +60,7 @@ class RLocale
 	/**
 	* The name of the locale.
 	*/
-	RStd::RString Name;
+	RString Name;
 
 public:
 
@@ -65,7 +68,7 @@ public:
 	* Construct the locale.
 	* @param name                     Name.
 	*/
-	RLocale(const RStd::RString& name);
+	RLocale(const RString& name);
 
 	/**
 	* Construct the locale.
@@ -86,7 +89,7 @@ public:
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RStd::RString& n) const;
+	int Compare(const RString& n) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
@@ -101,7 +104,7 @@ public:
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const RStd::RString& n) const;
+	bool operator==(const RString& n) const;
 
 	/**
 	* Equal operator.
@@ -115,8 +118,8 @@ public:
 };
 
 
-}  //-------- End of namespace RInter -----------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

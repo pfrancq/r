@@ -6,7 +6,10 @@
 
 	String - Implementation.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,22 +34,22 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rstring.h>
-using namespace RStd;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // RString
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RStd::RString::RString(void) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RString::RString(void) throw(bad_alloc)
 {
 	MaxLen=200;
 	Len=0;
@@ -55,8 +58,8 @@ RStd::RString::RString(void) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RStd::RString::RString(const char *text) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RString::RString(const char* text) throw(bad_alloc)
 {
 	const char *ptr1=text;
 	char *ptr2;
@@ -80,8 +83,8 @@ RStd::RString::RString(const char *text) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RStd::RString::RString(const unsigned int maxlen) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RString::RString(const unsigned int maxlen) throw(bad_alloc)
 {
 	if(maxlen)
 	{
@@ -101,8 +104,8 @@ RStd::RString::RString(const unsigned int maxlen) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RStd::RString::RString(const RString& str) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RString::RString(const RString& str) throw(bad_alloc)
 {
 	MaxLen=str.MaxLen;
 	Len=str.Len;
@@ -111,8 +114,8 @@ RStd::RString::RString(const RString& str) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RStd::RString::RString(const RString* str) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RString::RString(const RString* str) throw(bad_alloc)
 {
 	if(str)
 	{
@@ -132,8 +135,8 @@ RStd::RString::RString(const RString* str) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-inline void RStd::RString::Verify(const unsigned int maxlen) throw(bad_alloc)
+//------------------------------------------------------------------------------
+inline void RString::Verify(const unsigned int maxlen) throw(bad_alloc)
 {
 	if(MaxLen<maxlen)
 	{
@@ -150,8 +153,8 @@ inline void RStd::RString::Verify(const unsigned int maxlen) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::RString::operator=(const RString &str) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RString& RString::operator=(const RString& str) throw(bad_alloc)
 {
 	Verify(str.MaxLen);
 	Len=str.Len;
@@ -160,8 +163,8 @@ RString& RStd::RString::operator=(const RString &str) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::RString::operator=(const char *text) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RString& RString::operator=(const char* text) throw(bad_alloc)
 {
 	const char *ptr1;
 	char *ptr2;
@@ -180,8 +183,8 @@ RString& RStd::RString::operator=(const char *text) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-void RStd::RString::Copy(const char* text,unsigned int nb)
+//------------------------------------------------------------------------------
+void RString::Copy(const char* text,unsigned int nb)
 {
 	Verify(nb);
 	Len=nb;
@@ -190,8 +193,8 @@ void RStd::RString::Copy(const char* text,unsigned int nb)
 }
 
 
-//-----------------------------------------------------------------------------
-char* RStd::RString::StrDup(void) const throw(bad_alloc)
+//------------------------------------------------------------------------------
+char* RString::StrDup(void) const throw(bad_alloc)
 {
 	char *text,*ptr1;
 	const char *ptr2=Text;
@@ -204,8 +207,8 @@ char* RStd::RString::StrDup(void) const throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-char RStd::RString::ToLower(const char c)
+//------------------------------------------------------------------------------
+char RString::ToLower(const char c)
 {
 	#ifdef __BORLANDC__
 		#pragma warn -sig
@@ -220,8 +223,8 @@ char RStd::RString::ToLower(const char c)
 }
 
 
-//-----------------------------------------------------------------------------
-char RStd::RString::ToUpper(const char c)
+//------------------------------------------------------------------------------
+char RString::ToUpper(const char c)
 {
 	#ifdef __BORLANDC__
 		#pragma warn -sig
@@ -236,8 +239,8 @@ char RStd::RString::ToUpper(const char c)
 }
 
 
-//-----------------------------------------------------------------------------
-void RStd::RString::StrUpr(void)
+//------------------------------------------------------------------------------
+void RString::StrUpr(void)
 {
 	char *ptr=Text;
 	while(*ptr)
@@ -245,8 +248,8 @@ void RStd::RString::StrUpr(void)
 }
 
 
-//-----------------------------------------------------------------------------
-void RStd::RString::StrUpr(const char *text) throw(bad_alloc)
+//------------------------------------------------------------------------------
+void RString::StrUpr(const char* text) throw(bad_alloc)
 {
 	const char *ptr1=text;
 	char *ptr2;
@@ -261,8 +264,8 @@ void RStd::RString::StrUpr(const char *text) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-void RStd::RString::StrUpr(const RString &str) throw(bad_alloc)
+//------------------------------------------------------------------------------
+void RString::StrUpr(const RString& str) throw(bad_alloc)
 {
 	const char *ptr1=str.Text;
 	char *ptr2;
@@ -276,8 +279,8 @@ void RStd::RString::StrUpr(const RString &str) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-void RStd::RString::StrLwr(void)
+//------------------------------------------------------------------------------
+void RString::StrLwr(void)
 {
 	char *ptr=Text;
 
@@ -286,8 +289,8 @@ void RStd::RString::StrLwr(void)
 }
 
 
-//-----------------------------------------------------------------------------
-void RStd::RString::StrLwr(const char *text) throw(bad_alloc)
+//------------------------------------------------------------------------------
+void RString::StrLwr(const char* text) throw(bad_alloc)
 {
 	const char *ptr1=text;
 	char *ptr2;
@@ -302,8 +305,8 @@ void RStd::RString::StrLwr(const char *text) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-void RStd::RString::StrLwr(const RString &str) throw(bad_alloc)
+//------------------------------------------------------------------------------
+void RString::StrLwr(const RString& str) throw(bad_alloc)
 {
 	const char *ptr1=str.Text;
 	char *ptr2;
@@ -318,8 +321,8 @@ void RStd::RString::StrLwr(const RString &str) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::RString::operator+=(const RString &str) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RString& RString::operator+=(const RString& str) throw(bad_alloc)
 {
 	Verify(str.Len+Len);
 	memcpy(&Text[Len],str.Text,(str.Len+1)*sizeof(char));
@@ -328,8 +331,8 @@ RString& RStd::RString::operator+=(const RString &str) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::RString::operator+=(const char *text) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RString& RString::operator+=(const char* text) throw(bad_alloc)
 {
 	const char *ptr1;
 	char *ptr2;
@@ -347,8 +350,8 @@ RString& RStd::RString::operator+=(const char *text) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::RString::operator+=(const char c) throw(bad_alloc)
+//------------------------------------------------------------------------------
+RString& RString::operator+=(const char c) throw(bad_alloc)
 {
 	char* ptr;
 
@@ -360,8 +363,8 @@ RString& RStd::RString::operator+=(const char c) throw(bad_alloc)
 }
 
 
-//-----------------------------------------------------------------------------
-bool RStd::RString::operator==(const RString& str) const
+//------------------------------------------------------------------------------
+bool RString::operator==(const RString& str) const
 {
 	const char *ptr1=str.Text;
 	char *ptr2=Text;
@@ -377,15 +380,15 @@ bool RStd::RString::operator==(const RString& str) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RStd::RString::operator==(const char* str) const
+//------------------------------------------------------------------------------
+bool RString::operator==(const char* str) const
 {
 	return(!strcmp(Text,str));
 }
 
 
-//-----------------------------------------------------------------------------
-bool RStd::RString::operator!=(const RString& str) const
+//------------------------------------------------------------------------------
+bool RString::operator!=(const RString& str) const
 {
 	const char *ptr1=str.Text;
 	char *ptr2=Text;
@@ -401,36 +404,36 @@ bool RStd::RString::operator!=(const RString& str) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RStd::RString::operator!=(const char* str) const
+//------------------------------------------------------------------------------
+bool RString::operator!=(const char* str) const
 {
 	return(strcmp(Text,str));
 }
 
 
-//-----------------------------------------------------------------------------
-int RStd::RString::Compare(const RString &str) const
+//------------------------------------------------------------------------------
+int RString::Compare(const RString &str) const
 {
 	return(strcmp(Text,str.Text));
 }
 
 
-//-----------------------------------------------------------------------------
-int RStd::RString::Compare(const RString *str) const
+//------------------------------------------------------------------------------
+int RString::Compare(const RString *str) const
 {
 	return(strcmp(Text,str->Text));
 }
 
 
-//-----------------------------------------------------------------------------
-int RStd::RString::Compare(const char *str) const
+//------------------------------------------------------------------------------
+int RString::Compare(const char *str) const
 {
 	return(strcmp(Text,str));
 }
 
 
-//-----------------------------------------------------------------------------
-char RStd::RString::HashIndex(const RString* str)
+//------------------------------------------------------------------------------
+char RString::HashIndex(const RString* str)
 {
 	int c=(*str->Text);
 	#ifdef __BORLANDC__
@@ -447,8 +450,8 @@ char RStd::RString::HashIndex(const RString* str)
 }
 
 
-//-----------------------------------------------------------------------------
-char RStd::RString::HashIndex(const RString& str)
+//------------------------------------------------------------------------------
+char RString::HashIndex(const RString& str)
 {
 	int c=(*str.Text);
 	#ifdef __BORLANDC__
@@ -464,8 +467,8 @@ char RStd::RString::HashIndex(const RString& str)
 }
 
 
-//-----------------------------------------------------------------------------
-char RStd::RString::HashIndex(const char* str)
+//------------------------------------------------------------------------------
+char RString::HashIndex(const char* str)
 {
 	int c=(*str);
 	#ifdef __BORLANDC__
@@ -481,8 +484,8 @@ char RStd::RString::HashIndex(const char* str)
 }
 
 
-//-----------------------------------------------------------------------------
-char RStd::RString::HashIndex2(const RString* str)
+//------------------------------------------------------------------------------
+char RString::HashIndex2(const RString* str)
 {
 	int c=*(str->Text);
 	if(!c) return(26);
@@ -501,8 +504,8 @@ char RStd::RString::HashIndex2(const RString* str)
 }
 
 
-//-----------------------------------------------------------------------------
-char RStd::RString::HashIndex2(const RString& str)
+//------------------------------------------------------------------------------
+char RString::HashIndex2(const RString& str)
 {
 	int c=(*str.Text);
 	if(!c) return(26);
@@ -520,8 +523,8 @@ char RStd::RString::HashIndex2(const RString& str)
 }
 
 
-//-----------------------------------------------------------------------------
-char RStd::RString::HashIndex2(const char* str)
+//------------------------------------------------------------------------------
+char RString::HashIndex2(const char* str)
 {
 	int c=(*str);
 	if(!c) return(26);
@@ -539,8 +542,8 @@ char RStd::RString::HashIndex2(const char* str)
 }
 
 
-//-----------------------------------------------------------------------------
-RString* RStd::RString::GetString(void)
+//------------------------------------------------------------------------------
+RString* RString::GetString(void)
 {
 	RString *str=GetTemporaryObject<RString,__RMAXSTRING__>();
 
@@ -550,15 +553,15 @@ RString* RStd::RString::GetString(void)
 }
 
 
-//-----------------------------------------------------------------------------
-char* RStd::RString::GetCString(void)
+//------------------------------------------------------------------------------
+char* RString::GetCString(void)
 {
 	return(*GetTemporaryObject<char*,__RMAXSTRING__>());
 }
 
 
-//-----------------------------------------------------------------------------
-RStd::RString::~RString(void)
+//------------------------------------------------------------------------------
+RString::~RString(void)
 {
 	if(Text)
 		delete[] Text;
@@ -566,14 +569,14 @@ RStd::RString::~RString(void)
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // Global Functions and Operators
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RString& RStd::operator+(const RString &arg1,const RString &arg2)
+RString& R::operator+(const RString& arg1,const RString& arg2)
 {
 	RString *res=RString::GetString();
 	(*res)=arg1;
@@ -581,8 +584,8 @@ RString& RStd::operator+(const RString &arg1,const RString &arg2)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::operator+(const RString &arg1,const char *arg2)
+//------------------------------------------------------------------------------
+RString& R::operator+(const RString& arg1,const char* arg2)
 {
 	RString *res=RString::GetString();
 	(*res)=arg1;
@@ -590,8 +593,8 @@ RString& RStd::operator+(const RString &arg1,const char *arg2)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::operator+(const char *arg1,const RString &arg2)
+//------------------------------------------------------------------------------
+RString& R::operator+(const char* arg1,const RString& arg2)
 {
 	RString *res=RString::GetString();
 	(*res)=arg1;
@@ -599,8 +602,8 @@ RString& RStd::operator+(const char *arg1,const RString &arg2)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::itoa(const int nb)
+//------------------------------------------------------------------------------
+RString& R::itoa(const int nb)
 {
 	char Tmp[20];
 	RString *res=RString::GetString();
@@ -611,8 +614,8 @@ RString& RStd::itoa(const int nb)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::itoa(const unsigned int nb)
+//------------------------------------------------------------------------------
+RString& R::itoa(const unsigned int nb)
 {
 	char Tmp[20];
 	RString *res=RString::GetString();
@@ -623,8 +626,8 @@ RString& RStd::itoa(const unsigned int nb)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::ltoa(const long nb)
+//------------------------------------------------------------------------------
+RString& R::ltoa(const long nb)
 {
 	char Tmp[20];
 	RString *res=RString::GetString();
@@ -635,8 +638,8 @@ RString& RStd::ltoa(const long nb)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::chr(const unsigned char c)
+//------------------------------------------------------------------------------
+RString& R::chr(const unsigned char c)
 {
 	char Tmp[2];
 	RString *res=RString::GetString();
@@ -648,8 +651,8 @@ RString& RStd::chr(const unsigned char c)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::ltoa(const unsigned long nb)
+//------------------------------------------------------------------------------
+RString& R::ltoa(const unsigned long nb)
 {
 	char Tmp[20];
 	RString *res=RString::GetString();
@@ -660,8 +663,8 @@ RString& RStd::ltoa(const unsigned long nb)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::ftoa(const float nb)
+//------------------------------------------------------------------------------
+RString& R::ftoa(const float nb)
 {
 	char Tmp[20];
 	RString *res=RString::GetString();
@@ -672,8 +675,8 @@ RString& RStd::ftoa(const float nb)
 }
 
 
-//-----------------------------------------------------------------------------
-RString& RStd::dtoa(const double nb)
+//------------------------------------------------------------------------------
+RString& R::dtoa(const double nb)
 {
 	char Tmp[20];
 	RString *res=RString::GetString();

@@ -6,7 +6,10 @@
 
 	Line - Implementation.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,28 +33,28 @@
 */
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rgeometry/rline.h>
-using namespace RGeometry2D;
+#include <rmath/rline.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-// Class "RLine"
+// Class RLine
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RLine::RLine(void)
+//------------------------------------------------------------------------------
+RLine::RLine(void)
 	: Pt1(),Pt2(),Segment(false)
 {
 }
 
 
 //------------------------------------------------------ -----------------------
-RGeometry2D::RLine::RLine(const RPoint* pt1,const RPoint* pt2,const bool seg)
+RLine::RLine(const RPoint* pt1,const RPoint* pt2,const bool seg)
 	: Pt1(*pt1),Pt2(*pt2)
 {
 	RReturnIfFail(pt1&&pt2);
@@ -59,16 +62,16 @@ RGeometry2D::RLine::RLine(const RPoint* pt1,const RPoint* pt2,const bool seg)
 }
 
 
-//-----------------------------------------------------------------------------
-float RGeometry2D::RLine::Length(void) const
+//------------------------------------------------------------------------------
+float RLine::Length(void) const
 {
 	RCoord X=labs(Pt2.X-Pt1.X),Y=labs(Pt2.Y-Pt1.Y);
-	return(sqrt(X*X+Y*Y));
+	return(sqrt(static_cast<double>(X*X+Y*Y)));
 }
 
 
-//-----------------------------------------------------------------------------
-int RGeometry2D::RLine::CCW(const RPoint& pt) const
+//------------------------------------------------------------------------------
+int RLine::CCW(const RPoint& pt) const
 {
 	RCoord dx1,dx2,dy1,dy2;
 
@@ -84,25 +87,25 @@ int RGeometry2D::RLine::CCW(const RPoint& pt) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RLine::Inter(const RLine* line) const
+//------------------------------------------------------------------------------
+bool RLine::Inter(const RLine* line) const
 {
 	RReturnValIfFail(line,false);
 	return((CCW(line->Pt1)*CCW(line->Pt2)<=0)&&(line->CCW(Pt1)*line->CCW(Pt2)<=0));
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RLine::Inter(const RLine& line) const
+//------------------------------------------------------------------------------
+bool RLine::Inter(const RLine& line) const
 {
 	return((CCW(line.Pt1)*CCW(line.Pt2)<=0)&&(line.CCW(Pt1)*line.CCW(Pt2)<=0));
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RLine::IsIn(const RPoint& pt) const
+//------------------------------------------------------------------------------
+bool RLine::IsIn(const RPoint& pt) const
 {
-	double a,b;    // y=ax+b	
+	double a,b;    // y=ax+b
 	double eq;     // y(pt);
 
 	a=static_cast<double>(Pt2.Y-Pt1.Y)/static_cast<double>(Pt2.X-Pt1.X);

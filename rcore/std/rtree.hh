@@ -6,7 +6,10 @@
 
 	Generic Tree - Inline Implementation.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,24 +34,24 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RTree
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	RStd::RTree<N,bAlloc,bOrder>::RTree(unsigned int max,unsigned int inc) throw(bad_alloc)
+	RTree<N,bAlloc,bOrder>::RTree(unsigned int max,unsigned int inc) throw(bad_alloc)
 		: RContainer<N,unsigned int,bAlloc,bOrder>(max,inc), Top(0)
 {
 	Top = new RContainer<N,unsigned int,false,bOrder>(10,5);
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	void RStd::RTree<N,bAlloc,bOrder>::AddNode(N *parent,N *node) throw(bad_alloc)
+	void RTree<N,bAlloc,bOrder>::AddNode(N *parent,N *node) throw(bad_alloc)
 {
 	RReturnIfFail(node);
 	if(!node) return;
@@ -63,9 +66,9 @@ template<class N,bool bAlloc,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	void RStd::RTree<N,bAlloc,bOrder>::DeleteNode(N *node)
+	void RTree<N,bAlloc,bOrder>::DeleteNode(N *node)
 {
 	RReturnIfFail(node);
 	if(!node) return;
@@ -80,9 +83,9 @@ template<class N,bool bAlloc,bool bOrder>
 }
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	RStd::RTree<N,bAlloc,bOrder>::~RTree(void)
+	RTree<N,bAlloc,bOrder>::~RTree(void)
 {
 	if(Top) delete Top;
 }

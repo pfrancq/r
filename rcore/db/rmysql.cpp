@@ -1,63 +1,67 @@
 /*
 
+	R Project Library
+
 	RMySQL.cpp
 
-  MySQL C++ Classes - Implementation.
+	MySQL C++ Classes - Implementation.
 
-  (C) 2000 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
 
-  Version $Revision$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #include <string.h>
-#include <rmysql/rmysql.h>
-using namespace RMySQL;
-using namespace RStd;
+#include <rdb/rmysql.h>
+using namespace R;
 
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // RMySQLError
 //
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
-RMySQL::RMySQLError::RMySQLError(const char* error)
+//------------------------------------------------------------------------------
+RMySQLError::RMySQLError(const char* error)
 	: Error(error)
 {
 }
 
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // RDb
 //
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
-RMySQL::RDb::RDb(const char* host,const char* user,const char* pwd,const char* db) throw(RMySQLError)
+//------------------------------------------------------------------------------
+RDb::RDb(const char* host,const char* user,const char* pwd,const char* db) throw(RMySQLError)
 {
 	MYSQL* ret;
 
@@ -70,22 +74,22 @@ RMySQL::RDb::RDb(const char* host,const char* user,const char* pwd,const char* d
 }
 
 
-//---------------------------------------------------------------------------
-RMySQL::RDb::~RDb(void)
+//------------------------------------------------------------------------------
+RDb::~RDb(void)
 {
 	if(connection) mysql_close(connection);
 }
 
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // RQuery
 //
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
-RMySQL::RQuery::RQuery(RDb* db,const char* sql) throw(RMySQLError)
+//------------------------------------------------------------------------------
+RQuery::RQuery(RDb* db,const char* sql) throw(RMySQLError)
 {
 	RString Up(sql);
 	bool bSelect;
@@ -124,37 +128,37 @@ RMySQL::RQuery::RQuery(RDb* db,const char* sql) throw(RMySQLError)
 }
 
 
-//---------------------------------------------------------------------------	
-void RMySQL::RQuery::Begin(void)
+//------------------------------------------------------------------------------
+void RQuery::Begin(void)
 {
 	row=mysql_fetch_row(result);
 }
 
 
-//---------------------------------------------------------------------------	
-void RMySQL::RQuery::Start(void)
+//------------------------------------------------------------------------------
+void RQuery::Start(void)
 {
 	row=mysql_fetch_row(result);
 }
 
 
-//---------------------------------------------------------------------------
-RQuery& RMySQL::RQuery::operator++(int)
+//------------------------------------------------------------------------------
+RQuery& RQuery::operator++(int)
 {
 	row=mysql_fetch_row(result);
 	return(*this);
 }
 
 
-//---------------------------------------------------------------------------
-void RMySQL::RQuery::Next(void)
+//------------------------------------------------------------------------------
+void RQuery::Next(void)
 {
 	row=mysql_fetch_row(result);
 }
 
 
-//---------------------------------------------------------------------------	
-const char* RMySQL::RQuery::operator[](unsigned int index) const throw(RMySQLError)
+//------------------------------------------------------------------------------
+const char* RQuery::operator[](unsigned int index) const throw(RMySQLError)
 {
 	if(index>=nbcols)
 		throw RMySQLError("Index out of range");
@@ -164,8 +168,8 @@ const char* RMySQL::RQuery::operator[](unsigned int index) const throw(RMySQLErr
 }
 
 
-//---------------------------------------------------------------------------
-RMySQL::RQuery::~RQuery(void)
+//------------------------------------------------------------------------------
+RQuery::~RQuery(void)
 {
 	if(result) mysql_free_result(result);
 }

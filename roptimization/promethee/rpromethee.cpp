@@ -4,9 +4,12 @@
 
 	RPromethee.cpp
 
-	Rainbow Promethee Library - Implementation.
+	Promethee Library - Implementation.
 
-	(C) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,7 +34,6 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromethee.h>
-using namespace RPromethee;

@@ -6,7 +6,11 @@
 
 	Promethee Kernel - Header.
 
-	(C) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
 	Version $Revision$
 
@@ -31,23 +35,23 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RPromKernelH
 #define RPromKernelH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromethee.h>
 #include <rpromethee/rpromsol.h>
 #include <rpromethee/rpromcriterion.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RPromethee{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RPromKernel provides a kernel to manage Prométhée session.
 * @short Prométhée Kernel.
@@ -58,17 +62,17 @@ class RPromKernel
 	/**
 	* The name of the kernel.
 	*/
-	RStd::RString Name;
+	RString Name;
 
 	/**
 	* Solutions.
 	*/
-	RStd::RContainer<RPromSol,unsigned int,true,true> Solutions;
+	RContainer<RPromSol,unsigned int,true,true> Solutions;
 
 	/**
 	* Criteria.
 	*/
-	RStd::RContainer<RPromCriterion,unsigned int,true,true> Criteria;
+	RContainer<RPromCriterion,unsigned int,true,true> Criteria;
 
 	/**
 	* Define if a normalisation of the values for the different criteria must be
@@ -153,15 +157,15 @@ public:
 	* @param crit           Pointer to the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(RPromSol *sol,RPromCriterion *crit,const double v) throw(bad_alloc);
-	
+	virtual void Assign(RPromSol* sol,RPromCriterion* crit,const double v) throw(bad_alloc);
+
 	/**
 	* Assign a value to a criterion.
 	* @param sol            Name of to the solution.
 	* @param crit           Pointer to the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(const char* sol,RPromCriterion *crit,const double v) throw(bad_alloc);
+	virtual void Assign(const char* sol,RPromCriterion* crit,const double v) throw(bad_alloc);
 
 	/**
 	* Assign a value to a criterion.
@@ -169,7 +173,7 @@ public:
 	* @param crit           Name of the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(RPromSol *sol,const char* crit,const double v) throw(bad_alloc);
+	virtual void Assign(RPromSol* sol,const char* crit,const double v) throw(bad_alloc);
 
 	/**
 	* Assign a value to a criterion.
@@ -215,8 +219,8 @@ public:
 };
 
 
-}  //-------- End of namespace RPromethee -------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

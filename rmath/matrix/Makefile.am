@@ -1,0 +1,11 @@
+INCLUDES = -I$(top_srcdir)
+lib_LTLIBRARIES =  librmath.la
+AM_CFLAGS =
+AM_CXXFLAGS =
+AM_FFLAGS =
+SUBDIRS =
+rmathincludedir = $(includedir)/r/rmath
+rmathinclude_HEADERS = geometry.h rline.h rpoint.h rpoints.h rpolygon.h rpolygons.h rrect.h rrects.h \
+			redge.h rgraph.h rvertex.h rmatrix.h
+librmath_la_SOURCES = geometry.cpp rline.cpp rpoint.cpp rpoints.cpp rpolygon.cpp rpolygons.cpp rrect.cpp rrects.cpp \
+			redge.cpp rgraph.cpp rvertex.cpp rmatrix.cpp

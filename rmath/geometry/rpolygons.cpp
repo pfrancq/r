@@ -6,7 +6,10 @@
 
 	Polygons - Implentation.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,38 +34,38 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
-#include <iostream.h>
+#include <iostream>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rgeometry/rpolygons.h>
-#include <rgeometry/rpoints.h>
-#include <rgeometry/rrect.h>
-#include <rgeometry/rline.h>
-using namespace RGeometry2D;
+#include <rmath/rpolygons.h>
+#include <rmath/rpoints.h>
+#include <rmath/rrect.h>
+#include <rmath/rline.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
-// Class "RPolygons"
+// Class RPolygons
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RGeometry2D::RPolygons::RPolygons(void)
+//------------------------------------------------------------------------------
+RPolygons::RPolygons(void)
 	: RContainer<RPolygon,unsigned int,true,false>(20,10)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::Edge(const RPoint *pt) const
+//------------------------------------------------------------------------------
+bool RPolygons::Edge(const RPoint* pt) const
 {
-	RPolygon **poly;
+	RPolygon** poly;
 	unsigned int i;
 
 	RReturnValIfFail(pt,false);
@@ -73,10 +76,10 @@ bool RGeometry2D::RPolygons::Edge(const RPoint *pt) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::Edge(const RPoint *pt,const RPolygon *poly) const
+//------------------------------------------------------------------------------
+bool RPolygons::Edge(const RPoint* pt,const RPolygon* poly) const
 {
-	RPolygon **ptr;
+	RPolygon** ptr;
 	unsigned int i;
 
 	RReturnValIfFail(pt&&poly,false);
@@ -87,13 +90,13 @@ bool RGeometry2D::RPolygons::Edge(const RPoint *pt,const RPolygon *poly) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::Edge(const RPoint *pt1,const RPoint *pt2) const
+//------------------------------------------------------------------------------
+bool RPolygons::Edge(const RPoint* pt1,const RPoint* pt2) const
 {
-	RPolygon **poly;
+	RPolygon** poly;
 	unsigned int i;
 
-	RReturnValIfFail(pt1&&pt2,false);	
+	RReturnValIfFail(pt1&&pt2,false);
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
 		if((*poly)->Edge(pt1,pt2))
 			return(true);
@@ -101,18 +104,18 @@ bool RGeometry2D::RPolygons::Edge(const RPoint *pt1,const RPoint *pt2) const
 }
 
 
-//-----------------------------------------------------------------------------
-void RGeometry2D::RPolygons::PutPoints(RPoints *points) const
+//------------------------------------------------------------------------------
+void RPolygons::PutPoints(RPoints* points) const
 {
-	RPolygon **poly;
-	RPoint **point;
+	RPolygon** poly;
+	RPoint** point;
 	RPoint tmp;
 	unsigned int i,j;
 
 	RReturnIfFail(points);
 	points->Clear();
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
-		(*poly)->AddPoints(points);	
+		(*poly)->AddPoints(points);
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
 		for(j=(*poly)->NbPtr+1,point=(*poly)->Tab;--j;point++)
 		{
@@ -138,8 +141,8 @@ void RGeometry2D::RPolygons::PutPoints(RPoints *points) const
 }
 
 
-//-----------------------------------------------------------------------------
-void RGeometry2D::RPolygons::Union(RPolygon *upoly) const
+//------------------------------------------------------------------------------
+void RPolygons::Union(RPolygon* upoly) const
 {
 	RPoint *next,*first,*ins,*last;
 	RDirection FromDir;
@@ -258,8 +261,8 @@ void RGeometry2D::RPolygons::Union(RPolygon *upoly) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::DuplicatePoints(void) const
+//------------------------------------------------------------------------------
+bool RPolygons::DuplicatePoints(void) const
 {
 	RPoints tmp(500);
 
@@ -268,8 +271,8 @@ bool RGeometry2D::RPolygons::DuplicatePoints(void) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::IsIn(const RCoord X,const RCoord Y) const
+//------------------------------------------------------------------------------
+bool RPolygons::IsIn(const RCoord X,const RCoord Y) const
 {
 	RPolygon **tab;
 	unsigned int i;
@@ -281,8 +284,8 @@ bool RGeometry2D::RPolygons::IsIn(const RCoord X,const RCoord Y) const
 }
 
 
-//-----------------------------------------------------------------------------
-bool RGeometry2D::RPolygons::IsIn(const RPoint &pt) const
+//------------------------------------------------------------------------------
+bool RPolygons::IsIn(const RPoint& pt) const
 {
 	RPolygon **tab;
 	unsigned int i;
@@ -294,16 +297,16 @@ bool RGeometry2D::RPolygons::IsIn(const RPoint &pt) const
 }
 
 
-//-----------------------------------------------------------------------------
-RPolygons& RGeometry2D::RPolygons::operator=(const RPolygons &poly)
+//------------------------------------------------------------------------------
+RPolygons& RPolygons::operator=(const RPolygons& poly)
 {
 	RContainer<RPolygon,unsigned int,true,false>::operator=(poly);
 	return(*this);
 }
 
 
-//-----------------------------------------------------------------------------
-void RGeometry2D::RPolygons::Save(RTextFile& f)
+//------------------------------------------------------------------------------
+void RPolygons::Save(RTextFile& f)
 {
 	f<<NbPtr<<endl;
 	for(Start();!End();Next())

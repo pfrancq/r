@@ -6,7 +6,11 @@
 
 	XML file - Header.
 
-	(c) 2000-2001 by P. Francq and T. L'Eglise.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
 	Version $Revision$
 
@@ -30,29 +34,29 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RXMLFileH
 #define RXMLFileH
 
 
-//-----------------------------------------------------------------------------
-// include files for Rainbow
-#include <rio/rtextfile.h>
-#include <rxml/rxmlstruct.h>
+//------------------------------------------------------------------------------
+// include files for R Project
+#include <rstd/rtextfile.h>
+#include <rstd/rxmlstruct.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RXML{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class represents a XML file.
 * @short XML File.
 * @author Pascal Francq and Thomas L'Eglise.
 */
-class RXMLFile : public RIO::RTextFile
+class RXMLFile : public RTextFile
 {
 	/**
 	* The structure associated with the XML file.
@@ -67,7 +71,7 @@ public:
 	* @param xmlstruct      The XML tree associated with the file
 	* @param mode           The open mode for the file.
 	*/
-	RXMLFile(const char* name,RXMLStruct* xmlstruct,RIO::ModeType mode=RIO::Read);
+	RXMLFile(const char* name,RXMLStruct* xmlstruct,ModeType mode=Read);
 
 	/**
 	* Test if a new tag begins.
@@ -100,8 +104,8 @@ public:
 };
 
 
-}  //-------- End of namespace RXML -------------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

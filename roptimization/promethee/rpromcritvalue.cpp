@@ -6,7 +6,10 @@
 
 	Promethee Criterion Value - Implementation.
 
-	(C) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,34 +34,34 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rpromethee/rpromcritvalue.h>
-using namespace RPromethee;
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RPromCritValue
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromCritValue::RPromCritValue(void)
+//------------------------------------------------------------------------------
+RPromCritValue::RPromCritValue(void)
 	: Value(0.0)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromCritValue::RPromCritValue(double value)
+//------------------------------------------------------------------------------
+RPromCritValue::RPromCritValue(double value)
 	: Value(value)
 {
 }
 
 
-//-----------------------------------------------------------------------------
-RPromethee::RPromCritValue::~RPromCritValue(void)
+//------------------------------------------------------------------------------
+RPromCritValue::~RPromCritValue(void)
 {
 }

@@ -6,7 +6,10 @@
 
 	Point - Header
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,28 +33,27 @@
 */
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RPointH
 #define RPointH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdlib.h>
 
 
-//-----------------------------------------------------------------------------
-// include files for RGeometry
-#include <rgeometry/geometry.h>
-using namespace RGeometry2D;
+//------------------------------------------------------------------------------
+// include files for R Project
+#include <rmath/geometry.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGeometry2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class represent a point.
 * @author Pascal Francq
@@ -91,53 +93,53 @@ public:
 	* Construct a point from pt.
 	* @param pt             The point used as reference.
 	*/
-	RPoint(const RPoint *pt);
+	RPoint(const RPoint* pt);
 
 	/**
 	* The equal operator.
 	*/
-	inline bool operator==(const RPoint &pt) const {return((X==pt.X)&&(Y==pt.Y));}
+	inline bool operator==(const RPoint& pt) const {return((X==pt.X)&&(Y==pt.Y));}
 
 	/**
 	* The non-equal operator.
 	*/
-	inline bool operator!=(const RPoint &pt) const {return((X!=pt.X)||(Y!=pt.Y));}
+	inline bool operator!=(const RPoint& pt) const {return((X!=pt.X)||(Y!=pt.Y));}
 
 	/**
 	* Make a translation of the point.
 	* @param pt             The point representing the vector used.
 	*/
-	RPoint& operator+=(const RPoint &pt) {X+=pt.X;Y+=pt.Y;return(*this);}
+	RPoint& operator+=(const RPoint& pt) {X+=pt.X;Y+=pt.Y;return(*this);}
 
 	/**
 	* Make a translation of the point.
 	* @param pt             The point representing the vector used.
 	*/
-	RPoint& operator-=(const RPoint &pt) {X-=pt.X;Y-=pt.Y;return(*this);}
+	RPoint& operator-=(const RPoint& pt) {X-=pt.X;Y-=pt.Y;return(*this);}
 
 	/**
 	* Compare two points and return 0 if there are at the same position. This function
 	* is used with the class RContainer.
 	* @param pt             Point used for the comparaison.
 	*/
-	inline int Compare(const RPoint *pt) const { return((*this)!=(*pt)); }
+	inline int Compare(const RPoint* pt) const { return((*this)!=(*pt)); }
 
 	/**
 	* Compare two points and return 0 if there are at the same position. This function
 	* is used with the class RContainer.
 	* @param pt             Point used for the comparaison.
 	*/
-	inline int Compare(const RPoint &pt) const { return((*this)!=pt); }
+	inline int Compare(const RPoint& pt) const { return((*this)!=pt); }
 
 	/**
 	* Assignment operator.
 	*/
-	inline RPoint& operator=(const RPoint &pt) {X=pt.X;Y=pt.Y;return(*this);}
+	inline RPoint& operator=(const RPoint& pt) {X=pt.X;Y=pt.Y;return(*this);}
 
 	/**
 	* This function returns true if the two points are side by side.
 	*/
-	inline bool Near(const RPoint *pt) const;
+	inline bool Near(const RPoint* pt) const;
 
 	/**
 	* Set the point to the given position.
@@ -149,17 +151,17 @@ public:
 	/**
 	* Return the manhatan distance from a given point.
 	*/
-	RCoord ManhattanDist(const RPoint &pt) const;
-	
+	RCoord ManhattanDist(const RPoint& pt) const;
+
 	/**
 	* Return the euclidean distance from a given point.
 	*/
-	double EuclideanDist(const RPoint &pt) const;
+	double EuclideanDist(const RPoint& pt) const;
 
 	/**
 	* Return the length of the vector represented by the current point.
 	*/
-	inline double Length(void) const {return(sqrt((X*X)+(Y*Y)));}
+	inline double Length(void) const {return(sqrt(static_cast<double>((X*X)+(Y*Y))));}
 
 	/**
 	* Return a pointer to a temporary object of class point.
@@ -196,24 +198,24 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Operators
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * Add two points.
 */
-RPoint& operator+(const RPoint &arg1,const RPoint &arg2);
+RPoint& operator+(const RPoint& arg1,const RPoint& arg2);
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * Substract two points.
 */
-RPoint& operator-(const RPoint &arg1,const RPoint &arg2);
+RPoint& operator-(const RPoint& arg1,const RPoint& arg2);
 
 
-}  //-------- End of namespace RGeometry2D ------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

@@ -6,7 +6,10 @@
 
 	Geometry base classes - Basic definition - Implementation.
 
-	(c) 2000-2001 by P. Francq.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,20 +34,20 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rgeometry/geometry.h>
-using namespace RGeometry2D;
+#include <rmath/geometry.h>
+using namespace R;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Global variables
-double RGeometry2D::Epsi=0.0001;
+double R::Epsi=0.0001;
 
 
 
-//---------------------------------------------------------------------------
-void RGeometry2D::AdaptXY(RCoord &x,RCoord &y,const RDirection from)
+//------------------------------------------------------------------------------
+void R::AdaptXY(RCoord& x,RCoord& y,const RDirection from)
 {
 	switch(from)
 	{
@@ -75,8 +78,8 @@ void RGeometry2D::AdaptXY(RCoord &x,RCoord &y,const RDirection from)
 }
 
 
-//---------------------------------------------------------------------------
-void RGeometry2D::AdaptTestXY(RCoord &x,RCoord &y,const RDirection from)
+//------------------------------------------------------------------------------
+void R::AdaptTestXY(RCoord& x,RCoord& y,const RDirection from)
 {
 	switch(from)
 	{

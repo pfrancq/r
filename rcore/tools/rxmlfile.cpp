@@ -1,52 +1,54 @@
 /*
 
-    R Project Library
+	R Project Library
 
-    RXMLFile.cpp
+	RXMLFile.cpp
 
-    XML file - Implementation.
+	XML file - Implementation.
 
-	(c) 2000-2001 by P. Francq and T. L'Eglise.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
 
-    Version $Revision$
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
-    Last Modify: $Date$
+	Version $Revision$
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    any later version.
+	Last Modify: $Date$
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
 
 
-//-----------------------------------------------------------------------------
-// include files for R PRoject
-#include <rxml/rxmlfile.h>
-using namespace RXML;
-using namespace RIO;
-using namespace RStd;
+//------------------------------------------------------------------------------
+// include files for R Project
+#include <rstd/rxmlfile.h>
+using namespace R;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //
 // class RXMLFile
 //
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-RXML::RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
+//------------------------------------------------------------------------------
+RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
  : RTextFile(name,mode), XMLStruct(xmlstruct)
 {
 	RXMLTag *top;
@@ -94,22 +96,22 @@ RXML::RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
 }
 
 
-//-----------------------------------------------------------------------------
-bool RXML::RXMLFile::BeginTag(void)
+//------------------------------------------------------------------------------
+bool RXMLFile::BeginTag(void)
 {
 	return(((*ptr)=='<')&&((*(ptr+1))!='/'));
 }
 
 
-//-----------------------------------------------------------------------------
-bool RXML::RXMLFile::EndTag(void)
+//------------------------------------------------------------------------------
+bool RXMLFile::EndTag(void)
 {
 	return(((*ptr)=='<')&&((*(ptr+1))=='/'));
 }
 
 
-//-----------------------------------------------------------------------------
-char* RXML::RXMLFile::GetTag(void)
+//------------------------------------------------------------------------------
+char* RXMLFile::GetTag(void)
 {
 	char *tmp=GetCharPtr();
 	char c,*ptr2;
@@ -131,8 +133,8 @@ char* RXML::RXMLFile::GetTag(void)
 }
 
 
-//-----------------------------------------------------------------------------
-char* RXML::RXMLFile::GetContains(void)
+//------------------------------------------------------------------------------
+char* RXMLFile::GetContains(void)
 {
 	char *tmp=GetCharPtr();
 	char c,*ptr2;
@@ -150,7 +152,7 @@ char* RXML::RXMLFile::GetContains(void)
 }
 
 
-//-----------------------------------------------------------------------------
-RXML::RXMLFile::~RXMLFile()
+//------------------------------------------------------------------------------
+RXMLFile::~RXMLFile(void)
 {
 }

@@ -6,7 +6,10 @@
 
 	Geometry base classes - Basic definition - Header.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,40 +34,31 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef GeometryH
 #define GeometryH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdlib.h>
 #include <math.h>
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rcontainer.h>
-using namespace RStd;
-#include <rio/rtextfile.h>
-using namespace RIO;
+#include <rstd/rtextfile.h>
+using namespace R;
 
 
-/**
-* \namespace RGeometry2D
-* \brief 2D-Geometry Classes.
-*
-* This namespace declares classes to manipulate geometric entities in 2D.
-*/
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
-namespace RGeometry2D{
-//-----------------------------------------------------------------------------
-
-
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Forward class declaration
 class RPoint;
 class RPoints;
@@ -75,14 +69,14 @@ class RPolygon;
 class RPolygons;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The RCoord type represents a coordinate.
 */
 typedef int RCoord;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * The MaxCoord constante represent the maximal positive value that a
 * coordinate can have. It is often used to indicate an invalid coordinate.
@@ -90,51 +84,51 @@ typedef int RCoord;
 const RCoord MaxCoord=2147483647;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * Represent the different orientation of a given polygon.
 */
 enum ROrientation {Normal=0,NormalX=1,NormalY=2,NormalYX=3,Rota90=4,Rota90X=5,Rota90Y=6,Rota90YX=7};
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * Represent different directions.
 */
 enum RDirection {NoDirection,Left,Right,Down,Up,Behind,Beyond,Origin,Destination,Between};
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This variable represents a tolerance for calculations.
 */
 extern double Epsi;
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * Affect the coordinates in function of a given direction.
 * @param x                  X Coordinate.
 * @param y                  Y Coordinate.
 * @param from               The direction from where "it" is coming.
 */
-void AdaptXY(RCoord &x,RCoord &y,const RDirection from);
+void AdaptXY(RCoord& x,RCoord& y,const RDirection from);
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * Calculate the coordinates to test in function of a given direction.
 * @param x                  X Coordinate.
 * @param y                  Y Coordinate.
 * @param from               The direction from where "it" is coming.
 */
-void AdaptTestXY(RCoord &x,RCoord &y,const RDirection from);
+void AdaptTestXY(RCoord& x,RCoord& y,const RDirection from);
 
 
-}  //-------- End of namespace RGeometry2D ------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif
 
 

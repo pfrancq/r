@@ -6,7 +6,10 @@
 
 	Debugging structure and file in XML format (eXtended Markup Language) - Header
 
-	(C) 1998-2001 by P. Francq.
+	Copyright 1998-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,20 +34,20 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RDebugH
 #define RDebugH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstring.h>
-#include <rio/rtextfile.h>
+#include <rstd/rtextfile.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGA{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
@@ -81,12 +84,12 @@ protected:
 	/**
 	* Name of the application to debug.
 	*/
-	RStd::RString App;
+	RString App;
 
 	/**
 	* Name of the person which is generating the debug.
 	*/
-	RStd::RString Author;
+	RString Author;
 
 public:
 
@@ -174,7 +177,7 @@ public:
 };
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * \ingroup GA
 * This class implement a debuuger file in XML format.
@@ -186,12 +189,12 @@ class RDebugXML : public RDebug
 	/**
 	* The name of the file.
 	*/
-	RStd::RString Name;
+	RString Name;
 
 	/**
 	* The handle of the file.
 	*/
-	RIO::RTextFile File;
+	RTextFile File;
 
 	/**
 	* Temporary Variables for Internal use.
@@ -234,8 +237,8 @@ public:
 };
 
 
-}  //------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace R ------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

@@ -6,7 +6,10 @@
 
 	Container - Header.
 
-	(C) 1999-2002 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,22 +34,22 @@
 
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RContainerH
 #define RContainerH
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
 
 
-//---------------------------------------------------------------------------
-namespace RStd{
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * @param C                  The class of the elements to be contained.
 * @param T                  The type of the iterator used.
@@ -132,7 +135,7 @@ template<class C,class T,bool bAlloc,bool bOrder=false>
 	/**
 	* This variable is used to go through the container.
 	*/
-	C **Current;
+	C** Current;
 
 	/**
 	* This variable is used to see if the end of the container is reached.
@@ -144,7 +147,7 @@ public:
 	/**
 	* The array of pointers for the elements.
 	*/
-	C **Tab;
+	C** Tab;
 
 	/**
 	* The number of elements in the container.
@@ -153,7 +156,8 @@ public:
 
 	/**
 	* The maximal number of elements that can be hold by the container
-	* actually.*/
+	* actually.
+	*/
 	T MaxPtr;
 
 	/**
@@ -417,28 +421,28 @@ public:
 	/**
 	* Start the iterator to go trough the container.
 	* \deprecated
-	* Use the RContainerCursor class instead of this methods.
+	* Use the RCursor class instead of this methods.
 	*/
 	inline void Start(void);
 
 	/**
 	* Test if the end of the container is reached.
 	* \deprecated
-	* Use the RContainerCursor class instead of this methods.
+	* Use the RCursor class instead of this methods.
 	*/
 	inline bool End(void) const;
 
 	/**
 	* Goto the next element, if the end is reached, go to the beginning.
 	* \deprecated
-	* Use the RContainerCursor class instead of this methods.
+	* Use the RCursor class instead of this methods.
 	*/
 	inline void Next(void);
 
 	/**
 	* Return the current element.
 	* \deprecated
-	* Use the RContainerCursor class instead of this methods.
+	* Use the RCursor class instead of this methods.
 	*/
 	inline C* operator()(void) const;
 	//@}
@@ -455,15 +459,15 @@ public:
 };
 
 
-//---------------------------------------------------------------------------
-// inline implementation
+//------------------------------------------------------------------------------
+// Template implementation
 #include <rstd/rcontainer.hh>
 
 
-}  //-------- End of namespace RStd -----------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif
 
 

@@ -6,7 +6,10 @@
 
 	Rectangle - Header
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -30,23 +33,22 @@
 */
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RRectH
 #define RRectH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rgeometry/rpoint.h>
-using namespace RGeometry2D;
+#include <rmath/rpoint.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGeometry2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class implements a rectangle.
 * @author Pascal Francq
@@ -75,14 +77,14 @@ public:
 	* Construct a rectangle from another one.
 	* @param rect           The rectangle used as reference.
 	*/
-	RRect(const RRect *rect);
+	RRect(const RRect* rect);
 
 	/**
 	* Construct a rectangle with two points.
 	* @param pt1            Point used as (left,bottom) edge.
 	* @param pt2            Point used as (right,up) edge.
 	*/
-	RRect(const RPoint *pt1,const RPoint *pt2);
+	RRect(const RPoint* pt1,const RPoint* pt2);
 
 	/** Construct a rectangle from four coordinates.
 	* @param MinX           The most left position.
@@ -96,7 +98,7 @@ public:
 	* Return the width of the rectangle.
 	*/
 	RCoord Width(void) const;
-	
+
 	/**
 	* Return the height of the rectangle.
 	*/
@@ -110,45 +112,45 @@ public:
 	/**
 	* The equal operator.
 	*/
-	inline bool operator==(const RRect &rect) const {return((Pt1==rect.Pt1)&&(Pt2==rect.Pt2));}
+	inline bool operator==(const RRect& rect) const {return((Pt1==rect.Pt1)&&(Pt2==rect.Pt2));}
 
 	/**
 	* The non-equal operator.
 	*/
-	inline bool operator!=(const RRect &rect) const {return((Pt1!=rect.Pt1)||(Pt2!=rect.Pt2));}
+	inline bool operator!=(const RRect& rect) const {return((Pt1!=rect.Pt1)||(Pt2!=rect.Pt2));}
 
 	/**
 	* Make a translation of the rectangle.
 	* @param pt             The point representing the vector used.
 	*/
-	RRect& operator+=(const RPoint &pt) throw(bad_alloc);
-	
+	RRect& operator+=(const RPoint& pt) throw(bad_alloc);
+
 	/**
 	* Make a minus translation of the rectangle.
 	* @param pt             The point representing the vector used.
 	*/
-	RRect& operator-=(const RPoint &pt) throw(bad_alloc);
+	RRect& operator-=(const RPoint& pt) throw(bad_alloc);
 
 	/**
 	* Compare two rectangles and return 0 if there are at the same. This function
 	* is used with the class RContainer.
 	* @param rect           Rectangle used for the comparaison.
 	*/
-	int Compare(const RRect *rect) const { return((*this)!=(*rect)); }
+	int Compare(const RRect* rect) const { return((*this)!=(*rect)); }
 
 	/**
 	* Adapt the rectangle to be contained in a given region.
 	* @param clip           The region used as reference.
 	* @returns The function returns true if the rectangle was clipped.
 	*/
-	bool Clip(const RRect &clip);
+	bool Clip(const RRect& clip);
 
 	/**
 	* Adapt the rectangle to be contained in a given region.
 	* @param limits         The point representing the limits of the region.
 	* @returns The function returns true if the rectangle was clipped.
 	*/
-	bool Clip(const RPoint &limits);
+	bool Clip(const RPoint& limits);
 
 	/**
 	* Make a translation of the rectangle.
@@ -160,7 +162,7 @@ public:
 	/**
 	* This function returns true if the two rectangles overlapped.
 	*/
-	bool Overlap(const RRect *rect) const;
+	bool Overlap(const RRect* rect) const;
 
 	/**
 	* This function returns true if a given point is in the rectangle.
@@ -190,7 +192,7 @@ public:
 	/**
 	* The assign Operator.
 	*/
-	inline RRect& operator=(const RRect &rect) {Pt1=rect.Pt1;Pt2=rect.Pt2;return(*this);}
+	inline RRect& operator=(const RRect& rect) {Pt1=rect.Pt1;Pt2=rect.Pt2;return(*this);}
 
 	/**
 	* Return a pointer to a temporary object of class rectangle.
@@ -199,8 +201,8 @@ public:
 };
 
 
-}  //-------- End of namespace RGeometry2D ------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

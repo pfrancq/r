@@ -2,11 +2,14 @@
 
 	R Project Library
 
-	Polygons.h
+	RPolygons.h
 
 	Polygons - Header.
 
-	(C) 1999-2001 by P. Francq.
+	Copyright 1999-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	Version $Revision$
 
@@ -31,24 +34,23 @@
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef RPolygonH
 #define RPolygonH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for RGeometry
-#include <rgeometry/geometry.h>
-#include <rgeometry/rpoint.h>
-using namespace RGeometry2D;
+#include <rmath/geometry.h>
+#include <rmath/rpoint.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RGeometry2D{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class represent a polygon as a set of points regroup in a container.
 * Most of the functions assume that the order of the points in the container
@@ -57,10 +59,10 @@ namespace RGeometry2D{
 * @author Pascal Francq
 * @short Polygon class.
 */
-class RPolygon : public RStd::RContainer<RPoint,unsigned int,true,false>
+class RPolygon : public RContainer<RPoint,unsigned int,true,false>
 {
 public:
-	
+
 	/**
 	* Construct a polygon.
 	*/
@@ -76,40 +78,40 @@ public:
 	* Construct a polygon from another.
 	* @param poly           Polygon used as reference.
 	*/
-	RPolygon(const RPolygon *poly);
+	RPolygon(const RPolygon* poly);
 
 	/**
 	* Construct a polygon from another.
 	* @param poly           Polygon used as reference.
 	*/
-	RPolygon(const RPolygon &poly);
+	RPolygon(const RPolygon& poly);
 
 	/**
 	* The assign operator.
 	*/
-	RPolygon& operator=(const RPolygon &poly);
+	RPolygon& operator=(const RPolygon& poly);
 
 	/**
 	* The equal operator.
 	*/
-	bool operator==(const RPolygon &poly) const;
+	bool operator==(const RPolygon& poly) const;
 
 	/**
 	* The non-equal operator.
 	*/
-	bool operator!=(const RPolygon &poly) const;
+	bool operator!=(const RPolygon& poly) const;
 
 	/**
 	* Make a translation of the polygon.
 	* @param pt             The point representing the vector used.
 	*/
-	RPolygon& operator+=(const RPoint &pt) throw(bad_alloc);
+	RPolygon& operator+=(const RPoint& pt) throw(bad_alloc);
 
 	/**
 	* Make a translation of the polygon.
 	* @param pt             The point representing the vector used.
 	*/
-	RPolygon& operator-=(const RPoint &pt) throw(bad_alloc);
+	RPolygon& operator-=(const RPoint& pt) throw(bad_alloc);
 
 	/**
 	* This function compares two polygons and returns 0 if there have the same
@@ -131,12 +133,12 @@ public:
 	* This function returns a pointer to the point on the same horizontal vertex.
 	* @param pt             Point used as reference.
 	*/
-	RPoint* GetConX(const RPoint *pt) const;
+	RPoint* GetConX(const RPoint* pt) const;
 
 	/** This function returns a pointer to the point on the same vertital vertex.
 	* @param pt             Point used as reference.
 	*/
-	RPoint* GetConY(const RPoint *pt) const;
+	RPoint* GetConY(const RPoint* pt) const;
 
 	/**
 	* Return a pointer to the most bottom-left point of the polygon.
@@ -190,12 +192,12 @@ public:
 	* @param pt1            The first point used.
 	* @param pt2            The second point used.
 	*/
-	bool Edge(const RPoint *pt1,const RPoint *pt2) const;
+	bool Edge(const RPoint* pt1,const RPoint* pt2) const;
 
 	/**
 	* Return true if the point is a vertice.
 	*/
-	bool IsVertice(const RPoint &pt) const;
+	bool IsVertice(const RPoint& pt) const;
 
 	/**
 	* Return true if the point is inside the polygon.
@@ -240,7 +242,7 @@ public:
 	* Return the boundary rectangle of the polygon.
 	* @param rect           The rectangle.
 	*/
-	void Boundary(RRect &rect) const;
+	void Boundary(RRect& rect) const;
 
 	/**
 	* Modify the polygon to a certain orientation.
@@ -254,13 +256,13 @@ public:
 	* Decompose the polygon in a container of rectangles.
 	* @param rects          A pointer to the container of rectangles.
 	*/
-	void RectDecomposition(RRects *rects) const;
+	void RectDecomposition(RRects* rects) const;
 
 	/**
 	* Add the points of the polygon to a container of points.
 	* @param points         A pointer to the container of points.
 	*/
-	void AddPoints(RPoints *points) const;
+	void AddPoints(RPoints* points) const;
 
 	/**
 	* Shift the points of the polygon to make the bottom-left point be the first
@@ -282,7 +284,7 @@ public:
 	* Return a pointer to a temporary object of class rpolygon.
 	*/
 	static RPolygon* GetPolygon(void);
-	
+
 	/**
 	* Compute a point in the polygon which represents a sort of "Mass Point".
 	*/
@@ -301,8 +303,8 @@ public:
 };
 
 
-}  //-------- End of namespace RGeometry2D ------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif

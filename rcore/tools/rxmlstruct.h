@@ -6,7 +6,11 @@
 
 	XML structure - Header.
 
-	(c) 2000-2001 by P. Francq and T. L'Eglise.
+	Copyright 2000-2003 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
+		Thomas L'Eglise.
 
 	Version $Revision$
 
@@ -30,34 +34,34 @@
 
 
 
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 #ifndef RXMLStructH
 #define RXMLStructH
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rtree.h>
-#include <rxml/rxmltag.h>
+#include <rstd/rxmltag.h>
 
 
-//-----------------------------------------------------------------------------
-namespace RXML{
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+namespace R{
+//------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
 * This class provides a representation of a XML structure.
 * @short XML Structure.
 * @author Pascal Francq and Thomas L'Eglise.
 */
-class RXMLStruct : public RStd::RTree<RXMLTag,true,false>
+class RXMLStruct : public RTree<RXMLTag,true,false>
 {
 	/**
 	* The entities of the structure.
 	*/
-	RStd::RContainer<RXMLAttr,unsigned,true,true> Entities;
+	RContainer<RXMLAttr,unsigned,true,true> Entities;
 
 public:
 
@@ -105,8 +109,8 @@ public:
 };
 
 
-}  //-------- End of namespace RXML -------------------------------------------
+}  //-------- End of namespace R -----------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #endif
