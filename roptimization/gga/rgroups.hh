@@ -132,6 +132,16 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
+	void RGroups<cGroup,cObj,cGroupData,cGroups>::ReleaseGroup(cGroup* grp)
+{
+	DeleteObjs(grp);
+	Used.DeletePtr(grp);
+	grp->Clear();
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroups<cGroup,cObj,cGroupData,cGroups>::InsertObj(cGroup* to,const cObj* obj)
 {
 	unsigned int tmp,i,j;

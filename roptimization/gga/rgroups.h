@@ -126,16 +126,22 @@ public:
 	void ClearGroups(void);
 
 	/**
-	* Reserve a Node.
+	* Reserve a group.
 	* @returns A pointer to the node reserved.
 	*/
 	cGroup* ReserveGroup(void);
 
 	/**
-	* Release a node.
-	* @param node           Identificator of the group.
+	* Release a group.
+	* @param group          Identificator of the group.
 	*/
 	void ReleaseGroup(const unsigned int group);
+
+	/**
+	* Release a group.
+	* @param group          Pointer to the group.
+	*/
+	void ReleaseGroup(cGroup* group);
 
 	/**
 	* Insert an object to a group.
