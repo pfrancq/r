@@ -154,7 +154,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RGroup<cGroup,cObj,cGroupData,cGroups>& RGGA::RGroup<cGroup,cObj,cGroupData,cGroups>::operator=(const RGroup<cGroup,cObj,cGroupData,cGroups>& grp)
+	RGroup<cGroup,cObj,cGroupData,cGroups>& RGGA::RGroup<cGroup,cObj,cGroupData,cGroups>::operator=(const RGroup<cGroup,cObj,cGroupData,cGroups>& /*grp*/)
 {
 	return(*this);
 }
