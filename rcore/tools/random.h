@@ -108,26 +108,52 @@ public:
 	* @param arr		A pointer to the array representing the vector.
 	* @param size		The size of the vector.
 	*/
-  template<class T> static inline void randorder(T *arr,unsigned size)
-  {
-    register unsigned i,jump;
-    T aux;
-    register T *p1;
-    register T *p2;
+    template<class T> static inline void randorder(T *arr,unsigned size)
+    {
+		register unsigned i,jump;
+		T aux;
+		register T *p1;
+		register T *p2;
 
-  	#if __BORLANDC__
-  	  #pragma warn -pia
-  	#endif
-    if(size>1)
-      for(p1=arr,i=size;;p1++)
-      {
-        if(jump=RRand(i)) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
-        if(!--i) break;
-      }
-  	#if __BORLANDC__
-  	  #pragma warn +pia
-  	#endif
-  }
+    	#if __BORLANDC__
+    	  #pragma warn -pia
+    	#endif
+      	if(size>1)
+        	for(p1=arr,i=size;;p1++)
+	        {
+    	      if(jump=RRand(i)) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
+        	  if(!--i) break;
+	        }
+		#if __BORLANDC__
+			#pragma warn +pia
+		#endif
+	}
+	
+	/**
+	* Random the position of elements of a vector.
+	* @param arr		A pointer to the array representing the vector.
+	* @param size		The size of the vector.
+	*/
+    template<class T> inline void RandOrder(T *arr,unsigned size)
+    {
+      register unsigned i,jump;
+      T aux;
+      register T *p1;
+      register T *p2;
+
+    	#if __BORLANDC__
+    	  #pragma warn -pia
+    	#endif
+      if(size>1)
+        for(p1=arr,i=size;;p1++)
+        {
+          if(jump=Value(i)) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
+          if(!--i) break;
+        }
+		#if __BORLANDC__
+			#pragma warn +pia
+		#endif
+	}	
 };
 
 
