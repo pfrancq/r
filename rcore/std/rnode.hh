@@ -36,8 +36,8 @@
 
 //---------------------------------------------------------------------------
 template<class N,bool bOrder>
-	RNode<N,bOrder>::RNode(unsigned int id,unsigned int max,unsigned int inc) throw(bad_alloc)
-		: RContainer<N,unsigned int,false,bOrder>(max,inc), Top(NULL), Id(id)
+	RNode<N,bOrder>::RNode(unsigned int max,unsigned int inc) throw(bad_alloc)
+		: RContainer<N,unsigned int,false,bOrder>(max,inc), Parent(0)
 {
 }
 
@@ -46,7 +46,7 @@ template<class N,bool bOrder>
 template<class N,bool bOrder>
 	int RNode<N,bOrder>::Compare(RNode*)
 {
-	return(0);
+	return(-1);
 }
 
 

@@ -51,7 +51,7 @@ namespace RStd{                      // Using RStd namespace
 	* class MyNoOrderNode : public RNode<MyNoOrderNode,false>
 	*	{
 	*	public:
-	*		MyNoOrderNode(unsigned int id,unsigned int max,unsigned int inc);
+	*		MyNoOrderNode(unsigned int max,unsigned int inc);
 	*		int Compare(MyNoOrderNode *node);
 	*	};
 	* </pre>
@@ -64,15 +64,12 @@ template<class N,bool bOrder>
 public:
 	/** Parent Node.*/
   N *Parent;
-  /** The unique identificator for the node.*/
-  unsigned int Id;
 
   /** Construct the node.
-  	* @param id		The identificator of the node.
   	* @param max	The size of initial array of pointer to child.
   	* @param inc	The increment size for the array.
   	*/
-  RNode(unsigned int id,unsigned int max,unsigned int inc) throw(bad_alloc);
+  RNode(unsigned int max,unsigned int inc) throw(bad_alloc);
   /** Is used to compare two nodes. The function returns the same type of
   	* information than the strcmp function from the standard C library.
   	*/
