@@ -31,7 +31,13 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//
+// class RContainer
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>::RContainer(T M,T I) throw(bad_alloc)
 		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(M),IncPtr(I)
@@ -54,7 +60,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,bAlloc,bOrder> *container) throw(bad_alloc)
 		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(container->MaxPtr),IncPtr(container->IncPtr)
@@ -77,7 +83,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,bAlloc,bOrder> &container) throw(bad_alloc)
 		: Current(0),ActPtr(0),NbPtr(0),MaxPtr(0),IncPtr(container.IncPtr)
@@ -93,7 +99,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>& RContainer<C,T,bAlloc,bOrder>::
 		operator=(const RContainer<C,T,bAlloc,bOrder>& container) throw(bad_alloc)
@@ -109,7 +115,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>& RContainer<C,T,bAlloc,bOrder>::
 		operator+=(const RContainer<C,T,bAlloc,bOrder>& container) throw(bad_alloc)
@@ -124,7 +130,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	T RContainer<C,T,bAlloc,bOrder>::GetId(const TUse &tag,bool &Find)
 {
@@ -187,7 +193,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::VerifyTab(void) throw(bad_alloc)
 {
@@ -204,7 +210,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::VerifyTab(T MaxSize) throw(bad_alloc)
 {
@@ -225,7 +231,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::Clear(void)
 {
@@ -240,8 +246,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
-// Insert the pointer ins at position Pos
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::InsertPtrAt(C *ins,T Pos) throw(bad_alloc)
 {
@@ -260,8 +265,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
-// Insert a pointer C* in the container
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::InsertPtr(C* ins) throw(bad_alloc)
 {
@@ -290,8 +294,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
-// Return true if the tag already exists
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	bool RContainer<C,T,bAlloc,bOrder>::IsIn(const TUse &tag)
 {
@@ -313,9 +316,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 }
 
 
-//---------------------------------------------------------------------------
-// Return the pointer to the member corresponding to tag
-// If not find -> Return 0
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	C* RContainer<C,T,bAlloc,bOrder>::GetPtr(const TUse &tag,bool sortkey)
 {
@@ -340,9 +341,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 }
 
 
-//---------------------------------------------------------------------------
-// Return the pointer to the member corresponding to tag
-// If not find -> Create a member with tag
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	C* RContainer<C,T,bAlloc,bOrder>::GetInsertPtr(const TUse &tag,bool sortkey) throw(bad_alloc)
 {
@@ -369,7 +368,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
   template<class TUse> RContainer<C,T,false,bOrder>* RContainer<C,T,bAlloc,bOrder>::
 		GetPtrs(const TUse &tag) throw(bad_alloc)
@@ -386,8 +385,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
-// Delete the pointer to the member
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	void RContainer<C,T,bAlloc,bOrder>::DeletePtr(C* del)
 {
@@ -412,15 +410,15 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	if(bAlloc) delete(del);
 }
 
-//---------------------------------------------------------------------------
-// Delete the mmber corresponding to tag
+
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	void RContainer<C,T,bAlloc,bOrder>::DeletePtr(const TUse &tag)
+	void RContainer<C,T,bAlloc,bOrder>::DeletePtr(const TUse &tag,bool sortkey)
 {
 	C **ptr,*del;
 	T Index;
 
-	if(bOrder)
+	if(bOrder&&sortkey)
 	{
 		bool Find;
 		Index=GetId<TUse>(tag,Find);
@@ -438,7 +436,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	inline void RContainer<C,T,bAlloc,bOrder>::Start(void)
 {
@@ -447,7 +445,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	inline bool RContainer<C,T,bAlloc,bOrder>::End(void)
 {
@@ -455,7 +453,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	inline void RContainer<C,T,bAlloc,bOrder>::Next(void)
 {
@@ -469,7 +467,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	inline C* RContainer<C,T,bAlloc,bOrder>::operator()(void)
 {
@@ -477,8 +475,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 }
 
 
-//---------------------------------------------------------------------------
-// Class destructor
+//-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>::~RContainer(void)
 {
