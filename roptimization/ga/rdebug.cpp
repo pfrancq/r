@@ -67,7 +67,7 @@ RDebug::RDebug(void) : Deep(-1)
 
 
 //-----------------------------------------------------------------------------
-void RDebug::BeginTag(char *Text,unsigned NbAttr,...)
+void RDebug::BeginTag(const char *Text,unsigned NbAttr,...)
 {
 	va_list ap;
 
@@ -83,18 +83,21 @@ void RDebug::BeginTag(char *Text,unsigned NbAttr,...)
 
 
 //-----------------------------------------------------------------------------
-void RDebug::AddAttribute(char *buf,char *Value,char *Attr)
+void RDebug::AddAttribute(const char *buf,const char *Value,const char *Attr)
 {
-	if(NbOptions++) strcat(buf," ");
-	strcat(buf,Attr);
-	strcat(buf,"=\"");
-	strcat(buf,Value);
-	strcat(buf,"\"");
+	static char tmp[120];
+
+	strcpy(tmp,buf);
+	if(NbOptions++) strcat(tmp," ");
+	strcat(tmp,Attr);
+	strcat(tmp,"=\"");
+	strcat(tmp,Value);
+	strcat(tmp,"\"");
 }
 
 
 //-----------------------------------------------------------------------------
-void RDebug::PrintComment(char *Text)
+void RDebug::PrintComment(const char *Text)
 {
 	LevelOutput[Deep]=true;	
 	WriteText(Text);
@@ -102,7 +105,7 @@ void RDebug::PrintComment(char *Text)
 
 
 //-----------------------------------------------------------------------------
-void RDebug::EndTag(char *Text)
+void RDebug::EndTag(const char *Text)
 {
 	if(!LevelOutput[Deep])
 		WriteText("No Special Information");
@@ -113,7 +116,7 @@ void RDebug::EndTag(char *Text)
 
 
 //-----------------------------------------------------------------------------
-void RDebug::PrintInfo(char *Text)
+void RDebug::PrintInfo(const char *Text)
 {
 	BeginTag("Info");
 	PrintComment(Text);
@@ -122,21 +125,21 @@ void RDebug::PrintInfo(char *Text)
 
 
 //-----------------------------------------------------------------------------
-void RDebug::BeginFunc(char *Name,char *Object)
+void RDebug::BeginFunc(const char *Name,const char *Object)
 {
 	BeginTag(Name,1,"Object",Object);
 }
 
 
 //-----------------------------------------------------------------------------
-void RDebug::EndFunc(char *Name,char *)
+void RDebug::EndFunc(const char *Name,const char *)
 {
 	EndTag(Name);
 }
 
                                
 //-----------------------------------------------------------------------------
-void RDebug::BeginApp(char *App,char *Author)
+void RDebug::BeginApp(const char *App,const char *Author)
 {
 	time_t t;
 	char TempString[50];
@@ -149,7 +152,7 @@ void RDebug::BeginApp(char *App,char *Author)
 
 
 //-----------------------------------------------------------------------------
-void RDebug::EndApp(char *App,char *)
+void RDebug::EndApp(const char *App,const char *)
 {
 	EndTag(App);
 }
@@ -186,7 +189,7 @@ RDebugXML::RDebugXML(const RString &name) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-void RDebugXML::WriteBeginTag(char *tag,char *options)
+void RDebugXML::WriteBeginTag(const char *tag,const char *options)
 {
 	if(Deep)
 	{
@@ -205,7 +208,7 @@ void RDebugXML::WriteBeginTag(char *tag,char *options)
 
 
 //-----------------------------------------------------------------------------
-void RDebugXML::WriteEndTag(char *tag)
+void RDebugXML::WriteEndTag(const char *tag)
 {
 	if(Deep&&LevelOutput[Deep-1])
 	{
@@ -219,7 +222,7 @@ void RDebugXML::WriteEndTag(char *tag)
 
 
 //-----------------------------------------------------------------------------
-void RDebugXML::WriteText(char *text)
+void RDebugXML::WriteText(const char *text)
 {	
 	write(Handle,tmpNL,tmpLenNL);
 	write(Handle,tmpTab,Deep+1);

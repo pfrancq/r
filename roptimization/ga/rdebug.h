@@ -91,72 +91,72 @@ public:
 	* @param NbAttr		The number of attributes.
 	* The attributes are added after.
 	*/
-	void BeginTag(char *Text,unsigned NbAttr=0,...);
+	void BeginTag(const char *Text,unsigned NbAttr=0,...);
 
 	/**
 	* Print some Text in the current tag.
 	*/
-	void PrintComment(char *Text);
+	void PrintComment(const char *Text);
 
 	/**
 	* End a Tag.
 	*/
-	void EndTag(char *Text);
+	void EndTag(const char *Text);
 
 	/**
 	* Print an Info Tag.
 	*/
-	void PrintInfo(char *Text);                             								
+	void PrintInfo(const char *Text);                             								
 
 	/**
 	* Begin a member function tag.
 	* @param Name 		The name of the member function.
 	* @param Object		The name of the object.		
 	*/
-	void BeginFunc(char *Name,char *Object);
+	void BeginFunc(const char *Name,const char *Object);
 
 	/**
 	* End a member function tag.
 	* @param Name 		The name of the member function.
 	* @param Object		The name of the object.		
 	*/
-	void EndFunc(char *Name,char *Object);
+	void EndFunc(const char *Name,const char *Object);
 
 	/**
 	* Begin an application tag.
 	* @param App			The name of the application.
 	* @param Author		The auhtor of the application.
 	*/
-	void BeginApp(char *App,char *Author);
+	void BeginApp(const char *App,const char *Author);
 
 	/**
 	* End an application tag.
 	* @param App			The name of the application.
 	* @param Author		The auhtor of the application.
 	*/
-	void EndApp(char *App,char *Author);
+	void EndApp(const char *App,const char *Author);
 
 protected:
 
 	/**
 	* Add an attribute to buf.
 	*/
-	void AddAttribute(char* buf,char *Value,char *Att);
+	void AddAttribute(const char* buf,const char *Value,const char *Att);
 
 	/**
 	* Begin to write a Tag. This function must be implement.
 	*/
-	virtual void WriteBeginTag(char *tag,char* options=0)=0;
+	virtual void WriteBeginTag(const char *tag,const char* options=0)=0;
 
 	/**
 	* Write Text associate with current tag. This function must be implement.
 	*/
-	virtual void WriteText(char *text)=0;
+	virtual void WriteText(const char *text)=0;
 
 	/**
 	* End to write a Tag. This function must be implement.
 	*/
-	virtual void WriteEndTag(char *tag)=0;
+	virtual void WriteEndTag(const char *tag)=0;
 
 public:
 
@@ -214,17 +214,17 @@ protected:
 	/**
 	* Begin to write a Tag.
 	*/
-	virtual void WriteBeginTag(char *tag,char* options=0);
+	virtual void WriteBeginTag(const char *tag,const char* options=0);
 
 	/**
 	* Write Text associate with current tag.
 	*/
-	virtual void WriteText(char *text);
+	virtual void WriteText(const char *text);
 
 	/**
 	* End to write a Tag.
 	*/
-	virtual void WriteEndTag(char *tag);
+	virtual void WriteEndTag(const char *tag);
 
 public:
 
