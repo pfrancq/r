@@ -46,9 +46,9 @@ namespace RGA{
 * \ingroup GA
 * This class represents a fitness for a specific problem. the cVal parameter
 * is used to specify the nature of the fitness, and the max parameter is used
-* to indicate if the fitness is to maximised or minimised.
+* to indicate if the fitness is to maximized or minimized.
 * @param cVal               The type of information contained in the fitness.
-* @param Max                If true, the fitness is to maximzed.
+* @param Max                If true, the fitness is to maximized.
 *
 * This example implements a fitness that is represented by a integer value and
 * that has to be minimized.
