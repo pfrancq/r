@@ -276,8 +276,6 @@ public:
 	void Clear(T M,T I);
 	//@}
 
-protected:
-
 	/**
 	* @name Accessing elements.
 	*/
