@@ -46,7 +46,6 @@
 #include <rstd/rcontainer.h>
 #include <rstd/rcstring.h>
 #include <rstd/rchar.h>
-#include <rstd/rshareddata.h>
 
 
 //------------------------------------------------------------------------------
@@ -70,27 +69,9 @@ namespace R{
 */
 class RString
 {
+	class CharBuffer;
+
 protected:
-
-	// Internal Class representing a buffer of unicode characters.
-	class CharBuffer : public RSharedData
-	{
-	public:
-		RChar* Text;         // Text
-		unsigned int Len;    // Actual length
-		unsigned int MaxLen; // Maximum length
-		char* Latin1;        // Latin1 version of the string.
-
-		CharBuffer(void)
-			: RSharedData(), Text(0), Len(0), MaxLen(0), Latin1(0) {}
-		CharBuffer(RChar* tab,unsigned int len,unsigned int maxlen)
-			: RSharedData(), Text(tab), Len(len), MaxLen(maxlen), Latin1(0) {}
-		void InvalidLatin1(void) {if(Latin1) {delete[] Latin1; Latin1=0;}}
-		void Verify(const unsigned int maxlen);
-		~CharBuffer(void)
-			{if(Text) delete[] Text;
-			 if(Latin1) delete[] Latin1;}
-	};
 
 	/**
 	* Pointer to the buffer of the string.
@@ -219,7 +200,7 @@ public:
 	/**
 	* Return the length of the string.
 	*/
-	inline unsigned int GetLen(void) const {return(Data->Len);}
+	unsigned int GetLen(void) const;
 
 	/**
 	* Set the length of the string. If the length is greater than the current
@@ -231,13 +212,13 @@ public:
 	/**
 	* Return the maximal length of the string.
 	*/
-	inline unsigned int GetMaxLen(void) const {return(Data->MaxLen);}
+	unsigned int GetMaxLen(void) const;
 
 	/**
 	* Look if the string is empty.
 	* @returns true if the length is null, false else.
 	*/
-	inline bool IsEmpty(void) const {return(!Data->Len);}
+	bool IsEmpty(void) const;
 
 	/**
 	* Transform the string into a "C String" in Latin1 encoding. The resulting
@@ -327,12 +308,12 @@ public:
 	/**
 	* Return the string in UTF16.
 	*/
-	inline const RChar* UTF16(void) const {return(Data->Text);}
+	const RChar* UTF16(void) const;
 
 	/**
 	* Return the string.
 	*/
-	inline const RChar* operator()(void) const {return(Data->Text);}
+	const RChar* operator()(void) const;
 
 	/**
 	* Return the string.
@@ -349,7 +330,7 @@ public:
 	* Get a normal C++ string representring the current string.
 	* @return std::string.
 	*/
-	std::string ToString(void) const {return(operator std::string());}
+	std::string ToString(void) const;
 
 	/**
 	* Equal operator.

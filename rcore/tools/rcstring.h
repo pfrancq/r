@@ -59,23 +59,9 @@ namespace R{
 */
 class RCString
 {
+	class CharBuffer;
+
 protected:
-
-	// Internal Class representing a buffer of ascii characters.
-	class CharBuffer : public RSharedData
-	{
-	public:
-		char* Text;          // Text
-		unsigned int Len;    // Actual length
-		unsigned int MaxLen; // Maximum length
-
-		CharBuffer(void)
-			: RSharedData(), Text(0), Len(0), MaxLen(0) {}
-		CharBuffer(char* tab,unsigned int len,unsigned int maxlen)
-			: RSharedData(), Text(tab), Len(len), MaxLen(maxlen) {}
-		void Verify(const unsigned int maxlen);
-		~CharBuffer(void) {if(Text) delete[] Text;}
-	};
 
 	/**
 	* Pointer to the buffer of the string.
@@ -195,7 +181,7 @@ public:
 	/**
 	* Return the length of the string.
 	*/
-	inline unsigned int GetLen(void) const {return(Data->Len);}
+	unsigned int GetLen(void) const;
 
 	/**
 	* Set the length of the string. If the length is greater than the current
@@ -207,13 +193,13 @@ public:
 	/**
 	* Return the maximal length of the string.
 	*/
-	inline unsigned int GetMaxLen(void) const {return(Data->MaxLen);}
+	unsigned int GetMaxLen(void) const;
 
 	/**
 	* Look if the string is empty.
 	* @returns true if the length is null, false else.
 	*/
-	inline bool IsEmpty(void) const {return(!Data->Len);}
+	bool IsEmpty(void) const;
 
 	/**
 	* This function return a string by stripping whitespace (or other
@@ -285,17 +271,17 @@ public:
 	/**
 	* Return the string containing the string.
 	*/
-	inline const char* operator()(void) const {return(Data->Text);}
+	const char* operator()(void) const;
 
 	/**
 	* Return the string.
 	*/
-	inline operator std::string () const {return(Data->Text);}
+	operator std::string () const;
 
 	/**
 	* Return the string containing the string.
 	*/
-	inline operator const char* () const {return(Data->Text);}
+	operator const char* () const;
 
 	/**
 	* Equal operator.

@@ -34,6 +34,7 @@
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rstring.h>
+#include <rstd/rshareddata.h>
 using namespace std;
 using namespace R;
 
@@ -55,6 +56,27 @@ const RString RString::Null;
 // RString::CharBuffer
 //
 //------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+class RString::CharBuffer : public RSharedData
+{
+public:
+	RChar* Text;         // Text
+	unsigned int Len;    // Actual length
+	unsigned int MaxLen; // Maximum length
+	char* Latin1;        // Latin1 version of the string.
+
+	CharBuffer(void)
+		: RSharedData(), Text(0), Len(0), MaxLen(0), Latin1(0) {}
+	CharBuffer(RChar* tab,unsigned int len,unsigned int maxlen)
+		: RSharedData(), Text(tab), Len(len), MaxLen(maxlen), Latin1(0) {}
+	void InvalidLatin1(void) {if(Latin1) {delete[] Latin1; Latin1=0;}}
+	void Verify(const unsigned int maxlen);
+	~CharBuffer(void)
+		{if(Text) delete[] Text;
+		 if(Latin1) delete[] Latin1;}
+};
+
 
 //------------------------------------------------------------------------------
 void RString::CharBuffer::Verify(const unsigned int maxlen)
@@ -338,6 +360,13 @@ RString RString::ToLower(void) const
 
 
 //------------------------------------------------------------------------------
+unsigned int RString::GetLen(void) const
+{
+	return(Data->Len);
+}
+
+
+//------------------------------------------------------------------------------
 void RString::SetLen(unsigned int len)
 {
 	if(len<=Data->Len)
@@ -357,6 +386,20 @@ void RString::SetLen(unsigned int len)
 	}
 	if(Data!=DataNull)
 		Data->Text[len]=0;
+}
+
+
+//------------------------------------------------------------------------------
+unsigned int RString::GetMaxLen(void) const
+{
+	return(Data->MaxLen);
+}
+
+
+//------------------------------------------------------------------------------
+bool RString::IsEmpty(void) const
+{
+	return(!Data->Len);
 }
 
 
@@ -738,6 +781,20 @@ RString& RString::operator+=(const RChar c)
 
 
 //------------------------------------------------------------------------------
+const RChar* RString::UTF16(void) const
+{
+	return(Data->Text);
+}
+
+
+//------------------------------------------------------------------------------
+const RChar* RString::operator()(void) const
+{
+	return(Data->Text);
+}
+
+
+//------------------------------------------------------------------------------
 RString::operator const char* ()
 {
 	return(Latin1());
@@ -757,6 +814,13 @@ RString::operator std::string () const
 		ptr++;
 	}
 	return(text);
+}
+
+
+//------------------------------------------------------------------------------
+std::string RString::ToString(void) const
+{
+	return(operator std::string());
 }
 
 

@@ -106,10 +106,10 @@ void RIOFile::Open(RIO::ModeType mode)
 	#endif
 	if(Mode==RIO::Read)
 	{
-		handle=open(Name,localmode);
+		handle=open(Name.Latin1(),localmode);
 	}
 	else
-		handle=open(Name,localmode,S_IREAD|S_IWRITE);
+		handle=open(Name.Latin1(),localmode,S_IREAD|S_IWRITE);
 	if(handle==-1)
 		throw(RIOException(this,"Can't open the file"));
 	if((Mode==RIO::Read)||(Mode==RIO::Append))

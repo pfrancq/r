@@ -56,6 +56,23 @@ const RCString RCString::Null;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+class RCString::CharBuffer : public RSharedData
+{
+public:
+	char* Text;          // Text
+	unsigned int Len;    // Actual length
+	unsigned int MaxLen; // Maximum length
+
+	CharBuffer(void)
+		: RSharedData(), Text(0), Len(0), MaxLen(0) {}
+	CharBuffer(char* tab,unsigned int len,unsigned int maxlen)
+		: RSharedData(), Text(tab), Len(len), MaxLen(maxlen) {}
+	void Verify(const unsigned int maxlen);
+	~CharBuffer(void) {if(Text) delete[] Text;}
+};
+
+
+//------------------------------------------------------------------------------
 void RCString::CharBuffer::Verify(const unsigned int maxlen)
 {
 	if(MaxLen<maxlen)
@@ -319,6 +336,13 @@ RCString RCString::ToLower(void) const
 
 
 //------------------------------------------------------------------------------
+unsigned int RCString::GetLen(void) const
+{
+	return(Data->Len);
+}
+
+
+//------------------------------------------------------------------------------
 void RCString::SetLen(unsigned int len)
 {
 	if(len<=Data->Len)
@@ -337,6 +361,20 @@ void RCString::SetLen(unsigned int len)
 			Data->Verify(len+1);
 	}
 	Data->Text[len]=0;
+}
+
+
+//------------------------------------------------------------------------------
+unsigned int RCString::GetMaxLen(void) const
+{
+	return(Data->MaxLen);
+}
+
+
+//------------------------------------------------------------------------------
+bool RCString::IsEmpty(void) const
+{
+	return(!Data->Len);
 }
 
 
@@ -649,6 +687,27 @@ RCString& RCString::operator+=(const char c)
 		}
 	}
 	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+const char* RCString::operator()(void) const
+{
+	return(Data->Text);
+}
+
+
+//------------------------------------------------------------------------------
+RCString::operator std::string () const
+{
+	return(Data->Text);
+}
+
+
+//------------------------------------------------------------------------------
+RCString::operator const char* () const
+{
+	return(Data->Text);
 }
 
 

@@ -48,7 +48,7 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 RTextFile::RTextFile(const RString &name,const RString& encoding)
-  : RIOFile(name), All(true), NewLine(true), Rem("%"), BeginRem("/*"),
+  : RIOFile(name), Buffer(0), All(true), NewLine(true), Rem("%"), BeginRem("/*"),
 	EndRem("*/"), CommentType(SingleLineComment), ActivComment(NoComment),
 	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
 {
@@ -57,7 +57,7 @@ RTextFile::RTextFile(const RString &name,const RString& encoding)
 
 //------------------------------------------------------------------------------
 RTextFile::RTextFile(RIOFile& file,const RString& encoding)
-	: RIOFile(file), All(true), NewLine(true), Rem("%"), BeginRem("/*"),
+	: RIOFile(file), Buffer(0), All(true), NewLine(true), Rem("%"), BeginRem("/*"),
 	EndRem("*/"), CommentType(SingleLineComment), ActivComment(NoComment),
 	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
 {
@@ -491,12 +491,12 @@ bool RTextFile::Eof(void)
 //------------------------------------------------------------------------------
 RString RTextFile::GetWord(void)
 {
-	RString res;
+	RString res(500);
 
 	if(Mode!=RIO::Read)
 		throw(RIOException(this,"File Mode is not Read"));
 	SkipSpaces();
-	while((!Cur.IsNull())&&(!Cur.IsSpace())&&(!BeginComment()))
+	while((!Eol(Cur))&&(!Cur.IsNull())&&(!Cur.IsSpace())&&(!BeginComment()))
 	{
 		res+=Cur;
 		Next();
