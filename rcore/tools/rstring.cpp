@@ -292,7 +292,7 @@ void RStd::RString::StrLwr(const RString &str) throw(bad_alloc)
 RString& RStd::RString::operator+=(const RString &str) throw(bad_alloc)
 {
 	Verify(str.Len+Len);
-	memcpy(&Text[Len],str.Text,(str.Len+1)*sizeof(char*));
+	memcpy(&Text[Len],str.Text,(str.Len+1)*sizeof(char));
 	Len+=str.Len;
 	return(*this);
 }
