@@ -179,40 +179,6 @@ public:
 };
 
 
-//---------------------------------------------------------------------------
-/**
-* This class implements a container of rectangles.
-* @author Pascal Francq
-* @short Rectangles container.
-*/
-class RRects : public RStd::RContainer<RRect,unsigned int,true,false>
-{
-public:
-
-	/**
-	* Construct a container of rectangles.
-	*/
-	RRects(void);
-
-	/**
-	* Construct a container of rectangles with a intial maximal size.
-    * @param max	Initial maxiaml size.
-	*/
-	RRects(unsigned int max);
-
-	/**
-	* Construct a container of rectangles from another.
-	* @param rects	The container used as reference.
-	*/
-	RRects(RRects *rects);
-
-	/**
-	* Return the area of all the rectangles.
-	*/
-	RCoord Area(void);
-};
-
-
 }  //-------- End of namespace RStd ---------------------------------------
 
 
