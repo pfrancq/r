@@ -442,7 +442,10 @@ public:
 	void InsertPtrAt(const C *ins,unsigned int Pos,bool del=bAlloc) throw(std::bad_alloc);
 
 	/**
-	* Insert an element in the container.
+	* Insert an element in the container. If the container is ordered and if
+	* the corresponding index is already used, the previously inserted element
+	* is removed from the container (and destroy if the container is
+	* responsible for the allocation)
 	* @param ins            A pointer to the element to insert.
 	*/
 	void InsertPtr(const C* ins) throw(std::bad_alloc);
