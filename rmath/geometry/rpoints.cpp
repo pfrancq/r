@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPoint.cpp
 
 	Point - Implementation.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -32,7 +32,7 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rstd/rstd.h>
 using namespace RStd;
 #include <rgeometry/rpoints.h>

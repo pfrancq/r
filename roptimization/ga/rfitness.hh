@@ -6,7 +6,7 @@
 
 	Fitness for Chromsomes of Genetic Algorithms - Inline Implementation
 
-	(C) 1998-2000 by P. Francq.
+	(C) 1998-2001 by P. Francq.
 
 	Version $Revision$
 

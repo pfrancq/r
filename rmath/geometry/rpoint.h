@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPoint.h
 
 	Point - Header
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -145,6 +145,11 @@ public:
 	* Return the manhatan distance from a given point.
 	*/
 	inline RCoord ManhattanDist(const RPoint &pt) const {return(labs(X-pt.X)+labs(Y-pt.Y));}
+	
+	/**
+	* Return the euclidean distance from a given point.
+	*/
+	double EuclideanDist(const RPoint &pt) const;
 
 	/**
 	* Return the length of the vector represented by the current point.
@@ -172,6 +177,11 @@ public:
 	* formed by two points.
 	*/
 	RDirection Classify(const RPoint* p0,const RPoint* p1);
+	
+	/**
+	* Change the "orientation" of the point.
+	*/
+	void ChangeOrientation(ROrientation o);
 };
 
 

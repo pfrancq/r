@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RLine.cpp
 
 	Line - Implementation.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -31,6 +31,7 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
 #include <rgeometry/rline.h>
 using namespace RGeometry2D;
 

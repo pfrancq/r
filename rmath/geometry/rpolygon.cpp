@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	Polygons.cpp
 
 	Polygons - Implentation.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,7 +37,7 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for RGeometry
+// include files for R Project
 #include <rgeometry/rpolygon.h>
 #include <rgeometry/rpoints.h>
 #include <rgeometry/rrect.h>
@@ -68,14 +68,14 @@ RPolygon::RPolygon(int Max)
 
 
 //-----------------------------------------------------------------------------
-RPolygon::RPolygon(RPolygon *poly)
+RPolygon::RPolygon(const RPolygon *poly)
 	: RContainer<RPoint,unsigned int,true,false>(poly)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RPolygon::RPolygon(RPolygon &poly)
+RPolygon::RPolygon(const RPolygon &poly)
 	: RContainer<RPoint,unsigned int,true,false>(poly)
 {
 }
@@ -137,7 +137,7 @@ RPolygon& RPolygon::operator-=(const RPoint &pt) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetConX(RPoint *pt)
+RPoint* RPolygon::GetConX(RPoint *pt) const
 {
 	RPoint **point,*next;
 	unsigned int i;
@@ -165,7 +165,7 @@ RPoint* RPolygon::GetConX(RPoint *pt)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetConY(RPoint *pt)
+RPoint* RPolygon::GetConY(RPoint *pt) const
 {
 	RPoint **point,*next;
 	unsigned int i;
@@ -193,7 +193,7 @@ RPoint* RPolygon::GetConY(RPoint *pt)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetBottomLeft(void)
+RPoint* RPolygon::GetBottomLeft(void) const
 {
 	RPoint **point,*bl;
 	unsigned int i;
@@ -212,7 +212,7 @@ RPoint* RPolygon::GetBottomLeft(void)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX)
+RPoint* RPolygon::GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX) const
 {
 	RPoint **point,*bl;
 	unsigned int i;
@@ -242,7 +242,7 @@ RPoint* RPolygon::GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetLeftBottom(void)
+RPoint* RPolygon::GetLeftBottom(void) const
 {
 	RPoint **point,*lb;
 	unsigned int i;
@@ -261,7 +261,7 @@ RPoint* RPolygon::GetLeftBottom(void)
 
 
 //-----------------------------------------------------------------------------
-RPoint* RPolygon::GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY)
+RPoint* RPolygon::GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY) const
 {
 	RPoint **point,*lb;
 	unsigned int i;
@@ -291,7 +291,7 @@ RPoint* RPolygon::GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::Edge(RPoint *pt)
+bool RPolygon::Edge(RPoint *pt) const
 {
 	RPoint **point,*deb;
 	unsigned int i;
@@ -341,7 +341,7 @@ bool RPolygon::Edge(RPoint *pt)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::Edge(RPoint *pt1,RPoint *pt2)
+bool RPolygon::Edge(RPoint *pt1,RPoint *pt2) const
 {
 	RPoint **point,*deb;
 	unsigned int i;
@@ -428,17 +428,24 @@ bool RPolygon::IsVertice(const RPoint &pt) const
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::IsIn(const RCoord X,const RCoord Y)
+bool RPolygon::IsIn(const RCoord X,const RCoord Y) const
 {
 	RPoint p(X,Y),**tab,*deb;
 	unsigned int i;
 
+	// Special cases
 	if(NbPtr==1) return(p==(*Tab[0]));
 	if(NbPtr==2)
 	{
 		RDirection c=p.Classify(Tab[0],Tab[1]);
 		return((c==Between)||(c==Origin)||(c==Destination));
 	}
+	
+	// Verify if not a vertice
+	for(i=NbPtr+1,tab=Tab;--i;tab++)
+		if(((*tab)->X==X)&&((*tab)->Y==Y))
+			return(true);
+				
 	// Verify if not on a edge
 	tab=Tab;
 	deb=(*(tab++));
@@ -453,47 +460,66 @@ bool RPolygon::IsIn(const RCoord X,const RCoord Y)
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::IsIn(const RPoint& point)
-{
-	return(IsIn(point.X,point.Y));
-}
-
-
-//-----------------------------------------------------------------------------
-bool RPolygon::IsIn(const RPoint* point)
-{
-	return(IsIn(point->X,point->Y));
-}
-
-
-//-----------------------------------------------------------------------------
-bool RPolygon::IsIn(const RPolygon& poly)
+bool RPolygon::IsIn(const RPolygon* poly) const
 {
 	RPoint **pt;
 	unsigned int i;
+	RRect r1,r2;
+	RDirection FromDir;
+	RPoint *deb,*end;
+	bool AxisX;
+	RCoord X,Y;
+	
+	
+	// Polygon is a rectangle?
+	if(NbPtr==4)
+	{
+		// Each points of poly have to be in it.
+		for(i=poly->NbPtr,pt=poly->Tab;--i;pt++)
+		{	
+			if(!IsIn(*pt))
+				return(false);
+		}
+		return(true);
+	}
+	
+	return(false);
+	
+	// Verify first if the boundary rectangles overlap
+	Boundary(r1);
+	poly->Boundary(r2);
+	if(!r1.Overlap(&r2))
+		return(false);
+			
+	// Test all the bound
+	deb=poly->GetBottomLeft();
+	end=poly->GetConX(deb);
+	AxisX=true;
+	FromDir=Left;
+	while((*end)!=(*deb))
+	{
+		X=deb->X;
+		Y=deb->Y;
+		while((X!=end->X)||(Y!=end->Y))
+		{
+			if(!IsIn(X,Y))
+				return(false);
+			AdaptXY(X,Y,FromDir);
+		}
+		AxisX=!AxisX;
+		deb=end;
+		if(AxisX)
+			end=poly->GetConX(deb);
+		else
+			end=poly->GetConY(deb);
+	}
 
-	for(i=poly.NbPtr+1,pt=poly.Tab;--i;pt++)
-		if(!IsIn(*pt))
-			return(false);
 	return(true);
 }
 
 
 //-----------------------------------------------------------------------------
-bool RPolygon::IsIn(const RPolygon* poly)
-{
-	RPoint **pt;
-	unsigned int i;
-
-	for(i=poly->NbPtr+1,pt=poly->Tab;--i;pt++)
-		if(!IsIn(*pt))
-			return(false);
-	return(true);
-}
-
-
-//-----------------------------------------------------------------------------
-RCoord RPolygon::Area(void)
+RCoord RPolygon::Area(void) const
 {
 	RRects r;
 
@@ -503,7 +529,7 @@ RCoord RPolygon::Area(void)
 
 
 //-----------------------------------------------------------------------------
-void RPolygon::Boundary(RRect &rect)
+void RPolygon::Boundary(RRect &rect) const
 {
 	RCoord MinX=MaxCoord,MinY=MaxCoord,MaxX=0,MaxY=0,X,Y;
 	RPoint **ptr;
@@ -526,9 +552,9 @@ void RPolygon::Boundary(RRect &rect)
 
 
 //-----------------------------------------------------------------------------
-void RPolygon::ChangeOrientation(ROrientation o)
+void RPolygon::ChangeOrientation(ROrientation o,RPoint& min)
 {
-	RCoord factx=1,facty=1,i,minx,miny,oldx,oldy;
+	RCoord factx=1,facty=1,i,oldx,oldy;
 	RPoint **ptr;
 	double co=1,si=0;
 
@@ -542,7 +568,7 @@ void RPolygon::ChangeOrientation(ROrientation o)
 		co=0;
 		si=1;
 	}
-	minx=miny=MaxCoord;
+	min.X=min.Y=MaxCoord;
 
 	// Make the transformation for each vertice
 	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
@@ -551,22 +577,22 @@ void RPolygon::ChangeOrientation(ROrientation o)
 		oldy = facty*(*ptr)->Y;
 		(*ptr)->X = RCoord(co*oldx - si*oldy);
 		(*ptr)->Y = RCoord(si*oldx + co*oldy);
-		if((*ptr)->X<minx) minx=(*ptr)->X;
-		if((*ptr)->Y<miny) miny=(*ptr)->Y;
+		if((*ptr)->X<min.X) min.X=(*ptr)->X;
+		if((*ptr)->Y<min.Y) min.Y=(*ptr)->Y;
 	}
 
 	// Replace (0,0) as the left-top point of the embedded rectangle
 	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
 	{
-		(*ptr)->X -= minx;
-		(*ptr)->Y -= miny;
+		(*ptr)->X -= min.X;
+		(*ptr)->Y -= min.Y;
 	}
 	ReOrder();	// Make the bottom-left point be the first
 }
 
 
 //-----------------------------------------------------------------------------
-void RPolygon::RectDecomposition(RRects *rects)
+void RPolygon::RectDecomposition(RRects *rects) const
 {
 	RPolygon work(this),tmpPoly(20);
 	RRects tmpRects;
@@ -790,4 +816,34 @@ RPolygon* RPolygon::GetPolygon(void)
 	tmp=GetTemporaryObject<RPolygon,30>();
 	tmp->Clear();
 	return(tmp);
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RPolygon::GetCentralPoint(void)
+{
+	RPoint* pt=RPoint::GetPoint();
+	RPoint Middle;
+	RRect r;
+	double min,act;
+	
+	Boundary(r);
+	Middle.Set(r.Width()/2,r.Height()/2);
+	if(IsIn(Middle))
+		(*pt)=Middle;
+	else
+	{
+		// Find the Vertice the most closed to Middle
+		min=MaxCoord;
+		for(Start();!End();Next())
+		{
+			act=Middle.EuclideanDist((*this)());
+			if(act<min)
+			{
+				(*pt)=((*this)());
+				min=act;
+			}
+		}
+	}
+	return(*pt);
 }

@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPromethee.cpp
 
@@ -32,5 +32,6 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
 #include <rpromethee/rpromethee.h>
 using namespace RPromethee;

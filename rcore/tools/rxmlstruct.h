@@ -1,40 +1,42 @@
 /*
 
-  rxmlstruct.h
+	R Project Library
 
-  Description - Header.
+	RXMLStruct.h
 
-  (c) 2000 by P. Francq.
+	XML structure - Header.
 
-  Version $Revision$
+	(c) 2000-2001 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
 
 
 //---------------------------------------------------------------------------
-#ifndef RXMLSTRUCT_H
-#define RXMLSTRUCT_H
+#ifndef RXMLStructH
+#define RXMLStructH
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rstd/rtree.h>
 #include <rstd/rxmltag.h>
 using namespace RStd;
@@ -45,6 +47,7 @@ namespace RStd{
 //-----------------------------------------------------------------------------
 
 
+//-----------------------------------------------------------------------------
 /**
 * This class provides a representation of a XML structure.
 * @short XML Structure.

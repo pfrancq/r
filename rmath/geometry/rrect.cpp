@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RRect.cpp
 
 	Rectangle - Implemtation.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -32,6 +32,7 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
 #include <rgeometry/rrect.h>
 using namespace RGeometry2D;
 
@@ -86,6 +87,15 @@ RRect& RRect::operator+=(const RPoint &pt) throw(bad_alloc)
 {
 	Pt1+=pt;
 	Pt2+=pt;
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+RRect& RRect::operator-=(const RPoint &pt) throw(bad_alloc)
+{
+	Pt1-=pt;
+	Pt2-=pt;
 	return(*this);
 }
 
@@ -197,9 +207,10 @@ void RRect::Translation(RCoord x,RCoord y)
 
 
 //-----------------------------------------------------------------------------
-bool RRect::Overlap(RRect *rect)
+bool RRect::Overlap(const RRect *rect)
 {
 	RReturnValIfFail(rect,false);
+	
 	// Is up or bottom of rect
 	if((Pt1.Y>rect->Pt2.Y)||(Pt2.Y<rect->Pt1.Y)) return(false);
 
@@ -211,7 +222,7 @@ bool RRect::Overlap(RRect *rect)
 
 
 //-----------------------------------------------------------------------------
-bool RRect::IsIn(RCoord X,RCoord Y)
+bool RRect::IsIn(const RCoord X,const RCoord Y)
 {
 	// Is up or bottom of rect
 	if((Y>Pt2.Y)||(Y<Pt1.Y)) return(false);

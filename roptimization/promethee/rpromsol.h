@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPromSol.h
 
@@ -37,7 +37,7 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rpromethee/rpromethee.h>
 #include <rpromethee/rpromcritvalue.h>
 using namespace RStd;

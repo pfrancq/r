@@ -1,16 +1,16 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
-  RTree.h
+	RTree.h
 
-  Generic Tree - Header.
+	Generic Tree - Header.
 
-  (C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
-  Version $Revision$
+	Version $Revision$
 
-  Last Modify: $Date$
+	Last Modify: $Date$
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -37,8 +37,9 @@
 
 
 //-----------------------------------------------------------------------------
-#include "rstd/rstd.h"
-#include "rstd/rcontainer.h"
+// include files for R Project
+#include <rstd/rstd.h>
+#include <rstd/rcontainer.h>
 using namespace RStd;
 
 

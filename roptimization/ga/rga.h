@@ -6,7 +6,7 @@
 
 	Genetic Algorithms - Header
 
-	(C) 1998-2000 by P. Francq.
+	(C) 1998-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -49,11 +49,11 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstring.h>								// Strings
-#include <rstd/rcontainer.h>							// Container
-#include <rstd/rtextfile.h>								// Text files
+#include <rstd/rstring.h>
+#include <rstd/rcontainer.h>
+#include <rstd/rtextfile.h>
 using namespace RStd;
-#include <rmath/random.h>								// Random numbers generator
+#include <rmath/random.h>
 using namespace RMath;
 
 
@@ -81,15 +81,9 @@ using namespace RGA;
 
 /**
 * \namespace RGA
-* \brief Genetic Algorithms Classes.
+* \brief Generic Genetic Algorithm Classes.
 *
 * This namespace declares classes for working with Genetic Algorithms.
-*/
-
-/**
-* \defgroup GA Basic Genetic Algorithm (Core).
-*
-* This classes represent a generic genetic algorithm.
 */
 
 
@@ -100,7 +94,14 @@ namespace RGA{
 
 //-----------------------------------------------------------------------------
 // General Variables
-extern bool ExternBreak;										// If true, GA stops
+/**
+* If true, GA stops
+*/
+extern bool ExternBreak;
+
+/**
+* Pointer to a "debugger" holding information about the GA when it is running.
+*/
 extern RDebug *Debug;
 
 

@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	Polygons.h
 
 	Polygons - Header.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -76,13 +76,13 @@ public:
 	* Construct a polygon from another.
 	* @param poly		Polygon used as reference.
 	*/
-	RPolygon(RPolygon *poly);
+	RPolygon(const RPolygon *poly);
 
 	/**
 	* Construct a polygon from another.
 	* @param poly		Polygon used as reference.
 	*/
-	RPolygon(RPolygon &poly);
+	RPolygon(const RPolygon &poly);
 
 	/**
 	* The assign operator.
@@ -123,17 +123,17 @@ public:
 	* This function returns a pointer to the point on the same horizontal vertex.
 	*	@param pt		Point used as reference.
 	*/
-	RPoint* GetConX(RPoint *pt);
+	RPoint* GetConX(RPoint *pt) const;
 
 	/** This function returns a pointer to the point on the same vertital vertex.
     *	@param pt		Point used as reference.
 	*/
-	RPoint* GetConY(RPoint *pt);
+	RPoint* GetConY(RPoint *pt) const;
 
 	/**
 	* Return a pointer to the most bottom-left point of the polygon.
 	*/
-	RPoint* GetBottomLeft(void);
+	RPoint* GetBottomLeft(void) const;
 
 	/**
 	* Return a pointer to the most bottom-left point of the polygon responding
@@ -142,12 +142,12 @@ public:
 	* @param MinY			Minimal Y position of the point to search.
 	* @param MaxX			Maximal X position of the point to search.
 	*/
-	RPoint* GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX);
+	RPoint* GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX) const;
 
 	/**
 	* Return a pointer to the most left-bottom point of the polygon.
 	*/
-	RPoint* GetLeftBottom(void);
+	RPoint* GetLeftBottom(void) const;
 
 	/**
 	* Return a pointer to the most left-bottom point of the polygon responding
@@ -156,20 +156,20 @@ public:
 	* @param MinY			Minimal Y position of the point to search.
 	* @param MaxY			Maximal Y position of the point to search.
 	*/
-	RPoint* GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY);
+	RPoint* GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY) const;
 
 	/**
 	* Return true if the point is on an edge.
 	* @param pt		The point used.
 	*/
-	bool Edge(RPoint *pt);
+	bool Edge(RPoint *pt) const;
 
 	/**
 	* Return true if two points are on the same edge.
 	* @param pt1		The first point used.
 	* @param pt2		The second point used.
 	*/
-	bool Edge(RPoint *pt1,RPoint *pt2);
+	bool Edge(RPoint *pt1,RPoint *pt2) const;
 
 	/**
 	* Return true if the point is a vertice.
@@ -179,17 +179,19 @@ public:
 	/**
 	* Return true if the point is inside the polygon.
 	*/
-  bool IsIn(const RCoord X,const RCoord Y);
+	bool IsIn(const RCoord X,const RCoord Y) const;
 
 	/**
 	* Return true if the point is inside the polygon.
 	*/
-	bool IsIn(const RPoint& pt);
+	bool IsIn(const RPoint& pt) const
+		{return(IsIn(pt.X,pt.Y));}
 
 	/**
 	* Return true if the point is inside the polygon.
 	*/
-	bool IsIn(const RPoint* pt);
+	bool IsIn(const RPoint* pt) const
+		{return(IsIn(pt->X,pt->Y));}
 
 	/**
 	* Return true if the polygon poly is inside the polygon. The two polygons are
@@ -197,38 +199,41 @@ public:
 	* of poly are inside the polygon.
 	*	@param poly		The polygon to known if is in.
 	*/
-	bool IsIn(const RPolygon& poly);
+	bool IsIn(const RPolygon& poly) const
+		{return(IsIn(&poly));}
 
 	/**
-	* Return true if the polygon poly is inside the polygon. The two polygons are
-	* supposed to be "rectangular". This function determines if all the points
-	* of poly are inside the polygon.
+	* Return true if the polygon poly is inside the polygon. The two polygons
+	* are supposed to be "rectangular". This function determines if all the
+	* points of the bound of the polygon poly are inside the current one.
 	* @param poly		The polygon to known if is in.
 	*/
-	bool IsIn(const RPolygon* poly);
+	bool IsIn(const RPolygon* poly) const;
 
 	/**
 	* Return the area of the polygon.
 	*/
-	RCoord Area(void);
+	RCoord Area(void) const;
 
 	/**
 	* Return the boundary rectangle of the polygon.
 	* @param rect		The rectangle.
 	*/
-	void Boundary(RRect &rect);
+	void Boundary(RRect &rect) const;
 
 	/**
 	* Modify the polygon to a certain orientation.
 	* @param o		The orientation.
+	* @param min	The vector that has been substracted to have the
+	*				bottom-left point at (0,0).
 	*/
-	void ChangeOrientation(ROrientation o);
+	void ChangeOrientation(ROrientation o,RPoint& min);
 
 	/**
 	* Decompose the polygon in a container of rectangles.
 	* @param rects	A pointer to the container of rectangles.
 	*/
-	void RectDecomposition(RRects *rects);
+	void RectDecomposition(RRects *rects) const;
 
 	/**
 	* Add the points of the polygon to a container of points.
@@ -251,6 +256,11 @@ public:
 	* Return a pointer to a temporary object of class rpolygon.
 	*/
 	static RPolygon* GetPolygon(void);
+	
+	/**
+	* Compute a point in the polygon which represents a sort of "Mass Point".
+	*/
+	RPoint& GetCentralPoint(void);
 };
 
 

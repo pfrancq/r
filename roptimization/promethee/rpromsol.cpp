@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPromSol.cpp
 
@@ -32,6 +32,7 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
 #include <rpromethee/rpromsol.h>
 using namespace RPromethee;
 

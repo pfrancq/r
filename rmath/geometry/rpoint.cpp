@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPoint.cpp
 
 	Point - Implementation.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -32,7 +32,7 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rstd/rstd.h>
 using namespace RStd;
 #include <rgeometry/rpoint.h>
@@ -83,6 +83,17 @@ RPoint::RPoint(const RPoint *pt)
 
 
 //-----------------------------------------------------------------------------
+double RPoint::EuclideanDist(const RPoint &pt) const
+{
+	double dx,dy;
+	
+	dx=X-pt.X;
+	dy=Y-pt.Y;	
+	return(sqrt(dx*dx+dy*dy));
+}
+
+
+//-----------------------------------------------------------------------------
 RPoint* RPoint::GetPoint(void)
 {
 	return(GetTemporaryObject<RPoint,30>());
@@ -120,6 +131,32 @@ RDirection RPoint::Classify(const RPoint* p0,const RPoint* p1)
 	if((*this)==(*p0)) return(Origin);
 	if((*this)==(*p1)) return(Destination);
 	return(Between);
+}
+
+
+//-----------------------------------------------------------------------------
+void RPoint::ChangeOrientation(ROrientation o)
+{
+	RCoord factx=1,facty=1,i,oldx,oldy;
+	RPoint **ptr;
+	double co=1,si=0;
+
+	// Determine scale and rotation
+	if((o==NormalX)||(o==NormalYX)||(o==Rota90X)||(o==Rota90YX))
+		facty=-1;
+	if((o==NormalY)||(o==Normal)||(o==Rota90Y)||(o==Rota90YX))
+		factx=-1;
+	if((o==Rota90)||(o==Rota90X)||(o==Rota90Y)||(o==Rota90YX))
+	{
+		co=0;
+		si=1;
+	}
+
+	// Make the transformation for the point
+	oldx = factx*X;
+	oldy = facty*Y;
+	X = RCoord(co*oldx - si*oldy);
+	Y = RCoord(si*oldx + co*oldy);
 }
 
 

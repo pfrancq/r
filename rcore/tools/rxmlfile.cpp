@@ -1,47 +1,49 @@
 /*
 
-  rxmlfile.cpp
+	R Project Library
 
-  Description - Implementation.
+	RXMLFile.cpp
 
-  (c) 2000 by P. Francq.
+	XML file - Implementation.
 
-  Version $Revision$
+	(c) 2000-2001 by P. Francq.
 
-  Last Modify: $Date$
+	Version $Revision$
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  any later version.
+	Last Modify: $Date$
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	any later version.
 
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// include files for R PRoject
 #include <rstd/rxmlfile.h>
 using namespace RStd;
 
 
-/*-----------------------------------------------------------------------------
- * Construct the XML file.
- *
- * Parameters:
- *   name		Name of the file
- *
- * Returns:
- *
- *---------------------------------------------------------------------------*/
+
+//-----------------------------------------------------------------------------
+//
+// class RXMLFile
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct)
  : RTextFile(name), XMLStruct(xmlstruct)
 {
@@ -59,45 +61,21 @@ RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct)
 }
 
 
-/*-----------------------------------------------------------------------------
- * Verify if the file is at the begin of a tag.
- *
- * Parameters:
- *
- * Returns:
- *   true if it is so.
- *
- *---------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------
 bool RXMLFile::BeginTag(void)
 {
 	return(((*ptr)=='<')&&((*(ptr+1))!='/'));
 }
 
 
-/*-----------------------------------------------------------------------------
- * Verify if the file is at the end of a tag.
- *
- * Parameters:
- *
- * Returns:
- *   true if it is so.
- *
- *---------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------
 bool RXMLFile::EndTag(void)
 {
 	return(((*ptr)=='<')&&((*(ptr+1))=='/'));
 }
 
 
-/*-----------------------------------------------------------------------------
- * Return the next tag of the XML file.
- *
- * Parameters:
- *
- * Returns:
- *   A string containing the tag.
- *
- *---------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------
 char* RXMLFile::GetTag(void)
 {
 	char *tmp=GetCharPtr();
@@ -120,15 +98,7 @@ char* RXMLFile::GetTag(void)
 }
 
 
-/*-----------------------------------------------------------------------------
- * Return the contain of the current tag.
- *
- * Parameters:
- *
- * Returns:
- *   A string containing the contains.
- *
- *---------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------
 char* RXMLFile::GetContains(void)
 {
 	char *tmp=GetCharPtr();
@@ -147,15 +117,7 @@ char* RXMLFile::GetContains(void)
 }
 
 
-/*-----------------------------------------------------------------------------
- * Destruct the XML file.
- *
- * Parameters:
- *   name		Name of the file
- *
- * Returns:
- *
- *---------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------
 RXMLFile::~RXMLFile()
 {
 }

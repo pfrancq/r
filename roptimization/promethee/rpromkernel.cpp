@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPromKernel.cpp
 
@@ -37,7 +37,7 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rpromethee/rpromkernel.h>
 #include <rpromethee/rpromcritvalue.h>
 using namespace RPromethee;

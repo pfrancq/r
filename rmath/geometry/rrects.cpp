@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RRect.cpp
 
 	Rectangle - Implemtation.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -32,6 +32,7 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
 #include <rgeometry/rrects.h>
 using namespace RGeometry2D;
 

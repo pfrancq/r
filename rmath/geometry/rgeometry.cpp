@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	Geometry.cpp
 
 	Geometry base classes - Basic definition - Implementation.
 
-	(c) 2000 by P. Francq.
+	(c) 2000-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -32,7 +32,7 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rgeometry/geometry.h>
 using namespace RGeometry2D;
 

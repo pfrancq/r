@@ -6,7 +6,7 @@
 
 	Chromosomes of Genetic Algorithms - Header
 
-	(C) 1998-2000 by P. Francq.
+	(C) 1998-2001 by P. Francq.
 
 	Version $Revision$
 

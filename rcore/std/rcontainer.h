@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RContainer.h
 
 	Container - Header.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,7 +37,7 @@
 
 
 //---------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rstd/rstd.h>
 using namespace RStd;
 
@@ -345,7 +345,7 @@ public:
 #include "rcontainer.hh" // implementation
 
 
-}  //-------- End of namespace RStd ---------------------------------------
+}  //-------- End of namespace RStd -----------------------------------------
 
 
 //---------------------------------------------------------------------------

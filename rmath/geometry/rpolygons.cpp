@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	Polygons.cpp
 
 	Polygons - Implentation.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,7 +37,7 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for RGeometry
+// include files for R Project
 #include <rgeometry/rpolygons.h>
 #include <rgeometry/rpoints.h>
 #include <rgeometry/rrect.h>
@@ -199,7 +199,7 @@ void RPolygons::Union(RPolygon *upoly)
 					upoly->DeletePtr(ins);
 					break;
 				}
-   			if((next=pts.FindBottom(last,this)))
+				if((next=pts.FindBottom(last,this)))
 				{
 					FromDir=Up;
 					break;

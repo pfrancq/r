@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RNode.h
 
 	Generic Node - Header.
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -37,7 +37,7 @@
 
 
 //-----------------------------------------------------------------------------
-#include "rcontainer.h"
+#include <rstd/rcontainer.h>
 using namespace RStd;
 
 
@@ -100,7 +100,7 @@ public:
 #include "rnode.hh"			// Template implementation
 
 
-}	//---- End namespace RStd --------------------------------------------------
+}	//---- End namespace RStd -------------------------------------------------
 
 
 //-----------------------------------------------------------------------------

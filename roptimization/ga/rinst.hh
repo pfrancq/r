@@ -1,12 +1,12 @@
 /*
 
-	R ProjectLibrary
+	R Project Library
 
 	RInst.hh
 
 	Instance of Genetic Algorithms - Inline Implementation
 
-	(C) 1998-2000 by P. Francq.
+	(C) 1998-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -136,6 +136,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	emitInteractSig();
 	Verify();
 	bRandomConstruct=true;
+	emitBestSig();
+	emitGenSig();
 }
 
 

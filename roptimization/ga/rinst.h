@@ -6,7 +6,7 @@
 
 	Instance of Genetic Algorithms - Header
 
-	(C) 1998-2000 by P. Francq.
+	(C) 1998-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -120,6 +120,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	*/
 	cChromo **tmpChrom;
 
+protected:
+	
 	/**
 	* "Thread-dependent" data of the instance.
 	*/
@@ -131,7 +133,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	RContainer<RGASignalsReceiver<cInst,cChromo,cFit>,unsigned int,false,false> Receivers;
 
 	/**
-	* This function is true if the randol construction where done.
+	* This function is true if the random construction where done.
 	*/
 	bool bRandomConstruct;
 

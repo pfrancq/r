@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPromCritValue.cpp
 
@@ -32,6 +32,7 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
 #include <rpromethee/rpromcritvalue.h>
 #include <rpromethee/rpromevalfunc.h>
 using namespace RPromethee;

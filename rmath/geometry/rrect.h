@@ -1,12 +1,12 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RRect.h
 
 	Rectangle - Header
 
-	(C) 1999-2000 by P. Francq.
+	(C) 1999-2001 by P. Francq.
 
 	Version $Revision$
 
@@ -121,13 +121,19 @@ public:
 	* @param pt 	The point representing the vector used.
 	*/
 	RRect& operator+=(const RPoint &pt) throw(bad_alloc);
+	
+	/**
+	* Make a minus translation of the rectangle.
+	* @param pt 	The point representing the vector used.
+	*/
+	RRect& operator-=(const RPoint &pt) throw(bad_alloc);
 
 	/**
 	* Compare two rectangles and return 0 if there are at the same. This function
 	* is used with the class RContainer.
 	*	@param rect		Rectangle used for the comparaison.
 	*/
-	int Compare(RRect *rect) { return((*this)!=(*rect)); }
+	int Compare(const RRect *rect) { return((*this)!=(*rect)); }
 
 	/**
 	* Adapt the rectangle to be contained in a given region.
@@ -153,19 +159,19 @@ public:
 	/**
 	* This function returns true if the two rectangles overlapped.
 	*/
-	bool Overlap(RRect *rect);
+	bool Overlap(const RRect *rect);
 
 	/**
 	* This function returns true if a given point is in the rectangle.
 	* @param X		X position of the point.
 	* @param Y 		Y position of the point.
 	*/
-	bool IsIn(RCoord X,RCoord Y);
+	bool IsIn(const RCoord X,const RCoord Y);
 
 	/**
 	* This function returns true if a given point is in the rectangle.
 	*/
-	inline bool IsIn(RPoint& pos) {return(IsIn(pos.X,pos.Y));}
+	inline bool IsIn(const RPoint& pos) {return(IsIn(pos.X,pos.Y));}
 
 	/**
 	* The assign Operator.

@@ -6,7 +6,7 @@
 
 	Genetic Algorithms - Implementation
 
-	(C) 1998-2000 by By P. Francq.
+	(C) 1998-2001 by By P. Francq.
 
 	Version $Revision$
 
@@ -37,7 +37,7 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for Rainbow
+// include files for R Project
 #include <rga/rga.h>
 using namespace RGA;
 

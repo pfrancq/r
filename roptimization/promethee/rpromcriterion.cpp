@@ -1,6 +1,6 @@
 /*
 
-	Rainbow Library Project
+	R Project Library
 
 	RPromCriterion.cpp
 
@@ -32,6 +32,7 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
 #include <rpromethee/rpromcriterion.h>
 #include <rpromethee/rpromcritvalue.h>
 #include <rpromethee/rpromkernel.h>

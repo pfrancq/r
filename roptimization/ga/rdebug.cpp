@@ -6,7 +6,7 @@
 
 	Debugging file in XML format (eXtended Markup Language) - Implementation
 
-	(C) 1998-2000 by P. Francq.
+	(C) 1998-2001 by P. Francq.
 
 	Version $Revision$
 
