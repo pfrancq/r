@@ -6,7 +6,7 @@
 
 	Binary file for records  - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -55,35 +55,17 @@
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>::RRecFile(const RString &name,ModeType mode) throw(std::bad_alloc,RString)
-		: Mode(mode), Name(name), NbRecs(0)
+	RRecFile<C,S,bOrder>::RRecFile(const RString &name) throw(std::bad_alloc,RString)
+		: RFile(name), NbRecs(0)
 {
-	int localmode;
+}
 
-	switch(Mode)
-	{
-		case R::Read:
-			localmode=O_RDONLY;
-			break;
 
-		case Append:
-			localmode=O_WRONLY | O_CREAT | O_APPEND;
-			break;
-
-		case Create:
-			localmode=O_WRONLY | O_CREAT | O_TRUNC;
-			break;
-
-		default:
-			throw(RString("No Valid Mode"));
-	};
-	#ifndef _BSD_SOURCE
-		localmode|=O_BINARY;
-	#endif
-	if(Mode==R::Read)
-		handle=open(Name,localmode);
-	else
-		handle=open(Name,localmode,S_IREAD|S_IWRITE);
+//------------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	void RRecFile<C,S,bOrder>::Open(ModeType mode)
+{
+	RFile::Open(mode);
 	if(Mode!=Create)
 	{
 		struct stat statbuf;
@@ -94,6 +76,8 @@ template<class C,unsigned int S,bool bOrder>
 		throw(RString("Can't open file """+Name+""""));
 	eof=false;
 }
+
+
 
 
 //------------------------------------------------------------------------------
@@ -291,5 +275,4 @@ template<class C,unsigned int S,bool bOrder>
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>::~RRecFile(void)
 {
-	if(handle!=-1) close(handle);
 }

@@ -6,7 +6,7 @@
 
 	Binary file for records - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,8 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstring.h>
-#include <rstd/rio.h>
+#include <rstd/rfile.h>
 
 
 //------------------------------------------------------------------------------
@@ -78,24 +77,9 @@ namespace R{
 * @short Text File.
 */
 template<class C,unsigned int S,bool bOrder=false>
-	class RRecFile
+	class RRecFile : public RFile
 {
 protected:
-
-	/**
-	* How to file has to be used.
-	*/
-	ModeType Mode;
-
-	/**
-	* Name of the File.
-	*/
-	RString Name;
-
-	/**
-	* Internal Handle of the file.
-	*/
-	int handle;
 
 	/**
 	* This variable is holding the record number.
@@ -117,11 +101,14 @@ public:
 	/**
 	* Construct a binary file.
 	* @param name           The name of the file.
+	*/
+	RRecFile(const RString &name) throw(std::bad_alloc,RString);
+
+	/**
+	* Open the file
 	* @param mode           The open mode for the file.
 	*/
-	RRecFile(const RString &name,ModeType mode) throw(std::bad_alloc,RString);
-
-public:
+	virtual void Open(ModeType mode=Read);
 
 	/**
 	* Return true if the file is been treated.
