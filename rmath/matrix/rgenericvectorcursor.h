@@ -34,8 +34,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RGenericVectorCursorH
-#define RGenericVectorCursorH
+#ifndef RGenericVectorCursor_H
+#define RGenericVectorCursor_H
 
 //-----------------------------------------------------------------------------
 // include files for R Project

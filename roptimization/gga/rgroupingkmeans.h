@@ -36,8 +36,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RGroupingKMeansH
-#define RGroupingKMeansH
+#ifndef RGroupingKMeans_H
+#define RGroupingKMeans_H
 
 
 //------------------------------------------------------------------------------

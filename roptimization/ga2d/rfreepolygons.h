@@ -34,8 +34,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RFreePolygonsH
-#define RFreePolygonsH
+#ifndef RFreePolygons_H
+#define RFreePolygons_H
 
 
 //------------------------------------------------------------------------------

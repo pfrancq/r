@@ -34,8 +34,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef REdgeH
-#define REdgeH
+#ifndef REdge_H
+#define REdge_H
 
 
 

@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RGAImplementationH
-#define RGAImplementationH
+#ifndef RGAImplementation_H
+#define RGAImplementation_H
 
 
 //------------------------------------------------------------------------------

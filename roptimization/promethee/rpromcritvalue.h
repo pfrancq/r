@@ -36,8 +36,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPromCritValueH
-#define RPromCritValueH
+#ifndef RPromCritValue_H
+#define RPromCritValue_H
 
 
 //------------------------------------------------------------------------------

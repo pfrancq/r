@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RGA2DImplementationH
-#define RGA2DImplementationH
+#ifndef RGA2DImplementation_H
+#define RGA2DImplementation_H
 
 
 //------------------------------------------------------------------------------

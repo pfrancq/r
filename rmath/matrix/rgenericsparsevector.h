@@ -34,8 +34,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RGenericSparseVectorH
-#define RGenericSparseVectorH
+#ifndef RGenericSparseVector_H
+#define RGenericSparseVector_H
 
 
 //-----------------------------------------------------------------------------

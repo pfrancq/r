@@ -34,8 +34,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RGenericSparseMatrixH
-#define RGenericSparseMatrixH
+#ifndef RGenericSparseMatrix_H
+#define RGenericSparseMatrix_H
 
 
 //-----------------------------------------------------------------------------

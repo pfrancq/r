@@ -34,8 +34,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RGenericCellCursorH
-#define RGenericCellCursorH
+#ifndef RGenericCellCursor_H
+#define RGenericCellCursor_H
 
 
 //-----------------------------------------------------------------------------

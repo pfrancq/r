@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RGroupingHeuristicH
-#define RGroupingHeuristicH
+#ifndef RGroupingHeuristic_H
+#define RGroupingHeuristic_H
 
 
 //------------------------------------------------------------------------------

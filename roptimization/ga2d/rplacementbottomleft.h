@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPlacementBottomLeftH
-#define RPlacementBottomLeftH
+#ifndef RPlacementBottomLeft_H
+#define RPlacementBottomLeft_H
 
 
 //------------------------------------------------------------------------------

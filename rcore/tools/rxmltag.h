@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RXMLTagH
-#define RXMLTagH
+#ifndef RXMLTag_H
+#define RXMLTag_H
 
 
 

@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPlacementCenterH
-#define RPlacementCenterH
+#ifndef RPlacementCenter_H
+#define RPlacementCenter_H
 
 
 //------------------------------------------------------------------------------

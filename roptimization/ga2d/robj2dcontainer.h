@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RGeoInfoContainerH
-#define RGeoInfoContainerH
+#ifndef RGeoInfoContainer_H
+#define RGeoInfoContainer_H
 
 
 //------------------------------------------------------------------------------

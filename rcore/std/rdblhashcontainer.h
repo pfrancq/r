@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RDblHashContainerH
-#define RDblHashContainerH
+#ifndef RDblHashContainer_H
+#define RDblHashContainer_H
 
 
 //------------------------------------------------------------------------------

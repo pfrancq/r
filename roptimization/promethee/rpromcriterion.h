@@ -36,8 +36,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPromCriterionH
-#define RPromCriterionH
+#ifndef RPromCriterion_H
+#define RPromCriterion_H
 
 
 //------------------------------------------------------------------------------

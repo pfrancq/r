@@ -34,8 +34,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RGeoInfoConnectionsH
-#define RGeoInfoConnectionsH
+#ifndef RGeoInfoConnections_H
+#define RGeoInfoConnections_H
 
 
 //------------------------------------------------------------------------------

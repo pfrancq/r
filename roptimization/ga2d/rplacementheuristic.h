@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPlacementHeuristicH
-#define RPlacementHeuristicH
+#ifndef RPlacementHeuristic_H
+#define RPlacementHeuristic_H
 
 
 //------------------------------------------------------------------------------

@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RHashContainerH
-#define RHashContainerH
+#ifndef RHashContainer_H
+#define RHashContainer_H
 
 
 //------------------------------------------------------------------------------

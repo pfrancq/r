@@ -35,8 +35,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPlacementEdgeH
-#define RPlacementEdgeH
+#ifndef RPlacementEdge_H
+#define RPlacementEdge_H
 
 
 //------------------------------------------------------------------------------
