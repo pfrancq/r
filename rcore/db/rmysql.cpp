@@ -88,7 +88,7 @@ void RDb::CreateDatabase(RString host,RString user,RString pwd,RString name) thr
 	if((!ret)||(mysql_errno(&ms)))
 		throw RMySQLError(mysql_error(&ms));
 
-	RString sql="CREATE DATABASE ";
+	RString sql="CREATE DATABASE IF NOT EXISTS ";
 	sql+=name;
 	if(mysql_query(&ms,sql.Latin1()))
 		throw RMySQLError(mysql_error(&ms));
