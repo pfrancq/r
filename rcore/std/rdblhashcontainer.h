@@ -6,7 +6,7 @@
 
 	Container with a double hash table
 
-	(C) 2001 by P. Francq.
+	(C) 2001-2002 by P. Francq.
 
 	Version $Revision$
 
@@ -37,8 +37,8 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
 #include <rstd/rcontainer.h>
-
 
 
 //-----------------------------------------------------------------------------

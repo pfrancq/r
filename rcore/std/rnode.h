@@ -6,7 +6,7 @@
 
 	Generic Node - Header.
 
-	(C) 1999-2001 by P. Francq.
+	(C) 1999-2002 by P. Francq.
 
 	Version $Revision$
 
@@ -38,11 +38,10 @@
 
 //-----------------------------------------------------------------------------
 #include <rstd/rcontainer.h>
-using namespace RStd;
 
 
 //-----------------------------------------------------------------------------
-namespace RStd{                      // Using RStd namespace
+namespace RStd{
 //-----------------------------------------------------------------------------
 
 

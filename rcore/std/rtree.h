@@ -40,11 +40,10 @@
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rcontainer.h>
-using namespace RStd;
 
 
 //-----------------------------------------------------------------------------
-namespace RStd{                      // Using RStd namespace
+namespace RStd{
 //-----------------------------------------------------------------------------
 
 

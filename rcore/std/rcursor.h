@@ -6,7 +6,7 @@
 
 	Cursor for Containers - Header.
 
-	(C) 1999-2001 by P. Francq.
+	(C) 1999-2002 by P. Francq.
 
 	Version $Revision$
 
@@ -39,7 +39,6 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
-using namespace RStd;
 
 
 //-----------------------------------------------------------------------------
@@ -167,6 +166,16 @@ public:
 	void Set(RContainer<C,T,false,false>* c);
 
 	/**
+	* Go to the i-th element of the container.
+	*/
+	void GoTo(const unsigned int i) throw(bad_alloc);
+
+	/**
+	* Return the number of elements in the container.
+	*/
+	inline unsigned int GetNb(void);
+
+	/**
 	* Test if the end of the container is reached.
 	*/
 	inline bool End(void) const;
@@ -202,10 +211,10 @@ public:
 class name : public RStd::RCursor<C,T>                               \
 {                                                                    \
 public:                                                              \
-	name(void) : RCursor<C,T>() {}                                   \
+	name(void) : RStd::RCursor<C,T>() {}                             \
 	static name* GetTmpCursor(void)                                  \
 	{                                                                \
-		return(GetTemporaryObject<name,20>());                       \
+		return(RStd::GetTemporaryObject<name,20>());                 \
 	}                                                                \
 };
 

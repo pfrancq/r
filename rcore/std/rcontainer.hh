@@ -61,7 +61,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
-	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,bAlloc,bOrder>* src) throw(bad_alloc)
+	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,true,bOrder>* src) throw(bad_alloc)
 		: Current(0), ActPtr(0), NbPtr(0), MaxPtr(src->MaxPtr), LastPtr(0), IncPtr(src->IncPtr)
 {
 	T i;
@@ -91,7 +91,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
-	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,!bAlloc,bOrder>* src) throw(bad_alloc)
+	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,false,bOrder>* src) throw(bad_alloc)
 		: Current(0), ActPtr(0), NbPtr(0), MaxPtr(src->MaxPtr), LastPtr(0), IncPtr(src->IncPtr)
 {
 	T i;
@@ -121,7 +121,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
-	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,bAlloc,bOrder>& src) throw(bad_alloc)
+	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,true,bOrder>& src) throw(bad_alloc)
 		: Current(0), ActPtr(0), NbPtr(0), MaxPtr(0), LastPtr(0), IncPtr(src.IncPtr)
 {
 	T i;
@@ -146,7 +146,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
-	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,!bAlloc,bOrder>& src) throw(bad_alloc)
+	RContainer<C,T,bAlloc,bOrder>::RContainer(const RContainer<C,T,false,bOrder>& src) throw(bad_alloc)
 		: Current(0), ActPtr(0), NbPtr(0), MaxPtr(0), LastPtr(0), IncPtr(src.IncPtr)
 {
 	T i;
@@ -172,7 +172,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RContainer<C,T,bAlloc,bOrder>& RContainer<C,T,bAlloc,bOrder>::
-		operator=(const RContainer<C,T,bAlloc,bOrder>& src) throw(bad_alloc)
+		operator=(const RContainer<C,T,true,bOrder>& src) throw(bad_alloc)
 {
 	T i;
 	C **tab;
@@ -197,7 +197,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RStd::RContainer<C,T,bAlloc,bOrder>& RContainer<C,T,bAlloc,bOrder>::
-		operator=(const RContainer<C,T,!bAlloc,bOrder>& src) throw(bad_alloc)
+		operator=(const RContainer<C,T,false,bOrder>& src) throw(bad_alloc)
 {
 	T i;
 	C **tab;
@@ -222,7 +222,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RStd::RContainer<C,T,bAlloc,bOrder>& RContainer<C,T,bAlloc,bOrder>::
-		operator+=(const RContainer<C,T,bAlloc,bOrder>& src) throw(bad_alloc)
+		operator+=(const RContainer<C,T,true,bOrder>& src) throw(bad_alloc)
 {
 	T i;
 	C **tab;
@@ -246,7 +246,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
 	RStd::RContainer<C,T,bAlloc,bOrder>& RContainer<C,T,bAlloc,bOrder>::
-		operator+=(const RContainer<C,T,!bAlloc,bOrder>& src) throw(bad_alloc)
+		operator+=(const RContainer<C,T,false,bOrder>& src) throw(bad_alloc)
 {
 	T i;
 	C **tab;

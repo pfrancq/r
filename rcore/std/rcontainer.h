@@ -6,7 +6,7 @@
 
 	Container - Header.
 
-	(C) 1999-2001 by P. Francq.
+	(C) 1999-2002 by P. Francq.
 
 	Version $Revision$
 
@@ -39,8 +39,8 @@
 //---------------------------------------------------------------------------
 // include files for R Project
 #include <new.h>
+using namespace std;
 #include <rstd/rstd.h>
-using namespace RStd;
 
 
 //---------------------------------------------------------------------------
@@ -186,25 +186,25 @@ public:
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,bAlloc,bOrder>* src) throw(bad_alloc);
+	RContainer(const RContainer<C,T,true,bOrder>* src) throw(bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,!bAlloc,bOrder>* src) throw(bad_alloc);
+	RContainer(const RContainer<C,T,false,bOrder>* src) throw(bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,bAlloc,bOrder>& src) throw(bad_alloc);
+	RContainer(const RContainer<C,T,true,bOrder>& src) throw(bad_alloc);
 
 	/**
 	* Construct the container from another container.
 	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer<C,T,!bAlloc,bOrder>& src) throw(bad_alloc);
+	RContainer(const RContainer<C,T,false,bOrder>& src) throw(bad_alloc);
 	//@}
 
 	/**
@@ -216,25 +216,25 @@ public:
 	* The assignement operator.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator=(const RContainer<C,T,bAlloc,bOrder>& src) throw(bad_alloc);
+	RContainer& operator=(const RContainer<C,T,true,bOrder>& src) throw(bad_alloc);
 
 	/**
 	* The assignement operator.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator=(const RContainer<C,T,!bAlloc,bOrder>& src) throw(bad_alloc);
+	RContainer& operator=(const RContainer<C,T,false,bOrder>& src) throw(bad_alloc);
 
 	/**
 	* Add the elements of a container.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,T,bAlloc,bOrder>& src) throw(bad_alloc);
+	RContainer& operator+=(const RContainer<C,T,true,bOrder>& src) throw(bad_alloc);
 
 	/**
 	* Add the elements of a container.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,T,!bAlloc,bOrder>& src) throw(bad_alloc);
+	RContainer& operator+=(const RContainer<C,T,false,bOrder>& src) throw(bad_alloc);
 	//@}
 
 	/**
