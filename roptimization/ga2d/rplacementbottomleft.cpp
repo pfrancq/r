@@ -45,8 +45,8 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs)
-	: RPlacementHeuristic(maxobjs)
+RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calcfree)
+	: RPlacementHeuristic(maxobjs,calcfree)
 {
 }
 

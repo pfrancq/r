@@ -63,6 +63,26 @@ namespace RGA{
 class RPlacementCenter : public RPlacementHeuristic
 {
 	/**
+	* The ICalcPos structure represents a valid position for an object.
+	*/
+	struct ICalcPos
+	{
+		RPoint Pos;
+		RCoord Area;
+		RCoord Dist;
+	};
+
+	/**
+	* An array of calculate position for an element.
+	*/
+   ICalcPos CalcPos[100];
+	
+   /**
+	* Number of calculated position.
+	*/
+	unsigned int NbCalcPos;
+
+	/**
 	* The list of all the polygons representing objects already placed.
 	*/
 	RPolygons Sol;
@@ -88,13 +108,20 @@ class RPlacementCenter : public RPlacementHeuristic
 	*/
 	RPoint HoldLimits;
 
+	/**
+	* Minimal distance between current position and best position if total area
+	* is smaller.
+	*/
+	RCoord MinDist;
+
 public:
 
 	/**
 	* Construct the center heuristic.
 	* @param maxobjs		The maximal number of objects to place.
+	* @param calcfree		Must free polygons be calculated.
 	*/
-	RPlacementCenter(unsigned int maxobjs);
+	RPlacementCenter(unsigned int maxobjs,bool calcfree,RCoord mindist=15);
 
 	/**
 	* Initialize the heuristic.
@@ -105,6 +132,11 @@ public:
 	* @param nbobjs		Number of objects to place.
 	*/
 	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
+
+	/**
+	* Calculate all the possible position for the current object.
+	*/
+	void CalcPositions(void);
 
 	/**
 	* Place the next object for a specific information.

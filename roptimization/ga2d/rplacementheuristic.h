@@ -43,15 +43,16 @@ using namespace RStd;
 #include <rgeometry/rpoint.h>
 #include <rgeometry/rrect.h>
 using namespace RGeometry2D;
-#include "robj2d.h"
-#include "rgeoinfo.h"
-#include "rgrid.h"
+#include <rga/robj2d.h>
+#include <rga/rgeoinfo.h>
+#include <rga/rgrid.h>
+#include <rga/rfreepolygons.h>
+using namespace RGA;
 
 
 //-----------------------------------------------------------------------------
 namespace RGA{
 //-----------------------------------------------------------------------------
-
 
 //-----------------------------------------------------------------------------
 /**
@@ -112,15 +113,21 @@ protected:
 	/**
 	* Free Polygons resulting of the placement.
 	*/
-	RPolygons Free;
+	RFreePolygons Free;
+
+	/**
+	* Calculations of free polygons.
+	*/
+	bool CalculateFree;
 
 public:
 
 	/**
 	* Construct the placement heuristic.
 	* @param maxobjs		The maximum objects to placed fore this object.
+	* @param calcfree		Must free polygons be calculated.
 	*/
-	RPlacementHeuristic(unsigned int maxobjs);
+	RPlacementHeuristic(unsigned int maxobjs,bool calcfree=false);
 	
 	/**
 	* Initialize the heuristic.
@@ -168,6 +175,11 @@ public:
 	* Return the number of objects placed.
 	*/
 	inline unsigned int GetNbObjsOk(void) {return(NbObjsOk);}
+
+	/**
+	* Return a pointer to all the free polygons.
+	*/
+	inline RFreePolygons* GetFreePolygons(void) {return(&Free);}
 
 	/**
 	* Destruct the placement heuristic.

@@ -45,8 +45,8 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPlacementEdge::RPlacementEdge(unsigned int maxobjs)
-	: RPlacementHeuristic(maxobjs)
+RPlacementEdge::RPlacementEdge(unsigned int maxobjs,bool calcfree)
+	: RPlacementHeuristic(maxobjs,calcfree)
 {
 }
 

@@ -77,8 +77,9 @@ public:
 	/**
 	* Construct the bottom-left heuristic.
 	* @param maxobjs		Maximal number of objects to place.
+	* @param calcfree		Must free polygons be calculated.
 	*/
-	RPlacementBottomLeft(unsigned int maxobjs);
+	RPlacementBottomLeft(unsigned int maxobjs,bool calcfree);
 
 	/**
 	* Initialize the heuristic.

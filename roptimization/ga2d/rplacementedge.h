@@ -97,8 +97,9 @@ public:
 
 	/**
 	* Construct the edge heuristic.
+	* @param calcfree		Must free polygons be calculated.
 	*/
-	RPlacementEdge(unsigned int maxobjs);
+	RPlacementEdge(unsigned int maxobjs,bool calcfree);
 
 	/**
 	* Initialize the heuristic.

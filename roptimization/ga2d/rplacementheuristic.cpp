@@ -45,8 +45,8 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs)
-	: Free()
+RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calcfree)
+	: Free(), CalculateFree(calcfree)
 {
 	Order=new unsigned int[maxobjs];
 }
@@ -88,7 +88,10 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 	NextObjectOri();
 
 	// Look for free polygons
-//	Grid->AddFreePolygons(CurInfo,&Free,Result);
+	if(NbObjsOk==53)
+		cout<<"Debug"<<endl;
+	if(CalculateFree)
+		Grid->AddFreePolygons(CurInfo,&Free,Result);
 
 	// Next Object
 	NbObjsOk++;
