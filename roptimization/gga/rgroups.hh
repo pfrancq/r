@@ -117,12 +117,9 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 {
 	unsigned int tmp,i,j;
 	cGroup** G;
-//	cObj** o;
 
 	if(to->NbSubObjects)
 	{
-//		for(i=0,o=&ObjsAss.Tab[to->SubObjects];(i<to->NbSubObjects)&&((*o)<obj);o++,i++);
-//		tmp=to->SubObjects+i;
 		tmp=to->SubObjects+to->NbSubObjects;
 		j=to->SubObjects;
 		for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
@@ -148,19 +145,18 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 {
 	unsigned int j,i;
 	cGroup** G;
-	cObj** o;
 
-	for(i=0,o=&ObjsAss.Tab[from->SubObjects];(*o)!=obj;o++,i++);
 	j=from->SubObjects;
-	for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
-		if(((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
-			(*G)->SubObjects--;
-	if(!(--(from->NbSubObjects)))
-		from->SubObjects=NoObject;
 	ObjectsAss[obj->GetId()]=NoGroup;
 	ObjsNoAss.InsertPtr(obj);
 	ObjsAss.DeletePtr(obj);
+	from->NbSubObjects--;
+	if(!from->NbSubObjects)
+		from->SubObjects=NoObject;
 	from->PostDelete(obj);
+	for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
+		if(((*G)->Reserved)&&((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
+			(*G)->SubObjects--;
 }
 
 
@@ -174,6 +170,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 	if(!(from->NbSubObjects)) return;
 	tmp=from->NbSubObjects;
+	j=from->SubObjects;
 	for(i=from->NbSubObjects+1,obj=&ObjsAss.Tab[from->SubObjects];--i;)
 	{
 		 // No need to increment obj, because delete moves eveything
@@ -181,13 +178,13 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		ObjsNoAss.InsertPtr(*obj);
 		ObjsAss.DeletePtr(*obj);
 		from->NbSubObjects--;
+		if(from->NbSubObjects)
+			from->SubObjects=NoObject;
 		from->PostDelete(*obj);
 	}
-	j=from->SubObjects;
 	for(i=NbPtr+1,G=Tab;--i;G++)
 		if(((*G)->Reserved)&&((*G)->SubObjects>j)&&((*G)->SubObjects!=NoObject))
 			(*G)->SubObjects-=tmp;
-	from->SubObjects=NoObject;
 }
 
 
