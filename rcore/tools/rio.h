@@ -58,9 +58,11 @@ class RTextFile;
 */
 enum ModeType
 {
-	Append,
-	Read,
-	Create
+	Append                       /** Append to an existing file. If the file
+	                                 does not exist, it is created.*/,
+	Read                         /** Open a file to read it.*/,
+	Create                       /** Create a new file. If the file already
+	                                 exists, it is destruct.*/
 };
 
 

@@ -6,7 +6,7 @@
 
 	HTML file - Header.
 
-	Copyright 2004 by the Universitï¿½Libre de Bruxelles.
+	Copyright 2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).

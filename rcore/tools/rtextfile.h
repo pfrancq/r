@@ -104,7 +104,7 @@ public:
 		NoComment                /** No comments are possible. */,
 		SingleLineComment        /** Only single line comments are possible. */,
 		MultiLineComment         /** Only multiple line comments are possible. */,
-		SingleMultiLineComment  /** Both type of comments are possible. */
+		SingleMultiLineComment   /** Both type of comments are possible. */
 	};
 
 protected:
