@@ -57,8 +57,10 @@ namespace RGGA{
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	class RChromoG : public RGA::RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cGroupData>
 {
+protected:
+
 	/**
-	* Heuristic used for the placement.
+	* Heuristic used for the groupment.
 	*/
 	RGroupingHeuristic<cGroup,cObj,cGroupData>* Heuristic;
 
