@@ -40,7 +40,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstring.h>
+#include <rstd/rstd.h>
 
 
 //------------------------------------------------------------------------------
@@ -63,27 +63,22 @@ namespace R{
 * @author Pascal Francq
 * @short MySQL Error.
 */
-class RMySQLError
+class RMySQLError : public R::RException
 {
-	/**
-	* Description of the error.
-	*/
-	RString Error;
-
 public:
 
 	/**
 	* Constructor.
-	* @param error          Description.
 	*/
-	RMySQLError(const char* error);
+	RMySQLError(void) throw()
+		: R::RException() {}
 
 	/**
-	* Get the description of the error.
-	* @returns Pointer to a C string.
+	* Constructor.
+	* @param str                      Message of the error.
 	*/
-	const char* GetError(void) const
-		{return(Error);}
+	RMySQLError(const char* str) throw()
+		: R::RException(str) {}
 };
 
 
