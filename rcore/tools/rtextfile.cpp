@@ -487,7 +487,11 @@ char* RIO::RTextFile::GetLine(void) throw(RString)
 	if(*ptr)
 	{
 		ptr3=ptr;
-		SkipSpaces();
+		while((*ptr)&&((*ptr)=='\n'||(*ptr)=='\r'))
+			ptr++;
+		SkipComments();
+		while((*ptr)&&((*ptr)=='\n'||(*ptr)=='\r'))
+			ptr++;
 		(*ptr3)=0;
 	}
 	// If the line is empty, read next line
