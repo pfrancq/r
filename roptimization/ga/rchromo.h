@@ -107,7 +107,7 @@ public:
 	* @param parent2	Second parent used.
 	* @return 				The function must return true if the crossover has been done.
 	*/
-	virtual bool Crossover(cChromo *parent1,cChromo *parent2) {return(true);}
+	virtual bool Crossover(cChromo* /*parent1*/,cChromo* /*parent2*/) {return(true);}
 
 	/**
 	* Do a mutation with the chromosome.

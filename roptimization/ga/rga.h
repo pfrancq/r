@@ -87,7 +87,7 @@ using namespace RGA;
 */
 
 /**
-* \defgroup GA Basic Genetic Algorithm.
+* \defgroup GA Basic Genetic Algorithm (Core).
 *
 * This classes represent a generic genetic algorithm.
 */

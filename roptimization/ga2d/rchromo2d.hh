@@ -125,7 +125,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		GetSetOfObjs(RObj2DContainer *obj,bool *selected)
+		GetSetOfObjs(RObj2DContainer* /*obj*/,bool* /*selected*/)
 {
 /*	unsigned int idx;												// Id of the current object
 	bool bContinue;												// Continue to construct
@@ -296,7 +296,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		Crossover(cChromo *parent1,cChromo *parent2)
+		Crossover(cChromo* parent1,cChromo* /*parent2*/)
 {
 	RGeoInfo *info;
 

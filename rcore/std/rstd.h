@@ -131,7 +131,7 @@
        	cerr	<<"file "<<__FILE__\
 					<<": line "<<__LINE__\
 					<<" ("<<__PRETTY_FUNCTION__\
-					<<"): assertion failed: "<<#expr<<endl;\
+					<<"): check failed: "<<#expr<<endl;\
 			return;\
 		}
 
@@ -141,7 +141,7 @@
        	cerr	<<"file "<<__FILE__\
 					<<": line "<<__LINE__\
 					<<" ("<<__PRETTY_FUNCTION__\
-					<<"): assertion failed: "<<#expr<<endl;\
+					<<"): check failed: "<<#expr<<endl;\
 			return(val);\
 		}
 
@@ -152,7 +152,7 @@
 		{\
        	cerr	<<"file "<<__FILE__\
 					<<": line "<<__LINE__\
-					<<" : assertion failed: "<<#expr<<endl;\
+					<<" : check failed: "<<#expr<<endl;\
 			return;\
 		}
 
@@ -161,7 +161,7 @@
 		{\
    	  	cerr	<<"file "<<__FILE__\
 					<<": line "<<__LINE__\
-					<<" : assertion failed: "<<#expr<<endl;\
+					<<" : check failed: "<<#expr<<endl;\
 			return(val);\
 		}
 
