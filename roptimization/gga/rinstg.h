@@ -123,6 +123,15 @@ public:
 	RInstG(unsigned int popsize,RGA::RObjs<cObj>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
 
 	/**
+	* Construct the instance.
+	* @param popsize        Size of the population.
+	* @param objs           Objects to groups.
+	* @param h              The heuristic that has to be used.
+	* @param debug          Debugger.
+	*/
+	RInstG(unsigned int popsize,RStd::RContainer<cObj,unsigned int,false,true>* objs,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
+
+	/**
 	* Initialisation of the instance.
 	* @param gdata          The Data to use for the construction of the groups.
 	*/
