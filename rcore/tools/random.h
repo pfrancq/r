@@ -65,12 +65,6 @@ protected:
 public:
 
 	/**
-	* Pointer to the current random generator used for randorder and RRand. This
-	* pointer must be initialise by the user
-	*/
-	static RRandom *RandomGen;
-
-	/**
 	* Construct the random generator.
 	*/
 	RRandom(void) {_seed=0;}
@@ -99,38 +93,6 @@ public:
 	* Return the seed value.
 	*/
 	int Seed(void) const { return(_seed); }
-
-	/**
-	* Return a number in the interval [0,max[ using the current random generator.
-	* @param max            Variable used to calculate the number.
-	*/
-	static long RRand(long max);
-
-	/**
-	* Random the position of elements of a vector using the current random generator.
-	* @param arr            A pointer to the array representing the vector.
-	* @param size           The size of the vector.
-	*/
-    template<class T> static inline void randorder(T *arr,unsigned size)
-    {
-		register unsigned i,jump;
-		T aux;
-		register T *p1;
-		register T *p2;
-
-		#ifdef __BORLANDC__
-			#pragma warn -pia
-		#endif
-		if(size>1)
-			for(p1=arr,i=size;;p1++)
-			{
-				if(jump=RRand(i)) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
-				if(!--i) break;
-			}
-		#ifdef __BORLANDC__
-			#pragma warn +pia
-		#endif
-	}
 
 	/**
 	* Random the position of elements of a vector.

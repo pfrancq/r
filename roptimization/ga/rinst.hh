@@ -595,7 +595,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(BestChromosome) delete BestChromosome;
 	if(tmpChrom1) delete[] tmpChrom1;
 	if(tmpChrom2) delete[] tmpChrom2;
-	delete RRandom::RandomGen;
 	#ifdef RGADEBUG
 		if(Debug) Debug->EndApp();
 	#endif
