@@ -451,7 +451,7 @@ public:
 
 //---------------------------------------------------------------------------
 // inline implementation
-#include "rcontainer.hh"
+#include <rstd/rcontainer.hh>
 
 
 }  //-------- End of namespace RStd -----------------------------------------

@@ -96,7 +96,7 @@ public:
 };
 
 
-#include "rnode.hh"    // Template implementation
+#include <rstd/rnode.hh>    // Template implementation
 
 
 }	//---- End namespace RStd -------------------------------------------------

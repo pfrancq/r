@@ -192,7 +192,7 @@ public:
 };
 
 
-#include "rcursor.hh" // implementation
+#include <rstd/rcursor.hh> // implementation
 
 
 }  //-------- End of namespace RStd -------------------------------------------

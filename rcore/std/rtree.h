@@ -99,7 +99,7 @@ public:
 };
 
 
-#include "rtree.hh"  // Template implementation
+#include <rstd/rtree.hh>  // Template implementation
 
 
 }//---- End namespace RStd ----------------------------------------------------
