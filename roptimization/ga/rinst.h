@@ -72,7 +72,7 @@ public:
 	/**
 	* Instance of the problem.
 	*/
-	cInst *Owner;
+	cInst* Owner;
 
 	/**
 	* Construct the data.
@@ -111,10 +111,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	static int sort_function_cChromosome( const void *a, const void *b);
 
 public:
+
 	/**
 	* Pointer to a "debugger" holding information about the GA when it is running.
 	*/
-	RDebug *Debug;
+	RDebug* Debug;
 
 	/**
 	* Random number generator
@@ -122,27 +123,23 @@ public:
 	RRandom* Random;
 
 private:
-	/**
-	* Temporary data for internal use.
-	*/
-	cChromo **Parents;
 
 	/**
 	* Temporary data for internal use.
 	*/
-	cChromo **Childs;
+	cChromo** tmpChrom1;
 
 	/**
 	* Temporary data for internal use.
 	*/
-	cChromo **tmpChrom;
+	cChromo** tmpChrom2;
 
 protected:
 	
 	/**
 	* "Thread-dependent" data of the instance.
 	*/
-	cThreadData **thDatas;
+	cThreadData** thDatas;
 
 	/**
 	* Container of all objects that will be receive signals from the GA.
@@ -159,17 +156,17 @@ public:
 	/**
 	* The chromosomes.
 	*/
-	cChromo **Chromosomes;
+	cChromo** Chromosomes;
 
 	/**
 	* The best chromosome ever calculated.
 	*/
-	cChromo *BestChromosome;
+	cChromo* BestChromosome;
 
 	/**
 	* The best chromosome in the population.
 	*/
-	cChromo *BestInPop;
+	cChromo* BestInPop;
 
 	/**
 	* Size of the population.
@@ -200,6 +197,16 @@ public:
 	* Number of generation left before mutation of the best chromosome.
 	*/
 	unsigned int AgeNextBestMutation;
+
+	/**
+	* Number of generation left before next inversion.
+	*/
+	unsigned int AgeNextInversion;
+
+	/**
+	* Frequence of inversion.
+	*/
+	unsigned int FreqInversion;
 
 	/**
 	* Age of the best chromosome ever calculate.
@@ -261,8 +268,7 @@ public:
 
 	/**
 	* This function does the crossovers for a generation. Actually, the
-	* strategy implemented is the "ranking" one, but the tournament method must
-	* be implemented in a near future.
+	* tournament strategy is implemented.
 	*/
 	virtual void Crossover(void) throw(eGA);
 
@@ -270,6 +276,11 @@ public:
 	* This function does the necessary mutations for a generation.
 	*/
 	virtual void Mutation(void) throw(eGA);
+	
+	/**
+	* This function does the necessary inversions for a generation.
+	*/
+	virtual void Inversion(void) throw(eGA);
 
 	/**
 	* This function does a generation.
