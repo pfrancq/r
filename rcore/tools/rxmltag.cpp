@@ -118,6 +118,7 @@ void RXML::RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 	char *ptr,*ptr2,c;
 	char *attrn,*attrv;
 	RXMLTag *tag;
+	int OpenTags;
 
 	// If not a tag -> Error
 	if(!f->BeginTag())
@@ -136,10 +137,21 @@ void RXML::RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 	Name=ptr2;
 	(*ptr)=c;
 	while(isspace(*ptr)) ptr++; // Skip Spaces
+
+	// Skip first line <?xml ?>
+	if(!strcmp(Name(),"?xml")) return;
+
+	// Read DocType
 	if(!strcmp(Name(),"!DOCTYPE"))
 	{
+		OpenTags=1;
 		ptr2=ptr;
-		while((!isspace(*ptr))&&((*ptr)!='>')) ptr++; // Read DocType
+		while((!isspace(*ptr))&&OpenTags)
+		{
+			if((*ptr)=='<') OpenTags++;
+			if((*ptr)=='>') OpenTags--;
+			ptr++;
+		}
 		c=(*ptr);
 		(*ptr)=0;
 		Contains=ptr2;
@@ -299,6 +311,24 @@ void RXML::RXMLTag::DeleteEmptyTags(void)
 		else
 			ptr++;  // No empty tag -> Go to the next.
 	}
+}
+
+
+//-----------------------------------------------------------------------------
+RXMLAttrCursor& RXML::RXMLTag::GetXMLAttrCursor(void)
+{
+	RXMLAttrCursor *cur=RXMLAttrCursor::GetTmpCursor();
+	cur->Set(Attrs);
+	return(*cur);
+}
+
+
+//-----------------------------------------------------------------------------
+RXMLTagCursor& RXML::RXMLTag::GetXMLTagsCursor(void)
+{
+	RXMLTagCursor *cur=RXMLTagCursor::GetTmpCursor();
+	cur->Set(this);
+	return(*cur);
 }
 
 

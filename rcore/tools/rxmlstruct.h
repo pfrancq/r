@@ -56,6 +56,11 @@ namespace RXML{
 */
 class RXMLStruct : public RTree<RXMLTag,true,false>
 {
+	/**
+	* The entities of the structure.
+	*/
+	RContainer<RXMLAttr,unsigned,true,true> Entities;
+
 public:
 
 	/**
@@ -82,7 +87,18 @@ public:
 	*/
 	RXMLTag* GetTop(void) {return(Top->Tab[0]);}
 
-public:
+	/**
+	* Insert an entity.
+	* @param name           Name of thae entity.
+	* @param value          Value of thae entity.
+	*/
+	void InsertEntity(const char* name,const char* value);
+
+	/**
+	* Get a Cursor on the entities.
+	* @return GXMLAttrCursor.
+	*/
+	RXMLAttrCursor& GetXMLEntitiesCursor(void);
 
 	/**
 	* Destruct the XML Structure.

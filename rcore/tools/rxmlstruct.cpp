@@ -45,7 +45,7 @@ using namespace RXML;
 
 //-----------------------------------------------------------------------------
 RXML::RXMLStruct::RXMLStruct(void)
- : RTree<RXMLTag,true,false>(100,50)
+ : RTree<RXMLTag,true,false>(100,50), Entities(20,10)
 {
 }
 
@@ -65,6 +65,21 @@ RXMLTag* RXML::RXMLStruct::GetTag(const char* name,RXMLTag* parent)
 	return(parent->GetPtr<const char*>(name,false));
 }
 
+
+//------------------------------------------------------------------------------
+void RXMLStruct::InsertEntity(const char* name,const char* value)
+{
+	Entities.InsertPtr(new RXMLAttr(name,value));
+}
+
+
+//-----------------------------------------------------------------------------
+RXMLAttrCursor& RXML::RXMLStruct::GetXMLEntitiesCursor(void)
+{
+	RXMLAttrCursor *cur=RXMLAttrCursor::GetTmpCursor();
+	cur->Set(Entities);
+	return(*cur);
+}
 
 //-----------------------------------------------------------------------------
 RXML::RXMLStruct::~RXMLStruct(void)

@@ -48,6 +48,8 @@ RXML::RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
  : RTextFile(name,mode), XMLStruct(xmlstruct)
 {
 	RXMLTag *top;
+	RXMLAttrCursor Cur;
+	char tmp[500];
 
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -66,7 +68,21 @@ RXML::RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
 		case Append:
 		case Create:
 			top = XMLStruct->Top->Tab[0];
-			(*this)<<"<!DOCTYPE"<<top->GetName()+">"<<endl;
+			(*this)<<"<?xml version=\"1.0\"?>"<<endl;
+			(*this)<<"<!DOCTYPE"<<top->GetName();
+			Cur=XMLStruct->GetXMLEntitiesCursor();
+			if(Cur.GetNb())
+			{
+				(*this)<<"["<<endl;
+				for(Cur.Start();!Cur.End();Cur.Next())
+				{
+					sprintf(tmp,"\t<!ENTITY %s \"%s\">",(Cur()->GetName())(),(Cur()->GetValue())());
+					(*this)<<tmp<<endl;
+				}
+				(*this)<<"  ]>"<<endl;
+			}
+			else
+				(*this)<<">"<<endl;
 			top->Save(this,0);
 			break;
 

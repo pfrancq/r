@@ -40,6 +40,7 @@
 // include files for R Project
 #include <rstd/rstring.h>
 #include <rstd/rnode.h>
+#include <rstd/rcursor.h>
 using namespace RStd;
 #include <rxml/rxmlattr.h>
 using namespace RXML;
@@ -54,6 +55,7 @@ namespace RXML{
 // Forward class declaration
 class RXMLStruct;
 class RXMLFile;
+class RXMLTagCursor;
 
 
 //-----------------------------------------------------------------------------
@@ -64,7 +66,6 @@ class RXMLFile;
 */
 class RXMLTag : public RNode<RXMLTag,false>
 {
-
 	/**
 	* The name of the tag.
 	*/
@@ -255,6 +256,18 @@ public:
 	RXMLAttr* GetCurAttrs(void) {return(Attrs());}
 
 	/**
+	* Get a Cursor on the attributes.
+	* @return GXMLAttrCursor.
+	*/
+	RXMLAttrCursor& GetXMLAttrCursor(void);
+
+	/**
+	* Get a Cursor on the sub tags.
+	* @return GXMLTagCursor.
+	*/
+	RXMLTagCursor& GetXMLTagsCursor(void);
+
+	/**
 	* Destruct the XML Tag.
 	*/
 	~RXMLTag(void);
@@ -262,6 +275,14 @@ public:
 	// friend classes
 	friend class RXMLStruct;
 };
+
+
+//-----------------------------------------------------------------------------
+/**
+* The RXMLTagCursor class provides a way to go trough a set of XML tags.
+* @short XML Tags Cursor
+*/
+CLASSCURSOR(RXMLTagCursor,RXMLTag,unsigned int)
 
 
 }  //-------- End of namespace RXML -----------------------------------------
