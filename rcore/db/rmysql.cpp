@@ -153,6 +153,7 @@ void RQuery::Init(void) throw(RMySQLError)
 	{
 		throw RMySQLError("Error in encoded data");
 	}
+
 	if(mysql_real_query(DB->connection,SQL_utf8,SQL_utf8.GetLen()))
 		throw RMySQLError(mysql_error(&DB->mysql));
 
