@@ -275,18 +275,20 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	void RStd::RContainer<C,T,bAlloc,bOrder>::InsertPtrAt(C *ins,T Pos) throw(bad_alloc)
 {
 	C **ptr;
+	unsigned int max;
 
 	RReturnIfFail(ins);
 	if(!ins) return;
-	VerifyTab(Pos+1);
+	if(Pos>=MaxPtr)
+		max=Pos;
+	else
+		max=MaxPtr-1;
+	VerifyTab(max+1);
 	ptr=&Tab[Pos];
 	if(Pos<NbPtr)
 		memmove(ptr+1,ptr,(NbPtr-Pos)*sizeof(C*));
 	(*ptr)=ins;
-	if(Pos>=NbPtr)
-		NbPtr=Pos+1;
-	else
-		NbPtr++;
+	NbPtr++;
 }
 
 
