@@ -247,6 +247,24 @@ public:
 	static char HashIndex(const char* str);
 
 	/**
+	* Return a number between 0 and 26 according to the second character of the
+	* string. It is used for the RStd::RDblHashContainer class.
+	*/
+	static char HashIndex2(const RString* str);
+
+	/**
+	* Return a number between 0 and 26 according to the first character of the
+	* string. It is used for the RStd::RDblHashContainer class.
+	*/
+	static char HashIndex2(const RString& str);
+
+	/**
+	* Return a number between 0 and 26 according to the second character of the
+	* string. It is used for the RStd::RDblHashContainer class.
+	*/
+	static char HashIndex2(const char* str);
+
+	/**
 	* Return the length of the string.
 	*/
 	inline int GetLen(void) const {return(Len);}

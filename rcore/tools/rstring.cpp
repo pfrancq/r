@@ -416,12 +416,14 @@ char RStd::RString::HashIndex(const RString* str)
 	#ifdef __BORLANDC__
 		#pragma warn -sig
 	#endif
+	if(!c) return(26);
 	if(c>='a'&&c<='z') return(c-'a');
 	if(c>='A'&&c<='Z') return(c-'A');
 	#ifdef __BORLANDC__
 		#pragma warn .sig	
 	#endif
 	return(26);
+
 }
 
 
@@ -432,6 +434,7 @@ char RStd::RString::HashIndex(const RString& str)
 	#ifdef __BORLANDC__
 		#pragma warn -sig
 	#endif
+	if(!c) return(26);
 	if(c>='a'&&c<='z') return(c-'a');
 	if(c>='A'&&c<='Z') return(c-'A');
 	#ifdef __BORLANDC__
@@ -445,6 +448,65 @@ char RStd::RString::HashIndex(const RString& str)
 char RStd::RString::HashIndex(const char* str)
 {
 	int c=(*str);
+	#ifdef __BORLANDC__
+		#pragma warn -sig
+	#endif
+	if(!c) return(26);
+	if(c>='a'&&c<='z') return(c-'a');
+	if(c>='A'&&c<='Z') return(c-'A');
+	#ifdef __BORLANDC__
+		#pragma warn .sig	
+	#endif
+	return(26);
+}
+
+
+//-----------------------------------------------------------------------------
+char RStd::RString::HashIndex2(const RString* str)
+{
+	int c=*(str->Text);
+	if(!c) return(26);
+	c=(*(str->Text+1));
+	if(!c) return(26);
+	#ifdef __BORLANDC__
+		#pragma warn -sig
+	#endif
+	if(c>='a'&&c<='z') return(c-'a');
+	if(c>='A'&&c<='Z') return(c-'A');
+	#ifdef __BORLANDC__
+		#pragma warn .sig	
+	#endif
+	return(26);
+
+}
+
+
+//-----------------------------------------------------------------------------
+char RStd::RString::HashIndex2(const RString& str)
+{
+	int c=(*str.Text);
+	if(!c) return(26);
+	c=(*(str.Text+1));
+	if(!c) return(26);
+	#ifdef __BORLANDC__
+		#pragma warn -sig
+	#endif
+	if(c>='a'&&c<='z') return(c-'a');
+	if(c>='A'&&c<='Z') return(c-'A');
+	#ifdef __BORLANDC__
+		#pragma warn .sig	
+	#endif
+	return(26);
+}
+
+
+//-----------------------------------------------------------------------------
+char RStd::RString::HashIndex2(const char* str)
+{
+	int c=(*str);
+	if(!c) return(26);
+	c=(*(str+1));
+	if(!c) return(26);
 	#ifdef __BORLANDC__
 		#pragma warn -sig
 	#endif
