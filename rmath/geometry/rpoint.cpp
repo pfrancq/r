@@ -31,7 +31,7 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
 #include <rstd/rstd.h>
 using namespace RStd;
@@ -41,20 +41,20 @@ using namespace RGeometry2D;
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // Class "RPoint"
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint::RPoint(void)
 {
 	X=Y=0;
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint::RPoint(const RCoord x,const RCoord y)
 {
 	X=x;
@@ -62,7 +62,7 @@ RPoint::RPoint(const RCoord x,const RCoord y)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint::RPoint(const RPoint& pt)
 {
 	X=pt.X;
@@ -70,7 +70,7 @@ RPoint::RPoint(const RPoint& pt)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint::RPoint(const RPoint *pt)
 {
 	RReturnIfFail(pt);
@@ -80,7 +80,7 @@ RPoint::RPoint(const RPoint *pt)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPoint::GetPoint(void)
 {
 	return(GetTemporaryObject<RPoint,30>());
@@ -88,27 +88,27 @@ RPoint* RPoint::GetPoint(void)
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // RPoints
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoints::RPoints(void)
 	: RContainer<RPoint,unsigned int,true,false>(10,5)
 {
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoints::RPoints(unsigned int max)
 	: RContainer<RPoint,unsigned int,true,false>(max,5)
 {
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoints::RPoints(RPoints *points)
 	: RContainer<RPoint,unsigned int,true,false>(points->MaxPtr,points->IncPtr)
 {
@@ -122,7 +122,7 @@ RPoints::RPoints(RPoints *points)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 {
 	RPoint *Activ,**point;
@@ -134,14 +134,14 @@ RPoint* RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 	if(!NbPtr) return(0);
 	X=pt->X;
 	Y=pt->Y;
-	Activ=NULL;
+	Activ=0;
 	point=Tab;
 	i=NbPtr+1;
 	// Find first point on left
 	while((!Activ)&&(--i))
 	{
 		if(((*point)->Y==Y)&&((*point)->X==X-1)) return(*point);
-		if(((*point)->Y==Y)&&(polys->Vertex(*point,pt))&&((*point)->X<X))
+		if(((*point)->Y==Y)&&(polys->Edge(*point,pt))&&((*point)->X<X))
 			Activ=(*point);
 		point++;
 	}
@@ -151,7 +151,7 @@ RPoint* RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 	for(;--i;point++)
 	{
 		if(((*point)->Y==Y)&&((*point)->X==X-1)) return(*point);
-		if(((*point)->Y==Y)&&(polys->Vertex(*point,pt))&&((*point)->X>AX)&&((*point)->X<X))
+		if(((*point)->Y==Y)&&(polys->Edge(*point,pt))&&((*point)->X>AX)&&((*point)->X<X))
 		{
 			Activ=(*point);	
 			AX=Activ->X;
@@ -161,7 +161,7 @@ RPoint* RPoints::FindLeft(RPoint *pt,RPolygons *polys)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPoints::FindRight(RPoint *pt,RPolygons *polys)
 {
 	RPoint *Activ,**point;
@@ -173,14 +173,14 @@ RPoint* RPoints::FindRight(RPoint *pt,RPolygons *polys)
 	if(!NbPtr) return(0);
 	X=pt->X;
 	Y=pt->Y;
-	Activ=NULL;
+	Activ=0;
 	point=Tab;
 	i=NbPtr+1;
 	// Find first point on right
 	while((!Activ)&&(--i))
 	{
 		if(((*point)->Y==Y)&&((*point)->X==X+1)) return(*point);
-		if(((*point)->Y==Y)&&(polys->Vertex(*point,pt))&&((*point)->X>X))
+		if(((*point)->Y==Y)&&(polys->Edge(*point,pt))&&((*point)->X>X))
 			Activ=(*point);
 		point++;
 	}
@@ -190,7 +190,7 @@ RPoint* RPoints::FindRight(RPoint *pt,RPolygons *polys)
 	for(;--i;point++)
 	{
 		if(((*point)->Y==Y)&&((*point)->X==X+1)) return(*point);
-		if(((*point)->Y==Y)&&(polys->Vertex(*point,pt))&&((*point)->X<AX)&&((*point)->X>X))
+		if(((*point)->Y==Y)&&(polys->Edge(*point,pt))&&((*point)->X<AX)&&((*point)->X>X))
 		{
 			Activ=(*point);	
 			AX=Activ->X;
@@ -200,7 +200,7 @@ RPoint* RPoints::FindRight(RPoint *pt,RPolygons *polys)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPoints::FindBottom(RPoint *pt,RPolygons *polys)
 {
 	RPoint *Activ,**point;
@@ -212,14 +212,14 @@ RPoint* RPoints::FindBottom(RPoint *pt,RPolygons *polys)
 	if(!NbPtr) return(0);
 	X=pt->X;
 	Y=pt->Y;
-	Activ=NULL;
+	Activ=0;
 	point=Tab;
 	i=NbPtr+1;
 	// Find first point on bottom
 	while((!Activ)&&(--i))
 	{
 		if(((*point)->X==X)&&((*point)->Y==Y-1)) return(*point);
-		if(((*point)->X==X)&&(polys->Vertex(*point,pt))&&((*point)->Y<Y))
+		if(((*point)->X==X)&&(polys->Edge(*point,pt))&&((*point)->Y<Y))
 			Activ=(*point);
 		point++;
 	}
@@ -229,7 +229,7 @@ RPoint* RPoints::FindBottom(RPoint *pt,RPolygons *polys)
 	for(;--i;point++)
 	{
 		if(((*point)->X==X)&&((*point)->Y==Y-1)) return(*point);
-		if(((*point)->X==X)&&(polys->Vertex(*point,pt))&&((*point)->Y>AY)&&((*point)->Y<Y))
+		if(((*point)->X==X)&&(polys->Edge(*point,pt))&&((*point)->Y>AY)&&((*point)->Y<Y))
 		{
 			Activ=(*point);	
 			AY=Activ->Y;
@@ -239,7 +239,7 @@ RPoint* RPoints::FindBottom(RPoint *pt,RPolygons *polys)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPoints::FindUp(RPoint *pt,RPolygons *polys)
 {
 	RPoint *Activ,**point;
@@ -258,7 +258,7 @@ RPoint* RPoints::FindUp(RPoint *pt,RPolygons *polys)
 	while((!Activ)&&(--i))
 	{
 		if(((*point)->X==X)&&((*point)->Y==Y+1)) return(*point);
-		if(((*point)->X==X)&&(polys->Vertex(*point,pt))&&((*point)->Y>Y))
+		if(((*point)->X==X)&&(polys->Edge(*point,pt))&&((*point)->Y>Y))
 			Activ=(*point);
 		point++;
 	}
@@ -268,7 +268,7 @@ RPoint* RPoints::FindUp(RPoint *pt,RPolygons *polys)
 	for(;--i;point++)
 	{
 		if(((*point)->X==X)&&((*point)->Y==Y+1)) return(*point);
-		if(((*point)->X==X)&&(polys->Vertex(*point,pt))&&((*point)->Y<AY)&&((*point)->Y>Y))
+		if(((*point)->X==X)&&(polys->Edge(*point,pt))&&((*point)->Y<AY)&&((*point)->Y>Y))
 		{
 			Activ=(*point);	
 			AY=Activ->Y;
@@ -278,7 +278,7 @@ RPoint* RPoints::FindUp(RPoint *pt,RPolygons *polys)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPoints::FindBottomLeft(void)
 {
 	RPoint *Activ,**point;
@@ -301,7 +301,7 @@ RPoint* RPoints::FindBottomLeft(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool RPoints::DuplicatePoints(void)
 {
 	unsigned int i,j;
@@ -315,7 +315,7 @@ bool RPoints::DuplicatePoints(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoints& RPoints::operator=(const RPoints &points)
 {
 	RContainer<RPoint,unsigned int,true,false>::operator=(points);
@@ -324,13 +324,13 @@ RPoints& RPoints::operator=(const RPoints &points)
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // Global Functions and Operators
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint& RGeometry2D::operator+(const RPoint &arg1,const RPoint &arg2)
 {
 	RPoint *res=RPoint::GetPoint();
@@ -339,7 +339,7 @@ RPoint& RGeometry2D::operator+(const RPoint &arg1,const RPoint &arg2)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint& RGeometry2D::operator-(const RPoint &arg1,const RPoint &arg2)
 {
 	RPoint *res=RPoint::GetPoint();
