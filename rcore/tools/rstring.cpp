@@ -174,7 +174,9 @@ RString::CharBuffer* RString::GetDataNull(void)
 {
 	if(!RString::DataNull)
 	{
-		RString::DataNull=new CharBuffer();
+		RChar* ptr2=new RChar[1];
+		(*ptr2)=0;
+		RString::DataNull=new CharBuffer(ptr2,0,0);
 		RString* ptr=const_cast<RString*>(&RString::Null);
 		ptr->Data = RString::DataNull;
 	}

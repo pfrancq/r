@@ -169,7 +169,9 @@ RCString::CharBuffer* RCString::GetDataNull(void)
 {
 	if(!RCString::DataNull)
 	{
-		RCString::DataNull=new CharBuffer();
+		char* ptr2=new char[1];
+		(*ptr2)=0;
+		RCString::DataNull=new CharBuffer(ptr2,0,0);
 		RCString* ptr=const_cast<RCString*>(&RCString::Null);
 		ptr->Data = RCString::DataNull;
 	}
