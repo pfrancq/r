@@ -89,6 +89,11 @@ namespace RStd{
 * Here is an example of class MyElement that will be contained in the
 * variable c:
 * <pre>
+* #include<rstd/rcontainer.h>
+* #include<rstd/rcontainercursor.h>
+* using namespace RStd;
+*
+*
 * class MyElement
 * {
 * 	unsigned int Id;
@@ -105,16 +110,18 @@ namespace RStd{
 * 	}
 * };
 *
+*
 * int main()
 * {
 * 	RContainer<MyElement,unsigned int,true,true> c(20,10);
+* 	RContainerCursor<MyElement,unsigned int,true,true> cur(c);
 *
 * 	c.InsertPtr(new MyElement(5));
 * 	if(c.IsIn<char*>("5"))
 * 		cout<<"An element of value 5 is in the container"<<endl;
 * 	c.InsertPtr(new MyElement(10));
-* 	for(c.Start();!c.End();c.Next())
-* 		c()->DoSomething(2.3);
+* 	for(cur.Start();!cur.End();cur.Next())
+* 		cur()->DoSomething(2.3);
 * }
 * </pre>
 *
@@ -161,45 +168,79 @@ public:
 	*/
 	T IncPtr;
 
+public:
+
+	/**
+	* @name Constructors.
+	*/
+	//@{
+
 	/**
 	* Construct the container.
 	* @param M              The initial maximal size of the array.
 	* @param I              The value used when increasing the array.
 	*/
-	RContainer(T M,T I) throw(bad_alloc);
+	RContainer(T M,T I=0) throw(bad_alloc);
 
-	/** Construct the container from another container.
-	* @param container      The container used as reference.
+	/**
+	* Construct the container from another container.
+	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer *container) throw(bad_alloc);
+	RContainer(const RContainer<C,T,bAlloc,bOrder>* src) throw(bad_alloc);
 
-	/** Construct the container from another container.
-	* @param container      The container used as reference.
+	/**
+	* Construct the container from another container.
+	* @param src            Container used as source.
 	*/
-	RContainer(const RContainer &container) throw(bad_alloc);
-	
+	RContainer(const RContainer<C,T,!bAlloc,bOrder>* src) throw(bad_alloc);
+
+	/**
+	* Construct the container from another container.
+	* @param src            Container used as source.
+	*/
+	RContainer(const RContainer<C,T,bAlloc,bOrder>& src) throw(bad_alloc);
+
+	/**
+	* Construct the container from another container.
+	* @param src            Container used as source.
+	*/
+	RContainer(const RContainer<C,T,!bAlloc,bOrder>& src) throw(bad_alloc);
+	//@}
+
+	/**
+	* @name Assignement operators.
+	*/
+	//@{
+
 	/**
 	* The assignement operator.
+	* @param src            Container used as source.
 	*/
-	RContainer& operator=(const RContainer& container) throw(bad_alloc);
+	RContainer& operator=(const RContainer<C,T,bAlloc,bOrder>& src) throw(bad_alloc);
+
+	/**
+	* The assignement operator.
+	* @param src            Container used as source.
+	*/
+	RContainer& operator=(const RContainer<C,T,!bAlloc,bOrder>& src) throw(bad_alloc);
 
 	/**
 	* Add the elements of a container.
+	* @param src            Container used as source.
 	*/
-	RContainer& operator+=(const RContainer &container) throw(bad_alloc);
+	RContainer& operator+=(const RContainer<C,T,bAlloc,bOrder>& src) throw(bad_alloc);
 
 	/**
-	* This function returns the index of an element represented by tag, and it
-	* is used when the elements are to be ordered.
-	* @param TUse           The type of tag, the container uses the Compare(TUse &)
-	*                       member function of the elements.
-	* @param tag            The tag used.
-	* @param Find           If the element represented by tag exist, bFind is set to
-	*                       true.
-	* @return Returns the index of the element if it exists orthe index where
-	* is has to inserted.
+	* Add the elements of a container.
+	* @param src            Container used as source.
 	*/
-	template<class TUse> T GetId(const TUse &tag,bool &Find);
+	RContainer& operator+=(const RContainer<C,T,!bAlloc,bOrder>& src) throw(bad_alloc);
+	//@}
+
+	/**
+	* @name Size verification methods.
+	*/
+	//@{
 
 	/**
 	* Verify if the container can hold the next element to be inserted. If not,
@@ -213,6 +254,12 @@ public:
     * @param MaxSize        The number of elements that must be contained.
 	*/
 	void VerifyTab(T MaxSize) throw(bad_alloc);
+	//@}
+
+	/**
+	* @name Clear methods.
+	*/
+	//@{
 
 	/**
 	* Clear the container and destruct the elements if he is responsible for
@@ -227,13 +274,14 @@ public:
 	* @param I              The value used when increasing the array.
 	*/
 	void Clear(T M,T I);
+	//@}
+
+protected:
 
 	/**
 	* @name Accessing elements.
 	*/
 	//@{
-
-protected:
 
 	/**
 	* Insert an element in an ordered container. Used by InsertPtr and
@@ -241,9 +289,28 @@ protected:
 	* @param ins            A pointer to the element to insert.
 	* @param Pos            The position where to insert it.
 	*/
-	void InsertPtrOrderAt(C *ins,T Pos) throw(bad_alloc);
+	void InsertPtrOrderAt(const C *ins,T Pos) throw(bad_alloc);
+	//@}
 
 public:
+
+	/**
+	* @name Accessing elements.
+	*/
+
+	//@{
+	/**
+	* This function returns the index of an element represented by tag, and it
+	* is used when the elements are to be ordered.
+	* @param TUse           The type of tag, the container uses the Compare(TUse &)
+	*                       member function of the elements.
+	* @param tag            The tag used.
+	* @param Find           If the element represented by tag exist, bFind is set to
+	*                       true.
+	* @return Returns the index of the element if it exists orthe index where
+	* is has to inserted.
+	*/
+	template<class TUse> T GetId(const TUse &tag,bool &Find);
 
 	/**
 	* Insert an element at a certain position. Two remarks must be made :
@@ -257,13 +324,13 @@ public:
 	* @param del            Specify if the object that was previously at Pos
 	*                       must be shift or deleted.
 	*/
-	void InsertPtrAt(C *ins,T Pos,bool del=true) throw(bad_alloc);
+	void InsertPtrAt(const C *ins,T Pos,bool del=true) throw(bad_alloc);
 
 	/**
 	* Insert an element in the container.
 	* @param ins            A pointer to the element to insert.
 	*/
-	void InsertPtr(C* ins) throw(bad_alloc);
+	void InsertPtr(const C* ins) throw(bad_alloc);
 
 	/**
 	* Look if a certain element is in the container.
@@ -324,7 +391,7 @@ public:
 	* container is responsible of the desallocation.
 	* @param del            A pointer to the element to delete.
 	*/
-	void DeletePtr(C* del) throw(bad_alloc);
+	void DeletePtr(C*& del) throw(bad_alloc);
 
 	/**
 	* Delete an element from the container. The element is destruct if the
@@ -338,38 +405,55 @@ public:
 
 	/**
 	* @name Iterator functions.
+	* \deprecated
+	* Use the RContainerCursor class instead of this methods.
 	*/
 	//@{
 
 	/**
 	* Start the iterator to go trough the container.
+	* \deprecated
+	* Use the RContainerCursor class instead of this methods.
 	*/
 	inline void Start(void);
 
 	/**
 	* Test if the end of the container is reached.
+	* \deprecated
+	* Use the RContainerCursor class instead of this methods.
 	*/
 	inline bool End(void) const;
 
 	/**
 	* Goto the next element, if the end is reached, go to the beginning.
+	* \deprecated
+	* Use the RContainerCursor class instead of this methods.
 	*/
 	inline void Next(void);
 
 	/**
 	* Return the current element.
+	* \deprecated
+	* Use the RContainerCursor class instead of this methods.
 	*/
 	inline C* operator()(void) const;
 	//@}
 
 	/**
+	* @name Destructor.
+	*/
+	//@{
+	/**
 	* Destructs the container.
 	*/
 	virtual ~RContainer(void);
+	//@}
 };
 
 
-#include "rcontainer.hh" // implementation
+//---------------------------------------------------------------------------
+// inline implementation
+#include "rcontainer.hh"
 
 
 }  //-------- End of namespace RStd -----------------------------------------
