@@ -71,6 +71,7 @@ class RGeoInfo;
 */
 class RGeoInfoConnector
 {
+public:
 	/**
 	* Pointer to the real connector.
 	*/
@@ -80,8 +81,6 @@ class RGeoInfoConnector
 	* Owner of the connector.
 	*/
 	RGeoInfo* Owner;
-
-public:
 
 	/**
 	* Number of position for the connector.
@@ -162,6 +161,8 @@ class RGeoInfo
 {
 	/**
 	* Pointer to the the object.
+	* A geometric information with no corresponding object is considered not to
+	* be treated.
 	*/
 	RObj2D *Obj;
 
@@ -235,7 +236,7 @@ public:
 	/**
 	* Clears the geometric information.
 	*/
-	void Clear(void);
+	virtual void ClearInfo(void);
 
 	/**
 	* Return the index of the orientation.
@@ -260,8 +261,15 @@ public:
 
 	/**
 	* Return true if the geometric information is a valid one.
-	*/	
+	*/
 	bool IsValid(void) const;
+
+	/**
+	* Return true if the geometric information is a valid one in given limits.
+	* @param pos            Position to verify.
+	* @param limits         Limits.
+	*/
+	bool IsValid(const RPoint& pos,const RPoint& limits) const;
 
 	/**
 	* Return true if the object represented by the geometric information is
@@ -286,7 +294,7 @@ public:
 	* @param grid           Grid.
 	*/
 	void Assign(const RPoint &pos,RGrid *grid);
-	
+
 	/**
 	* Assign the geometric information to the position.
 	* @param pos            Position to place.
@@ -298,7 +306,14 @@ public:
 	* pointers.
 	* @param info           Pointer used for the comparaison.
 	*/
-	int Compare(RGeoInfo *info) { return(info!=this); }
+	int Compare(const RGeoInfo *info) { return(info!=this); }
+
+	/**
+	* Compare function use for the RContainer class. Compare the identificator
+	* with the one of the corresponding object.
+	* @param id             Idenfificator used for the comparaison.
+	*/
+	int Compare(const unsigned int id) { return(Obj->Compare(id)); }
 
 	/**
 	* Test if the object can be placed at a specific position in regards of the
@@ -399,6 +414,13 @@ public:
 	bool IsIn(RPoint pos);
 
 	/**
+	* See if a connector is at a specific position.
+	* @param pos            Position to test.
+	* @return Pointer to the connector or 0 if no connector.
+	*/
+	RGeoInfoConnector* GetConnector(const RPoint& pos);
+
+	/**
 	* Add the polygon representing the object in the container of polygons.
 	*/
 	void Add(RPolygons &polys);
@@ -443,43 +465,15 @@ public:
 	*/
 	unsigned int GetOrder(void) {return(Order);}
 
+	/**
+	* Destruct the geometric information.
+	*/
+	virtual ~RGeoInfo(void);
+
 	// friend classes
 	friend class RGeoInfos;
-};
-
-
-//-----------------------------------------------------------------------------
-/**
-* The RGeoInfoContainer class provides a set of geometric information to be
-* considered like one entity.
-* @author Pascal Francq
-* @short Geometric Information Container.
-*/
-class RGeoInfoContainer : public RGeoInfo
-{
-public:
-	
-	/**
-	* Construct a geometric information.
-	*/
-	RGeoInfoContainer(void);	
-
-	/**
-	* Construct a geometric information.
-	*/
-	RGeoInfoContainer(RObj2D* obj);
-
-	/**
-	* Add a geometric information information to the container.
-	* @param info           The geometric information of the object.
-	*/
-	void Add(RGeoInfo *info);
-
-	/**
-	* Does some calculation after each geometric informartion were added to the
-	* container.
-	*/
-	void End(void);
+	friend class RGeoInfoConnection;
+	friend class RObj2DContainer;
 };
 
 

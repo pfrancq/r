@@ -93,7 +93,7 @@ protected:
 	/**
 	* The random number genrator to use
 	*/
-	RRandom *Random;
+	RRandom* Random;
 
 	/**
 	* The limits for the placement.
@@ -103,12 +103,12 @@ protected:
 	/**
 	* The grid used for the placement.
 	*/
-	RGrid *Grid;
+	RGrid* Grid;
 
 	/**
 	* The geometric information of the objects.
 	*/
-	RGeoInfo **Infos;
+	RGeoInfos* Infos;
 	
 	/**
 	* The connections of the objects.	
@@ -131,14 +131,19 @@ protected:
 	RRect Result;
 
 	/**
+	* The sum of the connections distances.
+	*/
+	double Distances;
+
+	/**
 	* Order in which the objects are to be treated.
 	*/
-	unsigned int *Order;
+	RGeoInfo** Order;
 
 	/**
 	* Geometric information of the current object to place.
 	*/
-	RGeoInfo *CurInfo;
+	RGeoInfo* CurInfo;
 
 	/**
 	* Free Polygons resulting of the placement.
@@ -211,15 +216,7 @@ public:
 	* @param ori            Must all orientation be tested.
 	*/
 	RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
-	
-	/**
-	* Initialize the heuristic.
-	* @param prob           The problem.
-	* @param infos          Pointer to the geometric information.
-	* @param grid           Pointer to the grid.	
-	*/
-	virtual void Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
-		
+
 	/**
 	* Initialize the heuristic.
 	* @param prob           The problem.
@@ -227,7 +224,7 @@ public:
 	* @param grid           Pointer to the grid.
 	*/
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);	
-	
+
 	/**
 	* Set the parameters for the "area" criterion.
 	* @param p              The indifference's threshold.
@@ -235,13 +232,13 @@ public:
 	* @param w              The weight.
 	*/
 	void SetAreaParams(double p,double q,double w);
-	
+
 	/**
 	* Set the parameters for the "area" criterion.
 	* @param params         The parameters.
 	*/
 	void SetAreaParams(const RPromCriterionParams& params);
-	
+
 	/**
 	* Set the parameters for the "dist" criterion.
 	* @param p              The indifference's threshold.
@@ -249,7 +246,7 @@ public:
 	* @param w              The weight.
 	*/
 	void SetDistParams(double p,double q,double w);
-	
+
 	/**
 	* Set the parameters for the "area" criterion.
 	* @param params         The parameters.
@@ -289,14 +286,6 @@ public:
 	* @param infos          Pointer to the geometric information.
 	* @param grid           Pointer to the grid.
 	*/
-	void Run(RProblem2D* prob,RGeoInfo** infos,RGrid* grid) throw(RPlacementHeuristicException);
-
-	/**
-	* Run the heuristic.
-	* @param prob           The problem.
-	* @param infos          Pointer to the geometric information.
-	* @param grid           Pointer to the grid.
-	*/
 	void Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid) throw(RPlacementHeuristicException);
 
 	/**
@@ -308,12 +297,17 @@ public:
 	/**
 	* Do some operations after the run.
 	*/
-	virtual void PostRun(RPoint &){}
+	virtual void PostRun(RPoint &);
 
 	/**
 	* Return the bound rectangle containing all the objects.
 	*/
 	RRect& GetResult(void);
+
+	/**
+	* Return the sum of the distances of all the connections.
+	*/
+	double GetDistances(void) {return(Distances);}
 
 	/**
 	* Return true if all the objects are placed.

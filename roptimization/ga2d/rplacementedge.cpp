@@ -52,7 +52,7 @@ RGA2D::RPlacementEdge::RPlacementEdge(unsigned int maxobjs,bool calc,bool use,RR
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RPlacementEdge::Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid)
+void RGA2D::RPlacementEdge::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 {
 	RPlacementHeuristic::Init(prob,infos,grid);
 	for(unsigned i=0;i<40;i++)
@@ -62,13 +62,6 @@ void RGA2D::RPlacementEdge::Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid)
 	Actual.Set(0,0);
 	Max.Set(0,0);
 	Last.Set(0,0);
-}
-
-
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementEdge::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
-{
-	Init(prob,infos->Tab,grid);
 }
 
 

@@ -76,23 +76,21 @@ void RGA::RDebug::BeginTag(const char *Text,unsigned NbAttr,...)
 	(*tmpOpt)=0;
 	va_start(ap, NbAttr);
 	while(NbAttr--)
-		AddAttribute(tmpOpt,va_arg(ap,char*),va_arg(ap,char*));
+		AddAttribute(va_arg(ap,char*),va_arg(ap,char*));
 	va_end(ap);
 	WriteBeginTag(Text,tmpOpt);
 }
 
 
 //-----------------------------------------------------------------------------
-void RGA::RDebug::AddAttribute(const char *buf,const char *Value,const char *Attr)
+void RGA::RDebug::AddAttribute(const char *Value,const char *Attr)
 {
-	static char tmp[120];
-
-	strcpy(tmp,buf);
-	if(NbOptions++) strcat(tmp," ");
-	strcat(tmp,Attr);
-	strcat(tmp,"=\"");
-	strcat(tmp,Value);
-	strcat(tmp,"\"");
+	if(NbOptions++)
+		strcat(tmpOpt," ");
+	strcat(tmpOpt,Attr);
+	strcat(tmpOpt,"=\"");
+	strcat(tmpOpt,Value);
+	strcat(tmpOpt,"\"");
 }
 
 

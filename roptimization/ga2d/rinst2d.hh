@@ -41,7 +41,7 @@
 template<class cInst,class cChromo>
 	RGA2D::RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner) throw(bad_alloc)
 		: RThreadData<cInst,cChromo>(owner),NbObjs(0),Order(0),tmpObj1(0),
-			tmpObj2(0), Heuristic(0)
+			tmpObj2(0), tmpInfos(0), Heuristic(0)
 {
 }
 
@@ -57,8 +57,9 @@ template<class cInst,class cChromo>
 		Order=new unsigned int[NbObjs];
 		Order2=new unsigned int[NbObjs];
 		tmpObjs=new RObj2D*[NbObjs];
-		tmpObj1=new RObj2DContainer(NbObjs,NbObjs);
-		tmpObj2=new RObj2DContainer(NbObjs+1,NbObjs);
+		tmpObj1=new RObj2DContainer(NbObjs+1,"Temporary Object 1",NbObjs);
+		tmpObj2=new RObj2DContainer(NbObjs+2,"Temporary Object 2",NbObjs);
+		tmpInfos=new RGeoInfos(Owner->Problem,true);
 	}
 	switch(Owner->GetHeuristic())
 	{
@@ -83,6 +84,7 @@ template<class cInst,class cChromo>
 	if(tmpObjs)	delete[] tmpObjs;
 	if(tmpObj1) delete tmpObj1;
 	if(tmpObj2) delete tmpObj2;
+	if(tmpInfos) delete tmpInfos;
 	if(Heuristic) delete Heuristic;
 }
 
@@ -97,8 +99,8 @@ template<class cInst,class cChromo>
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RGA2D::RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h) throw(bad_alloc)
-			: RInst<cInst,cChromo,cFit,cThreadData>(popsize), Problem(prob), Objs(prob->Objs.Tab),
+		RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug *debug) throw(bad_alloc)
+			: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug), Problem(prob), Objs(prob->Objs.Tab),
 			 NbObjs(prob->Objs.NbPtr), bLocalOpti(true), Heuristic(h), Limits(prob->Limits)
 {
 }

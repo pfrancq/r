@@ -37,9 +37,9 @@
 
 //---------------------------------------------------------------------------
 // include files foor R Project
-#include <rstd/rxmltag.h>
-#include <rstd/rxmlfile.h>
-using namespace RStd;
+#include <rxml/rxmltag.h>
+#include <rxml/rxmlfile.h>
+using namespace RXML;
 
 
 
@@ -50,21 +50,21 @@ using namespace RStd;
 //-----------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RStd::RXMLTag::RXMLTag(void)
+RXML::RXMLTag::RXMLTag(void)
  : RNode<RXMLTag,false>(100,50), Attrs(20,10)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RStd::RXMLTag::RXMLTag(RString _name)
+RXML::RXMLTag::RXMLTag(RString _name)
  : RNode<RXMLTag,false>(100,50), Name(_name), Attrs(20,10)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RStd::RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
+void RXML::RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
 {
 	int i;
 	RString text;
@@ -110,7 +110,7 @@ void RStd::RXMLTag::Save(RXMLFile *f, int depth) throw(RString)
 
 
 //------------------------------------------------------------------------------
-void RStd::RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
+void RXML::RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 {
 	char *ptr,*ptr2,c;
 	char *attrn,*attrv;
@@ -183,7 +183,7 @@ void RStd::RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 
 
 //------------------------------------------------------------------------------
-RString& RStd::RXMLTag::GetName(void)
+RString& RXML::RXMLTag::GetName(void)
 {
 	RString *tmp=RString::GetString();
 
@@ -193,7 +193,7 @@ RString& RStd::RXMLTag::GetName(void)
 
 
 //------------------------------------------------------------------------------
-RString& RStd::RXMLTag::GetAttrValue(const char *name)
+RString& RXML::RXMLTag::GetAttrValue(const char *name)
 {
 	RString *tmp=RString::GetString();
 	RXMLAttr *attr;
@@ -215,20 +215,20 @@ void RXMLTag::InsertAttr(RXMLAttr *Attr)
 
 
 //------------------------------------------------------------------------------
-bool RStd::RXMLTag::IsAttrDefined(const char *name)
+bool RXML::RXMLTag::IsAttrDefined(const char *name)
 {
 	return(Attrs.IsIn<const char*>(name));
 }
 
 
 //-----------------------------------------------------------------------------
-RXMLTag* RStd::RXMLTag::GetTag(const char* name)
+RXMLTag* RXML::RXMLTag::GetTag(const char* name)
 {
 	return(GetPtr<const char*>(name,false));
 }
 
 
 //------------------------------------------------------------------------------
-RStd::RXMLTag::~RXMLTag(void)
+RXML::RXMLTag::~RXMLTag(void)
 {
 }

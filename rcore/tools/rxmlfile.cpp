@@ -32,8 +32,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R PRoject
-#include <rstd/rxmlfile.h>
-using namespace RStd;
+#include <rxml/rxmlfile.h>
+using namespace RXML;
 
 
 
@@ -44,7 +44,7 @@ using namespace RStd;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RStd::RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
+RXML::RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
  : RTextFile(name,mode), XMLStruct(xmlstruct)
 {
 	RXMLTag *top;
@@ -77,21 +77,21 @@ RStd::RXMLFile::RXMLFile(const char *name,RXMLStruct *xmlstruct,ModeType mode)
 
 
 //-----------------------------------------------------------------------------
-bool RStd::RXMLFile::BeginTag(void)
+bool RXML::RXMLFile::BeginTag(void)
 {
 	return(((*ptr)=='<')&&((*(ptr+1))!='/'));
 }
 
 
 //-----------------------------------------------------------------------------
-bool RStd::RXMLFile::EndTag(void)
+bool RXML::RXMLFile::EndTag(void)
 {
 	return(((*ptr)=='<')&&((*(ptr+1))=='/'));
 }
 
 
 //-----------------------------------------------------------------------------
-char* RStd::RXMLFile::GetTag(void)
+char* RXML::RXMLFile::GetTag(void)
 {
 	char *tmp=GetCharPtr();
 	char c,*ptr2;
@@ -114,7 +114,7 @@ char* RStd::RXMLFile::GetTag(void)
 
 
 //-----------------------------------------------------------------------------
-char* RStd::RXMLFile::GetContains(void)
+char* RXML::RXMLFile::GetContains(void)
 {
 	char *tmp=GetCharPtr();
 	char c,*ptr2;
@@ -133,6 +133,6 @@ char* RStd::RXMLFile::GetContains(void)
 
 
 //-----------------------------------------------------------------------------
-RStd::RXMLFile::~RXMLFile()
+RXML::RXMLFile::~RXMLFile()
 {
 }

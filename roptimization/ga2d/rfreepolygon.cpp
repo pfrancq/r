@@ -57,7 +57,7 @@ RGA2D::RFreePolygon::RFreePolygon(RPolygon& poly)
 		if((*tab)->X<Pos.X) Pos.X=(*tab)->X;
 		if((*tab)->Y<Pos.Y) Pos.Y=(*tab)->Y;
 	}
-	//(*this)-=Pos;
+	Area=RPolygon::Area();
 }
 
 
@@ -90,7 +90,7 @@ int RGA2D::RFreePolygon::CanContain(RGeoInfo* info,RPoint &pos)
 			if(IsIn(Test))
 			{
 				pos=(*act);
-				return(static_cast<int>((100*info->GetArea())/Area()));
+				return(static_cast<int>((100*info->GetArea())/Area));
 			}
 		}
 		

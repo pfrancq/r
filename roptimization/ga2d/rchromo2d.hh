@@ -42,7 +42,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RChromo2D(cInst *inst,unsigned int id) throw(bad_alloc)
 			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
-			  RGeoInfos(inst->Problem,false),
+			  RGeoInfos(inst->Problem,true),
 			  Heuristic(0), Grid(0),
 			  Objs(0), NbObjs(0), thOrder(0), thObjs(0),
 			  thObj1(0), thObj2(0), Limits()
@@ -55,9 +55,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		Init(cThreadData *thData) throw(bad_alloc)
 {
-	unsigned int i;
-	RObj2D **objs;
-
 	// Call the initialisation of the parent
 	RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
 
@@ -71,19 +68,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	thObjs=thData->tmpObjs;
 	thObj1=thData->tmpObj1;
 	thObj2=thData->tmpObj2;
+	thInfos=thData->tmpInfos;
 	Heuristic=thData->Heuristic;
 
 	// If objects to place -> create the information and selection
 	if(NbObjs)
 	{
-		// Create Infos
-		for(i=NbObjs+1,objs=Objs;--i;objs++)
-		{
-			InsertPtr(new cInfo(*objs));
-		}
-		InsertPtr(new cInfo(thObj1));
-		InsertPtr(new cInfo(thObj2));
-
 		// Create Selected
 		Selected=new bool[NbObjs];
 		memset(Selected,0,NbObjs*sizeof(bool));
@@ -99,62 +89,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	inline void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		ClearInfos(void)
-{
-	unsigned int i;
-	cInfo **info;
-
-	// All objects place in (MaxCoord,MaxCoord)
-	for(i=NbObjs+3,info=Tab;--i;info++)      // +3 because there are 2 temporary objects
-		(*info)->Clear();
-
-	// ActLimits -> (0,0)
-	ActLimits.Set(0,0);
-
-}
-
-
-//-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	inline void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		thVarsClear(void)
-{
-	thNbObjs=0;
-	memset(thObjs,0,NbObjs*sizeof(RObj2D*));
-	thObj1->Clear();
-	thObj2->Clear();
-}
-
-
-//-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		FillObjs(RObj2D **objs,unsigned int &nbobjs)
-{
-	unsigned int i;
-	RObj2D **obj;
-	bool *ptr;
-
-	nbobjs=1;
-	(*(objs++))=thObj1;
-//	(*(objs++))=thObj2;
-	for(i=NbObjs+1,ptr=Selected,obj=Objs;--i;ptr++,obj++)
-		if(!(*ptr))
-		{
-			nbobjs++;
-			(*(objs++))=(*obj);
-		}
-}
-
-
-//-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RandomConstruct(void)
 {
+	if(Id==12)
+		InsertMsg("Random");
 	memset(Selected,0,NbObjs*sizeof(bool));
-	Heuristic->Run(Instance->Problem,Tab,Grid);
+	Heuristic->Run(Instance->Problem,this,Grid);
 	RRect r=Heuristic->GetResult();
 	ActLimits.Set(r.Width(),r.Height());
 	return(true);
@@ -164,28 +105,106 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		Crossover(cChromo* /*parent1*/,cChromo* /*parent2*/)
+		Crossover(cChromo* parent1,cChromo* parent2)
 {
-//	RGeoInfo *info;
-//
-//	// Init Part
-	memset(Selected,0,NbObjs*sizeof(bool));              // No object selected
-//	thVarsClear();// Clear all temporary variables
-//
-//	// Select objs in parent1 & parent2
-//	parent1->GetSetOfObjs(thObj1,Selected);
-////	parent2->GetSetOfObjs(thObj2,Selected);
-//
-//	// Put the rest of the objects & apply the placement heuristic
-//	FillObjs(thObjs,thNbObjs);
-////	Heuristic->Run(Limits,Grid,Infos,0,thNbObjs);
-//
-//	// Remplace container by objects
-//	info=Infos[NbObjs];
-///*	if((info->Pos.X<MaxCoord)&&(info->Pos.Y<MaxCoord))
-//		thObj1->Assign(Infos,Grid,info->Pos);*/
-////	info=Infos[NbObjs+1];
-////	thObj2->Assign(Infos,OccupiedX,OccupiedY,info->Pos.X,info->Pos.Y);
+	unsigned int NbRealInfos,i;
+	RGeoInfo *info,*info1=0,*info2=0,*infoprob;
+	double Distances;
+	RPoint T(-Problem->Translation.X,-Problem->Translation.Y);
+
+	#ifdef RGADEBUG
+		char tmpmsg[100];
+		if(Instance->Debug)
+			Instance->Debug->BeginFunc("Crossover","RChromo2D");
+	#endif
+
+	// Init
+	NbRealInfos=0;
+	memset(Selected,0,NbObjs*sizeof(bool));
+	thInfos->Clear();
+	ClearInfos();
+
+	// Select the objects from the parents
+	parent1->GetSetInfos(thObj1,Grid,Selected);
+	#ifdef RGADEBUG
+		if(Instance->Debug)
+		{
+			sprintf(tmpmsg,"%u objects selected from %u",thObj1->NbPtr,parent1->Id);
+			Instance->Debug->PrintInfo(tmpmsg);
+		}
+	#endif
+	parent2->GetSetInfos(thObj2,Grid,Selected);
+	#ifdef RGADEBUG
+		if(Instance->Debug)
+		{
+			sprintf(tmpmsg,"%u objects selected from %u",thObj2->NbPtr,parent2->Id);
+			Instance->Debug->PrintInfo(tmpmsg);
+		}
+	#endif
+
+	// Add the geometric informations
+	for(i=0;i<RealNb;i++)
+	{
+		if(!Selected[i])
+		{
+			NbRealInfos++;
+			thInfos->InsertPtr(new cInfo(Objs[Tab[i]->GetObj()->GetId()]));
+		}
+	}
+	thInfos->RealNb=NbRealInfos;
+	if(thObj1->NbPtr)
+	{
+		thInfos->RealNb++;
+		thInfos->InsertPtr(info1=new cInfo(thObj1));
+	}
+	if(thObj2->NbPtr)
+	{
+		thInfos->RealNb++;
+		thInfos->InsertPtr(info2=new cInfo(thObj2));
+	}
+	thInfos->InsertPtr(new cInfo(&Problem->Problem));
+
+	// Calculate Positions
+	try
+	{
+		Heuristic->Run(Instance->Problem,thInfos,Grid);
+	}
+	catch(RPlacementHeuristicException& e)
+	{
+		return(false);
+	}
+
+	RRect r=Heuristic->GetResult();
+	ActLimits.Set(r.Width(),r.Height());
+
+	// Assign the "real" geometric information
+	for(i=0;i<NbRealInfos;i++)
+	{
+		info=GetPtr<unsigned int>(thInfos->Tab[i]->GetObj()->GetId());
+		(*info)=(*thInfos->Tab[i]);
+	}
+	if(info1)
+		thObj1->Assign(this,info1->GetPos(),Grid,info1->GetOrder());
+	if(info2)
+		thObj2->Assign(this,info2->GetPos(),Grid,info2->GetOrder());
+	infoprob=Tab[RealNb];
+	infoprob->SetOri(0);
+	infoprob->Assign(T);
+
+	// Compute all connections
+	Distances=0.0;
+	Cons.UnComplete();
+	for(Cons.Start();!Cons.End();Cons.Next())
+	{
+		Cons()->ComputeMinDist(this);
+		Distances+=Cons()->Dist;
+	}
+
+	#ifdef RGADEBUG
+		if(Instance->Debug)
+			Instance->Debug->EndFunc("Crossover","RChromo2D");
+	#endif
+
 	return(true);
 }
 
@@ -195,7 +214,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	bool RGA2D::RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
-//	Heuristic->Run(Limits,Grid,Infos,0,NbObjs);
+	Heuristic->Run(Instance->Problem,this,Grid);
+	RRect r=Heuristic->GetResult();
+	ActLimits.Set(r.Width(),r.Height());
 	return(true);
 }
 
@@ -206,6 +227,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 {
 	unsigned int i,j;
 	RGeoInfo **infoi,**infoj;
+	char Tmp[200];
 
 	for(i=0,infoi=Tab;i<NbObjs-1;i++,infoi++)
 	{
@@ -222,6 +244,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 					for((*infoj)->Start();!(*infoi)->End();(*infoj)->Next())
 						cerr<<"("<<((**infoj)()).X<<","<<((**infoj)()).Y<<")     ";
 					cerr<<endl;
+					#ifdef RGADEBUG
+						if(Instance->Debug)
+						{
+							sprintf(Tmp,"Overlapping Problem (Id==%u) between %s and %s",Id,(*infoi)->GetObj()->Name(),(*infoj)->GetObj()->Name());
+							Instance->Debug->PrintInfo(Tmp);
+						}
+					#endif
 					return(false);
 				}
 			}

@@ -37,9 +37,9 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rxmlstruct.h>
-#include <rstd/rxmlfile.h>
-using namespace RStd;
+#include <rxml/rxmlstruct.h>
+#include <rxml/rxmlfile.h>
+using namespace RXML;
 #include <rga2d/rproblem2d.h>
 using namespace RGA2D;
 
@@ -127,8 +127,12 @@ void RGA2D::RProblem2D::Load(const char* name)
 			CreateNet(*tab);
 		Cons.Init();
 	}
-	
+
 	DetermineLimit();
+	// The object problem have the greathers id
+	Problem.Id=Objs.NbPtr;
+	Problem.SetOri(Normal);
+	Problem.Init();
 }
 
 
@@ -304,11 +308,11 @@ void RGA2D::RProblem2D::DetermineLimit(void)
 	Translation=r.Pt1;
 
 	// Translate the Connectors Position.
-	for(i=Problem.Connectors.NbPtr+1,con=Problem.Connectors.Tab;--i;con++)
-	{
-		for(j=0;j<(*con)->NbPos;j++)
-			(*con)->Pos[j]-=Translation;
-	}
+//	for(i=Problem.Connectors.NbPtr+1,con=Problem.Connectors.Tab;--i;con++)
+//	{
+//		for(j=0;j<(*con)->NbPos;j++)
+//			(*con)->Pos[j]-=Translation;
+//	}
 }
 
 

@@ -40,12 +40,13 @@
 // include files for R Project
 #include <rstd/rstring.h>
 #include <rstd/rnode.h>
-#include <rstd/rxmlattr.h>
 using namespace RStd;
+#include <rxml/rxmlattr.h>
+using namespace RXML;
 
 
 //-----------------------------------------------------------------------------
-namespace RStd{
+namespace RXML{
 //-----------------------------------------------------------------------------
 
 
@@ -177,7 +178,7 @@ public:
 };
 
 
-}  //-------- End of namespace RStd -----------------------------------------
+}  //-------- End of namespace RXML -----------------------------------------
 
 
 //---------------------------------------------------------------------------

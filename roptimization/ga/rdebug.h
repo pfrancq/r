@@ -140,7 +140,7 @@ protected:
 	/**
 	* Add an attribute to buf.
 	*/
-	void AddAttribute(const char* buf,const char *Value,const char *Att);
+	void AddAttribute(const char *Value,const char *Att);
 
 	/**
 	* Begin to write a Tag. This function must be implement.

@@ -52,8 +52,9 @@
 #include <rstd/rstring.h>
 #include <rstd/rcontainer.h>
 #include <rstd/rmsg.h>
-#include <rstd/rtextfile.h>
 using namespace RStd;
+#include <rio/rtextfile.h>
+using namespace RIO;
 #include <rmath/random.h>
 using namespace RMath;
 
@@ -63,7 +64,7 @@ using namespace RMath;
 namespace RGA
 {
 	class RDebug;
-	template<class cVal,bool Max>	class RFitness;
+	template<class cVal,bool Max> class RFitness;
 	template<class cInst,class cChromo,class cFit,class cThreadData> class RChromo;
 	template<class cInst,class cChromo,class cFit,class cThreadData> class RInst;
 	class eGA;
@@ -100,11 +101,6 @@ namespace RGA{
 */
 extern bool ExternBreak;
 
-/**
-* Pointer to a "debugger" holding information about the GA when it is running.
-*/
-extern RDebug *Debug;
-
 
 //-----------------------------------------------------------------------------
 /**
@@ -123,9 +119,20 @@ public:
 
 	/**
 	* Construct the exception.
+	*/
+	eGA(void);
+
+	/**
+	* Construct the exception.
 	* @param msg            The message.
 	*/
 	eGA(const RString &msg);
+
+	/**
+	* Set Message.
+	* m                     The message.
+	*/
+	void SetMsg(const char* m);
 };
 
 
@@ -161,8 +168,12 @@ public:
 
 	/**
 	* Construct the crossover exception.
+	* @param g              Generation.
+	* @param p1             Identificator of the first parent.
+	* @param p2             Identificator of the second parent.
+	* @param c              Identificator of the child.
 	*/
-	eGACrossover(void);
+	eGACrossover(unsigned int g,unsigned p1,unsigned int p2,unsigned int c);
 };
 
 

@@ -56,6 +56,7 @@ namespace RGA2D{
 //-----------------------------------------------------------------------------
 // Forward class declaration
 class RGeoInfo;
+class RGeoInfos;
 class RObj2D;
 class RConnection;
 
@@ -258,7 +259,12 @@ public:
 	* @param pt1            The first connector point used.
 	* @param pt2            The second connector point used.
 	*/
-	double GetMinDist(RObj2DConnector* c,RGeoInfo** infos,RPoint& pt1,RPoint& pt2);
+	double GetMinDist(RObj2DConnector* c,RGeoInfos* infos,RPoint& pt1,RPoint& pt2);
+
+	/**
+	* Destruct the connectors
+	*/
+	virtual ~RObj2DConnector(void);
 
 	// friend classes
 	friend class RObj2D;
@@ -357,14 +363,14 @@ public:
 	* This function is used for the class RContainer.
 	* @param o              Object used for the comparaison.
 	*/
-	int Compare(const RObj2D* o) {return(Id-o->Id);}
+	int Compare(const RObj2D* o) {if(IsIn(o->Id)) return(0); else return(Id-o->Id);}
 
 	/**
 	* This function compares two cobjects and returns 0 if there are the same.
 	* This function is used for the class RContainer.
 	* @param o              Object used for the comparaison.
 	*/
-	int Compare(const RObj2D& o) {return(Id-o.Id);}
+	int Compare(const RObj2D& o) {if(IsIn(o.Id)) return(0); else return(Id-o.Id);}
 
 	/**
 	* This function compares an object and an identificator and returns 0 if
@@ -372,7 +378,7 @@ public:
 	* This function is used for the class RContainer.
 	* @param id             Identificator used for the comparaison.
 	*/
-	int Compare(const unsigned int id) {return(Id-id);}
+	int Compare(const unsigned int id) {if(IsIn(id)) return(0); else return(Id-id);}
 
 	/**
 	* This function compares an object and a name and returns 0 if
@@ -456,88 +462,18 @@ public:
 	* Copy the connectors from a given object.
 	*/
 	void CopyConnectors(RObj2D* o);
-};
-
-
-//-----------------------------------------------------------------------------
-/**
-* This class represent an object containg other objects to place. It is use,
-* for example, in the 2D placement GA crossover.
-* @author Pascal Francq
-* @short Container of objects.
-*/
-class RObj2DContainer : public RObj2D
-{
-public:
 
 	/**
-	* Identificators of the objects contained.
+	* Verify if a given object is in the container or not.
+	* @unsigned id          Identificator of the object.
+	* @return true if the object is in, else false.
 	*/
-	unsigned int *Ids;
+	virtual bool IsIn(unsigned int id) {return(Id==id);}
 
 	/**
-	* Pointer to all geometric infos of the objects.
+	* Destruct the object.
 	*/
-	RGeoInfo** Infos;
-
-	/**
-	* Maximum number of objects contained.
-	*/
-	unsigned int NbMax;
-
-	/**
-	* Number of objects contained.
-	*/
-	unsigned int Nb;
-
-	/**
-	* Polygons of the objects.
-	*/
-	RPolygons SPolygons;
-
-	/**
-	* Point the most left-bottom.
-	*/
-	RCoord MinX,MinY;
-
-	/**
-	* Construct the container of objects.
-	* @param id             The identificator of the object.
-	* @param max            Maxmimum number of objects that can be contained.
-	*/
-	RObj2DContainer(unsigned int id,unsigned int max);
-
-	/**
-	* Clear the container.
-	*/
-	void Clear(void);
-
-	/**
-	* Add an object and his information to the container.
-	* @param obj            The object to add.
-	* @param info           The geometric information of the object.
-	*/
-	void AddObj(RObj2D *obj,RGeoInfo *info);
-
-	/**
-	* Does some calculation after each objects were added to the container.
-	*/
-	void EndObjs(void);
-
-	/**
-	* Assign this container to a position and replace it in the grid with all the
-	* identificators of the objects contained.
-	* @param pos            Position.
-	* @param infos          The geometric information of the objects.
-	* @param OccY           Grid with X as entry.
-	* @param OccY           Grid with Y as entry.
-	*/
-	void Assign(RPoint &pos,RGeoInfo **infos,unsigned int **OccX,unsigned int **OccY);
-
-	/**
-	* Destruct the container.
-	*/
-	~RObj2DContainer(void);
+	virtual ~RObj2D(void);
 };
 
 

@@ -47,8 +47,9 @@
 // include files for R Project
 #include <rstd/rstd.h>
 #include <rstd/rcontainer.h>
-#include <rstd/rtextfile.h>
 using namespace RStd;
+#include <rio/rtextfile.h>
+using namespace RIO;
 
 
 /**
@@ -136,3 +137,6 @@ void AdaptTestXY(RCoord &x,RCoord &y,const RDirection from);
 
 //-----------------------------------------------------------------------------
 #endif
+
+
+

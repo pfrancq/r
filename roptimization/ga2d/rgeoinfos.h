@@ -41,6 +41,8 @@
 using namespace RStd;
 #include <rga2d/robj2d.h>
 #include <rga2d/rgeoinfo.h>
+#include <rga2d/rgeoinfoconnections.h>
+#include <rga2d/robj2dcontainer.h>
 #include <rga2d/rproblem2d.h>
 using namespace RGA2D;
 
@@ -59,17 +61,27 @@ namespace RGA2D{
 */
 class RGeoInfos : public RStd::RContainer<RGeoInfo,unsigned int,true,false>
 {
+public:
+
 	/**
 	* Pointer to the problem.
 	*/
 	RProblem2D* Problem;
 
-public:
+	/**
+	* Connections of the geometric information.
+	*/
+	RGeoInfoConnections Cons;
+
+	/**
+	* Number of "real" objects represented.
+	*/
+	unsigned int RealNb;
 
 	/**
 	* Which objects were selected for crossover.
 	*/
-	bool *Selected;
+	bool* Selected;
 
 	/**
 	* Construct the container.
@@ -81,7 +93,8 @@ public:
 	/**
 	* Select a "good" set of geometric informations. This is used by the
 	* crossover of the GA.
-	* @param cont           The container of objects that will be hold.
+	* @param cont           The container that will be hold the selected
+	*                       geomtric information.
 	* @param grid           The grid representing the Layout.
 	* @param selected       Array given the already selected objects.
 	*/
@@ -96,7 +109,19 @@ public:
 	/**
 	* Clear all the geometric informations.
 	*/
-	void Clear(void);
+	void ClearInfos(void);
+
+	/**
+	* The assignement operator.
+	*/
+	RGeoInfos& operator=(const RGeoInfos& infos) throw(bad_alloc);
+
+	/**
+	* Create a problem file for a specific configuration.
+	* @seek                 Actual "seek" value for the random number
+	*                       generator.
+	*/
+	void CreateProblem(unsigned long seek);
 
 	/**
 	* Destruct the geometric information.

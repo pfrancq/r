@@ -32,8 +32,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rxmlstruct.h>
-using namespace RStd;
+#include <rxml/rxmlstruct.h>
+using namespace RXML;
 
 
 
@@ -44,21 +44,21 @@ using namespace RStd;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RStd::RXMLStruct::RXMLStruct(void)
+RXML::RXMLStruct::RXMLStruct(void)
  : RTree<RXMLTag,true,false>(100,50)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RXMLTag* RStd::RXMLStruct::GetTag(const char* name)
+RXMLTag* RXML::RXMLStruct::GetTag(const char* name)
 {
 	return(GetPtr<const char*>(name,false));
 }
 
 
 //-----------------------------------------------------------------------------
-RXMLTag* RStd::RXMLStruct::GetTag(const char* name,RXMLTag* parent)
+RXMLTag* RXML::RXMLStruct::GetTag(const char* name,RXMLTag* parent)
 {
 	if(!parent)
 		return(0);
@@ -67,6 +67,6 @@ RXMLTag* RStd::RXMLStruct::GetTag(const char* name,RXMLTag* parent)
 
 
 //-----------------------------------------------------------------------------
-RStd::RXMLStruct::~RXMLStruct(void)
+RXML::RXMLStruct::~RXMLStruct(void)
 {
 }

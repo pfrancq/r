@@ -37,14 +37,14 @@
 
 //-----------------------------------------------------------------------------
 // include files for Rainbow
-#include <rstd/rtextfile.h>
-#include <rstd/rxmlstruct.h>
-using namespace RStd;
-
+#include <rio/rtextfile.h>
+using namespace RIO;
+#include <rxml/rxmlstruct.h>
+using namespace RXML;
 
 
 //-----------------------------------------------------------------------------
-namespace RStd{
+namespace RXML{
 //-----------------------------------------------------------------------------
 
 
@@ -103,7 +103,7 @@ public:
 };
 
 
-}  //-------- End of namespace RStd -------------------------------------------
+}  //-------- End of namespace RXML -------------------------------------------
 
 
 //-----------------------------------------------------------------------------

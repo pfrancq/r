@@ -66,6 +66,11 @@ class RFreePolygon : public RPolygon
 	*/
 	RPoint Pos;
 
+	/**
+	* Area of the polygon.
+	*/
+	RCoord Area;
+
 public:
 
 	/**

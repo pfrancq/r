@@ -99,8 +99,6 @@ public:
 	*/
 	RPlacementCenter(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 
-	virtual void Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid);
-
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
 
 	virtual void NextObjectOri(void) throw(RPlacementHeuristicException);

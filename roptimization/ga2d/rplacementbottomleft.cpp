@@ -52,18 +52,11 @@ RGA2D::RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calc
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RPlacementBottomLeft::Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid)
+void RGA2D::RPlacementBottomLeft::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 {
 	RPlacementHeuristic::Init(prob,infos,grid);
 	Actual.Set(0,0);
 	Last.Set(0,0);
-}
-
-
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementBottomLeft::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
-{
-	Init(prob,infos->Tab,grid);
 }
 
 

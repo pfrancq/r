@@ -32,8 +32,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rxmlattr.h>
-using namespace RStd;
+#include <rxml/rxmlattr.h>
+using namespace RXML;
 
 
 
@@ -44,21 +44,21 @@ using namespace RStd;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RStd::RXMLAttr::RXMLAttr(const char *name,const char *value)
+RXML::RXMLAttr::RXMLAttr(const char *name,const char *value)
 	: Name(name), Value(value)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RStd::RXMLAttr::RXMLAttr(const char *name,const double value)
+RXML::RXMLAttr::RXMLAttr(const char *name,const double value)
 	: Name(name), Value(dtoa(value))
 {
 }
 
 
 //------------------------------------------------------------------------------
-RString& RStd::RXMLAttr::GetName(void)
+RString& RXML::RXMLAttr::GetName(void)
 {
 	RString *tmp=RString::GetString();
 
@@ -68,7 +68,7 @@ RString& RStd::RXMLAttr::GetName(void)
 
 
 //-----------------------------------------------------------------------------
-RString& RStd::RXMLAttr::GetValue(void)
+RString& RXML::RXMLAttr::GetValue(void)
 {
 	RString* tmp=RString::GetString();
 
@@ -78,6 +78,6 @@ RString& RStd::RXMLAttr::GetValue(void)
 
 
 //-----------------------------------------------------------------------------
-RStd::RXMLAttr::~RXMLAttr(void)
+RXML::RXMLAttr::~RXMLAttr(void)
 {
 }

@@ -43,7 +43,7 @@ using namespace RStd;
 
 
 //-----------------------------------------------------------------------------
-namespace RStd{
+namespace RIO{
 //-----------------------------------------------------------------------------
 
 
@@ -96,7 +96,7 @@ public:
 	* The RemType enum represents the different style of comments used wich text
 	* files.
 	*/
-	enum RemType {NoComment,SingleLineComment,MultiLineComment};
+	enum RemType {NoComment,SingleLineComment,MultiLineComment,SingleMultiLineComment};
 
 protected:
 
@@ -133,7 +133,7 @@ protected:
 	/**
 	* At NewLine? (Used only if created or append mode).
 	*/
-    bool NewLine;
+	bool NewLine;
 
 	/**
 	* This string represent a single line comment.
@@ -156,6 +156,11 @@ protected:
 	RemType CommentType;
 
 	/**
+	* The type of comments currently activ.
+	*/
+	RemType ActivComment;
+
+	/**
 	* This string represent a separator for different elements on the same line
 	*/
 	RString Separator;
@@ -163,7 +168,12 @@ protected:
 	/**
 	* This variable is holding the current line number.
 	*/
-	unsigned long Line;
+	unsigned int Line;
+
+	/**
+	* This variable is holding the last line where something was readed (or written).
+	*/
+	unsigned int LastLine;
 
 public:
 
@@ -192,6 +202,11 @@ public:
 	void Begin(void) throw(RString);
 
 protected:
+
+	/**
+	* This function skip spaces (Only used if read mode).
+	*/
+	void SkipComments(void);
 
 	/**
 	* This function skip spaces (Only used if read mode).
@@ -427,6 +442,11 @@ public:
 	unsigned long ActualLine(void) {return(Line);}
 
 	/**
+	* Return the last line number where something was read.
+	*/
+	unsigned long GetLastLine(void) {return(LastLine);}
+
+	/**
 	* Specify the set of characters used as separator.
 	*/
 	void SetSeparator(const RString& str) {Separator=str;}
@@ -443,7 +463,7 @@ public:
 };
 
 
-}  //-------- End of namespace RStd -------------------------------------------
+}  //-------- End of namespace RIO --------------------------------------------
 
 
 //-----------------------------------------------------------------------------
@@ -453,17 +473,17 @@ extern "C++"
 	/**
 	* Write an end-of-line in a RTextFile.
 	*/
-	extern RStd::RTextFile& endl(RStd::RTextFile &file);
+	extern RIO::RTextFile& endl(RIO::RTextFile &file);
 
 	/**
 	* Write the current time and date in a RTextFile.
 	*/
-	extern RStd::RTextFile& Time(RStd::RTextFile &file);
+	extern RIO::RTextFile& Time(RIO::RTextFile &file);
 
 	/**
 	* Operator needed for using generic writing functions.
 	*/
-	inline RStd::RTextFile& operator<<(RStd::RTextFile& o, RStd::RTextFile& (&f)(RStd::RTextFile&)) {return(f(o));}
+	inline RIO::RTextFile& operator<<(RIO::RTextFile& o, RIO::RTextFile& (&f)(RIO::RTextFile&)) {return(f(o));}
 }
 
 

@@ -40,7 +40,9 @@
 // include files for R Project
 #include <rga2d/robj2d.h>
 #include <rga2d/rgeoinfo.h>
+#include <rga2d/rgeoinfos.h>
 #include <rga2d/rconnection.h>
+using namespace RGA2D;
 
 
 
@@ -64,7 +66,7 @@ RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RPoi
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RString& name,const RPoint pos)
 	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
-	Pos=new RPoint[1];
+	Pos=new RPoint[NbPos];
 	Poss=new RPoint*[NbPos];
 	Poss[0]=new RPoint[8];
 	Pos[0]=pos;
@@ -75,7 +77,7 @@ RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RStr
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const char* name,const RPoint pos)
 	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
-	Pos=new RPoint[1];
+	Pos=new RPoint[NbPos];
 	Poss=new RPoint*[NbPos];
 	Poss[0]=new RPoint[8];
 	Pos[0]=pos;
@@ -86,7 +88,7 @@ RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const char
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const unsigned int x,unsigned y)
 	: Owner(owner), Id(id), Name(itoa(id)), NbPos(1), Connections(10,5)
 {
-	Pos=new RPoint[1];
+	Pos=new RPoint[NbPos];
 	Poss=new RPoint*[NbPos];
 	Poss[0]=new RPoint[8];
 	Pos[0].Set(x,y);
@@ -95,9 +97,9 @@ RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const unsi
 
 //-----------------------------------------------------------------------------
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RString& name,const unsigned int x,unsigned y)
-	: Owner(owner), Id(id), Name(name), Connections(10,5)
+	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
-	Pos=new RPoint[1];
+	Pos=new RPoint[NbPos];
 	Poss=new RPoint*[NbPos];
 	Poss[0]=new RPoint[8];
 	Pos[0].Set(x,y);
@@ -108,7 +110,7 @@ RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RStr
 RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int x,unsigned y)
 	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
-	Pos=new RPoint[1];
+	Pos=new RPoint[NbPos];
 	Poss=new RPoint*[NbPos];
 	Poss[0]=new RPoint[8];
 	Pos[0].Set(x,y);
@@ -121,7 +123,7 @@ RGA2D::RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const cha
 {
 	Pos=new RPoint[NbPos];
 	Poss=new RPoint*[NbPos];
-	for(unsigned int i;i<NbPos;i++)
+	for(unsigned int i=0;i<NbPos;i++)
 		Poss[i]=new RPoint[8];
 }
 
@@ -154,7 +156,7 @@ void RGA2D::RObj2DConnector::AddConnection(RConnection* con)
 
 
 //-----------------------------------------------------------------------------
-double RGA2D::RObj2DConnector::GetMinDist(RObj2DConnector* c,RGeoInfo** infos,RPoint& pt1,RPoint& pt2)
+double RGA2D::RObj2DConnector::GetMinDist(RObj2DConnector* c,RGeoInfos* infos,RPoint& pt1,RPoint& pt2)
 {
 	double min=HUGE_VAL,d;
 	RGeoInfo *g1,*g2;
@@ -162,14 +164,15 @@ double RGA2D::RObj2DConnector::GetMinDist(RObj2DConnector* c,RGeoInfo** infos,RP
 	unsigned int i,j;
 	RPoint p1,p2;
 
-	g1=infos[Owner->GetId()];
+	g1=infos->GetPtr<unsigned int>(Owner->GetId());
 	c1=g1->Connectors.GetPtr<unsigned int>(Id);
-	g2=infos[c->Owner->GetId()];
+	g2=infos->GetPtr<unsigned int>(c->Owner->GetId());
 	c2=g2->Connectors.GetPtr<unsigned int>(c->Id);
 	for(i=0;i<c1->NbPos;i++)
+	{
+		p1=c1->Pos[i]+g1->GetPos();
 		for(j=0;j<c2->NbPos;j++)
 		{
-			p1=c1->Pos[i]+g1->GetPos();
 			p2=c2->Pos[j]+g2->GetPos();
 			d=p1.ManhattanDist(p2);
 			if(d<min)
@@ -179,7 +182,18 @@ double RGA2D::RObj2DConnector::GetMinDist(RObj2DConnector* c,RGeoInfo** infos,RP
 				pt2=p2;
 			}
 		}
+	}
 	return(min);
+}
+
+
+//-----------------------------------------------------------------------------
+RGA2D::RObj2DConnector::~RObj2DConnector(void)
+{
+	delete[] Pos;
+	for(unsigned int i;i<NbPos;i++)
+		delete Poss[i];
+	delete[] Poss;
 }
 
 
@@ -245,7 +259,12 @@ void RGA2D::RObj2D::CalcPolygons(void)
 			NbPossOri=1;
 			Polygons[0]=Polygon;
 			for(Connectors.Start();!Connectors.End();Connectors.Next())
-				Connectors()->Poss[0]=Connectors()->Pos;
+			{
+				for(unsigned int j=0;j<Connectors()->NbPos;j++)
+				{
+					Connectors()->Poss[j][0]=Connectors()->Pos[j]-Min;
+				}
+			}
 			return;
 		}
 
@@ -259,7 +278,13 @@ void RGA2D::RObj2D::CalcPolygons(void)
 				if(bRota90) idx=1; else idx=0;
 				Polygons[idx]=Polygon;
 				for(Connectors.Start();!Connectors.End();Connectors.Next())
-					Connectors()->Poss[idx]=Connectors()->Pos;			
+				{
+					for(unsigned int j=0;j<Connectors()->NbPos;j++)
+					{
+						Connectors()->Poss[j][idx]=Connectors()->Pos[j];
+						Connectors()->Poss[j][idx]-=Min;
+					}
+				}
 			}
 			if((!bRota90)&&(((*o)==Rota90)||((*o)==Rota90X)||((*o)==Rota90Y)||((*o)==Rota90YX)))
 			{
@@ -271,7 +296,7 @@ void RGA2D::RObj2D::CalcPolygons(void)
 				{
 					for(unsigned int j=0;j<Connectors()->NbPos;j++)
 					{
-						Connectors()->Poss[j][idx]=Connectors()->Pos;
+						Connectors()->Poss[j][idx]=Connectors()->Pos[j];
 						Connectors()->Poss[j][idx].ChangeOrientation(Rota90);
 						Connectors()->Poss[j][idx]-=Min;
 					}
@@ -292,7 +317,7 @@ void RGA2D::RObj2D::CalcPolygons(void)
 		{
 			for(unsigned int j=0;j<Connectors()->NbPos;j++)
 			{
-				Connectors()->Poss[j][i]=Connectors()->Pos;
+				Connectors()->Poss[j][i]=Connectors()->Pos[j];
 				Connectors()->Poss[j][i].ChangeOrientation(*o);
 				Connectors()->Poss[j][i]-=Min;
 			}
@@ -376,7 +401,6 @@ void RGA2D::RObj2D::CopyConnectors(RObj2D* o)
 	{
 		s=o->Connectors();
 		d=new RObj2DConnector(this,Connectors.NbPtr,s->Name,s->NbPos);
-		d->NbPos=s->NbPos;
 		for(unsigned int i=0;i<s->NbPos;i++)
 			d->Pos[i]=s->Pos[i];
 		Connectors.InsertPtr(d);
@@ -384,116 +408,7 @@ void RGA2D::RObj2D::CopyConnectors(RObj2D* o)
 }
 
 
-
 //-----------------------------------------------------------------------------
-//
-// RObj2DContainer
-//
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-RGA2D::RObj2DContainer::RObj2DContainer(unsigned int id,unsigned int max)
-	: RObj2D(id,false),Ids(0),Infos(0),NbMax(max),Nb(0)
+RGA2D::RObj2D::~RObj2D(void)
 {
-	NbPossOri=1;
-	PossOri[0]=Normal;
-	Ids=new unsigned int[NbMax];
-	Infos=new RGeoInfo*[NbMax];
-	memset(Ids,0,NbMax*sizeof(unsigned int));	
-	memset(Infos,0,NbMax*sizeof(RGeoInfo*));	
-}
-
-
-//-----------------------------------------------------------------------------
-void RGA2D::RObj2DContainer::Clear(void)
-{
-	SPolygons.Clear();
-	memset(Ids,0,NbMax*sizeof(unsigned int));	
-	memset(Infos,0,NbMax*sizeof(RGeoInfo*));	
-	Nb=0;
-	MinX=MinY=MaxCoord;
-	Area=0;
-}
-
-
-//-----------------------------------------------------------------------------
-void RGA2D::RObj2DContainer::AddObj(RObj2D *obj,RGeoInfo *info)
-{
-	RPoint **point,pt;
-	unsigned int i,j;
-	RCoord CalcX,CalcY;
-	RPolygon ins,**poly;
-
-	// Determine the most left-bottom edge
-	CalcX=MinX;
-	CalcY=MinY;
-	for(info->Start();!info->End();info->Next())
-	{
-		pt=(*info)();
-		if(pt.Y<MinY) MinY=pt.Y;
-		if(pt.X<MinX) MinX=pt.X;
-	}
-
-	// Create new polygon and translate it
-	ins=info->GetPolygon();
-	pt.Set(-MinX,-MinY);
-	ins+=pt;
-
-	// translate already inserted polygons if new MinX,MinY
-	if(Nb&&((CalcX!=MinX)||(CalcY!=MinY)))
-	{
-		CalcX-=MinX;
-		CalcY-=MinY;
-		for(i=SPolygons.NbPtr+1,poly=SPolygons.Tab;--i;poly++)
-			for(j=(*poly)->NbPtr+1,point=(*poly)->Tab;--j;point++)
-			{
-				(*point)->X+=CalcX;
-				(*point)->Y+=CalcY;
-			}
-	}
-
-	// Put object in lists
-	SPolygons.InsertPtr(new RPolygon(ins));
-	Ids[Nb]=obj->Id;
-	Infos[Nb]=info;
-	Area+=info->GetArea();
-	Nb++;
-}
-
-
-//-----------------------------------------------------------------------------
-void RGA2D::RObj2DContainer::EndObjs(void)
-{
-	SPolygons.Union(&Polygon);
-	Polygons[0]=Polygon;
-	Polygon.RectDecomposition(&Rects[0]);
-}
-
-
-//-----------------------------------------------------------------------------
-void RGA2D::RObj2DContainer::Assign(RPoint& /*pos*/,RGeoInfo** /*infos*/,unsigned int** /*OccX*/,unsigned int** /*OccY*/)
-{
-/*	unsigned int i;
-	unsigned int *ids;
-	RGeoInfo **info,*cur;
-	RPoint p;
-
-	pos.X-=MinX;
-	pos.Y-=MinY;	
-	for(i=Nb+1,ids=Ids,info=Infos;--i;ids++,info++)
-	{
-		cur=infos[*ids];
-		p=(*info)->Pos;
-		p+=pos;
-		cur->Assign(p,OccX,OccY);
-		cur->Selected=true;
-	}*/
-}
-
-
-//-----------------------------------------------------------------------------
-RGA2D::RObj2DContainer::~RObj2DContainer(void)
-{
-	if(Ids) delete[] Ids;
-	if(Infos) delete[] Infos;
 }

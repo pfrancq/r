@@ -690,11 +690,13 @@ void RGeometry2D::RPolygon::RectDecomposition(RRects *rects) const
 		if(Test)
 			work.DeletePtr(Test);
 		else
-			work.InsertPtrAt(new RPoint(tmp),i);
+			work.InsertPtrAt(new RPoint(tmp),i,false);
 
 		// If point to add -> after Vertice4
 		if(bFind21)
+		{
 			i=work.GetId<RPoint*>(PtX2,bFind)+1;
+		}
 
 		// Test if (X2,Y2) exists -> If yes delete it else create it
 		tmp.X=X2;
@@ -703,7 +705,7 @@ void RGeometry2D::RPolygon::RectDecomposition(RRects *rects) const
 		if(Test)
 			work.DeletePtr(Test);
 		else
-			work.InsertPtrAt(new RPoint(tmp),i);
+			work.InsertPtrAt(new RPoint(tmp),i,false);
 
 		// Verify if not multiple polygons necessary
 		Count=0;	// Counting nb Vertices on the same vertical
@@ -828,6 +830,46 @@ void RGeometry2D::RPolygon::ReOrder(void)
 	}
 	delete[] Tab;
 	Tab=tmp;
+}
+
+
+//-----------------------------------------------------------------------------
+void RGeometry2D::RPolygon::ReValid(void)
+{
+	unsigned int i;
+	RPoint *pt1,*nextx,*nexty,*pt2;
+	bool c=false;
+
+	for(i=0;i<NbPtr;i++)
+	{
+		pt1=Tab[i];
+		nextx=GetConX(pt1);
+		if((nextx)&&(pt1->X==nextx->X-1))
+		{
+			pt2=GetConY(nextx);
+			pt1->Y=pt2->Y;
+			DeletePtr(nextx);
+			DeletePtr(pt2);
+			c=true;
+		}
+		nexty=GetConY(pt1);
+		if((nexty)&&(pt1->Y==nexty->Y-1))
+		{
+			pt2=GetConX(nexty);
+			pt1->X=pt2->X;
+			DeletePtr(nexty);
+			DeletePtr(pt2);
+			c=true;
+		}
+	}
+	if(NbPtr<4)
+	{
+		Clear();
+	}
+	else
+	{
+		if(c) ReOrder();    // The points must order anti-clockwise.
+	}
 }
 
 

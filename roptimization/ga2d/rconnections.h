@@ -54,6 +54,11 @@ namespace RGA2D{
 
 
 //-----------------------------------------------------------------------------
+// forward class declaration
+class RGeoInfos;
+
+
+//-----------------------------------------------------------------------------
 /**
 * The RConnections class provides a representation for the connections of the problem.
 * @short Connections.
@@ -100,7 +105,7 @@ public:
 	* @param cur            Geometric information representing the given object for
 	*                       wich calculate the distance.
 	*/
-	double GetCon(RGeoInfo **infos,RGeoInfo *cur);
+	double GetCon(RGeoInfos* infos,RGeoInfo* cur);
 
 	/**
 	* Return the object that have the most connected objects go
@@ -110,7 +115,7 @@ public:
 	* @param selected       Array to hold which objects are selected.
 	* @return               The geometric information of the object to place.
 	*/
-	RGeoInfo* GetBestConnected(RGeoInfo **infos,unsigned int nb,bool* selected,RRect& bound);
+	RGeoInfo* GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* selected,RRect& bound);
 
 	/**
 	* Return the object that is not placed and that have the most connected
@@ -121,14 +126,14 @@ public:
 	* @param nbok           Number of objects already placed.
 	* @return The geometric information of the object to place.
 	*/
-	RGeoInfo* GetMostConnected(RGeoInfo **infos,unsigned int nb,unsigned int* order,unsigned int nbok);
+	RGeoInfo* GetMostConnected(RGeoInfos* infos,unsigned int nb,RGeoInfo** order,unsigned int nbok);
 
 	/**
 	* Calculate the sum of the Manhattant distance between all placed objects
 	* representing by the geometric informations.
 	* @param infos          The goemetric informations.
 	*/
-	double GetDistances(RGeoInfo** infos);
+//	double GetDistances(RGeoInfo** infos);
 
 	/**
 	* Calculate the sum of the Manhattant distance between all placed objects
@@ -141,6 +146,9 @@ public:
 	* Destruct the connections.
 	*/
 	~RConnections(void);
+
+	// friend classes
+	friend class RGeoInfoConnections;
 };
 
 

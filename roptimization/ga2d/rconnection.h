@@ -89,14 +89,6 @@ public:
 	*/
 	double GetWeight(void) {return(Weight);}
 
-	/**
-	* Return the distance of the net for a given set of geometric information.
-	* The "Prim's Algorithm for Minimum Spanning Trees" is used.
-	* @param infos          Geometric informations.
-	* @returns The "minimal" distance of the net.
-	*/
-	double GetMinDist(RGeoInfo** infos);
-
 	// friend classes
 	friend class RConnections;
 	friend class RObj2DConnector;

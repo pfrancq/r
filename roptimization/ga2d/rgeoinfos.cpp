@@ -32,6 +32,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rxml/rxmlstruct.h>
+using namespace RXML;
 #include <rga2d/rgeoinfos.h>
 using namespace RGA2D;
 
@@ -45,52 +47,71 @@ using namespace RGA2D;
 
 //-----------------------------------------------------------------------------
 RGA2D::RGeoInfos::RGeoInfos(RProblem2D* prob,bool create) throw(bad_alloc)
-	: RContainer<RGeoInfo,unsigned int,true,false>(prob->Objs.NbPtr+2,prob->Objs.NbPtr/2),
-	  Problem(prob), Selected(0)
+	: RContainer<RGeoInfo,unsigned int,true,false>(prob->Objs.NbPtr+3,prob->Objs.NbPtr/2),
+	  Problem(prob), Cons(&prob->Cons,this), RealNb(prob->Objs.NbPtr), Selected(0)
 {
 	if(create)
 	{
-		RObj2D** obj;	
+		RObj2D** obj;
 		unsigned int i;
+		RGeoInfo* l;
 
-		// Create geometric information and Objs orientations
+		// Create geometric information
 		for(i=prob->Objs.NbPtr+1,obj=Problem->Objs.Tab;--i;obj++)
 			InsertPtr(new RGeoInfo(*obj));
+
+		InsertPtr(l=new RGeoInfo(&prob->Problem));
+		l->SetOri(0);
+		l->Pos.Set(-prob->Translation.X,-prob->Translation.Y);
 	}
-	Selected=new bool[prob->Objs.NbPtr];
+	Selected=new bool[NbPtr];
 }
 
 
 //-----------------------------------------------------------------------------
 void RGA2D::RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* selected)
 {
-	RGeoInfo* best;
-	RPolygon Envelop(4);
-	RRect bound;
+//	RGeoInfo* best;
+	RRect bound,r;
+	RGeoInfo* i1;
+	RGeoInfo* i2;
 
-	cont->Clear();
+	cont->ClearInfo();
 	Boundary(bound);
+	bound-=bound.Pt1;
 	bound.Pt2.X/=4;
 	bound.Pt2.Y/=4;
-	best=Problem->Cons.GetBestConnected(Tab,NbPtr,selected,bound);
-	best->SetSelect();
-	selected[best->GetObj()->GetId()]=true;
-	Envelop.InsertPtr(new RPoint(bound.Pt1));
-	Envelop.InsertPtr(new RPoint(bound.Pt2.X,bound.Pt1.Y));
-	Envelop.InsertPtr(new RPoint(bound.Pt2));	
-	Envelop.InsertPtr(new RPoint(bound.Pt1.X,bound.Pt2.Y));	
+	Cons.GetBestsConnected(i1,i2,bound,selected);
+	if(!i1)
+	{
+		cont->Complete();
+		return;
+	}
+	selected[i1->GetObj()->GetId()]=true;
+	cont->Add(this,i1);
+	if(!i2)
+	{
+		cont->Complete();
+		return;
+	}
+	selected[i2->GetObj()->GetId()]=true;
+	cont->Add(this,i2);
+	i1->Boundary(bound);
+	i2->Boundary(r);
+	if(r.Pt1.X<bound.Pt1.X) bound.Pt1.X=r.Pt1.X;
+	if(r.Pt1.Y<bound.Pt1.Y) bound.Pt1.Y=r.Pt1.Y;
+	if(r.Pt2.X>bound.Pt2.X) bound.Pt2.X=r.Pt2.X;
+	if(r.Pt2.Y>bound.Pt2.Y) bound.Pt2.Y=r.Pt2.Y;
 	for(Start();!End();Next())
 	{
-		best=(*this)();
-		if((!selected[best->GetObj()->GetId()])&&Envelop.IsIn(best->GetPolygon()))
+		if((!selected[(*this)()->GetObj()->GetId()])&&bound.IsIn((*this)()->GetPolygon()))
 		{
 			// Add it
-			cont->AddObj(best->GetObj(),best);
-			best->SetSelect();
-			selected[best->GetObj()->GetId()]=true;
+			cont->Add(this,(*this)());
+			selected[(*this)()->GetObj()->GetId()]=true;
 		}
-	}
-	cont->EndObjs();
+	}	
+	cont->Complete();
 }
 
 
@@ -103,7 +124,7 @@ void RGA2D::RGeoInfos::Boundary(RRect &rect)
 
 	rect.Pt1.X=rect.Pt1.Y=MaxCoord;
 	rect.Pt2.X=rect.Pt2.Y=0;
-	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
+	for(i=RealNb+1,ptr=Tab;--i;ptr++)
 	{
 		(*ptr)->Boundary(tmp);
 		if(tmp.Pt1.X<rect.Pt1.X) rect.Pt1.X=tmp.Pt1.X;
@@ -115,15 +136,36 @@ void RGA2D::RGeoInfos::Boundary(RRect &rect)
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RGeoInfos::Clear(void)
+void RGA2D::RGeoInfos::ClearInfos(void)
 {
 	for(Start();!End();Next())
-		(*this)()->Clear();
+		(*this)()->ClearInfo();
+	Cons.UnComplete();
+}
+
+
+//-----------------------------------------------------------------------------
+RGeoInfos& RGA2D::RGeoInfos::operator=(const RGeoInfos& infos) throw(bad_alloc)
+{
+	RContainer<RGeoInfo,unsigned int,true,false>::operator=(infos);
+	Problem=infos.Problem;
+	Cons=infos.Cons;
+	Cons.Infos=this;
+	RealNb=infos.RealNb;
+	memcpy(Selected,infos.Selected,NbPtr*sizeof(bool));
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+void RGA2D::RGeoInfos::CreateProblem(unsigned long seek)
+{
 }
 
 
 //-----------------------------------------------------------------------------
 RGA2D::RGeoInfos::~RGeoInfos(void)
 {
-	if(Selected) delete[] Selected;
+	if(Selected)
+		delete[] Selected;
 }

@@ -52,20 +52,20 @@ using namespace RMath;
 RGA2D::RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: Random(r), Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori)
 {
-	Order=new unsigned int[maxobjs];
+	Order=new RGeoInfo*[maxobjs];
 	MaxPromSol=500;
 	Sols=new ObjectPos[MaxPromSol];
 }
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfo** infos,RGrid *grid)
+void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfos* infos,RGrid *grid)
 {
 	// Assign
 	Limits=prob->Limits;
 	Grid=grid;
 	Infos=infos;
-	NbObjs=prob->Objs.NbPtr;
+	NbObjs=Infos->RealNb;
 	Connections=&prob->Cons;
 
 	// Init the data for a placement
@@ -74,18 +74,12 @@ void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfo** infos,RGrid *g
 	Free.Clear();
 	Result.Pt1.Set(0,0);
 	Result.Pt2.Set(0,0);
+	Distances=0.0;
 
 	// Calculate an order
 	for(unsigned int i=0;i<NbObjs;i++)
-		Order[i]=i;
-	Random->RandOrder<unsigned int>(Order,NbObjs);
-}
-
-
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::Init(RProblem2D *prob,RGeoInfos *infos,RGrid *grid)
-{
-	Init(prob,infos->Tab,grid);
+		Order[i]=Infos->Tab[i];
+	Random->RandOrder<RGeoInfo*>(Order,NbObjs);
 }
 
 
@@ -126,7 +120,7 @@ void RGA2D::RPlacementHeuristic::SelectNextObject(void) throw(RPlacementHeuristi
 {
 	if(!NbObjsOk)
 	{
-		CurInfo=Infos[Order[0]];
+		CurInfo=Order[0];
 		return;
 	}
 
@@ -171,7 +165,7 @@ void RGA2D::RPlacementHeuristic::AddValidPosition(RPoint& pos)
 	p->Pos=pos;
 	sol=Prom->NewSol();
 	Prom->Assign(sol,area,CurRect.Width()*CurRect.Height());
-	Prom->Assign(sol,dist,Connections->GetDistances(Infos));
+	Prom->Assign(sol,dist,Infos->Cons.GetDistances(CurInfo,pos));
 //	cout<<NbPromSol<<": Pos=("<<pos.X<<","<<pos.Y<<") ; Area="<<CurRect.Width()*CurRect.Height();
 //	cout<<" ; Dist="<<Connections->GetDistances(Infos)<<endl;
 	NbPromSol++;
@@ -195,7 +189,6 @@ RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristic
 	if(UseFree)
 		pos=Free.CanPlace(CurInfo);
 
-//	cout<<NbObjsOk<<endl;
 	// Find the best position for current orientation if not already found.
 	if(!pos.IsValid())
 	{
@@ -228,7 +221,6 @@ RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristic
 			{
 				Prom->ComputePrometheeII();
 				best=Prom->GetBestSolId();
-//				cout<<endl<<"Best="<<best<<endl;
 				pos=Sols[best].Pos;
 				CurInfo->SetOri(Sols[best].Ori);
 			}
@@ -240,7 +232,6 @@ RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristic
 		}
 		delete Prom;
 	}
-//	cout<<endl<<endl;
 
 	// Place it	
 	if(!pos.IsValid())
@@ -248,11 +239,21 @@ RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristic
 		throw RPlacementHeuristicException("Can't place an object!");
 	}
 	Place(pos);
-	CurInfo->Assign(pos);
 	
 	// Look for free polygons
 	if(CalcFree)
+	{
+		if(NbObjsOk==26)
+		{
+			RMsg* m=LookMsg("Random");
+			if(m)
+			{
+				DeleteMsg(m);
+				InsertMsg("Debug");
+			}
+		}
 		Grid->AddFreePolygons(CurInfo,&Free,Result);
+	}
 
 	// Next Object
 	NbObjsOk++;
@@ -261,7 +262,7 @@ RGeoInfo* RGA2D::RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristic
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfo** infos,RGrid* grid) throw(RPlacementHeuristicException)
+void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid) throw(RPlacementHeuristicException)
 {
 	Init(prob,infos,grid);
 	while(NbObjsOk<NbObjs)
@@ -273,9 +274,16 @@ void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfo** infos,RGrid* gr
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid) throw(RPlacementHeuristicException)
+void RGA2D::RPlacementHeuristic::PostRun(RPoint&)
 {
-	Run(prob,infos->Tab,grid);
+	// Compute all connections part again
+	Distances=0.0;
+	Infos->Cons.UnComplete();
+	for(Infos->Cons.Start();!Infos->Cons.End();Infos->Cons.Next())
+	{
+		Infos->Cons()->ComputeMinDist(Infos);
+		Distances+=Infos->Cons()->Dist;
+	}
 }
 
 

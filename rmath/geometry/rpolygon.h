@@ -261,6 +261,11 @@ public:
 	void ReOrder(void);
 
 	/**
+	* Delete all necessary points to not have two adjance vertexes.
+	*/
+	void ReValid(void);
+
+	/**
 	* This function returns when there are duplicate points.
 	*/
 	bool DuplicatePoints(void) const;

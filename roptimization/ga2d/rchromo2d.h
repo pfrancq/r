@@ -123,6 +123,11 @@ protected:
 	*/
 	RObj2DContainer *thObj2;
 
+	/**
+	* Temporary geometric informations. This is a "thread-dependent" data.
+	*/
+	RGeoInfos *thInfos;
+
 public:
 
 	/**
@@ -145,27 +150,6 @@ public:
 	virtual void Init(cThreadData *thData) throw(bad_alloc);
 
 	/**
-	* This inline function clears all the geometric information. All the
-	* positions of the two grids are put to NoObject, and each information is
-	* place to (MaxCoord,MaxCoord) which is considered as an invalid position.
-	*/
-	inline void ClearInfos(void);
-
-	/**
-	* This inline function clears all the temporary variables needed for the
-	* crossover.
-	*/
-	inline void thVarsClear(void);
-
-	/**
-	* This function add all the unselected objects to thObjs and calculate the
-	* correspoding number.
-	* @param objs           The array of pointers to objects to be filled.
-	* @param nbobjs         The total number of objects in the array.
-	*/
-	void FillObjs(RObj2D **objs,unsigned int &nbobjs);
-
-	/**
 	* The random construction uses the heuristic to place all the objects.
 	* @return The function returns true if a solution has been constructed.
 	*/
@@ -176,8 +160,7 @@ public:
 	* first parent. Then, the heuristic is used to place this object and the
 	* objects that aren't selected.
 	* @param parent1        First parent used.
-	* @param parent2        Second parent used (Actually, no information is
-	*                       taken from this parent).
+	* @param parent2        Second parent used.
 	* @return The function returns true if the crossover has been done.
 	*/
 	virtual bool Crossover(cChromo *parent1,cChromo *parent2);

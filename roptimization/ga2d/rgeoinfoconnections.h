@@ -37,7 +37,9 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rga2d/rconnections.h>
 #include <rga2d/rgeoinfoconnection.h>
+#include <rga2d/rgeoinfo.h>
 using namespace RGA2D;
 
 
@@ -56,6 +58,62 @@ namespace RGA2D{
 */
 class RGeoInfoConnections : public RContainer<RGeoInfoConnection,unsigned int,true,false>
 {
+	/**
+	* Pointer to the connections.
+	*/
+	RConnections* Cons;
+
+	/**
+	* Pointer to the geometric information.
+	*/
+	RGeoInfos* Infos;
+
+public:
+
+	/**
+	* Construct the connections.
+	* @param o              General connections.
+	* @param i              Geometric information.
+	*/
+	RGeoInfoConnections(RConnections* c,RGeoInfos* i);
+
+	/**
+	* Calculate the total length of all connections for the placed objects.
+	* @param info           Current information to place.
+	* @param pos            Position where to place.
+	*/
+	double GetDistances(RGeoInfo* info,const RPoint& pos);
+
+	/**
+	* Calculate the total length of all connections involving a give geometric
+	* information.
+	* @param info           Geometric information to be involved.
+	*/
+	double GetDistances(RGeoInfo* info);
+
+	/**
+	* Return the two object that have the most connected objects and that
+	* are in a given rectangle and that are not selected.
+	* @param i1             Pointer to the first object.
+	* @param i2             Pointer to the second object.
+	* @param bound          Rectangle.
+	* @param selected       Array representing selected objects.
+	*/
+	void GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,const bool* selected);
+
+	/**
+	* Make all connections uncompleted.
+	*/
+	void UnComplete(void);
+
+	/**
+	* The assignement operator.
+	*/
+	RGeoInfoConnections& operator=(const RGeoInfoConnections& cons) throw(bad_alloc);
+
+	// friend classes
+	friend class RConnections;
+	friend class RGeoInfos;
 };
 
 

@@ -1,4 +1,4 @@
-/*
+	/*
 
 	R Project Library
 
@@ -107,6 +107,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 public:
 	/**
+	* Pointer to a "debugger" holding information about the GA when it is running.
+	*/
+	RDebug *Debug;
+
+	/**
 	* Random number generator
 	*/
 	RRandom* Random;
@@ -211,8 +216,9 @@ public:
 	/**
 	* Construct the instance.
 	* @param popsize        The size of the population.
+	* @param debug          Debugger.
 	*/
-	RInst(unsigned int popsize) throw(bad_alloc);
+	RInst(unsigned int popsize,RDebug *debug=0) throw(bad_alloc);
 
 	/**
 	* Initialisation of the instance.
@@ -246,17 +252,17 @@ public:
 	/**
 	* This function does the evaluation of the chromosomes when it is needed.
 	*/
-	inline void Evaluate(void) throw(eGA);
+	virtual void Evaluate(void) throw(eGA);
 
 	/**
 	* This function does the crossovers for a generation.
 	*/
-	inline void Crossover(void) throw(eGA);
+	virtual void Crossover(void) throw(eGA);
 
 	/**
 	* This function does the necessary mutations for a generation.
 	*/
-	inline void Mutation(void) throw(eGA);
+	virtual void Mutation(void) throw(eGA);
 
 	/**
 	* This function does a generation.

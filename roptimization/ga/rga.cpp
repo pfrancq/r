@@ -45,7 +45,6 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 // General Variables
 bool RGA::ExternBreak=false;
-RDebug *RGA::Debug=0;
 
 
 
@@ -56,9 +55,24 @@ RDebug *RGA::Debug=0;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+RGA::eGA::eGA(void)
+	: Msg()
+{
+}
+
+
+//-----------------------------------------------------------------------------
 RGA::eGA::eGA(const RString &msg)
 	: Msg(msg)
 {
+	cerr<<Msg()<<endl;
+}
+
+
+//-----------------------------------------------------------------------------
+void RGA::eGA::SetMsg(const char* m)
+{
+	Msg=m;
 	cerr<<Msg()<<endl;
 }
 
@@ -71,9 +85,13 @@ RGA::eGAVerify::eGAVerify(void)
 
 
 //-----------------------------------------------------------------------------
-RGA::eGACrossover::eGACrossover(void)
-	: eGA("Error when doing a crossover")
+RGA::eGACrossover::eGACrossover(unsigned int g,unsigned p1,unsigned int p2,unsigned int c)
+	: eGA()
 {
+	char tmp[200];
+
+	sprintf(tmp,"Generation %u: Crossover error: parent %u + parent %u -> Child %u",g,p1,p2,c);
+	SetMsg(tmp);
 }
 
 
@@ -122,14 +140,14 @@ bool RGA::Examine(int argc, char *argv[],const char* Prj,const char *Ver)
 	// Treats parameters
 	if(bVersion)
 	{
-		cout<<Prj<<" Version "<<Ver<<"  (C) 1999-2000 by Pascal Francq\n";	
+		cout<<Prj<<" Version "<<Ver<<"  (C) 1999-2000 by Pascal Francq\n";
 		return(true);
 	}
 	if(bHelp)
 	{
 		cout<<"Usage: "<<Prj<<" [options] file\nOptions:\n";
 		cout<<"--help\t\t\tDisplay this information\n";
-		cout<<"--version\t\tDisplay the version information\n";		
+		cout<<"--version\t\tDisplay the version information\n";
 		cout<<"-o <file>\t\tPut output into <file>\n";
 		cout<<"-s <ip>\t\t\tSlave mode with master address <ip>\n";
 		cout<<"-m <ip>\t\t\tMaster mode\n";

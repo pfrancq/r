@@ -54,8 +54,8 @@ template<class cInst,class cChromo>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RGA::RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize) throw(bad_alloc)
-		: Random(0), Parents(0),Childs(0),tmpChrom(0),Receivers(10,5),bRandomConstruct(false),
+	RGA::RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,RDebug *debug) throw(bad_alloc)
+		: Debug(debug), Random(0), Parents(0),Childs(0),tmpChrom(0),Receivers(10,5),bRandomConstruct(false),
 			Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0)
 {
 //	EmitSig(sigGAInit);
@@ -230,14 +230,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			if(Debug) Debug->PrintInfo(Tmp);
 		#endif
 		if(!((*(C1--))->Crossover(*C2,C3)))
-			throw eGACrossover();
+			throw eGACrossover(Gen,(*C2)->Id,C3->Id,(*C1)->Id);
 		emitInteractSig();
 		#ifdef RGADEBUG
 			sprintf(Tmp,"Parent %u + Parent %u -> Child %u",C3->Id,(*C2)->Id,(*C1)->Id);
 			if(Debug) Debug->PrintInfo(Tmp);
 		#endif
 		if(!((*C1)->Crossover(C3,*C2)))
-			throw eGACrossover();
+			throw eGACrossover(Gen,C3->Id,(*C2)->Id,(*C1)->Id);
 		emitInteractSig();
 	}
 	#ifdef RGADEBUG
@@ -264,12 +264,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		C=Chromosomes;
 		WorstFitness= (*(C++))->Fitness;
 		for(i=PopSize;--i;C++)
+		{
 			if((*((*C)->Fitness))<(*WorstFitness))
 			{
 				WorstFitness=(*C)->Fitness;
 				p=(*C);
 			}
+		}
+		i=p->Id;
 		(*p)=(*BestInPop);
+		p->Id=i;
 		#ifdef RGADEBUG
 			sprintf(Tmp,"Normal Mutation (BestInPop) -> Chromosome %u",p->Id);
 			if(Debug) Debug->PrintInfo(Tmp);
@@ -284,12 +288,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		C=Chromosomes;
 		WorstFitness= (*(C++))->Fitness;
 		for(i=PopSize;--i;C++)
+		{
 			if((*((*C)->Fitness))<(*WorstFitness))
 			{
 				WorstFitness=(*C)->Fitness;
 				p=(*C);
 			}
+		}
+		i=p->Id;
 		(*p)=(*BestChromosome);
+		p->Id=i;
 		#ifdef RGADEBUG
 			sprintf(Tmp,"Strong Mutation (BestInPop) -> Chromosome %u",p->Id);
 			if(Debug) Debug->PrintInfo(Tmp);
@@ -358,6 +366,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 {
 	unsigned int i;
 	cChromo **C;
+	bool b=false;
 
 	#ifdef RGADEBUG
 		if(Debug) Debug->BeginFunc("Verify","RInst");
@@ -365,9 +374,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		if(!((*C)->Verify()))
-			throw eGAVerify();
+		{
+			b=true;
+		}
 		emitInteractSig();
 	}
+	if(b)
+		throw eGAVerify();
 	#ifdef RGADEBUG
 		if(Debug)
 		{

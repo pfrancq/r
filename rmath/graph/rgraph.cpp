@@ -91,7 +91,7 @@ RVertex* RGraphs::RGraph::GetVertex(const unsigned int id)
 
 	s.id=id;
 	s.idx=Vertices.NbPtr;
-	s.nb=Vertices.NbPtr;
+	s.nb=Vertices.MaxPtr;
 	ptr=Vertices.GetInsertPtr<RVertex::VertexStruct>(s);
 	return(ptr);
 }

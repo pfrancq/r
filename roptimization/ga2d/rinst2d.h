@@ -95,6 +95,11 @@ public:
 	RObj2DContainer *tmpObj2;
 
 	/**
+	* Temporary geometric informations.
+	*/
+	RGeoInfos *tmpInfos;
+
+	/**
 	* Heuristic Used.
 	*/
 	RPlacementHeuristic *Heuristic;
@@ -173,8 +178,9 @@ public:
 	* @param popsize        The size of the population.
 	* @param prob           Pointer to the problem.
 	* @param h              The heuristic that has to be used.
+	* @param debug          Debugger.
 	*/
-	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h) throw(bad_alloc);
+	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug *debug=0) throw(bad_alloc);
 
 	/**
 	* Initialisation of the instance.

@@ -62,7 +62,7 @@ RGA2D::RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool us
 
 
 //-----------------------------------------------------------------------------
-void RGA2D::RPlacementCenter::Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid)
+void RGA2D::RPlacementCenter::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 {
 	RPlacementHeuristic::Init(prob,infos,grid);
 	HoldLimits=Limits;
@@ -74,13 +74,6 @@ void RGA2D::RPlacementCenter::Init(RProblem2D* prob,RGeoInfo** infos,RGrid* grid
 	Attraction.Set(Max.X/2,Max.Y/2);
 	Union.Clear();
 	Sol.Clear();
-}
-
-
-//-----------------------------------------------------------------------------
-void RGA2D::RPlacementCenter::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
-{
-	Init(prob,infos->Tab,grid);
 }
 
 
@@ -287,22 +280,14 @@ void RGA2D::RPlacementCenter::PostRun(RPoint &limits)
 {
 	RGeoInfo **info;
 	unsigned int i;
-	RPoint tmp;
 
+	RPlacementHeuristic::PostRun(limits);
 	Sol.Clear();
-	for(i=NbObjs+1,info=Infos;--i;info++)
+	for(i=NbObjs+1,info=Infos->Tab;--i;info++)
 		Sol.InsertPtr(new RPolygon((*info)->GetPolygon()));
 	Sol.Union(&Union);
 	Union.Boundary(Result);
 	limits=HoldLimits;
-	Grid->Clear();
-	for(i=NbObjs+1,info=Infos;--i;info++)
-	{
-		tmp=(*info)->GetPos()-Result.Pt1;
-		(*info)->Assign(tmp,Grid);
-	}
-	for(Free.Start();!Free.End();Free.Next())
-		(*Free())-=Result.Pt1;
 }
 
 

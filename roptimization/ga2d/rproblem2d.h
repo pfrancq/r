@@ -38,8 +38,9 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
-#include <rstd/rxmltag.h>
 using namespace RStd;
+#include <rxml/rxmltag.h>
+using namespace RXML;
 #include <rgeometry/rpoint.h>
 using namespace RGeometry2D;
 #include <rga2d/robj2d.h>

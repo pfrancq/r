@@ -33,6 +33,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rstd/rmsg.h>
+using namespace RStd;
 #include <rga2d/rgrid.h>
 #include <rga2d/rgeoinfo.h>
 using namespace RGA2D;
@@ -76,11 +78,11 @@ void RGA2D::RGrid::Clear(void)
 	RReturnIfFail(OccupiedY);
 
 	// OccupiedX
-	for(RCoord R=0;R<InternalLimits.X;R++)
+	for(RCoord R=0;R<InternalLimits.X+1;R++)
 		memset(OccupiedX[R],0xFF,sizeof(unsigned int)*(InternalLimits.Y));
 
 	// OccupiedY
-	for(RCoord R=0;R<InternalLimits.Y;R++)
+	for(RCoord R=0;R<InternalLimits.Y+1;R++)
 		memset(OccupiedY[R],0xFF,sizeof(unsigned int)*(InternalLimits.X));
 }
 
@@ -263,7 +265,7 @@ RCoord RGA2D::RGrid::SkirtUp(RPoint& pt,RRect &bound)
 		ptr++;
 		if(ptrL) ptrL++;
 		if(ptrR) ptrR++;
-		y++;	
+		y++;
 	}
 
 	// If bifucation and next up point is free, go to it
@@ -464,6 +466,37 @@ bool RGA2D::RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect 
 		}
 	}
 
+	// Verify that the not same X or not same Y
+	next=poly.Tab[poly.NbPtr-1];
+	if((first->X==next->X)&&(first->X==poly.Tab[1]->X))
+	{
+		if(poly.GetConY(next)->X<first->X)
+		{
+			poly.InsertPtr(new RPoint(next->X-1,next->Y));
+			poly.InsertPtr(new RPoint(next->X-1,first->Y));
+		}
+		else
+		{
+			poly.InsertPtr(new RPoint(next->X+1,next->Y));
+			poly.InsertPtr(new RPoint(next->X+1,first->Y));
+		}
+		poly.DeletePtr(next);
+	}
+	if((first->Y==next->Y)&&(first->Y==poly.Tab[1]->Y))
+	{
+		if(poly.GetConX(next)->Y<first->Y)
+		{
+			poly.InsertPtr(new RPoint(next->X,next->Y-1));
+			poly.InsertPtr(new RPoint(first->X-1,next->Y-1));
+		}
+		else
+		{
+			poly.InsertPtr(new RPoint(next->X,next->Y+1));
+			poly.InsertPtr(new RPoint(first->X,next->Y+1));
+		}
+		poly.DeletePtr(next);
+	}
+
 	// Ok
 	return(true);
 }
@@ -498,12 +531,25 @@ void RGA2D::RGrid::AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &boun
 		AdaptTestXY(TestX,TestY,FromDir);
 		if(bound.IsIn(TestX,TestY)&&IsFree(TestX,TestY)&&(!NewOne.IsIn(TestX,TestY)))
 		{
+			if((free->NbPtr==1)&&(TestX==368)&&(TestY==183))
+			{
+				RMsg *m=LookMsg("Debug");
+				if(m)
+				{
+					DeleteMsg(m);
+				}
+			}
+
 			// Calculate Polygon
 			if(CalculateFreePolygon(TestX,TestY,FromDir,bound,New))
 			{
 				New.ReOrder();    // The points must order anti-clockwise.
-				NewOne.InsertPtr(new RPolygon(New));
-				free->InsertPtr(new RFreePolygon(New));
+				New.ReValid();    // The vertex can't be close.
+				if(New.NbPtr)
+				{
+					NewOne.InsertPtr(new RPolygon(New));
+					free->InsertPtr(new RFreePolygon(New));
+				}
 			}
 		}
 
@@ -536,13 +582,13 @@ RGA2D::RGrid::~RGrid(void)
 {
 	if(OccupiedX)
 	{
-		for(RCoord R=0;R<InternalLimits.X;R++)
+		for(RCoord R=0;R<InternalLimits.X+1;R++)
 			delete[] (OccupiedX[R]);
 		delete[] OccupiedX;
 	}
 	if(OccupiedY)
 	{
-		for(RCoord R=0;R<InternalLimits.Y;R++)
+		for(RCoord R=0;R<InternalLimits.Y+1;R++)
 			delete[] (OccupiedY[R]);
 		delete[] OccupiedY;
 	}
