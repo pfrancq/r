@@ -144,7 +144,7 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	{
 		Find=false;
 		if(!NbPtr)
-		return(0);
+			return(0);
 		NbMax=NbPtr-1;
 		NbMin=0;
 		if(NbMax)

@@ -60,6 +60,8 @@ namespace RStd{
 */
 class RString
 {
+protected:
+
 	/**
 	* The Text containing the string.
 	*/
