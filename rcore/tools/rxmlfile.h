@@ -258,7 +258,7 @@ public:
 	/**
 	* Destruct the XML file.
 	*/
-	~RXMLFile(void);
+	virtual ~RXMLFile(void);
 };
 
 

@@ -130,7 +130,7 @@ public:
 	/**
 	* Destruct the attribute.
 	*/
-	~RXMLAttr(void);
+	virtual ~RXMLAttr(void);
 };
 
 

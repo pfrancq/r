@@ -264,7 +264,7 @@ public:
 	/**
 	* Destruct the XML Tag.
 	*/
-	~RXMLTag(void);
+	virtual ~RXMLTag(void);
 
 	// friend classes
 	friend class RXMLStruct;

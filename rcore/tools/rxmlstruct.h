@@ -157,7 +157,7 @@ public:
 	/**
 	* Destruct the XML Structure.
 	*/
-	~RXMLStruct(void);
+	virtual ~RXMLStruct(void);
 };
 
 

@@ -170,7 +170,7 @@ public:
 	/**
 	* Destruct the XML file.
 	*/
-	~RHTMLFile(void);
+	virtual ~RHTMLFile(void);
 };
 
 
