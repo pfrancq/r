@@ -146,10 +146,10 @@ public:
   bool operator!=(const RString &str) const;
 
 	/** Compare function like strcmp used in particular for RContainer class.*/
-  int Compare(const RString &str);
+  int Compare(const RString &str) const;
 
 	/** Compare function like strcmp used in particular for RContainer class.*/
-  int Compare(const RString *str);
+  int Compare(const RString *str) const;
 
 	/** Return a number between 0 and 26 according to the first character of the
 		* string. It is used for the RHashContainer class.*/
@@ -169,13 +169,13 @@ public:
 
 	/** This funnction return a pointer in the string where text is beginning if
 		* exist in the string.*/
-  const char* FindStr(const char *text);
+  const char* FindStr(const char *text) const;
 
 	/** Return the length of the string.*/
-  inline int GetLen(void) {return(Len);}
+  inline int GetLen(void) const {return(Len);}
 
 	/** Return the maximal length of the string.*/
-  inline int GetMaxLen(void) {return(MaxLen);}
+  inline int GetMaxLen(void) const {return(MaxLen);}
 
 	/** Need to manage temporary strings.*/
 	static RString* GetString(void);

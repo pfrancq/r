@@ -250,21 +250,21 @@ bool RString::operator!=(const RString &str) const
 
 
 //---------------------------------------------------------------------------
-int RString::Compare(const RString &str)
+int RString::Compare(const RString &str) const
 {
   return(strcmp(Text,str.Text));
 }
 
 
 //---------------------------------------------------------------------------
-int RString::Compare(const RString *str)
+int RString::Compare(const RString *str) const
 {
   return(strcmp(Text,str->Text));
 }
 
 
 //---------------------------------------------------------------------------
-const char* RString::FindStr(const char *text)
+const char* RString::FindStr(const char *text) const
 {
 	return(strstr(Text,text));
 }
