@@ -43,6 +43,7 @@
 #endif
 #include <new.h>
 #include <string.h>
+#include <stdio.h>
 
 
 //---------------------------------------------------------------------------
@@ -98,6 +99,15 @@ public:
     Len=str.Len;
     Text=new char[MaxLen+1];
     memcpy(Text,str.Text,Len+1);
+  }
+  // Constructor with a number
+  RString(const long nb)
+  {
+    char text[20];
+    text=itoa(nb);
+    MaxLen=Len=strlen(text);
+    Text=new char[MaxLen+1];
+    memcpy(Text,text,Len+1);
   }
   // Verify MaxLen
   inline void Verify(const int maxlen) throw(bad_alloc)
@@ -258,17 +268,20 @@ public:
 
 inline RString& operator+(const RString &arg1,const RString &arg2)
 {
-  RString res=arg1;
+  static RString res(200);
+  res=arg1;
   return(res+=arg2);
 }
 inline RString& operator+(const RString &arg1,const char *arg2)
 {
-  RString res=arg1;
+  static RString res(200);
+  res=arg1;
   return(res+=arg2);
 }
 inline RString& operator+(const char *arg1,const RString &arg2)
 {
-  RString res=arg1;
+  static RString res(200);
+  res=arg1;
   return(res+=arg2);
 }
 
