@@ -39,8 +39,8 @@
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj>
-	RGGA::RGroupingHeuristic<cGroup,cObj>::RGroupingHeuristic(RRandom* r,const unsigned int maxobjs)
-	: Random(r)
+	RGroupingHeuristic<cGroup,cObj>::RGroupingHeuristic(RRandom* r,const unsigned int maxobjs)
+		: Random(r)
 {
 	Order=new cObj*[maxobjs];
 }
@@ -48,7 +48,7 @@ template<class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj>
-	void RGGA::RGroupingHeuristic<cGroup,cObj>::Init(cObj** objs,cGroup** groups,const unsigned int nbobjs)
+	void RGroupingHeuristic<cGroup,cObj>::Init(cObj** objs,cGroup** groups,const unsigned int nbobjs)
 {
 	// Assign
 	Groups=groups;
@@ -67,7 +67,7 @@ template<class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj>
-	void RGGA::RGroupingHeuristic<cGroup,cObj>::SelectNextObject(void) throw(RGroupingHeuristicException)
+	void RGroupingHeuristic<cGroup,cObj>::SelectNextObject(void) throw(RGroupingHeuristicException)
 {
 	CurObj=Order[NbObjsOk];
 }
@@ -75,7 +75,7 @@ template<class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj>
-	void RGGA::RGroupingHeuristic<cGroup,cObj>::PutNextObject(void) throw(RGroupingHeuristicException)
+	void RGroupingHeuristic<cGroup,cObj>::PutNextObject(void) throw(RGroupingHeuristicException)
 {
 	SelectNextObject();
 	NextObject()->Insert(CurObj);
@@ -84,7 +84,7 @@ template<class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj>
-	void RGGA::RGroupingHeuristic<cGroup,cObj>::Run(cObj** objs,cGroup** groups,const unsigned int nbobjs) throw(RGroupingHeuristicException)
+	void RGroupingHeuristic<cGroup,cObj>::Run(cObj** objs,cGroup** groups,const unsigned int nbobjs) throw(RGroupingHeuristicException)
 {
 	Init(objss,groups,nbobjs);
 	while(NbObjsOk<NbObjs)
@@ -97,14 +97,14 @@ template<class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj>
-	void RGGA::RGroupingHeuristic<cGroup,cObj>::PostRun(void)
+	void RGroupingHeuristic<cGroup,cObj>::PostRun(void)
 {
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj>
-	RGGA::RGroupingHeuristic<cGroup,cObj>::~RGroupingHeuristic(void)
+	RGroupingHeuristic<cGroup,cObj>::~RGroupingHeuristic(void)
 {
 	if(Order) delete[] Order;
 }

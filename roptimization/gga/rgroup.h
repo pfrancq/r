@@ -37,6 +37,11 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
+#include <rgga/rgroups.h>
+
+
+//-----------------------------------------------------------------------------
 namespace RGGA{
 //-----------------------------------------------------------------------------
 
@@ -58,7 +63,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	/**
 	* Owner of the group.
 	*/
-	cChromo* Owner;
+	RGroups<cGroup>* Owner;
 
 	/**
 	* Array of groups for the current chromosome (Reference).
@@ -87,13 +92,18 @@ public:
 	* @param owner          Owner of the group.
 	* @param id             Identificator of the group.
 	*/
-	RGroup(cChromo* owner,unsigned id);
+	RGroup(RGroups<cGroup>* owner,unsigned id);
 
 	/**
 	* Verify if the group is not violating the integrity of the system.
 	* @return true if the group is correct, false else.
 	*/
 	bool Verify(void);
+
+	/**
+	* Clear the information container in a group.
+	*/
+	void Clear(void);
 
 	/**
 	* Compare two groups.

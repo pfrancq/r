@@ -42,9 +42,19 @@ using namespace RGGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RGGA::RObjG::RObjG(const unsigned int id)
-	: Id(id)
+RGGA::RObjG::RObjG(const unsigned int id,const RString& name)
+	: Id(id), Name(name)
 {
+}
+
+
+//-----------------------------------------------------------------------------
+RString& RGGA::RObjG::GetName(void) const
+{
+	RString *str=RString::GetString();
+
+	(*str)=Name;
+	return(*str);
 }
 
 

@@ -31,8 +31,14 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RObjgH
-#define RObjgH
+#ifndef RObjGH
+#define RObjGH
+
+
+//-----------------------------------------------------------------------------
+// include files for R Project
+#include <rstd/rstring.h>
+using namespace RStd;
 
 
 //-----------------------------------------------------------------------------
@@ -60,18 +66,29 @@ protected:
 	*/
 	unsigned int Id;
 
+	/**
+	* Name of the objects.
+	*/
+	RString Name;
+
 public:
 
 	/**
 	* Construct the object.
 	* @param id             Identificator.
+	* @param name           Name of the object.
 	*/
-	RObjG(const unsigned int id);
+	RObjG(const unsigned int id,const RString& name);
 
 	/**
 	* Return the identificator of the object.
 	*/
-	unsigned int GetId(void) {return(Id);}
+	unsigned int GetId(void) const {return(Id);}
+
+	/**
+	* Return the Name of the object.
+	*/
+	RString& GetName(void) const;
 
 	/**
 	* Destruct the object.

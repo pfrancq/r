@@ -35,13 +35,18 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R Project
+#include <rga/rchromo.h>
+
+
+//-----------------------------------------------------------------------------
 namespace RGGA{
 //-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	class RChromoG : public RChromo<cInst,cChromo,cFit,cThreadData>
+	class RChromoG : public RGA::RChromo<cInst,cChromo,cFit,cThreadData>
 {
 	/**
 	* The Objects to group.

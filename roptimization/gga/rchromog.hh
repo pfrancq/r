@@ -32,7 +32,7 @@
 //---------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RChromoG(cInst *inst,unsigned id) throw(bad_alloc)
-		: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id)
+		: RGA::RChromo<cInst,cChromo,cFit,cThreadData>(inst,id)
 {
 	NbGroups=0;
 	NbGroupsList=0;
@@ -49,7 +49,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	unsigned int i;
 
 	// Initialisation of the parent
-	RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
+	RGA::RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
 
 	// General Initalisation
 	MaxGroups=Instance->MaxGroups;
@@ -285,6 +285,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	bool RGGA::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Verify(void)
 {
+	unsigned int i;
+	cGroup** G;
+
+	for(i=NbGroups+1,G=Groups;--i;G++)
+		if(!(*G)->Verify())
+			return(false);
 	return(true);
 }
 
@@ -310,7 +316,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 //	memcpy(ObjectsAss,chromo.ObjectsAss,sizeof(unsigned int)*NbObjectsList);
 //	(*Fitness)=(*(chromo.Fitness));
 //  Verify();
-  return(*this);
+	RGA::RChromo<cInst,cChromo,cFit,cThreadData>::operator=(chromo);
+	return(*this);
 }
 
 

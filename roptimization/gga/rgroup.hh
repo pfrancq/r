@@ -39,7 +39,7 @@
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGGA::RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RGroup(cChromo* owner,unsigned id)
+	RGGA::RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RGroup(RGroups<cGroup>* owner,unsigned id)
 		: Id(id), Owner(owner), Groups(owner->Groups)
 {
 	NbSubObjects= 0;
@@ -94,6 +94,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	// return the value of the verification.
 	return(Ok);
+}
+
+
+//---------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	void RGGA::RGroup<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Clear(void)
+{
+	Reserved=false;
+	SubObjects=NoObjects;
+	NbSubObjects=0;
 }
 
 
