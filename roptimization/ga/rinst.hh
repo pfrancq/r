@@ -258,8 +258,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	emitInteractSig();
 
 	// Make the crossovers
-	for(C1=&tmpChrom2[PopSize-1],C2=tmpChrom2,i=NbCross+1;--i;C1--,C2++) // A changer au cas où crossover pas possible
+	for(C1=&tmpChrom2[PopSize-1],C2=tmpChrom2,i=NbCross+1;--i;C1--,C2++) // To change if crossover not possible
 	{
+		// First Crossover
 		C3=(*(C2++));
 		#ifdef RGADEBUG
 			if(Debug)
@@ -275,6 +276,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		if(!(*C1)->Verify())
 			throw eGAVerify(Gen,(*C1)->Id);
 		emitInteractSig();
+
+		// Second Crossover
+		C1--;
 		#ifdef RGADEBUG
 			if(Debug)
 			{
@@ -282,7 +286,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 				Debug->PrintInfo(Tmp);
 			}
 		#endif
-		if(!((*(--C1))->Crossover(C3,*C2)))
+		if(!((*C1)->Crossover(C3,*C2)))
 			throw eGACrossover(Gen,C3->Id,(*C2)->Id,(*C1)->Id);
 		(*C1)->Optimisation();
 		(*C1)->ToEval=true;
