@@ -31,7 +31,12 @@
 
 
 //-----------------------------------------------------------------------------
-// include file for HyperPRISME
+// include files for ANSI C/C++
+#include <string.h>
+
+
+//-----------------------------------------------------------------------------
+// include files for R Project
 #include "rinter/rlang.h"
 using namespace RInter;
 
