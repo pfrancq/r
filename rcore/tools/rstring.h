@@ -30,28 +30,29 @@
 */
 
 
-//---------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 #ifndef RStringH
 #define RStringH
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Generic defines
 #ifndef __RMAXSTRING__
 	#define __RMAXSTRING__ 30
 #endif
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 namespace RStd{
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /** This class implements the traditional "C string" (char*) as a class.
-	* @author Pascal Francq
-	* @short String Class
-	*/
+* @author Pascal Francq
+* @short String Class
+*/
 class RString
 {
 	/**
@@ -194,6 +195,11 @@ public:
 	int Compare(const RString *str) const;
 
 	/**
+	* Compare function like strcmp used in particular for RContainer class.
+	*/
+	int Compare(const char *str) const;
+
+	/**
 	* Return a number between 0 and 26 according to the first character of the
 	* string. It is used for the RHashContainer class.
 	*/
@@ -242,46 +248,66 @@ public:
 };
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Operators
 
-/** Add two strings together.*/
+/**
+* Add two strings together.
+*/
 RString& operator+(const RString &arg1,const RString &arg2);
 
-/** Add a string and a "C string" together.*/
+/**
+* Add a string and a "C string" together.
+*/
 RString& operator+(const RString &arg1,const char *arg2);
 
-/** Add a "C string" and a string together.*/
+/**
+* Add a "C string" and a string together.
+*/
 RString& operator+(const char *arg1,const RString &arg2);
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Conversion functions
 
-/** Transform an int to a string.*/
+/**
+* Transform an int to a string.
+*/
 RString& itoa(const int nb);
 
-/** Transform an unsigned int to a string.*/
+/**
+* Transform an unsigned int to a string.
+*/
 RString& itoa(const unsigned int nb);
 
-/** Transform a long to a string.*/
+/**
+* Transform a long to a string.
+*/
 RString& ltoa(const long nb);
 
-/** Transform an unsigned char to a string.*/
+/**
+* Transform an unsigned char to a string.
+*/
 RString& chr(const unsigned char c);
 
-/** Transform an unsigned long to a string.*/
+/**
+* Transform an unsigned long to a string.
+*/
 RString& ltoa(const unsigned long nb);
 
-/** Transform a float to a string.*/
+/**
+* Transform a float to a string.
+*/
 RString& ftoa(const float nb);
 
-/** Transform a double to a string.*/
+/**
+* Transform a double to a string.
+*/
 RString& dtoa(const double nb);
 
 
-}  //-------- End of namespace RStd ---------------------------------------
+}  //-------- End of namespace RStd -------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif
