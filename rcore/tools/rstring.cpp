@@ -80,7 +80,7 @@ RString::RString(const RString& str) throw(bad_alloc)
 
 
 //---------------------------------------------------------------------------
-RString::RString(RString* str) throw(bad_alloc)
+RString::RString(const RString* str) throw(bad_alloc)
 {
   MaxLen=str->MaxLen;
   Len=str->Len;
@@ -133,25 +133,27 @@ inline void RString::StrUpr(void)
 	char *ptr=Text;
 	while(*ptr)
 	{
+    #pragma warn -sig
 		if(((*ptr)>='a')&&((*ptr)<='z'))
 			(*ptr)-='a'-'A';
+    #pragma warn .sig
 		ptr++;
 	}
 }
 
 
 //---------------------------------------------------------------------------
-void RString::StrUpr(char *text) throw(bad_alloc)
+void RString::StrUpr(const char *text) throw(bad_alloc)
 {
   Len=strlen(text),
   Verify(Len);
-  memcpy(Text,text,Len+1);		
+  memcpy(Text,text,Len+1);
   StrUpr();
 }
 
 
 //---------------------------------------------------------------------------
-void RString::StrUpr(RString &str) throw(bad_alloc)
+void RString::StrUpr(const RString &str) throw(bad_alloc)
 {
   Verify(str.MaxLen);
   Len=str.Len;
@@ -164,18 +166,20 @@ void RString::StrUpr(RString &str) throw(bad_alloc)
 inline void RString::StrLwr(void)
 {
 	char *ptr=Text;
-  	
+
 	while(*ptr)
 	{
+    #pragma warn -sig
 		if(((*ptr)>='A')&&((*ptr)<='Z'))
 			(*ptr)+='a'-'A';
+    #pragma warn .sig
 		ptr++;
 	}
 }
 
 
 //---------------------------------------------------------------------------
-void RString::StrLwr(char *text) throw(bad_alloc)
+void RString::StrLwr(const char *text) throw(bad_alloc)
 {
   Len=strlen(text),
   Verify(Len);
@@ -185,7 +189,7 @@ void RString::StrLwr(char *text) throw(bad_alloc)
 
 
 //---------------------------------------------------------------------------
-void RString::StrLwr(RString &str) throw(bad_alloc)
+void RString::StrLwr(const RString &str) throw(bad_alloc)
 {
   Verify(str.MaxLen);
   Len=str.Len;
@@ -244,7 +248,7 @@ int RString::Compare(const RString *str)
 
 
 //---------------------------------------------------------------------------
-char* RString::FindStr(char *text)
+char* RString::FindStr(const char *text)
 {
 	return(strstr(Text,text));
 }

@@ -69,53 +69,62 @@ template<class C,class T,T tSize,bool bAlloc> class RHashContainer
 {
 public:
 	RContainer<C,T,bAlloc,true> **Hash;
-	
+
+  // Constructor
 	RHashContainer(T M,T I) throw(bad_alloc)
 	{
 		RContainer<C,T,bAlloc,true> **ptr;
 		T i;
-			
+
 		Hash= new RContainer<C,T,bAlloc,true>*[tSize];
 		for(i=tSize+1,ptr=Hash;--i;ptr++)
-			(*ptr)=new RContainer<C,T,bAlloc,true>(M,I);	
+			(*ptr)=new RContainer<C,T,bAlloc,true>(M,I);
 	}
-  inline void InsertPtrAt(C *ins,T Pos) throw(bad_alloc)
-  {
-  	Hash[ins->HashIndex()]->InsertPtrAt(ins,Pos);
-  }
+
+  // Get & Insert
   inline void InsertPtr(C *ins) throw(bad_alloc)
   {
-	  Hash[ins->HashIndex()]->InsertPtr(ins);	
+	  Hash[ins->HashIndex()]->InsertPtr(ins);
   }
   template<class TUse> inline bool IsIn(const TUse &tag)
   {
-		Hash[tag.HashIndex()]->IsIn<TUse>(tag);	  	
+		return(Hash[tag.HashIndex()]->IsIn<TUse>(tag));
   }
   template<class TUse> inline C* GetPtr(const TUse &tag)
   {
-		return(Hash[tag.HashIndex()]->GetPtr<TUse>(tag));	  	
+		return(Hash[tag.HashIndex()]->GetPtr<TUse>(tag));
   }
   template<class TUse> inline C* GetInsertPtr(const TUse &tag) throw(bad_alloc)
   {
-		return(Hash[tag.HashIndex()]->GetInsertPtr<TUse>(tag));	  	
+		return(Hash[tag.HashIndex()]->GetInsertPtr<TUse>(tag));
   }
+
+  // Delete
   inline void DeletePtr(C* del)
   {
-		Hash[ins->HashIndex()]->DeletePtr(del);	  	
+		Hash[ins->HashIndex()]->DeletePtr(del);
   }
   template<class TUse> inline void DeletePtr(const TUse &tag)
   {
-		Hash[tag.HashIndex()]->DeletePtr<TUse>(tag);	  	
+		Hash[tag.HashIndex()]->DeletePtr<TUse>(tag);
   }
-  template<class TUse> inline void ForEach(void f(TUse),const TUse &tag)
+
+  // For each
+  template<class TUse> void ForEach(void f(TUse),const TUse &tag)
   {
-		Hash[tag.HashIndex()]->ForEach<TUse>(f,tag);	  	
+		RContainer<C,T,bAlloc,true> **ptr;
+		T i;
+		for(i=tSize+1,ptr=Hash;--i;ptr++)	(*ptr)->ForEach<TUse>(f,tag);
   }
+
+  // Destructor
   ~RHashContainer(void)
   {
-		RContainer<C,T,bAlloc,true> **ptr=Hash;
-		for(T i;--i;ptr++)	delete (*ptr);	
-		delete[] Hash;  	
+		RContainer<C,T,bAlloc,true> **ptr;
+		T i;
+
+		for(i=tSize+1,ptr=Hash;--i;ptr++)	delete (*ptr);
+		delete[] Hash;
   }
 };
 

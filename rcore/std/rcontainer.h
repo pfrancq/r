@@ -80,28 +80,33 @@ public:
   // Constructors
   RContainer(T M,T I) throw(bad_alloc);
 	RContainer(RContainer *container) throw(bad_alloc);
+
 	// operators
 	RContainer& operator=(const RContainer& container) throw(bad_alloc);
+
   // Get Index
   template<class TUse> T GetId(const TUse &tag,bool &Find);
+
   // Verify size
   void VerifyTab(void) throw(bad_alloc);
+
 	// Clear the container
 	void Clear(void);
-  // Insert
+
+  // Insert & Get
   void InsertPtrAt(C *ins,T Pos) throw(bad_alloc);
   void InsertPtr(C* ins) throw(bad_alloc);
-  // Get
   template<class TUse> bool IsIn(const TUse &tag);
-//  template<class TUse,bool LocalOrder> C* GetPtr(const TUse &tag);
-  template<class TUse> inline C* GetPtr(const TUse &tag);
-  // Insert or Get
+  template<class TUse> C* GetPtr(const TUse &tag);
   template<class TUse> C* GetInsertPtr(const TUse &tag) throw(bad_alloc);
+
   // Delete
   void DeletePtr(C* del);
   template<class TUse> void DeletePtr(const TUse &tag);
+
   // For each
   template<class TUse> void ForEach(void f(TUse),const TUse &tag);
+
   // Class destructor
   ~RContainer(void);
 };

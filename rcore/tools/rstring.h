@@ -63,7 +63,7 @@ public:
   RString(const char *text) throw(bad_alloc);
   RString(const int maxlen) throw(bad_alloc);
   RString(const RString& str) throw(bad_alloc);
-	RString(RString* str) throw(bad_alloc);
+	RString(const RString* str) throw(bad_alloc);
 
 	// Assignation
   RString& operator=(const RString &str) throw(bad_alloc);
@@ -71,13 +71,13 @@ public:
 
   // Transform to uppercase
   inline void StrUpr(void);
-  void StrUpr(char *text) throw(bad_alloc);
-	void StrUpr(RString &str) throw(bad_alloc);
+  void StrUpr(const char *text) throw(bad_alloc);
+	void StrUpr(const RString &str) throw(bad_alloc);
 
   // Transform to lowercase
   inline void StrLwr(void);
-  void StrLwr(char *text) throw(bad_alloc);
-  void StrLwr(RString &str) throw(bad_alloc);
+  void StrLwr(const char *text) throw(bad_alloc);
+  void StrLwr(const RString &str) throw(bad_alloc);
 
   // Addition
   RString& operator+=(const RString &str) throw(bad_alloc);
@@ -95,13 +95,15 @@ public:
   inline char HashIndex(void) const
   {
   	char c=(*Text);
+    #pragma warn -sig
   	if(c>='a'&&c<='z') return(c-'a');
-		if(c>='A'&&c<='Z') return(c-'A');  	
+		if(c>='A'&&c<='Z') return(c-'A');
+    #pragma warn .sig
 		return(26);
   }
 
   // Find a string
-  inline char* FindStr(char *text);
+  char* FindStr(const char *text);
 
   // Return lengths
   inline int GetLen(void) {return(Len);}
@@ -125,6 +127,10 @@ RString* GetString(void);
 RString& operator+(const RString &arg1,const RString &arg2);
 RString& operator+(const RString &arg1,const char *arg2);
 RString& operator+(const char *arg1,const RString &arg2);
+
+
+//---------------------------------------------------------------------------
+// Conversion functions
 RString& itoa(const int nb);
 RString& itoa(const unsigned int nb);
 RString& ltoa(const long nb);
