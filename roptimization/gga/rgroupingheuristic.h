@@ -50,20 +50,6 @@ using namespace RMath;
 namespace RGGA{
 //-----------------------------------------------------------------------------
 
-
-//-----------------------------------------------------------------------------
-/**
-*/
-class RGroupingHeuristicException
-{
-public:
-	RString Msg;
-	
-	RGroupingHeuristicException(const RString& msg) : Msg(msg) {}
-	RGroupingHeuristicException(const char* msg) : Msg(msg) {}
-};
-
-
 //-----------------------------------------------------------------------------
 /**
 * The RGroupingHeuristic class provides an abstract class for grouping
@@ -77,9 +63,14 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 protected:
 
 	/**
+	* Name of the heuristic.
+	*/
+	RStd::RString Name;
+
+	/**
 	* The random number generator to use.
 	*/
-	RRandom* Random;
+	RMath::RRandom* Random;
 
 	/**
 	* Objects to be grouped.
@@ -120,11 +111,18 @@ public:
 
 	/**
 	* Construct the grouping heuristic.
+	* @param n              Name of the heuristic.
 	* @param r              The random genrator to use.
 	* @param objs           Pointer to the objects.
 	*/
-	RGroupingHeuristic(RRandom* r,RStd::RCursor<cObj,unsigned int>* objs);
+	RGroupingHeuristic(const char* n,RRandom* r,RStd::RCursor<cObj,unsigned int>* objs);
 
+	/**
+	* Get the name of the heuristic.
+	* @return Pointer to a C String.
+	*/
+	const char* GetName(void) const {return(Name());}
+	
 	/**
 	* Initialize the heuristic.
 	* @param groups         Pointer to the groups.
@@ -135,7 +133,7 @@ public:
 	* Select the next object to place.
 	* The CurObj must pointed to object to place.
 	*/
-	virtual void SelectNextObject(void) throw(RGroupingHeuristicException);
+	virtual void SelectNextObject(void) throw(RGA::eGA);
 
 	/**
 	* Return the current object to place.
@@ -150,23 +148,23 @@ public:
 	/**
 	* Find a group for the next object.
 	*/
-	virtual cGroup* FindGroup(void) throw(RGroupingHeuristicException)=0;
+	virtual cGroup* FindGroup(void) throw(RGA::eGA)=0;
 
 	/**
 	* Put the next object into a group.
 	*/
-	void PutNextObject(void) throw(RGroupingHeuristicException);
+	void PutNextObject(void) throw(RGA::eGA);
 
 	/**
 	* Run the heuristic.
 	* @param groups         Pointer to the groups.
 	*/
-	void Run(cGroups* groups) throw(RGroupingHeuristicException);
+	void Run(cGroups* groups) throw(RGA::eGA);
 
 	/**
 	* Do some operations after the run.
 	*/
-	virtual void PostRun(void);
+	virtual void PostRun(void) throw(RGA::eGA);
 
 	/**
 	* Return true if all the objects are grouped.

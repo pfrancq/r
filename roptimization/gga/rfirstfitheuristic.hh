@@ -40,14 +40,14 @@
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RFirstFitHeuristic<cGroup,cObj,cGroupData,cGroups>::RFirstFitHeuristic(RRandom* r,RStd::RCursor<cObj,unsigned int>* objs)
-	: RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>(r,objs)
+	: RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>("First-Fit Heuristic",r,objs)
 {
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	cGroup* RFirstFitHeuristic<cGroup,cObj,cGroupData,cGroups>::FindGroup(void) throw(RGGA::RGroupingHeuristicException)
+	cGroup* RFirstFitHeuristic<cGroup,cObj,cGroupData,cGroups>::FindGroup(void) throw(RGA::eGA)
 {
 	cGroup* grp;
 

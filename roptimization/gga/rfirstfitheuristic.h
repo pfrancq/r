@@ -68,7 +68,7 @@ public:
 	/**
 	* Find a group for the next object.
 	*/
-	virtual cGroup* FindGroup(void) throw(RGroupingHeuristicException);
+	virtual cGroup* FindGroup(void) throw(RGA::eGA);
 
 	/**
 	* Destruct the grouping heuristic.
