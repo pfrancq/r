@@ -447,9 +447,9 @@ template<class C,bool bAlloc,bool bOrder>
 
 	RReturnIfFail(ins);
 	if(!ins) return;
-	if(pos>MaxPtr)
+	if(pos+1>MaxPtr)
 	{
-		VerifyTab(pos+IncPtr);
+		VerifyTab(pos+1+IncPtr);
 	}
 	else
 	{
