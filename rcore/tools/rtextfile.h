@@ -54,10 +54,12 @@ namespace RStd{
 	*/
 class RTextFile
 {
-	enum ModeType {Append,Read,Create};
+public:
+	enum ModeType{Append,Read,Create};
 
+private:
 	/** How to file has to be used. */
-  ModeType Mode;
+	ModeType Mode;
 	/** Name of the File. */
 	RString Name;
 	/** Internal Handle of the file.*/
@@ -116,19 +118,19 @@ public:
 
 	/** Write a long in the file. If the number is not the first thing on the line,
 		*	a space is add before it.*/
-  void WriteLong(long nb) throw(RString);
+  void WriteLong(const long nb) throw(RString);
 
 	/** Write a unsigned long in the file. If the number is not the first thing on
 		* the line,	a space is add before it.*/
-  void WriteULong(unsigned long nb) throw(RString);
+  void WriteULong(const unsigned long nb) throw(RString);
 
 	/** Write a string in the file. If the string is not the first thing on the line,
 		*	a space is add before it.*/
-  void WriteStr(char *c) throw(RString);
+  void WriteStr(const char *c) throw(RString);
 
 	/** Write a bool in the file as '1' or '0' depend on his value. If the number is
 		* not the first thing on the line, a space is add before it.*/
-  void WriteBool(bool b) throw(RString);
+  void WriteBool(const bool b) throw(RString);
 
 	/** Write the time in the file. If the time is not the first thing on the line,
 		*	a space is add before it.*/
@@ -137,7 +139,7 @@ public:
 	/** Write a log entry in the file. First the time is written, and then the entry.
 		* The entry is alone on a line, so end-of-lines are inserted if ncessary before
 		* or after it.*/
-  void WriteLog(char *entry) throw(RString);
+  void WriteLog(const char *entry) throw(RString);
   
 	/** Destructs the file.*/
 	virtual ~RTextFile(void);

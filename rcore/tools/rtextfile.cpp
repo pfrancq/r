@@ -139,10 +139,19 @@ void RTextFile::Begin(void) throw(RString)
 //---------------------------------------------------------------------------
 void RTextFile::SkipSpaces(void)
 {
-	while((*ptr)&&((*ptr)==' '||(*ptr)=='\t'||(*ptr)=='\n'||(*ptr)=='\r')) ptr++;
-	if((*ptr)=='%')
-		while((*ptr)&&(*ptr)!='\n'&&(*ptr)!='\r') ptr++;
-	while((*ptr)&&((*ptr)==' '||(*ptr)=='\t'||(*ptr)=='\n'||(*ptr)=='\r')) ptr++;
+	// Read Spaces
+	while((*ptr)&&((*ptr)==' '||(*ptr)=='\t'||(*ptr)=='\n'||(*ptr)=='\r'))
+		ptr++;
+	// Read Comments
+	while((*ptr)=='%')
+	{
+		// Read a Comment
+		while((*ptr)&&(*ptr)!='\n'&&(*ptr)!='\r')
+			ptr++;
+		// Read Spaces
+		while((*ptr)&&((*ptr)==' '||(*ptr)=='\t'||(*ptr)=='\n'||(*ptr)=='\r'))
+			ptr++;
+	}
 }
 
 
@@ -234,7 +243,7 @@ void RTextFile::WriteLine(void) throw(RString)
 
 
 //---------------------------------------------------------------------------
-void RTextFile::WriteLong(long nb) throw(RString)
+void RTextFile::WriteLong(const long nb) throw(RString)
 {
   char Str[25];
 
@@ -252,7 +261,7 @@ void RTextFile::WriteLong(long nb) throw(RString)
 
 
 //---------------------------------------------------------------------------
-void RTextFile::WriteULong(unsigned long nb) throw(RString)
+void RTextFile::WriteULong(const unsigned long nb) throw(RString)
 {
   char Str[25];
 
@@ -271,7 +280,7 @@ void RTextFile::WriteULong(unsigned long nb) throw(RString)
 
 
 //---------------------------------------------------------------------------
-void RTextFile::WriteStr(char *c) throw(RString)
+void RTextFile::WriteStr(const char *c) throw(RString)
 {
   int l;
 
@@ -292,7 +301,7 @@ void RTextFile::WriteStr(char *c) throw(RString)
 
 
 //---------------------------------------------------------------------------
-void RTextFile::WriteBool(bool b) throw(RString)
+void RTextFile::WriteBool(const bool b) throw(RString)
 {
   char Str[10];
 
@@ -334,7 +343,7 @@ void RTextFile::WriteTime(void) throw(RString)
 
 
 //---------------------------------------------------------------------------
-void RTextFile::WriteLog(char *entry) throw(RString)
+void RTextFile::WriteLog(const char *entry) throw(RString)
 {
   char Str[30];
   time_t timer;
