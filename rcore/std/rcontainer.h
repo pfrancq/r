@@ -91,7 +91,7 @@ namespace R{
 * variable c:
 * <pre>
 * #include<rstd/rcontainer.h>
-* #include<rstd/rcontainercursor.h>
+* #include<rstd/rcursor.h>
 * using namespace R;
 *
 *
@@ -115,7 +115,7 @@ namespace R{
 * int main()
 * {
 * 	RContainer<MyElement,unsigned int,true,true> c(20,10);
-* 	RContainerCursor<MyElement,unsigned int,true,true> cur(c);
+* 	RCursor<MyElement,unsigned int> cur(c);
 *
 * 	c.InsertPtr(new MyElement(5));
 * 	if(c.IsIn<char*>("5"))

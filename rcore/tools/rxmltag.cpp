@@ -261,6 +261,13 @@ void RXMLTag::InsertAttr(const char* name,const char* value)
 
 
 //------------------------------------------------------------------------------
+void RXMLTag::InsertAttr(const RChar* name,const RChar* value)
+{
+	Attrs.InsertPtr(new RXMLAttr(name,value));
+}
+
+
+//------------------------------------------------------------------------------
 bool RXMLTag::IsAttrDefined(const char *name)
 {
 	return(Attrs.IsIn<const char*>(name));

@@ -104,6 +104,12 @@ public:
 	RString(const char* text) throw(bad_alloc);
 
 	/**
+	* Construct a string from a Unicode array.
+	* @param text           The array used as reference.
+	*/
+	RString(const RChar* text) throw(bad_alloc);
+
+	/**
 	* Construct a string from a string.
 	* @param text           The string used as reference.
 	*/

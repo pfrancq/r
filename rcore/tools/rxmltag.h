@@ -200,6 +200,13 @@ public:
 	void InsertAttr(const char* name,const char* value);
 
 	/**
+	* Insert an attribute.
+	* @param name           Name of thae attribute.
+	* @param value          Value of thae attribute.
+	*/
+	void InsertAttr(const RChar* name,const RChar* value);
+
+	/**
 	* Add a tag to this one.
 	* @param tag            Tag to add.
 	*/

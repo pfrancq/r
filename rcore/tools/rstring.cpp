@@ -121,6 +121,31 @@ RString::RString(const char* text) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
+RString::RString(const RChar* text) throw(bad_alloc)
+{
+	const RChar *ptr1=text;
+	RChar *ptr2;
+
+	if(!text->IsNull())
+	{
+		MaxLen=Len=RChar::StrLen(text);
+		ptr2=Text=new RChar[MaxLen+1];
+		while(!ptr1->IsNull())
+			(*(ptr2++))=(*(ptr1++));
+		(*ptr2)=0;
+	}
+	else
+	{
+		MaxLen=200;
+		Len=0;
+		Text=new RChar[MaxLen+1];
+		(*Text)=0;
+		RReturnIfFail(text);
+	}
+}
+
+
+//------------------------------------------------------------------------------
 RString::RString(const std::string& text) throw(bad_alloc)
 {
 	MaxLen=50;
