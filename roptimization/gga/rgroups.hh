@@ -228,10 +228,15 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 {
 	unsigned int i;
 	cGroup** G;
+	cGroup* ptr;
 
 	ClearGroups();
 	for(i=grps.Used.NbPtr+1,G=grps.Used.Tab;--i;G++)
-		ReserveGroup()->Insert(Objs,*G);
+	{
+		ptr=ReserveGroup();           // Reserve a new group
+		ptr->Insert(Objs,*G);         // Insert the necessary objects
+		(*ptr)=(**G);                 // Update internal information.
+	}
 	return(*this);
 }
 
