@@ -6,7 +6,7 @@
 
 	XML file - Implementation.
 
-	Copyright 2000-2004 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2005 by the Universit�Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -45,7 +45,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RXMLFile::RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding) throw(bad_alloc,RIOException)
+RXMLFile::RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding)
  : RTextFile(name,encoding), XMLStruct(xmlstruct), CurTag(0)
 {
 	SetRemStyle(MultiLineComment);
@@ -55,8 +55,28 @@ RXMLFile::RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& enco
 
 
 //------------------------------------------------------------------------------
-RXMLFile::RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding) throw(bad_alloc,RIOException)
+RXMLFile::RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding)
  : RTextFile(name,encoding), XMLStruct(&xmlstruct), CurTag(0)
+{
+	SetRemStyle(MultiLineComment);
+	SetRem("<!--","-->");
+
+}
+
+
+//------------------------------------------------------------------------------
+RXMLFile::RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
+ : RTextFile(file,encoding), XMLStruct(xmlstruct), CurTag(0)
+{
+	SetRemStyle(MultiLineComment);
+	SetRem("<!--","-->");
+
+}
+
+
+//------------------------------------------------------------------------------
+RXMLFile::RXMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding)
+ : RTextFile(file,encoding), XMLStruct(&xmlstruct), CurTag(0)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -73,7 +93,7 @@ void RXMLFile::SetEncoding(const RString& name) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::SetDocType(const RString& docType) throw(RIOException)
+void RXMLFile::SetDocType(const RString& docType)
 {
 	DocType=docType;
 }

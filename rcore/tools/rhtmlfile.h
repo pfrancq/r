@@ -6,7 +6,7 @@
 
 	HTML file - Header.
 
-	Copyright 2004 by the Université Libre de Bruxelles.
+	Copyright 2004-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -73,7 +73,7 @@ public:
 	* @param xmlstruct      The XML tree associated with the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RHTMLFile(const char* name,RXMLStruct* xmlstruct,const RString& encoding="Latin1") throw(std::bad_alloc,RIOException);
+	RHTMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding="Latin1");
 
 	/**
 	* Construct a HTML file to read.
@@ -81,7 +81,25 @@ public:
 	* @param xmlstruct      The XML tree associated with the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RHTMLFile(const char* name,RXMLStruct& xmlstruct,const RString& encoding="Latin1") throw(std::bad_alloc,RIOException);
+	RHTMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding="Latin1");
+
+	/**
+	* Construct a HTML file to read.
+	* @param file           A generic input/output file that should be treated
+	*                       as XHML file.
+	* @param xmlstruct      The XML tree associated with the file.
+	* @param encoding       The encoding scheme of the file.
+	*/
+	RHTMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding="Latin1");
+
+	/**
+	* Construct a HTML file to read.
+	* @param file           A generic input/output file that should be treated
+	*                       as XHTML file.
+	* @param xmlstruct      The XML tree associated with the file.
+	* @param encoding       The encoding scheme of the file.
+	*/
+	RHTMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding="Latin1");
 
 	/**
 	* Set the doctype of the XML document. The doctype is transform in lowercase
@@ -89,14 +107,14 @@ public:
 	* exception occurs.
 	* @param docType        Name of the encoding.
 	*/
-	virtual void SetDocType(const RString& docType) throw(RIOException);
+	virtual void SetDocType(const RString& docType);
 
-protected:
+private:
 
 	/**
 	* This methode creates all the tags valid for the HTML version supported.
 	*/
-	void InitValidTags(void) throw(std::bad_alloc);
+	void InitValidTags(void);
 
 public:
 

@@ -6,7 +6,7 @@
 
 	XML file - Header.
 
-	Copyright 2000-2004 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -83,7 +83,7 @@ public:
 	* @param xmlstruct      The XML tree associated with the file
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding="UTF-8") throw(std::bad_alloc,RIOException);
+	RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding="UTF-8");
 
 	/**
 	* Construct a XML file.
@@ -91,7 +91,25 @@ public:
 	* @param xmlstruct      The XML tree associated with the file
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding="UTF-8") throw(std::bad_alloc,RIOException);
+	RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding="UTF-8");
+
+	/**
+	* Construct a XML file.
+	* @param file           A generic input/output file that should be treated
+	*                       as XML file.
+	* @param xmlstruct      The XML tree associated with the file
+	* @param encoding       The encoding scheme of the file.
+	*/
+	RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding="UTF-8");
+
+	/**
+	* Construct a XML file.
+	* @param file           A generic input/output file that should be treated
+	*                       as XML file.
+	* @param xmlstruct      The XML tree associated with the file
+	* @param encoding       The encoding scheme of the file.
+	*/
+	RXMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding="UTF-8");
 
 	/**
 	* Set the encoding of the XML document.
@@ -103,7 +121,7 @@ public:
 	* Set the doctype of the XML document.
 	* @param docType        Name of the encoding.
 	*/
-	virtual void SetDocType(const RString& docType) throw(RIOException);
+	virtual void SetDocType(const RString& docType);
 
 	/**
 	* Open the file

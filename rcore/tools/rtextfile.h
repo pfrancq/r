@@ -6,7 +6,7 @@
 
 	Text File - Header.
 
-	Copyright 1999-2004 by the Université libre de Bruxelles.
+	Copyright 1999-2005 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -197,13 +197,21 @@ public:
 	* @param name           The name of the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RTextFile(const RString &name,const RString& encoding="Latin1") throw(std::bad_alloc,RIOException,RException);
+	RTextFile(const RString &name,const RString& encoding="Latin1");
+
+	/**
+	* Construct a text file.
+	* @param file           A generic input/output file that should be treated
+	*                       as text file.
+	* @param encoding       The encoding scheme of the file.
+	*/
+	RTextFile(RIOFile& file,const RString& encoding="Latin1");
 
 	/**
 	* Open the file
 	* @param mode           The open mode for the file.
 	*/
-	virtual void Open(RIO::ModeType mode=Read);
+	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
 	* Close the file.

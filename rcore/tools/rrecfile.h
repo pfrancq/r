@@ -6,7 +6,7 @@
 
 	Binary file for records - Header.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -102,7 +102,15 @@ public:
 	* Construct a binary file.
 	* @param name           The name of the file.
 	*/
-	RRecFile(const RString &name) throw(std::bad_alloc,RString);
+	RRecFile(const RString &name);
+
+	/**
+	* Construct a binary file.
+	* @param file           A generic input/output file that should be treated
+	*                       as binary file.
+	* @param encoding       The encoding scheme of the file.
+	*/
+	RRecFile(RIOFile& file);
 
 	/**
 	* Open the file

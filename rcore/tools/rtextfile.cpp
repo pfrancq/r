@@ -6,7 +6,7 @@
 
 	Text File - Implementation.
 
-	Copyright 1999-2004 by the Université libre de Bruxelles.
+	Copyright 1999-2005 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -63,8 +63,17 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RTextFile::RTextFile(const RString &name,const RString& encoding) throw(std::bad_alloc,RIOException, RException)
+RTextFile::RTextFile(const RString &name,const RString& encoding)
   : RIOFile(name), All(true), NewLine(true), Rem("%"), BeginRem("/*"),
+	EndRem("*/"), CommentType(SingleLineComment), ActivComment(NoComment),
+	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
+{
+}
+
+
+//------------------------------------------------------------------------------
+RTextFile::RTextFile(RIOFile& file,const RString& encoding)
+	: RIOFile(file), All(true), NewLine(true), Rem("%"), BeginRem("/*"),
 	EndRem("*/"), CommentType(SingleLineComment), ActivComment(NoComment),
 	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
 {

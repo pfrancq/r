@@ -6,7 +6,7 @@
 
 	HTML file - Implementation.
 
-	Copyright 2004 by the Université Libre de Bruxelles.
+	Copyright 2004-2005 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -641,7 +641,7 @@ const RCharCode FromXML[]={
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RHTMLFile::RHTMLFile(const char *name,RXMLStruct* xmlstruct,const RString& encoding) throw(std::bad_alloc,RIOException)
+RHTMLFile::RHTMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding)
  : RXMLFile(name,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
 {
 	InitValidTags();
@@ -649,7 +649,7 @@ RHTMLFile::RHTMLFile(const char *name,RXMLStruct* xmlstruct,const RString& encod
 
 
 //------------------------------------------------------------------------------
-RHTMLFile::RHTMLFile(const char *name,RXMLStruct& xmlstruct,const RString& encoding) throw(std::bad_alloc,RIOException)
+RHTMLFile::RHTMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding)
  : RXMLFile(name,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
 {
 	InitValidTags();
@@ -657,7 +657,23 @@ RHTMLFile::RHTMLFile(const char *name,RXMLStruct& xmlstruct,const RString& encod
 
 
 //------------------------------------------------------------------------------
-void RHTMLFile::SetDocType(const RString& docType) throw(RIOException)
+RHTMLFile::RHTMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
+ : RXMLFile(file,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
+{
+	InitValidTags();
+}
+
+
+//------------------------------------------------------------------------------
+RHTMLFile::RHTMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding)
+ : RXMLFile(file,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
+{
+	InitValidTags();
+}
+
+
+//------------------------------------------------------------------------------
+void RHTMLFile::SetDocType(const RString& docType)
 {
 	RString name;
 
@@ -670,7 +686,7 @@ void RHTMLFile::SetDocType(const RString& docType) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RHTMLFile::InitValidTags(void) throw(std::bad_alloc)
+void RHTMLFile::InitValidTags(void)
 {
 	// Global Tags
 	Tags.InsertPtr(new Tag("html",0,false));

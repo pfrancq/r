@@ -68,6 +68,13 @@ RFile::RFile(const RString &name)
 
 
 //------------------------------------------------------------------------------
+RFile::RFile(RFile& file)
+  : Mode(file.Mode), Name(file.Name)
+{
+}
+
+
+//------------------------------------------------------------------------------
 void RFile::Open(RIO::ModeType mode)
 {
 	Mode=mode;

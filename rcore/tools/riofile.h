@@ -6,7 +6,7 @@
 
 	Generic File for Input/Output - Header.
 
-	Copyright 1999-2005 by the Université Libre de Bruxelles.
+	Copyright 1999-2005 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -70,10 +70,16 @@ public:
 	RIOFile(const RString &name);
 
 	/**
+	* Copy constructor of a file.
+	* @param file           File.
+	*/
+	RIOFile(RIOFile& file);
+
+	/**
 	* Open the file
 	* @param mode           The open mode for the file.
 	*/
-	virtual void Open(RIO::ModeType mode=Read);
+	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
 	* Close the file.

@@ -6,7 +6,7 @@
 
 	Generic File for Input/Output - Implementation.
 
-	Copyright 1999-2005 by the Université Libre de Bruxelles.
+	Copyright 1999-2005 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -63,6 +63,12 @@ using namespace std;
 //------------------------------------------------------------------------------
 RIOFile::RIOFile(const RString &name)
   : RFile(name)
+{
+}
+
+//------------------------------------------------------------------------------
+RIOFile::RIOFile(RIOFile& file)
+	: RFile(file)
 {
 }
 

@@ -80,6 +80,12 @@ public:
 	RFile(const RString &name);
 
 	/**
+	* Copy constructor of a file.
+	* @param file           File.
+	*/
+	RFile(RFile& file);
+
+	/**
 	* Open the file
 	* @param mode           The open mode for the file.
 	*/

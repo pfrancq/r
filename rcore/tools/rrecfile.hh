@@ -6,7 +6,7 @@
 
 	Binary file for records  - Implementation.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -55,8 +55,16 @@
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>::RRecFile(const RString &name) throw(std::bad_alloc,RString)
+	RRecFile<C,S,bOrder>::RRecFile(const RString &name)
 		: RIOFile(name), NbRecs(0)
+{
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	RRecFile<C,S,bOrder>::RRecFile(RIOFile &file)
+		: RIOFile(file), NbRecs(0)
 {
 }
 
