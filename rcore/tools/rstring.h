@@ -1,14 +1,14 @@
 /*
 
-  RString
+  RString.h
 
-  Class representing a string
+  String - Header.
 
-  By (c) P. Francq, 1999.
+  (C) 1999-2000 by P. Francq.
 
-  Version 1.0.0.1
+  Version $Revision$
 
-  Last Modify: 1999/07/26
+  Last Modify: $Date$
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by

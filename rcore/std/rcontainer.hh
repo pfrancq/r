@@ -2,9 +2,9 @@
 
   RContainer.hh
 
-  Class representing a container:
+  Container - Inline Implementation.
 
-  By (c) P. Francq, 1999.
+  (C) 1999-2000 by P. Francq.
 
   Version $Revision$
 
@@ -26,8 +26,10 @@
 
 */
 
-#pragma warn -ccc
-#pragma warn -rch
+#ifdef __BORLANDC__
+	#pragma warn -ccc
+	#pragma warn -rch
+#endif
 
 
 //---------------------------------------------------------------------------
@@ -318,6 +320,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
   delete[] Tab;
 }
 
-
-#pragma warn .ccc
-#pragma warn .rch
+#ifdef __BORLANDC__
+	#pragma warn .ccc
+	#pragma warn .rch
+#endif

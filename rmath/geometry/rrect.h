@@ -1,10 +1,10 @@
 /*
 
-  RRect
+  RRect.h
 
-  Rectangle
+  Rectangle - Header
 
-  By (c) P. Francq, 1999.
+  (C) 1999-2000 by P. Francq.
 
   Version $Revision$
 

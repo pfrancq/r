@@ -1,10 +1,10 @@
 /*
 
-  Geometry
+  Geometry.h
 
-  Geometry base classes - Basic definition
+  Geometry base classes - Basic definition - Header.
 
-  By (c) P. Francq, 1999.
+  (C) 1999-2000 by P. Francq.
 
   Version $Revision$
 

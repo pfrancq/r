@@ -2,9 +2,9 @@
 
   Polygons.h
 
-  Polygons
+  Polygons - Header.
 
-  By (c) P. Francq, 1999.
+  (C) 1999-2000 by P. Francq.
 
   Version $Revision$
 
@@ -36,7 +36,7 @@
 #include "rpoint.h"
 #include "rrect.h"
 using namespace RGeometry;
-#include "rstd/rcontainer.h"
+#include "rcontainer.h"
 using namespace RStd;
 
 
