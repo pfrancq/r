@@ -34,6 +34,7 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for Rainbow
 #include <rgeometry/rpoint.h>
 #include <rgeometry/rpolygon.h>
 using namespace RGeometry2D;
@@ -45,6 +46,11 @@ namespace RGA{
 
 
 //-----------------------------------------------------------------------------
+// Forward declaration
+class RGeoInfo;
+
+
+//-----------------------------------------------------------------------------
 /**
 * \ingroup 2DGA
 * The RFreePolygon class provides a representation of a "free" polygon on the grid.
@@ -53,12 +59,22 @@ namespace RGA{
 */
 class RFreePolygon : public RPolygon
 {
+	/**
+	* The position of the polygon.
+	*/
+	RPoint Pos;
+
 public:
 
 	/**
 	* Construct a free polygon.
 	*/	
 	RFreePolygon(RPolygon& poly);
+
+	/**
+	* Construct a free polygon from another one.
+	*/	
+	RFreePolygon(RFreePolygon* poly);
 
 	/**
 	* The equal operator.
@@ -86,6 +102,20 @@ public:
 	*/
 	int Compare(const RFreePolygon& poly) {return((*this)!=poly);}
 
+	/**
+	* This function test if a geometric information can be contained in the free
+	* polygon.
+	* @param info		The geometric information to compare.
+	* @return	The function returns 0 if the polygon can't be contained, >0 if
+	*				the polygon can be contained. The less is the space wasted, the
+	*				greather is the return value.
+	*/
+	int CanContain(RGeoInfo* info);
+
+	/**
+	* Return the position of the free polygon.
+	*/
+	RPoint& GetPos(void);
 };
 
 

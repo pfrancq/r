@@ -29,7 +29,9 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for Rainbow
 #include <rga/rfreepolygon.h>
+#include <rga/rgeoinfo.h>
 using namespace RGA;
 
 
@@ -44,4 +46,32 @@ using namespace RGA;
 RFreePolygon::RFreePolygon(RPolygon& poly)
 	: RPolygon(poly)
 {
+	Pos=(*GetBottomLeft());
+	(*this)-=Pos;
+}
+
+
+//-----------------------------------------------------------------------------
+RFreePolygon::RFreePolygon(RFreePolygon* poly)
+	: RPolygon(poly)
+{
+	Pos=poly->Pos;
+}
+
+
+//-----------------------------------------------------------------------------
+int RFreePolygon::CanContain(RGeoInfo* info)
+{
+	if(!IsIn(info->GetBound())) return(0);
+	return((100*info->GetArea())/Area());
+}
+
+
+//-----------------------------------------------------------------------------
+RPoint& RFreePolygon::GetPos(void)
+{
+	RPoint *pt=RPoint::GetPoint();
+
+	(*pt)=Pos;
+	return(*pt);
 }
