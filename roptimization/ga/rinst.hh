@@ -166,12 +166,20 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	cChromo **C;
 
 	#ifdef RGADEBUG
+		static char tmp[200];
 		if(Debug) Debug->BeginFunc("AnalysePop","RInst");
 	#endif
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		if((*((*C)->Fitness))>(*(BestInPop->Fitness)))
 		{
+			#ifdef RGADEBUG
+				if(Debug)
+				{
+					sprintf(tmp,"Chromosome %u best of population",(*C)->Id);
+					Debug->PrintInfo(tmp);
+				}
+			#endif
 			BestInPop=(*C);
 			AgeBestPop=0;
 			AgeNextMutation=MaxBestPopAge;
@@ -179,6 +187,13 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	}
 	if((*(BestInPop->Fitness))>(*(BestChromosome->Fitness)))
 	{
+		#ifdef RGADEBUG
+			if(Debug)
+			{
+				sprintf(tmp,"Chromosome %u best ever",BestInPop->Id);
+				Debug->PrintInfo(tmp);
+			}
+		#endif
 		(*BestChromosome)=(*BestInPop);
 		AgeBest=0;
 		emitBestSig();
