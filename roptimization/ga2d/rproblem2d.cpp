@@ -73,8 +73,6 @@ void RGA2D::RProblem2D::Load(const char* name)
 	tag=s.GetTag("Shape",s.GetTop());
 	if(tag)
 	{
-		RRect r;
-		
 		// Read the points but the last
 		for(i=tag->NbPtr,tab=tag->Tab;--i;tab++)
 		{
@@ -88,9 +86,6 @@ void RGA2D::RProblem2D::Load(const char* name)
 		}
 		Tr=Problem.Polygon.Calibrate();
 		Problem.Polygon.ReOrder();
-		Problem.Polygon.Boundary(r);
-		Limits.X = r.Width();
-		Limits.Y = r.Height();
 	}
 
 	// Templates (Master Instances)
@@ -132,6 +127,8 @@ void RGA2D::RProblem2D::Load(const char* name)
 			CreateNet(*tab);
 //		Cons.Init();
 	}
+	
+	DetermineLimit();
 }
 
 
@@ -274,6 +271,44 @@ void RGA2D::RProblem2D::Clear(void)
 {	
 	Objs.Clear();
 	Cons.Clear();
+}
+
+
+//-----------------------------------------------------------------------------
+void RGA2D::RProblem2D::DetermineLimit(void)
+{
+	RRect r;
+	bool Cont=true;
+	unsigned int i,j;
+	RObj2DConnector **con;
+
+	Problem.Polygon.Boundary(r);
+	GlobalLimits.X = r.Width();
+	GlobalLimits.Y = r.Height();
+	while(Cont)
+	{
+		r.Pt1.X++;
+		r.Pt1.Y++;
+		r.Pt2.X--;
+		r.Pt2.Y--;
+		Cont=false;
+		for(i=Problem.Connectors.NbPtr+1,con=Problem.Connectors.Tab;--i;con++)
+		{
+			for(j=0;j<(*con)->NbPos;j++)
+				if(r.IsIn((*con)->Pos[j]))
+					Cont=true;
+		}
+	}
+	Limits.X = r.Width();
+	Limits.Y = r.Height();
+	Translation=r.Pt1;
+
+	// Translate the Connectors Position.
+	for(i=Problem.Connectors.NbPtr+1,con=Problem.Connectors.Tab;--i;con++)
+	{
+		for(j=0;j<(*con)->NbPos;j++)
+			(*con)->Pos[j]-=Translation;
+	}
 }
 
 

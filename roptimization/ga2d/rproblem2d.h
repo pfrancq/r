@@ -68,10 +68,20 @@ public:
 	RPoint Limits;
 
 	/**
+	* Global limits for the construction.
+	*/
+	RPoint GlobalLimits;
+
+	/**
 	* Object representing the "Problem".
 	*/
 	RObj2D Problem;
 
+	/**
+	* Translation to be done to adapt the placement on the global objects.
+	*/
+	RPoint Translation;
+	
 	/**
 	* Objects.
 	*/
@@ -97,6 +107,11 @@ public:
 	* Clears the problem.
 	*/
 	void Clear(void);
+	
+	/**
+	* Determine the limits of the problem based of the shape.
+	*/
+	void DetermineLimit(void);
 
 protected:
 
