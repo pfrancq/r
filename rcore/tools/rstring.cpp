@@ -410,9 +410,41 @@ int RStd::RString::Compare(const char *str) const
 
 
 //-----------------------------------------------------------------------------
-char RStd::RString::HashIndex(void) const
+char RStd::RString::HashIndex(const RString* str)
 {
-	int c=(*Text);
+	int c=(*str->Text);
+	#ifdef __BORLANDC__
+		#pragma warn -sig
+	#endif
+	if(c>='a'&&c<='z') return(c-'a');
+	if(c>='A'&&c<='Z') return(c-'A');
+	#ifdef __BORLANDC__
+		#pragma warn .sig	
+	#endif
+	return(26);
+}
+
+
+//-----------------------------------------------------------------------------
+char RStd::RString::HashIndex(const RString& str)
+{
+	int c=(*str.Text);
+	#ifdef __BORLANDC__
+		#pragma warn -sig
+	#endif
+	if(c>='a'&&c<='z') return(c-'a');
+	if(c>='A'&&c<='Z') return(c-'A');
+	#ifdef __BORLANDC__
+		#pragma warn .sig	
+	#endif
+	return(26);
+}
+
+
+//-----------------------------------------------------------------------------
+char RStd::RString::HashIndex(const char* str)
+{
+	int c=(*str);
 	#ifdef __BORLANDC__
 		#pragma warn -sig
 	#endif

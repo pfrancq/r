@@ -230,9 +230,21 @@ public:
 
 	/**
 	* Return a number between 0 and 26 according to the first character of the
-	* string. It is used for the RHashContainer class.
+	* string. It is used for the RStd::RHashContainer class.
 	*/
-	char HashIndex(void) const;
+	static char HashIndex(const RString* str);
+
+	/**
+	* Return a number between 0 and 26 according to the first character of the
+	* string. It is used for the RStd::RHashContainer class.
+	*/
+	static char HashIndex(const RString& str);
+
+	/**
+	* Return a number between 0 and 26 according to the first character of the
+	* string. It is used for the RStd::RHashContainer class.
+	*/
+	static char HashIndex(const char* str);
 
 	/**
 	* Return the length of the string.
