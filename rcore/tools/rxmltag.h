@@ -150,7 +150,7 @@ public:
 
 	/**
 	* Test if an attribute is defined.
-	* param name	        Name of the attribute.
+	* param name            Name of the attribute.
 	* @returns True if the attribute exists.
 	*/
 	bool IsAttrDefined(const char* name);
