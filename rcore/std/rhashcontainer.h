@@ -6,7 +6,7 @@
 
 	Single Hash Table Container - Header
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -135,9 +135,9 @@ public:
 		RContainer<C,bAlloc,true>** ptr;
 		unsigned int i;
 
-		Hash= new RContainer<C,T,bAlloc,true>*[tSize];
+		Hash= new RContainer<C,bAlloc,true>*[tSize];
 		for(i=tSize+1,ptr=Hash;--i;ptr++)
-			(*ptr)=new RContainer<C,T,bAlloc,true>(M,I);
+			(*ptr)=new RContainer<C,bAlloc,true>(M,I);
 	}
 
 	/**
@@ -148,7 +148,8 @@ public:
 		RContainer<C,bAlloc,true>** ptr;
 		unsigned int i;
 
-		for(i=tSize+1,ptr=Hash;--i;ptr++)	(*ptr)->Clear();
+		for(i=tSize+1,ptr=Hash;--i;ptr++)
+			(*ptr)->Clear();
 	}
 
 	/**
