@@ -210,7 +210,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	inline void RGA::RInst<cInst,cChromo,cFit,cThreadData>::Crossover(void) throw(eGA)
 {
 	unsigned int i,idx1,idx2;
-	cChromo **C1,**C2,*C3,*C4,*s1,*s2;
+	cChromo **C1,**C2,*C3,*s1,*s2;
 	static char Tmp[200];
 	unsigned int NbToTreat,NbTreated;
 
@@ -233,10 +233,19 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	memset(tmpChrom2,0,sizeof(cChromo*)*PopSize);
 	while(NbToTreat>1)
 	{
-		idx1=RRand(NbToTreat);
-		idx2=idx1+RRand(NbToTreat-1);
-		if(idx2>NbToTreat-1)
-			idx2-=NbToTreat-1;
+		if(NbToTreat>2)
+		{
+			idx1=RRand(NbToTreat);
+			idx2=idx1+RRand(NbToTreat-2)+1;
+			if(idx2>NbToTreat-1)
+				idx2-=NbToTreat-1;
+		}
+		else
+		{
+			idx1=0;
+			idx2=1;
+		}
+		RAssert(idx1!=idx2);
 		s1=tmpChrom1[idx1];
 		s2=tmpChrom1[idx2];
 		if((*s1->Fitness)>(*s2->Fitness))
