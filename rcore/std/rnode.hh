@@ -54,6 +54,5 @@ template<class N,bool bOrder>
 template<class N,bool bOrder>
 	RNode<N,bOrder>::~RNode(void)
 {
-	delete Sub;
 }
 

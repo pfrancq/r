@@ -34,7 +34,11 @@
 
 
 //---------------------------------------------------------------------------
-#include "rcontainer.h"
+#pragma warn -rch
+#pragma warn -ccc
+    #include "rcontainer.h"
+#pragma warn .rch
+#pragma warn .ccc
 using namespace RStd;
 
 

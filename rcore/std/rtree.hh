@@ -50,7 +50,7 @@ template<class N,bool bAlloc,bool bOrder>
   InsertPtr(node);
   if(parent)
   {
-    node->Top=parent;
+    node->Parent=parent;
     parent->InsertPtr(node);
   }
   else
