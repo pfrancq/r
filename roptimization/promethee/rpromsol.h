@@ -135,6 +135,11 @@ public:
 	unsigned int GetId(void) {return(Id);}
 
 	/**
+	* Return the name of the solution.
+	*/
+	RString& GetName(void);
+
+	/**
 	* Destruct a prométhée solution.
 	*/
 	virtual ~RPromSol(void);

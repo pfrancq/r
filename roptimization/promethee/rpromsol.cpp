@@ -59,7 +59,7 @@ RPromethee::RPromSol::RPromSol(const unsigned int id,const RString&  name,const 
 
 
 //------------------------------------------------------------------------------
-RString& RPromSol::GetName(void)
+RString& RPromethee::RPromSol::GetName(void)
 {
 	RString *tmp=RString::GetString();
 
