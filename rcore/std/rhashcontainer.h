@@ -53,28 +53,36 @@
 */
 
 
-//---------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 #ifndef RHashContainerH
 #define RHashContainerH
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #include "rcontainer.h"
 using namespace RStd;
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 namespace RStd{
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 template<class C,class T,T tSize,bool bAlloc>
 	class RHashContainer
 {
 public:
+	/**
+	* This container represents the hash table of the elements.
+	*/
 	RContainer<C,T,bAlloc,true> **Hash;
 
-	// Constructor
+	/**
+	* Construct a Hash container.
+	* @param M		Default maximum number of elements.
+	* @param I		Incremental number of elements.
+	*/
 	RHashContainer(T M,T I) throw(bad_alloc)
 	{
 		RContainer<C,T,bAlloc,true> **ptr;
@@ -85,59 +93,115 @@ public:
 			(*ptr)=new RContainer<C,T,bAlloc,true>(M,I);
 	}
 
-  // Clear
-  void Clear(void)
-  {
+	/**
+	* Clear the hash container.
+	*/
+	void Clear(void)
+	{
 		RContainer<C,T,bAlloc,true> **ptr;
 		T i;
 
 		for(i=tSize+1,ptr=Hash;--i;ptr++)	(*ptr)->Clear();
-  }
+	}
 
-  // Get & Insert
-  inline void InsertPtr(C *ins) throw(bad_alloc)
-  {
+	/**
+	* Insert an element.
+	* @param ins		Pointer to the element to insert.
+	*/
+	inline void InsertPtr(C *ins) throw(bad_alloc)
+	{
 		RReturnIfFail(ins);
 		Hash[ins->HashIndex()]->InsertPtr(ins);
-  }
-  template<class TUse> inline bool IsIn(const TUse &tag)
-  {
+	}
+
+	/**
+	* Verify if an element is in the hash container.
+	* @param TUse			The type of tag, the hash container uses the
+	*							Compare(TUse &) member function of the elements.
+	* @param tag			The tag used.
+	* @returns	The function returns true if the element is in the hash
+	*				container, else false.
+					
+	*/
+	template<class TUse> inline bool IsIn(const TUse &tag)
+	{
 		return(Hash[tag.HashIndex()]->IsIn<TUse>(tag));
-  }
-  template<class TUse> inline C* GetPtr(const TUse &tag)
+	}
+
+	/**
+	* Get a pointer to a certain element in the hash container.
+	* @param TUse			The type of tag, the hash container uses the
+	*							Compare(TUse &) member function of the elements.
+	* @param tag			The tag used.
+	* @param sortkey		The tag represents the sorting key. The default value
+	*							depends if the container is ordered (true) or not
+	*							(false).
+	* @return					Return the pointer or 0 if the element is not in the
+	*									container.
+	*/
+  template<class TUse> inline C* GetPtr(const TUse &tag,bool sortkey=true)
   {
-		return(Hash[tag.HashIndex()]->GetPtr<TUse>(tag));
-  }
-  template<class TUse> inline C* GetInsertPtr(const TUse &tag) throw(bad_alloc)
-  {
-		return(Hash[tag.HashIndex()]->GetInsertPtr<TUse>(tag));
+		return(Hash[tag.HashIndex()]->GetPtr<TUse>(tag,sortkey));
   }
 
-  // Delete
-  inline void DeletePtr(C* del)
-  {
+	/**
+	* Get a pointer to a certain element in the container. If the element is
+	* not existing, the container creates it by using the constructor with TUse
+	* as parameter.
+	* @param TUse			The type of tag, the container uses the Compare(TUse &)
+	*							member function of the elements.
+	* @param tag			The tag used.
+	* @param sortkey		The tag represents the sorting key. The default value
+	*							depends if the container is ordered (true) or not
+	*							(false).
+	* @return				The function returns a pointer to the element of the
+	*							container.
+	*/
+	template<class TUse> inline C* GetInsertPtr(const TUse &tag,bool sortkey=true) throw(bad_alloc)
+	{
+		return(Hash[tag.HashIndex()]->GetInsertPtr<TUse>(tag,sortkey));
+	}
+
+	/**
+	* Delete an element of the hash container.
+	* @param del		Pointer to the element to delete.
+	*/
+	inline void DeletePtr(C* del)
+	{
 		RReturnIfFail(del);
 		Hash[ins->HashIndex()]->DeletePtr(del);
-  }
-  template<class TUse> inline void DeletePtr(const TUse &tag)
-  {
-		Hash[tag.HashIndex()]->DeletePtr<TUse>(tag);
-  }
+	}
 
-  // Destructor
-  virtual ~RHashContainer(void)
-  {
+	/**
+	* Delete an element of the hash container.
+	* @param TUse			The type of tag, the container uses the Compare(TUse &)
+	*							member function of the elements.
+	* @param tag			The tag used.
+	* @param sortkey		The tag represents the sorting key. The default value
+	*							depends if the container is ordered (true) or not
+	*							(false).
+	*/
+	template<class TUse> inline void DeletePtr(const TUse &tag,bool sortkey=true)
+	{
+		Hash[tag.HashIndex()]->DeletePtr<TUse>(tag,sortkey);
+	}
+
+	/**
+	* Destruct the hash container.
+	*/
+	virtual ~RHashContainer(void)
+	{
 		RContainer<C,T,bAlloc,true> **ptr;
 		T i;
 
 		for(i=tSize+1,ptr=Hash;--i;ptr++)	delete (*ptr);
 		delete[] Hash;
-  }
+	}
 };
 
 
-}  //-------- End of namespace RStd ---------------------------------------
+}  //-------- End of namespace RStd -------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif
