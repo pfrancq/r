@@ -186,13 +186,13 @@ public:
 
 	/**
 	* Construct the container from another container.
-	* @param src            Container used as source.
+	* @param src            Pointer to the container used as source.
 	*/
 	RContainer(const RContainer<C,true,bOrder>* src) throw(std::bad_alloc);
 
 	/**
 	* Construct the container from another container.
-	* @param src            Container used as source.
+	* @param src            Pointer to the container used as source.
 	*/
 	RContainer(const RContainer<C,false,bOrder>* src) throw(std::bad_alloc);
 
@@ -207,6 +207,18 @@ public:
 	* @param src            Container used as source.
 	*/
 	RContainer(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
+
+	/**
+	* Construct the container from another container.
+	* @param src            Smart pointer to the container used as source.
+	*/
+	RContainer(const std::auto_ptr<RContainer<C,true,bOrder> >& src) throw(std::bad_alloc);
+
+	/**
+	* Construct the container from another container.
+	* @param src            Smart pointer to the container used as source.
+	*/
+	RContainer(const std::auto_ptr<RContainer<C,false,bOrder> >& src) throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -227,16 +239,72 @@ public:
 	RContainer& operator=(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
 
 	/**
-	* Add the elements of a container.
-	* @param src            Container used as source.
+	* The assignement operator.
+	* @param src            Smart pointer to the container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,true,bOrder>& src) throw(std::bad_alloc);
+	RContainer& operator=(const std::auto_ptr<RContainer<C,true,bOrder> >& src) throw(std::bad_alloc);
 
 	/**
-	* Add the elements of a container.
+	* The assignement operator.
+	* @param src            Smart pointer to the container used as source.
+	*/
+	RContainer& operator=(const std::auto_ptr<RContainer<C,false,bOrder> >& src) throw(std::bad_alloc);
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
 	* @param src            Container used as source.
 	*/
-	RContainer& operator+=(const RContainer<C,false,bOrder>& src) throw(std::bad_alloc);
+	RContainer& operator+=(const RContainer<C,true,true>& src) throw(std::bad_alloc);
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
+	* @param src            Container used as source.
+	*/
+	RContainer& operator+=(const RContainer<C,true,false>& src) throw(std::bad_alloc);
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
+	* @param src            Container used as source.
+	*/
+	RContainer& operator+=(const RContainer<C,false,true>& src) throw(std::bad_alloc);
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
+	* @param src            Container used as source.
+	*/
+	RContainer& operator+=(const RContainer<C,false,false>& src) throw(std::bad_alloc);
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
+	* @param src            Smart pointer to the container used as source.
+	*/
+	RContainer& operator+=(const std::auto_ptr<RContainer<C,true,true> >& src) throw(std::bad_alloc);
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
+	* @param src            Smart pointer to the container used as source.
+	*/
+	RContainer& operator+=(const std::auto_ptr<RContainer<C,true,false> >& src) throw(std::bad_alloc);
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
+	* @param src            Smart pointer to the container used as source.
+	*/
+	RContainer& operator+=(const std::auto_ptr<RContainer<C,false,true> >& src) throw(std::bad_alloc);
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
+	* @param src            Smart pointer to the container used as source.
+	*/
+	RContainer& operator+=(const std::auto_ptr<RContainer<C,false,false> >& src) throw(std::bad_alloc);
 	//@}
 
 	/**
@@ -463,6 +531,37 @@ public:
 	*/
 	template<class TUse> void DeletePtr(const TUse tag,bool sortkey=bOrder) throw(std::bad_alloc);
 	//@}
+
+private:
+
+	/**
+	* @name Internal methods.
+	*/
+	//@{
+
+	/**
+	* Create a container from another one. If the pointer to the container is
+	* null, an empty container is created.
+	* @param src            Pointer to the source container.
+	*/
+	template<bool b> void Create(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc);
+
+	/**
+	* Copy a container from another one. If the pointer to the container is
+	* null, the container is just emptied.
+	* @param src            Pointer to the source container.
+	*/
+	template<bool b> RContainer& Copy(const RContainer<C,b,bOrder>* src) throw(std::bad_alloc);
+
+	/**
+	* Add a container (if the pointer is not null) from another one.
+	* @param src            Pointer to the source container.
+	*/
+	template<bool b,bool o> RContainer& Add(const RContainer<C,b,o>* src) throw(std::bad_alloc);
+
+	//@}
+
+public:
 
 	/**
 	* @name Iterator functions.
