@@ -6,7 +6,7 @@
 
 	Text File - Implementation.
 
-	(C) 1999-2001 by P. Francq.
+	(C) 1999-2002 by P. Francq.
 
 	Version $Revision$
 
@@ -63,7 +63,7 @@ using namespace RIO;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RIO::RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
+RIO::RTextFile::RTextFile(const RString &name,RIO::ModeType mode) throw(bad_alloc,RString)
   : Mode(mode), Name(name), All(true), NewLine(true), Rem("%"),BeginRem("/*"),
 		EndRem("*/"), CommentType(SingleLineComment), ActivComment(NoComment),
 		Separator(" "), Line(0), LastLine(0)
@@ -72,15 +72,15 @@ RIO::RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RSt
 
 	switch(Mode)
 	{
-		case Read:
+		case RIO::Read:
 			localmode=O_RDONLY;
 			break;
 
-		case Append:
+		case RIO::Append:
 			localmode=O_WRONLY | O_CREAT | O_APPEND;
 			break;
 
-		case Create:
+		case RIO::Create:
 			localmode=O_WRONLY | O_CREAT | O_TRUNC;
 			break;
 
@@ -90,7 +90,7 @@ RIO::RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RSt
 	#ifndef _BSD_SOURCE
 		localmode|=O_BINARY;
 	#endif
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		handle=open(Name,localmode);
 	else
 		handle=open(Name,localmode,S_IREAD|S_IWRITE);
@@ -121,7 +121,7 @@ void RIO::RTextFile::Init(void) throw(bad_alloc,RString)
 
 	Line=0;
 	ptr=Buffer=0;
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 	{
 		if(All)
 		{
@@ -144,7 +144,7 @@ void RIO::RTextFile::Init(void) throw(bad_alloc,RString)
 //-----------------------------------------------------------------------------
 void RIO::RTextFile::Begin(void) throw(RString)
 {
-	if(Mode!=Read)
+	if(Mode!=RIO::Read)
 		throw(RString("File Mode is not Read"));
 	ptr=Buffer;
 	Line=1;
@@ -314,7 +314,7 @@ long RIO::RTextFile::GetInt(void) throw(RString)
 	char* ptr2=ptr;
 	char* rem;
 
-	if(Mode!=Read)
+	if(Mode!=RIO::Read)
 		throw(RString("File Mode is not Read"));
 	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment()))
 		if(!isdigit(*(ptr++))) throw(RString("No Int"));
@@ -335,7 +335,7 @@ unsigned long RIO::RTextFile::GetUInt(void) throw(RString)
 	char* ptr2=ptr;
 	char* rem;
 
-	if(Mode!=Read)
+	if(Mode!=RIO::Read)
 		throw(RString("File Mode is not Read"));
 	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment()))
 		if(!isdigit(*(ptr++))) throw(RString("No Int"));
@@ -420,7 +420,7 @@ float RIO::RTextFile::GetFloat(void) throw(RString)
 	char *ptr2=ptr;
 	char* rem;
 
-	if(Mode!=Read)
+	if(Mode!=RIO::Read)
 		throw(RString("File Mode is not Read"));
 	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment()))
 	{
@@ -461,7 +461,7 @@ char* RIO::RTextFile::GetWord(void) throw(RString)
 	char *ptr2=ptr;
 	char* rem;
 
-	if(Mode!=Read)
+	if(Mode!=RIO::Read)
 		throw(RString("File Mode is not Read"));
 	while((*ptr)&&(!isspace(*ptr))&&(!BeginComment())) ptr++;
 	LastLine=Line;
@@ -480,7 +480,7 @@ char* RIO::RTextFile::GetLine(void) throw(RString)
 {
 	char *ptr2=ptr,*ptr3;
 
-	if(Mode!=Read)
+	if(Mode!=RIO::Read)
 		throw(RString("File Mode is not Read"));
 	while((*ptr)&&(*ptr)!='\n'&&(*ptr)!='\r'&&(!BeginComment())) ptr++;
 	LastLine=Line;
@@ -502,7 +502,7 @@ char* RIO::RTextFile::GetLine(void) throw(RString)
 //-----------------------------------------------------------------------------
 void RIO::RTextFile::WriteLine(void) throw(RString)
 {
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	write(handle,"\n",strlen("\n"));
 	LastLine=Line++;
@@ -518,7 +518,7 @@ void RIO::RTextFile::WriteLong(const long nb) throw(RString)
 {
 	char Str[25];
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	if(!NewLine)
 		write(handle,Separator,Separator.GetLen());
@@ -560,7 +560,7 @@ void RTextFile::WriteULong(const unsigned long nb) throw(RString)
 {
 	char Str[25];
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	if(!NewLine)
 		write(handle,Separator,Separator.GetLen());
@@ -601,7 +601,7 @@ void RIO::RTextFile::WriteStr(const char *c) throw(RString)
 {
 	int l;
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	if(!NewLine)
 		write(handle,Separator,Separator.GetLen());
@@ -621,7 +621,7 @@ void RIO::RTextFile::WriteStr(const char *c) throw(RString)
 //-----------------------------------------------------------------------------
 void RIO::RTextFile::WriteStr(const char *c,unsigned int l) throw(RString)
 {
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	if(!l) return;
 	write(handle,c,l);
@@ -644,7 +644,7 @@ void RIO::RTextFile::WriteStr(const RString &str) throw(RString)
 {
 	int l;
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	RReturnIfFail(str.GetLen()>0);
 	if(!NewLine)
@@ -680,7 +680,7 @@ void RIO::RTextFile::WriteBool(const bool b) throw(RString)
 {
 	char Str[10];
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	if(!NewLine)
 		write(handle,Separator,Separator.GetLen());
@@ -706,7 +706,7 @@ void RIO::RTextFile::WriteChar(const char c) throw(RString)
 {
 	char Str[10];
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	sprintf(Str,"%c",c);
 	write(handle,Str,1);
@@ -730,7 +730,7 @@ void RIO::RTextFile::WriteDouble(const double d) throw(RString)
 {
 	char Str[25];
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	if(!NewLine)
 		write(handle,Separator,Separator.GetLen());
@@ -758,7 +758,7 @@ void RIO::RTextFile::WriteTime(void) throw(RString)
 	time_t timer;
 	struct tm *tblock;
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	timer = time(NULL);
 	tblock = localtime(&timer);
@@ -781,7 +781,7 @@ void RIO::RTextFile::WriteLog(const char *entry) throw(RString)
 	time_t timer;
 	struct tm *tblock;
 
-	if(Mode==Read)
+	if(Mode==RIO::Read)
 		throw(RString("File Mode is Read"));
 	RReturnIfFail(strlen(entry)>0);
 	if(!NewLine) WriteLine();
