@@ -41,7 +41,7 @@ using namespace RGA;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RFreePolygon::RFreePolygon(RPolygon* poly)
+RFreePolygon::RFreePolygon(RPolygon& poly)
 	: RPolygon(poly)
 {
 }

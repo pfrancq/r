@@ -26,20 +26,51 @@
 
 */
 
-//---------------------------------------------------------------------------
 
+
+//-----------------------------------------------------------------------------
 #ifndef RFREEPOLYGONS_H
 #define RFREEPOLYGONS_H
 
 
-/**
-  *@author Pascal Francq
-  */
+//-----------------------------------------------------------------------------
+// include files for Rainbow
+#include <rstd/rcontainer.h>
+using namespace RStd;
+#include <rga/rfreepolygon.h>
+using namespace RGA;
 
-class RFreePolygons {
-public: 
-	RFreePolygons();
-	~RFreePolygons();
+
+//-----------------------------------------------------------------------------
+namespace RGA{
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+/**
+* \ingroup RGA
+* The RFreePolygons provides a representation for a container of polygons.
+* @author Pascal Francq
+* @short Container of free polygons.
+*/
+class RFreePolygons : public RContainer<RFreePolygon,unsigned int,true,false>
+{
+public:
+
+	/**
+	* Construct the container.
+	*/
+	RFreePolygons(void);
+
+	/**
+	* Derstruct the container.
+	*/
+	virtual ~RFreePolygons(void);
 };
 
+
+}  //------- End of namespace RGA ---------------------------------------------
+
+
+//-----------------------------------------------------------------------------
 #endif

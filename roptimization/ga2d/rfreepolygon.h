@@ -34,19 +34,22 @@
 
 
 //-----------------------------------------------------------------------------
-#include <rpolygon.h>
+#include <rgeometry/rpoint.h>
+#include <rgeometry/rpolygon.h>
+using namespace RGeometry2D;
 
 
 //-----------------------------------------------------------------------------
 namespace RGA{
 //-----------------------------------------------------------------------------
 
+
 //-----------------------------------------------------------------------------
 /**
 * \ingroup 2DGA
 * The RFreePolygon class provides a representation of a "free" polygon on the grid.
 * @author Pascal Francq
-* @short Grid class.
+* @short Free Polygon class.
 */
 class RFreePolygon : public RPolygon
 {
@@ -55,7 +58,34 @@ public:
 	/**
 	* Construct a free polygon.
 	*/	
-	RFreePolygon(RPolygon* poly);
+	RFreePolygon(RPolygon& poly);
+
+	/**
+	* The equal operator.
+	*/
+ 	bool operator==(const RFreePolygon &poly) {return(RPolygon::operator==(poly));}
+
+	/**
+	* The non-equal operator.
+	*/
+	bool operator!=(const RFreePolygon &poly) {return(RPolygon::operator!=(poly));}
+
+	/**
+	* This function compares two polygons and returns 0 if there have the same
+	* number of points and at the same positions. This function is used for the
+	* class RContainer.
+	* @param poly		Polygon used for the comparaison.
+	*/
+	int Compare(const RFreePolygon* poly) {return((*this)!=(*poly));}
+
+	/**
+	* This function compares two polygons and returns 0 if there have the same
+	* number of points and at the same positions. This function is used for the
+	* class RContainer.
+	* @param poly		Polygon used for the comparaison.
+	*/
+	int Compare(const RFreePolygon& poly) {return((*this)!=poly);}
+
 };
 
 
