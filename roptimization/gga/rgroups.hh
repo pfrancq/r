@@ -31,12 +31,12 @@
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData>
-	RGroups<cGroup,cObj,cGroupData>::RGroups(RGA::RObjs<cObj>* objs,const unsigned max) throw(bad_alloc)
+	RGroups<cGroup,cObj,cGroupData>::RGroups(RStd::RCursor<cObj,unsigned int>* objs,const unsigned max) throw(bad_alloc)
 		: RStd::RContainer<cGroup,unsigned int,true,false>(max), Used(max),
-		  GroupData(0), Objs(objs), ObjsAss(objs->NbPtr), ObjsNoAss(objs->NbPtr)
+		  GroupData(0), Objs(objs), ObjsAss(objs->GetNb()), ObjsNoAss(objs->GetNb())
 {
-	ObjectsAss = new unsigned int[Objs->NbPtr];
-	memset(ObjectsAss,0xFF,Objs->NbPtr*sizeof(unsigned int));
+	ObjectsAss = new unsigned int[Objs->GetNb()];
+	memset(ObjectsAss,0xFF,Objs->GetNb()*sizeof(unsigned int));
 }
 
 
@@ -63,8 +63,10 @@ template<class cGroup,class cObj,class cGroupData>
 		(*G)->Clear();
 	Used.Clear();
 	ObjsAss.Clear();
-	ObjsNoAss=(*Objs);
-	memset(ObjectsAss,0xFF,Objs->NbPtr*sizeof(unsigned int));
+	ObjsNoAss.Clear();
+	for(Objs->Start();!Objs->End();Objs->Next())
+		ObjsNoAss.InsertPtr((*Objs)());
+	memset(ObjectsAss,0xFF,Objs->GetNb()*sizeof(unsigned int));
 }
 
 
@@ -188,10 +190,10 @@ template<class cGroup,class cObj,class cGroupData>
 	for(i=Used.NbPtr+1,G=Used.Tab;--i;G++)
 		if(!(*G)->Verify())
 			return(false);
-	for(i=Objs->NbPtr+1,list=ObjectsAss,nbobjs=0;--i;list++)
+	for(i=Objs->GetNb()+1,list=ObjectsAss,nbobjs=0;--i;list++)
 		if((*list)!=NoGroup)
 			nbobjs++;
-	if(ObjsAss.NbPtr+ObjsNoAss.NbPtr!=Objs->NbPtr)
+	if(ObjsAss.NbPtr+ObjsNoAss.NbPtr!=Objs->GetNb())
 	{
 		cout<<"Problem with the number of objects: ObjsAss="<<ObjsAss.NbPtr<<" and ObjsNoAss="<<ObjsNoAss.NbPtr<<endl;
 		return(false);

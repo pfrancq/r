@@ -74,7 +74,7 @@ protected:
 	/**
 	* The Objects to group.
 	*/
-	RGA::RObjs<cObj>* Objs;
+	RStd::RCursor<cObj,unsigned int>* Objs;
 
 	/**
 	* Assignment of the objects.
@@ -98,7 +98,7 @@ public:
 	* @param objs           Objects to group.
 	* @param max            Maximal number of groups to create.
 	*/
-	RGroups(RGA::RObjs<cObj>* objs,const unsigned int max) throw(bad_alloc);
+	RGroups(RStd::RCursor<cObj,unsigned int>* objs,const unsigned int max) throw(bad_alloc);
 
 	/**
 	* Init the groups.

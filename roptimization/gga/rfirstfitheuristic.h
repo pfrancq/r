@@ -63,7 +63,7 @@ public:
 	* @param r              The random genrator to use.
 	* @param objs           Pointer to the objects.
 	*/
-	RFirstFitHeuristic(RRandom* r,RGA::RObjs<cObj>* objs);
+	RFirstFitHeuristic(RRandom* r,RStd::RCursor<cObj,unsigned int>* objs);
 
 	/**
 	* Find a group for the next object.

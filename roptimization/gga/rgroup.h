@@ -133,7 +133,7 @@ public:
 	* @param objs           Objects manipulated.
 	* @param grp            Group to copy from.
 	*/
-	void Insert(RGA::RObjs<cObj>* objs,const cGroup* grp);
+	void Insert(RStd::RCursor<cObj,unsigned int>* objs,const cGroup* grp);
 
 	/**
 	* Delete an object in the group.

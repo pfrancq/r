@@ -39,6 +39,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rcontainer.h>
+#include <rstd/rcursor.h>
 #include <rga/robjs.h>
 #include <rga/rinst.h>
 #include <rgga/robjg.h>
@@ -103,7 +104,7 @@ protected:
 	/**
 	* Objects to group.
 	*/
-	RGA::RObjs<cObj>* Objs;
+	RStd::RCursor<cObj,unsigned int>* Objs;
 
 	/**
 	* Maximal number of groups to allocate by default.

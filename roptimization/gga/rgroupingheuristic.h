@@ -84,7 +84,7 @@ protected:
 	/**
 	* Objects to be grouped.
 	*/
-	RObjs<cObj>* Objs;
+	RStd::RCursor<cObj,unsigned int>* Objs;
 
 	/**
 	* Number of objects to be grouped.
@@ -123,7 +123,7 @@ public:
 	* @param r              The random genrator to use.
 	* @param objs           Pointer to the objects.
 	*/
-	RGroupingHeuristic(RRandom* r,RGA::RObjs<cObj>* objs);
+	RGroupingHeuristic(RRandom* r,RStd::RCursor<cObj,unsigned int>* objs);
 
 	/**
 	* Initialize the heuristic.
