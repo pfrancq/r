@@ -33,8 +33,9 @@
 //-----------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <dirent.h>
-/*#include <ctype.h>
 #include <sys/stat.h>
+#include <errno.h>
+/*#include <ctype.h>
 #ifdef _BSD_SOURCE
 	#include <unistd.h>
 #else
@@ -45,6 +46,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rdir.h>
+#include <rstd/riofile.h>
 using namespace R;
 using namespace std;
 
@@ -74,7 +76,7 @@ struct RDir::Internal
 
 //-----------------------------------------------------------------------------
 RDir::RDir(const RString& name)
-	: RFile(name), Data(0)
+	: RFile(name), Data(0), Entries(10,5)
 {
 	Data=new Internal();
 }
@@ -83,13 +85,13 @@ RDir::RDir(const RString& name)
 //-----------------------------------------------------------------------------
 void RDir::Open(RIO::ModeType mode)
 {
+	int err;
+
 	RFile::Open(mode);
 	switch(Mode)
 	{
 		case RIO::Read:
-			Data->Handle=opendir(GetName().Latin1());
-			if(!Data->Handle)
-				throw(RIOException(this,"Directory does not exist"));
+			OpenEntries();
 			break;
 
 		case RIO::Append:
@@ -97,12 +99,60 @@ void RDir::Open(RIO::ModeType mode)
 			break;
 
 		case RIO::Create:
+			err=mkdir(GetName().Latin1(),S_IRWXU | S_IRGRP | S_IXGRP | S_IXOTH);
+			if(err!=0)
+			{
+				switch(errno)
+				{
+					case EEXIST:
+						throw(RIOException(this,"Directory already exists"));
 
+					default:
+						throw(RIOException(this,"Cannot create the directory"));
+				}
+			}
+			OpenEntries();
 			break;
 
 		default:
 			throw(RIOException(this,"No Valid Mode"));
 	};
+}
+
+
+//-----------------------------------------------------------------------------
+void RDir::OpenEntries(void)
+{
+	struct dirent* ep;
+	RString Name;
+	RString Path;
+
+	Data->Handle=opendir(GetName().Latin1());
+	if(!Data->Handle)
+		throw(RIOException(this,"Directory does not exist"));
+	Path=GetName();
+	Path+=RFile::GetDirSeparator();
+	while((ep=readdir(Data->Handle)))
+	{
+		// Name og the 'file"
+		Name=ep->d_name;
+
+		// Look if it is a directoy
+		if(ep->d_type==DT_DIR)
+		{
+			Entries.InsertPtr(new RDir(Path+Name));
+			continue;
+		}
+		Entries.InsertPtr(new RIOFile(Path+Name));
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+RCursor<RFile> RDir::GetEntries(void) const
+{
+	RCursor<RFile> Cur(Entries);
+	return(Cur);
 }
 
 
@@ -115,6 +165,7 @@ void RDir::Close(void)
 		closedir(Data->Handle);
 		Data->Handle=0;
 	}
+	Entries.Clear();
 }
 
 

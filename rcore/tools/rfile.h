@@ -52,6 +52,12 @@ NEWRIOEXCEPTION(InvalidFile);
 
 
 //------------------------------------------------------------------------------
+// Forward declaration
+class RIOFile;
+class RDir;
+
+
+//------------------------------------------------------------------------------
 /**
 * The RFile class represents a file (text files, directories...).
 * @author Pascal Francq
@@ -95,6 +101,30 @@ public:
 	* Close the file.
 	*/
 	virtual void Close(void);
+
+	/**
+	* Compare two files by comparing their name.
+	* @see R::RContainer
+	* @param file            File.
+	* @return int
+	*/
+	int Compare(const RFile& file) const;
+
+	/**
+	* Compare two files by comparing their name.
+	* @see R::RContainer
+	* @param file            File.
+	* @return int
+	*/
+	int Compare(const RFile* file) const;
+
+	/**
+	* Compare the name of a file with a given string.
+	* @see R::RContainer
+	* @param name            String.
+	* @return int
+	*/
+	int Compare(const RString& name) const;
 
 	/**
 	* Return the name of the file.

@@ -39,6 +39,8 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rfile.h>
+#include <rstd/rcontainer.h>
+#include <rstd/rcursor.h>
 
 
 //-----------------------------------------------------------------------------
@@ -57,6 +59,11 @@ class RDir : public RFile
 	*/
 	Internal* Data;
 
+	/**
+	* Entries of the directory.
+	*/
+	RContainer<RFile,true,true> Entries;
+
 public:
 
 	/**
@@ -66,10 +73,24 @@ public:
 	RDir(const RString& name);
 
 	/**
-	* Open the directory
+	* Open the directory in a given mode.
 	* @param mode           The open mode for the file.
 	*/
 	virtual void Open(RIO::ModeType mode=RIO::Read);
+
+private:
+
+	/**
+	* Read the entries of the directory.
+	*/
+	void OpenEntries(void);
+
+public:
+
+	/**
+	* Get a cursor on the entries of the directory.
+	*/
+	RCursor<RFile> GetEntries(void) const;
 
 	/**
 	* Close the file.

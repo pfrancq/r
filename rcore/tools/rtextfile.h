@@ -570,11 +570,6 @@ public:
 	void SetSeparator(const char* str) {Separator=str;}
 
 	/**
-	* Get the separator used for the directories.
-	*/
-	static RChar GetDirSeparator(void);
-
-	/**
 	* Destructs the file.
 	*/
 	virtual ~RTextFile(void);

@@ -88,6 +88,27 @@ void RFile::Close(void)
 
 
 //------------------------------------------------------------------------------
+int RFile::Compare(const RFile& file) const
+{
+	return(Name.Compare(file.Name));
+}
+
+
+//------------------------------------------------------------------------------
+int RFile::Compare(const RFile* file) const
+{
+	return(Name.Compare(file->Name));
+}
+
+
+//------------------------------------------------------------------------------
+int RFile::Compare(const RString& name) const
+{
+	return(Name.Compare(name));
+}
+
+
+//------------------------------------------------------------------------------
 const RString& RFile::GetName(void) const
 {
 	return(this->Name);

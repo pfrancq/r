@@ -960,18 +960,6 @@ void RTextFile::WriteLog(const RString& entry) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-RChar RTextFile::GetDirSeparator(void)
-{
-#ifdef _BSD_SOURCE
-    return('/');
-#else
-    return('\\');
-#endif
-
-}
-
-
-//------------------------------------------------------------------------------
 RTextFile::~RTextFile(void)
 {
 }
