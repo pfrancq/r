@@ -493,6 +493,19 @@ RString& RString::operator+=(const char c) throw(bad_alloc)
 
 
 //------------------------------------------------------------------------------
+RString& RString::operator+=(const RChar c) throw(bad_alloc)
+{
+	RChar* ptr;
+
+	Verify(Len+1);
+	ptr=&Text[Len++];
+	(*(ptr++))=c;
+	(*ptr)=0;
+	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
 int RString::HashIndex(const RString* str)
 {
 	RChar c;

@@ -264,6 +264,11 @@ public:
 	RString& operator+=(const char c) throw(bad_alloc);
 
 	/**
+	* Add a character to the string.
+	*/
+	RString& operator+=(const RChar c) throw(bad_alloc);
+
+	/**
 	* Return the string containing the string.
 	*/
 	inline const RChar* operator()(void) const {return(Text);}
