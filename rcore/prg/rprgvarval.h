@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgVarVal.h
 
-	Rainbow Standard Library - Implementation.
+	Variable containing a value - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -35,32 +35,64 @@
 
 
 //------------------------------------------------------------------------------
+#ifndef RPrgVarValH
+#define RPrgVarValH
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-using namespace R;
-
+#include <rprg/rprgvar.h>
 
 
 //------------------------------------------------------------------------------
-//
-// class RException
-//
+namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+/**
+* The RPrgVarCons provides a class for a variable with a value.
+* @author Pascal Francq
+* @short Variable.
+*/
+class RPrgVarVal : public RPrgVar
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
-}
+	/**
+	* Value of the variable.
+	*/
+	RString Value;
+
+public:
+
+	/**
+	* Costructor of a variable.
+	* @param name           Name.
+	* @param value          Value.
+	*/
+	RPrgVarVal(const char* name,const char* value) throw(bad_alloc);
+
+	/**
+	* Assign some data to the variable.
+	* @param data           Data.
+	*/
+	virtual void Assign(const void* data) throw(RException);
+
+	/**
+	* Get the value of the variable.
+	* @param prg            Program.
+	* @return "C" string representing the value of the variable.
+	*/
+	virtual const char* GetValue(RPrg* prg) throw(RException);
+
+	/**
+	* Destructor of a variable.
+	*/
+	virtual ~RPrgVarVal(void);
+};
+
+
+}  //-------- End of namespace R -----------------------------------------------
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
-{
-}
+#endif

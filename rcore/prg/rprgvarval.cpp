@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgVarVal.cpp
 
-	Rainbow Standard Library - Implementation.
+	Variable containing a value  - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,31 +36,39 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
+#include <rprg/rprgvarval.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// RPrgVarVal
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RPrgVarVal::RPrgVarVal(const char* name,const char* value) throw(bad_alloc)
+	: RPrgVar(name), Value(value)
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+void RPrgVarVal::Assign(const void* data) throw(RException)
+{
+	Value=static_cast<const char*>(data);
+}
+
+
+//------------------------------------------------------------------------------
+const char* RPrgVarVal::GetValue(RPrg*) throw(RException)
+{
+	return(Value);
+}
+
+
+//------------------------------------------------------------------------------
+RPrgVarVal::~RPrgVarVal(void)
 {
 }

@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgVarRef.h
 
-	Rainbow Standard Library - Implementation.
+	Reference to a Variable - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -35,32 +35,58 @@
 
 
 //------------------------------------------------------------------------------
+#ifndef RPrgVarRefH
+#define RPrgVarRefH
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-using namespace R;
-
+#include <rprg/rprgvar.h>
 
 
 //------------------------------------------------------------------------------
-//
-// class RException
-//
+namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+/**
+* The RPrgVar provides a class for a reference to a variable.
+* @author Pascal Francq
+* @short Variable Reference.
+*/
+class RPrgVarRef : public RPrgVar
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
-}
+public:
+
+	/**
+	* Constructor of a variable.
+	* @param ref            Name of the variable referenced.
+	*/
+	RPrgVarRef(const char* ref) throw(bad_alloc);
+
+	/**
+	* Assign some data to the variable.
+	* @param data           Data.
+	*/
+	virtual void Assign(const void* data) throw(RException);
+
+	/**
+	* Get the value of the variable.
+	* @param prg            Program.
+	* @return "C" string representing the content of the variable.
+	*/
+	virtual const char* GetValue(RPrg* prg) throw(RException);
+
+	/**
+	* Destructor of a variable.
+	*/
+	virtual ~RPrgVarRef(void);
+};
+
+
+}  //-------- End of namespace R -----------------------------------------------
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
-{
-}
+#endif

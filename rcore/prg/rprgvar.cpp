@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgVar.cpp
 
-	Rainbow Standard Library - Implementation.
+	Generic variable - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,31 +36,59 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
+#include <rprg/rprgvar.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// RPrgVar
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RPrgVar::RPrgVar(const char* name) throw(bad_alloc)
+	: Name(name)
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+int RPrgVar::Compare(const RPrgVar* v) const
+{
+	return(Name.Compare(v->Name));
+}
+
+
+//------------------------------------------------------------------------------
+int RPrgVar::Compare(const RString& v) const
+{
+	return(Name.Compare(v));
+}
+
+
+//------------------------------------------------------------------------------
+int RPrgVar::Compare(const char* v) const
+{
+	return(Name.Compare(v));
+}
+
+
+//------------------------------------------------------------------------------
+void RPrgVar::Assign(const void*) throw(RException)
+{
+}
+
+
+//------------------------------------------------------------------------------
+const char* RPrgVar::GetValue(RPrg*) throw(RException)
+{
+	return(0);
+}
+
+
+//------------------------------------------------------------------------------
+RPrgVar::~RPrgVar(void)
 {
 }

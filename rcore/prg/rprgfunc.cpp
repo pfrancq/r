@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgFunc.cpp
 
-	Rainbow Standard Library - Implementation.
+	Generic function - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,31 +36,52 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
+#include <rprg/rprgfunc.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// RPrgFunc
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RPrgFunc::RPrgFunc(const char* name) throw(bad_alloc)
+	: Name(name)
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+int RPrgFunc::Compare(const RPrgFunc* f) const
+{
+	return(Name.Compare(f->Name));
+}
+
+
+//------------------------------------------------------------------------------
+int RPrgFunc::Compare(const RString& f) const
+{
+	return(Name.Compare(f));
+}
+
+
+//------------------------------------------------------------------------------
+int RPrgFunc::Compare(const char* f) const
+{
+	return(Name.Compare(f));
+}
+
+
+//------------------------------------------------------------------------------
+void RPrgFunc::Run(RPrg*,RPrgOutput*,RContainer<RPrgVar,unsigned int,true,false>*) throw(RException)
+{
+}
+
+
+//------------------------------------------------------------------------------
+RPrgFunc::~RPrgFunc(void)
 {
 }

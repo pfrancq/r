@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgVarConst.cpp
 
-	Rainbow Standard Library - Implementation.
+	Const Variable - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,31 +36,39 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
+#include <rprg/rprgvarconst.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// RPrgVarConst
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RPrgVarConst::RPrgVarConst(const char* value) throw(bad_alloc)
+	: RPrgVar(value)
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+void RPrgVarConst::Assign(const void* data) throw(RException)
+{
+	Name=static_cast<const char*>(data);
+}
+
+
+//------------------------------------------------------------------------------
+const char* RPrgVarConst::GetValue(RPrg*) throw(RException)
+{
+	return(Name);
+}
+
+
+//------------------------------------------------------------------------------
+RPrgVarConst::~RPrgVarConst(void)
 {
 }

@@ -223,10 +223,12 @@ template<class C,unsigned long Max>
 */
 class RException
 {
+protected:
+
 	/**
 	* Message holding some information.
 	*/
-	char* Msg;
+	char Msg[1024];
 
 public:
 
@@ -234,7 +236,7 @@ public:
 	* Construct an exception.
 	* @param str                      Message of the error.
 	*/
-	RException(const char* str) throw(bad_alloc);
+	RException(const char* str) throw();
 
 	/**
 	* Get the content of the exception.
@@ -245,7 +247,7 @@ public:
 	/**
 	* Destructor.
 	*/
-	virtual ~RException(void);
+	virtual ~RException(void) throw();
 };
 
 

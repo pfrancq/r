@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgVarRef.cpp
 
-	Rainbow Standard Library - Implementation.
+	Reference to a Variable - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,31 +36,39 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
+#include <rprg/rprgvarref.h>
+#include <rprg/rprg.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// RPrgVarRef
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RPrgVarRef::RPrgVarRef(const char* ref) throw(bad_alloc)
+	: RPrgVar(ref)
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+void RPrgVarRef::Assign(const void*) throw(RException)
+{
+}
+
+
+//------------------------------------------------------------------------------
+const char* RPrgVarRef::GetValue(RPrg* prg) throw(RException)
+{
+	return(prg->GetValue(Name));
+}
+
+
+//------------------------------------------------------------------------------
+RPrgVarRef::~RPrgVarRef(void)
 {
 }

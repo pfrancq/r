@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgInstFor.cpp
 
-	Rainbow Standard Library - Implementation.
+	"for" Instruction - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,31 +36,76 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
+#include <rprg/rprginstfor.h>
+#include <rprg/rprgvarval.h>
+#include <rprg/rprg.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// RPrgInstFor
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RPrgInstFor::RPrgInstFor(char* line,unsigned int t) throw(bad_alloc)
+	: RPrgInst(), Values(20,10), Insts(50,25), Tabs(t)
 {
-	if(str)
+	char* var;
+	RPrgVar* r;
+
+	// Read name of variable
+	var=line;
+	while((*line)&&((*line)!=' '))
+		line++;
+	(*(line++))=0;
+	Var=var;
+
+	// Skip "in "
+	while((*line)&&((*line)!=' '))
+		line++;
+	(*(line++))=0;
+	while((*line)&&((*line)==' '))
+		line++;
+
+	// Read Values
+	while((*line))
 	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
+		r=RPrg::AnalyseParam(line);
+		if(r)
+			Values.InsertPtr(r);
 	}
-	else
-		Msg[0]='\0';
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+void RPrgInstFor::AddInst(RPrgInst* ins) throw(bad_alloc)
+{
+	Insts.InsertPtr(ins);
+}
+
+
+//------------------------------------------------------------------------------
+void RPrgInstFor::Run(RPrg* prg,RPrgOutput* o) throw(RException)
+{
+	RPrgVarVal* local=new RPrgVarVal(Var,"");
+
+	prg->AddVar(local);
+	for(Values.Start();!Values.End();Values.Next())
+	{
+		local->Assign(Values()->GetValue(prg));
+		for(Insts.Start();!Insts.End();Insts.Next())
+		{
+			Insts()->Run(prg,o);
+		}
+	}
+	prg->DelVar(local);
+}
+
+
+//------------------------------------------------------------------------------
+RPrgInstFor::~RPrgInstFor(void)
 {
 }

@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgOutput.cpp
 
-	Rainbow Standard Library - Implementation.
+	Generic output - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,31 +36,30 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
+#include <rprg/rprgoutput.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+//  class RPrgOutput
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RPrgOutput::RPrgOutput(void)
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+void RPrgOutput::WriteStr(const char*)
+{
+}
+
+
+//------------------------------------------------------------------------------
+RPrgOutput::~RPrgOutput(void)
 {
 }

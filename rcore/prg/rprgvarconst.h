@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgVarConst.h
 
-	Rainbow Standard Library - Implementation.
+	Const Variable - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -35,32 +35,58 @@
 
 
 //------------------------------------------------------------------------------
+#ifndef RPrgVarConstH
+#define RPrgVarConstH
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-using namespace R;
-
+#include <rprg/rprgvar.h>
 
 
 //------------------------------------------------------------------------------
-//
-// class RException
-//
+namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+/**
+* The RPrgVarCons provides a class for a const variable.
+* @author Pascal Francq
+* @short Const Variable.
+*/
+class RPrgVarConst : public RPrgVar
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
-}
+public:
+
+	/**
+	* Constructor of a const variable.
+	* @param value          Name.
+	*/
+	RPrgVarConst(const char* value) throw(bad_alloc);
+
+	/**
+	* Assign some data to the const variable.
+	* @param data           Data.
+	*/
+	virtual void Assign(const void* data) throw(RException);
+
+	/**
+	* Get the value of the const variable.
+	* @param prg            Program.
+	* @return "C" string representing the content of the const variable.
+	*/
+	virtual const char* GetValue(RPrg* prg) throw(RException);
+
+	/**
+	* Destructor of a const variable.
+	*/
+	virtual ~RPrgVarConst(void);
+};
+
+
+}  //-------- End of namespace R -----------------------------------------------
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
-{
-}
+#endif 

@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgInstMethod.cpp
 
-	Rainbow Standard Library - Implementation.
+	Method of a class - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,31 +36,41 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
+#include <rprg/rprginstmethod.h>
+#include <rprg/rprgvar.h>
+#include <rprg/rprgfunc.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// RPrgInst
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RPrgInstMethod::RPrgInstMethod(RPrgFunc* inst) throw(bad_alloc)
+	: RPrgInst(), Method(inst), Params(10,5)
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+void RPrgInstMethod::Run(RPrg* prg,RPrgOutput* r) throw(RException)
+{
+	Method->Run(prg,r,&Params);
+}
+
+
+//------------------------------------------------------------------------------
+void RPrgInstMethod::AddParam(RPrgVar* var) throw(bad_alloc)
+{
+	Params.InsertPtr(var);
+}
+
+
+//------------------------------------------------------------------------------
+RPrgInstMethod::~RPrgInstMethod(void)
 {
 }

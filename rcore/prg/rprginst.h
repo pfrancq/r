@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgInst.h
 
-	Rainbow Standard Library - Implementation.
+	Generic instruction - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -35,32 +35,74 @@
 
 
 //------------------------------------------------------------------------------
+#ifndef RPrgInstH
+#define RPrgInstH
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/rstd.h>
-using namespace R;
-
 
 
 //------------------------------------------------------------------------------
-//
-// class RException
-//
+namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+// forward declaration
+class RPrg;
+class RPrgOutput;
+
+
+//------------------------------------------------------------------------------
+/**
+* The RPrgInst provides a class for a generic instruction.
+*
+* The Compare methods needed by R::RContainer are implemented so that it is
+* impossible to construct an ordered container of instructions.
+* @author Pascal Francq
+* @short Generic Instruction.
+*/
+class RPrgInst
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
-}
+public:
+
+	/**
+	* Constructor of a generic instruction.
+	*/
+	RPrgInst(void) throw(bad_alloc);
+
+	/**
+	* This method compares two instructions.
+	* @see R::RContainer.
+	* @return -1
+	*/
+	int Compare(const RPrgInst* t) const;
+
+	/**
+	* This method compares two instructions.
+	* @see R::RContainer.
+	* @return -1
+	*/
+	int Compare(const char* t) const;
+
+	/**
+	* Run the instruction.
+	* @param prg            Program.
+	* @param o              Output.
+	*/
+	virtual void Run(RPrg* prg,RPrgOutput* o) throw(RException);
+
+	/**
+	* Destructor of a generic instruction.
+	*/
+	virtual ~RPrgInst(void);
+};
+
+
+}  //-------- End of namespace R -----------------------------------------------
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
-{
-}
+#endif 

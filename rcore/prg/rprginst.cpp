@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgInst.cpp
 
-	Rainbow Standard Library - Implementation.
+	Generic instruction - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,31 +36,44 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
+#include <rprg/rprginst.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// RPrgInst
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RPrgInst::RPrgInst(void) throw(bad_alloc)
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+int RPrgInst::Compare(const RPrgInst*) const
+{
+	return(-1);
+}
+
+
+//------------------------------------------------------------------------------
+int RPrgInst::Compare(const char*) const
+{
+	return(-1);
+}
+
+
+//------------------------------------------------------------------------------
+void RPrgInst::Run(RPrg*,RPrgOutput*) throw(RException)
+{
+}
+
+
+//------------------------------------------------------------------------------
+RPrgInst::~RPrgInst(void)
 {
 }

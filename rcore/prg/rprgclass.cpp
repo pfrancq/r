@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RPrgClass.cpp
 
-	Rainbow Standard Library - Implementation.
+	Generic Class - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,31 +36,54 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
+#include <rprg/rprgclass.h>
+#include <rprg/rprgfunc.h>
+#include <rprg/rprgvar.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// RPrgClass
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RPrgClass::RPrgClass(const char* name) throw(bad_alloc)
+	: Name(name), Vars(20,10), Methods(30,15)
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+int RPrgClass::Compare(const RPrgClass* c) const
+{
+	return(Name.Compare(c->Name));
+}
+
+
+//------------------------------------------------------------------------------
+int RPrgClass::Compare(const RString& c) const
+{
+	return(Name.Compare(c));
+}
+
+//------------------------------------------------------------------------------
+int RPrgClass::Compare(const char* c) const
+{
+	return(Name.Compare(c));
+}
+
+
+//------------------------------------------------------------------------------
+RPrgFunc* RPrgClass::GetMethod(const char* method) const
+{
+	return(Methods.GetPtr<const char*>(method));
+}
+
+
+//------------------------------------------------------------------------------
+RPrgClass::~RPrgClass(void)
 {
 }
