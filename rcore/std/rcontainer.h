@@ -305,7 +305,7 @@ public:
 	* container is responsible of the desallocation.
 	* @param del		A pointer to the element to delete.
 	*/
-	void DeletePtr(C* del);
+	void DeletePtr(C* del) throw(bad_alloc);
 
 	/**
 	* Delete an element from the container. The element is destruct if the
@@ -314,7 +314,7 @@ public:
 	*							member function of the elements.
 	* @param tag			The tag used.
 	*/
-	template<class TUse> void DeletePtr(const TUse &tag,bool sortkey=bOrder);
+	template<class TUse> void DeletePtr(const TUse &tag,bool sortkey=bOrder) throw(bad_alloc);
 	//@}
 
 	/**

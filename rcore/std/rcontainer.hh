@@ -405,7 +405,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder>
-	void RStd::RContainer<C,T,bAlloc,bOrder>::DeletePtr(C* del)
+	void RStd::RContainer<C,T,bAlloc,bOrder>::DeletePtr(C* del) throw(bad_alloc)
 {
 	C **ptr;
 	T Index;
@@ -421,7 +421,8 @@ template<class C,class T,bool bAlloc,bool bOrder>
 	}
 	else
 	{
-		for(Index=0,ptr=Tab;(*ptr)!=del;Index++,ptr++);
+		for(Index=0,ptr=Tab;((*ptr)!=del)&&(Index<NbPtr);Index++,ptr++);
+		if(Index==NbPtr) return;
 	}
 	memcpy(ptr,ptr+1,((--NbPtr)-Index)*sizeof(C*));
 	Tab[NbPtr]=0;
@@ -431,7 +432,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	void RStd::RContainer<C,T,bAlloc,bOrder>::DeletePtr(const TUse &tag,bool sortkey)
+	void RStd::RContainer<C,T,bAlloc,bOrder>::DeletePtr(const TUse &tag,bool sortkey) throw(bad_alloc)
 {
 	C **ptr,*del;
 	T Index;
@@ -445,7 +446,8 @@ template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
 	}
 	else
 	{
-		for(Index=0,ptr=Tab;(*ptr)->Compare(tag);Index++,ptr++);
+		for(Index=0,ptr=Tab;((*ptr)->Compare(tag))&&(Index<Nbptr);Index++,ptr++);
+		if(Index==NbPtr) return;
 	}
 	del=*ptr;
 	memcpy(ptr,ptr+1,((--NbPtr)-Index)*sizeof(C*));
