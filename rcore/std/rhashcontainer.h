@@ -69,7 +69,7 @@ template<class C,class T,T tSize,bool bAlloc> class RHashContainer
 {
 public:
 	RContainer<C,T,bAlloc,true> **Hash;
-
+	
 	RHashContainer(T M,T I) throw(bad_alloc)
 	{
 		RContainer<C,T,bAlloc,true> **ptr;
@@ -97,7 +97,7 @@ public:
   }
   template<class TUse> inline C* GetInsertPtr(const TUse &tag) throw(bad_alloc)
   {
-		retrun(tag->Hash[HashIndex()]->GetInsertPtr<TUse>(tag));	  	
+		return(Hash[tag.HashIndex()]->GetInsertPtr<TUse>(tag));	  	
   }
   inline void DeletePtr(C* del)
   {
@@ -109,7 +109,7 @@ public:
   }
   template<class TUse> inline void ForEach(void f(TUse),const TUse &tag)
   {
-		Hash[tag->HashIndex()]->ForEach<void f(TUse),TUse>(f,tag);	  	
+		Hash[tag->HashIndex()]->ForEach<TUse>(f,tag);	  	
   }
   ~RHashContainer(void)
   {
@@ -119,7 +119,7 @@ public:
   }
 };
 
-s
+
 }  //-------- End of namespace RStd ---------------------------------------
 
 

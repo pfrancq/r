@@ -91,7 +91,7 @@ public:
   bool operator!=(const RString &str);
   int Compare(const RString &str);
   int Compare(const RString *str);
-  inline char HashIndex(void)
+  inline char HashIndex(void) const
   {
   	char c=(*Text);
   	if(c>='a'&&c<='z') return(c-'a');
