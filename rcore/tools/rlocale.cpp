@@ -33,6 +33,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rinter/rlocale.h>
+using namespace RStd;
 using namespace RInter;
 
 
@@ -54,6 +55,55 @@ RInter::RLocale::RLocale(const RString& name)
 RInter::RLocale::RLocale(const char* name)
 	: Name(name)
 {
+}
+
+
+//-----------------------------------------------------------------------------
+int RInter::RLocale::Compare(const RLocale& l) const
+{
+	return(Name.Compare(l.Name));
+}
+
+
+//-----------------------------------------------------------------------------
+int RInter::RLocale::Compare(const RLocale* l) const
+{
+	return(Name.Compare(l->Name));
+}
+
+
+//-----------------------------------------------------------------------------
+int RInter::RLocale::Compare(const RStd::RString& n) const
+{
+	return(Name.Compare(n));
+}
+
+
+//-----------------------------------------------------------------------------
+int RInter::RLocale::Compare(const char* n) const
+{
+	return(Name.Compare(n));
+}
+
+
+//-----------------------------------------------------------------------------
+bool RInter::RLocale::operator==(const RLocale& l) const
+{
+	return(Name==l.Name);
+}
+
+
+//-----------------------------------------------------------------------------
+bool RInter::RLocale::operator==(const RString& n) const
+{
+	return(Name==n);
+}
+
+
+//-----------------------------------------------------------------------------
+bool RInter::RLocale::operator==(const char* n) const
+{
+	return(Name==n);
 }
 
 

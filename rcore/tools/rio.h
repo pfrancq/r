@@ -38,6 +38,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rstd/rstd.h>
 #include <rstd/rstring.h>
 using namespace RStd;
 
@@ -58,6 +59,25 @@ enum ModeType
 	Read,
 	Create
 };
+
+
+//-----------------------------------------------------------------------------
+/**
+* The RIOException class provides a basic representation for an IO exception.
+* @author Pascal Francq
+* @short IO Exception.
+*/
+class RIOException : public RStd::RException
+{
+public:
+
+	/**
+	* Construct an IO exception.
+	* @param str                      Message of the error.
+	*/
+	RIOException(const char* str) throw(bad_alloc);
+};
+
 
 
 }  //-------- End of namespace RIO --------------------------------------------

@@ -57,7 +57,7 @@ class RLocale
 	/**
 	* The name of the locale.
 	*/
-	RString Name;
+	RStd::RString Name;
 
 public:
 
@@ -65,7 +65,7 @@ public:
 	* Construct the locale.
 	* @param name                     Name.
 	*/
-	RLocale(const RString& name);
+	RLocale(const RStd::RString& name);
 
 	/**
 	* Construct the locale.
@@ -76,40 +76,37 @@ public:
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RLocale& l) const {return(Name.Compare(l.Name));}
+	int Compare(const RLocale& l) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RLocale* l) const {return(Name.Compare(l->Name));}
+	int Compare(const RLocale* l) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RString& n) const {return(Name.Compare(n));}
+	int Compare(const RStd::RString& n) const;
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const char* n) const {return(Name.Compare(n));}
+	int Compare(const char* n) const;
 
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const RLocale& l) const
-		{return(Name==l.Name);}
+	bool operator==(const RLocale& l) const;
 
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const RString& n) const
-		{return(Name==n);}
+	bool operator==(const RStd::RString& n) const;
 
 	/**
 	* Equal operator.
 	*/
-	bool operator==(const char* n) const
-		{return(Name==n);}
+	bool operator==(const char* n) const;
 
 	/**
 	* Destruct the locale.
