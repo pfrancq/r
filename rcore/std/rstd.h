@@ -38,10 +38,11 @@
 
 //-----------------------------------------------------------------------------
 // include files for Standard C/C++
-#include <new.h>
+#include <new>
 #include <stdio.h>
 #include <string.h>
-#include <iostream.h>
+#include <iostream>
+using namespace std;
 
 
 //-----------------------------------------------------------------------------

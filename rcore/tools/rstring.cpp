@@ -237,7 +237,7 @@ char RStd::RString::ToUpper(const char c)
 
 
 //-----------------------------------------------------------------------------
-inline void RStd::RString::StrUpr(void)
+void RStd::RString::StrUpr(void)
 {
 	char *ptr=Text;
 	while(*ptr)
@@ -278,7 +278,7 @@ void RStd::RString::StrUpr(const RString &str) throw(bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-inline void RStd::RString::StrLwr(void)
+void RStd::RString::StrLwr(void)
 {
 	char *ptr=Text;
 

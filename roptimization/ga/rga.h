@@ -39,8 +39,6 @@
 //-----------------------------------------------------------------------------
 // include files for AINSI C/C++
 #include <stdlib.h>
-#include <iostream.h>
-#include <new.h>
 #ifndef RGADEBUG
 	#define RGADEBUG 1
 #endif
@@ -48,6 +46,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
+#include <rstd/rstd.h>
 #include <rstd/rstring.h>
 #include <rstd/rcontainer.h>
 #include <rstd/rmsg.h>

@@ -240,7 +240,7 @@ double RPromethee::RPromCriterion::ComputePref(double u,double v) const
 	double y;
 
 	if(u!=v)
-		d=(2.0*(u-v))/(u+v);
+		d=(u-v)/u;
 	else
 		d=0.0;
 

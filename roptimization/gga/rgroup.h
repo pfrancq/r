@@ -242,7 +242,7 @@ public:
 	virtual ~RGroup(void);
 
 	// friend classes
-	friend RGroups<cGroup,cObj,cGroupData,cGroups>;
+	friend class RGroups<cGroup,cObj,cGroupData,cGroups>;
 };
 
 

@@ -294,7 +294,7 @@ public:
 	~RPromCriterion(void);
 
 	// friend classes
-	friend RPromKernel;
+	friend class RPromKernel;
 };
 
 

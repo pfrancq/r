@@ -38,8 +38,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for ANSI C/C++
-#include <new.h>
-using namespace std;
+#include <rstd/rstd.h>
 
 
 //-----------------------------------------------------------------------------
@@ -152,7 +151,7 @@ public:
 	/**
 	* Transform the string to uppercase.
 	*/
-	inline void StrUpr(void);
+	void StrUpr(void);
 
 	/**
 	* Assign the uppercase version of a "C string".
@@ -169,7 +168,7 @@ public:
 	/**
 	* Transform the string to lowercase.
 	*/
-	inline void StrLwr(void);
+	void StrLwr(void);
 
 	/**
 	* Assign the lowercase version of a "C string".

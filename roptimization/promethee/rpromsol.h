@@ -170,8 +170,8 @@ public:
 	virtual ~RPromSol(void);
 
 	// friend classes
-	friend RPromKernel;
-	friend RPromCriterion;
+	friend class RPromKernel;
+	friend class RPromCriterion;
 };
 
 

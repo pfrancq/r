@@ -106,8 +106,8 @@ public:
 	*/
 	~RPromCritValue(void);
 
-	friend RPromKernel;
-	friend RPromCriterion;
+	friend class RPromKernel;
+	friend class RPromCriterion;
 };
 
 

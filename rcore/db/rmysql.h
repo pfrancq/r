@@ -56,7 +56,7 @@
 * Here is a example:
 *
 * <pre>
-* #include <iostream.h>
+* #include <iostream>
 * #include <rmysql/rmysql.h>
 * using namespace RMySQL;
 *

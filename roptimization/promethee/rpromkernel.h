@@ -211,7 +211,7 @@ public:
 	virtual ~RPromKernel(void);
 
 	// friend classes
-	friend RPromCriterion;
+	friend class RPromCriterion;
 };
 
 
