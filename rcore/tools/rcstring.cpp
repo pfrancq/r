@@ -496,7 +496,7 @@ int RCString::FindStr(const RCString str,int pos,bool CaseSensitive) const
 		incr=-1;
 
 		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=Data->Len+pos+search.GetLen()-1;
+		pos=Data->Len+pos;
 		if(pos<=0) return(-1);
 		start=&Data->Text[pos];
 		max=pos+1;
@@ -542,7 +542,7 @@ int RCString::FindStr(const RCString str,int pos,bool CaseSensitive) const
 							if(incr>0)
 								return(pos);
 							else
-								return(pos-search.GetLen());
+								return(pos-search.GetLen()+1);
 						}
 						start+=incr;
 						toFind+=incr;
@@ -561,7 +561,7 @@ int RCString::FindStr(const RCString str,int pos,bool CaseSensitive) const
 					if(incr>0)
 						return(pos);
 					else
-						return(pos-search.GetLen());
+						return(pos-search.GetLen()+1);
 				}
 			}
 		}
