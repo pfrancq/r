@@ -163,10 +163,44 @@ public:
 	RXMLTag* GetTag(const char* name);
 
 	/**
-	* Insertan attribute
+	* Insert an attribute.
 	* @param Attr           Attribute to insert
 	*/
 	void InsertAttr(RXMLAttr *Attr);
+
+	/**
+	* Insert an attribute.
+	* @param name           Name of thae attribute.
+	* @param value          Value of thae attribute.
+	*/
+	void InsertAttr(const RString& name,const RString& value);
+
+	/**
+	* Insert an attribute.
+	* @param name           Name of thae attribute.
+	* @param value          Value of thae attribute.
+	*/
+	void InsertAttr(const char* name,const RString& value);
+
+	/**
+	* Insert an attribute.
+	* @param name           Name of thae attribute.
+	* @param value          Value of thae attribute.
+	*/
+	void InsertAttr(const RString& name,const char* value);
+
+	/**
+	* Insert an attribute.
+	* @param name           Name of thae attribute.
+	* @param value          Value of thae attribute.
+	*/
+	void InsertAttr(const char* name,const char* value);
+
+	/**
+	* Add a tag to this one.
+	* @param tag            Tag to add.
+	*/
+	void AddTag(RXMLTag* tag);
 
 	/**
 	* Destruct the XML Tag.
