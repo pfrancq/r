@@ -530,6 +530,7 @@ template<class C,class T,bool bAlloc,bool bOrder>
 {
 	if(!NbPtr)
 	{
+		ActPtr=0;
 		Current=0;
 		return;
 	}
