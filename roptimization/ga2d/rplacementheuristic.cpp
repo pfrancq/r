@@ -31,27 +31,28 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
 #include "rplacementheuristic.h"
 using namespace RGA;
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //	RPlacementHeuristic
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs)
+	: Free()
 {
 	Order=new unsigned int[maxobjs];
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RPlacementHeuristic::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs)
 {
 	// Assign
@@ -64,6 +65,9 @@ void RPlacementHeuristic::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo
 	// Init the data for a placement
 	NbObjsOk=0;
 	Grid->Clear();	
+	Free.Clear();
+	Result.Pt1.Set(0,0);
+	Result.Pt2.Set(0,0);
 
 	// Calculate an order
 	for(unsigned int i=0;i<NbObjs;i++)
@@ -71,7 +75,7 @@ void RPlacementHeuristic::Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RGeoInfo* RPlacementHeuristic::NextObject(void)
 {
 	// Select the next object
@@ -83,13 +87,16 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 	// Place it
 	NextObjectOri();
 
+	// Look for free polygons
+//	Grid->AddFreePolygons(CurInfo,&Free,Result);
+
 	// Next Object
 	NbObjsOk++;
 	return(CurInfo);
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RPlacementHeuristic::Run(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs)
 {
 	Init(limits,grid,objs,infos,nbobjs);
@@ -99,7 +106,7 @@ void RPlacementHeuristic::Run(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo 
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RRect& RPlacementHeuristic::GetResult(void)
 {
 	RRect *rect=RRect::GetRect();
@@ -109,7 +116,7 @@ RRect& RPlacementHeuristic::GetResult(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPlacementHeuristic::~RPlacementHeuristic(void)
 {
 	if(Order) delete[] Order;

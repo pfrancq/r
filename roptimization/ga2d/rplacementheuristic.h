@@ -31,12 +31,12 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #ifndef RPlacementHeuristicH
 #define RPlacementHeuristicH
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
 #include <rstd/rstd.h>
 using namespace RStd;
@@ -48,12 +48,12 @@ using namespace RGeometry2D;
 #include "rgrid.h"
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 namespace RGA{
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * The RPlacementHeuristic class provides an abstract class for placement
 * heuristics.
@@ -109,6 +109,11 @@ protected:
 	*/
 	RGeoInfo *CurInfo;
 
+	/**
+	* Free Polygons resulting of the placement.
+	*/
+	RPolygons Free;
+
 public:
 
 	/**
@@ -119,6 +124,11 @@ public:
 	
 	/**
 	* Initialize the heuristic.
+	* @param limits		Limits for the placement.
+	* @param grid			Pointer to the grid.
+	* @param objs			Pointer to the objects.
+	* @param infos			Pointer to the geometric information.
+	* @param nbobjs		Number of objects to place.
 	*/
 	virtual void Init(RPoint &limits,RGrid *grid,RObj2D** objs,RGeoInfo **infos,unsigned int nbobjs);
 
@@ -130,7 +140,7 @@ public:
 	/**
 	* Place the next object (To override) for a specific information.
 	* @return		The function returns true if the object can be placed with the
-	*						current orientation.
+	*					current orientation.
 	*/
 	virtual bool NextObjectOri(void)=0;
 
@@ -166,8 +176,8 @@ public:
 };
 
 
-}//------- End of namespace RGA ---------------------------------------------
+}  //------- End of namespace RGA ---------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif
