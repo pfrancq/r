@@ -49,7 +49,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RXMLStruct::RXMLStruct(void)
- : RTree<RXMLTag,true,false>(100,50), Entities(20,10)
+ : RTree<RXMLTag,true,false>(100,50), Entities(20,10), TopTag(0)
 {
 }
 
@@ -67,6 +67,13 @@ RXMLTag* RXMLStruct::GetTag(const char* name,RXMLTag* parent)
 	if(!parent)
 		return(0);
 	return(parent->GetPtr<const char*>(name,false));
+}
+
+
+//-------------------------------------------------------------------------------
+RXMLTag* RXMLStruct::GetTop(void)
+{
+	return(TopTag);
 }
 
 

@@ -63,6 +63,11 @@ class RXMLStruct : public RTree<RXMLTag,true,false>
 	*/
 	RContainer<RXMLAttr,unsigned,true,true> Entities;
 
+	/**
+	* Top tag of the XML structure.
+	*/
+	RXMLTag* TopTag;
+
 public:
 
 	/**
@@ -87,7 +92,7 @@ public:
 	/**
 	* Return the Top Nodes of the XML struct.
 	*/
-	RXMLTag* GetTop(void) {return(Top->Tab[0]);}
+	RXMLTag* GetTop(void);
 
 	/**
 	* Insert an entity.
@@ -106,6 +111,8 @@ public:
 	* Destruct the XML Structure.
 	*/
 	~RXMLStruct(void);
+
+	friend class RXMLTag;
 };
 
 

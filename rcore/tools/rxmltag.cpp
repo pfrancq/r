@@ -162,6 +162,10 @@ void RXMLTag::Load(RXMLFile* f,RXMLStruct* xmlstruct) throw(RString)
 		return;
 	}
 
+	// If no top tag -> insert it
+	if(!xmlstruct->TopTag)
+		xmlstruct->TopTag=this;
+
 	// Treat Attributes
 	while((*ptr)&&((*ptr)!='>')&&((*ptr)!='/'))
 	{
