@@ -69,7 +69,7 @@ void RXMLTag::Load(RXMLFile *f,RXMLStruct *xmlstruct) throw(RString)
 	Name=ptr2;
 	(*ptr)=c;
 	while(isspace(*ptr)) ptr++; // Skip Spaces
-   if(!strcmp(Name(),"!DOCTYPE"))
+	if(!strcmp(Name(),"!DOCTYPE"))
 	{
 		ptr2=ptr;
 		while((!isspace(*ptr))&&((*ptr)!='>')) ptr++; // Read DocType
@@ -132,11 +132,13 @@ RString& RXMLTag::GetName(void)
 RString& RXMLTag::GetAttrValue(const char *name)
 {
 	RString *tmp=RString::GetString();
-   RXMLAttr *attr;
+   	RXMLAttr *attr;
 
 	attr=Attrs.GetPtr<const char*>(name);
 	if(attr)
 		(*tmp)=attr->GetValue();
+	else
+		(*tmp)="";
 	return(*tmp);
 }
 
