@@ -84,17 +84,32 @@ RMySQL::RDb::~RDb(void)
 RMySQL::RQuery::RQuery(RDb* db,const char* sql) throw(RMySQLError)
 {
 	RString Up(sql);
+	bool bSelect;
+	bool bInsert;
+	bool bLastInsertId;
 
 	if((!db)||!(db->connection))
 		throw(new RMySQLError("Database not initialize"));
 	if(mysql_real_query(db->connection,sql,strlen(sql)))
 		throw(new RMySQLError(mysql_error(&db->mysql)));
 	Up.StrUpr();
-	if(strstr(Up(),"SELECT")&&!strstr(Up(),"INSERT"))
+	bSelect=strstr(Up(),"SELECT");
+	if(bSelect)
 	{
-		result=mysql_store_result(db->connection);
-		nbrows=mysql_num_rows(result);
-		nbcols=mysql_num_fields(result);
+		bLastInsertId=strstr(Up(),"LAST_INSERT_ID()");
+		bInsert=strstr(Up(),"INSERT");
+		if(!bInsert||(bInsert&&bLastInsertId))
+		{
+			result=mysql_store_result(db->connection);
+			nbrows=mysql_num_rows(result);
+			nbcols=mysql_num_fields(result);
+		}
+		else
+		{
+			nbcols=nbrows=0;
+			row=0;
+			result=0;
+		}
 	}
 	else
 	{
