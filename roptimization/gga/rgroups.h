@@ -104,7 +104,6 @@ protected:
 	*/
 	unsigned int* NewUsedId;
 
-
 public:
 
 	/**
@@ -170,10 +169,18 @@ public:
 	virtual bool Verify(void);
 
 	/**
-	* Return a pointer of the group of an object.
+	* Get the group of an object.
 	* @param id             Identificator of the object.
+	* @returns Pointer to cGroup*.
 	*/
 	cGroup* GetGroup(const unsigned int id) {return(Tab[ObjectsAss[id]]);}
+
+	/**
+	* Get the group of an object.
+	* @param obj            Pionter to the object.
+	* @returns Pointer to cGroup*.
+	*/
+	cGroup* GetGroup(const cObj* obj) {return(Tab[ObjectsAss[obj->GetId()]]);}
 
 	/**
 	* Get a pointer to an object at a given index.
