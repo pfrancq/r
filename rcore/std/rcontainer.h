@@ -237,9 +237,12 @@ public:
 	* @param TUse			The type of tag, the container uses the Compare(TUse &)
 	*							member function of the elements.
 	* @param tag			The tag used.
+	* @param sortkey		The tag represents the sorting key. The default value
+	*							depends if the container is ordered (true) or not
+	*							(false).
 	* @return				Return true if the element is in the container.
 	*/
-	template<class TUse> bool IsIn(const TUse &tag);
+	template<class TUse> bool IsIn(const TUse &tag,bool sortkey=bOrder);
 
 	/**
 	* Get a pointer to a certain element in the container.

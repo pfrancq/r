@@ -296,9 +296,9 @@ template<class C,class T,bool bAlloc,bool bOrder>
 
 //-----------------------------------------------------------------------------
 template<class C,class T,bool bAlloc,bool bOrder> template<class TUse>
-	bool RContainer<C,T,bAlloc,bOrder>::IsIn(const TUse &tag)
+	bool RContainer<C,T,bAlloc,bOrder>::IsIn(const TUse &tag,bool sortkey)
 {
-	if(bOrder)
+	if(bOrder&&sortkey)
 	{
 		bool Find;
 		GetId<TUse>(tag,Find);

@@ -49,7 +49,7 @@
     Compare(C*).
 		The HashIndex(void) function returns the hash index of the element
 		The HashIndex of TUse function returns the hash index of the tag
-		
+
 */
 
 
@@ -121,11 +121,11 @@ public:
 	* @param tag			The tag used.
 	* @returns	The function returns true if the element is in the hash
 	*				container, else false.
-					
+
 	*/
-	template<class TUse> inline bool IsIn(const TUse &tag)
+	template<class TUse> inline bool IsIn(const TUse &tag,bool sortkey=true)
 	{
-		return(Hash[tag.HashIndex()]->IsIn<TUse>(tag));
+		return(Hash[tag.HashIndex()]->IsIn<TUse>(tag,sortkey));
 	}
 
 	/**
