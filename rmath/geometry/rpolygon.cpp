@@ -31,12 +31,12 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <iostream.h>
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for RGeometry
 #include "rpolygon.h"
 #include "rrect.h"
@@ -45,41 +45,41 @@ using namespace RGeometry2D;
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // Class "RPolygon"
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPolygon::RPolygon(void)
 	: RContainer<RPoint,unsigned int,true,false>(20,10)
 {
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPolygon::RPolygon(int Max)
 	: RContainer<RPoint,unsigned int,true,false>(Max,10)
 {
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPolygon::RPolygon(RPolygon *poly)
 	: RContainer<RPoint,unsigned int,true,false>(poly)
 {
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPolygon::RPolygon(RPolygon &poly)
 	: RContainer<RPoint,unsigned int,true,false>(poly)
 {
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPolygon& RPolygon::operator=(const RPolygon &poly)
 {
 	RContainer<RPoint,unsigned int,true,false>::operator=(poly);
@@ -87,7 +87,7 @@ RPolygon& RPolygon::operator=(const RPolygon &poly)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool RPolygon::operator==(const RPolygon &poly)
 {
 	RPoint **pt;
@@ -95,24 +95,24 @@ bool RPolygon::operator==(const RPolygon &poly)
 
 	if(NbPtr!=poly.NbPtr) return(false);
 	for(i=NbPtr+1,pt=Tab;--i;pt++)
-		if(!poly.IsEdge(*pt)) return(false);
+		if(!poly.IsVertice(*pt)) return(false);
 	return(true);
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool RPolygon::operator!=(const RPolygon &poly)
 {
 	RPoint **pt;
 	unsigned int i;
 
 	for(i=NbPtr+1,pt=Tab;--i;pt++)
-		if(!poly.IsEdge(*pt)) return(true);
+		if(!poly.IsVertice(*pt)) return(true);
 	return(false);
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPolygon& RPolygon::operator+=(const RPoint &pt) throw(bad_alloc)
 {
 	unsigned int i;
@@ -123,7 +123,7 @@ RPolygon& RPolygon::operator+=(const RPoint &pt) throw(bad_alloc)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPolygon::GetConX(RPoint *pt)
 {
 	RPoint **point,*next;
@@ -138,11 +138,11 @@ RPoint* RPolygon::GetConX(RPoint *pt)
 		i++;
 	}
 
-	// Look previous edge
+	// Look previous vertice
 	if(i) next=(*(point-1)); else next=Tab[NbPtr-1];
 	if(next->Y==pt->Y) return(next);
 
-	// Look next edge
+	// Look next vertice
 	if(i<NbPtr-1)	next=(*(point+1)); else	next=(*Tab);
 	if(next->Y==pt->Y) return(next);
 
@@ -151,7 +151,7 @@ RPoint* RPolygon::GetConX(RPoint *pt)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPolygon::GetConY(RPoint *pt)
 {
 	RPoint **point,*next;
@@ -166,11 +166,11 @@ RPoint* RPolygon::GetConY(RPoint *pt)
 		i++;
 	}
 
-	// Look previous edge
+	// Look previous vertice
 	if(i) next=(*(point-1)); else next=Tab[NbPtr-1];
 	if(next->X==pt->X) return(next);
 
-	// Look next edge
+	// Look next vertice
 	if(i<NbPtr-1)	next=(*(point+1)); else	next=(*Tab);
 	if(next->X==pt->X) return(next);
 
@@ -179,7 +179,7 @@ RPoint* RPolygon::GetConY(RPoint *pt)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPolygon::GetBottomLeft(void)
 {
 	RPoint **point,*bl;
@@ -198,7 +198,7 @@ RPoint* RPolygon::GetBottomLeft(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPolygon::GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX)
 {
 	RPoint **point,*bl;
@@ -228,7 +228,7 @@ RPoint* RPolygon::GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPolygon::GetLeftBottom(void)
 {
 	RPoint **point,*lb;
@@ -247,7 +247,7 @@ RPoint* RPolygon::GetLeftBottom(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPoint* RPolygon::GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY)
 {
 	RPoint **point,*lb;
@@ -277,8 +277,8 @@ RPoint* RPolygon::GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY)
 }
 
 
-//---------------------------------------------------------------------------
-bool RPolygon::Vertex(RPoint *pt)
+//-----------------------------------------------------------------------------
+bool RPolygon::Edge(RPoint *pt)
 {
 	RPoint **point,*deb;
 	unsigned int i;
@@ -298,7 +298,7 @@ bool RPolygon::Vertex(RPoint *pt)
 		Y=deb->Y-(*point)->Y;
 		if(!Y)
 		{
-			// Horizontal vertex
+			// Horizontal edge
 			if(pt->Y!=deb->Y) continue;
 			if(X<0)
 			{
@@ -311,7 +311,7 @@ bool RPolygon::Vertex(RPoint *pt)
 		}
 		else
 		{
-			// Vertical vertex
+			// Vertical edge
 			if(pt->X!=deb->X) continue;
 			if(Y<0)
 			{
@@ -327,8 +327,8 @@ bool RPolygon::Vertex(RPoint *pt)
 }
 
 
-//---------------------------------------------------------------------------
-bool RPolygon::Vertex(RPoint *pt1,RPoint *pt2)
+//-----------------------------------------------------------------------------
+bool RPolygon::Edge(RPoint *pt1,RPoint *pt2)
 {
 	RPoint **point,*deb;
 	unsigned int i;
@@ -349,7 +349,7 @@ bool RPolygon::Vertex(RPoint *pt1,RPoint *pt2)
 		Y=deb->Y-(*point)->Y;
 		if(!Y)
 		{
-			// Horizontal vertex
+			// Horizontal edge
 			if((pt1->Y!=deb->Y)||(pt2->Y!=deb->Y)) continue;
 			if(X<0)
 			{
@@ -374,7 +374,7 @@ bool RPolygon::Vertex(RPoint *pt1,RPoint *pt2)
 		}
 		else
 		{
-			// Vertical vertex
+			// Vertical edge
 			if((pt1->X!=deb->X)||(pt2->X!=deb->X)) continue;
 			if(Y<0)
 			{
@@ -402,8 +402,8 @@ bool RPolygon::Vertex(RPoint *pt1,RPoint *pt2)
 }
 
 
-//---------------------------------------------------------------------------
-bool RPolygon::IsEdge(const RPoint &pt) const
+//-----------------------------------------------------------------------------
+bool RPolygon::IsVertice(const RPoint &pt) const
 {
 	RPoint **point;
 	unsigned int i;
@@ -414,20 +414,17 @@ bool RPolygon::IsEdge(const RPoint &pt) const
 }
 
 
-//---------------------------------------------------------------------------
-// Trace a line from point to the infini
-// Calc nb intersections between this line and each segment of the polygon
-// If nb intersections is odd -> point is in the polygon
-bool RPolygon::IsIn(const RPoint &point)
+//-----------------------------------------------------------------------------
+bool RPolygon::IsIn(const RCoord X,const RCoord Y)
 {
 	RLine lt,lp;
 	RPoint **pt,*last;
 	unsigned int i;
 	long count=0;
 	
-	lt.Pt1=point;
+	lt.Pt1.Set(X,Y);
 	lt.Pt2.X=MaxCoord;
-	lt.Pt2.Y=point.Y;
+	lt.Pt2.Y=Y;
 	last=Tab[NbPtr-1];	// Point last to ending point of Polygon
 	for(i=NbPtr+1,pt=Tab;--i;pt++)
 	{
@@ -441,7 +438,14 @@ bool RPolygon::IsIn(const RPoint &point)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool RPolygon::IsIn(const RPoint &point)
+{
+	return(IsIn(point.X,point.Y));
+}
+
+
+//-----------------------------------------------------------------------------
 bool RPolygon::IsIn(const RPolygon &poly)
 {
 	RPoint **pt;
@@ -454,7 +458,7 @@ bool RPolygon::IsIn(const RPolygon &poly)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RPolygon::Boundary(RRect &rect)
 {
 	RCoord MinX=MaxCoord,MinY=MaxCoord,MaxX=0,MaxY=0,X,Y;
@@ -477,7 +481,7 @@ void RPolygon::Boundary(RRect &rect)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RPolygon::ChangeOrientation(ROrientation o)
 {
 	RCoord factx=1,facty=1,i,minx,miny,oldx,oldy;
@@ -496,7 +500,7 @@ void RPolygon::ChangeOrientation(ROrientation o)
 	}
 	minx=miny=0;
 
-	// Make the transformation for each vertex
+	// Make the transformation for each vertice
 	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
 	{
 		oldx = factx*(*ptr)->X;
@@ -517,7 +521,7 @@ void RPolygon::ChangeOrientation(ROrientation o)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RPolygon::RectDecomposition(RRects *rects)
 {
 	RPolygon work(this),tmpPoly(20);
@@ -527,7 +531,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 	RPoint *PtX2;								// Point at (?,Y2)
 	RPoint *Pt2Y;								// Point at (X2,?)
 	RPoint **point,*Test,tmp;
-	RCoord X1,Y1,X2,Y2;					// Edges of the rectangle to insert
+	RCoord X1,Y1,X2,Y2;					// Vertices of the rectangle to insert
 	unsigned int i,Count,Nb;
 	bool bFind;									// To use with GetId
 	bool bFind21;								// True if Point (X2,?) is (X2,Y1)
@@ -550,7 +554,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 		Y1=Pt11->Y;
 		Y2=Pt12->Y;
 
-		// Delete edge1 and edge2
+		// Delete Vertice1 and Vertice2
 		work.DeletePtr(Pt11);
 		work.DeletePtr(Pt12);				
 
@@ -581,7 +585,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 		else
 			work.InsertPtrAt(new RPoint(tmp),i);
 
-		// If point to add -> after edge4
+		// If point to add -> after Vertice4
 		if(bFind21)
 			i=work.GetId<RPoint*>(PtX2,bFind)+1;
 
@@ -595,7 +599,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 			work.InsertPtrAt(new RPoint(tmp),i);
 
 		// Verify if not multiple polygons necessary
-		Count=0;	// Counting nb edges on the same vertical
+		Count=0;	// Counting nb Vertices on the same vertical
 		for(i=work.NbPtr+1,point=work.Tab;--i;point++)
 			if(((*point)->X==X2)&&((*point)->Y<=Y2)&&((*point)->Y>=Y1))
 			{
@@ -604,7 +608,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 				if(Test->X>X2) Count++;
 			}
 		if(Count%2) continue;
-		Count/=2;	// if count edges found -> count/2 polygon are necessary
+		Count/=2;	// if count Vertices found -> count/2 polygon are necessary
 		while(Count>1)	// if more than one polygon is necessary
 		{
 			Count--;
@@ -683,7 +687,7 @@ void RPolygon::RectDecomposition(RRects *rects)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RPolygon::AddPoints(RPoints *points)
 {
 	RPoint **point;
@@ -695,12 +699,12 @@ void RPolygon::AddPoints(RPoints *points)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RPolygon::ReOrder(void)
 {
 	RPoint **tmp,**point,*next;
 	unsigned int i;
-	bool bX; 		// Next Vertex is horizontal
+	bool bX; 		// Next Vertice is horizontal
 
 	point=tmp=new RPoint*[MaxPtr];
 	bX=false;
@@ -720,7 +724,7 @@ void RPolygon::ReOrder(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool RPolygon::DuplicatePoints(void)
 {
 	unsigned int i,j;
@@ -734,10 +738,11 @@ bool RPolygon::DuplicatePoints(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPolygon* RPolygon::GetPolygon(void)
 {
 	RPolygon *tmp;
+
 	tmp=GetTemporaryObject<RPolygon,30>();
 	tmp->Clear();
 	return(tmp);
@@ -745,62 +750,62 @@ RPolygon* RPolygon::GetPolygon(void)
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // Class "RPolygons"
 //
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 RPolygons::RPolygons(void)
 	: RContainer<RPolygon,unsigned int,true,false>(20,10)
 {
 }
 
 
-//---------------------------------------------------------------------------
-bool RPolygons::Vertex(RPoint *pt)
+//-----------------------------------------------------------------------------
+bool RPolygons::Edge(RPoint *pt)
 {
 	RPolygon **poly;
 	unsigned int i;
 
 	RReturnValIfFail(pt,false);	
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
-		if((*poly)->Vertex(pt))
+		if((*poly)->Edge(pt))
 			return(true);
 	return(false);	
 }
 
 
-//---------------------------------------------------------------------------
-bool RPolygons::Vertex(RPoint *pt,RPolygon *poly)
+//-----------------------------------------------------------------------------
+bool RPolygons::Edge(RPoint *pt,RPolygon *poly)
 {
 	RPolygon **ptr;
 	unsigned int i;
 	
 	RReturnValIfFail(pt&&poly,false);
 	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
-		if(((*ptr)!=poly)&&((*ptr)->Vertex(pt)))
+		if(((*ptr)!=poly)&&((*ptr)->Edge(pt)))
 			return(true);
 	return(false);	
 }
 
 
-//---------------------------------------------------------------------------
-bool RPolygons::Vertex(RPoint *pt1,RPoint *pt2)
+//-----------------------------------------------------------------------------
+bool RPolygons::Edge(RPoint *pt1,RPoint *pt2)
 {
 	RPolygon **poly;
 	unsigned int i;
 
 	RReturnValIfFail(pt1&&pt2,false);	
 	for(i=NbPtr+1,poly=Tab;--i;poly++)
-		if((*poly)->Vertex(pt1,pt2))
+		if((*poly)->Edge(pt1,pt2))
 			return(true);
 	return(false);	
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void RPolygons::PutPoints(RPoints *points)
 {
 	RPolygon **poly;
@@ -818,27 +823,26 @@ void RPolygons::PutPoints(RPoints *points)
 			tmp.X=(*point)->X;
 			tmp.Y=(*point)->Y-1;
 			if(!points->IsIn<RPoint>(tmp))
-				if(Vertex(&tmp,*poly))
+				if(Edge(&tmp,*poly))
 					points->InsertPtr(new RPoint(tmp));
 			tmp.Y=(*point)->Y+1;
 			if(!points->IsIn<RPoint>(tmp))
-				if(Vertex(&tmp,*poly))
+				if(Edge(&tmp,*poly))
 					points->InsertPtr(new RPoint(tmp));
 			tmp.X=(*point)->X+1;
 			tmp.Y=(*point)->Y;
 			if(!points->IsIn<RPoint>(tmp))
-				if(Vertex(&tmp,*poly))
+				if(Edge(&tmp,*poly))
 					points->InsertPtr(new RPoint(tmp));
 				tmp.X=(*point)->X-1;
 			if(!points->IsIn<RPoint>(tmp))
-				if(Vertex(&tmp,*poly))
+				if(Edge(&tmp,*poly))
 					points->InsertPtr(new RPoint(tmp));
 		}
 }
 
 
-//---------------------------------------------------------------------------
-// Make the union of all polygons contained in RPolygons -> Result in poly
+//-----------------------------------------------------------------------------
 void RPolygons::Union(RPolygon *upoly)
 {
 	RPoint *next,*first,*ins,*last;
@@ -945,13 +949,17 @@ void RPolygons::Union(RPolygon *upoly)
 				FromDir=NoDirection;
 				break;
 
+			case NoDirection:
+				RAssertMsg("Direction can't be undefined");
+				break;
+
 		}
 		RAssert(next);
 	}
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 bool RPolygons::DuplicatePoints(void)
 {
 	RPoints tmp(500);
@@ -961,7 +969,33 @@ bool RPolygons::DuplicatePoints(void)
 }
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool RPolygons::IsIn(const RCoord X,const RCoord Y)
+{
+	RPolygon **tab;
+	unsigned int i;
+
+	for(i=NbPtr+1,tab=Tab;--i;tab++)
+		if((*tab)->IsIn(X,Y))
+			return(true);
+	return(false);
+}
+
+
+//-----------------------------------------------------------------------------
+bool RPolygons::IsIn(const RPoint &pt)
+{
+	RPolygon **tab;
+	unsigned int i;
+
+	for(i=NbPtr+1,tab=Tab;--i;tab++)
+		if((*tab)->IsIn(pt))
+			return(true);
+	return(false);
+}
+
+
+//-----------------------------------------------------------------------------
 RPolygons& RPolygons::operator=(const RPolygons &poly)
 {
 	RContainer<RPolygon,unsigned int,true,false>::operator=(poly);

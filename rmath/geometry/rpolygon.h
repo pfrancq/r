@@ -31,23 +31,23 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #ifndef PolygonsH
 #define PolygonsH
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for RGeometry
 #include <rgeometry/geometry.h>
 using namespace RGeometry2D;
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 namespace RGeometry2D{
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * This class represent a polygon as a set of points regroup in a container.
 * @author Pascal Francq
@@ -64,7 +64,7 @@ public:
 
 	/**
 	* Construct a polygon with an initial maxiam size.
-	* param Max			e initial maxiaml size.
+	* param Max			e initial maximal size.
 	*/
 	RPolygon(int Max);
 
@@ -111,7 +111,7 @@ public:
 
 	/**
 	* This function returns a pointer to the point on the same horizontal vertex.
-    *	@param pt		Point used as reference.
+	*	@param pt		Point used as reference.
 	*/
 	RPoint* GetConX(RPoint *pt);
 
@@ -128,9 +128,9 @@ public:
 	/**
 	* Return a pointer to the most bottom-left point of the polygon responding
 	* to the criteria.
-	* @param MinX		Minimal X position of the point to search.
+	* @param MinX			Minimal X position of the point to search.
 	* @param MinY			Minimal Y position of the point to search.
-	* @param MaxX		Maximal X position of the point to search.
+	* @param MaxX			Maximal X position of the point to search.
 	*/
 	RPoint* GetBottomLeft(RCoord MinX,RCoord MinY,RCoord MaxX);
 
@@ -142,29 +142,34 @@ public:
 	/**
 	* Return a pointer to the most left-bottom point of the polygon responding
 	* to the criteria.
-	* @param MinX		Minimal X position of the point to search.
+	* @param MinX			Minimal X position of the point to search.
 	* @param MinY			Minimal Y position of the point to search.
-	* @param MaxY		Maximal Y position of the point to search.
+	* @param MaxY			Maximal Y position of the point to search.
 	*/
 	RPoint* GetLeftBottom(RCoord MinX,RCoord MinY,RCoord MaxY);
 
 	/**
-	* Return true if the point is on a vertex.
+	* Return true if the point is on an edge.
 	* @param pt		The point used.
 	*/
-	bool Vertex(RPoint *pt);
+	bool Edge(RPoint *pt);
 
 	/**
-	* Return true if two points are on the same vertex.
+	* Return true if two points are on the same edge.
 	* @param pt1		The first point used.
 	* @param pt2		The second point used.
 	*/
-	bool Vertex(RPoint *pt1,RPoint *pt2);
+	bool Edge(RPoint *pt1,RPoint *pt2);
 
 	/**
-	* Return true if the point is a edge.
+	* Return true if the point is a vertice.
 	*/
-	bool IsEdge(const RPoint &pt) const;
+	bool IsVertice(const RPoint &pt) const;
+
+	/**
+	* Return true if the point is inside the polygon.
+	*/
+  bool IsIn(const RCoord X,const RCoord Y);
 
 	/**
 	* Return true if the point is inside the polygon.
@@ -220,7 +225,7 @@ public:
 };
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * This class represents a set of polygons regrouped in a container.
 *	@author Pascal Francq
@@ -235,24 +240,24 @@ public:
 	RPolygons(void);
 
 	/**
-	* Return true if the point is on a vertex of one of the polygon contained.
+	* Return true if the point is on an edge of one of the polygon contained.
 	* @param pt				The point used.
 	*/
-	bool Vertex(RPoint *pt);
+	bool Edge(RPoint *pt);
 
 	/**
-	* Return true if the point is on a vertex of a certain polygon.
+	* Return true if the point is on an edge of a certain polygon.
 	* @param pt				The point used.
 	* @param poly			The polygon to look in.
 	*/
-	bool Vertex(RPoint *pt,RPolygon *poly);
+	bool Edge(RPoint *pt,RPolygon *poly);
 
 	/**
-	* Return true if two points are on the same vertex of one of the polygon contained.
+	* Return true if two points are on the same edge of one of the polygon contained.
 	* @param pt1		The first point used.
 	* @param pt2		The second point used.
 	*/
-	bool Vertex(RPoint *pt1,RPoint *pt2);
+	bool Edge(RPoint *pt1,RPoint *pt2);
 
 	/**
 	* Add the points of the polygons contained to a container of points.
@@ -272,14 +277,24 @@ public:
 	bool DuplicatePoints(void);
 
 	/**
+	* Return true if the point is inside one of the polygons.
+	*/
+  bool IsIn(const RCoord X,const RCoord Y);
+
+	/**
+	* Return true if the point is inside one of the polygons.
+	*/
+  bool IsIn(const RPoint &pt);
+
+	/**
 	* Assign operator.
 	*/
 	RPolygons& operator=(const RPolygons &poly);
 };
 
 
-}  //-------- End of namespace RStd ---------------------------------------
+}  //-------- End of namespace RGeometry2D ------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif
