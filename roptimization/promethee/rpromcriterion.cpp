@@ -239,6 +239,7 @@ double RPromethee::RPromCriterion::ComputePref(double u,double v) const
 	double d;
 	double y;
 
+	if(u==0.0) return(0.0);
 	if(u!=v)
 		d=(u-v)/u;
 	else
