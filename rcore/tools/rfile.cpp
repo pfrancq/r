@@ -70,44 +70,13 @@ RFile::RFile(const RString &name)
 //------------------------------------------------------------------------------
 void RFile::Open(ModeType mode)
 {
-	int localmode;
-
 	Mode=mode;
-	switch(Mode)
-	{
-		case Read:
-			localmode=O_RDONLY;
-			break;
-
-		case Append:
-			localmode=O_WRONLY | O_CREAT | O_APPEND;
-			break;
-
-		case Create:
-			localmode=O_WRONLY | O_CREAT | O_TRUNC;
-			break;
-
-		default:
-			throw(RIOException(this,"No Valid Mode"));
-	};
-	#ifndef _BSD_SOURCE
-		localmode|=O_BINARY;
-	#endif
-	if(Mode==Read)
-		handle=open(Name,localmode);
-	else
-		handle=open(Name,localmode,S_IREAD|S_IWRITE);
-	if(handle==-1)
-		throw(RIOException(this,"Can't open file """+Name+""""));
 }
 
 
 //------------------------------------------------------------------------------
 void RFile::Close(void)
 {
-	if(handle==-1) return;
-	close(handle);
-	handle=-1;
 }
 
 

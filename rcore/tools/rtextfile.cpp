@@ -75,8 +75,35 @@ RTextFile::RTextFile(const RString &name,const RString& encoding) throw(std::bad
 void RTextFile::Open(ModeType mode)
 {
 	struct stat statbuf;
+	int localmode;
 
 	RFile::Open(mode);
+	switch(Mode)
+	{
+		case Read:
+			localmode=O_RDONLY;
+			break;
+
+		case Append:
+			localmode=O_WRONLY | O_CREAT | O_APPEND;
+			break;
+
+		case Create:
+			localmode=O_WRONLY | O_CREAT | O_TRUNC;
+			break;
+
+		default:
+			throw(RIOException(this,"No Valid Mode"));
+	};
+	#ifndef _BSD_SOURCE
+		localmode|=O_BINARY;
+	#endif
+	if(Mode==Read)
+		handle=open(Name,localmode);
+	else
+		handle=open(Name,localmode,S_IREAD|S_IWRITE);
+	if(handle==-1)
+		throw(RIOException(this,"Can't open file """+Name+""""));
 	LastLine=Line=0;
 	ptr=Buffer=0;
 	if(Mode==Read)
@@ -104,9 +131,16 @@ void RTextFile::Open(ModeType mode)
 void RTextFile::Close(void)
 {
 	RFile::Close();
-	if(!Buffer) return;
-	delete[] Buffer;
-	Buffer=0;
+	if(handle!=-1)
+	{
+		close(handle);
+		handle=-1;
+	}
+	if(Buffer)
+	{
+		delete[] Buffer;
+		Buffer=0;
+	}
 }
 
 

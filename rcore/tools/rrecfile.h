@@ -82,6 +82,11 @@ template<class C,unsigned int S,bool bOrder=false>
 protected:
 
 	/**
+	* Internal Handle of the file.
+	*/
+	int handle;
+
+	/**
 	* This variable is holding the record number.
 	*/
 	unsigned int NbRecs;

@@ -361,7 +361,7 @@ void RString::SetLen(unsigned int len)
 
 
 //------------------------------------------------------------------------------
-const char* RString::Latin1(void)
+const char* RString::Latin1(void) const
 {
 	if(!Data->Latin1)
 	{

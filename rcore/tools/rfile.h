@@ -71,11 +71,6 @@ protected:
 	*/
 	RString Name;
 
-	/**
-	* Internal Handle of the file.
-	*/
-	int handle;
-
 public:
 
 	/**

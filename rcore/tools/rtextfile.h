@@ -104,6 +104,11 @@ public:
 protected:
 
 	/**
+	* Internal Handle of the file.
+	*/
+	int handle;
+
+	/**
 	* Buffer containing the file (Used only if read mode).
 	*/
 	char* Buffer;

@@ -244,7 +244,7 @@ public:
 	* structure.
 	* @return C String
 	*/
-	const char* Latin1(void);
+	const char* Latin1(void) const;
 
 	/**
 	* This function returns the character at a given position in the string. If
