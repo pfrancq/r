@@ -440,6 +440,22 @@ float RIO::RTextFile::GetFloat(void) throw(RString)
 
 
 //-----------------------------------------------------------------------------
+RTextFile& RIO::RTextFile::operator>>(float& nb) throw(RString)
+{
+	nb=GetFloat();
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+RTextFile& RIO::RTextFile::operator>>(double& nb) throw(RString)
+{
+	nb=GetFloat();
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
 char* RIO::RTextFile::GetWord(void) throw(RString)
 {
 	char *ptr2=ptr;

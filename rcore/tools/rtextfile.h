@@ -281,47 +281,57 @@ public:
 	/**
 	* >> Operator for char.
 	*/
-	RTextFile& operator>>(char &nb) throw(RString);
+	RTextFile& operator>>(char& nb) throw(RString);
 
 	/**
 	* >> Operator for unsigned char.
 	*/
-	RTextFile& operator>>(unsigned char &nb) throw(RString);
+	RTextFile& operator>>(unsigned char& nb) throw(RString);
 
 	/**
 	* >> Operator for short.
 	*/
-	RTextFile& operator>>(short &nb) throw(RString);
+	RTextFile& operator>>(short& nb) throw(RString);
 
 	/**
 	* >> Operator for unsigned short.
 	*/
-	RTextFile& operator>>(unsigned short &nb) throw(RString);
+	RTextFile& operator>>(unsigned short& nb) throw(RString);
 
 	/**
 	* >> Operator for int.
 	*/
-	RTextFile& operator>>(int &nb) throw(RString);
+	RTextFile& operator>>(int& nb) throw(RString);
 
 	/**
 	* >> Operator for unsigned int.
 	*/
-	RTextFile& operator>>(unsigned int &nb) throw(RString);
+	RTextFile& operator>>(unsigned int& nb) throw(RString);
 
 	/**
 	* >> Operator for long.
 	*/
-	RTextFile& operator>>(long &nb) throw(RString);
+	RTextFile& operator>>(long& nb) throw(RString);
 
 	/**
 	* >> Operator for unsigned long.
 	*/
-	RTextFile& operator>>(unsigned long &nb) throw(RString);
+	RTextFile& operator>>(unsigned long& nb) throw(RString);
 
 	/**
 	* Return the next float contained in the file.
 	*/
 	float GetFloat(void) throw(RString);
+
+	/**
+	* >> Operator for float.
+	*/
+	RTextFile& operator>>(float& nb) throw(RString);
+
+	/**
+	* >> Operator for a double.
+	*/
+	RTextFile& operator>>(double& nb) throw(RString);
 
 	/**
 	* Return the next word contained in the file. A word is a suite of characters
