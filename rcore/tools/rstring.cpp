@@ -135,7 +135,6 @@ RString::RString(const RString* str) throw(bad_alloc)
 //-----------------------------------------------------------------------------
 inline void RString::Verify(const int maxlen) throw(bad_alloc)
 {
-	RReturnIfFail(maxlen!=0);
 	if(MaxLen<maxlen)
 	{
 	  	char *tmp;
