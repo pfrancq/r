@@ -31,12 +31,12 @@
 
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #ifndef RGeoInfoH
 #define RGeoInfoH
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for Rainbow
 #include <rstd/rstd.h>
 using namespace RStd;
@@ -48,19 +48,20 @@ using namespace RGeometry2D;
 #include "rgrid.h"
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 namespace RGA{
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Forward class declaration
 class RObj2D;
 class RGrid;
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
+* \ingroup 2DGA
 * The RGeoInfo class provides a geometric information concerning the placement
 * of an object.
 * @author Pascal Francq
@@ -174,41 +175,7 @@ public:
 	int Compare(RGeoInfo *info) { return(info!=this); }
 
 	/**
-	* Test if the object represented can be "pushed" to the left of a given
-	* position.
-	* @param test				The position.
-	* @param limits		    The limits for the placement.
-	* @param OccX				Grid with X as entry.
-	* @return 						The function returns 0 if the OBJECT can be pushed, 1
-	*										if it can be pushed but with clipping it or 2 if it can
-	*										be pushed without to clip it.
-	*/
-	int TestLeft(RPoint test,RPoint &limits,unsigned int **OccX);
-
-	/**
-	* Test if the object represented can be "pushed" to the bottom of a given
-	* position.
-	* @param test				The position.
-	* @param limits	    	The limits for the placement.
-	* @param OccY				Grid with Y as entry.
-	* @return 						The function returns 0 if the OBJECT can be pushed, 1
-	*										if it can be pushed but with clipping it or 2 if it can
-	*										be pushed without to clip it.
-	*/
-	int TestBottom(RPoint test,RPoint &limits,unsigned int **OccY);
-
-	/**
-	* Test if the obejct can be placed at a specific position in regards of the
-	* occupation.
-	* @param pos				The position to test.
-	* @param limits	    	The limits for the placement.
-	* @param OccX				Grid with X as entry.
-	* @param OccY				Grid with Y as entry.
-	*/
-	bool Test(RPoint &pos,RPoint &limits,unsigned int **OccX,unsigned int **OccY);
-
-	/**
-	* Test if the obejct can be placed at a specific position in regards of the
+	* Test if the object can be placed at a specific position in regards of the
 	* occupation.
 	* @param pos				The position to test.
 	* @param limits    	The limits for the placement.
@@ -296,7 +263,7 @@ public:
 };
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * This class implements a container of geometric information.
 * @author Pascal Francq
@@ -320,8 +287,8 @@ public:
 };
 
 
-}  //-------- End of namespace RGA ------------------------------------------
+}  //-------- End of namespace RGA --------------------------------------------
 
 
-//---------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif
