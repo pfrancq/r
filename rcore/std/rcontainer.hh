@@ -340,12 +340,12 @@ template<class C,class T,bool bAlloc,bool bOrder>
 		GetPtrs(const TUse &tag) throw(bad_alloc)
 {
   C **ptr;
-  T Index;
+  T i;
 	RContainer<C,T,false,bOrder>*	tmp;
 
 	tmp=new RContainer<C,T,false,bOrder>(MaxPtr,IncPtr);
-	for(i=NbPtr+1,ptr=Index;--i;ptr++)
-		if(!((*ptr)->Compare(tag)))	tmp->InsertPtr(tmp);
+	for(i=NbPtr+1,ptr=Tab;--i;ptr++)
+		if(!((*ptr)->Compare(tag)))	tmp->InsertPtr(*ptr);
 	return(tmp);
 }
 

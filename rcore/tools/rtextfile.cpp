@@ -59,30 +59,32 @@ using namespace RStd;
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-RTextFile::RTextFile(const RString &name,int mode) throw(bad_alloc,RString)
+RTextFile::RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString)
   : Mode(mode), Name(name), All(true), NewLine(true)
 {
+	int localmode;
+
   switch(Mode)
   {
-    case modRead:
-      mode=O_RDONLY;
+    case Read:
+      localmode=O_RDONLY;
       break;
 
-    case modAppend:
-      mode=O_WRONLY | O_CREAT | O_APPEND;
+    case Append:
+      localmode=O_WRONLY | O_CREAT | O_APPEND;
       break;
 
-    case modCreate:
-      mode=O_WRONLY | O_CREAT | O_TRUNC;
+    case Create:
+      localmode=O_WRONLY | O_CREAT | O_TRUNC;
       break;
 
     default:
       throw(RString("No Valid Mode"));
   };
-  if(Mode==modRead)
-    handle=open(Name(),mode);
+  if(Mode==Read)
+    handle=open(Name(),localmode);
   else
-    handle=open(Name(),mode,S_IREAD|S_IWRITE);
+    handle=open(Name(),localmode,S_IREAD|S_IWRITE);
   if(handle==-1)
     throw(RString("Can't open file """+Name+""""));
   Init();
@@ -91,7 +93,7 @@ RTextFile::RTextFile(const RString &name,int mode) throw(bad_alloc,RString)
 
 //---------------------------------------------------------------------------
 RTextFile::RTextFile(const RString &name,bool all) throw(bad_alloc,RString)
-  : Mode(modRead), Name(name), All(all), NewLine(false)
+  : Mode(Read), Name(name), All(all), NewLine(false)
 {
 	handle=open(Name(),O_RDONLY);
   Init();
@@ -104,25 +106,23 @@ void RTextFile::Init(void) throw(bad_alloc,RString)
 	struct stat statbuf;
 
 	ptr=Buffer=NULL;
-  switch(Mode)
-  {
-    case modRead:
-      if(All)
-      {
-        fstat(handle, &statbuf);
-        Buffer=new char[statbuf.st_size+1];
-        read(handle,Buffer,statbuf.st_size);
-        Buffer[statbuf.st_size]=0;
-      }
-      else
-      {
-        Buffer=new char[1001];
-        read(handle,Buffer,1000);
-        Buffer[1000]=0;
-      }
-      Begin();
-      SkipSpaces();
-      break;
+	if(Mode==Read)
+	{
+   	if(All)
+    {
+      fstat(handle, &statbuf);
+      Buffer=new char[statbuf.st_size+1];
+      read(handle,Buffer,statbuf.st_size);
+      Buffer[statbuf.st_size]=0;
+    }
+    else
+    {
+      Buffer=new char[1001];
+      read(handle,Buffer,1000);
+      Buffer[1000]=0;
+    }
+    Begin();
+    SkipSpaces();
   }
 }
 
@@ -130,8 +130,8 @@ void RTextFile::Init(void) throw(bad_alloc,RString)
 //---------------------------------------------------------------------------
 void RTextFile::Begin(void) throw(RString)
 {
-  if(Mode!=modRead)
-    throw(RString("File Mode is not modRead"));
+  if(Mode!=Read)
+    throw(RString("File Mode is not Read"));
   ptr=Buffer;
 }
 
@@ -151,8 +151,8 @@ long int RTextFile::GetInt(void) throw(RString)
 {
 	char *ptr2=ptr;
 
-  if(Mode!=modRead)
-    throw(RString("File Mode is not modRead"));
+  if(Mode!=Read)
+    throw(RString("File Mode is not Read"));
 	while((*ptr)&&(*ptr)!=' '&&(*ptr)!='\t'&&(*ptr)!='\n'&&(*ptr)!='\r')
 		if(!isdigit(*(ptr++))) throw(RString("No Int"));
 	if(*ptr)
@@ -169,8 +169,8 @@ float RTextFile::GetFloat(void) throw(RString)
 {
 	char *ptr2=ptr;
 
-  if(Mode!=modRead)
-    throw(RString("File Mode is not modRead"));
+  if(Mode!=Read)
+    throw(RString("File Mode is not Read"));
 	while((*ptr)&&(*ptr)!=' '&&(*ptr)!='\t'&&(*ptr)!='\n'&&(*ptr)!='\r')
 	{
 		if((!isdigit(*ptr))&&(*ptr)!='.'&&(*ptr)!='e'&&(*ptr)!='E')
@@ -191,8 +191,8 @@ char* RTextFile::GetWord(void) throw(RString)
 {
 	char *ptr2=ptr;
 
-  if(Mode!=modRead)
-    throw(RString("File Mode is not modRead"));
+  if(Mode!=Read)
+    throw(RString("File Mode is not Read"));
 	while((*ptr)&&(*ptr)!=' '&&(*ptr)!='\t'&&(*ptr)!='\n'&&(*ptr)!='\r') ptr++;
 	if(*ptr)
 	{
@@ -208,8 +208,8 @@ char* RTextFile::GetLine(void) throw(RString)
 {
 	char *ptr2=ptr;
 
-  if(Mode!=modRead)
-    throw(RString("File Mode is not modRead"));
+  if(Mode!=Read)
+    throw(RString("File Mode is not Read"));
 	while((*ptr)&&(*ptr)!='\n'&&(*ptr)!='\r') ptr++;
 	if(*ptr)
 	{
@@ -223,8 +223,8 @@ char* RTextFile::GetLine(void) throw(RString)
 //---------------------------------------------------------------------------
 void RTextFile::WriteLine(void) throw(RString)
 {
-  if(Mode==modRead)
-    throw(RString("File Mode is modRead"));
+  if(Mode==Read)
+    throw(RString("File Mode is Read"));
   write(handle,"\n",strlen("\n"));
 	#ifdef windows
 	  flushall();
@@ -238,8 +238,8 @@ void RTextFile::WriteLong(long nb) throw(RString)
 {
   char Str[25];
 
-  if(Mode==modRead)
-    throw(RString("File Mode is modRead"));
+  if(Mode==Read)
+    throw(RString("File Mode is Read"));
   if(!NewLine)
     write(handle," ",1);
   sprintf(Str,"%li",nb);
@@ -256,8 +256,8 @@ void RTextFile::WriteULong(unsigned long nb) throw(RString)
 {
   char Str[25];
 
-  if(Mode==modRead)
-    throw(RString("File Mode is modRead"));
+  if(Mode==Read)
+    throw(RString("File Mode is Read"));
 
   if(!NewLine)
     write(handle," ",1);
@@ -275,8 +275,8 @@ void RTextFile::WriteStr(char *c) throw(RString)
 {
   int l;
 
-  if(Mode==modRead)
-    throw(RString("File Mode is modRead"));
+  if(Mode==Read)
+    throw(RString("File Mode is Read"));
   if(!NewLine)
     write(handle," ",1);
   l=strlen(c);
@@ -296,8 +296,8 @@ void RTextFile::WriteBool(bool b) throw(RString)
 {
   char Str[10];
 
-  if(Mode==modRead)
-    throw(RString("File Mode is modRead"));
+  if(Mode==Read)
+    throw(RString("File Mode is Read"));
   if(!NewLine)
     write(handle," ",1);
   if(b) strcpy(Str,"1"); else strcpy(Str,"0");
@@ -317,8 +317,8 @@ void RTextFile::WriteTime(void) throw(RString)
   struct tm *tblock;
 
 
-  if(Mode==modRead)
-    throw(RString("File Mode is modRead"));
+  if(Mode==Read)
+    throw(RString("File Mode is Read"));
   timer = time(NULL);
   tblock = localtime(&timer);
   if(!NewLine)
@@ -340,8 +340,8 @@ void RTextFile::WriteLog(char *entry) throw(RString)
   time_t timer;
   struct tm *tblock;
 
-  if(Mode==modRead)
-    throw(RString("File Mode is modRead"));
+  if(Mode==Read)
+    throw(RString("File Mode is Read"));
   if(!NewLine) WriteLine();
   strcpy(Str,"[");
   timer = time(NULL);

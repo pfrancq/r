@@ -54,8 +54,10 @@ namespace RStd{
 	*/
 class RTextFile
 {
+	enum ModeType {Append,Read,Create};
+
 	/** How to file has to be used. */
-  int Mode;
+  ModeType Mode;
 	/** Name of the File. */
 	RString Name;
 	/** Internal Handle of the file.*/
@@ -77,7 +79,7 @@ public:
 		* @param name		The name of the file.
 		* @param mode		The open mode for the file.
 		*/
-	RTextFile(const RString &name,int mode) throw(bad_alloc,RString);
+	RTextFile(const RString &name,ModeType mode) throw(bad_alloc,RString);
 
 	/** Construct a text file in read mode.
 		* @param name		The name of the file.
@@ -139,13 +141,6 @@ public:
   
 	/** Destructs the file.*/
 	~RTextFile(void);
-
-	/** Open in read mode.*/
-  static const int modRead=1;
-	/** Open in append mode.*/
-  static const int modAppend=2;
-	/** Open in create mode.*/
-  static const int modCreate=3;
 };
 
 
