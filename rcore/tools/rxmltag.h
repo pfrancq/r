@@ -214,6 +214,30 @@ public:
 	const char* GetContent(void) const {return(Contains());}
 
 	/**
+	* Start the iterator to go trough the word.
+	*/
+	inline void AttrsStart(void)
+		{Attrs.Start();}
+
+	/**
+	* Test if the end of the container of words is reached.
+	*/
+	inline bool AttrsEnd(void) const
+		{return(Attrs.End());}
+
+	/**
+	* Goto the next element, if the end is reached, go to the beginning.
+	*/
+	inline void AttrsNext(void)
+		{Attrs.Next();}
+
+	/**
+	* Get the current word.
+	* @returns Pointer to the current word.
+	*/
+	RXMLAttr* GetCurAttrs(void) {return(Attrs());}
+
+	/**
 	* Destruct the XML Tag.
 	*/
 	~RXMLTag(void);
