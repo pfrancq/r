@@ -68,7 +68,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //-----------------------------------------------------------------------------
 // Heuristic Types
-enum HeuristicType{FirstFit,FirstFitDes};
+enum HeuristicType{Nothing,FirstFit,FirstFitDes};
 
 
 //-----------------------------------------------------------------------------
