@@ -37,11 +37,7 @@
 #include <rga/rgeoinfo.h>
 using namespace RGA;
 
-#define TestPtr(expr)\
-((!expr)||((expr)&&((*expr)==NoObject)))
 
-#define TestPtr2(expr,expr2)\
-!(TestPtr(expr)&&TestPtr(expr2))
 
 //-----------------------------------------------------------------------------
 //
@@ -330,6 +326,9 @@ bool RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect &bound,
   		case NoDirection:
   			RAssertMsg("Direction can't be undefined");
   			break;
+		default:
+			RAssertMsg("Not a valid Direction in this context");
+			break;
   	}
 
 	// Test if Valid one and insert it
@@ -449,6 +448,10 @@ bool RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect &bound,
 			case NoDirection:
 				RAssertMsg("Direction can't be undefined");
 				break;
+
+			default:
+				RAssertMsg("Not a valid Direction in this context");
+				break;
 		}
 	}
 
@@ -489,6 +492,7 @@ void RGrid::AddFreePolygons(RGeoInfo *ins,RFreePolygons *free,RRect &bound)
 			// Calculate Polygon
 			if(CalculateFreePolygon(TestX,TestY,FromDir,bound,New))
 			{
+				New.ReOrder();	// The points must order anti-clockwise.
 				NewOne.InsertPtr(new RPolygon(New));
 				free->InsertPtr(new RFreePolygon(New));
 			}
