@@ -174,7 +174,7 @@ RGA::RDebug::~RDebug(void)
 
 //-----------------------------------------------------------------------------
 RGA::RDebugXML::RDebugXML(const char* name,const char* app,const char* author) throw(bad_alloc)
-	: RDebug(app,author),Name(name), File(name,RTextFile::Create)
+	: RDebug(app,author),Name(name), File(name,RIO::Create)
 {
 	unsigned int i;
 	char *ptr;
