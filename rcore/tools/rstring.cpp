@@ -361,7 +361,7 @@ int RString::Compare(const RString &str) const
 		ptr1++;
 		ptr2++;
 	}
-	return((*ptr1)-(*ptr2));
+	return((*ptr2)-(*ptr1));
 }
 
 
@@ -380,14 +380,14 @@ int RString::Compare(const RString *str) const
 		ptr1++;
 		ptr2++;
 	}
-	return((*ptr1)-(*ptr2));
+	return((*ptr2)-(*ptr1));
 }
 
 
 //-----------------------------------------------------------------------------
 int RString::Compare(const char *str) const
 {
-	return(strcmp(str,Text));
+	return(strcmp(Text,str));
 }
 
 
