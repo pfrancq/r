@@ -160,20 +160,20 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	bool RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Inversion(void)
 {
-	unsigned int grp1,grp2,hold;
+	unsigned int g1,g2,hold;
 	cGroup* ptr;
 
 	if(Used.NbPtr<3) return(true);
-	grp1=Instance->RRand(Used.NbPtr);
-	hold=grp2=grp1+Instance->RRand(Used.NbPtr-2)+1;
-	if(grp2>Used.NbPtr-1)
-		grp2-=Used.NbPtr-1;
-	RReturnValIfFail(grp2!=grp1,false);
+	g1=Instance->RRand(Used.NbPtr);
+	hold=g2=g1+Instance->RRand(Used.NbPtr-2)+1;
+	if(g2>Used.NbPtr-1)
+		g2-=Used.NbPtr-1;
+	RReturnValIfFail(g2!=g1,false);
 
 	// Exchange them in Used
-	ptr=Used.Tab[grp1];
-	Used.Tab[grp1]=Used.Tab[grp2];
-	Used.Tab[grp2]=ptr;
+	ptr=Used.Tab[g1];
+	Used.Tab[g1]=Used.Tab[g2];
+	Used.Tab[g2]=ptr;
 
 	return(true);
 }

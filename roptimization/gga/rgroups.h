@@ -167,7 +167,7 @@ public:
 	* Return a pointer of the group of an object.
 	* @param id             Identificator of the object.
 	*/
-	cGroup* GetGroup(const unsigned int id) {return(Tab[ObjectsAss[obj]]);}
+	cGroup* GetGroup(const unsigned int id) {return(Tab[ObjectsAss[id]]);}
 
 	/**
 	* Return a pointer to an object at a given position of a group.
