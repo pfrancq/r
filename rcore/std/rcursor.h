@@ -264,6 +264,16 @@ public:                                                              \
 	{                                                                \
 		return(RStd::GetTemporaryObject<name,20>());                 \
 	}                                                                \
+	name& operator=(const name& c) throw(bad_alloc)                  \
+	{                                                                \
+		RStd::RCursor<C,T>::operator=(c);                            \
+		return(*this);                                               \
+	}                                                                \
+	name& operator=(const RStd::RCursor<C,T>& c) throw(bad_alloc)    \
+	{                                                                \
+		RStd::RCursor<C,T>::operator=(c);                            \
+		return(*this);                                               \
+	}                                                                \
 };
 
 
