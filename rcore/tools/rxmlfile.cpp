@@ -126,7 +126,7 @@ void RXMLFile::Open(RIO::ModeType mode)
 				Header+="[\n";
 				for(Cur.Start();!Cur.End();Cur.Next())
 				{
-					Header+="\t<!ENTITY "+Cur()->GetName()+" \""+Cur()->GetValue()+"\'>\n";
+					Header+="\t<!ENTITY "+Cur()->GetName()+" \""+Cur()->GetValue()+"\">\n";
 				}
 				Header+=" ]>";
 			}
