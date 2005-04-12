@@ -75,7 +75,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	cGroup* grp;
 	cGroup* src;
 	bool bInsertIt;
-//    RContainer<cObj,false,false> Del(20,10);
 
 	RCursor<cGroup> Cur1(parent1->Used);
 	RCursor<cGroup> Cur2(parent2->Used);
@@ -88,8 +87,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 				bInsertIt=false;
 		if(bInsertIt)
 		{
-//			std::cout<<"Create grp"<<std::endl;
-//			Verify();
 			grp=this->ReserveGroup();
 			if(this->Instance->EmptyModifiedGroups)
 			{
@@ -132,9 +129,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	unsigned int pos1,len1,pos2,i;
 	cGroup* grp;
 
-	#ifdef RGADEBUG
-		if(this->Instance->Debug) this->Instance->Debug->BeginFunc("Crossover","RChromoG");
-	#endif
+	if(this->Instance->Debug)
+		this->Instance->Debug->BeginFunc("Crossover","RChromoG");
 
 	// Clear the chromosome
 	Clear();
@@ -167,9 +163,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	Optimisation();
 	this->ComputeOrd();
 
-	#ifdef RGADEBUG
-		if(this->Instance->Debug) this->Instance->Debug->EndFunc("Crossover","RChromoG");
-	#endif
+	if(this->Instance->Debug)
+		this->Instance->Debug->EndFunc("Crossover","RChromoG");
 }
 
 
@@ -179,9 +174,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 {
 	unsigned int nb;
 
-	#ifdef RGADEBUG
-		if(this->Instance->Debug) this->Instance->Debug->BeginFunc("Mutation","RChromoG");
-	#endif
+	if(this->Instance->Debug)
+		this->Instance->Debug->BeginFunc("Mutation","RChromoG");
 
 	// Compute number of groups to eliminate
 	if(this->Used.GetNb()>10)
@@ -194,10 +188,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	// Insert missing objects after a local optimisation
 	Heuristic->Run(static_cast<cChromo*>(this));
 	this->ComputeOrd();
-	
-	#ifdef RGADEBUG
-		if(this->Instance->Debug) this->Instance->Debug->EndFunc("Mutation","RChromoG");
-	#endif
+
+	if(this->Instance->Debug)
+		this->Instance->Debug->EndFunc("Mutation","RChromoG");
 }
 
 
@@ -207,9 +200,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 {
 	unsigned int g1,g2,hold;
 
-	#ifdef RGADEBUG
-		if(this->Instance->Debug) this->Instance->Debug->BeginFunc("Inversion","RChromoG");
-	#endif
+	if(this->Instance->Debug)
+		this->Instance->Debug->BeginFunc("Inversion","RChromoG");
 
 	if(this->Used.GetNb()<3) return;
 	g1=this->Instance->RRand(this->Used.GetNb());
@@ -221,9 +213,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	// Exchange them in Used
 	this->Used.Exchange(g1,g2);
 
-	#ifdef RGADEBUG
-		if(this->Instance->Debug) this->Instance->Debug->EndFunc("Inversion","RChromoG");
-	#endif
+	if(this->Instance->Debug)
+		this->Instance->Debug->EndFunc("Inversion","RChromoG");
 }
 
 

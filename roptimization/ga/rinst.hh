@@ -55,13 +55,13 @@ template<class cInst,class cChromo>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,RDebug *debug) throw(std::bad_alloc)
 		: Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),Receivers(10,5),bRandomConstruct(false),
-			Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0),AgeBestPop(0)
+		  VerifyGA(false), Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0),AgeBestPop(0)
 {
 //	EmitSig(sigGAInit);
-	#ifdef RGADEBUG
-		if(Debug) Debug->BeginApp();
-		if(Debug) Debug->BeginFunc("RInst","RInst");
-	#endif
+	if(Debug)
+		Debug->BeginApp();
+	if(Debug)
+		Debug->BeginFunc("RInst","RInst");
 	MaxBestPopAge=5;
 	MaxBestAge=10;
 	FreqInversion=AgeNextInversion=10;
@@ -70,9 +70,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	BestInPop=BestChromosome=0;
 	Random = new RRandomGood(0);
 	Random->Reset(12345);
-	#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("RInst","RInst");
-	#endif
+	if(Debug)
+		Debug->EndFunc("RInst","RInst");
 }
 
 
@@ -111,21 +110,20 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	unsigned int i;
 	cChromo **C;
 
-	#ifdef RGADEBUG
-		if(Debug) Debug->BeginFunc("RandomConstruct","RInst");
-	#endif
+	if(Debug)
+		Debug->BeginFunc("RandomConstruct","RInst");
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		(*C)->RandomConstruct();
 		emitInteractSig();
 		(*C)->ToEval=true;
 	}
-	#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("RandomConstruct","RInst");
-	#endif
+	if(Debug)
+		Debug->EndFunc("RandomConstruct","RInst");
 	bRandomConstruct=true;
 	emitInteractSig();
-	Verify();
+	if(VerifyGA)
+		Verify();
 }
 
 
@@ -136,9 +134,8 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	unsigned int i;
 	cChromo **C;
 
-	#ifdef RGADEBUG
-		if(Debug) Debug->BeginFunc("Evaluate","RInst");
-	#endif
+	if(Debug)
+		Debug->BeginFunc("Evaluate","RInst");
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		if((*C)->ToEval)
@@ -148,9 +145,8 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 			emitInteractSig();
 		}
 	}
-	#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("Evaluate","RInst");
-	#endif
+	if(Debug)
+		Debug->EndFunc("Evaluate","RInst");
 }
 
 
@@ -161,21 +157,18 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	unsigned int i;
 	cChromo **C;
 
-	#ifdef RGADEBUG
-		static char tmp[200];
-		if(Debug) Debug->BeginFunc("AnalysePop","RInst");
-	#endif
+	if(Debug)
+		Debug->BeginFunc("AnalysePop","RInst");
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		if((*((*C)->Fitness))>(*(BestInPop->Fitness)))
 		{
-			#ifdef RGADEBUG
 				if(Debug)
 				{
+					static char tmp[200];
 					sprintf(tmp,"Chromosome %u best of population",(*C)->Id);
 					Debug->PrintInfo(tmp);
 				}
-			#endif
 			BestInPop=(*C);
 			AgeBestPop=0;
 			AgeNextMutation=MaxBestPopAge;
@@ -183,20 +176,18 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	}
 	if((*(BestInPop->Fitness))>(*(BestChromosome->Fitness)))
 	{
-		#ifdef RGADEBUG
 			if(Debug)
 			{
+				static char tmp[200];
 				sprintf(tmp,"Chromosome %u best ever",BestInPop->Id);
 				Debug->PrintInfo(tmp);
 			}
-		#endif
 		(*BestChromosome)=(*BestInPop);
 		AgeBest=0;
 		emitBestSig();
 	}
-	#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("AnalysePop","RInst");
-	#endif
+	if(Debug)
+		Debug->EndFunc("AnalysePop","RInst");
 }
 
 
@@ -221,18 +212,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 {
 	unsigned int i,idx1,idx2;
 	cChromo **C1,**C2,*C3,*s1,*s2;
-	static char Tmp[200];
 	unsigned int NbToTreat,NbTreated;
 
-	#ifdef RGADEBUG
-		if(Debug) Debug->BeginFunc("Crossover","RInst");
-	#endif
+	if(Debug)
+		Debug->BeginFunc("Crossover","RInst");
+
 	// Determine the childs (end of tmpChrom) and the parents (begin of tmpChrom)
 	if(PopSize<4)
 	{
-		#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("Crossover","RInst");
-		#endif
+		if(Debug)
+			Debug->EndFunc("Crossover","RInst");
 		return;
 	}
 
@@ -277,39 +266,34 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	{
 		// First Crossover
 		C3=(*(C2++));
-		#ifdef RGADEBUG
-			if(Debug)
-			{
-				sprintf(Tmp,"Parent %u + Parent %u -> Child %u",(*C2)->Id,C3->Id,(*C1)->Id);
-				Debug->PrintInfo(Tmp);
-			}
-		#endif
+		if(Debug)
+		{
+			static char Tmp[200];
+			sprintf(Tmp,"Parent %u + Parent %u -> Child %u",(*C2)->Id,C3->Id,(*C1)->Id);
+			Debug->PrintInfo(Tmp);
+		}
 		(*C1)->Crossover(*C2,C3);
 		(*C1)->ToEval=true;
-		#ifdef RGADEBUG
+		if(VerifyGA)
 			(*C1)->Verify();
-		#endif
 		emitInteractSig();
 
 		// Second Crossover
 		C1--;
-		#ifdef RGADEBUG
-			if(Debug)
-			{
-				sprintf(Tmp,"Parent %u + Parent %u -> Child %u",C3->Id,(*C2)->Id,(*C1)->Id);
-				Debug->PrintInfo(Tmp);
-			}
-		#endif
+		if(Debug)
+		{
+			static char Tmp[200];
+			sprintf(Tmp,"Parent %u + Parent %u -> Child %u",C3->Id,(*C2)->Id,(*C1)->Id);
+			Debug->PrintInfo(Tmp);
+		}
 		(*C1)->Crossover(C3,*C2);
 		(*C1)->ToEval=true;
-		#ifdef RGADEBUG
-		(*C1)->Verify();
-		#endif
+		if(VerifyGA)
+			(*C1)->Verify();
 		emitInteractSig();
 	}
-	#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("Crossover","RInst");
-	#endif
+	if(Debug)
+		Debug->EndFunc("Crossover","RInst");
 }
 
 
@@ -321,10 +305,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	cFit *WorstFitness;
 	cChromo **C,*p;
 
-	#ifdef RGADEBUG
-		static char Tmp[200];
-		if(Debug) Debug->BeginFunc("Mutation","RInst");
-	#endif
+
+	if(Debug)
+		Debug->BeginFunc("Mutation","RInst");
 	if(AgeBestPop==AgeNextMutation)
 	{
 		AgeNextMutation+=MaxBestPopAge;
@@ -345,16 +328,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			(*p)=(*BestInPop);
 			p->Id=i;
 		}
-		#ifdef RGADEBUG
+		if(Debug)
+		{
+			static char Tmp[200];
 			sprintf(Tmp,"Normal Mutation (BestInPop) -> Chromosome %u",p->Id);
-			if(Debug) Debug->PrintInfo(Tmp);
-		#endif
+			Debug->PrintInfo(Tmp);
+		}
 		emitInteractSig();
 		p->Mutation();
 		p->ToEval=true;
-		#ifdef RGADEBUG
+		if(VerifyGA)
 			p->Verify();
-		#endif
 		emitInteractSig();
 	}
 	if(AgeBest==AgeNextBestMutation)
@@ -374,21 +358,21 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		i=p->Id;
 		(*p)=(*BestChromosome);
 		p->Id=i;
-		#ifdef RGADEBUG
+		if(Debug)
+		{
+			static char Tmp[200];
 			sprintf(Tmp,"Strong Mutation (BestInPop) -> Chromosome %u",p->Id);
-			if(Debug) Debug->PrintInfo(Tmp);
-		#endif
+			Debug->PrintInfo(Tmp);
+		}
 		emitInteractSig();
 		p->Mutation();
 		p->ToEval=true;
-		#ifdef RGADEBUG
+		if(VerifyGA)
 			p->Verify();
-		#endif
 		emitInteractSig();
 	}
-	#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("Mutation","RInst");
-	#endif
+	if(Debug)
+		Debug->EndFunc("Mutation","RInst");
 }
 
 
@@ -398,29 +382,28 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 {
 	cChromo *p;
 
-	#ifdef RGADEBUG
-		static char Tmp[200];
-		if(Debug) Debug->BeginFunc("Inversion","RInst");
-	#endif
+
+	if(Debug)
+		Debug->BeginFunc("Inversion","RInst");
 	if(!(AgeNextInversion--))
 	{
 		AgeNextInversion=FreqInversion;
 		p=Chromosomes[RRand(PopSize)];
-		#ifdef RGADEBUG
+		if(Debug)
+		{
+			static char Tmp[200];
 			sprintf(Tmp,"Inversion of Chromosome %u",p->Id);
-			if(Debug) Debug->PrintInfo(Tmp);
-		#endif
+			Debug->PrintInfo(Tmp);
+		}
 		emitInteractSig();
 		p->Inversion();
 		p->ToEval=true;
-		#ifdef RGADEBUG
+		if(VerifyGA)
 			p->Verify();
-		#endif
 		emitInteractSig();
 	}
-	#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("Inversion","RInst");
-	#endif
+	if(Debug)
+		Debug->EndFunc("Inversion","RInst");
 }
 
 
@@ -428,17 +411,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RInst<cInst,cChromo,cFit,cThreadData>::Generation(void) throw(eGA)
 {
-	#ifdef RGADEBUG
-		if(Debug) Debug->BeginFunc("Generation","RInst");
-	#endif
+	if(Debug)
+		Debug->BeginFunc("Generation","RInst");
 	Gen++;
 	AgeBest++;
 	AgeBestPop++;
-	#ifdef RGADEBUG
+	if(Debug)
+	{
 		static char tmp[200];
 		sprintf(tmp,"Gen=%u  ;  AgeBest=%u  ;  AgeBestPop=%u",Gen,AgeBest,AgeBestPop);
-		if(Debug) Debug->PrintComment(tmp);
-	#endif
+		Debug->PrintComment(tmp);
+	}
 	Crossover();
 	emitInteractSig();
 	Mutation();
@@ -452,9 +435,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	AnalysePop();
 	emitGenSig();
 	emitInteractSig();
-	#ifdef RGADEBUG
-		if(Debug) Debug->EndFunc("Generation","RInst");
-	#endif
+	if(Debug)
+		Debug->EndFunc("Generation","RInst");
 }
 
 
@@ -462,9 +444,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RInst<cInst,cChromo,cFit,cThreadData>::Run(void) throw(eGA)
 {
-	#ifdef RGADEBUG
-		if(Debug&&(!ExternBreak)) Debug->BeginFunc("Run","RInst");
-	#endif
+	if(Debug&&(!ExternBreak))
+		Debug->BeginFunc("Run","RInst");
 	if(!bRandomConstruct)
 	{
 		RandomConstruct();
@@ -484,9 +465,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		DisplayInfos();
 	}
 	PostRun();
-	#ifdef RGADEBUG
-		if(Debug&&(!ExternBreak)) Debug->EndFunc("Run","RInst");
-	#endif
+	if(Debug&&(!ExternBreak))
+		Debug->EndFunc("Run","RInst");
 }
 
 
@@ -497,21 +477,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	unsigned int i;
 	cChromo **C;
 
-	#ifdef RGADEBUG
-		if(Debug) Debug->BeginFunc("Verify","RInst");
-	#endif
+	if(Debug)
+		Debug->BeginFunc("Verify","RInst");
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		(*C)->Verify();
 		emitInteractSig();
 	}
-	#ifdef RGADEBUG
-		if(Debug)
-		{
-			Debug->PrintComment("Instance Ok");
-			Debug->EndFunc("Verify","RInst");
-		}
-	#endif
+	if(Debug)
+	{
+		Debug->PrintComment("Instance Ok");
+		Debug->EndFunc("Verify","RInst");
+	}
 }
 
 
@@ -581,9 +558,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(BestChromosome) delete BestChromosome;
 	if(tmpChrom1) delete[] tmpChrom1;
 	if(tmpChrom2) delete[] tmpChrom2;
-	#ifdef RGADEBUG
-		if(Debug) Debug->EndApp();
-	#endif
+	if(Debug)
+		Debug->EndApp();
 	if(thDatas)
 	{
 		delete thDatas[0];

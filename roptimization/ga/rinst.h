@@ -140,6 +140,12 @@ protected:
 	*/
 	bool bRandomConstruct;
 
+	/**
+	* Set if the GA must verify the chromosomes during the different steps of
+	* the run.
+	*/
+	bool VerifyGA;
+
 public:
 
 	/**
@@ -220,6 +226,17 @@ public:
 	* @param debug          Debugger.
 	*/
 	RInst(unsigned int popsize,RDebug* debug=0) throw(std::bad_alloc);
+
+	/**
+	* Set if the verifications must be done.
+	* @param verify          Verify?
+	*/
+	inline void SetVerify(bool verify) {VerifyGA=verify;}
+
+	/**
+	* See if the verifications are made by the GA.
+	*/
+	inline bool GetVerify(void) const {return(VerifyGA);}
 
 	/**
 	* Initialisation of the instance.
