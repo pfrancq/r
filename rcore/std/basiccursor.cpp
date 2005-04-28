@@ -58,7 +58,6 @@ BasicCursor::BasicCursor(const BasicCursor& src)
 	ActPtr=src.ActPtr;
 	Current=src.Current;
 	Tab=src.Tab;
-	ActPtr=src.ActPtr;
 	LastPtr=src.LastPtr;
 	NbPtr=src.NbPtr;
 }
@@ -77,7 +76,6 @@ BasicCursor& BasicCursor::operator=(const BasicCursor& src)
 	ActPtr=src.ActPtr;
 	Current=src.Current;
 	Tab=src.Tab;
-	ActPtr=src.ActPtr;
 	LastPtr=src.LastPtr;
 	NbPtr=src.NbPtr;
 	return(*this);
@@ -102,7 +100,6 @@ void BasicCursor::Set(const BasicContainer& c,size_t max)
 //-----------------------------------------------------------------------------
 void BasicCursor::Clear(void)
 {
-	ActPtr=0;
 	Current=Tab=0;
 	ActPtr=LastPtr=NbPtr=0;
 }
@@ -118,7 +115,6 @@ void BasicCursor::Start(void)
 		return;
 	}
 	Current=Tab;
-	ActPtr=0;
 	while(!(*Current))
 		Next();
 }
