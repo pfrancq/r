@@ -71,7 +71,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int nb1,unsigned int pos2,unsigned int nb2)
 {
-	unsigned int i,j,k;
+	unsigned int i,j;
 	cGroup* grp;
 	cGroup* src;
 	bool bInsertIt;
@@ -98,8 +98,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 			{
 				// Must only insert the objects that are not in parent1
 				src=Cur2();
-				RCursor<cObj> obj(RGroups<cGroup,cObj,cGroupData,cChromo>::ObjsAss);
-				for(k=src->GetNbObjs()+1,obj.GoTo(src->GetObjsPos());--k;obj.Next())
+				RCursor<cObj> obj=GetObjs(*src);
+				for(obj.Start();!obj.End();obj.Next())
 				{
 					bInsertIt=true;
 					for(j=nb1+1,Cur1.GoTo(pos1);(--j)&&bInsertIt;Cur1.Next())

@@ -62,7 +62,6 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroup<cGroup,cObj,cGroupData,cGroups>::Verify(void) throw(eGA)
 {
-	unsigned int i;
 	unsigned int NbObjects=Owner->ObjsAss.GetNb();
 	char tmp[200];
 
@@ -108,8 +107,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	}
 
 	// Verify coherence with the objects.
-	RCursor<cObj> ptr(Owner->ObjsAss);
-	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next())
+	RCursor<cObj> ptr(this->Owner->GetObjs(*static_cast<cGroup*>(this)));
+	for(ptr.Start();!ptr.End();ptr.Next())
 	{
 		if(!ptr())
 		{
@@ -139,11 +138,9 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroup<cGroup,cObj,cGroupData,cGroups>::Copy(const cGroup* grp)
 {
-	unsigned int i;
-
 	RReturnIfFail(Owner!=grp->Owner);
-	RCursor<cObj> ptr(grp->Owner->ObjsAss);
-	for(i=grp->NbSubObjects+1,ptr.GoTo(grp->SubObjects);--i;ptr.Next())
+	RCursor<cObj> ptr(grp->Owner->GetObjs(*grp));
+	for(ptr.Start();!ptr.End();ptr.Next())
 		Insert(ptr());
 
 }
