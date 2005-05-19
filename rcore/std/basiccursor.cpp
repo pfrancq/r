@@ -48,7 +48,7 @@ BasicCursor::BasicCursor(void)
 {
 	ActPtr=0;
 	Current=Tab=0;
-	ActPtr=LastPtr=NbPtr=0;
+	ActPtr=FirstPtr=LastPtr=NbPtr=0;
 }
 
 
@@ -58,15 +58,16 @@ BasicCursor::BasicCursor(const BasicCursor& src)
 	ActPtr=src.ActPtr;
 	Current=src.Current;
 	Tab=src.Tab;
+	FirstPtr=src.FirstPtr;
 	LastPtr=src.LastPtr;
 	NbPtr=src.NbPtr;
 }
 
 
 //-----------------------------------------------------------------------------
-BasicCursor::BasicCursor(const BasicContainer& c,size_t max)
+BasicCursor::BasicCursor(const BasicContainer& c,size_t min,size_t max)
 {
-	Set(c,max);
+	Set(c,min,max);
 }
 
 
@@ -76,6 +77,7 @@ BasicCursor& BasicCursor::operator=(const BasicCursor& src)
 	ActPtr=src.ActPtr;
 	Current=src.Current;
 	Tab=src.Tab;
+	FirstPtr=src.FirstPtr;
 	LastPtr=src.LastPtr;
 	NbPtr=src.NbPtr;
 	return(*this);
@@ -83,14 +85,19 @@ BasicCursor& BasicCursor::operator=(const BasicCursor& src)
 
 
 //-----------------------------------------------------------------------------
-void BasicCursor::Set(const BasicContainer& c,size_t max)
+void BasicCursor::Set(const BasicContainer& c,size_t min,size_t max)
 {
+	RAssert(min<=max);
 	NbPtr=c.NbPtr;
 	Tab=c.Tab;
 	if((max)&&(max<c.LastPtr))
 		LastPtr=max;
 	else
 		LastPtr=c.LastPtr;
+	if((min<=max)&&(min<c.LastPtr))
+		FirstPtr=min;
+	else
+		FirstPtr=0;
 	Current=0;
 	ActPtr=0;
 }
@@ -101,20 +108,20 @@ void BasicCursor::Set(const BasicContainer& c,size_t max)
 void BasicCursor::Clear(void)
 {
 	Current=Tab=0;
-	ActPtr=LastPtr=NbPtr=0;
+	ActPtr=FirstPtr=LastPtr=NbPtr=0;
 }
 
 
 //-----------------------------------------------------------------------------
 void BasicCursor::Start(void)
 {
-	ActPtr=0;
+	ActPtr=FirstPtr;
 	if(!NbPtr)
 	{
 		Current=0;
 		return;
 	}
-	Current=Tab;
+	Current=&Tab[FirstPtr];
 	while(!(*Current))
 		Next();
 }
@@ -123,7 +130,7 @@ void BasicCursor::Start(void)
 //-----------------------------------------------------------------------------
 void BasicCursor::GoTo(size_t idx)
 {
-	if(idx>=LastPtr)
+	if((idx<FirstPtr)||(idx>=LastPtr))
 	#ifdef __GNUC__
 		throw std::range_error(__PRETTY_FUNCTION__);
 	#else

@@ -75,7 +75,12 @@ protected:
 	size_t NbPtr;
 
 	/*
-	* The last position in the array used by an object.
+	* The first position in the array handled by the cursor.
+	*/
+	size_t FirstPtr;
+
+	/*
+	* The last position in the array handled by the cursor.
 	*/
 	size_t LastPtr;
 
@@ -95,10 +100,11 @@ protected:
 	/*
 	* Construct the cursor.
 	* param c                Container to iterate.
-	* @param max             Maximum number of elements to iterate. If null,
-	*                        iterate over the whole container.
+	* @param min             Minimum position of the elements to iterate.
+	* @param max             Maximum position of the elements to iterate. If
+	*                        null, iterate until the end of the container.
 	*/
-	BasicCursor(const BasicContainer& c,size_t max);
+	BasicCursor(const BasicContainer& c,size_t min,size_t max);
 
 	/*
 	* Assignment operator using a "Cursor".
@@ -111,10 +117,11 @@ public:
 	/**
 	* Set the container.
 	* param c                Container to iterate.
-	* @param max             Maximum number of elements to iterate. If null,
-	*                        iterate over the whole container.
+	* @param min             Minimum position of the elements to iterate.
+	* @param max             Maximum position of the elements to iterate. If
+	*                        null, iterate until the end of the container.
 	*/
-	void Set(const BasicContainer& c,size_t max);
+	void Set(const BasicContainer& c,size_t min,size_t max);
 
 	/**
 	* Clear the cursor.
