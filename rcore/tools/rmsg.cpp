@@ -37,7 +37,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 // Global variable
-RContainer<RMsg,true,false> Msgs(30,15);
+static RContainer<RMsg,true,false> Msgs(30,15);
 
 
 
@@ -55,28 +55,14 @@ RMsg::RMsg(const RString& msg)
 
 
 //------------------------------------------------------------------------------
-RMsg::RMsg(const char* msg)
-	: Msg(msg)
-{
-}
-
-
-//------------------------------------------------------------------------------
 RMsg* RMsg::LookMsg(const RString& msg)
 {
-	return(Msgs.GetPtr<const RString>(msg));
+	return(Msgs.GetPtr(msg));
 }
 
 
 //------------------------------------------------------------------------------
-RMsg* RMsg::LookMsg(const char* msg)
-{
-	return(Msgs.GetPtr<const char*>(msg));
-}
-
-
-//------------------------------------------------------------------------------
-RMsg* RMsg::InsertMsg(const RString& msg) throw(std::bad_alloc)
+RMsg* RMsg::InsertMsg(const RString& msg)
 {
 	RMsg* Msg=new RMsg(msg);
 	Msgs.InsertPtr(Msg);
@@ -85,18 +71,9 @@ RMsg* RMsg::InsertMsg(const RString& msg) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RMsg* RMsg::InsertMsg(const char* msg) throw(std::bad_alloc)
+void RMsg::DeleteMsg(RMsg* msg)
 {
-	RMsg* Msg=new RMsg(msg);
-	Msgs.InsertPtr(Msg);
-	return(Msg);
-}
-
-
-//------------------------------------------------------------------------------
-void RMsg::DeleteMsg(RMsg* msg) throw(std::bad_alloc)
-{
-	Msgs.DeletePtr(msg);
+	Msgs.DeletePtr(*msg);
 }
 
 

@@ -68,12 +68,6 @@ public:
 	RMsg(const RString& msg);
 
 	/**
-	* Construct the message.
-	* @param msg            Contain.
-	*/
-	RMsg(const char* msg);
-
-	/**
 	* Compare two messages by comparing their content.
 	* @see R::RContainer
 	* @param msg            Message.
@@ -82,28 +76,12 @@ public:
 	int Compare(const RMsg& msg) const {return(Msg.Compare(msg.Msg));}
 
 	/**
-	* Compare two messages by comparing their content.
-	* @see R::RContainer
-	* @param msg            Pointer to a message.
-	* @return int
-	*/
-	int Compare(const RMsg* msg) const {return(Msg.Compare(msg->Msg));}
-
-	/**
 	* Compare a message with a given string.
 	* @see R::RContainer
 	* @param msg            RString.
 	* @return int
 	*/
 	int Compare(const RString& msg) const {return(Msg.Compare(msg));}
-
-	/**
-	* Compare a message with a given string.
-	* @see R::RContainer
-	* @param msg            C string.
-	* @return int
-	*/
-	int Compare(const char* msg) const {return(Msg.Compare(msg));}
 
 	/**
 	* Equal operator between messages.
@@ -122,14 +100,6 @@ public:
 		{return(Msg==msg);}
 
 	/**
-	* Equal operator between a message and a string.
-	* @param msg            C string.
-	* @return true if equal, false else.
-	*/
-	bool operator==(const char* msg) const
-		{return(Msg==msg);}
-
-	/**
 	* Look after a specific message.
 	* @param msg            String.
 	* @return Pointer to the specific message, or 0 if not found.
@@ -137,31 +107,17 @@ public:
 	static RMsg* LookMsg(const RString& msg);
 
 	/**
-	* Look after a specific message.
-	* @param msg            C string.
-	* @return Pointer to the specific message, or 0 if not found.
-	*/
-	static RMsg* LookMsg(const char* msg);
-
-	/**
 	* Insert a new message.
 	* @param msg            String representing the message.
 	* @return Pointer to the message inserted.
 	*/
-	static RMsg* InsertMsg(const RString& msg) throw(std::bad_alloc);
-
-	/**
-	* Insert a new message.
-	* @param msg            C string representing a message.
-	* @return Pointer to the message inserted.
-	*/
-	static RMsg* InsertMsg(const char* msg) throw(std::bad_alloc);
+	static RMsg* InsertMsg(const RString& msg);
 
 	/**
 	* Delete a message.
 	* @param msg            Message.
 	*/
-	static void DeleteMsg(RMsg* msg) throw(std::bad_alloc);
+	static void DeleteMsg(RMsg* msg);
 
 	/**
 	* Destruct the message.
