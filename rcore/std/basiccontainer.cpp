@@ -33,6 +33,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd/base/basiccontainer.h>
+#include <rstd/rmsg.h>
 using namespace R;
 
 
@@ -44,8 +45,15 @@ using namespace R;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+BasicContainer::BasicContainer(void)
+	: Tab(0), NbPtr(0), MaxPtr(0), LastPtr(0), IncPtr(0)
+{
+}
+
+
+//-----------------------------------------------------------------------------
 BasicContainer::BasicContainer(size_t m,size_t i)
-		: NbPtr(0), MaxPtr(m), LastPtr(0), IncPtr(i)
+	: Tab(0), NbPtr(0), MaxPtr(m), LastPtr(0), IncPtr(i)
 {
 	if(MaxPtr)
 	{
@@ -65,28 +73,10 @@ BasicContainer::BasicContainer(size_t m,size_t i)
 
 
 //-----------------------------------------------------------------------------
-void BasicContainer::VerifyTab(void)
-{
-	if(LastPtr==MaxPtr)
-	{
-		size_t OldSize;
-
-		OldSize=MaxPtr;
-		void** ptr;
-		MaxPtr+=IncPtr;
-		ptr=new void*[MaxPtr];
-		memcpy(ptr,Tab,OldSize*sizeof(void*));
-		delete[] Tab;
-		Tab=ptr;
-		memset(&Tab[OldSize],0,IncPtr*sizeof(void*));
-	}
-}
-
-
-//-----------------------------------------------------------------------------
 void BasicContainer::VerifyTab(size_t max)
 {
-	RReturnIfFail(max>0);
+	if((!max)&&(LastPtr==MaxPtr))
+		max=MaxPtr+IncPtr;
 	if(max>MaxPtr)
 	{
 		void** ptr;
@@ -104,34 +94,35 @@ void BasicContainer::VerifyTab(size_t max)
 
 
 //-----------------------------------------------------------------------------
-void BasicContainer::ReOrder(int sortOrder(const void*,const void*))
+void BasicContainer::Clear(bool bAlloc,size_t m,size_t i)
 {
-	if(NbPtr)
-		qsort(static_cast<void*>(Tab),LastPtr,sizeof(void*),sortOrder);
+	if(bAlloc)
+	{
+		void **ptr;
+
+		for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
+		{
+			if(*ptr)
+				Delete(*ptr);
+		}
+	}
+	LastPtr=NbPtr=0;
+	if(m)
+		MaxPtr=m;
+	if(i)
+		IncPtr=i;
+	if(!IncPtr) IncPtr=MaxPtr/2;
+	if(!IncPtr) IncPtr=10;
+	VerifyTab(m);
+	memset(Tab,0,MaxPtr*sizeof(void*));
 }
 
 
 //-----------------------------------------------------------------------------
-void BasicContainer::InsertPtrOrderAt(const void* ins,size_t pos)
+void BasicContainer::ReOrder(int sortOrder(const void*,const void*))
 {
-	void** ptr;
-
-	RReturnIfFail(ins);
-	RReturnIfFail(pos<=LastPtr);
-	if(pos>MaxPtr)
-	{
-		VerifyTab(pos+IncPtr);
-	}
-	else
-	{
-		VerifyTab();
-	}
-	ptr=&Tab[pos];
-	if(pos<LastPtr)
-		memmove(ptr+1,ptr,(LastPtr-pos)*sizeof(void*));
-	(*ptr)=(void*)ins;
-	NbPtr++;
-	LastPtr++;
+	if(NbPtr)
+		qsort(static_cast<void*>(Tab),LastPtr,sizeof(void*),sortOrder);
 }
 
 
@@ -143,6 +134,86 @@ void BasicContainer::Exchange(size_t pos1,size_t pos2)
 	void* ptr=Tab[pos1];
 	Tab[pos1]=Tab[pos2];
 	Tab[pos2]=ptr;
+}
+
+
+//-----------------------------------------------------------------------------
+size_t BasicContainer::GetIndex(bool bOrder,const void* tag,bool& find,size_t min, size_t max,int compare(const void*,const void*)) const
+{
+	size_t NbMin,NbMax,i=0;
+	int Comp=0;
+	bool Cont=true,NotLast=true;
+	void *ptr,**ptr2;
+
+	if(!NbPtr)
+	{
+		find=false;
+		return(0);
+	}
+	if(min<LastPtr-1)
+		NbMin=min;
+	else
+		NbMin=0;
+	if((!max)||(max>=LastPtr)||(max<min))
+		NbMax=LastPtr-1;
+	else
+		NbMax=max;
+	if(bOrder)
+	{
+		find=false;
+		if(NbMax)
+		{
+			while(Cont)
+			{
+				i=(NbMax+NbMin)/2;
+				ptr=Tab[i];
+				Comp=compare(ptr,tag);
+				if(!Comp)
+				{
+					find=true;
+					return(i);
+				}
+				if(Comp>0)
+				{
+					NbMax = i;
+					if(i) NbMax--;
+				}
+				else
+					NbMin = i+1;
+				Cont = NotLast;
+				if(NbMin>=NbMax) NotLast=false;
+			}
+		}
+		else
+		{
+			i = 0;
+			Comp=compare(*Tab,tag);
+			if(!Comp)
+			{
+				find=true;
+				return(0);
+			}
+		}
+		if(Comp<0) i++;
+		return(i);
+	}
+	else
+	{
+		find=true;
+		for(i=NbMin,ptr2=&Tab[NbMin];i<=NbMax;ptr2++,i++)
+			if((*ptr2)&&(!compare(*ptr2,tag))) return(i);
+		find=false;
+		return(i);
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+bool BasicContainer::IsIn(bool bOrder,const void* tag,bool sortkey,size_t min, size_t max,int compare(const void*,const void*)) const
+{
+	bool Find;
+	GetIndex(bOrder&&sortkey,tag,Find,min,max,compare);
+	return(Find);
 }
 
 
@@ -173,16 +244,152 @@ void* BasicContainer::operator[](size_t idx)
 
 
 //-----------------------------------------------------------------------------
-size_t BasicContainer::GetTab(void** tab)
+void* BasicContainer::GetPtr(bool bOrder,const void* tag,bool sortkey,size_t min, size_t max,int compare(const void*,const void*)) const
 {
-	memcpy(tab,Tab,LastPtr*sizeof(void*));
-	return(LastPtr);
+	bool Find;
+	size_t Index=GetIndex(bOrder&&sortkey,tag,Find,min,max,compare);
+	if(Find)
+		return(Tab[Index]);
+	else
+		return(0);
 }
 
 
 //-----------------------------------------------------------------------------
-size_t BasicContainer::GetTab(const void** tab) const
+size_t BasicContainer::GetTab(const void** tab,size_t min, size_t max) const
 {
-	memcpy(tab,Tab,LastPtr*sizeof(void*));
-	return(LastPtr);
+	size_t NbMin,NbMax;
+	if(min<LastPtr-1)
+		NbMin=min;
+	else
+		NbMin=0;
+	if((!max)||(max>=LastPtr)||(max<min))
+		NbMax=LastPtr-1;
+	else
+		NbMax=max;
+	memcpy(tab,&Tab[NbMin],(NbMax-NbMin+1)*sizeof(void*));
+	return(NbMax-NbMin+1);
+}
+
+
+//-----------------------------------------------------------------------------
+size_t BasicContainer::GetTab(void** tab,size_t min, size_t max)
+{
+	size_t NbMin,NbMax;
+	if(min<LastPtr-1)
+		NbMin=min;
+	else
+		NbMin=0;
+	if((!max)||(max>=LastPtr)||(max<min))
+		NbMax=LastPtr-1;
+	else
+		NbMax=max;
+	memcpy(tab,&Tab[NbMin],(NbMax-NbMin+1)*sizeof(void*));
+	return(NbMax-NbMin+1);
+}
+
+
+//-----------------------------------------------------------------------------
+void BasicContainer::InsertPtr(bool bAlloc,bool bOrder,const void* ins,bool del,size_t min, size_t max,int compare(const void*,const void*))
+{
+	RReturnIfFail(ins);
+	if(!ins) return;
+	if(bOrder)
+	{
+		bool Find;
+		size_t Index=GetIndex(bOrder,ins,Find,min,max,compare);
+		InsertPtrAt(bAlloc,ins,Index,Find&&del);
+/*		if(Find)
+		{
+			void** ptr=&Tab[Index];
+			if(del&&bAlloc)
+				Delete(*ptr);
+			(*ptr)=(void*)ins;
+		}
+		else
+			InsertPtrAt(bAlloc,ins,Index,false);*/
+	}
+	else
+	{
+		VerifyTab(0);
+		Tab[LastPtr++]=(void*)ins;
+		NbPtr++;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+void BasicContainer::InsertPtrAt(bool bAlloc,const void* ins,size_t pos,bool del)
+{
+	void** ptr;
+
+	RReturnIfFail(ins);
+	if(pos+1>MaxPtr)
+	{
+		VerifyTab(pos+1+IncPtr);
+	}
+	else
+	{
+		VerifyTab(0);
+	}
+	ptr=&Tab[pos];
+	if(pos<LastPtr)
+	{
+		if(del)
+		{
+			if(bAlloc)
+				Delete(*ptr);
+		}
+		else
+		{
+			memmove(ptr+1,ptr,(LastPtr-pos)*sizeof(void*));
+		}
+	}
+	(*ptr)=(void*)ins;
+	NbPtr++;
+	if(pos+1>LastPtr)
+	{
+		LastPtr=pos+1;
+	}
+	else
+	{
+		if(!del)
+			LastPtr++;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+void BasicContainer::DeletePtr(bool bOrder,bool bAlloc,const void* tag,bool sortkey,size_t min, size_t max,int compare(const void*,const void*))
+{
+	RReturnIfFail(tag);
+	if(!tag) return;
+
+	bool Find;
+	size_t Index=GetIndex(bOrder&&sortkey,tag,Find,min,max,compare);
+	if(!Find)
+		return;
+	DeletePtrAt(bAlloc,Index);
+}
+
+
+//-----------------------------------------------------------------------------
+void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos)
+{
+	void** ptr;
+
+	RReturnIfFail(pos<LastPtr);
+	ptr=&Tab[pos];
+	memmove(ptr,ptr+1,((--LastPtr)-pos)*sizeof(void*));
+	Tab[LastPtr]=0;
+	NbPtr--;
+	if(bAlloc)
+		Delete(*ptr);
+}
+
+
+//-----------------------------------------------------------------------------
+BasicContainer::~BasicContainer(void)
+{
+	delete[] Tab;
 }

@@ -85,131 +85,106 @@ protected:
 	*/
 	size_t IncPtr;
 
-	/*
-	* Constructor.
+	/**
+	* Method to delete a given element of the container.
 	*/
-	BasicContainer(void) {}
+	virtual void Delete(void*)=0;
 
-	/*
-	* Constructor of a container.
-	* @param m               The initial maximal size of the array.
-	* @param i               The value used when increasing the array. If null
-	*                        value, the size is set to the half the maximal
-	*                        size.
-	*/
-	explicit BasicContainer(size_t m,size_t i=0);
-
-	/*
+	/**
 	* Copy constructor of a container.
 	* @param src             Container used as source.
 	*/
-	BasicContainer(const BasicContainer& src);
-
-public:
+	BasicContainer(void);
 
 	/**
-	* Verify if the container can hold the next element to be inserted. If not,
-	* the container is extended.
+	* Constructor of a container.
 	*/
-	void VerifyTab(void);
+	explicit BasicContainer(size_t m,size_t i=0);
 
 	/**
-	* Verify if the container can hold a certain nujmber of elements. If not,
+	* Verify if the container can hold a certain number of elements. If not,
 	* the container is extended.
-    * @param max             Maximal number of elements that must be contained.
 	*/
 	void VerifyTab(size_t max);
 
 	/**
-	* Get the number of elements in the container.
-	* @return unsigned int.
+	* Clear the container and destruct the elements if he is responsible for
+	* the desallocation.
 	*/
-	size_t GetNb(void) const {return(NbPtr);}
+	void Clear(bool bAlloc,unsigned int m,unsigned int i);
 
 	/**
-	* Get the maximal position occupied by an elements in the container.
-	* @return unsigned int.
-	*/
-	size_t GetMaxPos(void) const {return(LastPtr);}
-
-	/**
-	* Get the maximum number of elements in the container.
-	* @return unsigned int.
-	*/
-	size_t GetMaxNb(void) const {return(MaxPtr);}
-
-	/**
-	* Get the increment used to resize the container.
-	* @return unsigned int.
-	*/
-	size_t GetIncNb(void) const {return(IncPtr);}
-
-	/**
-	* ReOrder the container. This method must be used with caution, because it
-	* can crash the container:
-	* -# The container contains null pointers.
-	* -# The container is ordered and the method does not use the same criterion
-	*    for the ordering.
-	* @param sortOrder       Pointer to a (static) funtion used for the ordering.
+	* ReOrder the container.
 	*/
 	void ReOrder(int sortOrder(const void*,const void*));
-
-protected:
-
-	/*
-	* Insert an element in an ordered container. Used by InsertPtr and
-	* GetInsertPtr.
-	* @param ins             A pointer to the element to insert.
-	* @param pos             The position where to insert it.
-	*/
-	void InsertPtrOrderAt(const void* ins,size_t pos);
-
-
-public:
 
 	/**
 	* Exchange two elements in the container. The method does not verify if the
 	* exchange is compatible with the ordering of the container.
-	* @param pos1            Position of the first element.
-	* @param pos2            Position of the second element.
 	*/
 	void Exchange(size_t pos1,size_t pos2);
 
-protected:
-
 	/*
+	* This function returns the index of an given element.
+	*/
+	size_t GetIndex(bool bOrder,const void* tag,bool& find,size_t min, size_t max,int compare(const void*,const void*)) const;
+
+	/**
+	* Verify that a element is in the container.
+	*/
+	bool IsIn(bool bOrder,const void* tag,bool sortkey,size_t min, size_t max,int compare(const void*,const void*)) const;
+
+	/**
 	* Get a pointer to the ith element in the container (Only read).
-	* @param idx             Index of the element to get.
-	* @return Return the pointer or 0 if the index is outside the scope of the
-	*         container.
 	*/
 	const void* operator[](size_t idx) const;
 
-	/*
+	/**
 	* Get a pointer to the ith element in the container (Read/Write).
-	* @param idx             Index of the element to get.
-	* @return Return the pointer or 0 if the index is outside the scope of the
-	*         container.
 	*/
 	void* operator[](size_t idx);
 
-	/*
-	* Copy the array of pointer into a temporary array. This array must have
-	* the right size (Read only).
-	* @param tab             Array of pointer.
-	* @return number of elements in the array (including eventually null
-	* pointers).
+	/**
+	* Get a given element of the container.
 	*/
-	size_t GetTab(void** tab);
+	void* GetPtr(bool bOrder,const void* tag,bool sortkey,size_t min, size_t max,int compare(const void*,const void*)) const;
 
-	/*
+	/**
 	* Copy the array of pointer into a temporary array. This array must have
 	* the right size (Read only).
-	* @param tab             Array of pointer.
-	* @return number of elements in the array (including eventually null
-	* pointers).
 	*/
-	size_t GetTab(const void** tab) const;
+	size_t GetTab(const void** tab,size_t min, size_t max) const;
+
+	/**
+	* Copy the array of pointer into a temporary array. This array must have
+	* the right size (Read/Write).
+	*/
+	size_t GetTab(void** tab,size_t min, size_t max);
+
+	/**
+	* Insert an element.
+	*/
+	void InsertPtr(bool bAlloc,bool bOrder,const void* ins,bool del,size_t min, size_t max,int compare(const void*,const void*));
+
+	/**
+	* Insert an element in at a given position.
+	*/
+	void InsertPtrAt(bool bAlloc,const void* ins,size_t pos,bool del);
+
+	/**
+	* Delete an element.
+	*/
+	void DeletePtr(bool bOrder,bool bAlloc,const void* tag,bool sortkey,size_t min, size_t max,int compare(const void*,const void*));
+
+	/**
+	* Delete an element at a given position.
+	*/
+	void DeletePtrAt(bool bAlloc,size_t pos);
+
+	/**
+	* Destructor of the container.
+	*/
+	virtual ~BasicContainer(void);
 
 	friend class BasicCursor;
 };
