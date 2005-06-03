@@ -58,7 +58,7 @@ RGeoInfoConnections::RGeoInfoConnections(RConnections* c,RGeoInfos* i)
 double RGeoInfoConnections::GetDistances(RGeoInfo* info,const RPoint& pos)
 {
 	double sum=0.0;
-	
+
 	RCursor<RGeoInfoConnection> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		sum+=Cur()->GetDist(Infos,info,pos);
@@ -70,7 +70,7 @@ double RGeoInfoConnections::GetDistances(RGeoInfo* info,const RPoint& pos)
 double RGeoInfoConnections::GetDistances(RGeoInfo* info)
 {
 	double sum=0.0;
-	
+
 	RCursor<RGeoInfoConnection> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		sum+=Cur()->GetDist(Infos,info);
@@ -94,7 +94,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 	i1=i2=0;
 	weight=Prom.NewCriterion(Maximize,Cons->WeightParams);
 	dist=Prom.NewCriterion(Minimize,Cons->DistParams);
-	treat=new RGeoInfo*[Infos->GetMaxPos()];
+	treat=new RGeoInfo*[Infos->GetMaxPos()+1];
 
 	// Go through each info
 	RCursor<RGeoInfo> info(*Infos);

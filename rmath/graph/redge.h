@@ -6,7 +6,7 @@
 
 	Edge of a graph - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -88,14 +88,14 @@ public:
 	* information than the strcmp function from the standard C library.
 	* @param e              Edge used for the comparaison.
 	*/
-	int Compare(const REdge& e) {return(this!=&e);}
+	int Compare(const REdge& e) const {return(this!=&e);}
 
 	/**
 	* Is used to compare two edges. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param e              Edge used for the comparaison.	
+	* @param e              Edge used for the comparaison.
 	*/
-	int Compare(const REdge* e) {return(this!=e);}
+	int Compare(const REdge* e) const {return(this!=e);}
 
 	/**
 	* Destructor of the edge.

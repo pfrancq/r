@@ -110,7 +110,7 @@ public:
 	* Compare function.
 	* @param s              Search criteria.
 	*/
-	int Compare(const sSearch& s)
+	int Compare(const sSearch& s) const
 			{return(!(((s.id1==Id1)&&(s.id2==Id2))||((s.id1==Id2)&&(s.id2==Id1))));}
 
 	// friend classes
@@ -165,7 +165,7 @@ public:
 	* This function compares two connections returns 0 if there are the same.
 	* @param c              Connection used for the comparaison.
 	*/
-	int Compare(const RGeoInfoConnection&) {return(-1);}
+	int Compare(const RGeoInfoConnection&) const {return(-1);}
 
 	/**
 	* Verify that at least two objects of the connection are placed.

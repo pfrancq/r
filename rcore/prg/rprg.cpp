@@ -275,7 +275,7 @@ void RPrg::AddVar(RPrgVar* var) throw(std::bad_alloc,RException)
 //-----------------------------------------------------------------------------
 void RPrg::DelVar(RPrgVar* var) throw(std::bad_alloc,RException)
 {
-	Vars.DeletePtr(var);
+	Vars.DeletePtr(*var);
 }
 
 

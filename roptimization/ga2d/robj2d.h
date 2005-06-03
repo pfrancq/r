@@ -73,7 +73,7 @@ public:
 	* Owner of the connector.
 	*/
 	RObj2D* Owner;
-	
+
 	/**
 	* Identificator of the connector.
 	*/
@@ -130,12 +130,12 @@ public:
 	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const RPoint pos);
 
-	/**	
+	/**
 	* Construct a connector.
 	* @param owner          Owner of the connector.
 	* @param id             Id of the connector.
 	* @param x              X Coordinate of the position of the connector.
-	* @param y              Y Coordinate of the position of the connector.	
+	* @param y              Y Coordinate of the position of the connector.
 	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const unsigned int x,unsigned y);
 
@@ -149,7 +149,7 @@ public:
 	*/
 	RObj2DConnector(RObj2D* owner, unsigned int id,const RString& name,const unsigned int x,unsigned y);
 
-	
+
 	/**
 	* Construct a connector.
 	* @param owner          Owner of the connector.
@@ -174,14 +174,14 @@ public:
 	* This function is used for the class RContainer.
 	* @param c              Connector used for the comparaison.
 	*/
-	int Compare(const RObj2DConnector* c) {return(Id-c->Id);}
+	int Compare(const RObj2DConnector* c) const {return(Id-c->Id);}
 
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
 	* @param c              Connector used for the comparaison.
 	*/
-	int Compare(const RObj2DConnector& c) {return(Id-c.Id);}
+	int Compare(const RObj2DConnector& c) const {return(Id-c.Id);}
 
 	/**
 	* This function compares a connector and an identificator and returns 0 if
@@ -189,15 +189,7 @@ public:
 	* This function is used for the class RContainer.
 	* @param id             Identificator used for the comparaison.
 	*/
-	int Compare(const unsigned int id) {return(Id-id);}
-	
-	/**
-	* This function compares a connector and a name and returns 0 if
-	* there are the same.
-	* This function is used for the class RContainer.
-	* @param name           Name used for the comparaison.
-	*/
-	int Compare(const RString& name) {return(Name.Compare(name));}
+	int Compare(const unsigned int id) const {return(Id-id);}
 
 	/**
 	* This function compares a connector and a name and returns 0 if
@@ -205,7 +197,15 @@ public:
 	* This function is used for the class RContainer.
 	* @param name           Name used for the comparaison.
 	*/
-	int Compare(const char* name) {return(Name.Compare(name));}
+	int Compare(const RString& name) const {return(Name.Compare(name));}
+
+	/**
+	* This function compares a connector and a name and returns 0 if
+	* there are the same.
+	* This function is used for the class RContainer.
+	* @param name           Name used for the comparaison.
+	*/
+	int Compare(const char* name) const {return(Name.Compare(name));}
 
 	/**
 	* Return the object that's own the connector.
@@ -351,14 +351,14 @@ public:
 	* This function is used for the class RContainer.
 	* @param o              Object used for the comparaison.
 	*/
-	int Compare(const RObj2D* o) {if(IsIn(o->Id)) return(0); else return(Id-o->Id);}
+	int Compare(const RObj2D* o) const {if(IsIn(o->Id)) return(0); else return(Id-o->Id);}
 
 	/**
 	* This function compares two cobjects and returns 0 if there are the same.
 	* This function is used for the class RContainer.
 	* @param o              Object used for the comparaison.
 	*/
-	int Compare(const RObj2D& o) {if(IsIn(o.Id)) return(0); else return(Id-o.Id);}
+	int Compare(const RObj2D& o) const {if(IsIn(o.Id)) return(0); else return(Id-o.Id);}
 
 	/**
 	* This function compares an object and an identificator and returns 0 if
@@ -366,7 +366,7 @@ public:
 	* This function is used for the class RContainer.
 	* @param id             Identificator used for the comparaison.
 	*/
-	int Compare(const unsigned int id) {if(IsIn(id)) return(0); else return(Id-id);}
+	int Compare(const unsigned int id) const {if(IsIn(id)) return(0); else return(Id-id);}
 
 	/**
 	* This function compares an object and a name and returns 0 if
@@ -374,7 +374,7 @@ public:
 	* This function is used for the class RContainer.
 	* @param name           Name used for the comparaison.
 	*/
-	int Compare(const RString& name) {return(Name.Compare(name));}
+	int Compare(const RString& name) const {return(Name.Compare(name));}
 
 	/**
 	* This function compares an object and a name and returns 0 if
@@ -382,7 +382,7 @@ public:
 	* This function is used for the class RContainer.
 	* @param name           Name used for the comparaison.
 	*/
-	int Compare(const char* name) {return(Name.Compare(name));}
+	int Compare(const char* name) const {return(Name.Compare(name));}
 
 	/**
 	* Initialize the object when all information are entered. In particular,
@@ -443,7 +443,7 @@ public:
 	* Add a connector to this object
 	* @param id             Identificator of the connector.
 	* @param x              X-Coordinate of the connection point.
-	* @param y              Y-Coordinate of the connection point.	
+	* @param y              Y-Coordinate of the connection point.
 	*/
 	void AddConnector(unsigned int id,unsigned x,unsigned y);
 
@@ -464,7 +464,7 @@ public:
 	* @param id             Identificator of the object.
 	* @return true if the object is in, else false.
 	*/
-	virtual bool IsIn(unsigned int id) {return(Id==id);}
+	virtual bool IsIn(unsigned int id) const {return(Id==id);}
 
 	/**
 	* Destruct the object.

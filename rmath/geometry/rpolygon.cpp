@@ -689,7 +689,7 @@ void RPolygon::RectDecomposition(RRects* rects) const
 
 		// If point to add -> after PtX2
 		if(!bFind21)
-			i=work.GetId<RPoint>(PtX2,bFind)+1;
+			i=work.GetIndex<RPoint>(PtX2,bFind)+1;
 
 		// Test if (X2,Y1) exists -> If yes delete it else create it
 		tmp.X=X2;
@@ -703,7 +703,7 @@ void RPolygon::RectDecomposition(RRects* rects) const
 		// If point to add -> after Vertice4
 		if(bFind21)
 		{
-			i=work.GetId<RPoint>(PtX2,bFind)+1;
+			i=work.GetIndex<RPoint>(PtX2,bFind)+1;
 		}
 
 		// Test if (X2,Y2) exists -> If yes delete it else create it

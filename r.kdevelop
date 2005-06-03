@@ -24,7 +24,7 @@
       <useconfiguration>default</useconfiguration>
     </general>
     <run>
-      <mainprogram>/home/pfrancq/prj/testr/debug/src/testr</mainprogram>
+      <mainprogram>/home/pfrancq/prj/upgalilei/src/.libs/upgalilei</mainprogram>
       <programargs/>
       <terminal>false</terminal>
       <envvars/>

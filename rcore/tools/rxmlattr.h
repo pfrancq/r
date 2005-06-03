@@ -88,7 +88,7 @@ public:
 	* parameter.
 	* @see RContainer
 	*/
-	int Compare(const char* name) {return(Name.Compare(name));}
+	int Compare(const char* name) const {return(Name.Compare(name));}
 
 	/**
 	* Compare the name of the attribute with a given string. This function is
@@ -97,7 +97,7 @@ public:
 	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
 	* parameter.
 	*/
-	int Compare(const RString &name) {return(Name.Compare(name));}
+	int Compare(const RString &name) const {return(Name.Compare(name));}
 
 	/**
 	* Compare the names of two attributes. This function is used by RContainer.
@@ -105,7 +105,7 @@ public:
 	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
 	* parameter.
 	*/
-	int Compare(const RXMLAttr &attr) { return(Name.Compare(attr.Name)); }
+	int Compare(const RXMLAttr &attr) const {return(Name.Compare(attr.Name)); }
 
 	/**
 	* Compare the names of two attributes. This function is used by RContainer.
@@ -113,7 +113,7 @@ public:
 	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
 	* parameter.
 	*/
-    int Compare(const RXMLAttr* attr) { return(Name.Compare(attr->Name)); }
+    int Compare(const RXMLAttr* attr) const {return(Name.Compare(attr->Name)); }
 
 	/**
 	* Return the name of the tag.
