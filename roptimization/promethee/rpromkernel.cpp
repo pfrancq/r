@@ -156,7 +156,7 @@ void RPromKernel::Assign(RPromSol* sol,RPromCriterion* crit,const double v) thro
 	RPromCritValue* val;
 
 	if((!sol)||(!crit)) return;
-	if((sol->GetMaxPos()<crit->Id)||(!(val=(*sol)[crit->Id])))
+	if((!sol->GetNb())||(sol->GetMaxPos()<crit->Id)||(!(val=(*sol)[crit->Id])))
 	{
 		val=new RPromCritValue(v);
 		sol->InsertPtrAt(val,crit->Id);
