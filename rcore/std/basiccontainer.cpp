@@ -293,21 +293,11 @@ size_t BasicContainer::GetTab(void** tab,size_t min, size_t max)
 void BasicContainer::InsertPtr(bool bAlloc,bool bOrder,const void* ins,bool del,size_t min, size_t max,int compare(const void*,const void*))
 {
 	RReturnIfFail(ins);
-	if(!ins) return;
 	if(bOrder)
 	{
 		bool Find;
 		size_t Index=GetIndex(bOrder,ins,Find,min,max,compare);
 		InsertPtrAt(bAlloc,ins,Index,Find&&del);
-/*		if(Find)
-		{
-			void** ptr=&Tab[Index];
-			if(del&&bAlloc)
-				Delete(*ptr);
-			(*ptr)=(void*)ins;
-		}
-		else
-			InsertPtrAt(bAlloc,ins,Index,false);*/
 	}
 	else
 	{

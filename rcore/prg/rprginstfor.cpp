@@ -77,7 +77,8 @@ RPrgInstFor::RPrgInstFor(const RString& line,unsigned int t) throw(std::bad_allo
 //------------------------------------------------------------------------------
 void RPrgInstFor::AddInst(RPrgInst* ins) throw(std::bad_alloc)
 {
-	Insts.InsertPtr(ins);
+	if(ins)
+		Insts.InsertPtr(ins);
 }
 
 
