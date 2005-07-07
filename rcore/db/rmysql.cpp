@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Library
-#include <rstd/rstring.h>
+//#include <rstd/rstring.h>
 #include <rstd/rcursor.h>
 #include <rdb/rmysql.h>
 #include <rstd/rtextencoding.h>
