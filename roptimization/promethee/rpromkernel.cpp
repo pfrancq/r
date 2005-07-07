@@ -225,7 +225,7 @@ int RPromKernel::sort_function_solutions(const void *a,const void *b)
 //------------------------------------------------------------------------------
 RPromSol** RPromKernel::GetSols(void)
 {
-	RPromSol** Sols=new RPromSol*[Solutions.GetMaxPos()];
+	RPromSol** Sols=new RPromSol*[Solutions.GetMaxPos()+1];
 	Solutions.GetTab(Sols);
 	qsort(static_cast<void*>(Sols),Solutions.GetNb(),sizeof(RPromSol*),sort_function_solutions);
 	return(Sols);

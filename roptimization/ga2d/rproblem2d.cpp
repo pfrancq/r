@@ -76,7 +76,7 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	if(tag)
 	{
 		// Read the points but the last
-		RCursor<RXMLTag> Cur(*tag);
+		RCursor<RXMLTag> Cur(tag->GetNodes());
 		for(Cur.Start(),i=Cur.GetNb();--i;Cur.Next())  // Last point = first point
 		{
 			if(Cur()->GetName()!="Point")
@@ -94,8 +94,8 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	tag=s.GetTag("InstanceMasters",s.GetTop());
 	if(tag)
 	{
-		Templates.Clear(tag->GetNb());
-		RCursor<RXMLTag> Cur(*tag);
+		Templates.Clear(tag->GetNbNodes());
+		RCursor<RXMLTag> Cur(tag->GetNodes());
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
 			if(Cur()->GetName()=="Master")
@@ -107,8 +107,8 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	tag=s.GetTag("Instances",s.GetTop());
 	if(tag)
 	{
-		Objs.Clear(tag->GetNb());
-		RCursor<RXMLTag> Cur(*tag);
+		Objs.Clear(tag->GetNbNodes());
+		RCursor<RXMLTag> Cur(tag->GetNodes());
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
 			if(Cur()->GetName()==RString("Instance"))
@@ -120,8 +120,8 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	tag=s.GetTag("Terminals",s.GetTop());
 	if(tag)
 	{
-		Objs.Clear(tag->GetNb());
-		RCursor<RXMLTag> Cur(*tag);
+		Objs.Clear(tag->GetNbNodes());
+		RCursor<RXMLTag> Cur(tag->GetNodes());
 		for(Cur.Start();!Cur.End();Cur.Next())
 			CreateConnector(Cur(),&Problem,Tr);
 	}
@@ -130,8 +130,8 @@ void RProblem2D::Load(const char* name) throw(RIOException)
 	tag=s.GetTag("Connections",s.GetTop());
 	if(tag)
 	{
-		Cons.Clear(tag->GetNb());
-		RCursor<RXMLTag> Cur(*tag);
+		Cons.Clear(tag->GetNbNodes());
+		RCursor<RXMLTag> Cur(tag->GetNodes());
 		for(Cur.Start();!Cur.End();Cur.Next())
 			CreateNet(Cur());
 		Cons.Init();
@@ -182,8 +182,8 @@ void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 		tag=o->GetTag("Shape");
 		if(tag)
 		{
-			RCursor<RXMLTag> Cur(*tag);
-			for(Cur.Start(),i=tag->GetNb();--i;Cur.Next())              // Last Point==First Point
+			RCursor<RXMLTag> Cur(tag->GetNodes());
+			for(Cur.Start(),i=tag->GetNbNodes();--i;Cur.Next())              // Last Point==First Point
 			{
 				if(Cur()->GetName()=="Point")
 				{
@@ -200,7 +200,7 @@ void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 		tag=o->GetTag("Terminals");
 		if(tag)
 		{
-			RCursor<RXMLTag> Cur(*tag);
+			RCursor<RXMLTag> Cur(tag->GetNodes());
 			for(Cur.Start();!Cur.End();Cur.Next())
 				CreateConnector(Cur(),obj,Tr);
 		}
@@ -232,15 +232,15 @@ void RProblem2D::CreateConnector(RXMLTag* c,RObj2D* obj,const RPoint& t)
 	RXMLTag *pt;
 
 	if(c->GetName()!="Terminal") return;
-	con=new RObj2DConnector(obj,obj->Connectors.GetNb(),c->GetAttrValue("Id"),c->GetNb());
-	RCursor<RXMLTag> Cur(*c);
-	for(Cur.Start(),i=c->GetNb();--i;Cur.Next())              // Last Point==First Point
+	con=new RObj2DConnector(obj,obj->Connectors.GetNb(),c->GetAttrValue("Id"),c->GetNbNodes());
+	RCursor<RXMLTag> Cur(c->GetNodes());
+	for(Cur.Start(),i=c->GetNbNodes();--i;Cur.Next())              // Last Point==First Point
 	{
 		pt=Cur()->GetTag("Shape")->GetTag("Point");
 		con->Pos[i].Set(atoi(pt->GetAttrValue("X")),atoi(pt->GetAttrValue("Y")));
 		con->Pos[i]-=t;
 	}
-	con->NbPos=c->GetNb();
+	con->NbPos=c->GetNbNodes();
 	obj->Connectors.InsertPtr(con);
 }
 
@@ -261,13 +261,13 @@ void RProblem2D::CreateNet(RXMLTag* n)
 		w=1.0;
 
 	// Look if connection with a external pin
-	cnt=new RConnection(n->GetNb(),w);
+	cnt=new RConnection(n->GetNbNodes(),w);
 	con=Problem.Connectors.GetPtr<const char*>(n->GetAttrValue("Id"),false);
 	if(con)
 		cnt->Connect.InsertPtr(con);
 
 	// Go through objects
-	RCursor<RXMLTag> tab(*n);
+	RCursor<RXMLTag> tab(n->GetNodes());
 	for(tab.Start();!tab.End();tab.Next())
 	{
 		if(tab()->GetName()!="Connect") continue;
