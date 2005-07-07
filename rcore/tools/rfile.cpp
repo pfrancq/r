@@ -69,7 +69,7 @@ RFile::RFile(const RString &name)
 
 
 //------------------------------------------------------------------------------
-RFile::RFile(RFile& file)
+RFile::RFile(const RFile& file)
   : Mode(file.Mode), Name(file.Name)
 {
 }

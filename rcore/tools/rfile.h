@@ -84,7 +84,7 @@ public:
 	* Copy constructor of a file.
 	* @param file           File.
 	*/
-	RFile(RFile& file);
+	RFile(const RFile& file);
 
 	/**
 	* Open the file
