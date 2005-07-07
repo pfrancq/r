@@ -70,12 +70,12 @@ template<class N,bool bAlloc,bool bOrder>
 	if(!node) return;
 	if(node->Parent)
 	{
-		node->Parent->RContainer<N,false,bOrder>::DeletePtr(node);
+		node->Parent->RContainer<N,false,bOrder>::DeletePtr(*node);
 		node->Parent=0;
 	}
 	else
-		Top->RContainer<N,false,bOrder>::DeletePtr(node);
-	RContainer<N,bAlloc,bOrder>::DeletePtr(node);
+		Top->RContainer<N,false,bOrder>::DeletePtr(*node);
+	RContainer<N,bAlloc,bOrder>::DeletePtr(*node);
 }
 
 

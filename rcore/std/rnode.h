@@ -37,6 +37,7 @@
 
 //-----------------------------------------------------------------------------
 #include <rstd/rcontainer.h>
+#include <rstd/rcursor.h>
 
 
 //-----------------------------------------------------------------------------
@@ -87,6 +88,18 @@ public:
 	* @returns Pointer to N.
 	*/
 	N* GetParent(void) const;
+
+	/**
+	* Get the number of child nodes in this node.
+	* @return size_t
+	*/
+	size_t GetNbNodes(void) const;
+
+	/**
+	* Get a cursor on the all nodes of the tree.
+	* @return RCursor<N>.
+	*/
+	RCursor<N> GetNodes(void) const;
 
 	/**
 	* Destruct the node.
