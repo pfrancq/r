@@ -63,7 +63,7 @@ RPoint RFreePolygons::CanPlace(RGeoInfo* info)
 
 	RCursor<RFreePolygon> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
-	{	
+	{
 		for(o=0;o<obj->NbPossOri;o++)
 		{
 			info->SetOri(o);

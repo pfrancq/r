@@ -154,7 +154,7 @@ RGeoInfo::RGeoInfo(RObj2D* obj)
 
 
 //------------------------------------------------------------------------------
-RGeoInfo::RGeoInfo(RGeoInfo& info)
+RGeoInfo::RGeoInfo(const RGeoInfo& info)
 	: Connectors(info.Connectors.GetNb(),info.Connectors.GetIncNb())
 {
 	Obj=info.Obj;

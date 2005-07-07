@@ -6,7 +6,7 @@
 
 	Object to place in a specific node - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -82,7 +82,7 @@ public:
 	/**
 	* Comparaison function
 	*/
-	int Compare(const unsigned int &id) const;
+	int Compare(const unsigned int id) const;
 
 	/**
 	* Comparaison function

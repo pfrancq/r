@@ -55,7 +55,7 @@ RXMLStruct::RXMLStruct(void)
 //------------------------------------------------------------------------------
 RXMLTag* RXMLStruct::GetTag(RString name)
 {
-	return(GetPtr<RString>(name,false));
+	return(GetPtr(name,false));
 }
 
 
@@ -64,7 +64,7 @@ RXMLTag* RXMLStruct::GetTag(RString name,RXMLTag* parent)
 {
 	if(!parent)
 		return(0);
-	return(parent->GetPtr<RString>(name,false));
+	return(parent->GetPtr(name,false));
 }
 
 
@@ -98,13 +98,6 @@ void RXMLStruct::DeleteTag(RXMLTag* tag)
 void RXMLStruct::InsertEntity(RString name,RString value)
 {
 	Entities.InsertPtr(new RXMLAttr(name,value));
-}
-
-
-//------------------------------------------------------------------------------
-void RXMLStruct::Clear(void)
-{
-	RTree<RXMLTag,true,false>::Clear();
 }
 
 

@@ -52,7 +52,7 @@ namespace R{
 * @short XML Structure.
 * @author Pascal Francq and Thomas L'Eglise.
 */
-class RXMLStruct : private RTree<RXMLTag,true,false>
+class RXMLStruct : public RTree<RXMLTag,true,false>
 {
 	/**
 	* The entities of the structure.
@@ -120,11 +120,6 @@ public:
 	* @param value          Value of thae entity.
 	*/
 	void InsertEntity(RString name,RString value);
-
-	/**
-	* Clear the tree XML structure.
-	*/
-	void Clear(void);
 
 	/**
 	* Get a Cursor on the entities.

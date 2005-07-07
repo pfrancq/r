@@ -6,7 +6,7 @@
 
 	Objects to Group - Implementation.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -57,7 +57,7 @@ RObjG::RObjG(const RObjG* obj)
 
 
 //------------------------------------------------------------------------------
-int RObjG::Compare(const unsigned int& id) const
+int RObjG::Compare(const unsigned int id) const
 {
 	return(Id-id);
 }

@@ -263,7 +263,7 @@ public:
 	/**
 	* Construct a geometric information from another one.
 	*/
-	RGeoInfo(RGeoInfo& info);
+	RGeoInfo(const RGeoInfo& info);
 
 	/**
 	* Clears the geometric information.
