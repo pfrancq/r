@@ -52,14 +52,14 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 RXMLTag::RXMLTag(void)
-	: RNode<RXMLTag,false>(100,50), Attrs(20,10)
+	: RNode<RXMLTag,false>(100,50), Name(), Contains(), Attrs(20,10)
 {
 }
 
 
 //-----------------------------------------------------------------------------
 RXMLTag::RXMLTag(const RString& name)
-	: RNode<RXMLTag,false>(100,50), Name(name), Attrs(20,10)
+	: RNode<RXMLTag,false>(100,50), Name(name), Contains(), Attrs(20,10)
 {
 }
 
