@@ -6,7 +6,7 @@
 
 	Generic class representing shared data - Header.
 
-	Copyright 2004 by the Université Libre de Bruxelles.
+	Copyright 2004-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -50,7 +50,7 @@ namespace R{
 class RSharedData
 {
 	/**
-	*	Number of references of the data.
+	* Number of references of the data.
 	*/
 	unsigned int Refs;
 
@@ -85,7 +85,7 @@ public:
 
 
 //------------------------------------------------------------------------------
-/** 
+/**
 * Function the increase the number of references of a RShareData object.
 * @param D                  Type of the shared data.
 * @param data               Pointer to the data.
@@ -93,12 +93,13 @@ public:
 template <class D>
 	void RIncRef(D* data)
 {
-	data->IncRef();
+	if(data)
+		data->IncRef();
 }
 
 
 //------------------------------------------------------------------------------
-/** 
+/**
 * Function the decrease the number of references of a RShareData object. If there
 * are no more references, the data is destroy and the pointer is set to 0.
 * @param D                  Type of the shared data.
@@ -108,9 +109,9 @@ template<class D>
 	void RDecRef(D* data)
 {
 	if(data&&data->DecRef())
-	{ 
-		delete data; 
-		data = 0; 
+	{
+		delete data;
+		data = 0;
 	}
 }
 
