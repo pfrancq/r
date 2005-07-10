@@ -241,6 +241,16 @@ public:
 	inline void ReOrder(int sortOrder(const void*,const void*)) {BasicContainer::ReOrder(sortOrder);}
 
 	/**
+	* ReOrder the container based on the 'Compare' method of the objects
+	* contained. This method must be used with caution, because it can crash
+	* the container:
+	* -# The container contains null pointers.
+	* -# The container is ordered and the method does not use the same criterion
+	*    for the ordering.
+	*/
+	inline void ReOrder(void) {BasicContainer::ReOrder(Compare<C>);}
+
+	/**
 	* Exchange two elements in the container. The method does not verify if the
 	* exchange is compatible with the ordering of the container.
 	* @param pos1            Position of the first element.
