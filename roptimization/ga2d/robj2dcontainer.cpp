@@ -32,9 +32,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/robj2dcontainer.h>
-#include <rga/rgeoinfo.h>
-#include <rga/rgeoinfos.h>
+#include <robj2dcontainer.h>
+#include <rgeoinfo.h>
+#include <rgeoinfos.h>
 using namespace R;
 
 

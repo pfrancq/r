@@ -37,10 +37,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Library
-//#include <rstd/rstring.h>
-#include <rstd/rcursor.h>
-#include <rdb/rmysql.h>
-#include <rstd/rtextencoding.h>
+//#include <rstring.h>
+#include <rcursor.h>
+#include <rmysql.h>
+#include <rtextencoding.h>
 using namespace R;
 
 

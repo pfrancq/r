@@ -38,9 +38,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstring.h>
-#include <rpromethee/rpromethee.h>
-#include <rpromethee/rpromcritvalue.h>
+#include <rstring.h>
+#include <rpromethee.h>
+#include <rpromcritvalue.h>
 
 
 //------------------------------------------------------------------------------

@@ -37,8 +37,8 @@
 
 //-----------------------------------------------------------------------------
 // include files foor R Project
-#include <rstd/rxmltag.h>
-#include <rstd/rxmlstruct.h>
+#include <rxmltag.h>
+#include <rxmlstruct.h>
 using namespace R;
 using namespace std;
 
@@ -143,22 +143,26 @@ bool RXMLTag::IsEmpty(void)
 void RXMLTag::DeleteEmptyTags(RXMLStruct* s)
 {
 #warning verify this behavior
-	unsigned int i;
+	RContainer<RXMLTag,false,false> ToDel(20,10);
 
 	// Go through the subtags.
-	RCursor<RXMLTag> ptr(GetNodes());
-	for(i=GetNbNodes()+1,ptr.Start();--i;)
+	RCursor<RXMLTag> Cur(GetNodes());
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		ptr()->DeleteEmptyTags(s);
-		if(ptr()->IsEmpty())
-		{
-			// If the tags is empty -> Delete it but don't increase ptr
-			// because DeletePtr will move everything to the left
-			s->DeleteTag(ptr());
-		}
-		else
-			ptr.Next();  // No empty tag -> Go to the next.
+		Cur()->DeleteEmptyTags(s);
+		if(Cur()->IsEmpty())
+			ToDel.InsertPtr(Cur());
 	}
+
+	Cur.Set(ToDel);
+	int i;
+	cout<<"Must delete "<<ToDel.GetNb()<<endl;
+	for(i=1,Cur.Start();!Cur.End();Cur.Next(),i++)
+	{
+		cout<<"      Del *"<<Cur()->GetName()<<"*  "<<i<<endl;
+		s->DeleteTag(Cur());
+	}
+	cout<<"OK"<<endl;
 }
 
 

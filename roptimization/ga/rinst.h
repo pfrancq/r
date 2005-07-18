@@ -37,10 +37,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rga.h>
-#include <rga/rdebug.h>
-#include <rga/rgasignals.h>
-#include <rstd/rcursor.h>
+#include <rga.h>
+#include <rdebug.h>
+#include <rgasignals.h>
+#include <rcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -388,7 +388,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Template implementation
-#include <rga/rinst.hh>
+#include <rinst.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

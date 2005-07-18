@@ -32,10 +32,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprg/rprginstfor.h>
-#include <rprg/rprgvarval.h>
-#include <rprg/rprg.h>
-#include <rstd/rcursor.h>
+#include <rprginstfor.h>
+#include <rprgvarval.h>
+#include <rprg.h>
+#include <rcursor.h>
 using namespace R;
 
 

@@ -37,10 +37,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-#include <rga/robjs.h>
-#include <rga/rgga.h>
-#include <rga/rgroup.h>
+#include <rcontainer.h>
+#include <robjs.h>
+#include <rgga.h>
+#include <rgroup.h>
 
 
 //------------------------------------------------------------------------------
@@ -233,7 +233,7 @@ public:
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rga/rgroups.hh>
+#include <rgroups.hh>
 
 
 }//------- End of namespace R --------------------------------------------------

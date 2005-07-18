@@ -28,8 +28,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rgeoinfoconnection.h>
-#include <rga/rgeoinfos.h>
+#include <rgeoinfoconnection.h>
+#include <rgeoinfos.h>
 using namespace R;
 
 

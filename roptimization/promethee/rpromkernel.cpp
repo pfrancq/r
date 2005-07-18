@@ -37,9 +37,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromkernel.h>
-#include <rpromethee/rpromcritvalue.h>
-#include <rstd/rcursor.h>
+#include <rpromkernel.h>
+#include <rpromcritvalue.h>
+#include <rcursor.h>
 using namespace R;
 
 

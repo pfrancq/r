@@ -38,12 +38,12 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstring.h>
-#include <rstd/rcontainer.h>
-#include <rstd/random.h>
-#include <rga/robjs.h>
-#include <rga/rgroups.h>
-#include <rstd/rcursor.h>
+#include <rstring.h>
+#include <rcontainer.h>
+#include <random.h>
+#include <robjs.h>
+#include <rgroups.h>
+#include <rcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -367,7 +367,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Definitions of templates
-#include <rga/rgroupingkmeans.hh>
+#include <rgroupingkmeans.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

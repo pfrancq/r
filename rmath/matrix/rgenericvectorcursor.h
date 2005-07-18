@@ -37,9 +37,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rgenericsparsevector.h>
-#include <rmath/rgenericsparsematrix.h>
-#include <rstd/rcursor.h>
+#include <rgenericsparsevector.h>
+#include <rgenericsparsematrix.h>
+#include <rcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ public :
 };
 
 
-#include <rmath/rgenericvectorcursor.hh> // implementation
+#include <rgenericvectorcursor.hh> // implementation
 
 
 }  //-------- End of namespace R -----------------------------------------------

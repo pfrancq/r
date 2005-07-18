@@ -36,12 +36,12 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rstd/rstring.h>
-#include <rstd/rcontainer.h>
-#include <rstd/rcstring.h>
-#include <rstd/rstring.h>
-#include <rstd/rdate.h>
+#include <rstd.h>
+#include <rstring.h>
+#include <rcontainer.h>
+#include <rcstring.h>
+#include <rstring.h>
+#include <rdate.h>
 
 
 //------------------------------------------------------------------------------

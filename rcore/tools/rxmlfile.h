@@ -36,8 +36,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rtextfile.h>
-#include <rstd/rxmlstruct.h>
+#include <rtextfile.h>
+#include <rxmlstruct.h>
 
 
 //------------------------------------------------------------------------------

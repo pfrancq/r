@@ -24,7 +24,7 @@
       <useconfiguration>default</useconfiguration>
     </general>
     <run>
-      <mainprogram>/home/pfrancq/prj/upgalilei/src/.libs/upgalilei</mainprogram>
+      <mainprogram>/home/pfrancq/prj/testr/src/testr</mainprogram>
       <programargs/>
       <terminal>false</terminal>
       <envvars/>
@@ -44,7 +44,7 @@
     </make>
     <configurations>
       <default>
-        <configargs>--prefix=/usr/local --enable-debug=full --enable-kde=yes</configargs>
+        <configargs>--prefix=/usr --enable-debug=full --enable-kde=yes</configargs>
         <builddir/>
         <topsourcedir/>
         <cppflags/>
@@ -58,6 +58,7 @@
         <cflags/>
         <cxxflags/>
         <f77flags/>
+        <envvars/>
       </default>
     </configurations>
   </kdevautoproject>

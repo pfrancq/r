@@ -31,7 +31,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rline.h>
+#include <rline.h>
 using namespace R;
 
 

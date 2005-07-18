@@ -45,8 +45,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rdir.h>
-#include <rstd/riofile.h>
+#include <rdir.h>
+#include <riofile.h>
 using namespace R;
 using namespace std;
 

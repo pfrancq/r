@@ -47,7 +47,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R library
-#include <rstd/rstring.h>
+#include <rstring.h>
 
 
 

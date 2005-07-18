@@ -31,8 +31,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Library
-#include <frontend/kde/qxmlcontainer.h>
-#include <frontend/kde/rqt.h>
+#include <qxmlcontainer.h>
+#include <rqt.h>
 using namespace R;
 
 

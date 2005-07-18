@@ -31,8 +31,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/redge.h>
-#include <rmath/rvertex.h>
+#include <redge.h>
+#include <rvertex.h>
 using namespace R;
 
 

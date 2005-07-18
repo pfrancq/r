@@ -31,7 +31,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rvertex.h>
+#include <rvertex.h>
 using namespace R;
 
 

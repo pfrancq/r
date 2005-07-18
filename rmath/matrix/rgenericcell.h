@@ -146,7 +146,7 @@ public :
 
 //---------------------------------------------------------------------------
 // inline implementation
-#include <rmath/rgenericcell.hh>
+#include <rgenericcell.hh>
 
 
 }  //-------- End of namespace RMath ------------------------------------------

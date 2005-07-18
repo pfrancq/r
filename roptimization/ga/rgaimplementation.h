@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rga.h>
+#include <rga.h>
 
 
 //------------------------------------------------------------------------------
@@ -46,9 +46,9 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // Definitions of templates
-#include <rga/rfitness.hh>
-#include <rga/rinst.hh>
-#include <rga/rchromo.hh>
+#include <rfitness.hh>
+#include <rinst.hh>
+#include <rchromo.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

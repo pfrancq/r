@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromsol.h>
+#include <rpromsol.h>
 using namespace R;
 
 

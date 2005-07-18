@@ -37,17 +37,17 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rmath/rpoint.h>
-#include <rmath/rrect.h>
-#include <rga/robj2d.h>
-#include <rga/rgeoinfo.h>
-#include <rga/rgeoinfos.h>
-#include <rga/rgrid.h>
-#include <rga/rfreepolygons.h>
-#include <rga/rconnections.h>
-#include <rga/rproblem2d.h>
-#include <rpromethee/rpromcriterion.h>
+#include <rstd.h>
+#include <rpoint.h>
+#include <rrect.h>
+#include <robj2d.h>
+#include <rgeoinfo.h>
+#include <rgeoinfos.h>
+#include <rgrid.h>
+#include <rfreepolygons.h>
+#include <rconnections.h>
+#include <rproblem2d.h>
+#include <rpromcriterion.h>
 
 
 //------------------------------------------------------------------------------

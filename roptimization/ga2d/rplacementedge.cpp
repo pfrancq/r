@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rplacementedge.h>
+#include <rplacementedge.h>
 using namespace R;
 
 

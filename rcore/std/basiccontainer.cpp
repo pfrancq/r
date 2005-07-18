@@ -32,8 +32,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/base/basiccontainer.h>
-#include <rstd/rmsg.h>
+#include <basiccontainer.h>
+#include <rmsg.h>
 using namespace R;
 
 

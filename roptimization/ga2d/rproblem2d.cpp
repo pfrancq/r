@@ -36,9 +36,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rxmlstruct.h>
-#include <rstd/rxmlfile.h>
-#include <rga/rproblem2d.h>
+#include <rxmlstruct.h>
+#include <rxmlfile.h>
+#include <rproblem2d.h>
 using namespace R;
 
 

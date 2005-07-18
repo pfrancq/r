@@ -32,8 +32,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromkernel.h>
-#include <rga/rplacementcenter.h>
+#include <rpromkernel.h>
+#include <rplacementcenter.h>
 using namespace R;
 
 

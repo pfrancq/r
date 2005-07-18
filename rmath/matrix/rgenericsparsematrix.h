@@ -36,9 +36,9 @@
 
 //-----------------------------------------------------------------------------
 //include file for R Project
-#include <rmath/rgenericcell.h>
-#include <rmath/rgenericsparsevector.h>
-#include <rstd/rcontainer.h>
+#include <rgenericcell.h>
+#include <rgenericsparsevector.h>
+#include <rcontainer.h>
 
 
 //-----------------------------------------------------------------------------
@@ -97,7 +97,7 @@ public :
 	virtual ~RGenericSparseMatrix(void);
 };
 
-#include <rmath/rgenericsparsematrix.hh>
+#include <rgenericsparsematrix.hh>
 
 }  //-------- End of namespace R -----------------------------------------
 

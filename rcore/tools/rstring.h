@@ -42,11 +42,11 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rstd/rcontainer.h>
-#include <rstd/rcstring.h>
-#include <rstd/rchar.h>
-#include <rstd/base/basicstring.h>
+#include <rstd.h>
+#include <rcontainer.h>
+#include <rcstring.h>
+#include <rchar.h>
+#include <basicstring.h>
 
 
 //-----------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 
 	Generic function used for Qt compatibility - Header.
 
-	Copyright 2004 by the Université Libre de Bruxelles.
+	Copyright 2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -34,7 +34,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R
-#include <rstd/rstring.h>
+#include <rstring.h>
 
 
 //------------------------------------------------------------------------------

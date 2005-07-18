@@ -35,7 +35,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rchar.h>
+#include <rchar.h>
 using namespace R;
 
 

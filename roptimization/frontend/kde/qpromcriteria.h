@@ -34,8 +34,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-#include <rpromethee/rpromcriterion.h>
+#include <rcontainer.h>
+#include <rpromcriterion.h>
 
 
 //------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The QPromCriteria class provides a QT widget to configure a list of Prométhée
+* The QPromCriteria class provides a QT widget to configure a list of Promï¿½hï¿½
 * Criterion.
 * @short Configuration of PROMETHEE Criteria.
 * @author Pascal Francq.

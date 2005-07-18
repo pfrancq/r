@@ -38,8 +38,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromethee.h>
-#include <rpromethee/rpromcritvalue.h>
+#include <rpromethee.h>
+#include <rpromcritvalue.h>
 
 
 //------------------------------------------------------------------------------

@@ -32,9 +32,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rstd/rtextfile.h>
-#include <rstd/rtextencoding.h>
+#include <rstd.h>
+#include <rtextfile.h>
+#include <rtextencoding.h>
 using namespace R;
 using namespace std;
 

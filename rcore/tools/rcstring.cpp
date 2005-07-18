@@ -37,7 +37,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcstring.h>
+#include <rcstring.h>
 using namespace std;
 using namespace R;
 

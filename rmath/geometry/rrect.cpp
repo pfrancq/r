@@ -32,8 +32,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rrect.h>
-#include <rmath/rpolygon.h>
+#include <rrect.h>
+#include <rpolygon.h>
 using namespace R;
 
 

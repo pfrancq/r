@@ -137,7 +137,7 @@ public:
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rga/rfitness.hh>
+#include <rfitness.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

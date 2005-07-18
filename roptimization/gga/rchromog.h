@@ -35,11 +35,11 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-#include <rga/rchromo.h>
-#include <rga/rgga.h>
-#include <rga/rgroups.h>
-#include <rga/rgroupingheuristic.h>
+#include <rcontainer.h>
+#include <rchromo.h>
+#include <rgga.h>
+#include <rgroups.h>
+#include <rgroupingheuristic.h>
 
 
 //------------------------------------------------------------------------------
@@ -170,7 +170,7 @@ public:
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rga/rchromog.hh>
+#include <rchromog.hh>
 
 
 }//------- End of namespace R --------------------------------------------------

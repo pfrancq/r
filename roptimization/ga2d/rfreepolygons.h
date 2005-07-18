@@ -36,8 +36,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-#include <rga/rfreepolygon.h>
+#include <rcontainer.h>
+#include <rfreepolygon.h>
 
 
 //------------------------------------------------------------------------------

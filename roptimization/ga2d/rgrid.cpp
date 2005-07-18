@@ -32,10 +32,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rmsg.h>
-#include <rga/rga.h>
-#include <rga/rgrid.h>
-#include <rga/rgeoinfo.h>
+#include <rmsg.h>
+#include <rga.h>
+#include <rgrid.h>
+#include <rgeoinfo.h>
 using namespace R;
 
 

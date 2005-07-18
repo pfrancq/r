@@ -37,8 +37,8 @@
 
 //-----------------------------------------------------------------------------
 //include file for R Project
-#include <rmath/rgenericcell.h>
-#include <rstd/rcontainer.h>
+#include <rgenericcell.h>
+#include <rcontainer.h>
 
 
 //-----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ public :
 
 //---------------------------------------------------------------------------
 // inline implementation
-#include <rmath/rgenericsparsevector.hh>
+#include <rgenericsparsevector.hh>
 
 
 }  //-------- End of namespace R -----------------------------------------

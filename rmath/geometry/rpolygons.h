@@ -37,8 +37,8 @@
 
 //------------------------------------------------------------------------------
 // include files for RGeometry
-#include <rmath/geometry.h>
-#include <rmath/rpolygon.h>
+#include <rgeometry.h>
+#include <rpolygon.h>
 
 
 //------------------------------------------------------------------------------

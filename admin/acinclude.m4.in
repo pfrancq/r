@@ -4172,15 +4172,15 @@ AC_DEFUN(KDE_CREATE_SUBDIRSLIST,
 
 DO_NOT_COMPILE="$DO_NOT_COMPILE CVS debian bsd-port admin"
 
-if test ! -s $srcdir/subdirs; then
+dnl if test ! -s $srcdir/subdirs; then
   dnl Note: Makefile.common creates subdirs, so this is just a fallback
-  TOPSUBDIRS=""
-  files=`cd $srcdir && ls -1`
-  dirs=`for i in $files; do if test -d $i; then echo $i; fi; done`
-  for i in $dirs; do
-    echo $i >> $srcdir/subdirs
-  done
-fi
+dnl  TOPSUBDIRS=""
+dnl  files=`cd $srcdir && ls -1`
+dnl  dirs=`for i in $files; do if test -d $i; then echo $i; fi; done`
+dnl  for i in $dirs; do
+dnl    echo $i >> $srcdir/subdirs
+dnl   done
+dnl fi
 
 if test -s $srcdir/inst-apps; then
   ac_topsubdirs="`cat $srcdir/inst-apps`"

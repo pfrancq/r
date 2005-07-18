@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprg/rprgfunc.h>
+#include <rprgfunc.h>
 using namespace R;
 
 

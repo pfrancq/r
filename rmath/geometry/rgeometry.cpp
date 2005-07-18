@@ -6,7 +6,7 @@
 
 	Geometry base classes - Basic definition - Implementation.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/geometry.h>
+#include <rgeometry.h>
 using namespace R;
 
 

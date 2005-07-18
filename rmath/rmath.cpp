@@ -32,8 +32,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rmath/rmath.h>
+#include <rstd.h>
+#include <rmath.h>
 using namespace R;
 using namespace std;
 

@@ -26,7 +26,8 @@ package-merge:
 	@MAKE=$(MAKE) POFILES=$(POFILES) PACKAGE=$(PACKAGE) \
 	  $(SHELL) admin/cvs.sh package-merge
 
-configure.in: configure.files $(shell test -f configure.files && cat configure.files) subdirs
+#configure.in: configure.files $(shell test -f configure.files && cat configure.files) subdirs
+configure.in: configure.files subdirs
 configure.files: subdirs
 
 .SILENT:

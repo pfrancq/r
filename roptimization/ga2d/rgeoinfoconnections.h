@@ -36,9 +36,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rconnections.h>
-#include <rga/rgeoinfoconnection.h>
-#include <rga/rgeoinfo.h>
+#include <rconnections.h>
+#include <rgeoinfoconnection.h>
+#include <rgeoinfo.h>
 
 
 //------------------------------------------------------------------------------

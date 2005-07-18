@@ -28,9 +28,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromkernel.h>
-#include <rga/rgeoinfoconnections.h>
-#include <rga/rgeoinfos.h>
+#include <rpromkernel.h>
+#include <rgeoinfoconnections.h>
+#include <rgeoinfos.h>
 using namespace R;
 
 

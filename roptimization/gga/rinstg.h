@@ -37,12 +37,12 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-#include <rstd/rcursor.h>
-#include <rga/robjs.h>
-#include <rga/rinst.h>
-#include <rga/robjg.h>
-#include <rga/rfirstfitheuristic.h>
+#include <rcontainer.h>
+#include <rcursor.h>
+#include <robjs.h>
+#include <rinst.h>
+#include <robjg.h>
+#include <rfirstfitheuristic.h>
 
 
 //------------------------------------------------------------------------------
@@ -232,7 +232,7 @@ public:
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rga/rinstg.hh>
+#include <rinstg.hh>
 
 
 }//------- End of namespace R --------------------------------------------------

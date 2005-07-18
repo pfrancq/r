@@ -1,9 +1,9 @@
-INCLUDES = -I$(top_srcdir)/ $(all_includes)
-pkglib_LTLIBRARIES = librdb.la
+INCLUDES = -I$(top_srcdir)/ $(all_includes) $(INCLUDES_R)
+noinst_LTLIBRARIES = libdb.la
 AM_CFLAGS =
 AM_CXXFLAGS =
 AM_FFLAGS =
 SUBDIRS =
-rdbincludedir = $(includedir)/r/rdb
-rdbinclude_HEADERS =  rmysql.h
-librdb_la_SOURCES =  rmysql.cpp
+dbincludedir = $(includedir)/r
+dbinclude_HEADERS =  rmysql.h
+libdb_la_SOURCES =  rmysql.cpp

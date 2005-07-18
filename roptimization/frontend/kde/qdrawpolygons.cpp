@@ -37,7 +37,7 @@
 //------------------------------------------------------------------------------
 // include files for Qt widgets
 #include <qdrawpolygons.h>
-#include <frontend/kde/rqt.h>
+#include <rqt.h>
 using namespace R;
 
 

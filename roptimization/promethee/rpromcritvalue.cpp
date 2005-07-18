@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromcritvalue.h>
+#include <rpromcritvalue.h>
 using namespace R;
 
 

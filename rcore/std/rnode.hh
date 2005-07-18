@@ -59,12 +59,14 @@ template<class N,bool bOrder>
 	return(Parent);
 }
 
+
 //-----------------------------------------------------------------------------
 template<class N,bool bOrder>
 	size_t RNode<N,bOrder>::GetNbNodes(void) const
 {
 	return(RContainer<N,false,bOrder>::GetNb());
 }
+
 
 //-----------------------------------------------------------------------------
 template<class N,bool bOrder>
@@ -79,4 +81,3 @@ template<class N,bool bOrder>
 	RNode<N,bOrder>::~RNode(void)
 {
 }
-

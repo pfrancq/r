@@ -36,8 +36,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rgraph.h>
-#include <rstd/rcursor.h>
+#include <rgraph.h>
+#include <rcursor.h>
 using namespace R;
 
 

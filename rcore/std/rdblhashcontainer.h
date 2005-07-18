@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
+#include <rcontainer.h>
 
 
 //------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ namespace R{
 * variable c:
 * @code
 * #include <string.h>
-* #include <rstd/rdblhashcontainer.h>
+* #include <lhashcontainer.h>
 * using namespace R;
 *
 *

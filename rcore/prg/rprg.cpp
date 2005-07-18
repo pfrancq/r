@@ -39,14 +39,14 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprg/rprg.h>
-#include <rprg/rprginstfor.h>
-#include <rprg/rprginstmethod.h>
-#include <rprg/rprgvarconst.h>
-#include <rprg/rprgvarref.h>
-#include <rprg/rprgclass.h>
-#include <rprg/rprgfunc.h>
-#include <rstd/rcursor.h>
+#include <rprg.h>
+#include <rprginstfor.h>
+#include <rprginstmethod.h>
+#include <rprgvarconst.h>
+#include <rprgvarref.h>
+#include <rprgclass.h>
+#include <rprgfunc.h>
+#include <rcursor.h>
 using namespace R;
 
 

@@ -28,10 +28,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/random.h>
-#include <rga/rconnections.h>
-#include <rga/rgeoinfos.h>
-#include <rpromethee/rpromkernel.h>
+#include <random.h>
+#include <rconnections.h>
+#include <rgeoinfos.h>
+#include <rpromkernel.h>
 using namespace R;
 
 

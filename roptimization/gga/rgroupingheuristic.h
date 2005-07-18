@@ -37,11 +37,11 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstring.h>
-#include <rstd/random.h>
-#include <rga/robjs.h>
-#include <rga/rgroups.h>
-#include <rga/rdebug.h>
+#include <rstring.h>
+#include <random.h>
+#include <robjs.h>
+#include <rgroups.h>
+#include <rdebug.h>
 
 
 //------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Definitions of templates
-#include <rga/rgroupingheuristic.hh>
+#include <rgroupingheuristic.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

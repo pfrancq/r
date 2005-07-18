@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rdebug.h>
+#include <rdebug.h>
 using namespace R;
 
 

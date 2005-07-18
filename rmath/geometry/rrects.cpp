@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rrects.h>
+#include <rrects.h>
 using namespace R;
 
 

@@ -37,9 +37,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rstd/rcontainer.h>
-#include <rstd/rstring.h>
+#include <rstd.h>
+#include <rcontainer.h>
+#include <rstring.h>
 
 
 //------------------------------------------------------------------------------

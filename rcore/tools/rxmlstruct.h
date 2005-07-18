@@ -37,8 +37,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rtree.h>
-#include <rstd/rxmltag.h>
+#include <rtree.h>
+#include <rxmltag.h>
 
 
 //------------------------------------------------------------------------------

@@ -37,10 +37,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromcriterion.h>
-#include <rpromethee/rpromcritvalue.h>
-#include <rpromethee/rpromkernel.h>
-#include <rstd/rcursor.h>
+#include <rpromcriterion.h>
+#include <rpromcritvalue.h>
+#include <rpromkernel.h>
+#include <rcursor.h>
 using namespace R;
 
 

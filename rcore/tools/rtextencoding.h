@@ -42,9 +42,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rstd/rstring.h>
-#include <rstd/rcstring.h>
+#include <rstd.h>
+#include <rstring.h>
+#include <rcstring.h>
 
 
 //------------------------------------------------------------------------------

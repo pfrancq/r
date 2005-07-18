@@ -43,10 +43,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rstd/rcontainer.h>
-#include <rstd/rcursor.h>
-#include <rstd/rtextfile.h>
+#include <rstd.h>
+#include <rcontainer.h>
+#include <rcursor.h>
+#include <rtextfile.h>
 
 
 //------------------------------------------------------------------------------

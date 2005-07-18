@@ -159,7 +159,7 @@ public:
 };
 
 
-#include <rstd/base/basicstring.hh>
+#include <basicstring.hh>
 
 
 }  //-------- End of namespace R ----------------------------------------------

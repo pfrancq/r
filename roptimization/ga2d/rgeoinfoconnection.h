@@ -36,10 +36,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-#include <rmath/rgraph.h>
-#include <rga/rgeoinfo.h>
-#include <rga/rconnection.h>
+#include <rcontainer.h>
+#include <rgraph.h>
+#include <rgeoinfo.h>
+#include <rconnection.h>
 
 
 //------------------------------------------------------------------------------

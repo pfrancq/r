@@ -32,4 +32,4 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromethee.h>
+#include <rpromethee.h>

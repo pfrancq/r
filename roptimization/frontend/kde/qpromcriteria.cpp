@@ -29,7 +29,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromcriterion.h>
+#include <rpromcriterion.h>
 #include <qpromcriteria.h>
 using namespace R;
 

@@ -32,10 +32,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rmath/rpoints.h>
-#include <rmath/rpolygon.h>
-#include <rmath/rpolygons.h>
+#include <rstd.h>
+#include <rpoints.h>
+#include <rpolygon.h>
+#include <rpolygons.h>
 using namespace R;
 
 

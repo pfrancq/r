@@ -32,7 +32,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/base/basiccursor.h>
+#include <basiccursor.h>
 using namespace R;
 
 

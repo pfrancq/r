@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rvectorint.h>
+#include <rvectorint.h>
 using namespace R;
 
 

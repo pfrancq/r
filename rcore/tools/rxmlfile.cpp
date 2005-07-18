@@ -31,8 +31,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rxmlfile.h>
-#include <rstd/rcursor.h>
+#include <rxmlfile.h>
+#include <rcursor.h>
 using namespace R;
 using namespace std;
 

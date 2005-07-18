@@ -32,10 +32,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromkernel.h>
-#include <rga/rplacementheuristic.h>
-#include <rstd/random.h>
-#include <rstd/rxmlstruct.h>
+#include <rpromkernel.h>
+#include <rplacementheuristic.h>
+#include <random.h>
+#include <rxmlstruct.h>
 using namespace R;
 
 

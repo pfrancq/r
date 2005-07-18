@@ -37,8 +37,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-#include <rstd/base/basiccursor.h>
+#include <rcontainer.h>
+#include <basiccursor.h>
 
 
 //-----------------------------------------------------------------------------

@@ -31,7 +31,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rmsg.h>
+#include <rmsg.h>
 using namespace R;
 
 

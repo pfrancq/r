@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rmatrix.h>
+#include <rmatrix.h>
 using namespace R;
 
 

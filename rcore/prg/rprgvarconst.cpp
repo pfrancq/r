@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprg/rprgvarconst.h>
+#include <rprgvarconst.h>
 using namespace R;
 
 

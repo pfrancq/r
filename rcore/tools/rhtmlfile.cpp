@@ -31,7 +31,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rhtmlfile.h>
+#include <rhtmlfile.h>
 using namespace R;
 using namespace std;
 

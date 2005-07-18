@@ -36,8 +36,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/robj2d.h>
-#include <rga/rgeoinfo.h>
+#include <robj2d.h>
+#include <rgeoinfo.h>
 
 
 //------------------------------------------------------------------------------

@@ -37,8 +37,8 @@
 
 //------------------------------------------------------------------------------
 // include files for RGeometry
-#include <rmath/geometry.h>
-#include <rmath/rpoint.h>
+#include <rgeometry.h>
+#include <rpoint.h>
 
 
 //------------------------------------------------------------------------------

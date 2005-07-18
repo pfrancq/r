@@ -37,11 +37,11 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rpolygon.h>
-#include <rmath/rpoints.h>
-#include <rmath/rrect.h>
-#include <rmath/rrects.h>
-#include <rmath/rline.h>
+#include <rpolygon.h>
+#include <rpoints.h>
+#include <rrect.h>
+#include <rrects.h>
+#include <rline.h>
 using namespace R;
 using namespace std;
 

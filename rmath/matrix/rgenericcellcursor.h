@@ -37,9 +37,9 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rgenericcell.h>
-#include <rmath/rgenericsparsevector.h>
-#include <rstd/rcursor.h>
+#include <rgenericcell.h>
+#include <rgenericsparsevector.h>
+#include <rcursor.h>
 
 
 //-----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ public :
 };
 
 
-#include <rmath/rgenericcellcursor.hh> // implementation
+#include <rgenericcellcursor.hh> // implementation
 
 
 }  //-------- End of namespace RMath --------------------------------

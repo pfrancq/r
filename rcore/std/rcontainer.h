@@ -37,7 +37,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/base/basiccontainer.h>
+#include <basiccontainer.h>
 
 
 //-----------------------------------------------------------------------------
@@ -466,7 +466,7 @@ public:
 
 //-----------------------------------------------------------------------------
 // Template implementation
-#include <rstd/rcontainer.hh>
+#include <rcontainer.hh>
 
 
 }  //-------- End of namespace R ----------------------------------------------

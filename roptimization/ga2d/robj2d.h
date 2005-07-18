@@ -37,12 +37,12 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstring.h>
-#include <rmath/rpoint.h>
-#include <rmath/rrect.h>
-#include <rmath/rrects.h>
-#include <rmath/rpolygon.h>
-#include <rmath/rpolygons.h>
+#include <rstring.h>
+#include <rpoint.h>
+#include <rrect.h>
+#include <rrects.h>
+#include <rpolygon.h>
+#include <rpolygons.h>
 
 
 //------------------------------------------------------------------------------

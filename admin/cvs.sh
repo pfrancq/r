@@ -61,7 +61,8 @@ echo "    environment variable M4 to something including \"--nesting-limit=500\"
 ### The make calls could be optimized away here,
 ### with a little thought.
 if test -r configure.in.in; then
-  rm -f subdirs configure.in
+#  rm -f subdirs configure.in
+  rm -f configure.in
   echo "*** Creating list of subdirectories"
   $MAKE -f Makefile.am top_srcdir=. ./subdirs || exit 1
   echo "*** Creating configure.in"

@@ -32,9 +32,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rio.h>
-#include <rstd/rfile.h>
-#include <rstd/rtextfile.h>
+#include <rio.h>
+#include <rfile.h>
+#include <rtextfile.h>
 using namespace R;
 
 

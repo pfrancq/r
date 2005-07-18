@@ -38,9 +38,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee/rpromethee.h>
-#include <rpromethee/rpromsol.h>
-#include <rpromethee/rpromcriterion.h>
+#include <rpromethee.h>
+#include <rpromsol.h>
+#include <rpromcriterion.h>
 
 
 //------------------------------------------------------------------------------

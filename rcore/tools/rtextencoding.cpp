@@ -31,9 +31,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R library
-#include <rstd/rcontainer.h>
-#include <rstd/rcursor.h>
-#include <rstd/rtextencoding.h>
+#include <rcontainer.h>
+#include <rcursor.h>
+#include <rtextencoding.h>
 #include <errno.h>
 using namespace R;
 using namespace std;

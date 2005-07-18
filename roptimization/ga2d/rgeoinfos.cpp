@@ -31,7 +31,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rgeoinfos.h>
+#include <rgeoinfos.h>
 using namespace R;
 
 

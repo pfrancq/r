@@ -37,11 +37,11 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rmath/rpoint.h>
-#include <rga/robj2d.h>
-#include <rga/rfreepolygon.h>
-#include <rga/rfreepolygons.h>
+#include <rstd.h>
+#include <rpoint.h>
+#include <robj2d.h>
+#include <rfreepolygon.h>
+#include <rfreepolygons.h>
 
 
 //------------------------------------------------------------------------------

@@ -31,7 +31,7 @@
 
 //------------------------------------------------------------------------------
 // include files for RProject
-#include <rga/robjg.h>
+#include <robjg.h>
 using namespace R;
 
 

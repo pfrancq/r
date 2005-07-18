@@ -28,8 +28,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/random.h>
-#include <rga/rconnection.h>
+#include <random.h>
+#include <rconnection.h>
 using namespace R;
 
 

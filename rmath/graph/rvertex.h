@@ -36,8 +36,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-#include <rmath/redge.h>
+#include <rcontainer.h>
+#include <redge.h>
 
 
 //------------------------------------------------------------------------------

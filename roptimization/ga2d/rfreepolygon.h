@@ -36,8 +36,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmath/rpoint.h>
-#include <rmath/rpolygon.h>
+#include <rpoint.h>
+#include <rpolygon.h>
 
 
 //------------------------------------------------------------------------------

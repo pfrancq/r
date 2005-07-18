@@ -39,7 +39,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R library
-#include <rstd/rdownload.h>
+#include <rdownload.h>
 using namespace R;
 using namespace std;
 

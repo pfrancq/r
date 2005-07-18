@@ -32,7 +32,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rxmlattr.h>
+#include <rxmlattr.h>
 using namespace R;
 
 

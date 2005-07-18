@@ -36,11 +36,11 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-#include <rstd/rxmltag.h>
-#include <rmath/rpoint.h>
-#include <rga/robj2d.h>
-#include <rga/rconnections.h>
+#include <rcontainer.h>
+#include <rxmltag.h>
+#include <rpoint.h>
+#include <robj2d.h>
+#include <rconnections.h>
 
 
 //------------------------------------------------------------------------------

@@ -41,10 +41,10 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rstd/rcontainer.h>
-#include <rstd/rshareddata.h>
-#include <rstd/base/basicstring.h>
+#include <rstd.h>
+#include <rcontainer.h>
+#include <rshareddata.h>
+#include <basicstring.h>
 
 
 //-----------------------------------------------------------------------------

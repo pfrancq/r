@@ -32,9 +32,9 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rstd/rstring.h>
-#include <rstd/rshareddata.h>
+#include <rstd.h>
+#include <rstring.h>
+#include <rshareddata.h>
 using namespace std;
 using namespace R;
 
@@ -139,8 +139,6 @@ RString::CharBuffer* RString::GetDataNull(void)
 		RChar* ptr2=new RChar[1];
 		(*ptr2)=0;
 		RString::DataNull=new CharBuffer(ptr2,0,0);
-		RString* ptr=const_cast<RString*>(&RString::Null);
-		ptr->Data = RString::DataNull;
 	}
 	else
 		RIncRef<BasicCharBuffer>(RString::DataNull);

@@ -38,10 +38,10 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstring.h>
-#include <rstd/rnode.h>
-#include <rstd/rxmlattr.h>
-#include <rstd/rcursor.h>
+#include <rstring.h>
+#include <rnode.h>
+#include <rxmlattr.h>
+#include <rcursor.h>
 
 
 //-----------------------------------------------------------------------------

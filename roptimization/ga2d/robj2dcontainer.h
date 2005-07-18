@@ -37,9 +37,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rcontainer.h>
-#include <rga/robj2d.h>
-#include <rga/rgrid.h>
+#include <rcontainer.h>
+#include <robj2d.h>
+#include <rgrid.h>
 
 
 //------------------------------------------------------------------------------

@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rplacementbottomleft.h>
+#include <rplacementbottomleft.h>
 using namespace R;
 
 

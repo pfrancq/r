@@ -45,12 +45,12 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd/rstd.h>
-#include <rstd/rstring.h>
-#include <rstd/rcontainer.h>
-#include <rstd/rmsg.h>
-#include <rstd/rtextfile.h>
-#include <rstd/random.h>
+#include <rstd.h>
+#include <rstring.h>
+#include <rcontainer.h>
+#include <rmsg.h>
+#include <rtextfile.h>
+#include <random.h>
 
 
 //------------------------------------------------------------------------------

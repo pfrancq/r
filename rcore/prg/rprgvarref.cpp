@@ -32,8 +32,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprg/rprgvarref.h>
-#include <rprg/rprg.h>
+#include <rprgvarref.h>
+#include <rprg.h>
 using namespace R;
 
 

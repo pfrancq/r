@@ -36,11 +36,11 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rga/rga.h>
-#include <rga/robj2d.h>
-#include <rga/rgeoinfo.h>
-#include <rga/rconnection.h>
-#include <rpromethee/rpromcriterion.h>
+#include <rga.h>
+#include <robj2d.h>
+#include <rgeoinfo.h>
+#include <rconnection.h>
+#include <rpromcriterion.h>
 
 
 //------------------------------------------------------------------------------
