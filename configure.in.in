@@ -126,9 +126,7 @@ if test "$enable_kde" != "no"; then
 	KDE_USE_QT
 	AC_PATH_KDE
 	AC_CHECK_KDEMAXPATHLEN
-	
 	FRONTEND="kde"
-	FRONTEND_LIB="$FRONTEND_LIB frontend/kde/libkde_r.la"
 	CXXFLAGS="$CXXFLAGS -D_USE_KDE"
 fi
 
