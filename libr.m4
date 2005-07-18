@@ -74,6 +74,23 @@ AC_DEFUN(R_LIB_CHK,[
 	PAST_R_LIB_DIR="$R_LIB_DIR"
 	LIB_R="$R_LIB_DIR $LIB_R"
 ])
+AC_DEFUN(RKDE_LIB_CHK,[
+	RKDE_LIB_DIR=""
+	for i in $R_LIB_PATH ; do
+		for t in $i/$1/frontend/kde $i/$1 $i ; do
+			str=`echo "$t/$2"kde.*`
+
+			for j in `echo $str`; do
+				if test -r $j; then
+					RKDE_LIB_DIR=$j
+					break 3
+				fi
+			done
+		done
+	done
+	PAST_RKDE_LIB_DIR="$RKDE_LIB_DIR"
+	LIBKDE_R="$RKDE_LIB_DIR $LIBKDE_R"
+])
 # --- end def function -----
 
 
@@ -140,8 +157,15 @@ AC_DEFUN(R_ALL_LIB_CHK,[
 	# ---- check the presence of all R libraries
 	for l in `echo $1` ; do
 		R_LIB_CHK($l,lib$l)
+		for k in $2 ; do
+			if test "$k" = "kde"; then
+				RKDE_LIB_CHK($l,lib$l)
+#				RKDE_LIB_CHK(roptimization/frontend/kde,qgamonitor.h,Cannot find R headers for KDE frontend.)
+			fi
+		done
 	done
 	MSG="libraries $i"
+
 ])
 # --- end def function -----
 
@@ -156,5 +180,6 @@ AC_DEFUN(R_CHK,[
 	R_ALL_LIB_CHK($1,$2)
 	R_ALL_INC_CHK($2)
 	AC_SUBST(LIB_R)
+	AC_SUBST(LIBKDE_R)
 ])
 # --- end def function -----
