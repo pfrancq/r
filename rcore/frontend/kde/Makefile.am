@@ -1,13 +1,14 @@
 INCLUDES = -I$(top_srcdir) $(all_includes) $(INCLUDES_R)
-noinst_LTLIBRARIES =  libkde_r.la
 
-libkde_r_la_METASOURCES = AUTO
-
-AM_CFLAGS =
-AM_CXXFLAGS =
-AM_FFLAGS =
+AUTOMAKE_OPTIONS        = foreign
 SUBDIRS =
+
+lib_LTLIBRARIES         = librcorekde.la
+
+librcorekde_la_METASOURCES = AUTO
+
 rincludedir = $(includedir)/r
 rinclude_HEADERS = rqt.h
-libkde_r_la_SOURCES =  rqt.cpp
-libkde_r_la_LIBADD=$(LIB_KDECORE) $(LIB_KDEUI)
+librcorekde_la_SOURCES =  rqt.cpp
+librcorekde_la_LIBADD = ../../librcore.la $(LIB_KDECORE) $(LIB_KDEUI)
+librcorekde_la_LDFLAGS     = -no-undefined -version-info 2:0:0

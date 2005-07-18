@@ -1,12 +1,14 @@
 INCLUDES = -I$(top_srcdir) $(all_includes) $(INCLUDES_R)
-noinst_LTLIBRARIES =  libkde_r.la
 
-libkde_r_la_METASOURCES = AUTO
+AUTOMAKE_OPTIONS        = foreign
 
-AM_CFLAGS =
-AM_CXXFLAGS =
-AM_FFLAGS =
+lib_LTLIBRARIES         = libroptimizationkde.la
+
+libroptimizationkde_la_METASOURCES = AUTO
+
 SUBDIRS =
 rincludedir = $(includedir)/r
 rinclude_HEADERS = qgamonitor.h qpromcriteria.h qxmlcontainer.h qdrawpolygons.h
-libkde_r_la_SOURCES =  qgamonitor.cpp qpromcriteria.cpp qxmlcontainer.cpp qdrawpolygons.cpp
+libroptimizationkde_la_SOURCES =  qgamonitor.cpp qpromcriteria.cpp qxmlcontainer.cpp qdrawpolygons.cpp
+libroptimizationkde_la_LDFLAGS     = -no-undefined -version-info 2:0:0
+libroptimizationkde_la_LIBADD = ../../libroptimization.la ../../../rcore/frontend/kde/librcorekde.la
