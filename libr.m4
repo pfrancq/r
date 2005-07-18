@@ -68,9 +68,6 @@ AC_DEFUN(R_LIB_CHK,[
 	if test -z "$R_LIB_DIR"; then
 		AC_MSG_ERROR(Cannot find R libraries.)
 	fi
-	if test "x$R_LIB_DIR" != "x$PAST_R_LIB_DIR"; then
-		LDFLAGS="-L$i $LDFLAGS"
-	fi
 	PAST_R_LIB_DIR="$R_LIB_DIR"
 	LIB_R="$R_LIB_DIR $LIB_R"
 ])
