@@ -239,7 +239,7 @@ template<class C,class S>
 	size_t max;        // Maximal number of character to search.
 	size_t avanct;
 	size_t maxlen;  //max number of char contained in the string to search
-	size_t incr;
+	int incr;
 	S search(str);
 
 	// Initialise the search
