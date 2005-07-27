@@ -359,22 +359,27 @@ void BasicContainer::DeletePtr(bool bOrder,bool bAlloc,const void* tag,bool sort
 	size_t Index=GetIndex(bOrder&&sortkey,tag,Find,min,max,compare);
 	if(!Find)
 		return;
-	DeletePtrAt(bAlloc,Index);
+	DeletePtrAt(bAlloc,Index,true);
 }
 
 
 //-----------------------------------------------------------------------------
-void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos)
+void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos,bool del)
 {
 	void** ptr;
 
 	RReturnIfFail(pos<LastPtr);
 	ptr=&Tab[pos];
-	memmove(ptr,ptr+1,((--LastPtr)-pos)*sizeof(void*));
-	Tab[LastPtr]=0;
-	NbPtr--;
 	if(bAlloc)
 		Delete(*ptr);
+	if(del)
+	{
+		memmove(ptr,ptr+1,((--LastPtr)-pos)*sizeof(void*));
+		Tab[LastPtr]=0;
+	}
+	else
+		Tab[pos]=0;
+	NbPtr--;
 }
 
 

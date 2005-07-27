@@ -450,7 +450,7 @@ public:
 	* @param min             Starting index of the container's part concerned.
 	* @param max             Ending index of the container's part concerned.
 	*/
-	template<class TUse> inline void DeletePtrAt(size_t pos) {BasicContainer::DeletePtrAt(bAlloc,pos);}
+	inline void DeletePtrAt(size_t pos,bool del=true) {BasicContainer::DeletePtrAt(bAlloc,pos,del);}
 
 	/**
 	* Destructs the container.
