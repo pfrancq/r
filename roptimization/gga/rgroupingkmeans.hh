@@ -519,7 +519,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	double RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::Similarity(cObj* obj1, cObj* obj2)
 {
-	return (obj1->Similarity(obj2));
+	return(obj1->Similarity(*obj2));
 }
 
 
