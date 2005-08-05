@@ -44,7 +44,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInst::RPrgInst(void) throw(std::bad_alloc)
+RPrgInst::RPrgInst(void)
 {
 }
 
@@ -64,7 +64,7 @@ int RPrgInst::Compare(const char*) const
 
 
 //------------------------------------------------------------------------------
-void RPrgInst::Run(RPrg*,RPrgOutput*) throw(RException)
+void RPrgInst::Run(RPrg*,RPrgOutput*)
 {
 }
 

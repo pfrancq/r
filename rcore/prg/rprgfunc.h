@@ -75,7 +75,7 @@ public:
 	* Costructor of a function.
 	* @param name           Name.
 	*/
-	RPrgFunc(const char* name) throw(std::bad_alloc);
+	RPrgFunc(const char* name);
 
 	/**
 	* This methods compares two functions using their names and works like the
@@ -110,7 +110,7 @@ public:
 	* @param o              Output.
 	* @param args           Parameters of the function.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o,RContainer<RPrgVar,true,false>* args) throw(RException);
+	virtual void Run(RPrg* prg,RPrgOutput* o,RContainer<RPrgVar,true,false>* args);
 
 	/**
 	* Destructor of a function.

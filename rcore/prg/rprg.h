@@ -111,12 +111,12 @@ public:
 	* @param f              Name of the file.
 	* @param o              Output.
 	*/
-	RPrg(R::RString f,RPrgOutput* o) throw(std::bad_alloc);
+	RPrg(R::RString f,RPrgOutput* o);
 
 	/**
 	* Load the script file.
 	*/
-	void Load(void) throw(std::bad_alloc,RException);
+	void Load(void);
 
 protected :
 
@@ -134,50 +134,50 @@ public:
 	* @param prg            File containing the program.
 	* @returns Instruction to insert.
 	*/
-	RPrgInst* AnalyseLine(R::RTextFile& prg) throw(std::bad_alloc,RException);
+	RPrgInst* AnalyseLine(R::RTextFile& prg);
 
 	/**
 	* Analyse a parameter.
 	* @param params         Parameter to analyse.
 	* @param values         Values of the paramter.
 	*/
-	static void AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* values) throw(std::bad_alloc,RException);
+	static void AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* values);
 
 	/**
 	* Execute a "program".
 	*/
-	void Exec(void) throw(RException);
+	void Exec(void);
 
 	/**
 	* Add a variable.
 	* @param var             Pointer to the variable.
 	*/
-	void AddVar(RPrgVar* var) throw(std::bad_alloc,RException);
+	void AddVar(RPrgVar* var);
 
 	/**
 	* Remove a variable.
 	* @param var             Pointer to the variable.
 	*/
-	void DelVar(RPrgVar* var) throw(std::bad_alloc,RException);
+	void DelVar(RPrgVar* var);
 
 	/**
 	* Get the value of the variable.
 	* @param var            Name of the variable.
 	* @return "C" string representing the content of the variable.
 	*/
-	virtual const char* GetValue(const char* var) throw(RException);
+	virtual const char* GetValue(const char* var);
 
 	/**
 	* Add a class.
 	* @param c               Pointer to the class.
 	*/
-	void AddVar(RPrgClass* c) throw(std::bad_alloc,RException);
+	void AddVar(RPrgClass* c);
 
 	/**
 	* Remove a class.
 	* @param c               Pointer to the class.
 	*/
-	void DelVar(RPrgClass* c) throw(std::bad_alloc,RException);
+	void DelVar(RPrgClass* c);
 
 	/**
 	* Destructor of the program.

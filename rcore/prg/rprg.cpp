@@ -58,7 +58,7 @@ using namespace R;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RPrg::RPrg(RString f,RPrgOutput* o) throw(std::bad_alloc)
+RPrg::RPrg(RString f,RPrgOutput* o)
 	: FileName(f), Cout(o), Insts(40), Vars(10,5), Classes(10,5), Prg(FileName)
 {
 	Prg.Open(RIO::Read);
@@ -66,7 +66,7 @@ RPrg::RPrg(RString f,RPrgOutput* o) throw(std::bad_alloc)
 
 
 //-----------------------------------------------------------------------------
-void RPrg::Load(void) throw(std::bad_alloc,RException)
+void RPrg::Load(void)
 {
 	RPrgInst* i;
 
@@ -99,7 +99,7 @@ unsigned int RPrg::CountTabs(const RString& line)
 
 
 //-----------------------------------------------------------------------------
-RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(std::bad_alloc,RException)
+RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 {
 	RString l;
 	RString obj;
@@ -204,7 +204,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg) throw(std::bad_alloc,RException)
 
 //-----------------------------------------------------------------------------
 
-void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* values) throw(std::bad_alloc,RException)
+void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* values)
 {
 	unsigned int len;
 	unsigned int pos;
@@ -257,7 +257,7 @@ void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* va
 
 
 //-----------------------------------------------------------------------------
-void RPrg::Exec(void) throw(RException)
+void RPrg::Exec(void)
 {
 	RCursor<RPrgInst> Cur(Insts);
 	for(Cur.Start();!Cur.End();Cur.Next())
@@ -266,21 +266,21 @@ void RPrg::Exec(void) throw(RException)
 
 
 //-----------------------------------------------------------------------------
-void RPrg::AddVar(RPrgVar* var) throw(std::bad_alloc,RException)
+void RPrg::AddVar(RPrgVar* var)
 {
 	Vars.InsertPtr(var);
 }
 
 
 //-----------------------------------------------------------------------------
-void RPrg::DelVar(RPrgVar* var) throw(std::bad_alloc,RException)
+void RPrg::DelVar(RPrgVar* var)
 {
 	Vars.DeletePtr(*var);
 }
 
 
 //-----------------------------------------------------------------------------
-const char* RPrg::GetValue(const char* var) throw(RException)
+const char* RPrg::GetValue(const char* var)
 {
 	RPrgVar* v=Vars.GetPtr<const char*>(var);
 

@@ -79,27 +79,27 @@ public:
 	* Constructor of a class method.
 	* @param inst           Function to execute.
 	*/
-	RPrgInstMethod(RPrgFunc* inst) throw(std::bad_alloc);
+	RPrgInstMethod(RPrgFunc* inst);
 
 	/**
 	* Add a parameter to the method.
 	* @param var            Parameter to add.
 	*/
-	void AddParam(RPrgVar* var) throw(std::bad_alloc);
+	void AddParam(RPrgVar* var);
 
 	/**
 	* Analyse a list of parameters.
 	* @param params         Parameters to analyse.
 	* @returns Variable created.
 	*/
-	void AnalyseParam(const RString& params) throw(std::bad_alloc,RException);
+	void AnalyseParam(const RString& params);
 
 	/**
 	* Run the method.
 	* @param prg            Program.
 	* @param o              Output.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o) throw(RException);
+	virtual void Run(RPrg* prg,RPrgOutput* o);
 
 	/**
 	* Destructor of a class method.
@@ -112,4 +112,4 @@ public:
 
 
 //-----------------------------------------------------------------------------
-#endif 
+#endif

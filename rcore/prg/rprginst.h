@@ -67,7 +67,7 @@ public:
 	/**
 	* Constructor of a generic instruction.
 	*/
-	RPrgInst(void) throw(std::bad_alloc);
+	RPrgInst(void);
 
 	/**
 	* This method compares two instructions.
@@ -88,7 +88,7 @@ public:
 	* @param prg            Program.
 	* @param o              Output.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o) throw(RException);
+	virtual void Run(RPrg* prg,RPrgOutput* o);
 
 	/**
 	* Destructor of a generic instruction.

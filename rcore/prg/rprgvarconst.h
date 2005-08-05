@@ -6,7 +6,7 @@
 
 	Const Variable - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -59,20 +59,20 @@ public:
 	* Constructor of a const variable.
 	* @param value          Name.
 	*/
-	RPrgVarConst(const char* value) throw(std::bad_alloc);
+	RPrgVarConst(const char* value);
 
 	/**
 	* Assign some data to the const variable.
 	* @param data           Data.
 	*/
-	virtual void Assign(const void* data) throw(RException);
+	virtual void Assign(const void* data);
 
 	/**
 	* Get the value of the const variable.
 	* @param prg            Program.
 	* @return "C" string representing the content of the const variable.
 	*/
-	virtual const char* GetValue(RPrg* prg) throw(RException);
+	virtual const char* GetValue(RPrg* prg);
 
 	/**
 	* Destructor of a const variable.
@@ -85,4 +85,4 @@ public:
 
 
 //------------------------------------------------------------------------------
-#endif 
+#endif

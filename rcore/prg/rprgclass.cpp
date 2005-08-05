@@ -46,7 +46,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgClass::RPrgClass(const char* name) throw(std::bad_alloc)
+RPrgClass::RPrgClass(const char* name)
 	: Name(name), Vars(20,10), Methods(30,15)
 {
 }

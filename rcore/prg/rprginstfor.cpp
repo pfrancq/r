@@ -47,7 +47,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstFor::RPrgInstFor(const RString& line,unsigned int t) throw(std::bad_alloc)
+RPrgInstFor::RPrgInstFor(const RString& line,unsigned int t)
 	: RPrgInst(), Values(20,10), Insts(50,25), Tabs(t)
 {
 	unsigned int pos;
@@ -75,7 +75,7 @@ RPrgInstFor::RPrgInstFor(const RString& line,unsigned int t) throw(std::bad_allo
 
 
 //------------------------------------------------------------------------------
-void RPrgInstFor::AddInst(RPrgInst* ins) throw(std::bad_alloc)
+void RPrgInstFor::AddInst(RPrgInst* ins)
 {
 	if(ins)
 		Insts.InsertPtr(ins);
@@ -83,7 +83,7 @@ void RPrgInstFor::AddInst(RPrgInst* ins) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-void RPrgInstFor::Run(RPrg* prg,RPrgOutput* o) throw(RException)
+void RPrgInstFor::Run(RPrg* prg,RPrgOutput* o)
 {
 	RPrgVarVal* local=new RPrgVarVal(Var,"");
 

@@ -6,7 +6,7 @@
 
 	Const Variable - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -44,21 +44,21 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVarConst::RPrgVarConst(const char* value) throw(std::bad_alloc)
+RPrgVarConst::RPrgVarConst(const char* value)
 	: RPrgVar(value)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgVarConst::Assign(const void* data) throw(RException)
+void RPrgVarConst::Assign(const void* data)
 {
 	Name=static_cast<const char*>(data);
 }
 
 
 //------------------------------------------------------------------------------
-const char* RPrgVarConst::GetValue(RPrg*) throw(RException)
+const char* RPrgVarConst::GetValue(RPrg*)
 {
 	return(Name);
 }

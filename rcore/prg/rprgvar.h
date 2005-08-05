@@ -71,7 +71,7 @@ public:
 	* Constructor of a variable.
 	* @param name           Name.
 	*/
-	RPrgVar(const char* name) throw(std::bad_alloc);
+	RPrgVar(const char* name);
 
 	/**
 	* This methods compares two variables using their names and works like the
@@ -104,14 +104,14 @@ public:
 	* Assign some data to the variable.
 	* @param data           Data.
 	*/
-	virtual void Assign(const void* data) throw(RException);
+	virtual void Assign(const void* data);
 
 	/**
 	* Get the value of the variable.
 	* @param prg            Program.
 	* @return "C" string representing the variable.
 	*/
-	virtual const char* GetValue(RPrg* prg) throw(RException);
+	virtual const char* GetValue(RPrg* prg);
 
 	/**
 	* Destructor of the variable.

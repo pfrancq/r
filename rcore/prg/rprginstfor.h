@@ -89,19 +89,19 @@ public:
 	* @param line           Rest of the line.
 	* @param t              Identation.
 	*/
-	RPrgInstFor(const RString& line,unsigned int t) throw(std::bad_alloc);
+	RPrgInstFor(const RString& line,unsigned int t);
 
 	/**
 	* Add an instruction to the for.
 	*/
-	void AddInst(RPrgInst* ins) throw(std::bad_alloc);
+	void AddInst(RPrgInst* ins);
 
 	/**
 	* Run the instructions in the for for the different values of its variable.
 	* @param prg            Program.
 	* @param o              Output.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o) throw(RException);
+	virtual void Run(RPrg* prg,RPrgOutput* o);
 
 	/**
 	* Get the number of tabs.
@@ -120,4 +120,4 @@ public:
 
 
 //------------------------------------------------------------------------------
-#endif 
+#endif

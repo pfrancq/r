@@ -6,7 +6,7 @@
 
 	Variable containing a value - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -65,20 +65,20 @@ public:
 	* @param name           Name.
 	* @param value          Value.
 	*/
-	RPrgVarVal(const char* name,const char* value) throw(std::bad_alloc);
+	RPrgVarVal(const char* name,const char* value);
 
 	/**
 	* Assign some data to the variable.
 	* @param data           Data.
 	*/
-	virtual void Assign(const void* data) throw(RException);
+	virtual void Assign(const void* data);
 
 	/**
 	* Get the value of the variable.
 	* @param prg            Program.
 	* @return "C" string representing the value of the variable.
 	*/
-	virtual const char* GetValue(RPrg* prg) throw(RException);
+	virtual const char* GetValue(RPrg* prg);
 
 	/**
 	* Destructor of a variable.

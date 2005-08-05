@@ -44,7 +44,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVar::RPrgVar(const char* name) throw(std::bad_alloc)
+RPrgVar::RPrgVar(const char* name)
 	: Name(name)
 {
 }
@@ -72,13 +72,13 @@ int RPrgVar::Compare(const char* v) const
 
 
 //------------------------------------------------------------------------------
-void RPrgVar::Assign(const void*) throw(RException)
+void RPrgVar::Assign(const void*)
 {
 }
 
 
 //------------------------------------------------------------------------------
-const char* RPrgVar::GetValue(RPrg*) throw(RException)
+const char* RPrgVar::GetValue(RPrg*)
 {
 	return(0);
 }

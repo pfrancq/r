@@ -6,7 +6,7 @@
 
 	Method of a class - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -47,28 +47,28 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstMethod::RPrgInstMethod(RPrgFunc* inst) throw(std::bad_alloc)
+RPrgInstMethod::RPrgInstMethod(RPrgFunc* inst)
 	: RPrgInst(), Method(inst), Params(10,5)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgInstMethod::Run(RPrg* prg,RPrgOutput* r) throw(RException)
+void RPrgInstMethod::Run(RPrg* prg,RPrgOutput* r)
 {
 	Method->Run(prg,r,&Params);
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgInstMethod::AddParam(RPrgVar* var) throw(std::bad_alloc)
+void RPrgInstMethod::AddParam(RPrgVar* var)
 {
 	Params.InsertPtr(var);
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgInstMethod::AnalyseParam(const RString& params) throw(std::bad_alloc,RException)
+void RPrgInstMethod::AnalyseParam(const RString& params)
 {
 	RPrg::AnalyseParam(params,&Params);
 }

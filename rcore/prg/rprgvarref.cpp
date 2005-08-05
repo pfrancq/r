@@ -6,7 +6,7 @@
 
 	Reference to a Variable - Implementation.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -45,20 +45,20 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVarRef::RPrgVarRef(const char* ref) throw(std::bad_alloc)
+RPrgVarRef::RPrgVarRef(const char* ref)
 	: RPrgVar(ref)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgVarRef::Assign(const void*) throw(RException)
+void RPrgVarRef::Assign(const void*)
 {
 }
 
 
 //------------------------------------------------------------------------------
-const char* RPrgVarRef::GetValue(RPrg* prg) throw(RException)
+const char* RPrgVarRef::GetValue(RPrg* prg)
 {
 	return(prg->GetValue(Name));
 }

@@ -44,7 +44,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgFunc::RPrgFunc(const char* name) throw(std::bad_alloc)
+RPrgFunc::RPrgFunc(const char* name)
 	: Name(name)
 {
 }
@@ -72,7 +72,7 @@ int RPrgFunc::Compare(const char* f) const
 
 
 //------------------------------------------------------------------------------
-void RPrgFunc::Run(RPrg*,RPrgOutput*,RContainer<RPrgVar,true,false>*) throw(RException)
+void RPrgFunc::Run(RPrg*,RPrgOutput*,RContainer<RPrgVar,true,false>*)
 {
 }
 
