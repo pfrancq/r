@@ -100,7 +100,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	{
 		RContainer<cObj,true,true>* startingprotos ;
 		startingprotos = new RContainer<cObj,true,true> (10,5);
-		g=new cGroup(subsamples->GetNb(),0,0);
+		g=new cGroup(subsamples->GetNb(),0,0,RDate(""),RDate(""));
 		curs=g->GetCursor();
 		while (curs.GetNb()<nbsubprofpersubsamp)
 		{
@@ -131,7 +131,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 			kmeanstry++;
 		}
 		// save the centers
-		cGroup* centers= new cGroup(initialcenters->GetNb(),0,true);
+		cGroup* centers= new cGroup(initialcenters->GetNb(),0,true,RDate(""),RDate(""));
 		initialcenters->InsertPtr(centers);
 		RCursor<cObj> Cur(*protos);
 		for(Cur.Start();!Cur.End();Cur.Next())
@@ -383,7 +383,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RCursor<cObj> Cur(*protos);
 	for(Cur.Start();!Cur.End();Cur.Next())            // groupscontaining one proto are created
 	{
-		g=new cGroup(i,0, true);
+		g=new cGroup(i,0, true,RDate(""),RDate(""));
 		g->InsertPtr(Cur());
 		grpstemp->InsertPtr(g);
 		i++;

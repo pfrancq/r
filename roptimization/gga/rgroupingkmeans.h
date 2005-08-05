@@ -38,6 +38,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
+#include <rdate.h>
 #include <rstring.h>
 #include <rcontainer.h>
 #include <random.h>
@@ -109,7 +110,7 @@ protected:
 	* Current object to place.
 	*/
 	cObj* CurObj;
-		
+
 	/**
 	* random table of objects;
 	*/
