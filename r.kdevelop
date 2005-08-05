@@ -24,7 +24,7 @@
       <useconfiguration>default</useconfiguration>
     </general>
     <run>
-      <mainprogram>/home/pfrancq/prj/testr/src/testr</mainprogram>
+      <mainprogram>/home/pfrancq/prj/kgalileicenter/kgalileicenter/.libs/lt-kgalileicenter</mainprogram>
       <programargs/>
       <terminal>false</terminal>
       <envvars/>
@@ -158,6 +158,14 @@
       <headerCompletionDelay>250</headerCompletionDelay>
     </codecompletion>
     <references/>
+    <creategettersetter>
+      <prefixGet/>
+      <prefixSet>set</prefixSet>
+      <prefixVariable>m_,_</prefixVariable>
+      <parameterName>theValue</parameterName>
+      <inlineGet>true</inlineGet>
+      <inlineSet>true</inlineSet>
+    </creategettersetter>
   </kdevcppsupport>
   <kdevcvsservice>
     <recursivewhenupdate>true</recursivewhenupdate>
