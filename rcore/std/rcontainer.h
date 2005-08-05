@@ -416,12 +416,12 @@ public:
 	*       in other words, some "valid" pointers could be null. This situation is
 	*       not handle by the other functions of the container.
 	*  This method can be limited to a part of the container.
-	* @param ins            A pointer to the element to insert.
-	* @param pos            The position where to insert it.
-	* @param del            Specify if the object that was previously at Pos
-	*                       must be shift or deleted.
+	* @param ins             A pointer to the element to insert.
+	* @param pos             The position where to insert it.
+	* @param shift           Specify if the object that was previously at the
+	*                        position should be shifted or deleted.
 	*/
-	inline void InsertPtrAt(const C* ins,size_t pos,bool del=bAlloc)  {BasicContainer::InsertPtrAt(bAlloc,static_cast<const void*>(ins),pos,del);}
+	inline void InsertPtrAt(const C* ins,size_t pos,bool shift=bAlloc)  {BasicContainer::InsertPtrAt(bAlloc,static_cast<const void*>(ins),pos,shift);}
 
 	/**
 	* Delete an element from the container. The element is destruct if the
@@ -441,16 +441,11 @@ public:
 	/**
 	* Delete an element from the container at a given position. The element is
 	* destruct if the container is responsible of the desallocation.
-	* @param TUse            The type of tag, the container uses the Compare(TUse &)
-	*                        member function of the elements.
-	* @param tag             The tag used.
-	* @param sortkey         The tag represents the sorting key. The default value
-	*                        depends if the container is ordered (true) or not
-	*                        (false).
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param pos             Position of the element.
+	* @param shift           Specify if the the container should be shifted or
+	*                        if the position should be left empty.
 	*/
-	inline void DeletePtrAt(size_t pos,bool del=true) {BasicContainer::DeletePtrAt(bAlloc,pos,del);}
+	inline void DeletePtrAt(size_t pos,bool shift=true) {BasicContainer::DeletePtrAt(bAlloc,pos,shift);}
 
 	/**
 	* Destructs the container.
