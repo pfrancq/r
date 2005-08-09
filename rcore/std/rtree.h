@@ -39,6 +39,7 @@
 // include files for R Project
 #include <rstd.h>
 #include <rcontainer.h>
+#include <rcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -65,6 +66,13 @@ namespace R{
 template<class N,bool bAlloc,bool bOrder>
 	class RTree : public RContainer<N,bAlloc,bOrder>
 {
+	/**
+	* Do a deep copy of a child node.
+	* @param child           Child node.
+	* @param parent          Parent node.
+	*/
+	void DeepCopy(N* child,N* parent);
+
 public:
 	/**
 	* This container hold the top nodes.
@@ -96,6 +104,12 @@ public:
 	* @return unsigned int
 	*/
 	unsigned int GetNbNodes(void) const;
+
+	/**
+	* Deep copy of a the tree.
+	* @param src             Source tree.
+	*/
+	template<bool a, bool o> void Copy(const RTree<N,a,o>& src);
 
 	/**
 	* Destruct the tree.

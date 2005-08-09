@@ -38,6 +38,20 @@
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
+	void RTree<N,bAlloc,bOrder>::DeepCopy(N* child, N* parent)
+{
+	RCursor<N> curs(*child);
+	N *new_node;
+	new_node = new N(*child);
+	new_node->Clear();
+	AddNode(parent, new_node);
+	for(curs.Start(); !curs.End(); curs.Next())
+		DeepCopy(curs(), new_node);
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
 	RTree<N,bAlloc,bOrder>::RTree(unsigned int max,unsigned int inc) throw(std::bad_alloc)
 		: RContainer<N,bAlloc,bOrder>(max,inc), Top(0)
 {
@@ -84,6 +98,16 @@ template<class N,bool bAlloc,bool bOrder>
 	unsigned int RTree<N,bAlloc,bOrder>::GetNbNodes(void) const
 {
 	return(this->GetNb());
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder> template<bool a, bool o>
+	void RTree<N,bAlloc,bOrder>::Copy(const RTree<N,a,o>& src)
+{
+	RCursor<N> curs(*src.Top);
+	for (curs.Start(); !curs.End(); curs.Next())
+		DeepCopy(curs(), 0);
 }
 
 
