@@ -6,7 +6,7 @@
 
 	Date - Implementation.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -109,6 +109,13 @@ RDate& RDate::operator=(const RDate& date)
 bool RDate::operator==(const RDate& d) const
 {
 	return((Year==d.Year)&&(Month==d.Month)&&(Day==d.Day));
+}
+
+
+//------------------------------------------------------------------------------
+bool RDate::operator!=(const RDate& d) const
+{
+	return((Year!=d.Year)||(Month!=d.Month)||(Day!=d.Day));
 }
 
 

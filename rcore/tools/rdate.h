@@ -6,7 +6,7 @@
 
 	Date - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -106,6 +106,11 @@ public:
 	* Equal operator.
 	*/
 	bool operator==(const RDate& d) const;
+
+	/**
+	 * Difference operator.
+	 */
+	bool operator!=(const RDate& d) const;
 
 	/**
 	* Less operator.
