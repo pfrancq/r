@@ -265,7 +265,16 @@ public:
 	* elements of src are just copied and not re-created. Use Copy if you want a
 	* "deep" copy of src.
 	*/
-	template<bool a> inline RContainer& operator=(const RContainer<C,a,bOrder>& src) {return(NormalCopy<a>(src));}
+	inline RContainer& operator=(const RContainer<C,true,bOrder>& src) {return(NormalCopy<true>(src));}
+
+	/**
+	* The assignement operator.
+	* @param src             Container used as source.
+	* \warning If the container is not a responsible for the allocation, the
+	* elements of src are just copied and not re-created. Use Copy if you want a
+	* "deep" copy of src.
+	*/
+	inline RContainer& operator=(const RContainer<C,false,bOrder>& src) {return(NormalCopy<false>(src));}
 
 	/**
 	* Deep copy of a container.
@@ -278,7 +287,28 @@ public:
 	* elements, these elements are not copied.
 	* @param src             Container used as source.
 	*/
-	template<bool a,bool o> inline RContainer& operator+=(const RContainer<C,a,o>& src) {return(Add<a,o>(src));}
+	inline RContainer& operator+=(const RContainer<C,true,true>& src) {return(Add<true,true>(src));}
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
+	* @param src             Container used as source.
+	*/
+	inline RContainer& operator+=(const RContainer<C,true,false>& src) {return(Add<true,false>(src));}
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
+	* @param src             Container used as source.
+	*/
+	inline RContainer& operator+=(const RContainer<C,false,true>& src) {return(Add<false,true>(src));}
+
+	/**
+	* Add the elements of a container. If the source container contains null
+	* elements, these elements are not copied.
+	* @param src             Container used as source.
+	*/
+	inline RContainer& operator+=(const RContainer<C,false,false>& src) {return(Add<false,false>(src));}
 
 	/**
 	* This function returns the index of an element represented by tag, and it
