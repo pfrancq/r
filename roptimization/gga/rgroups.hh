@@ -117,20 +117,10 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroups<cGroup,cObj,cGroupData,cGroups>::ReleaseGroup(const unsigned int grp)
-{
-	cGroup *G=(*this)[grp];
-
-	DeleteObjs(G);
-	Used.DeletePtr(G);
-	G->Clear();
-}
-
-
-//------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
 	void RGroups<cGroup,cObj,cGroupData,cGroups>::ReleaseGroup(cGroup* grp)
 {
+	if(!grp->Reserved)
+		return;
 	DeleteObjs(grp);
 	Used.DeletePtr(grp);
 	grp->Clear();

@@ -133,12 +133,6 @@ public:
 
 	/**
 	* Release a group.
-	* @param group          Identificator of the group.
-	*/
-	void ReleaseGroup(const unsigned int group);
-
-	/**
-	* Release a group.
 	* @param group          Pointer to the group.
 	*/
 	void ReleaseGroup(cGroup* group);

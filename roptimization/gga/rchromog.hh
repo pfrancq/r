@@ -183,7 +183,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	else
 		nb=2;
 	while(--nb)
-		ReleaseGroup(this->Instance->RRand(this->Used.GetNb()));
+		ReleaseGroup(this->Used[this->Instance->RRand(this->Used.GetNb())]);
 
 	// Insert missing objects after a local optimisation
 	Heuristic->Run(static_cast<cChromo*>(this));
