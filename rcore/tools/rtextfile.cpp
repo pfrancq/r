@@ -987,6 +987,7 @@ void RTextFile::WriteLog(const RString& entry)
 //------------------------------------------------------------------------------
 RTextFile::~RTextFile(void)
 {
+	Close();
 }
 
 
