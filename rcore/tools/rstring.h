@@ -391,6 +391,8 @@ public:
 	*/
 	static int HashIndex2(const RChar* str);
 
+private:
+
 	/**
 	* Transform a C string into an array of RChar. The resulting array should be
 	* destroyed by the caller of the function.
@@ -407,6 +409,8 @@ public:
 	* @param len             Number of characters in the array.
 	*/
 	static char* UnicodeToLatin1(const RChar* src,size_t len);
+
+public:
 
 	/**
 	* Destruct the string.
