@@ -74,6 +74,11 @@ public:
 	RDate(void);
 
 	/**
+	* Copy constructor.
+	*/
+	RDate(const RDate& src);
+
+	/**
 	* Construct a date.
 	* @param day            The day.
 	* @param month          The month.

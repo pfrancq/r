@@ -63,6 +63,13 @@ RDate::RDate(void)
 
 
 //------------------------------------------------------------------------------
+RDate::RDate(const RDate& src)
+	: Day(src.Day), Month(src.Month), Year(src.Year)
+{
+}
+
+
+//------------------------------------------------------------------------------
 RDate::RDate(const int day,const int month,const int year)
 	: Day(day), Month(month), Year(year)
 {
