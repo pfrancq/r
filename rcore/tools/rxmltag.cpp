@@ -140,24 +140,24 @@ bool RXMLTag::IsEmpty(void)
 
 
 //-----------------------------------------------------------------------------
-void RXMLTag::DeleteEmptyTags(RXMLStruct* s)
+void RXMLTag::DeleteEmptyTags(RXMLStruct*)
 {
-#warning verify this behavior
-	RContainer<RXMLTag,false,false> ToDel(20,10);
-
-	// Go through the subtags.
-	RCursor<RXMLTag> Cur(GetNodes());
-	for(Cur.Start();!Cur.End();Cur.Next())
-	{
-		Cur()->DeleteEmptyTags(s);
-		if(Cur()->IsEmpty())
-			ToDel.InsertPtr(Cur());
-	}
-
-	Cur.Set(ToDel);
-	int i;
-	for(i=1,Cur.Start();!Cur.End();Cur.Next(),i++)
-		s->DeleteTag(Cur());
+	#pragma Implement this behavior
+// 	RContainer<RXMLTag,false,false> ToDel(20,10);
+//
+// 	// Go through the subtags.
+// 	RCursor<RXMLTag> Cur(GetNodes());
+// 	for(Cur.Start();!Cur.End();Cur.Next())
+// 	{
+// 		Cur()->DeleteEmptyTags(s);
+// 		if(Cur()->IsEmpty())
+// 			ToDel.InsertPtr(Cur());
+// 	}
+//
+// 	Cur.Set(ToDel);
+// 	int i;
+// 	for(i=1,Cur.Start();!Cur.End();Cur.Next(),i++)
+// 		s->DeleteTag(Cur());
 }
 
 
