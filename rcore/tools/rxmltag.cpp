@@ -156,13 +156,8 @@ void RXMLTag::DeleteEmptyTags(RXMLStruct* s)
 
 	Cur.Set(ToDel);
 	int i;
-	cout<<"Must delete "<<ToDel.GetNb()<<endl;
 	for(i=1,Cur.Start();!Cur.End();Cur.Next(),i++)
-	{
-		cout<<"      Del *"<<Cur()->GetName()<<"*  "<<i<<endl;
 		s->DeleteTag(Cur());
-	}
-	cout<<"OK"<<endl;
 }
 
 
