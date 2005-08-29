@@ -6,7 +6,7 @@
 
 	R Standard Library - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -57,6 +57,7 @@ RException::RException(const char* str) throw()
 	{
 	    strncpy(Msg,str,1024);
 	    Msg[1023] = '\0';
+		std::cerr<<"Exception: "<<Msg<<std::endl;
 	}
 	else
 		Msg[0]='\0';
@@ -70,6 +71,7 @@ void RException::SetMsg(const char* str)
 	{
 	    strncpy(Msg,str,1024);
 	    Msg[1023] = '\0';
+		std::cerr<<"Exception: "<<Msg<<std::endl;
 	}
 	else
 		Msg[0]='\0';
