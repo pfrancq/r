@@ -52,19 +52,34 @@ class RString;
 class RDate
 {
 	/**
-	* The day.
-	*/
-	int Day;
-
-	/**
-	* The month.
-	*/
-	int Month;
-
-	/**
-	* The Year
+	* Year
 	*/
 	int Year;
+
+	/**
+	* Month.
+	*/
+	char Month;
+
+	/**
+	* Day.
+	*/
+	char Day;
+
+	/**
+	* Hour.
+	*/
+	char Hour;
+
+	/**
+	* Minute.
+	*/
+	char Minute;
+
+	/**
+	* Second.
+	*/
+	char Second;
 
 public:
 
@@ -80,15 +95,19 @@ public:
 
 	/**
 	* Construct a date.
-	* @param day            The day.
-	* @param month          The month.
-	* @param year           The year.
+	* @param day             Day.
+	* @param month           Month.
+	* @param year            Year.
+	* @param hour            Hour.
+	* @param minute          Minute.
+	* @param second          Second.
 	*/
-	RDate(const int day,const int month,const int year);
+	RDate(char day,char month,int year,char hour=0,char minute=0,char second=0);
 
 	/**
 	* Construct a date. If string is null, then the current date is used.
-	* @param date           String representing a date in (yy-mm-dd).
+	* @param date            String representing a date in YYYY-MM-DD HH:MM:SS
+	*                        or YY-MM-DD HH:MM:SS.
 	*/
 	RDate(const RString& date);
 
@@ -139,33 +158,59 @@ public:
 
 	/**
 	* Get the day of the date.
-	* @returns Integer.
 	*/
-	int GetDay(void) const {return(Day);}
+	char GetDay(void) const {return(Day);}
 
 	/**
 	* Get the month of the date.
-	* @returns Integer.
 	*/
-	int GetMonth(void) const {return(Month);}
+	char GetMonth(void) const {return(Month);}
 
 	/**
 	* Get the year of the date.
-	* @returns Integer.
 	*/
 	int GetYear(void) const {return(Year);}
 
 	/**
-	* Set the date.
-	* @param day            The day.
-	* @param month          The month.
-	* @param year           The year.
+	* Get the hour of the date.
 	*/
-	void SetDate(const int day,const int month,const int year);
+	char GetHour(void) const {return(Hour);}
+
+	/**
+	* Get the minute of the date.
+	*/
+	char GetMinute(void) const {return(Minute);}
+
+	/**
+	* Get the second of the date.
+	*/
+	char GetSecond(void) const {return(Second);}
+
+	/**
+	* Get a string representring the date.
+	*/
+	operator RString () const;
+
+	/**
+	* Get a string representring the date.
+	*/
+	RString ToString(void) const;
+
+	/**
+	* Set the date.
+	* @param day             Day.
+	* @param month           Month.
+	* @param year            Year.
+	* @param hour            Hour.
+	* @param minute          Minute.
+	* @param second          Second.
+	*/
+	void SetDate(char day,char month,int year,char hour=0,char minute=0,char second=0);
 
 	/**
 	* Set the date. If string is null, then the current date is used.
-	* @param date           String representing a date in (yy-mm-dd).
+	* @param date            String representing a date in YYYY-MM-DD HH:MM:SS
+	*                        or YY-MM-DD HH:MM:SS.
 	*/
 	void SetDate(const RString& date);
 

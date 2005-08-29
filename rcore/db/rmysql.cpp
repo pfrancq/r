@@ -282,10 +282,7 @@ RString RQuery::SQLValue(const RString val)
 //------------------------------------------------------------------------------
 RString RQuery::SQLValue(const RDate& d)
 {
-	RString res;
-
-	res="'"+itou(d.GetYear())+"-"+itou(d.GetMonth())+"-"+itou(d.GetDay())+"'";
-	return(res);
+	return("'"+d+"'");
 }
 
 
