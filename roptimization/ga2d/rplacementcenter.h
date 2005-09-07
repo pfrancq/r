@@ -6,7 +6,7 @@
 
 	Center Heuristic for Placement - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -111,7 +111,7 @@ public:
 	* information. The function have to register the valid positions with the
 	* 'AddValidPosition' method.
 	*/
-	virtual void NextObjectOri(void) throw(RPlacementHeuristicException);
+	virtual void NextObjectOri(void);
 
 	/**
 	* Place the current object to a specific position. This function is called
@@ -119,7 +119,7 @@ public:
 	* This function is responsible to update Result.
 	* @param pos            The position where to place it.
 	*/
-	virtual void Place(RPoint& pos) throw(RPlacementHeuristicException);
+	virtual void Place(RPoint& pos);
 
 	/**
 	* Do some operations after the run.

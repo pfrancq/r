@@ -4,7 +4,7 @@
 
 	Class representing an instance of a HGA - Implementation
 
-	Copyright 2001-2003 by the Universitï¿½Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -36,7 +36,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RThreadDataG(cInst *owner) throw(std::bad_alloc)
+	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RThreadDataG(cInst *owner)
 		: RThreadData<cInst,cChromo>(owner), Heuristic(0)
 {
 }
@@ -44,7 +44,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(void) throw(std::bad_alloc)
+	void RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(void)
 {
 	RThreadData<cInst,cChromo>::Init();
 	Heuristic=this->Owner->CreateHeuristic();
@@ -69,7 +69,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,RDebug *debug)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
@@ -84,7 +84,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,RDebug *debug)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
@@ -99,7 +99,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,RDebug *debug)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
@@ -114,7 +114,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(cGroupData* gdata) throw(std::bad_alloc)
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(cGroupData* gdata)
 {
 	cChromo **C;
 	unsigned int i;
@@ -128,7 +128,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::CreateHeuristic(void) throw(std::bad_alloc)
+	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::CreateHeuristic(void)
 {
 	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* h;
 
@@ -147,7 +147,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::HandleSameChromosomes(void) throw(eGA)
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::HandleSameChromosomes(void)
 {
 	cChromo **C,**C1,*p;
 	unsigned int i,j;
@@ -178,7 +178,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void) throw(eGA)
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void)
 {
 	RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct();
 	HandleSameChromosomes();
@@ -187,7 +187,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Crossover(void) throw(eGA)
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Crossover(void)
 {
 	RInst<cInst,cChromo,cFit,cThreadData>::Crossover();
 	HandleSameChromosomes();
@@ -196,7 +196,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Mutation(void) throw(eGA)
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Mutation(void)
 {
 	RInst<cInst,cChromo,cFit,cThreadData>::Mutation();
 	HandleSameChromosomes();
@@ -205,7 +205,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Inversion(void) throw(eGA)
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Inversion(void)
 {
 	RInst<cInst,cChromo,cFit,cThreadData>::Inversion();
 	HandleSameChromosomes();

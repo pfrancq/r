@@ -6,7 +6,7 @@
 
 	Grid for the 2D placement - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -86,7 +86,7 @@ public:
 	*                       internally, the grid is allocate 2x the size to be used
 	*                       by the "center" heuristic.
 	*/
-	RGrid(RPoint& limits) throw(std::bad_alloc);
+	RGrid(RPoint& limits);
 
 	/**
 	* This function returns true if the position (x,y) is free or if it is out

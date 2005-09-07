@@ -6,7 +6,7 @@
 
 	Center Heuristic for Placement - Implemenation
 
-	Copyright 1998-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -76,7 +76,7 @@ void RPlacementCenter::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 
 
 //------------------------------------------------------------------------------
-void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
+void RPlacementCenter::NextObjectOri(void)
 {
 	RPoint Pos;                     // Position to test (X,Y).
 	unsigned int NbPos;
@@ -260,7 +260,7 @@ void RPlacementCenter::NextObjectOri(void) throw(RPlacementHeuristicException)
 
 
 //------------------------------------------------------------------------------
-void RPlacementCenter::Place(RPoint& pos) throw(RPlacementHeuristicException)
+void RPlacementCenter::Place(RPoint& pos)
 {
 	// Assign it
 	CurInfo->Assign(pos,Grid);

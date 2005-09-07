@@ -6,7 +6,7 @@
 
 	Double Hash Table Container - Header
 
-	Copyright 2001-2004 by the Université Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -158,7 +158,7 @@ public:
 	* @param M              Default maximum number of elements.
 	* @param I              Incremental number of elements.
 	*/
-	RDblHashContainer(unsigned int M,unsigned int I) throw(std::bad_alloc)
+	RDblHashContainer(unsigned int M,unsigned int I)
 	{
 		RContainer<C,bAlloc,true>*** ptr;
 		RContainer<C,bAlloc,true>** ptr2;
@@ -191,7 +191,7 @@ public:
 	* Insert an element.
 	* @param ins            Pointer to the element to insert.
 	*/
-	inline void InsertPtr(C *ins) throw(std::bad_alloc)
+	inline void InsertPtr(C *ins)
 	{
 		RReturnIfFail(ins);
 		Hash[C::HashIndex(ins)][C::HashIndex2(ins)]->InsertPtr(ins);
@@ -259,7 +259,7 @@ public:
 	*                       not (false).
 	* @return The function returns a pointer to the element of the container.
 	*/
-	template<class TUse> inline C* GetInsertPtr(const TUse tag,bool sortkey=true) throw(std::bad_alloc)
+	template<class TUse> inline C* GetInsertPtr(const TUse tag,bool sortkey=true)
 	{
 		return(Hash[C::HashIndex(tag)][C::HashIndex2(tag)]->GetInsertPtr<TUse>(tag,sortkey));
 	}

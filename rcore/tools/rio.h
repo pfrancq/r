@@ -6,7 +6,7 @@
 
 	Generic Class - Header.
 
-	Copyright 2002-2004 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -92,28 +92,28 @@ public:
 	* Construct an IO exception.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const char* str) throw(std::bad_alloc);
+	RIOException(const char* str);
 
 	/**
 	* Construct an IO exception.
 	* @param file                     File process when the error occurs.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const RFile* file,const char* str) throw(std::bad_alloc);
+	RIOException(const RFile* file,const char* str);
 
 	/**
 	* Construct an IO exception.
 	* @param file                     File process when the error occurs.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const RIOFile* file,const char* str) throw(std::bad_alloc);
+	RIOException(const RIOFile* file,const char* str);
 
 	/**
 	* Construct an IO exception.
 	* @param file                     File process when the error occurs.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const RTextFile* file,const char* str) throw(std::bad_alloc);
+	RIOException(const RTextFile* file,const char* str);
 };
 
 

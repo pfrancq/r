@@ -6,7 +6,7 @@
 
 	Geometric information - Header
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -172,7 +172,7 @@ public:
 	/**
 	* Assignment operator using a "Cursor".
 	*/
-	RRelPointCursor& operator=(const RRelPointCursor& c) throw(std::bad_alloc);
+	RRelPointCursor& operator=(const RRelPointCursor& c);
 
 	/**
 	* Set the container.

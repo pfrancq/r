@@ -6,7 +6,7 @@
 
 	Generic Tree - Inline Implementation.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -52,7 +52,7 @@ template<class N,bool bAlloc,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	RTree<N,bAlloc,bOrder>::RTree(unsigned int max,unsigned int inc) throw(std::bad_alloc)
+	RTree<N,bAlloc,bOrder>::RTree(unsigned int max,unsigned int inc)
 		: RContainer<N,bAlloc,bOrder>(max,inc), Top(0)
 {
 	Top = new RContainer<N,false,bOrder>(10,5);
@@ -61,7 +61,7 @@ template<class N,bool bAlloc,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	void RTree<N,bAlloc,bOrder>::AddNode(N* parent,N* node) throw(std::bad_alloc)
+	void RTree<N,bAlloc,bOrder>::AddNode(N* parent,N* node)
 {
 	RReturnIfFail(node);
 	if(!node) return;

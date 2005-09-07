@@ -5,7 +5,7 @@
 
 	Generic Cell Element  - Implementation.
 
-	Copyright 2003 by the Université Libre de Bruxelles.
+	Copyright 2003-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors
 		 Vandaele Valery(vavdaele@ulb.ac.be)
@@ -37,35 +37,35 @@
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>::RGenericCell(unsigned int id) throw(std::bad_alloc)
+	RGenericCell<C>::RGenericCell(unsigned int id)
 		: Id(id) , Value(0)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>::RGenericCell(unsigned int id, C value) throw(std::bad_alloc)
+	RGenericCell<C>::RGenericCell(unsigned int id, C value)
 		: Id(id) , Value(value)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>::RGenericCell(const RGenericCell<C>* src) throw(std::bad_alloc)
+	RGenericCell<C>::RGenericCell(const RGenericCell<C>* src)
 		: Id(src->GetId()) , Value(src->GetValue())
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>::RGenericCell(const RGenericCell<C>& src) throw(std::bad_alloc)
+	RGenericCell<C>::RGenericCell(const RGenericCell<C>& src)
 		: Id(src.GetId()) , Value(src.GetValue())
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>& RGenericCell<C>::operator=(const RGenericCell<C>& src) throw(std::bad_alloc)
+	RGenericCell<C>& RGenericCell<C>::operator=(const RGenericCell<C>& src)
 {
 	Id= src.Id;
 	Value=src.Value;
@@ -102,4 +102,3 @@ template<class C>
 	RGenericCell<C>::~RGenericCell(void)
 {
 }
-

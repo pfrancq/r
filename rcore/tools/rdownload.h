@@ -6,9 +6,10 @@
 
 	Class to download files (using the CURL library) - Header.
 
-	Copyright 2004 by the Universit�Libre de Bruxelles.
+	Copyright 2004-2005 by the Université Libre de Bruxelles.
 
 	Authors:
+		Pascal Francq (pfrancq@ulb.ac.Be)
 		Valery Vandaele (vavdaele@ulb.ac.be)
 
 	This library is free software; you can redistribute it and/or
@@ -60,7 +61,7 @@ namespace R{
 /**
 * The RDownload class provides a representation for a downloader
 * using the CURL library.
-* @author Valery Vandaele 
+* @author Valery Vandaele
 * @short Downloader using the CURL library.
 */
 class RDownload
@@ -77,7 +78,7 @@ public:
 	* @param path            Path to find the plugins.
 	* @param dlg             Should the dialog box be loaded.
 	*/
-	RDownload(void) throw(std::bad_alloc);
+	RDownload(void);
 
 protected:
 
@@ -89,20 +90,20 @@ protected:
 public:
 
 	/**
-	* Download and store locally a document given by an URL. If the tmpFile contains 
-	* an url, the temporary document will be saved using this filename esle a file is 
+	* Download and store locally a document given by an URL. If the tmpFile contains
+	* an url, the temporary document will be saved using this filename esle a file is
 	* created with a random name
 	* @param URL            URL of the document.
 	* @param tmpFile        Temporary file created.
 	*/
-	virtual void Download(const char* URL,R::RString& tmpFile) throw(RException);
+	virtual void Download(const char* URL,R::RString& tmpFile);
 
 	/**
 	* Delete a temporary copy of a file created by the manager. This method is
 	* only called if a temporary file was really created.
 	* @param tmpFile        Temporary file to delete.
 	*/
-	virtual void Delete(R::RString& tmpFile) throw(RException);
+	virtual void Delete(R::RString& tmpFile);
 
 	/**
 	* Destructor of the URL manager.

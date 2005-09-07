@@ -6,7 +6,7 @@
 
 	Chromosomes of Genetic Algorithms - inline Implementation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,unsigned int id) throw(std::bad_alloc)
+	RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,unsigned int id)
 		: Instance(inst),Id(id),ToEval(true)
 {
 	Fitness=new cFit();
@@ -47,14 +47,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RChromo<cInst,cChromo,cFit,cThreadData>::Init(cThreadData*) throw(std::bad_alloc)
+	void RChromo<cInst,cChromo,cFit,cThreadData>::Init(cThreadData*)
 {
 }
 
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RChromo<cInst,cChromo,cFit,cThreadData>::Crossover(cChromo*,cChromo*) throw(eGA)
+	void RChromo<cInst,cChromo,cFit,cThreadData>::Crossover(cChromo*,cChromo*)
 {
 }
 

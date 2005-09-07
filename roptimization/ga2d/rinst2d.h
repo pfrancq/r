@@ -6,7 +6,7 @@
 
 	Instance for 2D placement GA - Header
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -107,12 +107,12 @@ public:
 	* Construct the data.
 	* @param owner          The instance of the problem.
 	*/
-	RThreadData2D(cInst* owner) throw(std::bad_alloc);
+	RThreadData2D(cInst* owner);
 
 	/**
 	* Initialise thje data.
 	*/
-	virtual void Init(void) throw(std::bad_alloc);
+	virtual void Init(void);
 
 	/**
 	* Destruct the data.
@@ -179,12 +179,12 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug* debug=0) throw(std::bad_alloc);
+	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug* debug=0);
 
 	/**
 	* Initialisation of the instance.
 	*/
-	virtual void Init(void) throw(std::bad_alloc);
+	virtual void Init(void);
 
 	/**
 	* Return the limits for the placement.

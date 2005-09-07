@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Placement - Implemenation
 
-	Copyright 1998-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -112,9 +112,9 @@ void RPlacementHeuristic::SetAreaParams(double p,double q,double w)
 	AreaParams.Weight=w;
 }
 
-	
+
 //------------------------------------------------------------------------------
-void RPlacementHeuristic::SelectNextObject(void) throw(RPlacementHeuristicException)
+void RPlacementHeuristic::SelectNextObject(void)
 {
 	if(!NbObjsOk)
 	{
@@ -145,7 +145,7 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 	{
 		// Allocate new Sols
 	}
-	
+
 	// Compute the bounding rectangle of all placed objects and the current
 	// one at the given position
 	if(pos.X<CurRect.Pt1.X) CurRect.Pt1.X=pos.X;
@@ -171,10 +171,10 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 
 
 //------------------------------------------------------------------------------
-RGeoInfo* RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristicException)
+RGeoInfo* RPlacementHeuristic::NextObject(void)
 {
 	RPoint pos;
-	RObj2D* obj;	
+	RObj2D* obj;
 	unsigned int best;
 
 	SelectNextObject();
@@ -231,13 +231,13 @@ RGeoInfo* RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristicExcepti
 		delete Prom;
 	}
 
-	// Place it	
+	// Place it
 	if(!pos.IsValid())
 	{
 		throw RPlacementHeuristicException("Can't place an object!");
 	}
 	Place(pos);
-	
+
 	// Look for free polygons
 	if(CalcFree)
 	{
@@ -260,7 +260,7 @@ RGeoInfo* RPlacementHeuristic::NextObject(void) throw(RPlacementHeuristicExcepti
 
 
 //------------------------------------------------------------------------------
-void RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid) throw(RPlacementHeuristicException)
+void RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 {
 	Init(prob,infos,grid);
 	while(NbObjsOk<NbObjs)
@@ -296,7 +296,7 @@ RRect RPlacementHeuristic::GetResult(void)
 //------------------------------------------------------------------------------
 void RPlacementHeuristic::CreateProblem(void)
 {
-	
+
 }
 
 

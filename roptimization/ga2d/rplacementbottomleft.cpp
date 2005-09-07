@@ -6,7 +6,7 @@
 
 	Bottom Left Heuristic for Placement - Implementation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -60,7 +60,7 @@ void RPlacementBottomLeft::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 
 
 //------------------------------------------------------------------------------
-void RPlacementBottomLeft::NextObjectOri(void) throw(RPlacementHeuristicException)
+void RPlacementBottomLeft::NextObjectOri(void)
 {
 	RPoint Pos;
 
@@ -90,7 +90,7 @@ void RPlacementBottomLeft::NextObjectOri(void) throw(RPlacementHeuristicExceptio
 
 
 //------------------------------------------------------------------------------
-void RPlacementBottomLeft::Place(RPoint& pos) throw(RPlacementHeuristicException)
+void RPlacementBottomLeft::Place(RPoint& pos)
 {
 	// Assign the object to the current position
 	CurInfo->Assign(pos,Grid);

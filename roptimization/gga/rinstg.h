@@ -6,7 +6,7 @@
 
 	Class representing an instance of a GGA - Header
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -72,12 +72,12 @@ public:
 	* Construct the data.
 	* @param owner          Owner of the data.
 	*/
-	RThreadDataG(cInst* owner) throw(std::bad_alloc);
+	RThreadDataG(cInst* owner);
 
 	/**
 	* Initialise thje data.
 	*/
-	virtual void Init(void) throw(std::bad_alloc);
+	virtual void Init(void);
 
 	/**
 	* Destruct the data.
@@ -130,7 +130,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,RDebug *debug=0) throw(std::bad_alloc);
+	RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,RDebug *debug=0);
 
 	/**
 	* Construct the instance.
@@ -139,7 +139,7 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,RDebug *debug=0) throw(std::bad_alloc);
+	RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,RDebug *debug=0);
 
 	/**
 	* Construct the instance.
@@ -148,13 +148,13 @@ public:
 	* @param h              The heuristic that has to be used.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,RDebug *debug=0) throw(std::bad_alloc);
+	RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,RDebug *debug=0);
 
 	/**
 	* Initialisation of the instance.
 	* @param gdata          The Data to use for the construction of the groups.
 	*/
-	virtual void Init(cGroupData* gdata) throw(std::bad_alloc);
+	virtual void Init(cGroupData* gdata);
 
 	/**
 	* Return the heuristic type.
@@ -186,38 +186,38 @@ public:
 	/**
 	* Create a heuristic object.
 	*/
-	virtual RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* CreateHeuristic(void) throw(std::bad_alloc);
+	virtual RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* CreateHeuristic(void);
 
 	/**
 	* Handle the chromosomes that are representing the same solutions. If two
 	* same chromosomes are detect, one of them is replace a random based one
 	* with a probability of 90%.
 	*/
-	virtual void HandleSameChromosomes(void) throw(eGA);
+	virtual void HandleSameChromosomes(void);
 
 	/**
 	* Random construction of the chromosomes. Call the method of RInst and
 	* handles the same solutions after.
 	*/
-	virtual void RandomConstruct(void) throw(eGA);
+	virtual void RandomConstruct(void);
 
 	/**
 	* This function does the crossovers for a generation. Call the method of
 	* RInst and handles the same solutions after.
 	*/
-	virtual void Crossover(void) throw(eGA);
+	virtual void Crossover(void);
 
 	/**
 	* This function does the necessary mutations for a generation. Call the
 	* method of RInst and handles the same solutions after.
 	*/
-	virtual void Mutation(void) throw(eGA);
+	virtual void Mutation(void);
 
 	/**
 	* This function does the necessary inversions for a generation. Call the
 	* method of RInst and handles the same solutions after.
 	*/
-	virtual void Inversion(void) throw(eGA);
+	virtual void Inversion(void);
 
 	/**
 	* Destruct the instance.

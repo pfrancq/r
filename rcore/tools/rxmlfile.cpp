@@ -6,7 +6,7 @@
 
 	XML file - Implementation.
 
-	Copyright 2000-2005 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -85,7 +85,7 @@ RXMLFile::RXMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::SetEncoding(const RString& name) throw(RIOException)
+void RXMLFile::SetEncoding(const RString& name)
 {
 	XMLStruct->SetEncoding(name);
 	RTextFile::SetEncoding(name);
@@ -206,7 +206,7 @@ RString RXMLFile::CharToCode(RChar car,bool strict)
 
 
 //------------------------------------------------------------------------------
-RString RXMLFile::XMLToString(const RString& str) throw(RIOException)
+RString RXMLFile::XMLToString(const RString& str)
 {
 	RString res;
 	RCharCursor Cur(str);
@@ -279,7 +279,7 @@ RString RXMLFile::StringToXML(const RString& str,bool strict)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::LoadHeader(void) throw(RIOException)
+void RXMLFile::LoadHeader(void)
 {
 	RString Content;
 	RContainer<RXMLAttr,true,true> Attrs(10);
@@ -338,7 +338,7 @@ void RXMLFile::LoadHeader(void) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::LoadNextTag(void) throw(RIOException)
+void RXMLFile::LoadNextTag(void)
 {
 	RString attrn,attrv;
 	RString TagName;
@@ -441,7 +441,7 @@ void RXMLFile::LoadNextTag(void) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag1,RChar EndTag2) throw(RIOException)
+void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag1,RChar EndTag2)
 {
 	RString attrn,attrv;
 	RChar What;
@@ -505,7 +505,7 @@ void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::SaveNextTag(int depth) throw(RIOException)
+void RXMLFile::SaveNextTag(int depth)
 {
 	int i;
 	RString text;
@@ -568,7 +568,7 @@ void RXMLFile::SaveNextTag(int depth) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::AddNextCharacter(RString& str) throw(RIOException)
+void RXMLFile::AddNextCharacter(RString& str)
 {
 	// If it is an eol character, skip it with the SkipEol
 	if(RTextFile::Eol(Cur))
@@ -587,7 +587,7 @@ void RXMLFile::AddNextCharacter(RString& str) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RContainer<RXMLAttr,true,true>& attrs) throw(RIOException)
+void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RContainer<RXMLAttr,true,true>& attrs)
 {
 	RXMLTag* tag;
 	RCursor<RXMLAttr> Cur;
@@ -627,7 +627,7 @@ void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RCon
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::EndTag(const RString&, const RString&, const RString& name) throw(RIOException)
+void RXMLFile::EndTag(const RString&, const RString&, const RString& name)
 {
 	if(CurTag->GetName()!=name)
 		throw eInvalidXMLFile(this,"Found closing tag '"+name+"' while closing tag '"+CurTag->GetName()+"' was expected.");
@@ -636,7 +636,7 @@ void RXMLFile::EndTag(const RString&, const RString&, const RString& name) throw
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::Text(const RString& text) throw(RIOException)
+void RXMLFile::Text(const RString& text)
 {
 	RCharCursor Cur(text);
 

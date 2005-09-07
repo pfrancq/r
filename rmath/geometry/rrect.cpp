@@ -6,7 +6,7 @@
 
 	Rectangle - Implemtation.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -97,7 +97,7 @@ RCoord RRect::Height(void) const
 
 
 //------------------------------------------------------------------------------
-RRect& RRect::operator+=(const RPoint& pt) throw(std::bad_alloc)
+RRect& RRect::operator+=(const RPoint& pt)
 {
 	Pt1+=pt;
 	Pt2+=pt;
@@ -106,7 +106,7 @@ RRect& RRect::operator+=(const RPoint& pt) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RRect& RRect::operator-=(const RPoint& pt) throw(std::bad_alloc)
+RRect& RRect::operator-=(const RPoint& pt)
 {
 	Pt1-=pt;
 	Pt2-=pt;
@@ -224,7 +224,7 @@ void RRect::Translation(const RCoord x,const RCoord y)
 bool RRect::Overlap(const RRect* rect) const
 {
 	RReturnValIfFail(rect,false);
-	
+
 	// Is up or bottom of rect
 	if((Pt1.Y>rect->Pt2.Y)||(Pt2.Y<rect->Pt1.Y)) return(false);
 

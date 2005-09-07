@@ -6,7 +6,7 @@
 
 	Groups - Header
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -112,7 +112,7 @@ public:
 	* @param objs           Objects to group.
 	* @param max            Maximal number of groups to create.
 	*/
-	RGroups(RCursor<cObj>* objs,const unsigned int max) throw(std::bad_alloc);
+	RGroups(RCursor<cObj>* objs,const unsigned int max);
 
 	/**
 	* Init the groups.
@@ -161,7 +161,7 @@ public:
 	* Verify the validity of the groups.
 	* @return True if the groups are valid one, false else.
 	*/
-	virtual void Verify(void) throw(eGA);
+	virtual void Verify(void);
 
 	/**
 	* Get the group of an object.

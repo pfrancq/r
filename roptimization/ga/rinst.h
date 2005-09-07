@@ -6,7 +6,7 @@
 
 	Instance of Genetic Algorithms - Header
 
-	Copyright 1998-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -68,12 +68,12 @@ public:
 	* Construct the data.
 	* @param owner          The instance of the problem.
 	*/
-	RThreadData(cInst *owner) throw(std::bad_alloc);
+	RThreadData(cInst *owner);
 
 	/**
 	* Initialise the data.
 	*/
-	virtual void Init(void) throw(std::bad_alloc) {}
+	virtual void Init(void) {}
 
 	/**
 	* Destruct the data.
@@ -225,7 +225,7 @@ public:
 	* @param popsize        The size of the population.
 	* @param debug          Debugger.
 	*/
-	RInst(unsigned int popsize,RDebug* debug=0) throw(std::bad_alloc);
+	RInst(unsigned int popsize,RDebug* debug=0);
 
 	/**
 	* Set if the verifications must be done.
@@ -241,13 +241,13 @@ public:
 	/**
 	* Initialisation of the instance.
 	*/
-	virtual void Init(void) throw(std::bad_alloc);
+	virtual void Init(void);
 
 	/**
 	* Random construction of the chromosomes.
 	* @return The function returns true if all chromosomes are constructed.
 	*/
-	virtual void RandomConstruct(void) throw(eGA);
+	virtual void RandomConstruct(void);
 
 	/**
 	* This function determines if the GA must stop. It is called after
@@ -270,50 +270,50 @@ public:
 	/**
 	* This function does the evaluation of the chromosomes when it is needed.
 	*/
-	virtual void Evaluate(void) throw(eGA);
+	virtual void Evaluate(void);
 
 	/**
 	* Do some post evluation traitment. It can be used to implement a
 	* multi-criteria approach like PROMETHEE to classify the chromosomes.
 	*/
-	virtual void PostEvaluate(void) throw(eGA) {}
+	virtual void PostEvaluate(void) {}
 
 	/**
 	* Analyse the population to find the best chromosome of the population and
 	* to verify if the best chromosome ever calculated has to replaced.
 	*/
-	virtual void AnalysePop(void) throw(eGA);
+	virtual void AnalysePop(void);
 
 	/**
 	* This function does the crossovers for a generation. Actually, the
 	* tournament strategy is implemented.
 	*/
-	virtual void Crossover(void) throw(eGA);
+	virtual void Crossover(void);
 
 	/**
 	* This function does the necessary mutations for a generation.
 	*/
-	virtual void Mutation(void) throw(eGA);
+	virtual void Mutation(void);
 
 	/**
 	* This function does the necessary inversions for a generation.
 	*/
-	virtual void Inversion(void) throw(eGA);
+	virtual void Inversion(void);
 
 	/**
 	* This function does a generation.
 	*/
-	void Generation(void) throw(eGA);
+	void Generation(void);
 
 	/**
 	* This functions runs the GA.
 	*/
-	void Run(void) throw(eGA);
+	void Run(void);
 
 	/**
 	* This functions verifies all the chromosomes after each generation.
 	*/
-	virtual void Verify(void) throw(eGA);
+	virtual void Verify(void);
 
 	/**
 	* Add a receiver to the list of signals receivers.

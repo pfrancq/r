@@ -6,7 +6,7 @@
 
 	Edge Heuristic for Placement - Implementation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -65,7 +65,7 @@ void RPlacementEdge::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 
 
 //------------------------------------------------------------------------------
-void RPlacementEdge::NextObjectOri(void) throw(RPlacementHeuristicException)
+void RPlacementEdge::NextObjectOri(void)
 {
 	double FactorX,FactorY;
 	RPoint Pos;
@@ -124,7 +124,7 @@ void RPlacementEdge::NextObjectOri(void) throw(RPlacementHeuristicException)
 
 
 //------------------------------------------------------------------------------
-void RPlacementEdge::Place(RPoint& pos) throw(RPlacementHeuristicException)
+void RPlacementEdge::Place(RPoint& pos)
 {
 	unsigned int i,l;
 

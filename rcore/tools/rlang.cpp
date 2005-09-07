@@ -6,7 +6,7 @@
 
 	Language - Implementation.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -48,7 +48,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RLang::RLang(const RString& lang,const char* code) throw(std::bad_alloc)
+RLang::RLang(const RString& lang,const char* code)
   : Lang(lang)
 {
   memcpy(Code,code,2*sizeof(char));

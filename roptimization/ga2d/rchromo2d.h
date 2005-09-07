@@ -6,7 +6,7 @@
 
 	Chromosome for 2D placement GA - Header
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -140,19 +140,19 @@ public:
 	* @param inst           Pointer to the instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	RChromo2D(cInst* inst,unsigned int id) throw(std::bad_alloc);
+	RChromo2D(cInst* inst,unsigned int id);
 
 	/**
 	* This function initialises some important data, in particular Infos and
 	* Selected.
 	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
 	*/
-	virtual void Init(cThreadData* thData) throw(std::bad_alloc);
+	virtual void Init(cThreadData* thData);
 
 	/**
 	* The random construction uses the heuristic to place all the objects.
 	*/
-	virtual void RandomConstruct(void) throw(eGA);
+	virtual void RandomConstruct(void);
 
 	/**
 	* Make the crossover for the chromosome. A set of objects is taken from the
@@ -161,18 +161,18 @@ public:
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
 	*/
-	virtual void Crossover(cChromo* parent1,cChromo* parent2) throw(eGA);
+	virtual void Crossover(cChromo* parent1,cChromo* parent2);
 
 	/**
 	* The mutation simply calls the heuristic with all the objects.
 	*/
-	virtual void Mutation(void) throw(eGA);
+	virtual void Mutation(void);
 
 	/**
 	* This function verify the validity of the chromosome, in particular that
 	* no polygons are overlaped.
 	*/
-	virtual void Verify(void) throw(eGA);
+	virtual void Verify(void);
 
 	/**
 	* The assignment operator.

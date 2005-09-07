@@ -6,7 +6,7 @@
 
 	Group of a GGA - Header.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -113,7 +113,7 @@ public:
 	/**
 	* Verify if the group is not violating the integrity of the system.
 	*/
-	virtual void Verify(void) throw(eGA);
+	virtual void Verify(void);
 
 	/**
 	* Clear the information container in a group.

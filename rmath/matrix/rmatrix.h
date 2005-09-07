@@ -6,7 +6,7 @@
 
 	Matrix classes - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -90,7 +90,7 @@ class RMatrix
 	/**
 	* Initialise the matrix.
 	*/
-	void Init(void) throw(std::bad_alloc);
+	void Init(void);
 
 public:
 
@@ -128,30 +128,25 @@ public:
 	* Construct a square matrix(Size,Size).
 	* @param Size		Initial size of the matrix.
 	*/
-	RMatrix(tSize Size) throw(std::bad_alloc);
+	RMatrix(tSize Size);
 
 	/**
 	* Construct a matrix (L,C).
 	* @param L	Initial number of lines.
 	* @param C  Initial number of columns.
 	*/
-	RMatrix(tSize L,tSize C) throw(std::bad_alloc);
+	RMatrix(tSize L,tSize C);
 
 	/**
 	* Construct a matrix from another one.
 	*/
-	RMatrix(const RMatrix& Matrix) throw(std::bad_alloc);
-
-	/**
-	* Construct a matrix from another one.
-	*/
-	RMatrix(const RMatrix* Matrix) throw(std::bad_alloc);
+	RMatrix(const RMatrix& Matrix);
 
 	/**
 	* Verify if the matrix has a given size, and increase them if necessary.
 	* @param NewLin		New line number.
 	* @param NewCol		New column number.*/
-	inline void VerifySize(tSize NewLin,tSize NewCol) throw(std::bad_alloc);
+	inline void VerifySize(tSize NewLin,tSize NewCol);
 
 	/**
 	* Symetrize the matrix.
@@ -163,27 +158,27 @@ public:
 	* @param m	Line number of the element.
 	* @param n	Column number of the element.
 	*/
- 	tNumber& operator()(int m, int n) const throw(RException,std::bad_alloc);
+ 	tNumber& operator()(int m, int n) const;
 
 	/**
 	* Make the transitive closure for the matrix.
 	*/
-	char TransitiveClosure(RMatrix *Matrix) throw(RException,std::bad_alloc);
+	char TransitiveClosure(RMatrix *Matrix);
 
 	/**
 	* Assign operator.
 	*/
-	RMatrix& operator=(const RMatrix) throw(RException,std::bad_alloc);
+	RMatrix& operator=(const RMatrix);
 
 	/**
 	* Add a matrix to the current one.
 	*/
-	RMatrix& operator+=(const RMatrix) throw(RException,std::bad_alloc);
+	RMatrix& operator+=(const RMatrix);
 
 	/**
 	* Substract a matrix from the current one.
 	*/
-  	RMatrix& operator-=(const RMatrix) throw(RException,std::bad_alloc);
+  	RMatrix& operator-=(const RMatrix);
 
 	/**
 	* Multiply a matrix with the current one. It is important to remember that
@@ -200,12 +195,12 @@ public:
 	* }
 	* @endcode
 	*/
-	RMatrix& operator*=(const RMatrix) throw(RException,std::bad_alloc);
+	RMatrix& operator*=(const RMatrix);
 
 	/**
 	* Multiply a matrix with a given number.
 	*/
-	RMatrix& operator*=(const tNumber) throw(RException,std::bad_alloc);
+	RMatrix& operator*=(const tNumber);
 
 	/**
 	* Destruct the matrix.
@@ -222,31 +217,31 @@ public:
 /**
 * Multiplication of a matrix and a number.
 */
-RMatrix operator*(const RMatrix&,const tNumber) throw(std::bad_alloc);
+RMatrix operator*(const RMatrix&,const tNumber);
 
 //------------------------------------------------------------------------------
 /**
 * Multiplication of a matrix and a number.
 */
-RMatrix operator*(const tNumber,const RMatrix&) throw(std::bad_alloc);
+RMatrix operator*(const tNumber,const RMatrix&);
 
 //------------------------------------------------------------------------------
 /**
 * Addition of two matrixes.
 */
-RMatrix operator+(const RMatrix& ,const RMatrix&) throw(RException,std::bad_alloc);
+RMatrix operator+(const RMatrix& ,const RMatrix&);
 
 //------------------------------------------------------------------------------
 /**
 * Substraction of two matrixes.
 */
-RMatrix operator-(const RMatrix& ,const RMatrix&) throw(RException,std::bad_alloc);
+RMatrix operator-(const RMatrix& ,const RMatrix&);
 
 //------------------------------------------------------------------------------
 /**
 * Multiplication of two matrixes.
 */
-RMatrix operator*(const RMatrix& ,const RMatrix&) throw(RException,std::bad_alloc);
+RMatrix operator*(const RMatrix& ,const RMatrix&);
 
 
 }  //-------- End of namespace R -----------------------------------------------

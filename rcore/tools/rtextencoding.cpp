@@ -6,7 +6,7 @@
 
 	Genereic Text Encoding Scheme - Implementation.
 
-	Copyright 2004 by the Universit�Libre de Bruxelles.
+	Copyright 2004-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -117,11 +117,11 @@ RString GetOfficialName(const RString& alias)
 class RTextUTF16Encoding : public RTextEncoding
 {
 public:
-	RTextUTF16Encoding(void) throw(std::bad_alloc, EncodingNotSupported)
+	RTextUTF16Encoding(void)
 		: RTextEncoding("utf-16")
 	{}
 
-	RString ToUnicode(const char* text,unsigned int len) const throw(RException,InvalidByteSequence,IncompleteByteSequence)
+	RString ToUnicode(const char* text,unsigned int len) const
 	{
 		const char* ptr=text;
 
@@ -140,7 +140,7 @@ public:
 		return(res);
 	}
 
-	RCString FromUnicode(const RString& text) const throw(RException,InvalidByteSequence,IncompleteByteSequence)
+	RCString FromUnicode(const RString& text) const
 	{
 		const RChar* ptr=text.UTF16();
 		RCString res;
@@ -158,7 +158,7 @@ public:
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RTextEncoding::RTextEncoding(const RString& name) throw(std::bad_alloc, EncodingNotSupported)
+RTextEncoding::RTextEncoding(const RString& name)
 	: Name(name.ToLower())
 {
 	ToUTF16=iconv_open("utf-16",Name);
@@ -195,7 +195,7 @@ RTextEncoding::RTextEncoding(const RString& name) throw(std::bad_alloc, Encoding
 
 
 //------------------------------------------------------------------------------
-void RTextEncoding::Init(void) const throw(RException)
+void RTextEncoding::Init(void) const
 {
 }
 
@@ -222,7 +222,7 @@ int RTextEncoding::Compare(const RString& name) const
 
 
 //------------------------------------------------------------------------------
-RString RTextEncoding::ToUnicode(const char* text,unsigned int len) const throw(RException,InvalidByteSequence,IncompleteByteSequence)
+RString RTextEncoding::ToUnicode(const char* text,unsigned int len) const
 {
 	char* ptr;
 	char* ptr2;
@@ -245,7 +245,7 @@ RString RTextEncoding::ToUnicode(const char* text,unsigned int len) const throw(
 				case EILSEQ:
 					throw InvalidByteSequence("Invalid byte sequence for encoding "+Name);
 					break;
-				case E2BIG: 
+				case E2BIG:
 					ToFill=true;
 					break;
 				case EINVAL:
@@ -268,7 +268,7 @@ RString RTextEncoding::ToUnicode(const char* text,unsigned int len) const throw(
 
 
 //------------------------------------------------------------------------------
-RChar RTextEncoding::NextUnicode(const char* text,unsigned int& len) const throw(RException,InvalidByteSequence,IncompleteByteSequence)
+RChar RTextEncoding::NextUnicode(const char* text,unsigned int& len) const
 {
 	RChar Code;
 	char Tab[sizeof(UChar)];
@@ -303,7 +303,7 @@ RChar RTextEncoding::NextUnicode(const char* text,unsigned int& len) const throw
 
 
 //------------------------------------------------------------------------------
-RCString RTextEncoding::FromUnicode(const RString& text) const throw(RException,InvalidByteSequence,IncompleteByteSequence)
+RCString RTextEncoding::FromUnicode(const RString& text) const
 {
 	char *ptr,*ptr2;
 	char Tab[BufSize];
@@ -325,7 +325,7 @@ RCString RTextEncoding::FromUnicode(const RString& text) const throw(RException,
 				case EILSEQ:
 					throw InvalidByteSequence("Invalid byte sequence for encoding UFT-16");
 					break;
-				case E2BIG: 
+				case E2BIG:
 					ToFill=true;
 					break;
 				case EINVAL:
@@ -346,7 +346,7 @@ RCString RTextEncoding::FromUnicode(const RString& text) const throw(RException,
 
 
 //------------------------------------------------------------------------------
-RTextEncoding* RTextEncoding::GetTextEncoding(const RString& name) throw(std::bad_alloc,EncodingNotSupported)
+RTextEncoding* RTextEncoding::GetTextEncoding(const RString& name)
 {
 	RTextEncoding* ptr;
 	RString search(name.ToLower());
@@ -358,7 +358,7 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RString& name) throw(std::ba
 		Encodings.InsertPtr(ptr);
 		ptr->Init();
 	}
-	
+
 	// Find the official name
 	search=GetOfficialName(search);
 	if(search.IsEmpty())

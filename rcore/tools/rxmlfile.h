@@ -120,7 +120,7 @@ public:
 	* Set the encoding of the XML document.
 	* @param name           Name of the encoding.
 	*/
-	void SetEncoding(const RString& name) throw(RIOException);
+	void SetEncoding(const RString& name);
 
 	/**
 	* Set the doctype of the XML document.
@@ -162,7 +162,7 @@ public:
 	* @exception RIOException An exception is generated if the string contains
 	*                         an invalid XML or HTML code.
 	*/
-	RString XMLToString(const RString& str) throw(RIOException);
+	RString XMLToString(const RString& str);
 
 	/**
 	* This function transform a normal string into a valid XML string where some
@@ -179,12 +179,12 @@ private:
 	/**
 	* Load the Header of a XML file (or nothing if it seems to be a HTML file).
 	*/
-	void LoadHeader(void) throw(RIOException);
+	void LoadHeader(void);
 
 	/**
 	* Load the next XML tag from a XML file.
 	*/
-	void LoadNextTag(void) throw(RIOException);
+	void LoadNextTag(void);
 
 	/**
 	* Load the attributes and put them in a container. By default, the tag is
@@ -193,19 +193,19 @@ private:
 	* @param EndTag1        Character than can delimited the tag.
 	* @param EndTag2        Another character than can delimited the tag.
 	*/
-	void LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag1='/',RChar EndTag2='>') throw(RIOException);
+	void LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag1='/',RChar EndTag2='>');
 
 	/**
 	* Save the next XML tag into the XML file.
 	* @param depth          The depth of the tag in the XML structure.
 	*/
-	void SaveNextTag(int depth) throw(RIOException);
+	void SaveNextTag(int depth);
 
 	/**
 	* Add the next character to the string. "CR" / "LF" is converted to "LF".
 	* @param str            String to which to add the character.
 	*/
-	void AddNextCharacter(RString& str) throw(RIOException);
+	void AddNextCharacter(RString& str);
 
 protected:
 
@@ -220,7 +220,7 @@ protected:
 	* @remarks The namespace are not treated for the moment, so the namespaceURI
 	*          and lname parameters are always empty.
 	*/
-	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs) throw(RIOException);
+	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs);
 
 	/**
 	* Function called each time a tag was treated when reading a XML file.
@@ -231,14 +231,14 @@ protected:
 	* @remarks The namespace are not treated for the moment, so the namespaceURI
 	*          and lname parameters are always empty.
 	*/
-	virtual void EndTag(const RString& namespaceURI, const RString& lName, const RString& name) throw(RIOException);
+	virtual void EndTag(const RString& namespaceURI, const RString& lName, const RString& name);
 
 	/**
 	* Function called each time a text is processed when reading a XML file.
 	* Actually, the text is added as content to the current tag.
 	* @param text          Text processed.
 	*/
-	virtual void Text(const RString& text) throw(RIOException);
+	virtual void Text(const RString& text);
 
 	/**
 	* Function that specify if only quotes are allowed to delimit a parameter in

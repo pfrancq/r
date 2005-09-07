@@ -129,7 +129,7 @@ public:
 	* @remarks The namespace are not treated for the moment, so the namespaceURI
 	*          and lname parameters are always empty.
 	*/
-	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs) throw(RIOException);
+	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs);
 
 	/**
 	* Function called each time a tag was treated when reading a XML file.
@@ -140,20 +140,20 @@ public:
 	* @remarks The namespace are not treated for the moment, so the namespaceURI
 	*          and lname parameters are always empty.
 	*/
-	virtual void EndTag(const RString& namespaceURI, const RString& lName, const RString& name) throw(RIOException);
+	virtual void EndTag(const RString& namespaceURI, const RString& lName, const RString& name);
 
 	/**
 	* Function called each time a text is processed when reading a XML file.
 	* Actually, the text is added as content to the current tag.
 	* @param text          Text processed.
 	*/
-	virtual void Text(const RString& text) throw(RIOException);
+	virtual void Text(const RString& text);
 
 	/**
 	* Function to find the end of the tag and to skip all the content
 	* @param tag           The name of the tag to close
 	*/
-	virtual void SkipTagContent(const RString& tag)throw(RIOException);
+	virtual void SkipTagContent(const RString& tag);
 
 	/**
 	* Function that specify if only quotes are allowed to delimit a parameter in

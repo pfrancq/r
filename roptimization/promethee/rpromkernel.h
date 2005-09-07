@@ -6,7 +6,7 @@
 
 	Promethee Kernel - Header.
 
-	Copyright 2000-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -100,7 +100,7 @@ public:
 	void ComputeEvalFunc(void);
 
 	/**
-	* Calculate Prom�h� II.
+	* Calculate PROMETHEE II.
 	*/
 	virtual void ComputePrometheeII(void);
 
@@ -111,14 +111,14 @@ public:
 	* @param q              Indifference's threshold.
 	* @param w              Weight of the criterion.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const double p,const double q,const double w) throw(std::bad_alloc);
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const double p,const double q,const double w);
 
 	/**
 	* Create a new criterion.
 	* @param t             Type of the criterion.
 	* @param params         Parameters.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RPromCriterionParams& params) throw(std::bad_alloc);
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RPromCriterionParams& params);
 
 	/**
 	* Create a new criterion.
@@ -128,7 +128,7 @@ public:
 	* @param q              Indifference's threshold.
 	* @param w              Weight of the criterion.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const double p,const double q,const double w) throw(std::bad_alloc);
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const double p,const double q,const double w);
 
 	/**
 	* Create a new criterion.
@@ -136,18 +136,18 @@ public:
 	* @param name           Name of the criterion.
 	* @param params         Parameters.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const RPromCriterionParams& params) throw(std::bad_alloc);
+	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const RPromCriterionParams& params);
 
 	/**
 	* Create a new solution.
 	*/
-	virtual RPromSol* NewSol(void) throw(std::bad_alloc);
+	virtual RPromSol* NewSol(void);
 
 	/**
 	* Create a new solution.
 	* @param name           Name of the solution.
 	*/
-	virtual RPromSol* NewSol(const char* name) throw(std::bad_alloc);
+	virtual RPromSol* NewSol(const char* name);
 
 	/**
 	* Assign a value to a criterion.
@@ -155,7 +155,7 @@ public:
 	* @param crit           Pointer to the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(RPromSol* sol,RPromCriterion* crit,const double v) throw(std::bad_alloc);
+	virtual void Assign(RPromSol* sol,RPromCriterion* crit,const double v);
 
 	/**
 	* Assign a value to a criterion.
@@ -163,7 +163,7 @@ public:
 	* @param crit           Pointer to the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(const char* sol,RPromCriterion* crit,const double v) throw(std::bad_alloc);
+	virtual void Assign(const char* sol,RPromCriterion* crit,const double v);
 
 	/**
 	* Assign a value to a criterion.
@@ -171,7 +171,7 @@ public:
 	* @param crit           Name of the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(RPromSol* sol,const char* crit,const double v) throw(std::bad_alloc);
+	virtual void Assign(RPromSol* sol,const char* crit,const double v);
 
 	/**
 	* Assign a value to a criterion.
@@ -179,7 +179,7 @@ public:
 	* @param crit           Name of the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(const char* sol,const char* crit,const double v) throw(std::bad_alloc);
+	virtual void Assign(const char* sol,const char* crit,const double v);
 
 	/**
 	* Return the best solution.

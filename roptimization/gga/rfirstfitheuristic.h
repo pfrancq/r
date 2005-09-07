@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Grouping - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -69,7 +69,7 @@ public:
 	/**
 	* Find a group for the next object.
 	*/
-	virtual cGroup* FindGroup(void) throw(eGA);
+	virtual cGroup* FindGroup(void);
 
 	/**
 	* Destruct the grouping heuristic.

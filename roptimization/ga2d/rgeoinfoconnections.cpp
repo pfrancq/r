@@ -6,7 +6,10 @@
 
 	Connections for the 2D Placement (Geometric Information Part) - Implementation.
 
-	(c) 2000-2003 by P. Francq.
+	Copyright 2000-2005 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -179,7 +182,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 
 
 //------------------------------------------------------------------------------
-RGeoInfoConnections& RGeoInfoConnections::operator=(const RGeoInfoConnections& cons) throw(std::bad_alloc)
+RGeoInfoConnections& RGeoInfoConnections::operator=(const RGeoInfoConnections& cons)
 {
 	RContainer<RGeoInfoConnection,true,false>::operator=(cons);
 	Cons=cons.Cons;

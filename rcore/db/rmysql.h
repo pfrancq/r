@@ -6,7 +6,7 @@
 
 	MySQL C++ Classes - Header.
 
-	Copyright 2000-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -107,7 +107,7 @@ public:
 *
 *
 * //----------------------------------------------------------------------------
-* void Load(void) throw(RMySQLError)
+* void Load(void)
 * {
 * 	RDb db("host","me","mypassword","thedb");
 * 	RQuery q(&db, "SELECT * FROM tbl");
@@ -161,7 +161,7 @@ public:
 	* @param db             Name of the database.
 	* @param coding         Name of the coding.
 	*/
-	RDb(RString host,RString user,RString pwd,RString db,RString coding="latin1") throw(RMySQLError);
+	RDb(RString host,RString user,RString pwd,RString db,RString coding="latin1");
 
 	/**
 	* Create a new database
@@ -170,7 +170,7 @@ public:
 	* @param pwd            Password of the user.
 	* @param name           The name of the new database
 	*/
-	static void CreateDatabase(RString host,RString user,RString pwd,RString name) throw(RMySQLError);
+	static void CreateDatabase(RString host,RString user,RString pwd,RString name);
 
 	/**
 	* Create a table that will be used to simulate transactions.
@@ -243,28 +243,28 @@ public:
 	* @param db             Pointer to the corresponding database.
 	* @param sql            String containing a SQL query.
 	*/
-	RQuery(RDb* db,RString sql) throw(RMySQLError);
+	RQuery(RDb* db,RString sql);
 
 	/**
 	* Construct a query.
 	* @param db             Reference to the corresponding database.
 	* @param sql            String containing a SQL query.
 	*/
-	RQuery(RDb& db,RString sql) throw(RMySQLError);
+	RQuery(RDb& db,RString sql);
 
 	/**
 	* Construct a query.
 	* @param db             Smart pointer to the corresponding database.
 	* @param sql            String containing a SQL query.
 	*/
-	RQuery(std::auto_ptr<R::RDb>& db,RString sql) throw(RMySQLError);
+	RQuery(std::auto_ptr<R::RDb>& db,RString sql);
 
 protected:
 
 	/**
 	* Does the work of initializing the query.
 	*/
-	void Init(void) throw(RMySQLError);
+	void Init(void);
 
 public:
 
@@ -327,7 +327,7 @@ public:
 	* Return a specific field of the current row.
 	* @param index          Index of the field in the query.
 	*/
-	RString operator[](unsigned int index) const throw(RMySQLError);
+	RString operator[](unsigned int index) const;
 
 	/**
 	* Transform a string to be used in a SQL (add quotes before and after,

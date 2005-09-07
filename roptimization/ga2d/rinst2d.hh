@@ -6,7 +6,7 @@
 
 	Instance for 2D placement GA - Inline Implementation
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner) throw(std::bad_alloc)
+	RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner)
 		: RThreadData<cInst,cChromo>(owner),NbObjs(0),Order(0),tmpObj1(0),
 			tmpObj2(0), tmpInfos(0), Heuristic(0)
 {
@@ -47,7 +47,7 @@ template<class cInst,class cChromo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	void RThreadData2D<cInst,cChromo>::Init(void) throw(std::bad_alloc)
+	void RThreadData2D<cInst,cChromo>::Init(void)
 {
 	RThreadData<cInst,cChromo>::Init();
 	NbObjs=this->Owner->NbObjs;
@@ -98,7 +98,7 @@ template<class cInst,class cChromo>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug *debug) throw(std::bad_alloc)
+		RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug *debug)
 			: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug), Problem(prob), Objs(prob->Objs),
 			 NbObjs(prob->Objs.GetNb()), bLocalOpti(true), Heuristic(h), Limits(prob->Limits)
 {
@@ -107,7 +107,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::Init(void) throw(std::bad_alloc)
+	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::Init(void)
 {
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
 	this->BestChromosome->Objs=Objs;

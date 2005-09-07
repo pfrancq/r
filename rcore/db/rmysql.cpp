@@ -6,7 +6,7 @@
 
 	MySQL C++ Classes - Implementation.
 
-	Copyright 2000-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -52,7 +52,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDb::RDb(RString host,RString user,RString pwd,RString db,RString coding) throw(RMySQLError)
+RDb::RDb(RString host,RString user,RString pwd,RString db,RString coding)
 	: Coding(0)
 {
 	MYSQL* ret;
@@ -75,7 +75,7 @@ RDb::RDb(RString host,RString user,RString pwd,RString db,RString coding) throw(
 
 
 //------------------------------------------------------------------------------
-void RDb::CreateDatabase(RString host,RString user,RString pwd,RString name) throw(RMySQLError)
+void RDb::CreateDatabase(RString host,RString user,RString pwd,RString name)
 {
 	MYSQL* ret;
 	MYSQL ms;
@@ -131,7 +131,7 @@ RDb::~RDb(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RQuery::RQuery(RDb* db,const RString sql) throw(RMySQLError)
+RQuery::RQuery(RDb* db,const RString sql)
 	: SQL(sql), DB(db)
 {
 	if(!DB)
@@ -141,7 +141,7 @@ RQuery::RQuery(RDb* db,const RString sql) throw(RMySQLError)
 
 
 //------------------------------------------------------------------------------
-RQuery::RQuery(RDb& db,const RString sql) throw(RMySQLError)
+RQuery::RQuery(RDb& db,const RString sql)
 	: SQL(sql), DB(&db)
 {
 	Init();
@@ -149,7 +149,7 @@ RQuery::RQuery(RDb& db,const RString sql) throw(RMySQLError)
 
 
 //------------------------------------------------------------------------------
-RQuery::RQuery(std::auto_ptr<R::RDb>& db,RString sql) throw(RMySQLError)
+RQuery::RQuery(std::auto_ptr<R::RDb>& db,RString sql)
 	: SQL(sql), DB(db.get())
 {
 	Init();
@@ -157,7 +157,7 @@ RQuery::RQuery(std::auto_ptr<R::RDb>& db,RString sql) throw(RMySQLError)
 
 
 //------------------------------------------------------------------------------
-void RQuery::Init(void) throw(RMySQLError)
+void RQuery::Init(void)
 {
 	const RChar* ptr;
 	unsigned int size,pos;
@@ -242,7 +242,7 @@ void RQuery::Next(void)
 
 
 //------------------------------------------------------------------------------
-RString RQuery::operator[](unsigned int index) const throw(RMySQLError)
+RString RQuery::operator[](unsigned int index) const
 {
 	const char* val;
 	RString res;

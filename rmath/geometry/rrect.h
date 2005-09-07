@@ -6,7 +6,7 @@
 
 	Rectangle - Header
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -119,13 +119,13 @@ public:
 	* Make a translation of the rectangle.
 	* @param pt             The point representing the vector used.
 	*/
-	RRect& operator+=(const RPoint& pt) throw(std::bad_alloc);
+	RRect& operator+=(const RPoint& pt);
 
 	/**
 	* Make a minus translation of the rectangle.
 	* @param pt             The point representing the vector used.
 	*/
-	RRect& operator-=(const RPoint& pt) throw(std::bad_alloc);
+	RRect& operator-=(const RPoint& pt);
 
 	/**
 	* Compare two rectangles and return 0 if there are at the same. This function

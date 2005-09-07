@@ -6,7 +6,7 @@
 
 	Generic Tree - Header.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -57,7 +57,7 @@ namespace R{
 * class MyOrderResponsibleTree : public RTree<MyNode,true,true>
 *	{
 *	public:
-*		MyOrderResponsibleTree(unsigned int max,unsigned int inc) throw(std::bad_alloc);
+*		MyOrderResponsibleTree(unsigned int max,unsigned int inc);
 *	};
 * @endcode
 * @author Pascal Francq
@@ -84,14 +84,14 @@ public:
 	* @param max            Initial size of the array of top nodes.
 	* @param inc            Increment size of the array.
 	*/
-	RTree(unsigned int max,unsigned int inc) throw(std::bad_alloc);
+	RTree(unsigned int max,unsigned int inc);
 
 	/**
 	* Add the node to the parent.
 	* @param parent         The parent node.
 	* @param node           The node to add to the tree.
 	*/
-	void AddNode(N* parent,N* node) throw(std::bad_alloc);
+	void AddNode(N* parent,N* node);
 
 	/**
 	* Delete the node from the tree.

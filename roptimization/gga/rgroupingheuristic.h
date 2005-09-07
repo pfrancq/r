@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Grouping - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -137,7 +137,7 @@ public:
 	* Select the next object to place.
 	* The CurObj must pointed to object to place.
 	*/
-	virtual void SelectNextObject(void) throw(eGA);
+	virtual void SelectNextObject(void);
 
 	/**
 	* Return the current object to place.
@@ -152,23 +152,23 @@ public:
 	/**
 	* Find a group for the next object.
 	*/
-	virtual cGroup* FindGroup(void) throw(eGA)=0;
+	virtual cGroup* FindGroup(void)=0;
 
 	/**
 	* Put the next object into a group.
 	*/
-	void PutNextObject(void) throw(eGA);
+	void PutNextObject(void);
 
 	/**
 	* Run the heuristic.
 	* @param groups         Pointer to the groups.
 	*/
-	void Run(cGroups* groups) throw(eGA);
+	void Run(cGroups* groups);
 
 	/**
 	* Do some operations after the run.
 	*/
-	virtual void PostRun(void) throw(eGA);
+	virtual void PostRun(void);
 
 	/**
 	* Return true if all the objects are grouped.

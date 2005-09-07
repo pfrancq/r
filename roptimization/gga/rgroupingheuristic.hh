@@ -6,10 +6,10 @@
 
 	Generic Heuristic for Grouping - Inline Implemenation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
-		
+
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -71,7 +71,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::SelectNextObject(void) throw(eGA)
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::SelectNextObject(void)
 {
 	CurObj=Order[NbObjsOk];
 }
@@ -79,7 +79,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::PutNextObject(void) throw(eGA)
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::PutNextObject(void)
 {
 	SelectNextObject();
 	CurGroup=FindGroup();
@@ -90,7 +90,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::Run(cGroups* groups) throw(eGA)
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::Run(cGroups* groups)
 {
 	Init(groups);
 	while(NbObjsOk<NbObjs)
@@ -103,7 +103,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::PostRun(void) throw(eGA)
+	void RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>::PostRun(void)
 {
 }
 

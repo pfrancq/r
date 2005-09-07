@@ -6,7 +6,7 @@
 
 	Connections for the 2D Placement (Geometric Information Part) - Header.
 
-	Copyright 2000-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -107,7 +107,7 @@ public:
 	* The assignement operator.
 	* @param cons           Connections.
 	*/
-	RGeoInfoConnections& operator=(const RGeoInfoConnections& cons) throw(std::bad_alloc);
+	RGeoInfoConnections& operator=(const RGeoInfoConnections& cons);
 
 	// friend classes
 	friend class RConnections;

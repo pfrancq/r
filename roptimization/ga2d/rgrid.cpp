@@ -6,7 +6,7 @@
 
 	Grid for the 2D placement - Implementation
 
-	Copyright 1998-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -52,7 +52,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGrid::RGrid(RPoint &limits) throw(std::bad_alloc)
+RGrid::RGrid(RPoint &limits)
 	: Limits(limits), OccupiedX(0), OccupiedY(0)
 {
 	#ifdef DOUBLESPACE
@@ -141,7 +141,7 @@ RCoord RGrid::LookLeft(RPoint& pt)
 	while(x&&((*ptr)==NoObject))
 	{
 		ptr--;
-		x--;	
+		x--;
 	}
 	return(x);
 }
@@ -156,7 +156,7 @@ RCoord RGrid::LookRight(RPoint& pt)
 	while((x<InternalLimits.X)&&((*ptr)==NoObject))
 	{
 		ptr++;
-		x++;	
+		x++;
 	}
 	return(x);
 }
@@ -171,7 +171,7 @@ RCoord RGrid::LookUp(RPoint& pt)
 	while((y<=InternalLimits.Y)&&((*ptr)==NoObject))
 	{
 		ptr++;
-		y++;	
+		y++;
 	}
 	return(y);
 }
@@ -186,7 +186,7 @@ RCoord RGrid::LookDown(RPoint& pt)
 	while(y&&((*ptr)==NoObject))
 	{
 		ptr--;
-		y--;	
+		y--;
 	}
 	return(y);
 }
@@ -197,7 +197,7 @@ RCoord RGrid::SkirtLeft(RPoint& pt,RRect& bound)
 {
 	unsigned int *ptr,*ptrU,*ptrD;
 	RCoord x=pt.X;
-	RCoord Limit=bound.Pt1.X;	
+	RCoord Limit=bound.Pt1.X;
 
 	if(pt.X>0) ptr=&OccupiedY[pt.Y][pt.X-1]; else return(x);
 	if(pt.Y>0) ptrD=&OccupiedY[pt.Y-1][pt.X-1]; else ptrD=0;
@@ -209,7 +209,7 @@ RCoord RGrid::SkirtLeft(RPoint& pt,RRect& bound)
 		ptr--;
 		if(ptrU) ptrU--;
 		if(ptrD) ptrD--;
-		x--;	
+		x--;
 	}
 
 	// If bifucation and next left point is free, go to it
@@ -237,7 +237,7 @@ RCoord RGrid::SkirtRight(RPoint& pt,RRect& bound)
 		ptr++;
 		if(ptrU) ptrU++;
 		if(ptrD) ptrD++;
-		x++;	
+		x++;
 	}
 
 	// If bifucation and next right point is free, go to it
@@ -292,7 +292,7 @@ RCoord RGrid::SkirtDown(RPoint& pt,RRect& bound)
 		ptr--;
 		if(ptrL) ptrL--;
 		if(ptrR) ptrR--;
-		y--;	
+		y--;
 	}
 
 	// If bifucation and next down point is free, go to it
@@ -310,7 +310,7 @@ bool RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect& bound,
 	RCoord TestX,TestY;
 
 	// Init Part
-	poly.Clear();	
+	poly.Clear();
 	poly.InsertPtr(first=new RPoint(X,Y));
 	pt.Set(X,Y);
 

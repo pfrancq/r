@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Placement - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -79,7 +79,7 @@ class RPlacementHeuristic
 		RPoint Pos;
 		char Ori;
 	};
-	
+
 protected:
 
 	/**
@@ -101,12 +101,12 @@ protected:
 	* The geometric information of the objects.
 	*/
 	RGeoInfos* Infos;
-	
+
 	/**
-	* The connections of the objects.	
+	* The connections of the objects.
 	*/
 	RConnections* Connections;
-	
+
 	/**
 	* Total number of objects to place.
 	*/
@@ -151,7 +151,7 @@ protected:
 	* Use of free polygons.
 	*/
 	bool UseFree;
-	
+
 	/**
 	* All possible orientation must be tested.
 	*/
@@ -173,7 +173,7 @@ protected:
 	ObjectPos* Sols;
 
 	/**
-	* Prométhée Kernel
+	* Promï¿½hï¿½ Kernel
 	*/
 	RPromKernel* Prom;
 
@@ -188,15 +188,15 @@ protected:
 	RPromCriterion* dist;
 
 	/**
-	* Prométhée Parameters for the distance.
+	* Promï¿½hï¿½ Parameters for the distance.
 	*/
 	RPromCriterionParams DistParams;
-	
+
 	/**
-	* Prométhée Parameters for the area.
+	* Promï¿½hï¿½ Parameters for the area.
 	*/
 	RPromCriterionParams AreaParams;
-	
+
 public:
 
 	/**
@@ -215,7 +215,7 @@ public:
 	* @param infos          Pointer to the geometric information.
 	* @param grid           Pointer to the grid.
 	*/
-	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);	
+	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
 
 	/**
 	* Set the parameters for the "area" criterion.
@@ -250,19 +250,19 @@ public:
 	* The CurInfo must pointed to the geometric information representing the
 	* object to place.
 	*/
-	virtual void SelectNextObject(void) throw(RPlacementHeuristicException);
+	virtual void SelectNextObject(void);
 
 	/**
 	* Place the next object.
 	*/
-	RGeoInfo* NextObject(void) throw(RPlacementHeuristicException);
+	RGeoInfo* NextObject(void);
 
 	/**
 	* Calculate the position to place the next object for a specific geometric
 	* information. The function have to register the valid positions with the
 	* 'AddValidPosition' method.
 	*/
-	virtual void NextObjectOri(void) throw(RPlacementHeuristicException)=0;
+	virtual void NextObjectOri(void)=0;
 
 	/**
 	* Place the current object to a specific position. This function is called
@@ -270,7 +270,7 @@ public:
 	* This function is responsible to update Result.
 	* @param pos            The position where to place it.
 	*/
-	virtual void Place(RPoint& pos) throw(RPlacementHeuristicException)=0;
+	virtual void Place(RPoint& pos)=0;
 
 	/**
 	* Run the heuristic.
@@ -278,7 +278,7 @@ public:
 	* @param infos          Pointer to the geometric information.
 	* @param grid           Pointer to the grid.
 	*/
-	void Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid) throw(RPlacementHeuristicException);
+	void Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
 
 	/**
 	* Add a valid position fot the current geometric information to place.
@@ -321,7 +321,7 @@ public:
 	* Create a problem file for a specific configuration.
 	*/
 	void CreateProblem(void);
-	
+
 	/**
 	* Destruct the placement heuristic.
 	*/

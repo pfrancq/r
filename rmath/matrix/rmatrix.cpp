@@ -6,7 +6,7 @@
 
 	Matrix classes - Implementation.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -52,7 +52,7 @@ RMatrix::RMatrix(void)
 
 
 //------------------------------------------------------------------------------
-RMatrix::RMatrix(tSize Size) throw(std::bad_alloc)
+RMatrix::RMatrix(tSize Size)
 {
 	Lin=MaxLin=Col=MaxCol=Size;
  	M=0;
@@ -61,7 +61,7 @@ RMatrix::RMatrix(tSize Size) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RMatrix::RMatrix(tSize L,tSize C) throw(std::bad_alloc)
+RMatrix::RMatrix(tSize L,tSize C)
 {
 	Lin=MaxLin=L;
 	Col=MaxCol=C;
@@ -71,7 +71,7 @@ RMatrix::RMatrix(tSize L,tSize C) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RMatrix::RMatrix(const RMatrix &Matrix) throw(std::bad_alloc)
+RMatrix::RMatrix(const RMatrix& Matrix)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
@@ -87,31 +87,7 @@ RMatrix::RMatrix(const RMatrix &Matrix) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RMatrix::RMatrix(const RMatrix *Matrix) throw(std::bad_alloc)
-{
-	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
-	tSize i,j;
-
-	if(Matrix)
-	{
-		Lin=MaxLin=Matrix->Lin;
-		Col=MaxCol=Matrix->Col;
-		M=0;
-		Init();
-		for(i=Lin+1,ptrL=M,ptrLM=Matrix->M;--i;ptrL++,ptrLM++)
-			for(j=Col+1,ptrC=*ptrL,ptrCM=*ptrLM;--j;ptrC++,ptrCM++)
-				(*ptrC)=(*ptrCM);
-	}
-	else
-	{
-		RMatrix();
-		RReturnIfFail(Matrix);
-	}
-}
-
-
-//------------------------------------------------------------------------------
-void RMatrix::Init(void) throw(std::bad_alloc)
+void RMatrix::Init(void)
 {
 	tNumber **ptr;
 	tSize i;
@@ -123,7 +99,7 @@ void RMatrix::Init(void) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-void RMatrix::VerifySize(tSize NewLin,tSize NewCol) throw(std::bad_alloc)
+void RMatrix::VerifySize(tSize NewLin,tSize NewCol)
 {
 	tNumber **ptr;
 	tSize i;
@@ -166,7 +142,7 @@ void RMatrix::Symetrize(void)
 
 
 //------------------------------------------------------------------------------
-char RMatrix::TransitiveClosure(RMatrix *Matrix) throw(RException,std::bad_alloc)
+char RMatrix::TransitiveClosure(RMatrix *Matrix)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM,**ptrLT,*ptrCT;
 	tSize i,j,k;
@@ -197,7 +173,7 @@ char RMatrix::TransitiveClosure(RMatrix *Matrix) throw(RException,std::bad_alloc
 
 
 //------------------------------------------------------------------------------
-tNumber& RMatrix::operator()(int m, int n) const throw(RException,std::bad_alloc)
+tNumber& RMatrix::operator()(int m, int n) const
 {
 	if(m<0||m>Lin||n<0||n>Col)
 		throw RException("Bad Index");
@@ -206,7 +182,7 @@ tNumber& RMatrix::operator()(int m, int n) const throw(RException,std::bad_alloc
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator=(const RMatrix Matrix) throw(RException,std::bad_alloc)
+RMatrix& RMatrix::operator=(const RMatrix Matrix)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
@@ -221,7 +197,7 @@ RMatrix& RMatrix::operator=(const RMatrix Matrix) throw(RException,std::bad_allo
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator+=(const RMatrix Matrix) throw(RException,std::bad_alloc)
+RMatrix& RMatrix::operator+=(const RMatrix Matrix)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
@@ -237,7 +213,7 @@ RMatrix& RMatrix::operator+=(const RMatrix Matrix) throw(RException,std::bad_all
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator-=(const RMatrix Matrix) throw(RException,std::bad_alloc)
+RMatrix& RMatrix::operator-=(const RMatrix Matrix)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
 	tSize i,j;
@@ -253,7 +229,7 @@ RMatrix& RMatrix::operator-=(const RMatrix Matrix) throw(RException,std::bad_all
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator*=(const tNumber arg) throw(RException,std::bad_alloc)
+RMatrix& RMatrix::operator*=(const tNumber arg)
 {
 	tNumber **ptrL,*ptrC;
 	tSize i,j;
@@ -266,7 +242,7 @@ RMatrix& RMatrix::operator*=(const tNumber arg) throw(RException,std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator*=(const RMatrix Matrix) throw(RException,std::bad_alloc)
+RMatrix& RMatrix::operator*=(const RMatrix Matrix)
 {
 	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM,**ptrLR,*ptrCR,Sum;
 	tSize i,j,k;
@@ -313,7 +289,7 @@ RMatrix::~RMatrix(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RMatrix operator+(const RMatrix &arg1,const RMatrix &arg2) throw(RException,std::bad_alloc)
+RMatrix operator+(const RMatrix &arg1,const RMatrix &arg2)
 {
 	RMatrix res(arg1);
 
@@ -323,7 +299,7 @@ RMatrix operator+(const RMatrix &arg1,const RMatrix &arg2) throw(RException,std:
 
 
 //------------------------------------------------------------------------------
-RMatrix operator-(const RMatrix &arg1,const RMatrix &arg2) throw(RException,std::bad_alloc)
+RMatrix operator-(const RMatrix &arg1,const RMatrix &arg2)
 {
 	RMatrix res(arg1);
 
@@ -333,7 +309,7 @@ RMatrix operator-(const RMatrix &arg1,const RMatrix &arg2) throw(RException,std:
 
 
 //------------------------------------------------------------------------------
-RMatrix operator*(const RMatrix& arg1,const RMatrix& arg2) throw(RException,std::bad_alloc)
+RMatrix operator*(const RMatrix& arg1,const RMatrix& arg2)
 {
 	RMatrix res(arg1);
 
@@ -343,7 +319,7 @@ RMatrix operator*(const RMatrix& arg1,const RMatrix& arg2) throw(RException,std:
 
 
 //------------------------------------------------------------------------------
-RMatrix operator*(const tNumber arg1,const RMatrix& arg2) throw(std::bad_alloc)
+RMatrix operator*(const tNumber arg1,const RMatrix& arg2)
 {
 	RMatrix res(arg2);
 
@@ -353,7 +329,7 @@ RMatrix operator*(const tNumber arg1,const RMatrix& arg2) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RMatrix operator*(const RMatrix& arg1,const tNumber arg2) throw(std::bad_alloc)
+RMatrix operator*(const RMatrix& arg1,const tNumber arg2)
 {
 	RMatrix res(arg1);
 

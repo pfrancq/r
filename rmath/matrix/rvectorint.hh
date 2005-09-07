@@ -6,9 +6,10 @@
 
 	Class representing a list of Integer value - Implementation
 
-	Copyright 1998-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2005 by the Université Libre de Bruxelles.
 
 	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 		Vandaele Valery(vvandaele@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
@@ -51,7 +52,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	RVectorInt<bOrder>::RVectorInt(const unsigned int max) throw(std::bad_alloc)
+	RVectorInt<bOrder>::RVectorInt(const unsigned int max)
 	: MaxInt(max)
 {
 	NbInt = 0;
@@ -62,7 +63,7 @@ template<bool bOrder>
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	RVectorInt<bOrder>::RVectorInt(const RVectorInt* lst) throw(std::bad_alloc)
+	RVectorInt<bOrder>::RVectorInt(const RVectorInt* lst)
 	: MaxInt(lst->MaxInt)
 {
 	NbInt = lst->NbInt;
@@ -73,7 +74,7 @@ template<bool bOrder>
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	void RVectorInt<bOrder>::Verify(void) throw(std::bad_alloc)
+	void RVectorInt<bOrder>::Verify(void)
 {
 	if(NbInt==MaxInt)
 	{
@@ -95,7 +96,7 @@ template<bool bOrder>
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	void RVectorInt<bOrder>::Verify(unsigned int max) throw(std::bad_alloc)
+	void RVectorInt<bOrder>::Verify(unsigned int max)
 {
 	RReturnIfFail(max>0);
 	if(max>MaxInt)

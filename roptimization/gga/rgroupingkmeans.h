@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Grouping - Header
 
-	Copyright 1998-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -250,12 +250,12 @@ public:
 	* @param obj            Object to test.
 	* @return bool.
 	*/
-	bool IsValidProto(RContainer<cObj,false,false>* prototypes,cObj* obj) throw(std::bad_alloc);
+	bool IsValidProto(RContainer<cObj,false,false>* prototypes,cObj* obj);
 
 	/**
 	* Verify wether the initializing kmeans is ok.
 	*/
-	bool VerifyKMeansMod(void) throw(RException);
+	bool VerifyKMeansMod(void);
 
 	/**
 	* Calulates the distortion of a grouping.
@@ -315,7 +315,7 @@ public:
 	* @param dataset         Set of all objects to group.
 	* @param nbobjects       Number of objects to choose.
 	*/
-	void RandomInitObjects(RContainer<cObj,false,true>* dataset, unsigned int nbobjects) throw(RException);
+	void RandomInitObjects(RContainer<cObj,false,true>* dataset, unsigned int nbobjects);
 
 	/**
 	* Function to evaluates the number of groups.
@@ -348,11 +348,10 @@ public:
 	*/
 	void RefiningCenters(int nbsub, int level);
 
-
 	/**
 	* Find a group for the next object.
 	*/
-	virtual cGroup* FindGroup(void) throw(eGA) {return(0);};
+	virtual cGroup* FindGroup(void) {return(0);};
 
 	/**
 	* Run the heuristic.

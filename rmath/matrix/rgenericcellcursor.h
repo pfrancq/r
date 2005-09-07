@@ -82,7 +82,7 @@ public :
 	/**
 	* Assignment operator using a "GenericCellCursor".
 	*/
-	RGenericCellCursor<C>& operator=(const RGenericCellCursor<C>& c) throw(std::bad_alloc);
+	RGenericCellCursor<C>& operator=(const RGenericCellCursor<C>& c);
 
 	/**
 	* Set the container.
@@ -116,12 +116,12 @@ class name : public R::RGenericCellCursor<C>                                    
 {                                                                               \
 public:                                                                         \
 	name(void) : R::RGenericCellCursor<C>() {}                                  \
-	name& operator=(const name& c) throw(std::bad_alloc)                        \
+	name& operator=(const name& c)                                              \
 	{                                                                           \
 		R::RGenericCellCursor<C>::operator=(c);                                 \
 		return(*this);                                                          \
 	}                                                                           \
-	name& operator=(const R::RGenericCellCursor<C>& c) throw(std::bad_alloc)    \
+	name& operator=(const R::RGenericCellCursor<C>& c)                          \
 	{                                                                           \
 		R::RGenericCellCursor<C>::operator=(c);                                 \
 		return(*this);                                                          \

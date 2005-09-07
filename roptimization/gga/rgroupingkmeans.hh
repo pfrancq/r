@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Grouping - Inline Implemenation
 
-	Copyright 1998-2001 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -62,7 +62,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::IsValidProto(R::RContainer<cObj,false,false>* prototypes,cObj* obj) throw(std::bad_alloc)
+	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::IsValidProto(R::RContainer<cObj,false,false>* prototypes,cObj* obj)
 {
 	if(prototypes->GetPtr(obj))
 		return(false);
@@ -173,7 +173,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::VerifyKMeansMod(void) throw(RException)
+	bool RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::VerifyKMeansMod(void)
 {
 	cObj** ptr;
 	unsigned int i, nbprotos;
@@ -273,7 +273,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::RandomInitObjects(RContainer<cObj,false,true>* dataset, unsigned int nbgroups) throw(RException)
+	void RGroupingKMeans<cGroup,cObj,cGroupData,cGroups>::RandomInitObjects(RContainer<cObj,false,true>* dataset, unsigned int nbgroups)
 {
 	cObj **ptr;
 	unsigned int i;

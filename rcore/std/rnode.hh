@@ -6,7 +6,7 @@
 
 	Generic Node - Inline implementation.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 template<class N,bool bOrder>
-	RNode<N,bOrder>::RNode(unsigned int max,unsigned int inc) throw(std::bad_alloc)
+	RNode<N,bOrder>::RNode(unsigned int max,unsigned int inc)
 		: RContainer<N,false,bOrder>(max,inc), Parent(0)
 {
 }

@@ -6,7 +6,7 @@
 
 	XML Structure - Implementation.
 
-	Copyright 2000-2004 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -76,7 +76,7 @@ RXMLTag* RXMLStruct::GetTop(void)
 
 
 //-------------------------------------------------------------------------------
-void RXMLStruct::AddTag(RXMLTag* parent,RXMLTag* tag) throw(std::bad_alloc)
+void RXMLStruct::AddTag(RXMLTag* parent,RXMLTag* tag)
 {
 	RTree<RXMLTag,true,false>::AddNode(parent,tag);
 	if(!parent)

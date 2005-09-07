@@ -6,7 +6,7 @@
 
 	Edge Heuristic for Placement - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -111,21 +111,21 @@ public:
 	* @param grid           Pointer to the grid.
 	*/
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
-	
+
 	/**
 	* Calculate the position to place the next object for a specific geometric
 	* information. The function have to register the valid positions with the
 	* 'AddValidPosition' method.
 	*/
-	virtual void NextObjectOri(void) throw(RPlacementHeuristicException);
-	
+	virtual void NextObjectOri(void);
+
 	/**
 	* Place the current object to a specific position. This function is called
 	* by the NextObject method.<BR>
 	* This function is responsible to update Result.
 	* @param pos            The position where to place it.
 	*/
-	virtual void Place(RPoint& pos) throw(RPlacementHeuristicException);
+	virtual void Place(RPoint& pos);
 };
 
 

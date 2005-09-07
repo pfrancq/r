@@ -4,7 +4,7 @@
 
 	Class representing a chromosome of a GGA - Header
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -70,14 +70,14 @@ public:
 	* @param inst           The instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	RChromoG(cInst* inst,unsigned int id) throw(std::bad_alloc);
+	RChromoG(cInst* inst,unsigned int id);
 
 	/**
 	* Initialisation of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the
 	*                       chromosome.
 	*/
-	virtual void Init(cThreadData *thData) throw(std::bad_alloc);
+	virtual void Init(cThreadData *thData);
 
 	/**
 	* Clear all the information of the chromosome.
@@ -88,7 +88,7 @@ public:
 	* Construct a valid solution.
 	* @return The function must retrun true if a solution has been constructed.
 	*/
-	virtual void RandomConstruct(void) throw(eGA);
+	virtual void RandomConstruct(void);
 
 private:
 
@@ -114,44 +114,44 @@ public:
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
 	*/
-	virtual void Crossover(cChromo* parent1,cChromo* parent2) throw(eGA);
+	virtual void Crossover(cChromo* parent1,cChromo* parent2);
 
 	/**
 	* Do a mutation of the chromosome, by choosing randomly groups and
 	* destroy them.
 	*/
-	virtual void Mutation(void) throw(eGA);
+	virtual void Mutation(void);
 
 	/**
 	* Do a inversion of the chromosome, by exchanging two groups in list
 	* representing all the used one.
 	*/
-	virtual void Inversion(void) throw(eGA);
+	virtual void Inversion(void);
 
 	/**
 	* Perform a local optimisation. This function is called by the crossover
 	* and the mutation operators just before the use of the heuristic to find
 	* a group for the objects not yet assigned.
 	*/
-	virtual void LocalOptimisation(void) throw(eGA) {}
+	virtual void LocalOptimisation(void) {}
 
 	/**
 	* Perform an optimisation. This function is called at the end of the
 	* crossover and the mutation operators.
 	*/
-	virtual void Optimisation(void) throw(eGA) {}
+	virtual void Optimisation(void) {}
 
 	/**
 	* Modify a given chromosome when it is identical to another one. By
 	* default, the mutation operator of the chromosome is called.
 	* destroy them.
 	*/
-	virtual void Modify(void) throw(eGA);
+	virtual void Modify(void);
 
 	/**
 	* Verify the validity of the chromosome.
 	*/
-	virtual void Verify(void) throw(eGA);
+	virtual void Verify(void);
 
 	/**
 	* The assigment operator.

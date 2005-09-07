@@ -6,9 +6,10 @@
 
 	Class representing a list of Integer values - Header
 
-	Copyright 1998-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2005 by the Université Libre de Bruxelles.
 
 	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 		Vandaele Valery(vvandaele@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
@@ -96,13 +97,13 @@ public:
 	* Construct the list of Integer value.
 	* @param Max            The maximum number of values.
 	*/
-	RVectorInt(const unsigned int max) throw(std::bad_alloc);
+	RVectorInt(const unsigned int max);
 
 	/**
 	* Copy constructor.
 	* @param lst            List to copy.
 	*/
-	RVectorInt(const RVectorInt* lst) throw(std::bad_alloc);
+	RVectorInt(const RVectorInt* lst);
 
 private:
 
@@ -110,14 +111,14 @@ private:
 	* Verify if the container can hold the next element to be inserted. If not,
 	* the container is extended.
 	*/
-	void Verify(void) throw(std::bad_alloc);
+	void Verify(void);
 
 	/**
 	* Verify if the container can hold a certain nujmber of elements. If not,
 	* the container is extended.
     * @param max            The number of elements that must be contained.
 	*/
-	void Verify(unsigned int max) throw(std::bad_alloc);
+	void Verify(unsigned int max);
 
 	/**
 	* This function returns the index of an element represented by tag, and it

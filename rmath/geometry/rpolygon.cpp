@@ -6,7 +6,7 @@
 
 	Polygon - Implentation.
 
-	Copyright 1999-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -104,7 +104,7 @@ bool RPolygon::operator!=(const RPolygon& poly) const
 
 
 //------------------------------------------------------------------------------
-RPolygon& RPolygon::operator+=(const RPoint& pt) throw(std::bad_alloc)
+RPolygon& RPolygon::operator+=(const RPoint& pt)
 {
 	RCursor<RPoint> pts(*this);
 	for(pts.Start();!pts.End();pts.Next())
@@ -114,7 +114,7 @@ RPolygon& RPolygon::operator+=(const RPoint& pt) throw(std::bad_alloc)
 
 
 //------------------------------------------------------------------------------
-RPolygon& RPolygon::operator-=(const RPoint& pt) throw(std::bad_alloc)
+RPolygon& RPolygon::operator-=(const RPoint& pt)
 {
 	RCursor<RPoint> pts(*this);
 	for(pts.Start();!pts.End();pts.Next())

@@ -6,7 +6,7 @@
 
 	Group of a GGA - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -60,7 +60,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroup<cGroup,cObj,cGroupData,cGroups>::Verify(void) throw(eGA)
+	void RGroup<cGroup,cObj,cGroupData,cGroups>::Verify(void)
 {
 	unsigned int NbObjects=Owner->ObjsAss.GetNb();
 	char tmp[200];

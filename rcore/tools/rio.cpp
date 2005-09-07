@@ -6,7 +6,7 @@
 
 	Generic Class - Implementation.
 
-	Copyright 2002-2004 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -46,14 +46,14 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const char* str) throw(std::bad_alloc)
+RIOException::RIOException(const char* str)
 	: RException(str)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RFile* file,const char* str) throw(std::bad_alloc)
+RIOException::RIOException(const RFile* file,const char* str)
 	: RException()
 {
 	if(file)
@@ -64,7 +64,7 @@ RIOException::RIOException(const RFile* file,const char* str) throw(std::bad_all
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RIOFile* file,const char* str) throw(std::bad_alloc)
+RIOException::RIOException(const RIOFile* file,const char* str)
 	: RException()
 {
 	if(file)
@@ -75,7 +75,7 @@ RIOException::RIOException(const RIOFile* file,const char* str) throw(std::bad_a
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RTextFile* file,const char* str) throw(std::bad_alloc)
+RIOException::RIOException(const RTextFile* file,const char* str)
 	: RException()
 {
 	if(file)

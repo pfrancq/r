@@ -6,7 +6,7 @@
 
 	2D Placement Problem - Header.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -57,7 +57,7 @@ namespace R{
 class RProblem2D
 {
 public:
-	
+
 	/**
 	* Limits for the construction.
 	*/
@@ -97,7 +97,7 @@ public:
 	* Load a problem from a XML file.
 	* @param name           Name of the XML file.
 	*/
-	void Load(const char* name) throw(RIOException);
+	void Load(const char* name);
 
 	/**
 	* Clears the problem.

@@ -6,7 +6,7 @@
 
 	Genereic Text Encoding Scheme - Header.
 
-	Copyright 2004 by the Université Libre de Bruxelles.
+	Copyright 2004-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -58,7 +58,7 @@ NEWREXCEPTION(EncodingNotSupported);
 NEWREXCEPTION(InvalidByteSequence);
 NEWREXCEPTION(IncompleteByteSequence);
 
-     
+
 //------------------------------------------------------------------------------
 /**
 * This class provides a representation for a generic text encoding scheme other
@@ -97,12 +97,12 @@ public:
 	* Construct a particular enconding.
 	* @param name           Name of the encoding.
 	*/
-	RTextEncoding(const RString& name) throw(std::bad_alloc,EncodingNotSupported);
+	RTextEncoding(const RString& name);
 
 	/**
 	* Initialize the text encoding.
 	*/
-	virtual void Init(void) const throw(RException);
+	virtual void Init(void) const;
 
 	/**
 	* Return the name of the file.
@@ -134,7 +134,7 @@ public:
 	* @param len            Number of character to convert.
 	* @return RString.
 	*/
-	virtual RString ToUnicode(const char* text,unsigned int len) const throw(RException,InvalidByteSequence,IncompleteByteSequence);
+	virtual RString ToUnicode(const char* text,unsigned int len) const;
 
 	/**
 	* Read the next unicode character contained in a string of the given
@@ -144,14 +144,14 @@ public:
 	*                       this parameters contains the number of bytes read.
 	* @return RChar.
 	*/
-	virtual RChar NextUnicode(const char* text,unsigned int& len) const throw(RException,InvalidByteSequence,IncompleteByteSequence);
+	virtual RChar NextUnicode(const char* text,unsigned int& len) const;
 
 	/**
 	* Transform a Unicode string to a string of the given encoding.
 	* @param text           Unicode string.
 	* @return RCString.
 	*/
-	virtual RCString FromUnicode(const RString& text) const throw(RException,InvalidByteSequence,IncompleteByteSequence);
+	virtual RCString FromUnicode(const RString& text) const;
 
 	/**
 	* This method returns a text encoding scheme based on a name. The method
@@ -161,13 +161,13 @@ public:
 	* @param name           Name of encoding.
 	* @return Pointer to a RTextEncoding.
 	*/
-	static RTextEncoding* GetTextEncoding(const RString& name) throw(std::bad_alloc,EncodingNotSupported);
+	static RTextEncoding* GetTextEncoding(const RString& name);
 
 	/**
 	* Destructor of the encoding.
 	*/
 	virtual ~RTextEncoding(void);
-};     
+};
 
 
 }  //-------- End of namespace R -----------------------------------------------

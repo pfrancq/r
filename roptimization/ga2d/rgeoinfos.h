@@ -6,7 +6,7 @@
 
 	Set of geometric informations - Header.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -84,7 +84,7 @@ public:
 	* @param prob           The instance of the problem.
 	* @param create         If true, nb geometric information are created.
 	*/
-	RGeoInfos(RProblem2D* prob,bool create) throw(std::bad_alloc);
+	RGeoInfos(RProblem2D* prob,bool create);
 
 	/**
 	* Select a "good" set of geometric informations. This is used by the
@@ -110,7 +110,7 @@ public:
 	/**
 	* The assignement operator.
 	*/
-	RGeoInfos& operator=(const RGeoInfos& infos) throw(std::bad_alloc);
+	RGeoInfos& operator=(const RGeoInfos& infos);
 
 	/**
 	* Destruct the geometric information.

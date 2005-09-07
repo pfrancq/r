@@ -5,7 +5,7 @@
 
 	Generic Sparse Matrix  containing generic Sparse vector - Header.
 
-	Copyright 2003 by the Universit�Libre de Bruxelles.
+	Copyright 2003-2005 by the Université Libre de Bruxelles.
 
 	Authors
 		 Vandaele Valery(vavdaele@ulb.ac.be)
@@ -64,32 +64,32 @@ public :
 	/**
 	* Constructor of RGenericSparseMatrix
 	*/
-	RGenericSparseMatrix(void) throw(std::bad_alloc) ;
+	RGenericSparseMatrix(void);
 
 	/**
 	* Constructor of RGenericSparseMatrix
 	* @param nbElem            The initial number of element in the container
 	* @param increment         The number of new element each increase
 	*/
-	RGenericSparseMatrix(unsigned int nbElem,unsigned int increment) throw(std::bad_alloc) ;
+	RGenericSparseMatrix(unsigned int nbElem,unsigned int increment);
 
 	/**
 	* Construct the generic cell from another one.
 	* @param src            Generic Sparse Matrix used as source.
 	*/
-	RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>* src) throw(std::bad_alloc);
+	RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>* src);
 
 	/**
 	* Construct the generic cell from another one.
 	* @param src            Generic Sparse Matrix used as source.
 	*/
-	RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>& src) throw(std::bad_alloc);
+	RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>& src);
 
 	/**
 	* The assignement operator.
 	* @param src            Generic Sparse Matrix used as source.
 	*/
-	RGenericSparseMatrix& operator=(const RGenericSparseMatrix<C,bAlloc>& src) throw(std::bad_alloc);
+	RGenericSparseMatrix& operator=(const RGenericSparseMatrix<C,bAlloc>& src);
 
 	/**
 	* destructor of RGenericSparseMatrix
@@ -97,7 +97,9 @@ public :
 	virtual ~RGenericSparseMatrix(void);
 };
 
-#include <rgenericsparsematrix.hh>
+
+#include <rgenericsparsematrix.hh>     // Implementation
+
 
 }  //-------- End of namespace R -----------------------------------------
 

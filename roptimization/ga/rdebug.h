@@ -6,7 +6,7 @@
 
 	Debugging structure and file in XML format (eXtended Markup Language) - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -216,7 +216,7 @@ public:
 	* @param app            The name of the application.
 	* @param author         The auhtor of the application.
 	*/
-	RDebugXML(RString name,RString app,RString author) throw(std::bad_alloc);
+	RDebugXML(RString name,RString app,RString author);
 
 protected:
 

@@ -6,7 +6,7 @@
 
 	Chromosome for 2D placement GA - Inline Implementation
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -39,7 +39,7 @@
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RChromo2D(cInst *inst,unsigned int id) throw(std::bad_alloc)
+		RChromo2D(cInst *inst,unsigned int id)
 			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
 			  RGeoInfos(inst->Problem,true),
 			  Heuristic(0), Grid(0), Objs(),
@@ -52,7 +52,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		Init(cThreadData *thData) throw(std::bad_alloc)
+		Init(cThreadData *thData)
 {
 	// Call the initialisation of the parent
 	RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
@@ -88,7 +88,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::RandomConstruct(void) throw(eGA)
+	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::RandomConstruct(void)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
 	Heuristic->Run(this->Instance->Problem,this,Grid);
@@ -99,7 +99,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Crossover(cChromo* parent1,cChromo* parent2) throw(eGA)
+	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Crossover(cChromo* parent1,cChromo* parent2)
 {
 	unsigned int NbRealInfos,i;
 	RGeoInfo *info,*info1=0,*info2=0,*infoprob;
@@ -198,7 +198,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void) throw(eGA)
+	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Mutation(void)
 {
 	memset(Selected,0,NbObjs*sizeof(bool));
 	Heuristic->Run(this->Instance->Problem,this,Grid);
@@ -209,7 +209,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void) throw(eGA)
+	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void)
 {
 	unsigned int i;
 	char Tmp[200];

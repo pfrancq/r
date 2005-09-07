@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	RThreadData<cInst,cChromo>::RThreadData(cInst *owner) throw(std::bad_alloc)
+	RThreadData<cInst,cChromo>::RThreadData(cInst *owner)
 		: Owner(owner)
 {
 }
@@ -53,7 +53,7 @@ template<class cInst,class cChromo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,RDebug *debug) throw(std::bad_alloc)
+	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,RDebug *debug)
 		: Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),Receivers(10,5),bRandomConstruct(false),
 		  VerifyGA(false), Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0),AgeBestPop(0)
 {
@@ -77,7 +77,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Init(void) throw(std::bad_alloc)
+	void RInst<cInst,cChromo,cFit,cThreadData>::Init(void)
 {
 	cChromo **C;
 	unsigned int i;
@@ -105,7 +105,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct(void)
 {
 	unsigned int i;
 	cChromo **C;
@@ -129,7 +129,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreaData>
-	void RInst<cInst,cChromo,cFit,cThreaData>::Evaluate(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreaData>::Evaluate(void)
 {
 	unsigned int i;
 	cChromo **C;
@@ -152,7 +152,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreaData>
-	void RInst<cInst,cChromo,cFit,cThreaData>::AnalysePop(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreaData>::AnalysePop(void)
 {
 	unsigned int i;
 	cChromo **C;
@@ -208,7 +208,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Crossover(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreadData>::Crossover(void)
 {
 	unsigned int i,idx1,idx2;
 	cChromo **C1,**C2,*C3,*s1,*s2;
@@ -299,7 +299,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Mutation(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreadData>::Mutation(void)
 {
 	unsigned int i;
 	cFit *WorstFitness;
@@ -378,7 +378,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Inversion(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreadData>::Inversion(void)
 {
 	cChromo *p;
 
@@ -409,7 +409,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Generation(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreadData>::Generation(void)
 {
 	if(Debug)
 		Debug->BeginFunc("Generation","RInst");
@@ -442,7 +442,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Run(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreadData>::Run(void)
 {
 	if(Debug&&(!ExternBreak))
 		Debug->BeginFunc("Run","RInst");
@@ -472,7 +472,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Verify(void) throw(eGA)
+	void RInst<cInst,cChromo,cFit,cThreadData>::Verify(void)
 {
 	unsigned int i;
 	cChromo **C;

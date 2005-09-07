@@ -6,7 +6,7 @@
 
 	Debugging file in XML format (eXtended Markup Language) - Implementation
 
-	Copyright 1998-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1998-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -157,7 +157,7 @@ RDebug::~RDebug(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDebugXML::RDebugXML(RString name,RString app,RString author) throw(std::bad_alloc)
+RDebugXML::RDebugXML(RString name,RString app,RString author)
 	: RDebug(app,author),Name(name), File(name)
 {
 	File.Open(RIO::Create);

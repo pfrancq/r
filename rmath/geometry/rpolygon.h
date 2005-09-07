@@ -6,7 +6,7 @@
 
 	Polygon - Header.
 
-	Copyright 1999-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -95,13 +95,13 @@ public:
 	* Make a translation of the polygon.
 	* @param pt             The point representing the vector used.
 	*/
-	RPolygon& operator+=(const RPoint& pt) throw(std::bad_alloc);
+	RPolygon& operator+=(const RPoint& pt);
 
 	/**
 	* Make a translation of the polygon.
 	* @param pt             The point representing the vector used.
 	*/
-	RPolygon& operator-=(const RPoint& pt) throw(std::bad_alloc);
+	RPolygon& operator-=(const RPoint& pt);
 
 	/**
 	* This function compares two polygons and returns 0 if there have the same

@@ -6,7 +6,7 @@
 
 	Language - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -72,7 +72,7 @@ public:
 	* @param lang                     Name of the language.
 	* @param code                     Code of the language.
 	*/
-	RLang(const RString& lang,const char* code) throw(std::bad_alloc);
+	RLang(const RString& lang,const char* code);
 
 	/**
 	* Compare function like strcmp used in particular for RContainer class.

@@ -6,9 +6,10 @@
 
 		Class to download files (using the CURL library) - Implementation.
 
-	Copyright 2004 by the Universit�Libre de Bruxelles.
+	Copyright 2004-2005 by the Université Libre de Bruxelles.
 
 	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be)
 		Valery Vandaele (vavdaele@ulb.ac.be)
 
 	This library is free software; you can redistribute it and/or
@@ -70,7 +71,7 @@ int RDownload::WriteTmpFile(void* buffer, size_t size, size_t nmemb, void* strea
 		if(!out->stream)
 		return(-1);
 	}
-	return(fwrite(buffer, size, nmemb, out->stream)); 
+	return(fwrite(buffer, size, nmemb, out->stream));
 }
 
 
@@ -82,19 +83,19 @@ int RDownload::WriteTmpFile(void* buffer, size_t size, size_t nmemb, void* strea
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDownload::RDownload(void) throw(std::bad_alloc)
+RDownload::RDownload(void)
 {
 	Lib = curl_easy_init();
 }
 
 
 //------------------------------------------------------------------------------
-void RDownload::Download(const char* URL,RString& tmpFile) throw(RException)
+void RDownload::Download(const char* URL,RString& tmpFile)
 {
 	struct DwnFile tmpfile;
 	int err;
 
-	// Fill structure -> 
+	// Fill structure ->
 	//find a local temporary file if tmpFile not specified else use the one specified
 	if(tmpFile.IsEmpty())
 	{
@@ -103,7 +104,7 @@ void RDownload::Download(const char* URL,RString& tmpFile) throw(RException)
 		tmpfile.stream=0;
 		tmpFile=tmpfile.filename;
 	}
-	else 
+	else
 	{
 		tmpfile.stream=0;
 		strcpy(tmpfile.filename,tmpFile.Latin1());
@@ -115,7 +116,7 @@ void RDownload::Download(const char* URL,RString& tmpFile) throw(RException)
 	curl_easy_setopt(Lib, CURLOPT_FILE, &tmpfile);
 	//curl_easy_setopt(Lib, CURLOPT_CONNECTTIMEOUT,120);
 	//curl_easy_setopt(Lib, CURLOPT_TIMEOUT,120);
-	
+
 	err=curl_easy_perform(Lib);
 	if(tmpfile.stream)
 		fclose(tmpfile.stream);
@@ -125,7 +126,7 @@ void RDownload::Download(const char* URL,RString& tmpFile) throw(RException)
 
 
 //------------------------------------------------------------------------------
-void RDownload::Delete(RString& tmpFile) throw(RException)
+void RDownload::Delete(RString& tmpFile)
 {
 	remove(tmpFile);
 }

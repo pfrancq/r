@@ -6,7 +6,7 @@
 
 	2D Placement Problem - Implementation.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -57,7 +57,7 @@ RProblem2D::RProblem2D(void)
 
 
 //------------------------------------------------------------------------------
-void RProblem2D::Load(const char* name) throw(RIOException)
+void RProblem2D::Load(const char* name)
 {
 	RXMLStruct s;
 	RXMLFile f(name,&s);

@@ -38,28 +38,28 @@
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(unsigned int id) throw(std::bad_alloc)
+	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(unsigned int id)
 		: RContainer<C,bAlloc,true>(3,2) , Id(id)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(unsigned int id,unsigned int nbElem, unsigned int increase) throw(std::bad_alloc)
+	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(unsigned int id,unsigned int nbElem, unsigned int increase)
 		: RContainer<C,bAlloc,true>(nbElem,increase) , Id(id)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(const RGenericSparseVector<C,bAlloc>& src) throw(std::bad_alloc)
+	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(const RGenericSparseVector<C,bAlloc>& src)
 		: RContainer<C,bAlloc,true>::RContainer(src),Id(src.GetId())
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseVector<C,bAlloc>& RGenericSparseVector<C,bAlloc>::operator=(const RGenericSparseVector<C,bAlloc>& src) throw(std::bad_alloc)
+	RGenericSparseVector<C,bAlloc>& RGenericSparseVector<C,bAlloc>::operator=(const RGenericSparseVector<C,bAlloc>& src)
 {
 	RContainer<C,bAlloc,true>::operator=(src);
 	Id= src.GetId();

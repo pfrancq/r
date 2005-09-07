@@ -5,7 +5,7 @@
 
 	Cursor for RGenericSparseVector - Implementation.
 
-	Copyright 2003-2005 by the Universié Libre de Bruxelles.
+	Copyright 2003-2005 by the Université Libre de Bruxelles.
 
 	Authors
 		 Pascal Francq (pfrancq@ulb.ac.be)
@@ -61,7 +61,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCellCursor<C>& RGenericCellCursor<C>::operator=(const RGenericCellCursor<C>& c) throw(std::bad_alloc)
+	RGenericCellCursor<C>& RGenericCellCursor<C>::operator=(const RGenericCellCursor<C>& c)
 {
 	R::RCursor< RGenericCell<C> >::operator=(c);
 	return(*this);

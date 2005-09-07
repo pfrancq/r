@@ -6,7 +6,7 @@
 
 	XML structure - Header.
 
-	Copyright 2000-2004 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -106,7 +106,7 @@ public:
 	* @param parent         The parent tag.
  	* @param tag            The tag to add.
 	*/
-	void AddTag(RXMLTag* parent,RXMLTag* tag) throw(std::bad_alloc);
+	void AddTag(RXMLTag* parent,RXMLTag* tag);
 
 	/**
 	* Delete a tag from the XML structure.

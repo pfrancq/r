@@ -6,7 +6,7 @@
 
 	Generic Node - Header.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -75,7 +75,7 @@ public:
 	* @param max            The size of initial array of pointer to child.
 	* @param inc            The increment size for the array.
 	*/
-	RNode(unsigned int max,unsigned int inc) throw(std::bad_alloc);
+	RNode(unsigned int max,unsigned int inc);
 
 	/**
 	* Is used to compare two nodes. The function returns the same type of

@@ -6,7 +6,7 @@
 
 	HTML file - Implementation.
 
-	Copyright 2004-2005 by the Universit�Libre de Bruxelles.
+	Copyright 2004-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -799,7 +799,7 @@ void RHTMLFile::InitValidTags(void)
 
 
 //------------------------------------------------------------------------------
-void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs) throw(RIOException)
+void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs)
 {
 	RString htmlName=name;
 	Tag* tag;
@@ -855,7 +855,7 @@ void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, cons
 
 
 //------------------------------------------------------------------------------
-void RHTMLFile::EndTag(const RString& namespaceURI, const RString& lName, const RString& name) throw(RIOException)
+void RHTMLFile::EndTag(const RString& namespaceURI, const RString& lName, const RString& name)
 {
 	RString htmlName=name;
 	Tag* tag;
@@ -919,7 +919,7 @@ void RHTMLFile::EndTag(const RString& namespaceURI, const RString& lName, const 
 
 
 //------------------------------------------------------------------------------
-void RHTMLFile::Text(const RString& text) throw(RIOException)
+void RHTMLFile::Text(const RString& text)
 {
 	// if HTML closing tag found -> Nothing to do
 	if(FoundClosingHTML)
@@ -934,7 +934,7 @@ void RHTMLFile::Text(const RString& text) throw(RIOException)
 
 
 //------------------------------------------------------------------------------
-void RHTMLFile::SkipTagContent(const RString& tag)throw(RIOException)
+void RHTMLFile::SkipTagContent(const RString& tag)
 {
 	RString tagToFind("</");
 
