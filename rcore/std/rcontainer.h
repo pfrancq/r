@@ -86,7 +86,7 @@ namespace R{
 * 	unsigned int Id;
 * public:
 * 	MyElement(unsigned int id) : Id(id) {}
-* 	MyElement(MyElement* e) : Id(e->Id) {}
+* 	MyElement(const MyElement& e) : Id(e.Id) {}
 * 	void DoSomething(double d) {cout<<d<<endl;}
 * 	int Compare(const MyElement& e) const {return(Id-e.Id);}
 * 	int Compare(const unsigned int id) const {return(Id-id);}
