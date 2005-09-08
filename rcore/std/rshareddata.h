@@ -106,7 +106,7 @@ template <class D>
 * @param data               Reference to a pointer to the data.
 */
 template<class D>
-	void RDecRef(D* data)
+	void RDecRef(D* &data)
 {
 	if(data&&data->DecRef())
 	{
