@@ -72,8 +72,8 @@ namespace R{
 * At least, a compare function and a HashIndex method must be implemented in
 * the class C:
 * @code
-* int Compare(const C*) const;
-* static int HashIndex(const C*);
+* int Compare(const C&) const;
+* static int HashIndex(const C&);
 * @endcode
 *
 * Here is an example of class MyElement that will be contained in the
@@ -86,12 +86,13 @@ namespace R{
 *
 * class MyElement
 * {
-* 	char *Text;
+* 	char* Text;
 * public:
 * 	MyElement(const char* text) {Text=strdup(text);}
-* 	MyElement(MyElement *e) {Text=strdup(e->Text);}
-* 	int Compare(const MyElement *e) const {return(strcmp(Text,e->Text));}
+* 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
+* 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
 * 	int Compare(const char* text) const {return(strcmp(Text,text));}
+*	~MyElement(void) {free(Text);}
 * 	static int HashIndex(const char *u)
 * 	{
 * 		int c=*u;
@@ -99,9 +100,9 @@ namespace R{
 * 		if(c>='A'&&c<='Z') return(c-'A');
 * 		return(26);
 * 	}
-* 	static int HashIndex(const MyElement *e)
+* 	static int HashIndex(const MyElement& e)
 * 	{
-* 		int c=(*e->Text);
+* 		int c=(*e.Text);
 * 		if(c>='a'&&c<='z') return(c-'a');
 * 		if(c>='A'&&c<='Z') return(c-'A');
 * 		return(26);
@@ -113,152 +114,194 @@ namespace R{
 * {
 * 	RHashContainer<MyElement,27,true> c(20,10);
 *
-* 	c.InsertPtr(new MyElement("Coucou"));
-* 	if(c.IsIn<const char*>("Coucou"))
-* 		cout<<"An element of value \"Coucou\" is in the container"<<endl;
-* 	c.InsertPtr(new MyElement("Autre"));
+* 	c.InsertPtr(new MyElement("Hello World"));
+* 	if(c.IsIn<const char*>("Hello World"))
+* 		cout<<"An element of value \"Hello World\" is in the container"<<endl;
+* 	c.InsertPtr(new MyElement("Other"));
 * }
 * @endcode
 *
 * @author Pascal Francq
 * @short Single Hash Table Container.
 */
-template<class C,unsigned int tSize,bool bAlloc>
+template<class C,size_t tSize,bool bAlloc>
 	class RHashContainer
 {
 public:
+
+	/**
+	* Class representing the index in a hash table container.
+	*/
+	class Hash : public RContainer<C,bAlloc,true>
+	{
+		/*
+		* Constructor.
+		* @param m               The initial maximal size of the array.
+		* @param i               The value used when increasing the array. If
+		*                        null value, the size is set to the half the
+		*                        maximal size.
+		*/
+		Hash(size_t m,size_t i) : RContainer<C,bAlloc,true>(m,i) {}
+
+		friend class RHashContainer;
+	};
+
+private:
+
 	/**
 	* This container represents the hash table of the elements.
 	*/
-	RContainer<C,bAlloc,true>** Hash;
+	RContainer<Hash,true,true> HashTable;
+
+public:
 
 	/**
-	* Construct a Hash container.
-	* @param M              Default maximum number of elements.
-	* @param I              Incremental number of elements.
+	* Constructor of a hash container.
+	* @param m               The initial maximal size of the array for a index.
+	* @param i               The value used when increasing the array for a
+	*                        index. If null value, the size is set to the half
+	*                        of the maximal size.
 	*/
-	RHashContainer(unsigned int M,unsigned int I)
+	RHashContainer(size_t m,size_t i)
+		: HashTable(tSize)
 	{
-		RContainer<C,bAlloc,true>** ptr;
-		unsigned int i;
-
-		Hash= new RContainer<C,bAlloc,true>*[tSize];
-		for(i=tSize+1,ptr=Hash;--i;ptr++)
-			(*ptr)=new RContainer<C,bAlloc,true>(M,I);
+		for(size_t pos=0;pos<tSize;pos++)
+			HashTable.InsertPtrAt(new Hash(m,i),pos);
 	}
+
+	/**
+	* Get the number of elements in the hash container.
+	*/
+	inline size_t GetNb(void) const
+	{
+		RCursor<Hash> Cur(HashTable);
+		size_t nb;
+		for(Cur.Start(),nb=0;!Cur.End();Cur.Next())
+			nb+=Cur()->GetNb();
+		return(nb);
+	}
+
+	/**
+	* Get a pointer to the ith element in the container (Only read).
+	* @param idx             Index of the element to get.
+	* @return Return the pointer or 0 if the index is outside the scope of the
+	*         container.
+	*/
+	const Hash* operator[](size_t idx) const {return(HashTable[idx]);}
+
+	/**
+	* Get a pointer to the ith element in the container (Read/Write).
+	* @param idx             Index of the element to get.
+	* @return Return the pointer or 0 if the index is outside the scope of the
+	*         container.
+	*/
+	Hash* operator[](size_t idx) {return(HashTable[idx]);}
 
 	/**
 	* Clear the hash container.
 	*/
 	void Clear(void)
 	{
-		RContainer<C,bAlloc,true>** ptr;
-		unsigned int i;
-
-		for(i=tSize+1,ptr=Hash;--i;ptr++)
-			(*ptr)->Clear();
+		RCursor<Hash> Cur(HashTable);
+		for(Cur.Start();!Cur.End();Cur.Next())
+			Cur()->Clear();
 	}
 
 	/**
-	* Insert an element.
-	* @param ins            Pointer to the element to insert.
+	* Look if a certain element is in the container.
+	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param sortkey         The tag represents the sorting key. The default value
+	*                        depends if the container is ordered (true) or not
+	*                        (false).
+	* @return Return true if the element is in the container.
 	*/
-	inline void InsertPtr(C *ins)
+	template<class TUse> inline bool IsIn(const TUse& tag,bool sortkey=true) const
 	{
-		RReturnIfFail(ins);
-		Hash[C::HashIndex(ins)]->InsertPtr(ins);
+		size_t hash=C::HashIndex(tag);
+		if(hash>=tSize)
+			throw RException("Invalid hash index");
+		return(HashTable[hash]->IsIn<TUse>(tag,sortkey));
 	}
 
 	/**
-	* Verify if an element is in the hash container.
-	* @param TUse           The type of tag, the hash container uses the
-	*                       Compare(TUse &) member function of the elements.
-	* @param tag            The tag used.
-	* @param sortkey        The tag represents the sorting key. The default value
-	*                       depends if the container is ordered (true) or not
-	*                       (false).
-	* @returns The function returns true if the element is in the hash
-	* container, else false.
-	*/
-	template<class TUse> inline bool IsIn(const TUse tag,bool sortkey=true) const
-	{
-		return(Hash[C::HashIndex(tag)]->IsIn<TUse>(tag,sortkey));
-	}
-
-	/**
-	* Get a pointer to a certain element in the hash container.
-	* @param TUse           The type of tag, the hash container uses the
-	*                       Compare(TUse &) member function of the elements.
-	* @param tag            The tag used.
-	* @param sortkey        The tag represents the sorting key. The default value
-	*                       depends if the container is ordered (true) or not
-	*                       (false).
+	* Get a pointer to a certain element in the container.
+	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param sortkey         The tag represents the sorting key. The default value
+	*                        depends if the container is ordered (true) or not
+	*                        (false).
 	* @return Return the pointer or 0 if the element is not in the container.
 	*/
-	template<class TUse> inline C* GetPtr(const TUse tag,bool sortkey=true) const
+	template<class TUse> inline C* GetPtr(const TUse& tag,bool sortkey=true) const
 	{
-		return(Hash[C::HashIndex(tag)]->GetPtr<TUse>(tag,sortkey));
+		size_t hash=C::HashIndex(tag);
+		if(hash>=tSize)
+			throw RException("Invalid hash index");
+		return(HashTable[hash]->GetPtr<TUse>(tag,sortkey));
 	}
 
 	/**
 	* Get a pointer to a certain element in the container. If the element is
 	* not existing, the container creates it by using the constructor with TUse
 	* as parameter.
-	* @param TUse           The type of tag, the container uses the
-	*                       Compare(TUse &) member function of the elements.
-	* @param tag            The tag used.
-	* @param sortkey        The tag represents the sorting key. The default
-	*                       value depends if the container is ordered (true) or
-	*                       not (false).
+	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param sortkey         The tag represents the sorting key. The default value
+	*                        depends if the container is ordered (true) or not
+	*                        (false).
 	* @return The function returns a pointer to the element of the container.
 	*/
-	template<class TUse> inline C* GetInsertPtr(const TUse tag,bool sortkey=true)
+	template<class TUse> inline C* GetInsertPtr(const TUse& tag,bool sortkey=true)
 	{
-		return(Hash[C::HashIndex(tag)]->GetInsertPtr<TUse>(tag,sortkey));
+		size_t hash=C::HashIndex(tag);
+		if(hash>=tSize)
+			throw RException("Invalid hash index");
+		return(HashTable[hash]->GetInsertPtr<TUse>(tag,sortkey));
 	}
 
 	/**
-	* Delete an element of the hash container.
-	* @param del            Pointer to the element to delete.
+	* Insert an element in the container. If the corresponding index is already
+	* used, the previously inserted element is removed from the container (and
+	* destroy if the container is responsible for the allocation).
+	* @param ins             A pointer to the element to insert.
+	* @param del             Specify if a similar existing element must be
+	*                        deleted.
 	*/
-	inline void DeletePtr(C* del)
+	inline void InsertPtr(const C* ins,bool del=false)
 	{
-		RReturnIfFail(del);
-		Hash[C::HashIndex(del)]->DeletePtr(del);
+		RReturnIfFail(ins);
+		size_t hash=C::HashIndex(*ins);
+		if(hash>=tSize)
+			throw RException("Invalid hash index");
+		HashTable[hash]->InsertPtr(ins,del);
 	}
 
 	/**
-	* Delete an element of the hash container.
-	* @param TUse           The type of tag, the container uses the
-	*                       Compare(TUse &) member function of the elements.
-	* @param tag            The tag used.
-	* @param sortkey        The tag represents the sorting key. The default
-	*                       value depends if the container is ordered (true) or
-	*                       not (false).
+	* Delete an element from the container. The element is destruct if the
+	* container is responsible of the desallocation.
+	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param sortkey         The tag represents the sorting key. The default value
+	*                        depends if the container is ordered (true) or not
+	*                        (false).
 	*/
-	template<class TUse> inline void DeletePtr(const TUse tag,bool sortkey=true)
+	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=true)
 	{
-		Hash[C::HashIndex(tag)]->DeletePtr<TUse>(tag,sortkey);
+		size_t hash=C::HashIndex(tag);
+		if(hash>=tSize)
+			throw RException("Invalid hash index");
+		return(HashTable[hash]->DeletePtr<TUse>(tag,sortkey));
 	}
 
 	/**
 	* Destruct the hash container.
 	*/
-	virtual ~RHashContainer(void)
-	{
-		try
-		{
-			RContainer<C,bAlloc,true>** ptr;
-			unsigned int i;
-
-			for(i=tSize+1,ptr=Hash;--i;ptr++)
-				delete (*ptr);
-			delete[] Hash;
-		}
-		catch(...)
-		{
-		}
-	}
+	virtual ~RHashContainer(void) {}
 };
 
 
