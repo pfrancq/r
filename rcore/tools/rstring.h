@@ -424,9 +424,27 @@ public:
 
 
 //-----------------------------------------------------------------------------
-// Operators+
+// C++ operators
+
+/**
+* Add two strings.
+* @param arg1                First string.
+* @param arg2                Second string.
+*/
 inline const RString operator+(const RString& arg1,const RString& arg2) {return(RString(arg1)+=arg2);}
+
+/**
+* Add two strings.
+* @param arg1                First string.
+* @param arg2                Second string.
+*/
 inline const RString operator+(const RString& arg1,const char* arg2) {return(RString(arg1)+=arg2);}
+
+/**
+* Add two strings.
+* @param arg1                First string.
+* @param arg2                Second string.
+*/
 inline const RString operator+(const char* arg1,const RString& arg2) {return(RString(arg1)+=arg2);}
 
 

@@ -88,7 +88,7 @@ namespace R{
 * variable c:
 * @code
 * #include <string.h>
-* #include <lhashcontainer.h>
+* #include <rdblhashcontainer.h>
 * using namespace R;
 *
 *
@@ -100,6 +100,7 @@ namespace R{
 * 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
 * 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
 * 	int Compare(const char* text) const {return(strcmp(Text,text));}
+* 	void DoSomething(void) {cout<<Text<<endl;}
 *	~MyElement(void) {free(Text);}
 * 	static int HashIndex(const MyElement& e)
 * 	{
@@ -140,6 +141,19 @@ namespace R{
 * 	if(c.IsIn<const char*>("Hello World"))
 * 		cout<<"An element of value \"Hello World\" is in the container"<<endl;
 * 	c.InsertPtr(new MyElement("Other"));
+*
+*	// Parse the double hash table
+*	RCursor<RDblHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+*	for(Cur.Start();!Cur.End();Cur.Next())
+*	{
+*		RCursor<RDblHashContainer<MyElement,27,true>::Hash2> Cur2(*Cur());
+*		for(Cur2.Start();!Cur2.End();Cur2.Next())
+*		{
+*			RCursor<MyElement> Cur3(*Cur2());
+*			for(Cur3.Start();!Cur3.End();Cur3.Next())
+*				Cur3()->DoSomething();
+*		}
+*	}
 * }
 * @endcode
 *
@@ -155,6 +169,78 @@ public:
 
 	/**
 	* Class representing the second index in a double hash table container.
+	* Here is an example of class MyElement that will be contained in the
+	* variable c:
+	* @code
+	* #include <string.h>
+	* #include <rdblhashcontainer.h>
+	* using namespace R;
+	*
+	*
+	* class MyElement
+	* {
+	* 	char* Text;
+	* public:
+	* 	MyElement(const char* text) {Text=strdup(text);}
+	* 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
+	* 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
+	* 	int Compare(const char* text) const {return(strcmp(Text,text));}
+	* 	void DoSomething(void) {cout<<Text<<endl;}
+	*	~MyElement(void) {free(Text);}
+	* 	static int HashIndex(const MyElement& e)
+	* 	{
+	* 		int c=(*e.Text);
+	* 		if(c>='a'&&c<='z') return(c-'a');
+	* 		if(c>='A'&&c<='Z') return(c-'A');
+	* 		return(26);
+	* 	}
+	* 	static int HashIndex2(const MyElement& e)
+	* 	{
+	* 		int c=(*(e.Text+1));
+	* 		if(c>='a'&&c<='z') return(c-'a');
+	* 		if(c>='A'&&c<='Z') return(c-'A');
+	* 		return(26);
+	* 	}
+	* 	static int HashIndex(const char *u)
+	* 	{
+	* 		int c=*u;
+	* 		if(c>='a'&&c<='z') return(c-'a');
+	* 		if(c>='A'&&c<='Z') return(c-'A');
+	* 		return(26);
+	* 	}
+	* 	static int HashIndex2(const char *u)
+	* 	{
+	* 		int c=*(u+1);
+	* 		if(c>='a'&&c<='z') return(c-'a');
+	* 		if(c>='A'&&c<='Z') return(c-'A');
+	* 		return(26);
+	* 	}
+	* };
+	*
+	*
+	* int main()
+	* {
+	* 	RDblHashContainer<MyElement,27,27,true> c(20,10);
+	*
+	* 	c.InsertPtr(new MyElement("Hello World"));
+	* 	if(c.IsIn<const char*>("Hello World"))
+	* 		cout<<"An element of value \"Hello World\" is in the container"<<endl;
+	* 	c.InsertPtr(new MyElement("Other"));
+	*
+	*	// Parse the double hash table
+	*	RCursor<RDblHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+	*	for(Cur.Start();!Cur.End();Cur.Next())
+	*	{
+	*		RCursor<RDblHashContainer<MyElement,27,true>::Hash2> Cur2(*Cur());
+	*		for(Cur2.Start();!Cur2.End();Cur2.Next())
+	*		{
+	*			RCursor<MyElement> Cur3(*Cur2());
+	*			for(Cur3.Start();!Cur3.End();Cur3.Next())
+	*				Cur3()->DoSomething();
+	*		}
+	*	}
+	* }
+	* @endcode
 	*/
 	class Hash2 : public RContainer<C,bAlloc,true>
 	{
@@ -173,6 +259,78 @@ public:
 
 	/**
 	* Class representing the first index in a double hash table container.
+	* Here is an example of class MyElement that will be contained in the
+	* variable c:
+	* @code
+	* #include <string.h>
+	* #include <rdblhashcontainer.h>
+	* using namespace R;
+	*
+	*
+	* class MyElement
+	* {
+	* 	char* Text;
+	* public:
+	* 	MyElement(const char* text) {Text=strdup(text);}
+	* 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
+	* 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
+	* 	int Compare(const char* text) const {return(strcmp(Text,text));}
+	* 	void DoSomething(void) {cout<<Text<<endl;}
+	*	~MyElement(void) {free(Text);}
+	* 	static int HashIndex(const MyElement& e)
+	* 	{
+	* 		int c=(*e.Text);
+	* 		if(c>='a'&&c<='z') return(c-'a');
+	* 		if(c>='A'&&c<='Z') return(c-'A');
+	* 		return(26);
+	* 	}
+	* 	static int HashIndex2(const MyElement& e)
+	* 	{
+	* 		int c=(*(e.Text+1));
+	* 		if(c>='a'&&c<='z') return(c-'a');
+	* 		if(c>='A'&&c<='Z') return(c-'A');
+	* 		return(26);
+	* 	}
+	* 	static int HashIndex(const char *u)
+	* 	{
+	* 		int c=*u;
+	* 		if(c>='a'&&c<='z') return(c-'a');
+	* 		if(c>='A'&&c<='Z') return(c-'A');
+	* 		return(26);
+	* 	}
+	* 	static int HashIndex2(const char *u)
+	* 	{
+	* 		int c=*(u+1);
+	* 		if(c>='a'&&c<='z') return(c-'a');
+	* 		if(c>='A'&&c<='Z') return(c-'A');
+	* 		return(26);
+	* 	}
+	* };
+	*
+	*
+	* int main()
+	* {
+	* 	RDblHashContainer<MyElement,27,27,true> c(20,10);
+	*
+	* 	c.InsertPtr(new MyElement("Hello World"));
+	* 	if(c.IsIn<const char*>("Hello World"))
+	* 		cout<<"An element of value \"Hello World\" is in the container"<<endl;
+	* 	c.InsertPtr(new MyElement("Other"));
+	*
+	*	// Parse the double hash table
+	*	RCursor<RDblHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+	*	for(Cur.Start();!Cur.End();Cur.Next())
+	*	{
+	*		RCursor<RDblHashContainer<MyElement,27,true>::Hash2> Cur2(*Cur());
+	*		for(Cur2.Start();!Cur2.End();Cur2.Next())
+	*		{
+	*			RCursor<MyElement> Cur3(*Cur2());
+	*			for(Cur3.Start();!Cur3.End();Cur3.Next())
+	*				Cur3()->DoSomething();
+	*		}
+	*	}
+	* }
+	* @endcode
 	*/
 	class Hash : public RContainer<Hash2,true,true>
 	{

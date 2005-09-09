@@ -92,6 +92,7 @@ namespace R{
 * 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
 * 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
 * 	int Compare(const char* text) const {return(strcmp(Text,text));}
+* 	void DoSomething(void) {cout<<Text<<endl;}
 *	~MyElement(void) {free(Text);}
 * 	static int HashIndex(const char *u)
 * 	{
@@ -118,6 +119,15 @@ namespace R{
 * 	if(c.IsIn<const char*>("Hello World"))
 * 		cout<<"An element of value \"Hello World\" is in the container"<<endl;
 * 	c.InsertPtr(new MyElement("Other"));
+*
+*	// Parse the hash table
+*	RCursor<RHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+*	for(Cur.Start();!Cur.End();Cur.Next())
+*	{
+*		RCursor<MyElement> Cur2(*Cur());
+*		for(Cur2.Start();!Cur2.End();Cur2.Next())
+*			Cur2()->DoSomething();
+*	}
 * }
 * @endcode
 *
@@ -131,6 +141,60 @@ public:
 
 	/**
 	* Class representing the index in a hash table container.
+	* Here is an example of class MyElement that will be contained in the
+	* variable c:
+	* @code
+	* #include <string.h>
+	* #include <rhashcontainer.h>
+	* using namespace R;
+	*
+	*
+	* class MyElement
+	* {
+	* 	char* Text;
+	* public:
+	* 	MyElement(const char* text) {Text=strdup(text);}
+	* 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
+	* 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
+	* 	int Compare(const char* text) const {return(strcmp(Text,text));}
+	* 	void DoSomething(void) {cout<<Text<<endl;}
+	*	~MyElement(void) {free(Text);}
+	* 	static int HashIndex(const char *u)
+	* 	{
+	* 		int c=*u;
+	* 		if(c>='a'&&c<='z') return(c-'a');
+	* 		if(c>='A'&&c<='Z') return(c-'A');
+	* 		return(26);
+	* 	}
+	* 	static int HashIndex(const MyElement& e)
+	* 	{
+	* 		int c=(*e.Text);
+	* 		if(c>='a'&&c<='z') return(c-'a');
+	* 		if(c>='A'&&c<='Z') return(c-'A');
+	* 		return(26);
+	* 	}
+	* };
+	*
+	*
+	* int main()
+	* {
+	* 	RHashContainer<MyElement,27,true> c(20,10);
+	*
+	* 	c.InsertPtr(new MyElement("Hello World"));
+	* 	if(c.IsIn<const char*>("Hello World"))
+	* 		cout<<"An element of value \"Hello World\" is in the container"<<endl;
+	* 	c.InsertPtr(new MyElement("Other"));
+	*
+	*	// Parse the hash table
+	*	RCursor<RHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+	*	for(Cur.Start();!Cur.End();Cur.Next())
+	*	{
+	*		RCursor<MyElement> Cur2(*Cur());
+	*		for(Cur2.Start();!Cur2.End();Cur2.Next())
+	*			Cur2()->DoSomething();
+	*	}
+	* }
+	* @endcode
 	*/
 	class Hash : public RContainer<C,bAlloc,true>
 	{

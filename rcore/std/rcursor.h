@@ -87,7 +87,7 @@ public:
 
 	/**
 	* Construct the cursor.
-	* param c                Container to iterate.
+	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
 	*                        null, iterate until the end of the container.
@@ -96,7 +96,7 @@ public:
 
 	/**
 	* Construct the cursor.
-	* param c                Container to iterate.
+	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
 	*                        null, iterate until the end of the container.
@@ -105,7 +105,7 @@ public:
 
 	/**
 	* Construct the cursor.
-	* param c                Container to iterate.
+	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
 	*                        null, iterate until the end of the container.
@@ -114,7 +114,7 @@ public:
 
 	/**
 	* Construct the cursor.
-	* param c                Container to iterate.
+	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
 	*                        null, iterate until the end of the container.
@@ -129,7 +129,7 @@ public:
 
 	/**
 	* Set the container.
-	* param c                Container to iterate.
+	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
 	*                        null, iterate until the end of the container.
