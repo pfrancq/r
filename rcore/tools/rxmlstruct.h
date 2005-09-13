@@ -60,11 +60,6 @@ class RXMLStruct : public RTree<RXMLTag,true,false>
 	RContainer<RXMLAttr,true,true> Entities;
 
 	/**
-	* Top tag of the XML structure.
-	*/
-	RXMLTag* TopTag;
-
-	/**
 	* Version of the XML standard.
 	*/
 	RString Version;
@@ -94,11 +89,6 @@ public:
 	* @param parent         Parent of the tag to find.
 	*/
 	RXMLTag* GetTag(RString name,RXMLTag* parent);
-
-	/**
-	* Return the Top Nodes of the XML struct.
-	*/
-	RXMLTag* GetTop(void);
 
 	/**
 	* Add a tag to the a given one which will be the parent. If the parent is

@@ -46,8 +46,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RXMLStruct::RXMLStruct(void)
-	: RTree<RXMLTag,true,false>(100,50), Entities(20,10), TopTag(0),
-	  Version("1.0"), Encoding("UTF-8")
+	: RTree<RXMLTag,true,false>(100,50), Entities(20,10), Version("1.0"), Encoding("UTF-8")
 {
 }
 
@@ -55,7 +54,7 @@ RXMLStruct::RXMLStruct(void)
 //------------------------------------------------------------------------------
 RXMLTag* RXMLStruct::GetTag(RString name)
 {
-	return(GetPtr(name,false));
+	return(GetNode(name,false));
 }
 
 
@@ -64,26 +63,14 @@ RXMLTag* RXMLStruct::GetTag(RString name,RXMLTag* parent)
 {
 	if(!parent)
 		return(0);
-	return(parent->GetPtr(name,false));
-}
-
-
-//-------------------------------------------------------------------------------
-RXMLTag* RXMLStruct::GetTop(void)
-{
-	return(TopTag);
+	return(parent->GetNode(name,false));
 }
 
 
 //-------------------------------------------------------------------------------
 void RXMLStruct::AddTag(RXMLTag* parent,RXMLTag* tag)
 {
-	RTree<RXMLTag,true,false>::AddNode(parent,tag);
-	if(!parent)
-	{
-		//if(TopTag) throw RException("Problem");
-		TopTag=tag;
-	}
+	RTree<RXMLTag,true,false>::InsertNode(parent,tag);
 }
 
 

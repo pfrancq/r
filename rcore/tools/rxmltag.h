@@ -62,7 +62,7 @@ class RXMLTagCursor;
 * @short XML Tag.
 * @author Pascal Francq and Thomas L'Eglise.
 */
-class RXMLTag : public RNode<RXMLTag,false>
+class RXMLTag : public RNode<RXMLTag,true,false>
 {
 	/**
 	* The name of the tag.
@@ -84,13 +84,13 @@ public:
 	/**
 	* Construct a XML Tag.
 	*/
-	RXMLTag(void);
+	RXMLTag(RXMLStruct* xml);
 
 	/**
 	* Construct a XML Tag.
 	* @param name          The name of the tag.
 	*/
-	RXMLTag(const RString& name);
+	RXMLTag(RXMLStruct* xml,const RString& name);
 
 	/**
 	* Compare a tag with a given name.
