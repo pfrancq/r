@@ -80,13 +80,13 @@ public:
 	/**
 	* Destructor.
 	*/
-	~RSharedData(void) {}
+	virtual ~RSharedData(void) {}
 };
 
 
 //------------------------------------------------------------------------------
 /**
-* Function the increase the number of references of a RShareData object.
+* Function the increase the number of references of a RSharedData object.
 * @param D                  Type of the shared data.
 * @param data               Pointer to the data.
 */
@@ -100,8 +100,9 @@ template <class D>
 
 //------------------------------------------------------------------------------
 /**
-* Function the decrease the number of references of a RShareData object. If there
-* are no more references, the data is destroy and the pointer is set to 0.
+* Function the decrease the number of references of a RSharedData object. If
+* there are no more references, the data is destroy and the pointer is set to
+* 0.
 * @param D                  Type of the shared data.
 * @param data               Reference to a pointer to the data.
 */

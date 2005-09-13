@@ -54,7 +54,7 @@ protected:
 	class BasicCharBuffer : public RSharedData
 	{
 	public:
-		C* Text;     		 // Text
+		C* Text;       // Text
 		size_t Len;    // Actual length
 		size_t MaxLen; // Maximum length
 
@@ -63,7 +63,7 @@ protected:
 		BasicCharBuffer(C* tab,size_t len,size_t maxlen)
 			: RSharedData(), Text(tab), Len(len), MaxLen(maxlen) {}
 		void Verify(size_t maxlen);
-		~BasicCharBuffer(void){delete[] Text;}
+		virtual ~BasicCharBuffer(void){delete[] Text;}
 	};
 
 	/*

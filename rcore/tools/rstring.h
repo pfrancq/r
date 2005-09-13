@@ -80,7 +80,7 @@ class RString : public BasicString<RChar,RString>
 		CharBuffer(RChar* tab,size_t len,size_t maxlen)
 			: BasicCharBuffer(tab,len,maxlen), Latin1(0) {}
 		void InvalidLatin1(void) {delete[] Latin1; Latin1=0;}
-		~CharBuffer(void) {delete[] Latin1;}
+		virtual ~CharBuffer(void) {delete[] Latin1;}
 	};
 
 	/**
