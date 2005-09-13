@@ -48,7 +48,18 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RIOFile class represents a file that can do some input and/or output
-* tasks.
+* tasks. Here is an example:
+* @code
+* #include <riofile.h>
+* using namespace R;
+*
+* char Buffer[81];
+* RIOFile In("/home/user/Test.txt");
+* In.Open(RIO::Read);
+* unsigned int len=In.Read(Buffer,80);
+* Buffer[len]=0;
+* cout<<Buffer<<endl;
+* @endcode
 * @author Pascal Francq
 * @short Generic File for Input/Output.
 */

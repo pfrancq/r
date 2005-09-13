@@ -6,7 +6,7 @@
 
 	Internationalisation - Header.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -80,17 +80,7 @@ public:
 	/**
 	* Compare function like strcmp used in particular for RContainer class.
 	*/
-	int Compare(const RLocale* l) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	*/
 	int Compare(const RString& n) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	*/
-	int Compare(const char* n) const;
 
 	/**
 	* Equal operator.
@@ -101,11 +91,6 @@ public:
 	* Equal operator.
 	*/
 	bool operator==(const RString& n) const;
-
-	/**
-	* Equal operator.
-	*/
-	bool operator==(const char* n) const;
 
 	/**
 	* Destruct the locale.

@@ -62,75 +62,77 @@ namespace R{
 * The user can write his own operators to read and write record from a
 * RRecFile. Here is an example:
 * @code
+* #include <rrecfile.h>
+* using namespace R;
+*
 * class Person
 * {
 * public:
-* 	R::RString LastName;
-* 	R::RString FirstName;
+*    R::RString LastName;
+*    R::RString FirstName;
 *
-* 	Person(void) {}
-* 	Person(const R::RString& l,const RString& f) : LastName(l), FirstName(f) {}
-* 	Person(const Person* p) : LastName(p->LastName), FirstName(p->FirstName) {}
-* 	int Compare(const Person* p) const {return(LastName.Compare(p->LastName));}
-* 	int Compare(const R::RString& name) const {return(LastName.Compare(name));}
-* 	void Read(R::RRecFile<Person,80,true>& f);
-* 	void Write(R::RRecFile<Person,80,true>& f);
+*    Person(void) {}
+*    Person(const R::RString& l,const RString& f) : LastName(l), FirstName(f) {}
+*    Person(const Person& p) : LastName(p.LastName), FirstName(p.FirstName) {}
+*    int Compare(const Person& p) const {return(LastName.Compare(p.LastName));}
+*    int Compare(const R::RString& name) const {return(LastName.Compare(name));}
+*    void Read(R::RRecFile<Person,80,true>& f);
+*    void Write(R::RRecFile<Person,80,true>& f);
 * };
 *
 * void Person::Read(R::RRecFile<Person,80,true>& f)
 * {
-* 	char Buf[41];
-* 	f.Read(Buf,40);
-* 	LastName=Buf;
-* 	f.Read(Buf,40);
-* 	FirstName=Buf;
+*    char Buf[41];
+*    f.Read(Buf,40);
+*    LastName=Buf;
+*    f.Read(Buf,40);
+*    FirstName=Buf;
 * }
 *
 * void Person::Write(R::RRecFile<Person,80,true>& f)
 * {
-* 	char Buf[41];
-* 	strcpy(Buf,LastName.Latin1());
-* 	f.Write(Buf,40);
-* 	strcpy(Buf,FirstName.Latin1());
-* 	f.Write(Buf,40);
+*    char Buf[41];
+*    strcpy(Buf,LastName.Latin1());
+*    f.Write(Buf,40);
+*    strcpy(Buf,FirstName.Latin1());
+*    f.Write(Buf,40);
 * }
 *
 * int main(int argc, char *argv[])
 * {
-* 	R::RContainer<Person,true,true> Cont(2,1);
-* 	R::RCursor<Person> Cur;
-* 	R::RRecFile<Person,80,true> File("/home/pfrancq/test.bin");
+*    R::RContainer<Person,true,true> Cont(2,1);
+*    R::RCursor<Person> Cur;
+*    R::RRecFile<Person,80,true> File("/home/pfrancq/test.bin");
 *
-* 	// Create container -> create file -> write data
-* 	cout<<"Create"<<endl;
-* 	Cont.InsertPtr(new Person("Jagger","Mike"));
-* 	Cont.InsertPtr(new Person("Gillian","Ian"));
-* 	Cont.InsertPtr(new Person("Plant","Robert"));
-* 	Cont.InsertPtr(new Person("Coverdale","David"));
-* 	File.Open(R::RIO::Create);
-* 	Cur.Set(Cont);
-* 	for(Cur.Start();!Cur.End();Cur.Next())
-* 		Cur()->Write(File);
-* 	File.Close();
+*    // Create container -> create file -> write data
+*    cout<<"Create"<<endl;
+*    Cont.InsertPtr(new Person("Jagger","Mike"));
+*    Cont.InsertPtr(new Person("Gillian","Ian"));
+*    Cont.InsertPtr(new Person("Plant","Robert"));
+*    Cont.InsertPtr(new Person("Coverdale","David"));
+*    File.Open(R::RIO::Create);
+*    Cur.Set(Cont);
+*    for(Cur.Start();!Cur.End();Cur.Next())
+*       Cur()->Write(File);
+*    File.Close();
 *
-* 	// Clean container -> open file -> read data
-* 	cout<<"Read"<<endl;
-* 	Cont.Clear();
-* 	File.Open(R::RIO::Read);
-* 	for(File.Start();!File.End();File.Next())
-		Cont.InsertPtr(new Person(File()));
-* 	Cur.Set(Cont);
-* 	for(Cur.Start();!Cur.End();Cur.Next())
-* 		cout<<"  "<<Cur()->LastName<<", "<<Cur()->FirstName<<endl;
-* 	File.Close();
+*    // Clean container -> open file -> read data
+*    cout<<"Read"<<endl;
+*    Cont.Clear();
+*    File.Open(R::RIO::Read);
+*    for(File.Start();!File.End();File.Next())
+*       Cont.InsertPtr(new Person(*File()));
+*    Cur.Set(Cont);
+*    for(Cur.Start();!Cur.End();Cur.Next())
+*       cout<<"  "<<Cur()->LastName<<", "<<Cur()->FirstName<<endl;
+*    File.Close();
 *
-* 	// Just find the firstname of "Gillian" directly in the file
-* 	cout<<"Find"<<endl;
-* 	File.Open(R::RIO::Read);
-* 	Person* Find=File.GetRec<RString>("Gillian");
-* 	if(Find)
-* 		cout<<"  "<<Find->LastName<<", "<<Find->FirstName<<endl;
-* 	File.Close();
+*    // Just find the firstname of "Gillian" directly in the file
+*    cout<<"Find"<<endl;
+*    File.Open(R::RIO::Read);
+*    if(File.Search("Gillian"))
+*       cout<<"  "<<File()->LastName<<", "<<File()->FirstName<<endl;
+*    File.Close();
 * }
 * @endcode
 * @author Pascal Francq
@@ -230,16 +232,20 @@ public:
 
 	/**
 	* This function returns the number of a record represented by tag, and it
-	* is used when the file is ordered.
+	* is used when the file is ordered. If the record was found, it becomes the
+	* current one accessible through the operator().
 	* @param TUse           The type of tag, the file uses the Compare(TUse &)
 	*                       member function of the records.
 	* @param tag            The tag used.
-	* @param find           If the record represented by tag exist, find is set to
-	*                       true.
 	* @return Returns the number of the record if it exists or the index where
 	* is has to inserted.
 	*/
 	template<class TUse> unsigned int Search(const TUse& tag);
+
+	/**
+	* Is the file pointing to a valid record?
+	*/
+	bool FindRecord(void) {return(Find);}
 
 	/**
 	* Get the number of records in the file.

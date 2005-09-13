@@ -6,7 +6,7 @@
 
 	Message systems - Implementation.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -64,21 +64,7 @@ int RLocale::Compare(const RLocale& l) const
 
 
 //------------------------------------------------------------------------------
-int RLocale::Compare(const RLocale* l) const
-{
-	return(Name.Compare(l->Name));
-}
-
-
-//------------------------------------------------------------------------------
 int RLocale::Compare(const RString& n) const
-{
-	return(Name.Compare(n));
-}
-
-
-//------------------------------------------------------------------------------
-int RLocale::Compare(const char* n) const
 {
 	return(Name.Compare(n));
 }
@@ -93,13 +79,6 @@ bool RLocale::operator==(const RLocale& l) const
 
 //------------------------------------------------------------------------------
 bool RLocale::operator==(const RString& n) const
-{
-	return(Name==n);
-}
-
-
-//------------------------------------------------------------------------------
-bool RLocale::operator==(const char* n) const
 {
 	return(Name==n);
 }

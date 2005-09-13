@@ -48,9 +48,39 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RMsg class provides a representation for a message that can be leave by
-* some objects and that can be retrieve by others.
+* some objects and that can be retrieve by others. This system can be used for
+* debugging purposes to handle inter-depency problems.
 * @author Pascal Francq
-* @short Message.
+* @code
+* // Library A
+* #include <rmsg.h>
+* using namespace R;
+*
+* void SomeWhereInTheCode(int money)
+* {
+*    ...
+*    if(!money)
+*       RMsg::InsertMsg("Special situation : No money");
+*    ...
+* }
+*
+*
+* // Library B
+* #include <rmsg.h>
+* using namespace R;
+* void SomeWhereElseInTheCode(void)
+* {
+*    ...
+*    RMsg* msg=RMsg::LookMsg("Special situation : No money");
+*    if(msg)
+*    {
+*       cout<<"Put here a breakpoint"<<endl;
+*       RMsg::DeleteMsg(msg);     // Situation handled
+*    }
+*    ...
+* }
+* @endcode
+* @short Message System.
 */
 class RMsg
 {

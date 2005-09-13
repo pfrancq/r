@@ -4,7 +4,7 @@
 
 	RDownload.cpp
 
-		Class to download files (using the CURL library) - Implementation.
+		Class to download files - Implementation.
 
 	Copyright 2004-2005 by the Université Libre de Bruxelles.
 

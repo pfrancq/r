@@ -592,7 +592,7 @@ unsigned long RTextFile::GetUInt(void)
 	}
 
 	// Get Number
-	while(GetCur().IsDigit()||(GetCur()=='+')||(GetCur()=='-'))
+	while(GetCur().IsDigit())
 	{
 		str+=GetCur();
 		Next();

@@ -4,7 +4,7 @@
 
 	RDownload.h
 
-	Class to download files (using the CURL library) - Header.
+	Class to download files - Header.
 
 	Copyright 2004-2005 by the Université Libre de Bruxelles.
 
@@ -59,10 +59,9 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RDownload class provides a representation for a downloader
-* using the CURL library.
+* The RDownload class provides a representation for a downloader.
 * @author Valery Vandaele
-* @short Downloader using the CURL library.
+* @short Downloader.
 */
 class RDownload
 {
@@ -74,9 +73,7 @@ class RDownload
 public:
 
 	/**
-	* Construct the URL manager.
-	* @param path            Path to find the plugins.
-	* @param dlg             Should the dialog box be loaded.
+	* Construct the downloader.
 	*/
 	RDownload(void);
 
@@ -106,7 +103,7 @@ public:
 	virtual void Delete(R::RString& tmpFile);
 
 	/**
-	* Destructor of the URL manager.
+	* Destructor of the downloader.
 	*/
 	virtual ~RDownload(void);
 };

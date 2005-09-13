@@ -514,7 +514,7 @@ void RXMLFile::SaveNextTag(int depth)
 	RString line;
 
 	for(int i=0;i<depth;i++) line+="\t";
-	Cur=CurTag->GetAttr();
+	Cur=CurTag->GetAttrs();
 	Tags=CurTag->GetNodes();
 	if(Cur.GetNb())
 	{

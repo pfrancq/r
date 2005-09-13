@@ -49,7 +49,17 @@ namespace R{
 
 
 /**
-* The RDir class represents a generic directory.
+* The RDir class represents a generic directory. Here is an example:
+* @code
+* #include <rdir.h>
+* using namespace R;
+*
+* RDir Dir("/home/user/data");
+* Dir.Open(RIO::Read);
+* RCursor<RFile> Files=Dir.GetEntries();
+* for(Files.Start();!Files.End();Files.Next())
+*    cout<<Files()->GetName()<<endl;
+* @endcode
 * @author Pascal Francq
 * @short Directory.
 */

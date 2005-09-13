@@ -6,7 +6,7 @@
 
 	Date - Implementation.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -95,18 +95,6 @@ int RDate::Compare(const RDate& d) const
 	if(Hour!=d.Hour) return(Hour-d.Hour);
 	if(Minute!=d.Minute) return(Minute-d.Minute);
 	return(Second-d.Second);
-}
-
-
-//------------------------------------------------------------------------------
-int RDate::Compare(const RDate* d) const
-{
-	if(Year!=d->Year) return(Year-d->Year);
-	if(Month!=d->Month) return(Month-d->Month);
-	if(Day!=d->Day) return(Day-d->Day);
-	if(Hour!=d->Hour) return(Hour-d->Hour);
-	if(Minute!=d->Minute) return(Minute-d->Minute);
-	return(Second-d->Second);
 }
 
 

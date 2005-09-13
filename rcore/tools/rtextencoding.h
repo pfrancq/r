@@ -53,9 +53,21 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// New Exception
+// New Exceptions
+
+/**
+* Exception specifying that the chosen encoding is not supported.
+*/
 NEWREXCEPTION(EncodingNotSupported);
+
+/**
+* Exception specifying that an invalid byte sequence cannot be handle.
+*/
 NEWREXCEPTION(InvalidByteSequence);
+
+/**
+* Exception specifying that the byte sequence is incompleted..
+*/
 NEWREXCEPTION(IncompleteByteSequence);
 
 
@@ -111,20 +123,20 @@ public:
 	const RString& GetName(void) const {return(Name);}
 
 	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	* @param enc            Encoding.
+	* Lexically compares two strings and returns an integer less than, equal
+	* to, or greater than zero if this is less than, equal to, or greater than
+	* enc.
+	* @param enc             Encoding to compare with.
+	* @see R::RContainer.
 	*/
 	int Compare(const RTextEncoding& enc) const;
 
 	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	* @param enc            Encoding.
-	*/
-	int Compare(const RTextEncoding* enc) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
+	* Lexically compares two strings and returns an integer less than, equal
+	* to, or greater than zero if this is less than, equal to, or greater than
+	* name.
 	* @param name           Name of encoding.
+	* @see R::RContainer.
 	*/
 	int Compare(const RString& name) const;
 
@@ -147,7 +159,7 @@ public:
 	virtual RChar NextUnicode(const char* text,unsigned int& len) const;
 
 	/**
-	* Transform a Unicode string to a string of the given encoding.
+	* Transform a string in Unicode to a string of the given encoding.
 	* @param text           Unicode string.
 	* @return RCString.
 	*/
@@ -155,7 +167,7 @@ public:
 
 	/**
 	* This method returns a text encoding scheme based on a name. The method
-	* construct a text encoding for UTF-16 tbe first time it is used.
+	* construct a text encoding for UTF-16 the first time it is used.
 	*
 	* The encoding schemes are added when they are requested.
 	* @param name           Name of encoding.

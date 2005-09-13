@@ -6,7 +6,7 @@
 
 	Date - Header.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -46,6 +46,13 @@ class RString;
 //------------------------------------------------------------------------------
 /**
 * The RDate class provides a representation for a date.
+* @code
+* #include <rdate.h>
+* using namespace R;
+*
+* RDate Date(30,12,2005,12,12,11);
+* cout<<Date.ToString()<<endl;
+* @endcode
 * @author Pascal Francq
 * @short Date.
 */
@@ -112,14 +119,13 @@ public:
 	RDate(const RString& date);
 
 	/**
-	* Compare function like strcmp used in particular for RStd::RContainer class.
+	* Lexically compares two dates and returns an integer less than, equal
+	* to, or greater than zero if this is less than, equal to, or greater than
+	* d.
+	* @param d               Date to compare with.
+	* @see R::RContainer.
 	*/
 	int Compare(const RDate& d) const;
-
-	/**
-	* Compare function like strcmp used in particular for RStd::RContainer class.
-	*/
-	int Compare(const RDate* d) const;
 
 	/**
 	* Assignment operator using another date.

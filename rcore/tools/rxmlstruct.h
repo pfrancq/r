@@ -48,7 +48,23 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* This class provides a representation of a XML structure.
+* This class provides a representation of a XML structure. It is implemented as
+* a RTree of RXMLTag.
+* @code
+* #include <rxmlstruct.h>
+* #include <rcursor.h>
+* using namespace R;
+*
+* RXMLStruct XML;
+* XML.AddTag(0,new RXMLTag(&XML,"html"));
+* XML.AddTag(XML.GetTop(),new RXMLTag(&XML,"head"));
+* XML.AddTag(XML.GetTop(),new RXMLTag(&XML,"body"));
+* ...
+* // Parse all the child nodes of the body tag
+* RCursor<RXMLTag> Cur(XML.GetTag("body")->GetNodes());
+* for(Cur.Start();!Cur.End();Cur.Next())
+*    cout<<Cur()->GetName()<<endl;
+* @endcode
 * @short XML Structure.
 * @author Pascal Francq and Thomas L'Eglise.
 */

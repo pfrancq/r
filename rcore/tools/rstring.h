@@ -63,8 +63,8 @@ namespace R{
 * RString str2;
 * str2=str2;
 * @endcode
-* The strings str1 and str2 use (as long as none of tehm is modified) the same
-* copy of the characters.
+* The strings str1 and str2 use (as long as none of them is modified) the same
+* copy of the characters string.
 * @author Pascal Francq
 * @short Unicode String
 */
@@ -259,12 +259,14 @@ public:
 	const RChar* UTF16(void) const;
 
 	/**
-	* Return the string.
+	* Return the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
 	*/
 	const RChar* operator()(void) const;
 
 	/**
-	* Return the string.
+	* Return the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
 	*/
 	operator const char* () const;
 

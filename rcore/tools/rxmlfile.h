@@ -53,6 +53,17 @@ NEWRIOEXCEPTION(RIOException,eInvalidXMLFile);
 //------------------------------------------------------------------------------
 /**
 * This class represents a XML file.
+* @code
+* #include <rxmlfile.h>
+* #include <rxmlstruct.h>
+* using namespace R;
+*
+* RXMLStruct XML;
+* RXMLFile In("/home/user/data.xml",&XML);
+* In.Open(RIO::Read);
+* RXMLFile Out("/home/user/data.xml.backup",&XML);
+* Out.Open(RIO::Create);
+* @endcode
 * @short XML File.
 * @author Pascal Francq.
 */

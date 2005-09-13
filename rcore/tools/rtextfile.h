@@ -67,20 +67,38 @@ class RTextEncoding;
 * The user can write his own operators to read and write with RTextFile. Here
 * is an example:
 * @code
+* #include <rtextfile.h>
+* using namespace R;
+*
 * class Point
 * {
 * public:
-* 	int X,Y;
+*    int X,Y;
+*    Point(void) : X(0), Y(0) {}
+*    Point(int x,int y) : X(x), Y(y) {}
 * };
 *
 * RTextFile& operator<<(RTextFile &f,Point &pt)
 * {
-* 	return(f<<pt.X<<pt.Y);
+*    return(f<<pt.X<<pt.Y);
 * }
 *
 * RTextFile& operator>>(RTextFile &f,Point &pt)
 * {
-* 	return(f>>pt.X>>pt.Y);
+*    return(f>>pt.X>>pt.Y);
+* }
+*
+* int main(int argc, char *argv[])
+* {
+*    Point Pt1(2,3);
+*    Point Pt2;
+*    RTextFile Out("/home/user/Test.txt");
+*    Out.Open(RIO::Create);
+*    Out<<Pt1;
+*    RTextFile In("/home/user/Test.txt");
+*    In.Open(RIO::Read);
+*    In>>Pt2;
+*    cout<<"Pt2=("<<Pt2.X<<","<<Pt2.Y<<")"<<endl;
 * }
 * @endcode
 * @author Pascal Francq

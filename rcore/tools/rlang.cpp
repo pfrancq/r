@@ -64,13 +64,6 @@ int RLang::Compare(const RLang& lang) const
 
 
 //------------------------------------------------------------------------------
-int RLang::Compare(const RLang *lang) const
-{
-  return(strcmp(Code,lang->Code));
-}
-
-
-//------------------------------------------------------------------------------
 int RLang::Compare(const char* code) const
 {
   return(strcmp(Code,code));

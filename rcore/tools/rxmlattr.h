@@ -6,7 +6,7 @@
 
 	Attribute for a XML Tag - Header.
 
-	Copyright 2000-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -83,21 +83,11 @@ public:
 	/**
 	* Compare the name of the attribute with a given string. This function is
 	* used by RContainer.
-	* @param name           The C string used for the comparaison.
-	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
-	* parameter.
-	* @see RContainer
-	*/
-	int Compare(const char* name) const {return(Name.Compare(name));}
-
-	/**
-	* Compare the name of the attribute with a given string. This function is
-	* used by RContainer.
 	* @param name           The string used for the comparaison.
 	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
 	* parameter.
 	*/
-	int Compare(const RString &name) const {return(Name.Compare(name));}
+	int Compare(const RString& name) const {return(Name.Compare(name));}
 
 	/**
 	* Compare the names of two attributes. This function is used by RContainer.
@@ -105,15 +95,7 @@ public:
 	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
 	* parameter.
 	*/
-	int Compare(const RXMLAttr &attr) const {return(Name.Compare(attr.Name)); }
-
-	/**
-	* Compare the names of two attributes. This function is used by RContainer.
-	* @param attr           The attribute used for the comparaison.
-	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
-	* parameter.
-	*/
-    int Compare(const RXMLAttr* attr) const {return(Name.Compare(attr->Name)); }
+	int Compare(const RXMLAttr& attr) const {return(Name.Compare(attr.Name)); }
 
 	/**
 	* Return the name of the tag.

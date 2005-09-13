@@ -212,17 +212,20 @@ public:
 	RCString& operator+=(const char src);
 
 	/**
-	* Return the string containing the string.
+	* Return the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
 	*/
 	const char* operator()(void) const;
 
 	/**
-	* Return the string.
+	* Return the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
 	*/
 	operator std::string () const;
 
 	/**
-	* Return the string containing the string.
+	* Return the string containing the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
 	*/
 	operator const char* () const;
 

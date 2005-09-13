@@ -208,13 +208,6 @@ int RTextEncoding::Compare(const RTextEncoding& enc) const
 
 
 //------------------------------------------------------------------------------
-int RTextEncoding::Compare(const RTextEncoding* enc) const
-{
-	return(Name.Compare(enc->Name));
-}
-
-
-//------------------------------------------------------------------------------
 int RTextEncoding::Compare(const RString& name) const
 {
 	return(Name.Compare(name));

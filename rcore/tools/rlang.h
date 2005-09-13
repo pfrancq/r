@@ -69,24 +69,23 @@ public:
 
 	/**
 	* Construct a language.
-	* @param lang                     Name of the language.
-	* @param code                     Code of the language.
+	* @param lang            Name of the language.
+	* @param code            Code of the language.
 	*/
 	RLang(const RString& lang,const char* code);
 
 	/**
-	* Compare function like strcmp used in particular for RContainer class.
+	* Compare two langs and return an integer less than, equal to, or greater
+	* than zero if this is less than, equal to, or greater than lang.
+	* @param lang            Language.
+	* @see R::RContainer.
 	*/
 	int Compare(const RLang& lang) const;
 
 	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	*/
-	int Compare(const RLang* lang) const;
-
-	/**
-	* Compare function like strcmp used in particular for RContainer class.
-	* @param code           Code used for the comparaison.
+	* Compare a lang and a code and return an integer less than, equal to, or
+	* greater than zero if this is less than, equal to, or greater than code.
+	* @param code            Code used for the comparaison.
 	*/
 	int Compare(const char* code) const;
 
