@@ -46,26 +46,71 @@
 namespace R{
 //------------------------------------------------------------------------------
 
+// forward declaration
+template<class N,bool bAlloc,bool bOrder> class RNode;
+
 
 //------------------------------------------------------------------------------
 /**
-* This class implement a generic tree of node of class N. The class N must
-* derived from the RNode<N,bool> class. The paremeter bAlloc specify if the
-* tree is responsible for the desallocation of the nodes. The parameter bOrder
-* specify if the nodes are ordered. Here is a example:
+* @param N                   The class of the elements of the tree.
+* @param bAlloc              Specify if the elements are desallocated by the
+*                            tree.
+* @param bOrder              Specify if the elements are ordered in the tree.
+* This class implement a generic tree of node of a given class N. This class N
+* must derived from the RNode class.
+*
+* The tree is supposed to have only one root node which has to be created
+* manually.
+*
+* Here is a example:
 * @code
-* class MyOrderResponsibleTree : public RTree<MyNode,true,true>
-*	{
-*	public:
-*		MyOrderResponsibleTree(unsigned int max,unsigned int inc);
-*	};
+* #include <rtree.h>
+* #include <rnode.h>
+* #include <rcursor.h>
+* using namespace R;
+*
+* class MyTree;   // Forward declaration
+*
+* class MyNode : public RNode<MyNode,true,true>
+* {
+*    RString Name;
+* public:
+*    MyNode(MyTree* tree,const RString& name) : RNode<MyNode,true,true>(tree), Name(name) {}
+*    int Compare(const MyNode& node) const {return(Name.Compare(node.Name));}
+*    void DoSomething(void) {cout<<Name<<endl;}
+* };
+*
+* class MyTree : public RTree<MyNode,true,true>
+* {
+* public:
+*    MyTree(unsigned int max,unsigned int inc) : RTree<MyNode,true,true>(max,inc) {}
+* };
+*
+* int main()
+* {
+*    MyTree Tree(20,10);
+*
+*    // Insert the top node
+*    Tree.InsertNode(0,new MyNode(&Tree,"Root"));
+*
+*    // Insert two sub nodes
+*    Tree.InsertNode(Tree.GetTop(),new MyNode(&Tree,"First Level (1)"));
+*    Tree.InsertNode(Tree.GetTop(),new MyNode(&Tree,"First Level (2)"));
+*
+*    // Parse the nodes
+*    R::RCursor<MyNode> Cur(Tree.GetNodes());
+*    for(Cur.Start();!Cur.End();Cur.Next())
+*       Cur()->DoSomething();
+* }
 * @endcode
 * @author Pascal Francq
 * @short Generic Tree.
 */
 template<class N,bool bAlloc,bool bOrder>
-	class RTree : public RContainer<N,bAlloc,bOrder>
+	class RTree : private RContainer<N,bAlloc,bOrder>
 {
+protected:
+
 	/**
 	* Do a deep copy of a child node.
 	* @param child           Child node.
@@ -73,11 +118,12 @@ template<class N,bool bAlloc,bool bOrder>
 	*/
 	void DeepCopy(N* child,N* parent);
 
-public:
 	/**
-	* This container hold the top nodes.
+	* The top node.
 	*/
-	RContainer<N,false,bOrder>* Top;
+	N* Top;
+
+public:
 
 	/**
 	* Construct the tree.
@@ -87,23 +133,66 @@ public:
 	RTree(unsigned int max,unsigned int inc);
 
 	/**
-	* Add the node to the parent.
-	* @param parent         The parent node.
-	* @param node           The node to add to the tree.
+	* Return the top node.
 	*/
-	void AddNode(N* parent,N* node);
+	N* GetTop(void) const {return(Top);}
 
 	/**
-	* Delete the node from the tree.
-	* @param node           The node to be delete from the tree.
+	* Get the total number of nodes in the tree.
+	* @return size_t
+	*/
+	inline size_t GetNbNodes(void) const {return(RContainer<N,bAlloc,bOrder>::GetNb());}
+
+	/**
+	* Get a cursor over all the nodes of the tree.
+	*/
+	inline RCursor<N> GetNodes(void) const {return(R::RCursor<N>(*this));}
+
+	/**
+	* Copy the array of nodes into a temporary array. This array must have
+	* the right size (Read only). This method can be limited to a part of the
+	* tree.
+	* @param tab             Array of nodes.
+	* @param min             Starting index.
+	* @param max             Ending index.
+	* @return number of elements of the tree.
+	*/
+	inline size_t GetTab(const N** tab,size_t min=0, size_t max=0) const {return(RContainer<N,bAlloc,bOrder>::GetTab(tab,min,max));}
+
+	/**
+	* Copy the array of nodes into a temporary array. This array must have
+	* the right size (Read/Write). This method can be limited to a part of the
+	* tree.
+	* @param tab             Array of nodes.
+	* @param min             Starting index.
+	* @param max             Ending index.
+	* @return number of elements in the tree.
+	*/
+	inline size_t GetTab(N** tab,size_t min=0, size_t max=0) {return(RContainer<N,bAlloc,bOrder>::GetTab(tab,min,max));}
+
+	/**
+	* Clear the tree and destruct the nodes if it is responsible for
+	* the desallocation.
+	* @param m              New maximal size of the array. If null, the old
+	*                       size remains.
+	* @param i              New increasing value. If null, the old value
+	*                       remains.
+	*/
+	inline void Clear(unsigned int m=0,unsigned int i=0) {RContainer<N,bAlloc,bOrder>::Clear(m,i); Top=0;}
+
+	/**
+	* Insert a node and attached it to a parent. If the parent is null,
+	* the node is considered as the top node of the tree.
+	* @param parent         Parent where the node is to attached.
+	* @param node           Node to insert.
+	*/
+	void InsertNode(N* to,N* node);
+
+	/**
+	* Delete a node from the tree. All the child nodes are also deleted.
+	* @param node           Node to delete.
 	*/
 	void DeleteNode(N* node);
-
-	/**
-	* Get the number of nodes in the tree.
-	* @return unsigned int
-	*/
-	unsigned int GetNbNodes(void) const;
 
 	/**
 	* Deep copy of a the tree.
@@ -112,9 +201,23 @@ public:
 	template<bool a, bool o> void Copy(const RTree<N,a,o>& src);
 
 	/**
+	* Get a pointer to a certain node of the tree.
+	* @param TUse            The type of the tag used for the search.
+	* @param tag             The tag used.
+	* @param sortkey         The tag represents the sorting key. The default value
+	*                        depends if the container is ordered (true) or not
+	*                        (false).
+	* @return Return the pointer or 0 if the element is not in the tree.
+	*/
+	template<class TUse> N* GetNode(const TUse& tag,bool sortkey=bOrder) const;
+
+	/**
 	* Destruct the tree.
 	*/
-	~RTree(void);
+	virtual ~RTree(void);
+
+	// The RNode is a friend class
+	friend class RNode<N,bAlloc,bOrder>;
 };
 
 

@@ -37,47 +37,57 @@
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-template<class N,bool bOrder>
-	RNode<N,bOrder>::RNode(unsigned int max,unsigned int inc)
-		: RContainer<N,false,bOrder>(max,inc), Parent(0)
+template<class N,bool bAlloc,bool bOrder>
+	RNode<N,bAlloc,bOrder>::RNode(RTree<N,bAlloc,bOrder>* tree)
+		: Tree(tree), Parent(0), SubNodes(NullId), NbSubNodes(0)
 {
 }
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bOrder>
-	int RNode<N,bOrder>::Compare(const RNode*) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-template<class N,bool bOrder>
-	N* RNode<N,bOrder>::GetParent(void) const
+template<class N,bool bAlloc,bool bOrder>
+	N* RNode<N,bAlloc,bOrder>::GetParent(void) const
 {
 	return(Parent);
 }
 
 
 //-----------------------------------------------------------------------------
-template<class N,bool bOrder>
-	size_t RNode<N,bOrder>::GetNbNodes(void) const
+template<class N,bool bAlloc,bool bOrder>
+	size_t RNode<N,bAlloc,bOrder>::GetNbNodes(void) const
 {
-	return(RContainer<N,false,bOrder>::GetNb());
+	return(NbSubNodes);
 }
 
 
 //-----------------------------------------------------------------------------
-template<class N,bool bOrder>
-	RCursor<N> RNode<N,bOrder>::GetNodes(void) const
+template<class N,bool bAlloc,bool bOrder>
+	RCursor<N> RNode<N,bAlloc,bOrder>::GetNodes(void) const
 {
-	return(R::RCursor<N>(*this));
+	if(!NbSubNodes)
+		return(R::RCursor<N>());
+	return(R::RCursor<N>(*Tree,SubNodes,SubNodes+NbSubNodes));
 }
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bOrder>
-	RNode<N,bOrder>::~RNode(void)
+template<class N,bool bAlloc,bool bOrder>
+	template<class TUse> N* RNode<N,bAlloc,bOrder>::GetNode(const TUse& tag,bool sortkey) const
+{
+	return(Tree->GetPtr(tag,sortkey,SubNodes,SubNodes+NbSubNodes));
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
+	void RNode<N,bAlloc,bOrder>::InsertNode(N* node)
+{
+	Tree->InsertNode(static_cast<N*>(this),node);
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
+	RNode<N,bAlloc,bOrder>::~RNode(void)
 {
 }

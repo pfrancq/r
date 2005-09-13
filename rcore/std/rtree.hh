@@ -55,49 +55,69 @@ template<class N,bool bAlloc,bool bOrder>
 	RTree<N,bAlloc,bOrder>::RTree(unsigned int max,unsigned int inc)
 		: RContainer<N,bAlloc,bOrder>(max,inc), Top(0)
 {
-	Top = new RContainer<N,false,bOrder>(10,5);
 }
 
 
-//------------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	void RTree<N,bAlloc,bOrder>::AddNode(N* parent,N* node)
+	void RTree<N,bAlloc,bOrder>::InsertNode(N* to,N* node)
 {
-	RReturnIfFail(node);
-	if(!node) return;
-	RContainer<N,bAlloc,bOrder>::InsertPtr(node);
-	if(parent)
+	unsigned int tmp;
+
+	if(!to)
 	{
-		node->Parent=parent;
-		parent->RContainer<N,false,bOrder>::InsertPtr(node);
+		// Must be the top node
+		if(!Top)
+		{
+			Top=node;
+			InsertPtrAt(Top,0);
+			return;
+		}
+		to=Top;
+	}
+	if(to->NbSubNodes)
+	{
+		tmp=to->SubNodes+to->NbSubNodes;
+		InsertPtrAt(node,tmp,false);
+		RCursor<N> Nodes(*this);
+		for(Nodes.Start();!Nodes.End();Nodes.Next())
+			if((Nodes()->SubNodes>to->SubNodes)&&(Nodes()->SubNodes!=NullId))
+				Nodes()->SubNodes++;
+		if((Top->SubNodes>to->SubNodes)&&(Top->SubNodes!=NullId))
+			Top->SubNodes++;
 	}
 	else
-		Top->RContainer<N,false,bOrder>::InsertPtr(node);
+	{
+		to->SubNodes=RContainer<N,bAlloc,bOrder>::GetNb();
+		InsertPtrAt(node,to->SubNodes,false);
+	}
+	node->Parent = to;
+	to->NbSubNodes++;
 }
 
 
-//------------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
 	void RTree<N,bAlloc,bOrder>::DeleteNode(N* node)
 {
-	RReturnIfFail(node);
-	if(!node) return;
-	if(node->Parent)
-	{
-		node->Parent->RContainer<N,false,bOrder>::DeletePtr(*node);
-		node->Parent=0;
-	}
-	else
-		Top->RContainer<N,false,bOrder>::DeletePtr(*node);
-	RContainer<N,bAlloc,bOrder>::DeletePtr(*node);
-}
+	N* from;
 
+	// Delete sub-nodes
+	RCursor<N> Cur(*this,node->SubNodes,node->SubNodes+node->NbSubNodes);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		DeleteNode(Cur());
 
-//------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	unsigned int RTree<N,bAlloc,bOrder>::GetNbNodes(void) const
-{
-	return(this->GetNb());
+	// Delete the node and update the index
+	from=node->Parent;
+	if(!(--from->NbSubNodes))
+		from->SubNodes=NullId;
+	DeletePtr(*node);
+	if((Top->SubNodes>from->SubNodes)&&(Top->SubNodes!=NullId))
+		Top->SubNodes--;
+	RCursor<N> Nodes(*this);
+	for(Nodes.Start();!Nodes.End();Nodes.Next())
+		if((Nodes()->SubNodes>from->SubNodes)&&(Nodes()->SubNodes!=NullId))
+			Nodes()->SubNodes--;
 }
 
 
@@ -113,7 +133,15 @@ template<class N,bool bAlloc,bool bOrder> template<bool a, bool o>
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
+	template<class TUse>
+		N* RTree<N,bAlloc,bOrder>::GetNode(const TUse& tag,bool sortkey) const
+{
+	return(RContainer<N,bAlloc,bOrder>::GetPtr(tag,sortkey));
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
 	RTree<N,bAlloc,bOrder>::~RTree(void)
 {
-	if(Top) delete Top;
 }

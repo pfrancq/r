@@ -45,43 +45,108 @@ namespace R{
 //-----------------------------------------------------------------------------
 
 
+// forward declaration
+template<class N,bool bAlloc,bool bOrder> class RTree;
+
+
 //-----------------------------------------------------------------------------
 /**
+* @param N                   The class of the elements of the tree.
+* @param bAlloc              Specify if the elements are desallocated by the
+*                            tree.
+* @param bOrder              Specify if the elements are ordered in the tree.
 * This class represent a generic node. The user has to derived from this class
-* and implement the Compare function. The paramter N specify the real class and
-* the parameter bOrder specify if the nodes has to be ordered. Here is an example:
+* to create elements that can be handle by a RTree.
+*
+* To make the necessary comparisons, the tree uses member functions of
+* the class representing the elements (class C). These functions have the
+* signature:
 * @code
-* class MyNoOrderNode : public RNode<MyNoOrderNode,false>
-*	{
-*	public:
-*		MyNoOrderNode(unsigned int max,unsigned int inc);
-*		int Compare(MyNoOrderNode *node);
-*	};
+* int Compare(const TUse& tag) const;
+* int Compare(const TUse* tag) const;
+* @endcode
+*
+* At least, a compare function must be implemented in the class N:
+* @code
+* int Compare(const N&) const;
+* @endcode
+*
+* Here is an example:
+* @code
+* #include <rtree.h>
+* #include <rnode.h>
+* #include <rcursor.h>
+* using namespace R;
+*
+* class MyTree;   // Forward declaration
+*
+* class MyNode : public RNode<MyNode,true,true>
+* {
+*    RString Name;
+* public:
+*    MyNode(MyTree* tree,const RString& name) : RNode<MyNode,true,true>(tree), Name(name) {}
+*    int Compare(const MyNode& node) const {return(Name.Compare(node.Name));}
+*    void DoSomething(void) {cout<<Name<<endl;}
+* };
+*
+* class MyTree : public RTree<MyNode,true,true>
+* {
+* public:
+*    MyTree(unsigned int max,unsigned int inc) : RTree<MyNode,true,true>(max,inc) {}
+* };
+*
+* int main()
+* {
+*    MyTree Tree(20,10);
+*
+*    // Insert the top node
+*    Tree.InsertNode(0,new MyNode(&Tree,"Root"));
+*
+*    // Insert two sub nodes
+*    Tree.InsertNode(Tree.GetTop(),new MyNode(&Tree,"First Level (1)"));
+*    Tree.InsertNode(Tree.GetTop(),new MyNode(&Tree,"First Level (2)"));
+*
+*    // Parse the nodes
+*    R::RCursor<MyNode> Cur(Tree.GetNodes());
+*    for(Cur.Start();!Cur.End();Cur.Next())
+*       Cur()->DoSomething();
+* }
 * @endcode
 * @author Pascal Francq
 * @short Generic Node.
 */
-template<class N,bool bOrder>
-	class RNode : public RContainer<N,false,bOrder>
+template<class N,bool bAlloc,bool bOrder>
+	class RNode
 {
-public:
+protected:
+
+	/**
+	* Tree holding the node.
+	*/
+	RTree<N,bAlloc,bOrder>* Tree;
+
 	/**
 	* Parent Node.
 	*/
 	N* Parent;
 
 	/**
-	* Construct the node.
-	* @param max            The size of initial array of pointer to child.
-	* @param inc            The increment size for the array.
+	* Index of the first subnode in Nodes.
 	*/
-	RNode(unsigned int max,unsigned int inc);
+	size_t SubNodes;
 
 	/**
-	* Is used to compare two nodes. The function returns the same type of
-	* information than the strcmp function from the standard C library.
+	* Number of subnodes
 	*/
-	virtual int Compare(const RNode*) const;
+	size_t NbSubNodes;
+
+public:
+
+	/**
+	* Construct the node.
+	* @param tree           The tree.
+	*/
+	RNode(RTree<N,bAlloc,bOrder>* tree);
 
 	/**
 	* Return the parent of the node.
@@ -90,21 +155,41 @@ public:
 	N* GetParent(void) const;
 
 	/**
-	* Get the number of child nodes in this node.
+	* Get the number of child nodes.
 	* @return size_t
 	*/
 	size_t GetNbNodes(void) const;
 
 	/**
-	* Get a cursor on the all nodes of the tree.
+	* Get a cursor over the child nodes.
 	* @return RCursor<N>.
 	*/
 	RCursor<N> GetNodes(void) const;
 
 	/**
+	* Get a pointer to a certain child node.
+	* @param TUse            The type of the tag used for the search.
+	* @param tag             The tag used.
+	* @param sortkey         The tag represents the sorting key. The default value
+	*                        depends if the container is ordered (true) or not
+	*                        (false).
+	* @return Return the pointer or 0 if the element is not a child node.
+	*/
+	template<class TUse> N* GetNode(const TUse& tag,bool sortkey=bOrder) const;
+
+	/**
+	* Method call to insert a node.
+	* @param node           Node to insert.
+	*/
+	void InsertNode(N* node);
+
+	/**
 	* Destruct the node.
 	*/
 	virtual ~RNode(void);
+
+	// The RTree is a  friend class
+	friend class RTree<N,bAlloc,bOrder>;
 };
 
 
