@@ -56,7 +56,7 @@ namespace R{
 * This class represent a container of elements (class C) with a double hash
 * table.
 *
-* To make the necessary comparaisons, the container used member functions of
+* To make the necessary comparaisons, the container uses member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
 * @code
@@ -89,71 +89,72 @@ namespace R{
 * @code
 * #include <string.h>
 * #include <rdblhashcontainer.h>
+* #include <rcursor.h>
 * using namespace R;
 *
 *
 * class MyElement
 * {
-* 	char* Text;
+*    char* Text;
 * public:
-* 	MyElement(const char* text) {Text=strdup(text);}
-* 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
-* 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
-* 	int Compare(const char* text) const {return(strcmp(Text,text));}
-* 	void DoSomething(void) {cout<<Text<<endl;}
-*	~MyElement(void) {free(Text);}
-* 	static int HashIndex(const MyElement& e)
-* 	{
-* 		int c=(*e.Text);
-* 		if(c>='a'&&c<='z') return(c-'a');
-* 		if(c>='A'&&c<='Z') return(c-'A');
-* 		return(26);
-* 	}
-* 	static int HashIndex2(const MyElement& e)
-* 	{
-* 		int c=(*(e.Text+1));
-* 		if(c>='a'&&c<='z') return(c-'a');
-* 		if(c>='A'&&c<='Z') return(c-'A');
-* 		return(26);
-* 	}
-* 	static int HashIndex(const char *u)
-* 	{
-* 		int c=*u;
-* 		if(c>='a'&&c<='z') return(c-'a');
-* 		if(c>='A'&&c<='Z') return(c-'A');
-* 		return(26);
-* 	}
-* 	static int HashIndex2(const char *u)
-* 	{
-* 		int c=*(u+1);
-* 		if(c>='a'&&c<='z') return(c-'a');
-* 		if(c>='A'&&c<='Z') return(c-'A');
-* 		return(26);
-* 	}
+*    MyElement(const char* text) {Text=strdup(text);}
+*    MyElement(const MyElement& e) {Text=strdup(e.Text);}
+*    int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
+*    int Compare(const char* text) const {return(strcmp(Text,text));}
+*    void DoSomething(void) {cout<<Text<<endl;}
+*    ~MyElement(void) {free(Text);}
+*    static int HashIndex(const MyElement& e)
+*    {
+*       int c=(*e.Text);
+*       if(c>='a'&&c<='z') return(c-'a');
+*       if(c>='A'&&c<='Z') return(c-'A');
+*       return(26);
+*    }
+*    static int HashIndex2(const MyElement& e)
+*    {
+*       int c=(*(e.Text+1));
+*       if(c>='a'&&c<='z') return(c-'a');
+*       if(c>='A'&&c<='Z') return(c-'A');
+*       return(26);
+*    }
+*    static int HashIndex(const char *u)
+*    {
+*       int c=*u;
+*       if(c>='a'&&c<='z') return(c-'a');
+*       if(c>='A'&&c<='Z') return(c-'A');
+*       return(26);
+*    }
+*    static int HashIndex2(const char *u)
+*    {
+*       int c=*(u+1);
+*       if(c>='a'&&c<='z') return(c-'a');
+*       if(c>='A'&&c<='Z') return(c-'A');
+*       return(26);
+*    }
 * };
 *
 *
 * int main()
 * {
-* 	RDblHashContainer<MyElement,27,27,true> c(20,10);
+*    RDblHashContainer<MyElement,27,27,true> c(20,10);
 *
-* 	c.InsertPtr(new MyElement("Hello World"));
-* 	if(c.IsIn<const char*>("Hello World"))
-* 		cout<<"An element of value \"Hello World\" is in the container"<<endl;
-* 	c.InsertPtr(new MyElement("Other"));
+*    c.InsertPtr(new MyElement("Hello World"));
+*    if(c.IsIn<const char*>("Hello World"))
+*       cout<<"An element of value \"Hello World\" is in the container"<<endl;
+*    c.InsertPtr(new MyElement("Other"));
 *
-*	// Parse the double hash table
-*	RCursor<RDblHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
-*	for(Cur.Start();!Cur.End();Cur.Next())
-*	{
-*		RCursor<RDblHashContainer<MyElement,27,true>::Hash2> Cur2(*Cur());
-*		for(Cur2.Start();!Cur2.End();Cur2.Next())
-*		{
-*			RCursor<MyElement> Cur3(*Cur2());
-*			for(Cur3.Start();!Cur3.End();Cur3.Next())
-*				Cur3()->DoSomething();
-*		}
-*	}
+*    // Parse the double hash table
+*    RCursor<RDblHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+*    for(Cur.Start();!Cur.End();Cur.Next())
+*    {
+*       RCursor<RDblHashContainer<MyElement,27,true>::Hash2> Cur2(*Cur());
+*       for(Cur2.Start();!Cur2.End();Cur2.Next())
+*       {
+*          RCursor<MyElement> Cur3(*Cur2());
+*          for(Cur3.Start();!Cur3.End();Cur3.Next())
+*             Cur3()->DoSomething();
+*      }
+*    }
 * }
 * @endcode
 *

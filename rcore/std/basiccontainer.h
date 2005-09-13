@@ -150,13 +150,13 @@ protected:
 	void* GetPtr(bool bOrder,const void* tag,bool sortkey,size_t min, size_t max,int compare(const void*,const void*)) const;
 
 	/**
-	* Copy the array of pointer into a temporary array. This array must have
+	* Copy the array of pointers into a temporary array. This array must have
 	* the right size (Read only).
 	*/
 	size_t GetTab(const void** tab,size_t min, size_t max) const;
 
 	/**
-	* Copy the array of pointer into a temporary array. This array must have
+	* Copy the array of pointers into a temporary array. This array must have
 	* the right size (Read/Write).
 	*/
 	size_t GetTab(void** tab,size_t min, size_t max);

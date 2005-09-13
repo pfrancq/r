@@ -57,7 +57,7 @@ namespace R{
 * container can be responsible for the desallocation of the elements
 * (bAlloc), and the elements can be ordered (bOrder).
 *
-* To make the necessary comparaisons, the container used member functions of
+* To make the necessary comparaisons, the container uses member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
 * @code
@@ -81,34 +81,37 @@ namespace R{
 * To iterate through the container, a RCursor can be used. Here is an example
 * of class MyElement that will be contained in the variable c:
 * @code
+* #include <rcontainer.h>
+* #include <rcursor.h>
+* using namespace R;
+*
 * class MyElement
 * {
-* 	unsigned int Id;
+*    unsigned int Id;
 * public:
-* 	MyElement(unsigned int id) : Id(id) {}
-* 	MyElement(const MyElement& e) : Id(e.Id) {}
-* 	void DoSomething(double d) {cout<<d<<endl;}
-* 	int Compare(const MyElement& e) const {return(Id-e.Id);}
-* 	int Compare(const unsigned int id) const {return(Id-id);}
-* 	int Compare(const char* text) const
-* 	{
-* 		unsigned int id=atoi(text);
-* 		return(Compare(id));
-* 	}
+*    MyElement(unsigned int id) : Id(id) {}
+*    MyElement(const MyElement& e) : Id(e.Id) {}
+*    void DoSomething(double d) {cout<<d<<endl;}
+*    int Compare(const MyElement& e) const {return(Id-e.Id);}
+*    int Compare(const unsigned int id) const {return(Id-id);}
+*    int Compare(const char* text) const
+*    {
+*       unsigned int id=atoi(text);
+*       return(Compare(id));
+*    }
 * };
-*
 *
 * int main()
 * {
-* 	R::RContainer<MyElement,true,true> c(20,10);
+*    R::RContainer<MyElement,true,true> c(20,10);
 *
-* 	c.InsertPtr(new MyElement(5));
-* 	if(c.IsIn<char*>("5"))
-* 		cout<<"An element of value 5 is in the container"<<endl;
-* 	c.InsertPtr(new MyElement(10));
-* 	R::RCursor<MyElement> cur(c);
-* 	for(cur.Start();!cur.End();cur.Next())
-* 		cur()->DoSomething(2.3);
+*    c.InsertPtr(new MyElement(5));
+*    if(c.IsIn<char*>("5"))
+*       cout<<"An element of value 5 is in the container"<<endl;
+*    c.InsertPtr(new MyElement(10));
+*    R::RCursor<MyElement> cur(c);
+*    for(cur.Start();!cur.End();cur.Next())
+*       cur()->DoSomething(2.3);
 * }
 * @endcode
 *
@@ -388,10 +391,10 @@ public:
 	template<class TUse> inline C* GetInsertPtr(const TUse& tag,bool sortkey=bOrder,size_t min=0, size_t max=0);
 
 	/**
-	* Copy the array of pointer into a temporary array. This array must have
+	* Copy the array of pointers into a temporary array. This array must have
 	* the right size (Read only). This method can be limited to a part of the
 	* container.
-	* @param tab             Array of pointer.
+	* @param tab             Array of pointers.
 	* @param min             Starting index of the container's part concerned.
 	* @param max             Ending index of the container's part concerned.
 	* @return number of elements in the array (including eventually null
@@ -400,10 +403,10 @@ public:
 	inline size_t GetTab(const C** tab,size_t min=0, size_t max=0) const {return(BasicContainer::GetTab(reinterpret_cast<const void**>(tab),min,max));}
 
 	/**
-	* Copy the array of pointer into a temporary array. This array must have
+	* Copy the array of pointers into a temporary array. This array must have
 	* the right size (Read/Write). This method can be limited to a part of the
 	* container.
-	* @param tab             Array of pointer.
+	* @param tab             Array of pointers.
 	* @param min             Starting index of the container's part concerned.
 	* @param max             Ending index of the container's part concerned.
 	* @return number of elements in the array (including eventually null
