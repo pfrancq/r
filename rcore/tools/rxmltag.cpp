@@ -162,7 +162,7 @@ void RXMLTag::DeleteEmptyTags(RXMLStruct*)
 
 
 //-----------------------------------------------------------------------------
-RCursor<RXMLAttr> RXMLTag::GetAttr(void)
+RCursor<RXMLAttr> RXMLTag::GetAttrs(void)
 {
 	return(RCursor<RXMLAttr>(Attrs));
 }

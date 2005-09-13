@@ -58,7 +58,21 @@ class RXMLTagCursor;
 
 //-----------------------------------------------------------------------------
 /**
-* This class provides a representation for a XML tag.
+* This class provides a representation for a XML tag. It inherits from RNode.
+* @code
+* #include <rxmlstruct.h>
+* #include <rxmlattr.h>
+* #include <rcursor.h>
+* using namespace R;
+*
+* void ViewAttr(RXMLTag* tag)
+* {
+*    cout<<"The tag "<<tag->GetName()<<" has the following attributes:"<<endl;
+*    RCursor<RXMLAttr> Cur(tag->GetAttrs());
+*    for(Cur.Start();!Cur.End();Cur.Next())
+*       cout<<Cur()->GetName()<<"="<<Cur()->GetValue()<<endl;
+* }
+* @endcode
 * @short XML Tag.
 * @author Pascal Francq and Thomas L'Eglise.
 */
@@ -185,7 +199,7 @@ public:
 	* Get a Cursor on the attributes.
 	* @return GXMLAttrCursor.
 	*/
-	R::RCursor<RXMLAttr> GetAttr(void);
+	R::RCursor<RXMLAttr> GetAttrs(void);
 
 	/**
 	* Destruct the XML Tag.
