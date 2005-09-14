@@ -52,16 +52,16 @@ RMatrix::RMatrix(void)
 
 
 //------------------------------------------------------------------------------
-RMatrix::RMatrix(tSize Size)
+RMatrix::RMatrix(size_t size)
 {
-	Lin=MaxLin=Col=MaxCol=Size;
+	Lin=MaxLin=Col=MaxCol=size;
  	M=0;
 	Init();
 }
 
 
 //------------------------------------------------------------------------------
-RMatrix::RMatrix(tSize L,tSize C)
+RMatrix::RMatrix(size_t L,size_t C)
 {
 	Lin=MaxLin=L;
 	Col=MaxCol=C;
@@ -73,8 +73,8 @@ RMatrix::RMatrix(tSize L,tSize C)
 //------------------------------------------------------------------------------
 RMatrix::RMatrix(const RMatrix& Matrix)
 {
-	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
-	tSize i,j;
+	double **ptrL,*ptrC,**ptrLM,*ptrCM;
+	size_t i,j;
 
 	Lin=MaxLin=Matrix.Lin;
 	Col=MaxCol=Matrix.Col;
@@ -89,20 +89,20 @@ RMatrix::RMatrix(const RMatrix& Matrix)
 //------------------------------------------------------------------------------
 void RMatrix::Init(void)
 {
-	tNumber **ptr;
-	tSize i;
+	double **ptr;
+	size_t i;
 
-	M=new tNumber*[MaxLin];
+	M=new double*[MaxLin];
 	for(i=MaxLin+1,ptr=M;--i;ptr++)
-		(*ptr) = new tNumber[MaxCol];
+		(*ptr) = new double[MaxCol];
 }
 
 
 //------------------------------------------------------------------------------
-void RMatrix::VerifySize(tSize NewLin,tSize NewCol)
+void RMatrix::VerifySize(size_t NewLin,size_t NewCol)
 {
-	tNumber **ptr;
-	tSize i;
+	double **ptr;
+	size_t i;
 
 	if(MaxLin<NewLin)
 	{
@@ -110,9 +110,9 @@ void RMatrix::VerifySize(tSize NewLin,tSize NewCol)
 		for(i=MaxLin+1,ptr=M;--i;ptr++) delete[](*ptr);
 		delete[] M;
 		MaxLin=NewLin;
-		M = new tNumber*[MaxLin];
+		M = new double*[MaxLin];
 		for(i=MaxLin+1,ptr=M;--i;ptr++)
-			(*ptr)= new tNumber[MaxCol];
+			(*ptr)= new double[MaxCol];
 	}
 	else
 		if(MaxCol<NewCol)
@@ -121,7 +121,7 @@ void RMatrix::VerifySize(tSize NewLin,tSize NewCol)
 			for(i=MaxLin+1,ptr=M;--i;ptr++)
 			{
 				delete[] (*ptr);
-				(*ptr)= new tNumber[MaxCol];
+				(*ptr)= new double[MaxCol];
 			}
 		}
 	Lin=NewLin;
@@ -132,8 +132,8 @@ void RMatrix::VerifySize(tSize NewLin,tSize NewCol)
 //------------------------------------------------------------------------------
 void RMatrix::Symetrize(void)
 {
-	tNumber **ptrL,**ptrLA,*ptrC,*ptrCA;
-	tSize i,j;
+	double **ptrL,**ptrLA,*ptrC,*ptrCA;
+	size_t i,j;
 
 	for(i=Lin+1,ptrL=M,ptrLA=M+(Lin-1);--i;ptrL++,ptrLA--)
 		for(j=Col+1,ptrC=(*ptrL),ptrCA=(*ptrLA)+Col-1;--j;ptrC++,ptrCA--)
@@ -142,40 +142,9 @@ void RMatrix::Symetrize(void)
 
 
 //------------------------------------------------------------------------------
-char RMatrix::TransitiveClosure(RMatrix *Matrix)
+double& RMatrix::operator()(size_t m,size_t n) const
 {
-	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM,**ptrLT,*ptrCT;
-	tSize i,j,k;
-	char Ok=1;
-
-	if(Col!=Lin)
-		throw RException("Not Quadratic Matrix");
-	if(Matrix)
-	{
-		Matrix->VerifySize(Lin,Col);
-		for(i=Lin+1,ptrL=M;--i;ptrL++)
-			for(j=Col+1,ptrC=*ptrL,ptrLT=M,ptrLM=Matrix->M;--j;ptrC++,ptrLT++,ptrLM++)
-				if(*ptrC)
-					for(k=Col+1,ptrCT=*ptrLT,ptrCM=*ptrLM;--k;ptrCT++,ptrCM++)
-						if(*ptrCT)
-         		     (*ptrCM) = 1;
-            		else
-              			Ok=0;
-	}
-	else
-		for(i=Lin+1,ptrL=M;--i;ptrL++)
-			for(j=Col+1,ptrC=*ptrL,ptrLT=M;--j;ptrC++,ptrLT++)
-				if(*ptrC)
-					for(k=Col+1,ptrCT=*ptrLT;--k;ptrCT++)
-						if(!(*ptrCT)) return(0);
-	return(Ok);
-}
-
-
-//------------------------------------------------------------------------------
-tNumber& RMatrix::operator()(int m, int n) const
-{
-	if(m<0||m>Lin||n<0||n>Col)
+	if((m>Lin)||(n>Col))
 		throw RException("Bad Index");
 	return(M[m][n]);
 }
@@ -184,8 +153,8 @@ tNumber& RMatrix::operator()(int m, int n) const
 //------------------------------------------------------------------------------
 RMatrix& RMatrix::operator=(const RMatrix Matrix)
 {
-	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
-	tSize i,j;
+	double **ptrL,*ptrC,**ptrLM,*ptrCM;
+	size_t i,j;
 
 	if(this==&Matrix) return *this;
 	VerifySize(Matrix.Lin,Matrix.Col);
@@ -199,8 +168,8 @@ RMatrix& RMatrix::operator=(const RMatrix Matrix)
 //------------------------------------------------------------------------------
 RMatrix& RMatrix::operator+=(const RMatrix Matrix)
 {
-	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
-	tSize i,j;
+	double **ptrL,*ptrC,**ptrLM,*ptrCM;
+	size_t i,j;
 
 	if((Lin!=Matrix.Lin)||(Col!=Matrix.Col))
 		throw RException("Not Compatible Sizes");
@@ -215,8 +184,8 @@ RMatrix& RMatrix::operator+=(const RMatrix Matrix)
 //------------------------------------------------------------------------------
 RMatrix& RMatrix::operator-=(const RMatrix Matrix)
 {
-	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM;
-	tSize i,j;
+	double **ptrL,*ptrC,**ptrLM,*ptrCM;
+	size_t i,j;
 
 	if((Lin!=Matrix.Lin)||(Col!=Matrix.Col))
 		throw RException("Not Compatible Sizes");
@@ -229,10 +198,10 @@ RMatrix& RMatrix::operator-=(const RMatrix Matrix)
 
 
 //------------------------------------------------------------------------------
-RMatrix& RMatrix::operator*=(const tNumber arg)
+RMatrix& RMatrix::operator*=(const double arg)
 {
-	tNumber **ptrL,*ptrC;
-	tSize i,j;
+	double **ptrL,*ptrC;
+	size_t i,j;
 
 	for(i=Lin+1,ptrL=M;--i;ptrL++)
 		for(j=Col+1,ptrC=*ptrL;--j;ptrC++)
@@ -244,8 +213,8 @@ RMatrix& RMatrix::operator*=(const tNumber arg)
 //------------------------------------------------------------------------------
 RMatrix& RMatrix::operator*=(const RMatrix Matrix)
 {
-	tNumber **ptrL,*ptrC,**ptrLM,*ptrCM,**ptrLR,*ptrCR,Sum;
-	tSize i,j,k;
+	double **ptrL,*ptrC,**ptrLM,*ptrCM,**ptrLR,*ptrCR,Sum;
+	size_t i,j,k;
 	RMatrix res;
 
 	if(Lin!=Matrix.Col)
@@ -270,8 +239,8 @@ RMatrix& RMatrix::operator*=(const RMatrix Matrix)
 //------------------------------------------------------------------------------
 RMatrix::~RMatrix(void)
 {
-	tNumber **ptr;
-	tSize i;
+	double **ptr;
+	size_t i;
 
 	if(M)
 	{
@@ -319,7 +288,7 @@ RMatrix operator*(const RMatrix& arg1,const RMatrix& arg2)
 
 
 //------------------------------------------------------------------------------
-RMatrix operator*(const tNumber arg1,const RMatrix& arg2)
+RMatrix operator*(const double arg1,const RMatrix& arg2)
 {
 	RMatrix res(arg2);
 
@@ -329,7 +298,7 @@ RMatrix operator*(const tNumber arg1,const RMatrix& arg2)
 
 
 //------------------------------------------------------------------------------
-RMatrix operator*(const RMatrix& arg1,const tNumber arg2)
+RMatrix operator*(const RMatrix& arg1,const double arg2)
 {
 	RMatrix res(arg1);
 

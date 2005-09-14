@@ -51,12 +51,6 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// Typedef
-typedef int tSize;
-typedef float tNumber;
-
-
-//------------------------------------------------------------------------------
 /**
 * The RMatrix class provides a matrix that can be used to do calculations.
 *
@@ -88,36 +82,31 @@ typedef float tNumber;
 class RMatrix
 {
 	/**
-	* Initialise the matrix.
-	*/
-	void Init(void);
-
-public:
-
-	/**
 	* Actual number of columns in the matrix.
 	*/
- 	tSize Col;
+ 	size_t Col;
 
 	/**
 	* Actual number of lines in the matrix.
 	*/
-	tSize Lin;
+	size_t Lin;
 
 	/**
 	* Maximal number of columns in the matrix.
 	*/
-	tSize MaxCol;
+	size_t MaxCol;
 
 	/**
 	* Maximal number of lines in the matrix.
 	*/
-	tSize MaxLin;
+	size_t MaxLin;
 
 	/**
 	* The matrix itself.
 	*/
-	tNumber **M;
+	double** M;
+
+public:
 
 	/**
 	* Construct a empty matrix.
@@ -125,28 +114,48 @@ public:
 	RMatrix(void);
 
 	/**
-	* Construct a square matrix(Size,Size).
-	* @param Size		Initial size of the matrix.
+	* Construct a square matrix of a given size.
+	* @param size            Size of the matrix.
 	*/
-	RMatrix(tSize Size);
+	RMatrix(size_t size);
 
 	/**
 	* Construct a matrix (L,C).
 	* @param L	Initial number of lines.
 	* @param C  Initial number of columns.
 	*/
-	RMatrix(tSize L,tSize C);
+	RMatrix(size_t L,size_t C);
 
 	/**
 	* Construct a matrix from another one.
 	*/
 	RMatrix(const RMatrix& Matrix);
 
+private:
+
+	/**
+	* Initialise the matrix.
+	*/
+	void Init(void);
+
+public:
+
+	/**
+	* Get the number of lines in the matrix.
+	*/
+	size_t GetLinesNb(void) const {return(Lin);}
+
+	/**
+	* Get the number of columns in the matrix.
+	*/
+	size_t GetColsNb(void) const {return(Col);}
+
 	/**
 	* Verify if the matrix has a given size, and increase them if necessary.
-	* @param NewLin		New line number.
-	* @param NewCol		New column number.*/
-	inline void VerifySize(tSize NewLin,tSize NewCol);
+	* @param NewLin          New line number.
+	* @param NewCol          New column number.
+	*/
+	void VerifySize(size_t NewLin,size_t NewCol);
 
 	/**
 	* Symetrize the matrix.
@@ -158,12 +167,7 @@ public:
 	* @param m	Line number of the element.
 	* @param n	Column number of the element.
 	*/
- 	tNumber& operator()(int m, int n) const;
-
-	/**
-	* Make the transitive closure for the matrix.
-	*/
-	char TransitiveClosure(RMatrix *Matrix);
+ 	double& operator()(size_t m,size_t n) const;
 
 	/**
 	* Assign operator.
@@ -172,13 +176,15 @@ public:
 
 	/**
 	* Add a matrix to the current one.
+	* @param arg             Matrix to add.
 	*/
-	RMatrix& operator+=(const RMatrix);
+	RMatrix& operator+=(const RMatrix arg);
 
 	/**
 	* Substract a matrix from the current one.
+	* @param arg             Matrix to substract.
 	*/
-  	RMatrix& operator-=(const RMatrix);
+  	RMatrix& operator-=(const RMatrix arg);
 
 	/**
 	* Multiply a matrix with the current one. It is important to remember that
@@ -194,13 +200,15 @@ public:
 	* 	TempB*=A;
 	* }
 	* @endcode
+	* @param arg             Matrix to multiply.
 	*/
-	RMatrix& operator*=(const RMatrix);
+	RMatrix& operator*=(const RMatrix arg);
 
 	/**
 	* Multiply a matrix with a given number.
+	* @param arg             Number.
 	*/
-	RMatrix& operator*=(const tNumber);
+	RMatrix& operator*=(const double arg);
 
 	/**
 	* Destruct the matrix.
@@ -216,32 +224,42 @@ public:
 //------------------------------------------------------------------------------
 /**
 * Multiplication of a matrix and a number.
+* @param arg1                Matrix.
+* @param arg2                Number.
 */
-RMatrix operator*(const RMatrix&,const tNumber);
+RMatrix operator*(const RMatrix& arg1,const double arg2);
 
 //------------------------------------------------------------------------------
 /**
 * Multiplication of a matrix and a number.
+* @param arg1                Number.
+* @param arg2                Matrix.
 */
-RMatrix operator*(const tNumber,const RMatrix&);
+RMatrix operator*(const double arg1,const RMatrix& arg2);
 
 //------------------------------------------------------------------------------
 /**
 * Addition of two matrixes.
+* @param arg1                Matrix.
+* @param arg2                Matrix.
 */
-RMatrix operator+(const RMatrix& ,const RMatrix&);
+RMatrix operator+(const RMatrix& arg1,const RMatrix& arg2);
 
 //------------------------------------------------------------------------------
 /**
 * Substraction of two matrixes.
+* @param arg1                Matrix.
+* @param arg2                Matrix.
 */
-RMatrix operator-(const RMatrix& ,const RMatrix&);
+RMatrix operator-(const RMatrix& arg1,const RMatrix& arg2);
 
 //------------------------------------------------------------------------------
 /**
 * Multiplication of two matrixes.
+* @param arg1                Matrix.
+* @param arg2                Matrix.
 */
-RMatrix operator*(const RMatrix& ,const RMatrix&);
+RMatrix operator*(const RMatrix& arg1,const RMatrix& arg2);
 
 
 }  //-------- End of namespace R -----------------------------------------------
