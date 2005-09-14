@@ -152,12 +152,12 @@ void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 	// Compute Minimum Spanning tree
 	Dist=0.0;
 	T.MinSpanningTree(&S);
-	RCursor<REdge> e(S.Edges);
+	RCursor<REdge> e(S.GetEdges());
 	for(e.Start();!e.End();e.Next())
 	{
-		Dist+=e()->Weight;
-		s.id1=e()->v1->Id;
-		s.id2=e()->v2->Id;
+		Dist+=e()->GetWeight();
+		s.id1=e()->GetVertex1()->GetId();
+		s.id2=e()->GetVertex2()->GetId();
 		InsertPtr(new RGeoInfoConnectionPart(Local.GetPtr<RGeoInfoConnectionPart::sSearch>(s)));
 	}
 }

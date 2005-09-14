@@ -6,7 +6,7 @@
 
 	A Graph - Implementation.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -64,6 +64,20 @@ void RGraph::Clear(void)
 
 
 //------------------------------------------------------------------------------
+RCursor<RVertex> RGraph::GetVertices(void) const
+{
+	return(RCursor<RVertex>(Vertices));
+}
+
+
+//------------------------------------------------------------------------------
+RCursor<REdge> RGraph::GetEdges(void) const
+{
+	return(RCursor<REdge>(Edges));
+}
+
+
+//------------------------------------------------------------------------------
 RVertex* RGraph::CreateVertex(void)
 {
 	RVertex *ptr;
@@ -104,7 +118,7 @@ REdge* RGraph::CreateEdge(RVertex* v1,RVertex* v2,double w)
 
 	Edges.InsertPtr(ptr=new REdge(v1,v2,w));
 	v1->Edges.InsertPtr(ptr);
-	v2->Edges.InsertPtr(ptr);	
+	v2->Edges.InsertPtr(ptr);
 	return(ptr);
 }
 
@@ -133,8 +147,8 @@ void RGraph::MinSpanningTree(RGraph* g)
 			if(e()->Weight<bestw)
 			{
 				// Test if only one is in g
-				b1=g->Vertices.IsIn<const unsigned int>(e()->v1->Id);
-				b2=g->Vertices.IsIn<const unsigned int>(e()->v2->Id);
+				b1=g->Vertices.IsIn<const unsigned int>(e()->GetVertex1()->GetId());
+				b2=g->Vertices.IsIn<const unsigned int>(e()->GetVertex2()->GetId());
 				if((b1&&!b2)||(!b1&&b2))
 				{
 					best=e();
@@ -147,17 +161,17 @@ void RGraph::MinSpanningTree(RGraph* g)
 		// Insert the vertex
 		if(b)
 		{
-			v1=g->Vertices.GetPtr<const unsigned int>(best->v1->Id);
-			v2=g->CreateVertex(best->v2->Id);
+			v1=g->Vertices.GetPtr<const unsigned int>(best->GetVertex1()->GetId());
+			v2=g->CreateVertex(best->GetVertex2()->GetId());
 		}
 		else
 		{
-			v1=g->Vertices.GetPtr<const unsigned int>(best->v2->Id);
-			v2=g->CreateVertex(best->v1->Id);
+			v1=g->Vertices.GetPtr<const unsigned int>(best->GetVertex2()->GetId());
+			v2=g->CreateVertex(best->GetVertex1()->GetId());
 		}
 
 		// Insert the Edge
-		g->Edges.InsertPtr(new REdge(v1,v2,best->Weight));
+		g->Edges.InsertPtr(new REdge(v1,v2,best->GetWeight()));
 	}
 }
 

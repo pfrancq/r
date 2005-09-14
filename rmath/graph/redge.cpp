@@ -6,7 +6,7 @@
 
 	Edge of a graph  - Implementation.
 
-	Copyright 2001-2003 by the Université Libre de Bruxelles.
+	Copyright 2001-2005 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -45,14 +45,14 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 REdge::REdge(void)
-	: v1(0), v2(0)
+	: Vertex1(0), Vertex2(0)
 {
 }
 
 
 //------------------------------------------------------------------------------
-REdge::REdge(RVertex* _v1,RVertex* _v2,const double w)
-	: v1(_v1), v2(_v2), Weight(w)
+REdge::REdge(RVertex* v1,RVertex* v2,const double w)
+	: Vertex1(v1), Vertex2(v2), Weight(w)
 {
 }
 

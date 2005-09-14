@@ -6,7 +6,7 @@
 
 	Edge of a graph - Header.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -53,22 +53,22 @@ class RVertex;
 */
 class REdge
 {
-public:
-
 	/**
 	* First vertex that the edge connect.
 	*/
-	RVertex* v1;
+	RVertex* Vertex1;
 
 	/**
 	* Second vertex that the edge connect.
 	*/
-	RVertex* v2;
+	RVertex* Vertex2;
 
 	/**
 	* Weight of the vertex.
 	*/
 	double Weight;
+
+public:
 
 	/**
 	* Constructor of the edge.
@@ -77,25 +77,33 @@ public:
 
 	/**
 	* Constructor of the edge.
-	* @param _v1            First Vertex.
-	* @param _v2            First Vertex.
-	* @param w              Weight
+	* @param v1              First Vertex.
+	* @param v2              First Vertex.
+	* @param w               Weight
 	*/
-	REdge(RVertex* _v1,RVertex* _v2,double w);
+	REdge(RVertex* v1,RVertex* v2,double w);
+
+	/**
+	* Get a pointer over the first vertex of the edge.
+	*/
+	RVertex* GetVertex1(void) const {return(Vertex1);}
+
+	/**
+	* Get a pointer over the second vertex of the edge.
+	*/
+	RVertex* GetVertex2(void) const {return(Vertex2);}
+
+	/**
+	* Get the weight of the edge.
+	*/
+	double GetWeight(void) const {return(Weight);}
 
 	/**
 	* Is used to compare two edges. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param e              Edge used for the comparaison.
+	* @param e               Edge used for the comparaison.
 	*/
 	int Compare(const REdge& e) const {return(this!=&e);}
-
-	/**
-	* Is used to compare two edges. The function returns the same type of
-	* information than the strcmp function from the standard C library.
-	* @param e              Edge used for the comparaison.
-	*/
-	int Compare(const REdge* e) const {return(this!=e);}
 
 	/**
 	* Destructor of the edge.

@@ -6,7 +6,7 @@
 
 	Vertex of a graph - Implementation.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -43,7 +43,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RVertex::RVertex(const unsigned int id,const unsigned int idx,const unsigned int nb)
+RVertex::RVertex(size_t id,size_t idx,size_t nb)
 	: Id(id), Index(idx), Edges(nb,nb/2)
 {
 }
@@ -60,6 +60,13 @@ RVertex::RVertex(const RVertex& v)
 RVertex::RVertex(const VertexStruct& s)
 	: Id(s.id), Index(s.idx), Edges(s.nb,s.nb/2)
 {
+}
+
+
+//------------------------------------------------------------------------------
+RCursor<REdge> RVertex::GetEdges(void) const
+{
+	return(RCursor<REdge>(Edges));
 }
 
 

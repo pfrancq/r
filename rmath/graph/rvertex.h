@@ -6,7 +6,7 @@
 
 	Vertex of a graph - Header.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,6 +37,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rcontainer.h>
+#include <rcursor.h>
 #include <redge.h>
 
 
@@ -62,68 +63,75 @@ public:
 		unsigned int nb;
 	};
 
+private:
+
 	/**
 	* Identificator of the vertex.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 	/**
 	* Index of the vertex in the graph's container.
 	*/
-	unsigned int Index;
+	size_t Index;
 
 	/**
 	* All the edges connecting the given vertex.
 	*/
 	RContainer<REdge,false,false> Edges;
 
+public:
+
 	/**
 	* Constructor of the vertex.
-	* @param id             Identificator.
-	* @param idx            Index.
-	* @param nb             Number of edges.
+	* @param id              Identificator.
+	* @param idx             Index.
+	* @param nb              Number of edges.
 	*/
-	RVertex(const unsigned int id,const unsigned int idx,const unsigned int nb);
+	RVertex(size_t id,size_t idx,size_t nb);
 
 	/**
 	* Copy constructor.
-	* @param v              Vertex used.
+	* @param v               Vertex used.
 	*/
 	RVertex(const RVertex& v);
 
 	/**
 	* Construct a vertex from a structure.
-	* @param s              Structure.
+	* @param s               Structure.
 	*/
 	RVertex(const VertexStruct& s);
 
 	/**
-	* Is used to compare two vertices. The function returns the same type of
-	* information than the strcmp function from the standard C library.
-	* @param v              Vertex used for the comparaison.
+	* Get the identificator of the vertex.
 	*/
-	int Compare(const RVertex& v) const {return(this!=&v);}
+	size_t GetId(void) const {return(Id);}
+
+	/**
+	* Get a cursor over the edges of the graph.
+	*/
+	RCursor<REdge> GetEdges(void) const;
 
 	/**
 	* Is used to compare two vertices. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param v              Vertex used for the comparaison.
+	* @param v               Vertex used for the comparaison.
 	*/
-	int Compare(const RVertex* v) const {return(this!=v);}
-	
+	int Compare(const RVertex& v) const {return(this!=&v);}
+
 	/**
 	* Is used to compare a vertex and an identificator. The function returns
 	* the same type of information than the strcmp function from the standard
 	* C library.
-	* @param i              Identificator used for the comparaison.
+	* @param i               Identificator used for the comparaison.
 	*/
-	int Compare(const unsigned int i) const {return(Id-i);}
+	int Compare(const size_t i) const {return(Id-i);}
 
 	/**
 	* Is used to compare a vertex and a structure. The function returns
 	* the same type of information than the strcmp function from the standard
 	* C library.
-	* @param s              Structure used for the comparaison.
+	* @param s               Structure used for the comparaison.
 	*/
 	int Compare(const VertexStruct& s) const {return(Id-s.id);}
 
