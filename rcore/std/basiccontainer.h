@@ -111,7 +111,7 @@ protected:
 	* Clear the container and destruct the elements if he is responsible for
 	* the desallocation.
 	*/
-	void Clear(bool bAlloc,unsigned int m,unsigned int i);
+	void Clear(bool bAlloc,size_t m,size_t i);
 
 	/**
 	* ReOrder the container.
