@@ -40,6 +40,7 @@
 //#include <rstring.h>
 #include <rcursor.h>
 #include <rmysql.h>
+#include <rstring.h>
 #include <rtextencoding.h>
 using namespace R;
 
@@ -178,7 +179,7 @@ void RQuery::Init(void)
 	}
 
 	if(mysql_real_query(DB->connection,SQL_utf8,SQL_utf8.GetLen()))
-		throw RMySQLError(mysql_error(&DB->mysql));
+		throw RMySQLError("Error in query "+SQL+": "+mysql_error(&DB->mysql));
 
 	// Find the SQL cmd
 	ptr=SQL();
@@ -347,7 +348,7 @@ size_raw RTransactionTable::WriteTransaction(unsigned int id,...)
 	// Insert the info in the table
 	sSql="INSERT INTO "+Name+" SET ";
 	if(id)
-		sSql+="transid="+itou(id)+",";
+		sSql+="transid="+RString::Number(id)+",";
 	va_start(ap,Params.GetNb());
 	RCursor<RString> Cur(Params);
 	for(Cur.Start();!Cur.End();)
@@ -378,7 +379,7 @@ RQuery* RTransactionTable::ReadTransaction(size_raw id,bool wait)
 
 	sSql="SELECT * FROM "+Name;
 	if(id)
-		sSql+=" WHERE transid="+lltou(id);
+		sSql+=" WHERE transid="+RString::Number(id);
 	try
 	{
 		do
@@ -412,7 +413,7 @@ void RTransactionTable::WaitTransaction(size_raw id)
 
 	sSql="SELECT * FROM "+Name;
 	if(id)
-		sSql+=" WHERE transid="+lltou(id);
+		sSql+=" WHERE transid="+RString::Number(id);
 	try
 	{
 		do
@@ -443,7 +444,7 @@ void RTransactionTable::RemoveTransaction(size_raw id)
 
 	sSql="DELETE FROM "+Name;
 	if(id)
-		sSql+=" WHERE transid="+lltou(id);
+		sSql+=" WHERE transid="+RString::Number(id);
 	try
 	{
 		RQuery del(DB,sSql);

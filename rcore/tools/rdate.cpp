@@ -224,7 +224,7 @@ bool RDate::operator>=(const RDate& d) const
 //------------------------------------------------------------------------------
 RDate::operator RString () const
 {
-	return(itou(Year)+"-"+itou(Month)+"-"+itou(Day)+" "+itou(Hour)+":"+itou(Minute)+":"+itou(Second));
+	return(RString::Number(Year)+"-"+RString::Number(Month)+"-"+RString::Number(Day)+" "+RString::Number(Hour)+":"+RString::Number(Minute)+":"+RString::Number(Second));
 }
 
 

@@ -6,7 +6,7 @@
 
 	Geometry base classes - Basic definition - Header.
 
-	Copyright 1999-2004 by the Université Libre de Bruxelles.
+	Copyright 1999-2004 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -84,14 +84,36 @@ const RCoord MaxCoord=2147483647;
 /**
 * Represent the different orientation of a given polygon.
 */
-enum ROrientation {Normal=0,NormalX=1,NormalY=2,NormalYX=3,Rota90=4,Rota90X=5,Rota90Y=6,Rota90YX=7};
+enum ROrientation
+{
+	Normal=0,
+	NormalX=1,
+	NormalY=2,
+	NormalYX=3,
+	Rota90=4,
+	Rota90X=5,
+	Rota90Y=6,
+	Rota90YX=7
+};
 
 
 //------------------------------------------------------------------------------
 /**
 * Represent different directions.
 */
-enum RDirection {NoDirection,Left,Right,Down,Up,Behind,Beyond,Origin,Destination,Between};
+enum RDirection
+{
+	NoDirection,
+	Left,
+	Right,
+	Down,
+	Up,
+	Behind,
+	Beyond,
+	Origin,
+	Destination,
+	Between
+};
 
 
 //------------------------------------------------------------------------------
@@ -126,6 +148,3 @@ void AdaptTestXY(RCoord& x,RCoord& y,const RDirection from);
 
 //------------------------------------------------------------------------------
 #endif
-
-
-

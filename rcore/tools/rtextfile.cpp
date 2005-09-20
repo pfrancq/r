@@ -34,6 +34,7 @@
 // include files for R Project
 #include <rstd.h>
 #include <rtextfile.h>
+#include <rstring.h>
 #include <rtextencoding.h>
 using namespace R;
 using namespace std;
@@ -831,7 +832,7 @@ RTextFile& RTextFile::operator<<(const RString& str)
 //------------------------------------------------------------------------------
 void RTextFile::WriteLong(const long nb)
 {
-	RString res=ltou(nb);
+	RString res=RString::Number(nb);
 	WriteStr(res);
 }
 
@@ -863,7 +864,7 @@ RTextFile& RTextFile::operator<<(const long nb)
 //------------------------------------------------------------------------------
 void RTextFile::WriteULong(const unsigned long nb)
 {
-	RString res=ltou(nb);
+	RString res=RString::Number(nb);
 	WriteStr(res);
 }
 
@@ -935,7 +936,7 @@ RTextFile& RTextFile::operator<<(const char c)
 //------------------------------------------------------------------------------
 void RTextFile::WriteDouble(const double d)
 {
-	RString str=dtou(d);
+	RString str=RString::Number(d);
 	WriteStr(str);
 }
 

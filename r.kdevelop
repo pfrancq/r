@@ -24,7 +24,7 @@
       <useconfiguration>default</useconfiguration>
     </general>
     <run>
-      <mainprogram>/home/pfrancq/prj/kgalileicenter/kgalileicenter/.libs/lt-kgalileicenter</mainprogram>
+      <mainprogram>/home/pfrancq/prj/testr/src/.libs/testr</mainprogram>
       <programargs/>
       <terminal>false</terminal>
       <envvars/>

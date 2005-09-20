@@ -38,6 +38,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <robj2d.h>
+#include <rstring.h>
 #include <rgeoinfo.h>
 #include <rgeoinfos.h>
 #include <rconnection.h>
@@ -53,7 +54,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RPoint pos)
-	: Owner(owner), Id(id), Name(itou(id)), NbPos(1), Connections(10,5)
+	: Owner(owner), Id(id), Name(RString::Number(id)), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
 	Poss=new RPoint*[NbPos];
@@ -85,7 +86,7 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const char* name,
 
 //------------------------------------------------------------------------------
 RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const unsigned int x,unsigned y)
-	: Owner(owner), Id(id), Name(itou(id)), NbPos(1), Connections(10,5)
+	: Owner(owner), Id(id), Name(RString::Number(id)), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
 	Poss=new RPoint*[NbPos];
@@ -199,7 +200,7 @@ RObj2DConnector::~RObj2DConnector(void)
 
 //------------------------------------------------------------------------------
 RObj2D::RObj2D(unsigned int id,bool deformable)
-	: Id(id), Name(itou(id)), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
+	: Id(id), Name(RString::Number(id)), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
 {
 }
 

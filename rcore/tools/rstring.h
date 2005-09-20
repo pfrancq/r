@@ -391,7 +391,51 @@ public:
 	* @param str             String.
 	* @see R::RHashContainer and R::RDblHashContainer.
 	*/
-	static int HashIndex2(const RChar* str);
+	static int HashIndex2(const RChar* str);	
+
+	//-----------------------------------------------------------------------------
+	// Static conversion functions
+
+	/**
+	* Transform an int to a string.
+	*/
+	static RString Number(const int nb);
+	
+	/**
+	* Transform an unsigned int to a string.
+	*/
+	static RString Number(const unsigned int nb);
+	
+	/**
+	* Transform a long to a string.
+	*/
+	static RString Number(const long nb);
+	
+	/**
+	* Transform an unsigned char to a string.
+	*/
+	static RString Number(const unsigned char c);
+	
+	/**
+	* Transform an unsigned long to a string.
+	*/
+	static RString Number(const unsigned long nb);
+	
+	/**
+	* Transform an unsigned long long to a string.
+	*/
+	static RString Number(const unsigned long long nb);
+	
+	/**
+	* Transform a float to a string.
+	*/
+	static RString Number(const float nb);
+	
+	/**
+	* Transform a double to a string.
+	*/
+	static RString Number(const double nb);
+
 
 private:
 
@@ -450,48 +494,7 @@ inline const RString operator+(const RString& arg1,const char* arg2) {return(RSt
 inline const RString operator+(const char* arg1,const RString& arg2) {return(RString(arg1)+=arg2);}
 
 
-//-----------------------------------------------------------------------------
-// Conversion functions
 
-/**
-* Transform an int to a string.
-*/
-RString itou(const int nb);
-
-/**
-* Transform an unsigned int to a string.
-*/
-RString itou(const unsigned int nb);
-
-/**
-* Transform a long to a string.
-*/
-RString ltou(const long nb);
-
-/**
-* Transform an unsigned char to a string.
-*/
-RString chrtou(const unsigned char c);
-
-/**
-* Transform an unsigned long to a string.
-*/
-RString ltou(const unsigned long nb);
-
-/**
-* Transform an unsigned long long to a string.
-*/
-RString lltou(const unsigned long long nb);
-
-/**
-* Transform a float to a string.
-*/
-RString ftou(const float nb);
-
-/**
-* Transform a double to a string.
-*/
-RString dtou(const double nb);
 
 
 //-----------------------------------------------------------------------------

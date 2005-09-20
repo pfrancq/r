@@ -33,6 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rio.h>
+#include <rstring.h>
 #include <rfile.h>
 #include <rtextfile.h>
 using namespace R;
@@ -68,7 +69,7 @@ RIOException::RIOException(const RIOFile* file,const char* str)
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetName()+" ("+itou(file->GetPos())+"): "+str);
+		strcpy(Msg,file->GetName()+" ("+RString::Number(file->GetPos())+"): "+str);
 	else
 		strcpy(Msg,str);
 }
@@ -79,7 +80,7 @@ RIOException::RIOException(const RTextFile* file,const char* str)
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetName()+" ("+ltou(file->ActualLine())+"): "+str);
+		strcpy(Msg,file->GetName()+" ("+RString::Number(file->ActualLine())+"): "+str);
 	else
 		strcpy(Msg,str);
 }

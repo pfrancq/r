@@ -1,4 +1,4 @@
-/*
+ /*
 
 	R Project Library
 
@@ -170,7 +170,7 @@ RString& RString::operator=(const char* src)
 //-----------------------------------------------------------------------------
 RString& RString::operator=(const std::string& src)
 {
-	unsigned int len,maxlen=0;
+	size_t len,maxlen=0;
 	RDecRef<BasicCharBuffer>(Data);
 	RChar* ptr=Latin1ToUnicode(src.c_str(),len,maxlen);
 	Data=new CharBuffer(ptr,len,maxlen);
@@ -657,12 +657,12 @@ RString::~RString(void)
 
 
 //-----------------------------------------------------------------------------
-// Conversion functions
+// Static Conversion functions
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RString R::itou(const int nb)
+RString RString::Number(const int nb)
 {
 	char Tmp[20];
 
@@ -672,7 +672,7 @@ RString R::itou(const int nb)
 
 
 //-----------------------------------------------------------------------------
-RString R::itou(const unsigned int nb)
+RString RString::Number(const unsigned int nb)
 {
 	char Tmp[20];
 
@@ -682,7 +682,7 @@ RString R::itou(const unsigned int nb)
 
 
 //-----------------------------------------------------------------------------
-RString R::ltou(const long nb)
+RString RString::Number(const long nb)
 {
 	char Tmp[20];
 
@@ -692,7 +692,7 @@ RString R::ltou(const long nb)
 
 
 //-----------------------------------------------------------------------------
-RString R::chrtou(const unsigned char c)
+RString RString::Number(const unsigned char c)
 {
 	char Tmp[2];
 
@@ -703,7 +703,7 @@ RString R::chrtou(const unsigned char c)
 
 
 //-----------------------------------------------------------------------------
-RString R::ltou(const unsigned long nb)
+RString RString::Number(const unsigned long nb)
 {
 	char Tmp[20];
 
@@ -713,7 +713,7 @@ RString R::ltou(const unsigned long nb)
 
 
 //------------------------------------------------------------------------------
-RString R::lltou(const unsigned long long nb)
+RString RString::Number(const unsigned long long nb)
 {
 	char Tmp[20];
 	RString res;
@@ -725,7 +725,7 @@ RString R::lltou(const unsigned long long nb)
 
 
 //-----------------------------------------------------------------------------
-RString R::ftou(const float nb)
+RString RString::Number(const float nb)
 {
 	char Tmp[20];
 
@@ -735,7 +735,7 @@ RString R::ftou(const float nb)
 
 
 //-----------------------------------------------------------------------------
-RString R::dtou(const double nb)
+RString RString::Number(const double nb)
 {
 	char Tmp[20];
 
