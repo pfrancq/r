@@ -72,7 +72,7 @@ RDate::RDate(const RDate& src)
 
 //------------------------------------------------------------------------------
 RDate::RDate(char day,char month,int year,char hour,char minute,char second)
-	: Year(0), Month(0), Day(0), Hour(0), Minute(0), Second(0)
+	: Year(1970), Month(1), Day(1), Hour(0), Minute(0), Second(0)
 {
 	SetDate(day,month,year,hour,minute,second);
 }
@@ -80,7 +80,7 @@ RDate::RDate(char day,char month,int year,char hour,char minute,char second)
 
 //------------------------------------------------------------------------------
 RDate::RDate(const RString& date)
-	: Year(0), Month(0), Day(0), Hour(0), Minute(0), Second(0)
+	: Year(1970), Month(1), Day(1), Hour(0), Minute(0), Second(0)
 {
 	SetDate(date);
 }
@@ -257,7 +257,7 @@ void RDate::SetDate(char day,char month,int year,char hour,char minute,char seco
 {
 	// Verify the values
 	if((month<1)||(month>12)||(day<1)||(day>31)||(hour<0)||(hour>23)||(minute<0)||(minute>59)||(second<0)||(second>59))
-		throw RException("Not a valid date");
+		throw RException("'"+RString::Number(day)+"-"+RString::Number(month)+"-"+RString::Number(year)+" "+RString::Number(hour)+":"+RString::Number(minute)+":"+RString::Number(second)+"' is not a valid date");
 	Year=year;
 	Month=month;
 	Day=day;
