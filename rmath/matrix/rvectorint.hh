@@ -273,7 +273,7 @@ template<bool bOrder>
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	void RVectorInt<bOrder>::Reset(void)
+	void RVectorInt<bOrder>::Clear(void)
 {
 	NbInt=0;
 	memset(List,0,MaxInt*sizeof(unsigned int));

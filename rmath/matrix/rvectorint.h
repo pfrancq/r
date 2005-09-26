@@ -175,9 +175,9 @@ public:
 	void Delete(const unsigned int del);
 
 	/**
-	* Reset the list.
+	* Clear the list.
 	*/
-	void Reset(void);
+	void Clear(void);
 
 	/**
 	* Assignation operator.
