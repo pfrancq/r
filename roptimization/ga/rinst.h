@@ -111,6 +111,11 @@ public:
 	*/
 	RRandom* Random;
 
+	/**
+	* Name of the GA.
+	*/
+	RString Name;
+
 private:
 
 	/**
@@ -223,9 +228,10 @@ public:
 	/**
 	* Construct the instance.
 	* @param popsize        The size of the population.
+	* @param name           Name of the genetic algorithm.
 	* @param debug          Debugger.
 	*/
-	RInst(unsigned int popsize,RDebug* debug=0);
+	RInst(unsigned int popsize,const RString& name,RDebug* debug=0);
 
 	/**
 	* Set if the verifications must be done.

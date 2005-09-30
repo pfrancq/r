@@ -61,11 +61,6 @@ class RDebug
 	RString tmpOpt;
 
 	/**
-	* Number of options.
-	*/
-	unsigned int NbOptions;
-
-	/**
 	* String containing the current tag.
 	*/
 	RString CurTag;
@@ -82,24 +77,12 @@ protected:
 	*/
 	bool LevelOutput[50];
 
-	/**
-	* Name of the application to debug.
-	*/
-	RString App;
-
-	/**
-	* Name of the person which is generating the debug.
-	*/
-	RString Author;
-
 public:
 
 	/**
 	* Construct a debugger output.
-	* @param app            The name of the application.
-	* @param author         The auhtor of the application.
 	*/
-	RDebug(RString app,RString author);
+	RDebug(void);
 
 	/**
 	* Begin a Tag with attributes. The attributes are added after.
@@ -146,19 +129,19 @@ public:
 	/**
 	* Begin an application tag.
 	*/
-	void BeginApp(void);
+	void BeginApp(const RString& app);
 
 	/**
 	* End an application tag.
 	*/
-	void EndApp(void);
+	void EndApp(const RString& app);
 
 protected:
 
 	/**
 	* Add an attribute to buf.
 	*/
-	void AddAttribute(RString* Value,RString* Att);
+	void AddAttribute(unsigned int& nboptions,RString* Value,RString* Att);
 
 	/**
 	* Begin to write a Tag. This function must be implement.
@@ -213,10 +196,8 @@ public:
 	/**
 	* Construct the debug file.
 	* @param name           The name of the file.
-	* @param app            The name of the application.
-	* @param author         The auhtor of the application.
 	*/
-	RDebugXML(RString name,RString app,RString author);
+	RDebugXML(const RString& name);
 
 protected:
 

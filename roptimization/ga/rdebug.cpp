@@ -39,6 +39,7 @@
 // include files for R Project
 #include <rdebug.h>
 using namespace R;
+using namespace std;
 
 
 
@@ -49,8 +50,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDebug::RDebug(RString app,RString author)
-	: Deep(-1), App(app), Author(author)
+RDebug::RDebug(void)
+	: Deep(-1)
 {
 }
 
@@ -61,11 +62,11 @@ void RDebug::BeginTag(RString Text,unsigned NbAttr,...)
 	va_list ap;
 
 	LevelOutput[++Deep]=false;      // For the moment nothing as child
-	NbOptions=0;
+	unsigned int NbOptions=0;
 	tmpOpt.Clear();
 	va_start(ap, NbAttr);
 	while(NbAttr--)
-		AddAttribute(va_arg(ap,RString*),va_arg(ap,RString*));
+		AddAttribute(NbOptions,va_arg(ap,RString*),va_arg(ap,RString*));
 	va_end(ap);
 	WriteBeginTag(Text,tmpOpt);
 	CurTag=Text;
@@ -73,9 +74,9 @@ void RDebug::BeginTag(RString Text,unsigned NbAttr,...)
 
 
 //------------------------------------------------------------------------------
-void RDebug::AddAttribute(RString* Value,RString* Attr)
+void RDebug::AddAttribute(unsigned int& nboptions,RString* Value,RString* Attr)
 {
-	if(NbOptions++)
+	if(nboptions++)
 		tmpOpt+=" ";
 	tmpOpt+=(*Attr)+"=\""+(*Value)+"\"";
 }
@@ -124,7 +125,7 @@ void RDebug::EndFunc(RString Name,RString)
 
 
 //------------------------------------------------------------------------------
-void RDebug::BeginApp(void)
+void RDebug::BeginApp(const RString& app)
 {
 	time_t t;
 	char TempString[20];
@@ -132,14 +133,14 @@ void RDebug::BeginApp(void)
 	time(&t);
 	strcpy(TempString,ctime(&t));
 	TempString[strlen(TempString)-1]=0;
-	BeginTag(App,2,&RString("Author"),&Author,&RString("Date"),&RString(TempString));
+	BeginTag(app,1,&RString("Date"),&RString(TempString));
 }
 
 
 //------------------------------------------------------------------------------
-void RDebug::EndApp(void)
+void RDebug::EndApp(const RString& app)
 {
-	EndTag(App);
+	EndTag(app);
 }
 
 
@@ -157,12 +158,17 @@ RDebug::~RDebug(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDebugXML::RDebugXML(RString name,RString app,RString author)
-	: RDebug(app,author),Name(name), File(name)
+RDebugXML::RDebugXML(const RString& name)
+	: RDebug(), Name(name), File(name)
 {
+	LevelOutput[++Deep]=false;      // For the moment nothing as child
+	File.SetSeparator("");
 	File.Open(RIO::Create);
-	File.WriteStr("<!DOCTYPE "+RString(app)+">");
+	File.WriteStr("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 	File.WriteLine();
+	File.WriteStr("<!DOCTYPE RDebug>");
+	File.WriteLine();
+	File.WriteStr("<RDebug>");
 	for(int i=51;--i;)
 		tmpTab+=RChar('\t');
 }
@@ -177,11 +183,11 @@ void RDebugXML::WriteBeginTag(RString tag,RString options)
 		File.WriteStr(tmpTab,Deep);
 	}
 	File.WriteStr("<",1);
-	File.WriteStr(tag,strlen(tag));
-	if(options&&(*options))
+	File.WriteStr(tag,tag.GetLen());
+	if(options.GetLen())
 	{
 		File.WriteStr(" ",1);
-		File.WriteStr(options,strlen(options));
+		File.WriteStr(options);
 	}
 	File.WriteStr(">",1);
 }
@@ -213,4 +219,6 @@ void RDebugXML::WriteText(RString text)
 //------------------------------------------------------------------------------
 RDebugXML::~RDebugXML(void)
 {
+	File.WriteLine();
+	File.WriteStr("</RDebug>");
 }

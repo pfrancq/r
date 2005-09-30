@@ -65,11 +65,9 @@ public:
 	/**
 	* Construct the XML debug widget.
 	* @param parent         Parent of the widget.
-	* @param app            Name of the application.
-	* @param author         Author of the application.
 	* @param name           Name of the instance.
 	*/
-	QXMLContainer(QWidget* parent=0,RString app=RString::Null,RString author=RString::Null,RString name=RString::Null);
+	QXMLContainer(QWidget* parent=0,RString name=RString::Null);
 
 	/**
 	* Clear the XML.

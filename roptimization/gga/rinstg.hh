@@ -69,8 +69,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,RDebug *debug)
-		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,const RString& name,RDebug *debug)
+		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
 	Objs=new RCursor<cObj>();
@@ -84,8 +84,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,RDebug *debug)
-		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,const RString& name,RDebug *debug)
+		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
 	Objs=new RCursor<cObj>();
@@ -99,8 +99,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,RDebug *debug)
-		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,debug),
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,const RString& name,RDebug *debug)
+		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
 	Objs=new RCursor<cObj>();

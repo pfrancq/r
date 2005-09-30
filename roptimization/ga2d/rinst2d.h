@@ -177,9 +177,10 @@ public:
 	* @param popsize        The size of the population.
 	* @param prob           Pointer to the problem.
 	* @param h              The heuristic that has to be used.
+	* @param name           Name of the genetic algorithm.
 	* @param debug          Debugger.
 	*/
-	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,RDebug* debug=0);
+	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,const RString& name,RDebug* debug=0);
 
 	/**
 	* Initialisation of the instance.

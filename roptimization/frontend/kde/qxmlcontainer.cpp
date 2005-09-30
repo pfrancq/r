@@ -44,8 +44,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QXMLContainer::QXMLContainer(QWidget* parent,RString app,RString author,RString name)
-	: QListView(parent,name),RDebug(app,author)
+QXMLContainer::QXMLContainer(QWidget* parent,RString name)
+	: QListView(parent,name), RDebug()
 {
 	memset(Items,0,50*sizeof(QListViewItem *));
 	addColumn("Steps");
@@ -54,6 +54,7 @@ QXMLContainer::QXMLContainer(QWidget* parent,RString app,RString author,RString 
 	setRootIsDecorated(true);
 	setSorting(-1,true);
 	setAllColumnsShowFocus(true);
+	BeginTag("RDebug");
 }
 
 

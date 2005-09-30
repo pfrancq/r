@@ -53,13 +53,13 @@ template<class cInst,class cChromo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,RDebug *debug)
-		: Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),Receivers(10,5),bRandomConstruct(false),
+	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,const RString& name,RDebug* debug)
+		: Debug(debug), Random(0), Name(name), tmpChrom1(0), tmpChrom2(0),Receivers(10,5),bRandomConstruct(false),
 		  VerifyGA(false), Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0),AgeBestPop(0)
 {
 //	EmitSig(sigGAInit);
 	if(Debug)
-		Debug->BeginApp();
+		Debug->BeginApp(Name);
 	if(Debug)
 		Debug->BeginFunc("RInst","RInst");
 	MaxBestPopAge=5;
@@ -559,7 +559,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(tmpChrom1) delete[] tmpChrom1;
 	if(tmpChrom2) delete[] tmpChrom2;
 	if(Debug)
-		Debug->EndApp();
+		Debug->EndApp(Name);
 	if(thDatas)
 	{
 		delete thDatas[0];
