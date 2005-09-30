@@ -199,6 +199,11 @@ public:
 	*/
 	RDebugXML(const RString& name);
 
+	/**
+	* Get the name of the file.
+	*/
+	RString GetName(void) const;
+
 protected:
 
 	/**

@@ -174,6 +174,14 @@ RDebugXML::RDebugXML(const RString& name)
 }
 
 
+
+//------------------------------------------------------------------------------
+RString RDebugXML::GetName(void) const
+{
+	return(Name);
+}
+
+
 //------------------------------------------------------------------------------
 void RDebugXML::WriteBeginTag(RString tag,RString options)
 {
