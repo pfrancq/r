@@ -109,7 +109,7 @@ bool RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
 void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 {
 	RGeoInfo *g1,*g2;
-	unsigned int id1,id2;
+	unsigned int id1,id2,i;
 	RVertex *v1,*v2;
 	RPoint pt1,pt2;
 	RGraph T(Con->Connect.GetNb()),S(Con->Connect.GetNb());
@@ -124,14 +124,14 @@ void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 	RAssert(Con->Connect.GetNb());
 	RCursor<RObj2DConnector> con(Con->Connect);
 	RCursor<RObj2DConnector> con2(Con->Connect);
-	for(con.Start();!con.End();con.Next())
+	for(con.Start(),i=con.GetNb();--i;con.Next())
 	{
 		id1=con()->Owner->GetId();
 		g1=infos->GetPtr<unsigned int>(id1);
 		if(g1->IsValid())
 		{
 			v1=T.GetVertex(id1);
-			for(con2.GoTo(con.GetPos()+1);!con2.End();con.Next())
+			for(con2.GoTo(con.GetPos()+1);!con2.End();con2.Next())
 			{
 				id2=con2()->Owner->GetId();
 				g2=infos->GetPtr<unsigned int>(id2);

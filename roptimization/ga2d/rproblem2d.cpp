@@ -77,7 +77,7 @@ void RProblem2D::Load(const char* name)
 	{
 		// Read the points but the last
 		RCursor<RXMLTag> Cur(tag->GetNodes());
-		for(Cur.Start(),i=Cur.GetNb();--i;Cur.Next())  // Last point = first point
+		for(Cur.Start(),i=tag->GetNbNodes();--i;Cur.Next())  // Last point = first point
 		{
 			if(Cur()->GetName()!="Point")
 				throw RIOException("Wrong sub-tags in tag 'Shape'");
@@ -120,7 +120,6 @@ void RProblem2D::Load(const char* name)
 	tag=s.GetTag("Terminals",s.GetTop());
 	if(tag)
 	{
-		Objs.Clear(tag->GetNbNodes());
 		RCursor<RXMLTag> Cur(tag->GetNodes());
 		for(Cur.Start();!Cur.End();Cur.Next())
 			CreateConnector(Cur(),&Problem,Tr);
