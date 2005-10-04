@@ -170,6 +170,11 @@ public:
 	* Compare function.
 	*/
 	int Compare(const RGASignalsReceiver&) const { return(-1); }
+
+	/**
+	* Destructor.
+	*/
+	virtual ~RGASignalsReceiver(void) {}
 };
 
 

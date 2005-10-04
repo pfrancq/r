@@ -116,6 +116,8 @@ public:
 			#pragma warn +pia
 		#endif
 	}
+
+	virtual ~RRandom(void) {}
 };
 
 
