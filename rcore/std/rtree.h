@@ -195,6 +195,11 @@ public:
 	void DeleteNode(N* node);
 
 	/**
+	* Delete all empty nodes of the tree (except the top one).
+	*/
+	void DeleteEmptyNodes(void);
+
+	/**
 	* Deep copy of a the tree.
 	* @param src             Source tree.
 	*/

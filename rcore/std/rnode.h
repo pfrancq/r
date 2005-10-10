@@ -140,6 +140,11 @@ protected:
 	*/
 	size_t NbSubNodes;
 
+	/**
+	* Index of the node.
+	*/
+	size_t Index;
+
 public:
 
 	/**
@@ -159,6 +164,12 @@ public:
 	* @return size_t
 	*/
 	size_t GetNbNodes(void) const;
+
+	/**
+	* Return the index of a given node in the tree.
+	* @param ptr             Pointer to a direct subnode.
+	*/
+	size_t GetIndex(void) const;
 
 	/**
 	* Get a cursor over the child nodes.
@@ -182,6 +193,16 @@ public:
 	* @param node           Node to insert.
 	*/
 	void InsertNode(N* node);
+
+	/**
+	* Delete all empty subnodes.
+	*/
+	void DeleteEmptySubNodes(void);
+
+	/**
+	* Test if the tag is empty, i.e. it has no subnodes.
+	*/
+	virtual bool IsEmpty(void);
 
 	/**
 	* Destruct the node.

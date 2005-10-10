@@ -71,6 +71,7 @@ template<class N,bool bAlloc,bool bOrder>
 		{
 			Top=node;
 			InsertPtrAt(Top,0);
+			Top->Index=0;
 			return;
 		}
 		to=Top;
@@ -79,6 +80,7 @@ template<class N,bool bAlloc,bool bOrder>
 	{
 		tmp=to->SubNodes+to->NbSubNodes;
 		InsertPtrAt(node,tmp,false);
+		node->Index=tmp;
 		RCursor<N> Nodes(*this);
 		for(Nodes.Start();!Nodes.End();Nodes.Next())
 			if((Nodes()->SubNodes>to->SubNodes)&&(Nodes()->SubNodes!=NullId))
@@ -90,6 +92,7 @@ template<class N,bool bAlloc,bool bOrder>
 	{
 		to->SubNodes=RContainer<N,bAlloc,bOrder>::GetNb();
 		InsertPtrAt(node,to->SubNodes,false);
+		node->Index=to->SubNodes;
 	}
 	node->Parent = to;
 	to->NbSubNodes++;
@@ -103,21 +106,37 @@ template<class N,bool bAlloc,bool bOrder>
 	N* from;
 
 	// Delete sub-nodes
-	RCursor<N> Cur(*this,node->SubNodes,node->SubNodes+node->NbSubNodes);
-	for(Cur.Start();!Cur.End();Cur.Next())
-		DeleteNode(Cur());
+	if(node->NbSubNodes)
+	{
+		RContainer<N,false,false> Del(node->NbSubNodes);
+		RCursor<N> Cur(node->GetNodes());
+		for(Cur.Start();!Cur.End();Cur.Next())
+			Del.InsertPtr(Cur());
+		Cur.Set(Del);
+		for(Cur.Start();!Cur.End();Cur.Next())
+			DeleteNode(Cur());
+	}
 
 	// Delete the node and update the index
 	from=node->Parent;
+	if(!from) return;
+	DeletePtrAt(node->Index);
+	size_t j=from->SubNodes;
 	if(!(--from->NbSubNodes))
 		from->SubNodes=NullId;
-	DeletePtr(*node);
-	if((Top->SubNodes>from->SubNodes)&&(Top->SubNodes!=NullId))
-		Top->SubNodes--;
 	RCursor<N> Nodes(*this);
 	for(Nodes.Start();!Nodes.End();Nodes.Next())
-		if((Nodes()->SubNodes>from->SubNodes)&&(Nodes()->SubNodes!=NullId))
+		if((Nodes()->SubNodes>j)&&(Nodes()->SubNodes!=NullId))
 			Nodes()->SubNodes--;
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
+	void RTree<N,bAlloc,bOrder>::DeleteEmptyNodes(void)
+{
+	if(Top)
+		Top->DeleteEmptySubNodes();
 }
 
 

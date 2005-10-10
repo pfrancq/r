@@ -39,7 +39,7 @@
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
 	RNode<N,bAlloc,bOrder>::RNode(RTree<N,bAlloc,bOrder>* tree)
-		: Tree(tree), Parent(0), SubNodes(NullId), NbSubNodes(0)
+		: Tree(tree), Parent(0), SubNodes(NullId), NbSubNodes(0), Index(SIZE_MAX)
 {
 }
 
@@ -57,6 +57,14 @@ template<class N,bool bAlloc,bool bOrder>
 	size_t RNode<N,bAlloc,bOrder>::GetNbNodes(void) const
 {
 	return(NbSubNodes);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
+	size_t RNode<N,bAlloc,bOrder>::GetIndex(void) const
+{
+	return(Index);
 }
 
 
@@ -83,6 +91,44 @@ template<class N,bool bAlloc,bool bOrder>
 	void RNode<N,bAlloc,bOrder>::InsertNode(N* node)
 {
 	Tree->InsertNode(static_cast<N*>(this),node);
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
+	void RNode<N,bAlloc,bOrder>::DeleteEmptySubNodes(void)
+{
+
+	if(!NbSubNodes) return;
+	RContainer<N,false,false> ToTreat(20,10);
+	RContainer<N,false,false> ToDel(20,10);
+
+	// Go through the subnodes.
+	RCursor<N> Cur(GetNodes());
+	for(Cur.Start();!Cur.End();Cur.Next())
+		ToTreat.InsertPtr(Cur());
+
+	// Treat all subnodes
+	Cur.Set(ToTreat);
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		Cur()->DeleteEmptySubNodes();
+		if(Cur()->IsEmpty())
+			ToDel.InsertPtr(Cur());
+	}
+
+	// Delete those needed
+	Cur.Set(ToDel);
+ 	for(Cur.Start();!Cur.End();Cur.Next())
+		Tree->DeleteNode(Cur());
+}
+
+
+//-----------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
+	bool RNode<N,bAlloc,bOrder>::IsEmpty(void)
+{
+	return(!NbSubNodes);
 }
 
 
