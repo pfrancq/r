@@ -187,13 +187,7 @@ public:
 	* Test if the tag is empty, i.e. it has no subnodes, no parameters and no
 	* content.
 	*/
-	bool IsEmpty(void);
-
-	/**
-	* Delete all the empty subtags attached to the current tag.
-	* @param s              Structure of the node.
-	*/
-	void DeleteEmptyTags(RXMLStruct* s);
+	virtual bool IsEmpty(void);
 
 	/**
 	* Get a Cursor on the attributes.
