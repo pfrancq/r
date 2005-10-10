@@ -110,36 +110,36 @@ public:
 	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
-	*                        null, iterate until the end of the container.
+	*                        SIZE_MAX, iterate until the end of the container.
 	*/
-	RCursor(const RContainer<C,true,true>& c,size_t min=0,size_t max=0) : BasicCursor(c,min,max) {}
+	RCursor(const RContainer<C,true,true>& c,size_t min=0,size_t max=SIZE_MAX) : BasicCursor(c,min,max) {}
 
 	/**
 	* Construct the cursor.
 	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
-	*                        null, iterate until the end of the container.
+	*                        SIZE_MAX, iterate until the end of the container.
 	*/
-	RCursor(const RContainer<C,false,true>& c,size_t min=0,size_t max=0) : BasicCursor(c,min,max) {}
+	RCursor(const RContainer<C,false,true>& c,size_t min=0,size_t max=SIZE_MAX) : BasicCursor(c,min,max) {}
 
 	/**
 	* Construct the cursor.
 	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
-	*                        null, iterate until the end of the container.
+	*                        SIZE_MAX, iterate until the end of the container.
 	*/
-	RCursor(const RContainer<C,true,false>& c,size_t min=0,size_t max=0) : BasicCursor(c,min,max) {}
+	RCursor(const RContainer<C,true,false>& c,size_t min=0,size_t max=SIZE_MAX) : BasicCursor(c,min,max) {}
 
 	/**
 	* Construct the cursor.
 	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
-	*                        null, iterate until the end of the container.
+	*                        SIZE_MAX, iterate until the end of the container.
 	*/
-	RCursor(const RContainer<C,false,false>& c,size_t min=0,size_t max=0) : BasicCursor(c,min,max) {}
+	RCursor(const RContainer<C,false,false>& c,size_t min=0,size_t max=SIZE_MAX) : BasicCursor(c,min,max) {}
 
 	/**
 	* Assignment operator using a "Cursor".
@@ -152,9 +152,9 @@ public:
 	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
-	*                        null, iterate until the end of the container.
+	*                        SIZE_MAX, iterate until the end of the container.
 	*/
-	template<bool b,bool o> void Set(const RContainer<C,b,o>& c,size_t min=0,size_t max=0) { BasicCursor::Set(c,min,max);}
+	template<bool b,bool o> void Set(const RContainer<C,b,o>& c,size_t min=0,size_t max=SIZE_MAX) { BasicCursor::Set(c,min,max);}
 
 	/**
 	* Return the current element.

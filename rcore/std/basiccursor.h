@@ -36,6 +36,16 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <stdint.h>
+#if __WORDSIZE == 64
+#define SIZE_MAX		(18446744073709551615UL)
+#else
+#define SIZE_MAX		(4294967295U)
+#endif
+
+
+//-----------------------------------------------------------------------------
 // include files for R Project
 #include <basiccontainer.h>
 
@@ -102,7 +112,7 @@ protected:
 	* param c                Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
-	*                        null, iterate until the end of the container.
+	*                        SIZE_MAX, iterate until the end of the container.
 	*/
 	BasicCursor(const BasicContainer& c,size_t min,size_t max);
 
@@ -119,7 +129,7 @@ public:
 	* param c                Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate. If
-	*                        null, iterate until the end of the container.
+	*                        SIZE_MAX, iterate until the end of the container.
 	*/
 	void Set(const BasicContainer& c,size_t min,size_t max);
 

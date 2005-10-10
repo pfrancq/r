@@ -90,7 +90,7 @@ void BasicCursor::Set(const BasicContainer& c,size_t min,size_t max)
 	RAssert(min<=max);
 	NbPtr=c.NbPtr;
 	Tab=c.Tab;
-	if((max)&&(max<c.LastPtr))
+	if((max!=SIZE_MAX)&&(max<c.LastPtr))
 		LastPtr=max;
 	else
 		LastPtr=c.LastPtr;
