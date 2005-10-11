@@ -391,7 +391,7 @@ public:
 	* @param str             String.
 	* @see R::RHashContainer and R::RDblHashContainer.
 	*/
-	static int HashIndex2(const RChar* str);	
+	static int HashIndex2(const RChar* str);
 
 	//-----------------------------------------------------------------------------
 	// Static conversion functions
@@ -400,42 +400,41 @@ public:
 	* Transform an int to a string.
 	*/
 	static RString Number(const int nb);
-	
+
 	/**
 	* Transform an unsigned int to a string.
 	*/
 	static RString Number(const unsigned int nb);
-	
+
 	/**
 	* Transform a long to a string.
 	*/
 	static RString Number(const long nb);
-	
+
 	/**
 	* Transform an unsigned char to a string.
 	*/
 	static RString Number(const unsigned char c);
-	
+
 	/**
 	* Transform an unsigned long to a string.
 	*/
 	static RString Number(const unsigned long nb);
-	
+
 	/**
 	* Transform an unsigned long long to a string.
 	*/
 	static RString Number(const unsigned long long nb);
-	
+
 	/**
 	* Transform a float to a string.
 	*/
 	static RString Number(const float nb);
-	
+
 	/**
 	* Transform a double to a string.
 	*/
 	static RString Number(const double nb);
-
 
 private:
 
@@ -457,6 +456,70 @@ private:
 	static char* UnicodeToLatin1(const RChar* src,size_t len);
 
 public:
+
+	/**
+	* Return the length of the string.
+	*/
+	inline size_t GetLen(void) const {return(Data->Len);}
+
+	/**
+	* Return the maximal length of the string.
+	*/
+	inline size_t GetMaxLen(void) const {return(Data->MaxLen);}
+
+	/**
+	* Look if the string is empty.
+	* @returns true if the length is null, false else.
+	*/
+	inline bool IsEmpty(void) const {return(!Data->Len);}
+
+	/**
+	* Get a uppercase version of the string.
+	* @return String.
+	*/
+	inline RString ToUpper(void) const {return(BasicString<RChar,RString>::ToUpper());}
+
+	/**
+	* Get a lowercase version of the string.
+	* @return String.
+	*/
+	inline RString ToLower(void) const  {return(BasicString<RChar,RString>::ToLower());}
+
+	/**
+	* This function return a string by stripping whitespace (or other
+	* characters) from the beginning and end of the string.
+	* @return String.
+	*/
+	inline RString Trim(void) const  {return(BasicString<RChar,RString>::Trim());}
+
+	/**
+	* Find the position of a given character in the string.
+	* @param car             Character to find.
+	* @param pos             Position to start the search. Negative values
+	*                        start the search from the end.
+	* @param CaseSensitive   Is the search case sensitive.
+	* @return The position of the first occurence or -1 if the character was not
+	*         found.
+	*/
+	inline int Find(const RChar car,int pos=0,bool CaseSensitive=true) const {return(BasicString<RChar,RString>::Find(car,pos,CaseSensitive));}
+
+	/**
+	* Find the position of a given string in the string.
+	* @param str             String to find.
+	* @param pos             Position to start the search. Negative values
+	*                        start the search from the end.
+	* @param CaseSensitive   Is the search case sensitive.
+	* @return The position of the first occurence or -1 if the character was not
+	*         found.
+	*/
+	inline int FindStr(const RString& str,int pos=0,bool CaseSensitive=true) const {return(BasicString<RChar,RString>::FindStr(str,pos,CaseSensitive));}
+
+	/**
+	* Split the string to find all the elements separated by a given character.
+	* @param elements        Container that will hold the results.
+	* @param car             Character used as separator.
+	*/
+	inline void Split(RContainer<RString,true,false>& elements,const RChar car) const {BasicString<RChar,RString>::Split(elements,car);}
 
 	/**
 	* Destruct the string.
