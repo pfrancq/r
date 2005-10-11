@@ -384,11 +384,25 @@ inline bool isgraph(const RChar c)                      { return(c.IsGraph()); }
 inline RChar tolower(const RChar c)                { return(RChar::ToLower(c)); }
 
 /**
+* Transform a character in lowercase.
+* @param c               Character.
+* return char.
+*/
+inline char tolower(const char c)                   { return(std::tolower(c)); }
+
+/**
 * Transform an Unicode character in upperrcase.
 * @param c               Character.
 * return RChar.
 */
 inline RChar toupper(const RChar c)                { return(RChar::ToUpper(c)); }
+
+/**
+* Transform a character in uppercase.
+* @param c               Character.
+* return char.
+*/
+inline char toupper(const char c)                   { return(std::toupper(c)); }
 
 
 }  //-------- End of namespace R -----------------------------------------------
