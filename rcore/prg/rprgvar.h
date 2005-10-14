@@ -71,7 +71,7 @@ public:
 	* Constructor of a variable.
 	* @param name           Name.
 	*/
-	RPrgVar(const char* name);
+	RPrgVar(const RString& name);
 
 	/**
 	* This methods compares two variables using their names and works like the
@@ -92,15 +92,6 @@ public:
 	int Compare(const RString& v) const;
 
 	/**
-	* This methods compares the name of a variable with a string and works like
-	* the "strcpy" function of the ANSI C/C++ library.
-	* @see R::RContainer.
-	* @param v               String representing the name of the variable.
-	* @return int
-	*/
-	int Compare(const char* v) const;
-
-	/**
 	* Assign some data to the variable.
 	* @param data           Data.
 	*/
@@ -111,7 +102,7 @@ public:
 	* @param prg            Program.
 	* @return "C" string representing the variable.
 	*/
-	virtual const char* GetValue(RPrg* prg);
+	virtual RString GetValue(RPrg* prg);
 
 	/**
 	* Destructor of the variable.

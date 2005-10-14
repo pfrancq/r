@@ -44,8 +44,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgFunc::RPrgFunc(const char* name)
-	: Name(name)
+RPrgFunc::RPrgFunc(const RString& name,const RString desc)
+	: Name(name), Description(desc)
 {
 }
 
@@ -65,9 +65,16 @@ int RPrgFunc::Compare(const RString& f) const
 
 
 //------------------------------------------------------------------------------
-int RPrgFunc::Compare(const char* f) const
+RString RPrgFunc::GetName(void) const
 {
-	return(Name.Compare(f));
+	return(Name);
+}
+
+
+//------------------------------------------------------------------------------
+RString RPrgFunc::GetDescription(void) const
+{
+	return(Description);
 }
 
 

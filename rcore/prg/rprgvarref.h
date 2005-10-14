@@ -59,7 +59,7 @@ public:
 	* Constructor of a variable.
 	* @param ref            Name of the variable referenced.
 	*/
-	RPrgVarRef(const char* ref);
+	RPrgVarRef(const RString& ref);
 
 	/**
 	* Assign some data to the variable.
@@ -72,7 +72,7 @@ public:
 	* @param prg            Program.
 	* @return "C" string representing the content of the variable.
 	*/
-	virtual const char* GetValue(RPrg* prg);
+	virtual RString GetValue(RPrg* prg);
 
 	/**
 	* Destructor of a variable.

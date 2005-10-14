@@ -38,6 +38,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
+#include <rstring.h>
 
 
 //------------------------------------------------------------------------------
@@ -81,7 +82,7 @@ public:
 	* @see R::RContainer.
 	* @return -1
 	*/
-	int Compare(const char* t) const;
+	int Compare(const RString& t) const;
 
 	/**
 	* Run the instruction.

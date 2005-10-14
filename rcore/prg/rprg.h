@@ -39,6 +39,7 @@
 // include files for R Project
 #include <rtextfile.h>
 #include <rcontainer.h>
+#include <rcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -163,9 +164,8 @@ public:
 	/**
 	* Get the value of the variable.
 	* @param var            Name of the variable.
-	* @return "C" string representing the content of the variable.
 	*/
-	virtual const char* GetValue(const char* var);
+	virtual RString GetValue(const RString& var);
 
 	/**
 	* Add a class.
@@ -178,6 +178,11 @@ public:
 	* @param c               Pointer to the class.
 	*/
 	void DelVar(RPrgClass* c);
+
+	/**
+	* Get a cursor over the classes.
+	*/
+	RCursor<RPrgClass> GetClasses(void) const;
 
 	/**
 	* Destructor of the program.

@@ -44,7 +44,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVarConst::RPrgVarConst(const char* value)
+RPrgVarConst::RPrgVarConst(const RString& value)
 	: RPrgVar(value)
 {
 }
@@ -58,7 +58,7 @@ void RPrgVarConst::Assign(const void* data)
 
 
 //------------------------------------------------------------------------------
-const char* RPrgVarConst::GetValue(RPrg*)
+RString RPrgVarConst::GetValue(RPrg*)
 {
 	return(Name);
 }

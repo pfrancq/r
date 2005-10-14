@@ -57,7 +57,7 @@ int RPrgInst::Compare(const RPrgInst&) const
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const char*) const
+int RPrgInst::Compare(const RString&) const
 {
 	return(-1);
 }

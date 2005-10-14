@@ -6,7 +6,7 @@
 
 	Generic output - Header.
 
-	Copyright 2002-2003 by the Université Libre de Bruxelles.
+	Copyright 2002-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -35,6 +35,11 @@
 #define RPrgOutputH
 
 
+//------------------------------------------------------------------------------
+// include files for R Project
+#include <rstring.h>
+
+
 //-----------------------------------------------------------------------------
 namespace R{
 //-----------------------------------------------------------------------------
@@ -61,7 +66,7 @@ public:
 	* information.
 	* @param str            String to output.
 	*/
-	virtual void WriteStr(const char* str);
+	virtual void WriteStr(const RString& str);
 
 	/**
 	* Destructor of a generic output.

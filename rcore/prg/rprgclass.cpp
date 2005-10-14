@@ -46,7 +46,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgClass::RPrgClass(const char* name)
+RPrgClass::RPrgClass(const RString& name)
 	: Name(name), Vars(20,10), Methods(30,15)
 {
 }
@@ -65,17 +65,24 @@ int RPrgClass::Compare(const RString& c) const
 	return(Name.Compare(c));
 }
 
+
 //------------------------------------------------------------------------------
-int RPrgClass::Compare(const char* c) const
+RPrgFunc* RPrgClass::GetMethod(const RString& method) const
 {
-	return(Name.Compare(c));
+	return(Methods.GetPtr(method));
+}
+
+//------------------------------------------------------------------------------
+RString RPrgClass::GetName(void) const
+{
+	return(Name);
 }
 
 
 //------------------------------------------------------------------------------
-RPrgFunc* RPrgClass::GetMethod(const char* method) const
+RCursor<RPrgFunc> RPrgClass::GetMethods(void) const
 {
-	return(Methods.GetPtr<const char*>(method));
+	return(RCursor<RPrgFunc>(Methods));
 }
 
 

@@ -61,7 +61,6 @@ using namespace R;
 RPrg::RPrg(RString f,RPrgOutput* o)
 	: FileName(f), Cout(o), Insts(40), Vars(10,5), Classes(10,5), Prg(FileName)
 {
-	Prg.Open(RIO::Read);
 }
 
 
@@ -70,6 +69,7 @@ void RPrg::Load(void)
 {
 	RPrgInst* i;
 
+	Prg.Open(RIO::Read);
 	Prg.SetRem("#");
 	ReadLine=true;
 	while((!ReadLine)||(!Prg.Eof()&&(ReadLine)))
@@ -203,7 +203,6 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 
 
 //-----------------------------------------------------------------------------
-
 void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* values)
 {
 	unsigned int len;
@@ -280,12 +279,19 @@ void RPrg::DelVar(RPrgVar* var)
 
 
 //-----------------------------------------------------------------------------
-const char* RPrg::GetValue(const char* var)
+RString RPrg::GetValue(const RString& var)
 {
 	RPrgVar* v=Vars.GetPtr<const char*>(var);
 
-	if(!v) return(0);
+	if(!v) return(RString::Null);
 	return(v->GetValue(this));
+}
+
+
+//-----------------------------------------------------------------------------
+RCursor<RPrgClass> RPrg::GetClasses(void) const
+{
+	return(RCursor<RPrgClass>(Classes));
 }
 
 

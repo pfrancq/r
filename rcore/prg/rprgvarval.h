@@ -65,7 +65,7 @@ public:
 	* @param name           Name.
 	* @param value          Value.
 	*/
-	RPrgVarVal(const char* name,const char* value);
+	RPrgVarVal(const RString& name,const RString& value);
 
 	/**
 	* Assign some data to the variable.
@@ -78,7 +78,7 @@ public:
 	* @param prg            Program.
 	* @return "C" string representing the value of the variable.
 	*/
-	virtual const char* GetValue(RPrg* prg);
+	virtual RString GetValue(RPrg* prg);
 
 	/**
 	* Destructor of a variable.

@@ -69,13 +69,19 @@ protected:
 	*/
 	RString Name;
 
+	/**
+	* Description of the function.
+	*/
+	RString Description;
+
 public:
 
 	/**
 	* Costructor of a function.
 	* @param name           Name.
+	* @param desc           Description.
 	*/
-	RPrgFunc(const char* name);
+	RPrgFunc(const RString& name,const RString desc=RString::Null);
 
 	/**
 	* This methods compares two functions using their names and works like the
@@ -96,13 +102,14 @@ public:
 	int Compare(const RString& f) const;
 
 	/**
-	* This methods compares the name of a function with a string and works like
-	* the "strcpy" function of the ANSI C/C++ library.
-	* @see R::RContainer.
-	* @param f               String representing the name of the function.
-	* @return int
+	* Get the name of the function.
 	*/
-	int Compare(const char* f) const;
+	RString GetName(void) const;
+
+	/**
+	* Get the description of the function.
+	*/
+	RString GetDescription(void) const;
 
 	/**
 	* Execute the function.

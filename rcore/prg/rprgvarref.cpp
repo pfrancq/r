@@ -45,7 +45,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVarRef::RPrgVarRef(const char* ref)
+RPrgVarRef::RPrgVarRef(const RString& ref)
 	: RPrgVar(ref)
 {
 }
@@ -58,7 +58,7 @@ void RPrgVarRef::Assign(const void*)
 
 
 //------------------------------------------------------------------------------
-const char* RPrgVarRef::GetValue(RPrg* prg)
+RString RPrgVarRef::GetValue(RPrg* prg)
 {
 	return(prg->GetValue(Name));
 }

@@ -44,7 +44,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVar::RPrgVar(const char* name)
+RPrgVar::RPrgVar(const RString& name)
 	: Name(name)
 {
 }
@@ -65,22 +65,15 @@ int RPrgVar::Compare(const RString& v) const
 
 
 //------------------------------------------------------------------------------
-int RPrgVar::Compare(const char* v) const
-{
-	return(Name.Compare(v));
-}
-
-
-//------------------------------------------------------------------------------
 void RPrgVar::Assign(const void*)
 {
 }
 
 
 //------------------------------------------------------------------------------
-const char* RPrgVar::GetValue(RPrg*)
+RString RPrgVar::GetValue(RPrg*)
 {
-	return(0);
+	return(RString::Null);
 }
 
 

@@ -59,7 +59,7 @@ public:
 	* Constructor of a const variable.
 	* @param value          Name.
 	*/
-	RPrgVarConst(const char* value);
+	RPrgVarConst(const RString& value);
 
 	/**
 	* Assign some data to the const variable.
@@ -72,7 +72,7 @@ public:
 	* @param prg            Program.
 	* @return "C" string representing the content of the const variable.
 	*/
-	virtual const char* GetValue(RPrg* prg);
+	virtual RString GetValue(RPrg* prg);
 
 	/**
 	* Destructor of a const variable.

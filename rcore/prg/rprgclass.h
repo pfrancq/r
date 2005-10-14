@@ -39,6 +39,7 @@
 // include files for R Project
 #include <rstring.h>
 #include <rcontainer.h>
+#include <rcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -83,7 +84,7 @@ public:
 	* Concstructor of a class.
 	* @param name           Name.
 	*/
-	RPrgClass(const char* name);
+	RPrgClass(const RString& name);
 
 	/**
 	* This methods compares two classes using their names and works like the
@@ -104,20 +105,21 @@ public:
 	int Compare(const RString& c) const;
 
 	/**
-	* This methods compares the name of a class with a string and works like
-	* the "strcpy" function of the ANSI C/C++ library.
-	* @see R::RContainer.
-	* @param c               String representing the name of a class.
-	* @return int
-	*/
-	int Compare(const char* c) const;
-
-	/**
 	* Find a method.
 	* @param method         Name of the method.
 	* @returns Pointer to RPrgInst.
 	*/
-	RPrgFunc* GetMethod(const char* method) const;
+	RPrgFunc* GetMethod(const RString& method) const;
+
+	/**
+	* Get the name of the function.
+	*/
+	RString GetName(void) const;
+
+	/**
+	* Get a cursor over the methods defined in the class.
+	*/
+	RCursor<RPrgFunc> GetMethods(void) const;
 
 	/**
 	* Destructor of a class.
