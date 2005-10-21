@@ -132,6 +132,14 @@ template<class C,bool bAlloc,bool bOrder=false>
 	}
 
 	/**
+	* Generic static template function to sort a container.
+	*/
+	static int SortOrder(const void* a,const void* b)
+	{
+		return((*((C**)a))->Compare(**((C**)b)));
+	}
+
+	/**
 	* Method to delete a given element of the container.
 	* @param ptr             Element to delete.
 	*/
@@ -251,7 +259,7 @@ public:
 	* -# The container is ordered and the method does not use the same criterion
 	*    for the ordering.
 	*/
-	inline void ReOrder(void) {BasicContainer::ReOrder(Compare<C>);}
+	inline void ReOrder(void) {BasicContainer::ReOrder(SortOrder);}
 
 	/**
 	* Exchange two elements in the container. The method does not verify if the
