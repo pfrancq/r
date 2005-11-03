@@ -35,12 +35,12 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <errno.h>
-/*#include <ctype.h>
 #ifdef _BSD_SOURCE
-	#include <unistd.h>
+#include <unistd.h>
 #else
-	#include <io.h>
-#endif*/
+#include <io.h>
+#endif
+#include <fcntl.h>
 
 
 //-----------------------------------------------------------------------------
@@ -126,6 +126,8 @@ void RDir::OpenEntries(void)
 	struct dirent* ep;
 	RString Name;
 	RString Path;
+	struct stat statbuf;
+	int handle;
 
 	Data->Handle=opendir(GetName().Latin1());
 	if(!Data->Handle)
@@ -140,13 +142,18 @@ void RDir::OpenEntries(void)
 		if((Name==".")||(Name==".."))
 			continue;
 
+		// Open file
+		handle=open(Path+Name,O_RDONLY);
+		fstat(handle, &statbuf);
+
 		// Look if it is a directoy
-		if(ep->d_type==DT_DIR)
-		{
+		if(S_ISDIR(statbuf.st_mode))
 			Entries.InsertPtr(new RDir(Path+Name));
-			continue;
-		}
-		Entries.InsertPtr(new RIOFile(Path+Name));
+		else
+			Entries.InsertPtr(new RIOFile(Path+Name));
+
+		// Close file
+		close(handle);
 	}
 }
 
