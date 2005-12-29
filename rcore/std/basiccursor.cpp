@@ -131,11 +131,11 @@ void BasicCursor::Start(void)
 void BasicCursor::GoTo(size_t idx)
 {
 	if((idx<FirstPtr)||(idx>=LastPtr))
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("RContainer::operator[] const : index outside container");
-	#endif
+	{
+		char tmp[80];
+		sprintf(tmp,"void BasicCursor::GoTo(size_t) : index %u outside range [%u,%u]",idx,FirstPtr,LastPtr-1);
+		throw std::range_error(tmp);
+	}
 	Current=&Tab[idx];
 	ActPtr=idx;
 }

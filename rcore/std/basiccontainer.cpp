@@ -221,11 +221,11 @@ bool BasicContainer::IsIn(bool bOrder,const void* tag,bool sortkey,size_t min, s
 const void* BasicContainer::operator[](size_t idx) const
 {
 	if(idx>=LastPtr)
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("BasicContainer::operator[] const : index outside container");
-	#endif
+	{
+		char tmp[80];
+		sprintf(tmp,"BasicContainer::operator[] const : index %u outside range [0,%u]",idx,LastPtr-1);
+		throw std::range_error(tmp);
+	}
 	return(Tab[idx]);
 }
 
@@ -234,11 +234,11 @@ const void* BasicContainer::operator[](size_t idx) const
 void* BasicContainer::operator[](size_t idx)
 {
 	if(idx>=LastPtr)
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("BasicContainer::operator[] const : index outside container");
-	#endif
+	{
+		char tmp[80];
+		sprintf(tmp,"BasicContainer::operator[] : index %u outside range [0,%u]",idx,LastPtr-1);
+		throw std::range_error(tmp);
+	}
 	return(Tab[idx]);
 }
 
