@@ -98,8 +98,7 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	void RNode<N,bAlloc,bOrder>::DeleteEmptySubNodes(void)
 {
-
-	if(!NbSubNodes) return;
+/*	if(!NbSubNodes) return;
 	RContainer<N,false,false> ToTreat(20,10);
 	RContainer<N,false,false> ToDel(20,10);
 
@@ -120,7 +119,7 @@ template<class N,bool bAlloc,bool bOrder>
 	// Delete those needed
 	Cur.Set(ToDel);
  	for(Cur.Start();!Cur.End();Cur.Next())
-		Tree->DeleteNode(Cur());
+		Tree->DeleteNode(Cur());*/
 }
 
 

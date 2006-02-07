@@ -135,8 +135,8 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	void RTree<N,bAlloc,bOrder>::DeleteEmptyNodes(void)
 {
-	if(Top)
-		Top->DeleteEmptySubNodes();
+//	if(Top)
+//		Top->DeleteEmptySubNodes();
 }
 
 
