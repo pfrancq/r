@@ -88,14 +88,32 @@ void RIOFile::Open(RIO::ModeType mode)
 	{
 		case RIO::Read:
 			localmode=O_RDONLY;
+			CanWrite=false;
+			CanRead=true;
+			break;
+
+		case RIO::Write:
+			localmode=O_WRONLY | O_CREAT;
+			CanWrite=true;
+			CanRead=false;
+			break;
+
+		case RIO::ReadWrite:
+			localmode=O_RDWR | O_CREAT;
+			CanWrite=true;
+			CanRead=true;
 			break;
 
 		case RIO::Append:
 			localmode=O_WRONLY | O_CREAT | O_APPEND;
+			CanWrite=true;
+			CanRead=true;
 			break;
 
 		case RIO::Create:
 			localmode=O_WRONLY | O_CREAT | O_TRUNC;
+			CanWrite=true;
+			CanRead=false;
 			break;
 
 		default:
@@ -112,13 +130,10 @@ void RIOFile::Open(RIO::ModeType mode)
 		handle=open(Name.Latin1(),localmode,S_IREAD|S_IWRITE);
 	if(handle==-1)
 		throw(RIOException(this,"Can't open the file"));
-	if((Mode==RIO::Read)||(Mode==RIO::Append))
-	{
-		fstat(handle, &statbuf);
-		Size=statbuf.st_size;
-		if(Mode==RIO::Append)
-			Pos=Size;
-	}
+	fstat(handle, &statbuf);
+	Size=statbuf.st_size;
+	if(Mode==RIO::Append)
+		Pos=Size;
 }
 
 
@@ -147,13 +162,15 @@ unsigned int RIOFile::Read(char* buffer,unsigned int nb)
 {
 	if(handle==-1)
 		throw(RIOException(this,"Can't read in the file"));
-	if(Mode!=RIO::Read)
+	if(!CanRead)
 		throw(RIOException(this,"No Read access"));
 	if(End())
 		throw(RIOException(this,"End of the file reached"));
 	if(nb>Size-Pos)
 		nb=Size-Pos;
 	read(handle,buffer,nb);
+
+	// Next position
 	Pos+=nb;
 	return(nb);
 }
@@ -164,13 +181,21 @@ void RIOFile::Write(const char* buffer,unsigned int nb)
 {
 	if(handle==-1)
 		throw(RIOException(this,"Can't write into the file"));
-	if(Mode==RIO::Read)
+	if(!CanWrite)
 		throw(RIOException(this,"No write access"));
 	write(handle,buffer,nb);
 	#ifdef windows
 		flushall();
 	#endif
-	Size+=nb;
+
+	// Increase the size only if the current position is at the end
+	if(Mode==RIO::Append)
+		Size+=nb;
+	else
+		if(Pos>=Size)
+			Size=Pos+nb;
+
+	// Next position
 	Pos+=nb;
 }
 
@@ -178,10 +203,22 @@ void RIOFile::Write(const char* buffer,unsigned int nb)
 //------------------------------------------------------------------------------
 void RIOFile::Seek(unsigned int pos)
 {
-	if(pos>=Size)
+	if((pos>=Size)&&(!CanWrite))
 		throw(RIOException(this,"Position outside of the file"));
 	lseek(handle,pos,SEEK_SET);
 	Pos=pos;
+}
+
+
+//------------------------------------------------------------------------------
+void RIOFile::SeekRel(int rel)
+{
+	if(Pos<rel)
+		throw(RIOException(this,"Position before beginning of the file"));
+	if((Pos+rel>=Size)&&(!CanWrite))
+		throw(RIOException(this,"Position outside of the file"));
+	lseek(handle,rel,SEEK_CUR);
+	Pos=+rel;
 }
 
 

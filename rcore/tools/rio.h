@@ -71,6 +71,10 @@ public:
 		Append                       /** Append to an existing file. If the file
 		                                 does not exist, it is created.*/,
 		Read                         /** Open a file to read it.*/,
+		Write                        /** Open a file to write it. If the file
+		                                 doesn't exist, it is created.*/,
+		ReadWrite                    /** Open a file to read and write it. If
+		                                 the file doesn't exist, it is created.*/,
 		Create                       /** Create a new file. If the file already
 		                                 exists, it is destruct.*/,
 		Undefined                    /** The mode of the file is undefined.*/

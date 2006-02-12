@@ -4,9 +4,9 @@
 
 	RRecFile.hh
 
-	Binary file for records  - Implementation.
+	Binary file for records - Implementation.
 
-	Copyright 2002-2005 by the Université Libre de Bruxelles.
+	Copyright 2002-2006 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -39,7 +39,7 @@
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
 	RRecFile<C,S,bOrder>::RRecFile(const RString &name)
-		: RIOFile(name), Find(false), Dirty(true)
+		: RBinaryFile(name), Find(false), Dirty(true)
 {
 }
 
@@ -54,78 +54,17 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::Open(RIO::ModeType mode)
-{
-	RIOFile::Open(mode);
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
 	void RRecFile<C,S,bOrder>::Close(void)
 {
 	Find=false;
 	Dirty=true;
-	RIOFile::Close();
+	RBinaryFile::Close();
 }
 
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(double& nb)
-{
-	Read((char*)(&nb),sizeof(double));
-	return(*this);
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator>>(unsigned int& nb)
-{
-	Read((char*)(&nb),sizeof(unsigned int));
-	return(*this);
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned char nb)
-{
-	Write((char*)(&nb),sizeof(unsigned char));
-	return(*this);
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned int nb)
-{
-	Write((char*)(&nb),sizeof(unsigned int));
-	return(*this);
-}
-
-//------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(unsigned long nb)
-{
-	Write((char*)(&nb),sizeof(unsigned long));
-	return(*this);
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>& RRecFile<C,S,bOrder>::operator<<(double nb)
-{
-	Write((char*)(&nb),sizeof(double));
-	return(*this);
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::Seek(unsigned int nb)
+	void RRecFile<C,S,bOrder>::GoToRec(unsigned int nb)
 {
 	Find=false;
 	RIOFile::Seek(nb*S);
@@ -136,7 +75,7 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc)
+	void RRecFile<C,S,bOrder>::GoToRec(unsigned int c,unsigned int l,unsigned int maxc)
 {
 	Find=false;
 	Seek(c+(l*maxc));
@@ -207,7 +146,7 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	unsigned int RRecFile<C,S,bOrder>::GetSize(void) const
+	unsigned int RRecFile<C,S,bOrder>::GetRecNb(void) const
 {
 	return(RIOFile::GetSize()/S);
 }
@@ -215,9 +154,25 @@ template<class C,unsigned int S,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,unsigned int S,bool bOrder>
-	unsigned int RRecFile<C,S,bOrder>::GetPos(void) const
+	unsigned int RRecFile<C,S,bOrder>::GetCurrentRec(void) const
 {
 	return(RIOFile::GetPos()/S);
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	void RRecFile<C,S,bOrder>::ReadRec(C& rec)
+{
+	rec.Read(*this);
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	void RRecFile<C,S,bOrder>::WriteRec(C& rec)
+{
+	rec.Write(*this);
 }
 
 
@@ -234,7 +189,17 @@ template<class C,unsigned int S,bool bOrder>
 	void RRecFile<C,S,bOrder>::Next(void)
 {
 	if(Dirty)
-		Seek(GetPos()+1);
+		SeekRel(S);
+	Dirty=true;
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,unsigned int S,bool bOrder>
+	void RRecFile<C,S,bOrder>::Prev(void)
+{
+	if(Dirty)
+		SeekRel(-S);
 	Dirty=true;
 }
 

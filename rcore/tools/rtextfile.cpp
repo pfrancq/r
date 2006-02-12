@@ -71,7 +71,7 @@ void RTextFile::Open(RIO::ModeType mode)
 	RIOFile::Open(mode);
 	LastLine=Line=0;
 	ptr=Buffer=0;
-	if(Mode==RIO::Read)
+	if(CanRead)
 	{
 		TotalLen=GetSize();
 		if(All)
@@ -106,7 +106,7 @@ void RTextFile::Close(void)
 //------------------------------------------------------------------------------
 void RTextFile::Begin(void)
 {
-	if(Mode!=RIO::Read)
+	if(!CanRead)
 		throw(RIOException(this,"File Mode is not Read"));
 	ptr=Buffer;
 	Len=TotalLen;
@@ -494,7 +494,7 @@ RString RTextFile::GetWord(void)
 {
 	RString res(500);
 
-	if(Mode!=RIO::Read)
+	if(!CanRead)
 		throw(RIOException(this,"File Mode is not Read"));
 	SkipSpaces();
 	while((!Eol(Cur))&&(!Cur.IsNull())&&(!Cur.IsSpace())&&(!BeginComment()))
@@ -512,7 +512,7 @@ RString RTextFile::GetLine(bool SkipEmpty)
 {
 	RString res;
 
-	if(Mode!=RIO::Read)
+	if(!CanRead)
 		throw(RIOException(this,"File Mode is not Read"));
 	if(Cur.IsNull()) return(res);
 	while((!Cur.IsNull())&&(!Eol(Cur))&&(!BeginComment()))

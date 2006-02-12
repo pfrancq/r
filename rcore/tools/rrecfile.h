@@ -6,7 +6,7 @@
 
 	Binary file for records - Header.
 
-	Copyright 2002-2005 by the Université Libre de Bruxelles.
+	Copyright 2002-2006 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <riofile.h>
+#include <rbinaryfile.h>
 
 
 //------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace R{
 *    R::RRecFile<Person,80,true> File("/home/pfrancq/test.bin");
 *
 *    // Create container -> create file -> write data
-*    cout<<"Create"<<endl;
+*    std::cout<<"Create"<<std::endl;
 *    Cont.InsertPtr(new Person("Jagger","Mike"));
 *    Cont.InsertPtr(new Person("Gillian","Ian"));
 *    Cont.InsertPtr(new Person("Plant","Robert"));
@@ -117,21 +117,21 @@ namespace R{
 *    File.Close();
 *
 *    // Clean container -> open file -> read data
-*    cout<<"Read"<<endl;
+*    std::cout<<"Read"<<std::endl;
 *    Cont.Clear();
 *    File.Open(R::RIO::Read);
 *    for(File.Start();!File.End();File.Next())
 *       Cont.InsertPtr(new Person(*File()));
 *    Cur.Set(Cont);
 *    for(Cur.Start();!Cur.End();Cur.Next())
-*       cout<<"  "<<Cur()->LastName<<", "<<Cur()->FirstName<<endl;
+*       std::cout<<"  "<<Cur()->LastName<<", "<<Cur()->FirstName<<std::endl;
 *    File.Close();
 *
 *    // Just find the firstname of "Gillian" directly in the file
-*    cout<<"Find"<<endl;
+*    std::cout<<"Find"<<std::endl;
 *    File.Open(R::RIO::Read);
 *    if(File.Search("Gillian"))
-*       cout<<"  "<<File()->LastName<<", "<<File()->FirstName<<endl;
+*       std::cout<<"  "<<File()->LastName<<", "<<File()->FirstName<<std::endl;
 *    File.Close();
 * }
 * @endcode
@@ -139,7 +139,7 @@ namespace R{
 * @short Fixed-length Records File.
 */
 template<class C,unsigned int S,bool bOrder=false>
-	class RRecFile : public RIOFile
+	class RRecFile : public RBinaryFile
 {
 protected:
 
@@ -161,24 +161,17 @@ protected:
 public:
 
 	/**
-	* Construct a binary file.
+	* Construct a binary file for records.
 	* @param name           The name of the file.
 	*/
 	RRecFile(const RString &name);
 
 	/**
-	* Construct a binary file.
+	* Construct a binary file for records.
 	* @param file           A generic input/output file that should be treated
 	*                       as binary file.
-	* @param encoding       The encoding scheme of the file.
 	*/
 	RRecFile(RIOFile& file);
-
-	/**
-	* Open the file
-	* @param mode           The open mode for the file.
-	*/
-	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
 	* Close the file
@@ -186,40 +179,10 @@ public:
 	virtual void Close(void);
 
 	/**
-	* >> Operator for unsigned int.
-	*/
-	RRecFile& operator>>(unsigned int& nb);
-
-	/**
-	* >> Operator for a double.
-	*/
-	RRecFile& operator>>(double& nb);
-
-	/**
-	* << Operator for unsigned char.
-	*/
-	RRecFile& operator<<(unsigned char nb);
-
-	/**
-	* << Operator for unsigned int.
-	*/
-	RRecFile& operator<<(unsigned int nb);
-
-	/**
-	* << Operator for unsigned long.
-	*/
-	RRecFile& operator<<(unsigned long nb);
-
-	/**
-	* << Operator for double.
-	*/
-	RRecFile& operator<<(double nb);
-
-	/**
 	* Seek the file to a specific record number.
 	* @param nb             Number of record.
 	*/
-	void Seek(unsigned int nb);
+	void GoToRec(unsigned int nb);
 
 	/**
 	* Seek the file to a specific record number if the file represent a matrix.
@@ -228,7 +191,7 @@ public:
 	* @param maxc          Number of Columns.
 	* \remarks It is presume that the file is store lines by lines.
 	*/
-	void SeekMatrix(unsigned int c,unsigned int l,unsigned int maxc);
+	void GoToRec(unsigned int c,unsigned int l,unsigned int maxc);
 
 	/**
 	* This function returns the number of a record represented by tag, and it
@@ -250,12 +213,23 @@ public:
 	/**
 	* Get the number of records in the file.
 	*/
-	unsigned int GetSize(void) const;
+	unsigned int GetRecNb(void) const;
 
 	/**
 	* Get the current record number.
 	*/
-	unsigned int GetPos(void) const;
+	unsigned int GetCurrentRec(void) const;
+
+	/**
+	* Read the current record.
+	* \remarks This method change the current position of the file to next one.
+	*/
+	void ReadRec(C& rec);
+
+	/**
+	* Write the current record.
+	*/
+	void WriteRec(C& rec);
 
 	/**
 	* Start the file at the first record.
@@ -268,7 +242,13 @@ public:
 	void Next(void);
 
 	/**
+	* Goto the previous record.
+	*/
+	void Prev(void);
+
+	/**
 	* Return the current record.
+	* \remarks This method change the current position of the file to next one.
 	*/
 	C* operator()(void);
 

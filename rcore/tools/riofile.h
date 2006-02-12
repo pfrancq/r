@@ -80,6 +80,18 @@ class RIOFile : public RFile
 	*/
 	unsigned int Pos;
 
+protected:
+
+	/**
+	* It is possible to write in the file.
+	*/
+	bool CanWrite;
+
+	/**
+	* It is possible to read from the file.
+	*/
+	bool CanRead;
+
 public:
 
 	/**
@@ -132,6 +144,12 @@ public:
 	* @param pos            Position to reach.
 	*/
 	void Seek(unsigned int pos);
+
+	/**
+	* Move for a given number of bytes from the current position of the file.
+	* @param rel            Relative position.
+	*/
+	void SeekRel(int pos);
 
 	/**
 	* Return true if the file is at the end.
