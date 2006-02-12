@@ -233,6 +233,14 @@ RPromSol** RPromKernel::GetSols(void)
 
 
 //------------------------------------------------------------------------------
+void RPromKernel::GetSols(RPromSol** sols)
+{
+	Solutions.GetTab(sols);
+	qsort(static_cast<void*>(sols),Solutions.GetNb(),sizeof(RPromSol*),sort_function_solutions);
+}
+
+
+//------------------------------------------------------------------------------
 void RPromKernel::Clear(void)
 {
 	Criteria.Clear();

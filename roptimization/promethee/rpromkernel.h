@@ -193,6 +193,12 @@ public:
 	RPromSol** GetSols(void);
 
 	/**
+	* Fill an array with pointer to the solutions order by fit. The array must
+	* be one size larger than the number of solutions.
+	*/
+	void GetSols(RPromSol** sols);
+
+	/**
 	* Return the best solution identifier.
 	*/
 	unsigned int GetBestSolId(void) {return(GetBestSol()->Id);}
