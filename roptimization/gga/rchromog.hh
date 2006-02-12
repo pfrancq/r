@@ -62,8 +62,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void)
 {
+	if(this->Instance->Debug)
+		this->Instance->Debug->BeginFunc("RamdomConstruct","RChromoG");
 	Heuristic->Run(static_cast<cChromo*>(this));
 	this->ComputeOrd();
+	if(this->Instance->Debug)
+		this->Instance->Debug->EndFunc("RamdomConstruct","RChromoG");
 }
 
 
@@ -222,7 +226,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Modify(void)
 {
+	if(this->Instance->Debug)
+		this->Instance->Debug->BeginFunc("Modify","RChromoG");
+
 	Mutation();
+
+	if(this->Instance->Debug)
+		this->Instance->Debug->EndFunc("Modify","RChromoG");
 }
 
 

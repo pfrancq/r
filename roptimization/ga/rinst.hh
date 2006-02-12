@@ -112,18 +112,20 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 	if(Debug)
 		Debug->BeginFunc("RandomConstruct","RInst");
+
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		(*C)->RandomConstruct();
 		emitInteractSig();
 		(*C)->ToEval=true;
 	}
-	if(Debug)
-		Debug->EndFunc("RandomConstruct","RInst");
 	bRandomConstruct=true;
 	emitInteractSig();
 	if(VerifyGA)
 		Verify();
+
+	if(Debug)
+		Debug->EndFunc("RandomConstruct","RInst");
 }
 
 
