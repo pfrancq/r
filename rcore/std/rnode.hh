@@ -133,6 +133,34 @@ template<class N,bool bAlloc,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
+	const N* RNode<N,bAlloc,bOrder>::operator[](size_t idx) const
+{
+	if(idx>=SubNodes)
+	{
+		char tmp[80];
+		sprintf(tmp,"RNode::operator[] const : index %u outside range [0,%u]",idx,SubNodes-1);
+		throw std::range_error(tmp);
+	}
+	return((*Tree)[idx]);
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
+	N* RNode<N,bAlloc,bOrder>::operator[](size_t idx)
+{
+	if(idx>=SubNodes)
+	{
+		char tmp[80];
+		sprintf(tmp,"RNode::operator[] const : index %u outside range [0,%u]",idx,SubNodes-1);
+		throw std::range_error(tmp);
+	}
+	return((*Tree)[idx]);
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
 	RNode<N,bAlloc,bOrder>::~RNode(void)
 {
 }

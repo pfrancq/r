@@ -205,6 +205,20 @@ public:
 	virtual bool IsEmpty(void);
 
 	/**
+	* Get a pointer to the ith subnode in the node (Only read).
+	* @param idx             Index of the node to get.
+	* @return Return the pointer.
+	*/
+	const N* operator[](size_t idx) const;
+
+	/**
+	* Get a pointer to the ith subnode in the node (Read/Write).
+	* @param idx             Index of the node to get.
+	* @return Return the pointer.
+	*/
+	N* operator[](size_t idx);
+
+	/**
 	* Destruct the node.
 	*/
 	virtual ~RNode(void);
