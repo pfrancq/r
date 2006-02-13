@@ -52,7 +52,7 @@ RBinaryFile::RBinaryFile(const RString &name)
 
 
 //------------------------------------------------------------------------------
-RBinaryFile::RBinaryFile(RIOFile &file)
+RBinaryFile::RBinaryFile(RIOFile& file)
 	: RIOFile(file)
 {
 }
