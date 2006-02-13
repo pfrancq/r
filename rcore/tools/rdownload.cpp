@@ -114,8 +114,8 @@ void RDownload::Download(const char* URL,RString& tmpFile)
 	curl_easy_setopt(Lib, CURLOPT_URL, URL);
 	curl_easy_setopt(Lib, CURLOPT_WRITEFUNCTION,RDownload::WriteTmpFile);
 	curl_easy_setopt(Lib, CURLOPT_FILE, &tmpfile);
-	curl_easy_setopt(Lib, CURLOPT_CONNECTTIMEOUT,120);
-	curl_easy_setopt(Lib, CURLOPT_TIMEOUT,120);
+	curl_easy_setopt(Lib, CURLOPT_CONNECTTIMEOUT,30);
+	curl_easy_setopt(Lib, CURLOPT_TIMEOUT,240);
 
 	err=curl_easy_perform(Lib);
 	if(tmpfile.stream)
