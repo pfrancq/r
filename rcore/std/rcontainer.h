@@ -355,16 +355,14 @@ public:
 	/**
 	* Get a pointer to the ith element in the container (Only read).
 	* @param idx             Index of the element to get.
-	* @return Return the pointer or 0 if the index is outside the scope of the
-	*         container.
+	* @return Return the pointer.
 	*/
 	inline const C* operator[](size_t idx) const {return(static_cast<const C*>(BasicContainer::operator[](idx)));}
 
 	/**
 	* Get a pointer to the ith element in the container (Read/Write).
 	* @param idx             Index of the element to get.
-	* @return Return the pointer or 0 if the index is outside the scope of the
-	*         container.
+	* @return Return the pointer.
 	*/
 	inline C* operator[](size_t idx) {return(static_cast<C*>(BasicContainer::operator[](idx)));}
 
