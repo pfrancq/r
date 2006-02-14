@@ -6,7 +6,7 @@
 
 	Generic Tree - Inline Implementation.
 
-	Copyright 1999-2005 by the Université Libre de Bruxelles.
+	Copyright 1999-2006 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -40,11 +40,10 @@
 template<class N,bool bAlloc,bool bOrder>
 	void RTree<N,bAlloc,bOrder>::DeepCopy(N* child, N* parent)
 {
-	RCursor<N> curs(*child);
+	RCursor<N> curs(child->GetNodes());
 	N *new_node;
 	new_node = new N(*child);
-	new_node->Clear();
-	AddNode(parent, new_node);
+	parent->InsertNode(parent);
 	for(curs.Start(); !curs.End(); curs.Next())
 		DeepCopy(curs(), new_node);
 }
@@ -144,7 +143,7 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder> template<bool a, bool o>
 	void RTree<N,bAlloc,bOrder>::Copy(const RTree<N,a,o>& src)
 {
-	RCursor<N> curs(*src.Top);
+	RCursor<N> curs(src.Top->GetNodes());
 	for (curs.Start(); !curs.End(); curs.Next())
 		DeepCopy(curs(), 0);
 }

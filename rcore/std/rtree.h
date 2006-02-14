@@ -40,6 +40,7 @@
 #include <rstd.h>
 #include <rcontainer.h>
 #include <rcursor.h>
+#include <rnode.h>
 
 
 //------------------------------------------------------------------------------
