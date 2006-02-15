@@ -148,10 +148,9 @@ protected:
 public:
 
 	/**
-	* Construct the node.
-	* @param tree           The tree.
+	* Default constructor.
 	*/
-	RNode(RTree<N,bAlloc,bOrder>* tree);
+	RNode(void);
 
 	/**
 	* Return the parent of the node.

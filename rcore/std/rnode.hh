@@ -32,14 +32,14 @@
 
 //------------------------------------------------------------------------------
 //
-//		class RNode
+// Class RNode
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	RNode<N,bAlloc,bOrder>::RNode(RTree<N,bAlloc,bOrder>* tree)
-		: Tree(tree), Parent(0), SubNodes(NullId), NbSubNodes(0), Index(SIZE_MAX)
+	RNode<N,bAlloc,bOrder>::RNode(void)
+		: Tree(0), Parent(0), SubNodes(NullId), NbSubNodes(0), Index(SIZE_MAX)
 {
 }
 
@@ -72,6 +72,8 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	RCursor<N> RNode<N,bAlloc,bOrder>::GetNodes(void) const
 {
+	if(!Tree)
+		throw RException("Node not assign to a tree");
 	if(!NbSubNodes)
 		return(R::RCursor<N>());
 	return(R::RCursor<N>(*Tree,SubNodes,SubNodes+NbSubNodes));
@@ -82,6 +84,8 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	template<class TUse> N* RNode<N,bAlloc,bOrder>::GetNode(const TUse& tag,bool sortkey) const
 {
+	if(!Tree)
+		throw RException("Node not assign to a tree");
 	return(Tree->GetPtr(tag,sortkey,SubNodes,SubNodes+NbSubNodes));
 }
 
@@ -90,6 +94,8 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	void RNode<N,bAlloc,bOrder>::InsertNode(N* node)
 {
+	if(!Tree)
+		throw RException("Node not assign to a tree");
 	Tree->InsertNode(static_cast<N*>(this),node);
 }
 
@@ -135,6 +141,8 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	const N* RNode<N,bAlloc,bOrder>::operator[](size_t idx) const
 {
+	if(!Tree)
+		throw RException("Node not assign to a tree");
 	if(idx>=SubNodes)
 	{
 		char tmp[80];
@@ -149,6 +157,8 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	N* RNode<N,bAlloc,bOrder>::operator[](size_t idx)
 {
+	if(!Tree)
+		throw RException("Node not assign to a tree");
 	if(idx>=SubNodes)
 	{
 		char tmp[80];

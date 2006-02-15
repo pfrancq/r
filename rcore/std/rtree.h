@@ -113,11 +113,11 @@ template<class N,bool bAlloc,bool bOrder>
 protected:
 
 	/**
-	* Do a deep copy of a child node.
-	* @param child           Child node.
+	* Do a deep copy of a node of another tree.
+	* @param src             Source node in the another tree.
 	* @param parent          Parent node.
 	*/
-	void DeepCopy(N* child,N* parent);
+	void DeepCopy(N* src,N* newparent);
 
 	/**
 	* The top node.

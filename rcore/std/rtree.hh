@@ -38,14 +38,13 @@
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	void RTree<N,bAlloc,bOrder>::DeepCopy(N* child, N* parent)
+	void RTree<N,bAlloc,bOrder>::DeepCopy(N* src,N* parent)
 {
-	RCursor<N> curs(child->GetNodes());
-	N *new_node;
-	new_node = new N(*child);
-	parent->InsertNode(parent);
+	N* NewNode=new N(this);
+	InsertNode(parent,NewNode);
+	RCursor<N> curs(src->GetNodes());
 	for(curs.Start(); !curs.End(); curs.Next())
-		DeepCopy(curs(), new_node);
+		DeepCopy(curs(),NewNode);
 }
 
 
@@ -63,6 +62,9 @@ template<class N,bool bAlloc,bool bOrder>
 {
 	unsigned int tmp;
 
+	if(node->Tree)
+		throw RException("Node is already inserted in a tree");
+	node->Tree=this;
 	if(!to)
 	{
 		// Must be the top node
@@ -118,6 +120,7 @@ template<class N,bool bAlloc,bool bOrder>
 
 	// Delete the node and update the index
 	from=node->Parent;
+	node->Tree=0;
 	if(!from) return;
 	DeletePtrAt(node->Index);
 	size_t j=from->SubNodes;
@@ -143,9 +146,9 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder> template<bool a, bool o>
 	void RTree<N,bAlloc,bOrder>::Copy(const RTree<N,a,o>& src)
 {
-	RCursor<N> curs(src.Top->GetNodes());
-	for (curs.Start(); !curs.End(); curs.Next())
-		DeepCopy(curs(), 0);
+	RCursor<N> Nodes(src.Top->GetNodes());
+	for(Nodes.Start();!Nodes.End();Nodes.Next())
+		DeepCopy(Nodes(),0);
 }
 
 
