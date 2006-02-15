@@ -98,13 +98,7 @@ public:
 	/**
 	* Construct a XML Tag.
 	*/
-	RXMLTag(RXMLStruct* xml);
-
-	/**
-	* Construct a XML Tag.
-	* @param name          The name of the tag.
-	*/
-	RXMLTag(RXMLStruct* xml,const RString& name);
+	RXMLTag(const RString& name);
 
 	/**
 	* Compare a tag with a given name.

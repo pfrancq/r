@@ -593,7 +593,7 @@ void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RCon
 	RCursor<RXMLAttr> Cur;
 
 	// Create the tag
-	tag=new RXMLTag(XMLStruct,name);
+	tag=new RXMLTag(name);
 	Cur.Set(attrs);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		tag->InsertAttr(Cur()->GetName(),Cur()->GetValue());

@@ -51,15 +51,8 @@ using namespace std;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RXMLTag::RXMLTag(RXMLStruct* xml)
-	: RNode<RXMLTag,true,false>(xml), Name(), Contains(), Attrs(20,10)
-{
-}
-
-
-//-----------------------------------------------------------------------------
-RXMLTag::RXMLTag(RXMLStruct* xml,const RString& name)
-	: RNode<RXMLTag,true,false>(xml), Name(name), Contains(), Attrs(20,10)
+RXMLTag::RXMLTag(const RString& name)
+	: RNode<RXMLTag,true,false>(), Name(name), Contains(), Attrs(20,10)
 {
 }
 
