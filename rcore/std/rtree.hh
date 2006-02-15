@@ -40,7 +40,7 @@
 template<class N,bool bAlloc,bool bOrder>
 	void RTree<N,bAlloc,bOrder>::DeepCopy(N* src,N* parent)
 {
-	N* NewNode=new N(this);
+	N* NewNode=new N(*src);
 	InsertNode(parent,NewNode);
 	RCursor<N> curs(src->GetNodes());
 	for(curs.Start(); !curs.End(); curs.Next())
