@@ -33,7 +33,6 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <basiccontainer.h>
-#include <rmsg.h>
 using namespace R;
 
 
