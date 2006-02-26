@@ -122,17 +122,16 @@ RCString::RCString(const std::string& src)
 
 
 //-----------------------------------------------------------------------------
-RCString::RCString(size_t maxlen)
+RCString::RCString(char src)
 	: BasicString<char,RCString>()
 {
-	if(maxlen)
-	{
-		char* ptr=new char[maxlen+1];
-		(*ptr)=0;
-		Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,0,maxlen);
-	}
-	else
-		Data=GetDataNull();
+	size_t len,maxlen=1;
+	char* ptr=new char[2];
+
+	ptr[0]=src;
+	ptr[1]=0;
+	len=(src>0);
+	Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
 }
 
 

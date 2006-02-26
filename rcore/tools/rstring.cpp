@@ -109,17 +109,30 @@ RString::RString(const std::string& src)
 
 
 //-----------------------------------------------------------------------------
-RString::RString(size_t maxlen)
+RString::RString(char src)
 	: BasicString<RChar,RString>()
 {
-	if(maxlen)
-	{
-		RChar* ptr=new RChar[maxlen+1];
-		(*ptr)=0;
-		Data=new CharBuffer(ptr,0,maxlen);
-	}
-	else
-		Data=GetDataNull();
+	size_t len,maxlen=1;
+	RChar* ptr=new RChar[2];
+
+	ptr[0]=RChar(src);
+	ptr[1]=0;
+	len=(src>0);
+	Data=new CharBuffer(ptr,len,maxlen);
+}
+
+
+//-----------------------------------------------------------------------------
+RString::RString(RChar src)
+	: BasicString<RChar,RString>()
+{
+	size_t len,maxlen=1;
+	RChar* ptr=new RChar[2];
+
+	ptr[0]=src;
+	ptr[1]=0;
+	len=src.IsNull();
+	Data=new CharBuffer(ptr,len,maxlen);
 }
 
 

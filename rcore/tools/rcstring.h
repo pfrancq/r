@@ -100,10 +100,10 @@ public:
 	RCString(const std::string& src);
 
 	/**
-	* Construct an empty string with a maximal size.
-	* @param maxlen          Initial maximal length of the string.
+	* Construct a string from a character.
+	* @param src             Character.
 	*/
-	explicit RCString(size_t maxlen);
+	RCString(char src);
 
 	/**
 	* Construct a string from another string.
@@ -399,6 +399,20 @@ inline RCString operator+(const RCString& arg1,const char* arg2) {return(RCStrin
 * @param arg2                Second string.
 */
 inline RCString operator+(const char* arg1,const RCString& arg2) {return(RCString(arg1)+=arg2);}
+
+/**
+* Add a string and a character.
+* @param arg1                Character.
+* @param arg2                String.
+*/
+inline const RCString operator+(char arg1,const RCString& arg2) {return(RCString(arg1)+=arg2);}
+
+/**
+* Add a character and a string.
+* @param arg1                String.
+* @param arg2                Character.
+*/
+inline const RCString operator+(const RCString& arg1,char arg2) {return(RCString(arg1)+=arg2);}
 
 
 }  //-------- End of namespace R ----------------------------------------------

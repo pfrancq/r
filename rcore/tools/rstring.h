@@ -119,10 +119,16 @@ public:
 	RString(const std::string& src);
 
 	/**
-	* Construct an empty string with a maximal size.
-	* @param maxlen          Initial maximal length of the string.
+	* Construct a string from a character.
+	* @param src             Character.
 	*/
-	explicit RString(size_t maxlen);
+	RString(char src);
+
+	/**
+	* Construct a string from a character.
+	* @param src             Character.
+	*/
+	RString(RChar src);
 
 	/**
 	* Construct a string from another string.
@@ -556,7 +562,33 @@ inline const RString operator+(const RString& arg1,const char* arg2) {return(RSt
 */
 inline const RString operator+(const char* arg1,const RString& arg2) {return(RString(arg1)+=arg2);}
 
+/**
+* Add a string and a character.
+* @param arg1                Character.
+* @param arg2                String.
+*/
+inline const RString operator+(char arg1,const RString& arg2) {return(RString(arg1)+=arg2);}
 
+/**
+* Add a string and a character.
+* @param arg1                Character.
+* @param arg2                String.
+*/
+inline const RString operator+(RChar arg1,const RString& arg2) {return(RString(arg1)+=arg2);}
+
+/**
+* Add a character and a string.
+* @param arg1                String.
+* @param arg2                Character.
+*/
+inline const RString operator+(const RString& arg1,char arg2) {return(RString(arg1)+=arg2);}
+
+/**
+* Add a string and a character.
+* @param arg1                Character.
+* @param arg2                String.
+*/
+inline const RString operator+(const RString& arg1,RChar arg2) {return(RString(arg1)+=arg2);}
 
 
 
