@@ -56,6 +56,19 @@ namespace R{
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	class RChromoG : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cGroupData,cChromo>
 {
+	// Internal class used to compute the adjusted Rand Index
+	class GroupId
+	{
+	public:
+		int GrpId;       // Group Identificator.
+		int position;    // Position of the group.
+
+		// Constructor and Compare methods.
+		GroupId(int RealId,int Position) : GrpId(RealId), position(Position) {}
+		int Compare(const int ID) const {return(GrpId-ID);}
+		int Compare(const GroupId& grp) const {return(GrpId-grp.GrpId);}
+	};
+
 protected:
 
 	/**
@@ -85,6 +98,17 @@ public:
 	void Clear(void);
 
 	/**
+	* Method to compute the adjusted Rand index with another chromosome in
+	* order to determine a similarity between two clusterings. The results is
+	* between -1 (nothing in common) and +1 (identical).
+	*
+	* This method can be used to verify if two chromosomes are similar.
+	* @param chromo          Chromosome to compare.
+	* @return Adjusted Rand Index.
+	*/
+	double Similarity(const cChromo& chromo) const;
+
+	/**
 	* Construct a valid solution.
 	* @return The function must retrun true if a solution has been constructed.
 	*/
@@ -100,8 +124,15 @@ private:
 	* In regards of the parameter of the instance, the groups of parent2
 	* containing objects of parent1 are copied (and the common objects not) or
 	* not.
+	* @param parent1         Parent 1.
+	* @param parent1         Parent 2.
+	* @param pos1            Position in parent 1.
+	* @param begin           Number of "first" groups of parent 1 to verify.
+	* @param end             Number of groups after pos1 of parent 1 to verify.
+	* @param pos2            Position in parent 2.
+	* @param nb2             Number of groups of parent2 of copy.
 	*/
-	void CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int nb1,unsigned int pos2,unsigned int nb2);
+	void CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int begin,unsigned int end,unsigned int pos2,unsigned int nb2);
 
 public:
 

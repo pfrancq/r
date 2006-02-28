@@ -60,6 +60,97 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+	double RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Similarity(const cChromo& chromo) const
+{
+	unsigned int NbRows,NbCols;                   // Rows and Cols for matrix
+	unsigned int NbObjs;                          // Total Number of objects
+	unsigned int col;
+	cGroup* Group2;
+	double a,b,c,d,num,den;
+	double* VectorRows=0;                         // Sum of the rows of the matrix
+	double* VectorCols=0;                         // Sum of the columns of the matrix
+	double* VectorColsTemp=0;                     // temp sum of the columns of the matrix
+	double* ptr;
+	double Total;
+
+	// Init part
+	Total=0.0;
+	NbObjs=0;
+
+	// Go through the languages to define the maximal sizes and allocate the matrix
+	NbRows=this->Used.GetNb();
+	NbCols=chromo.Used.GetNb();
+	if((!NbRows)||(!NbCols))
+		return(-1.0);
+	VectorRows=new double[NbRows];
+	VectorCols=new double[NbCols];
+	VectorColsTemp=new double[NbCols];
+
+	// Construction of the container for relation between id and column in the matrix.
+	RContainer<GroupId,true,true> GroupsId(NbCols,NbCols/2);
+	RCursor<cGroup> Cur2(chromo.Used);
+	for(Cur2.Start(),col=0;!Cur2.End();Cur2.Next())
+		GroupsId.InsertPtr(new GroupId(Cur2()->GetId(),col++));
+
+	// Initialisation of the variable used for computing the subtotal
+	a=b=c=d=0.0;
+
+	// Initalisation of the vectors
+	memset(VectorRows,0,NbRows*sizeof(double));
+	memset(VectorCols,0,NbCols*sizeof(double));
+
+	// For each group of the current chromosome and for each object in this group
+	// -> Compute the differents terms of the total
+	int row,position;
+	row=0;
+
+	RCursor<cGroup> Cur1(this->Used);
+	for(Cur1.Start();!Cur1.End();Cur1.Next())
+	{
+		memset(VectorColsTemp,0,NbCols*sizeof(double));
+		RCursor<cObj> Objs(GetObjs(*Cur1()));
+		for(Objs.Start();!Objs.End();Objs.Next())
+		{
+			if(!GetGroup(Objs()))
+				continue;
+			VectorRows[row]++;
+			NbObjs++;
+			Group2=chromo.GetGroup(Objs());
+			if(!Group2)
+				continue;
+			position=GroupsId.GetPtr(Group2->GetId())->position;
+			VectorCols[position]++;
+			VectorColsTemp[position]++;
+		}
+		row++;
+		for(col=NbCols+1,ptr=VectorColsTemp;--col;ptr++)
+			a+=(((*ptr)*((*ptr)-1))/2);
+	}
+
+	// Finish the computation
+	for(col=NbCols+1,ptr=VectorCols;--col;ptr++)
+		b+=(((*ptr)*((*ptr)-1))/2);
+	for(row=NbRows+1,ptr=VectorRows;--row;ptr++)
+		c+=(((*ptr)*((*ptr)-1))/2);
+	d=(NbObjs*(NbObjs-1))/2;
+	num=a-((b*c)/d);
+	den=(0.5*(b+c))-(b*c/d);
+	if(den<0.0000001)
+		return(-1.0);
+	Total=num/den;
+
+	// Delete the vectors
+	delete[] VectorRows;
+	delete[] VectorCols;
+	delete[] VectorColsTemp;
+
+	// Return the result
+	return(Total);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void)
 {
 	if(this->Instance->Debug)
@@ -73,7 +164,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int nb1,unsigned int pos2,unsigned int nb2)
+	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int begin,unsigned int end,unsigned int pos2,unsigned int nb2)
 {
 	unsigned int i,j;
 	cGroup* grp;
@@ -84,11 +175,20 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	RCursor<cGroup> Cur2(parent2->Used);
 	for(i=nb2+1,Cur2.GoTo(pos2);--i;Cur2.Next())
 	{
+		// By default, group can be insert
 		bInsertIt=true;
-		for(j=nb1+1,Cur1.GoTo(pos1);(--j)&&bInsertIt;Cur1.Next())
+
+		// Verify if the 'begin' first groups of parent1
+		for(j=begin+1,Cur1.Start();(--j)&&bInsertIt;Cur1.Next())
 			if((this->Instance->EmptyModifiedGroups&&(Cur1()->CommonObjs(Cur2())))||(!Cur1()->IsCompatible(Cur2())))
-			//if(((*grps1)->CommonObjs(*grps2))||(!((*grps1)->IsCompatible(*grps2))))
 				bInsertIt=false;
+
+		// Verify if the 'end' groups of parent1 after pos1
+		for(j=end+1,Cur1.GoTo(pos1);(--j)&&bInsertIt;Cur1.Next())
+			if((this->Instance->EmptyModifiedGroups&&(Cur1()->CommonObjs(Cur2())))||(!Cur1()->IsCompatible(Cur2())))
+				bInsertIt=false;
+
+		// If group can be inserted -> do it
 		if(bInsertIt)
 		{
 			grp=this->ReserveGroup();
@@ -105,14 +205,28 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 				RCursor<cObj> obj=GetObjs(*src);
 				for(obj.Start();!obj.End();obj.Next())
 				{
+					// By default, insert the object.
 					bInsertIt=true;
-					for(j=nb1+1,Cur1.GoTo(pos1);(--j)&&bInsertIt;Cur1.Next())
+
+					// Verify if the 'begin' first groups of parent1
+					for(j=begin+1,Cur1.Start();(--j)&&bInsertIt;Cur1.Next())
 					{
 						if(Cur1()->IsIn(obj()->GetId()))
 						{
 							bInsertIt=false;
 						}
 					}
+
+					// Verify if the 'end' groups of parent1 after pos1
+					for(j=end+1,Cur1.GoTo(pos1);(--j)&&bInsertIt;Cur1.Next())
+					{
+						if(Cur1()->IsIn(obj()->GetId()))
+						{
+							bInsertIt=false;
+						}
+					}
+
+					// If object can be inserted -> do it
 					if(bInsertIt)
 						grp->Insert(obj());
 				}
@@ -130,7 +244,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Crossover(cChromo* parent1,cChromo* parent2)
 {
-	unsigned int pos1,len1,pos2,i;
+	unsigned int pos1;              // Position in parent1
+	unsigned int end;               // Number of groups after pos1 to copy from parent1
+	unsigned int begin;             // Number of first groups to copy from parent1
+	unsigned int pos2;              // Position where the groups must be copied in parent2
+	unsigned int i;
 	cGroup* grp;
 
 	if(this->Instance->Debug)
@@ -141,16 +259,31 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	// Select two crossing sites
 	pos1=this->Instance->RRand(parent1->Used.GetNb());
-	len1=this->Instance->RRand(parent1->Used.GetNb()-pos1-1)+1;
+	//len1=this->Instance->RRand(parent1->Used.GetNb()-pos1-1)+1;
+	end=this->Instance->RRand(parent1->Used.GetNb()-1)+1;
+	if(end>parent1->Used.GetNb()-pos1)
+	{
+		i=parent1->Used.GetNb()-pos1;
+		begin=end-i;
+		end=i;
+	}
+	else
+		begin=0;
 	pos2=this->Instance->RRand(parent2->Used.GetNb());
 
 	// Insert groups from parent2<pos2 and verify that they dont contains "new"
-	// objects insert from parent1. //EmptyModifiedGroups
-	CopyGroups(parent1,parent2,pos1,len1,0,pos2);
+	// objects insert from parent1.
+	CopyGroups(parent1,parent2,pos1,begin,end,0,pos2);
 
 	// Insert the selected group from parent1
 	RCursor<cGroup> Cur(parent1->Used);
-	for(i=len1+1,Cur.GoTo(pos1);--i;Cur.Next())
+	for(i=begin+1,Cur.Start();--i;Cur.Next())   // Copy 'begin' first groups
+	{
+			grp=this->ReserveGroup();
+			grp->Copy(Cur());
+			(*grp)=(*Cur());
+	}
+	for(i=end+1,Cur.GoTo(pos1);--i;Cur.Next())  // Copy 'end' groups from pos1
 	{
 			grp=this->ReserveGroup();
 			grp->Copy(Cur());
@@ -159,7 +292,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	// Insert groups from parent2<pos2 and verify that they dont contains "new"
 	// objects insert from parent1.
-	CopyGroups(parent1,parent2,pos1,len1,pos2,parent2->Used.GetNb()-pos2);
+	CopyGroups(parent1,parent2,pos1,begin,end,pos2,parent2->Used.GetNb()-pos2);
 
 	// Insert missing objects after a local optimisation
 	LocalOptimisation();
