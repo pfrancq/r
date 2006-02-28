@@ -168,28 +168,28 @@ public:
 	* @param id             Identificator of the object.
 	* @returns Pointer to cGroup*.
 	*/
-	cGroup* GetGroup(unsigned int id);
+	cGroup* GetGroup(unsigned int id) const;
 
 	/**
 	* Get the group of an object.
 	* @param obj            Pionter to the object.
 	* @returns Pointer to cGroup*.
 	*/
-	cGroup* GetGroup(const cObj* obj);
+	cGroup* GetGroup(const cObj* obj) const;
 
 	/**
 	* Get a pointer to an object at a given index.
 	* @param idx            Global Index.
 	* @returns cObj*
 	*/
-	cObj* GetObj(unsigned int idx) {return(ObjsAss[idx]);}
+	cObj* GetObj(unsigned int idx) const {return(const_cast<RContainer<cObj,false,false>&>(ObjsAss)[idx]);}
 
 	/**
 	* Return a cursor over the objects of a group. The cursor cannot iterate
 	* after the last oobject.
 	* @param grp            Group.
 	*/
-	RCursor<cObj> GetObjs(const cGroup& grp);
+	RCursor<cObj> GetObjs(const cGroup& grp) const;
 
 	/**
 	* The assigment operator.

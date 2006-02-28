@@ -227,29 +227,29 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::GetGroup(unsigned int id)
+	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::GetGroup(unsigned int id) const
 {
 	unsigned int idx=ObjectsAss[id];
 
 	if(idx==NoObject) return(0);
-	return((*this)[idx]);
+	return((*const_cast<RGroups<cGroup,cObj,cGroupData,cGroups>*>(this))[idx]);
 }
 
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::GetGroup(const cObj* obj)
+	cGroup* RGroups<cGroup,cObj,cGroupData,cGroups>::GetGroup(const cObj* obj) const
 {
 	unsigned int idx=ObjectsAss[obj->GetId()];
 
 	if(idx==NoObject) return(0);
-	return((*this)[idx]);
+	return((*const_cast<RGroups<cGroup,cObj,cGroupData,cGroups>*>(this))[idx]);
 }
 
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RCursor<cObj> RGroups<cGroup,cObj,cGroupData,cGroups>::GetObjs(const cGroup& grp)
+	RCursor<cObj> RGroups<cGroup,cObj,cGroupData,cGroups>::GetObjs(const cGroup& grp) const
 {
 	return(RCursor<cObj>(ObjsAss,grp.SubObjects,grp.SubObjects+grp.NbSubObjects));
 }
