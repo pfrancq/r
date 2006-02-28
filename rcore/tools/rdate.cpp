@@ -276,6 +276,11 @@ void RDate::SetDate(const RString& date)
 	int year;
 	char month,day,hour,minute,second;
 
+	if(date.ToUpper()=="NULL")
+	{
+		(*this)=RDate::null;
+		return;
+	}
 	if(!date.IsEmpty())
 	{
 		ptr=date();
