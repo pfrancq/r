@@ -154,6 +154,7 @@ void RIOFile::Close(void)
 	}
 	Pos=Size=0;
 	Mode=RIO::Undefined;
+	RFile::Close();
 }
 
 
@@ -246,4 +247,6 @@ unsigned int RIOFile::GetPos(void) const
 //------------------------------------------------------------------------------
 RIOFile::~RIOFile(void)
 {
+	if(handle!=-1)
+		close(handle);
 }

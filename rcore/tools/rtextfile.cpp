@@ -94,12 +94,12 @@ void RTextFile::Open(RIO::ModeType mode)
 //------------------------------------------------------------------------------
 void RTextFile::Close(void)
 {
-	RIOFile::Close();
 	if(Buffer)
 	{
 		delete[] Buffer;
 		Buffer=0;
 	}
+	RIOFile::Close();
 }
 
 
@@ -988,7 +988,7 @@ void RTextFile::WriteLog(const RString& entry)
 //------------------------------------------------------------------------------
 RTextFile::~RTextFile(void)
 {
-	Close();
+	delete[] Buffer;
 }
 
 
