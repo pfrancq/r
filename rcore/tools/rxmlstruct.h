@@ -97,14 +97,34 @@ public:
 	* @param name           Name of the tag to find.
 	* @returns a pointer to the tag of 0 if no tag exists.
 	*/
-	RXMLTag* GetTag(RString name);
+	RXMLTag* GetTag(const RString& name) const;
 
 	/**
-	* Find the first tag with a gtiven name and a given parent.
+	* Get the value of an attribute of the first tag with a given name.
+	* param tag             Name of the tag.
+	* param attr            Name of the attribute.
+	* @returns a string containing the value of the attribute or a null string
+	* if either the tag wasn't foud or the attribute was not found.
+	*/
+	RString GetTagAttrValue(const RString& tag,const RString& attr) const;
+
+	/**
+	* Find the first tag with a given name and a given parent.
 	* @param name           Name of the tag to find.
 	* @param parent         Parent of the tag to find.
 	*/
-	RXMLTag* GetTag(RString name,RXMLTag* parent);
+	RXMLTag* GetTag(const RString& name,const RXMLTag* parent) const;
+
+	/**
+	* Get the value of an attribute of the first tag with a given name and a
+	* given parent.
+	* param tag             Name of the tag.
+	* param attr            Name of the attribute.
+	* @param parent         Parent of the tag to find.
+	* @returns a string containing the value of the attribute or a null string
+	* if either the tag wasn't foud or the attribute was not found.
+	*/
+	RString GetTagAttrValue(const RString& tag,const RString& attr,const RXMLTag* parent) const;
 
 	/**
 	* Add a tag to the a given one which will be the parent. If the parent is
@@ -125,13 +145,13 @@ public:
 	* @param name           Name of thae entity.
 	* @param value          Value of thae entity.
 	*/
-	void InsertEntity(RString name,RString value);
+	void InsertEntity(const RString& name,const RString& value);
 
 	/**
 	* Get a Cursor on the entities.
 	* @return GXMLAttrCursor.
 	*/
-	R::RCursor<RXMLAttr> GetXMLEntitiesCursor(void);
+	R::RCursor<RXMLAttr> GetXMLEntitiesCursor(void) const;
 
 	/**
 	* Set the version of the XML standard.

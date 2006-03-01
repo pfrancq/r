@@ -129,23 +129,33 @@ public:
 	/**
 	* Return the name of the tag.
 	* param name            Name of the attribute.
-	* @returns a string containing the name.
+	* @returns a string containing the name or the null strinf if the attribute
+	* wasn't found.
 	*/
-	RString GetAttrValue(RString name) const;
+	RString GetAttrValue(const RString& name) const;
 
 	/**
 	* Test if an attribute is defined.
 	* param name            Name of the attribute.
 	* @returns True if the attribute exists.
 	*/
-	bool IsAttrDefined(RString name) const;
+	bool IsAttrDefined(const RString& name) const;
 
 	/**
-	* Find the first tag with a gtiven name.
+	* Find the first tag with a given name.
 	* @param name           Name of the tag to find.
 	* @return Pointer to the element.
 	*/
 	RXMLTag* GetTag(const RString& name) const;
+
+	/**
+	* Get the value of an attribute of the first tag with a given name.
+	* param tag             Name of the tag.
+	* param attr            Name of the attribute.
+	* @returns a string containing the value of the attribute or a null string
+	* if either the tag wasn't foud or the attribute was not found.
+	*/
+	RString GetTagAttrValue(const RString& tag,const RString& attr) const;
 
 	/**
 	* Insert an attribute.
@@ -187,7 +197,7 @@ public:
 	* Get a Cursor on the attributes.
 	* @return GXMLAttrCursor.
 	*/
-	R::RCursor<RXMLAttr> GetAttrs(void);
+	R::RCursor<RXMLAttr> GetAttrs(void) const;
 
 	/**
 	* Destruct the XML Tag.

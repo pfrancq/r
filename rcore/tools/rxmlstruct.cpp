@@ -52,18 +52,40 @@ RXMLStruct::RXMLStruct(void)
 
 
 //------------------------------------------------------------------------------
-RXMLTag* RXMLStruct::GetTag(RString name)
+RXMLTag* RXMLStruct::GetTag(const RString& name) const
 {
 	return(GetNode(name,false));
 }
 
 
+//-----------------------------------------------------------------------------
+RString RXMLStruct::GetTagAttrValue(const RString& tag,const RString& attr) const
+{
+	RXMLTag* find=GetNode(tag,false);
+	if(!find)
+		return(RString::Null);
+	return(find->GetAttrValue(attr));
+}
+
+
 //------------------------------------------------------------------------------
-RXMLTag* RXMLStruct::GetTag(RString name,RXMLTag* parent)
+RXMLTag* RXMLStruct::GetTag(const RString& name,const RXMLTag* parent) const
 {
 	if(!parent)
-		return(0);
+		return(GetNode(name,false));
 	return(parent->GetNode(name,false));
+}
+
+
+//-----------------------------------------------------------------------------
+RString RXMLStruct::GetTagAttrValue(const RString& tag,const RString& attr,const RXMLTag* parent) const
+{
+	if(!parent)
+		GetTagAttrValue(tag,attr);
+	RXMLTag* find=parent->GetNode(tag,false);
+	if(!find)
+		return(RString::Null);
+	return(find->GetAttrValue(attr));
 }
 
 
@@ -82,17 +104,16 @@ void RXMLStruct::DeleteTag(RXMLTag* tag)
 
 
 //-------------------------------------------------------------------------------
-void RXMLStruct::InsertEntity(RString name,RString value)
+void RXMLStruct::InsertEntity(const RString& name,const RString& value)
 {
 	Entities.InsertPtr(new RXMLAttr(name,value));
 }
 
 
 //------------------------------------------------------------------------------
-R::RCursor<RXMLAttr> RXMLStruct::GetXMLEntitiesCursor(void)
+R::RCursor<RXMLAttr> RXMLStruct::GetXMLEntitiesCursor(void) const
 {
-	R::RCursor<RXMLAttr> cur(Entities);
-	return(cur);
+	return(R::RCursor<RXMLAttr>(Entities));
 }
 
 

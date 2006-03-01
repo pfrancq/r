@@ -79,19 +79,19 @@ void RXMLTag::SetName(const RString& name)
 
 
 //-----------------------------------------------------------------------------
-RString RXMLTag::GetAttrValue(RString name) const
+RString RXMLTag::GetAttrValue(const RString& name) const
 {
 	RXMLAttr* attr;
 
 	attr=Attrs.GetPtr<RString>(name);
 	if(attr)
 		return(attr->GetValue());
-	return("");
+	return(RString::Null);
 }
 
 
 //-----------------------------------------------------------------------------
-bool RXMLTag::IsAttrDefined(RString name) const
+bool RXMLTag::IsAttrDefined(const RString& name) const
 {
 	return(Attrs.IsIn<RString>(name));
 }
@@ -101,6 +101,16 @@ bool RXMLTag::IsAttrDefined(RString name) const
 RXMLTag* RXMLTag::GetTag(const RString& name) const
 {
 	return(GetNode(name,false));
+}
+
+
+//-----------------------------------------------------------------------------
+RString RXMLTag::GetTagAttrValue(const RString& tag,const RString& attr) const
+{
+	RXMLTag* find=GetNode(tag,false);
+	if(!find)
+		return(RString::Null);
+	return(find->GetAttrValue(attr));
 }
 
 
@@ -133,7 +143,7 @@ bool RXMLTag::IsEmpty(void)
 
 
 //-----------------------------------------------------------------------------
-RCursor<RXMLAttr> RXMLTag::GetAttrs(void)
+RCursor<RXMLAttr> RXMLTag::GetAttrs(void) const
 {
 	return(RCursor<RXMLAttr>(Attrs));
 }
