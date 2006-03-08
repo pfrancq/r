@@ -143,13 +143,13 @@ template<class N,bool bAlloc,bool bOrder>
 {
 	if(!Tree)
 		throw RException("Node not assign to a tree");
-	if(idx>=SubNodes)
+	if(idx>=NbSubNodes)
 	{
 		char tmp[80];
-		sprintf(tmp,"RNode::operator[] const : index %u outside range [0,%u]",idx,SubNodes-1);
+		sprintf(tmp,"RNode::operator[] const : index %u outside range [0,%u]",idx,NbSubNodes-1);
 		throw std::range_error(tmp);
 	}
-	return((*Tree)[idx]);
+	return((*Tree)[SubNodes+idx]);
 }
 
 
@@ -159,13 +159,13 @@ template<class N,bool bAlloc,bool bOrder>
 {
 	if(!Tree)
 		throw RException("Node not assign to a tree");
-	if(idx>=SubNodes)
+	if(idx>=NbSubNodes)
 	{
 		char tmp[80];
-		sprintf(tmp,"RNode::operator[] const : index %u outside range [0,%u]",idx,SubNodes-1);
+		sprintf(tmp,"RNode::operator[] const : index %u outside range [0,%u]",idx,NbSubNodes-1);
 		throw std::range_error(tmp);
 	}
-	return((*Tree)[idx]);
+	return((*Tree)[SubNodes+idx]);
 }
 
 
