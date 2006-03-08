@@ -76,7 +76,7 @@ template<class N,bool bAlloc,bool bOrder> class RNode;
 * {
 *    RString Name;
 * public:
-*    MyNode(MyTree* tree,const RString& name) : RNode<MyNode,true,true>(tree), Name(name) {}
+*    MyNode(const RString& name) : RNode<MyNode,true,true>(), Name(name) {}
 *    int Compare(const MyNode& node) const {return(Name.Compare(node.Name));}
 *    void DoSomething(void) {cout<<Name<<endl;}
 * };
@@ -92,11 +92,11 @@ template<class N,bool bAlloc,bool bOrder> class RNode;
 *    MyTree Tree(20,10);
 *
 *    // Insert the top node
-*    Tree.InsertNode(0,new MyNode(&Tree,"Root"));
+*    Tree.InsertNode(0,new MyNode("Root")); // First node inserted in the tree with no parent, is always the top
 *
 *    // Insert two sub nodes
-*    Tree.InsertNode(Tree.GetTop(),new MyNode(&Tree,"First Level (1)"));
-*    Tree.InsertNode(Tree.GetTop(),new MyNode(&Tree,"First Level (2)"));
+*    Tree.InsertNode(0,new MyNode("First Level (1)"));  // First Level since there is already a top node
+*    Tree.InsertNode(0,new MyNode("First Level (2)"));  // First Level since there is already a top node
 *
 *    // Parse the nodes
 *    R::RCursor<MyNode> Cur(Tree.GetNodes());
