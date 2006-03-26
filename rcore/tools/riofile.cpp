@@ -202,7 +202,7 @@ void RIOFile::Write(const char* buffer,unsigned int nb)
 
 
 //------------------------------------------------------------------------------
-void RIOFile::Seek(unsigned int pos)
+void RIOFile::Seek(unsigned long long pos)
 {
 	if((pos>=Size)&&(!CanWrite))
 		throw(RIOException(this,"Position outside of the file"));
@@ -212,9 +212,9 @@ void RIOFile::Seek(unsigned int pos)
 
 
 //------------------------------------------------------------------------------
-void RIOFile::SeekRel(int rel)
+void RIOFile::SeekRel(long long rel)
 {
-	if(Pos<rel)
+	if(Pos<labs(rel))
 		throw(RIOException(this,"Position before beginning of the file"));
 	if((Pos+rel>=Size)&&(!CanWrite))
 		throw(RIOException(this,"Position outside of the file"));

@@ -143,13 +143,13 @@ public:
 	* Go to a specific position of the file.
 	* @param pos            Position to reach.
 	*/
-	void Seek(unsigned int pos);
+	void Seek(unsigned long long pos);
 
 	/**
 	* Move for a given number of bytes from the current position of the file.
 	* @param rel            Relative position.
 	*/
-	void SeekRel(int pos);
+	void SeekRel(long long pos);
 
 	/**
 	* Return true if the file is at the end.
