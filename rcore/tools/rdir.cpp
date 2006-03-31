@@ -105,7 +105,7 @@ void RDir::Open(RIO::ModeType mode)
 				switch(errno)
 				{
 					case EEXIST:
-						throw(RIOException(this,"Directory already exists"));
+						throw(eExistingDir(this,"Directory already exists"));
 
 					default:
 						throw(RIOException(this,"Cannot create the directory"));
@@ -131,7 +131,7 @@ void RDir::OpenEntries(void)
 
 	Data->Handle=opendir(GetName().Latin1());
 	if(!Data->Handle)
-		throw(RIOException(this,"Directory does not exist"));
+		throw(eExistingDir(this,"Directory does not exist"));
 	Path=GetName();
 	Path+=RFile::GetDirSeparator();
 	while((ep=readdir(Data->Handle)))
@@ -176,6 +176,31 @@ void RDir::Close(void)
 		Data->Handle=0;
 	}
 	Entries.Clear();
+}
+
+
+//-----------------------------------------------------------------------------
+void RDir::CreateDirIfNecessary(const RString& dir,bool cascade)
+{
+	if(!dir.GetLen()) return;
+	if(cascade)
+	{
+		int pos=dir.Find(RFile::GetDirSeparator(),-1);
+		if(pos!=-1)
+		{
+			RString Parent=dir.Mid(0,pos);
+			CreateDirIfNecessary(Parent);
+		}
+	}
+	try
+	{
+		RDir Dir(dir);
+		Dir.Open(RIO::Create);
+	}
+	catch(eExistingDir& )
+	{
+		// Ok, nothing to do.
+	}
 }
 
 

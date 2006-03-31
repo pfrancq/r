@@ -48,6 +48,12 @@ namespace R{
 //-----------------------------------------------------------------------------
 
 
+//-----------------------------------------------------------------------------
+// Exceptions
+NEWRIOEXCEPTION(RIOException,eExistingDir);
+
+
+//-----------------------------------------------------------------------------
 /**
 * The RDir class represents a generic directory. Here is an example:
 * @code
@@ -109,6 +115,14 @@ public:
 	* Close the file.
 	*/
 	virtual void Close(void);
+
+	/**
+	* Create if a directory if it does not exist.
+	* @param dir            Directory to create.
+	* @param cascade        If true, all not existing parent directories are
+	*                       created too.
+	*/
+	static void CreateDirIfNecessary(const RString& dir,bool cascade=true);
 
 	/**
 	* Destruct the directory object.
