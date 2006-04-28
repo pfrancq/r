@@ -459,6 +459,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		AnalysePop();
 		emitBestSig();
 		emitGenSig();
+		DisplayInfos();
 	}
 	ExternBreak = false;
 	while((!StopCondition())&&(!ExternBreak))
