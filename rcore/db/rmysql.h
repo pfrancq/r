@@ -102,7 +102,7 @@ public:
 *
 * @code
 * #include <iostream>
-* #include <rmysql/rmysql.h>
+* #include <rmysql.h>
 * using namespace R;
 *
 *
@@ -201,6 +201,39 @@ public:
 //------------------------------------------------------------------------------
 /**
 * The RQuery class provides a representation of a query.
+*
+* Here is a example:
+*
+* @code
+* #include <iostream>
+* #include <rmysql.h>
+* using namespace R;
+*
+*
+* //----------------------------------------------------------------------------
+* void Load(void)
+* {
+* 	RDb db("host","me","mypassword","thedb");
+* 	RQuery q(&db, "SELECT * FROM tbl");
+*
+* 	for(q.Begin();q.IsMore();q++)
+* 		cout<<"Col 1: "<<q[0]<<"   -    Col 2:"<<q[1]<<endl;
+* }
+*
+*
+* //----------------------------------------------------------------------------
+* int main(void)
+* {
+* 	try
+* 	{
+* 		Load();
+* 	}
+* 	catch(RMySQLError &e)
+* 	{
+* 		cout<<"Error: "<<e.GetError()<<endl;
+* 	}
+* }
+* @endcode
 * @author Pascal Francq
 * @short MySQL Query.
 */
