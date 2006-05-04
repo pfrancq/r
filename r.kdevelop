@@ -24,7 +24,7 @@
       <useconfiguration>default</useconfiguration>
     </general>
     <run>
-      <mainprogram>/home/pfrancq/prj/testr/src/.libs/testr</mainprogram>
+      <mainprogram>/home/pfrancq/prj/kgalileicenter/kgalileicenter/.libs/lt-kgalileicenter</mainprogram>
       <programargs/>
       <terminal>false</terminal>
       <envvars/>
@@ -166,6 +166,11 @@
       <inlineGet>true</inlineGet>
       <inlineSet>true</inlineSet>
     </creategettersetter>
+    <qt>
+      <used>false</used>
+      <version>3</version>
+      <root>/usr/lib/qt3</root>
+    </qt>
   </kdevcppsupport>
   <kdevcvsservice>
     <recursivewhenupdate>true</recursivewhenupdate>
