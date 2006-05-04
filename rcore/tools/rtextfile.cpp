@@ -71,7 +71,7 @@ void RTextFile::Open(RIO::ModeType mode)
 	RIOFile::Open(mode);
 	LastLine=Line=0;
 	ptr=Buffer=0;
-	if(CanRead)
+	if(CanRead&&mode!=RIO::Append)
 	{
 		TotalLen=GetSize();
 		if(All)
