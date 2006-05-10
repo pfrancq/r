@@ -12,7 +12,7 @@ AC_PROG_CXX
 
 AC_C_BIGENDIAN
 
-AC_SUBST(INCLUDES_R,'-I$(top_builddir)/rcore/std -I$(top_builddir)/rcore/tools -I$(top_builddir)/rcore/db -I$(top_builddir)/rcore/prg -I$(top_builddir)/rmath/graph -I$(top_builddir)/rmath/matrix -I$(top_builddir)/rmath/geometry -I$(top_builddir)/roptimization/promethee -I$(top_builddir)/roptimization/ga -I$(top_builddir)/roptimization/gga -I$(top_builddir)/roptimization/ga2d -I$(top_builddir)/rcore/frontend/kde')
+AC_SUBST(INCLUDES_R,'-I$(top_builddir)/rcore/std -I$(top_builddir)/rcore/tools -I$(top_builddir)/rcore/db -I$(top_builddir)/rcore/prg -I$(top_builddir)/rcore/app -I$(top_builddir)/rmath/graph -I$(top_builddir)/rmath/matrix -I$(top_builddir)/rmath/geometry -I$(top_builddir)/roptimization/promethee -I$(top_builddir)/roptimization/ga -I$(top_builddir)/roptimization/gga -I$(top_builddir)/roptimization/ga2d -I$(top_builddir)/rcore/frontend/kde')
 
 FRONTEND=""
 FRONTEND_LIB=""

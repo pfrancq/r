@@ -114,6 +114,7 @@ AC_DEFUN(R_ALL_INC_CHK,[
 	R_INC_CHK(rcore/tools,rstring.h,Cannot find R headers.)
 	R_INC_CHK(rcore/prg,rprg.h,Cannot find R headers.)
 	R_INC_CHK(rcore/db,rmysql.h,Cannot find R headers.)
+	R_INC_CHK(rcore/app,rapplication.h,Cannot find R headers.)
 	R_INC_CHK(rmath/geometry,rgeometry.h,Cannot find R headers.)
 	R_INC_CHK(rmath/graph,rgraph.h,Cannot find R headers.)
 	R_INC_CHK(rmath/matrix,rmatrix.h,Cannot find R headers.)
