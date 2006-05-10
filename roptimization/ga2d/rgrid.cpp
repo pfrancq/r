@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmsg.h>
+#include <rtrace.h>
 #include <rga.h>
 #include <rgrid.h>
 #include <rgeoinfo.h>
@@ -532,10 +532,10 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,RRect& bound)
 		{
 			if((free->GetNb()==1)&&(TestX==368)&&(TestY==183))
 			{
-				RMsg *m=RMsg::LookMsg("Debug");
+				RTrace *m=RTrace::LookMsg("Debug");
 				if(m)
 				{
-					RMsg::DeleteMsg(m);
+					RTrace::DeleteMsg(m);
 				}
 			}
 

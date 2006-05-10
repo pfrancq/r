@@ -48,7 +48,7 @@
 #include <rstd.h>
 #include <rstring.h>
 #include <rcontainer.h>
-#include <rmsg.h>
+#include <rtrace.h>
 #include <rtextfile.h>
 #include <random.h>
 

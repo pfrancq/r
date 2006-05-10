@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	rmsg.h
+	RTrace.h
 
-	Message systems - Header.
+	Trace system - Header.
 
-	Copyright 2001-2004 by the Université Libre de Bruxelles.
+	Copyright 2001-2006 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -30,8 +30,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RMsgH
-#define RMsgH
+#ifndef RTraceH
+#define RTraceH
 
 
 //------------------------------------------------------------------------------
@@ -47,55 +47,55 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RMsg class provides a representation for a message that can be leave by
+* The RTrace class provides a representation for a message that can be leave by
 * some objects and that can be retrieve by others. This system can be used for
 * debugging purposes to handle inter-depency problems.
 * @author Pascal Francq
 * @code
 * // Library A
-* #include <rmsg.h>
+* #include <rtrace.h>
 * using namespace R;
 *
 * void SomeWhereInTheCode(int money)
 * {
 *    ...
 *    if(!money)
-*       RMsg::InsertMsg("Special situation : No money");
+*       RTrace::InsertMsg("Special situation : No money");
 *    ...
 * }
 *
 *
 * // Library B
-* #include <rmsg.h>
+* #include <rtrace.h>
 * using namespace R;
 * void SomeWhereElseInTheCode(void)
 * {
 *    ...
-*    RMsg* msg=RMsg::LookMsg("Special situation : No money");
+*    RTrace* msg=RTrace::LookMsg("Special situation : No money");
 *    if(msg)
 *    {
 *       cout<<"Put here a breakpoint"<<endl;
-*       RMsg::DeleteMsg(msg);     // Situation handled
+*       RTrace::DeleteMsg(msg);     // Situation handled
 *    }
 *    ...
 * }
 * @endcode
-* @short Message System.
+* @short Trace System.
 */
-class RMsg
+class RTrace
 {
 	/**
-	* The contain of the message.
+	* The message to trace.
 	*/
 	RString Msg;
 
 public:
 
 	/**
-	* Construct the message.
+	* Construct the tracing of a message.
 	* @param msg            Contain.
 	*/
-	RMsg(const RString& msg);
+	RTrace(const RString& msg);
 
 	/**
 	* Compare two messages by comparing their content.
@@ -103,7 +103,7 @@ public:
 	* @param msg            Message.
 	* @return int
 	*/
-	int Compare(const RMsg& msg) const {return(Msg.Compare(msg.Msg));}
+	int Compare(const RTrace& msg) const {return(Msg.Compare(msg.Msg));}
 
 	/**
 	* Compare a message with a given string.
@@ -118,7 +118,7 @@ public:
 	* @param msg            Message.
 	* @return true if equal, false else.
 	*/
-	bool operator==(const RMsg& msg) const
+	bool operator==(const RTrace& msg) const
 		{return(Msg==msg.Msg);}
 
 	/**
@@ -134,25 +134,25 @@ public:
 	* @param msg            String.
 	* @return Pointer to the specific message, or 0 if not found.
 	*/
-	static RMsg* LookMsg(const RString& msg);
+	static RTrace* LookMsg(const RString& msg);
 
 	/**
 	* Insert a new message.
 	* @param msg            String representing the message.
 	* @return Pointer to the message inserted.
 	*/
-	static RMsg* InsertMsg(const RString& msg);
+	static RTrace* InsertMsg(const RString& msg);
 
 	/**
 	* Delete a message.
 	* @param msg            Message.
 	*/
-	static void DeleteMsg(RMsg* msg);
+	static void DeleteMsg(RTrace* msg);
 
 	/**
 	* Destruct the message.
 	*/
-	~RMsg(void);
+	~RTrace(void);
 };
 
 

@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RMsg.cpp
+	RTrace.cpp
 
-	Message systems - Implementation.
+	Trace system - Implementation.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2006 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -31,53 +31,53 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rmsg.h>
+#include <rtrace.h>
 using namespace R;
 
 
 //------------------------------------------------------------------------------
 // Global variable
-static RContainer<RMsg,true,false> Msgs(30,15);
+static RContainer<RTrace,true,false> Msgs(30,15);
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RMsg
+// class RTrace
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RMsg::RMsg(const RString& msg)
+RTrace::RTrace(const RString& msg)
 	: Msg(msg)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RMsg* RMsg::LookMsg(const RString& msg)
+RTrace* RTrace::LookMsg(const RString& msg)
 {
 	return(Msgs.GetPtr(msg));
 }
 
 
 //------------------------------------------------------------------------------
-RMsg* RMsg::InsertMsg(const RString& msg)
+RTrace* RTrace::InsertMsg(const RString& msg)
 {
-	RMsg* Msg=new RMsg(msg);
+	RTrace* Msg=new RTrace(msg);
 	Msgs.InsertPtr(Msg);
 	return(Msg);
 }
 
 
 //------------------------------------------------------------------------------
-void RMsg::DeleteMsg(RMsg* msg)
+void RTrace::DeleteMsg(RTrace* msg)
 {
 	Msgs.DeletePtr(*msg);
 }
 
 
 //------------------------------------------------------------------------------
-RMsg::~RMsg(void)
+RTrace::~RTrace(void)
 {
 }

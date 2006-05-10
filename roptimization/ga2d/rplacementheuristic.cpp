@@ -243,11 +243,11 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 	{
 		if(NbObjsOk==26)
 		{
-			RMsg* m=RMsg::LookMsg("Random");
+			RTrace* m=RTrace::LookMsg("Random");
 			if(m)
 			{
-				RMsg::DeleteMsg(m);
-				RMsg::InsertMsg("Debug");
+				RTrace::DeleteMsg(m);
+				RTrace::InsertMsg("Debug");
 			}
 		}
 		Grid->AddFreePolygons(CurInfo,&Free,Result);
