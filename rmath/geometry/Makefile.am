@@ -5,5 +5,5 @@ AM_CXXFLAGS =
 AM_FFLAGS =
 SUBDIRS =
 geometryincludedir = $(includedir)/r
-geometryinclude_HEADERS = rgeometry.h rline.h rpoint.h rpoints.h rpolygon.h rpolygons.h rrect.h rrects.h
-libgeometry_la_SOURCES = rgeometry.cpp rline.cpp rpoint.cpp rpoints.cpp rpolygon.cpp rpolygons.cpp rrect.cpp rrects.cpp
+geometryinclude_HEADERS = rgeometry.h rline.h rpoint.h rpoints.h rpolygon.h rpolygons.h rrect.h rrects.h rsize.h
+libgeometry_la_SOURCES = rgeometry.cpp rline.cpp rpoint.cpp rpoints.cpp rpolygon.cpp rpolygons.cpp rrect.cpp rrects.cpp rsize.cpp

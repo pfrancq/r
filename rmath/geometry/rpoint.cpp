@@ -6,7 +6,7 @@
 
 	Point - Implementation.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2006 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -142,27 +142,4 @@ void RPoint::ChangeOrientation(const ROrientation o)
 void RPoint::Save(RTextFile& f) const
 {
 	f<<X<<Y<<endl;
-}
-
-
-
-//------------------------------------------------------------------------------
-//
-// Global Functions and Operators
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-RPoint R::operator+(const RPoint& arg1,const RPoint& arg2)
-{
-	RPoint res(arg1);
-	return(res+=arg2);
-}
-
-
-//------------------------------------------------------------------------------
-RPoint R::operator-(const RPoint& arg1,const RPoint& arg2)
-{
-	RPoint res(arg1);
-	return(res-=arg2);
 }

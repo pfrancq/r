@@ -6,7 +6,7 @@
 
 	Point - Header
 
-	Copyright 1999-2004 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2006 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -132,6 +132,16 @@ public:
 	inline bool Near(const RPoint* pt) const;
 
 	/**
+	* Get the X position.
+	*/
+	RCoord GetX(void) const {return(X);}
+
+	/**
+	* Get the Y position.
+	*/
+	RCoord GetY(void) const {return(Y);}
+
+	/**
 	* Set the point to the given position.
 	* @param x	            X Position.
 	* @param y              Y Position.
@@ -191,13 +201,13 @@ public:
 /**
 * Add two points.
 */
-RPoint operator+(const RPoint& arg1,const RPoint& arg2);
+inline RPoint operator+(const RPoint& arg1,const RPoint& arg2)  {return(RPoint(arg1)+=arg2);}
 
 //------------------------------------------------------------------------------
 /**
 * Substract two points.
 */
-RPoint operator-(const RPoint& arg1,const RPoint& arg2);
+inline RPoint operator-(const RPoint& arg1,const RPoint& arg2) {return(RPoint(arg1)-=arg2);}
 
 
 }  //-------- End of namespace R -----------------------------------------------
