@@ -199,7 +199,7 @@ template<class C,bool bAlloc,bool bOrder> template<class TUse>
 	bool Find;
 	size_t Index=BasicContainer::GetIndex(bOrder&&sortkey,static_cast<const void*>(&tag),Find,min,max,Compare<TUse>);
 	if(!Find)
-		BasicContainer::InsertPtrAt(bAlloc,ptr=new C(tag),Index,false);
+			BasicContainer::InsertPtrAt(bAlloc,ptr=new C(tag),Index,false);
 	else
 		ptr=static_cast<C*>(Tab[Index]);
 	return(ptr);
