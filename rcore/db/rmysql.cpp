@@ -175,7 +175,7 @@ void RQuery::Init(void)
 	}
 	catch(...)
 	{
-		throw RMySQLError("Error in encoded data");
+		throw RMySQLError("Error in encoded data: "+SQL);
 	}
 
 	if(mysql_real_query(DB->connection,SQL_utf8,SQL_utf8.GetLen()))
