@@ -148,7 +148,7 @@ RChar RXMLFile::CodeToChar(RString& str)
 {
 	RChar res;
 
-	if(!str.Compare("quo"))
+	if(!str.Compare("quot"))
 		res='"';
 	if(!str.Compare("amp"))
 		res='&';
