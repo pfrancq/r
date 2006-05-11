@@ -153,6 +153,33 @@ public:
 
 //------------------------------------------------------------------------------
 //
+// class RTextLatin1Encoding
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+class RTextLatin1Encoding : public RTextEncoding
+{
+public:
+	RTextLatin1Encoding(void)
+		: RTextEncoding("latin1")
+		{}
+
+	RString ToUnicode(const char* text,unsigned int len) const
+	{
+		return(RString(text));
+	}
+
+	RCString FromUnicode(const RString& text) const
+	{
+		return(RCString(text.Latin1()));
+	}
+};
+
+
+
+//------------------------------------------------------------------------------
+//
 // class RTextEncoding
 //
 //------------------------------------------------------------------------------
@@ -170,7 +197,7 @@ RTextEncoding::RTextEncoding(const RString& name)
 
 	// Test the order
 	char Tab[8];
-	char Test[]="test";;
+	char Test[]="test";
 	size_t s1,s2,err;
 	char *ptr1,*ptr2;
 	s1=4;
@@ -219,7 +246,7 @@ RString RTextEncoding::ToUnicode(const char* text,unsigned int len) const
 {
 	char* ptr;
 	char* ptr2;
-	char Tab[BufSize+sizeof(UChar)];
+	char Tab[BufSize*sizeof(UChar)];
 	size_t s1,s2,err;
 	RString out;
 	bool ToFill=true;
@@ -299,7 +326,7 @@ RChar RTextEncoding::NextUnicode(const char* text,unsigned int& len) const
 RCString RTextEncoding::FromUnicode(const RString& text) const
 {
 	char *ptr,*ptr2;
-	char Tab[BufSize];
+	char Tab[BufSize*sizeof(char)];
 	size_t s1,s2,err;
 	bool ToFill=true;
 	RCString out;
@@ -344,10 +371,13 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RString& name)
 	RTextEncoding* ptr;
 	RString search(name.ToLower());
 
-	// Insert UTF16 if necessary
+	// Insert UTF16 and latin1 if necessary
 	if(Encodings.GetNb()==0)
 	{
 		ptr=new RTextUTF16Encoding();
+		Encodings.InsertPtr(ptr);
+		ptr->Init();
+		ptr=new RTextLatin1Encoding();
 		Encodings.InsertPtr(ptr);
 		ptr->Init();
 	}
