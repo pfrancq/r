@@ -146,6 +146,34 @@ RString RXMLStruct::GetEncoding(void) const
 
 
 //------------------------------------------------------------------------------
+bool RXMLStruct::Compare(const RXMLTag* tag1,const RXMLTag* tag2)
+{
+	// Test the name
+	if(tag1->GetName()!=tag2->GetName())
+		return(false);
+
+	// Go trought the attributes of tag1 and verify if a same attributes exist
+	// in tag2
+	RCursor<RXMLAttr> Cur(tag1->GetAttrs());
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		RXMLAttr* attr=tag2->GetAttr(Cur()->GetName());
+		if(attr&&(attr->GetValue()!=Cur()->GetValue()))
+			return(false);
+	}
+
+	return(true);
+}
+
+
+//------------------------------------------------------------------------------
+bool RXMLStruct::Merge(const RXMLStruct& xml)
+{
+	return(Top->Merge(xml.Top));
+}
+
+
+//------------------------------------------------------------------------------
 RXMLStruct::~RXMLStruct(void)
 {
 }

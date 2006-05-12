@@ -51,6 +51,13 @@ using namespace std;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+RXMLTag::RXMLTag(const RXMLTag& tag)
+	: RNode<RXMLTag,true,false>(), Name(tag.Name), Contains(tag.Contains), Attrs(tag.Attrs)
+{
+}
+
+
+//-----------------------------------------------------------------------------
 RXMLTag::RXMLTag(const RString& name)
 	: RNode<RXMLTag,true,false>(), Name(name), Contains(), Attrs(20,10)
 {
@@ -83,10 +90,17 @@ RString RXMLTag::GetAttrValue(const RString& name) const
 {
 	RXMLAttr* attr;
 
-	attr=Attrs.GetPtr<RString>(name);
+	attr=Attrs.GetPtr(name);
 	if(attr)
 		return(attr->GetValue());
 	return(RString::Null);
+}
+
+
+//-----------------------------------------------------------------------------
+RXMLAttr* RXMLTag::GetAttr(const RString& name) const
+{
+	return(Attrs.GetPtr(name));
 }
 
 
@@ -146,6 +160,52 @@ bool RXMLTag::IsEmpty(void)
 RCursor<RXMLAttr> RXMLTag::GetAttrs(void) const
 {
 	return(RCursor<RXMLAttr>(Attrs));
+}
+
+
+//-----------------------------------------------------------------------------
+bool RXMLTag::Merge(const RXMLTag* merge)
+{
+	if(!static_cast<RXMLStruct*>(Tree)->Compare(this,merge))
+		return(false);
+
+	// Merge the attributes
+	RCursor<RXMLAttr> attr(merge->Attrs);
+	for(attr.Start();!attr.End();attr.Next())
+	{
+		// Attribute exist -> Replace value
+		// Else -> Insert new attribute
+		RXMLAttr* here=Attrs.GetPtr(attr()->GetName());
+		if(here)
+			here->SetValue(attr()->GetValue());
+		else
+			Attrs.InsertPtr(new RXMLAttr(*attr()));
+	}
+
+	// Pass through the subnodes of merge
+	RCursor<RXMLTag> Cur(merge->GetNodes());
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		size_t nb;
+		RXMLTag* same;
+		// Go trough each subnode and count the number of same
+		RCursor<RXMLTag> My(GetNodes());
+		for(My.Start(),nb=0;!My.End();My.Next())
+		{
+			if(static_cast<RXMLStruct*>(Tree)->Compare(Cur(),My()))
+			{
+				nb++;
+				same=My();
+			}
+		}
+		if(nb==1)
+			same->Merge(Cur());
+		else
+			Tree->DeepCopy(Cur(),this);
+	}
+
+	// Merge OK
+	return(true);
 }
 
 

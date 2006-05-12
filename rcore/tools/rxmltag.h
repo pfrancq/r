@@ -96,6 +96,12 @@ class RXMLTag : public RNode<RXMLTag,true,false>
 public:
 
 	/**
+	* Copy constructor. Create a tag with the same name and the same attributes
+	* but without the subnodes.
+	*/
+	RXMLTag(const RXMLTag& tag);
+
+	/**
 	* Construct a XML Tag.
 	*/
 	RXMLTag(const RString& name);
@@ -127,12 +133,19 @@ public:
 	void SetName(const RString& name);
 
 	/**
-	* Return the name of the tag.
+	* Return the value of an attribute.
 	* param name            Name of the attribute.
-	* @returns a string containing the name or the null strinf if the attribute
-	* wasn't found.
+	* @returns a string containing the name or the null if the attribute wasn't
+	* found.
 	*/
 	RString GetAttrValue(const RString& name) const;
+
+	/**
+	* Return an attribute.
+	* param name            Name of the attribute.
+	* @returns a pointer or null if the attribute wasn't found.
+	*/
+	RXMLAttr* GetAttr(const RString& name) const;
 
 	/**
 	* Test if an attribute is defined.
@@ -198,6 +211,16 @@ public:
 	* @return GXMLAttrCursor.
 	*/
 	R::RCursor<RXMLAttr> GetAttrs(void) const;
+
+	/**
+	* Merge two tag if they are identical (based on the Compare method of
+	* RXMLStruct). The attributes of merge replace (when necessary) the
+	* attirbutes. Each subtag of merge is merged if it correspond to one of the
+	* subtags,else merge it is added.
+	* @param merge           Tag to merge.
+	* @return true if the merge could be done.
+	*/
+	bool Merge(const RXMLTag* merge);
 
 	/**
 	* Destruct the XML Tag.

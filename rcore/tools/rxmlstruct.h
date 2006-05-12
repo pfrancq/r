@@ -176,6 +176,21 @@ public:
 	RString GetEncoding(void) const;
 
 	/**
+	* Compare two tags to see if it is the same tag. By default, the names
+	* must be the same, and that all common attributes have the same values.
+	* @param tag1            First tag.
+	* @param tag2            Second tag.
+	*/
+	virtual bool Compare(const RXMLTag* tag1,const RXMLTag* tag2);
+
+	/**
+	* Merge two xml structures.
+	* @param xml             XML structure to merge.
+	* @return true if the merge could be done.
+	*/
+	bool Merge(const RXMLStruct& xml);
+
+	/**
 	* Destruct the XML Structure.
 	*/
 	virtual ~RXMLStruct(void);
