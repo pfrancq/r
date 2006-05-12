@@ -67,6 +67,11 @@ class RXMLAttr
 public:
 
 	/**
+	* Copy constructor.
+	*/
+	RXMLAttr(const RXMLAttr& attr);
+
+	/**
 	* Construct a XML Attribute.
 	* @param name           The name of the attribute.
 	* @param value          The value of the attribute.
@@ -78,7 +83,7 @@ public:
 	* @param name           The name of the attribute.
 	* @param value          The value of the attribute.
 	*/
-	RXMLAttr(const char* name,const double value);
+	RXMLAttr(const RString& name,const double value);
 
 	/**
 	* Compare the name of the attribute with a given string. This function is
@@ -108,6 +113,11 @@ public:
 	* @returns a string containing the value;
 	*/
 	RString GetValue(void) const {return(Value);}
+
+	/**
+	* Set a new value to the attribute.
+	*/
+	void SetValue(const RString& value);
 
 	/**
 	* Destruct the attribute.

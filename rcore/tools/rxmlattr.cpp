@@ -44,6 +44,13 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+RXMLAttr::RXMLAttr(const RXMLAttr& attr)
+	: Name(attr.Name), Value(attr.Value)
+{
+}
+
+
+//------------------------------------------------------------------------------
 RXMLAttr::RXMLAttr(const RString& name,const RString& value)
 	: Name(name), Value(value)
 {
@@ -51,12 +58,16 @@ RXMLAttr::RXMLAttr(const RString& name,const RString& value)
 
 
 //-------------------------------------------------------------------------------
-RXMLAttr::RXMLAttr(const char *name,const double value)
-	: Name(name), Value(30)
+RXMLAttr::RXMLAttr(const RString& name,const double value)
+	: Name(name), Value(RString::Number(value))
 {
-	char Str[30];
-	sprintf(Str,"%f",value);
-	Value=Str;
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLAttr::SetValue(const RString& value)
+{
+	Value=value;
 }
 
 
