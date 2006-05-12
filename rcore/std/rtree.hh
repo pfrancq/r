@@ -38,18 +38,6 @@
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	void RTree<N,bAlloc,bOrder>::DeepCopy(N* src,N* parent)
-{
-	N* NewNode=new N(*src);
-	InsertNode(parent,NewNode);
-	RCursor<N> curs(src->GetNodes());
-	for(curs.Start(); !curs.End(); curs.Next())
-		DeepCopy(curs(),NewNode);
-}
-
-
-//------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
 	RTree<N,bAlloc,bOrder>::RTree(unsigned int max,unsigned int inc)
 		: RContainer<N,bAlloc,bOrder>(max,inc), Top(0)
 {
@@ -149,6 +137,18 @@ template<class N,bool bAlloc,bool bOrder> template<bool a, bool o>
 	RCursor<N> Nodes(src.Top->GetNodes());
 	for(Nodes.Start();!Nodes.End();Nodes.Next())
 		DeepCopy(Nodes(),0);
+}
+
+
+//------------------------------------------------------------------------------
+template<class N,bool bAlloc,bool bOrder>
+	void RTree<N,bAlloc,bOrder>::DeepCopy(N* src,N* parent)
+{
+	N* NewNode=new N(*src);
+	InsertNode(parent,NewNode);
+	RCursor<N> curs(src->GetNodes());
+	for(curs.Start(); !curs.End(); curs.Next())
+		DeepCopy(curs(),NewNode);
 }
 
 

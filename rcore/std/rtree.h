@@ -113,13 +113,6 @@ template<class N,bool bAlloc,bool bOrder>
 protected:
 
 	/**
-	* Do a deep copy of a node of another tree.
-	* @param src             Source node in the another tree.
-	* @param parent          Parent node.
-	*/
-	void DeepCopy(N* src,N* newparent);
-
-	/**
 	* The top node.
 	*/
 	N* Top;
@@ -205,6 +198,13 @@ public:
 	* @param src             Source tree.
 	*/
 	template<bool a, bool o> void Copy(const RTree<N,a,o>& src);
+
+	/**
+	* Do a deep copy of a node of another tree.
+	* @param src             Source node in the another tree.
+	* @param parent          Parent node.
+	*/
+	void DeepCopy(N* src,N* newparent);
 
 	/**
 	* Get a pointer to a certain node of the tree.
