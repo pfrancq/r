@@ -63,34 +63,12 @@ template<bool bOrder>
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	RVectorInt<bOrder>::RVectorInt(const RVectorInt* lst)
-	: MaxInt(lst->MaxInt)
+	RVectorInt<bOrder>::RVectorInt(const RVectorInt& vec)
+	: MaxInt(vec.MaxInt)
 {
-	NbInt = lst->NbInt;
+	NbInt = vec.NbInt;
 	List = new unsigned int[MaxInt];
-	memcpy(List,lst->List,lst->MaxInt*sizeof(NbInt));
-}
-
-
-//------------------------------------------------------------------------------
-template<bool bOrder>
-	void RVectorInt<bOrder>::Verify(void)
-{
-	if(NbInt==MaxInt)
-	{
-		unsigned int OldSize;
-		unsigned int IncPtr;
-		unsigned int* ptr;
-
-		OldSize=MaxInt;
-		IncPtr=MaxInt/2;
-		MaxInt+=IncPtr;
-		ptr=new unsigned int[MaxInt];
-		memcpy(ptr,List,OldSize*sizeof(unsigned int));
-		memset(&List[OldSize],0,IncPtr*sizeof(unsigned int));
-		delete[] List;
-		List=ptr;
-	}
+	memcpy(List,vec.List,vec.MaxInt*sizeof(unsigned int));
 }
 
 
@@ -108,7 +86,7 @@ template<bool bOrder>
 		MaxInt=max;
 		ptr=new unsigned int[MaxInt];
 		memcpy(ptr,List,OldSize*sizeof(unsigned int));
-		memset(&List[OldSize],0,(MaxInt-OldSize)*sizeof(unsigned int));
+		memset(&ptr[OldSize],0,(MaxInt-OldSize)*sizeof(unsigned int));
 		delete[] List;
 		List=ptr;
 	}
@@ -212,7 +190,7 @@ template<bool bOrder>
 	unsigned int *ptr=List;
 	unsigned int i=NbInt;
 
-	Verify();
+	Verify(NbInt+1);
 	if(bOrder)
 	{
 		while(i&&((*ptr)<ins))

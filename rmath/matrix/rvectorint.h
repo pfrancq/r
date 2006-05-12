@@ -95,37 +95,31 @@ public:
 
 	/**
 	* Construct the list of Integer value.
-	* @param Max            The maximum number of values.
+	* @param Max             The maximum number of values.
 	*/
 	RVectorInt(const unsigned int max);
 
 	/**
 	* Copy constructor.
-	* @param lst            List to copy.
+	* @param vec             Vector to copy.
 	*/
-	RVectorInt(const RVectorInt* lst);
+	RVectorInt(const RVectorInt& vec);
 
 private:
 
 	/**
-	* Verify if the container can hold the next element to be inserted. If not,
-	* the container is extended.
-	*/
-	void Verify(void);
-
-	/**
 	* Verify if the container can hold a certain nujmber of elements. If not,
 	* the container is extended.
-    * @param max            The number of elements that must be contained.
+    * @param max             Number of elements that must be contained.
 	*/
 	void Verify(unsigned int max);
 
 	/**
 	* This function returns the index of an element represented by tag, and it
 	* is used when the elements are to be ordered.
-	* @param nb             Number to find.
-	* @param find           If the element represented by tag exist, find is set to
-	*                       true.
+	* @param nb              Number to find.
+	* @param find            If the element represented by tag exist, find is set to
+	*                        true.
 	* @return Returns the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
@@ -135,21 +129,21 @@ public:
 
 	/**
 	* Test if two lists have exactly the same integers.
-	* @param vi             The list used for the comparaison.
+	* @param vi              The list used for the comparaison.
 	* @return True if the lists are the same.
 	*/
 	bool IsSame(const RVectorInt& vi) const;
 
 	/**
 	* Verify if a integer value is in the list.
-	* @param value          The integer value to test.
+	* @param value           The integer value to test.
 	* @return True if the integer is in the list, false else.
 	*/
 	bool IsIn(unsigned int value) const;
 
 	/**
 	* Insert an integer value in the list.
-	* @param ins            The integer value to insert.
+	* @param ins             The integer value to insert.
 	*/
 	void Insert(unsigned int ins);
 
@@ -157,20 +151,20 @@ public:
 	* Insert all the integer of a list in the current one. This function
 	* supposes that the list to insert don't contain any Integers already
 	* in the current list.
-	* @param ins            The list to insert.
+	* @param ins             The list to insert.
 	*/
 	void Insert(const RVectorInt& ins);
 
 	/**
 	* Insert an integer value in the list at a given position.
-	* @param ins            The integer value to insert.
-	* @param pos            The position where to insert.
+	* @param ins             The integer value to insert.
+	* @param pos             The position where to insert.
 	*/
 	void InsertAt(unsigned int ins,unsigned int pos);
 
 	/**
 	* Delete an integer value in the list.
-	* @param del            The integer value to delete.
+	* @param del             The integer value to delete.
 	*/
 	void Delete(const unsigned int del);
 
@@ -181,13 +175,13 @@ public:
 
 	/**
 	* Assignation operator.
-	* @param src            List used for the assignation.
+	* @param src             List used for the assignation.
 	*/
 	RVectorInt& operator=(const RVectorInt& src);
 
 	/**
 	* Return the Integer value at position i. The first Integer value is at position 0.
-	* @param i              Index.
+	* @param i               Index.
 	*/
 	unsigned int operator[](int i) const;
 
