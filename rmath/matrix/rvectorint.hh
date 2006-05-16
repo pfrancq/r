@@ -79,12 +79,11 @@ template<bool bOrder>
 	RReturnIfFail(max>0);
 	if(max>MaxInt)
 	{
-		unsigned int OldSize;
-		unsigned int* ptr;
-
-		OldSize=MaxInt;
-		MaxInt=max;
-		ptr=new unsigned int[MaxInt];
+		unsigned int OldSize=MaxInt;
+		MaxInt+=(MaxInt/2);
+		if(max>MaxInt)
+			MaxInt=max;
+		unsigned int* ptr=new unsigned int[MaxInt];
 		memcpy(ptr,List,OldSize*sizeof(unsigned int));
 		memset(&ptr[OldSize],0,(MaxInt-OldSize)*sizeof(unsigned int));
 		delete[] List;
