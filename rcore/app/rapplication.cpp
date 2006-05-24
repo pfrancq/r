@@ -35,6 +35,11 @@
 using namespace R;
 
 
+//-----------------------------------------------------------------------------
+// Static variables
+RApplication* R::App=0;
+
+
 
 //-----------------------------------------------------------------------------
 //
@@ -44,8 +49,12 @@ using namespace R;
 
 //-----------------------------------------------------------------------------
 RApplication::RApplication(const RString& name,int argc, char** argv)
-	: Name(name), Args(argc)
+	: Name(name), Args(argc), Config("app",name), HasInitApp(false)
 {
+	if(App)
+		throw RException("Already one application running");
+	App=this;
+
 	// Verify parameters
 	RAssert(argc);
 	RAssert(argv);
@@ -73,18 +82,31 @@ RString RApplication::GetApplicationFile(void) const
 
 
 //-----------------------------------------------------------------------------
+void RApplication::CreateConfig(void)
+{
+}
+
+
+//-----------------------------------------------------------------------------
 void RApplication::Init(void)
 {
+	CreateConfig();
+	Config.Load();
+	HasInitApp=true;
 }
 
 
 //-----------------------------------------------------------------------------
 void RApplication::Run(void)
 {
+	if(!HasInitApp)
+		throw RException("Application not initialized");
 }
 
 
 //-----------------------------------------------------------------------------
 RApplication::~RApplication(void)
 {
+	Config.Save();
+	App=0;
 }

@@ -100,6 +100,26 @@ RPromCriterionParams& RPromCriterionParams::operator=(const RPromCriterionParams
 }
 
 
+//-----------------------------------------------------------------------------
+void RPromCriterionParams::Set(RParamStruct* param)
+{
+	P=param->Get<RParamValue>("P")->GetDouble();
+	Q=param->Get<RParamValue>("Q")->GetDouble();
+	Weight=param->Get<RParamValue>("Weight")->GetDouble();
+}
+
+
+//-----------------------------------------------------------------------------
+RParam* RPromCriterionParams::CreateParam(const R::RString& name)
+{
+	RParamStruct* param=new RParamStruct(name);
+	param->Insert(new RParamValue("P",0.2));
+	param->Insert(new RParamValue("Q",0.05));
+	param->Insert(new RParamValue("Weight",1.0));
+	return(param);
+}
+
+
 
 //------------------------------------------------------------------------------
 //
@@ -315,7 +335,7 @@ void RPromCriterion::ComputeFiCrit(RPromKernel* kern)
 	RCursor<RPromSol> sol(kern->Solutions);
 	RCursor<RPromSol> sol2(kern->Solutions);
 	for(ptr.Start(),sol.Start();!ptr.End();ptr.Next(),sol.Next())
-	{	
+	{
 		for(ptr2.Start(),sol2.Start();!ptr2.End();ptr2.Next(),sol2.Next())
 		{
 			// Only if secondary solution is not the same than the primary one.

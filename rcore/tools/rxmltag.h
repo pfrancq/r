@@ -162,6 +162,13 @@ public:
 	RXMLTag* GetTag(const RString& name) const;
 
 	/**
+	* Find the all tags with a given name.
+	* @param name           Name of the tags to find.
+	* @param find           Container that will hold the tags.
+	*/
+	void GetTags(const RString& name,RContainer<RXMLTag,false,false>& find) const;
+
+	/**
 	* Get the value of an attribute of the first tag with a given name.
 	* param tag             Name of the tag.
 	* param attr            Name of the attribute.
@@ -171,17 +178,21 @@ public:
 	RString GetTagAttrValue(const RString& tag,const RString& attr) const;
 
 	/**
-	* Insert an attribute.
+	* Insert an attribute. If the attribute already exist, the value can be
+	* overwritten depending of the second parameter.
 	* @param Attr           Attribute to insert
+	* @param overwritte     Overwritte existing parameter.
 	*/
-	void InsertAttr(RXMLAttr* Attr);
+	void InsertAttr(RXMLAttr* Attr,bool overwritte=true);
 
 	/**
-	* Insert an attribute.
-	* @param name           Name of thae attribute.
-	* @param value          Value of thae attribute.
+	* Insert an attribute. If the attribute already exist, the value can be
+	* overwritten depending of the third parameter.
+	* @param name           Name of the attribute.
+	* @param value          Value of the attribute.
+	* @param overwritte     Overwritte existing parameter.
 	*/
-	void InsertAttr(const RString& name,const RString& value);
+	void InsertAttr(const RString& name,const RString& value,bool overwritte=true);
 
 	/**
 	* Add a string to the content of the tag.

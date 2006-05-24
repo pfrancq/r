@@ -110,6 +110,7 @@ void RXMLFile::Open(RIO::ModeType mode)
 	switch(Mode)
 	{
 		case RIO::Read:
+			XMLStruct->Clear(); // Make sure the xml structure is empty
 			LoadHeader();
 			LoadNextTag();
 			break;
@@ -495,11 +496,11 @@ void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag
 					Next();
 				}
 			}
-			attrs.InsertPtr(new RXMLAttr(attrn,XMLToString(attrv)));
+			attrs.InsertPtr(XMLStruct->NewAttr(attrn,XMLToString(attrv)));
 			SkipSpaces();
 		}
 		else
-			attrs.InsertPtr(new RXMLAttr(attrn,""));
+			attrs.InsertPtr(XMLStruct->NewAttr(attrn,""));
 	}
 }
 
@@ -592,8 +593,10 @@ void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RCon
 	RXMLTag* tag;
 	RCursor<RXMLAttr> Cur;
 
-	// Create the tag
-	tag=new RXMLTag(name);
+	// Create the tag and add it to the XML structure
+	tag=XMLStruct->NewTag(name);
+	XMLStruct->AddTag(CurTag,tag);
+
 	Cur.Set(attrs);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		tag->InsertAttr(Cur()->GetName(),Cur()->GetValue());
@@ -620,8 +623,7 @@ void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RCon
 		}
 	}
 
-	// Add the tag the XML structure and make it the current tag
-	XMLStruct->AddTag(CurTag,tag);
+	// Make the tag the current one
 	CurTag=tag;
 }
 

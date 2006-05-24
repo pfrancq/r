@@ -174,6 +174,20 @@ bool RXMLStruct::Merge(const RXMLStruct& xml)
 
 
 //------------------------------------------------------------------------------
+RXMLTag* RXMLStruct::NewTag(const RString& tag)
+{
+	return(new RXMLTag(tag));
+}
+
+
+//------------------------------------------------------------------------------
+RXMLAttr* RXMLStruct::NewAttr(const RString& name,const RString& value)
+{
+	return(new RXMLAttr(name,value));
+}
+
+
+//------------------------------------------------------------------------------
 RXMLStruct::~RXMLStruct(void)
 {
 }

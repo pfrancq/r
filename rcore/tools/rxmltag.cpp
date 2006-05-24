@@ -119,6 +119,16 @@ RXMLTag* RXMLTag::GetTag(const RString& name) const
 
 
 //-----------------------------------------------------------------------------
+void RXMLTag::GetTags(const RString& name,RContainer<RXMLTag,false,false>& find) const
+{
+	RCursor<RXMLTag> Tags(GetNodes());
+	for(Tags.Start();!Tags.End();Tags.Next())
+		if(Tags()->GetName()==name)
+			find.InsertPtr(Tags());
+}
+
+
+//-----------------------------------------------------------------------------
 RString RXMLTag::GetTagAttrValue(const RString& tag,const RString& attr) const
 {
 	RXMLTag* find=GetNode(tag,false);
@@ -129,16 +139,29 @@ RString RXMLTag::GetTagAttrValue(const RString& tag,const RString& attr) const
 
 
 //-----------------------------------------------------------------------------
-void RXMLTag::InsertAttr(RXMLAttr* Attr)
+void RXMLTag::InsertAttr(RXMLAttr* Attr,bool overwritte)
 {
+	// Check if the attribute exist
+	RXMLAttr* attr=GetAttr(Attr->GetName());
+	if(attr)
+	{
+		if(!overwritte)
+			throw RException("Attribute "+Attr->GetName()+" already exists for tag "+Name);
+		if(attr!=Attr)
+			Attrs.DeletePtr(attr->GetName());
+		else
+			return;
+	}
 	Attrs.InsertPtr(Attr);
 }
 
 
 //-----------------------------------------------------------------------------
-void RXMLTag::InsertAttr(const RString& name,const RString& value)
+void RXMLTag::InsertAttr(const RString& name,const RString& value,bool overwritte)
 {
-	Attrs.InsertPtr(new RXMLAttr(name,value));
+	if(!Tree)
+		throw RException("Node "+Name+" has no parent structure");
+	InsertAttr(static_cast<RXMLStruct*>(Tree)->NewAttr(name,value),overwritte);
 }
 
 
@@ -166,6 +189,9 @@ RCursor<RXMLAttr> RXMLTag::GetAttrs(void) const
 //-----------------------------------------------------------------------------
 bool RXMLTag::Merge(const RXMLTag* merge)
 {
+	if(!Tree)
+		throw RException("Node "+Name+" has no parent structure");
+
 	if(!static_cast<RXMLStruct*>(Tree)->Compare(this,merge))
 		return(false);
 

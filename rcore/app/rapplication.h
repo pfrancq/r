@@ -38,6 +38,7 @@
 // include files for R Project
 #include <rstring.h>
 #include <rcontainer.h>
+#include <rconfig.h>
 
 
 //-----------------------------------------------------------------------------
@@ -53,6 +54,8 @@ namespace R{
 */
 class RApplication
 {
+protected:
+
 	/**
 	* Name of the application.
 	*/
@@ -67,6 +70,16 @@ class RApplication
 	* Arguments of the application.
 	*/
 	RContainer<RString,true,false> Args;
+
+	/**
+	* Configuration
+	*/
+	RConfig Config;
+
+	/**
+	* Application initialized?
+	*/
+	bool HasInitApp;
 
 public:
 
@@ -90,7 +103,24 @@ public:
 	RString GetApplicationFile(void) const;
 
 	/**
-	* Initialize the application.
+	* Look if the application was initialized (call 'Init()' method).
+	*/
+	bool IsInit(void) const {return(HasInitApp);}
+
+	/**
+	* Get a pointer over the configuration.
+	*/
+	RConfig* GetConfig(void) {return(&Config);}
+
+	/**
+	* Create the configuration structure. New parameters can be added by
+	* defining a new method.
+	*/
+	virtual void CreateConfig(void);
+
+	/**
+	* Initialize the application. By default, it create the configuration
+	* structure and load the configuration file.
 	*/
 	virtual void Init(void);
 
@@ -100,10 +130,17 @@ public:
 	virtual void Run(void);
 
 	/**
-	* Destructor of the application.
+	* Destructor of the application. By default, the configuration is saved.
 	*/
 	virtual ~RApplication(void);
 };
+
+
+//-----------------------------------------------------------------------------
+/**
+* Pointer to the current application. Only one application can be run at once.
+*/
+extern RApplication* App;
 
 
 }  //-------- End of namespace R ----------------------------------------------

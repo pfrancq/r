@@ -41,6 +41,7 @@
 #include <rstring.h>
 #include <rpromethee.h>
 #include <rpromcritvalue.h>
+#include <rparam.h>
 
 
 //------------------------------------------------------------------------------
@@ -110,6 +111,18 @@ public:
 	* @param params         Source object.
 	*/
 	RPromCriterionParams& operator=(const RPromCriterionParams& params);
+
+	/**
+	* Set the parameter of the parameter.
+	* @param param           Pointer to a structure parameter.
+	*/
+	void Set(R::RParamStruct* param);
+
+	/**
+	* Create a parameter corresponding to a promethee criteria.
+	* @param name            Name of the criteria.
+	*/
+	static RParam* CreateParam(const R::RString& name);
 };
 
 

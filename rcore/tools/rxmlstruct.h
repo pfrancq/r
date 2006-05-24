@@ -191,6 +191,23 @@ public:
 	bool Merge(const RXMLStruct& xml);
 
 	/**
+	* Create a new tag with a given name. By default, the method creates a
+	* RXMLTag.
+	* @param tag             Name of the tag.
+	* @return Pointer to a tag.
+	*/
+	virtual RXMLTag* NewTag(const RString& tag);
+
+	/**
+	* Create a new attribute with a given name and value. By default, the
+	* method creates a RXMLAttr.
+	* @param name            Name of the attribute.
+	* @param value           Value of the attribute.
+	* @return Pointer to a attribute.
+	*/
+	virtual RXMLAttr* NewAttr(const RString& name,const RString& value);
+
+	/**
 	* Destruct the XML Structure.
 	*/
 	virtual ~RXMLStruct(void);

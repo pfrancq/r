@@ -4,5 +4,5 @@ AM_CFLAGS =
 AM_CXXFLAGS =
 AM_FFLAGS =
 appincludedir = $(includedir)/r
-appinclude_HEADERS =  rapplication.h
-libapp_la_SOURCES =  rapplication.cpp
+appinclude_HEADERS =  rapplication.h  rconfig.h rparam.h
+libapp_la_SOURCES =  rapplication.cpp rconfig.cpp rparam.cpp
