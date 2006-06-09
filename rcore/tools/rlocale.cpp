@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RMsg.cpp
+	RLocale.cpp
 
-	Message systems - Implementation.
+	Internationalisation - Implementation.
 
 	Copyright 2001-2005 by the Université Libre de Bruxelles.
 
