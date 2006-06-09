@@ -53,15 +53,15 @@ namespace R{
 * class MyObject : RObject
 * {
 * public:
-*	MyObject(const RString& name) : RObject(name) {}
-*	virtual RCString GetClassName(void) const {return("MyObject");}
-*	void Handle(const RNotification& notification);
+*    MyObject(const RString& name) : RObject(name) {}
+*    virtual RCString GetClassName(void) const {return("MyObject");}
+*    void Handle(const RNotification& notification);
 * };
 *
 * MyObject::MyObject(const RString& name)
-*	: RObject(name)
+*    : RObject(name)
 * {
-*	InsertObserber(HANDLER(MyObject::Handle),"Example");
+*    InsertObserber(HANDLER(MyObject::Handle),"Example");
 * }
 * @endcode
 * @short Object.

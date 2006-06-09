@@ -138,25 +138,26 @@ public:
 * The RNotificationData provides a representation for a notification that can
 * be send by an object with a specific data.
 * @param T                   Type of the parameter.
+*
 * The type used for template is very important. For example, the following code
 * generates an exception:
 * @code
 * class MyObject : public RObject
 * {
 * public:
-*	MyObject(const RString& name) : RObject(name) {}
-*	virtual RCString GetClassName(void) {return("RObjectR");}
-*	virtual void HandleMsg(const RNotification& msg)
-* 	{
-*		cout<<GetData<long>(msg)<<endl;
-*	}
-*};
+*    MyObject(const RString& name) : RObject(name) {}
+*    virtual RCString GetClassName(void) {return("RObjectR");}
+*    void HandleMsg(const RNotification& msg)
+*    {
+*       cout<<GetData<long>(msg)<<endl;
+*    }
+* };
 *
 * NotificationCenter.PostNotification("Message",3);
 * @endcode
-* In fact, the PostNotification method will suppose a int, while the handler
-* supposes a long. To solve this problem, you must explicily cast the data
-* sended:
+* In fact, the PostNotification method will suppose that the parameter with the
+* value 3 is an int, while the handler supposes a long. To solve this problem,
+* you must explicily cast the data sended:
 * @code
 * NotificationCenter.PostNotification("Message",(long)3);
 * @endcode
@@ -192,8 +193,10 @@ public:
 //-----------------------------------------------------------------------------
 /**
 * Get the data associated with a given notification.
+* @param T                   Type of the parameter.
+* @param notification        Notification.
 * @short Data extracted of notification.
-* @author Pascal FRancq
+* @author Pascal Francq
 */
 template<class T> T GetData(const RNotification& notification)
 {
@@ -209,9 +212,9 @@ template<class T> T GetData(const RNotification& notification)
 * class MyObject : RObject
 * {
 * public:
-*	MyObject(const RString& name) : RObject(name) {}
-*	virtual RCString GetClassName(void) const {return("MyObject");}
-*	void Handle(const RNotification& notification);
+*    MyObject(const RString& name) : RObject(name) {}
+*    virtual RCString GetClassName(void) const {return("MyObject");}
+*    void Handle(const RNotification& notification);
 * };
 *
 * tNotificationHandler handler=HANDLER(MyObject::Handle);
