@@ -58,5 +58,3 @@ tNotificationType RNotification::GetType(const RCString& name)
 		res= (res & mask) ^ (res<<shift) ^ (*ptr);
 	return(res);
 }
-
-

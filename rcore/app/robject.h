@@ -64,7 +64,6 @@ namespace R{
 *	InsertObserber(HANDLER(MyObject::Handle),"Example");
 * }
 * @endcode
-* Methods that are used as handlers cannot be declared virtual.
 * @short Object.
 * @author Pascal Francq
 */

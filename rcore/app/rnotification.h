@@ -112,7 +112,7 @@ public:
 	/**
 	* Build an hash key for a notification name.
 	* @param name            Name of the notification.
-	* @return TYpe of the notification.
+	* @return Type of the notification.
 	*/
 	static tNotificationType GetType(const RCString& name);
 
@@ -270,8 +270,7 @@ public:
 *
 * tNotificationHandler handler=HANDLER(MyObject::Handle);
 * @endcode
-* It is necessary to use the HANDLER macro to define a handler. Methods cannot
-* be virtual.
+* It is necessary to use the HANDLER macro to define a handler.
 * @short Message handler.
 * @author Pascal Francq
 */
