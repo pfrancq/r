@@ -128,7 +128,7 @@ public:
 	*/
 	template<class T> void PostNotification(const RCString& name,T data)
 	{
-		NotificationCenter.PostNotification(RNotification(name,this,data));
+		NotificationCenter.PostNotification(RNotificationData<T>(name,this,data));
 	}
 
 	/**

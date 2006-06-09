@@ -70,9 +70,9 @@ typedef unsigned int tNotificationType;
 
 //-----------------------------------------------------------------------------
 /**
-* The RNotification provides a representation for a notification that can be send by an
-* object.
-* @short Message
+* The RNotification provides a representation for a notification that can be
+* send by an object.
+* @short Notification
 * @author Pascal Francq
 */
 class RNotification
@@ -92,21 +92,6 @@ class RNotification
 	*/
 	RObject* Sender;
 
-	/**
-	* Data associated to the notification.
-	*/
-	union
-	{
-		long LongValue;
-		unsigned long ULongValue;
-		long long LongLongValue;
-		unsigned long long ULongLongValue;
-		double DoubleValue;
-		char* CharSValue;
-		RString* StringSValue;
-		void* VoidSValue;
-	};
-
 public:
 
 	/**
@@ -125,78 +110,6 @@ public:
 		: Name(name), Type(GetType(name)), Sender(sender) {}
 
 	/**
-	* Constructor of a notification.
-	* @param name            Name of the notification.
-	* @param sender          Object sending the notification.
-	* @param data            Data associated with the notification.
-	*/
-	RNotification(const RCString& name,RObject* sender,long data)
-		: Name(name), Type(GetType(name)), Sender(sender), LongValue(data) {}
-
-	/**
-	* Constructor of a notification.
-	* @param name            Name of the notification.
-	* @param sender          Object sending the notification.
-	* @param data            Data associated with the notification.
-	*/
-	RNotification(const RCString& name,RObject* sender,unsigned long data)
-		: Name(name), Type(GetType(name)), Sender(sender), ULongValue(data) {}
-
-	/**
-	* Constructor of a notification.
-	* @param name            Name of the notification.
-	* @param sender          Object sending the notification.
-	* @param data            Data associated with the notification.
-	*/
-	RNotification(const RCString& name,RObject* sender,long long data)
-		: Name(name), Type(GetType(name)), Sender(sender), LongLongValue(data) {}
-
-	/**
-	* Constructor of a notification.
-	* @param name            Name of the notification.
-	* @param sender          Object sending the notification.
-	* @param data            Data associated with the notification.
-	*/
-	RNotification(const RCString& name,RObject* sender,unsigned long long data)
-		: Name(name), Type(GetType(name)), Sender(sender), ULongLongValue(data) {}
-
-	/**
-	* Constructor of a notification.
-	* @param name            Name of the notification.
-	* @param sender          Object sending the notification.
-	* @param data            Data associated with the notification.
-	*/
-	RNotification(const RCString& name,RObject* sender,double data)
-		: Name(name), Type(GetType(name)), Sender(sender), DoubleValue(data) {}
-
-	/**
-	* Constructor of a notification.
-	* @param name            Name of the notification.
-	* @param sender          Object sending the notification.
-	* @param data            Data associated with the notification.
-	*/
-	RNotification(const RCString& name,RObject* sender,char* data)
-		: Name(name), Type(GetType(name)), Sender(sender), CharSValue(data) {}
-
-	/**
-	* Constructor of a notification.
-	* @param name            Name of the notification.
-	* @param sender          Object sending the notification.
-	* @param data            Data associated with the notification.
-	*/
-	RNotification(const RCString& name,RObject* sender,RString* data)
-		: Name(name), Type(GetType(name)), Sender(sender), StringSValue(data) {}
-
-	/**
-	* Constructor of a notification.
-	* @param name            Name of the notification.
-	* @param sender          Object sending the notification.
-	* @param data            Data associated with the notification.
-	*/
-	RNotification(const RCString& name,RObject* sender,void* data)
-		: Name(name), Type(GetType(name)), Sender(sender), VoidSValue(data) {}
-
-	/**
 	* Get the name of a notification.
 	*/
 	RCString GetName(void) const {return(Name);}
@@ -212,47 +125,80 @@ public:
 	RObject* GetSender(void) const {return(Sender);}
 
 	/**
-	* Get the value of the data associated with the notification.
+	* Desturctor. This is only used OO purposes.
 	*/
-	long GetLong(void) const {return(LongValue);}
-
-	/**
-	* Get the value of the data associated with the notification.
-	*/
-	unsigned long GetULong(void) const {return(ULongValue);}
-
-	/**
-	* Get the value of the data associated with the notification.
-	*/
-	long long GetLongLong(void) const {return(LongLongValue);}
-
-	/**
-	* Get the value of the data associated with the notification.
-	*/
-	unsigned long long GetULongLong(void) const {return(ULongLongValue);}
-
-	/**
-	* Get the value of the data associated with the notification.
-	*/
-	double GetDouble(void) const {return(DoubleValue);}
-
-	/**
-	* Get the value of the data associated with the notification.
-	*/
-	char* GetCharS(void) const {return(CharSValue);}
-
-	/**
-	* Get the value of the data associated with the notification.
-	*/
-	RString* GetStringS(void) const {return(StringSValue);}
-
-	/**
-	* Get the value of the data associated with the notification.
-	*/
-	void* GetVoidS(void) const {return(VoidSValue);}
+	virtual ~RNotification(void);
 
 	friend class RNotificationCenter;
 };
+
+
+//-----------------------------------------------------------------------------
+/**
+* The RNotificationData provides a representation for a notification that can
+* be send by an object with a specific data.
+* @param T                   Type of the parameter.
+* The type used for template is very important. For example, the following code
+* generates an exception:
+* @code
+* class MyObject : public RObject
+* {
+* public:
+*	MyObject(const RString& name) : RObject(name) {}
+*	virtual RCString GetClassName(void) {return("RObjectR");}
+*	virtual void HandleMsg(const RNotification& msg)
+* 	{
+*		cout<<GetData<long>(msg)<<endl;
+*	}
+*};
+*
+* NotificationCenter.PostNotification("Message",3);
+* @endcode
+* In fact, the PostNotification method will suppose a int, while the handler
+* supposes a long. To solve this problem, you must explicily cast the data
+* sended:
+* @code
+* NotificationCenter.PostNotification("Message",(long)3);
+* @endcode
+* @short Notification with Data.
+* @author Pascal Francq
+*/
+template <class T>
+	class RNotificationData : public RNotification
+{
+	/**
+	* Data associated with the notification.
+	*/
+	T Data;
+
+public:
+
+	/**
+	* Constructor of a notification.
+	* @param name            Name of the notification.
+	* @param sender          Object sending the notification.
+	* @param data            Data associated.
+	*/
+	RNotificationData(const RCString& name,RObject* sender,T data)
+		: RNotification(name,sender), Data(data) {}
+
+	/**
+	* Get the data of the notification.
+	*/
+	T Get(void) const {return(Data);}
+};
+
+
+//-----------------------------------------------------------------------------
+/**
+* Get the data associated with a given notification.
+* @short Data extracted of notification.
+* @author Pascal FRancq
+*/
+template<class T> T GetData(const RNotification& notification)
+{
+	return(dynamic_cast<const RNotificationData<T>&>(notification).Get());
+}
 
 
 //-----------------------------------------------------------------------------

@@ -96,7 +96,7 @@ public:
 	*/
 	template<class T> void PostNotification(const RCString& name,T data)
 	{
-		PostNotification(RNotification(name,0,data));
+		PostNotification(RNotificationData<T>(name,0,data));
 	}
 
 	/**
