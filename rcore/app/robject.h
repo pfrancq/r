@@ -115,6 +115,15 @@ public:
 	/**
 	* Post a notification to the notification center.
 	* @param name            Name of the notification.
+	*/
+	void PostNotification(const RCString& name)
+	{
+		NotificationCenter.PostNotification(RNotification(name,this));
+	}
+
+	/**
+	* Post a notification to the notification center.
+	* @param name            Name of the notification.
 	* @param data            Data associated to the notification.
 	*/
 	template<class T> void PostNotification(const RCString& name,T data)
