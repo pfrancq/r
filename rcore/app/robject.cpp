@@ -45,8 +45,22 @@ using namespace R;
 
 //-----------------------------------------------------------------------------
 RObject::RObject(const RString& name)
-	: Name(name)
+	: Name(name), Handlers(0)
 {
+}
+
+
+//-----------------------------------------------------------------------------
+int RObject::Compare(const RObject& obj) const
+{
+	return(this-&obj);
+}
+
+
+//-----------------------------------------------------------------------------
+int RObject::Compare(const RObject* obj) const
+{
+	return(this-obj);
 }
 
 

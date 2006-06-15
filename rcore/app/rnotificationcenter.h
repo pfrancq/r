@@ -47,6 +47,7 @@ namespace R{
 //-----------------------------------------------------------------------------
 class RObject;
 
+
 //-----------------------------------------------------------------------------
 /**
 * The RNotificationCenter class provides a representation for a notification
@@ -67,6 +68,36 @@ public:
 	RNotificationCenter(void);
 
 	/**
+	* Get a handle for a given notification.
+	* @param name            Name of the notification.
+	* @return Handle.
+	*/
+	hNotification GetNotificationHandle(const RCString& name);
+
+	/**
+	* Get the name of a notification.
+	* @param handle          Handle of the notification.
+	*/
+	RCString GetNotificationName(hNotification handle) const;
+
+	/**
+	* Add an observer, eventually for a particular object and/or a particular
+	* notification.
+	* @param handler         Method that should handle the notification.
+	* @param observer        Observer of the notification.
+	* @param handle          Handle of the notification.
+	* @param object          Object which notifications must be handle.
+	* Several possibilities exists:
+	* -# handle is not null, but object is. The handler catches a particular
+	*    notification for any object.
+	* -# handle is null, but object isn't. The handler catches every notification
+	*    for a particular object.
+	* -# hanlde and object are null. The handler catches every notification of
+	*    every object.
+	*/
+	void InsertObserver(tNotificationHandler handler,RObject* observer,hNotification handle=0,RObject* object=0);
+
+	/**
 	* Add an observer, eventually for a particular object and/or a particular
 	* notification.
 	* @param handler         Method that should handle the notification.
@@ -81,7 +112,10 @@ public:
 	* -# name and object are null. The handler catches every notification of
 	*    every object.
 	*/
-	void InsertObserver(tNotificationHandler handler,RObject* observer,const RCString& name=RCString::Null,RObject* object=0);
+	void InsertObserver(tNotificationHandler handler,RObject* observer,const RCString& name=RCString::Null,RObject* object=0)
+	{
+		InsertObserver(handler,observer,GetNotificationHandle(name),object);
+	}
 
 	/**
 	* Post a notification.
@@ -117,6 +151,20 @@ public:
 	/**
 	* Delete a given handler of a given observer.
 	* @param observer        Observer of the handle.
+	* @param handle          Handle of the notification.
+	* @param object          Object which notifications must be handle.
+	* Several possibilities exists:
+	* -# handle is not null, but object is. All handlers defined for the
+	*    particular notification are deleted.
+	* -# handle is null, but object isn't. All handlers defined for the object
+	*    are deleted.
+	* -# handle and object are null. All default handlers are deleted.
+	*/
+	void DeleteObserver(RObject* observer,hNotification handle,RObject* object);
+
+	/**
+	* Delete a given handler of a given observer.
+	* @param observer        Observer of the handle.
 	* @param name            Name of the notification to handle.
 	* @param object          Object which notifications must be handle.
 	* Several possibilities exists:
@@ -126,7 +174,10 @@ public:
 	*    are deleted.
 	* -# name and object are null. All default handlers are deleted.
 	*/
-	void DeleteObserver(RObject* observer,const RCString& name,RObject* object);
+	void DeleteObserver(RObject* observer,const RCString& name,RObject* object)
+	{
+		DeleteObserver(observer,GetNotificationHandle(name),object);
+	}
 
 	/**
 	* Destructor of the notification center.

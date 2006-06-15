@@ -32,6 +32,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rnotification.h>
+#include <rnotificationcenter.h>
 using namespace R;
 
 
@@ -42,23 +43,25 @@ using namespace R;
 //
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-// internal constant used
-unsigned int const shift=6;
-unsigned int const mask = ~0U << (sizeof(unsigned int)*8-shift);
+//------------------------------------------------------------------------------
+RNotification::RNotification(const RCString& name,RObject* sender)
+	: Handle(NotificationCenter.GetNotificationHandle(name)), Sender(sender)
+{
+}
 
 
 //------------------------------------------------------------------------------
-tNotificationType RNotification::GetType(const RCString& name)
+RNotification::RNotification(hNotification handle,RObject* sender)
+	: Handle(handle), Sender(sender)
 {
-	const char* ptr=name();
-	unsigned int res=0;
-
-	for(;*ptr;ptr++)
-		res= (res & mask) ^ (res<<shift) ^ (*ptr);
-	return(res);
 }
 
+
+//------------------------------------------------------------------------------
+RCString RNotification::GetName(void) const
+{
+	return(NotificationCenter.GetNotificationName(Handle));
+}
 
 //------------------------------------------------------------------------------
 RNotification::~RNotification(void)

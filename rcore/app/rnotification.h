@@ -59,13 +59,11 @@ class RObject;
 
 //-----------------------------------------------------------------------------
 /**
-* The tNotificationType provides a representation for a unique identifier representing a
-* notification. It is computed using a hashing function on the name of the
-* notification.
-* @short Notification type
+* The hNotification provides a handle for a given notification.
+* @short Notification Handle
 * @author Pascal Francq
 */
-typedef unsigned int tNotificationType;
+typedef unsigned int hNotification;
 
 
 //-----------------------------------------------------------------------------
@@ -78,14 +76,9 @@ typedef unsigned int tNotificationType;
 class RNotification
 {
 	/**
-	* Name of the notification.
-	*/
-	RCString Name;
-
-	/**
 	* Type of the notification.
 	*/
-	tNotificationType Type;
+	hNotification Handle;
 
 	/**
 	* Object that has send the notification.
@@ -95,29 +88,28 @@ class RNotification
 public:
 
 	/**
-	* Build an hash key for a notification name.
-	* @param name            Name of the notification.
-	* @return Type of the notification.
-	*/
-	static tNotificationType GetType(const RCString& name);
-
-	/**
 	* Constructor of a notification.
 	* @param name            Name of the notification.
 	* @param sender          Object sending the notification.
 	*/
-	RNotification(const RCString& name,RObject* sender)
-		: Name(name), Type(GetType(name)), Sender(sender) {}
+	RNotification(const RCString& name,RObject* sender);
+
+	/**
+	* Constructor of a notification.
+	* @param handle          Handle of the notification.
+	* @param sender          Object sending the notification.
+	*/
+	RNotification(hNotification handle,RObject* sender);
 
 	/**
 	* Get the name of a notification.
 	*/
-	RCString GetName(void) const {return(Name);}
+	RCString GetName(void) const;
 
 	/**
-	* Get the type of the notification.
+	* Get the handle of the notification.
 	*/
-	tNotificationType GetType(void) const {return(Type);}
+	hNotification GetHandle(void) const {return(Handle);}
 
 	/**
 	* Get the senderof the notification.
@@ -182,6 +174,15 @@ public:
 	*/
 	RNotificationData(const RCString& name,RObject* sender,T data)
 		: RNotification(name,sender), Data(data) {}
+
+	/**
+	* Constructor of a notification.
+	* @param handle          Handle of the notification.
+	* @param sender          Object sending the notification.
+	* @param data            Data associated.
+	*/
+	RNotificationData(hNotification handle,RObject* sender,T data)
+		: RNotification(handle,sender), Data(data) {}
 
 	/**
 	* Get the data of the notification.

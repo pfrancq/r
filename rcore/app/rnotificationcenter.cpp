@@ -55,11 +55,11 @@ struct IListener
 public:
 	tNotificationHandler Handler;
 	RObject* Observer;
-	tNotificationType Type;
+	hNotification Handle;
 	RObject* Object;
 
-	IListener(tNotificationHandler handler,RObject* observer,tNotificationType type,RObject* object)
-		: Handler(handler), Observer(observer), Type(type), Object(object) {}
+	IListener(tNotificationHandler handler,RObject* observer,hNotification handle,RObject* object)
+		: Handler(handler), Observer(observer), Handle(handle), Object(object) {}
 	int Compare(const IListener& listener) const {return(this-&listener);}
 	int Compare(const IListener* listener) const {return(this-listener);}
 };
@@ -75,11 +75,11 @@ public:
 //-----------------------------------------------------------------------------
 struct INotifications : public RContainer<IListener,true,true>
 {
-	tNotificationType Type;
+	RCString Name;
 
-	INotifications(tNotificationType type) : RContainer<IListener,true,true>(50), Type(type) {}
-	int Compare(const INotifications& msg) const {return(Type-msg.Type);}
-	int Compare(tNotificationType type) const {return(Type-type);}
+	INotifications(const RCString& name) : RContainer<IListener,true,true>(50), Name(name) {}
+	int Compare(const INotifications& msg) const {return(Name.Compare(msg.Name));}
+	int Compare(const RCString& name) const {return(Name.Compare(name));}
 	void Delete(const RObject* observer);
 };
 
@@ -114,17 +114,17 @@ struct IObjects : public RContainer<IListener,true,true>
 
 	int Compare(const IObjects& object) const {return(Object-object.Object);}
 	int Compare(RObject* object) const {return(Object-object);}
-	void Delete(const RObject* observer,tNotificationType type);
+	void Delete(const RObject* observer,hNotification type);
 };
 
 
 //-----------------------------------------------------------------------------
-void IObjects::Delete(const RObject* observer,tNotificationType type)
+void IObjects::Delete(const RObject* observer,hNotification handle)
 {
 	RContainer<IListener,false,false> Dels(20);
 	RCursor<IListener> List(*this);
 	for(List.Start();!List.End();List.Next())
-		if((List()->Observer==observer)&&((!type)||((type)&&(type==List()->Type))))
+		if((List()->Observer==observer)&&((!handle)||((handle)&&(handle==List()->Handle))))
 			Dels.InsertPtr(List());
 	List.Set(Dels);
 	for(List.Start();!List.End();List.Next())
@@ -169,34 +169,55 @@ RNotificationCenter::RNotificationCenter(void)
 
 
 //-----------------------------------------------------------------------------
-void RNotificationCenter::InsertObserver(tNotificationHandler handler,RObject* observer,const RCString& name,RObject* object)
+hNotification RNotificationCenter::GetNotificationHandle(const RCString& name)
+{
+	return(reinterpret_cast<hNotification>(Data->Notifications.GetInsertPtr(name)));
+}
+
+
+//-----------------------------------------------------------------------------
+RCString RNotificationCenter::GetNotificationName(hNotification handle) const
+{
+	if(!handle)
+		return(RCString::Null);
+	return(reinterpret_cast<INotifications*>(handle)->Name);
+}
+
+//-----------------------------------------------------------------------------
+void RNotificationCenter::InsertObserver(tNotificationHandler handler,RObject* observer,hNotification handle,RObject* object)
 {
 	// Verify that the observer is not null
 	RReturnIfFail(observer);
 	RReturnIfFail(handler);
-	tNotificationType type=RNotification::GetType(name);
 
 	// Register the notification and the observer
-	IListener* listener=new IListener(handler,observer,type,object);
+	IListener* listener=new IListener(handler,observer,handle,object);
 	if(!Data->Observers.IsIn(observer))
 		Data->Observers.InsertPtr(observer);
 
 	if(!object)
 	{
 		// Notification to track does not depend of a particular object
-		if(!type)
+		if(!handle)
 			Data->Defaults.InsertPtr(listener);          // Observer catch all messages
 		else
 		{
 			// Observer catch a given message from all objects
-			INotifications* msg=Data->Notifications.GetInsertPtr(type);
+			INotifications* msg=reinterpret_cast<INotifications*>(handle);
 			msg->InsertPtr(listener);
 		}
 	}
 	else
 	{
 		// Observer catch for a given object all notification (name="") or a particular notification
-		IObjects* obj=Data->Objects.GetInsertPtr(object);
+		IObjects* obj;
+		if(!object->Handlers)
+		{
+			obj=Data->Objects.GetInsertPtr(object);
+			object->Handlers=obj;
+		}
+		else
+			obj=static_cast<IObjects*>(object->Handlers);
 		obj->InsertPtr(listener);
 	}
 }
@@ -208,10 +229,9 @@ void RNotificationCenter::PostNotification(const RNotification& notification)
 	bool Call=false;
 
 	// Tell the observers that want to know about a particular notification
-	INotifications* ptr=Data->Notifications.GetPtr(notification.Type);
-	if(ptr)
+	if(notification.Handle)
 	{
-		RCursor<IListener> Notification(*ptr);
+		RCursor<IListener> Notification(*reinterpret_cast<INotifications*>(notification.Handle));
 		for(Notification.Start();!Notification.End();Notification.Next())
 		{
 			(Notification()->Observer->*(Notification()->Handler))(notification);
@@ -220,13 +240,12 @@ void RNotificationCenter::PostNotification(const RNotification& notification)
 	}
 
 	// Tell the observers that want to know about a particular object
-	IObjects* ptr2=Data->Objects.GetPtr(notification.Sender);
-	if(ptr2)
+	if(notification.Sender&&notification.Sender->Handlers)
 	{
-		RCursor<IListener> Object(*ptr2);
+		RCursor<IListener> Object(*static_cast<IObjects*>(notification.Sender->Handlers));
 		for(Object.Start();!Object.End();Object.Next())
 		{
-			if((Object()->Type)&&(Object()->Type!=notification.Type))
+			if((Object()->Handle)&&(Object()->Handle!=notification.Handle))
 				continue;
 			(Object()->Observer->*(Object()->Handler))(notification);
 			Call=true;
@@ -278,27 +297,21 @@ void RNotificationCenter::DeleteObserver(RObject* observer)
 
 
 //-----------------------------------------------------------------------------
-void RNotificationCenter::DeleteObserver(RObject* observer,const RCString& name,RObject* object)
+void RNotificationCenter::DeleteObserver(RObject* observer,hNotification handle,RObject* object)
 {
 	// Verify that the observer is not null
 	RReturnIfFail(observer);
-	tNotificationType type=RNotification::GetType(name);
 
 	// Goes through to all listerners that receive a particular notification
-	if(type&&(!object))
-	{
-		INotifications* ptr=Data->Notifications.GetPtr(type);
-		if(ptr)
-			ptr->Delete(observer);
-	}
+	if(handle&&(!object))
+		reinterpret_cast<INotifications*>(handle)->Delete(observer);
 
 	// Goes through to all listerners that receive notifications for a particular object
-	IObjects* ptr2=Data->Objects.GetPtr(object);
-	if(ptr2)
-		ptr2->Delete(observer,type);
+	if(object&&object->Handlers)
+		static_cast<IObjects*>(object->Handlers)->Delete(observer,handle);
 
 	// Go trough the all default listeners
-	if((!type)&&(!object))
+	if((!handle)&&(!object))
 	{
 		RContainer<IListener,false,false> Dels(20);
 		RCursor<IListener> Listener(Data->Defaults);

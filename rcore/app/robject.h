@@ -74,6 +74,11 @@ class RObject
 	*/
 	RString Name;
 
+	/**
+	* Handlers of the object.
+	*/
+	void* Handlers;
+
 public:
 
 	/**
@@ -86,13 +91,13 @@ public:
 	* Compare method used by R::RContainer.
 	* @param obj             Object to compare with.
 	*/
-	int Compare(const RObject& obj) const {return(this-&obj);}
+	int Compare(const RObject& obj) const;
 
 	/**
 	* Compare method used by R::RContainer.
 	* @param obj             Object to compare with.
 	*/
-	int Compare(const RObject* obj) const {return(this-obj);}
+	int Compare(const RObject* obj) const;
 
 	/**
 	* Get the name of the object.
@@ -114,11 +119,30 @@ public:
 
 	/**
 	* Post a notification to the notification center.
+	* @param handle          Handle of the notification.
+	*/
+	void PostNotification(hNotification handle)
+	{
+		NotificationCenter.PostNotification(RNotification(handle,this));
+	}
+
+	/**
+	* Post a notification to the notification center.
 	* @param name            Name of the notification.
 	*/
 	void PostNotification(const RCString& name)
 	{
 		NotificationCenter.PostNotification(RNotification(name,this));
+	}
+
+	/**
+	* Post a notification to the notification center.
+	* @param handle          Handle of the notification.
+	* @param data            Data associated to the notification.
+	*/
+	template<class T> void PostNotification(hNotification handle,T data)
+	{
+		NotificationCenter.PostNotification(RNotificationData<T>(handle,this,data));
 	}
 
 	/**
@@ -134,12 +158,33 @@ public:
 	/**
 	* Add a handler for a particular notification for a particular object.
 	* @param handler         Handler of the notification.
+	* @param handle          Handle of the notification.
+	* @param object          Object emitting the notification.
+	*/
+	void InsertObserver(tNotificationHandler handler,hNotification handle,RObject* object)
+	{
+		NotificationCenter.InsertObserver(handler,this,handle,object);
+	}
+
+	/**
+	* Add a handler for a particular notification for a particular object.
+	* @param handler         Handler of the notification.
 	* @param name            Name of the notification.
 	* @param object          Object emitting the notification.
 	*/
 	void InsertObserver(tNotificationHandler handler,const RCString& name,RObject* object)
 	{
 		NotificationCenter.InsertObserver(handler,this,name,object);
+	}
+
+	/**
+	* Add a handler for a particular notification of every object.
+	* @param handler         Handler of the notification.
+	* @param Handle          Handle of the notification.
+	*/
+	void InsertObserver(tNotificationHandler handler,hNotification handle)
+	{
+		NotificationCenter.InsertObserver(handler,this,handle,0);
 	}
 
 	/**
@@ -159,7 +204,7 @@ public:
 	*/
 	void InsertObserver(tNotificationHandler handler,RObject* object)
 	{
-		NotificationCenter.InsertObserver(handler,this,RCString::Null,object);
+		NotificationCenter.InsertObserver(handler,this,0,object);
 	}
 
 	/**
@@ -168,13 +213,34 @@ public:
 	*/
 	void InsertObserver(tNotificationHandler handler)
 	{
-		NotificationCenter.InsertObserver(handler,this,RCString::Null,0);
+		NotificationCenter.InsertObserver(handler,this,0,0);
+	}
+
+	/**
+	* Get a handle for a given notification.
+	* @param name            Name of the notification.
+	* @return Handle.
+	*/
+	hNotification GetNotificationHandle(const RCString& name) const
+	{
+		return(NotificationCenter.GetNotificationHandle(name));
+	}
+
+	/**
+	* Get the name of a notification.
+	* @param handle          Handle of the notification.
+	*/
+	RCString GetNotificationName(hNotification handle) const
+	{
+		return(NotificationCenter.GetNotificationName(handle));
 	}
 
 	/**
 	* Destructor of the object.
 	*/
 	virtual ~RObject(void);
+
+	friend class RNotificationCenter;
 };
 
 
