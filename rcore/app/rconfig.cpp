@@ -217,7 +217,7 @@ void RConfig::Save(void)
 	try
 	{
 		// Always save localy
-		RDir::CreateDirIfNecessary("/home/pfrancq/.r/config/"+Category,true);
+		RDir::CreateDirIfNecessary(Home+"/.r/config/"+Category,true);
 		RXMLFile File(Where,Config);
 		File.Open(R::RIO::Create);
 	}
