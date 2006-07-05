@@ -91,10 +91,11 @@ public:
 * @param data               Pointer to the data.
 */
 template <class D>
-	void RIncRef(D* data)
+	D* RIncRef(D* data)
 {
 	if(data)
 		data->IncRef();
+	return(data);
 }
 
 
