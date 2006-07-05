@@ -6,5 +6,5 @@ AM_FFLAGS =
 appincludedir = $(includedir)/r
 appinclude_HEADERS =  rapplication.h  rconfig.h rparam.h rnotification.h rnotificationcenter.h robject.h
 libapp_la_SOURCES = rapplication.cpp rconfig.cpp rparam.cpp rnotification.cpp \
-	rnotificationcenter.cpp robject.cpp rthread.cpp rmutex.cpp
-noinst_HEADERS = rthread.h rmutex.h
+	rnotificationcenter.cpp robject.cpp rthread.cpp rmutex.cpp rconditionvar.cpp
+noinst_HEADERS = rthread.h rmutex.h rconditionvar.h
