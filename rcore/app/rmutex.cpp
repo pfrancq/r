@@ -45,16 +45,13 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RMutex::RMutex(void)
-	: Mutex(0)
 {
-	Mutex=new pthread_mutex_t;
-	pthread_mutex_init(Mutex,NULL);
+	pthread_mutex_init(&Mutex,NULL);
 }
 
 
 //------------------------------------------------------------------------------
 RMutex::~RMutex(void)
 {
-	pthread_mutex_destroy(Mutex);
-	delete Mutex;
+	pthread_mutex_destroy(&Mutex);
 }

@@ -83,7 +83,7 @@ class RMutex
 	/**
 	* Pointer to a mutex structure.
 	*/
-	pthread_mutex_t* Mutex;
+	pthread_mutex_t Mutex;
 
 public:
 
@@ -96,19 +96,24 @@ public:
 	* Lock the mutex. If the mutex is already locked, the calling thread is
 	*blocked.
 	*/
-	void Lock(void) {pthread_mutex_lock(Mutex);}
+	void Lock(void) {pthread_mutex_lock(&Mutex);}
 
 	/**
 	* Unlock the mutex. If threads are blocked because of this mutex, one of
 	* them (depending of the priority schema) is wake up.
 	*/
-	void UnLock(void) {pthread_mutex_unlock(Mutex);}
+	void UnLock(void) {pthread_mutex_unlock(&Mutex);}
 
 	/**
 	* Try to lock the mutex. If the mutex is already locked, the method returns
 	* also. This method must be used carefully.
 	*/
-	void TryLock(void) {pthread_mutex_trylock(Mutex);}
+	void TryLock(void) {pthread_mutex_trylock(&Mutex);}
+
+	/**
+	* Get the pthread pointer of the mutex.
+	*/
+	pthread_mutex_t* GetMutex(void) {return(&Mutex);}
 
 	/**
 	* Destruct the mutex. The behaviour of the program is unkwown if the mutex
