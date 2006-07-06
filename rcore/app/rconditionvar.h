@@ -75,7 +75,7 @@ class RMutex;
 *    cond.WakeUpOne();
 *    // Continue to work
 * }
-* @encode
+* @endcode
 * @author Pascal Francq
 * @short Conditional Variable
 */

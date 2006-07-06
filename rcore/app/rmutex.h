@@ -74,7 +74,7 @@ namespace R{
 *    account=act;
 *    mutex.UnLock();
 * }
-* @encode
+* @endcode
 * @author Pascal Francq
 * @short Mutex
 */
@@ -150,7 +150,7 @@ public:
 *    mutex.UnLock();
 *    return(0);
 * }
-* @encode
+* @endcode
 * Using the RSmartMutexPtr class, the code is less complex:
 * @code
 * RMutex mutex;
@@ -164,7 +164,7 @@ public:
 *       return(1);
 *    return(0);
 * }
-* @encode
+* @endcode
 * @author Pascal Francq
 * @short Smart Mutex Pointer
 */

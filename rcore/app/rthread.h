@@ -66,7 +66,7 @@ namespace R{
 * b.Start();
 * a.Wait();
 * b.Wait();
-* @encode
+* @endcode
 * @author Pascal Francq
 * @short Thread.
 */
