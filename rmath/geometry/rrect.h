@@ -101,6 +101,16 @@ public:
 	RCoord Height(void) const;
 
 	/**
+	* Return the width of the rectangle.
+	*/
+	RCoord GetWidth(void) const;
+
+	/**
+	* Return the height of the rectangle.
+	*/
+	RCoord GetHeight(void) const;
+
+	/**
 	* Return the area of the rectangle.
 	*/
 	inline RCoord Area(void) const {return(Height()*Width());}
@@ -189,6 +199,26 @@ public:
 	* The assign Operator.
 	*/
 	inline RRect& operator=(const RRect& rect) {Pt1=rect.Pt1;Pt2=rect.Pt2;return(*this);}
+
+	/**
+	* Get the X position of the first point.
+	*/
+	RCoord GetX1(void) const {return(Pt1.GetX());}
+
+	/**
+	* Get the Y position of the first point.
+	*/
+	RCoord GetY1(void) const {return(Pt1.GetY());}
+
+	/**
+	* Get the X position of the second point.
+	*/
+	RCoord GetX2(void) const {return(Pt2.GetX());}
+
+	/**
+	* Get the Y position of the second point.
+	*/
+	RCoord GetY2(void) const {return(Pt2.GetY());}
 };
 
 

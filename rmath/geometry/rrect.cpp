@@ -97,6 +97,20 @@ RCoord RRect::Height(void) const
 
 
 //------------------------------------------------------------------------------
+RCoord RRect::GetWidth(void) const
+{
+	return(labs(Pt2.X-Pt1.X+1));
+}
+
+
+//------------------------------------------------------------------------------
+RCoord RRect::GetHeight(void) const
+{
+	return(labs(Pt2.Y-Pt1.Y+1));
+}
+
+
+//------------------------------------------------------------------------------
 RRect& RRect::operator+=(const RPoint& pt)
 {
 	Pt1+=pt;

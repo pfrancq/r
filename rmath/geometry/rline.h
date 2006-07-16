@@ -6,7 +6,7 @@
 
 	Line - Header.
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -109,6 +109,26 @@ public:
 	* @param pt             Point used for the comparaison.
 	*/
 	bool IsIn(const RPoint& pt) const;
+
+	/**
+	* Get the X position of the first point.
+	*/
+	RCoord GetX1(void) const {return(Pt1.GetX());}
+
+	/**
+	* Get the Y position of the first point.
+	*/
+	RCoord GetY1(void) const {return(Pt1.GetY());}
+
+	/**
+	* Get the X position of the second point.
+	*/
+	RCoord GetX2(void) const {return(Pt2.GetX());}
+
+	/**
+	* Get the Y position of the second point.
+	*/
+	RCoord GetY2(void) const {return(Pt2.GetY());}
 };
 
 
