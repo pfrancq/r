@@ -53,7 +53,9 @@ template<class cGroup,class cObj,class cGroupData,class cGroups> class RGroups;
 
 
 //------------------------------------------------------------------------------
-// Constance
+/**
+* Constance representing a non-assignation of an object.
+*/
 const unsigned int NoGroup=0xFFFFFFFF;
 
 

@@ -147,7 +147,7 @@ public:
 
 	/**
 	* Move for a given number of bytes from the current position of the file.
-	* @param rel            Relative position.
+	* @param pos            Relative position.
 	*/
 	void SeekRel(long long pos);
 

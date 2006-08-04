@@ -165,7 +165,7 @@ public:
 	* This function compares two connections returns 0 if there are the same.
 	* @param c              Connection used for the comparaison.
 	*/
-	int Compare(const RGeoInfoConnection&) const {return(-1);}
+	int Compare(const RGeoInfoConnection& c) const;
 
 	/**
 	* Verify that at least two objects of the connection are placed.

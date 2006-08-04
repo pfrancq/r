@@ -166,7 +166,6 @@ public:
 
 	/**
 	* Return the index of a given node in the tree.
-	* @param ptr             Pointer to a direct subnode.
 	*/
 	size_t GetIndex(void) const;
 

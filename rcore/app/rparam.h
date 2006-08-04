@@ -83,7 +83,7 @@ public:
 
 	/**
 	* Compare the names of two paramters. This function is used by RContainer.
-	* @param attr           The parameter used for the comparaison.
+	* @param param          The parameter used for the comparaison.
 	* @returns -1,0 or 1 if the parameter is greather, the same or lesser than
 	* the parameter.
 	*/
@@ -98,7 +98,7 @@ public:
 
 	/**
 	* Set the parameter based on a tag.
-	* @param tag             Tag.
+	* @param parent          Tag.
 	* @return true if the tag correspond to the current parameter or false if
 	* not.
 	*/
@@ -212,7 +212,7 @@ public:
 
 	/**
 	* Set the parameter based on a tag.
-	* @param tag             Tag.
+	* @param parent          Tag.
 	* @return true if the tag correspond to the current parameter or false if
 	* not.
 	*/
@@ -304,7 +304,7 @@ public:
 
 	/**
 	* Set the parameter based on a tag.
-	* @param tag             Tag.
+	* @param parent          Tag.
 	* @return true if the tag correspond to the current parameter or false if
 	* not.
 	*/
@@ -312,6 +312,7 @@ public:
 
 	/**
 	* Add a new value to the list.
+	* @param value           Value.
 	*/
 	void Insert(const RString& value);
 
@@ -364,7 +365,7 @@ public:
 
 	/**
 	* Set the parameter based on a tag.
-	* @param tag             Tag.
+	* @param parent          Tag.
 	* @return true if the tag correspond to the current parameter or false if
 	* not.
 	*/

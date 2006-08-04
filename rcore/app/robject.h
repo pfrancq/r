@@ -180,7 +180,7 @@ public:
 	/**
 	* Add a handler for a particular notification of every object.
 	* @param handler         Handler of the notification.
-	* @param Handle          Handle of the notification.
+	* @param handle          Handle of the notification.
 	*/
 	void InsertObserver(tNotificationHandler handler,hNotification handle)
 	{

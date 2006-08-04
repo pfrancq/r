@@ -118,8 +118,8 @@ public:
 	/**
 	* Get the value of an attribute of the first tag with a given name and a
 	* given parent.
-	* param tag             Name of the tag.
-	* param attr            Name of the attribute.
+	* @param tag            Name of the tag.
+	* @param attr           Name of the attribute.
 	* @param parent         Parent of the tag to find.
 	* @returns a string containing the value of the attribute or a null string
 	* if either the tag wasn't foud or the attribute was not found.

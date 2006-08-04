@@ -129,6 +129,13 @@ RRect& RRect::operator-=(const RPoint& pt)
 
 
 //------------------------------------------------------------------------------
+int RRect::Compare(const RRect&) const
+{
+	return(-1);
+}
+
+
+//------------------------------------------------------------------------------
 bool RRect::Clip(const RRect& clip)
 {
 	bool bClip=false;

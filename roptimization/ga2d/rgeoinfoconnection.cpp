@@ -86,6 +86,13 @@ void RGeoInfoConnection::UnComplete(void)
 
 
 //------------------------------------------------------------------------------
+int RGeoInfoConnection::Compare(const RGeoInfoConnection&) const
+{
+	return(-1);
+}
+
+
+//------------------------------------------------------------------------------
 bool RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
 {
 	unsigned int count(0);

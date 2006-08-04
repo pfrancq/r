@@ -49,7 +49,9 @@ namespace R{
 
 
 //-----------------------------------------------------------------------------
-// Exceptions
+/**
+* Directory does not exist exception.
+*/
 NEWRIOEXCEPTION(RIOException,eExistingDir);
 
 

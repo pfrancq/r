@@ -142,7 +142,7 @@ public:
 	* is used with the class RContainer.
 	* @param rect           Rectangle used for the comparaison.
 	*/
-	int Compare(const RRect&) const { return(-1); }
+	int Compare(const RRect& rect) const;
 
 	/**
 	* Adapt the rectangle to be contained in a given region.

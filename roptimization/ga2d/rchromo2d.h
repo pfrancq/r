@@ -88,6 +88,9 @@ public:
 
 protected:
 
+	/**
+	* Array representing the area that can be occupied.
+	*/
 	unsigned int** OccupiedY;
 
 	/**

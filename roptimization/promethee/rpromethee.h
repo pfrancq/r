@@ -6,7 +6,7 @@
 
 	Rainbow Promethee Library - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -52,7 +52,6 @@ namespace R{
 * Different types for criteria.
 */
 enum CriteriaType{Minimize,Maximize};
-enum FilterType{Low, LowEqual, Equal, GreatEqual, Great};
 
 
 //------------------------------------------------------------------------------

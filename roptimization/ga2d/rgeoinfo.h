@@ -132,7 +132,7 @@ public:
 	int Compare(const unsigned int id) const {return(Con->Id-id);}
 
 	/**
-	* Return the position of the connector in absolute (not relativ to the
+	* Return the position of the connector in absolute (not relative to the
 	* object).
 	*/
 	RPoint GetPos(void) const;
@@ -338,7 +338,7 @@ public:
 	* pointers.
 	* @param info           Pointer used for the comparaison.
 	*/
-	int Compare(const RGeoInfo&) const { return(-1); }
+	int Compare(const RGeoInfo& info) const;
 
 	/**
 	* Compare function use for the RContainer class. Compare the identificator

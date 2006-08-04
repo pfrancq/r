@@ -6,7 +6,7 @@
 
 	2D Placement Genetic Algorithm - Header
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -56,7 +56,9 @@ template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> clas
 
 
 //------------------------------------------------------------------------------
-// Heuristic Types
+/**
+* Different heuristic usable in the 2DGA.
+*/
 enum HeuristicType{BottomLeft=0,Edge=1,Center=2};
 
 

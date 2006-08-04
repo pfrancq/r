@@ -63,7 +63,9 @@ class RTextEncoding;
 
 
 //------------------------------------------------------------------------------
-// Type representing an identifier in a database row
+/**
+* Type representing an identifier in a database row/
+*/
 typedef unsigned long long size_raw;
 
 
@@ -429,7 +431,8 @@ public:
 
 	/**
 	* Write a given transaction.
-
+	* @param id             Identificator of the transaction (if null, a new is
+	*                       created).
 	* @param ...            Values of the parameters of the transaction (transid
 	                        is reserved).
 	* @return The identificator of the transaction.

@@ -281,7 +281,7 @@ protected:
 
 	/**
 	* Return true if a string begin with a end of line.
-	* @param ptr            Pointer to a string.
+	* @param car            Character.
 	*/
 	static bool Eol(RChar car);
 

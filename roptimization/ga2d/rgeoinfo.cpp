@@ -233,6 +233,13 @@ void RGeoInfo::Assign(const RPoint& pos,RGrid* grid)
 
 
 //------------------------------------------------------------------------------
+int RGeoInfo::Compare(const RGeoInfo&) const
+{
+	return(-1);
+}
+
+
+//------------------------------------------------------------------------------
 bool RGeoInfo::Test(RPoint& pos,RGrid* grid)
 {
 	RPoint start,end;

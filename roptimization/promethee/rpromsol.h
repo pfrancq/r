@@ -83,14 +83,14 @@ class RPromSol : protected RContainer<RPromCritValue,true,false>
 
 public:
 
-	/*
+	/**
 	* Construct a prom�h� solution.
 	* @param id             Identifier of the solution.
 	* @param nbcrit         Number of criterions.
 	*/
 	RPromSol(const unsigned int id,const unsigned int nbcrit=30);
 
-	/*
+	/**
 	* Construct a prom�h� solution.
 	* @param id             Identifier of the solution.
 	* @param name           Name of the solution

@@ -46,7 +46,9 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// Exceptions
+/**
+* Invalid XML file exception.
+*/
 NEWRIOEXCEPTION(RIOException,eInvalidXMLFile);
 
 

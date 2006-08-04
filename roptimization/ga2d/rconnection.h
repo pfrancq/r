@@ -77,7 +77,7 @@ public:
 	* there are the same.
 	* @param c              Connection used for the comparaison.
 	*/
-	int Compare(const RConnection&) const {return(-1);}
+	int Compare(const RConnection& c) const;
 
 	/**
 	* Return the weight.

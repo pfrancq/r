@@ -222,7 +222,6 @@ public:
 	* @param name            Name of the parameter.
 	* @param v               Value of the parameter.
 	* @param cat             Category of the parameter.
-	* @param multiple        Multiple parameter with the same name?
 	*/
 	void Set(const RString& name,const RString& v,const RString& cat=RString::Null);
 
@@ -269,7 +268,7 @@ public:
 	/**
 	* Add a parameter to a structure.
 	* @param name            Name of the structure.
-	* @param parameter       Parameter.
+	* @param param           Parameter.
 	* @param cat             Category of the structure.
 	*/
 	void AddToStruct(const RString& name,RParam* param,const RString& cat=RString::Null);

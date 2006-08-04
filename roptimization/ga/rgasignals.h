@@ -62,9 +62,14 @@ public:
 	class BestSig
 	{
 	public:
-		cChromo *Best;
+		/** Best chromosome. */
+		cChromo* Best;
 
-		BestSig(cChromo *best) : Best(best) {}
+		/**
+		* Construct this signal.
+		* @param best        Best chromosome.
+		*/
+		BestSig(cChromo* best) : Best(best) {}
 	};
 
 	/**
@@ -127,12 +132,23 @@ public:
 	class GenSig
 	{
 	public:
+		/** Number of generations. */
 		unsigned int Gen;
+		/** Age of the best chromosome. */
 		unsigned int BestGen;
+		/** Population. */
 		cChromo** Pop;
+		/** Best chromosome. */
 		cChromo* Best;
 
-		GenSig(unsigned int gen,unsigned int bestgen,cChromo **pop,cChromo *best)
+		/**
+		* Constructor.
+		* @param gen         Actual generation number.
+		* @param bestgen     Age of the best chromosome.
+		* @param pop         Population.
+		* @param best        Best chromosome.
+		*/
+		GenSig(unsigned int gen,unsigned int bestgen,cChromo** pop,cChromo* best)
 			: Gen(gen), BestGen(bestgen), Pop(pop), Best(best) {}
 	};
 

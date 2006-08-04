@@ -45,3 +45,10 @@ RConnection::RConnection(unsigned int nb,double weight)
 	: Weight(weight), Connect(nb,nb/2)
 {
 }
+
+
+//------------------------------------------------------------------------------
+int RConnection::Compare(const RConnection&) const
+{
+	return(-1);
+}

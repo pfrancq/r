@@ -64,6 +64,7 @@ template<bool bOrder=true>
 	class RVectorInt
 {
 protected:
+
 	/**
 	* Number of values in the list.
 	*/
@@ -95,7 +96,7 @@ public:
 
 	/**
 	* Construct the list of Integer value.
-	* @param Max             The maximum number of values.
+	* @param max             Maximum number of values.
 	*/
 	RVectorInt(const unsigned int max);
 

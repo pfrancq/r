@@ -177,7 +177,7 @@ public:
 	/**
 	* Insert a node and attached it to a parent. If the parent is null,
 	* the node is considered as the top node of the tree.
-	* @param parent         Parent where the node is to attached.
+	* @param to             Parent where the node is to attached.
 	* @param node           Node to insert.
 	*/
 	void InsertNode(N* to,N* node);
@@ -202,7 +202,7 @@ public:
 	/**
 	* Do a deep copy of a node of another tree.
 	* @param src             Source node in the another tree.
-	* @param parent          Parent node.
+	* @param newparent       Parent node.
 	*/
 	void DeepCopy(N* src,N* newparent);
 
