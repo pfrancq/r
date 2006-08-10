@@ -150,17 +150,17 @@ public:
 	void GoTo(size_t idx);
 
 	/**
-	* Return the actual position in the container.
+	* Return the actual position in the cursor.
 	*/
 	inline size_t GetPos(void) const {return(ActPtr);}
 
 	/**
-	* Return the number of elements in the container.
+	* Return the number of elements in the cursor.
 	*/
-	inline size_t GetNb(void) const {return(NbPtr);}
+	inline size_t GetNb(void) const {return(LastPtr-FirstPtr);}
 
 	/**
-	* Test if the end of the container is reached.
+	* Test if the end of the cursor is reached.
 	*/
 	inline bool End(void) const {return(ActPtr==LastPtr);}
 
