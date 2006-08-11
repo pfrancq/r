@@ -130,7 +130,8 @@ void BasicCursor::Start(void)
 //-----------------------------------------------------------------------------
 void BasicCursor::GoTo(size_t idx)
 {
-	if((idx<FirstPtr)||(idx>=LastPtr))
+	idx+=FirstPtr;
+	if(idx>=LastPtr)
 	{
 		char tmp[80];
 		sprintf(tmp,"void BasicCursor::GoTo(size_t) : index %u outside range [%u,%u]",idx,FirstPtr,LastPtr-1);

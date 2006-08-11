@@ -144,7 +144,7 @@ public:
 	void Start(void);
 
 	/**
-	* Go to the i-th element of the container.
+	* Go to the i-th element of the cursor.
 	* @param idx             Index of the element to get.
 	*/
 	void GoTo(size_t idx);
@@ -152,7 +152,7 @@ public:
 	/**
 	* Return the actual position in the cursor.
 	*/
-	inline size_t GetPos(void) const {return(ActPtr);}
+	inline size_t GetPos(void) const {return(ActPtr-FirstPtr);}
 
 	/**
 	* Return the number of elements in the cursor.
