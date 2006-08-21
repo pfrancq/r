@@ -91,7 +91,7 @@ class RDate
 public:
 
 	/**
-	* Construct a date.
+	* Construct a date. The current date is used.
 	*/
 	RDate(void);
 
