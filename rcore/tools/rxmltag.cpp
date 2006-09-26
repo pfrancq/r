@@ -159,9 +159,10 @@ void RXMLTag::InsertAttr(RXMLAttr* Attr,bool overwritte)
 //-----------------------------------------------------------------------------
 void RXMLTag::InsertAttr(const RString& name,const RString& value,bool overwritte)
 {
-	if(!Tree)
-		throw RException("Node "+Name+" has no parent structure");
-	InsertAttr(static_cast<RXMLStruct*>(Tree)->NewAttr(name,value),overwritte);
+	if(Tree)
+		InsertAttr(static_cast<RXMLStruct*>(Tree)->NewAttr(name,value),overwritte);
+	else
+		InsertAttr(new RXMLAttr(name,value),overwritte);
 }
 
 

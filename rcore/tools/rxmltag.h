@@ -187,7 +187,9 @@ public:
 
 	/**
 	* Insert an attribute. If the attribute already exist, the value can be
-	* overwritten depending of the third parameter.
+	* overwritten depending of the third parameter. If the tag is attached to a
+	* XML structure, the method RXMLStruct::NewAttr is used to create the
+	* attribute. If not, a RXMLAttr is created.
 	* @param name           Name of the attribute.
 	* @param value          Value of the attribute.
 	* @param overwritte     Overwritte existing parameter.
