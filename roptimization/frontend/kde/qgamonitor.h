@@ -31,7 +31,6 @@
 
 //------------------------------------------------------------------------------
 // include files for Qt
-#include <qlist.h>
 #include <qwidget.h>
 #include <qlabel.h>
 #include <qgroupbox.h>
