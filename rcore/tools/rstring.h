@@ -61,7 +61,7 @@ namespace R{
 * @code
 * RString str1("Hello Wold");
 * RString str2;
-* str2=str2;
+* str2=str1;
 * @endcode
 * The strings str1 and str2 use (as long as none of them is modified) the same
 * copy of the characters string.
