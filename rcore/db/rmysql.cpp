@@ -197,8 +197,8 @@ void RQuery::Init(void)
 	}
 	cmd=SQL.Mid(pos,size).ToUpper();
 
-	// It is a SELECT or a SHOW command -> retrieve results
-	if((size<7)&&((cmd=="SELECT")||(cmd=="SHOW")))
+	// It is a SELECT, a DESC or a SHOW command -> retrieve results
+	if((size<7)&&((cmd=="SELECT")||(cmd=="SHOW")||(cmd=="DESC")))
 	{
 		result=mysql_store_result(DB->connection);
 		nbrows=mysql_num_rows(result);
