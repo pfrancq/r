@@ -201,6 +201,8 @@ void RQuery::Init(void)
 	if((size<7)&&((cmd=="SELECT")||(cmd=="SHOW")||(cmd=="DESC")))
 	{
 		result=mysql_store_result(DB->connection);
+		if(!result)
+			throw RMySQLError(mysql_error(&DB->mysql));
 		nbrows=mysql_num_rows(result);
 		nbcols=mysql_num_fields(result);
 	}
