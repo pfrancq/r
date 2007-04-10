@@ -6,7 +6,7 @@
 
 	Class to download files - Header.
 
-	Copyright 2004-2005 by the Université Libre de Bruxelles.
+	Copyright 2004-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.Be)
@@ -70,6 +70,16 @@ class RDownload
 	*/
 	CURL* Lib;
 
+	/**
+	 * Valid Content?
+	 */
+	bool ValidContent;
+	
+	/**
+	 * Current MIME Type;
+	 */
+	RString MIME;
+	
 public:
 
 	/**
@@ -82,26 +92,45 @@ protected:
 	/**
 	* Parameter function gived to curl_easy_setopt
 	*/
-	static int WriteTmpFile(void* buffer, size_t size, size_t nmemb, void* stream);
+	static int WriteTmpFile(void* buffer, size_t size, size_t nmemb,void* param);
+
+	/**
+	 * Treat Header.
+	 */
+	static int TreatHeader(void* buffer, size_t size, size_t nmemb,void* param);
 
 public:
 
 	/**
 	* Download and store locally a document given by an URL. If the tmpFile contains
-	* an url, the temporary document will be saved using this filename esle a file is
+	* an url, the temporary document will be saved using this filename else a file is
 	* created with a random name
 	* @param URL            URL of the document.
 	* @param tmpFile        Temporary file created.
 	*/
-	virtual void Download(const char* URL,R::RString& tmpFile);
+	virtual void DownloadFile(const RString& URL,R::RString& tmpFile);
 
 	/**
 	* Delete a temporary copy of a file created by the manager. This method is
 	* only called if a temporary file was really created.
 	* @param tmpFile        Temporary file to delete.
 	*/
-	virtual void Delete(R::RString& tmpFile);
+	virtual void DeleteFile(R::RString& tmpFile);
 
+	/**
+	 * If the protocol is HTTP and the server returns a content type for the
+	 * downloaded file, this function is called to verify if the file should be
+	 * really downloaded.
+	 * @param MIME           MIME type send by the server.
+	 * @return true if the file should be downloaded (default).
+	 */
+	virtual bool IsValidContent(const R::RString& MIME);
+	
+	/**
+	 * Get the current MIME type.
+	 */
+	RString GetMIMEType(void);
+	
 	/**
 	* Destructor of the downloader.
 	*/
