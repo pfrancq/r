@@ -127,6 +127,12 @@ public:
 	virtual bool IsValidContent(const R::RString& MIME);
 	
 	/**
+	 * Method called when the download of file starts.
+	 * @return true if the file should really be downloaded (default).
+	 */
+	virtual bool StartDownload(void);
+	
+	/**
 	 * Get the current MIME type.
 	 */
 	RString GetMIMEType(void);

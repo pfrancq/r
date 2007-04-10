@@ -57,9 +57,10 @@ struct DwnFile
 {
 	FILE* Stream;
 	RDownload* Caller;
+	bool First;
 	
 	DwnFile(const char* filename,RDownload* caller)
-		: Stream(0), Caller(caller)
+		: Stream(0), Caller(caller), First(true)
 	{
 		Stream=fopen(filename, "wb");
 		if(!Stream)
@@ -77,6 +78,15 @@ struct DwnFile
 //------------------------------------------------------------------------------
 int RDownload::WriteTmpFile(void* buffer, size_t size, size_t nmemb, void* param)
 {
+	if(((struct DwnFile*)param)->First)
+	{
+		((struct DwnFile*)param)->First=false;
+		if(!((struct DwnFile*)param)->Caller->StartDownload())
+		{
+			((struct DwnFile*)param)->Caller->ValidContent=false;
+        		return(-1);
+		}		
+	}
 	return(fwrite(buffer, size, nmemb, ((struct DwnFile*)param)->Stream));
 }
 
@@ -185,6 +195,13 @@ void RDownload::DeleteFile(RString& tmpFile)
 
 //------------------------------------------------------------------------------
 bool RDownload::IsValidContent(const R::RString&)
+{
+	return(true);
+}
+
+
+//------------------------------------------------------------------------------
+bool RDownload::StartDownload(void)
 {
 	return(true);
 }
