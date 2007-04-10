@@ -57,7 +57,6 @@ RException::RException(const char* str) throw()
 	{
 	    strncpy(Msg,str,1024);
 	    Msg[1023] = '\0';
-		std::cerr<<"Exception: "<<Msg<<std::endl;
 	}
 	else
 		Msg[0]='\0';
@@ -71,7 +70,6 @@ void RException::SetMsg(const char* str)
 	{
 	    strncpy(Msg,str,1024);
 	    Msg[1023] = '\0';
-		std::cerr<<"Exception: "<<Msg<<std::endl;
 	}
 	else
 		Msg[0]='\0';
