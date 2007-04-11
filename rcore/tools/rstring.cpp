@@ -629,13 +629,16 @@ RChar* RString::Latin1ToUnicode(const char* src,size_t& len,size_t& maxlen)
 	size_t i;
 	RChar* ptr;
 
-	len=strlen(src);
-	if(maxlen<len)
-		maxlen=len;
+	if(!maxlen)
+		maxlen=strlen(src);
 	res=ptr=new RChar[maxlen+1];
-	i = len;
-	while(i--)
+	i = maxlen+1;
+	len=0;
+	while((--i)&&(*src))
+	{
 	   	(*(ptr++)) = (*(src++));
+	   	len++;
+	}
 	(*ptr)=0;
 	return(res);
 }

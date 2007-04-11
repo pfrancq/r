@@ -53,81 +53,52 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-struct DwnFile
+int RDownload::WriteTmpFile(void* buffer,size_t size,size_t nmemb,void* param)
 {
-	FILE* Stream;
-	RDownload* Caller;
-	bool First;
-	
-	DwnFile(const char* filename,RDownload* caller)
-		: Stream(0), Caller(caller), First(true)
+	if(((RDownload*)param)->First)
 	{
-		Stream=fopen(filename, "wb");
-		if(!Stream)
-			throw RException(RString("Cannot create temporary file ")+filename);
-	}
-	~DwnFile(void)
-	{
-		if(Stream)
-			fclose(Stream);		
-	}
-	
-};
-
-
-//------------------------------------------------------------------------------
-int RDownload::WriteTmpFile(void* buffer, size_t size, size_t nmemb, void* param)
-{
-	if(((struct DwnFile*)param)->First)
-	{
-		((struct DwnFile*)param)->First=false;
-		if(!((struct DwnFile*)param)->Caller->StartDownload())
+		((RDownload*)param)->First=false;
+		if(!((RDownload*)param)->StartDownload())
 		{
-			((struct DwnFile*)param)->Caller->ValidContent=false;
-        		return(-1);
+			((RDownload*)param)->ValidContent=false;
+        	return(-1);
 		}		
 	}
-	return(fwrite(buffer, size, nmemb, ((struct DwnFile*)param)->Stream));
+	return(fwrite(buffer,size,nmemb,((RDownload*)param)->Stream));
 }
 
 
 //------------------------------------------------------------------------------
-int RDownload::TreatHeader(void* buffer, size_t size, size_t nmemb,void* param)
+int RDownload::TreatHeader(void* buffer,size_t size,size_t nmemb,void* param)
 {
-   // only handle single-byte data
-    if (size!=1)
-        return(0);
+	// Only handle single-byte data
+	if(size!=1)
+		return(0);
 
-    char* buf = (char*)malloc(nmemb + 1);
-    if(buf)
-    {
-        memset(buf,0,nmemb + 1);
-        memcpy(buf,buffer,nmemb);
-        char* mime=buf;
-        while(((*mime)&&((*mime)!=':')))
-        	mime++;
-        (*mime)=0;
-        if(!strcmp(buf,"Content-Type"))
-        {
-        	mime++;
-        	while(isspace(*mime))
-        		mime++;
-       		char* ptr=mime;
-       		while((!isspace(*ptr))&&((*ptr)!=';'))
-       			ptr++;
-        	(*ptr)=0;
-        	((struct DwnFile*)param)->Caller->MIME=mime;
-        	if(!((struct DwnFile*)param)->Caller->IsValidContent(((struct DwnFile*)param)->Caller->MIME))
-        	{
-        		((struct DwnFile*)param)->Caller->ValidContent=false;
-        		return(-1);
-        	}
-        }
-        free(buf);
-        return nmemb;
+	if(buffer&&nmemb)
+	{
+		if(!strncmp((char*)buffer,"Content-Type",12))
+		{
+			char* ptr=(char*)buffer+13;
+			while((*ptr)&&(isspace(*ptr)))
+				ptr++;
+			char* mime=ptr;
+			int nb=0;
+			while((*ptr)&&(!isspace(*ptr))&&((*ptr)!=';'))
+			{
+				ptr++;
+				nb++;
+			}
+			((RDownload*)param)->MIME.Copy(mime,nb);
+			if(!((RDownload*)param)->IsValidContent(((RDownload*)param)->MIME))
+			{
+				((RDownload*)param)->ValidContent=false;
+				return(-1);
+			}
+		}
+        return(nmemb);
     }
     return(0);
-	
 }
 
 
@@ -140,8 +111,20 @@ int RDownload::TreatHeader(void* buffer, size_t size, size_t nmemb,void* param)
 
 //------------------------------------------------------------------------------
 RDownload::RDownload(void)
+	: ValidContent(true), MIME(30), Stream(0), First(true)
 {
+	// Create link to CURL library and put global options
 	Lib = curl_easy_init();
+	curl_easy_setopt(Lib, CURLOPT_WRITEFUNCTION,RDownload::WriteTmpFile);
+	curl_easy_setopt(Lib, CURLOPT_HEADERFUNCTION,RDownload::TreatHeader);
+	curl_easy_setopt(Lib, CURLOPT_CONNECTTIMEOUT,30);
+	curl_easy_setopt(Lib, CURLOPT_TIMEOUT,240);
+	curl_easy_setopt(Lib, CURLOPT_NOPROGRESS, 1);
+	curl_easy_setopt(Lib, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+ 	curl_easy_setopt(Lib, CURLOPT_COOKIEFILE, "");
+ 	curl_easy_setopt(Lib, CURLOPT_NOSIGNAL, 1);	
+	curl_easy_setopt(Lib, CURLOPT_WRITEHEADER,this);
+ 	curl_easy_setopt(Lib, CURLOPT_WRITEDATA,this);
 }
 
 
@@ -157,26 +140,21 @@ void RDownload::DownloadFile(const RString& URL,RString& tmpFile)
 		tmpFile=filename;
 	}
 
-	// Fill structure
+	// Init Part
 	ValidContent=true;  // Suppose the content is OK
 	MIME="";            // No MIME type.
-	struct DwnFile Dwn(tmpFile,this);
+	First=true;
+	Stream=fopen(tmpFile, "wb");
+	if(!Stream)
+		throw RException("Cannot create temporary file "+tmpFile);
 	
-	// Set the option
-	curl_easy_setopt(Lib, CURLOPT_URL, URL.Latin1());
-	curl_easy_setopt(Lib, CURLOPT_WRITEFUNCTION,RDownload::WriteTmpFile);
-	curl_easy_setopt(Lib, CURLOPT_HEADERFUNCTION,RDownload::TreatHeader);
-	curl_easy_setopt(Lib, CURLOPT_CONNECTTIMEOUT,30);
-	curl_easy_setopt(Lib, CURLOPT_TIMEOUT,240);
-	curl_easy_setopt(Lib, CURLOPT_NOPROGRESS, 1);
-	curl_easy_setopt(Lib, CURLOPT_WRITEDATA,&Dwn);
-	curl_easy_setopt(Lib, CURLOPT_WRITEHEADER,&Dwn);
-	curl_easy_setopt(Lib, CURLOPT_USERAGENT, "libcurl-agent/1.0");
- 	curl_easy_setopt(Lib, CURLOPT_COOKIEFILE, "");
- 	curl_easy_setopt(Lib, CURLOPT_NOSIGNAL, 1);
-
 	// Download the file
+	curl_easy_setopt(Lib, CURLOPT_URL, URL.Latin1());
 	CURLcode err=curl_easy_perform(Lib);
+
+	// Done Part	
+	if(Stream)
+		fclose(Stream);		
 	if(err)
 	{
 		if(!ValidContent)

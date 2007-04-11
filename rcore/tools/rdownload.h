@@ -79,7 +79,17 @@ class RDownload
 	 * Current MIME Type;
 	 */
 	RString MIME;
-	
+
+	/**
+	 * Stream that will store the file to download.
+	 */
+	FILE* Stream;
+
+	/**
+	 * Is it the first bloc of data downloaded?
+	 */
+	bool First;
+
 public:
 
 	/**
@@ -87,15 +97,17 @@ public:
 	*/
 	RDownload(void);
 
-protected:
+private:
 
 	/**
-	* Parameter function gived to curl_easy_setopt
+	* Parameter function gived to CURLOPT_WRITEFUNCTION and called by CURL when
+	* data are downloaded.
 	*/
 	static int WriteTmpFile(void* buffer, size_t size, size_t nmemb,void* param);
 
 	/**
-	 * Treat Header.
+	* Parameter function gived to CURLOPT_HEADERFUNCTION and called by CURL when
+	* a part of the header is downloaded.
 	 */
 	static int TreatHeader(void* buffer, size_t size, size_t nmemb,void* param);
 
@@ -117,6 +129,8 @@ public:
 	*/
 	virtual void DeleteFile(R::RString& tmpFile);
 
+protected:
+
 	/**
 	 * If the protocol is HTTP and the server returns a content type for the
 	 * downloaded file, this function is called to verify if the file should be
@@ -131,6 +145,8 @@ public:
 	 * @return true if the file should really be downloaded (default).
 	 */
 	virtual bool StartDownload(void);
+
+public:
 	
 	/**
 	 * Get the current MIME type.
