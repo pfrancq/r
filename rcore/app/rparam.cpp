@@ -44,8 +44,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RParam::RParam(const RString& n)
-	: Name(n)
+RParam::RParam(const RString& n,const RString& desc)
+	: Name(n), Description(desc)
 {
 }
 
@@ -118,53 +118,46 @@ RParam::~RParam(void)
 
 //------------------------------------------------------------------------------
 RParamValue::RParamValue(const RXMLTag* tag)
-	: RParam(tag->GetAttrValue("name"))
+	: RParam(tag->GetAttrValue("name"),tag->GetAttrValue("desc"))
 {
 	Value=tag->GetAttrValue("value");
 }
 
 
 //------------------------------------------------------------------------------
-RParamValue::RParamValue(const RString& n,const RString& v)
-	: RParam(n), Value(v)
+RParamValue::RParamValue(const RString& n,const RString& v,const RString& desc)
+	: RParam(n,desc), Value(v)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RParamValue::RParamValue(const RString& n,const char* v)
-	: RParam(n), Value(v)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RParamValue::RParamValue(const RString& n,int v)
-		: RParam(n)
+RParamValue::RParamValue(const RString& n,int v,const RString& desc)
+		: RParam(n,desc)
 {
 	SetInt(v);
 }
 
 
 //------------------------------------------------------------------------------
-RParamValue::RParamValue(const RString& n,unsigned int v)
-		: RParam(n)
+RParamValue::RParamValue(const RString& n,unsigned int v,const RString& desc)
+		: RParam(n,desc)
 {
 	SetUInt(v);
 }
 
 
 //------------------------------------------------------------------------------
-RParamValue::RParamValue(const RString& n,double v)
-		: RParam(n)
+RParamValue::RParamValue(const RString& n,double v,const RString& desc)
+		: RParam(n,desc)
 {
 	SetDouble(v);
 }
 
 
 //------------------------------------------------------------------------------
-RParamValue::RParamValue(const RString& n,bool v)
-		: RParam(n)
+RParamValue::RParamValue(const RString& n,bool v,const RString& desc)
+		: RParam(n,desc)
 {
 	SetBool(v);
 }
@@ -268,6 +261,7 @@ void RParamValue::AddTag(RXMLStruct* xml,RXMLTag* parent)
 	xml->AddTag(parent,ptr=new RXMLTag("param"));
 	ptr->InsertAttr("name",Name);
 	ptr->InsertAttr("value",Value);
+	ptr->InsertAttr("desc",Description);
 }
 
 
@@ -287,7 +281,7 @@ void RParamValue::Reset(void)
 
 //------------------------------------------------------------------------------
 RParamList::RParamList(const RXMLTag* tag)
-	: RParam(tag->GetAttrValue("name")), Values(tag->GetNbNodes())
+	: RParam(tag->GetAttrValue("name"),tag->GetAttrValue("desc")), Values(tag->GetNbNodes())
 {
 	RCursor<RXMLTag> Cur(tag->GetNodes());
 	for(Cur.Start();!Cur.End();Cur.Next())
@@ -300,8 +294,8 @@ RParamList::RParamList(const RXMLTag* tag)
 
 
 //------------------------------------------------------------------------------
-RParamList::RParamList(const RString& name)
-	: RParam(name), Values(20)
+RParamList::RParamList(const RString& name,const RString& desc)
+	: RParam(name,desc), Values(20)
 {
 }
 
@@ -355,6 +349,7 @@ void RParamList::AddTag(RXMLStruct* xml,RXMLTag* parent)
 
 	xml->AddTag(parent,ptr=new RXMLTag("list"));
 	ptr->InsertAttr("name",Name);
+	ptr->InsertAttr("desc",Description);
 	RCursor<RString> Cur(Values);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
@@ -380,7 +375,7 @@ void RParamList::Reset(void)
 
 //------------------------------------------------------------------------------
 RParamStruct::RParamStruct(const RXMLTag* tag)
-	: RParam(tag->GetAttrValue("name")), Parameters(tag->GetNbNodes())
+	: RParam(tag->GetAttrValue("name"),tag->GetAttrValue("desc")), Parameters(tag->GetNbNodes())
 {
 	RCursor<RXMLTag> Cur(tag->GetNodes());
 	for(Cur.Start();!Cur.End();Cur.Next())
@@ -396,8 +391,8 @@ RParamStruct::RParamStruct(const RXMLTag* tag)
 
 
 //------------------------------------------------------------------------------
-RParamStruct::RParamStruct(const RString& name)
-	: RParam(name), Parameters(20)
+RParamStruct::RParamStruct(const RString& name,const RString& desc)
+	: RParam(name,desc), Parameters(20)
 {
 }
 
@@ -445,6 +440,7 @@ void RParamStruct::AddTag(RXMLStruct* xml,RXMLTag* parent)
 
 	xml->AddTag(parent,ptr=new RXMLTag("struct"));
 	ptr->InsertAttr("name",Name);
+	ptr->InsertAttr("desc",Description);
 	RCursor<RParam> Cur(Parameters);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->AddTag(xml,ptr);

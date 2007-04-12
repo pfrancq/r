@@ -59,18 +59,29 @@ protected:
 	*/
 	RString Name;
 
+	/**
+	 * Description of the parameter. 
+	 */
+	RString Description;
+	
 public:
 
 	/**
 	* Constructor of the parameter.
 	* @param n               Name of the parameter.
+	* @param desc            Description of the parameter.
 	*/
-	RParam(const RString& n);
+	RParam(const RString& n,const RString& desc=RString::Null);
 
 	/**
 	* Get the name of the parameter.
 	*/
 	RString GetName(void) const {return(Name);}
+	
+	/**
+	* Get the description of the parameter.
+	*/
+	RString GetDescription(void) const {return(Description);}
 
 	/**
 	* Compare the name of the paramter with a given string. This function is
@@ -142,43 +153,41 @@ public:
 	* Constructor of the parameter with a 'value' attribute.
 	* @param n               Name of the parameter.
 	* @param v               Value.
+	* @param desc            Description of the parameter.
 	*/
-	RParamValue(const RString& n,const RString& v);
+	RParamValue(const RString& n,const RString& v,const RString& desc=RString::Null);
 
 	/**
 	* Constructor of the parameter with a 'value' attribute.
 	* @param n               Name of the parameter.
 	* @param v               Value.
+	* @param desc            Description of the parameter.
 	*/
-	RParamValue(const RString& n,const char* v);
+	RParamValue(const RString& n,int v,const RString& desc=RString::Null);
 
 	/**
 	* Constructor of the parameter with a 'value' attribute.
 	* @param n               Name of the parameter.
 	* @param v               Value.
+	* @param desc            Description of the parameter.
 	*/
-	RParamValue(const RString& n,int v);
+	RParamValue(const RString& n,unsigned int v,const RString& desc=RString::Null);
 
 	/**
 	* Constructor of the parameter with a 'value' attribute.
 	* @param n               Name of the parameter.
 	* @param v               Value.
+	* @param desc            Description of the parameter.
 	*/
-	RParamValue(const RString& n,unsigned int v);
+	RParamValue(const RString& n,double v,const RString& desc=RString::Null);
 
 	/**
 	* Constructor of the parameter with a 'value' attribute.
 	* @param n               Name of the parameter.
 	* @param v               Value.
+	* @param desc            Description of the parameter.
 	*/
-	RParamValue(const RString& n,double v);
-
-	/**
-	* Constructor of the parameter with a 'value' attribute.
-	* @param n               Name of the parameter.
-	* @param v               Value.
-	*/
-	RParamValue(const RString& n,bool v);
+	RParamValue(const RString& n,bool v,const RString& desc=RString::Null);
 
 	/**
 	* Get the content of the parameter.
@@ -287,8 +296,9 @@ public:
 	/**
 	* Constructor of the parameter.
 	* @param name            Name.
+	* @param desc            Description of the parameter.
 	*/
-	RParamList(const RString& name);
+	RParamList(const RString& name,const RString& desc=RString::Null);
 
 	/**
 	* Return the values.
@@ -355,8 +365,9 @@ public:
 	/**
 	* Constructor of the parameter.
 	* @param name            Name.
+	* @param desc            Description of the parameter.
 	*/
-	RParamStruct(const RString& name);
+	RParamStruct(const RString& name,const RString& desc=RString::Null);
 
 	/**
 	* Return the parameters.
