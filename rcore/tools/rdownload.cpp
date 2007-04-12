@@ -158,7 +158,7 @@ void RDownload::DownloadFile(const RString& URL,RString& tmpFile)
 	if(err)
 	{
 		if(!ValidContent)
-			throw RException("Cannot treat the MIME type "+MIME);
+			throw RException("Cannot treat the MIME type '"+MIME+"'");
 		throw RException(curl_easy_strerror(err)+RString(" : ")+URL);
 	}
 }
