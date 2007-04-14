@@ -6,7 +6,7 @@
 
 	Class representing a list of Integer values - Header
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -68,12 +68,12 @@ protected:
 	/**
 	* Number of values in the list.
 	*/
-	unsigned int NbInt;
+	size_t NbInt;
 
 	/**
 	* Maximal number of values in the list.
 	*/
-	unsigned int MaxInt;
+	size_t MaxInt;
 
 	/**
 	* The array representing the integer values.
@@ -90,7 +90,7 @@ private:
 	/**
 	* Current position parsed.
 	*/
-	unsigned int Pos;
+	size_t Pos;
 
 public:
 
@@ -98,7 +98,7 @@ public:
 	* Construct the list of Integer value.
 	* @param max             Maximum number of values.
 	*/
-	RVectorInt(const unsigned int max);
+	RVectorInt(size_t max);
 
 	/**
 	* Copy constructor.
@@ -113,7 +113,7 @@ private:
 	* the container is extended.
     * @param max             Number of elements that must be contained.
 	*/
-	void Verify(unsigned int max);
+	void Verify(size_t max);
 
 	/**
 	* This function returns the index of an element represented by tag, and it
@@ -124,7 +124,7 @@ private:
 	* @return Returns the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
-	unsigned int GetId(unsigned int nb,bool& find) const;
+	size_t GetId(unsigned int nb,bool& find) const;
 
 public:
 
@@ -161,13 +161,13 @@ public:
 	* @param ins             The integer value to insert.
 	* @param pos             The position where to insert.
 	*/
-	void InsertAt(unsigned int ins,unsigned int pos);
+	void InsertAt(unsigned int ins,size_t pos);
 
 	/**
 	* Delete an integer value in the list.
 	* @param del             The integer value to delete.
 	*/
-	void Delete(const unsigned int del);
+	void Delete(unsigned int del);
 
 	/**
 	* Clear the list.
@@ -184,13 +184,13 @@ public:
 	* Return the Integer value at position i. The first Integer value is at position 0.
 	* @param i               Index.
 	*/
-	unsigned int operator[](int i) const;
+	unsigned int operator[](size_t i) const;
 
 	/**
 	* Get the number of Integer value in the list.
 	* @return unsigned int
 	*/
-	unsigned int GetNbInt(void) const;
+	size_t GetNbInt(void) const;
 
 	/**
 	* Start the iterator to go trough the list.

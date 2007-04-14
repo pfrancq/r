@@ -6,7 +6,7 @@
 
 	Class representing a list of Integer value - Implementation
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -52,10 +52,12 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	RVectorInt<bOrder>::RVectorInt(const unsigned int max)
+	RVectorInt<bOrder>::RVectorInt(size_t max)
 	: MaxInt(max)
 {
 	NbInt = 0;
+	if(!max)
+		MaxInt=100;
 	List = new unsigned int[MaxInt];
 	memset(List,0,MaxInt*sizeof(unsigned int));
 }
@@ -74,29 +76,31 @@ template<bool bOrder>
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	void RVectorInt<bOrder>::Verify(unsigned int max)
+	void RVectorInt<bOrder>::Verify(size_t max)
 {
-	RReturnIfFail(max>0);
 	if(max>MaxInt)
 	{
-		unsigned int OldSize=MaxInt;
+		unsigned int* ptr;
+		size_t OldSize;
+		
+		OldSize=MaxInt;
 		MaxInt+=(MaxInt/2);
 		if(max>MaxInt)
 			MaxInt=max;
-		unsigned int* ptr=new unsigned int[MaxInt];
+		ptr=new unsigned int[MaxInt];
 		memcpy(ptr,List,OldSize*sizeof(unsigned int));
-		memset(&ptr[OldSize],0,(MaxInt-OldSize)*sizeof(unsigned int));
 		delete[] List;
 		List=ptr;
+		memset(&List[OldSize],0,(MaxInt-OldSize)*sizeof(unsigned int));
 	}
 }
 
-
+	
 //------------------------------------------------------------------------------
 template<bool bOrder>
 	unsigned int RVectorInt<bOrder>::GetId(unsigned int nb,bool& find) const
 {
-	unsigned int NbMin,NbMax,i=0;
+	size_t NbMin,NbMax,i=0;
 	int Comp=0;
 	bool Cont=true,NotLast=true;
 	unsigned int ptr,*ptr2;
@@ -104,7 +108,7 @@ template<bool bOrder>
 	if(bOrder)
 	{
 		find=false;
-		if(!MaxInt)
+		if(!NbInt)
 			return(0);
 		NbMax=NbInt-1;
 		NbMin=0;
@@ -159,7 +163,7 @@ template<bool bOrder>
 template<bool bOrder>
 	bool RVectorInt<bOrder>::IsSame(const RVectorInt& vi) const
 {
-	unsigned int i;
+	size_t i;
 	unsigned int *ptr1,*ptr2;
 
 	if(NbInt!=vi.NbInt) return(false);
@@ -173,7 +177,7 @@ template<bool bOrder>
 template<bool bOrder>
 	bool RVectorInt<bOrder>::IsIn(unsigned int value) const
 {
-	unsigned int i;
+	size_t i;
 	unsigned int *ptr;
 
 	for(i=NbInt+1,ptr=List;--i;ptr++)
@@ -187,12 +191,16 @@ template<bool bOrder>
 	void RVectorInt<bOrder>::Insert(unsigned int ins)
 {
 	unsigned int *ptr=List;
-	unsigned int i=NbInt;
+	size_t i=NbInt;
 
 	Verify(NbInt+1);
 	if(bOrder)
 	{
-		while(i&&((*ptr)<ins))
+		bool Find;
+		size_t Index=GetId(ins,Find);
+		InsertAt(ins,Index);
+		
+/*		while(i&&((*ptr)<ins))
 		{
 			i--;
 			ptr++;
@@ -200,7 +208,7 @@ template<bool bOrder>
 		if(i)
 			memmove(ptr+1,ptr,sizeof(unsigned int)*i);
 		NbInt++;
-		(*ptr) = ins;
+		(*ptr) = ins;*/
 	}
 	else
 		List[NbInt++]=ins;
@@ -211,7 +219,8 @@ template<bool bOrder>
 template<bool bOrder>
 	void RVectorInt<bOrder>::Insert(const RVectorInt& ins)
 {
-	unsigned int *ptr,i;
+	unsigned int* ptr;
+	size_t i;
 
 	Verify(NbInt+ins.NbInt);
 	for(i=ins.NbInt+1,ptr=ins.List;--i;ptr++)
@@ -221,21 +230,31 @@ template<bool bOrder>
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	void RVectorInt<bOrder>::InsertAt(unsigned int ins,unsigned int pos)
+	void RVectorInt<bOrder>::InsertAt(unsigned int ins,size_t pos)
 {
-	Verify(pos);
+/*	Verify(pos);
 	if(NbInt<pos+1)
 		NbInt=pos+1;
-	List[pos]=ins;
+	List[pos]=ins;*/
+	
+	unsigned int* ptr;
+	
+	if(pos+1>MaxInt)
+		Verify(pos+1);
+	ptr=&List[pos];
+	if(pos<NbInt)
+		memmove(ptr+1,ptr,(NbInt-pos)*sizeof(unsigned int));
+	(*ptr)=ins;
+	NbInt++;	
 }
 
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	void RVectorInt<bOrder>::Delete(const unsigned int del)
+	void RVectorInt<bOrder>::Delete(unsigned int del)
 {
 	unsigned int *ptr=List;
-	unsigned int i=0;
+	size_t i=0;
 
 	while((*ptr)!=del)
 	{
@@ -270,7 +289,7 @@ template<bool bOrder>
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	unsigned int RVectorInt<bOrder>::operator[](int i) const
+	unsigned int RVectorInt<bOrder>::operator[](size_t i) const
 {
 	return(List[i]);
 }
@@ -278,7 +297,7 @@ template<bool bOrder>
 
 //------------------------------------------------------------------------------
 template<bool bOrder>
-	unsigned int RVectorInt<bOrder>::GetNbInt(void) const
+	size_t RVectorInt<bOrder>::GetNbInt(void) const
 {
 	return(NbInt);
 }
