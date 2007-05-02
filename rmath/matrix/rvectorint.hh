@@ -190,25 +190,12 @@ template<bool bOrder>
 template<bool bOrder>
 	void RVectorInt<bOrder>::Insert(unsigned int ins)
 {
-	unsigned int *ptr=List;
-	size_t i=NbInt;
-
 	Verify(NbInt+1);
 	if(bOrder)
 	{
 		bool Find;
 		size_t Index=GetId(ins,Find);
 		InsertAt(ins,Index);
-		
-/*		while(i&&((*ptr)<ins))
-		{
-			i--;
-			ptr++;
-		}
-		if(i)
-			memmove(ptr+1,ptr,sizeof(unsigned int)*i);
-		NbInt++;
-		(*ptr) = ins;*/
 	}
 	else
 		List[NbInt++]=ins;
@@ -232,11 +219,6 @@ template<bool bOrder>
 template<bool bOrder>
 	void RVectorInt<bOrder>::InsertAt(unsigned int ins,size_t pos)
 {
-/*	Verify(pos);
-	if(NbInt<pos+1)
-		NbInt=pos+1;
-	List[pos]=ins;*/
-	
 	unsigned int* ptr;
 	
 	if(pos+1>MaxInt)

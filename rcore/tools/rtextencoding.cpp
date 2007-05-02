@@ -165,7 +165,7 @@ public:
 		: RTextEncoding("latin1")
 		{}
 
-	RString ToUnicode(const char* text,unsigned int len) const
+	RString ToUnicode(const char* text,unsigned int) const
 	{
 		return(RString(text));
 	}
@@ -194,9 +194,9 @@ RTextEncoding::RTextEncoding(const RString& name)
 	FromUTF16=iconv_open(Name,"utf-16");
 	if(FromUTF16==(iconv_t)-1)
 		throw EncodingNotSupported(Name+" encoding not supported");
-
+	
 	// Test the order
-	char Tab[8];
+	char Tab[20];
 	char Test[]="test";
 	size_t s1,s2,err;
 	char *ptr1,*ptr2;
