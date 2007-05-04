@@ -128,7 +128,7 @@ void RDebug::EndFunc(RString Name,RString)
 void RDebug::BeginApp(const RString& app)
 {
 	time_t t;
-	char TempString[20];
+	char TempString[40];
 
 	time(&t);
 	strcpy(TempString,ctime(&t));
