@@ -220,7 +220,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	if(ObjsAss.GetNb()+ObjsNoAss.GetNb()!=Objs->GetNb())
 	{
 		sprintf(tmp,"Problem with the number of objects: ObjsAss=%u and ObjsNoAss=%u",ObjsAss.GetNb(),ObjsNoAss.GetNb());
-		throw eGAVerify(tmp);
+		throw RGAException(tmp,RGAException::eGAVerify);
 	}
 }
 

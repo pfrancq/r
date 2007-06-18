@@ -39,27 +39,27 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 //
-// Exceptions
+// class RGGAException
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-eGAModify::eGAModify(const unsigned int g,const unsigned int c)
-	: eGA()
+RGGAException::RGGAException(tException type,const unsigned int g,const unsigned int c)
+	: RGAException(type)
 {
 	char tmp[200];
 
-	sprintf(tmp,"Generation %u: Modify error: Chromsosome %u",g,c);
-	SetMsg(tmp);
-}
-
-
-//------------------------------------------------------------------------------
-eGALocalOptimisation::eGALocalOptimisation(const unsigned int g,const unsigned int c)
-	: eGA()
-{
-	char tmp[200];
-
-	sprintf(tmp,"Generation %u: Local Optimisation error: Chromsosome %u",g,c);
-	SetMsg(tmp);
+	switch(Type)
+	{
+		case eGAModify:
+			sprintf(tmp,"Generation %u: Modify error: Chromsosome %u",g,c);
+			SetMsg(tmp);
+			break;
+		case eGALocalOptimisation:
+			sprintf(tmp,"Generation %u: Local optimisation error: Chromsosome %u",g,c);
+			SetMsg(tmp);
+			break;
+		default:
+			RGAException(Type,g,c);
+	}
 }

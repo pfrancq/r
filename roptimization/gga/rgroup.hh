@@ -69,7 +69,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	if(!Owner)
 	{
 		sprintf(tmp,"No Owner for group %u",Id);
-		throw eGAVerify(tmp);
+		throw RGAException(tmp,RGAException::eGAVerify);
 	}
 
 	// Verify objects attached.
@@ -79,21 +79,21 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		if(!NbSubObjects)
 		{
 			sprintf(tmp,"!NbSubObjects for group %u",Id);
-			throw eGAVerify(tmp);
+			throw RGAException(tmp,RGAException::eGAVerify);
 		}
 
 		// The index of the first objects attached can not exceed the total number of objects.
 		if(SubObjects>NbObjects)
 		{
 			sprintf(tmp,"SubObjects>NbObjects for group %u",Id);
-			throw eGAVerify(tmp);
+			throw RGAException(tmp,RGAException::eGAVerify);
 		}
 
 		// The index of the last objects attached can not exceed the total number of objects.
 		if(SubObjects+NbSubObjects>NbObjects+1)
 		{
 			sprintf(tmp,"SubObjects+NbSubObjects>NbObjects+1 for group %u",Id);
-			throw eGAVerify(tmp);
+			throw RGAException(tmp,RGAException::eGAVerify);
 		}
 	}
 	else
@@ -102,7 +102,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		if(NbSubObjects)
 		{
 			sprintf(tmp,"NbSubObjects for group %u",Id);
-			throw eGAVerify(tmp);
+			throw RGAException(tmp,RGAException::eGAVerify);
 		}
 	}
 
@@ -113,12 +113,12 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 		if(!ptr())
 		{
 			sprintf(tmp,"Owner->ObjsAss is null for group %u",Id);
-			throw eGAVerify(tmp);
+			throw RGAException(tmp,RGAException::eGAVerify);
 		}
 		if(Owner->ObjectsAss[ptr()->GetId()]!=Id)
 		{
 			sprintf(tmp,"Owner->ObjsAss[(*obj)->GetId()]!=Id for group %u and object %u",Id,ptr()->GetId());
-			throw eGAVerify(tmp);
+			throw RGAException(tmp,RGAException::eGAVerify);
 		}
 	}
 }

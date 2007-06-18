@@ -40,6 +40,7 @@
 #include <rstd.h>
 #include <rpoint.h>
 #include <rrect.h>
+#include <rga2d.h>
 #include <robj2d.h>
 #include <rgeoinfo.h>
 #include <rgeoinfos.h>
@@ -53,16 +54,6 @@
 //------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
-/**
-*/
-class RPlacementHeuristicException : public eGA
-{
-public:
-	RPlacementHeuristicException(const char* msg) : eGA(msg) {}
-};
 
 
 //------------------------------------------------------------------------------

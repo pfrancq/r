@@ -157,7 +157,7 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 		return;
 	}
 
-	// Add new solution for Prom�h�
+	// Add new solution for Proméhée
 	p=&Sols[NbPromSol];
 	p->Ori=CurInfo->GetOri();
 	p->Pos=pos;
@@ -212,7 +212,7 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 			NextObjectOri();
 		}
 
-		// Run Prom�h�
+		// Run Proméhéé
 		if(NbPromSol)
 		{
 			if(NbPromSol>1)
@@ -234,7 +234,7 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 	// Place it
 	if(!pos.IsValid())
 	{
-		throw RPlacementHeuristicException("Can't place an object!");
+		throw RGA2DException("Can't place an object!");
 	}
 	Place(pos);
 

@@ -375,7 +375,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 {
 	RGroups<cGroup,cObj,cGroupData,cChromo>::Verify();
 	if(!this->Used.GetNb())
-		throw eGAVerify("No Group used.");
+		throw RGAException("No Group used.",RGAException::eGAVerify);
 }
 
 

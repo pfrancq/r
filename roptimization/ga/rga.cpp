@@ -49,93 +49,67 @@ bool R::ExternBreak=false;
 
 //------------------------------------------------------------------------------
 //
-// Exceptions
+// class RGAException
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-eGAVerify::eGAVerify(const unsigned int g,const unsigned int c) throw()
-	: eGA()
+RGAException::RGAException(tException type) throw()
+	: RException(), Type(type)
 {
-	char tmp[200];
-
-	sprintf(tmp,"Generation %u: Verify error for chromosome %u",g,c);
-	SetMsg(tmp);
 }
 
 
 //------------------------------------------------------------------------------
-eGACrossover::eGACrossover(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c) throw()
-	: eGA()
+RGAException::RGAException(const char* str,tException type) throw()
+	: RException(str), Type(type)
+{
+}
+		
+		
+//------------------------------------------------------------------------------
+RGAException::RGAException(tException type,const unsigned int g,const unsigned int c) throw()
+	: RException(), Type(type)
+{
+	char tmp[200];
+	
+	switch(Type)
+	{
+		case eGAVerify:		
+			sprintf(tmp,"Generation %u: Verify error for chromosome %u",g,c);
+			break;
+		case eGAMutation:	
+			sprintf(tmp,"Generation %u: Mutation error: Chromsosome %u",g,c);
+			break;
+		case eGAInversion:
+			sprintf(tmp,"Generation %u: Inversion error: Chromsosome %u",g,c);
+			break;
+		case eGAOptimisation:
+			sprintf(tmp,"Generation %u: Optimisation error: Chromsosome %u",g,c);
+			break;
+		case eGARandomConstruct:
+			sprintf(tmp,"Generation %u: Random Construction error: Chromsosome %u",g,c);
+			break;
+		case eGAEvaluation:	
+			sprintf(tmp,"Generation %u: Evaluation error: Chromsosome %u",g,c);
+			break;  		
+		case eGAPostEvaluation:
+			sprintf(tmp,"Generation %u: Post Evaluation error: Chromsosome %u",g,c);
+			break;
+		default:
+			sprintf(tmp,"Generation %u: Unknown error for chromosome %u",g,c);
+	}
+	SetMsg(tmp);
+}
+
+
+
+//------------------------------------------------------------------------------
+RGAException::RGAException(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c) throw()
+	: RException(), Type(eGACrossover)
 {
 	char tmp[200];
 
 	sprintf(tmp,"Generation %u: Crossover error: parent %u + parent %u -> Child %u",g,p1,p2,c);
-	SetMsg(tmp);
-}
-
-
-//------------------------------------------------------------------------------
-eGAMutation::eGAMutation(const unsigned int g,const unsigned int c) throw()
-	: eGA()
-{
-	char tmp[200];
-
-	sprintf(tmp,"Generation %u: Mutation error: Chromsosome %u",g,c);
-	SetMsg(tmp);
-}
-
-
-//------------------------------------------------------------------------------
-eGAInversion::eGAInversion(const unsigned int g,const unsigned int c) throw()
-	: eGA()
-{
-	char tmp[200];
-
-	sprintf(tmp,"Generation %u: Inversion error: Chromsosome %u",g,c);
-	SetMsg(tmp);
-}
-
-
-//------------------------------------------------------------------------------
-eGAOptimisation::eGAOptimisation(const unsigned int g,const unsigned int c) throw()
-	: eGA()
-{
-	char tmp[200];
-
-	sprintf(tmp,"Generation %u: Optimisation error: Chromsosome %u",g,c);
-	SetMsg(tmp);
-}
-
-
-//------------------------------------------------------------------------------
-eGARandomConstruct::eGARandomConstruct(const unsigned int g,const unsigned int c) throw()
-	: eGA()
-{
-	char tmp[200];
-
-	sprintf(tmp,"Generation %u: Random Construction error: Chromsosome %u",g,c);
-	SetMsg(tmp);
-}
-
-
-//------------------------------------------------------------------------------
-eGAEvaluation::eGAEvaluation(const unsigned int g,const unsigned int c) throw()
-	: eGA()
-{
-	char tmp[200];
-
-	sprintf(tmp,"Generation %u: Evaluation error: Chromsosome %u",g,c);
-	SetMsg(tmp);
-}
-
-
-//------------------------------------------------------------------------------
-eGAPostEvaluation::eGAPostEvaluation(const unsigned int g,const unsigned int c) throw()
-	: eGA()
-{
-	char tmp[200];
-
-	sprintf(tmp,"Generation %u: Post Evaluation error: Chromsosome %u",g,c);
 	SetMsg(tmp);
 }
