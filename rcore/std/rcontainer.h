@@ -457,10 +457,10 @@ public:
 	*  This method can be limited to a part of the container.
 	* @param ins             A pointer to the element to insert.
 	* @param pos             The position where to insert it.
-	* @param shift           Specify if the object that was previously at the
-	*                        position should be shifted or deleted.
+	* @param del             Specify if the object that was previously at the
+	*                        position should be deleted or shifted.
 	*/
-	inline void InsertPtrAt(const C* ins,size_t pos,bool shift=bAlloc)  {BasicContainer::InsertPtrAt(bAlloc,static_cast<const void*>(ins),pos,shift);}
+	inline void InsertPtrAt(const C* ins,size_t pos,bool del=bAlloc)  {BasicContainer::InsertPtrAt(bAlloc,static_cast<const void*>(ins),pos,del);}
 
 	/**
 	* Delete an element from the container. The element is destruct if the

@@ -110,9 +110,10 @@ void BasicContainer::Clear(bool bAlloc,size_t m,size_t i)
 		MaxPtr=m;
 	if(i)
 		IncPtr=i;
+	if(!MaxPtr) MaxPtr=10;
 	if(!IncPtr) IncPtr=MaxPtr/2;
 	if(!IncPtr) IncPtr=10;
-	VerifyTab(m);
+	VerifyTab(MaxPtr);
 	memset(Tab,0,MaxPtr*sizeof(void*));
 }
 
