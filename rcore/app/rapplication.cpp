@@ -55,6 +55,9 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
 		throw RException("Already one application running");
 	App=this;
 
+	// Set locale information specified by the user.
+	setlocale (LC_ALL, "");
+	
 	// Verify parameters
 	RAssert(argc);
 	RAssert(argv);

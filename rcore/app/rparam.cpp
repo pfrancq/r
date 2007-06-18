@@ -260,8 +260,10 @@ void RParamValue::AddTag(RXMLStruct* xml,RXMLTag* parent)
 	RXMLTag* ptr;
 	xml->AddTag(parent,ptr=new RXMLTag("param"));
 	ptr->InsertAttr("name",Name);
-	ptr->InsertAttr("value",Value);
-	ptr->InsertAttr("desc",Description);
+	if(!Value.IsEmpty())
+		ptr->InsertAttr("value",Value);
+	if(!Description.IsEmpty())
+		ptr->InsertAttr("desc",Description);
 }
 
 
@@ -349,7 +351,8 @@ void RParamList::AddTag(RXMLStruct* xml,RXMLTag* parent)
 
 	xml->AddTag(parent,ptr=new RXMLTag("list"));
 	ptr->InsertAttr("name",Name);
-	ptr->InsertAttr("desc",Description);
+	if(!Description.IsEmpty())
+		ptr->InsertAttr("desc",Description);
 	RCursor<RString> Cur(Values);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
@@ -440,7 +443,8 @@ void RParamStruct::AddTag(RXMLStruct* xml,RXMLTag* parent)
 
 	xml->AddTag(parent,ptr=new RXMLTag("struct"));
 	ptr->InsertAttr("name",Name);
-	ptr->InsertAttr("desc",Description);
+	if(!Description.IsEmpty())
+		ptr->InsertAttr("desc",Description);
 	RCursor<RParam> Cur(Parameters);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->AddTag(xml,ptr);
