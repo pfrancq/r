@@ -134,6 +134,8 @@ void RIOFile::Open(RIO::ModeType mode)
 	Size=statbuf.st_size;
 	if(Mode==RIO::Append)
 		Pos=Size;
+	else
+		Pos=0;
 }
 
 
@@ -154,7 +156,6 @@ void RIOFile::Close(void)
 	}
 	Pos=Size=0;
 	Mode=RIO::Undefined;
-	RFile::Close();
 }
 
 
@@ -219,7 +220,7 @@ void RIOFile::SeekRel(long long rel)
 	if((Pos+rel>=Size)&&(!CanWrite))
 		throw(RIOException(this,"Position outside of the file"));
 	lseek(handle,rel,SEEK_CUR);
-	Pos=+rel;
+	Pos+=rel;
 }
 
 
@@ -247,6 +248,5 @@ unsigned int RIOFile::GetPos(void) const
 //------------------------------------------------------------------------------
 RIOFile::~RIOFile(void)
 {
-	if(handle!=-1)
-		close(handle);
+	Close();
 }

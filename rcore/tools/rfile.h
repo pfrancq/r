@@ -128,6 +128,12 @@ public:
 	const RString GetName(void) const;
 
 	/**
+	* Set the fullname of the file including the path.
+	* @param name            String containing the full name.
+	*/
+	void SetName(const RString& name);
+	
+	/**
 	* Return the name of the file. If the fullname doesn't have a slash at the
 	* end, the part between the last slash and the end of the fullname is
 	* considered to be the file name. If the fullname has a slash at the end,

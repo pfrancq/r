@@ -117,6 +117,13 @@ const RString RFile::GetName(void) const
 
 
 //------------------------------------------------------------------------------
+void RFile::SetName(const RString& name)
+{
+		this->Name=name;
+}
+
+
+//------------------------------------------------------------------------------
 const RString RFile::GetFileName(void) const
 {
 	RString res;
@@ -163,4 +170,5 @@ RString RFile::GetTempFile(void)
 //------------------------------------------------------------------------------
 RFile::~RFile(void)
 {
+	Close();
 }

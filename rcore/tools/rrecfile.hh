@@ -78,7 +78,7 @@ template<class C,unsigned int S,bool bOrder>
 	void RRecFile<C,S,bOrder>::GoToRec(unsigned int c,unsigned int l,unsigned int maxc)
 {
 	Find=false;
-	Seek(c+(l*maxc));
+	Seek((c+(l*maxc))*S);
 	Dirty=true;
 	Find=true;
 }

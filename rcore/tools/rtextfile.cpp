@@ -99,7 +99,6 @@ void RTextFile::Close(void)
 		delete[] Buffer;
 		Buffer=0;
 	}
-	RIOFile::Close();
 }
 
 
@@ -988,7 +987,7 @@ void RTextFile::WriteLog(const RString& entry)
 //------------------------------------------------------------------------------
 RTextFile::~RTextFile(void)
 {
-	delete[] Buffer;
+	Close();
 }
 
 
