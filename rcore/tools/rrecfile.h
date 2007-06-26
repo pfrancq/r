@@ -6,7 +6,7 @@
 
 	Binary file for records - Header.
 
-	Copyright 2002-2006 by the Université Libre de Bruxelles.
+	Copyright 2002-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -47,16 +47,20 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
+* @param C                   The class of the elements to be read/write.
+* @param bOrder              Specify if the elements are ordered in the file.
+* 
 * The RRecFile class implements some basic functions needed when working with
 * files for records. This files can be accessed as ordered or not. Opening a
 * non ordered file as ordered gives problems.
 *
 * As for the RContainer class, the TUse represent a class or a structure used
 * for the comparaisons.
+* 
 *
 * At least, one read function must be implemented in the class C:
 * @code
-* void Read(R::RecFile<C,S,bOrder>& f);
+* void Read(R::RecFile<C,bOrder>& f);
 * @endcode
 *
 * The user can write his own operators to read and write record from a
@@ -76,11 +80,11 @@ namespace R{
 *    Person(const Person& p) : LastName(p.LastName), FirstName(p.FirstName) {}
 *    int Compare(const Person& p) const {return(LastName.Compare(p.LastName));}
 *    int Compare(const R::RString& name) const {return(LastName.Compare(name));}
-*    void Read(R::RRecFile<Person,80,true>& f);
-*    void Write(R::RRecFile<Person,80,true>& f);
+*    void Read(R::RRecFile<Person,true>& f);
+*    void Write(R::RRecFile<Person,true>& f);
 * };
 *
-* void Person::Read(R::RRecFile<Person,80,true>& f)
+* void Person::Read(R::RRecFile<Person,true>& f)
 * {
 *    char Buf[41];
 *    f.Read(Buf,40);
@@ -89,7 +93,7 @@ namespace R{
 *    FirstName=Buf;
 * }
 *
-* void Person::Write(R::RRecFile<Person,80,true>& f)
+* void Person::Write(R::RRecFile<Person,true>& f)
 * {
 *    char Buf[41];
 *    strcpy(Buf,LastName.Latin1());
@@ -102,7 +106,7 @@ namespace R{
 * {
 *    R::RContainer<Person,true,true> Cont(2,1);
 *    R::RCursor<Person> Cur;
-*    R::RRecFile<Person,80,true> File("/home/pfrancq/test.bin");
+*    R::RRecFile<Person,true> File("/home/pfrancq/test.bin",80); // Each record have a size of 80 bytes.
 *
 *    // Create container -> create file -> write data
 *    std::cout<<"Create"<<std::endl;
@@ -138,7 +142,7 @@ namespace R{
 * @author Pascal Francq
 * @short Fixed-length Records File.
 */
-template<class C,unsigned int S,bool bOrder=false>
+template<class C,bool bOrder=false>
 	class RRecFile : public RBinaryFile
 {
 protected:
@@ -158,20 +162,19 @@ protected:
 	*/
 	bool Dirty;
 
+	/**
+	 * Size of a record.
+	 */
+	 size_t RecSize;
+	  
 public:
 
 	/**
 	* Construct a binary file for records.
 	* @param name           The name of the file.
+	* @param recsize        Size of a given record.
 	*/
-	RRecFile(const RString &name);
-
-	/**
-	* Construct a binary file for records.
-	* @param file           A generic input/output file that should be treated
-	*                       as binary file.
-	*/
-	RRecFile(RIOFile& file);
+	RRecFile(const RString &name,size_t recsize);
 
 	/**
 	* Close the file

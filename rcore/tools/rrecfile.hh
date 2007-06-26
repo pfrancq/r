@@ -6,7 +6,7 @@
 
 	Binary file for records - Implementation.
 
-	Copyright 2002-2006 by the Université Libre de Bruxelles.
+	Copyright 2002-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,24 +37,16 @@
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>::RRecFile(const RString &name)
-		: RBinaryFile(name), Find(false), Dirty(true)
+template<class C,bool bOrder>
+	RRecFile<C,bOrder>::RRecFile(const RString &name,size_t recsize)
+		: RBinaryFile(name), Find(false), Dirty(true), RecSize(recsize)
 {
 }
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>::RRecFile(RIOFile &file)
-		: RIOFile(file), Find(false), Dirty(true)
-{
-}
-
-
-//------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::Close(void)
+template<class C,bool bOrder>
+	void RRecFile<C,bOrder>::Close(void)
 {
 	Find=false;
 	Dirty=true;
@@ -63,31 +55,31 @@ template<class C,unsigned int S,bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::GoToRec(unsigned int nb)
+template<class C,bool bOrder>
+	void RRecFile<C,bOrder>::GoToRec(unsigned int nb)
 {
 	Find=false;
-	RIOFile::Seek(nb*S);
+	RIOFile::Seek(nb*RecSize);
 	Dirty=true;
 	Find=true;
 }
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::GoToRec(unsigned int c,unsigned int l,unsigned int maxc)
+template<class C,bool bOrder>
+	void RRecFile<C,bOrder>::GoToRec(unsigned int c,unsigned int l,unsigned int maxc)
 {
 	Find=false;
-	Seek((c+(l*maxc))*S);
+	Seek((c+(l*maxc))*RecSize);
 	Dirty=true;
 	Find=true;
 }
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
+template<class C,bool bOrder>
 	template<class TUse>
-		unsigned int RRecFile<C,S,bOrder>::Search(const TUse& tag)
+		unsigned int RRecFile<C,bOrder>::Search(const TUse& tag)
 {
 	unsigned int NbMin,NbMax,i=0;
 	int Comp=0;
@@ -145,68 +137,68 @@ template<class C,unsigned int S,bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	unsigned int RRecFile<C,S,bOrder>::GetRecNb(void) const
+template<class C,bool bOrder>
+	unsigned int RRecFile<C,bOrder>::GetRecNb(void) const
 {
-	return(RIOFile::GetSize()/S);
+	return(RIOFile::GetSize()/RecSize);
 }
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	unsigned int RRecFile<C,S,bOrder>::GetCurrentRec(void) const
+template<class C,bool bOrder>
+	unsigned int RRecFile<C,bOrder>::GetCurrentRec(void) const
 {
-	return(RIOFile::GetPos()/S);
+	return(RIOFile::GetPos()/RecSize);
 }
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::ReadRec(C& rec)
+template<class C,bool bOrder>
+	void RRecFile<C,bOrder>::ReadRec(C& rec)
 {
 	rec.Read(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::WriteRec(C& rec)
+template<class C,bool bOrder>
+	void RRecFile<C,bOrder>::WriteRec(C& rec)
 {
 	rec.Write(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::Start(void)
+template<class C,bool bOrder>
+	void RRecFile<C,bOrder>::Start(void)
 {
 	Seek(0);
 }
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::Next(void)
+template<class C,bool bOrder>
+	void RRecFile<C,bOrder>::Next(void)
 {
 	if(Dirty)
-		SeekRel(S);
+		SeekRel(RecSize);
 	Dirty=true;
 }
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	void RRecFile<C,S,bOrder>::Prev(void)
+template<class C,bool bOrder>
+	void RRecFile<C,bOrder>::Prev(void)
 {
 	if(Dirty)
-		SeekRel(-S);
+		SeekRel(-RecSize);
 	Dirty=true;
 }
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	C* RRecFile<C,S,bOrder>::operator()(void)
+template<class C,bool bOrder>
+	C* RRecFile<C,bOrder>::operator()(void)
 {
 	if(!Find)
 		return(0);
@@ -220,7 +212,7 @@ template<class C,unsigned int S,bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<class C,unsigned int S,bool bOrder>
-	RRecFile<C,S,bOrder>::~RRecFile(void)
+template<class C,bool bOrder>
+	RRecFile<C,bOrder>::~RRecFile(void)
 {
 }
