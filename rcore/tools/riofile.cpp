@@ -129,7 +129,7 @@ void RIOFile::Open(RIO::ModeType mode)
 	else
 		handle=open(Name.Latin1(),localmode,S_IREAD|S_IWRITE);
 	if(handle==-1)
-		throw(RIOException(this,"Can't open the file"));
+		throw(RIOException(this,"Can't open the file '"+Name+"'"));
 	fstat(handle, &statbuf);
 	Size=statbuf.st_size;
 	if(Mode==RIO::Append)
