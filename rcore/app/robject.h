@@ -50,19 +50,27 @@ namespace R{
 * send and receive notifications. The deriving objects should overload the
 * GetClassName method.
 * @code
-* class MyObject : RObject
+* class MyObject : public RObject
 * {
 * public:
-*    MyObject(const RString& name) : RObject(name) {}
+*    MyObject(const RString& name) : RObject(name)
+*    {
+*       InsertObserver(HANDLER(MyObject::Handle),"Example");
+*    } 
 *    virtual RCString GetClassName(void) const {return("MyObject");}
-*    void Handle(const RNotification& notification);
+*    void Handle(const RNotification& notification)
+*    {
+*       cout<<"From "<<GetName()<<" : "<<GetData<long>(msg)<<endl;
+*    }
 * };
 *
-* MyObject::MyObject(const RString& name)
-*    : RObject(name)
+* int main(int argc, char *argv[])
 * {
-*    InsertObserber(HANDLER(MyObject::Handle),"Example");
-* }
+*    MyObject Obj1("Object 1");
+*    MyObject Obj2("Object 2");
+*    NotificationCenter.PostNotification("Message",(long)3);
+* } 
+
 * @endcode
 * @short Object.
 * @author Pascal Francq
@@ -102,7 +110,7 @@ public:
 	/**
 	* Get the name of the object.
 	*/
-	RString GetName(void) const {return(Name);}
+	inline RString GetName(void) const {return(Name);}
 
 	/**
 	* This is the handler that is called when an object does not find any

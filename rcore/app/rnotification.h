@@ -137,22 +137,26 @@ public:
 * class MyObject : public RObject
 * {
 * public:
-*    MyObject(const RString& name) : RObject(name) {}
-*    virtual RCString GetClassName(void) {return("RObjectR");}
-*    void HandleMsg(const RNotification& msg)
+*    MyObject(const RString& name) : RObject(name)
 *    {
-*       cout<<GetData<long>(msg)<<endl;
+*       InsertObserver(HANDLER(MyObject::Handle),"Example");
+*    } 
+*    virtual RCString GetClassName(void) const {return("MyObject");}
+*    void Handle(const RNotification& notification)
+*    {
+*       cout<<"From "<<GetName()<<" : "<<GetData<long>(msg)<<endl;
 *    }
 * };
 *
-* NotificationCenter.PostNotification("Message",3);
+* int main(int argc, char *argv[])
+* {
+*    MyObject Obj1("Object 1");
+*    MyObject Obj2("Object 2");
+*    NotificationCenter.PostNotification("Message",(long)3);
+* } 
 * @endcode
-* In fact, the PostNotification method will suppose that the parameter with the
-* value 3 is an int, while the handler supposes a long. To solve this problem,
-* you must explicily cast the data sended:
-* @code
-* NotificationCenter.PostNotification("Message",(long)3);
-* @endcode
+* To be sure that PostNotification calls the right handlers, it is always
+* better to explicity cast the parameter when sending. 
 * @short Notification with Data.
 * @author Pascal Francq
 */
@@ -213,9 +217,15 @@ template<class T> T GetData(const RNotification& notification)
 * class MyObject : RObject
 * {
 * public:
-*    MyObject(const RString& name) : RObject(name) {}
+*    MyObject(const RString& name) : RObject(name)
+*    {
+*       InsertObserver(HANDLER(MyObject::Handle),"Example");
+*    } 
 *    virtual RCString GetClassName(void) const {return("MyObject");}
-*    void Handle(const RNotification& notification);
+*    void Handle(const RNotification& notification)
+*    {
+*       cout<<"From "<<GetName()<<" : "<<GetData<long>(msg)<<endl;
+*    }
 * };
 *
 * tNotificationHandler handler=HANDLER(MyObject::Handle);

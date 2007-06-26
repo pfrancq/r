@@ -168,9 +168,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 				if(this->RRand(100)<90)
 				{
 					p->Modify();
-					this->emitInteractSig();
+					this->PostNotification("RInst::Interact");
 					p->Evaluate();
-					this->emitInteractSig();
+					this->PostNotification("RInst::Interact");
 					p->ToEval=false;
 				}
 			}

@@ -6,7 +6,7 @@
 
 	Instance of Genetic Algorithms - Inline Implementation
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -54,12 +54,11 @@ template<class cInst,class cChromo>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,const RString& name,RDebug* debug)
-		: Debug(debug), Random(0), Name(name), tmpChrom1(0), tmpChrom2(0),Receivers(10,5),bRandomConstruct(false),
+		: RObject(name), Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),bRandomConstruct(false),
 		  VerifyGA(false), Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0),AgeBestPop(0)
 {
-//	EmitSig(sigGAInit);
 	if(Debug)
-		Debug->BeginApp(Name);
+		Debug->BeginApp(GetName());
 	if(Debug)
 		Debug->BeginFunc("RInst","RInst");
 	MaxBestPopAge=5;
@@ -116,11 +115,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		(*C)->RandomConstruct();
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 		(*C)->ToEval=true;
 	}
 	bRandomConstruct=true;
-	emitInteractSig();
+	PostNotification("RInst::Interact");
 	if(VerifyGA)
 		Verify();
 
@@ -144,7 +143,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 		{
 			(*C)->Evaluate();
 			(*C)->ToEval=false;
-			emitInteractSig();
+			PostNotification("RInst::Interact");
 		}
 	}
 	if(Debug)
@@ -186,7 +185,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 			}
 		(*BestChromosome)=(*BestInPop);
 		AgeBest=0;
-		emitBestSig();
+		PostNotification("RInst::Best");
 	}
 	if(Debug)
 		Debug->EndFunc("AnalysePop","RInst");
@@ -261,7 +260,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		}
 	}
 	tmpChrom2[0]=tmpChrom1[0];
-	emitInteractSig();
+	PostNotification("RInst::Interact");
 
 	// Make the crossovers
 	for(C1=&tmpChrom2[PopSize-1],C2=tmpChrom2,i=NbCross+1;--i;C1--,C2++) // To change if crossover not possible
@@ -278,7 +277,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		(*C1)->ToEval=true;
 		if(VerifyGA)
 			(*C1)->Verify();
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 
 		// Second Crossover
 		C1--;
@@ -292,7 +291,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		(*C1)->ToEval=true;
 		if(VerifyGA)
 			(*C1)->Verify();
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 	}
 	if(Debug)
 		Debug->EndFunc("Crossover","RInst");
@@ -336,12 +335,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			sprintf(Tmp,"Normal Mutation (BestInPop) -> Chromosome %u",p->Id);
 			Debug->PrintInfo(Tmp);
 		}
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 		p->Mutation();
 		p->ToEval=true;
 		if(VerifyGA)
 			p->Verify();
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 	}
 	if(AgeBest==AgeNextBestMutation)
 	{
@@ -366,12 +365,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			sprintf(Tmp,"Strong Mutation (BestInPop) -> Chromosome %u",p->Id);
 			Debug->PrintInfo(Tmp);
 		}
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 		p->Mutation();
 		p->ToEval=true;
 		if(VerifyGA)
 			p->Verify();
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 	}
 	if(Debug)
 		Debug->EndFunc("Mutation","RInst");
@@ -397,12 +396,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			sprintf(Tmp,"Inversion of Chromosome %u",p->Id);
 			Debug->PrintInfo(Tmp);
 		}
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 		p->Inversion();
 		p->ToEval=true;
 		if(VerifyGA)
 			p->Verify();
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 	}
 	if(Debug)
 		Debug->EndFunc("Inversion","RInst");
@@ -425,18 +424,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		Debug->PrintComment(tmp);
 	}
 	Crossover();
-	emitInteractSig();
+	PostNotification("RInst::Interact");
 	Mutation();
-	emitInteractSig();
+	PostNotification("RInst::Interact");
 	Inversion();
-	emitInteractSig();
+	PostNotification("RInst::Interact");
 	Evaluate();
-	emitInteractSig();
+	PostNotification("RInst::Interact");
 	PostEvaluate();
-	emitInteractSig();
+	PostNotification("RInst::Interact");
 	AnalysePop();
-	emitGenSig();
-	emitInteractSig();
+	PostNotification("RInst::Generation");
+	PostNotification("RInst::Interact");
 	if(Debug)
 		Debug->EndFunc("Generation","RInst");
 }
@@ -451,14 +450,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(!bRandomConstruct)
 	{
 		RandomConstruct();
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 		Evaluate();
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 		PostEvaluate();
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 		AnalysePop();
-		emitBestSig();
-		emitGenSig();
+		PostNotification("RInst::Generation");
 		DisplayInfos();
 	}
 	ExternBreak = false;
@@ -485,7 +483,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
 	{
 		(*C)->Verify();
-		emitInteractSig();
+		PostNotification("RInst::Interact");
 	}
 	if(Debug)
 	{
@@ -497,51 +495,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	inline void RInst<cInst,cChromo,cFit,cThreadData>::AddReceiver(RGASignalsReceiver<cInst,cChromo,cFit> *rec)
+	void RInst<cInst,cChromo,cFit,cThreadData>::HandlerNotFound(const RNotification& notification)
 {
-	Receivers.InsertPtr(rec);
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData>
-	inline void RInst<cInst,cChromo,cFit,cThreadData>::DelReceiver(RGASignalsReceiver<cInst,cChromo,cFit> *rec)
-{
-	Receivers.DeletePtr(rec);
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::emitGenSig(void)
-{
-	typename RGASignalsReceiver<cInst,cChromo,cFit>::GenSig s(Gen,AgeBest,Chromosomes,BestChromosome);
-	RCursor<RGASignalsReceiver<cInst,cChromo,cFit> > r(Receivers);
-	for(r.Start();!r.End();r.Next())
-		r()->receiveGenSig(&s);
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::emitInteractSig(void)
-{
-	typename RGASignalsReceiver<cInst,cChromo,cFit>::InteractSig s;
-	RCursor<RGASignalsReceiver<cInst,cChromo,cFit> > r(Receivers);
-	for(r.Start();!r.End();r.Next())
-		r()->receiveInteractSig(&s);
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::emitBestSig(void)
-{
-	typename RGASignalsReceiver<cInst,cChromo,cFit>::BestSig s(BestChromosome);
-
-	RCursor<RGASignalsReceiver<cInst,cChromo,cFit> > r(Receivers);
-	for(r.Start();!r.End();r.Next())
-		r()->receiveBestSig(&s);
+	std::cout<<GetName()<<" : Message '"<<notification.GetName()<<"' not treated (Gen="<<Gen<<")."<<std::endl;
 }
 
 
@@ -562,7 +518,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(tmpChrom1) delete[] tmpChrom1;
 	if(tmpChrom2) delete[] tmpChrom2;
 	if(Debug)
-		Debug->EndApp(Name);
+		Debug->EndApp(GetName());
 	if(thDatas)
 	{
 		delete thDatas[0];

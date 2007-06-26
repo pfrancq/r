@@ -6,7 +6,7 @@
 
 	Instance of Genetic Algorithms - Header
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -39,8 +39,9 @@
 // include files for R Project
 #include <rga.h>
 #include <rdebug.h>
-#include <rgasignals.h>
 #include <rcursor.h>
+#include <robject.h>
+#include <rnotification.h>
 
 
 //------------------------------------------------------------------------------
@@ -89,7 +90,7 @@ public:
 * @short Generic GA instance.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	class RInst
+	class RInst : public RObject
 {
 	/**
 	* This function is used to make a sort of the chromosomes based on their fitness.
@@ -111,11 +112,6 @@ public:
 	*/
 	RRandom* Random;
 
-	/**
-	* Name of the GA.
-	*/
-	RString Name;
-
 private:
 
 	/**
@@ -134,11 +130,6 @@ protected:
 	* "Thread-dependent" data of the instance.
 	*/
 	cThreadData** thDatas;
-
-	/**
-	* Container of all objects that will be receive signals from the GA.
-	*/
-	RContainer<RGASignalsReceiver<cInst,cChromo,cFit>,false,false> Receivers;
 
 	/**
 	* This variable is true if the random construction where done.
@@ -234,6 +225,11 @@ public:
 	RInst(unsigned int popsize,const RString& name,RDebug* debug=0);
 
 	/**
+	 * Return the name of the class.
+	 */
+	virtual RCString GetClassName(void) const {return("RInst");}
+
+	/**
 	* Set if the verifications must be done.
 	* @param verify          Verify?
 	*/
@@ -322,30 +318,13 @@ public:
 	virtual void Verify(void);
 
 	/**
-	* Add a receiver to the list of signals receivers.
+	* This is the handler that is called when an object does not find any
+	* handler for a sended notification. By default, it prints the name of the
+	* message and the generation numbers.
+	* @param notification    Notification.
 	*/
-	inline void AddReceiver(RGASignalsReceiver<cInst,cChromo,cFit> *rec);
-
-	/**
-	* Delete a receiver from the list of signals receivers.
-	*/
-	inline void DelReceiver(RGASignalsReceiver<cInst,cChromo,cFit> *rec);
-
-	/**
-	* Emit a Generation Signal.
-	*/
-	void emitGenSig(void);
-
-	/**
-	* Emit an Interact Signal.
-	*/
-	void emitInteractSig(void);
-
-	/**
-	* Emit a "Best Chromosome" Signal.
-	*/
-	void emitBestSig(void);
-
+	virtual void HandlerNotFound(const RNotification& notification);
+	
 	/**
 	* Return a number in the interval [0,max[ using the current random generator.
 	* @param max            Variable used to calculate the number.

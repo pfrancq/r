@@ -52,6 +52,26 @@ class RObject;
 /**
 * The RNotificationCenter class provides a representation for a notification
 * center that dispatch notifications send by objects.
+* * class MyObject : public RObject
+* {
+* public:
+*    MyObject(const RString& name) : RObject(name)
+*    {
+*       InsertObserver(HANDLER(MyObject::Handle),"Example");
+*    } 
+*    virtual RCString GetClassName(void) const {return("MyObject");}
+*    void Handle(const RNotification& notification)
+*    {
+*       cout<<"From "<<GetName()<<" : "<<GetData<long>(msg)<<endl;
+*    }
+* };
+*
+* int main(int argc, char *argv[])
+* {
+*    MyObject Obj1("Object 1");
+*    MyObject Obj2("Object 2");
+*    NotificationCenter.PostNotification("Message",(long)3);
+* } 
 * @short Notification Center
 * @author Pascal Francq
 */

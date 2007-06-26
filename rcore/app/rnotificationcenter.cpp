@@ -34,6 +34,7 @@
 #include <rnotificationcenter.h>
 #include <robject.h>
 using namespace R;
+using namespace std;
 
 
 //-----------------------------------------------------------------------------
@@ -73,9 +74,12 @@ public:
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+/**
+ * All handlers for a given notification.
+ */
 struct INotifications : public RContainer<IListener,true,true>
 {
-	RCString Name;
+	RCString Name;         // Name of the notification observed.
 
 	INotifications(const RCString& name) : RContainer<IListener,true,true>(50), Name(name) {}
 	int Compare(const INotifications& msg) const {return(Name.Compare(msg.Name));}
@@ -106,9 +110,12 @@ void INotifications::Delete(const RObject* observer)
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+/**
+ *  All handlers for a given object.
+*/
 struct IObjects : public RContainer<IListener,true,true>
 {
-	RObject* Object;
+	RObject* Object;        // Pointer to the object observed.
 
 	IObjects(RObject* object) : RContainer<IListener,true,true>(50), Object(object) {}
 
@@ -260,6 +267,7 @@ void RNotificationCenter::PostNotification(const RNotification& notification)
 		Call=true;
 	}
 
+	// If nobody has catch the message, call the 'HandlerNotFound' method.
 	if((!Call)&&notification.GetSender())
 		notification.GetSender()->HandlerNotFound(notification);
 }
