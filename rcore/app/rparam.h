@@ -156,6 +156,14 @@ public:
 	* @param desc            Description of the parameter.
 	*/
 	RParamValue(const RString& n,const RString& v,const RString& desc=RString::Null);
+	
+	/**
+	* Constructor of the parameter with a 'value' attribute.
+	* @param n               Name of the parameter.
+	* @param v               Value.
+	* @param desc            Description of the parameter.
+	*/
+	RParamValue(const RString& n,const char* v,const RString& desc=RString::Null);
 
 	/**
 	* Constructor of the parameter with a 'value' attribute.

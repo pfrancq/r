@@ -132,6 +132,13 @@ RParamValue::RParamValue(const RString& n,const RString& v,const RString& desc)
 
 
 //------------------------------------------------------------------------------
+RParamValue::RParamValue(const RString& n,const char* v,const RString& desc)
+	: RParam(n,desc), Value(v)
+{
+}
+
+
+//------------------------------------------------------------------------------
 RParamValue::RParamValue(const RString& n,int v,const RString& desc)
 		: RParam(n,desc)
 {
