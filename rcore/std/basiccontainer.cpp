@@ -223,7 +223,10 @@ const void* BasicContainer::operator[](size_t idx) const
 	if(idx>=LastPtr)
 	{
 		char tmp[80];
-		sprintf(tmp,"BasicContainer::operator[] const : index %u outside range [0,%u]",idx,LastPtr-1);
+		if(LastPtr)
+			sprintf(tmp,"BasicContainer::operator[] const : index %u outside range [0,%u]",idx,LastPtr-1);
+		else
+			sprintf(tmp,"BasicContainer::operator[] const : no elements");
 		throw std::range_error(tmp);
 	}
 	return(Tab[idx]);
