@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 PROJECT_NAME           = "R Project"
 PROJECT_NUMBER         =
-OUTPUT_DIRECTORY       = /home/public/api/r/
+OUTPUT_DIRECTORY       = /home/public/api/rmath/
 OUTPUT_LANGUAGE        = English
 USE_WINDOWS_ENCODING   = NO
 BRIEF_MEMBER_DESC      = YES
@@ -60,7 +60,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = /home/pfrancq/prj/r
+INPUT                  = /home/pfrancq/prj/r/rmath
 FILE_PATTERNS          = *.h
 RECURSIVE              = YES
 EXCLUDE                =
@@ -91,7 +91,7 @@ IGNORE_PREFIX          = R
 # configuration options related to the HTML output
 #---------------------------------------------------------------------------
 GENERATE_HTML          = YES
-HTML_OUTPUT            = /home/public/api/r/
+HTML_OUTPUT            = /home/public/api/rmath/
 HTML_FILE_EXTENSION    = .html
 HTML_HEADER            =
 HTML_FOOTER            =
@@ -170,8 +170,8 @@ SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
 # Configuration::additions related to external references
 #---------------------------------------------------------------------------
-TAGFILES               =
-GENERATE_TAGFILE       = /home/public/api/r/r.tags
+TAGFILES               = /home/public/api/r/r.tags
+GENERATE_TAGFILE       = /home/public/api/rmath/rmath.tags
 ALLEXTERNALS           = NO
 EXTERNAL_GROUPS        = YES
 PERL_PATH              = /usr/bin/perl
