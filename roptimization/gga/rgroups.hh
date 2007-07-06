@@ -311,7 +311,97 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 	return(RCursor<cObj>(ObjsAss));
 }
 
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroupData,class cGroups>
+	double RGroups<cGroup,cObj,cGroupData,cGroups>::ComputeAdjustedRandIndex(const cGroups& groups) const
+{
+	unsigned int NbRows,NbCols;                   // Rows and Cols for matrix
+	unsigned int NbObjs;                          // Total Number of objects
+	unsigned int col;
+	cGroup* Group2;
+	double a,b,c,d,num,den;
+	double* VectorRows=0;                         // Sum of the rows of the matrix
+	double* VectorCols=0;                         // Sum of the columns of the matrix
+	double* VectorColsTemp=0;                     // temp sum of the columns of the matrix
+	double* ptr;
+	double Total;
 
+	// Init part
+	Total=0.0;
+	NbObjs=0;
+
+	// Go through the languages to define the maximal sizes and allocate the matrix
+	NbRows=this->Used.GetNb();
+	NbCols=groups.Used.GetNb();
+	if((!NbRows)||(!NbCols))
+		return(-1.0);
+	VectorRows=new double[NbRows];
+	VectorCols=new double[NbCols];
+	VectorColsTemp=new double[NbCols];
+
+	// Construction of the container for relation between id and column in the matrix.
+	RContainer<GroupId,true,true> GroupsId(NbCols,NbCols/2);
+	RCursor<cGroup> Cur2(groups.Used);
+	for(Cur2.Start(),col=0;!Cur2.End();Cur2.Next())
+		GroupsId.InsertPtr(new GroupId(Cur2()->GetId(),col++));
+
+	// Initialisation of the variable used for computing the subtotal
+	a=b=c=d=0.0;
+
+	// Initalisation of the vectors
+	memset(VectorRows,0,NbRows*sizeof(double));
+	memset(VectorCols,0,NbCols*sizeof(double));
+
+	// For each group of the current chromosome and for each object in this group
+	// -> Compute the differents terms of the total
+	int row,position;
+	row=0;
+
+	RCursor<cGroup> Cur1(this->Used);
+	for(Cur1.Start();!Cur1.End();Cur1.Next())
+	{
+		memset(VectorColsTemp,0,NbCols*sizeof(double));
+		RCursor<cObj> Objs(GetObjs(*Cur1()));
+		for(Objs.Start();!Objs.End();Objs.Next())
+		{
+			if(!GetGroup(Objs()))
+				continue;
+			VectorRows[row]++;
+			NbObjs++;
+			Group2=groups.GetGroup(Objs());
+			if(!Group2)
+				continue;
+			position=GroupsId.GetPtr(Group2->GetId())->position;
+			VectorCols[position]++;
+			VectorColsTemp[position]++;
+		}
+		row++;
+		for(col=NbCols+1,ptr=VectorColsTemp;--col;ptr++)
+			a+=(((*ptr)*((*ptr)-1))/2);
+	}
+
+	// Finish the computation
+	for(col=NbCols+1,ptr=VectorCols;--col;ptr++)
+		b+=(((*ptr)*((*ptr)-1))/2);
+	for(row=NbRows+1,ptr=VectorRows;--row;ptr++)
+		c+=(((*ptr)*((*ptr)-1))/2);
+	d=(NbObjs*(NbObjs-1))/2;
+	num=a-((b*c)/d);
+	den=(0.5*(b+c))-(b*c/d);
+	if(den<0.0000001)
+		return(-1.0);
+	Total=num/den;
+
+	// Delete the vectors
+	delete[] VectorRows;
+	delete[] VectorCols;
+	delete[] VectorColsTemp;
+
+	// Return the result
+	return(Total);
+}
+		
+		
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	RGroups<cGroup,cObj,cGroupData,cGroups>::~RGroups(void)

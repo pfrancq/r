@@ -58,6 +58,19 @@ namespace R{
 template<class cGroup,class cObj,class cGroupData,class cGroups>
 	class RGroups : public RContainer<cGroup,true,false>
 {
+	// Internal class used to compute the adjusted Rand Index
+	class GroupId
+	{
+	public:
+		int GrpId;       // Group Identificator.
+		int position;    // Position of the group.
+
+		// Constructor and Compare methods.
+		GroupId(int RealId,int Position) : GrpId(RealId), position(Position) {}
+		int Compare(const int ID) const {return(GrpId-ID);}
+		int Compare(const GroupId& grp) const {return(GrpId-grp.GrpId);}
+	};
+	
 public:
 
 	/**
@@ -214,6 +227,17 @@ public:
 	*/
 	RCursor<cObj> GetObjsCursor(void) const;
 
+	/**
+	* Method to compute the adjusted Rand index with another clustering in
+	* order to determine a similarity between two clusterings. The results is
+	* between -1 (nothing in common) and +1 (identical).
+	*
+	* This method can be used to verify if two clusterings are similar.
+	* @param groups          Groups to compare.
+	* @return Adjusted Rand Index.
+	*/	
+	double ComputeAdjustedRandIndex(const cGroups& groups) const;
+	
 	/**
 	* Destruct the groups.
 	*/

@@ -56,19 +56,6 @@ namespace R{
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
 	class RChromoG : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cGroupData,cChromo>
 {
-	// Internal class used to compute the adjusted Rand Index
-	class GroupId
-	{
-	public:
-		int GrpId;       // Group Identificator.
-		int position;    // Position of the group.
-
-		// Constructor and Compare methods.
-		GroupId(int RealId,int Position) : GrpId(RealId), position(Position) {}
-		int Compare(const int ID) const {return(GrpId-ID);}
-		int Compare(const GroupId& grp) const {return(GrpId-grp.GrpId);}
-	};
-
 protected:
 
 	/**
@@ -96,17 +83,6 @@ public:
 	* Clear all the information of the chromosome.
 	*/
 	void Clear(void);
-
-	/**
-	* Method to compute the adjusted Rand index with another chromosome in
-	* order to determine a similarity between two clusterings. The results is
-	* between -1 (nothing in common) and +1 (identical).
-	*
-	* This method can be used to verify if two chromosomes are similar.
-	* @param chromo          Chromosome to compare.
-	* @return Adjusted Rand Index.
-	*/
-	double Similarity(const cChromo& chromo) const;
 
 	/**
 	* Construct a valid solution.
