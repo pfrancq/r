@@ -114,7 +114,7 @@ public:
 * 	RDb db("host","me","mypassword","thedb");
 * 	RQuery q(&db, "SELECT * FROM tbl");
 *
-* 	for(q.Begin();q.IsMore();q++)
+* 	for(q.Start();!q.End();q.Next())
 * 		cout<<"Col 1: "<<q[0]<<"   -    Col 2:"<<q[1]<<endl;
 * }
 *
@@ -218,7 +218,7 @@ public:
 * 	RDb db("host","me","mypassword","thedb");
 * 	RQuery q(&db, "SELECT * FROM tbl");
 *
-* 	for(q.Begin();q.IsMore();q++)
+* 	for(q.Start();!q.End();q.Next())
 * 		cout<<"Col 1: "<<q[0]<<"   -    Col 2:"<<q[1]<<endl;
 * }
 *
@@ -306,26 +306,9 @@ public:
 	/**
 	* Get the total number of rows of the query.
 	* @returns Number of row.
-	* \deprecated
-	*/
-	size_raw GetNbRows(void)
-		{ return(nbrows); }
-
-	/**
-	* Get the total number of rows of the query.
-	* @returns Number of row.
 	*/
 	size_raw GetNb(void)
 		{ return(nbrows); }
-
-	/**
-	* Look if all rows of the query were treated.
-	* @return False if all rows were treated.
-	* \deprecated
-	* Use the !End() method instead.
-	*/
-	bool IsMore(void)
-		{ return(row); }
 
 	/**
 	* Look if all rows of the query were treated.
@@ -336,22 +319,8 @@ public:
 
 	/**
 	* Put the query at the first row.
-	* \deprecated
-	* Use the Start() method instead.
-	*/
-	void Begin(void);
-
-	/**
-	* Put the query at the first row.
 	*/
 	void Start(void);
-
-	/**
-	* Increment the current row.
-	* \deprecated
-	* Use the Next() method instead.
-	*/
-	RQuery& operator++(int);
 
 	/**
 	* Increment the current row.

@@ -216,24 +216,9 @@ void RQuery::Init(void)
 
 
 //------------------------------------------------------------------------------
-void RQuery::Begin(void)
-{
-	row=mysql_fetch_row(result);
-}
-
-
-//------------------------------------------------------------------------------
 void RQuery::Start(void)
 {
 	row=mysql_fetch_row(result);
-}
-
-
-//------------------------------------------------------------------------------
-RQuery& RQuery::operator++(int)
-{
-	row=mysql_fetch_row(result);
-	return(*this);
 }
 
 
@@ -392,12 +377,10 @@ RQuery* RTransactionTable::ReadTransaction(size_raw id,bool wait)
 				delete Access;
 				Access=0;
 			}
-
-//			std::cout<<sSql<<std::endl;
 			Access=new RQuery(DB,sSql);
 			Access->Start();
 		}
-		while((wait)&&(!Access->GetNbRows()));
+		while((wait)&&(!Access->GetNb()));
 	}
 	catch(...)
 	{
@@ -430,7 +413,7 @@ void RTransactionTable::WaitTransaction(size_raw id)
 			Access=new RQuery(DB,sSql);
 			Access->Start();
 		}
-		while(!Access->GetNbRows());
+		while(!Access->GetNb());
 		delete Access;
 	}
 	catch(...)
