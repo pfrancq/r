@@ -6,7 +6,7 @@
 
 	Grouping Genetic Algorithms - Header.
 
-	Copyright 2001-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2001-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -48,12 +48,12 @@ namespace R{
 //------------------------------------------------------------------------------
 // Forward class declaration
 class RObjG;
-template<class cGroup,class cObj,class cGroupData,class cChromo> class RGroup;
-template<class cGroup,class cObj,class cGroupData,class cChromo> class RGroups;
-template<class cGroup,class cObj,class cGroupData,class cGroups> class RGroupingHeuristic;
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData> class RThreadDataG;
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData> class RChromoG;
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData> class RInstG;
+template<class cGroup,class cObj,class cGroups> class RGroup;
+template<class cGroup,class cObj,class cGroups> class RGroups;
+template<class cGroup,class cObj,class cGroups> class RGroupingHeuristic;
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj> class RThreadDataG;
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj> class RChromoG;
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj> class RInstG;
 
 
 //------------------------------------------------------------------------------

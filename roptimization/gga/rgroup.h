@@ -6,7 +6,7 @@
 
 	Group of a GGA - Header.
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -49,7 +49,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // forward class declaration
-template<class cGroup,class cObj,class cGroupData,class cGroups> class RGroups;
+template<class cGroup,class cObj,class cGroups> class RGroups;
 
 
 //------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ const unsigned int NoGroup=0xFFFFFFFF;
 * @author Pascal Francq.
 * @short Group.
 */
-template<class cGroup,class cObj,class cGroupData,class cGroups>
+template<class cGroup,class cObj,class cGroups>
 	class RGroup
 {
 protected:
@@ -108,9 +108,8 @@ public:
 	* Construct the group.
 	* @param owner          Owner of the group.
 	* @param id             Identificator of the group.
-	* @param data           Specific data to construct the group.
 	*/
-	RGroup(cGroups* owner,const unsigned int id,const cGroupData* data=0);
+	RGroup(cGroups* owner,const unsigned int id);
 
 	/**
 	* Verify if the group is not violating the integrity of the system.
@@ -244,7 +243,7 @@ public:
 	virtual ~RGroup(void);
 
 	// friend classes
-	friend class RGroups<cGroup,cObj,cGroupData,cGroups>;
+	friend class RGroups<cGroup,cObj,cGroups>;
 };
 
 

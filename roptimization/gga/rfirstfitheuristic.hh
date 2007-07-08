@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Grouping - Inline Implemenation
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -32,21 +32,21 @@
 
 //------------------------------------------------------------------------------
 //
-// class RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>
+// class RGroupingHeuristic<cGroup,cObj,cGroups>
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RFirstFitHeuristic<cGroup,cObj,cGroupData,cGroups>::RFirstFitHeuristic(RRandom* r,RCursor<cObj>* objs,RDebug* debug)
-	: RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>("First-Fit Heuristic",r,objs,debug)
+template<class cGroup,class cObj,class cGroups>
+	RFirstFitHeuristic<cGroup,cObj,cGroups>::RFirstFitHeuristic(RRandom* r,RCursor<cObj>* objs,RDebug* debug)
+	: RGroupingHeuristic<cGroup,cObj,cGroups>("First-Fit Heuristic",r,objs,debug)
 {
 }
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	cGroup* RFirstFitHeuristic<cGroup,cObj,cGroupData,cGroups>::FindGroup(void)
+template<class cGroup,class cObj,class cGroups>
+	cGroup* RFirstFitHeuristic<cGroup,cObj,cGroups>::FindGroup(void)
 {
 	cGroup* grp;
 
@@ -60,7 +60,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RFirstFitHeuristic<cGroup,cObj,cGroupData,cGroups>::~RFirstFitHeuristic(void)
+template<class cGroup,class cObj,class cGroups>
+	RFirstFitHeuristic<cGroup,cObj,cGroups>::~RFirstFitHeuristic(void)
 {
 }

@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Grouping - Header
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -55,7 +55,7 @@ namespace R{
 * @author Pascal Francq
 * @short Generic Grouping Heuristic class.
 */
-template<class cGroup,class cObj,class cGroupData,class cGroups>
+template<class cGroup,class cObj,class cGroups>
 	class RGroupingHeuristic
 {
 protected:

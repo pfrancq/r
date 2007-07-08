@@ -4,7 +4,7 @@
 
 	Class representing an instance of a HGA - Implementation
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -35,16 +35,16 @@
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RThreadDataG(cInst *owner)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RThreadDataG(cInst *owner)
 		: RThreadData<cInst,cChromo>(owner), Heuristic(0)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	void RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(void)
 {
 	RThreadData<cInst,cChromo>::Init();
 	Heuristic=this->Owner->CreateHeuristic();
@@ -52,8 +52,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::~RThreadDataG(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RThreadDataG(void)
 {
 	if(Heuristic)
 		delete Heuristic;
@@ -68,8 +68,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,const RString& name,RDebug *debug)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,const RString& name,RDebug *debug)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
@@ -83,8 +83,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,const RString& name,RDebug *debug)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,const RString& name,RDebug *debug)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
@@ -98,8 +98,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,const RString& name,RDebug *debug)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,const RString& name,RDebug *debug)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
 {
@@ -113,29 +113,29 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Init(cGroupData* gdata)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(void)
 {
 	cChromo **C;
 	unsigned int i;
 
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
 	for(i=this->PopSize+1,C=this->Chromosomes;--i;C++)
-		(static_cast<RGroups<cGroup,cObj,cGroupData,cChromo>*>(*C))->Init(gdata);
-	(static_cast<RGroups<cGroup,cObj,cGroupData,cChromo>*>(this->BestChromosome))->Init(gdata);
+		(static_cast<RGroups<cGroup,cObj,cChromo>*>(*C))->Init();
+	(static_cast<RGroups<cGroup,cObj,cChromo>*>(this->BestChromosome))->Init();
 }
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::CreateHeuristic(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	RGroupingHeuristic<cGroup,cObj,cChromo>* RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::CreateHeuristic(void)
 {
-	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* h;
+	RGroupingHeuristic<cGroup,cObj,cChromo>* h;
 
 	switch(Heuristic)
 	{
 		case FirstFit:
-			h = new RFirstFitHeuristic<cGroup,cObj,cGroupData,cChromo>(this->Random,Objs,this->Debug);
+			h = new RFirstFitHeuristic<cGroup,cObj,cChromo>(this->Random,Objs,this->Debug);
 			break;
 		default:
 			h=0;
@@ -146,8 +146,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::HandleSameChromosomes(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::HandleSameChromosomes(void)
 {
 	cChromo **C,**C1,*p;
 	unsigned int i,j;
@@ -183,8 +183,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::RandomConstruct(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RandomConstruct(void)
 {
 	if(this->Debug)
 		this->Debug->BeginFunc("RandomConstruct","RInstG");
@@ -198,8 +198,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Crossover(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(void)
 {
 	if(this->Debug)
 		this->Debug->BeginFunc("Crossover","RInstG");
@@ -213,8 +213,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Mutation(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Mutation(void)
 {
 	if(this->Debug)
 		this->Debug->BeginFunc("Mutation","RInstG");
@@ -228,8 +228,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::Inversion(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Inversion(void)
 {
 	if(this->Debug)
 		this->Debug->BeginFunc("Inversion","RInstG");
@@ -243,8 +243,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>::~RInstG(void)
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RInstG(void)
 {
 	if(Objs)
 		delete Objs;

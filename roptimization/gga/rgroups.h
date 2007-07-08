@@ -6,7 +6,7 @@
 
 	Groups - Header
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -55,7 +55,7 @@ namespace R{
 * @author Pascal Francq
 * @short Groups.
 */
-template<class cGroup,class cObj,class cGroupData,class cGroups>
+template<class cGroup,class cObj,class cGroups>
 	class RGroups : public RContainer<cGroup,true,false>
 {
 	// Internal class used to compute the adjusted Rand Index
@@ -77,11 +77,6 @@ public:
 	* Groups used.
 	*/
 	RContainer<cGroup,false,false> Used;
-
-	/**
-	* Data used to construct a group.
-	*/
-	cGroupData* GroupData;
 
 protected:
 
@@ -131,7 +126,7 @@ public:
 	* Init the groups.
 	* @param data           Data used to construct the groups.
 	*/
-	void Init(cGroupData* data);
+	void Init(void);
 
 	/**
 	* Clear all the information of the chromosome.
@@ -244,8 +239,8 @@ public:
 	virtual ~RGroups(void);
 
 	// friend classes
-	friend class RGroup<cGroup,cObj,cGroupData,cGroups>;
-	friend class RGroupingHeuristic<cGroup,cObj,cGroupData,cGroups>;
+	friend class RGroup<cGroup,cObj,cGroups>;
+	friend class RGroupingHeuristic<cGroup,cObj,cGroups>;
 };
 
 

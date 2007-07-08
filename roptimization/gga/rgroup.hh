@@ -6,7 +6,7 @@
 
 	Group of a GGA - Header.
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -32,13 +32,13 @@
 
 //------------------------------------------------------------------------------
 //
-// class RGroup<cGroup,cObj,cGroupData,cGroups>
+// class RGroup<cGroup,cObj,cGroups>
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RGroup<cGroup,cObj,cGroupData,cGroups>::RGroup(RGroup* grp)
+template<class cGroup,class cObj,class cGroups>
+	RGroup<cGroup,cObj,cGroups>::RGroup(RGroup* grp)
 		: Id(grp->Id), Owner(grp->Owner)
 {
 	NbSubObjects= grp->NbSubObjects;
@@ -48,8 +48,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RGroup<cGroup,cObj,cGroupData,cGroups>::RGroup(cGroups* owner,const unsigned int id,const cGroupData*)
+template<class cGroup,class cObj,class cGroups>
+	RGroup<cGroup,cObj,cGroups>::RGroup(cGroups* owner,const unsigned int id)
 		: Id(id), Owner(owner)
 {
 	NbSubObjects= 0;
@@ -59,8 +59,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroup<cGroup,cObj,cGroupData,cGroups>::Verify(void)
+template<class cGroup,class cObj,class cGroups>
+	void RGroup<cGroup,cObj,cGroups>::Verify(void)
 {
 	unsigned int NbObjects=Owner->ObjsAss.GetNb();
 	char tmp[200];
@@ -125,8 +125,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroup<cGroup,cObj,cGroupData,cGroups>::Clear(void)
+template<class cGroup,class cObj,class cGroups>
+	void RGroup<cGroup,cObj,cGroups>::Clear(void)
 {
 	Reserved=false;
 	SubObjects=NoObject;
@@ -135,8 +135,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroup<cGroup,cObj,cGroupData,cGroups>::Copy(const cGroup* grp)
+template<class cGroup,class cObj,class cGroups>
+	void RGroup<cGroup,cObj,cGroups>::Copy(const cGroup* grp)
 {
 	RReturnIfFail(Owner!=grp->Owner);
 	RCursor<cObj> ptr(grp->Owner->GetObjs(*grp));
@@ -147,62 +147,62 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroup<cGroup,cObj,cGroupData,cGroups>::PostInsert(const cObj*)
+template<class cGroup,class cObj,class cGroups>
+	void RGroup<cGroup,cObj,cGroups>::PostInsert(const cObj*)
 {
 }
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	void RGroup<cGroup,cObj,cGroupData,cGroups>::PostDelete(const cObj*)
+template<class cGroup,class cObj,class cGroups>
+	void RGroup<cGroup,cObj,cGroups>::PostDelete(const cObj*)
 {
 }
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroup<cGroup,cObj,cGroupData,cGroups>::CanInsert(const cObj*) const
-{
-	return(true);
-}
-
-
-//------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroup<cGroup,cObj,cGroupData,cGroups>::IsCompatible(const cObj*) const
+template<class cGroup,class cObj,class cGroups>
+	bool RGroup<cGroup,cObj,cGroups>::CanInsert(const cObj*) const
 {
 	return(true);
 }
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroup<cGroup,cObj,cGroupData,cGroups>::CanDelete(const cObj*) const
+template<class cGroup,class cObj,class cGroups>
+	bool RGroup<cGroup,cObj,cGroups>::IsCompatible(const cObj*) const
 {
 	return(true);
 }
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RGroup<cGroup,cObj,cGroupData,cGroups>& RGroup<cGroup,cObj,cGroupData,cGroups>::operator=(const RGroup<cGroup,cObj,cGroupData,cGroups>&)
+template<class cGroup,class cObj,class cGroups>
+	bool RGroup<cGroup,cObj,cGroups>::CanDelete(const cObj*) const
+{
+	return(true);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
+	RGroup<cGroup,cObj,cGroups>& RGroup<cGroup,cObj,cGroups>::operator=(const RGroup<cGroup,cObj,cGroups>&)
 {
 	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroup<cGroup,cObj,cGroupData,cGroups>::IsCompatible(const cGroup*) const
+template<class cGroup,class cObj,class cGroups>
+	bool RGroup<cGroup,cObj,cGroups>::IsCompatible(const cGroup*) const
 {
 	return(true);
 }
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroup<cGroup,cObj,cGroupData,cGroups>::IsIn(const unsigned int id) const
+template<class cGroup,class cObj,class cGroups>
+	bool RGroup<cGroup,cObj,cGroups>::IsIn(const unsigned int id) const
 {
 	unsigned int i;
 
@@ -214,8 +214,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroup<cGroup,cObj,cGroupData,cGroups>::CommonObjs(const cGroup* grp) const
+template<class cGroup,class cObj,class cGroups>
+	bool RGroup<cGroup,cObj,cGroups>::CommonObjs(const cGroup* grp) const
 {
 	unsigned int i;
 
@@ -227,8 +227,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	bool RGroup<cGroup,cObj,cGroupData,cGroups>::SameObjs(const cGroup* grp) const
+template<class cGroup,class cObj,class cGroups>
+	bool RGroup<cGroup,cObj,cGroups>::SameObjs(const cGroup* grp) const
 {
 	unsigned int i;
 
@@ -241,8 +241,8 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	unsigned int* RGroup<cGroup,cObj,cGroupData,cGroups>::GetObjectsId(void) const
+template<class cGroup,class cObj,class cGroups>
+	unsigned int* RGroup<cGroup,cObj,cGroups>::GetObjectsId(void) const
 {
 	unsigned int* tmp;
 	unsigned int* tmp2;
@@ -258,7 +258,7 @@ template<class cGroup,class cObj,class cGroupData,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroupData,class cGroups>
-	RGroup<cGroup,cObj,cGroupData,cGroups>::~RGroup(void)
+template<class cGroup,class cObj,class cGroups>
+	RGroup<cGroup,cObj,cGroups>::~RGroup(void)
 {
 }

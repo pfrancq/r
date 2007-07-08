@@ -6,7 +6,7 @@
 
 	Class representing an instance of a GGA - Header
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -56,7 +56,7 @@ namespace R{
 * @author Pascal Francq
 * @short GGA "thread-dependent" Data.
 */
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	class RThreadDataG : public RThreadData<cInst,cChromo>
 {
 protected:
@@ -64,7 +64,7 @@ protected:
 	/**
 	* Heuristic Used.
 	*/
-	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* Heuristic;
+	RGroupingHeuristic<cGroup,cObj,cChromo>* Heuristic;
 
 public:
 
@@ -85,7 +85,7 @@ public:
 	virtual ~RThreadDataG(void);
 
 	// friend class
-	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
+	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>;
 };
 
 
@@ -95,7 +95,7 @@ public:
 * @author Pascal Francq
 * @short Generic GGA instance.
 */
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	class RInstG : public RInst<cInst,cChromo,cFit,cThreadData>
 {
 protected:
@@ -157,7 +157,7 @@ public:
 	* Initialisation of the instance.
 	* @param gdata          The Data to use for the construction of the groups.
 	*/
-	virtual void Init(cGroupData* gdata);
+	virtual void Init(void);
 
 	/**
 	* Return the heuristic type.
@@ -189,7 +189,7 @@ public:
 	/**
 	* Create a heuristic object.
 	*/
-	virtual RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* CreateHeuristic(void);
+	virtual RGroupingHeuristic<cGroup,cObj,cChromo>* CreateHeuristic(void);
 
 	/**
 	* Handle the chromosomes that are representing the same solutions. If two
@@ -228,8 +228,8 @@ public:
 	virtual ~RInstG(void);
 
 	// friend classes
-	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
-	friend class RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
+	friend class RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>;
+	friend class RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>;
 };
 
 

@@ -4,7 +4,7 @@
 
 	Class representing a chromosome of a GGA - Header
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -53,15 +53,15 @@ namespace R{
 * @author Pascal Francq
 * @short GGA Chromosome.
 */
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj,class cGroupData>
-	class RChromoG : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cGroupData,cChromo>
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	class RChromoG : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cChromo>
 {
 protected:
 
 	/**
 	* Heuristic used for the groupment.
 	*/
-	RGroupingHeuristic<cGroup,cObj,cGroupData,cChromo>* Heuristic;
+	RGroupingHeuristic<cGroup,cObj,cChromo>* Heuristic;
 
 public:
 
@@ -171,7 +171,7 @@ public:
 	*/
 	virtual ~RChromoG(void);
 
-	friend class RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj,cGroupData>;
+	friend class RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>;
 };
 
 
