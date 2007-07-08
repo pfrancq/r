@@ -114,7 +114,7 @@ protected:
 	* @param max             Maximum position of the elements to iterate. If
 	*                        SIZE_MAX, iterate until the end of the container.
 	*/
-	BasicCursor(const BasicContainer& c,size_t min,size_t max);
+	BasicCursor(const BasicContainer& c,size_t min=0,size_t max=SIZE_MAX);
 
 	/*
 	* Assignment operator using a "Cursor".
@@ -131,7 +131,7 @@ public:
 	* @param max             Maximum position of the elements to iterate. If
 	*                        SIZE_MAX, iterate until the end of the container.
 	*/
-	void Set(const BasicContainer& c,size_t min,size_t max);
+	void Set(const BasicContainer& c,size_t min=0,size_t max=SIZE_MAX);
 
 	/**
 	* Clear the cursor.
