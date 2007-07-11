@@ -491,8 +491,9 @@ bool RTextFile::Eof(void)
 //------------------------------------------------------------------------------
 RString RTextFile::GetWord(void)
 {
-	RString res(500);
-
+	RString res;
+	
+	res.SetLen(500);
 	if(!CanRead)
 		throw(RIOException(this,"File Mode is not Read"));
 	SkipSpaces();

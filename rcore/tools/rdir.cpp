@@ -35,10 +35,10 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <errno.h>
-#ifdef _BSD_SOURCE
-#include <unistd.h>
+#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
+	#include <unistd.h>
 #else
-#include <io.h>
+	#include <io.h>
 #endif
 #include <fcntl.h>
 

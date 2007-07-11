@@ -36,7 +36,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/stat.h>
-#ifdef _BSD_SOURCE
+#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
 	#include <unistd.h>
 #else
 	#include <io.h>
@@ -129,9 +129,9 @@ const RString RFile::GetFileName(void) const
 	RString res;
 
 	int pos=Name.Find('/',-1)+1;
-	if(pos==0)
+	if(pos<=0)
 		res=Name;
-	else if(pos<Name.GetLen())
+	else if(static_cast<size_t>(pos)<Name.GetLen())
 		res=Name.Mid(pos);
 	return(res);
 }

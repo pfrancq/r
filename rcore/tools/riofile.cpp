@@ -36,7 +36,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/stat.h>
-#ifdef _BSD_SOURCE
+#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
 	#include <unistd.h>
 #else
 	#include <io.h>

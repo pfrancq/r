@@ -214,7 +214,7 @@ bool RXMLTag::Merge(const RXMLTag* merge)
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		size_t nb;
-		RXMLTag* same;
+		RXMLTag* same=0;
 		// Go trough each subnode and count the number of same
 		RCursor<RXMLTag> My(GetNodes());
 		for(My.Start(),nb=0;!My.End();My.Next())
