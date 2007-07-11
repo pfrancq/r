@@ -63,7 +63,7 @@ class RObject;
 * @short Notification Handle
 * @author Pascal Francq
 */
-typedef unsigned int hNotification;
+typedef void* hNotification;
 
 
 //-----------------------------------------------------------------------------
