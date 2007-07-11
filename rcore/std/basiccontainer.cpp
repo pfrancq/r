@@ -224,7 +224,7 @@ const void* BasicContainer::operator[](size_t idx) const
 	{
 		char tmp[80];
 		if(LastPtr)
-			sprintf(tmp,"BasicContainer::operator[] const : index %u outside range [0,%u]",idx,LastPtr-1);
+			sprintf(tmp,"BasicContainer::operator[] const : index %zu outside range [0,%zu]",idx,LastPtr-1);
 		else
 			sprintf(tmp,"BasicContainer::operator[] const : no elements");
 		throw std::range_error(tmp);
@@ -237,9 +237,12 @@ const void* BasicContainer::operator[](size_t idx) const
 void* BasicContainer::operator[](size_t idx)
 {
 	if(idx>=LastPtr)
-	{
+	{		
 		char tmp[80];
-		sprintf(tmp,"BasicContainer::operator[] : index %u outside range [0,%u]",idx,LastPtr-1);
+		if(LastPtr)
+			sprintf(tmp,"BasicContainer::operator[] : index %zu outside range [0,%zu]",idx,LastPtr-1);
+		else
+			sprintf(tmp,"BasicContainer::operator[] : no elements");
 		throw std::range_error(tmp);
 	}
 	return(Tab[idx]);

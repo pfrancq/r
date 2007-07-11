@@ -51,10 +51,12 @@ class BasicCursor;
 
 
 //-----------------------------------------------------------------------------
-/*
-* This class represent a container of elements. This elements are
-* store in an array of pointers which will be increase when necessary.
-*/
+/**
+ * This class represent a basic container. This class cannot be instantiated,
+ * use R::RContainer instead. 
+ * @author Pascal Francq
+ * @short Basic Container.
+ */
 class BasicContainer
 {
 protected:

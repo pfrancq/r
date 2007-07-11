@@ -196,6 +196,18 @@ public:
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
+	RCastCursor(const BasicCursor& src) : BasicCursor(src) {}
+	
+	/**
+	* Construct the cursor.
+	* @param src             Source container.
+	*/
+	RCastCursor(const RCastCursor<C>& src) : BasicCursor(src) {}
+	
+	/**
+	* Construct the cursor.
+	* @param src             Source container.
+	*/
 	RCastCursor(const RCursor<C>& src) : BasicCursor(src) {}
 
 	/**

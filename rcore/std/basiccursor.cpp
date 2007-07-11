@@ -134,7 +134,7 @@ void BasicCursor::GoTo(size_t idx)
 	if(idx>=LastPtr)
 	{
 		char tmp[80];
-		sprintf(tmp,"void BasicCursor::GoTo(size_t) : index %u outside range [%u,%u]",idx,FirstPtr,LastPtr-1);
+		sprintf(tmp,"void BasicCursor::GoTo(size_t) : index %zu outside range [%zu,%zu]",idx,FirstPtr,LastPtr-1);
 		throw std::range_error(tmp);
 	}
 	Current=&Tab[idx];

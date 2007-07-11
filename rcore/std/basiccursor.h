@@ -56,10 +56,12 @@ namespace R{
 
 
 //-----------------------------------------------------------------------------
-/*
-* @author Pascal Francq
-* @short Container Cursor.
-*/
+/**
+ * This class represent a basic cursor for a basic container. This class cannot
+ * be instantiated, use R::RCursor or R::RCastCursor instead. 
+ * @author Pascal Francq
+ * @short Basic Container Cursor.
+ */
 class BasicCursor
 {
 protected:
