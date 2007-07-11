@@ -336,7 +336,7 @@ size_raw RTransactionTable::WriteTransaction(unsigned int id,...)
 	sSql="INSERT INTO "+Name+" SET ";
 	if(id)
 		sSql+="transid="+RString::Number(id)+",";
-	va_start(ap,Params.GetNb());
+	va_start(ap,id);
 	RCursor<RString> Cur(Params);
 	for(Cur.Start();!Cur.End();)
 	{
