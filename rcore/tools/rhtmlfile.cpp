@@ -75,7 +75,7 @@ struct RCharCode
 
 //------------------------------------------------------------------------------
 // All the supported codes from HTML or XML to normal.
-const RCharCode FromXML[]={
+/*const RCharCode FromXML[]={
 {"#13" ,0x000D},
 {"#32" ,0x0020},
 {"#33" ,0x0021},
@@ -632,7 +632,7 @@ const RCharCode FromXML[]={
 {"zwj",0x200D},
 {"zwnj",0x200C}
 };
-
+*/
 
 //------------------------------------------------------------------------------
 //
