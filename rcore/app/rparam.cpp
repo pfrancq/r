@@ -30,11 +30,11 @@
 
 
 //------------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <values.h>
-#include <rxmlstruct.h>
+// include files for R
 #include <rparam.h>
+#include <rxmlstruct.h>
 using namespace R;
+
 
 
 //------------------------------------------------------------------------------
