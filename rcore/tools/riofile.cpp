@@ -119,9 +119,11 @@ void RIOFile::Open(RIO::ModeType mode)
 		default:
 			throw(RIOException(this,"No Valid Mode"));
 	};
-	#ifndef _BSD_SOURCE
-		localmode|=O_BINARY;
-	#endif
+	#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
+		//do nothing
+	#else
+        localmode|=O_BINARY;
+	#endif	
 	if(Mode==RIO::Read)
 	{
 		handle=open(Name.Latin1(),localmode);
