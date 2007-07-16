@@ -204,7 +204,11 @@ RTextEncoding::RTextEncoding(const RString& name)
 	s2=12;
 	ptr1=Test;
 	ptr2=Tab;
-	err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+	#ifdef _LIBICONV_VERSION	
+		err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+	#else
+		err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+	#endif
 	if(s2>6)
 		Order=true;
 	else
@@ -257,7 +261,11 @@ RString RTextEncoding::ToUnicode(const char* text,unsigned int len) const
 	{
 		ptr2=Tab;
 		s2=BufSize;
-		err=iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
+		#ifdef _LIBICONV_VERSION	
+			err=iconv(ToUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
+		#else
+			err=iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
+		#endif
 		if(err==(size_t)-1)
 		{
 			switch(errno)
@@ -300,7 +308,11 @@ RChar RTextEncoding::NextUnicode(const char* text,unsigned int& len) const
 	s1=len;
 	ptr2=Tab;
 	s2=sizeof(UChar);
-	err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+	#ifdef _LIBICONV_VERSION	
+		err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+	#else
+		err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+	#endif
 	if(err==(size_t)-1)
 	{
 		switch(errno)
@@ -337,7 +349,11 @@ RCString RTextEncoding::FromUnicode(const RString& text) const
 	{
 		ptr2=Tab;
 		s2=BufSize;
-		err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
+		#ifdef _LIBICONV_VERSION	
+			err=iconv(ToUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
+		#else
+			err=iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
+		#endif
 		if(err==(size_t)-1)
 		{
 			switch(errno)
