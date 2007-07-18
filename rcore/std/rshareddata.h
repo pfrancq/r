@@ -62,6 +62,18 @@ public:
 	RSharedData(void) : Refs(1) {}
 
 	/**
+	 * Copy constructor.
+	 * @param data           Original data.
+	 */
+	RSharedData(const RSharedData& data);
+	  
+	/**
+	 * Assignement operator.
+	 * @param data           Original data.
+	 */
+	RSharedData& operator=(const RSharedData& data);
+	
+	/**
 	* Increment the number of references of the data.
 	*/
 	void IncRef(void) {Refs++;}
@@ -85,13 +97,19 @@ public:
 
 
 //------------------------------------------------------------------------------
+// inline declarations here to avoid compiler complains about unused parameters
+inline RSharedData::RSharedData(const RSharedData&) : Refs(1) {}
+inline RSharedData& RSharedData::operator=(const RSharedData&) {return(*this);}
+
+
+//------------------------------------------------------------------------------
 /**
 * Function the increase the number of references of a RSharedData object.
 * @param D                  Type of the shared data.
 * @param data               Pointer to the data.
 */
 template <class D>
-	D* RIncRef(D* data)
+	inline D* RIncRef(D* data)
 {
 	if(data)
 		data->IncRef();
@@ -108,7 +126,7 @@ template <class D>
 * @param data               Reference to a pointer to the data.
 */
 template<class D>
-	void RDecRef(D* &data)
+	inline void RDecRef(D* &data)
 {
 	if(data&&data->DecRef())
 	{
@@ -116,6 +134,78 @@ template<class D>
 		data = 0;
 	}
 }
+
+
+//------------------------------------------------------------------------------
+/**
+ * The RSmartPtr represent a smart pointer of a given type which must inherits
+ * from RSharedData.
+ * @param C                  Class pointed.
+ * It is an implementation of Scott Meyers proposition in "MORE EFFECTIVE C++".
+ */
+template<class C>
+	class RSmartPtr
+{
+	/**
+	 * Pointer.
+	 */
+	C* Ptr;
+	
+	/**
+	 * Method called by all constructors.
+	 */
+	inline void Init(void) {RIncRef(Ptr);}
+	
+public:
+	
+	/**
+	 * Default constructor.
+	 */
+	RSmartPtr(void) : Ptr(0) {}
+
+	/**
+	 * Constructor.
+	 * @param ptr            Pointer to the object.
+	 */
+	RSmartPtr(C* ptr) : Ptr(ptr) {Init();}
+	
+	/**
+	 * Copy constructor.
+	 * @param ptr            Original smart pointer.
+	 */
+	RSmartPtr(const RSmartPtr& ptr) : Ptr(ptr.Ptr) {Init();}
+  
+	/**
+	 * Assignment operator.
+	 * @param ptr            Original smart pointer.
+	 */
+	RSmartPtr& operator=(const RSmartPtr& ptr)
+	{
+		if(Ptr!=ptr.Ptr)
+		{
+			C* OldPtr=Ptr;
+            Ptr=ptr.Ptr;                      
+            Init(); 
+            RRefDec(OldPtr);                
+		}
+		return(*this);
+	}
+	
+	/**
+	 * The -> operator.
+	 */ 
+	C* operator->() const {return(Ptr);}
+  
+	/**
+	 * The * operator.
+	 */
+	C& operator*() const {return(*Ptr);}
+  
+	/**
+	 * Destructor.
+	 */
+	~RSmartPtr(void) {RDecRef(Ptr);}
+};
 
 
 }  //-------- End of namespace R -----------------------------------------------
