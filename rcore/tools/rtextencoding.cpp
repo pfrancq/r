@@ -350,9 +350,9 @@ RCString RTextEncoding::FromUnicode(const RString& text) const
 		ptr2=Tab;
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION	
-			err=iconv(ToUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
+			err=iconv(FromUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
 		#else
-			err=iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
+			err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
 		#endif
 		if(err==(size_t)-1)
 		{
