@@ -102,10 +102,6 @@ void RXMLFile::SetDocType(const RString& docType)
 //------------------------------------------------------------------------------
 void RXMLFile::Open(RIO::ModeType mode)
 {
-	RXMLTag *top;
-	RCursor<RXMLAttr> Cur;
-	RString Header;
-
 	RTextFile::Open(mode);
 	switch(Mode)
 	{
@@ -117,11 +113,12 @@ void RXMLFile::Open(RIO::ModeType mode)
 
 		case RIO::Append:
 		case RIO::Create:
-			top = XMLStruct->GetTop();
-			Header="<?xml version=\""+XMLStruct->GetVersion()+"\" encoding=\""+XMLStruct->GetEncoding()+"\"?>";
+		{
+			RXMLTag* top(XMLStruct->GetTop());
+			RString Header("<?xml version=\""+XMLStruct->GetVersion()+"\" encoding=\""+XMLStruct->GetEncoding()+"\"?>");
 			(*this)<<Header<<endl;
 			Header="<!DOCTYPE "+top->GetName();
-			Cur=XMLStruct->GetXMLEntitiesCursor();
+			RCursor<RXMLAttr> Cur(XMLStruct->GetXMLEntitiesCursor());
 			if(Cur.GetNb())
 			{
 				Header+="[\n";
@@ -137,9 +134,10 @@ void RXMLFile::Open(RIO::ModeType mode)
 			CurTag=top;
 			SaveNextTag(0);
 			break;
+		}
 
 		default:
-			throw(RString("No Valid Mode"));
+			throw(RIOException("No Valid Mode"));
 	};
 }
 
