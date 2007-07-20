@@ -229,26 +229,26 @@ class QDrawPolygons : public QWidget
 	* @param x              X Coordinate.
 	* @param y              Y Coordinate.
 	*/
-	void TransformExternCon(RCoord& x,RCoord& y);
+	void TransformExternCon(tCoord& x,tCoord& y);
 
 	/**
 	* Adapt the coordinates for the external connectors.
 	* @param x              X Coordinate.
 	* @param y              Y Coordinate.
 	*/
-	void AdaptExternCon(RCoord& x,RCoord& y);
+	void AdaptExternCon(tCoord& x,tCoord& y);
 
 	/**
 	* Transform a Real X coordinate to a Screen one.
 	* @param x              X Coordinate.
 	*/
-	int RealToScreenX(const RCoord x) {return(static_cast<int>(x*FactorX));}
+	int RealToScreenX(const tCoord x) {return(static_cast<int>(x*FactorX));}
 
 	/**
 	* Transform a Real Y coordinate to a Screen one.
 	* @param y              Y Coordinate.
 	*/
-	int RealToScreenY(const RCoord y) {return(static_cast<int>((Limits.Y-y)*FactorY));}
+	int RealToScreenY(const tCoord y) {return(static_cast<int>((Limits.Y-y)*FactorY));}
 
 public:
 

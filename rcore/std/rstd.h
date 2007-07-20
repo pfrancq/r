@@ -195,6 +195,64 @@ const tId NullId=0xFFFFFFFF;
 
 //------------------------------------------------------------------------------
 /**
+* The tCoord type represents a coordinate.
+*/
+typedef int tCoord;
+
+
+//------------------------------------------------------------------------------
+/**
+* The MaxCoord constante represent the maximal positive value that a
+* coordinate can have. It is often used to indicate an invalid coordinate.
+*/
+const tCoord MaxCoord=2147483647;
+
+
+//------------------------------------------------------------------------------
+/**
+* Represent the different orientation of a given polygon.
+*/
+enum ROrientation
+{
+	Normal,
+	NormalX,
+	NormalY,
+	NormalYX,
+	Rota90,
+	Rota90X,
+	Rota90Y,
+	Rota90YX
+};
+
+
+//------------------------------------------------------------------------------
+/**
+* Represent different directions.
+*/
+enum RDirection
+{
+	NoDirection,
+	Left,
+	Right,
+	Down,
+	Up,
+	Behind,
+	Beyond,
+	Origin,
+	Destination,
+	Between
+};
+
+
+//------------------------------------------------------------------------------
+/**
+* This variable represents a tolerance for calculations.
+*/
+extern double Epsi;
+
+
+//------------------------------------------------------------------------------
+/**
 * The RException class provides a basic representation for an exception.
 * @author Pascal Francq
 * @short Basic Exception.

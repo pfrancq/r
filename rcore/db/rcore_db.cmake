@@ -1,0 +1,7 @@
+IF(disable-mysql)
+    SET(rcore_db_INST_INCLUDES "")
+    SET(rcore_db_TARGET_SOURCES "")
+ELSE(disable-mysql)
+    SET(rcore_db_INST_INCLUDES rmysql.h)
+    SET(rcore_db_TARGET_SOURCES rmysql.cpp)
+ENDIF(disable-mysql)

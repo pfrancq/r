@@ -83,7 +83,7 @@ protected:
 	/**
 	* The Objects to group.
 	*/
-	RCursor<cObj>* Objs;
+	RCursor<cObj> Objs;
 
 	/**
 	* Assignment of the objects.
@@ -120,7 +120,7 @@ public:
 	* @param objs           Objects to group.
 	* @param max            Maximal number of groups to create.
 	*/
-	RGroups(RCursor<cObj>* objs,const unsigned int max);
+	RGroups(RCursor<cObj> objs,const unsigned int max);
 
 	/**
 	* Init the groups.

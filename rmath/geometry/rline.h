@@ -37,6 +37,7 @@
 //------------------------------------------------------------------------------
 //#include files for R Project
 #include <rpoint.h>
+#include <rgeometry.h>
 
 
 //------------------------------------------------------------------------------
@@ -113,22 +114,22 @@ public:
 	/**
 	* Get the X position of the first point.
 	*/
-	RCoord GetX1(void) const {return(Pt1.GetX());}
+	tCoord GetX1(void) const {return(Pt1.GetX());}
 
 	/**
 	* Get the Y position of the first point.
 	*/
-	RCoord GetY1(void) const {return(Pt1.GetY());}
+	tCoord GetY1(void) const {return(Pt1.GetY());}
 
 	/**
 	* Get the X position of the second point.
 	*/
-	RCoord GetX2(void) const {return(Pt2.GetX());}
+	tCoord GetX2(void) const {return(Pt2.GetX());}
 
 	/**
 	* Get the Y position of the second point.
 	*/
-	RCoord GetY2(void) const {return(Pt2.GetY());}
+	tCoord GetY2(void) const {return(Pt2.GetY());}
 };
 
 

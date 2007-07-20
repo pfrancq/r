@@ -37,21 +37,21 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroups<cGroup,cObj,cGroups>::RGroups(RCursor<cObj>* objs,const unsigned max)
+	RGroups<cGroup,cObj,cGroups>::RGroups(RCursor<cObj> objs,const unsigned max)
 		: RContainer<cGroup,true,false>(max,max<20?20:max/2), Used(max,max<20?20:max/2),
-		  Objs(objs), ObjsAss(objs->GetNb()), ObjsNoAss(objs->GetNb()),
+		  Objs(objs), ObjsAss(objs.GetNb()), ObjsNoAss(objs.GetNb()),
 		  OrdObjectsAss(0), NewUsedId(0)
 {
-	ObjectsAss = new unsigned int[Objs->GetNb()];
-	memset(ObjectsAss,0xFF,Objs->GetNb()*sizeof(unsigned int));
+	ObjectsAss = new unsigned int[Objs.GetNb()];
+	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(unsigned int));
 
 	// Init of the arrays needed.
-	OrdObjectsAss=new unsigned int[Objs->GetNb()];
+	OrdObjectsAss=new unsigned int[Objs.GetNb()];
 	NewUsedId=new unsigned int[this->GetMaxNb()];
 
 	// Suppose no object is assigned
-	for(Objs->Start();!Objs->End();Objs->Next())
-		ObjsNoAss.InsertPtr((*Objs)());
+	for(Objs.Start();!Objs.End();Objs.Next())
+		ObjsNoAss.InsertPtr(Objs());
 }
 
 
@@ -77,9 +77,9 @@ template<class cGroup,class cObj,class cGroups>
 	Used.Clear();
 	ObjsAss.Clear();
 	ObjsNoAss.Clear();
-	for(Objs->Start();!Objs->End();Objs->Next())
-		ObjsNoAss.InsertPtr((*Objs)());
-	memset(ObjectsAss,0xFF,Objs->GetNb()*sizeof(unsigned int));
+	for(Objs.Start();!Objs.End();Objs.Next())
+		ObjsNoAss.InsertPtr(Objs());
+	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(unsigned int));
 }
 
 
@@ -213,10 +213,10 @@ template<class cGroup,class cObj,class cGroups>
 	RCursor<cGroup> Cur(Used);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->Verify();
-	for(i=Objs->GetNb()+1,list=ObjectsAss,nbobjs=0;--i;list++)
+	for(i=Objs.GetNb()+1,list=ObjectsAss,nbobjs=0;--i;list++)
 		if((*list)!=NoGroup)
 			nbobjs++;
-	if(ObjsAss.GetNb()+ObjsNoAss.GetNb()!=Objs->GetNb())
+	if(ObjsAss.GetNb()+ObjsNoAss.GetNb()!=Objs.GetNb())
 	{
 		sprintf(tmp,"Problem with the number of objects: ObjsAss=%u and ObjsNoAss=%u",ObjsAss.GetNb(),ObjsNoAss.GetNb());
 		throw RGAException(tmp,RGAException::eGAVerify);

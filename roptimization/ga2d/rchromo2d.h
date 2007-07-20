@@ -188,7 +188,7 @@ public:
 	* @param Y              Y Position.
 	* @return The function returns a pointer to the objects or 0.
 	*/
-	RObj2D* GetObj(RCoord X,RCoord Y);
+	RObj2D* GetObj(tCoord X,tCoord Y);
 
 	/**
 	* Gives the geometric information of the object at position (X,Y).
@@ -196,7 +196,7 @@ public:
 	* @param Y              Y Position.
 	* @return The function returns a pointer to the information or 0.
 	*/
-	cInfo* GetInfo(RCoord X,RCoord Y);
+	cInfo* GetInfo(tCoord X,tCoord Y);
 
 	/**
 	* Return the actual limits of the chromosome.

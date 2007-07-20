@@ -151,7 +151,7 @@ void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 	bool IsObj;
 	RXMLTag *tag;
 	unsigned int i;
-	RCoord X,Y;
+	tCoord X,Y;
 	RPoint Tr;
 
 	IsObj=(o->GetName()=="Instance");

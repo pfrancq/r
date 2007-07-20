@@ -33,6 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rrects.h>
+#include <rcursor.h>
 using namespace R;
 
 
@@ -65,9 +66,9 @@ RRects::RRects(const RRects& rects)
 
 
 //------------------------------------------------------------------------------
-RCoord RRects::Area(void) const
+tCoord RRects::Area(void) const
 {
-	RCoord Area;
+	tCoord Area;
 
 	RCursor<RRect> rect(*this);
 	for(rect.Start(),Area=0;!rect.End();rect.Next())

@@ -1,4 +1,4 @@
-/*
+	/*
 
 	R Project Library
 
@@ -142,7 +142,7 @@ public:
 	* @param MinY           Minimal Y position of the point to search.
 	* @param MaxX           Maximal X position of the point to search.
 	*/
-	RPoint* GetBottomLeft(const RCoord MinX,const RCoord MinY,const RCoord MaxX) const;
+	RPoint* GetBottomLeft(const tCoord MinX,const tCoord MinY,const tCoord MaxX) const;
 
 	/**
 	* Return a pointer to the most left-bottom point of the polygon.
@@ -156,14 +156,14 @@ public:
 	* @param MinY           Minimal Y position of the point to search.
 	* @param MaxY           Maximal Y position of the point to search.
 	*/
-	RPoint* GetLeftBottom(const RCoord MinX,const RCoord MinY,const RCoord MaxY) const;
+	RPoint* GetLeftBottom(const tCoord MinX,const tCoord MinY,const tCoord MaxY) const;
 
 	/**
 	* Return true if the point is on an edge.
 	* @param X              The X Coordinate used.
 	* @param Y              The Y Coordinate used.
 	*/
-	bool Edge(const RCoord X,const RCoord Y) const;
+	bool Edge(const tCoord X,const tCoord Y) const;
 
 	/**
 	* Return true if the point is on an edge.
@@ -192,7 +192,7 @@ public:
 	/**
 	* Return true if the point is inside the polygon.
 	*/
-	bool IsIn(const RCoord X,const RCoord Y) const;
+	bool IsIn(const tCoord X,const tCoord Y) const;
 
 	/**
 	* Return true if the point is inside the polygon.
@@ -224,9 +224,15 @@ public:
 	bool IsIn(const RPolygon* poly) const;
 
 	/**
+	* Return true if the polygon is inside the rectangle.
+	* @param rect            Rectangle to known if contains.
+	*/
+	bool Contained(const RRect* rect) const;
+
+	/**
 	* Return the area of the polygon.
 	*/
-	RCoord Area(void) const;
+	tCoord Area(void) const;
 
 	/**
 	* Return the boundary rectangle of the polygon.

@@ -1,9 +1,0 @@
-INCLUDES = -I$(top_srcdir)/ $(all_includes) $(INCLUDES_R)
-noinst_LTLIBRARIES = libdb.la
-AM_CFLAGS =
-AM_CXXFLAGS =
-AM_FFLAGS =
-SUBDIRS =
-dbincludedir = $(includedir)/r
-dbinclude_HEADERS =  rmysql.h
-libdb_la_SOURCES =  rmysql.cpp

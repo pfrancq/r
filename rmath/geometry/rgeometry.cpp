@@ -36,14 +36,9 @@
 using namespace R;
 
 
-//------------------------------------------------------------------------------
-// Global variables
-double R::Epsi=0.0001;
-
-
 
 //------------------------------------------------------------------------------
-void R::AdaptXY(RCoord& x,RCoord& y,const RDirection from)
+void R::AdaptXY(tCoord& x,tCoord& y,const RDirection from)
 {
 	switch(from)
 	{
@@ -75,7 +70,7 @@ void R::AdaptXY(RCoord& x,RCoord& y,const RDirection from)
 
 
 //------------------------------------------------------------------------------
-void R::AdaptTestXY(RCoord& x,RCoord& y,const RDirection from)
+void R::AdaptTestXY(tCoord& x,tCoord& y,const RDirection from)
 {
 	switch(from)
 	{

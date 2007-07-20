@@ -75,8 +75,8 @@ RPoint* RPoints::FindBottom(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ;
 	unsigned int i;
-	RCoord X,Y;
-	RCoord AY;
+	tCoord X,Y;
+	tCoord AY;
 
 	RReturnValIfFail(pt&&polys,0);
 	if(!GetNb()) return(0);
@@ -115,8 +115,8 @@ RPoint* RPoints::FindLeft(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ;
 	unsigned int i;
-	RCoord X,Y;
-	RCoord AX;
+	tCoord X,Y;
+	tCoord AX;
 
 	RReturnValIfFail(pt&&polys,0);
 	if(!GetNb()) return(0);
@@ -155,8 +155,8 @@ RPoint* RPoints::FindRight(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ;
 	unsigned int i;
-	RCoord X,Y;
-	RCoord AX;
+	tCoord X,Y;
+	tCoord AX;
 
 	RReturnValIfFail(pt&&polys,0);
 	if(!GetNb()) return(0);
@@ -195,8 +195,8 @@ RPoint* RPoints::FindUp(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ;
 	unsigned int i;
-	RCoord X,Y;
-	RCoord AY;
+	tCoord X,Y;
+	tCoord AY;
 
 	RReturnValIfFail(pt&&polys,0);
 	if(!GetNb()) return(0);
@@ -235,7 +235,7 @@ RPoint* RPoints::FindBottomLeft(void) const
 {
 	RPoint *Activ;
 	unsigned int i;
-	RCoord X,Y;
+	tCoord X,Y;
 
 	if(!GetNb()) return(0);
 	RCursor<RPoint> point(*this);

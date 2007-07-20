@@ -54,9 +54,8 @@ AC_DEFUN(R_INC_CHK,[
 AC_DEFUN(R_LIB_CHK,[
 	R_LIB_DIR=""
 	for i in $R_LIB_PATH ; do
-		for t in $i/$1 $i; do
+		for t in $i/$1 $i/build/$1 $i; do
 			str="$t/$2.*"
-
 			for j in `echo $str`; do
 				if test -r $j; then
 					R_LIB_DIR=$j
@@ -74,7 +73,7 @@ AC_DEFUN(R_LIB_CHK,[
 AC_DEFUN(RKDE_LIB_CHK,[
 	RKDE_LIB_DIR=""
 	for i in $R_LIB_PATH ; do
-		for t in $i/$1/frontend/kde $i/$1 $i ; do
+		for t in $i/$1/frontend/kde $i/$1 $i/build/$1 $i ; do
 			str=`echo "$t/$2"kde.*`
 
 			for j in `echo $str`; do
@@ -115,6 +114,7 @@ AC_DEFUN(R_ALL_INC_CHK,[
 	R_INC_CHK(rcore/prg,rprg.h,Cannot find R headers.)
 	R_INC_CHK(rcore/db,rmysql.h,Cannot find R headers.)
 	R_INC_CHK(rcore/app,rapplication.h,Cannot find R headers.)
+	R_INC_CHK(rcore/geometry,rpoint.h,Cannot find R headers.)
 	R_INC_CHK(rmath/geometry,rgeometry.h,Cannot find R headers.)
 	R_INC_CHK(rmath/graph,rgraph.h,Cannot find R headers.)
 	R_INC_CHK(rmath/matrix,rmatrix.h,Cannot find R headers.)
@@ -146,12 +146,13 @@ AC_DEFUN(R_ALL_LIB_CHK,[
 	else
 		R_LIB_PATH="/usr/lib /usr/lib/r /usr/local/lib /usr/local/lib/r ${prefix}/lib/r"
 	fi
+	
 	AC_ARG_WITH(r-libs,
 		AC_HELP_STRING(
 			[--with-r-libs=DIR],
 			[where the R libraries are installed, default: [/usr/lib].]),
 		R_LIB_PATH="$withval")
-
+		
 	# ---- check the presence of all R libraries
 	for l in `echo $1` ; do
 		R_LIB_CHK($l,lib$l)

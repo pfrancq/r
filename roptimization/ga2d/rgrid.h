@@ -96,7 +96,7 @@ public:
 	* @returns The function return true if the point is out of the limits
 	* or if the position is free.
 	*/
-	bool IsFree(RCoord x,RCoord y);
+	bool IsFree(tCoord x,tCoord y);
 
 	/**
 	* This function returns true if the position (x,y) is occupied.
@@ -105,7 +105,7 @@ public:
 	* @returns The function returns true if the position is occupied, false
 	* else (also if the point is out of the limits).
 	*/
-	bool IsOcc(RCoord x,RCoord y);
+	bool IsOcc(tCoord x,tCoord y);
 
 	/**
 	* This function returns the identificator of the object placed at position
@@ -113,7 +113,7 @@ public:
 	* @param x              X position.
 	* @param y              Y position.
 	*/
-	unsigned int GetObjId(RCoord x,RCoord y) {RReturnValIfFail(OccupiedX,false); return(OccupiedX[x][y]);}
+	unsigned int GetObjId(tCoord x,tCoord y) {RReturnValIfFail(OccupiedX,false); return(OccupiedX[x][y]);}
 
 	/**
 	* Clear the Grid.
@@ -132,53 +132,53 @@ public:
 	* Find the left most x coordinates that is free of a reference.
 	* @param pt             Point used as reference.
 	*/
-	RCoord LookLeft(RPoint& pt);
+	tCoord LookLeft(RPoint& pt);
 
 	/**
 	* Find the right most x coordinates that is free of a reference.
 	* @param pt             Point used as reference.
 	*/
-	RCoord LookRight(RPoint& pt);
+	tCoord LookRight(RPoint& pt);
 
 	/**
 	* Find the up most x coordinates that is free of a reference.
 	* @param pt             Point used as reference.
 	*/
-	RCoord LookUp(RPoint& pt);
+	tCoord LookUp(RPoint& pt);
 
 	/**
 	* Find the down most x coordinates that is free of a reference.
 	* @param pt             Point used as reference.
 	*/
-	RCoord LookDown(RPoint& pt);
+	tCoord LookDown(RPoint& pt);
 
 	/**
 	* Find the left most x coordinates that is free and that skirt an edge.
 	* @param pt             Point used as reference.
 	* @param bound          The rectangle which limits the research.
 	*/
-	RCoord SkirtLeft(RPoint& pt,RRect& bound);
+	tCoord SkirtLeft(RPoint& pt,RRect& bound);
 
 	/**
 	* Find the right most x coordinates that is free and that skirt an edge.
 	* @param pt             Point used as reference.
 	* @param bound          The rectangle which limits the research.
 	*/
-	RCoord SkirtRight(RPoint& pt,RRect& bound);
+	tCoord SkirtRight(RPoint& pt,RRect& bound);
 
 	/**
 	* Find the up most x coordinates that is free and that skirt an edge.
 	* @param pt             Point used as reference.
 	* @param bound          The rectangle which limits the research.
 	*/
-	RCoord SkirtUp(RPoint& pt,RRect& bound);
+	tCoord SkirtUp(RPoint& pt,RRect& bound);
 
 	/**
 	* Find the down most x coordinates that is free and that skirt an edge.
 	* @param pt             Point used as reference.
 	* @param bound          The rectangle which limits the research.
 	*/
-	RCoord SkirtDown(RPoint& pt,RRect& bound);
+	tCoord SkirtDown(RPoint& pt,RRect& bound);
 
 	/**
 	* Calculate a free polygon from a given position and a given direction.
@@ -190,7 +190,7 @@ public:
 	* @returns The function returns true if a close polygon has been calculated
 	* or false if not.
 	*/
-	bool CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect& bound,RPolygon& poly);
+	bool CalculateFreePolygon(tCoord X,tCoord Y,RDirection from,RRect& bound,RPolygon& poly);
 
 	/**
 	* Add all the polygons representing free spaces that are closed and resulting

@@ -291,7 +291,7 @@ public:
 	/**
 	* Represent the area of the object.
 	*/
-	RCoord Area;
+	tCoord Area;
 
 	/**
 	* Number of possible Orientations.
@@ -417,7 +417,7 @@ public:
 	/**
 	* Return the area of the object.
 	*/
-	inline RCoord GetArea(void) {return(Area);}
+	inline tCoord GetArea(void) {return(Area);}
 
 	/**
 	* Return a pointer to the polygon representing the ith orientation.

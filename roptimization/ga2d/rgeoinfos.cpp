@@ -100,7 +100,7 @@ void RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* selected
 	RCursor<RGeoInfo> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		if((!selected[Cur()->GetObj()->GetId()])&&bound.IsIn(Cur()->GetPolygon()))
+		if((!selected[Cur()->GetObj()->GetId()])&&Cur()->GetPolygon().Contained(&bound))
 		{
 			// Add it
 			cont->Add(this,Cur());

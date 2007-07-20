@@ -264,7 +264,7 @@ bool RPolygons::DuplicatePoints(void) const
 
 
 //------------------------------------------------------------------------------
-bool RPolygons::IsIn(const RCoord X,const RCoord Y) const
+bool RPolygons::IsIn(const tCoord X,const tCoord Y) const
 {
 	RCursor<RPolygon> poly(*this);
 	for(poly.Start();!poly.End();poly.Next())

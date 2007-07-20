@@ -114,7 +114,7 @@ protected:
 	/**
 	* Objects to group.
 	*/
-	RCursor<cObj>* Objs;
+	RCursor<cObj> Objs;
 
 	/**
 	* Maximal number of groups to allocate by default.
@@ -131,27 +131,7 @@ public:
 	* @param name           Name of the genetic algorithm.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,const RString& name,RDebug *debug=0);
-
-	/**
-	* Construct the instance.
-	* @param popsize        Size of the population.
-	* @param objs           Objects to groups.
-	* @param h              The heuristic that has to be used.
-	* @param name           Name of the genetic algorithm.
-	* @param debug          Debugger.
-	*/
-	RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,const RString& name,RDebug *debug=0);
-
-	/**
-	* Construct the instance.
-	* @param popsize        Size of the population.
-	* @param objs           Objects to groups.
-	* @param h              The heuristic that has to be used.
-	* @param name           Name of the genetic algorithm.
-	* @param debug          Debugger.
-	*/
-	RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,const RString& name,RDebug *debug=0);
+	RInstG(unsigned int popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug *debug=0);
 
 	/**
 	* Initialisation of the instance.

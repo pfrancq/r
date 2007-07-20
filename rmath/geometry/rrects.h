@@ -74,7 +74,7 @@ public:
 	/**
 	* Return the area of all the rectangles.
 	*/
-	RCoord Area(void) const;
+	tCoord Area(void) const;
 };
 
 

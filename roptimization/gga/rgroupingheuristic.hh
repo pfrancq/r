@@ -38,10 +38,10 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroupingHeuristic<cGroup,cObj,cGroups>::RGroupingHeuristic(const char* n,RRandom* r,RCursor<cObj>* objs,RDebug* debug)
+	RGroupingHeuristic<cGroup,cObj,cGroups>::RGroupingHeuristic(const char* n,RRandom* r,RCursor<cObj> objs,RDebug* debug)
 		: Name(n), Random(r), Objs(objs), Groups(0), Debug(debug)
 {
-	Order=new cObj*[Objs->GetNb()];
+	Order=new cObj*[Objs.GetNb()];
 }
 
 
@@ -59,10 +59,10 @@ template<class cGroup,class cObj,class cGroups>
 	NbObjsOk=0;
 
 	// Calculate an order
-	for(Objs->Start(),ass=groups->ObjectsAss;!Objs->End();ass++,Objs->Next())
+	for(Objs.Start(),ass=groups->ObjectsAss;!Objs.End();ass++,Objs.Next())
 	{
 		if((*ass)==NoGroup)
-			Order[NbObjs++]=(*Objs)();
+			Order[NbObjs++]=Objs();
 	}
 	if(NbObjs)
 		RandOrder<cObj*>(Order,NbObjs);

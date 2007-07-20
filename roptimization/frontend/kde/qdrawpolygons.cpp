@@ -276,7 +276,7 @@ void QDrawPolygons::end(void)
 void QDrawPolygons::paintConnectors(RGeoInfo* info,QPainter* Painter)
 {
 	unsigned j;
-	RCoord x,y;
+	tCoord x,y;
 
 	Painter->setPen(black);
 	Painter->setBrush(SolidPattern);
@@ -294,7 +294,7 @@ void QDrawPolygons::paintConnectors(RGeoInfo* info,QPainter* Painter)
 
 
 //------------------------------------------------------------------------------
-void QDrawPolygons::TransformExternCon(RCoord& x,RCoord& y)
+void QDrawPolygons::TransformExternCon(tCoord& x,tCoord& y)
 {
 	// X-Axis
 	if(x<Translation.X)
@@ -339,7 +339,7 @@ void QDrawPolygons::TransformExternCon(RCoord& x,RCoord& y)
 
 
 //------------------------------------------------------------------------------
-void QDrawPolygons::AdaptExternCon(RCoord& x,RCoord& y)
+void QDrawPolygons::AdaptExternCon(tCoord& x,tCoord& y)
 {
 	// Absolute Adaptation
 	x=x+Translation.X-Problem->Translation.X;
@@ -506,7 +506,7 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 				static_cast<int>((Problem->Limits.X+1)*FactorX),static_cast<int>((Problem->Limits.Y+1)*FactorY));
 			unsigned j;
 			RGeoInfo* info;
-			RCoord x,y;
+			tCoord x,y;
 			Painter->setPen(black);
 			Painter->setBrush(SolidPattern);
 			info=Infos->GetPtr<unsigned int>(Problem->Problem.GetId());
@@ -591,8 +591,8 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 		}
 		else
 		{
-			Pos2.X=static_cast<RCoord>(e->x()/FactorX)-Translation.X;
-			Pos2.Y=Limits.Y-static_cast<RCoord>(e->y()/FactorY)-Translation.Y;
+			Pos2.X=static_cast<tCoord>(e->x()/FactorX)-Translation.X;
+			Pos2.Y=Limits.Y-static_cast<tCoord>(e->y()/FactorY)-Translation.Y;
 			RCursor<RGeoInfo> Cur(*Infos);
 			for(Cur.Start();!Cur.End();Cur.Next())
 			{

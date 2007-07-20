@@ -101,7 +101,7 @@ public:
 	/**
 	* Return true if the point is inside one of the polygons.
 	*/
-	bool IsIn(const RCoord X,const RCoord Y) const;
+	bool IsIn(const tCoord X,const tCoord Y) const;
 
 	/**
 	* Return true if the point is inside one of the polygons.

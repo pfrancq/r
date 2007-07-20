@@ -69,46 +69,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,RObjs<cObj>* objs,HeuristicType h,const RString& name,RDebug *debug)
+	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug *debug)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
-		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
+		  Heuristic(h), EmptyModifiedGroups(true), Objs(objs)
 {
-	Objs=new RCursor<cObj>();
-	Objs->Set(*objs);
-	if(Objs->GetNb()<11)
+	if(Objs.GetNb()<11)
 		MaxGroups=10;
 	else
-		MaxGroups=Objs->GetNb()/4;
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,RContainer<cObj,false,true>* objs,HeuristicType h,const RString& name,RDebug *debug)
-		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
-		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
-{
-	Objs=new RCursor<cObj>();
-	Objs->Set(*objs);
-	if(Objs->GetNb()<11)
-		MaxGroups=10;
-	else
-		MaxGroups=Objs->GetNb()/4;
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,RContainer<cObj,true,true>* objs,HeuristicType h,const RString& name,RDebug *debug)
-		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
-		  Heuristic(h), EmptyModifiedGroups(true), Objs(0)
-{
-	Objs=new RCursor<cObj>();
-	Objs->Set(objs);
-	if(Objs->GetNb()<11)
-		MaxGroups=10;
-	else
-		MaxGroups=Objs->GetNb()/4;
+		MaxGroups=Objs.GetNb()/4;
 }
 
 
@@ -246,6 +214,4 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RInstG(void)
 {
-	if(Objs)
-		delete Objs;
 }

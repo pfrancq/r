@@ -203,7 +203,7 @@ void RGeoInfo::SetOri(char i)
 
 
 //------------------------------------------------------------------------------
-RCoord RGeoInfo::GetArea(void) const
+tCoord RGeoInfo::GetArea(void) const
 {
 	if(Obj)
 		return(Obj->GetArea());
@@ -245,7 +245,7 @@ bool RGeoInfo::Test(RPoint& pos,RGrid* grid)
 	RPoint start,end;
 	unsigned int nbpts;
 	RDirection FromDir;
-	RCoord X,Y;
+	tCoord X,Y;
 
 	// Test it and go through the other
 	start=Bound->GetBottomLeft();

@@ -126,7 +126,7 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 	double w,d;
 	RRect r1,r2;
 	bool bFound;
-	RCoord X1,Y1,X2,Y2;
+	tCoord X1,Y1,X2,Y2;
 	RPoint Pt;
 	bool bProm;
 

@@ -251,7 +251,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RObj2D* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetObj(RCoord X,RCoord Y)
+	RObj2D* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetObj(tCoord X,tCoord Y)
 {
 	unsigned int obj;
 
@@ -269,7 +269,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	cInfo* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetInfo(RCoord X,RCoord Y)
+	cInfo* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetInfo(tCoord X,tCoord Y)
 {
 	unsigned int obj;
 

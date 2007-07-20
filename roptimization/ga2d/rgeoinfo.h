@@ -283,7 +283,7 @@ public:
 	/**
 	* Area used by the polygon.
 	*/
-	RCoord GetArea(void) const;
+	tCoord GetArea(void) const;
 
 	/**
 	* Calculate the boundary rectangle of the polygon according to the position.
@@ -382,12 +382,12 @@ public:
 	/**
 	* Return the Width of the object represented.
 	*/
-	inline RCoord Width(void) const {return(Rect.Width());}
+	inline tCoord Width(void) const {return(Rect.Width());}
 
 	/**
 	* Return the Height of the object represented.
 	*/
-	inline RCoord Height(void) const {return(Rect.Height());}
+	inline tCoord Height(void) const {return(Rect.Height());}
 
 	/**
 	* Return the number of points contained in the polygon.

@@ -62,10 +62,10 @@ RGrid::RGrid(RPoint &limits)
 	#endif
 	// Init Occupied
 	OccupiedX = new unsigned int*[InternalLimits.X+1];
-	for(RCoord R=0;R<InternalLimits.X+1;R++)
+	for(tCoord R=0;R<InternalLimits.X+1;R++)
 		OccupiedX[R] = new unsigned int[InternalLimits.Y+1];
 	OccupiedY = new unsigned int*[InternalLimits.Y+1];
-	for(RCoord R=0;R<InternalLimits.Y+1;R++)
+	for(tCoord R=0;R<InternalLimits.Y+1;R++)
 		OccupiedY[R] = new unsigned int[InternalLimits.X+1];
 }
 
@@ -77,11 +77,11 @@ void RGrid::Clear(void)
 	RReturnIfFail(OccupiedY);
 
 	// OccupiedX
-	for(RCoord R=0;R<InternalLimits.X+1;R++)
+	for(tCoord R=0;R<InternalLimits.X+1;R++)
 		memset(OccupiedX[R],0xFF,sizeof(unsigned int)*(InternalLimits.Y));
 
 	// OccupiedY
-	for(RCoord R=0;R<InternalLimits.Y+1;R++)
+	for(tCoord R=0;R<InternalLimits.Y+1;R++)
 		memset(OccupiedY[R],0xFF,sizeof(unsigned int)*(InternalLimits.X));
 }
 
@@ -89,7 +89,7 @@ void RGrid::Clear(void)
 //------------------------------------------------------------------------------
 void RGrid::Assign(RRect& rect,RPoint& pos,unsigned int id)
 {
-	RCoord BeginX,BeginY,j,k,H,W;
+	tCoord BeginX,BeginY,j,k,H,W;
 	unsigned int **ptr1,*ptr2;
 
 	RReturnIfFail(OccupiedX);
@@ -113,7 +113,7 @@ void RGrid::Assign(RRect& rect,RPoint& pos,unsigned int id)
 
 
 //------------------------------------------------------------------------------
-bool RGrid::IsFree(RCoord x,RCoord y)
+bool RGrid::IsFree(tCoord x,tCoord y)
 {
 	RReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.X)||y<0||y>(InternalLimits.Y))
@@ -123,7 +123,7 @@ bool RGrid::IsFree(RCoord x,RCoord y)
 
 
 //------------------------------------------------------------------------------
-bool RGrid::IsOcc(RCoord x,RCoord y)
+bool RGrid::IsOcc(tCoord x,tCoord y)
 {
 	RReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.X)||y<0||y>(InternalLimits.Y))
@@ -133,10 +133,10 @@ bool RGrid::IsOcc(RCoord x,RCoord y)
 
 
 //------------------------------------------------------------------------------
-RCoord RGrid::LookLeft(RPoint& pt)
+tCoord RGrid::LookLeft(RPoint& pt)
 {
 	unsigned int *ptr=&OccupiedY[pt.Y][pt.X];
-	RCoord x=pt.X;
+	tCoord x=pt.X;
 
 	while(x&&((*ptr)==NoObject))
 	{
@@ -148,10 +148,10 @@ RCoord RGrid::LookLeft(RPoint& pt)
 
 
 //------------------------------------------------------------------------------
-RCoord RGrid::LookRight(RPoint& pt)
+tCoord RGrid::LookRight(RPoint& pt)
 {
 	unsigned int *ptr=&OccupiedY[pt.Y][pt.X];
-	RCoord x=pt.X;
+	tCoord x=pt.X;
 
 	while((x<InternalLimits.X)&&((*ptr)==NoObject))
 	{
@@ -163,10 +163,10 @@ RCoord RGrid::LookRight(RPoint& pt)
 
 
 //------------------------------------------------------------------------------
-RCoord RGrid::LookUp(RPoint& pt)
+tCoord RGrid::LookUp(RPoint& pt)
 {
 	unsigned int *ptr=&OccupiedX[pt.X][pt.Y];
-	RCoord y=pt.Y;
+	tCoord y=pt.Y;
 
 	while((y<=InternalLimits.Y)&&((*ptr)==NoObject))
 	{
@@ -178,10 +178,10 @@ RCoord RGrid::LookUp(RPoint& pt)
 
 
 //------------------------------------------------------------------------------
-RCoord RGrid::LookDown(RPoint& pt)
+tCoord RGrid::LookDown(RPoint& pt)
 {
 	unsigned int *ptr=&OccupiedX[pt.X][pt.Y];
-	RCoord y=pt.Y;
+	tCoord y=pt.Y;
 
 	while(y&&((*ptr)==NoObject))
 	{
@@ -193,11 +193,11 @@ RCoord RGrid::LookDown(RPoint& pt)
 
 
 //------------------------------------------------------------------------------
-RCoord RGrid::SkirtLeft(RPoint& pt,RRect& bound)
+tCoord RGrid::SkirtLeft(RPoint& pt,RRect& bound)
 {
 	unsigned int *ptr,*ptrU,*ptrD;
-	RCoord x=pt.X;
-	RCoord Limit=bound.Pt1.X;
+	tCoord x=pt.X;
+	tCoord Limit=bound.Pt1.X;
 
 	if(pt.X>0) ptr=&OccupiedY[pt.Y][pt.X-1]; else return(x);
 	if(pt.Y>0) ptrD=&OccupiedY[pt.Y-1][pt.X-1]; else ptrD=0;
@@ -221,11 +221,11 @@ RCoord RGrid::SkirtLeft(RPoint& pt,RRect& bound)
 
 
 //------------------------------------------------------------------------------
-RCoord RGrid::SkirtRight(RPoint& pt,RRect& bound)
+tCoord RGrid::SkirtRight(RPoint& pt,RRect& bound)
 {
 	unsigned int *ptr,*ptrU,*ptrD;
-	RCoord x=pt.X;
-	RCoord Limit=bound.Pt2.X;
+	tCoord x=pt.X;
+	tCoord Limit=bound.Pt2.X;
 
 	if(pt.X<InternalLimits.X) ptr=&OccupiedY[pt.Y][pt.X+1]; else return(x);
 	if(pt.Y>0) ptrD=&OccupiedY[pt.Y-1][pt.X+1]; else ptrD=0;
@@ -248,11 +248,11 @@ RCoord RGrid::SkirtRight(RPoint& pt,RRect& bound)
 
 
 //------------------------------------------------------------------------------
-RCoord RGrid::SkirtUp(RPoint& pt,RRect& bound)
+tCoord RGrid::SkirtUp(RPoint& pt,RRect& bound)
 {
 	unsigned int *ptr,*ptrL,*ptrR;
-	RCoord y=pt.Y;
-	RCoord Limit=bound.Pt2.Y;
+	tCoord y=pt.Y;
+	tCoord Limit=bound.Pt2.Y;
 
 	if(pt.Y<InternalLimits.Y) ptr=&OccupiedX[pt.X][pt.Y+1]; else return(y);
 	if(pt.X>0) ptrL=&OccupiedX[pt.X-1][pt.Y+1]; else ptrL=0;
@@ -276,11 +276,11 @@ RCoord RGrid::SkirtUp(RPoint& pt,RRect& bound)
 
 
 //------------------------------------------------------------------------------
-RCoord RGrid::SkirtDown(RPoint& pt,RRect& bound)
+tCoord RGrid::SkirtDown(RPoint& pt,RRect& bound)
 {
 	unsigned int *ptr,*ptrL,*ptrR;
-	RCoord y=pt.Y;
-	RCoord Limit=bound.Pt1.Y;
+	tCoord y=pt.Y;
+	tCoord Limit=bound.Pt1.Y;
 
 	if(pt.Y>0) ptr=&OccupiedX[pt.X][pt.Y-1]; else return(y);
 	if(pt.X>0) ptrL=&OccupiedX[pt.X-1][pt.Y-1]; else ptrL=0;
@@ -304,10 +304,10 @@ RCoord RGrid::SkirtDown(RPoint& pt,RRect& bound)
 
 
 //------------------------------------------------------------------------------
-bool RGrid::CalculateFreePolygon(RCoord X,RCoord Y,RDirection from,RRect& bound,RPolygon& poly)
+bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,RDirection from,RRect& bound,RPolygon& poly)
 {
 	RPoint *next,*first,pt;
-	RCoord TestX,TestY;
+	tCoord TestX,TestY;
 
 	// Init Part
 	poly.Clear();
@@ -510,8 +510,8 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,RRect& bound)
 	RPoint start,end;
 	unsigned int nbpts;
 	RDirection FromDir;
-	RCoord X,Y;
-	RCoord TestX,TestY;
+	tCoord X,Y;
+	tCoord TestX,TestY;
 
 	// Initialisation
 	Poly=ins->GetPolygon();
@@ -581,13 +581,13 @@ RGrid::~RGrid(void)
 {
 	if(OccupiedX)
 	{
-		for(RCoord R=0;R<InternalLimits.X+1;R++)
+		for(tCoord R=0;R<InternalLimits.X+1;R++)
 			delete[] (OccupiedX[R]);
 		delete[] OccupiedX;
 	}
 	if(OccupiedY)
 	{
-		for(RCoord R=0;R<InternalLimits.Y+1;R++)
+		for(tCoord R=0;R<InternalLimits.Y+1;R++)
 			delete[] (OccupiedY[R]);
 		delete[] OccupiedY;
 	}

@@ -83,7 +83,7 @@ public:
 	* @param id             Identificator of the chromosome.
 	*/
 	RChromo(cInst* inst,unsigned int id);
-
+	
 	/**
 	* Initialisation of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the chromosome.

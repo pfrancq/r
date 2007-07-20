@@ -1,9 +1,0 @@
-INCLUDES = -I$(top_srcdir) $(all_includes) $(INCLUDES_R)
-noinst_LTLIBRARIES =  libgraph.la
-AM_CFLAGS =
-AM_CXXFLAGS =
-AM_FFLAGS =
-SUBDIRS =
-graphincludedir = $(includedir)/r
-graphinclude_HEADERS = redge.h rgraph.h rvertex.h
-libgraph_la_SOURCES = 	redge.cpp rgraph.cpp rvertex.cpp

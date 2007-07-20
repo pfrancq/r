@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RFirstFitHeuristic<cGroup,cObj,cGroups>::RFirstFitHeuristic(RRandom* r,RCursor<cObj>* objs,RDebug* debug)
+	RFirstFitHeuristic<cGroup,cObj,cGroups>::RFirstFitHeuristic(RRandom* r,RCursor<cObj> objs,RDebug* debug)
 	: RGroupingHeuristic<cGroup,cObj,cGroups>("First-Fit Heuristic",r,objs,debug)
 {
 }

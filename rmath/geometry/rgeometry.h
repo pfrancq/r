@@ -67,70 +67,12 @@ class RPolygons;
 
 //------------------------------------------------------------------------------
 /**
-* The RCoord type represents a coordinate.
-*/
-typedef int RCoord;
-
-
-//------------------------------------------------------------------------------
-/**
-* The MaxCoord constante represent the maximal positive value that a
-* coordinate can have. It is often used to indicate an invalid coordinate.
-*/
-const RCoord MaxCoord=2147483647;
-
-
-//------------------------------------------------------------------------------
-/**
-* Represent the different orientation of a given polygon.
-*/
-enum ROrientation
-{
-	Normal=0,
-	NormalX=1,
-	NormalY=2,
-	NormalYX=3,
-	Rota90=4,
-	Rota90X=5,
-	Rota90Y=6,
-	Rota90YX=7
-};
-
-
-//------------------------------------------------------------------------------
-/**
-* Represent different directions.
-*/
-enum RDirection
-{
-	NoDirection,
-	Left,
-	Right,
-	Down,
-	Up,
-	Behind,
-	Beyond,
-	Origin,
-	Destination,
-	Between
-};
-
-
-//------------------------------------------------------------------------------
-/**
-* This variable represents a tolerance for calculations.
-*/
-extern double Epsi;
-
-
-//------------------------------------------------------------------------------
-/**
 * Affect the coordinates in function of a given direction.
 * @param x                  X Coordinate.
 * @param y                  Y Coordinate.
 * @param from               The direction from where "it" is coming.
 */
-void AdaptXY(RCoord& x,RCoord& y,const RDirection from);
+void AdaptXY(tCoord& x,tCoord& y,const RDirection from);
 
 
 //------------------------------------------------------------------------------
@@ -140,7 +82,7 @@ void AdaptXY(RCoord& x,RCoord& y,const RDirection from);
 * @param y                  Y Coordinate.
 * @param from               The direction from where "it" is coming.
 */
-void AdaptTestXY(RCoord& x,RCoord& y,const RDirection from);
+void AdaptTestXY(tCoord& x,tCoord& y,const RDirection from);
 
 
 }  //-------- End of namespace R -----------------------------------------------
