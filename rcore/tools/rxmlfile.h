@@ -6,7 +6,7 @@
 
 	XML file - Header.
 
-	Copyright 2000-2005 by the Université Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).

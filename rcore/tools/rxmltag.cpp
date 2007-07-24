@@ -52,14 +52,16 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 RXMLTag::RXMLTag(const RXMLTag& tag)
-	: RNode<RXMLTag,true,false>(), Name(tag.Name), Contains(tag.Contains), Attrs(tag.Attrs)
+	: RNode<RXMLTag,true,false>(), Name(tag.Name), Contains(tag.Contains),
+	  Attrs(tag.Attrs), Namespace(tag.Namespace)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RXMLTag::RXMLTag(const RString& name)
-	: RNode<RXMLTag,true,false>(), Name(name), Contains(), Attrs(20,10)
+RXMLTag::RXMLTag(const RString& name,RString* xmlns)
+	: RNode<RXMLTag,true,false>(), Name(name), Contains(), Attrs(20,10),
+	  Namespace(xmlns)
 {
 }
 
@@ -82,6 +84,13 @@ int RXMLTag::Compare(const RXMLTag& tag) const
 void RXMLTag::SetName(const RString& name)
 {
 	Name=name;
+}
+
+
+//-----------------------------------------------------------------------------
+void RXMLTag::SetNamespace(RString* xmlns)
+{
+	Namespace=xmlns;
 }
 
 
@@ -157,12 +166,12 @@ void RXMLTag::InsertAttr(RXMLAttr* Attr,bool overwritte)
 
 
 //-----------------------------------------------------------------------------
-void RXMLTag::InsertAttr(const RString& name,const RString& value,bool overwritte)
+void RXMLTag::InsertAttr(const RString& name,const RString& value,const RString& xmlns,bool overwritte)
 {
 	if(Tree)
-		InsertAttr(static_cast<RXMLStruct*>(Tree)->NewAttr(name,value),overwritte);
+		InsertAttr(static_cast<RXMLStruct*>(Tree)->NewAttr(name,value,xmlns),overwritte);
 	else
-		InsertAttr(new RXMLAttr(name,value),overwritte);
+		InsertAttr(new RXMLAttr(name,value,0),overwritte);
 }
 
 

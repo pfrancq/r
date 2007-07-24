@@ -64,6 +64,11 @@ class RXMLAttr
 	*/
 	RString Value;
 
+	/**
+	 * Namespace.
+	 */
+	RString* Namespace;
+	
 public:
 
 	/**
@@ -75,16 +80,24 @@ public:
 	* Construct a XML Attribute.
 	* @param name           The name of the attribute.
 	* @param value          The value of the attribute.
+	* @param xmlns          Namespace.
 	*/
-	RXMLAttr(const RString& name,const RString& value);
+	RXMLAttr(const RString& name,const RString& value,RString* xmlns=0);
 
 	/**
 	* Construct a XML Attribute.
 	* @param name           The name of the attribute.
 	* @param value          The value of the attribute.
+	* @param xmlns          Namespace.
 	*/
-	RXMLAttr(const RString& name,const double value);
+	RXMLAttr(const RString& name,const double value,RString* xmlns=0);
 
+	/**
+	* Return the namespace of the tag.
+	* @returns a string containing the namespace.
+	*/
+	RString* GetNamespace(void) const {return(Namespace);}
+	
 	/**
 	* Compare the name of the attribute with a given string. This function is
 	* used by RContainer.

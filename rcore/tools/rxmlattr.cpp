@@ -45,21 +45,21 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RXMLAttr::RXMLAttr(const RXMLAttr& attr)
-	: Name(attr.Name), Value(attr.Value)
+	: Name(attr.Name), Value(attr.Value), Namespace(attr.Namespace)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RXMLAttr::RXMLAttr(const RString& name,const RString& value)
-	: Name(name), Value(value)
+RXMLAttr::RXMLAttr(const RString& name,const RString& value,RString* xmlns)
+	: Name(name), Value(value), Namespace(xmlns)
 {
 }
 
 
 //-------------------------------------------------------------------------------
-RXMLAttr::RXMLAttr(const RString& name,const double value)
-	: Name(name), Value(RString::Number(value))
+RXMLAttr::RXMLAttr(const RString& name,const double value,RString* xmlns)
+	: Name(name), Value(RString::Number(value)), Namespace(xmlns)
 {
 }
 

@@ -6,7 +6,7 @@
 
 	XML file - Implementation.
 
-	Copyright 2000-2005 by the Université Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -626,7 +626,7 @@ void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,bool& popdef
 		}
 
 		// Insert the attribute
-		attrs.InsertPtr(XMLStruct->NewAttr(attrn,attrv));		
+		attrs.InsertPtr(XMLStruct->NewAttr(attrn,attrv,uri));		
 	}
 }
 
@@ -714,17 +714,17 @@ void RXMLFile::AddNextCharacter(RString& str)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs)
+void RXMLFile::BeginTag(const RString& namespaceURI, const RString&, const RString& name,RContainer<RXMLAttr,true,true>& attrs)
 {
 	RXMLTag* tag;
 	RCursor<RXMLAttr> Cur(attrs);
 
 	// Create the tag and add it to the XML structure
-	tag=XMLStruct->NewTag(name);
+	tag=XMLStruct->NewTag(name,namespaceURI);
 	XMLStruct->AddTag(CurTag,tag);
 
 	for(Cur.Start();!Cur.End();Cur.Next())
-		tag->InsertAttr(Cur()->GetName(),Cur()->GetValue());
+		tag->InsertAttr(Cur()->GetName(),Cur()->GetValue(),*Cur()->GetNamespace());
 	
 	// If no top tag -> insert it
 	if(!XMLStruct->GetTop())

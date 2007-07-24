@@ -6,7 +6,7 @@
 
 	XML structure - Header.
 
-	Copyright 2000-2005 by the Université Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -85,6 +85,11 @@ class RXMLStruct : public RTree<RXMLTag,true,false>
 	*/
 	RString Encoding;
 
+	/**
+	 * All the namespaces used.
+	 */
+	RContainer<RString,true,true> Namespaces;
+	
 public:
 
 	/**
@@ -92,6 +97,17 @@ public:
 	*/
 	RXMLStruct(void);
 
+	/**
+	 * Get a pointer to a XML namespace.
+	 * @param xmlns          Namespace.
+	 */
+	RString* GetNamespace(const RString& xmlns);
+	
+	/**
+	 * Get a cursor over all XML namespaces used by this XML structire.
+	 */
+	RCursor<RString> GetNamespaces(void) const {return(RCursor<RString>(Namespaces));}
+	
 	/**
 	* Find the first tag with a given name.
 	* @param name           Name of the tag to find.
@@ -194,18 +210,20 @@ public:
 	* Create a new tag with a given name. By default, the method creates a
 	* RXMLTag.
 	* @param tag             Name of the tag.
+	* @param xmlns          Namespace.
 	* @return Pointer to a tag.
 	*/
-	virtual RXMLTag* NewTag(const RString& tag);
+	virtual RXMLTag* NewTag(const RString& tag,const RString& xmlns);
 
 	/**
 	* Create a new attribute with a given name and value. By default, the
 	* method creates a RXMLAttr.
 	* @param name            Name of the attribute.
 	* @param value           Value of the attribute.
+	* @param xmlns           Namespace.
 	* @return Pointer to a attribute.
 	*/
-	virtual RXMLAttr* NewAttr(const RString& name,const RString& value);
+	virtual RXMLAttr* NewAttr(const RString& name,const RString& value,const RString& xmlns);
 
 	/**
 	* Destruct the XML Structure.

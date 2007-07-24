@@ -6,7 +6,7 @@
 
 	XML Structure - Implementation.
 
-	Copyright 2000-2005 by the Université Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -46,8 +46,16 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RXMLStruct::RXMLStruct(void)
-	: RTree<RXMLTag,true,false>(100,50), Entities(20,10), Version("1.0"), Encoding("UTF-8")
+	: RTree<RXMLTag,true,false>(100,50), Entities(20,10), Version("1.0"),
+	  Encoding("UTF-8"), Namespaces(10)
 {
+}
+
+	
+//------------------------------------------------------------------------------
+RString* RXMLStruct::GetNamespace(const RString& xmlns)
+{
+	return(Namespaces.GetInsertPtr(xmlns));
 }
 
 
@@ -174,16 +182,16 @@ bool RXMLStruct::Merge(const RXMLStruct& xml)
 
 
 //------------------------------------------------------------------------------
-RXMLTag* RXMLStruct::NewTag(const RString& tag)
+RXMLTag* RXMLStruct::NewTag(const RString& tag,const RString& xmlns)
 {
-	return(new RXMLTag(tag));
+	return(new RXMLTag(tag,GetNamespace(xmlns)));
 }
 
 
 //------------------------------------------------------------------------------
-RXMLAttr* RXMLStruct::NewAttr(const RString& name,const RString& value)
+RXMLAttr* RXMLStruct::NewAttr(const RString& name,const RString& value,const RString& xmlns)
 {
-	return(new RXMLAttr(name,value));
+	return(new RXMLAttr(name,value,GetNamespace(xmlns)));
 }
 
 

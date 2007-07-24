@@ -6,7 +6,7 @@
 
 	XML tag - Header.
 
-	Copyright 2000-2005 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -93,18 +93,26 @@ class RXMLTag : public RNode<RXMLTag,true,false>
 	*/
 	RContainer<RXMLAttr,true,true> Attrs;
 
+	/**
+	 * Namespace.
+	 */
+	RString* Namespace;
+	
 public:
 
 	/**
 	* Copy constructor. Create a tag with the same name and the same attributes
 	* but without the subnodes.
+	* @param tag             Original tag.
 	*/
 	RXMLTag(const RXMLTag& tag);
 
 	/**
 	* Construct a XML Tag.
+	* @param name            Name of the tag.
+	* @param xmlns           Namespace of the tag.
 	*/
-	RXMLTag(const RString& name);
+	RXMLTag(const RString& name,RString* xmlns=0);
 
 	/**
 	* Compare a tag with a given name.
@@ -131,7 +139,19 @@ public:
 	* @param name           Name of the tag.
 	*/
 	void SetName(const RString& name);
+	
+	/**
+	* Return the namespace of the tag.
+	* @returns a string containing the namespace.
+	*/
+	RString* GetNamespace(void) const {return(Namespace);}
 
+	/**
+	* Set the namespace of the tag.
+	* @param xmlns           Namespace of the tag.
+	*/
+	void SetNamespace(RString* xmlns);
+	
 	/**
 	* Return the value of an attribute.
 	* param name            Name of the attribute.
@@ -194,7 +214,7 @@ public:
 	* @param value          Value of the attribute.
 	* @param overwritte     Overwritte existing parameter.
 	*/
-	void InsertAttr(const RString& name,const RString& value,bool overwritte=true);
+	void InsertAttr(const RString& name,const RString& value,const RString& xmlns=RString::Null,bool overwritte=true);
 
 	/**
 	* Add a string to the content of the tag.
