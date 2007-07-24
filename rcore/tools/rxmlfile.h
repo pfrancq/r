@@ -38,18 +38,12 @@
 // include files for R Project
 #include <rtextfile.h>
 #include <rxmlstruct.h>
+#include <rstack.h>
 
 
 //------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
-/**
-* Invalid XML file exception.
-*/
-NEWRIOEXCEPTION(RIOException,eInvalidXMLFile);
 
 
 //------------------------------------------------------------------------------
@@ -72,6 +66,8 @@ NEWRIOEXCEPTION(RIOException,eInvalidXMLFile);
 class RXMLFile : public RTextFile
 {
 protected:
+	class Namespace;
+	
 	/**
 	* The structure associated with the XML file.
 	*/
@@ -93,6 +89,16 @@ protected:
 	*/
 	bool CurTagClosing;
 
+	/**
+	 * Namespaces defined in the XML file.
+	 */
+	RContainer<Namespace,true,true> Namespaces;
+	
+	/**
+	 * Default namespace (if any).
+	 */
+	RStack<RString,true,true,true> DefaultNamespace;
+	
 public:
 
 	/**
@@ -200,13 +206,16 @@ private:
 	void LoadNextTag(void);
 
 	/**
-	* Load the attributes and put them in a container. By default, the tag is
-	* supposed to be a normal XML tag ending with either '/>' or '>'.
+	* Load the attributes of the current tag and put them in a container. By
+	* default, the tag is supposed to be a normal XML tag ending with either
+	* '/>' or '>'.
 	* @param attrs          Container that will hold the attributes.
+	* @param popdefault     A default namespace is defined for this tag 
+	* @param popuri         Namespaces with prefixes defined for this tag.
 	* @param EndTag1        Character than can delimited the tag.
 	* @param EndTag2        Another character than can delimited the tag.
 	*/
-	void LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag1='/',RChar EndTag2='>');
+	void LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,bool& popdefault,RContainer<Namespace,false,false>& popuri,RChar EndTag1='/',RChar EndTag2='>');
 
 	/**
 	* Save the next XML tag into the XML file.

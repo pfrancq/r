@@ -47,14 +47,6 @@
 namespace R{
 //-----------------------------------------------------------------------------
 
-
-//-----------------------------------------------------------------------------
-/**
-* Directory does not exist exception.
-*/
-NEWRIOEXCEPTION(RIOException,eExistingDir);
-
-
 //-----------------------------------------------------------------------------
 /**
 * The RDir class represents a generic directory. Here is an example:

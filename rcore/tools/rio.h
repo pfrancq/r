@@ -125,20 +125,4 @@ public:
 
 
 //------------------------------------------------------------------------------
-// Macro to create a new exception directlty derived from RIOException
-#define NEWRIOEXCEPTION(parent,name)                                          \
-class name : public parent                                                    \
-{                                                                             \
-public:                                                                       \
-	name(const char* str) throw() : parent(str) {}                            \
-	name(const R::RFile* file,const char* str) throw()                        \
-		: parent(file,str) {}                                                 \
-	name(const R::RIOFile* file,const char* str) throw()                      \
-		: parent(file,str) {}                                                 \
-	name(const R::RTextFile* file,const char* str) throw()                    \
-		: parent(file,str) {}                                                 \
-}
-
-
-//------------------------------------------------------------------------------
 #endif

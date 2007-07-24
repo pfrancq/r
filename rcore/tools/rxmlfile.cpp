@@ -40,13 +40,34 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 //
+// class RXMLFile::Namespace
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+class RXMLFile::Namespace
+{
+public:
+	RString Prefix;
+	RStack<RString,true,true,true> URI;
+	
+	Namespace(const RString& prefix) : Prefix(prefix), URI(5) {}
+	int Compare(const Namespace& sp) const {return(Prefix.Compare(sp.Prefix));}
+	int Compare(const Namespace* sp) const {return(Prefix.Compare(sp->Prefix));}
+	int Compare(const RString& sp) const {return(Prefix.Compare(sp));}
+};
+
+
+
+//------------------------------------------------------------------------------
+//
 // class RXMLFile
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 RXMLFile::RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding)
- : RTextFile(name,encoding), XMLStruct(xmlstruct), CurTag(0)
+ : RTextFile(name,encoding), XMLStruct(xmlstruct), CurTag(0), Namespaces(20), DefaultNamespace(5)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -56,7 +77,7 @@ RXMLFile::RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& enco
 
 //------------------------------------------------------------------------------
 RXMLFile::RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding)
- : RTextFile(name,encoding), XMLStruct(&xmlstruct), CurTag(0)
+ : RTextFile(name,encoding), XMLStruct(&xmlstruct), CurTag(0), Namespaces(20), DefaultNamespace(5)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -66,7 +87,7 @@ RXMLFile::RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& enco
 
 //------------------------------------------------------------------------------
 RXMLFile::RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
- : RTextFile(file,encoding), XMLStruct(xmlstruct), CurTag(0)
+ : RTextFile(file,encoding), XMLStruct(xmlstruct), CurTag(0), Namespaces(20), DefaultNamespace(5)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -76,7 +97,7 @@ RXMLFile::RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
 
 //------------------------------------------------------------------------------
 RXMLFile::RXMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding)
- : RTextFile(file,encoding), XMLStruct(&xmlstruct), CurTag(0)
+ : RTextFile(file,encoding), XMLStruct(&xmlstruct), CurTag(0), Namespaces(20), DefaultNamespace(5)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -137,7 +158,7 @@ void RXMLFile::Open(RIO::ModeType mode)
 		}
 
 		default:
-			throw(RIOException("No Valid Mode"));
+			throw RIOException("No Valid Mode");
 	};
 }
 
@@ -236,7 +257,7 @@ RString RXMLFile::XMLToString(const RString& str)
 				{
 					if(InvalidXMLCodeAccept())
 						return(Code);
-					throw eInvalidXMLFile(this,"Invalid XML/HTML code \""+Code+"\"");
+					throw RIOException(this,"Invalid XML/HTML code \""+Code+"\"");
 				}
 				else
 					res+=What;
@@ -249,7 +270,7 @@ RString RXMLFile::XMLToString(const RString& str)
 			{
 				if(InvalidXMLCodeAccept())
 					return(Code);
-				throw eInvalidXMLFile(this,"Invalid XML/HTML code \""+Code+"\"");
+				throw RIOException(this,"Invalid XML/HTML code \""+Code+"\"");
 			}
 		}
 		else
@@ -269,6 +290,8 @@ RString RXMLFile::StringToXML(const RString& str,bool strict)
 	RCharCursor Cur(str);
 	RString res;
 
+	if(str.FindStr("<![CDATA[")!=-1)
+		return(str);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		res+=CharToCode(Cur(),strict);
@@ -294,7 +317,9 @@ void RXMLFile::LoadHeader(void)
 		Next(); Next();
 
 		// Search for parameters until ?> is found
-		LoadAttributes(Attrs,'?','>');
+		bool PopDefault;
+		RContainer<Namespace,false,false> PopURI(5);
+		LoadAttributes(Attrs,PopDefault,PopURI,'?','>');
 		if((Attr=Attrs.GetPtr<const char*>("version")))
 			XMLStruct->SetVersion(Attr->GetValue());
 		if((Attr=Attrs.GetPtr<const char*>("encoding")))
@@ -312,7 +337,7 @@ void RXMLFile::LoadHeader(void)
 	{
 		Next(); Next(); // Skip <?
 		if(!CurString("DOCTYPE",false))
-			throw eInvalidXMLFile(this,"Wrong DOCTYPE command");
+			throw RIOException(this,"Wrong DOCTYPE command");
 
 		// Skip DOCTYPE
 		for(int i=8;--i;)
@@ -345,11 +370,13 @@ void RXMLFile::LoadNextTag(void)
 	RContainer<RXMLAttr,true,true> Attrs(10);
 	RChar What;
 	RString Code;
+	bool PopDefault;
+	RContainer<Namespace,false,false> PopURI(5);
 	bool CDATA;
 
 	// If not a tag -> Error
 	if((Cur!=RChar('<'))||(GetNextCur()==RChar('/')))
-		throw eInvalidXMLFile(this,"Not a tag");
+		throw RIOException(this,"Not a tag");
 
 	// Read name of the tag
 	Next(); // Skip <
@@ -362,7 +389,7 @@ void RXMLFile::LoadNextTag(void)
 	SkipSpaces();
 
 	// Read Attributes
-	LoadAttributes(Attrs);
+	LoadAttributes(Attrs,PopDefault,PopURI);
 
 	// It is a closing tag?
 	CurTagClosing=(Cur==RChar('/'));
@@ -370,7 +397,27 @@ void RXMLFile::LoadNextTag(void)
 		Next();
 
 	// Treat the tag
-	BeginTag("","",TagName,Attrs);
+	// Search if it has a namespace
+	RString uri,lname;
+	int i=TagName.Find(':');
+	if(i!=-1)
+	{
+		RString prefix=TagName.Mid(0,i);
+		Namespace* ptr=Namespaces.GetPtr(prefix);
+		if(!ptr)
+			throw RIOException(this,"Namespace with prefix '"+prefix+"' no defined");
+		uri=(*ptr->URI());
+		lname=TagName.Mid(i+1,TagName.GetLen()-i);
+	}
+	else
+	{
+		uri=(*DefaultNamespace()); // Perhaps a default namespace?
+		if(uri.GetLen())
+			lname=TagName;
+	}
+	
+	BeginTag(uri,lname,TagName,Attrs);
+		
 	// Verify if it has sub-tags
 	if(CurTagClosing)
 	{
@@ -387,7 +434,28 @@ void RXMLFile::LoadNextTag(void)
 		if((Cur==RChar('<'))&&(GetNextCur()!=RChar('/')))
 		{
 			// It is a tag -> read it
-			LoadNextTag();
+			CDATA=CurString("<![CDATA[",true);
+			if(CDATA)
+			{
+				Contains+="<![CDATA[";
+				// Skip <![CDATA[
+				for(int i=10;--i;)
+					Next();
+
+				// Read until ']]>' is found
+				while((!Cur.IsNull())&&(!CurString("]]>")))
+					AddNextCharacter(Contains);
+
+				// Skip ]]>
+				for(int i=4;--i;)
+					Next();
+				Contains+="]]>";
+
+				Text(XMLToString(Contains));
+				SkipSpaces();				
+			}			
+			else
+				LoadNextTag();
 		}
 		else
 		{
@@ -404,6 +472,7 @@ void RXMLFile::LoadNextTag(void)
 				CDATA=CurString("<![CDATA[",true);
 				if(CDATA)
 				{
+					cout<<"<![CDATA[ found"<<endl;
 					// Skip <![CDATA[
 					for(int i=10;--i;)
 						Next();
@@ -434,28 +503,68 @@ void RXMLFile::LoadNextTag(void)
 	}
 	SkipSpaces();
 	Next(); // Skip >
-	EndTag("","",TagName);
+	EndTag(uri,lname,TagName);
+	if(PopDefault)
+		DefaultNamespace.Pop();
+	while(PopURI.GetNb())
+	{
+		RCursor<Namespace> Cur(PopURI);
+		for(Cur.Start();!Cur.End();Cur.Next())
+			Cur()->URI.Pop();
+		PopURI.Clear();
+	}
 	SkipSpaces();
 }
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag1,RChar EndTag2)
+void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,bool& popdefault,RContainer<Namespace,false,false>& popuri,RChar EndTag1,RChar EndTag2)
 {
-	RString attrn,attrv;
+	RString attrn,attrv,uri;
 	RChar What;
 	bool Quotes;
 
+	// No namespaces
+	popdefault=false;
+	
 	while((!Cur.IsNull())&&(Cur!=EndTag1)&&(Cur!=EndTag2))
 	{
-		// Read the Name
+		// Clear name, value and uri
 		attrn.Clear();
+		attrv.Clear();
+		uri.Clear();
+		
+		// Read the Name
 		while((!Cur.IsNull())&&(!Cur.IsSpace())&&(Cur!=RChar('='))&&(Cur!=RChar('>')))
 		{
 			attrn+=Cur;
 			Next();
 		}
-
+	
+		// Verify if the attribute name has a namespace
+		int i=attrn.Find(':');
+		if(i!=-1)
+		{
+			// Namespace defined
+			RString prefix=attrn.Mid(0,i);
+			if(prefix=="xmlns")	
+				uri="xmlns";  // New namespace declared
+			else
+			{
+				Namespace* ptr=Namespaces.GetPtr(prefix);
+				if(!ptr)
+					throw RIOException(this,"Namespace with prefix '"+prefix+"' no defined");
+				uri=(*ptr->URI());
+			}
+		}
+		else
+		{
+			if(attrn=="xmlns")	
+				uri="xmlns";  // New namespace declared
+			else		
+				uri=(*DefaultNamespace()); // Perhaps a default namespace?				
+		}
+		
 		// Determine if a value is assign
 		SkipSpaces();
 		if(Cur==RChar('='))
@@ -468,8 +577,7 @@ void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag
 			What=Cur;
 			Quotes=((What==RChar('\''))||(What==RChar('"')));
 
-			// Read the parameter
-			attrv.Clear();
+			// Read the parameter			
 			if(Quotes)
 			{
 				Next(); // Skip the quote
@@ -485,7 +593,7 @@ void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag
 			{
 				// If Quote must be used -> generate an exeception
 				if(OnlyQuote())
-					throw eInvalidXMLFile(this,"Quote must be used to delimit the parameter value in a tag.");
+					throw RIOException(this,"Quote must be used to delimit the parameter value in a tag.");
 
 				// Read until a space or the end of the tag
 				while((!Cur.IsNull())&&(!Cur.IsSpace())&&(!  (((Cur==EndTag1)&&(GetNextCur()==EndTag2)) || (Cur==EndTag2))))
@@ -494,11 +602,31 @@ void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,RChar EndTag
 					Next();
 				}
 			}
-			attrs.InsertPtr(XMLStruct->NewAttr(attrn,XMLToString(attrv)));
+						
+			// Verify if the attribute is a namespace					
+			if(uri=="xmlns")
+			{
+				int i=attrn.Find(':');
+				if(i!=-1)				
+				{
+					Namespace* ptr=Namespaces.GetInsertPtr(attrn.Mid(i+1,attrn.GetLen()-i));
+					ptr->URI.Push(new RString(XMLToString(attrv)));
+					popuri.InsertPtr(ptr);
+				}
+				else
+				{
+					// If not : -> default namespace
+					DefaultNamespace.Push(new RString(XMLToString(attrv)));
+					popdefault=true;
+				}
+			}
+			
+			attrv=XMLToString(attrv);
 			SkipSpaces();
 		}
-		else
-			attrs.InsertPtr(XMLStruct->NewAttr(attrn,""));
+
+		// Insert the attribute
+		attrs.InsertPtr(XMLStruct->NewAttr(attrn,attrv));		
 	}
 }
 
@@ -586,19 +714,18 @@ void RXMLFile::AddNextCharacter(RString& str)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RContainer<RXMLAttr,true,true>& attrs)
+void RXMLFile::BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs)
 {
 	RXMLTag* tag;
-	RCursor<RXMLAttr> Cur;
+	RCursor<RXMLAttr> Cur(attrs);
 
 	// Create the tag and add it to the XML structure
 	tag=XMLStruct->NewTag(name);
 	XMLStruct->AddTag(CurTag,tag);
 
-	Cur.Set(attrs);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		tag->InsertAttr(Cur()->GetName(),Cur()->GetValue());
-
+	
 	// If no top tag -> insert it
 	if(!XMLStruct->GetTop())
 	{
@@ -607,7 +734,7 @@ void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RCon
 		{
 			// Name of the Tag must be name of the DocType
 			if(tag->GetName()!=DocType)
-				throw eInvalidXMLFile(this,"Not a valid XML file");
+				throw RIOException(this,"Not a valid XML file");
 		}
 		else
 		{
@@ -630,7 +757,7 @@ void RXMLFile::BeginTag(const RString&, const RString&, const RString& name,RCon
 void RXMLFile::EndTag(const RString&, const RString&, const RString& name)
 {
 	if(CurTag->GetName()!=name)
-		throw eInvalidXMLFile(this,"Found closing tag '"+name+"' while closing tag '"+CurTag->GetName()+"' was expected.");
+		throw RIOException(this,"Found closing tag '"+name+"' while closing tag '"+CurTag->GetName()+"' was expected.");
 	CurTag=CurTag->GetParent();
 }
 

@@ -6,7 +6,7 @@
 
 	Container - Header.
 
-	Copyright 1999-2005 by the Université Libre de Bruxelles.
+	Copyright 1999-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -47,16 +47,16 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 /**
+* This class represent a container of elements (class C). This elements are
+* stored in an array of pointers which will be increase when necessary. The
+* container can be responsible for the desallocation of the elements
+* (bAlloc), and the elements can be ordered (bOrder).
 * @param C                   The class of the elements to be contained.
 * @param bAlloc              Specify if the elements are desallocated by the
 *                            container.
 * @param bOrder              Specify if the elements are ordered in the
 *                            container.
-* This class represent a container of elements (class C). This elements are
-* store in an array of pointers which will be increase when necessary. The
-* container can be responsible for the desallocation of the elements
-* (bAlloc), and the elements can be ordered (bOrder).
-*
+* 
 * To make the necessary comparaisons, the container uses member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
