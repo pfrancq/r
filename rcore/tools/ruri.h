@@ -49,14 +49,15 @@ namespace R{
  * in particular for the schemes involving files.
  * 
  * Here are two examples explaining how it is handle by the RRUI class:
- * foo://example.com:8042/over/there?name=ferret#nose
- * \ /   \______________/\_________/ \_________/ \__/
- *  |           |             |           |        |
-* scheme     authority        path       query   fragment
-*   |   ______________________|_
- * / \ /                        \
- * urn:example:animal:ferret:nose
- * 
+ * @code
+ *   foo://example.com:8042/over/there?name=ferret#nose
+ *   \ /   \______________/\_________/ \_________/ \__/
+ *    |           |             |           |        |
+ * scheme     authority        path       query   fragment
+ *    |   ______________________|_
+ *   / \ /                        \
+ *   urn:example:animal:ferret:nose
+ * @endcode
  * @remarks The whole specification is not supported.
  */
 class RURI : public RString
