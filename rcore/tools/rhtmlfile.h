@@ -69,19 +69,19 @@ public:
 
 	/**
 	* Construct a HTML file to read.
-	* @param name           Name of the file.
+	* @param uri            URI of the file.
 	* @param xmlstruct      The XML tree associated with the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RHTMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding="Latin1");
+	RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding="Latin1");
 
 	/**
 	* Construct a HTML file to read.
-	* @param name           Name of the file.
+	* @param uri            URI of the file.
 	* @param xmlstruct      The XML tree associated with the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RHTMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding="Latin1");
+	RHTMLFile(const RURI& uri,RXMLStruct& xmlstruct,const RString& encoding="Latin1");
 
 	/**
 	* Construct a HTML file to read.

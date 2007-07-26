@@ -212,10 +212,10 @@ public:
 
 	/**
 	* Construct a text file.
-	* @param name           The name of the file.
+	* @param uri            URI of the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RTextFile(const RString &name,const RString& encoding="Latin1");
+	RTextFile(const RURI& uri,const RString& encoding="Latin1");
 
 	/**
 	* Construct a text file.

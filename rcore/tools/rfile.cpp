@@ -62,15 +62,15 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RFile::RFile(const RString &name)
-  : Mode(RIO::Undefined), Name(name)
+RFile::RFile(const RURI& uri)
+  : Mode(RIO::Undefined), URI(uri)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RFile::RFile(const RFile& file)
-  : Mode(file.Mode), Name(file.Name)
+  : Mode(file.Mode), URI(file.URI)
 {
 }
 
@@ -91,35 +91,28 @@ void RFile::Close(void)
 //------------------------------------------------------------------------------
 int RFile::Compare(const RFile& file) const
 {
-	return(Name.Compare(file.Name));
+	return(URI.Compare(file.URI));
 }
 
 
 //------------------------------------------------------------------------------
 int RFile::Compare(const RFile* file) const
 {
-	return(Name.Compare(file->Name));
+	return(URI.Compare(file->URI));
 }
 
 
 //------------------------------------------------------------------------------
-int RFile::Compare(const RString& name) const
+int RFile::Compare(const RString& uri) const
 {
-	return(Name.Compare(name));
+	return(URI.Compare(uri));
 }
 
 
 //------------------------------------------------------------------------------
-const RString RFile::GetName(void) const
+void RFile::SetURI(const RString& uri)
 {
-	return(this->Name);
-}
-
-
-//------------------------------------------------------------------------------
-void RFile::SetName(const RString& name)
-{
-		this->Name=name;
+		this->URI=uri;
 }
 
 
@@ -127,7 +120,8 @@ void RFile::SetName(const RString& name)
 const RString RFile::GetFileName(void) const
 {
 	RString res;
-
+	RString Name(URI.GetPath());
+	
 	int pos=Name.Find('/',-1)+1;
 	if(pos<=0)
 		res=Name;

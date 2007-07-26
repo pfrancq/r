@@ -48,8 +48,8 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RTextFile::RTextFile(const RString &name,const RString& encoding)
-  : RIOFile(name), Buffer(0), All(true), NewLine(true), Rem("%"), BeginRem("/*"),
+RTextFile::RTextFile(const RURI& uri,const RString& encoding)
+  : RIOFile(uri), Buffer(0), All(true), NewLine(true), Rem("%"), BeginRem("/*"),
 	EndRem("*/"), CommentType(SingleLineComment), ActivComment(NoComment),
 	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
 {

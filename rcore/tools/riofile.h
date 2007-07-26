@@ -6,7 +6,7 @@
 
 	Generic File for Input/Output - Header.
 
-	Copyright 1999-2005 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -38,6 +38,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rfile.h>
+#include <rdownload.h>
 
 
 //------------------------------------------------------------------------------
@@ -80,6 +81,16 @@ class RIOFile : public RFile
 	*/
 	unsigned int Pos;
 
+	/**
+	 * Downloader for non-local files.
+	 */
+	static RDownload Get;
+	
+	/**
+	 * File which is really treated.
+	 */
+	RString File;
+	
 protected:
 
 	/**
@@ -96,9 +107,9 @@ public:
 
 	/**
 	* Construct a file.
-	* @param name           The name of the file.
+	* @param uri             URI of the file.
 	*/
-	RIOFile(const RString& name);
+	RIOFile(const RURI& uri);
 
 	/**
 	* Copy constructor of a file.

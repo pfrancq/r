@@ -129,7 +129,7 @@ RDownload::RDownload(void)
 
 
 //------------------------------------------------------------------------------
-void RDownload::DownloadFile(const RString& URL,RString& tmpFile)
+void RDownload::DownloadFile(const RURI& uri,RString& tmpFile)
 {
 	// Find a local temporary file if tmpFile not specified else use the one specified
 	if(tmpFile.IsEmpty())
@@ -149,7 +149,7 @@ void RDownload::DownloadFile(const RString& URL,RString& tmpFile)
 		throw RException("Cannot create temporary file "+tmpFile);
 	
 	// Download the file
-	curl_easy_setopt(Lib, CURLOPT_URL, URL.Latin1());
+	curl_easy_setopt(Lib, CURLOPT_URL, uri.Latin1());
 	CURLcode err=curl_easy_perform(Lib);
 
 	// Done Part	
@@ -159,7 +159,7 @@ void RDownload::DownloadFile(const RString& URL,RString& tmpFile)
 	{
 		if(!ValidContent)
 			throw RException("Cannot treat the MIME type '"+MIME+"'");
-		throw RException(curl_easy_strerror(err)+RString(" : ")+URL);
+		throw RException(curl_easy_strerror(err)+RString(" : ")+uri);
 	}
 }
 

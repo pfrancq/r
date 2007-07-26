@@ -171,10 +171,10 @@ public:
 
 	/**
 	* Construct a binary file for records.
-	* @param name           The name of the file.
+	* @param uri            URI of the file.
 	* @param recsize        Size of a given record.
 	*/
-	RRecFile(const RString &name,size_t recsize);
+	RRecFile(const RURI& uri,size_t recsize);
 
 	/**
 	* Close the file

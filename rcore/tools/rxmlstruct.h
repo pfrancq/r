@@ -39,6 +39,7 @@
 // include files for R Project
 #include <rtree.h>
 #include <rxmltag.h>
+#include <ruri.h>
 
 
 //------------------------------------------------------------------------------
@@ -88,7 +89,7 @@ class RXMLStruct : public RTree<RXMLTag,true,false>
 	/**
 	 * All the namespaces used.
 	 */
-	RContainer<RString,true,true> Namespaces;
+	RContainer<RURI,true,true> Namespaces;
 	
 public:
 
@@ -106,7 +107,7 @@ public:
 	/**
 	 * Get a cursor over all XML namespaces used by this XML structire.
 	 */
-	RCursor<RString> GetNamespaces(void) const {return(RCursor<RString>(Namespaces));}
+	RCursor<RURI> GetNamespaces(void) const {return(RCursor<RURI>(Namespaces));}
 	
 	/**
 	* Find the first tag with a given name.

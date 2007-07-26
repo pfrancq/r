@@ -641,16 +641,16 @@ struct RCharCode
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RHTMLFile::RHTMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding)
- : RXMLFile(name,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
+RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding)
+ : RXMLFile(uri,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
 {
 	InitValidTags();
 }
 
 
 //------------------------------------------------------------------------------
-RHTMLFile::RHTMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding)
- : RXMLFile(name,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
+RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct& xmlstruct,const RString& encoding)
+ : RXMLFile(uri,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
 {
 	InitValidTags();
 }
@@ -675,9 +675,7 @@ RHTMLFile::RHTMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding
 //------------------------------------------------------------------------------
 void RHTMLFile::SetDocType(const RString& docType)
 {
-	RString name;
-
-	name=docType.ToLower();
+	RString name(docType.ToLower());
 	if((name=="xhtml")||(name=="html"))
 		RXMLFile::SetDocType("html");
 	else

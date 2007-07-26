@@ -48,7 +48,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R library
-#include <rstring.h>
+#include <ruri.h>
 
 
 
@@ -114,13 +114,13 @@ private:
 public:
 
 	/**
-	* Download and store locally a document given by an URL. If the tmpFile contains
-	* an url, the temporary document will be saved using this filename else a file is
+	* Download and store locally a document given by an URI. If the tmpFile contains
+	* an URL, the temporary document will be saved using this filename else a file is
 	* created with a random name
-	* @param URL            URL of the document.
+	* @param uri            URI of the document.
 	* @param tmpFile        Temporary file created.
 	*/
-	virtual void DownloadFile(const RString& URL,R::RString& tmpFile);
+	virtual void DownloadFile(const RURI& uri,R::RString& tmpFile);
 
 	/**
 	* Delete a temporary copy of a file created by the manager. This method is

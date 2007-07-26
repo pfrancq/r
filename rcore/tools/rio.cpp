@@ -58,7 +58,7 @@ RIOException::RIOException(const RFile* file,const char* str)
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetName()+": "+str);
+		strcpy(Msg,file->GetURI()+": "+str);
 	else
 		strcpy(Msg,str);
 }
@@ -69,7 +69,7 @@ RIOException::RIOException(const RIOFile* file,const char* str)
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetName()+" ("+RString::Number(file->GetPos())+"): "+str);
+		strcpy(Msg,file->GetURI()+" ("+RString::Number(file->GetPos())+"): "+str);
 	else
 		strcpy(Msg,str);
 }
@@ -80,7 +80,7 @@ RIOException::RIOException(const RTextFile* file,const char* str)
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetName()+" ("+RString::Number(file->ActualLine())+"): "+str);
+		strcpy(Msg,file->GetURI()+" ("+RString::Number(file->ActualLine())+"): "+str);
 	else
 		strcpy(Msg,str);
 }

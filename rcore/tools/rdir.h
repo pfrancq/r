@@ -81,9 +81,9 @@ public:
 
 	/**
 	* Construct a directory.
-	* @param name           The name of the directory.
+	* @param uri            URI of the directory.
 	*/
-	RDir(const RString& name);
+	RDir(const RURI& uri);
 
 	/**
 	* Open the directory in a given mode.

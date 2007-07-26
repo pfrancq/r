@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstring.h>
+#include <ruri.h>
 #include <rio.h>
 
 
@@ -68,17 +68,17 @@ protected:
 	RIO::ModeType Mode;
 
 	/**
-	* Name of the File.
+	* URI of the File.
 	*/
-	RString Name;
+	RURI URI;
 
 public:
 
 	/**
 	* Construct a file.
-	* @param name           The name of the file.
+	* @param uri             URI of the file.
 	*/
-	RFile(const RString &name);
+	RFile(const RURI& uri);
 
 	/**
 	* Copy constructor of a file.
@@ -114,24 +114,23 @@ public:
 	int Compare(const RFile* file) const;
 
 	/**
-	* Compare the name of a file with a given string.
+	* Compare the uri of a file with a given string.
 	* @see R::RContainer
-	* @param name            String.
+	* @param uri             URI.
 	* @return int
 	*/
-	int Compare(const RString& name) const;
+	int Compare(const RString& uri) const;
 
 	/**
-	* Return the fullname of the file including the path.
-	* @returns a string containing the full name.
+	* Return the URI of the file including.
 	*/
-	const RString GetName(void) const;
+	const RURI GetURI(void) const {return(URI);}
 
 	/**
-	* Set the fullname of the file including the path.
-	* @param name            String containing the full name.
+	* Set the URI of the file.
+	* @param uri             RURI.
 	*/
-	void SetName(const RString& name);
+	void SetURI(const RString& uri);
 	
 	/**
 	* Return the name of the file. If the fullname doesn't have a slash at the

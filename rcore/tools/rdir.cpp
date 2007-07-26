@@ -75,8 +75,8 @@ struct RDir::Internal
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RDir::RDir(const RString& name)
-	: RFile(name), Data(0), Entries(10,5)
+RDir::RDir(const RURI& uri)
+	: RFile(uri), Data(0), Entries(10,5)
 {
 	Data=new Internal();
 }
@@ -99,7 +99,7 @@ void RDir::Open(RIO::ModeType mode)
 			break;
 
 		case RIO::Create:
-			err=mkdir(GetName().Latin1(),S_IRWXU | S_IRGRP | S_IXGRP | S_IXOTH);
+			err=mkdir(URI.GetPath().Latin1(),S_IRWXU | S_IRGRP | S_IXGRP | S_IXOTH);
 			if(err!=0)
 			{
 				switch(errno)
@@ -125,18 +125,16 @@ void RDir::OpenEntries(void)
 {
 	struct dirent* ep;
 	RString Name;
-	RString Path;
 	struct stat statbuf;
 	int handle;
 
-	Data->Handle=opendir(GetName().Latin1());
+	Data->Handle=opendir(URI.GetPath().Latin1());
 	if(!Data->Handle)
 		throw(RIOException(this,"Directory does not exist"));
-	Path=GetName();
-	Path+=RFile::GetDirSeparator();
+	RString Path=URI.GetPath()+RFile::GetDirSeparator();
 	while((ep=readdir(Data->Handle)))
 	{
-		// Name og the 'file"
+		// Name of the 'file"
 		Name=ep->d_name;
 
 		if((Name==".")||(Name==".."))
@@ -161,8 +159,7 @@ void RDir::OpenEntries(void)
 //-----------------------------------------------------------------------------
 RCursor<RFile> RDir::GetEntries(void) const
 {
-	RCursor<RFile> Cur(Entries);
-	return(Cur);
+	return(RCursor<RFile>(Entries));
 }
 
 

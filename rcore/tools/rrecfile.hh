@@ -38,8 +38,8 @@
 
 //------------------------------------------------------------------------------
 template<class C,bool bOrder>
-	RRecFile<C,bOrder>::RRecFile(const RString &name,size_t recsize)
-		: RBinaryFile(name), Find(false), Dirty(true), RecSize(recsize)
+	RRecFile<C,bOrder>::RRecFile(const RURI& uri,size_t recsize)
+		: RBinaryFile(uri), Find(false), Dirty(true), RecSize(recsize)
 {
 }
 

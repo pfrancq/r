@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RFile.cpp
+	RIOFile.cpp
 
 	Generic File for Input/Output - Implementation.
 
-	Copyright 1999-2005 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -61,10 +61,15 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RIOFile::RIOFile(const RString& name)
-  : RFile(name), handle(-1), Size(0), Pos(0)
+RDownload RIOFile::Get;
+
+
+//------------------------------------------------------------------------------
+RIOFile::RIOFile(const RURI& uri)
+  : RFile(uri), handle(-1), Size(0), Pos(0)
 {
 }
+
 
 //------------------------------------------------------------------------------
 RIOFile::RIOFile(RIOFile& file)
@@ -78,11 +83,23 @@ void RIOFile::Open(RIO::ModeType mode)
 {
 	int localmode;
 	struct stat statbuf;
-
+	bool local=false;
+	
 	// If file seems to be open -> close it
 	if(handle!=-1)
 		Close();
 
+	// Verify that it is not a urn
+	if(URI.GetScheme()=="urn")
+		throw RIOException(this,"URI does not represent a file");
+	
+	// look if it is a local file
+	if(URI.GetScheme()=="file")
+	{
+		local=true;
+		File=URI.GetPath();
+	}
+	
 	RFile::Open(mode);
 	switch(Mode)
 	{
@@ -93,32 +110,45 @@ void RIOFile::Open(RIO::ModeType mode)
 			break;
 
 		case RIO::Write:
+			if(!local)
+				throw RIOException(this,"Cannot write with an URL");
 			localmode=O_WRONLY | O_CREAT;
 			CanWrite=true;
 			CanRead=false;
 			break;
 
 		case RIO::ReadWrite:
+			if(!local)
+				throw RIOException(this,"Cannot write with an URL");			
 			localmode=O_RDWR | O_CREAT;
 			CanWrite=true;
 			CanRead=true;
 			break;
 
 		case RIO::Append:
+			if(!local)
+				throw RIOException(this,"Cannot appen to an URL");			
 			localmode=O_WRONLY | O_CREAT | O_APPEND;
 			CanWrite=true;
 			CanRead=true;
 			break;
 
 		case RIO::Create:
+			if(!local)
+				throw RIOException(this,"Cannot create with an URL");			
 			localmode=O_WRONLY | O_CREAT | O_TRUNC;
 			CanWrite=true;
 			CanRead=false;
 			break;
 
 		default:
-			throw(RIOException(this,"No Valid Mode"));
+			throw(RIOException(this,"No valid mode"));
 	};
+	
+	// If not local -> Download it
+	if(!local)
+		Get.DownloadFile(URI,File);
+	
 	#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
 		//do nothing
 	#else
@@ -126,12 +156,12 @@ void RIOFile::Open(RIO::ModeType mode)
 	#endif	
 	if(Mode==RIO::Read)
 	{
-		handle=open(Name.Latin1(),localmode);
+		handle=open(File.Latin1(),localmode);
 	}
 	else
-		handle=open(Name.Latin1(),localmode,S_IREAD|S_IWRITE);
+		handle=open(File.Latin1(),localmode,S_IREAD|S_IWRITE);
 	if(handle==-1)
-		throw(RIOException(this,"Can't open the file '"+Name+"'"));
+		throw(RIOException(this,"Can't open the file '"+URI+"'"));
 	fstat(handle, &statbuf);
 	Size=statbuf.st_size;
 	if(Mode==RIO::Append)
@@ -156,6 +186,10 @@ void RIOFile::Close(void)
 		close(handle);
 		handle=-1;
 	}
+	// If non-local file -> remove the temporary file
+	if(URI.GetScheme()!="file")
+			Get.DeleteFile(File);
+	File=RString::Null;
 	Pos=Size=0;
 	Mode=RIO::Undefined;
 }
@@ -217,7 +251,7 @@ void RIOFile::Seek(unsigned long long pos)
 //------------------------------------------------------------------------------
 void RIOFile::SeekRel(long long rel)
 {
-	if(Pos<labs(rel))
+	if(Pos<static_cast<unsigned int>(labs(rel)))
 		throw(RIOException(this,"Position before beginning of the file"));
 	if((Pos+rel>=Size)&&(!CanWrite))
 		throw(RIOException(this,"Position outside of the file"));

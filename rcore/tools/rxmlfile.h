@@ -99,23 +99,28 @@ protected:
 	 */
 	RStack<RString,true,true,true> DefaultNamespace;
 	
+	/**
+	 * Avoid spaces in the XML file when creating it.
+	 */
+	bool AvoidSpaces;
+	
 public:
 
 	/**
 	* Construct a XML file.
-	* @param name           Name of the file.
+	* @param uri            URI of the file.
 	* @param xmlstruct      The XML tree associated with the file
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding="UTF-8");
+	RXMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding="UTF-8");
 
 	/**
 	* Construct a XML file.
-	* @param name           Name of the file.
+	* @param uri            URI of the file.
 	* @param xmlstruct      The XML tree associated with the file
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding="UTF-8");
+	RXMLFile(const RURI& uri,RXMLStruct& xmlstruct,const RString& encoding="UTF-8");
 
 	/**
 	* Construct a XML file.
@@ -135,6 +140,11 @@ public:
 	*/
 	RXMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding="UTF-8");
 
+	/**
+	 * Avoid spaces when a XML file is created.
+	 */
+	void SetAvoidSpaces(bool as) { AvoidSpaces=as;}
+	
 	/**
 	* Set the encoding of the XML document.
 	* @param name           Name of the encoding.

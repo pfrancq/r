@@ -66,8 +66,9 @@ public:
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RXMLFile::RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& encoding)
- : RTextFile(name,encoding), XMLStruct(xmlstruct), CurTag(0), Namespaces(20), DefaultNamespace(5)
+RXMLFile::RXMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding)
+ : RTextFile(uri,encoding), XMLStruct(xmlstruct), CurTag(0), Namespaces(20),
+   DefaultNamespace(5), AvoidSpaces(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -76,8 +77,9 @@ RXMLFile::RXMLFile(const RString& name,RXMLStruct* xmlstruct,const RString& enco
 
 
 //------------------------------------------------------------------------------
-RXMLFile::RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& encoding)
- : RTextFile(name,encoding), XMLStruct(&xmlstruct), CurTag(0), Namespaces(20), DefaultNamespace(5)
+RXMLFile::RXMLFile(const RURI& uri,RXMLStruct& xmlstruct,const RString& encoding)
+ : RTextFile(uri,encoding), XMLStruct(&xmlstruct), CurTag(0), Namespaces(20),
+   DefaultNamespace(5), AvoidSpaces(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -87,7 +89,8 @@ RXMLFile::RXMLFile(const RString& name,RXMLStruct& xmlstruct,const RString& enco
 
 //------------------------------------------------------------------------------
 RXMLFile::RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
- : RTextFile(file,encoding), XMLStruct(xmlstruct), CurTag(0), Namespaces(20), DefaultNamespace(5)
+ : RTextFile(file,encoding), XMLStruct(xmlstruct), CurTag(0), Namespaces(20),
+   DefaultNamespace(5), AvoidSpaces(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -97,7 +100,8 @@ RXMLFile::RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
 
 //------------------------------------------------------------------------------
 RXMLFile::RXMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding)
- : RTextFile(file,encoding), XMLStruct(&xmlstruct), CurTag(0), Namespaces(20), DefaultNamespace(5)
+ : RTextFile(file,encoding), XMLStruct(&xmlstruct), CurTag(0), Namespaces(20),
+   DefaultNamespace(5), AvoidSpaces(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -137,21 +141,33 @@ void RXMLFile::Open(RIO::ModeType mode)
 		{
 			RXMLTag* top(XMLStruct->GetTop());
 			RString Header("<?xml version=\""+XMLStruct->GetVersion()+"\" encoding=\""+XMLStruct->GetEncoding()+"\"?>");
-			(*this)<<Header<<endl;
+			(*this)<<Header;
+			if(!AvoidSpaces)
+				(*this)<<endl;
 			Header="<!DOCTYPE "+top->GetName();
 			RCursor<RXMLAttr> Cur(XMLStruct->GetXMLEntitiesCursor());
 			if(Cur.GetNb())
 			{
-				Header+="[\n";
+				Header+="[";
+				if(!AvoidSpaces)
+					Header+="\n";
 				for(Cur.Start();!Cur.End();Cur.Next())
 				{
-					Header+="\t<!ENTITY "+Cur()->GetName()+" \""+Cur()->GetValue()+"\">\n";
+					if(!AvoidSpaces)
+						Header+="\t";
+					else
+						Header+=" ";
+					Header+="<!ENTITY "+Cur()->GetName()+" \""+Cur()->GetValue()+"\">";
+					if(!AvoidSpaces)
+						Header+="\n";
 				}
 				Header+=" ]>";
 			}
 			else
 				Header+=">";
-			(*this)<<Header<<endl;
+			(*this)<<Header;
+			if(!AvoidSpaces)
+				(*this)<<endl;
 			CurTag=top;
 			SaveNextTag(0);
 			break;
@@ -640,7 +656,8 @@ void RXMLFile::SaveNextTag(int depth)
 	RCursor<RXMLTag> Tags;
 	RString line;
 
-	for(int i=0;i<depth;i++) line+="\t";
+	if(!AvoidSpaces)
+		for(int i=0;i<depth;i++) line+="\t";
 	Cur=CurTag->GetAttrs();
 	Tags=CurTag->GetNodes();
 	if(Cur.GetNb())
@@ -674,7 +691,8 @@ void RXMLFile::SaveNextTag(int depth)
 	}
 	if(CurTag->GetContent().GetLen())
 	{
-		for(int i=0;i<depth+1;i++) line+="\t";
+		if(!AvoidSpaces)
+			for(int i=0;i<depth+1;i++) line+="\t";
 		line+=StringToXML(CurTag->GetContent(),false);
 		(*this)<<line<<endl;
 		line.Clear();
@@ -687,7 +705,8 @@ void RXMLFile::SaveNextTag(int depth)
 	}
 	if(Tags.GetNb()||CurTag->GetContent().GetLen())
 	{
-		for(int i=0;i<depth;i++) line+="\t";
+		if(!AvoidSpaces)
+			for(int i=0;i<depth;i++) line+="\t";
 		line+="</"+CurTag->GetName()+">";
 		(*this)<<line<<endl;
 	}
