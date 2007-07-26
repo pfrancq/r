@@ -61,7 +61,7 @@ RLine::RLine(const RPoint* pt1,const RPoint* pt2,const bool seg)
 //------------------------------------------------------------------------------
 float RLine::Length(void) const
 {
-	tCoord X=labs(Pt2.X-Pt1.X),Y=labs(Pt2.Y-Pt1.Y);
+	tCoord X=Abs(Pt2.X-Pt1.X),Y=Abs(Pt2.Y-Pt1.Y);
 	return(sqrt(static_cast<double>(X*X+Y*Y)));
 }
 

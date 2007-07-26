@@ -36,6 +36,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
+#include <rcontainer.h>
 #include <rrect.h>
 
 

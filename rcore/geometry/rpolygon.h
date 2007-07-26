@@ -36,9 +36,11 @@
 
 
 //------------------------------------------------------------------------------
-// include files for RGeometry
-#include <rgeometry.h>
+// include files for R Project
+#include <rcontainer.h>
+#include <rcursor.h>
 #include <rpoint.h>
+#include <rrect.h>
 
 
 //------------------------------------------------------------------------------
@@ -252,13 +254,13 @@ public:
 	* Decompose the polygon in a container of rectangles.
 	* @param rects          A pointer to the container of rectangles.
 	*/
-	void RectDecomposition(RRects* rects) const;
+	void RectDecomposition(RContainer<RRect,true,false>& rects) const;
 
 	/**
 	* Add the points of the polygon to a container of points.
 	* @param points         A pointer to the container of points.
 	*/
-	void AddPoints(RPoints* points) const;
+	void AddPoints(RContainer<RPoint,true,false>& points) const;
 
 	/**
 	* Shift the points of the polygon to make the bottom-left point be the first

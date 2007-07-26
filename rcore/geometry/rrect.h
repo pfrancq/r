@@ -6,7 +6,7 @@
 
 	Rectangle - Header
 
-	Copyright 1999-2005 by the Université Libre de Bruxelles.
+	Copyright 1999-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -53,16 +53,26 @@ namespace R{
 class RRect
 {
 public:
+	
+	/**
+	* Left limit.
+	*/
+	tCoord X1;
+	
+	/**
+	* Bottom limit.
+	*/
+	tCoord Y1;
 
 	/**
-	* (left,bottom) edge.
+	* Right limit.
 	*/
-	RPoint Pt1;
-
+	tCoord X2;
+	
 	/**
-	* (right,up) edge.
+	* Upper limit.
 	*/
-	RPoint Pt2;
+	tCoord Y2;
 
 	/**
 	* Construct a rectangle with two points at (0,0).
@@ -73,69 +83,108 @@ public:
 	* Construct a rectangle from another one.
 	* @param rect           The rectangle used as reference.
 	*/
-	RRect(const RRect* rect);
+	RRect(const RRect& rect);
 
 	/**
 	* Construct a rectangle with two points.
 	* @param pt1            Point used as (left,bottom) edge.
 	* @param pt2            Point used as (right,up) edge.
 	*/
-	RRect(const RPoint* pt1,const RPoint* pt2);
-
-	/** Construct a rectangle from four coordinates.
-	* @param MinX           The most left position.
-	* @param MinY           The most bottom position
-	* @param MaxX           The most right position.
-	* @param MaxY           The most up position.
-	*/
-	RRect(const tCoord MinX,const tCoord MinY,const tCoord MaxX,const tCoord MaxY);
+	RRect(const RPoint& pt1,const RPoint& pt2);
 
 	/**
-	* Return the width of the rectangle.
+	* Construct a rectangle from four coordinates.
+	* @param x1              The most left position.
+	* @param y1              The most bottom position
+	* @param x2              The most right position.
+	* @param y2              The most up position.
 	*/
-	tCoord Width(void) const;
+	RRect(tCoord x1,tCoord y1,tCoord x2,tCoord y2);
 
 	/**
-	* Return the height of the rectangle.
+	* Return the width of the rectangle. The width includes the border, i.e. a
+	* rectangle where X1=X2 has a width of 1.
 	*/
-	tCoord Height(void) const;
+	tCoord GetWidth(void) const {return(Abs(X2-X1+1));}
 
 	/**
-	* Return the width of the rectangle.
+	* Return the height of the rectangle. The height includes the border, i.e. 
+	* a rectangle where Y1=Y2 has a height of 1.
 	*/
-	tCoord GetWidth(void) const;
+	tCoord GetHeight(void) const {return(Abs(Y2-Y1+1));}
 
 	/**
-	* Return the height of the rectangle.
+	* Set the width of the rectangle. The method adapts the X-coordinate of
+	* Pt2. The width includes the border, i.e. a width of 1 means that X2=X1.
+	* @param width           New width.
 	*/
-	tCoord GetHeight(void) const;
+	inline void SetWidth(tCoord width) {X2=width+X1-1;}
+
+	/**
+	* Set the height of the rectangle. The method adapts the Y-coordinate of
+	* Pt2. The height includes the border, i.e. a width of 1 means that Y2=Y1.
+	* @param height          New height.
+	*/
+	inline void SetHeight(tCoord height) {Y2=height+Y1-1;}
+	
+	/**
+	* Set the coordinates of the rectangle.
+	* @param x1              The most left position.
+	* @param y1              The most bottom position
+	* @param x2              The most right position.
+	* @param y2              The most up position.
+	*/
+	inline void Set(tCoord x1,tCoord y1,tCoord x2,tCoord y2) {X1=x1; Y1=y1; X2=x2; Y2=y2;}
+	
+	/**
+	* Set the coordinates of the rectangle based on a shape.
+	* @param x               The most left position.
+	* @param y               The most bottom position
+	* @param w               Width.
+	* @param h               Height.
+	*/ 
+	inline void SetShape(tCoord x,tCoord y,tCoord w,tCoord h) {X1=x; Y1=y; X2=x+w-1; Y2=y+h-1;}
 
 	/**
 	* Return the area of the rectangle.
 	*/
-	inline tCoord Area(void) const {return(Height()*Width());}
+	inline tCoord GetArea(void) const {return(GetHeight()*GetWidth());}
 
 	/**
 	* The equal operator.
 	*/
-	inline bool operator==(const RRect& rect) const {return((Pt1==rect.Pt1)&&(Pt2==rect.Pt2));}
+	inline bool operator==(const RRect& rect) const {return((X1==rect.X1)&&(Y1==rect.Y1)&&(X2==rect.X2)&&(Y2==rect.Y2));}
 
 	/**
 	* The non-equal operator.
 	*/
-	inline bool operator!=(const RRect& rect) const {return((Pt1!=rect.Pt1)||(Pt2!=rect.Pt2));}
+	inline bool operator!=(const RRect& rect) const {return((X1!=rect.X1)||(Y1!=rect.Y1)||(X2!=rect.X2)||(Y2!=rect.Y2));}
+
+	/**
+	* Make a translation of the rectangle.
+	* @param x              The x to add.
+	* @param y              The y to add.
+	*/
+	void Translation(tCoord x,tCoord y);
+	
+	/**
+	* Put a rectangle at a given position.
+	* @param x              X position.
+	* @param y              Y position.
+	*/
+	void SetPos(tCoord x,tCoord y);
 
 	/**
 	* Make a translation of the rectangle.
 	* @param pt             The point representing the vector used.
 	*/
-	RRect& operator+=(const RPoint& pt);
+	inline RRect& operator+=(const RPoint& pt) {Translation(pt.X,pt.Y); return(*this);}
 
 	/**
 	* Make a minus translation of the rectangle.
 	* @param pt             The point representing the vector used.
 	*/
-	RRect& operator-=(const RPoint& pt);
+	inline RRect& operator-=(const RPoint& pt) {Translation(-pt.X,-pt.Y); return(*this);}
 
 	/**
 	* Compare two rectangles and return 0 if there are at the same. This function
@@ -159,23 +208,23 @@ public:
 	bool Clip(const RPoint& limits);
 
 	/**
-	* Make a translation of the rectangle.
-	* @param x              The x to add.
-	* @param y              The y to add.
+	* This function returns true if the two rectangles overlapped.
+	* @param rect            Reference rectangle.
 	*/
-	void Translation(const tCoord x,const tCoord y);
-
+	bool Overlap(const RRect& rect) const;
+	
 	/**
 	* This function returns true if the two rectangles overlapped.
+	* @param rect            Reference rectangle.
 	*/
-	bool Overlap(const RRect* rect) const;
+	inline bool Overlap(const RRect* rect) const {return(Overlap(*rect));}
 
 	/**
 	* This function returns true if a given point is in the rectangle.
 	* @param X              X position of the point.
 	* @param Y              Y position of the point.
 	*/
-	bool IsIn(const tCoord X,const tCoord Y) const;
+	bool IsIn(tCoord X,tCoord Y) const;
 
 	/**
 	* This function returns true if a given point is in the rectangle.
@@ -185,27 +234,19 @@ public:
 	/**
 	* The assign Operator.
 	*/
-	inline RRect& operator=(const RRect& rect) {Pt1=rect.Pt1;Pt2=rect.Pt2;return(*this);}
-
+	inline RRect& operator=(const RRect& rect) {X1=rect.X1;Y1=rect.Y1;X2=rect.X2;Y2=rect.Y2;return(*this);}
+	
 	/**
-	* Get the X position of the first point.
-	*/
-	tCoord GetX1(void) const {return(Pt1.GetX());}
-
+	 * Get the (bottom,left) point.
+	 * @return RPoint
+	 */
+	RPoint inline GetPt1(void) const {return(RPoint(X1,Y1));}
+	
 	/**
-	* Get the Y position of the first point.
-	*/
-	tCoord GetY1(void) const {return(Pt1.GetY());}
-
-	/**
-	* Get the X position of the second point.
-	*/
-	tCoord GetX2(void) const {return(Pt2.GetX());}
-
-	/**
-	* Get the Y position of the second point.
-	*/
-	tCoord GetY2(void) const {return(Pt2.GetY());}
+	 * Get the (upper,right) point.
+	 * @return RPoint
+	 */
+	RPoint inline GetPt2(void) const {return(RPoint(X2,Y2));}
 };
 
 

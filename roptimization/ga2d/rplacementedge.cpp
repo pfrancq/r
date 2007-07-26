@@ -71,17 +71,17 @@ void RPlacementEdge::NextObjectOri(void)
 	RPoint Pos;
 
 	// Verify if add normally or on bottom
-	if(((Result.Pt2.X+1)<Limits.X)&&(CurLevel==NbLevels))
+	if(((Result.X2+1)<Limits.X)&&(CurLevel==NbLevels))
 	{
-		FactorX=(static_cast<double>(Result.Pt2.X))/(static_cast<double>(Limits.X));
-		FactorY=(static_cast<double>(Result.Pt2.Y))/(static_cast<double>(Limits.Y));
+		FactorX=(static_cast<double>(Result.X2))/(static_cast<double>(Limits.X));
+		FactorY=(static_cast<double>(Result.Y2))/(static_cast<double>(Limits.Y));
 		if(FactorX<FactorY)
 		{
 			Levels[CurLevel++]=Actual;
 			if(CurLevel>=NbLevels)
 				NbLevels=CurLevel;
-			Actual.Set(Result.Pt2.X,0);
-			Max.X=Result.Pt2.X+CurInfo->Width()+1;
+			Actual.Set(Result.X2,0);
+			Max.X=Result.X2+CurInfo->Width()+1;
 			if(Max.X>Limits.X)
 			Max.X=Limits.X;
 			CurLevel=0;
@@ -157,11 +157,11 @@ void RPlacementEdge::Place(RPoint& pos)
 	}
 
 	// Verify ActLimits
-	if(pos.X+CurInfo->Width()>Result.Pt2.X)
+	if(pos.X+CurInfo->Width()>Result.X2)
 	{
-		Result.Pt2.X=pos.X+CurInfo->Width();
-		if(Max.X==0) Max.X=Result.Pt2.X;
+		Result.X2=pos.X+CurInfo->Width();
+		if(Max.X==0) Max.X=Result.X2;
 	}
-	if(pos.Y+CurInfo->Height()>Result.Pt2.Y)
-		Result.Pt2.Y=pos.Y+CurInfo->Height();
+	if(pos.Y+CurInfo->Height()>Result.Y2)
+		Result.Y2=pos.Y+CurInfo->Height();
 }

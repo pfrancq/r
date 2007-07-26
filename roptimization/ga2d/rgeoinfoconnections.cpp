@@ -138,11 +138,11 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 		while((--Nb)&&(!bFound))
 		{
 			(*info)->Boundary(r2);
-			if(r1.Pt1.X<r2.Pt1.X) r2.Pt1.X=r1.Pt1.X;
-			if(r1.Pt1.Y<r2.Pt1.Y) r2.Pt1.Y=r1.Pt1.Y;
-			if(r1.Pt2.X>r2.Pt2.X) r2.Pt2.X=r1.Pt2.X;
-			if(r1.Pt2.Y>r2.Pt2.Y) r2.Pt2.Y=r1.Pt2.Y;
-			if((r2.Width()<=bound.Width())&&(r2.Height()<=bound.Height())&&(!selected[(*info)->GetObj()->GetId()]))
+			if(r1.X1<r2.X1) r2.X1=r1.X1; 
+			if(r1.Y1<r2.Y1) r2.Y1=r1.Y1;
+			if(r1.X2>r2.X2) r2.X2=r1.X2;
+			if(r1.Y2>r2.Y2) r2.Y2=r1.Y2;
+			if((r2.GetWidth()<=bound.GetWidth())&&(r2.GetHeight()<=bound.GetHeight())&&(!selected[(*info)->GetObj()->GetId()]))
 			{
 					bFound=true;
 					i2=(*info);
@@ -162,11 +162,11 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 		while((--Nb)&&(!bFound))
 		{
 			treat[(*best)->GetId()]->Boundary(r2);      // Get The boundary rectangle
-			if(r1.Pt1.X<r2.Pt1.X) r2.Pt1.X=r1.Pt1.X;
-			if(r1.Pt1.Y<r2.Pt1.Y) r2.Pt1.Y=r1.Pt1.Y;
-			if(r1.Pt2.X>r2.Pt2.X) r2.Pt2.X=r1.Pt2.X;
-			if(r1.Pt2.Y>r2.Pt2.Y) r2.Pt2.Y=r1.Pt2.Y;
-			if((r2.Width()<=bound.Width())&&(r2.Height()<=bound.Height()))
+			if(r1.X1<r2.X1) r2.X1=r1.X1; 
+			if(r1.Y1<r2.Y1) r2.Y1=r1.Y1;
+			if(r1.X2>r2.X2) r2.X2=r1.X2;
+			if(r1.Y2>r2.Y2) r2.Y2=r1.Y2;
+			if((r2.GetWidth()<=bound.GetWidth())&&(r2.GetHeight()<=bound.GetHeight()))
 			{
 					bFound=true;
 					i2=treat[(*(best++))->GetId()];

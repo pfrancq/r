@@ -6,7 +6,7 @@
 
 	Rectangle - Implemtation.
 
-	Copyright 1999-2005 by the Université Libre de Bruxelles.
+	Copyright 1999-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -45,86 +45,51 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RRect::RRect(void)
-	: Pt1(),Pt2()
+	: X1(0),Y1(0),X2(0),Y2(0)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RRect::RRect(const RRect* rect)
-	: Pt1(),Pt2()
-{
-	if(rect)
-	{
-		Pt1=rect->Pt1;
-		Pt2=rect->Pt2;
-	}
-	else
-		RReturnIfFail(rect);
-}
-
-
-//------------------------------------------------------------------------------
-RRect::RRect(const RPoint* pt1,const RPoint* pt2)
-	: Pt1(), Pt2()
-{
-	RReturnIfFail(pt1&&pt2);
-	Pt1=(*pt1);
-	Pt2=(*pt2);
-}
-
-
-//------------------------------------------------------------------------------
-RRect::RRect(const tCoord MinX,const tCoord MinY,const tCoord MaxX,const tCoord MaxY)
-	: Pt1(MinX,MinY),Pt2(MaxX,MaxY)
+RRect::RRect(const RRect& rect)
+	: X1(rect.X1),Y1(rect.Y1),X2(rect.X2),Y2(rect.Y2)
 {
 }
 
 
 //------------------------------------------------------------------------------
-tCoord RRect::Width(void) const
+RRect::RRect(const RPoint& pt1,const RPoint& pt2)
+	: X1(pt1.X),Y1(pt1.Y),X2(pt2.X),Y2(pt2.Y)
 {
-	return(labs(Pt2.X-Pt1.X+1));
 }
 
 
 //------------------------------------------------------------------------------
-tCoord RRect::Height(void) const
+RRect::RRect(tCoord x1,tCoord y1,tCoord x2,tCoord y2)
+	: X1(x1),Y1(y1),X2(x2),Y2(y2)
 {
-	return(labs(Pt2.Y-Pt1.Y+1));
 }
 
 
 //------------------------------------------------------------------------------
-tCoord RRect::GetWidth(void) const
+void RRect::Translation(const tCoord x,const tCoord y)
 {
-	return(labs(Pt2.X-Pt1.X+1));
+	X1+=x;
+	X2+=x;
+	Y1+=y;
+	Y2+=y;
 }
 
 
 //------------------------------------------------------------------------------
-tCoord RRect::GetHeight(void) const
+void RRect::SetPos(tCoord x,tCoord y)
 {
-	return(labs(Pt2.Y-Pt1.Y+1));
+	X2=x+GetWidth();
+	Y2=y+GetHeight();
+	X1=x;
+	Y1=y;
 }
 
-
-//------------------------------------------------------------------------------
-RRect& RRect::operator+=(const RPoint& pt)
-{
-	Pt1+=pt;
-	Pt2+=pt;
-	return(*this);
-}
-
-
-//------------------------------------------------------------------------------
-RRect& RRect::operator-=(const RPoint& pt)
-{
-	Pt1-=pt;
-	Pt2-=pt;
-	return(*this);
-}
 
 
 //------------------------------------------------------------------------------
@@ -140,51 +105,51 @@ bool RRect::Clip(const RRect& clip)
 	bool bClip=false;
 
 	// Test Min X
-	if(Pt1.X<clip.Pt1.X)
+	if(X1<clip.X1)
 	{
 		bClip=true;
-		Pt1.X=clip.Pt1.X;
+		X1=clip.X1;
 	}
-	if(Pt1.X>clip.Pt2.X)
+	if(X1>clip.X2)
 	{
 		bClip=true;
-		Pt1.X=clip.Pt2.X;
+		X1=clip.X2;
 	}
 
 	// Test Min Y
-	if(Pt1.Y<clip.Pt1.Y)
+	if(Y1<clip.Y1)
 	{
 		bClip=true;
-		Pt1.Y=clip.Pt1.Y;
+		Y1=clip.Y1;
 	}
-	if(Pt1.Y>clip.Pt2.Y)
+	if(Y1>clip.Y2)
 	{
 		bClip=true;
-		Pt1.Y=clip.Pt2.Y;
+		Y1=clip.Y2;
 	}
 
 	// Test Max X
-	if(Pt2.X<clip.Pt1.X)
+	if(X2<clip.X1)
 	{
 		bClip=true;
-		Pt2.X=clip.Pt1.X;
+		X2=clip.X1;
 	}
-	if(Pt2.X>clip.Pt2.X)
+	if(X2>clip.X2)
 	{
 		bClip=true;
-		Pt2.X=clip.Pt2.X;
+		X2=clip.X2;
 	}
 
 	// Test Max Y
-	if(Pt2.Y<clip.Pt1.Y)
+	if(Y2<clip.Y1)
 	{
 		bClip=true;
-		Pt2.Y=clip.Pt1.Y;
+		Y2=clip.Y1;
 	}
-	if(Pt2.Y>clip.Pt2.Y)
+	if(Y2>clip.Y2)
 	{
 		bClip=true;
-		Pt2.Y=clip.Pt2.Y;
+		Y2=clip.Y2;
 	}
 
 	// Return value
@@ -198,31 +163,31 @@ bool RRect::Clip(const RPoint& limits)
 	bool bClip=false;
 
 	// Test Min X
-	if(Pt1.X>limits.X)
+	if(X1>limits.X)
 	{
 		bClip=true;
-		Pt1.X=limits.X;
+		X1=limits.X;
 	}
 
 	// Test Min Y
-	if(Pt1.Y>limits.Y)
+	if(Y1>limits.Y)
 	{
 		bClip=true;
-		Pt1.Y=limits.Y;
+		Y1=limits.Y;
 	}
 
 	// Test Max X
-	if(Pt2.X>limits.X)
+	if(X2>limits.X)
 	{
 		bClip=true;
-		Pt2.X=limits.X;
+		X2=limits.X;
 	}
 
 	// Test Max Y
-	if(Pt2.Y>limits.Y)
+	if(Y2>limits.Y)
 	{
 		bClip=true;
-		Pt2.Y=limits.Y;
+		Y2=limits.Y;
 	}
 
 	// Return value
@@ -231,25 +196,13 @@ bool RRect::Clip(const RPoint& limits)
 
 
 //------------------------------------------------------------------------------
-void RRect::Translation(const tCoord x,const tCoord y)
+bool RRect::Overlap(const RRect& rect) const
 {
-	Pt1.X+=x;
-	Pt1.Y+=y;
-	Pt2.X+=x;
-	Pt2.Y+=y;
-}
-
-
-//------------------------------------------------------------------------------
-bool RRect::Overlap(const RRect* rect) const
-{
-	RReturnValIfFail(rect,false);
-
 	// Is up or bottom of rect
-	if((Pt1.Y>rect->Pt2.Y)||(Pt2.Y<rect->Pt1.Y)) return(false);
+	if((Y1>rect.Y2)||(Y2<rect.Y1)) return(false);
 
 	// Is left or right of rect
-	if((Pt1.X>rect->Pt2.X)||(Pt2.X<rect->Pt1.X)) return(false);
+	if((X1>rect.X2)||(X2<rect.X1)) return(false);
 
 	return(true);
 }
@@ -259,10 +212,10 @@ bool RRect::Overlap(const RRect* rect) const
 bool RRect::IsIn(const tCoord X,const tCoord Y) const
 {
 	// Is up or bottom of rect
-	if((Y>Pt2.Y)||(Y<Pt1.Y)) return(false);
+	if((Y>Y2)||(Y<Y1)) return(false);
 
 	// Is left or right of rect
-	if((X>Pt2.X)||(X<Pt1.X)) return(false);
+	if((X>X2)||(X<X1)) return(false);
 
 	return(true);
 }

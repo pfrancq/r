@@ -215,10 +215,7 @@ tCoord RGeoInfo::GetArea(void) const
 void RGeoInfo::Boundary(RRect& rect)
 {
 	Bound->Boundary(rect);
-	rect.Pt1.X+=Pos.X;
-	rect.Pt1.Y+=Pos.Y;
-	rect.Pt2.X+=Pos.X;
-	rect.Pt2.Y+=Pos.Y;
+	rect+=Pos;
 }
 
 
@@ -403,8 +400,8 @@ bool RGeoInfo::IsValid(const RPoint& pos,const RPoint& limits) const
 {
 	if(pos.X<0) return(false);
 	if(pos.Y<0) return(false);
-	if(pos.X+Rect.Width()>limits.X) return(false);
-	if(pos.Y+Rect.Height()>limits.Y) return(false);
+	if(pos.X+Rect.GetWidth()>limits.X) return(false);
+	if(pos.Y+Rect.GetHeight()>limits.Y) return(false);
 	return(true);
 }
 

@@ -60,13 +60,14 @@ RGrid::RGrid(RPoint &limits)
 	#else
 		InternalLimits=Limits;
 	#endif
+		
 	// Init Occupied
-	OccupiedX = new unsigned int*[InternalLimits.X+1];
-	for(tCoord R=0;R<InternalLimits.X+1;R++)
-		OccupiedX[R] = new unsigned int[InternalLimits.Y+1];
-	OccupiedY = new unsigned int*[InternalLimits.Y+1];
-	for(tCoord R=0;R<InternalLimits.Y+1;R++)
-		OccupiedY[R] = new unsigned int[InternalLimits.X+1];
+	OccupiedX = new size_t*[GetMaxX()];
+	for(size_t R=0;R<GetMaxX();R++)
+		OccupiedX[R] = new size_t[GetMaxY()];
+	OccupiedY = new size_t*[GetMaxY()];
+	for(size_t R=0;R<GetMaxY();R++)
+		OccupiedY[R] = new size_t[GetMaxX()];
 }
 
 
@@ -77,28 +78,28 @@ void RGrid::Clear(void)
 	RReturnIfFail(OccupiedY);
 
 	// OccupiedX
-	for(tCoord R=0;R<InternalLimits.X+1;R++)
-		memset(OccupiedX[R],0xFF,sizeof(unsigned int)*(InternalLimits.Y));
+	for(size_t R=0;R<GetMaxX();R++)
+		memset(OccupiedX[R],0xFF,sizeof(size_t)*(GetMaxY()));
 
 	// OccupiedY
-	for(tCoord R=0;R<InternalLimits.Y+1;R++)
-		memset(OccupiedY[R],0xFF,sizeof(unsigned int)*(InternalLimits.X));
+	for(size_t R=0;R<GetMaxY();R++)
+		memset(OccupiedY[R],0xFF,sizeof(size_t)*(GetMaxX()));
 }
 
 
 //------------------------------------------------------------------------------
 void RGrid::Assign(RRect& rect,RPoint& pos,unsigned int id)
 {
-	tCoord BeginX,BeginY,j,k,H,W;
-	unsigned int **ptr1,*ptr2;
+	size_t BeginX,BeginY,j,k,H,W;
+	size_t **ptr1,*ptr2;
 
 	RReturnIfFail(OccupiedX);
 	RReturnIfFail(OccupiedY);
 
-	BeginX=rect.Pt1.X+pos.X;
-	BeginY=rect.Pt1.Y+pos.Y;
-	H=rect.Height()+1;
-	W=rect.Width()+1;
+	BeginX=static_cast<size_t>(rect.X1+pos.X);
+	BeginY=static_cast<size_t>(rect.Y1+pos.Y);
+	H=static_cast<size_t>(rect.GetHeight()+1);
+	W=static_cast<size_t>(rect.GetWidth()+1);
 
 	// OccupiedX
 	for(j=W,ptr1=&OccupiedX[BeginX];--j;ptr1++)
@@ -118,7 +119,7 @@ bool RGrid::IsFree(tCoord x,tCoord y)
 	RReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.X)||y<0||y>(InternalLimits.Y))
 		return(true);
-	return(OccupiedX[x][y]==NoObject);
+	return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]==NoObject);
 }
 
 
@@ -128,14 +129,14 @@ bool RGrid::IsOcc(tCoord x,tCoord y)
 	RReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.X)||y<0||y>(InternalLimits.Y))
 		return(false);
-	return(OccupiedX[x][y]!=NoObject);
+	return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]!=NoObject);
 }
 
 
 //------------------------------------------------------------------------------
 tCoord RGrid::LookLeft(RPoint& pt)
 {
-	unsigned int *ptr=&OccupiedY[pt.Y][pt.X];
+	size_t* ptr=&OccupiedY[static_cast<size_t>(pt.Y)][static_cast<size_t>(pt.X)];
 	tCoord x=pt.X;
 
 	while(x&&((*ptr)==NoObject))
@@ -150,7 +151,7 @@ tCoord RGrid::LookLeft(RPoint& pt)
 //------------------------------------------------------------------------------
 tCoord RGrid::LookRight(RPoint& pt)
 {
-	unsigned int *ptr=&OccupiedY[pt.Y][pt.X];
+	size_t *ptr=&OccupiedY[static_cast<size_t>(pt.Y)][static_cast<size_t>(pt.X)];
 	tCoord x=pt.X;
 
 	while((x<InternalLimits.X)&&((*ptr)==NoObject))
@@ -165,7 +166,7 @@ tCoord RGrid::LookRight(RPoint& pt)
 //------------------------------------------------------------------------------
 tCoord RGrid::LookUp(RPoint& pt)
 {
-	unsigned int *ptr=&OccupiedX[pt.X][pt.Y];
+	size_t *ptr=&OccupiedX[static_cast<size_t>(pt.Y)][static_cast<size_t>(pt.X)];
 	tCoord y=pt.Y;
 
 	while((y<=InternalLimits.Y)&&((*ptr)==NoObject))
@@ -180,7 +181,7 @@ tCoord RGrid::LookUp(RPoint& pt)
 //------------------------------------------------------------------------------
 tCoord RGrid::LookDown(RPoint& pt)
 {
-	unsigned int *ptr=&OccupiedX[pt.X][pt.Y];
+	size_t *ptr=&OccupiedX[static_cast<size_t>(pt.Y)][static_cast<size_t>(pt.X)];
 	tCoord y=pt.Y;
 
 	while(y&&((*ptr)==NoObject))
@@ -195,13 +196,13 @@ tCoord RGrid::LookDown(RPoint& pt)
 //------------------------------------------------------------------------------
 tCoord RGrid::SkirtLeft(RPoint& pt,RRect& bound)
 {
-	unsigned int *ptr,*ptrU,*ptrD;
+	size_t *ptr,*ptrU,*ptrD;
 	tCoord x=pt.X;
-	tCoord Limit=bound.Pt1.X;
+	tCoord Limit=bound.X1;
 
-	if(pt.X>0) ptr=&OccupiedY[pt.Y][pt.X-1]; else return(x);
-	if(pt.Y>0) ptrD=&OccupiedY[pt.Y-1][pt.X-1]; else ptrD=0;
-	if(pt.Y<InternalLimits.Y) ptrU=&OccupiedY[pt.Y+1][pt.X-1]; else ptrU=0;
+	if(pt.X>0) ptr=&OccupiedY[static_cast<size_t>(pt.Y)][static_cast<size_t>(pt.X-1)]; else return(x);
+	if(pt.Y>0) ptrD=&OccupiedY[static_cast<size_t>(pt.Y-1)][static_cast<size_t>(pt.X-1)]; else ptrD=0;
+	if(pt.Y<InternalLimits.Y) ptrU=&OccupiedY[static_cast<size_t>(pt.Y+1)][static_cast<size_t>(pt.X-1)]; else ptrU=0;
 
 	// While next point is free and not a bifurcation, go to left
 	while((x>=Limit)&&((*ptr)==NoObject)&&!((ptrU&&((*ptrU)==NoObject))&&(ptrD&&((*ptrD)==NoObject))))
@@ -223,13 +224,13 @@ tCoord RGrid::SkirtLeft(RPoint& pt,RRect& bound)
 //------------------------------------------------------------------------------
 tCoord RGrid::SkirtRight(RPoint& pt,RRect& bound)
 {
-	unsigned int *ptr,*ptrU,*ptrD;
+	size_t *ptr,*ptrU,*ptrD;
 	tCoord x=pt.X;
-	tCoord Limit=bound.Pt2.X;
+	tCoord Limit=bound.X2;
 
-	if(pt.X<InternalLimits.X) ptr=&OccupiedY[pt.Y][pt.X+1]; else return(x);
-	if(pt.Y>0) ptrD=&OccupiedY[pt.Y-1][pt.X+1]; else ptrD=0;
-	if(pt.Y<InternalLimits.Y) ptrU=&OccupiedY[pt.Y+1][pt.X+1]; else ptrU=0;
+	if(pt.X<InternalLimits.X) ptr=&OccupiedY[static_cast<size_t>(pt.Y)][static_cast<size_t>(pt.X+1)]; else return(x);
+	if(pt.Y>0) ptrD=&OccupiedY[static_cast<size_t>(pt.Y-1)][static_cast<size_t>(pt.X+1)]; else ptrD=0;
+	if(pt.Y<InternalLimits.Y) ptrU=&OccupiedY[static_cast<size_t>(pt.Y+1)][static_cast<size_t>(pt.X+1)]; else ptrU=0;
 
    // While next point is free and not a bifurcation, go to right
 	while((x<=Limit)&&((*ptr)==NoObject)&&!((ptrU&&((*ptrU)==NoObject))&&(ptrD&&((*ptrD)==NoObject))))
@@ -250,13 +251,13 @@ tCoord RGrid::SkirtRight(RPoint& pt,RRect& bound)
 //------------------------------------------------------------------------------
 tCoord RGrid::SkirtUp(RPoint& pt,RRect& bound)
 {
-	unsigned int *ptr,*ptrL,*ptrR;
+	size_t *ptr,*ptrL,*ptrR;
 	tCoord y=pt.Y;
-	tCoord Limit=bound.Pt2.Y;
+	tCoord Limit=bound.Y2;
 
-	if(pt.Y<InternalLimits.Y) ptr=&OccupiedX[pt.X][pt.Y+1]; else return(y);
-	if(pt.X>0) ptrL=&OccupiedX[pt.X-1][pt.Y+1]; else ptrL=0;
-	if(pt.X<InternalLimits.X) ptrR=&OccupiedX[pt.X+1][pt.Y+1]; else ptrR=0;
+	if(pt.Y<InternalLimits.Y) ptr=&OccupiedX[static_cast<size_t>(pt.X)][static_cast<size_t>(pt.Y+1)]; else return(y);
+	if(pt.X>0) ptrL=&OccupiedX[static_cast<size_t>(pt.X-1)][static_cast<size_t>(pt.Y+1)]; else ptrL=0;
+	if(pt.X<InternalLimits.X) ptrR=&OccupiedX[static_cast<size_t>(pt.X+1)][static_cast<size_t>(pt.Y+1)]; else ptrR=0;
 
 	// While next point is free and not a bifurcation, go to up
 	while((y<=Limit)&&((*ptr)==NoObject)&&!((ptrR&&((*ptrR)==NoObject))&&(ptrL&&((*ptrL)==NoObject))))
@@ -278,13 +279,13 @@ tCoord RGrid::SkirtUp(RPoint& pt,RRect& bound)
 //------------------------------------------------------------------------------
 tCoord RGrid::SkirtDown(RPoint& pt,RRect& bound)
 {
-	unsigned int *ptr,*ptrL,*ptrR;
+	size_t *ptr,*ptrL,*ptrR;
 	tCoord y=pt.Y;
-	tCoord Limit=bound.Pt1.Y;
+	tCoord Limit=bound.Y1;
 
-	if(pt.Y>0) ptr=&OccupiedX[pt.X][pt.Y-1]; else return(y);
-	if(pt.X>0) ptrL=&OccupiedX[pt.X-1][pt.Y-1]; else ptrL=0;
-	if(pt.X<InternalLimits.X) ptrR=&OccupiedX[pt.X+1][pt.Y-1]; else ptrR=0;
+	if(pt.Y>0) ptr=&OccupiedX[static_cast<size_t>(pt.X)][static_cast<size_t>(pt.Y-1)]; else return(y);
+	if(pt.X>0) ptrL=&OccupiedX[static_cast<size_t>(pt.X-1)][static_cast<size_t>(pt.Y-1)]; else ptrL=0;
+	if(pt.X<InternalLimits.X) ptrR=&OccupiedX[static_cast<size_t>(pt.X+1)][static_cast<size_t>(pt.Y-1)]; else ptrR=0;
 
 	// While next point is free and not a bifurcation, go to down
 	while((y>=Limit)&&((*ptr)==NoObject)&&!((ptrR&&((*ptrR)==NoObject))&&(ptrL&&((*ptrL)==NoObject))))
@@ -342,10 +343,10 @@ bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,RDirection from,RRect& bound,
 	}
 
 	// Test if Valid one and insert it
-	if( ((bound.Pt1.X>0)&&(X==bound.Pt1.X)) ||
-	    (X==bound.Pt2.X)                    ||
-	    ((bound.Pt1.Y>0)&&(Y==bound.Pt1.Y)) ||
-	    (Y==bound.Pt2.Y)||((X==pt.X)&&(Y==pt.Y))  )
+	if( ((bound.X1>0)&&(X==bound.X1)) ||
+	    (X==bound.X2)                    ||
+	    ((bound.Y1>0)&&(Y==bound.Y1)) ||
+	    (Y==bound.Y2)||((X==pt.X)&&(Y==pt.Y))  )
 		return(false);
 
 	// Find next Vertices
@@ -357,21 +358,21 @@ bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,RDirection from,RRect& bound,
 		{
 			case Left:
 				TestY=SkirtDown(pt,bound);
-				if((TestY!=Y)&&((bound.Pt1.Y==0)||((bound.Pt1.Y>0)&&(TestY>bound.Pt1.Y))))
+				if((TestY!=Y)&&((bound.Y1==0)||((bound.Y1>0)&&(TestY>bound.Y1))))
 				{
 					Y=TestY;
 					from=Up;
 					break;
 				}
 				TestX=SkirtRight(pt,bound);
-				if((TestX!=X)&&(TestX<bound.Pt2.X))
+				if((TestX!=X)&&(TestX<bound.X2))
 				{
 					X=TestX;
 					from=Left;
 					break;
 				}
 				TestY=SkirtUp(pt,bound);
-				if((TestY!=Y)&&(TestY<bound.Pt2.Y))
+				if((TestY!=Y)&&(TestY<bound.Y2))
 				{
 					Y=TestY;
 					from=Down;
@@ -382,21 +383,21 @@ bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,RDirection from,RRect& bound,
 
 			case Right:
 				TestY=SkirtUp(pt,bound);
-				if((TestY!=Y)&&(TestY<bound.Pt2.Y))
+				if((TestY!=Y)&&(TestY<bound.Y2))
 				{
 					Y=TestY;
 					from=Down;
 					break;
 				}
 				TestX=SkirtLeft(pt,bound);
-				if((TestX!=X)&&((bound.Pt1.X==0)||((bound.Pt1.X>0)&&(TestX>bound.Pt1.X))))
+				if((TestX!=X)&&((bound.X1==0)||((bound.X1>0)&&(TestX>bound.X1))))
 				{
 					X=TestX;
 					from=Right;
 					break;
 				}
 				TestY=SkirtDown(pt,bound);
-				if((TestY!=Y)&&((bound.Pt1.Y==0)||((bound.Pt1.Y>0)&&(TestY>bound.Pt1.Y))))
+				if((TestY!=Y)&&((bound.Y1==0)||((bound.Y1>0)&&(TestY>bound.Y1))))
 				{
 					Y=TestY;
 					from=Up;
@@ -407,21 +408,21 @@ bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,RDirection from,RRect& bound,
 
 			case Down:
 				TestX=SkirtRight(pt,bound);
-				if((TestX!=X)&&(TestX<bound.Pt2.X))
+				if((TestX!=X)&&(TestX<bound.X2))
 				{
 					X=TestX;
 					from=Left;
 					break;
 				}
 				TestY=SkirtUp(pt,bound);
-				if((TestY!=Y)&&(TestY<bound.Pt2.Y))
+				if((TestY!=Y)&&(TestY<bound.Y2))
 				{
 					Y=TestY;
 					from=Down;
 					break;
 				}
 				TestX=SkirtLeft(pt,bound);
-				if((TestX!=X)&&((bound.Pt1.X==0)||((bound.Pt1.X>0)&&(TestX>bound.Pt1.X))))
+				if((TestX!=X)&&((bound.X1==0)||((bound.X1>0)&&(TestX>bound.X1))))
 				{
 					X=TestX;
 					from=Right;
@@ -432,21 +433,21 @@ bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,RDirection from,RRect& bound,
 
 			case Up:
 				TestX=SkirtLeft(pt,bound);
-				if((TestX!=X)&&((bound.Pt1.X==0)||((bound.Pt1.X>0)&&(TestX>bound.Pt1.X))))
+				if((TestX!=X)&&((bound.X1==0)||((bound.X1>0)&&(TestX>bound.X1))))
 				{
 					X=TestX;
 					from=Right;
 					break;
 				}
 				TestY=SkirtDown(pt,bound);
-				if((TestY!=Y)&&((bound.Pt1.Y==0)||((bound.Pt1.Y>0)&&(TestY>bound.Pt1.Y))))
+				if((TestY!=Y)&&((bound.Y1==0)||((bound.Y1>0)&&(TestY>bound.Y1))))
 				{
 					Y=TestY;
 					from=Up;
 					break;
 				}
 				TestX=SkirtRight(pt,bound);
-				if((TestX!=X)&&(TestX<bound.Pt2.X))
+				if((TestX!=X)&&(TestX<bound.X2))
 				{
 					X=TestX;
 					from=Left;
@@ -581,13 +582,13 @@ RGrid::~RGrid(void)
 {
 	if(OccupiedX)
 	{
-		for(tCoord R=0;R<InternalLimits.X+1;R++)
+		for(size_t R=0;R<GetMaxX();R++)
 			delete[] (OccupiedX[R]);
 		delete[] OccupiedX;
 	}
 	if(OccupiedY)
 	{
-		for(tCoord R=0;R<InternalLimits.Y+1;R++)
+		for(size_t R=0;R<GetMaxY();R++)
 			delete[] (OccupiedY[R]);
 		delete[] OccupiedY;
 	}

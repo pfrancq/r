@@ -70,8 +70,7 @@ void RPlacementHeuristic::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 	NbObjsOk=0;
 	Grid->Clear();
 	Free.Clear();
-	Result.Pt1.Set(0,0);
-	Result.Pt2.Set(0,0);
+	Result.Set(0,0,0,0);
 	Distances=0.0;
 
 	// Calculate an order
@@ -148,11 +147,11 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 
 	// Compute the bounding rectangle of all placed objects and the current
 	// one at the given position
-	if(pos.X<CurRect.Pt1.X) CurRect.Pt1.X=pos.X;
-	if(pos.Y<CurRect.Pt1.Y) CurRect.Pt1.Y=pos.Y;
-	if(pos.X+CurInfo->Width()>CurRect.Pt2.X) CurRect.Pt2.X=pos.X+CurInfo->Width();
-	if(pos.Y+CurInfo->Height()>CurRect.Pt2.Y) CurRect.Pt2.Y=pos.Y+CurInfo->Height();
-	if((CurRect.Pt1.X<0)||(CurRect.Pt1.Y<0)||(CurRect.Pt2.X>=Limits.X)||(CurRect.Pt2.Y>=Limits.Y))
+	if(pos.X<CurRect.X1) CurRect.X1=pos.X;
+	if(pos.Y<CurRect.Y1) CurRect.Y1=pos.Y;
+	if(pos.X+CurInfo->Width()>CurRect.X2) CurRect.X2=pos.X+CurInfo->Width();
+	if(pos.Y+CurInfo->Height()>CurRect.Y2) CurRect.Y2=pos.Y+CurInfo->Height();
+	if((CurRect.X1<0)||(CurRect.Y1<0)||(CurRect.X2>=Limits.X)||(CurRect.Y2>=Limits.Y))
 	{
 		return;
 	}
@@ -162,7 +161,7 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 	p->Ori=CurInfo->GetOri();
 	p->Pos=pos;
 	sol=Prom->NewSol();
-	Prom->Assign(sol,area,CurRect.Width()*CurRect.Height());
+	Prom->Assign(sol,area,CurRect.GetWidth()*CurRect.GetHeight());
 	Prom->Assign(sol,dist,Infos->Cons.GetDistances(CurInfo,pos));
 //	cout<<NbPromSol<<": Pos=("<<pos.X<<","<<pos.Y<<") ; Area="<<CurRect.Width()*CurRect.Height();
 //	cout<<" ; Dist="<<Connections->GetDistances(Infos)<<endl;

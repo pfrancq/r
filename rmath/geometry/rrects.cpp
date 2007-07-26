@@ -72,6 +72,6 @@ tCoord RRects::Area(void) const
 
 	RCursor<RRect> rect(*this);
 	for(rect.Start(),Area=0;!rect.End();rect.Next())
-		Area+=rect()->Area();
+		Area+=rect()->GetArea();
 	return(Area);
 }

@@ -67,7 +67,7 @@ void RPlacementBottomLeft::NextObjectOri(void)
 	// Do a local optimisationn at actual position
 	Pos=Last;
 	CurInfo->PushBottomLeft(Pos,Limits,Grid);
-	if((Pos.Y+CurInfo->Height()>Result.Pt2.Y)||(Pos.X+CurInfo->Width()>Actual.X))
+	if((Pos.Y+CurInfo->Height()>Result.Y2)||(Pos.X+CurInfo->Width()>Actual.X))
 	{
 		Pos=Actual;
 		CurInfo->PushBottomLeft(Pos,Limits,Grid);
@@ -76,7 +76,7 @@ void RPlacementBottomLeft::NextObjectOri(void)
 	// If to long than begin from left again
 	if(Pos.X+CurInfo->Width()>Limits.X)
 	{
-		Actual.Set(0,Result.Pt2.Y);
+		Actual.Set(0,Result.Y2);
 		Pos=Actual;
 		CurInfo->PushBottomLeft(Pos,Limits,Grid);
 	}
@@ -102,8 +102,8 @@ void RPlacementBottomLeft::Place(RPoint& pos)
 	Last.Y+=CurInfo->Height();
 
 	// Verify ActLimits
-	if(pos.X+CurInfo->Width()>Result.Pt2.X)
-		Result.Pt2.X=pos.X+CurInfo->Width();
-	if(pos.Y+CurInfo->Height()>Result.Pt2.Y)
-		Result.Pt2.Y=pos.Y+CurInfo->Height();
+	if(pos.X+CurInfo->Width()>Result.X2)
+		Result.X2=pos.X+CurInfo->Width();
+	if(pos.Y+CurInfo->Height()>Result.Y2)
+		Result.Y2=pos.Y+CurInfo->Height();
 }

@@ -6,7 +6,7 @@
 
 	R Standard Library - Header.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -197,15 +197,22 @@ const tId NullId=0xFFFFFFFF;
 /**
 * The tCoord type represents a coordinate.
 */
-typedef int tCoord;
+typedef double tCoord;
+
+
+//------------------------------------------------------------------------------
+/**
+ * Inline function that returns the absolute value of a coordinate.
+ */
+inline tCoord Abs(tCoord x) {return(x<0.0?-x:x);}
 
 
 //------------------------------------------------------------------------------
 /**
 * The MaxCoord constante represent the maximal positive value that a
-* coordinate can have. It is often used to indicate an invalid coordinate.
+* coordinate can have. It is used to indicate an invalid coordinate.
 */
-const tCoord MaxCoord=2147483647;
+const tCoord MaxCoord=3.40282347e+38F;
 
 
 //------------------------------------------------------------------------------

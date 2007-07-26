@@ -228,7 +228,7 @@ void RObj2D::Init(void)
 
 	CalcPolygons();
 	for(i=NbPossOri+1,p=Polygons,r=Rects,j=0;--i;p++,r++,j++)
-		p->RectDecomposition(r);
+		p->RectDecomposition(*r);
 	Area=Rects[0].Area();
 }
 

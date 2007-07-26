@@ -93,7 +93,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	memset(Selected,0,NbObjs*sizeof(bool));
 	Heuristic->Run(this->Instance->Problem,this,Grid);
 	RRect r=Heuristic->GetResult();
-	ActLimits.Set(r.Width(),r.Height());
+	ActLimits.Set(r.GetWidth(),r.GetHeight());
 }
 
 
@@ -163,7 +163,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	Heuristic->Run(this->Instance->Problem,thInfos,Grid);
 
 	RRect r=Heuristic->GetResult();
-	ActLimits.Set(r.Width(),r.Height());
+	ActLimits.Set(r.GetWidth(),r.GetHeight());
 
 	// Assign the "real" geometric information
 	for(i=0;i<NbRealInfos;i++)
@@ -203,7 +203,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	memset(Selected,0,NbObjs*sizeof(bool));
 	Heuristic->Run(this->Instance->Problem,this,Grid);
 	RRect r=Heuristic->GetResult();
-	ActLimits.Set(r.Width(),r.Height());
+	ActLimits.Set(r.GetWidth(),r.GetHeight());
 }
 
 
@@ -229,7 +229,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 						if(this->Instance->Debug)
 							this->Instance->Debug->PrintInfo(Tmp);
 					#endif
-					throw eGAVerify(Tmp);
+					throw RGAException(Tmp,RGAException::eGAVerify);
 				}
 			}
 		}

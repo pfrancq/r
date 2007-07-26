@@ -382,12 +382,12 @@ public:
 	/**
 	* Return the Width of the object represented.
 	*/
-	inline tCoord Width(void) const {return(Rect.Width());}
+	inline tCoord Width(void) const {return(Rect.GetWidth());}
 
 	/**
 	* Return the Height of the object represented.
 	*/
-	inline tCoord Height(void) const {return(Rect.Height());}
+	inline tCoord Height(void) const {return(Rect.GetHeight());}
 
 	/**
 	* Return the number of points contained in the polygon.

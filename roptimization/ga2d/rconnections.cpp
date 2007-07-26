@@ -184,19 +184,18 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 		while((--Nb)&&(!bFound))
 		{
 			treat[(*best)->GetId()]->Boundary(r2);      // Get The boundary rectangle
-			if(r1.Pt1.X<r2.Pt1.X) X1=r1.Pt1.X; else X1=r2.Pt1.X;
-			if(r1.Pt1.Y<r2.Pt1.Y) Y1=r1.Pt1.Y; else Y1=r2.Pt1.Y;
-			if(r1.Pt2.X>r2.Pt2.X) X2=r1.Pt2.X; else X2=r2.Pt2.X;
-			if(r1.Pt2.Y>r2.Pt2.Y) Y2=r1.Pt2.Y; else Y2=r2.Pt2.Y;
-			if(((X2-X1+1)<bound.Width())&&((Y2-Y1+1)<bound.Height()))
+			if(r1.X1<r2.X1) X1=r1.X1; else X1=r2.X1;
+			if(r1.Y1<r2.Y1) Y1=r1.Y1; else Y1=r2.Y1;
+			if(r1.X2>r2.X2) X2=r1.X2; else X2=r2.X2;
+			if(r1.Y2>r2.Y2) Y2=r1.Y2; else Y2=r2.Y2;
+			if(((X2-X1+1)<bound.GetWidth())&&((Y2-Y1+1)<bound.GetHeight()))
 			{
 				bFound=true;
 //				X2=bound.Width()-(X2-X1);
 //				Y2=bound.Height()-(Y2-Y1);
 //				Pt.Set(X1-(X2/2),Y1-(Y2/2));
 //				bound+=Pt;
-				r1.Pt1.Set(X1,Y1);
-				r1.Pt2.Set(X2,Y2);
+				r1.Set(X1,Y1,X2,Y2);
 			}
 			best++;
 		}
@@ -207,8 +206,8 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 		{
 			// Nothing found -> Central Rectangle
 			Pt=b->GetPos();
-			Pt.X+=r1.Width()/2-bound.Width()/2;
-			Pt.Y+=r1.Height()/2-bound.Height()/2;
+			Pt.X+=r1.GetWidth()/2-bound.GetWidth()/2;
+			Pt.Y+=r1.GetHeight()/2-bound.GetHeight()/2;
 			bound+=Pt;
 		}
 //	}

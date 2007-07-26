@@ -6,7 +6,7 @@
 
 	Point - Header
 
-	Copyright 1999-2006 by the Université Libre de Bruxelles.
+	Copyright 1999-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -42,12 +42,15 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
-#include <rtextfile.h>
 
 
 //------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// forward class declaration
+class RTextFile;
 
 
 //------------------------------------------------------------------------------
@@ -77,8 +80,10 @@ public:
 
 	/**
 	* Construct a point at (x,y).
+	* @param x	            X Position.
+	* @param y              Y Position.
 	*/
-	RPoint(const tCoord x,const tCoord y);
+	RPoint(tCoord x,tCoord y);
 
 	/**
 	* Construct a point from pt.
@@ -88,23 +93,25 @@ public:
 
 	/**
 	* The equal operator.
+	* @param pt             Point used for the comparaison.
 	*/
 	inline bool operator==(const RPoint& pt) const {return((X==pt.X)&&(Y==pt.Y));}
 
 	/**
 	* The non-equal operator.
+	 @param pt             Point used for the comparaison.
 	*/
 	inline bool operator!=(const RPoint& pt) const {return((X!=pt.X)||(Y!=pt.Y));}
 
 	/**
 	* Make a translation of the point.
-	* @param pt             The point representing the vector used.
+	* @param pt             Point used for the comparaison.
 	*/
 	RPoint& operator+=(const RPoint& pt) {X+=pt.X;Y+=pt.Y;return(*this);}
 
 	/**
 	* Make a translation of the point.
-	* @param pt             The point representing the vector used.
+	* @param pt             Point used for the comparaison.
 	*/
 	RPoint& operator-=(const RPoint& pt) {X-=pt.X;Y-=pt.Y;return(*this);}
 
@@ -124,38 +131,32 @@ public:
 
 	/**
 	* Assignment operator.
+	* @param pt              Original point.
 	*/
 	inline RPoint& operator=(const RPoint& pt) {X=pt.X;Y=pt.Y;return(*this);}
 
 	/**
 	* This function returns true if the two points are side by side.
+	* @param pt              Reference point.
 	*/
-	inline bool Near(const RPoint* pt) const;
-
-	/**
-	* Get the X position.
-	*/
-	tCoord GetX(void) const {return(X);}
-
-	/**
-	* Get the Y position.
-	*/
-	tCoord GetY(void) const {return(Y);}
+	inline bool Near(const RPoint& pt) const;
 
 	/**
 	* Set the point to the given position.
 	* @param x	            X Position.
 	* @param y              Y Position.
 	*/
-	void Set(const tCoord x,const tCoord y) {X=x; Y=y;}
+	inline void Set(tCoord x,tCoord y) {X=x; Y=y;}
 
 	/**
 	* Return the manhatan distance from a given point.
+	* @param pt              Reference point.
 	*/
 	tCoord ManhattanDist(const RPoint& pt) const;
 
 	/**
 	* Return the euclidean distance from a given point.
+	* @param pt              Reference point.
 	*/
 	double EuclideanDist(const RPoint& pt) const;
 
@@ -172,15 +173,19 @@ public:
 	/**
 	* Return the classification of the current point relative to the segment
 	* formed by two points.
+	* @param p0              First point.
+	* @param p1              Second point.
 	*/
-	RDirection Classify(const RPoint& p0,const RPoint& p1) const
-		{ return(Classify(&p0,&p1)); }
+	RDirection Classify(const RPoint& p0,const RPoint& p1) const;
 
 	/**
 	* Return the classification of the current point relative to the segment
 	* formed by two points.
+	* @param p0              First point.
+	* @param p1              Second point.
 	*/
-	RDirection Classify(const RPoint* p0,const RPoint* p1) const;
+	inline RDirection Classify(const RPoint* p0,const RPoint* p1) const
+		{ return(Classify(*p0,*p1)); }
 
 	/**
 	* Change the "orientation" of the point.

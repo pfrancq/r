@@ -38,10 +38,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rpolygon.h>
-#include <rpoints.h>
-#include <rrect.h>
-#include <rrects.h>
-#include <rline.h>
+#include <rtextfile.h>
 using namespace R;
 using namespace std;
 
@@ -561,7 +558,30 @@ bool RPolygon::IsIn(const RPolygon* poly) const
 			}
 		}
 		else
-			AdaptXY(X,Y,FromDir);
+		{
+			switch(FromDir)
+			{
+				case Left:
+					X++;
+					break;
+
+				case Right:
+					X--;
+					break;
+
+				case Down:
+					Y++;
+					break;
+
+				case Up:
+					Y--;
+					break;
+					
+				default:
+					RAssertMsg("Not a valid Direction in this context");
+					break;
+			}
+		}
 	}
 	return(true);
 }
@@ -583,10 +603,14 @@ bool RPolygon::Contained(const RRect* rect) const
 //------------------------------------------------------------------------------
 tCoord RPolygon::Area(void) const
 {
-	RRects r;
-
-	RectDecomposition(&r);
-	return(r.Area());
+	RContainer<RRect,true,false> r(50);
+	double Area=0.0;
+	
+	RectDecomposition(r);
+	RCursor<RRect> Cur(r);
+	for(Cur.Start();!Cur.End();Cur.End())
+		Area+=Cur()->GetArea();
+	return(Area);
 }
 
 
@@ -605,10 +629,7 @@ void RPolygon::Boundary(RRect& rect) const
 		if(MaxX<X) MaxX=X;
 		if(MaxY<Y) MaxY=Y;
 	}
-	rect.Pt1.X=MinX;
-	rect.Pt1.Y=MinY;
-	rect.Pt2.X=MaxX;
-	rect.Pt2.Y=MaxY;
+	rect.Set(MinX,MinY,MaxX,MaxY);
 }
 
 
@@ -653,11 +674,10 @@ void RPolygon::ChangeOrientation(const ROrientation o,RPoint& min)
 
 
 //------------------------------------------------------------------------------
-void RPolygon::RectDecomposition(RRects* rects) const
+void RPolygon::RectDecomposition(RContainer<RRect,true,false>& rects) const
 {
-#warning verify that it is working because using a pointer on a container where objects are deleted
 	RPolygon work(*this),tmpPoly(20);
-	RRects tmpRects;
+	RContainer<RRect,true,false> tmpRects(20);
 	RPoint Pt11;                               // Point at (X1,Y1)
 	RPoint Pt12;                               // Point at (X1,Y2)
 	RPoint PtX2;                               // Point at (?,Y2)
@@ -669,8 +689,7 @@ void RPolygon::RectDecomposition(RRects* rects) const
 	bool bFind21;                               // True if Point (X2,?) is (X2,Y1)
 
 	// Init
-	RReturnIfFail(rects);
-	rects->Clear();
+	rects.Clear();
 
 	// While points  -> Construct the rectangle (X1,Y1,X2,Y2)
 	while(work.GetNb())
@@ -692,7 +711,7 @@ void RPolygon::RectDecomposition(RRects* rects) const
 		X2=Pt2Y.X;
 
 		// Insert Rectangle
-		rects->InsertPtr(new RRect(X1,Y1,X2,Y2));
+		rects.InsertPtr(new RRect(X1,Y1,X2,Y2));
 
 		// If Pt2Y is (X2,Y1) -> bFind=true
 		if((Pt2Y.X==X2)&&(Pt2Y.Y==Y1))
@@ -810,20 +829,19 @@ void RPolygon::RectDecomposition(RRects* rects) const
 			}
 
 			// Calculate the rectangular decomposition of the sub-polygon and add them
-			tmpPoly.RectDecomposition(&tmpRects);
-			(*rects)+=tmpRects;
+			tmpPoly.RectDecomposition(tmpRects);
+			rects+=tmpRects;
 		}
 	}
 }
 
 
 //------------------------------------------------------------------------------
-void RPolygon::AddPoints(RPoints* points) const
+void RPolygon::AddPoints(RContainer<RPoint,true,false>& points) const
 {
-	RReturnIfFail(points);
 	RCursor<RPoint> point(*this);
 	for(point.Start();!point.End();point.Next())
-		points->InsertPtr(new RPoint(*point()));
+		points.InsertPtr(new RPoint(*point()));
 }
 
 
@@ -923,7 +941,7 @@ RPoint RPolygon::GetCentralPoint(void)
 	double min,act;
 
 	Boundary(r);
-	Middle.Set(r.Width()/2,r.Height()/2);
+	Middle.Set(r.GetWidth()/2,r.GetHeight()/2);
 	if(IsIn(Middle))
 		return(Middle);
 

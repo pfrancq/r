@@ -104,7 +104,7 @@ void RPolygons::PutPoints(RPoints* points) const
 	points->Clear();
 	RCursor<RPolygon> poly(*this);
 	for(poly.Start();!poly.End();poly.Next())
-		poly()->AddPoints(points);
+		poly()->AddPoints(*points);
 	for(poly.Start();!poly.End();poly.Next())
 	{
 		RCursor<RPoint> point(*poly());

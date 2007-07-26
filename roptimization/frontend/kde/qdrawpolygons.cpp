@@ -287,14 +287,14 @@ void QDrawPolygons::paintConnectors(RGeoInfo* info,QPainter* Painter)
 		{
 			x=RealToScreenX(Cur()->Pos[j].X+Translation.X+info->GetPos().X-1);
 			y=RealToScreenY(Cur()->Pos[j].Y+Translation.Y+info->GetPos().Y+1);
-			Painter->drawRect(x,y,static_cast<int>(3*FactorX),static_cast<int>(3*FactorY));
+			Painter->drawRect(static_cast<size_t>(x),static_cast<size_t>(y),static_cast<int>(3*FactorX),static_cast<int>(3*FactorY));
 		}
 	}
 }
 
 
 //------------------------------------------------------------------------------
-void QDrawPolygons::TransformExternCon(tCoord& x,tCoord& y)
+void QDrawPolygons::TransformExternCon(int& x,int& y)
 {
 	// X-Axis
 	if(x<Translation.X)
@@ -339,11 +339,11 @@ void QDrawPolygons::TransformExternCon(tCoord& x,tCoord& y)
 
 
 //------------------------------------------------------------------------------
-void QDrawPolygons::AdaptExternCon(tCoord& x,tCoord& y)
+void QDrawPolygons::AdaptExternCon(int& x,int& y)
 {
 	// Absolute Adaptation
-	x=x+Translation.X-Problem->Translation.X;
-	y=y+Translation.Y-Problem->Translation.Y;
+	x=x+static_cast<size_t>(Translation.X-Problem->Translation.X);
+	y=y+static_cast<size_t>(Translation.Y-Problem->Translation.Y);
 
 	// X-Axis
 	if(x<Translation.X)
@@ -395,33 +395,33 @@ void QDrawPolygons::paintConnection(RGeoInfoConnection* con,QPainter* Painter,bo
 	RCursor<RGeoInfoConnectionPart> p(*con);
 	for(p.Start();!p.End();p.Next())
 	{
-		X1=p()->PosCon1.X;
-		Y1=p()->PosCon1.Y;
-		X2=p()->PosCon2.X;
-		Y2=p()->PosCon2.Y;
+		X1=static_cast<size_t>(p()->PosCon1.X);
+		Y1=static_cast<size_t>(p()->PosCon1.Y);
+		X2=static_cast<size_t>(p()->PosCon2.X);
+		Y2=static_cast<size_t>(p()->PosCon2.Y);
 
 		if(p()->Id1==Problem->Problem.GetId())
 		{
-			X1+=Problem->Translation.X;
-			Y1+=Problem->Translation.Y;
+			X1+=static_cast<size_t>(Problem->Translation.X);
+			Y1+=static_cast<size_t>(Problem->Translation.Y);
 			TransformExternCon(X1,Y1);
 		}
 		else
 		{
-			X1+=Translation.X;
-			Y1+=Translation.Y;
+			X1+=static_cast<size_t>(Translation.X);
+			Y1+=static_cast<size_t>(Translation.Y);
 		}
 
 		if(p()->Id2==Problem->Problem.GetId())
 		{
-			X2+=Problem->Translation.X;
-			Y2+=Problem->Translation.Y;
+			X2+=static_cast<size_t>(Problem->Translation.X);
+			Y2+=static_cast<size_t>(Problem->Translation.Y);
 			TransformExternCon(X2,Y2);
 		}
 		else
 		{
-			X2+=Translation.X;
-			Y2+=Translation.Y;
+			X2+=static_cast<size_t>(Translation.X);
+			Y2+=static_cast<size_t>(Translation.Y);
 		}
 
 		if(c)
@@ -506,7 +506,7 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 				static_cast<int>((Problem->Limits.X+1)*FactorX),static_cast<int>((Problem->Limits.Y+1)*FactorY));
 			unsigned j;
 			RGeoInfo* info;
-			tCoord x,y;
+			int x,y;
 			Painter->setPen(black);
 			Painter->setBrush(SolidPattern);
 			info=Infos->GetPtr<unsigned int>(Problem->Problem.GetId());
@@ -517,8 +517,8 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 				{
 					for(j=0;j<tab()->NbPos;j++)
 					{
-						x=tab()->Pos[j].X;
-						y=tab()->Pos[j].Y;
+						x=static_cast<size_t>(tab()->Pos[j].X);
+						y=static_cast<size_t>(tab()->Pos[j].Y);
 						TransformExternCon(x,y);
 						Painter->drawRect(RealToScreenX(x-1),RealToScreenY(y+1),static_cast<int>(3*FactorX),static_cast<int>(3*FactorY));
 					}
@@ -599,7 +599,11 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 				Pos=Pos2;
 				if(Cur()->GetObj()->GetId()==Problem->Problem.GetId())
 				{
-					AdaptExternCon(Pos.X,Pos.Y);
+					int x=static_cast<int>(Pos.X);
+					int y=static_cast<int>(Pos.Y);
+					AdaptExternCon(x,y);
+					Pos.X=x;
+					Pos.Y=y;
 				}
 				if(Cur()->IsIn(Pos))
 				{

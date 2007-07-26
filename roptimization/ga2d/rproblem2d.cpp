@@ -57,10 +57,10 @@ RProblem2D::RProblem2D(void)
 
 
 //------------------------------------------------------------------------------
-void RProblem2D::Load(const char* name)
+void RProblem2D::Load(const RURI& uri)
 {
 	RXMLStruct s;
-	RXMLFile f(name,&s);
+	RXMLFile f(uri,&s);
 	RXMLTag *tag;
 	unsigned int i,X,Y;
 	RString Attr;
@@ -296,14 +296,14 @@ void RProblem2D::DetermineLimit(void)
 	unsigned int j;
 
 	Problem.Polygon.Boundary(r);
-	GlobalLimits.X = r.Width();
-	GlobalLimits.Y = r.Height();
+	GlobalLimits.X = r.GetWidth();
+	GlobalLimits.Y = r.GetHeight();
 	while(Cont)
 	{
-		r.Pt1.X++;
-		r.Pt1.Y++;
-		r.Pt2.X--;
-		r.Pt2.Y--;
+		r.X1++;
+		r.Y1++;
+		r.X2--;
+		r.Y2--;
 		Cont=false;
 		RCursor<RObj2DConnector> con(Problem.Connectors);
 		for(con.Start();!con.End();con.Next())
@@ -313,9 +313,9 @@ void RProblem2D::DetermineLimit(void)
 					Cont=true;
 		}
 	}
-	Limits.X = r.Width();
-	Limits.Y = r.Height();
-	Translation=r.Pt1;
+	Limits.X = r.GetWidth();
+	Limits.Y = r.GetHeight();
+	Translation=r.GetPt1();
 
 	// Translate the Connectors Position.
 //	for(i=Problem.Connectors.NbPtr+1,con=Problem.Connectors.Tab;--i;con++)

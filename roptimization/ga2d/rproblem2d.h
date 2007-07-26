@@ -95,9 +95,9 @@ public:
 
 	/**
 	* Load a problem from a XML file.
-	* @param name           Name of the XML file.
+	* @param uri             URI of the XML file.
 	*/
-	void Load(const char* name);
+	void Load(const RURI& uri);
 
 	/**
 	* Clears the problem.

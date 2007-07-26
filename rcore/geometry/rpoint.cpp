@@ -6,7 +6,7 @@
 
 	Point - Implementation.
 
-	Copyright 1999-2006 by the Université Libre de Bruxelles.
+	Copyright 1999-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -34,6 +34,7 @@
 // include files for R Project
 #include <rstd.h>
 #include <rpoint.h>
+#include <rtextfile.h>
 using namespace R;
 using namespace std;
 
@@ -53,7 +54,7 @@ RPoint::RPoint(void)
 
 
 //------------------------------------------------------------------------------
-RPoint::RPoint(const tCoord x,const tCoord y)
+RPoint::RPoint(tCoord x,tCoord y)
 {
 	X=x;
 	Y=y;
@@ -69,16 +70,16 @@ RPoint::RPoint(const RPoint& pt)
 
 
 //------------------------------------------------------------------------------
-bool RPoint::Near(const RPoint* pt) const
+bool RPoint::Near(const RPoint& pt) const
 {
-	return((labs(X-pt->X)<=1)&&(labs(Y-pt->Y)<=1));
+	return((Abs(X-pt.X)<=1)&&(Abs(Y-pt.Y)<=1));
 }
 
 
 //------------------------------------------------------------------------------
 tCoord RPoint::ManhattanDist(const RPoint& pt) const
 {
-	return(labs(X-pt.X)+labs(Y-pt.Y));
+	return(Abs(X-pt.X)+Abs(Y-pt.Y));
 }
 
 
@@ -94,18 +95,18 @@ double RPoint::EuclideanDist(const RPoint& pt) const
 
 
 //------------------------------------------------------------------------------
-RDirection RPoint::Classify(const RPoint* p0,const RPoint* p1) const
+RDirection RPoint::Classify(const RPoint& p0,const RPoint& p1) const
 {
-	RPoint a=(*p1)-(*p0);
-	RPoint b=(*this)-(*p0);
+	RPoint a=p1-p0;
+	RPoint b=(*this)-p0;
 	double sa=a.X*b.Y-b.X*a.Y;
 
 	if(sa>Epsi) return(Left);
 	if(sa<-Epsi) return(Right);
 	if(((a.X*b.X)<Epsi)||((a.Y*b.Y)<Epsi)) return(Behind);
 	if(a.Length()<b.Length()) return(Beyond);
-	if((*this)==(*p0)) return(Origin);
-	if((*this)==(*p1)) return(Destination);
+	if((*this)==p0) return(Origin);
+	if((*this)==p1) return(Destination);
 	return(Between);
 }
 

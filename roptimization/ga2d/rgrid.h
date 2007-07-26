@@ -71,12 +71,12 @@ class RGrid
 	/**
 	* Grid with X as entry.
 	*/
-	unsigned int **OccupiedX;
+	size_t** OccupiedX;
 
 	/**
 	* Grid with Y as entry.
 	*/
-	unsigned int **OccupiedY;
+	size_t** OccupiedY;
 
 public:
 
@@ -108,12 +108,28 @@ public:
 	bool IsOcc(tCoord x,tCoord y);
 
 	/**
+	 * Get the maximal X size allocated.
+	 * @return size_t
+	 */	
+	inline size_t GetMaxX(void) const {return(static_cast<size_t>(InternalLimits.X)+1);}
+	
+	/**
+	 * Get the maximal Y size allocated.
+	 * @return size_t
+	 */		
+	inline size_t GetMaxY(void) const {return(static_cast<size_t>(InternalLimits.Y)+1);}
+	
+	/**
 	* This function returns the identificator of the object placed at position
 	* (x,y) or NoObject if no object is placed there.
 	* @param x              X position.
 	* @param y              Y position.
 	*/
-	unsigned int GetObjId(tCoord x,tCoord y) {RReturnValIfFail(OccupiedX,false); return(OccupiedX[x][y]);}
+	inline unsigned int GetObjId(tCoord x,tCoord y)
+	{
+		RReturnValIfFail(OccupiedX,false);
+		return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]);
+	}
 
 	/**
 	* Clear the Grid.

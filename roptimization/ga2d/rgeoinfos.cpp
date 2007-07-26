@@ -73,9 +73,9 @@ void RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* selected
 
 	cont->ClearInfo();
 	Boundary(bound);
-	bound-=bound.Pt1;
-	bound.Pt2.X/=4;
-	bound.Pt2.Y/=4;
+	bound-=bound.GetPt1();
+	bound.X2/=4;
+	bound.Y2/=4;
 	Cons.GetBestsConnected(i1,i2,bound,selected);
 	if(!i1)
 	{
@@ -93,10 +93,10 @@ void RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* selected
 	cont->Add(this,i2);
 	i1->Boundary(bound);
 	i2->Boundary(r);
-	if(r.Pt1.X<bound.Pt1.X) bound.Pt1.X=r.Pt1.X;
-	if(r.Pt1.Y<bound.Pt1.Y) bound.Pt1.Y=r.Pt1.Y;
-	if(r.Pt2.X>bound.Pt2.X) bound.Pt2.X=r.Pt2.X;
-	if(r.Pt2.Y>bound.Pt2.Y) bound.Pt2.Y=r.Pt2.Y;
+	if(r.X1<bound.X1) bound.X1=r.X1;
+	if(r.Y1<bound.Y1) bound.Y1=r.Y1;
+	if(r.X2>bound.X2) bound.X2=r.X2;
+	if(r.Y2>bound.Y2) bound.Y2=r.Y2;
 	RCursor<RGeoInfo> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
@@ -117,16 +117,15 @@ void RGeoInfos::Boundary(RRect& rect)
 	unsigned int i;
 	RRect tmp;
 
-	rect.Pt1.X=rect.Pt1.Y=MaxCoord;
-	rect.Pt2.X=rect.Pt2.Y=0;
+	rect.Set(0,0,MaxCoord,MaxCoord);
 	RCursor<RGeoInfo> Cur(*this);
 	for(i=RealNb+1,Cur.Start();--i;Cur.Next())
 	{
 		Cur()->Boundary(tmp);
-		if(tmp.Pt1.X<rect.Pt1.X) rect.Pt1.X=tmp.Pt1.X;
-		if(tmp.Pt1.Y<rect.Pt1.Y) rect.Pt1.Y=tmp.Pt1.Y;
-		if(tmp.Pt2.X>rect.Pt2.X) rect.Pt2.X=tmp.Pt2.X;
-		if(tmp.Pt2.Y>rect.Pt2.Y) rect.Pt2.Y=tmp.Pt2.Y;
+		if(tmp.X1<rect.X1) rect.X1=tmp.X1;
+		if(tmp.Y1<rect.Y1) rect.Y1=tmp.Y1;
+		if(tmp.X2>rect.X2) rect.X2=tmp.X2;
+		if(tmp.Y2>rect.Y2) rect.Y2=tmp.Y2;
 	}
 }
 
