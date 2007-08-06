@@ -6,7 +6,7 @@
 
 	Attribute for a XML Tag - Header.
 
-	Copyright 2000-2005 by the Université Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -116,7 +116,13 @@ public:
 	int Compare(const RXMLAttr& attr) const {return(Name.Compare(attr.Name)); }
 
 	/**
-	* Return the name of the tag.
+	* Return the full name of the attribute (including the namespace).
+	* @returns a string containing the name.
+	*/
+	RString GetFullName(void) const;
+	
+	/**
+	* Return the name of the attribute.
 	* @returns a string containing the name.
 	*/
 	RString GetName(void) const {return(Name);}

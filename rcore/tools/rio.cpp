@@ -33,10 +33,46 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rio.h>
+#include <rfile.h>
 #include <rstring.h>
 #include <rfile.h>
 #include <rtextfile.h>
 using namespace R;
+
+
+
+//------------------------------------------------------------------------------
+//
+// class RIO::RSmartTempFile
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+RIO::RSmartTempFile::RSmartTempFile(void)
+	: Name(), Requested(false), Remove(false)
+{
+}
+
+
+//------------------------------------------------------------------------------
+RString RIO::RSmartTempFile::GetName(bool remove)
+{
+	Remove=remove;
+	if(!Requested)
+	{
+		Name=RFile::GetTempFile();
+		Requested=true;
+	}
+	return(Name);
+}
+
+
+//------------------------------------------------------------------------------
+RIO::RSmartTempFile::~RSmartTempFile(void)
+{
+	if(Remove)
+		RFile::RemoveFile(Name);
+}
 
 
 

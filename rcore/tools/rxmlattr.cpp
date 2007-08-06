@@ -6,7 +6,7 @@
 
 	Attribute for a XML Tag - Implementation.
 
-	Copyright 2000-2005 by the Université Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -61,6 +61,15 @@ RXMLAttr::RXMLAttr(const RString& name,const RString& value,RString* xmlns)
 RXMLAttr::RXMLAttr(const RString& name,const double value,RString* xmlns)
 	: Name(name), Value(RString::Number(value)), Namespace(xmlns)
 {
+}
+
+
+//-----------------------------------------------------------------------------
+RString RXMLAttr::GetFullName(void) const
+{
+	if(Namespace)
+		return((*Namespace)+":"+Name);
+	return(Name);
 }
 
 

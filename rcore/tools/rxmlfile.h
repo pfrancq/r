@@ -74,6 +74,11 @@ protected:
 	RXMLStruct* XMLStruct;
 
 	/**
+	 * The XML Structure was created by RXMLFile.
+	 */
+	bool NewStruct;
+	
+	/**
 	* Type of the document as defined in the XML file <!DOCTYPE >. If the tag
 	* is omitted, the string is empty.
 	*/
@@ -107,7 +112,8 @@ protected:
 public:
 
 	/**
-	* Construct a XML file.
+	* Construct a XML file. If the pointer to the XML structure is null, a
+	* default structure is created and destroy when the file is closed.
 	* @param uri            URI of the file.
 	* @param xmlstruct      The XML tree associated with the file
 	* @param encoding       The encoding scheme of the file.
@@ -158,14 +164,20 @@ public:
 	virtual void SetDocType(const RString& docType);
 
 	/**
-	* Open the file
+	* Open the file.
 	* @param mode           The open mode for the file.
 	*/
 	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
+	 * Close the file. If the XML structure was created by the file, it is 
+	 * deleted.
+	 */
+	virtual void Close(void);
+	
+	/**
 	* This function transform a given string that is supposed to represent a
-	* HTML code (ex: "Ucirc") into the corresponding character (ex: �.
+	* HTML code (ex: "Ucirc") into the corresponding character (ex: û).
 	* @param code           HTML Code.
 	* @returns A RChar corresponding to the code or 0 if the code is not
 	* identified.

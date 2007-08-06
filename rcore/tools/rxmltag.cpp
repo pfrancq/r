@@ -6,7 +6,7 @@
 
 	XML tag - Implementation.
 
-	Copyright 2000-2005 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -77,6 +77,15 @@ int RXMLTag::Compare(const RString& name) const
 int RXMLTag::Compare(const RXMLTag& tag) const
 {
 	return(Name.Compare(tag.Name));
+}
+
+
+//-----------------------------------------------------------------------------
+RString RXMLTag::GetFullName(void) const
+{
+	if(Namespace)
+		return((*Namespace)+":"+Name);
+	return(Name);
 }
 
 

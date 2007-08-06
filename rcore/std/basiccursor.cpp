@@ -143,16 +143,16 @@ void BasicCursor::GoTo(size_t idx)
 
 
 //-----------------------------------------------------------------------------
-void BasicCursor::Next(void)
+void BasicCursor::Next(size_t inc)
 {
 	if(!NbPtr) return;
 	if(ActPtr==LastPtr)
 		Start();
 	else
 	{
-		ActPtr++;
-		Current++;
-		while((ActPtr<LastPtr)&&(!(*Current)))
+		ActPtr+=inc;
+		Current+=inc;
+		while((ActPtr<LastPtr)&&(!(*Current)))     // Go to next non-null pointer
 		{
 			ActPtr++;
 			Current++;

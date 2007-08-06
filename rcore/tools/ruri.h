@@ -108,10 +108,36 @@ class RURI : public RString
 public:
 	
 	/**
+	* Undefined uniform resource identifier.
+	*/
+	static const RURI Null;
+
+private:
+	
+	/**
+	 * Default constructor.
+	 */
+	RURI(void);
+	
+public:
+	
+	/**
 	 * Constructor of uniform resource identifier.
 	 * @param uri            String representing the URI.
 	 */
 	RURI(const RString& uri);
+
+	/**
+	 * Constructor of uniform resource identifier.
+	 * @param uri            String representing the URI.
+	 */
+	RURI(const char* uri);
+
+	/**
+	 * Copy constructor.
+	 * @param uri            Uniform resource identifier.
+	 */
+	RURI(const RURI& uri);
 	
 private:
 	
@@ -136,7 +162,19 @@ public:
 	 * Compare method used by R::RContainer.
 	 * @param uri            URI used for the comparisons.
 	 */
-	int Compare(const RURI& uri) const {return(Compare(uri));}
+	int Compare(const RURI& uri) const {return(RString::Compare(uri));}
+	
+	/**
+	 * Compare method used by R::RContainer.
+	 * @param uri            URI used for the comparisons.
+	 */
+	int Compare(const RString& uri) const {return(RString::Compare(uri));}
+	
+	/**
+	 * Compare method used by R::RContainer.
+	 * @param uri            URI used for the comparisons.
+	 */
+	int Compare(const char* uri) const {return(RString::Compare(uri));}
 
 	/**
 	 * Get the Scheme part of the uniform resource identifier.

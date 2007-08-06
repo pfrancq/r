@@ -53,7 +53,7 @@ RXMLStruct::RXMLStruct(void)
 
 	
 //------------------------------------------------------------------------------
-RString* RXMLStruct::GetNamespace(const RString& xmlns)
+RURI* RXMLStruct::GetNamespace(const RString& xmlns)
 {
 	return(Namespaces.GetInsertPtr(xmlns));
 }
@@ -154,6 +154,17 @@ RString RXMLStruct::GetEncoding(void) const
 
 
 //------------------------------------------------------------------------------
+void RXMLStruct::Clear(void)
+{
+	RTree<RXMLTag,true,false>::Clear();
+	Entities.Clear();
+	Version.Clear();
+	Encoding.Clear();
+	Namespaces.Clear();	
+}
+
+
+//------------------------------------------------------------------------------
 bool RXMLStruct::Compare(const RXMLTag* tag1,const RXMLTag* tag2)
 {
 	// Test the name
@@ -184,14 +195,20 @@ bool RXMLStruct::Merge(const RXMLStruct& xml)
 //------------------------------------------------------------------------------
 RXMLTag* RXMLStruct::NewTag(const RString& tag,const RString& xmlns)
 {
-	return(new RXMLTag(tag,GetNamespace(xmlns)));
+	RURI* uri(0);
+	if(!xmlns.IsEmpty())
+		uri=GetNamespace(xmlns);
+	return(new RXMLTag(tag,uri));
 }
 
 
 //------------------------------------------------------------------------------
 RXMLAttr* RXMLStruct::NewAttr(const RString& name,const RString& value,const RString& xmlns)
 {
-	return(new RXMLAttr(name,value,GetNamespace(xmlns)));
+	RURI* uri(0);
+	if(!xmlns.IsEmpty())
+		uri=GetNamespace(xmlns);	
+	return(new RXMLAttr(name,value,uri));
 }
 
 

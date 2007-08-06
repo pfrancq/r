@@ -129,24 +129,15 @@ RDownload::RDownload(void)
 
 
 //------------------------------------------------------------------------------
-void RDownload::DownloadFile(const RURI& uri,RString& tmpFile)
+void RDownload::DownloadFile(const RURI& uri,const RString& local)
 {
-	// Find a local temporary file if tmpFile not specified else use the one specified
-	if(tmpFile.IsEmpty())
-	{
-		char filename[L_tmpnam+1];
-		(*filename)=0;
-		tmpnam(filename);
-		tmpFile=filename;
-	}
-
 	// Init Part
 	ValidContent=true;  // Suppose the content is OK
 	MIME="";            // No MIME type.
 	First=true;
-	Stream=fopen(tmpFile, "wb");
+	Stream=fopen(local, "wb");
 	if(!Stream)
-		throw RException("Cannot create temporary file "+tmpFile);
+		throw RException("Cannot create file '"+local+"'");
 	
 	// Download the file
 	curl_easy_setopt(Lib, CURLOPT_URL, uri.Latin1());

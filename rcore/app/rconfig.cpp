@@ -115,16 +115,19 @@ void RConfig::SetConfigInfos(const RString& cat,const RString& name)
 void RConfig::Load(bool global)
 {
 	RXMLStruct Config;
-	RString Where;
 
 	if(global)
 	{
 		// Load first the default config
-		Where="/usr/r/config/"+Category+"/"+Name+".config";
+		RURI Where("/usr/r/config/"+Category+"/"+Name+".config");
 		try
 		{
 			RXMLFile File(Where,Config);
 			File.Open(R::RIO::Read);
+		}
+		catch(RException& e)
+		{
+			std::cout<<"Error "<<e.GetMsg()<<std::endl;
 		}
 		catch(...)
 		{
@@ -135,12 +138,12 @@ void RConfig::Load(bool global)
 	// Load user specific config
 	RXMLTag* Root=Config.GetTop();
 	RString Home=getenv("HOME");
-	Where=Home+"/.r/config/"+Category+"/"+Name+".config";
 	try
 	{
+		RURI Where(Home+"/.r/config/"+Category+"/"+Name+".config");
 		if(Root)
 		{
-			RXMLStruct Local;
+			RXMLStruct Local;			
 			RXMLFile File(Where,Local);
 			File.Open(R::RIO::Read);
 			Config.Merge(Local);
@@ -152,9 +155,13 @@ void RConfig::Load(bool global)
 			Root=Config.GetTop();
 		}
 	}
+	catch(RException& e)
+	{
+		std::cout<<"Error "<<e.GetMsg()<<std::endl;
+	}	
 	catch(...)
 	{
-		std::cout<<"Warning: Local config file '"<<Where<<"' not found."<<std::endl;
+		std::cout<<"Warning: Local config file '"<<Home+"/.r/config/"+Category+"/"+Name+".config"<<"' not found."<<std::endl;
 	}
 
 	// Create the parameters based on the xml structure

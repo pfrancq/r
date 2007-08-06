@@ -129,6 +129,12 @@ public:
 	int Compare(const RXMLTag& tag) const;
 
 	/**
+	* Return the full name of the tag (including the namespace).
+	* @returns a string containing the name.
+	*/
+	RString GetFullName(void) const;
+
+	/**
 	* Return the name of the tag.
 	* @returns a string containing the name.
 	*/

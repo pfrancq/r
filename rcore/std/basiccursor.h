@@ -173,9 +173,11 @@ public:
 	inline bool IsAt(size_t idx) const {return(ActPtr==idx);}
 
 	/**
-	* Goto the next element, if the end is reached, go to the beginning.
+	* Go to a given number of next elements. If the end is reached, go to the
+	* beginning.
+	* @param inc             Number of elements to go to.
 	*/
-	void Next(void);
+	void Next(size_t inc=1);
 };
 
 

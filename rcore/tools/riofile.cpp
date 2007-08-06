@@ -99,6 +99,8 @@ void RIOFile::Open(RIO::ModeType mode)
 		local=true;
 		File=URI.GetPath();
 	}
+	else
+		File=RFile::GetTempFile();  // File must be download in a temporary file
 	
 	RFile::Open(mode);
 	switch(Mode)

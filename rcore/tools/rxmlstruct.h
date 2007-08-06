@@ -102,7 +102,7 @@ public:
 	 * Get a pointer to a XML namespace.
 	 * @param xmlns          Namespace.
 	 */
-	RString* GetNamespace(const RString& xmlns);
+	RURI* GetNamespace(const RString& xmlns);
 	
 	/**
 	 * Get a cursor over all XML namespaces used by this XML structire.
@@ -192,6 +192,11 @@ public:
 	*/
 	RString GetEncoding(void) const;
 
+	/**
+	 * Clear the XML structure.
+	 */
+	virtual void Clear(void);
+	
 	/**
 	* Compare two tags to see if it is the same tag. By default, the names
 	* must be the same, and that all common attributes have the same values.

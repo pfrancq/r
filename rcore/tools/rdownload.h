@@ -114,13 +114,11 @@ private:
 public:
 
 	/**
-	* Download and store locally a document given by an URI. If the tmpFile contains
-	* an URL, the temporary document will be saved using this filename else a file is
-	* created with a random name
+	* Download a document given by an URI and store it in a local file.
 	* @param uri            URI of the document.
-	* @param tmpFile        Temporary file created.
+	* @param local          Local file where to store.
 	*/
-	virtual void DownloadFile(const RURI& uri,R::RString& tmpFile);
+	virtual void DownloadFile(const RURI& uri,const R::RString& local);
 
 	/**
 	* Delete a temporary copy of a file created by the manager. This method is
