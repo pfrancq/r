@@ -429,11 +429,20 @@ public:
 	*/
 	RTextFile& operator>>(unsigned long& nb);
 
+protected:
+	
 	/**
-	* Return the next float contained in the file.
+	* Return a next string contained in the that should be a real number with
+	* the following pattern:
+	* @code
+	* [whitespaces][+|-][nnnnn][.nnnnn][e|E[+|-]nnnn]
+	* @endcode
+	* @return RString.
 	*/
-	float GetFloat(void);
+	RString GetRealNb(void);
 
+public:
+	
 	/**
 	* >> Operator for float.
 	*/
@@ -443,6 +452,11 @@ public:
 	* >> Operator for a double.
 	*/
 	RTextFile& operator>>(double& nb);
+	
+	/**
+	* >> Operator for a long double.
+	*/
+	RTextFile& operator>>(long double& nb);
 
 	/**
 	* Write an end of line in the file.
@@ -548,16 +562,36 @@ public:
 	* Write a char in the file.
 	*/
 	void WriteChar(const char c);
+	
+	/**
+	* Write a float.
+	*/
+	void WriteFloat(const float nb);
 
 	/**
-	* Write a double
+	* << Operator for float.
 	*/
-	void WriteDouble(const double d);
+	RTextFile& operator<<(const float nb);
+
+	/**
+	* Write a double.
+	*/
+	void WriteDouble(const double nb);
 
 	/**
 	* << Operator for double.
 	*/
-	RTextFile& operator<<(const double d);
+	RTextFile& operator<<(const double nb);
+	
+	/**
+	* Write a long double
+	*/
+	void WriteLongDouble(const long double nb);
+
+	/**
+	* << Operator for long double.
+	*/
+	RTextFile& operator<<(const long double nb);
 
 	/**
 	* Write the time in the file. If the time is not the first thing on the line,

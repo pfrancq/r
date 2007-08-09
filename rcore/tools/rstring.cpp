@@ -744,7 +744,7 @@ RString RString::Number(const float nb)
 {
 	char Tmp[20];
 
-	sprintf(Tmp,"%f",nb);
+	sprintf(Tmp,"%G",nb);
 	return(RString(Tmp));
 }
 
@@ -754,7 +754,17 @@ RString RString::Number(const double nb)
 {
 	char Tmp[20];
 
-	sprintf(Tmp,"%f",nb);
+	sprintf(Tmp,"%G",nb);
+	return(RString(Tmp));
+}
+
+
+//-----------------------------------------------------------------------------
+RString RString::Number(const long double nb)
+{
+	char Tmp[20];
+
+	sprintf(Tmp,"%LG",nb);
 	return(RString(Tmp));
 }
 

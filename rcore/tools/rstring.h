@@ -442,6 +442,11 @@ public:
 	*/
 	static RString Number(const double nb);
 
+	/**
+	* Transform a long double to a string.
+	*/
+	static RString Number(const long double nb);
+	
 private:
 
 	/**

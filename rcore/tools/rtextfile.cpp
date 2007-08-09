@@ -681,13 +681,11 @@ RTextFile& RTextFile::operator>>(unsigned long &nb)
 
 
 //------------------------------------------------------------------------------
-float RTextFile::GetFloat(void)
+RString RTextFile::GetRealNb(void)
 {
-	//Patern [whitespaces][+|-][nnnnn][.nnnnn][e|E[+|-]nnnn]
-	float nb;
-	char* ptr;
 	RString str;
-
+	
+	// Patern [whitespaces][+|-][nnnnn][.nnnnn][e|E[+|-]nnnn]
 	SkipSpaces();
 
 	//Check for sign
@@ -731,18 +729,19 @@ float RTextFile::GetFloat(void)
 	}
 
 	SkipEmptyLines();
-
-	nb=strtof(str,&ptr);
-	if(ptr==str)
-		throw RIOException(this,"No Float");
-	return(nb);
+	
+	return(str);
 }
 
 
 //------------------------------------------------------------------------------
 RTextFile& RTextFile::operator>>(float& nb)
 {
-	nb=GetFloat();
+	char* ptr;
+	RString str=GetRealNb();
+	nb=strtof(str,&ptr);
+	if(ptr==str)
+		throw RIOException(this,"No Float");
 	return(*this);
 }
 
@@ -750,7 +749,23 @@ RTextFile& RTextFile::operator>>(float& nb)
 //------------------------------------------------------------------------------
 RTextFile& RTextFile::operator>>(double& nb)
 {
-	nb=GetFloat();
+	char* ptr;
+	RString str=GetRealNb();
+	nb=strtod(str,&ptr);
+	if(ptr==str)
+		throw RIOException(this,"No Float");
+	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+RTextFile& RTextFile::operator>>(long double& nb)
+{
+	char* ptr;
+	RString str=GetRealNb();
+	nb=strtold(str,&ptr);
+	if(ptr==str)
+		throw RIOException(this,"No Float");
 	return(*this);
 }
 
@@ -934,17 +949,49 @@ RTextFile& RTextFile::operator<<(const char c)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteDouble(const double d)
+void RTextFile::WriteFloat(const float nb)
 {
-	RString str=RString::Number(d);
+	RString str=RString::Number(nb);
 	WriteStr(str);
 }
 
 
 //------------------------------------------------------------------------------
-RTextFile& RTextFile::operator<<(const double d)
+RTextFile& RTextFile::operator<<(const float nb)
 {
-	WriteDouble(d);
+	WriteFloat(nb);
+	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+void RTextFile::WriteDouble(const double nb)
+{
+	RString str=RString::Number(nb);
+	WriteStr(str);
+}
+
+
+//------------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const double nb)
+{
+	WriteDouble(nb);
+	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+void RTextFile::WriteLongDouble(const long double nb)
+{
+	RString str=RString::Number(nb);
+	WriteStr(str);
+}
+
+
+//------------------------------------------------------------------------------
+RTextFile& RTextFile::operator<<(const long double nb)
+{
+	WriteLongDouble(nb);
 	return(*this);
 }
 
