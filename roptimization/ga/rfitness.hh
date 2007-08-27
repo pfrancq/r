@@ -6,7 +6,7 @@
 
 	Fitness for Chromsomes of Genetic Algorithms - Inline Implementation
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2007 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -64,7 +64,7 @@ template<class cVal,bool Max>
 
 //------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator==(const RFitness &f)
+	inline bool RFitness<cVal,Max>::operator==(const RFitness &f) const
 {
 	return(Value==f.Value);
 }
@@ -72,7 +72,7 @@ template<class cVal,bool Max>
 
 //------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator!=(const RFitness &f)
+	inline bool RFitness<cVal,Max>::operator!=(const RFitness &f) const
 {
 	return(Value!=f.Value);
 }
@@ -80,7 +80,7 @@ template<class cVal,bool Max>
 
 //------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator>(const RFitness &f)
+	inline bool RFitness<cVal,Max>::operator>(const RFitness &f) const
 {
 	if(Max)
 		return(Value>f.Value);
@@ -91,7 +91,7 @@ template<class cVal,bool Max>
 
 //------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::operator<(const RFitness &f)
+	inline bool RFitness<cVal,Max>::operator<(const RFitness &f) const
 {
 	if(Max)
 		return(Value<f.Value);
@@ -102,7 +102,7 @@ template<class cVal,bool Max>
 
 //------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::ToMaximize(void)
+	inline bool RFitness<cVal,Max>::ToMaximize(void) const
 {
 	return(Max);
 }
@@ -110,7 +110,7 @@ template<class cVal,bool Max>
 
 //------------------------------------------------------------------------------
 template<class cVal,bool Max>
-	inline bool RFitness<cVal,Max>::ToMinimize(void)
+	inline bool RFitness<cVal,Max>::ToMinimize(void) const
 {
 	return(!Max);
 }

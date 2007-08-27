@@ -104,17 +104,13 @@ void BasicContainer::Clear(bool bAlloc,size_t m,size_t i)
 			if(*ptr)
 				Delete(*ptr);
 		}
+		memset(Tab,0,MaxPtr*sizeof(void*));
 	}
 	LastPtr=NbPtr=0;
-	if(m)
-		MaxPtr=m;
 	if(i)
-		IncPtr=i;
-	if(!MaxPtr) MaxPtr=10;
-	if(!IncPtr) IncPtr=MaxPtr/2;
-	if(!IncPtr) IncPtr=10;
-	VerifyTab(MaxPtr);
-	memset(Tab,0,MaxPtr*sizeof(void*));
+		IncPtr=i;	
+	if(m)
+		VerifyTab(m);
 }
 
 

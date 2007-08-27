@@ -6,7 +6,7 @@
 
 	Double Hash Table Container - Header
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -48,40 +48,32 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* @param C                  The class of the element to be contained.
-* @param tSize1             First Size of the hash table.
-* @param tSize2             Second Size of the hash table.
-* @param bAlloc             Specify if the elements are desallocated by the
-*                           container.
 * This class represent a container of elements (class C) with a double hash
 * table.
-*
+* @param C                  The class of the element to be contained.
+* @param bAlloc             Specify if the elements are desallocated by the
+*                           container.
 * To make the necessary comparaisons, the container uses member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
 * @code
 * int Compare(const TUse& tag) const;
 * int Compare(const TUse* tag) const;
-* static int HashIndex(const TUse& tag);
-* static int HashIndex(const TUse* tag);
-* static int HashIndex2(const TUse& tag);
-* static int HashIndex2(const TUse* tag);
+* size_t HashIndex(size_t idx) const;
 * @endcode
 *
 * The TUse represent a class or a structure used for the comparaisons. The
 * Compare methods are working like the strcmp function from the standard C/C++
 * library. The result returned specifies if the tag preceeds (>0), is the
 * same (0) or is after (<0) the element used. The HashIndex methods return the
-* hash index of the given argument for the first hash table. The HashIndex2
-* methods return the hash index of the given argument for the Second hash
-* table.
+* hash index of the given argument for the first hash table (idx=1) or for the
+* second hash table (idx=2).
 *
 * At least, a compare function and a HashIndex and HashIndex2 method must be
 * implemented in the class C:
 * @code
 * int Compare(const C&) const;
-* static int HashIndex(const C&);
-* static int HashIndex2(const C&);
+* size_t HashIndex(size_t idx) const;
 * @endcode
 *
 * Here is an example of class MyElement that will be contained in the
@@ -101,42 +93,22 @@ namespace R{
 *    MyElement(const MyElement& e) {Text=strdup(e.Text);}
 *    int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
 *    int Compare(const char* text) const {return(strcmp(Text,text));}
+*    size_t HashIndex(size_t idx) const
+*    {
+*       if(strlen(Text)<idx)
+*          return(26);
+*       int c=tolower(Text[idx]);
+*       if(c>='a'&&c<='z') return(c-'a');
+*       return(26);
+*    }
 *    void DoSomething(void) {cout<<Text<<endl;}
 *    ~MyElement(void) {free(Text);}
-*    static int HashIndex(const MyElement& e)
-*    {
-*       int c=(*e.Text);
-*       if(c>='a'&&c<='z') return(c-'a');
-*       if(c>='A'&&c<='Z') return(c-'A');
-*       return(26);
-*    }
-*    static int HashIndex2(const MyElement& e)
-*    {
-*       int c=(*(e.Text+1));
-*       if(c>='a'&&c<='z') return(c-'a');
-*       if(c>='A'&&c<='Z') return(c-'A');
-*       return(26);
-*    }
-*    static int HashIndex(const char *u)
-*    {
-*       int c=*u;
-*       if(c>='a'&&c<='z') return(c-'a');
-*       if(c>='A'&&c<='Z') return(c-'A');
-*       return(26);
-*    }
-*    static int HashIndex2(const char *u)
-*    {
-*       int c=*(u+1);
-*       if(c>='a'&&c<='z') return(c-'a');
-*       if(c>='A'&&c<='Z') return(c-'A');
-*       return(26);
-*    }
 * };
 *
 *
 * int main()
 * {
-*    RDblHashContainer<MyElement,27,27,true> c(20,10);
+*    RDblHashContainer<MyElement,true> c(27,27,20,10);
 *
 *    c.InsertPtr(new MyElement("Hello World"));
 *    if(c.IsIn<const char*>("Hello World"))
@@ -144,10 +116,10 @@ namespace R{
 *    c.InsertPtr(new MyElement("Other"));
 *
 *    // Parse the double hash table
-*    RCursor<RDblHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+*    RCursor<RDblHashContainer<MyElement,true>::Hash> Cur(c.GetCursor());
 *    for(Cur.Start();!Cur.End();Cur.Next())
 *    {
-*       RCursor<RDblHashContainer<MyElement,27,true>::Hash2> Cur2(*Cur());
+*       RCursor<RDblHashContainer<MyElement,true>::Hash2> Cur2(*Cur());
 *       for(Cur2.Start();!Cur2.End();Cur2.Next())
 *       {
 *          RCursor<MyElement> Cur3(*Cur2());
@@ -161,7 +133,7 @@ namespace R{
 * @author Pascal Francq
 * @short Double Hash Table Container.
 */
-template<class C,size_t tSize1,size_t tSize2,bool bAlloc>
+template<class C,bool bAlloc>
 	class RDblHashContainer
 {
 public:
@@ -186,42 +158,22 @@ public:
 	* 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
 	* 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
 	* 	int Compare(const char* text) const {return(strcmp(Text,text));}
+	*    size_t HashIndex(size_t idx) const
+	*    {
+	*       if(strlen(Text)<idx)
+	*          return(26);
+	*       int c=tolower(Text[idx]);
+	*       if(c>='a'&&c<='z') return(c-'a');
+	*       return(26);
+	*    }
 	* 	void DoSomething(void) {cout<<Text<<endl;}
 	*	~MyElement(void) {free(Text);}
-	* 	static int HashIndex(const MyElement& e)
-	* 	{
-	* 		int c=(*e.Text);
-	* 		if(c>='a'&&c<='z') return(c-'a');
-	* 		if(c>='A'&&c<='Z') return(c-'A');
-	* 		return(26);
-	* 	}
-	* 	static int HashIndex2(const MyElement& e)
-	* 	{
-	* 		int c=(*(e.Text+1));
-	* 		if(c>='a'&&c<='z') return(c-'a');
-	* 		if(c>='A'&&c<='Z') return(c-'A');
-	* 		return(26);
-	* 	}
-	* 	static int HashIndex(const char *u)
-	* 	{
-	* 		int c=*u;
-	* 		if(c>='a'&&c<='z') return(c-'a');
-	* 		if(c>='A'&&c<='Z') return(c-'A');
-	* 		return(26);
-	* 	}
-	* 	static int HashIndex2(const char *u)
-	* 	{
-	* 		int c=*(u+1);
-	* 		if(c>='a'&&c<='z') return(c-'a');
-	* 		if(c>='A'&&c<='Z') return(c-'A');
-	* 		return(26);
-	* 	}
 	* };
 	*
 	*
 	* int main()
 	* {
-	* 	RDblHashContainer<MyElement,27,27,true> c(20,10);
+	* 	RDblHashContainer<MyElement,true> c(27,27,20,10);
 	*
 	* 	c.InsertPtr(new MyElement("Hello World"));
 	* 	if(c.IsIn<const char*>("Hello World"))
@@ -229,10 +181,10 @@ public:
 	* 	c.InsertPtr(new MyElement("Other"));
 	*
 	*	// Parse the double hash table
-	*	RCursor<RDblHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+	*	RCursor<RDblHashContainer<MyElement,true>::Hash> Cur(c.GetCursor());
 	*	for(Cur.Start();!Cur.End();Cur.Next())
 	*	{
-	*		RCursor<RDblHashContainer<MyElement,27,true>::Hash2> Cur2(*Cur());
+	*		RCursor<RDblHashContainer<MyElement,true>::Hash2> Cur2(*Cur());
 	*		for(Cur2.Start();!Cur2.End();Cur2.Next())
 	*		{
 	*			RCursor<MyElement> Cur3(*Cur2());
@@ -276,36 +228,16 @@ public:
 	* 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
 	* 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
 	* 	int Compare(const char* text) const {return(strcmp(Text,text));}
+	*    size_t HashIndex(size_t idx) const
+	*    {
+	*       if(strlen(Text)<idx)
+	*          return(26);
+	*       int c=tolower(Text[idx]);
+	*       if(c>='a'&&c<='z') return(c-'a');
+	*       return(26);
+	*    }
 	* 	void DoSomething(void) {cout<<Text<<endl;}
 	*	~MyElement(void) {free(Text);}
-	* 	static int HashIndex(const MyElement& e)
-	* 	{
-	* 		int c=(*e.Text);
-	* 		if(c>='a'&&c<='z') return(c-'a');
-	* 		if(c>='A'&&c<='Z') return(c-'A');
-	* 		return(26);
-	* 	}
-	* 	static int HashIndex2(const MyElement& e)
-	* 	{
-	* 		int c=(*(e.Text+1));
-	* 		if(c>='a'&&c<='z') return(c-'a');
-	* 		if(c>='A'&&c<='Z') return(c-'A');
-	* 		return(26);
-	* 	}
-	* 	static int HashIndex(const char *u)
-	* 	{
-	* 		int c=*u;
-	* 		if(c>='a'&&c<='z') return(c-'a');
-	* 		if(c>='A'&&c<='Z') return(c-'A');
-	* 		return(26);
-	* 	}
-	* 	static int HashIndex2(const char *u)
-	* 	{
-	* 		int c=*(u+1);
-	* 		if(c>='a'&&c<='z') return(c-'a');
-	* 		if(c>='A'&&c<='Z') return(c-'A');
-	* 		return(26);
-	* 	}
 	* };
 	*
 	*
@@ -337,15 +269,16 @@ public:
 	{
 		/*
 		* Constructor.
+		* @param s               Size of the initial hash table.
 		* @param m               The initial maximal size of the array for a
 		*                        pair of index.
 		* @param i               The value used when increasing the array for a
 		*                        pair of index. If null value, the size is set
 		*                        to the half the maximal size.
 		*/
-		Hash(size_t m,size_t i) : RContainer<Hash2,true,true>(tSize2)
+		Hash(size_t s,size_t m,size_t i) : RContainer<Hash2,true,true>(s)
 		{
-			for(size_t pos=0;pos<tSize2;pos++)
+			for(size_t pos=0;pos<s;pos++)
 				InsertPtrAt(new Hash2(m,i),pos);
 		}
 
@@ -371,6 +304,34 @@ public:
 				Cur()->Clear();
 		}
 
+		/**
+		 * Get a pointer to the hash table.
+		 * @param hash           Hash index 1.
+		 * @param m              Maximum.
+		 * @param i              Increase.
+		 */
+		const Hash2* GetHash(size_t hash) const
+		{
+			const Hash2* ptr;
+			if((hash>this->MaxPtr)||(!(ptr=static_cast<Hash2*>(this->Tab[hash]))))
+				throw RException("Invalid hash index");
+			return(ptr);
+		}
+			
+		/**
+		 * Get a pointer to the hash table.
+		 * @param hash           Hash index 1.
+		 * @param m              Maximum.
+		 * @param i              Increase.
+		 */
+		Hash2* GetHash(size_t hash,size_t m,size_t i)
+		{
+			Hash2* ptr;
+			if((hash>this->MaxPtr)||(!(ptr=static_cast<Hash2*>(this->Tab[hash]))))
+				this->InsertPtrAt(ptr=new Hash2(m,i),hash);
+			return(ptr);
+		}
+			
 		friend class RDblHashContainer;
 	};
 
@@ -380,22 +341,39 @@ private:
 	* This container represents the hash table of the elements.
 	*/
 	RContainer<Hash,true,true> HashTable;
+	
+	/**
+	 * Initial size of the second hash index.
+	 */
+	size_t Size;
+	
+	/**
+	 * Maximum size of last container.
+	 */
+	size_t Max;
+	
+	/**
+	 * Incremental size of last container.
+	 */	
+	size_t Inc;
 
 public:
 
 	/**
 	* Construct a Hash container.
+	* @param s1              Size of the initial hash table.
+	* @param s2              Size of the second hash table.
 	* @param m               The initial maximal size of the array for a pair
 	*                        of index.
 	* @param i               The value used when increasing the array for a pair
 	*                        of index. If null value, the size is set to the
 	*                        half the maximal size.
 	*/
-	RDblHashContainer(size_t m,size_t i=0)
-		: HashTable(tSize1)
+	RDblHashContainer(size_t s1,size_t s2,size_t m,size_t i=0)
+		: HashTable(s1), Size(s2), Max(m), Inc(i)
 	{
-		for(size_t pos=0;pos<tSize1;pos++)
-			HashTable.InsertPtrAt(new Hash(m,i),pos);
+		for(size_t pos=0;pos<s1;pos++)
+			HashTable.InsertPtrAt(new Hash(Size,Max,Inc),pos);
 	}
 
 	/**
@@ -444,6 +422,34 @@ public:
 			Cur()->Clear();
 	}
 
+private:
+	
+	/**
+	 * Get a pointer to the hash table.
+	 * @param hash           Hash index.
+	 */
+	const Hash* GetHash(size_t hash) const
+	{
+		const Hash* ptr;
+		if((hash>HashTable.GetMaxPos())||(!(ptr=HashTable[hash])))
+			throw RException("Invalid hash index");
+		return(ptr);
+	}
+	
+	/**
+	 * Get a pointer to the hash table.
+	 * @param hash           Hash index.
+	 */
+	Hash* GetHash(size_t hash)
+	{
+		Hash* ptr;
+		if((hash>HashTable.GetMaxPos())||(!(ptr=HashTable[hash])))
+			HashTable.InsertPtrAt(ptr=new Hash(Size,Max,Inc),hash);
+		return(ptr);
+	}
+	
+public:
+	
 	/**
 	* Verify if an element is in the hash container.
 	* @param TUse           The type of tag, the hash container uses the
@@ -457,13 +463,9 @@ public:
 	*/
 	template<class TUse> inline bool IsIn(const TUse tag,bool sortkey=true) const
 	{
-		size_t hash1=C::HashIndex(tag);
-		if(hash1>=tSize1)
-			throw RException("Invalid first hash index");
-		size_t hash2=C::HashIndex2(tag);
-		if(hash2>=tSize2)
-			throw RException("Invalid second hash index");
-		return((*HashTable[hash1])[hash2]->IsIn<TUse>(tag,sortkey));
+		const Hash* ptr=GetHash(tag.HashIndex(1));
+		const Hash2* ptr2=ptr->GetHash(tag.HashIndex(2));
+		return(ptr2->IsIn<TUse>(tag,sortkey));
 	}
 
 	/**
@@ -478,13 +480,9 @@ public:
 	*/
 	template<class TUse> inline C* GetPtr(const TUse tag,bool sortkey=true) const
 	{
-		size_t hash1=C::HashIndex(tag);
-		if(hash1>=tSize1)
-			throw RException("Invalid first hash index");
-		size_t hash2=C::HashIndex2(tag);
-		if(hash2>=tSize2)
-			throw RException("Invalid second hash index");
-		return((*HashTable[hash1])[hash2]->GetPtr<TUse>(tag,sortkey));
+		const Hash* ptr=GetHash(tag.HashIndex(1));
+		const Hash2* ptr2=ptr->GetHash(tag.HashIndex(2));
+		return(ptr2->GetPtr<TUse>(tag,sortkey));
 	}
 
 	/**
@@ -501,13 +499,9 @@ public:
 	*/
 	template<class TUse> inline C* GetInsertPtr(const TUse tag,bool sortkey=true)
 	{
-		size_t hash1=C::HashIndex(tag);
-		if(hash1>=tSize1)
-			throw RException("Invalid first hash index");
-		size_t hash2=C::HashIndex2(tag);
-		if(hash2>=tSize2)
-			throw RException("Invalid second hash index");
-		return((*HashTable[hash1])[hash2]->GetInsertPtr<TUse>(tag,sortkey));
+		Hash* ptr=GetHash(tag.HashIndex(1));
+		Hash2* ptr2=ptr->GetHash(tag.HashIndex(2),Max,Inc);
+		return(ptr2->GetInsertPtr<TUse>(tag,sortkey));
 	}
 
 	/**
@@ -521,13 +515,9 @@ public:
 	inline void InsertPtr(const C* ins,bool del=false)
 	{
 		RReturnIfFail(ins);
-		size_t hash1=C::HashIndex(*ins);
-		if(hash1>=tSize1)
-			throw RException("Invalid first hash index");
-		size_t hash2=C::HashIndex2(*ins);
-		if(hash2>=tSize2)
-			throw RException("Invalid second hash index");
-		(*HashTable[hash1])[hash2]->InsertPtr(ins,del);
+		Hash* ptr=GetHash(ins->HashIndex(1));
+		Hash2* ptr2=ptr->GetHash(ins->HashIndex(2),Max,Inc);
+		ptr2->InsertPtr(ins,del);
 	}
 
 	/**
@@ -541,13 +531,9 @@ public:
 	*/
 	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=true)
 	{
-		size_t hash1=C::HashIndex(tag);
-		if(hash1>=tSize1)
-			throw RException("Invalid first hash index");
-		size_t hash2=C::HashIndex2(tag);
-		if(hash2>=tSize2)
-			throw RException("Invalid second hash index");
-		(*HashTable[hash1])[hash2]->DeletePtr<TUse>(tag,sortkey);
+		Hash* ptr=GetHash(tag.HashIndex(1));
+		Hash2* ptr2=ptr->GetHash(tag.HashIndex(2),Max,Inc);
+		ptr2->DeletePtr<TUse>(tag,sortkey);
 	}
 
 	/**

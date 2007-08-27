@@ -92,14 +92,6 @@ public:
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	class RInst : public RObject
 {
-	/**
-	* This function is used to make a sort of the chromosomes based on their fitness.
-	* @param a              The first chromosome.
-	* @param b              The second chromosome.
-	* @return a-b
-	*/
-	static int sort_function_cChromosome(const void *a,const void *b);
-
 public:
 
 	/**
@@ -142,6 +134,11 @@ protected:
 	*/
 	bool VerifyGA;
 
+	/**
+	 * Define if the post evalutation must be done.
+	 */
+	bool DoPostEvaluation;
+	
 public:
 
 	/**
@@ -149,6 +146,11 @@ public:
 	*/
 	cChromo** Chromosomes;
 
+	/**
+	 * The chromosomes ranked by fitness.
+	 */
+	cChromo** Ranked;
+	
 	/**
 	* The best chromosome ever calculated.
 	*/
@@ -159,6 +161,8 @@ public:
 	*/
 	cChromo* BestInPop;
 
+private:
+	
 	/**
 	* Size of the population.
 	*/
@@ -175,10 +179,35 @@ public:
 	unsigned int AgeBest;
 
 	/**
+	* Age of the best chromosome ever calculate.
+	*/
+	unsigned int AgeBestPop;
+
+	/**
 	* Number of crossovers to be done in a generation.
 	*/
 	unsigned int NbCross;
 
+	/**
+	* Frequence of mutation.
+	*/
+	unsigned int FreqMutation;
+
+	/**
+	* Frequence of mutation of the best chromosome.
+	*/
+	unsigned int FreqBestMutation;
+
+	/**
+	 * Number of mutations to do at each mutation operation.
+	 */
+	unsigned int NbMutations;
+	
+	/**
+	* Frequence of inversion.
+	*/
+	unsigned int FreqInversion;
+		
 	/**
 	* Number of generation left before next mutation.
 	*/
@@ -188,34 +217,14 @@ public:
 	* Number of generation left before mutation of the best chromosome.
 	*/
 	unsigned int AgeNextBestMutation;
-
+	
 	/**
 	* Number of generation left before next inversion.
 	*/
 	unsigned int AgeNextInversion;
 
-	/**
-	* Frequence of inversion.
-	*/
-	unsigned int FreqInversion;
-
-	/**
-	* Age of the best chromosome ever calculate.
-	*/
-	unsigned int AgeBestPop;
-
-	/**
-	* Age of the best chromosome before insertion of mutation of it in the
-	* population.
-	*/
-	unsigned int MaxBestPopAge;
-
-	/**
-	* Age of the best chromosome ever calculate before insertion of mutation of it
-	* in the population.
-	*/
-	unsigned int MaxBestAge;
-
+public:
+	
 	/**
 	* Construct the instance.
 	* @param popsize        The size of the population.
@@ -230,6 +239,15 @@ public:
 	virtual RCString GetClassName(void) const {return("RInst");}
 
 	/**
+	 * Set the parameters of the mutation operator.
+	 * @param agemut         Number of generations between mutations.
+	 * @param agebestmut     Number of generations between mutations of the
+	 *                       best chromosome.
+	 * @param nbmut          Number of mutations to do at each mutation operation.
+	 */
+	void SetMutationParams(unsigned int agemut,unsigned int agebestmut,unsigned int nbmut);
+	 
+	/**
 	* Set if the verifications must be done.
 	* @param verify          Verify?
 	*/
@@ -241,10 +259,42 @@ public:
 	inline bool GetVerify(void) const {return(VerifyGA);}
 
 	/**
+	 * Get the size of the population.
+	 */
+	inline unsigned int GetPopSize(void) const {return(PopSize);}
+	
+	/**
+	 * Number of generations run.
+	 */
+	inline unsigned int GetGen(void) const {return(Gen);}
+	
+	/**
 	* Initialisation of the instance.
 	*/
 	virtual void Init(void);
 
+	/**
+	* This function is used to make a sort of the chromosomes based on their
+	* fitness where the best chromosomes are at the top.
+	* @param a              The first chromosome.
+	* @param b              The second chromosome.
+	* @return a-b
+	*/
+	static int sort_function_cChromosome(const void *a,const void *b);
+
+	/**
+	* Analyse the population to find the best chromosome of the population and
+	* to verify if the best chromosome ever calculated has to replaced. When
+	* needed, the chromosomes are evaluated.
+	*/
+	virtual void AnalysePop(void);
+	
+	/**
+	* Do some post evluation traitment. It can be used to implement a
+	* multi-criteria approach like PROMETHEE to classify the chromosomes.
+	*/
+	virtual void PostEvaluate(void) {}
+		
 	/**
 	* Random construction of the chromosomes.
 	* @return The function returns true if all chromosomes are constructed.
@@ -268,23 +318,6 @@ public:
 	* each generation.
 	*/
 	virtual void DisplayInfos(void) {}
-
-	/**
-	* This function does the evaluation of the chromosomes when it is needed.
-	*/
-	virtual void Evaluate(void);
-
-	/**
-	* Do some post evluation traitment. It can be used to implement a
-	* multi-criteria approach like PROMETHEE to classify the chromosomes.
-	*/
-	virtual void PostEvaluate(void) {}
-
-	/**
-	* Analyse the population to find the best chromosome of the population and
-	* to verify if the best chromosome ever calculated has to replaced.
-	*/
-	virtual void AnalysePop(void);
 
 	/**
 	* This function does the crossovers for a generation. Actually, the

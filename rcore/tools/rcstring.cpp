@@ -384,77 +384,12 @@ int RCString::Compare(const char* src) const
 
 
 //-----------------------------------------------------------------------------
-int RCString::HashIndex(const RCString& src)
+size_t RCString::HashIndex(size_t idx) const
 {
-	char c;
-	char u;
-	char a;
-
-	if(!src) return(26);
-	c=(*src.Data->Text);
-	if(!c) return(26);
-	u=tolower(c);
-	a=char('a');
-	if((u>=a)&&(u<=char('z')))
-		return(u-a);
-	return(26);
-}
-
-
-//-----------------------------------------------------------------------------
-int RCString::HashIndex(const char* src)
-{
-	char c;
-	char u;
-	char a;
-
-	if(!src) return(26);
-	c=(*src);
-	if(!c) return(26);
-	u=tolower(c);
-	a=char('a');
-	if((u>=a)&&(u<=char('z')))
-		return(u-a);
-	return(26);
-}
-
-
-//-----------------------------------------------------------------------------
-int RCString::HashIndex2(const RCString& src)
-{
-	char c;
-	char u;
-	char a;
-
-	if(!src) return(26);
-	c=*(src.Data->Text);
-	if(!c) return(26);
-	c=(*(src.Data->Text+1));
-	if(!c) return(26);
-	u=tolower(c);
-	a=char('a');
-	if((u>=a)&&(u<=char('z')))
-		return(u-a);
-	return(26);
-}
-
-
-//-----------------------------------------------------------------------------
-int RCString::HashIndex2(const char* src)
-{
-	char c;
-	char u;
-	char a;
-
-	if(!src) return(26);
-	c=*src;
-	if(!c) return(26);
-	c=(*(src+1));
-	if(!c) return(26);
-	u=tolower(c);
-	a=char('a');
-	if((u>=a)&&(u<=char('z')))
-		return(u-a);
+	if((!Data)||(Data->Len<idx)) return(26);
+	char c(tolower(Data->Text[idx-1]));
+	if((c>=char('a'))&&(c<=char('z')))
+		return(c-char('a'));
 	return(26);
 }
 

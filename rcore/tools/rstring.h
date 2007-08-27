@@ -352,52 +352,13 @@ public:
 	inline bool operator!=(const RChar* src) const {return(Compare(src));}
 
 	/**
-	* Return a number between 0 and 26 according to the first character of the
-	* string.
-	* @param str             String.
+	* Return a number between 0 and 26 according to the character at position
+	* idx in the string.
+	* @remark Supported values for idx are 1 and 2.
+	* @param idx             Index of hash asked.
 	* @see R::RHashContainer and R::RDblHashContainer.
 	*/
-	static int HashIndex(const RString& str);
-
-	/**
-	* Return a number between 0 and 26 according to the first character of the
-	* string.
-	* @param str             String.
-	* @see R::RHashContainer and R::RDblHashContainer.
-	*/
-	static int HashIndex(const char* str);
-
-	/**
-	* Return a number between 0 and 26 according to the first character of the
-	* string.
-	* @param str             String.
-	* @see R::RHashContainer and R::RDblHashContainer.
-	*/
-	static int HashIndex(const RChar* str);
-
-	/**
-	* Return a number between 0 and 26 according to the second character of the
-	* string.
-	* @param str             String.
-	* @see R::RHashContainer and R::RDblHashContainer.
-	*/
-	static int HashIndex2(const RString& str);
-
-	/**
-	* Return a number between 0 and 26 according to the second character of the
-	* string.
-	* @param str             String.
-	* @see R::RHashContainer and R::RDblHashContainer.
-	*/
-	static int HashIndex2(const char* str);
-
-	/**
-	* Return a number between 0 and 26 according to the second character of the
-	* string.
-	* @param str             String.
-	* @see R::RHashContainer and R::RDblHashContainer.
-	*/
-	static int HashIndex2(const RChar* str);
+	size_t HashIndex(size_t idx) const;
 
 	//-----------------------------------------------------------------------------
 	// Static conversion functions

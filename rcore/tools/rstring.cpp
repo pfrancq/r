@@ -503,115 +503,13 @@ int RString::Compare(const RChar* src) const
 
 
 //-----------------------------------------------------------------------------
-int RString::HashIndex(const RString& src)
+size_t RString::HashIndex(size_t idx) const
 {
-	RChar c;
-	UChar u;
-	UChar a;
-
-	if(!src.Data->Text) return(26);
-	c=(*src.Data->Text);
-	if(c.IsNull()) return(26);
-	u=RChar::ToLower(c).Unicode();
-	a=RChar('a').Unicode();
-	if((u>=a)&&(u<=RChar('z').Unicode()))
-		return(u-a);
-	return(26);
-}
-
-
-//-----------------------------------------------------------------------------
-int RString::HashIndex(const char* src)
-{
-	RChar c;
-	UChar u;
-	UChar a;
-
-	if(!src) return(26);
-	c=(*src);
-	if(c.IsNull()) return(26);
-	u=RChar::ToLower(c).Unicode();
-	a=RChar('a').Unicode();
-	if((u>=a)&&(u<=RChar('z').Unicode()))
-		return(u-a);
-	return(26);
-}
-
-
-//-----------------------------------------------------------------------------
-int RString::HashIndex(const RChar* src)
-{
-	RChar c;
-	UChar u;
-	UChar a;
-
-	if(!src) return(26);
-	c=(*src);
-	if(c.IsNull()) return(26);
-	u=RChar::ToLower(c).Unicode();
-	a=RChar('a').Unicode();
-	if((u>=a)&&(u<=RChar('z').Unicode()))
-		return(u-a);
-	return(26);
-}
-
-
-//-----------------------------------------------------------------------------
-int RString::HashIndex2(const RString& src)
-{
-	RChar c;
-	UChar u;
-	UChar a;
-
-	if(!src.Data->Text) return(26);
-	c=*(src.Data->Text);
-	if(c.IsNull()) return(26);
-	c=(*(src.Data->Text+1));
-	if(c.IsNull()) return(26);
-	u=RChar::ToLower(c).Unicode();
-	a=RChar('a').Unicode();
-	if((u>=a)&&(u<=RChar('z').Unicode()))
-		return(u-a);
-	return(26);
-}
-
-
-//-----------------------------------------------------------------------------
-int RString::HashIndex2(const char* src)
-{
-	RChar c;
-	UChar u;
-	UChar a;
-
-	if(!src) return(26);
-	c=*src;
-	if(c.IsNull()) return(26);
-	c=(*(src+1));
-	if(c.IsNull()) return(26);
-	u=RChar::ToLower(c).Unicode();
-	a=RChar('a').Unicode();
-	if((u>=a)&&(u<=RChar('z').Unicode()))
-		return(u-a);
-	return(26);
-}
-
-
-//-----------------------------------------------------------------------------
-int RString::HashIndex2(const RChar* src)
-{
-	RChar c;
-	UChar u;
-	UChar a;
-
-	if(!src) return(26);
-	c=*src;
-	if(c.IsNull()) return(26);
-	c=(*(src+1));
-	if(c.IsNull()) return(26);
-	u=RChar::ToLower(c).Unicode();
-	a=RChar('a').Unicode();
-	if((u>=a)&&(u<=RChar('z').Unicode()))
-		return(u-a);
+	if((!Data)||(Data->Len<idx)) return(26);
+	UChar c(RChar::ToLower(Data->Text[idx-1]).Unicode());
+	UChar a(RChar('a').Unicode());
+	if((c>=a)&&(c<=RChar('z').Unicode()))
+		return(c-a);
 	return(26);
 }
 

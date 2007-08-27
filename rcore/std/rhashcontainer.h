@@ -6,7 +6,7 @@
 
 	Single Hash Table Container - Header
 
-	Copyright 2000-2005 by the Université Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -47,20 +47,17 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
+* This class represent a container of elements (class C) with a hash table.
 * @param C                  The class of the element to be contained.
-* @param tSize              Size of the hash table.
 * @param bAlloc             Specify if the elements are desallocated by the
 *                           container.
-* This class represent a container of elements (class C) with a hash table.
-*
 * To make the necessary comparaisons, the container uses member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
 * @code
 * int Compare(const TUse& tag) const;
 * int Compare(const TUse* tag) const;
-* static int HashIndex(const TUse& tag);
-* static int HashIndex(const TUse* tag);
+* size_t HashIndex(size_t idx) const;
 * @endcode
 *
 * The TUse represent a class or a structure used for the comparaisons. The
@@ -73,7 +70,7 @@ namespace R{
 * the class C:
 * @code
 * int Compare(const C&) const;
-* static int HashIndex(const C&);
+* size_t HashIndex(size_t idx) const;
 * @endcode
 *
 * Here is an example of class MyElement that will be contained in the
@@ -93,22 +90,16 @@ namespace R{
 *    MyElement(const MyElement& e) {Text=strdup(e.Text);}
 *    int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
 *    int Compare(const char* text) const {return(strcmp(Text,text));}
+*    size_t HashIndex(size_t idx) const
+*    {
+*       if(strlen(Text)<idx)
+*          return(26);
+*       int c=tolower(Text[idx]);
+*       if(c>='a'&&c<='z') return(c-'a');
+*       return(26);
+*    }
 *    void DoSomething(void) {cout<<Text<<endl;}
 *    ~MyElement(void) {free(Text);}
-*    static int HashIndex(const char *u)
-*    {
-*       int c=*u;
-*       if(c>='a'&&c<='z') return(c-'a');
-*       if(c>='A'&&c<='Z') return(c-'A');
-*       return(26);
-*    }
-*    static int HashIndex(const MyElement& e)
-*    {
-*       int c=(*e.Text);
-*       if(c>='a'&&c<='z') return(c-'a');
-*       if(c>='A'&&c<='Z') return(c-'A');
-*       return(26);
-*    }
 * };
 *
 *
@@ -135,7 +126,7 @@ namespace R{
 * @author Pascal Francq
 * @short Single Hash Table Container.
 */
-template<class C,size_t tSize,bool bAlloc>
+template<class C,bool bAlloc>
 	class RHashContainer
 {
 public:
@@ -158,28 +149,22 @@ public:
 	* 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
 	* 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
 	* 	int Compare(const char* text) const {return(strcmp(Text,text));}
-	* 	void DoSomething(void) {cout<<Text<<endl;}
+	*    size_t HashIndex(size_t idx) const
+	*    {
+	*       if(strlen(Text)<idx)
+	*          return(26);
+	*       int c=tolower(Text[idx]);
+	*       if(c>='a'&&c<='z') return(c-'a');
+	*       return(26);
+    *    }
+ 	* 	void DoSomething(void) {cout<<Text<<endl;}
 	*	~MyElement(void) {free(Text);}
-	* 	static int HashIndex(const char *u)
-	* 	{
-	* 		int c=*u;
-	* 		if(c>='a'&&c<='z') return(c-'a');
-	* 		if(c>='A'&&c<='Z') return(c-'A');
-	* 		return(26);
-	* 	}
-	* 	static int HashIndex(const MyElement& e)
-	* 	{
-	* 		int c=(*e.Text);
-	* 		if(c>='a'&&c<='z') return(c-'a');
-	* 		if(c>='A'&&c<='Z') return(c-'A');
-	* 		return(26);
-	* 	}
 	* };
 	*
 	*
 	* int main()
 	* {
-	* 	RHashContainer<MyElement,27,true> c(20,10);
+	* 	RHashContainer<MyElement,true> c(27,20,10);
 	*
 	* 	c.InsertPtr(new MyElement("Hello World"));
 	* 	if(c.IsIn<const char*>("Hello World"))
@@ -187,7 +172,7 @@ public:
 	* 	c.InsertPtr(new MyElement("Other"));
 	*
 	*	// Parse the hash table
-	*	RCursor<RHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+	*	RCursor<RHashContainer<MyElement,true>::Hash> Cur(c.GetCursor());
 	*	for(Cur.Start();!Cur.End();Cur.Next())
 	*	{
 	*		RCursor<MyElement> Cur2(*Cur());
@@ -218,20 +203,31 @@ private:
 	*/
 	RContainer<Hash,true,true> HashTable;
 
+	/**
+	 * Maximum size of last container.
+	 */
+	size_t Max;
+	
+	/**
+	 * Incremental size of last container.
+	 */	
+	size_t Inc;
+	
 public:
 
 	/**
 	* Constructor of a hash container.
+	* @param s               Size of the initial hash table.
 	* @param m               The initial maximal size of the array for a index.
 	* @param i               The value used when increasing the array for a
 	*                        index. If null value, the size is set to the half
 	*                        of the maximal size.
 	*/
-	RHashContainer(size_t m,size_t i)
-		: HashTable(tSize)
+	RHashContainer(size_t s,size_t m,size_t i=0)
+		: HashTable(s), Max(m), Inc(i)
 	{
-		for(size_t pos=0;pos<tSize;pos++)
-			HashTable.InsertPtrAt(new Hash(m,i),pos);
+		for(size_t pos=0;pos<s;pos++)
+			HashTable.InsertPtrAt(new Hash(Max,Inc),pos);
 	}
 
 	/**
@@ -272,6 +268,34 @@ public:
 			Cur()->Clear();
 	}
 
+private:
+	
+	/**
+	 * Get a pointer to the hash table.
+	 * @param hash           Hash index.
+	 */
+	const Hash* GetHash(size_t hash) const
+	{
+		const Hash* ptr;
+		if((hash>HashTable.GetMaxPos())||(!(ptr=HashTable[hash])))
+			throw RException("Invalid hash index");
+		return(ptr);
+	}
+
+	/**
+	 * Get a pointer to the hash table.
+	 * @param hash           Hash index.
+	 */
+	Hash* GetHash(size_t hash)
+	{
+		Hash* ptr;
+		if((hash>HashTable.GetMaxPos())||(!(ptr=HashTable[hash])))
+			HashTable.InsertPtrAt(ptr=new Hash(Max,Inc),hash);
+		return(ptr);
+	}
+	
+public:
+	
 	/**
 	* Look if a certain element is in the container.
 	* @param TUse            The type of tag, the container uses the Compare(TUse &)
@@ -284,10 +308,9 @@ public:
 	*/
 	template<class TUse> inline bool IsIn(const TUse& tag,bool sortkey=true) const
 	{
-		size_t hash=C::HashIndex(tag);
-		if(hash>=tSize)
-			throw RException("Invalid hash index");
-		return(HashTable[hash]->IsIn<TUse>(tag,sortkey));
+		
+		const Hash* ptr=GetHash(tag.HashIndex(1));
+		return(ptr->IsIn<TUse>(tag,sortkey));
 	}
 
 	/**
@@ -302,10 +325,8 @@ public:
 	*/
 	template<class TUse> inline C* GetPtr(const TUse& tag,bool sortkey=true) const
 	{
-		size_t hash=C::HashIndex(tag);
-		if(hash>=tSize)
-			throw RException("Invalid hash index");
-		return(HashTable[hash]->GetPtr<TUse>(tag,sortkey));
+		const Hash* ptr=GetHash(tag.HashIndex(1));
+		return(ptr->GetPtr<TUse>(tag,sortkey));
 	}
 
 	/**
@@ -322,10 +343,8 @@ public:
 	*/
 	template<class TUse> inline C* GetInsertPtr(const TUse& tag,bool sortkey=true)
 	{
-		size_t hash=C::HashIndex(tag);
-		if(hash>=tSize)
-			throw RException("Invalid hash index");
-		return(HashTable[hash]->GetInsertPtr<TUse>(tag,sortkey));
+		Hash* ptr=GetHash(tag.HashIndex(1));
+		return(ptr->GetInsertPtr<TUse>(tag,sortkey));
 	}
 
 	/**
@@ -339,10 +358,8 @@ public:
 	inline void InsertPtr(const C* ins,bool del=false)
 	{
 		RReturnIfFail(ins);
-		size_t hash=C::HashIndex(*ins);
-		if(hash>=tSize)
-			throw RException("Invalid hash index");
-		HashTable[hash]->InsertPtr(ins,del);
+		Hash* ptr=GetHash(ins->HashIndex(1));
+		ptr->InsertPtr(ins,del);
 	}
 
 	/**
@@ -357,10 +374,8 @@ public:
 	*/
 	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=true)
 	{
-		size_t hash=C::HashIndex(tag);
-		if(hash>=tSize)
-			throw RException("Invalid hash index");
-		return(HashTable[hash]->DeletePtr<TUse>(tag,sortkey));
+		Hash* ptr=GetHash(tag.HashIndex(1));
+		ptr->DeletePtr<TUse>(tag,sortkey);
 	}
 
 	/**

@@ -54,18 +54,18 @@ template<class cInst,class cChromo>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,const RString& name,RDebug* debug)
-		: RObject(name), Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),bRandomConstruct(false),
-		  VerifyGA(false), Chromosomes(0),PopSize(popsize),Gen(0),AgeBest(0),AgeBestPop(0)
+		: RObject(name), Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),bRandomConstruct(false),		
+		  VerifyGA(false), DoPostEvaluation(false),
+		  Chromosomes(0), Ranked(0), PopSize(popsize), Gen(0), AgeBest(0), AgeBestPop(0)
 {
 	if(Debug)
 		Debug->BeginApp(GetName());
 	if(Debug)
 		Debug->BeginFunc("RInst","RInst");
-	MaxBestPopAge=5;
-	MaxBestAge=10;
 	FreqInversion=AgeNextInversion=10;
-	AgeNextMutation=MaxBestPopAge;
-	AgeNextBestMutation=MaxBestAge;
+	NbMutations=1;
+	FreqMutation=AgeNextMutation=5;
+	FreqBestMutation=AgeNextBestMutation=10;
 	BestInPop=BestChromosome=0;
 	Random = new RRandomGood(0);
 	Random->Reset(12345);
@@ -73,7 +73,19 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		Debug->EndFunc("RInst","RInst");
 }
 
-
+	
+//------------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	void RInst<cInst,cChromo,cFit,cThreadData>::SetMutationParams(unsigned int agemut,unsigned int agebestmut,unsigned int nbmut)
+{
+		if(nbmut>PopSize)
+			throw RGAException("Number of mutations cannot be greather than the population size");
+		NbMutations=nbmut;
+		FreqMutation=agemut;
+		FreqBestMutation=agebestmut;		
+}
+	
+	
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RInst<cInst,cChromo,cFit,cThreadData>::Init(void)
@@ -84,7 +96,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(PopSize)
 	{
 		Chromosomes=new cChromo*[PopSize];
+		Ranked=new cChromo*[PopSize];
 		memset(Chromosomes,0,PopSize*sizeof(cChromo*));
+		memset(Ranked,0,PopSize*sizeof(cChromo*));
 		NbCross=PopSize/4;
 		tmpChrom1=new cChromo*[PopSize];
 		tmpChrom2=new cChromo*[PopSize];
@@ -99,6 +113,87 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	for(i=0,C=Chromosomes;i<PopSize;C++,i++)
 		(*C)->Init(thDatas[0]);
 	BestChromosome->Init(thDatas[0]);
+}
+
+	
+//------------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	int RInst<cInst,cChromo,cFit,cThreadData>::sort_function_cChromosome(const void* a,const void* b)
+{
+	cFit* af=(*((cChromo**)a))->Fitness;
+	cFit* bf=(*((cChromo**)b))->Fitness;
+		
+	if((*af)==(*bf)) return(0);
+	if((*af)>(*bf))
+		return(-1);
+	else
+		return(1);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreaData>
+	void RInst<cInst,cChromo,cFit,cThreaData>::AnalysePop(void)
+{
+	unsigned int i;
+	cChromo **C;
+
+	if(Debug)
+		Debug->BeginFunc("AnalysePop","RInst");
+	
+	// Evaluate all the chromosomes if necessary
+	PostNotification("RInst::Interact");
+	for(i=PopSize+1,C=Chromosomes;--i;C++)
+	{
+		if((*C)->ToEval)
+		{
+			(*C)->Evaluate();
+			(*C)->ToEval=false;
+			DoPostEvaluation=true;
+			PostNotification("RInst::Interact");
+		}
+	}
+	PostNotification("RInst::Interact");
+	
+	// If necessary, do a post eveluation
+	if(DoPostEvaluation)
+	{
+		PostEvaluate();
+		DoPostEvaluation=true;
+	};
+	PostNotification("RInst::Interact");
+	
+	// Ranked the chromosomes and verify that the best of the population or the best ever have not changed.
+	memcpy(Ranked,Chromosomes,sizeof(cChromo*)*PopSize);
+	qsort(static_cast<void*>(Ranked),PopSize,sizeof(cChromo*),sort_function_cChromosome);
+	cChromo* best=Ranked[0];
+	if((*best->Fitness)>(*BestInPop->Fitness))
+	{
+		if(Debug)
+		{
+			static char tmp[200];
+			sprintf(tmp,"Chromosome %u best of population",(*C)->Id);
+			Debug->PrintInfo(tmp);
+		}
+		BestInPop=best;
+		AgeBestPop=0;
+		AgeNextMutation=FreqMutation;
+	}
+	if((*BestInPop->Fitness)>(*BestChromosome->Fitness))
+	{
+		if(Debug)
+		{
+			static char tmp[200];
+			sprintf(tmp,"Chromosome %u best ever",BestInPop->Id);
+			Debug->PrintInfo(tmp);
+		}
+		(*BestChromosome)=(*BestInPop);
+		AgeBest=0;
+		AgeNextBestMutation=FreqBestMutation;
+		PostNotification("RInst::Best");
+	}
+	if(Debug)
+		Debug->EndFunc("AnalysePop","RInst");
 }
 
 
@@ -126,86 +221,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(Debug)
 		Debug->EndFunc("RandomConstruct","RInst");
 }
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreaData>
-	void RInst<cInst,cChromo,cFit,cThreaData>::Evaluate(void)
-{
-	unsigned int i;
-	cChromo **C;
-
-	if(Debug)
-		Debug->BeginFunc("Evaluate","RInst");
-	for(i=PopSize+1,C=Chromosomes;--i;C++)
-	{
-		if((*C)->ToEval)
-		{
-			(*C)->Evaluate();
-			(*C)->ToEval=false;
-			PostNotification("RInst::Interact");
-		}
-	}
-	if(Debug)
-		Debug->EndFunc("Evaluate","RInst");
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreaData>
-	void RInst<cInst,cChromo,cFit,cThreaData>::AnalysePop(void)
-{
-	unsigned int i;
-	cChromo **C;
-
-	if(Debug)
-		Debug->BeginFunc("AnalysePop","RInst");
-	for(i=PopSize+1,C=Chromosomes;--i;C++)
-	{
-		if((*((*C)->Fitness))>(*(BestInPop->Fitness)))
-		{
-				if(Debug)
-				{
-					static char tmp[200];
-					sprintf(tmp,"Chromosome %u best of population",(*C)->Id);
-					Debug->PrintInfo(tmp);
-				}
-			BestInPop=(*C);
-			AgeBestPop=0;
-			AgeNextMutation=MaxBestPopAge;
-		}
-	}
-	if((*(BestInPop->Fitness))>(*(BestChromosome->Fitness)))
-	{
-			if(Debug)
-			{
-				static char tmp[200];
-				sprintf(tmp,"Chromosome %u best ever",BestInPop->Id);
-				Debug->PrintInfo(tmp);
-			}
-		(*BestChromosome)=(*BestInPop);
-		AgeBest=0;
-		PostNotification("RInst::Best");
-	}
-	if(Debug)
-		Debug->EndFunc("AnalysePop","RInst");
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData>
-	int RInst<cInst,cChromo,cFit,cThreadData>::sort_function_cChromosome(const void* a,const void* b)
-{
-	cFit* af=(*(static_cast<cChromo**>(a)))->Fitness;
-	cFit* bf=(*(static_cast<cChromo**>(b)))->Fitness;
-
-	if((*af)==(*bf)) return(0);
-	if((*af)>(*bf))
-		return(-1);
-	else
-		return(1);
-}
-
+		
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
@@ -302,75 +318,62 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RInst<cInst,cChromo,cFit,cThreadData>::Mutation(void)
 {
-	unsigned int i;
-	cFit *WorstFitness;
-	cChromo **C,*p;
-
-
 	if(Debug)
 		Debug->BeginFunc("Mutation","RInst");
-	if(AgeBestPop==AgeNextMutation)
+	
+	// Normal mutation?
+	if(!AgeNextMutation)
 	{
-		AgeNextMutation+=MaxBestPopAge;
-		C=Chromosomes;
-		p=(*C);
-		WorstFitness= (*(C++))->Fitness;
-		for(i=PopSize;--i;C++)
+		AgeNextMutation=FreqMutation;
+		cChromo** Mut=&Ranked[PopSize-1];
+		for(unsigned int i=NbMutations+1;--i;Mut--)
 		{
-			if((*((*C)->Fitness))<(*WorstFitness))
-			{
-				WorstFitness=(*C)->Fitness;
-				p=(*C);
+			cChromo* p=(*Mut);
+			if(p->Id!=BestInPop->Id)
+			{	
+				unsigned int id=p->Id;
+				(*p)=(*BestInPop);
+				p->Id=id;
 			}
+			if(Debug)
+			{
+				static char Tmp[200];
+				sprintf(Tmp,"Normal Mutation (BestInPop) -> Chromosome %u",p->Id);
+				Debug->PrintInfo(Tmp);
+			}
+			PostNotification("RInst::Interact");
+			p->Mutation();
+			p->ToEval=true;
+			if(VerifyGA)
+				p->Verify();
+			PostNotification("RInst::Interact");
 		}
-		if(p->Id!=BestInPop->Id)
-		{
-			i=p->Id;
-			(*p)=(*BestInPop);
-			p->Id=i;
-		}
-		if(Debug)
-		{
-			static char Tmp[200];
-			sprintf(Tmp,"Normal Mutation (BestInPop) -> Chromosome %u",p->Id);
-			Debug->PrintInfo(Tmp);
-		}
-		PostNotification("RInst::Interact");
-		p->Mutation();
-		p->ToEval=true;
-		if(VerifyGA)
-			p->Verify();
-		PostNotification("RInst::Interact");
 	}
-	if(AgeBest==AgeNextBestMutation)
+	
+	// Best mutation?
+	if(!AgeNextBestMutation)
 	{
-		AgeNextBestMutation+=MaxBestPopAge;
-		C=Chromosomes;
-		p=(*C);
-		WorstFitness= (*(C++))->Fitness;
-		for(i=PopSize;--i;C++)
+		AgeNextBestMutation=FreqBestMutation;
+		cChromo** Mut=&Ranked[PopSize-1];
+		for(unsigned int i=NbMutations+1;--i;Mut--)
 		{
-			if((*((*C)->Fitness))<(*WorstFitness))
+			cChromo* p=(*Mut);
+			unsigned int id=p->Id;
+			(*p)=(*BestChromosome);
+			p->Id=id;
+			if(Debug)
 			{
-				WorstFitness=(*C)->Fitness;
-				p=(*C);
+				static char Tmp[200];
+				sprintf(Tmp,"Strong Mutation (BestInPop) -> Chromosome %u",p->Id);
+				Debug->PrintInfo(Tmp);
 			}
+			PostNotification("RInst::Interact");
+			p->Mutation();
+			p->ToEval=true;
+			if(VerifyGA)
+				p->Verify();
+			PostNotification("RInst::Interact");
 		}
-		i=p->Id;
-		(*p)=(*BestChromosome);
-		p->Id=i;
-		if(Debug)
-		{
-			static char Tmp[200];
-			sprintf(Tmp,"Strong Mutation (BestInPop) -> Chromosome %u",p->Id);
-			Debug->PrintInfo(Tmp);
-		}
-		PostNotification("RInst::Interact");
-		p->Mutation();
-		p->ToEval=true;
-		if(VerifyGA)
-			p->Verify();
-		PostNotification("RInst::Interact");
 	}
 	if(Debug)
 		Debug->EndFunc("Mutation","RInst");
@@ -381,28 +384,23 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void RInst<cInst,cChromo,cFit,cThreadData>::Inversion(void)
 {
-	cChromo *p;
-
-
 	if(Debug)
 		Debug->BeginFunc("Inversion","RInst");
-	if(!(AgeNextInversion--))
+		
+	// Do the inversion
+	AgeNextInversion=FreqInversion;
+	cChromo* p=Chromosomes[RRand(PopSize)];
+	if(Debug)
 	{
-		AgeNextInversion=FreqInversion;
-		p=Chromosomes[RRand(PopSize)];
-		if(Debug)
-		{
-			static char Tmp[200];
-			sprintf(Tmp,"Inversion of Chromosome %u",p->Id);
-			Debug->PrintInfo(Tmp);
-		}
-		PostNotification("RInst::Interact");
-		p->Inversion();
-		p->ToEval=true;
-		if(VerifyGA)
-			p->Verify();
-		PostNotification("RInst::Interact");
+		static char Tmp[200];
+		sprintf(Tmp,"Inversion of Chromosome %u",p->Id);
+		Debug->PrintInfo(Tmp);
 	}
+	p->Inversion();
+	p->ToEval=true;
+	if(VerifyGA)
+		p->Verify();
+
 	if(Debug)
 		Debug->EndFunc("Inversion","RInst");
 }
@@ -424,14 +422,22 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		Debug->PrintComment(tmp);
 	}
 	Crossover();
-	PostNotification("RInst::Interact");
-	Mutation();
-	PostNotification("RInst::Interact");
-	Inversion();
-	PostNotification("RInst::Interact");
-	Evaluate();
-	PostNotification("RInst::Interact");
-	PostEvaluate();
+	PostNotification("RInst::Interact");	
+	if(!((AgeNextMutation--)&&(AgeNextBestMutation--)))  // Decrease the number of generations between mutations and verify if a mutation must be done
+	{
+		// Evaluation is necessary since the crossover has been done
+		AnalysePop();
+		PostNotification("RInst::Interact");				
+		Mutation();
+	}
+	PostNotification("RInst::Interact");	
+	if(!(AgeNextInversion--)) // Decrease the number of generations between inversions and verify if a mutation must be done
+	{
+		// Evaluation is necessary since the crossover has been done (and perhaps Mutation)
+		AnalysePop();
+		PostNotification("RInst::Interact");	
+		Inversion();
+	}
 	PostNotification("RInst::Interact");
 	AnalysePop();
 	PostNotification("RInst::Generation");
@@ -450,10 +456,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(!bRandomConstruct)
 	{
 		RandomConstruct();
-		PostNotification("RInst::Interact");
-		Evaluate();
-		PostNotification("RInst::Interact");
-		PostEvaluate();
 		PostNotification("RInst::Interact");
 		AnalysePop();
 		PostNotification("RInst::Generation");
@@ -514,6 +516,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			if(*C) delete (*C);
 		delete[] Chromosomes;
 	}
+	if(Ranked) delete[] Ranked;
 	if(BestChromosome) delete BestChromosome;
 	if(tmpChrom1) delete[] tmpChrom1;
 	if(tmpChrom2) delete[] tmpChrom2;

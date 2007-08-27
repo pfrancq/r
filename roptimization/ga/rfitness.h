@@ -6,7 +6,7 @@
 
 	Fitness for Chromosomes of Genetic Algorithms - Header
 
-	Copyright 1998-2003 by the Université Libre de Bruxelles.
+	Copyright 1998-2007 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -97,7 +97,7 @@ public:
 	* @return The function returns true if the value of the two fitnesses are
 	* equal.
 	*/
-	inline bool operator==(const RFitness &f);
+	inline bool operator==(const RFitness &f) const;
 
 	/**
 	* The different operator.
@@ -105,7 +105,7 @@ public:
 	* @return The function returns true if the value of the two fitnesses are
 	* different.
 	*/
-	inline bool operator!=(const RFitness &f);
+	inline bool operator!=(const RFitness &f) const;
 
 	/**
 	* The greater operator.
@@ -113,7 +113,7 @@ public:
 	* @return The function returns true if the value of the fitness is
 	* greater than the value of f.
 	*/
-	inline bool operator>(const RFitness &f);
+	inline bool operator>(const RFitness &f) const;
 
 	/**
 	* The less-than operator.
@@ -121,17 +121,17 @@ public:
 	* @return The function returns true if the value of the fitness is less
 	* than the value of f.
 	*/
-	inline bool operator<(const RFitness &f);
+	inline bool operator<(const RFitness &f) const;
 
 	/**
 	* Returns true if the fitness is to maximize.
 	*/
-	inline bool ToMaximize(void);
+	inline bool ToMaximize(void) const;
 
 	/**
 	* Returns true if the fitness is to minimize.
 	*/
-	inline bool ToMinimize(void);
+	inline bool ToMinimize(void) const;
 };
 
 

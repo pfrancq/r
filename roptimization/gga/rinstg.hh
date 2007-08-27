@@ -88,7 +88,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	unsigned int i;
 
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
-	for(i=this->PopSize+1,C=this->Chromosomes;--i;C++)
+	for(i=this->GetPopSize()+1,C=this->Chromosomes;--i;C++)
 		(static_cast<RGroups<cGroup,cObj,cChromo>*>(*C))->Init();
 	(static_cast<RGroups<cGroup,cObj,cChromo>*>(this->BestChromosome))->Init();
 }
@@ -123,9 +123,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	if(this->Debug)
 		this->Debug->BeginFunc("HandleSameChromosomes","RInstG");
 
-	for(i=0,C=this->Chromosomes;i<this->PopSize-1;C++,i++)
+	for(i=0,C=this->Chromosomes;i<this->GetPopSize()-1;C++,i++)
 	{
-		for(j=i+1,C1=C+1;j<this->PopSize;C1++,j++)
+		for(j=i+1,C1=C+1;j<this->GetPopSize();C1++,j++)
 		{
 			if((*C)->SameGroupment(*C1))
 			{
