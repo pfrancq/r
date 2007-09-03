@@ -131,8 +131,8 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 	bool bProm;
 
 	// Init Part
-	weight=Prom.NewCriterion(Maximize,WeightParams);
-	dist=Prom.NewCriterion(Minimize,DistParams);
+	weight=Prom.NewCriterion(RPromCriterion::Maximize,"Weight",WeightParams);
+	dist=Prom.NewCriterion(RPromCriterion::Minimize,"Distance",DistParams);
 	treat=new RGeoInfo*[nb];
 
 	// Go through each info

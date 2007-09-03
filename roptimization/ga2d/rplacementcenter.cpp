@@ -53,9 +53,8 @@ using namespace R;
 RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
-	AreaParams.P=AreaParams.Q=DistParams.P=DistParams.Q=0.0;
-	AreaParams.Weight=2.0;
-	DistParams.Weight=1.0;
+	AreaParams.Set(0.2,0.05,2.0);
+	DistParams.Set(0.2,0.05,1.0);
 }
 
 

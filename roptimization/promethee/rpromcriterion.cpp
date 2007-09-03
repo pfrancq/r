@@ -6,7 +6,7 @@
 
 	Promethee Criterion - Implementation.
 
-	Copyright 2000-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -33,6 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <math.h>
+using namespace std;
 
 
 //------------------------------------------------------------------------------
@@ -60,52 +61,61 @@ RPromCriterionParams::RPromCriterionParams(void)
 
 //------------------------------------------------------------------------------
 RPromCriterionParams::RPromCriterionParams(double p,double q,double w)
-	: P(p), Q(q), Weight(w)
 {
+	Set(p,q,w);
 }
 
 
 //------------------------------------------------------------------------------
 RPromCriterionParams::RPromCriterionParams(const RPromCriterionParams& p)
-	: P(p.P), Q(p.Q), Weight(p.Weight)
 {
+	Set(p.P,p.Q,p.Weight);
 }
 
 
 //------------------------------------------------------------------------------
 RPromCriterionParams::RPromCriterionParams(const RPromCriterionParams* p)
-	: P(0.2), Q(0.05), Weight(1.0)
 {
-	if(!p) return;
-	P=p->P;
-	Q=p->Q;
-	Weight=p->Weight;
+	Set(p->P,p->Q,p->Weight);
 }
 
 
 //------------------------------------------------------------------------------
 void RPromCriterionParams::Set(const char* values)
 {
-	sscanf(values,"%lf %lf %lf",&P,&Q,&Weight);
+	double p,q,w;
+	sscanf(values,"%lf %lf %lf",&p,&q,&w);
+	Set(p,q,w);
 }
 
 
 //------------------------------------------------------------------------------
 RPromCriterionParams& RPromCriterionParams::operator=(const RPromCriterionParams &params)
 {
-	P=params.P;
-	Q=params.Q;
-	Weight=params.Weight;
+	Set(params.P,params.Q,params.Weight);
 	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+void RPromCriterionParams::Set(double p,double q,double w)
+{
+	if((p<0.0)||(q<0.0)||(p>1.0)||(q>1.0)||(p<=q))
+		throw RException("Wrong Promethee Parameters: 0<Q<P<1");
+	P=p;
+	Q=q;
+	Weight=w;
 }
 
 
 //-----------------------------------------------------------------------------
 void RPromCriterionParams::Set(RParamStruct* param)
 {
-	P=param->Get<RParamValue>("P")->GetDouble();
-	Q=param->Get<RParamValue>("Q")->GetDouble();
-	Weight=param->Get<RParamValue>("Weight")->GetDouble();
+	double p,q,w;
+	p=param->Get<RParamValue>("P")->GetDouble();
+	q=param->Get<RParamValue>("Q")->GetDouble();
+	w=param->Get<RParamValue>("Weight")->GetDouble();
+	Set(p,q,w);
 }
 
 
@@ -128,111 +138,45 @@ RParam* RPromCriterionParams::CreateParam(const R::RString& name)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,unsigned int nb)
-	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(id),
-	  Type(type), P(p), Q(q), Weight(w)
+RPromCriterion::RPromCriterion(tCriteriaType type,double p,double q,double w,const char* name,unsigned int nb)
+	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(NullId), Name(name),
+	  Type(type)
 {
-	if(Type==Minimize)
-	{
-		P=-p;
-		Q=-q;
-	}
-	else
-	{
-		P=p;
-		Q=q;
-	}
+	Set(p,q,w);
 }
 
 
 //------------------------------------------------------------------------------
-RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,unsigned int nb)
-	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(id),
-	  Type(type), P(params.P), Q(params.Q), Weight(params.Weight)
-{
-	if(Type==Minimize)
-	{
-		P=-params.P;
-		Q=-params.Q;
-	}
-	else
-	{
-		P=params.P;
-		Q=params.Q;
-	}
-}
-
-
-//------------------------------------------------------------------------------
-RPromCriterion::RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,const char* name,unsigned int nb)
-	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(id), Name(name),
-	  Type(type), P(p), Q(q), Weight(w)
-{
-	if(Type==Minimize)
-	{
-		P=-p;
-		Q=-q;
-	}
-	else
-	{
-		P=p;
-		Q=q;
-	}
-}
-
-
-//------------------------------------------------------------------------------
-RPromCriterion::RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,const char* name,unsigned int nb)
-	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(id), Name(name),
+RPromCriterion::RPromCriterion(tCriteriaType type,const RPromCriterionParams& params,const char* name,unsigned int nb)
+	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(NullId), Name(name),
 	  Type(type), Weight(params.Weight)
 {
-	if(Type==Minimize)
-	{
-		P=-params.P;
-		Q=-params.Q;
-	}
-	else
-	{
-		P=params.P;
-		Q=params.Q;
-	}
+	Set(params.P,params.Q,params.Weight);
+}
+
+	
+//-----------------------------------------------------------------------------
+void RPromCriterion::Set(double p,double q,double w)
+{
+	if((p<0.0)||(q<0.0)||(p>1.0)||(q>1.0)||(p<=q))
+		throw RException("Wrong Promethee Parameters: 0<Q<P<1");
+	P=p;
+	Q=q;
+	Weight=w;
 }
 
 
 //------------------------------------------------------------------------------
 void RPromCriterion::SetParams(const RPromCriterionParams& params)
 {
-	if(Type==Minimize)
-	{
-		P=-params.P;
-		Q=-params.Q;
-	}
-	else
-	{
-		P=params.P;
-		Q=params.Q;
-	}
-	Weight=params.Weight;
+	Set(params.P,params.Q,params.Weight);
 }
 
 
 //------------------------------------------------------------------------------
 RPromCriterionParams RPromCriterion::GetParams(void)
 {
-	RPromCriterionParams tmp;
-
-	if(Type==Minimize)
-	{
-		tmp.P=-P;
-		tmp.Q=-Q;
-	}
-	else
-	{
-		tmp.P=P;
-		tmp.Q=Q;
-	}
-	tmp.Weight=Weight;
-	return(tmp);
+	return(RPromCriterionParams(P,Q,Weight));
 }
 
 
@@ -267,81 +211,69 @@ void RPromCriterion::Normalize(void)
 //------------------------------------------------------------------------------
 double RPromCriterion::ComputePref(double u,double v) const
 {
-	double d;
-	double y;
-
-	if(u==0.0) return(0.0);
-	if(u!=v)
-		d=(u-v)/u;
-	else
-		d=0.0;
-
-	switch(Type)
-	{
-		case Maximize:
-			if(P<Q) return(0.0);
-			if((P<0.0)||(Q<0.0)) return(0.0);
-			if(P==Q)
-			{
-				if(d<=Q) return(0.0); else return(1.0);
-			}
-			if(d<=Q)
-				y=0.0;
+	double d=fabs(u-v);
+	
+	// No solution is better
+	if(d<=Q)
+		return(0.0);  
+	
+	// One solution is better than the other one but it depends of:
+	// If u>v or v<u
+	// If the criteria should be maximized or minimized
+	if(d>=P)
+	{		
+		if(Type==Maximize)
+		{
+			if(u>v)
+				return(1.0);
 			else
-			{
-				if(d>P)
-					y=1.0;
-				else
-					y=(d-Q)/(P-Q);
-			}
-			break;
-
-		case Minimize:
-			if(P>Q) return(0.0);
-			if((P>0.0)||(Q>0.0)) return(0.0);
-			if(P==Q)
-			{
-				if(d>=Q) return(0.0); else return(1.0);
-			}
-			if(d>=Q)
-				y=0.0;
+				return(0.0);
+		}
+		else
+		{
+			if(u<v)
+				return(1.0);
 			else
-			{
-				if(d<P)
-					y=1.0;
-				else
-					y=(d-Q)/(P-Q);
-			}
-			break;
-
-		default:
-			y=0.0;
-			break;
+				return(0.0);			
+		}
 	}
-	return(y);
+	
+	// Betwwen Q and P -> Compute the prefrence.
+	if(Type==Maximize)
+	{
+		if(u>v)
+			return((d-Q)/(P-Q));
+		else
+			return(0);
+	}
+	else
+	{
+		if(u<v)
+			return((d-Q)/(P-Q));
+		else
+			return(0);			
+	}
 }
 
 
 //------------------------------------------------------------------------------
 void RPromCriterion::ComputeFiCrit(RPromKernel* kern)
 {
-	// Init all value to 0
-	RCursor<RPromCritValue> ptr(*this);
-	for(ptr.Start();!ptr.End();ptr.Next())
-		ptr()->FiCritPlus=ptr()->FiCritMinus=0.0;
-
 	// Calculation of Fi Crit + & -
 	RCursor<RPromCritValue> ptr2(*this);
+	RCursor<RPromCritValue> ptr(*this);
 	RCursor<RPromSol> sol(kern->Solutions);
 	RCursor<RPromSol> sol2(kern->Solutions);
 	for(ptr.Start(),sol.Start();!ptr.End();ptr.Next(),sol.Next())
 	{
+		// Fi are zero
+		ptr()->FiCritPlus=ptr()->FiCritMinus=0.0;
 		for(ptr2.Start(),sol2.Start();!ptr2.End();ptr2.Next(),sol2.Next())
 		{
 			// Only if secondary solution is not the same than the primary one.
 			if(sol()==sol2()) continue;
-			ptr()->FiCritPlus+=ComputePref(ptr()->Value,ptr2()->Value)/((double)(GetNb()-1));
-			ptr()->FiCritMinus+=ComputePref(ptr2()->Value,ptr2()->Value)/((double)(GetNb()-1));
+			ptr()->FiCritPlus+=ComputePref(ptr()->Value,ptr2()->Value);
+			ptr()->FiCritMinus+=ComputePref(ptr2()->Value,ptr()->Value);
 		}
 	}
 

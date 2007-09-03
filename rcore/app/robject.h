@@ -60,7 +60,7 @@ namespace R{
 *    virtual RCString GetClassName(void) const {return("MyObject");}
 *    void Handle(const RNotification& notification)
 *    {
-*       cout<<"From "<<GetName()<<" : "<<GetData<long>(msg)<<endl;
+*       cout<<"From "<<GetName()<<" : "<<GetData<long>(notification)<<endl;
 *    }
 * };
 *

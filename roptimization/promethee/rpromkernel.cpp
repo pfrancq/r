@@ -33,6 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdlib.h>
+using namespace std;
 
 
 //------------------------------------------------------------------------------
@@ -51,8 +52,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPromKernel::RPromKernel(const char* name,const unsigned int sol,const unsigned int crit,const bool norm)
-	: Name(name), Solutions(sol,sol/2), Criteria(crit,crit/2), Normalize(norm)
+RPromKernel::RPromKernel(const char* name,unsigned int sol,unsigned int crit)
+	: Name(name), Solutions(sol,sol/2), Criteria(crit,crit/2)
 {
 }
 
@@ -72,8 +73,7 @@ void RPromKernel::ComputePrometheeII(void)
 	RCursor<RPromCriterion> crit(Criteria);
 	for(crit.Start();!crit.End();crit.Next())
 	{
-		if(Normalize)
-			crit()->Normalize();
+		crit()->Normalize();
 		SumWTot+=crit()->Weight;
 		crit()->ComputeFiCrit(this);
 	}
@@ -82,53 +82,45 @@ void RPromKernel::ComputePrometheeII(void)
 	RCursor<RPromSol> sol(Solutions);
 	for(sol.Start();!sol.End();sol.Next())
 	{
-		sol()->FiPlus=sol()->FiMinus=0.0;
+		sol()->FiPlus=sol()->FiMinus=0.0;		
 		RCursor<RPromCritValue> value(*sol());
 		for(crit.Start(),value.Start();!value.End();crit.Next(),value.Next())
 		{
-			sol()->FiPlus+=((crit()->Weight)*(value()->FiCritPlus))/SumWTot;
-			sol()->FiMinus+=((crit()->Weight)*(value()->FiCritMinus))/SumWTot;
+			sol()->FiPlus+=crit()->Weight*value()->FiCritPlus;
+			sol()->FiMinus+=crit()->Weight*value()->FiCritMinus;
 		}
+		sol()->FiPlus/=SumWTot*((double)sol.GetNb()-1);
+		sol()->FiMinus/=SumWTot*((double)sol.GetNb()-1);
 		sol()->Fi=sol()->FiPlus-sol()->FiMinus;
 	}
 }
 
 
 //------------------------------------------------------------------------------
-RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const double p,const double q,const double w)
+RPromCriterion* RPromKernel::NewCriterion(const RPromCriterion::tCriteriaType t,const char* name,double p,double q,double w)
 {
-	RPromCriterion* crit=new RPromCriterion(t,p,q,w,Criteria.GetNb(),Solutions.GetMaxNb());
+	RPromCriterion* crit=new RPromCriterion(t,p,q,w,name,Solutions.GetMaxNb());
+	crit->SetId(Criteria.GetNb());
 	Criteria.InsertPtr(crit);
 	return(crit);
 }
 
 
 //------------------------------------------------------------------------------
-RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const RPromCriterionParams& params)
+RPromCriterion* RPromKernel::NewCriterion(const RPromCriterion::tCriteriaType t,const char* name,const RPromCriterionParams& params)
 {
-	RPromCriterion* crit=new RPromCriterion(t,params,Criteria.GetNb(),Solutions.GetMaxNb());
+	RPromCriterion* crit=new RPromCriterion(t,params,name,Solutions.GetMaxNb());
+	crit->SetId(Criteria.GetNb());
 	Criteria.InsertPtr(crit);
 	return(crit);
 }
 
 
 //------------------------------------------------------------------------------
-RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const char* name,
-		const double p,const double q,const double w)
+void RPromKernel::AddCriterion(RPromCriterion* crit)
 {
-	RPromCriterion* crit=new RPromCriterion(t,p,q,w,Criteria.GetNb(),name,Solutions.GetMaxNb());
+	crit->SetId(Criteria.GetNb());
 	Criteria.InsertPtr(crit);
-	return(crit);
-}
-
-
-//------------------------------------------------------------------------------
-RPromCriterion* RPromKernel::NewCriterion(const CriteriaType t,const char* name,
-		const RPromCriterionParams& params)
-{
-	RPromCriterion* crit=new RPromCriterion(t,params,Criteria.GetNb(),name,Solutions.GetMaxNb());
-	Criteria.InsertPtr(crit);
-	return(crit);
 }
 
 

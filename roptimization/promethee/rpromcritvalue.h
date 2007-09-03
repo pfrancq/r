@@ -6,7 +6,7 @@
 
 	Promethee Criterion Value - Header.
 
-	Copyright 2000-2003 by the Université Libre de Bruxelles.
+	Copyright 2000-2007 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -56,17 +56,17 @@ namespace R{
 class RPromCritValue
 {
 	/**
-	* The Fi crit used by Prométhée.
+	* The Fi crit used by Promethee.
 	*/
 	double FiCrit;
 
 	/**
-	* The Fi+ crit used by Prométhée.
+	* The Fi+ crit used by Promethee.
 	*/
 	double FiCritPlus;
 
 	/**
-	* The Fi- crit used by Prométhée.
+	* The Fi- crit used by Promethee.
 	*/
 	double FiCritMinus;
 

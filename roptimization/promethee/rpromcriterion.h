@@ -6,7 +6,7 @@
 
 	Promethee Criterion - Header.
 
-	Copyright 2000-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -53,20 +53,18 @@ namespace R{
 /**
 * The RPromCriterionParams is use to hold the parameters that can influence a
 * criterion in Promethee.
-* @short Prom�h� Criterion.
+* @short Promethee Criterion.
 * @author Pascal Francq.
 */
 class RPromCriterionParams
 {
-public:
-
 	/**
-	* Value for the preference threshold of the Prom�h� method.
+	* Value for the preference threshold of the Promethee method.
 	*/
 	double P;
 
 	/**
-	* Value for the indifference threshold of the Prom�h� method.
+	* Value for the indifference threshold of the Promethee method.
 	*/
 	double Q;
 
@@ -75,6 +73,8 @@ public:
 	*/
 	double Weight;
 
+public:
+	
 	/**
 	* Construct a list of parameters for a criterion.
 	*/
@@ -113,28 +113,67 @@ public:
 	RPromCriterionParams& operator=(const RPromCriterionParams& params);
 
 	/**
+	 * Set the parameters.
+	 * @param p              Preference's threshold.
+	 * @param q              Indifference's threshold.
+	 * @param w              Weight of the criterion.
+	 */	
+	void Set(double p,double q,double w);
+			
+	/**
 	* Set the parameter of the parameter.
 	* @param param           Pointer to a structure parameter.
 	*/
 	void Set(R::RParamStruct* param);
 
 	/**
+	* Get the preference's threshold.
+	*/
+	double GetP(void) const {return(P);}
+
+	/**
+	* Get the indifference's threshold.
+	*/
+	double GetQ(void) const {return(Q);}
+
+	/**
+	* Get the weight.
+	*/
+	double GetWeight(void) const {return(Weight);}
+	
+	/**
 	* Create a parameter corresponding to a promethee criteria.
 	* @param name            Name of the criteria.
 	*/
 	static RParam* CreateParam(const R::RString& name);
+	
+	friend class RPromCriterion;
 };
 
 
 
 //------------------------------------------------------------------------------
 /**
-* The RPromCriterion class provides a representation for a Prom�h� Criterion.
-* @short Prom�h� Criterion.
+* The RPromCriterion class provides a representation for a Promethee Criterion.
+* @short Promethee Criterion.
 * @author Pascal Francq & Thomas L'Eglise.
 */
 class RPromCriterion : protected RContainer<RPromCritValue,false,false>
 {
+public:
+
+	/**
+	* Different types of criteria.
+	* @short Criteria Type.
+	*/
+	enum tCriteriaType
+	{
+		Minimize                 /** The criteria must be maximalized.*/,
+		Maximize                 /** The criteria must be minimalized.*/
+	};
+
+protected:
+	
 	/**
 	* The identifier of the criterion.
 	*/
@@ -148,15 +187,15 @@ class RPromCriterion : protected RContainer<RPromCritValue,false,false>
 	/**
 	* The type of criteria.
 	*/
-	CriteriaType Type;
+	tCriteriaType Type;
 
 	/**
-	* Value for the preference threshold of the Prom�h� method.
+	* Value for the preference threshold of the Promethee method.
 	*/
 	double P;
 
 	/**
-	* Value for the indifference threshold of the Prom�h� method.
+	* Value for the indifference threshold of the Promethee method.
 	*/
 	double Q;
 
@@ -173,41 +212,19 @@ public:
 	* @param p              Preference's threshold.
 	* @param q              Indifference's threshold.
 	* @param w              Weight of the criterion.
-	* @param id             Identifier of the criterion.
+	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,unsigned int nb=30);
+	RPromCriterion(tCriteriaType type,double p,double q,double w,const char* name=0,unsigned int nb=30);
 
 	/**
 	* Construct a criterion.
 	* @param type           Type of the criterion.
 	* @param params         Parameters.
-	* @param id             Identifier of the criterion.
-	* @param nb             Number of solution.
-	*/
-	RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,unsigned int nb=30);
-
-	/**
-	* Construct a criterion.
-	* @param type           Type of the criterion.
-	* @param p              Preference's threshold.
-	* @param q              Indifference's threshold.
-	* @param w              Weight of the criterion.
-	* @param id             Identifier of the criterion.
 	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromCriterion(CriteriaType type,double p,double q,double w,unsigned int id,const char* name,unsigned int nb=30);
-
-	/**
-	* Construct a criterion.
-	* @param type           Type of the criterion.
-	* @param params         Parameters.
-	* @param id             Identifier of the criterion.
-	* @param name           Name of the criterion.
-	* @param nb             Number of solution.
-	*/
-	RPromCriterion(CriteriaType type,const RPromCriterionParams& params,unsigned int id,const char* name,unsigned int nb=30);
+	RPromCriterion(tCriteriaType type,const RPromCriterionParams& params,const char* name=0,unsigned int nb=30);
 
 	/**
 	* Compare the identifier of two criteria.
@@ -249,10 +266,13 @@ public:
 	*/
 	int Compare(const char* name) const {return(Name.Compare(name));}
 
-	/**
-	* Set the preference's threshold.
-	*/
-	void SetP(double p) {P=p;}
+ 	/**
+ 	* Set the parameters.
+ 	* @param p              Preference's threshold.
+ 	* @param q              Indifference's threshold.
+ 	* @param w              Weight of the criterion.
+ 	*/	
+	void Set(double p,double q,double w);
 
 	/**
 	* Get the preference's threshold.
@@ -260,47 +280,66 @@ public:
 	double GetP(void) const {return(P);}
 
 	/**
-	* Set the indifference's threshold.
-	*/
-	void SetQ(double q) {Q=q;}
-
-	/**
 	* Get the indifference's threshold.
 	*/
 	double GetQ(void) const {return(Q);}
 
 	/**
+	 * Get the type of criteria.
+	 */
+	tCriteriaType GetType(void) const {return(Type);}
+	
+	/**
+	* Get the weight.
+	*/
+	double GetWeight(void) const {return(Weight);}
+	
+	/**
+	 * Get the name of the criterion.
+	 */
+	RString GetName(void) const {return(Name);}
+	
+	/**
 	* Set the parameters.
 	*/
 	void SetParams(const RPromCriterionParams& params);
-
+	
 	/**
 	* Get the parameters.
 	*/
 	RPromCriterionParams GetParams(void);
 
+private:
+	
 	/**
-	* Set the weight.
-	*/
-	void SetWeight(double w) {Weight=w;}
-
+	 * Set the identifier of the criterion. Can only be done by RPromKernel.
+	 * @param id             Identifier of the criterion.
+	 */
+	void SetId(unsigned int id) {Id=id;}
+	
+public:
+	
 	/**
-	* Get the weight.
-	*/
-	double GetWeight(void) const {return(Weight);}
-
-	/**
-	* Normalize the values for the solution.
+	* Normalize the values for the solutions such that they are in [0,1].
 	*/
 	void Normalize(void);
 
 	/**
-	* Compare two values representing two different solutions.
+	* Compute the preference of a solution with the value u and a solution with
+	* the value v. This preference must be in [0,1].
+	* 
+	* By default, it compares the normalized difference of values, d:
+	* -# If d<Q=: No solutions must be prefered to the other one. The method
+	*            returns 0.
+	* -# If Q<d<P: One of the solution has a degree of preference computed as
+	*              (d-Q)/(P-Q).
+	* -# If d>=P: One of the solution must always be prefered. The method
+	*            returns 1. 
 	* @param u              Value of the first solution.
 	* @param v              Value of the second solution.
 	* @return The result of the preference function defined.
 	*/
-	double ComputePref(double u,double v) const;
+	virtual double ComputePref(double u,double v) const;
 
 	/**
 	* Calculate the Fi Crit for the different solutions.

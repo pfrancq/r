@@ -83,9 +83,7 @@ void RPlacementHeuristic::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 //------------------------------------------------------------------------------
 void RPlacementHeuristic::SetDistParams(double p,double q,double w)
 {
-	DistParams.P=p;
-	DistParams.Q=q;
-	DistParams.Weight=w;
+	DistParams.Set(p,q,w);
 }
 
 
@@ -106,9 +104,7 @@ void RPlacementHeuristic::SetAreaParams(const RPromCriterionParams& params)
 //------------------------------------------------------------------------------
 void RPlacementHeuristic::SetAreaParams(double p,double q,double w)
 {
-	AreaParams.P=p;
-	AreaParams.Q=q;
-	AreaParams.Weight=w;
+	AreaParams.Set(p,q,w);
 }
 
 
@@ -191,8 +187,8 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 	{
 		// Init Part
 		Prom=new RPromKernel("Orientations",200,2);
-		area=Prom->NewCriterion(Minimize,AreaParams);
-		dist=Prom->NewCriterion(Minimize,DistParams);
+		area=Prom->NewCriterion(RPromCriterion::Minimize,"Area",AreaParams);
+		dist=Prom->NewCriterion(RPromCriterion::Minimize,"Distance",DistParams);
 
 		if(AllOri&&(obj->NbPossOri>1))
 		{

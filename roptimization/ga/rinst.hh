@@ -172,7 +172,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 		if(Debug)
 		{
 			static char tmp[200];
-			sprintf(tmp,"Chromosome %u best of population",(*C)->Id);
+			sprintf(tmp,"Chromosome %u best of population",best->Id);
 			Debug->PrintInfo(tmp);
 		}
 		BestInPop=best;
@@ -190,7 +190,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 		(*BestChromosome)=(*BestInPop);
 		AgeBest=0;
 		AgeNextBestMutation=FreqBestMutation;
-		PostNotification("RInst::Best");
+		PostNotification("RInst::Best",(unsigned int)Gen);
 	}
 	if(Debug)
 		Debug->EndFunc("AnalysePop","RInst");

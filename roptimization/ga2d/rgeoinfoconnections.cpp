@@ -95,8 +95,8 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 
 	// Init Part
 	i1=i2=0;
-	weight=Prom.NewCriterion(Maximize,Cons->WeightParams);
-	dist=Prom.NewCriterion(Minimize,Cons->DistParams);
+	weight=Prom.NewCriterion(RPromCriterion::Maximize,"Weight",Cons->WeightParams);
+	dist=Prom.NewCriterion(RPromCriterion::Minimize,"Distance",Cons->DistParams);
 	treat=new RGeoInfo*[Infos->GetMaxPos()+1];
 
 	// Go through each info

@@ -6,7 +6,7 @@
 
 	Promethee Kernel - Header.
 
-	Copyright 2000-2005 by the Université Libre de Bruxelles.
+	Copyright 2000-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -49,8 +49,8 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RPromKernel provides a kernel to manage Prom�h� session.
-* @short Prom�h� Kernel.
+* The RPromKernel provides a kernel to manage Promethee session.
+* @short PPromethee Kernel.
 * @author Pascal Francq & Thomas L'Eglise.
 */
 class RPromKernel
@@ -71,17 +71,11 @@ class RPromKernel
 	RContainer<RPromCriterion,true,true> Criteria;
 
 	/**
-	* Define if a normalisation of the values for the different criteria must be
-	* done.
-	*/
-	bool Normalize;
-
-	/**
 	* Function used to sort the solutions by fit.
 	* @param a              Pointer to the first solution.
 	* @param b              Pointer to the second solution.
 	*/
-	static int sort_function_solutions( const void *a, const void *b);
+	static int sort_function_solutions(const void *a,const void *b);
 
 public:
 
@@ -92,7 +86,7 @@ public:
 	* @param crit           Number of criteria.
 	* @param norm           Normlisation activ.
 	*/
-	RPromKernel(const char* name,const unsigned int sol,const unsigned int crit,const bool norm=true);
+	RPromKernel(const char* name,unsigned int sol,unsigned int crit);
 
 	/**
 	* Applicates the evaluation functions for the solution.
@@ -107,28 +101,12 @@ public:
 	/**
 	* Create a new criterion.
 	* @param t              Type of the criterion.
-	* @param p              Preference's threshold.
-	* @param q              Indifference's threshold.
-	* @param w              Weight of the criterion.
-	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const double p,const double q,const double w);
-
-	/**
-	* Create a new criterion.
-	* @param t             Type of the criterion.
-	* @param params         Parameters.
-	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const RPromCriterionParams& params);
-
-	/**
-	* Create a new criterion.
-	* @param t              Type of the criterion.
 	* @param name           Name of the criterion.
 	* @param p              Preference's threshold.
 	* @param q              Indifference's threshold.
 	* @param w              Weight of the criterion.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const double p,const double q,const double w);
+	RPromCriterion* NewCriterion(RPromCriterion::tCriteriaType t,const char* name,double p,double q,double w);
 
 	/**
 	* Create a new criterion.
@@ -136,8 +114,14 @@ public:
 	* @param name           Name of the criterion.
 	* @param params         Parameters.
 	*/
-	virtual RPromCriterion* NewCriterion(const CriteriaType t,const char* name,const RPromCriterionParams& params);
+	RPromCriterion* NewCriterion(RPromCriterion::tCriteriaType t,const char* name,const RPromCriterionParams& params);
 
+	/**
+	 * Add a new critetion.
+	 * @param crit           Pointer to the new criterion.
+	 */
+	void AddCriterion(RPromCriterion* crit);
+	
 	/**
 	* Create a new solution.
 	*/

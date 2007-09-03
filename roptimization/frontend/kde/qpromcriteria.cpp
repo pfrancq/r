@@ -207,9 +207,9 @@ void QPromCriteria::SetCriterionParam(const char* crit,RPromCriterionParams& p)
 	ptr->Q->setText(tmp);
 	tmp.setNum(p.Weight);
 	ptr->W->setText(tmp);*/
-	ptr->P=p.P;
-	ptr->Q=p.Q;
-	ptr->W=p.Weight;
+	ptr->P=p.GetP();
+	ptr->Q=p.GetQ();
+	ptr->W=p.GetWeight();
 	if(ptr->Idx==Current)
 	{
 		tmp.setNum(ptr->P);
@@ -272,9 +272,7 @@ void QPromCriteria::GetCriterionParam(const char* crit,RPromCriterionParams& p)
 			ptr->Q=d;
 		ptr->W=W->text().toDouble();
 	}
-	p.P=ptr->P;
-	p.Q=ptr->Q;
-	p.Weight=ptr->W;
+	p.Set(ptr->P,ptr->Q,ptr->W);
 }
 
 
