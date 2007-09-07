@@ -354,7 +354,11 @@ size_raw RTransactionTable::WriteTransaction(unsigned int id,...)
 	sSql="SELECT LAST_INSERT_ID() FROM "+Name;
 	RQuery select(DB,sSql);
 	select.Start();
+#ifndef WIN32
 	return(atoll(select[0]));
+#else
+	return(_atoi64(select[0]));
+#endif
 }
 
 

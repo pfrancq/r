@@ -154,7 +154,7 @@ void RIOFile::Open(RIO::ModeType mode)
 	#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
 		//do nothing
 	#else
-        localmode|=O_BINARY;
+		localmode|=O_BINARY;
 	#endif	
 	if(Mode==RIO::Read)
 	{

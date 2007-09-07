@@ -288,7 +288,9 @@ RString RTextEncoding::ToUnicode(const char* text,unsigned int len) const
 			ToFill=false;
 		s2=BufSize-s2;
 		(*((UChar*)(ptr2)))=0; // Terminate by a null string
+#ifndef WIN32
 		#warning Does iconv correctly handle encoding with different bytes order?
+#endif
 		out+=(RChar*)(Tab);
 	}
 	return(out);

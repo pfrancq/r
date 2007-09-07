@@ -48,6 +48,7 @@
 // include files for MySQL
 #ifdef WIN32
 	#include <winsock.h>
+	#include <memory> //for std::auto_ptr
 #endif
 #include <mysql/mysql.h>
 

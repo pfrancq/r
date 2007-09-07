@@ -43,6 +43,7 @@
 #include <string.h>
 #include <cstdlib>
 #include <iostream>
+#include <rportsmacro.h>
 
 
 //------------------------------------------------------------------------------
@@ -212,7 +213,7 @@ inline tCoord Abs(tCoord x) {return(x<0.0?-x:x);}
 * The MaxCoord constante represent the maximal positive value that a
 * coordinate can have. It is used to indicate an invalid coordinate.
 */
-const tCoord MaxCoord=3.40282347e+38F;
+const tCoord MaxCoord=3.40282347e+38;
 
 
 //------------------------------------------------------------------------------

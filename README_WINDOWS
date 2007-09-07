@@ -1,0 +1,100 @@
+R Compilation procedure for Windows 32bits
+
+This document describe the procedure to compile R on Windows.  
+The following packages had been used during the writting of this document.
+Cmake options are described in the README_CMAKE file
+
+Required Tools
+--------------
+Microsoft Visual C++ 2005 Express Edition with Plateform SDK (last release).
+Cmake 2.4.7 or greater
+MySQL source code for version 5.0.45.  Greater version may work (in the 5.0 series).
+GnuWin32 Iconv Library
+LibCurl 7.16.4 (greater version may works)
+
+Remarks
+-------
+In the windows port, MySQL is actually a mandatory dependency.  
+Since MySQL provide a pthread implementation, this one was used.
+You need the MySQL source because rcore library link to mysqlclient.lib.  
+The compiled one provided by MySQL conflicts with some other libs used in R in the link step.  
+In the rest of the document, we explain how to recompile mysqlclient.lib to works with R and it's dependency
+
+Before compiling R
+------------------
+A. Visual C++ 2005 Express
+--------------------------
+If you already have installed it or the full edition, this step is already done
+1) Download Microsoft Visual C++ 2005 Express Edition and related service pack if any from Microsoft (http://www.microsoft.com)
+2) Install microsoft visual C++ 2005 Express Edition and related service pack if any
+
+B. Microsoft Plateform SDK
+--------------------------
+Only needed if using Visual C++ 2005 Express
+1) Dowload it from Microsoft web site.
+2) Install it
+3) Follow configuration informations found at http://msdn.microsoft.com/vstudio/express/visualc/usingpsdk/ (for step 3, follow the note)
+
+C. Cmake
+--------
+1) Download it from http://www.cmake.org
+2) Install it
+
+D. GnuWin32 iconv
+-----------------
+1) Download it from GnuWin32 website (http://gnuwin32.sourceforge.net)
+2) Install it
+3) Update your system path to the GnuWin32 binary folder (for dll resolution)
+
+E. LibCurl
+----------
+1) Get source code on http://curl.haxx.se/libcurl
+2) Uncompress source code in a smart place (the path will be refered during R configuration stage, by exemple: C:\rdependencies)
+3) Open a Visual C++ command prompt and cd to the libcurl directory (the one that contain the src directory)
+4) Use the following nmake command: nmake Makefile vc-dll
+It will produce the libcurl.dll and the libcurl_imp.lib in the lib directory (you may copy the 
+dll to a convinient place to use it or add this directory to you system path)
+
+F. mysqlclient.lib recompilation
+--------------------------------
+1) Download MySQL source code from http://www.mysql.org
+2) Uncompress source code in a smart place (since again you will use some folder for r configuration)
+3) Open the MySQL project (in the version 5.0.45, it was a VC6 project)
+4) If needed convert it when asked by Visual C++  If some project in the solution cause problem, fix them by opening them separately and save to new version
+and finaly add them to the MySQL project.
+5) Select the release target on the MySQL solution
+6) You don't need to recompile all, just the mysqlclient subproject but
+7) You must change one compiling option (double check that you are using the release target):
+	-- Under the C/C++ compiler option -> Code generation, change the runtime library to Multi-threaded DLL (/MD)
+8) Compile it.  The compilation result will by placed in the release_lib of mysql directory (the directory that contain mysql.sln).
+10) Copy the include directory in place with name mysql
+
+
+G. R
+----
+1) Create the build directory in R top source directory
+2) Open a Visual Studio Console
+3) cd in the newly created build directory
+4) run cmake (use / or \\ for path separator), but don't use the nmake generator (seems broken)
+	cmake .. -Dcurl-include="CurlPath/include" -Dcurl-library="CurlPath/lib" -Diconv-include="InconvPath/include" -Diconv-library="IconvPath/lib" -Dmysql-include="MySQLSourcePath" -Dmysql-library="MySQLSourcePath/lib_release" -Ddisable-kde=yes
+	in my configuration, I have the following cmake command:
+	cmake .. -Dcurl-include="C:/rlibs/curl-7.16.4/include" -Dcurl-library="C:/rlibs/curl-7.16.4/lib" -Diconv-include="C:/Program Files/GnuWin32/include" -Diconv-library="C:/Program Files/GnuWin32/lib" -Dmysql-include="C:/Documents and Settings/Xavier/Desktop/mysql-5.0.45-win-src/mysql-5.0.45" -Dmysql-library="C:/Documents and Settings/Xavier/Desktop/mysql-5.0.45-win-src/mysql-5.0.45/lib_release" -Ddisable-kde=yes
+5) In the build directory, after CMake run, a r.sln file is created, open it
+6) Build ALL_BUILD 
+7) Enjoy !!!
+
+Notes
+-----
+Don't delete mysql source after use or save the mysql directory (copy of includes) to a common place, it's needed by RMySQL.h (in rcore/db).
+If you have some link errors, try the following:
+	1) In your project, add a new filter (named lib)
+	2) In this filter add files of type .lib: libcurl_imp (in curl lib directory), mysqlclient and zlib (in mysql release_lib directory), libiconv (in the GnuWin32 lib directory), the needed R library (in the lib directory of R if installed, in the r/build/r[libname]/[Debug]|[Release] directory) and in the project option, linker related options, dependency lib property the ws2_32.lib
+
+Autors
+------
+Xavier Sacr�
+xsacre [at] ulb [dot] ac [dot] be
+
+File Revision
+-------------
+06 September 2007: initial release

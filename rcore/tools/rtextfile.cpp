@@ -32,6 +32,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
+#ifdef WIN32
+	#include <sys/time.h> //for asctime_s
+	#include <c99_support.h>
+#endif
 #include <rstd.h>
 #include <rtextfile.h>
 #include <rstring.h>
