@@ -157,7 +157,13 @@ public:
 	* @return Name of the file.
 	*/
 	static RString GetTempFile(void);
-
+	
+	/**
+	 * Test if a file exists.
+	 * @param name           Name of the file.
+	 */
+	static bool Exists(const RString& name);
+	
 	/**
 	* Destructs the file.
 	*/

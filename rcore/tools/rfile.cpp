@@ -162,6 +162,17 @@ RString RFile::GetTempFile(void)
 
 
 //------------------------------------------------------------------------------
+bool RFile::Exists(const RString& name)
+{
+    if(FILE* file=fopen(name,"r"))
+    {
+        fclose(file);
+        return(true);
+    }
+    return(false);
+}
+
+//------------------------------------------------------------------------------
 RFile::~RFile(void)
 {
 	Close();

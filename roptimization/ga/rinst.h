@@ -264,9 +264,19 @@ public:
 	inline unsigned int GetPopSize(void) const {return(PopSize);}
 	
 	/**
-	 * Number of generations run.
+	 * Get the number of generations run.
 	 */
 	inline unsigned int GetGen(void) const {return(Gen);}
+
+	/**
+	* Get the age of the best chromosome.
+	*/
+	inline unsigned int GetAgeBest(void) const {return(AgeBest);}
+
+	/**
+	* Get the age of the best chromosome ever calculate.
+	*/
+	inline unsigned int GetAgeBestPop(void) const {return(AgeBestPop);}
 	
 	/**
 	* Initialisation of the instance.
