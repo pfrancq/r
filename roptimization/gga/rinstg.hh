@@ -115,14 +115,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::HandleSameChromosomes(void)
+	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::AnalysePop(void)
 {
 	cChromo **C,**C1,*p;
 	unsigned int i,j;
 
 	if(this->Debug)
-		this->Debug->BeginFunc("HandleSameChromosomes","RInstG");
+		this->Debug->BeginFunc("AnalysePop","RInstG");
 
+	// Call the default AnalysePop
+	RInst<cInst,cChromo,cFit,cThreadData>::AnalysePop();
+	
+	// Look if same chromosomes and modify population to have only one copy of each
 	for(i=0,C=this->Chromosomes;i<this->GetPopSize()-1;C++,i++)
 	{
 		for(j=i+1,C1=C+1;j<this->GetPopSize();C1++,j++)
@@ -146,7 +150,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	}
 
 	if(this->Debug)
-		this->Debug->EndFunc("HandleSameChromosomes","RInstG");
+		this->Debug->EndFunc("AnalysePop","RInstG");
 }
 
 
@@ -158,7 +162,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		this->Debug->BeginFunc("RandomConstruct","RInstG");
 
 	RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct();
-	HandleSameChromosomes();
 
 	if(this->Debug)
 		this->Debug->EndFunc("RandomConstruct","RInstG");
@@ -173,7 +176,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		this->Debug->BeginFunc("Crossover","RInstG");
 
 	RInst<cInst,cChromo,cFit,cThreadData>::Crossover();
-	HandleSameChromosomes();
 
 	if(this->Debug)
 		this->Debug->EndFunc("Crossover","RInstG");
@@ -188,7 +190,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		this->Debug->BeginFunc("Mutation","RInstG");
 
 	RInst<cInst,cChromo,cFit,cThreadData>::Mutation();
-	HandleSameChromosomes();
 
 	if(this->Debug)
 		this->Debug->EndFunc("Mutation","RInstG");
@@ -203,7 +204,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		this->Debug->BeginFunc("Inversion","RInstG");
 
 	RInst<cInst,cChromo,cFit,cThreadData>::Inversion();
-	HandleSameChromosomes();
 
 	if(this->Debug)
 		this->Debug->EndFunc("Inversion","RInstG");

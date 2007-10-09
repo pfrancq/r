@@ -48,7 +48,7 @@ namespace R{
  * This class implements a basic support of URI (Uniform Resource Identifier),
  * in particular for the schemes involving files.
  * 
- * Here are two examples explaining how it is handle by the RRUI class:
+ * Here are two examples explaining how it is handle by the RURI class:
  * @code
  *   foo://example.com:8042/over/there?name=ferret#nose
  *   \ /   \______________/\_________/ \_________/ \__/

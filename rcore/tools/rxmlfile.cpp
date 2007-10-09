@@ -118,6 +118,15 @@ void RXMLFile::SetEncoding(const RString& name)
 
 
 //------------------------------------------------------------------------------
+size_t RXMLFile::GetCurrentDepth(void)
+{
+	if(Mode!=RIO::Read)
+		throw RIOException("File not in read mode");
+	return(CurDepth);
+}
+
+
+//------------------------------------------------------------------------------
 void RXMLFile::SetDocType(const RString& docType)
 {
 	DocType=docType;
@@ -131,6 +140,7 @@ void RXMLFile::Open(RIO::ModeType mode)
 	switch(Mode)
 	{
 		case RIO::Read:
+			CurDepth=0;
 			if(!XMLStruct)
 			{
 				XMLStruct=new RXMLStruct();
@@ -140,6 +150,7 @@ void RXMLFile::Open(RIO::ModeType mode)
 				XMLStruct->Clear(); // Make sure the xml structure is empty
 			LoadHeader();
 			LoadNextTag();
+			CurDepth=0;
 			break;
 
 		case RIO::Append:
@@ -565,7 +576,11 @@ void RXMLFile::LoadNextTag(void)
 				SkipSpaces();				
 			}			
 			else
+			{
+				CurDepth++;   	// Increase de depth			 				
 				LoadNextTag();
+				CurDepth--;   	// Decrease de depth	
+			}
 		}
 		else
 		{
@@ -740,6 +755,9 @@ void RXMLFile::LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,bool& popdef
 		}
 
 		// Insert the attribute
+		i=attrn.Find(':');
+		if(i!=-1)	
+			attrn=attrn.Mid(i+1); // Cut the namespace from the attribute name
 		attrs.InsertPtr(XMLStruct->NewAttr(attrn,attrv,uri));
 	}
 }

@@ -246,10 +246,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 {
 	unsigned int g1,g2,hold;
 
+	if(this->Used.GetNb()<3)
+		return;
+	
 	if(this->Instance->Debug)
 		this->Instance->Debug->BeginFunc("Inversion","RChromoG");
-
-	if(this->Used.GetNb()<3) return;
+	
 	g1=this->Instance->RRand(this->Used.GetNb());
 	hold=g2=g1+this->Instance->RRand(this->Used.GetNb()-2)+1;
 	if(g2>this->Used.GetNb()-1)

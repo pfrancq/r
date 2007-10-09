@@ -109,6 +109,11 @@ protected:
 	 */
 	bool AvoidSpaces;
 	
+	/**
+	 * Current Depth.
+	 */
+	size_t CurDepth;
+	
 public:
 
 	/**
@@ -157,6 +162,11 @@ public:
 	*/
 	void SetEncoding(const RString& name);
 
+	/**
+	 * Get the current depth of the XML tree parsed.
+	 */
+	size_t GetCurrentDepth(void);
+	
 	/**
 	* Set the doctype of the XML document.
 	* @param docType        Name of the encoding.
