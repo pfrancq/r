@@ -329,7 +329,7 @@ void BasicContainer::InsertPtrAt(bool bAlloc,const void* ins,size_t pos,bool del
 	{
 		if(del)
 		{
-			if(bAlloc)
+			if(bAlloc&&(*ptr))
 				Delete(*ptr);
 		}
 		else

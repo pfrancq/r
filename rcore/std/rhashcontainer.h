@@ -278,7 +278,7 @@ private:
 	{
 		const Hash* ptr;
 		if((hash>HashTable.GetMaxPos())||(!(ptr=HashTable[hash])))
-			throw RException("Invalid hash index");
+			return(0);
 		return(ptr);
 	}
 
@@ -310,6 +310,8 @@ public:
 	{
 		
 		const Hash* ptr=GetHash(tag.HashIndex(1));
+		if(!ptr)
+			return(false);
 		return(ptr->IsIn<TUse>(tag,sortkey));
 	}
 
@@ -326,6 +328,8 @@ public:
 	template<class TUse> inline C* GetPtr(const TUse& tag,bool sortkey=true) const
 	{
 		const Hash* ptr=GetHash(tag.HashIndex(1));
+		if(!ptr)
+			return(0);
 		return(ptr->GetPtr<TUse>(tag,sortkey));
 	}
 
@@ -375,6 +379,8 @@ public:
 	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=true)
 	{
 		Hash* ptr=GetHash(tag.HashIndex(1));
+		if(!ptr)
+			return;
 		ptr->DeletePtr<TUse>(tag,sortkey);
 	}
 
