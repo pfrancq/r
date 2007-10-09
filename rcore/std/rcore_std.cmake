@@ -13,7 +13,8 @@ SET(rcore_std_INST_INCLUDES rstd.h
                        basiccontainer.h
                        basiccursor.h
                        basicstring.h
-                       basicstring.hh)
+                       basicstring.hh
+                       rportsmacro.h)
 
 SET(rcore_std_TARGET_SOURCES rstd.cpp
                              basiccontainer.cpp
