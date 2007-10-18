@@ -213,23 +213,17 @@ void RXMLFile::Close(void)
 //------------------------------------------------------------------------------
 RChar RXMLFile::CodeToChar(RString& str)
 {
-	RChar res;
-
 	if(!str.Compare("quot"))
-		res='"';
+		return('"');
 	if(!str.Compare("amp"))
-		res='&';
+		return('&');
 	if(!str.Compare("apos"))
-		res='\'';
+		return('\'');
 	if(!str.Compare("lt"))
-		res='<';
+		return('<');
 	if(!str.Compare("gt"))
-		res='>';
-
-	if(!res.IsNull())
-		return(res);
-	else
-		return(0);
+		return('>');
+	return(0);
 }
 
 

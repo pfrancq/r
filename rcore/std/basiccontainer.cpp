@@ -335,10 +335,12 @@ void BasicContainer::InsertPtrAt(bool bAlloc,const void* ins,size_t pos,bool del
 		else
 		{
 			memmove(ptr+1,ptr,(LastPtr-pos)*sizeof(void*));
+			NbPtr++;
 		}
 	}
-	(*ptr)=(void*)ins;
-	NbPtr++;
+	else
+		NbPtr++;
+	(*ptr)=(void*)ins;		
 	if(pos+1>LastPtr)
 	{
 		LastPtr=pos+1;

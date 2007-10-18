@@ -4,9 +4,9 @@
 
 	RGroupingKMeans.h
 
-	Generic Heuristic for Grouping - Header
+	k-Means Algorithm - Header
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 2003-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -38,13 +38,11 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rdate.h>
 #include <rstring.h>
 #include <rcontainer.h>
 #include <random.h>
-#include <robjs.h>
-#include <rgroups.h>
 #include <rcursor.h>
+#include <rdebug.h>
 
 
 //------------------------------------------------------------------------------
@@ -53,53 +51,35 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RGroupingKMeans class provides an abstract class for grouping
-* heuristics.
+* The RGroupingKMeans class provides the implementation of a basic k-Means
+* grouping algorithm.
 * @author Pascal Francq
-* @short Generic Grouping Heuristic class.
+* @short k-Means Algorithm.
 */
-template<class cGroup,class cObj,class cGroupData,class cGroups>
+template<class cGroup,class cObj,class cGroups>
 	class RGroupingKMeans
 {
-
-public:
-
-	/**
-	* enum of initial conditions
-	*/
-	enum Initial {Refined,Random};
-
 protected:
 
 	/**
-	* init method chosen
-	*/
-	Initial initial;
-
+	 * Name of the k-Means
+	 */
+	RString Name;
+	
 	/**
-	* The random number generator to use.
+	 * Debugger.
+	 */
+	RDebug* Debug;
+	
+	/**
+	* Random number generator to use.
 	*/
 	RRandom* Rand;
 
 	/**
-	* the number of subsamples
-	*/
-	unsigned int NbSubSamples;
-
-	/**
-	* rate of subprofiles in each subsamples
-	*/
-	unsigned int SubSamplesRate;
-
-	/**
-	* maximum number of KMeans verification in refineing procedure
-	*/
-	 unsigned int VerifyKMeansMaxIters;
-
-	/**
 	* Objects to be grouped.
 	*/
-	RContainer<cObj,false,true>* Objs;
+	 RCursor<cObj> Objs;
 
 	/**
 	* Groups.
@@ -107,203 +87,78 @@ protected:
 	cGroups* Groups;
 
 	/**
-	* Current object to place.
-	*/
-	cObj* CurObj;
-
-	/**
 	* random table of objects;
 	*/
-	cObj **RandObjects;
+	cObj** RandObjects;
 
 	/**
-	* Current group manipulated.
+	* Prototypes of the groups. The order of the prototypes is identical as the
+	* corresponding group.
 	*/
-	cGroup* CurGroup;
-
+	RContainer<cObj,false,false> Protos;
+	
 	/**
-	* value for decimals error
-	*/
-	double Epsilon;
-
-	/**
-	* Number of groups.
-	*/
-	unsigned int GroupsNumber;
-
-	/**
-	* Number of iterations
-	*/
-	unsigned int IterNumber;
-
-	/**
-	* Number of tests
-	*/
-	unsigned int NbTests;
-
-	/**
-	* Maximum number of groups
-	*/
-	unsigned int MaxNbGroups;
-
-	/**
-	* Minimum number of groups
-	*/
-	unsigned int MinNbGroups;
-
-	/**
-	* Container of cObj considered as prototypes
-	*/
-	RContainer<cObj,false,false>* protos;
-
-	/**
-	* Temporary container of groupment, needed to run tests
-	*/
-	RContainer<cGroup,false,false>* grpstemp2;
-
-	/**
-	* Container of subprofiles considered as prototypes,
-	* needed to calculate the error between two iterations
-	*/
-	RContainer<cObj,false,false>* protoserror;
-
-	/**
-	* Temporary container of groupment, needed to run tests
-	*/
-	RContainer<cGroup,false,false>* grpstemp;
-
-	/**
-	* Container of the final groupment
-	*/
-	RContainer<cGroup,false,false>* grpsfinal;
-
+	 * Number of Iterations.
+	 */
+	unsigned int NbIterations;
+	
 public:
 
 	/**
-	* Construct the grouping heuristic.
-	* @param Objs           Pointer to the objects.
+	* Construct the k-Means.
+	* @param n               Name of the k-Means.
+	* @param r               Random number generator to use.
+	* @param Objs            Cursor over the objects to group.
+	* @param debug           Debugger.
 	*/
-	RGroupingKMeans(RContainer<cObj,false,true>* Objs);
+	RGroupingKMeans(const RString& n,RRandom* r,RCursor<cObj> objs,RDebug* debug=0);
 
 	/**
 	* Get the name of the heuristic.
-	* @return Pointer to a C String.
 	*/
-	const char* GetName(void) const {return(this->Name());}
+	RString GetName(void) const {return(Name);}
 
 	/**
-	* Set the maximum number of iterations for kmeans.
-	* @param i              Number of iterations.
-	*/
-	void SetIterNumber(unsigned int i) {IterNumber=i;}
+	 * Get the number of interations runned.
+	 */
+	unsigned int GetNbIterations(void) const {return(NbIterations);}
+	
+protected:
 
 	/**
-	* Set the number of tests.
-	* @param i              Number of tests.
+	 * Computre the prototype of a given group.
+	 * @param                Group.
+	 * @return Pointer to the object which is the prototype.
+	 */
+	cObj* ComputePrototype(cGroup* group);
+	
+	/**
+	 * Compute the sum of similarities between a given object and the other
+	 * objects of its group.
+	 * @param group          Group.
+	 * @param obj            Object.
+	 */
+	double ComputeSumSim(cGroup* group,cObj* obj);
+		
+	/**
+	* Randmoly creates an initialization for the k-Means
+	* @param nbclusters      Number of groups to create.
 	*/
-	void SetNbTests(unsigned int i) {NbTests=i;}
+	void InitRandom(size_t nbclusters);
 
 	/**
-	* Set the number of Groups.
-	* @param i              Number of groups.
+	* Re-Allocation step where the objects are put in the group of the most
+	* similar prototype.
 	*/
-	void SetGroupsNumber(unsigned int i) {GroupsNumber=i;}
+	void ReAllocate(void);
 
 	/**
-	* Set the number of sub-samples.
-	* @param i              Number of sub-samples.
+	* Computing the new prototypes.
+	* @return Number of different prototypes.
 	*/
-	void SetSubSamplesNumber(unsigned int i) {NbSubSamples=i;}
-
-	/**
-	* Set the sub-samples rate.
-	* @param i              Sub-samples rate.
-	*/
-	void SetSubSamplesRate(unsigned int i) {SubSamplesRate=i;}
-
-	/**
-	* Set VerifyKMeansMaxIters limit.
-	* @param i              Maximum number of k-Means iterations.
-	*/
-	void SetVerifyKMeansMaxIters(unsigned int i) {VerifyKMeansMaxIters=i;}
-
-	/**
-	* Set the refined parameter.
-	* @param i              Refined parameter.
-	*/
-	void SetInitial(Initial i) {initial=i;}
-
-	/**
-	* Set the value of Epsilon.
-	* @param d              Value of epsilon.
-	*/
-	void SetEpsilon(double d) {Epsilon=d;}
-
-	/**
-	* Initialize the heuristic.
-	*/
-	void Init(void);
-
-	/**
-	* Test if an object is a valid prototype.
-	* @param prototypes     List of prototypes.
-	* @param obj            Object to test.
-	* @return bool.
-	*/
-	bool IsValidProto(RContainer<cObj,false,false>* prototypes,cObj* obj);
-
-	/**
-	* Verify wether the initializing kmeans is ok.
-	*/
-	bool VerifyKMeansMod(void);
-
-	/**
-	* Calulates the distortion of a grouping.
-	* @param grps           Groups.
-	*/
-	double Distortion(RContainer<cGroup,false,false>* grps);
-
-	/**
-	* Calculates the variance of a group.
-	* @param grp            Group.
-	*/
-	double GroupVariance(cGroup* grp);
-
-	/**
-	* Re-Allocation step.
-	* @param dataset        Dataset to re-allocate.
-	*/
-	void ReAllocate(RContainer<cObj,false,true>* dataset);
-
-	/**
-	* Re-Centering step.
-	*/
-	void ReCenter(void);
-
-	/**
-	* Calculates the cost function.
-	* @param grps           Groups.
-	*/
-	double CostFunction(RContainer<cGroup,false,false>* grps);
-
-	/**
-	* Calculate the distance between an object and a prototype.
-	* @param obj            Object.
-	* @param proto          Prototype.
-	*/
-	double Distance(cObj* obj, cObj* proto);
-
-	/**
-	* Calculates the error between two iterations of K-Means.
-	*/
-	int CalcError(void);
-
-	/**
-	* Execute the K-Means.
-	* @param dataset         Set of all objects to group.
-	* @param nbtests         Number of tests.
-	*/
-	void Execute(RContainer<cObj,false,true>* dataset, unsigned int nbtests);
+	unsigned int CalcNewProtosNb(void);
+	
+public:	
 
 	/**
 	* Couts many informations on K-Means configuration.
@@ -311,62 +166,30 @@ public:
 	void DisplayInfos(void);
 
 	/**
-	* Chooses subprofiles among the dataset to initialize the K-Means
-	* @param dataset         Set of all objects to group.
-	* @param nbobjects       Number of objects to choose.
+	* Calculates the similarity between two objects. It is suppose that if the
+	* similarity is between -1 and 1 (same objects).
+	* @param obj1            First object.
+	* @param obj2            Second object.
 	*/
-	void RandomInitObjects(RContainer<cObj,false,true>* dataset, unsigned int nbobjects);
-
-	/**
-	* Function to evaluates the number of groups.
-	*/
-	void EvaluateGroupsNumber(void);
-
-	/**
-	* Finds the group containing a given object.
-	* @param grps           List of all groups.
-	* @param obj            Object.
-	*/
-	cGroup* FindGroup(RContainer<cGroup,false,false>* grps, cObj* obj);
-
-	/**
-	* Calculates the similarity between two objects.
-	* @param obj1           First object.
-	* @param obj2           Second object.
-	*/
-	double Similarity(cObj* obj1, cObj* obj2);
-
-	/**
-	* Gets the final grouping, result of the K-Means procedure.
-	*/
-	RContainer<cGroup,false,false>* GetGrouping(void){return(grpsfinal);}
-
-	/**
-	* Init the protos to the refined points.
-	* @param nbsub           number of subsamples to get.
-	* @param level           level  (in %) of the full dataset for the subsamples
-	*/
-	void RefiningCenters(int nbsub, int level);
-
-	/**
-	* Find a group for the next object.
-	*/
-	virtual cGroup* FindGroup(void) {return(0);};
+	virtual double Similarity(cObj* obj1, cObj* obj2)=0;
 
 	/**
 	* Run the heuristic.
+	* @param groups          Group to initialize.
+	* @param itermax         Maximal number of iterations.
+	* @param nbclusters      Number of groups to create. 
 	*/
-	void Run(void);
+	void Run(cGroups* groups,unsigned int itermax,size_t nbclusters);
 
 	/**
-	* Destruct the grouping heuristic.
+	* Destruct the k-Means.
 	*/
 	virtual ~RGroupingKMeans(void);
 };
 
 
 //------------------------------------------------------------------------------
-// Definitions of templates
+// inline implementation
 #include <rgroupingkmeans.hh>
 
 

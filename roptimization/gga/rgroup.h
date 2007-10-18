@@ -153,19 +153,22 @@ public:
 	virtual void PostDelete(const cObj* obj);
 
 	/**
-	* Look if an object can be insert in the group.
+	* Look if an object can be insert in the group. By default, the method
+	* returns always true.
 	* @param obj            Pointer to the object to insert.
 	*/
 	virtual bool CanInsert(const cObj* obj) const;
 
 	/**
-	* Look if an object is "compatible" with a specific group.
+	* Look if an object is "compatible" with a specific group. By default, the
+	* method returns always true.
 	* @param obj            Pointer to the object to verify.
 	*/
 	virtual bool IsCompatible(const cObj* obj) const;
 
 	/**
-	* Look if an object can be delete from the group.
+	* Look if an object can be delete from the group. By default, the method
+	* returns always true.
 	* @param obj            Pointer to the object to delete.
 	*/
 	virtual bool CanDelete(const cObj* obj) const;
