@@ -147,6 +147,9 @@ protected:
 
 	// Set a new length to the string.
 	template<class B> void SetLen(size_t len);
+	
+	// Set a new length to the string and fill it.
+	template<class B> void SetLen(size_t len,const S& str);
 
 public:
 

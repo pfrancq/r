@@ -170,6 +170,15 @@ public:
 	inline void SetLen(size_t len) {BasicString<char,RCString>::SetLen<BasicCharBuffer>(len);}
 
 	/**
+	* Set the length of the string. If the length is greater than the current
+	* one, the second string is used to fill the first string (eventually it is
+	* copid several times).
+	* @param len             Length of the string.
+	* @param str             String used to fill.
+	*/
+	inline void SetLen(size_t len,const RCString& str) {BasicString<char,RCString>::SetLen<BasicCharBuffer>(len,str);}
+	
+	/**
 	* This function returns the character at a given position in the string.
 	* (Read-Only).
 	* @param idx             Index of the character.

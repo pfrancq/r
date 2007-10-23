@@ -196,6 +196,15 @@ public:
 	* @param len             Length of the string.
 	*/
 	inline void SetLen(size_t len) {BasicString<RChar,RString>::SetLen<CharBuffer>(len);}
+	
+	/**
+	* Set the length of the string. If the length is greater than the current
+	* one, the second string is used to fill the first string (eventually it is
+	* copid several times).
+	* @param len             Length of the string.
+	* @param str             String used to fill.
+	*/
+	inline void SetLen(size_t len,const RString& str) {BasicString<RChar,RString>::SetLen<CharBuffer>(len,str);}
 
 	/**
 	* Transform the string into a "C String" in Latin1 encoding. The resulting

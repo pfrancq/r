@@ -379,6 +379,28 @@ template<class C,class S> template<class B>
 
 
 //-----------------------------------------------------------------------------
+template<class C,class S> template<class B>
+	void R::BasicString<C,S>::SetLen(size_t len,const S& str)
+{
+	size_t oldsize=Data->Len;
+	SetLen<B>(len);
+	Data->Len=len;
+	if(oldsize<len)
+	{
+		C* ptr=&Data->Text[oldsize];
+		C* ptr2=str.Data->Text;
+		for(;oldsize<len;oldsize++,ptr++,ptr2++)
+		{
+			if(!(*ptr2))
+				ptr2=str.Data->Text;
+			if((*ptr2)!=0)
+				(*ptr)=(*ptr2);
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
 template<class C,class S>
 	void R::BasicString<C,S>::Split(R::RContainer<S,true,false>& elements,const C car) const
 {
