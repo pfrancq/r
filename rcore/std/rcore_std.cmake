@@ -14,7 +14,9 @@ SET(rcore_std_INST_INCLUDES rstd.h
                        basiccursor.h
                        basicstring.h
                        basicstring.hh
-                       rportsmacro.h)
+                       rportsmacro.h
+                       rvectorint.h
+                       rvectorint.hh)
 
 SET(rcore_std_TARGET_SOURCES rstd.cpp
                              basiccontainer.cpp
