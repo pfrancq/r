@@ -373,49 +373,55 @@ public:
 	// Static conversion functions
 
 	/**
-	* Transform an int to a string.
-	*/
+	 * Transform an int to a string.
+	 * @param nb             Number.
+	 */
 	static RString Number(const int nb);
 
 	/**
-	* Transform an unsigned int to a string.
-	*/
+	 * Transform an unsigned int to a string.
+	 * @param nb             Number.
+	 */
 	static RString Number(const unsigned int nb);
 
 	/**
-	* Transform a long to a string.
-	*/
+	 * Transform a long to a string.
+	 * @param nb             Number.
+	 */
 	static RString Number(const long nb);
 
 	/**
-	* Transform an unsigned char to a string.
-	*/
-	static RString Number(const unsigned char c);
-
-	/**
-	* Transform an unsigned long to a string.
-	*/
+	 * Transform an unsigned long to a string.
+	 * @param nb             Number.
+	 */
 	static RString Number(const unsigned long nb);
 
 	/**
-	* Transform an unsigned long long to a string.
-	*/
+	 * Transform an unsigned long long to a string.
+	 * @param nb             Number.
+	 */
 	static RString Number(const unsigned long long nb);
 
 	/**
-	* Transform a float to a string.
-	*/
-	static RString Number(const float nb);
+	 * Transform a float to a string.
+	 * @param nb             Number.
+	 * @param format         String representing the format.
+	 */
+	static RString Number(const float nb,const char* format="%E");
 
 	/**
-	* Transform a double to a string.
-	*/
-	static RString Number(const double nb);
+	 * Transform a double to a string.
+	 * @param nb             Number.
+	 * @param format         String representing the format.
+	 */
+	static RString Number(const double nb,const char* format="%E");
 
 	/**
-	* Transform a long double to a string.
-	*/
-	static RString Number(const long double nb);
+	 * Transform a long double to a string.
+	 * @param nb             Number.
+	 * @param format         String representing the format.
+	 */
+	static RString Number(const long double nb,const char* format="%LE");
 	
 private:
 

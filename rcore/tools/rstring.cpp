@@ -605,17 +605,6 @@ RString RString::Number(const long nb)
 
 
 //-----------------------------------------------------------------------------
-RString RString::Number(const unsigned char c)
-{
-	char Tmp[2];
-
-	(*Tmp)=c;
-	(*(Tmp+1))=0;
-	return(RString(Tmp));
-}
-
-
-//-----------------------------------------------------------------------------
 RString RString::Number(const unsigned long nb)
 {
 	char Tmp[20];
@@ -638,31 +627,31 @@ RString RString::Number(const unsigned long long nb)
 
 
 //-----------------------------------------------------------------------------
-RString RString::Number(const float nb)
+RString RString::Number(const float nb,const char* format)
 {
 	char Tmp[20];
 
-	sprintf(Tmp,"%G",nb);
+	sprintf(Tmp,format,nb);
 	return(RString(Tmp));
 }
 
 
 //-----------------------------------------------------------------------------
-RString RString::Number(const double nb)
+RString RString::Number(const double nb,const char* format)
 {
 	char Tmp[20];
 
-	sprintf(Tmp,"%G",nb);
+	sprintf(Tmp,format,nb);
 	return(RString(Tmp));
 }
 
 
 //-----------------------------------------------------------------------------
-RString RString::Number(const long double nb)
+RString RString::Number(const long double nb,const char* format)
 {
 	char Tmp[20];
 
-	sprintf(Tmp,"%LG",nb);
+	sprintf(Tmp,format,nb);
 	return(RString(Tmp));
 }
 
