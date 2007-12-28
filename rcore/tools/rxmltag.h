@@ -206,10 +206,10 @@ public:
 	/**
 	* Insert an attribute. If the attribute already exist, the value can be
 	* overwritten depending of the second parameter.
-	* @param Attr           Attribute to insert
+	* @param attr           Attribute to insert
 	* @param overwritte     Overwritte existing parameter.
 	*/
-	void InsertAttr(RXMLAttr* Attr,bool overwritte=true);
+	void InsertAttr(RXMLAttr* attr,bool overwritte=true);
 
 	/**
 	* Insert an attribute. If the attribute already exist, the value can be
@@ -218,6 +218,7 @@ public:
 	* attribute. If not, a RXMLAttr is created.
 	* @param name           Name of the attribute.
 	* @param value          Value of the attribute.
+	* @param xmlns          XML Namespace.
 	* @param overwritte     Overwritte existing parameter.
 	*/
 	void InsertAttr(const RString& name,const RString& value,const RString& xmlns=RString::Null,bool overwritte=true);

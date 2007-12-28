@@ -157,20 +157,20 @@ RString RXMLTag::GetTagAttrValue(const RString& tag,const RString& attr) const
 
 
 //-----------------------------------------------------------------------------
-void RXMLTag::InsertAttr(RXMLAttr* Attr,bool overwritte)
+void RXMLTag::InsertAttr(RXMLAttr* attr,bool overwritte)
 {
 	// Check if the attribute exist
-	RXMLAttr* attr=GetAttr(Attr->GetName());
-	if(attr)
+	RXMLAttr* exist=GetAttr(attr->GetName());
+	if(exist)
 	{
 		if(!overwritte)
-			throw RException("Attribute "+Attr->GetName()+" already exists for tag "+Name);
-		if(attr!=Attr)
-			Attrs.DeletePtr(attr->GetName());
+			throw RException("Attribute "+attr->GetName()+" already exists for tag "+Name);
+		if(exist!=attr)
+			Attrs.DeletePtr(exist->GetName());
 		else
 			return;
 	}
-	Attrs.InsertPtr(Attr);
+	Attrs.InsertPtr(attr);
 }
 
 

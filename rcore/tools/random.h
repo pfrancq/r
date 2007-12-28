@@ -10,7 +10,7 @@
 	RRandomBetter Park & Miller with a Bays & Durham shuffle
 	RRandomBest   L'Ecuyer's two-series combo plus a shuffle for a period > 2e18
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2007 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -102,19 +102,15 @@ public:
 		T aux;
 		register T* p1;
 		register T* p2;
-
-		#ifdef __BORLANDC__
-			#pragma warn -pia
-		#endif
+		
 		if(size>1)
+		{
 			for(p1=arr,i=size;;p1++)
 			{
 				if((jump=Value(i))) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
 				if(!--i) break;
 			}
-		#ifdef __BORLANDC__
-			#pragma warn +pia
-		#endif
+		}
 	}
 
 	virtual ~RRandom(void) {}
