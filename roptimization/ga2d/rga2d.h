@@ -66,7 +66,8 @@ public:
 
 	/**
 	* Construct the modify exception.
-	* @param msg            The message.
+	* @param msg             The message.
+	* @param type            Type of the exception.
 	*/
 	RGA2DException(const char* msg,tException type=eGA2D) : RGAException(msg,type) {}
 };
