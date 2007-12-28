@@ -119,13 +119,13 @@ public:
 	* @param objs           Pointer to the objects.
 	* @param debug          Debugger.
 	*/
-	RGroupingHeuristic(const char* n,RRandom* r,RCursor<cObj> objs,RDebug* debug=0);
+	RGroupingHeuristic(const RString& n,RRandom* r,RCursor<cObj> objs,RDebug* debug=0);
 
 	/**
 	* Get the name of the heuristic.
 	* @return Pointer to a C String.
 	*/
-	const char* GetName(void) const {return(Name());}
+	const RString GetName(void) const {return(Name);}
 
 	/**
 	* Initialize the heuristic.

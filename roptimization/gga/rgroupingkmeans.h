@@ -108,7 +108,7 @@ public:
 	* Construct the k-Means.
 	* @param n               Name of the k-Means.
 	* @param r               Random number generator to use.
-	* @param Objs            Cursor over the objects to group.
+	* @param objs            Cursor over the objects to group.
 	* @param debug           Debugger.
 	*/
 	RGroupingKMeans(const RString& n,RRandom* r,RCursor<cObj> objs,RDebug* debug=0);
@@ -126,8 +126,8 @@ public:
 protected:
 
 	/**
-	 * Computre the prototype of a given group.
-	 * @param                Group.
+	 * Compute the prototype of a given group.
+	 * @param group          Group.
 	 * @return Pointer to the object which is the prototype.
 	 */
 	cObj* ComputePrototype(cGroup* group);

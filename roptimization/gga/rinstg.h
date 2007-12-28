@@ -135,7 +135,6 @@ public:
 
 	/**
 	* Initialisation of the instance.
-	* @param gdata          The Data to use for the construction of the groups.
 	*/
 	virtual void Init(void);
 
@@ -151,7 +150,6 @@ public:
 	*/
 	bool GetEmptyModifiedGroups(void) const {return(EmptyModifiedGroups);}
 
-
 	/**
 	* Set if the groups containing objects that are also contained in groups
 	* inserted during a crossover must be completely emptied.
@@ -159,12 +157,11 @@ public:
 	*/
 	void SetEmptyModifiedGroups(bool empty) {EmptyModifiedGroups=empty;}
 
-
 	/**
 	* Get the Objects to group.
 	* @return Pointer to the objects.
 	*/
-	RCursor<cObj>* GetObjs(void) const {return(Objs);}
+	RCursor<cObj> GetObjs(void) const {return(RCursor<cObj>(Objs));}
 
 	/**
 	* Create a heuristic object.

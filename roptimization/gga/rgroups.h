@@ -124,7 +124,6 @@ public:
 
 	/**
 	* Init the groups.
-	* @param data           Data used to construct the groups.
 	*/
 	void Init(void);
 
@@ -194,7 +193,7 @@ public:
 
 	/**
 	* Return a cursor over the objects of a group. The cursor cannot iterate
-	* after the last oobject.
+	* after the last object.
 	* @param grp            Group.
 	*/
 	RCursor<cObj> GetObjs(const cGroup& grp) const;
