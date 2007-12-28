@@ -86,6 +86,13 @@ public:
 //------------------------------------------------------------------------------
 /**
 * Instance for the generic GA.
+* 
+* The instance emit several signals:
+* - PostNotification("RInst::Interact") : Possible interactions from the
+*   outside.
+* - PostNotification("RInst::Best",unsigned int) : The best chromosome has
+*   changed at a given generation.
+* - PostNotification("RInst::Generation") : A new generation has be done.
 * @author Pascal Francq
 * @short Generic GA instance.
 */

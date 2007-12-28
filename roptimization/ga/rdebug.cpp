@@ -115,7 +115,7 @@ void RDebug::BeginFunc(RString Name,RString Object)
 {
 	RString what("Object");
 	RString obj(Object);
-	BeginTag(Name,1,&what,&obj);
+	BeginTag(Name,2,&what,&obj);
 }
 
 
@@ -137,7 +137,7 @@ void RDebug::BeginApp(const RString& app)
 	strcpy(TempString,ctime(&t));
 	TempString[strlen(TempString)-1]=0;
 	RString Time(TempString);
-	BeginTag(app,1,&what,&Time);
+	BeginTag(app,2,&what,&Time);
 }
 
 
