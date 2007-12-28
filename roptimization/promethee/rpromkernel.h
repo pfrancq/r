@@ -84,7 +84,6 @@ public:
 	* @param name           The name of the kernel.
 	* @param sol            Number of solutions.
 	* @param crit           Number of criteria.
-	* @param norm           Normlisation activ.
 	*/
 	RPromKernel(const char* name,unsigned int sol,unsigned int crit);
 
