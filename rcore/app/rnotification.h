@@ -85,6 +85,11 @@ class RNotification
 	*/
 	RObject* Sender;
 
+	/**
+	 * Object which is currently receiving the notification.
+	 */
+	RObject* Receiver;
+	
 public:
 
 	/**
@@ -112,9 +117,14 @@ public:
 	hNotification GetHandle(void) const {return(Handle);}
 
 	/**
-	* Get the senderof the notification.
+	* Get the sender of the notification.
 	*/
 	RObject* GetSender(void) const {return(Sender);}
+	
+	/**
+	* Get the receiver of the notification.
+	*/
+	RObject* GetReceiver(void) const {return(Receiver);}
 
 	/**
 	* Desturctor. This is only used OO purposes.

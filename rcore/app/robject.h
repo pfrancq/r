@@ -68,9 +68,20 @@ namespace R{
 * {
 *    MyObject Obj1("Object 1");
 *    MyObject Obj2("Object 2");
-*    NotificationCenter.PostNotification("Message",(long)3);
+*    NotificationCenter.PostNotification("Example",(long)3);
 * } 
 
+* @endcode
+* 
+* It may append that a call to a method InsertObserver does not work well when
+* objects inheriting from RObject also inherit from other objects libraries
+* (such as Qt). The results is that the 'this' may not point to the real
+* address. To avoid this, you must explicitly cast 'this':
+* @code
+*    MyObject(const RString& name) : RObject(name)
+*    {
+*       reinterpret_cast<RObject*>(this)->InsertObserver(HANDLER(MyObject::Handle),"Example");
+*    } 
 * @endcode
 * @short Object.
 * @author Pascal Francq

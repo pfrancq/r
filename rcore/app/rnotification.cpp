@@ -45,14 +45,14 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RNotification::RNotification(const RCString& name,RObject* sender)
-	: Handle(NotificationCenter.GetNotificationHandle(name)), Sender(sender)
+	: Handle(NotificationCenter.GetNotificationHandle(name)), Sender(sender), Receiver(0)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RNotification::RNotification(hNotification handle,RObject* sender)
-	: Handle(handle), Sender(sender)
+	: Handle(handle), Sender(sender), Receiver(0)
 {
 }
 
@@ -62,6 +62,7 @@ RCString RNotification::GetName(void) const
 {
 	return(NotificationCenter.GetNotificationName(Handle));
 }
+
 
 //------------------------------------------------------------------------------
 RNotification::~RNotification(void)

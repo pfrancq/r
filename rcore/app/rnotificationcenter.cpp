@@ -241,6 +241,7 @@ void RNotificationCenter::PostNotification(const RNotification& notification)
 		RCursor<IListener> Notification(*reinterpret_cast<INotifications*>(notification.Handle));
 		for(Notification.Start();!Notification.End();Notification.Next())
 		{
+			const_cast<RNotification&>(notification).Receiver=Notification()->Observer;
 			(Notification()->Observer->*(Notification()->Handler))(notification);
 			Call=true;
 		}
@@ -249,9 +250,10 @@ void RNotificationCenter::PostNotification(const RNotification& notification)
 	// Tell the observers that want to know about a particular object
 	if(notification.Sender&&notification.Sender->Handlers)
 	{
-		RCursor<IListener> Object(*static_cast<IObjects*>(notification.Sender->Handlers));
+		RCursor<IListener> Object(*reinterpret_cast<IObjects*>(notification.Sender->Handlers));
 		for(Object.Start();!Object.End();Object.Next())
 		{
+			const_cast<RNotification&>(notification).Receiver=Object()->Observer;
 			if((Object()->Handle)&&(Object()->Handle!=notification.Handle))
 				continue;
 			(Object()->Observer->*(Object()->Handler))(notification);
@@ -263,11 +265,13 @@ void RNotificationCenter::PostNotification(const RNotification& notification)
 	RCursor<IListener> Default(Data->Defaults);
 	for(Default.Start();!Default.End();Default.Next())
 	{
+		const_cast<RNotification&>(notification).Receiver=Default()->Observer;
 		(Default()->Observer->*(Default()->Handler))(notification);
 		Call=true;
 	}
 
 	// If nobody has catch the message, call the 'HandlerNotFound' method.
+	const_cast<RNotification&>(notification).Receiver=0;
 	if((!Call)&&notification.GetSender())
 		notification.GetSender()->HandlerNotFound(notification);
 }
