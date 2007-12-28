@@ -51,59 +51,59 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	RVectorInt<bOrder>::RVectorInt(size_t max)
+template<class I,bool bOrder>
+	RVectorInt<I,bOrder>::RVectorInt(size_t max)
 	: MaxInt(max)
 {
 	NbInt = 0;
 	if(!max)
 		MaxInt=100;
-	List = new unsigned int[MaxInt];
-	memset(List,0,MaxInt*sizeof(unsigned int));
+	List = new I[MaxInt];
+	memset(List,0,MaxInt*sizeof(I));
 }
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	RVectorInt<bOrder>::RVectorInt(const RVectorInt& vec)
+template<class I,bool bOrder>
+	RVectorInt<I,bOrder>::RVectorInt(const RVectorInt& vec)
 	: MaxInt(vec.MaxInt)
 {
 	NbInt = vec.NbInt;
-	List = new unsigned int[MaxInt];
-	memcpy(List,vec.List,vec.MaxInt*sizeof(unsigned int));
+	List = new I[MaxInt];
+	memcpy(List,vec.List,vec.MaxInt*sizeof(I));
 }
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	void RVectorInt<bOrder>::Verify(size_t max)
+template<class I,bool bOrder>
+	void RVectorInt<I,bOrder>::Verify(size_t max)
 {
 	if(max>MaxInt)
 	{
-		unsigned int* ptr;
+		I* ptr;
 		size_t OldSize;
 		
 		OldSize=MaxInt;
 		MaxInt+=(MaxInt/2);
 		if(max>MaxInt)
 			MaxInt=max;
-		ptr=new unsigned int[MaxInt];
-		memcpy(ptr,List,OldSize*sizeof(unsigned int));
+		ptr=new I[MaxInt];
+		memcpy(ptr,List,OldSize*sizeof(I));
 		delete[] List;
 		List=ptr;
-		memset(&List[OldSize],0,(MaxInt-OldSize)*sizeof(unsigned int));
+		memset(&List[OldSize],0,(MaxInt-OldSize)*sizeof(I));
 	}
 }
 
 	
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	size_t RVectorInt<bOrder>::GetId(unsigned int nb,bool& find) const
+template<class I,bool bOrder>
+	size_t RVectorInt<I,bOrder>::GetId(I nb,bool& find) const
 {
 	size_t NbMin,NbMax,i=0;
 	int Comp=0;
 	bool Cont=true,NotLast=true;
-	unsigned int ptr,*ptr2;
+	I ptr,*ptr2;
 
 	if(bOrder)
 	{
@@ -160,25 +160,25 @@ template<bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	bool RVectorInt<bOrder>::IsSame(const RVectorInt& vi) const
+template<class I,bool bOrder>
+	bool RVectorInt<I,bOrder>::IsSame(const RVectorInt& vi) const
 {
 	size_t i;
-	unsigned int *ptr1,*ptr2;
+	I *ptr1,*ptr2;
 
 	if(NbInt!=vi.NbInt) return(false);
 	for(i=NbInt+1,ptr1=List,ptr2=vi.List;--i;ptr1++,ptr2++)
-		if(*ptr1!=*ptr2) return(false);
+		if((*ptr1)!=(*ptr2)) return(false);
 	return(true);
 }
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	bool RVectorInt<bOrder>::IsIn(unsigned int value) const
+template<class I,bool bOrder>
+	bool RVectorInt<I,bOrder>::IsIn(I value) const
 {
 	size_t i;
-	unsigned int *ptr;
+	I *ptr;
 
 	for(i=NbInt+1,ptr=List;--i;ptr++)
 		if((*ptr)==value) return(true);
@@ -187,8 +187,8 @@ template<bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	void RVectorInt<bOrder>::Insert(unsigned int ins)
+template<class I,bool bOrder>
+	void RVectorInt<I,bOrder>::Insert(I ins)
 {
 	Verify(NbInt+1);
 	if(bOrder)
@@ -203,10 +203,10 @@ template<bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	void RVectorInt<bOrder>::Insert(const RVectorInt& ins)
+template<class I,bool bOrder>
+	void RVectorInt<I,bOrder>::Insert(const RVectorInt& ins)
 {
-	unsigned int* ptr;
+	I* ptr;
 	size_t i;
 
 	Verify(NbInt+ins.NbInt);
@@ -216,26 +216,26 @@ template<bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	void RVectorInt<bOrder>::InsertAt(unsigned int ins,size_t pos)
+template<class I,bool bOrder>
+	void RVectorInt<I,bOrder>::InsertAt(I ins,size_t pos)
 {
-	unsigned int* ptr;
+	I* ptr;
 	
 	if(pos+1>MaxInt)
 		Verify(pos+1);
 	ptr=&List[pos];
 	if(pos<NbInt)
-		memmove(ptr+1,ptr,(NbInt-pos)*sizeof(unsigned int));
+		memmove(ptr+1,ptr,(NbInt-pos)*sizeof(I));
 	(*ptr)=ins;
 	NbInt++;	
 }
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	void RVectorInt<bOrder>::Delete(unsigned int del)
+template<class I,bool bOrder>
+	void RVectorInt<I,bOrder>::Delete(I del)
 {
-	unsigned int *ptr=List;
+	I *ptr=List;
 	size_t i=0;
 
 	while((*ptr)!=del)
@@ -244,51 +244,61 @@ template<bool bOrder>
 		ptr++;
 	}
 	NbInt--;
-	memcpy(ptr,ptr+1,sizeof(unsigned int)*(NbInt-i));
+	memcpy(ptr,ptr+1,sizeof(I)*(NbInt-i));
 	List[NbInt]=0;
 }
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	void RVectorInt<bOrder>::Clear(void)
+template<class I,bool bOrder>
+	void RVectorInt<I,bOrder>::Clear(void)
 {
 	NbInt=0;
-	memset(List,0,MaxInt*sizeof(unsigned int));
+	memset(List,0,MaxInt*sizeof(I));
+}
+
+//------------------------------------------------------------------------------
+template<class I,bool bOrder>
+	int RVectorInt<I,bOrder>::ReOrderFunction(const void* num1, const void* num2)
+{
+	const I *a=static_cast<const I*>(num1);
+	const I *b=static_cast<const I*>(num2);
+	return((*a)-(*b));
 }
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	RVectorInt<bOrder>& RVectorInt<bOrder>::operator=(const RVectorInt& src)
+template<class I,bool bOrder>
+	void RVectorInt<I,bOrder>::ReOrder(void)
+{
+	qsort(static_cast<void*>(List),NbInt,sizeof(I),ReOrderFunction);
+}
+
+
+//------------------------------------------------------------------------------
+template<class I,bool bOrder>
+	void RVectorInt<I,bOrder>::Randomize(RRandom* rand,size_t nb)
+{
+	if((!nb)||(nb>NbInt))
+		nb=NbInt;
+	rand->RandOrder<I>(List,nb);
+}
+
+	
+//------------------------------------------------------------------------------
+template<class I,bool bOrder>
+	RVectorInt<I,bOrder>& RVectorInt<I,bOrder>::operator=(const RVectorInt& src)
 {
 	Verify(src.NbInt);
 	NbInt = src.NbInt;
-	memcpy(List,src.List,sizeof(unsigned int)*NbInt);
+	memcpy(List,src.List,sizeof(I)*NbInt);
 	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
-template<bool bOrder>
-	unsigned int RVectorInt<bOrder>::operator[](size_t i) const
-{
-	return(List[i]);
-}
-
-
-//------------------------------------------------------------------------------
-template<bool bOrder>
-	size_t RVectorInt<bOrder>::GetNbInt(void) const
-{
-	return(NbInt);
-}
-
-
-//------------------------------------------------------------------------------
-template<bool bOrder>
-	RVectorInt<bOrder>::~RVectorInt(void)
+template<class I,bool bOrder>
+	RVectorInt<I,bOrder>::~RVectorInt(void)
 {
 	delete[] List;
 }
-

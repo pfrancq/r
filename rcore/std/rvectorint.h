@@ -45,6 +45,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
+#include <random.h>
 
 
 //------------------------------------------------------------------------------
@@ -52,19 +53,18 @@ namespace R{
 //------------------------------------------------------------------------------
 
 
-
 //------------------------------------------------------------------------------
 /**
-* The RVectorInt class provides a representation of ordered vector of integers.
-
-* @author Vandaele Valery
-* @short Ordered Integers Vector.
+* The RVectorInt class provides a representation of a vector of integers.
+* @param I                   Type of intergers.
+* @param bOrder              Is the vector of integer ordered?
+*
+* @author Pascal and Vandaele Valery.
+* @short Vector of integers.
 */
-template<bool bOrder=true>
+template<class I,bool bOrder=true>
 	class RVectorInt
 {
-protected:
-
 	/**
 	* Number of values in the list.
 	*/
@@ -78,14 +78,14 @@ protected:
 	/**
 	* The array representing the integer values.
 	*/
-	unsigned int* List;
+	I* List;
 
 private:
 
 	/**
 	* Pointer used to parse a list.
 	*/
-	unsigned int* Parse;
+	I* Parse;
 
 	/**
 	* Current position parsed.
@@ -124,7 +124,7 @@ private:
 	* @return Returns the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
-	size_t GetId(unsigned int nb,bool& find) const;
+	size_t GetId(I nb,bool& find) const;
 
 public:
 
@@ -140,13 +140,13 @@ public:
 	* @param value           The integer value to test.
 	* @return True if the integer is in the list, false else.
 	*/
-	bool IsIn(unsigned int value) const;
+	bool IsIn(I value) const;
 
 	/**
 	* Insert an integer value in the list.
 	* @param ins             The integer value to insert.
 	*/
-	void Insert(unsigned int ins);
+	void Insert(I ins);
 
 	/**
 	* Insert all the integer of a list in the current one. This function
@@ -161,19 +161,41 @@ public:
 	* @param ins             The integer value to insert.
 	* @param pos             The position where to insert.
 	*/
-	void InsertAt(unsigned int ins,size_t pos);
+	void InsertAt(I ins,size_t pos);
 
 	/**
 	* Delete an integer value in the list.
 	* @param del             The integer value to delete.
 	*/
-	void Delete(unsigned int del);
+	void Delete(I del);
 
 	/**
 	* Clear the list.
 	*/
 	void Clear(void);
 
+private:
+	
+	/**
+	 * Static function needed to order a list.
+	 */
+	static int ReOrderFunction(const void* num1, const void* num2);
+	
+public:
+	
+	/**
+	* Reorder the current list of unsigned integers in ascending order.
+	*/
+	void ReOrder(void);
+
+	/**
+	* Randomize the list.
+	* @param rand            Random number generator to use.
+	* @param nb              Number of first element to randomize. If null,
+	*                        all integers are randomized.
+	*/
+	void Randomize(RRandom* rand,size_t nb=0);
+	
 	/**
 	* Assignation operator.
 	* @param src             List used for the assignation.
@@ -184,13 +206,18 @@ public:
 	* Return the Integer value at position i. The first Integer value is at position 0.
 	* @param i               Index.
 	*/
-	unsigned int operator[](size_t i) const;
-
+	I operator[](size_t i) const {return(List[i]);}
+	
+	/**
+	 * Get the list of the integers contained in the vector.
+	 */
+	const I* GetList(void) const {return(List);}
+	
 	/**
 	* Get the number of Integer value in the list.
 	* @return unsigned int
 	*/
-	size_t GetNbInt(void) const;
+	size_t GetNb(void) const {return(NbInt);}
 
 	/**
 	* Start the iterator to go trough the list.
@@ -210,7 +237,7 @@ public:
 	/**
 	* Return the current element.
 	*/
-	unsigned int operator()(void) const {return(*Parse);}
+	I operator()(void) const {return(*Parse);}
 
 	/**
 	* Destructor of the list.
