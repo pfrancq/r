@@ -10,7 +10,7 @@ ENDMACRO (GET_TARGET_PROPERTY_WITH_DEFAULT)
 
 ###This macro is provided on CMake site but not in the standard configuration
 ###User contributed macro, correct compilation path
-# from http://www.cmake.org/Wiki/CMakeMacroLibtoolFile  
+# from http://www.cmake.org/Wiki/CMakeMacroLibtoolFile
 MACRO(CREATE_LIBTOOL_FILE _target _install_DIR)
   GET_TARGET_PROPERTY(_target_location ${_target} LOCATION)
   GET_TARGET_PROPERTY_WITH_DEFAULT(_target_static_lib ${_target} STATIC_LIB "")
@@ -83,10 +83,10 @@ MACRO(SUBDIR_PATH_MANIPULATION)
     ELSE(R_CUR_PATH)
         SET(R_CUR_PATH ${PROJECT_SOURCE_DIR})
     ENDIF(R_CUR_PATH)
-    
+
     #save path for recursion
     SET(TMP_R_CUR_PATH ${R_CUR_PATH})
-    
+
     #set path to current directory
     SET(R_CUR_PATH ${R_CUR_PATH}/${_in_dir})
 ENDMACRO(SUBDIR_PATH_MANIPULATION)
@@ -102,27 +102,27 @@ MACRO(ADD_SOURCE_FILE _for_target _in_dir _includes)
     ELSE(R_CUR_PATH)
         SET(R_CUR_PATH ${PROJECT_SOURCE_DIR})
     ENDIF(R_CUR_PATH)
-    
+
     #save path for recursion
     SET(TMP_R_CUR_PATH ${R_CUR_PATH})
-    
+
     #set path to current directory
     SET(R_CUR_PATH ${R_CUR_PATH}/${_in_dir})
     SET(${_includes} ${${_includes}} ${R_CUR_PATH})
-    
+
     #include sub directory content
     INCLUDE(${R_CUR_PATH}/${_for_target}_${_in_dir}.cmake)
-    
+
     #for each source file, add it to the list of file to build
     FOREACH(${_for_target}_${_in_dir}file ${${_for_target}_${_in_dir}_TARGET_SOURCES})
 	    SET(${_for_target}_TARGET_SOURCES ${${_for_target}_TARGET_SOURCES} ${_in_dir}/${${_for_target}_${_in_dir}file})
     ENDFOREACH(${_for_target}_${_in_dir}file)
-    
+
     #for each include file, add it to the list of file to install
     FOREACH(${_for_target}_${_in_dir}file ${${_for_target}_${_in_dir}_INST_INCLUDES})
 	    SET(${_for_target}_INST_INCLUDES ${${_for_target}_INST_INCLUDES} ${_in_dir}/${${_for_target}_${_in_dir}file})
     ENDFOREACH(${_for_target}_${_in_dir}file)
-    
+
     #restore path after include (and recursion)
     SET(R_CUR_PATH ${TMP_R_CUR_PATH})
 ENDMACRO(ADD_SOURCE_FILE)
@@ -138,37 +138,42 @@ MACRO(ADD_FRONTEND_SOURCE_FILE _for_target _real_target _in_dir _includes)
     ELSE(R_CUR_PATH)
         SET(R_CUR_PATH ${PROJECT_SOURCE_DIR})
     ENDIF(R_CUR_PATH)
-    
+
     #save path for recursion
     SET(TMP_R_CUR_PATH ${R_CUR_PATH})
-    
+
     #set path to current directory
     SET(R_CUR_PATH ${R_CUR_PATH}/${_in_dir})
     SET(${_includes} ${${_includes}} ${R_CUR_PATH})
-    
+
     #include sub directory content
     INCLUDE(${R_CUR_PATH}/${_for_target}_${_in_dir}.cmake)
-    
+
     #for each source file, add it to the list of file to build
     FOREACH(${_for_target}_${_in_dir}file ${${_for_target}_${_in_dir}_TARGET_SOURCES})
         SET(${_real_target}_${_in_dir}_TARGET_SOURCES ${${_real_target}_${_in_dir}_TARGET_SOURCES} ${R_CUR_PATH}/${${_for_target}_${_in_dir}file})
     ENDFOREACH(${_for_target}_${_in_dir}file)
-    
+
     #for each moc file, add it to the list of file to build
     FOREACH(${_for_target}_${_in_dir}file ${${_for_target}_${_in_dir}_MOCFILE})
         SET(${_real_target}_${_in_dir}_TARGET_SOURCES ${${_real_target}_${_in_dir}_TARGET_SOURCES} ${${_for_target}_${_in_dir}file})
     ENDFOREACH(${_for_target}_${_in_dir}file)
-    
+
+	 #for each UI file, add it to the list of file to build
+	 FOREACH(${_for_target}_${_in_dir}file ${${_for_target}_${_in_dir}_UIFILE})
+		SET(${_real_target}_${_in_dir}_TARGET_SOURCES ${${_real_target}_${_in_dir}_TARGET_SOURCES} ${${_for_target}_${_in_dir}file})
+	 ENDFOREACH(${_for_target}_${_in_dir}file)
+
     #for each include file, add it to the list of file to install
     FOREACH(${_for_target}_${_in_dir}file ${${_for_target}_${_in_dir}_INST_INCLUDES})
 	    SET(${_real_target}_${_in_dir}_INST_INCLUDES ${${_real_target}_${_in_dir}_INST_INCLUDES} ${R_CUR_PATH}/${${_for_target}_${_in_dir}file})
     ENDFOREACH(${_for_target}_${_in_dir}file)
-    
+
     #restore path after include (and recursion)
     SET(R_CUR_PATH ${TMP_R_CUR_PATH})
 ENDMACRO(ADD_FRONTEND_SOURCE_FILE)
 
-###this macro is usefull to produce list output 
+###this macro is usefull to produce list output
 MACRO(PRINT_LIST_WITH_MESSAGE _message _values)
     MESSAGE(STATUS ${_message})
     FOREACH(part ${${_values}})
@@ -190,6 +195,75 @@ MACRO(ADD_FRONTEND _frontend_for_target _lt_vers _so_vers _vers _libdest _includ
         INSTALL(FILES ${${_frontend_for_target}_${${_frontend_for_target}_fe}_INST_INCLUDES} DESTINATION include/${_include_dest})
         IF(rcmake-verbose)
             PRINT_LIST_WITH_MESSAGE("Will install the following header files for rcore${${_frontend_for_target}_fe}:" ${_frontend_for_target}_${${_frontend_for_target}_fe}_INST_INCLUDES)
-        ENDIF(rcmake-verbose) 
+        ENDIF(rcmake-verbose)
     ENDFOREACH(${_frontend_for_target}_fe ${${_frontend_for_target}_AVAILABLE_FRONTENDS})
 ENDMACRO(ADD_FRONTEND _frontend_for_target _lt_vers _so_vers _vers _libdest _include_dest _type _includes)
+
+MACRO(CHECK_IF_THIS_SPECIFIC_R_LIB_IS_INSTALLED _libName _libInstallName _pathToLib)
+    IF(${_libName} STREQUAL "R") #in R, file are under /prefix/include/r/'("
+        FIND_FILE(${_libName}ISINSTALLED include/r/rapplication.h ${RLIBPATH})
+    ELSE(${_libName} STREQUAL "R") #in sub libs from R, check it from /prefix/include/r/libname/
+        FIND_FILE(${_libName}ISINSTALLED include/r/${_libInstallName}/${${_libName}_search_file} ${RLIBPATH})
+    ENDIF(${_libName} STREQUAL "R")
+
+    IF(${_libName}ISINSTALLED)
+        SET(${_libName}INSTALLED "1")
+    ELSE(${_libName}ISINSTALLED)
+        SET(${_libName}INSTALLED "0")
+    ENDIF(${_libName}ISINSTALLED)
+ENDMACRO(CHECK_IF_THIS_SPECIFIC_R_LIB_IS_INSTALLED _libName _pathToLib)
+
+MACRO(DO_R_LIB_INCLUDE _libPath)
+        INCLUDE_DIRECTORIES("${_libPath}/rcore")
+        INCLUDE_DIRECTORIES("${_libPath}/rcore/app")
+        INCLUDE_DIRECTORIES("${_libPath}/rcore/db")
+        INCLUDE_DIRECTORIES("${_libPath}/rcore/frontend")
+        INCLUDE_DIRECTORIES("${_libPath}/rcore/frontend/kde")
+        INCLUDE_DIRECTORIES("${_libPath}/rcore/geometry")
+        INCLUDE_DIRECTORIES("${_libPath}/rcore/prg")
+        INCLUDE_DIRECTORIES("${_libPath}/rcore/std")
+        INCLUDE_DIRECTORIES("${_libPath}/rcore/tools")
+        IF(NOT UNIX)
+            INCLUDE_DIRECTORIES("${_libPath}/rcore/win32support")
+        ENDIF(NOT UNIX)
+
+        INCLUDE_DIRECTORIES("${_libPath}/rmath")
+        INCLUDE_DIRECTORIES("${_libPath}/rmath/geometry")
+        INCLUDE_DIRECTORIES("${_libPath}/rmath/graph")
+        INCLUDE_DIRECTORIES("${_libPath}/rmath/matrix")
+
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization")
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization/frontend")
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization/frontend/kde")
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization/ga")
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization/ga2d")
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization/gga")
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization/hga")
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization/promethee")
+
+        LINK_DIRECTORIES(${_libPath}/build/rcore)
+        LINK_DIRECTORIES(${_libPath}/build/rmath)
+        LINK_DIRECTORIES(${_libPath}/build/roptimization)
+ENDMACRO(DO_R_LIB_INCLUDE)
+
+MACRO(ADD_R_INCLUDES _libName _libInstallName _libPath)
+    IF(${${_libName}INSTALLED} STREQUAL "1")
+        #lib is installed, add simply the r include directory
+        MESSAGE(FATAL_ERROR "HERE")
+        IF(${_libName} STREQUAL "R") #in R, file are under /prefix/include/r/
+            INCLUDE_DIRECTORIES("${_libPath}/include/r")
+        ELSE(${_libName} STREQUAL "R") #in sub lib, file are under /prefix/include/r/libname
+            INCLUDE_DIRECTORIES("${_libPath}/include/r/${_libInstallName}")
+        ENDIF(${_libName} STREQUAL "R")
+    ELSE(${${_libName}INSTALLED} STREQUAL "1")
+        #lib is not installed, add all sub repertory
+        IF(${_libName} STREQUAL "R")
+            SET(CMDTORUNNOWFORINCLUDE "DO_R_LIB_INCLUDE(${_libPath})")
+        ELSE(${_libName} STREQUAL "R")
+            SET(CMDTORUNNOWFORINCLUDE "DO_${_libName}_R_LIB_INCLUDE(${_libPath})")
+        ENDIF(${_libName} STREQUAL "R")
+        #MESSAGE(FATAL_ERROR "How to run CMDTORUNNOWFORINCLUDE: ${CMDTORUNNOWFORINCLUDE}")
+        WRITE_FILE("/tmp/r_cmake_tmp.cmake" "${CMDTORUNNOWFORINCLUDE}")
+        INCLUDE("/tmp/r_cmake_tmp.cmake")
+    ENDIF(${${_libName}INSTALLED} STREQUAL "1")
+ENDMACRO(ADD_R_INCLUDES)

@@ -120,6 +120,7 @@ AC_DEFUN(R_ALL_INC_CHK,[
 	R_INC_CHK(rmath/matrix,rmatrix.h,Cannot find R headers.)
 	R_INC_CHK(roptimization/ga,rga.h,Cannot find R headers.)
 	R_INC_CHK(roptimization/gga,rgga.h,Cannot find R headers.)
+	R_INC_CHK(roptimization/hga,rhga.h,Cannot find R headers.)
 	R_INC_CHK(roptimization/ga2d,rga2d.h,Cannot find R headers.)
 	R_INC_CHK(roptimization/promethee,rpromethee.h,Cannot find R headers.)
 	for l in $1 ; do
@@ -146,13 +147,13 @@ AC_DEFUN(R_ALL_LIB_CHK,[
 	else
 		R_LIB_PATH="/usr/lib /usr/lib/r /usr/local/lib /usr/local/lib/r ${prefix}/lib/r"
 	fi
-	
+
 	AC_ARG_WITH(r-libs,
 		AC_HELP_STRING(
 			[--with-r-libs=DIR],
 			[where the R libraries are installed, default: [/usr/lib].]),
 		R_LIB_PATH="$withval")
-		
+
 	# ---- check the presence of all R libraries
 	for l in `echo $1` ; do
 		R_LIB_CHK($l,lib$l)
