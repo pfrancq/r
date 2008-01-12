@@ -194,16 +194,16 @@ MACRO(ADD_FRONTEND _frontend_for_target _lt_vers _so_vers _vers _libdest _includ
         INSTALL(TARGETS ${_frontend_for_target}${${_frontend_for_target}_fe} LIBRARY DESTINATION ${_libdest})
         INSTALL(FILES ${${_frontend_for_target}_${${_frontend_for_target}_fe}_INST_INCLUDES} DESTINATION include/${_include_dest})
         IF(rcmake-verbose)
-            PRINT_LIST_WITH_MESSAGE("Will install the following header files for rcore${${_frontend_for_target}_fe}:" ${_frontend_for_target}_${${_frontend_for_target}_fe}_INST_INCLUDES)
-        ENDIF(rcmake-verbose)
+            PRINT_LIST_WITH_MESSAGE("Will install the following header files for ${_frontend_for_target}${${_frontend_for_target}_fe}:" ${_frontend_for_target}_${${_frontend_for_target}_fe}_INST_INCLUDES)
+        ENDIF(rcmake-verbose) 
     ENDFOREACH(${_frontend_for_target}_fe ${${_frontend_for_target}_AVAILABLE_FRONTENDS})
 ENDMACRO(ADD_FRONTEND _frontend_for_target _lt_vers _so_vers _vers _libdest _include_dest _type _includes)
 
 MACRO(CHECK_IF_THIS_SPECIFIC_R_LIB_IS_INSTALLED _libName _libInstallName _pathToLib)
     IF(${_libName} STREQUAL "R") #in R, file are under /prefix/include/r/'("
-        FIND_FILE(${_libName}ISINSTALLED include/r/rapplication.h ${RLIBPATH})
+        FIND_FILE(${_libName}ISINSTALLED include/r/rapplication.h ${_pathToLib})
     ELSE(${_libName} STREQUAL "R") #in sub libs from R, check it from /prefix/include/r/libname/
-        FIND_FILE(${_libName}ISINSTALLED include/r/${_libInstallName}/${${_libName}_search_file} ${RLIBPATH})
+        FIND_FILE(${_libName}ISINSTALLED include/r/${_libInstallName}/${${_libName}_search_file} ${_pathToLib})
     ENDIF(${_libName} STREQUAL "R")
 
     IF(${_libName}ISINSTALLED)
@@ -249,7 +249,6 @@ ENDMACRO(DO_R_LIB_INCLUDE)
 MACRO(ADD_R_INCLUDES _libName _libInstallName _libPath)
     IF(${${_libName}INSTALLED} STREQUAL "1")
         #lib is installed, add simply the r include directory
-        MESSAGE(FATAL_ERROR "HERE")
         IF(${_libName} STREQUAL "R") #in R, file are under /prefix/include/r/
             INCLUDE_DIRECTORIES("${_libPath}/include/r")
         ELSE(${_libName} STREQUAL "R") #in sub lib, file are under /prefix/include/r/libname
@@ -262,8 +261,15 @@ MACRO(ADD_R_INCLUDES _libName _libInstallName _libPath)
         ELSE(${_libName} STREQUAL "R")
             SET(CMDTORUNNOWFORINCLUDE "DO_${_libName}_R_LIB_INCLUDE(${_libPath})")
         ENDIF(${_libName} STREQUAL "R")
-        #MESSAGE(FATAL_ERROR "How to run CMDTORUNNOWFORINCLUDE: ${CMDTORUNNOWFORINCLUDE}")
-        WRITE_FILE("/tmp/r_cmake_tmp.cmake" "${CMDTORUNNOWFORINCLUDE}")
-        INCLUDE("/tmp/r_cmake_tmp.cmake")
+        
+	#WRITE_FILE("/tmp/r_cmake_tmp.cmake" "${CMDTORUNNOWFORINCLUDE}")
+	    RUNCMDINR(${CMDTORUNNOWFORINCLUDE} ${_libName})
+    #INCLUDE("/tmp/r_cmake_tmp.cmake")
     ENDIF(${${_libName}INSTALLED} STREQUAL "1")
 ENDMACRO(ADD_R_INCLUDES)
+
+MACRO(RUNCMDINR _cmd _lib)
+    CONFIGURE_FILE("${REXECFILE}" "${CMAKE_CURRENT_BINARY_DIR}/willrun${_lib}.cmake" IMMEDIATE @ONLY)
+    INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/willrun${_lib}.cmake")
+    MESSAGE(STATUS "Run complete for ${_cmd} in ${CMAKE_CURRENT_BINARY_DIR}/willrun${_lib}.cmake")
+ENDMACRO(RUNCMDINR)
