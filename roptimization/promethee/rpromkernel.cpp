@@ -6,7 +6,7 @@
 
 	Promethee Kernel - Implementation.
 
-	Copyright 2000-2005 by the Université Libre de Bruxelles.
+	Copyright 2000-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -93,26 +93,6 @@ void RPromKernel::ComputePrometheeII(void)
 		sol()->FiMinus/=SumWTot*((double)sol.GetNb()-1);
 		sol()->Fi=sol()->FiPlus-sol()->FiMinus;
 	}
-}
-
-
-//------------------------------------------------------------------------------
-RPromCriterion* RPromKernel::NewCriterion(const RPromCriterion::tCriteriaType t,const char* name,double p,double q,double w)
-{
-	RPromCriterion* crit=new RPromCriterion(t,p,q,w,name,Solutions.GetMaxNb());
-	crit->SetId(Criteria.GetNb());
-	Criteria.InsertPtr(crit);
-	return(crit);
-}
-
-
-//------------------------------------------------------------------------------
-RPromCriterion* RPromKernel::NewCriterion(const RPromCriterion::tCriteriaType t,const char* name,const RPromCriterionParams& params)
-{
-	RPromCriterion* crit=new RPromCriterion(t,params,name,Solutions.GetMaxNb());
-	crit->SetId(Criteria.GetNb());
-	Criteria.InsertPtr(crit);
-	return(crit);
 }
 
 

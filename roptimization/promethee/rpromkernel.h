@@ -6,7 +6,7 @@
 
 	Promethee Kernel - Header.
 
-	Copyright 2000-2007 by the Université Libre de Bruxelles.
+	Copyright 2000-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -96,24 +96,6 @@ public:
 	* Calculate PROMETHEE II.
 	*/
 	virtual void ComputePrometheeII(void);
-
-	/**
-	* Create a new criterion.
-	* @param t              Type of the criterion.
-	* @param name           Name of the criterion.
-	* @param p              Preference's threshold.
-	* @param q              Indifference's threshold.
-	* @param w              Weight of the criterion.
-	*/
-	RPromCriterion* NewCriterion(RPromCriterion::tCriteriaType t,const char* name,double p,double q,double w);
-
-	/**
-	* Create a new criterion.
-	* @param t              Type of the criterion.
-	* @param name           Name of the criterion.
-	* @param params         Parameters.
-	*/
-	RPromCriterion* NewCriterion(RPromCriterion::tCriteriaType t,const char* name,const RPromCriterionParams& params);
 
 	/**
 	 * Add a new critetion.
