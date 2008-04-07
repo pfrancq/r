@@ -6,7 +6,7 @@
 
 	Class representing a list of Integer value - Implementation
 
-	Copyright 1998-2007 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -244,7 +244,7 @@ template<class I,bool bOrder>
 		ptr++;
 	}
 	NbInt--;
-	memcpy(ptr,ptr+1,sizeof(I)*(NbInt-i));
+	memmove(ptr,ptr+1,sizeof(I)*(NbInt-i));
 	List[NbInt]=0;
 }
 
