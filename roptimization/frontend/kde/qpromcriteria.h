@@ -6,7 +6,10 @@
 
 	Qt Widget to configure a list of Promethee Criterion - Header.
 
-	(C) 2002 by P. Francq.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -98,53 +101,54 @@ public:
 
 	/**
 	* Construct a criterion.
-	* @param parent         Parent widget.
-	* @param name           Name of the widget.
+	* @param parent          Parent widget.
+	* @param name            Name of the widget.
 	*/
 	QPromCriteria(QWidget* parent,const char* name);
 
 	/**
 	* Insert a criterion.
-	* @param crit           Name of the criterion.
+	* @param crit            Name of the criterion.
 	*/
 	void InsertCriterion(const char* crit);
 
 	/**
 	* Set the parameters for a particular criterion of PROMETHEE.
-	* @param crit           Name of the criterion.
-	* @param p              Preference's threshold.
-	* @param q              Indifference's threshold.
-	* @param w              Weight of the criterion.
+	* @param crit            Name of the criterion.
+	* @param p               Preference's threshold.
+	* @param q               Indifference's threshold.
+	* @param w               Weight of the criterion.
 	*/
 	void SetCriterionParam(const char* crit,double p,double q,double w);
 
 	/**
 	* Set the parameters for a particular criterion of PROMETHEE.
-	* @param crit           Name of the criterion.
-	* @param p              Parameters.
+	* @param crit            Name of the criterion.
+	* @param p               Parameters.
 	*/
-	void SetCriterionParam(const char* crit,R::RPromCriterionParams& p);
+	void SetCriterionParam(const char* crit,R::RParam* p);
 
 	/**
 	* Set the parameters for a particular criterion of PROMETHEE.
-	* @param crit           Name of the criterion.
-	* @param p              Preference's threshold.
-	* @param q              Indifference's threshold.
-	* @param w              Weight of the criterion.
+	* @param crit            Name of the criterion.
+	* @param p               Preference's threshold.
+	* @param q               Indifference's threshold.
+	* @param w               Weight of the criterion.
 	*/
 	void GetCriterionParam(const char* crit,double& p,double& q,double& w);
 
 	/**
 	* Set the parameters for a particular criterion of PROMETHEE.
-	* @param crit           Name of the criterion.
-	* @param p              Parameters.	*/
-	void GetCriterionParam(const char* crit,R::RPromCriterionParams& p);
+	* @param crit            Name of the criterion.
+	* @param p               Parameters.
+	*/
+	void GetCriterionParam(const char* crit,R::RParam* p);
 
 public slots:
 
 	/**
 	* Slot called when a new criterion was selected
-	* @param index          Index of the selected criterion.
+	* @param index           Index of the selected criterion.
 	*/
 	void slotActivated(int index);
 

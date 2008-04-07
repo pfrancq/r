@@ -95,8 +95,8 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 
 	// Init Part
 	i1=i2=0;
-	weight=Prom.NewCriterion(RPromCriterion::Maximize,"Weight",Cons->WeightParams);
-	dist=Prom.NewCriterion(RPromCriterion::Minimize,"Distance",Cons->DistParams);
+	Prom.AddCriterion(weight=new RPromLinearCriterion(RPromCriterion::Maximize,Cons->WeightParams,"Weight"));
+	Prom.AddCriterion(dist=new RPromLinearCriterion(RPromCriterion::Minimize,Cons->DistParams,"Distance"));	
 	treat=new RGeoInfo*[Infos->GetMaxPos()+1];
 
 	// Go through each info
@@ -112,7 +112,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 		d=GetDistances(info());
 		if((w>0.0)&&(d>0.0))
 		{
-			// If both are not null -> Create a Prom�h� solution
+			// If both are not null -> Create a PROMETHEE solution
 			sol=Prom.NewSol();
 			Prom.Assign(sol,weight,w);
 			Prom.Assign(sol,dist,d);

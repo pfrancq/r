@@ -6,7 +6,7 @@
 
 	Connections for the 2D Placement - Header.
 
-	Copyright 2000-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2000-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -68,14 +68,14 @@ class RConnections : public RContainer<RConnection,true,false>
 	RRandom* Random;
 
 	/**
-	* Prom�h� Parameters for the distance.
+	* PROMETHEE Parameters for the distance.
 	*/
-	RPromCriterionParams DistParams;
+	RParam* DistParams;
 	
 	/**
-	* Prom�h� Parameters for the weight.
+	* PROMETHEE Parameters for the weight.
 	*/
-	RPromCriterionParams WeightParams;
+	RParam* WeightParams;
 
 public:
 
@@ -90,12 +90,12 @@ public:
 	void Init(void);
 	
 	/**
-	* Set the parameters for Prom�h�.
-	* @param dist           Prom�h� Parameters for the distance.
-	* @param weight         Prom�h� Parameters for the weight.
+	* Set the parameters for PROMETHEE.
+	* @param dist           PROMETHEE Parameters for the distance.
+	* @param weight         PROMETHEE Parameters for the weight.
 	* @param r              Pointer to the random generator.
 	*/
-	void SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight,RRandom* r);
+	void SetParams(RParam* dist,RParam* weight,RRandom* r);
 
 	/**
 	* Calculate the sum of the weight of the connected objects, that are already

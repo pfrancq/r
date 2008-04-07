@@ -6,7 +6,10 @@
 
 	Qt Widget to configure a list of Promethee Criterion - Implementation.
 
-	(C) 2002 by P. Francq.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -48,6 +51,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 // include files for KDE
 #include <klocale.h>
+
 
 
 //------------------------------------------------------------------------------
@@ -172,12 +176,6 @@ void QPromCriteria::SetCriterionParam(const char* crit,double p,double q,double 
 
 	ptr=Crits.GetPtr<const char*>(crit);
 	if(!ptr) return;
-/*	tmp.setNum(p);
-	ptr->P->setText(tmp);
-	tmp.setNum(q);
-	ptr->Q->setText(tmp);
-	tmp.setNum(w);
-	ptr->W->setText(tmp);*/
 	ptr->P=p;
 	ptr->Q=q;
 	ptr->W=w;
@@ -194,22 +192,16 @@ void QPromCriteria::SetCriterionParam(const char* crit,double p,double q,double 
 
 
 //------------------------------------------------------------------------------
-void QPromCriteria::SetCriterionParam(const char* crit,RPromCriterionParams& p)
+void QPromCriteria::SetCriterionParam(const char* crit,RParam* p)
 {
 	QPromCriterion* ptr;
 	QString tmp;
 
-	ptr=Crits.GetPtr<const char*>(crit);
+	ptr=Crits.GetPtr(crit);
 	if(!ptr) return;
-/*	tmp.setNum(p.P);
-	ptr->P->setText(tmp);
-	tmp.setNum(p.Q);
-	ptr->Q->setText(tmp);
-	tmp.setNum(p.Weight);
-	ptr->W->setText(tmp);*/
-	ptr->P=p.GetP();
-	ptr->Q=p.GetQ();
-	ptr->W=p.GetWeight();
+	ptr->P=dynamic_cast<RParamStruct*>(p)->Get<RParamValue>("P")->GetDouble();
+	ptr->Q=dynamic_cast<RParamStruct*>(p)->Get<RParamValue>("Q")->GetDouble();
+	ptr->W=dynamic_cast<RParamStruct*>(p)->Get<RParamValue>("Weight")->GetDouble();
 	if(ptr->Idx==Current)
 	{
 		tmp.setNum(ptr->P);
@@ -230,13 +222,6 @@ void QPromCriteria::GetCriterionParam(const char* crit,double& p,double& q,doubl
 
 	ptr=Crits.GetPtr<const char*>(crit);
 	if(!ptr) return;
-/*	d=ptr->P->text().toDouble();
-	if((d>=0.0)&&(d<=1.0))
-		p=d;
-	d=ptr->Q->text().toDouble();
-	if((d>=0.0)&&(d<=1.0))
-		q=d;
-	w=ptr->W->text().toDouble();*/
 	if(ptr->Idx==Current)
 	{
 		d=P->text().toDouble();
@@ -255,7 +240,7 @@ void QPromCriteria::GetCriterionParam(const char* crit,double& p,double& q,doubl
 
 
 //------------------------------------------------------------------------------
-void QPromCriteria::GetCriterionParam(const char* crit,RPromCriterionParams& p)
+void QPromCriteria::GetCriterionParam(const char* crit,RParam* p)
 {
 	QPromCriterion* ptr;
 	double d;
@@ -272,7 +257,9 @@ void QPromCriteria::GetCriterionParam(const char* crit,RPromCriterionParams& p)
 			ptr->Q=d;
 		ptr->W=W->text().toDouble();
 	}
-	p.Set(ptr->P,ptr->Q,ptr->W);
+	dynamic_cast<RParamStruct*>(p)->Get<RParamValue>("P")->SetDouble(ptr->P);
+	dynamic_cast<RParamStruct*>(p)->Get<RParamValue>("Q")->SetDouble(ptr->Q);
+	dynamic_cast<RParamStruct*>(p)->Get<RParamValue>("Weight")->SetDouble(ptr->W);
 }
 
 

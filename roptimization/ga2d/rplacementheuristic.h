@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Placement - Header
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -164,7 +164,7 @@ protected:
 	ObjectPos* Sols;
 
 	/**
-	* Prom�h� Kernel
+	* PROMETHEE Kernel.
 	*/
 	RPromKernel* Prom;
 
@@ -179,14 +179,14 @@ protected:
 	RPromCriterion* dist;
 
 	/**
-	* Prom�h� Parameters for the distance.
+	* PROMETHEE Parameters for the distance.
 	*/
-	RPromCriterionParams DistParams;
+	RParam* DistParams;
 
 	/**
-	* Prom�h� Parameters for the area.
+	* PROMETHEE Parameters for the area.
 	*/
-	RPromCriterionParams AreaParams;
+	RParam* AreaParams;
 
 public:
 
@@ -220,7 +220,7 @@ public:
 	* Set the parameters for the "area" criterion.
 	* @param params         The parameters.
 	*/
-	void SetAreaParams(const RPromCriterionParams& params);
+	void SetAreaParams(RParam* params);
 
 	/**
 	* Set the parameters for the "dist" criterion.
@@ -234,7 +234,7 @@ public:
 	* Set the parameters for the "area" criterion.
 	* @param params         The parameters.
 	*/
-	void SetDistParams(const RPromCriterionParams& params);
+	void SetDistParams(RParam* params);
 
 	/**
 	* Select the next object to place.

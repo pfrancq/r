@@ -6,7 +6,10 @@
 
 	Connections for the 2D Placement - Implementation.
 
-	(c) 2000-2003 by P. Francq.
+	Copyright 2000-2008 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -69,7 +72,7 @@ void RConnections::Init(void)
 
 
 //------------------------------------------------------------------------------
-void RConnections::SetParams(const RPromCriterionParams& dist,const RPromCriterionParams& weight,RRandom* r)
+void RConnections::SetParams(RParam* dist,RParam* weight,RRandom* r)
 {
 	DistParams=dist;
 	WeightParams=weight;
@@ -131,8 +134,8 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 	bool bProm;
 
 	// Init Part
-	weight=Prom.NewCriterion(RPromCriterion::Maximize,"Weight",WeightParams);
-	dist=Prom.NewCriterion(RPromCriterion::Minimize,"Distance",DistParams);
+	Prom.AddCriterion(weight=new RPromLinearCriterion(RPromCriterion::Maximize,WeightParams,"Weight"));
+	Prom.AddCriterion(dist=new RPromLinearCriterion(RPromCriterion::Minimize,DistParams,"Distance"));
 	treat=new RGeoInfo*[nb];
 
 	// Go through each info
@@ -171,7 +174,7 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 	}
 	else
 	{
-		Prom.ComputePrometheeII();         // Compute Prom�h�
+		Prom.ComputePrometheeII();         // Compute PROMETHEE
 		sols=best=Prom.GetSols();          // Get the solutions
 		b=treat[(*(best++))->GetId()];     // The first one is the best
 		bProm=true;

@@ -6,7 +6,7 @@
 
 	Center Heuristic for Placement - Header
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).

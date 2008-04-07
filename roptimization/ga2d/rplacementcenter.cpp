@@ -6,7 +6,7 @@
 
 	Center Heuristic for Placement - Implemenation
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -53,8 +53,6 @@ using namespace R;
 RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
-	AreaParams.Set(0.2,0.05,2.0);
-	DistParams.Set(0.2,0.05,1.0);
 }
 
 

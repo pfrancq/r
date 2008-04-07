@@ -6,7 +6,7 @@
 
 	Generic Heuristic for Placement - Implemenation
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -53,6 +53,8 @@ RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use
 	Order=new RGeoInfo*[maxobjs];
 	MaxPromSol=500;
 	Sols=new ObjectPos[MaxPromSol];
+	AreaParams=RPromLinearCriterion::CreateParam("Area");
+	DistParams=RPromLinearCriterion::CreateParam("Dist");	
 }
 
 
@@ -83,19 +85,21 @@ void RPlacementHeuristic::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 //------------------------------------------------------------------------------
 void RPlacementHeuristic::SetDistParams(double p,double q,double w)
 {
-	DistParams.Set(p,q,w);
+	dynamic_cast<RParamStruct*>(DistParams)->Get<RParamValue>("P")->SetDouble(p);
+	dynamic_cast<RParamStruct*>(DistParams)->Get<RParamValue>("Q")->SetDouble(q);
+	dynamic_cast<RParamStruct*>(DistParams)->Get<RParamValue>("Weight")->SetDouble(w);
 }
 
 
 //------------------------------------------------------------------------------
-void RPlacementHeuristic::SetDistParams(const RPromCriterionParams& params)
+void RPlacementHeuristic::SetDistParams(RParam* params)
 {
 	DistParams=params;
 }
 
 
 //------------------------------------------------------------------------------
-void RPlacementHeuristic::SetAreaParams(const RPromCriterionParams& params)
+void RPlacementHeuristic::SetAreaParams(RParam* params)
 {
 	AreaParams=params;
 }
@@ -104,7 +108,9 @@ void RPlacementHeuristic::SetAreaParams(const RPromCriterionParams& params)
 //------------------------------------------------------------------------------
 void RPlacementHeuristic::SetAreaParams(double p,double q,double w)
 {
-	AreaParams.Set(p,q,w);
+	dynamic_cast<RParamStruct*>(AreaParams)->Get<RParamValue>("P")->SetDouble(p);
+	dynamic_cast<RParamStruct*>(AreaParams)->Get<RParamValue>("Q")->SetDouble(q);
+	dynamic_cast<RParamStruct*>(AreaParams)->Get<RParamValue>("Weight")->SetDouble(w);
 }
 
 
@@ -127,7 +133,7 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 {
 	RRect CurRect(Result);
 	ObjectPos *p;
-	RPromSol *sol;
+	RPromSol* sol;
 	unsigned int i;
 
 	// Verify if solution not already exists
@@ -187,9 +193,9 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 	{
 		// Init Part
 		Prom=new RPromKernel("Orientations",200,2);
-		area=Prom->NewCriterion(RPromCriterion::Minimize,"Area",AreaParams);
-		dist=Prom->NewCriterion(RPromCriterion::Minimize,"Distance",DistParams);
-
+		Prom->AddCriterion(area=new RPromLinearCriterion(RPromCriterion::Maximize,AreaParams,"Weight"));
+		Prom->AddCriterion(dist=new RPromLinearCriterion(RPromCriterion::Minimize,DistParams,"Distance"));
+		
 		if(AllOri&&(obj->NbPossOri>1))
 		{
 			// Compute all orientations
@@ -298,5 +304,7 @@ void RPlacementHeuristic::CreateProblem(void)
 //------------------------------------------------------------------------------
 RPlacementHeuristic::~RPlacementHeuristic(void)
 {
-	if(Order) delete[] Order;
+	delete[] Order;
+	delete DistParams;
+	delete AreaParams;
 }
