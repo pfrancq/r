@@ -167,6 +167,47 @@
 
 #endif 		// !__RDISABLECHECKS__
 
+
+//------------------------------------------------------------------------------
+// To-Do Macros
+#ifdef __RDISABLECHECKS__
+
+	#define RToImplement()
+	#define RToDo(expr)
+
+#else 		// !__RDISABLECHECKS__
+
+	#ifdef __GNUC__
+
+		#define RToImplement()                                                \
+		std::cout	<<"file "<<__FILE__                                       \
+					<<": line "<<__LINE__                                     \
+					<<" ("<<__PRETTY_FUNCTION__                               \
+					<<"): to implement"<<std::endl;                           \
+
+		#define RToDo(expr)                                                   \
+		std::cout	<<"file "<<__FILE__                                       \
+					<<": line "<<__LINE__                                     \
+					<<" ("<<__PRETTY_FUNCTION__                               \
+					<<"): to do: "<<#expr<<std::endl;                         \
+
+	#else 	// !__GNUC__
+
+		#define RToImplement()                                                \
+		std::cout	<<"file "<<__FILE__                                       \
+					<<": line "<<__LINE__                                     \
+					<<" : to implement"<<std::endl;                           \
+
+		#define RToDo(expr)                                                   \
+		std::cout	<<"file "<<__FILE__                                       \
+					<<": line "<<__LINE__                                     \
+					<<" : to do: "<<#expr<<std::endl;                         \
+
+	#endif 	// !__GNUC__
+
+#endif 		// !__RDISABLECHECKS__
+
+
 /**
 * \namespace R
 * \brief Standard Classes.
