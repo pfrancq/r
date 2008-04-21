@@ -236,7 +236,11 @@ RString RQuery::operator[](unsigned int index) const
 	RString res;
 
 	if(index>=nbcols)
-		throw RMySQLError("Index out of range");
+	{
+		char tmp[80];
+		sprintf(tmp,"RQuery::operator[] const : column %zu outside range [0,%zu]",index,nbcols-1);
+		throw RMySQLError(tmp);
+	}
 	if(!row)
 		throw RMySQLError("Treated set");
 	val=row[index];
