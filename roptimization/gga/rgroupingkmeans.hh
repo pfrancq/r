@@ -102,7 +102,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void RGroupingKMeans<cGroup,cObj,cGroups>::InitRandom(size_t nbclusters)
 {
-	cObj** ptr;
+	cObj** ptr(RandObjects);
 	size_t i,nbtoplace;
 	double maxsim;
 	cGroup* grp;
@@ -129,6 +129,7 @@ template<class cGroup,class cObj,class cGroups>
 		for(Grp.Start(),Proto.Start(),maxsim=-1.0,grp=0;!Grp.End();Grp.Next(),Proto.Next())
 		{
 			double sim=Similarity(*ptr,Proto());
+			std::cout<<"Sim="<<sim<<std::endl;
 			if(sim>maxsim)
 			{
 				maxsim=sim;
