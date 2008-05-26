@@ -4,9 +4,9 @@
 
 	RMatrix.h
 
-	Matrix classes - Header.
+	Matrix class - Header.
 
-	Copyright 1999-2005 by the Université Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -82,24 +82,24 @@ namespace R{
 class RMatrix
 {
 	/**
-	* Actual number of columns in the matrix.
-	*/
- 	size_t Col;
-
-	/**
 	* Actual number of lines in the matrix.
 	*/
-	size_t Lin;
-
-	/**
-	* Maximal number of columns in the matrix.
-	*/
-	size_t MaxCol;
+	size_t Lines;
 
 	/**
 	* Maximal number of lines in the matrix.
 	*/
-	size_t MaxLin;
+	size_t MaxLines;
+
+	/**
+	* Actual number of columns in the matrix.
+	*/
+ 	size_t Cols;
+
+	/**
+	* Maximal number of columns in the matrix.
+	*/
+	size_t MaxCols;
 
 	/**
 	* The matrix itself.
@@ -116,20 +116,22 @@ public:
 	/**
 	* Construct a square matrix of a given size.
 	* @param size            Size of the matrix.
+	* @param sym             Symetric matrix.
 	*/
 	RMatrix(size_t size);
 
 	/**
 	* Construct a matrix (L,C).
-	* @param L	Initial number of lines.
-	* @param C  Initial number of columns.
+	* @param lines           Initial number of lines.
+	* @param cols            Initial number of columns.
 	*/
-	RMatrix(size_t L,size_t C);
+	RMatrix(size_t lines,size_t cols);
 
 	/**
 	* Construct a matrix from another one.
+	* @param matrix          Matrix.
 	*/
-	RMatrix(const RMatrix& Matrix);
+	RMatrix(const RMatrix& matrix);
 
 private:
 
@@ -143,19 +145,19 @@ public:
 	/**
 	* Get the number of lines in the matrix.
 	*/
-	size_t GetLinesNb(void) const {return(Lin);}
+	size_t GetNbLines(void) const {return(Lines);}
 
 	/**
 	* Get the number of columns in the matrix.
 	*/
-	size_t GetColsNb(void) const {return(Col);}
+	size_t GetNbCols(void) const {return(Cols);}
 
 	/**
 	* Verify if the matrix has a given size, and increase them if necessary.
-	* @param NewLin          New line number.
-	* @param NewCol          New column number.
+	* @param nwlines         New line number.
+	* @param newcols         New column number.
 	*/
-	void VerifySize(size_t NewLin,size_t NewCol);
+	void VerifySize(size_t newlines,size_t newcols);
 
 	/**
 	* Symetrize the matrix.
@@ -164,27 +166,40 @@ public:
 
 	/**
 	* Return a specific element of the matrix.
-	* @param m	Line number of the element.
-	* @param n	Column number of the element.
+	* @param i               Line number of the element.
+	* @param j               Column number of the element.
 	*/
- 	double& operator()(size_t m,size_t n) const;
+ 	double& operator()(size_t i,size_t j) const;
 
+ 	/**
+ 	 * Return a given lines from the matrix.
+ 	 * @param i               Line number of the element.
+ 	 */
+ 	const double* operator[](size_t i) const;
+ 	
+ 	/**
+ 	 * Return a given lines from the matrix.
+ 	 * @param i               Line number of the element.
+ 	 */
+ 	double* operator[](size_t i);
+ 	 	
 	/**
 	* Assign operator.
+	* @param matrix          Matrix.
 	*/
-	RMatrix& operator=(const RMatrix);
+	RMatrix& operator=(const RMatrix& matrix);
 
 	/**
 	* Add a matrix to the current one.
-	* @param arg             Matrix to add.
+	* @param matrix          Matrix to add.
 	*/
-	RMatrix& operator+=(const RMatrix arg);
+	RMatrix& operator+=(const RMatrix& matrix);
 
 	/**
 	* Substract a matrix from the current one.
-	* @param arg             Matrix to substract.
+	* @param matrix          Matrix to substract.
 	*/
-  	RMatrix& operator-=(const RMatrix arg);
+  	RMatrix& operator-=(const RMatrix& matrix);
 
 	/**
 	* Multiply a matrix with the current one. It is important to remember that
@@ -200,9 +215,9 @@ public:
 	* 	TempB*=A;
 	* }
 	* @endcode
-	* @param arg             Matrix to multiply.
+	* @param matrix          Matrix to multiply.
 	*/
-	RMatrix& operator*=(const RMatrix arg);
+	RMatrix& operator*=(const RMatrix& matrix);
 
 	/**
 	* Multiply a matrix with a given number.
