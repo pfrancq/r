@@ -376,13 +376,26 @@ void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos,bool del)
 	ptr=&Tab[pos];
 	if(bAlloc)
 		Delete(*ptr);
-	if(del)
+	
+	// If the position is the last one -> find the last position
+	if(pos==LastPtr-1)
 	{
-		memmove(ptr,ptr+1,((--LastPtr)-pos)*sizeof(void*));
-		Tab[LastPtr]=0;
+		(*ptr)=0;
+		for(;(!(*ptr))&&LastPtr;ptr--,LastPtr--);
 	}
 	else
-		Tab[pos]=0;
+	{
+		// Not the last element -> Verify if the elements must be moved
+		if(del)
+		{
+			memmove(ptr,ptr+1,((--LastPtr)-pos)*sizeof(void*));
+			Tab[LastPtr]=0;
+		}
+		else
+			(*ptr)=0;		
+	}
+	
+	// Decrease number of elements
 	NbPtr--;
 }
 
