@@ -6,7 +6,7 @@
 
 	XML structure - Header.
 
-	Copyright 2000-2007 by the Université Libre de Bruxelles.
+	Copyright 2000-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -86,6 +86,11 @@ class RXMLStruct : public RTree<RXMLTag,true,false>
 	*/
 	RString Encoding;
 
+	/**
+	 * URI of the DTD.
+	 */
+	RString DTD;
+		
 	/**
 	 * All the namespaces used.
 	 */
@@ -172,6 +177,7 @@ public:
 
 	/**
 	* Set the version of the XML standard.
+	* @param version         Version to assign.
 	*/
 	void SetVersion(const RString& version);
 
@@ -182,16 +188,29 @@ public:
 	RString GetVersion(void) const;
 
 	/**
-	* Set the encoding of the corresponding XML file.
+	* Set the encoding corresponding to the XML structure.
+	* @param encoding        Enconding to assign.
 	*/
 	void SetEncoding(const RString& encoding);
 
 	/**
-	* Get the encoding of the corresponding XML file.
+	* Get the encoding corresponding to the XML structure.
 	* @return RString.
 	*/
 	RString GetEncoding(void) const;
 
+	/**
+	 * Set the DTD of the XML structure.
+	 * @param dtd            DTD to assign.
+	 */
+	void SetDTD(const RString& dtd);
+	
+	/**
+	 * Get the DTD corresponding to the XML structure.
+	 * @return RString.
+	 */
+	RString GetDTD(void) const;
+	
 	/**
 	 * Clear the XML structure.
 	 */
@@ -216,7 +235,7 @@ public:
 	* Create a new tag with a given name. By default, the method creates a
 	* RXMLTag.
 	* @param tag             Name of the tag.
-	* @param xmlns          Namespace.
+	* @param xmlns           Namespace.
 	* @return Pointer to a tag.
 	*/
 	virtual RXMLTag* NewTag(const RString& tag,const RString& xmlns);
@@ -230,6 +249,15 @@ public:
 	* @return Pointer to a attribute.
 	*/
 	virtual RXMLAttr* NewAttr(const RString& name,const RString& value,const RString& xmlns);
+	
+	/**
+	* Create a new attribute with a given name. By default, the method creates
+	* a RXMLAttr.
+	* @param name            Name of the attribute.
+	* @param xmlns           Namespace.
+	* @return Pointer to a attribute.
+	*/
+	virtual RXMLAttr* NewAttr(const RString& name,const RString& xmlns);
 
 	/**
 	* Destruct the XML Structure.

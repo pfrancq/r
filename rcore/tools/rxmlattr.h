@@ -135,8 +135,14 @@ public:
 
 	/**
 	* Set a new value to the attribute.
+	* @param value           Value to assign.
 	*/
 	void SetValue(const RString& value);
+	
+	/**
+	* Add something to the current value of the attribute.
+	*/
+	void AddValue(const RString& value);
 
 	/**
 	* Destruct the attribute.
