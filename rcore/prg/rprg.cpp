@@ -72,7 +72,7 @@ void RPrg::Load(void)
 	Prg.Open(RIO::Read);
 	Prg.SetRem("#");
 	ReadLine=true;
-	while((!ReadLine)||(!Prg.Eof()&&(ReadLine)))
+	while((!ReadLine)||(!Prg.End()&&(ReadLine)))
 	{
 		i=AnalyseLine(Prg);
 		if(i)
@@ -146,7 +146,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 			if(buf.IsEmpty()) return(f);
 			pos=0;
 			ReadLine=false;
-			while((!ReadLine)||(!Prg.Eof()&&(ReadLine)))
+			while((!ReadLine)||(!Prg.End()&&(ReadLine)))
 			{
 				if(CountTabs(buf)<=f->GetTabs())
 					break;
