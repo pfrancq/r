@@ -6,7 +6,7 @@
 
 	Chromosomes of Genetic Algorithms - Header
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
+	Copyright 1998-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -83,7 +83,7 @@ public:
 	* @param id             Identificator of the chromosome.
 	*/
 	RChromo(cInst* inst,unsigned int id);
-	
+
 	/**
 	* Initialisation of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
@@ -146,7 +146,7 @@ public:
 
 
 //------------------------------------------------------------------------------
-// Template implementation
+// inline implementation
 #include <rchromo.hh>
 
 

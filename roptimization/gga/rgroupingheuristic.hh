@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroupingHeuristic<cGroup,cObj,cGroups>::RGroupingHeuristic(const RString& n,RRandom* r,RCursor<cObj> objs,RDebug* debug)
+	R::RGroupingHeuristic<cGroup,cObj,cGroups>::RGroupingHeuristic(const R::RString& n,R::RRandom* r,R::RCursor<cObj> objs,R::RDebug* debug)
 		: Name(n), Random(r), Objs(objs), Groups(0), Debug(debug)
 {
 	Order=new cObj*[Objs.GetNb()];
@@ -47,7 +47,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroups>::Init(cGroups* groups)
+	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::Init(cGroups* groups)
 {
 	unsigned int* ass;
 
@@ -71,7 +71,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroups>::SelectNextObject(void)
+	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::SelectNextObject(void)
 {
 	CurObj=Order[NbObjsOk];
 }
@@ -79,7 +79,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroups>::PutNextObject(void)
+	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::PutNextObject(void)
 {
 	SelectNextObject();
 	CurGroup=FindGroup();
@@ -90,7 +90,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroups>::Run(cGroups* groups)
+	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::Run(cGroups* groups)
 {
 	Init(groups);
 	while(NbObjsOk<NbObjs)
@@ -103,14 +103,14 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupingHeuristic<cGroup,cObj,cGroups>::PostRun(void)
+	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::PostRun(void)
 {
 }
 
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroupingHeuristic<cGroup,cObj,cGroups>::~RGroupingHeuristic(void)
+	R::RGroupingHeuristic<cGroup,cObj,cGroups>::~RGroupingHeuristic(void)
 {
 	if(Order) delete[] Order;
 }

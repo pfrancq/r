@@ -36,24 +36,24 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RThreadDataG(cInst *owner)
-		: RThreadData<cInst,cChromo>(owner), Heuristic(0)
+	R::RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RThreadDataG(cInst *owner)
+		: R::RThreadData<cInst,cChromo>(owner), Heuristic(0)
 {
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(void)
+	void R::RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(void)
 {
-	RThreadData<cInst,cChromo>::Init();
+	R::RThreadData<cInst,cChromo>::Init();
 	Heuristic=this->Owner->CreateHeuristic();
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RThreadDataG(void)
+	R::RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RThreadDataG(void)
 {
 	if(Heuristic)
 		delete Heuristic;
@@ -69,8 +69,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug *debug)
-		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
+	R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,R::RCursor<cObj> objs,HeuristicType h,const R::RString& name,R::RDebug* debug)
+		: R::RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(objs)
 {
 	if(Objs.GetNb()<11)
@@ -82,28 +82,28 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(void)
+	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(void)
 {
 	cChromo **C;
 	unsigned int i;
 
-	RInst<cInst,cChromo,cFit,cThreadData>::Init();
+	R::RInst<cInst,cChromo,cFit,cThreadData>::Init();
 	for(i=this->GetPopSize()+1,C=this->Chromosomes;--i;C++)
-		(static_cast<RGroups<cGroup,cObj,cChromo>*>(*C))->Init();
-	(static_cast<RGroups<cGroup,cObj,cChromo>*>(this->BestChromosome))->Init();
+		(static_cast<R::RGroups<cGroup,cObj,cChromo>*>(*C))->Init();
+	(static_cast<R::RGroups<cGroup,cObj,cChromo>*>(this->BestChromosome))->Init();
 }
 
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RGroupingHeuristic<cGroup,cObj,cChromo>* RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::CreateHeuristic(void)
+	R::RGroupingHeuristic<cGroup,cObj,cChromo>* R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::CreateHeuristic(void)
 {
-	RGroupingHeuristic<cGroup,cObj,cChromo>* h;
+	R::RGroupingHeuristic<cGroup,cObj,cChromo>* h;
 
 	switch(Heuristic)
 	{
 		case FirstFit:
-			h = new RFirstFitHeuristic<cGroup,cObj,cChromo>(this->Random,Objs,this->Debug);
+			h = new R::RFirstFitHeuristic<cGroup,cObj,cChromo>(this->Random,Objs,this->Debug);
 			break;
 		default:
 			h=0;
@@ -115,7 +115,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::AnalysePop(void)
+	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::AnalysePop(void)
 {
 	cChromo **C,**C1,*p;
 	unsigned int i,j;
@@ -124,8 +124,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		this->Debug->BeginFunc("AnalysePop","RInstG");
 
 	// Call the default AnalysePop
-	RInst<cInst,cChromo,cFit,cThreadData>::AnalysePop();
-	
+	R::RInst<cInst,cChromo,cFit,cThreadData>::AnalysePop();
+
 	// Look if same chromosomes and modify population to have only one copy of each
 	for(i=0,C=this->Chromosomes;i<this->GetPopSize()-1;C++,i++)
 	{
@@ -156,12 +156,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RandomConstruct(void)
+	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RandomConstruct(void)
 {
 	if(this->Debug)
 		this->Debug->BeginFunc("RandomConstruct","RInstG");
 
-	RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct();
+	R::RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct();
 
 	if(this->Debug)
 		this->Debug->EndFunc("RandomConstruct","RInstG");
@@ -170,12 +170,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(void)
+	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(void)
 {
 	if(this->Debug)
 		this->Debug->BeginFunc("Crossover","RInstG");
 
-	RInst<cInst,cChromo,cFit,cThreadData>::Crossover();
+	R::RInst<cInst,cChromo,cFit,cThreadData>::Crossover();
 
 	if(this->Debug)
 		this->Debug->EndFunc("Crossover","RInstG");
@@ -184,12 +184,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Mutation(void)
+	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Mutation(void)
 {
 	if(this->Debug)
 		this->Debug->BeginFunc("Mutation","RInstG");
 
-	RInst<cInst,cChromo,cFit,cThreadData>::Mutation();
+	R::RInst<cInst,cChromo,cFit,cThreadData>::Mutation();
 
 	if(this->Debug)
 		this->Debug->EndFunc("Mutation","RInstG");
@@ -198,12 +198,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Inversion(void)
+	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Inversion(void)
 {
 	if(this->Debug)
 		this->Debug->BeginFunc("Inversion","RInstG");
 
-	RInst<cInst,cChromo,cFit,cThreadData>::Inversion();
+	R::RInst<cInst,cChromo,cFit,cThreadData>::Inversion();
 
 	if(this->Debug)
 		this->Debug->EndFunc("Inversion","RInstG");
@@ -212,6 +212,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RInstG(void)
+	R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RInstG(void)
 {
 }

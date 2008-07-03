@@ -48,6 +48,7 @@
 namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
 /**
 * The RGroupingHeuristic class provides an abstract class for grouping
@@ -202,7 +203,7 @@ public:
 
 
 //------------------------------------------------------------------------------
-// Definitions of templates
+// inline implementation
 #include <rgroupingheuristic.hh>
 
 

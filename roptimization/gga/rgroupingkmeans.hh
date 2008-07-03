@@ -39,23 +39,23 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroupingKMeans<cGroup,cObj,cGroups>::RGroupingKMeans(const RString& n, RRandom* r,RCursor<cObj> objs,RDebug* debug)
+	R::RGroupingKMeans<cGroup,cObj,cGroups>::RGroupingKMeans(const R::RString& n,R::RRandom* r,R::RCursor<cObj> objs,R::RDebug* debug)
 	: Name(n), Debug(debug), Rand(r), Objs(objs), RandObjects(0), Protos(40)
 {
 	Groups=0;
 }
-		
-	
+
+
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	double RGroupingKMeans<cGroup,cObj,cGroups>::ComputeSumSim(cGroup* group,cObj* obj)
+	double R::RGroupingKMeans<cGroup,cObj,cGroups>::ComputeSumSim(cGroup* group,cObj* obj)
 {
 	double Sum;
 	double tmp;
 
 	if(!group->GetNbObjs())
 		return(0.0);
-	RCursor<cObj> ptr(Groups->GetObjs(*group));
+	R::RCursor<cObj> ptr(Groups->GetObjs(*group));
 	for(ptr.Start(),Sum=0.0;!ptr.End();ptr.Next())
 	{
 		if(ptr()==obj) continue;
@@ -64,16 +64,16 @@ template<class cGroup,class cObj,class cGroups>
 	}
 	return(Sum);
 }
-	
+
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	cObj* RGroupingKMeans<cGroup,cObj,cGroups>::ComputePrototype(cGroup* group)
- 
+	cObj* R::RGroupingKMeans<cGroup,cObj,cGroups>::ComputePrototype(cGroup* group)
+
 {
 	double SumSim;
 	cObj* Relevant;
-	
+
 	// If no objects -> No relevant one.
 	if(!group->GetNbObjs())
 		return(0);
@@ -94,22 +94,22 @@ template<class cGroup,class cObj,class cGroups>
 			BestSumSim=SumSim;
 		}
 	}
-	return(Relevant);	
+	return(Relevant);
 }
-		
-		
+
+
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupingKMeans<cGroup,cObj,cGroups>::InitRandom(size_t nbclusters)
+	void R::RGroupingKMeans<cGroup,cObj,cGroups>::InitRandom(size_t nbclusters)
 {
 	cObj** ptr(RandObjects);
 	size_t i,nbtoplace;
 	double maxsim;
 	cGroup* grp;
-	
+
 	if(nbclusters>Objs.GetNb())
-		throw RException("KMeans : Cannot find valid prototypes");	
-	
+		throw RException("KMeans : Cannot find valid prototypes");
+
 	Protos.Clear();
 
 	// Reserve the correct number of groups and allocate one object to each group
@@ -120,12 +120,12 @@ template<class cGroup,class cObj,class cGroups>
 		grp->Insert(*ptr);
 		Protos.InsertPtr(*ptr);
 	}
-	
+
 	// Allocate the rest of the objects
 	R::RCursor<cGroup> Grp(Groups->Used);
 	R::RCursor<cObj> Proto(Protos);
 	for(;nbtoplace<Objs.GetNb();ptr++,nbtoplace++)
-	{		
+	{
 		for(Grp.Start(),Proto.Start(),maxsim=-1.0,grp=0;!Grp.End();Grp.Next(),Proto.Next())
 		{
 			double sim=Similarity(*ptr,Proto());
@@ -140,10 +140,10 @@ template<class cGroup,class cObj,class cGroups>
 	}
 }
 
-	
+
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupingKMeans<cGroup,cObj,cGroups>::ReAllocate(void)
+	void R::RGroupingKMeans<cGroup,cObj,cGroups>::ReAllocate(void)
 {
 	double sim,maxsim;
 	cGroup* grp;
@@ -162,7 +162,7 @@ template<class cGroup,class cObj,class cGroups>
 	Groups->ClearGroups();
 
 	// Insert the Prototypes in a group
-	RCursor<cObj> CurP(Protos);
+	R::RCursor<cObj> CurP(Protos);
 	for(CurP.Start();!CurP.End();CurP.Next())
 		Groups->ReserveGroup()->Insert(CurP());
 
@@ -197,7 +197,7 @@ template<class cGroup,class cObj,class cGroups>
 		if(!grp)
 		{
 			grp=Groups->ReserveGroup();
-			Protos.InsertPtrAt(*Cur,grp->GetId());						
+			Protos.InsertPtrAt(*Cur,grp->GetId());
 		}
 
 		// Insert the subprofile in the current group.
@@ -208,7 +208,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	unsigned int RGroupingKMeans<cGroup,cObj,cGroups>::CalcNewProtosNb(void)
+	unsigned int R::RGroupingKMeans<cGroup,cObj,cGroups>::CalcNewProtosNb(void)
 {
 	unsigned int count;
 	R::RCursor<cGroup> Grp;
@@ -226,19 +226,19 @@ template<class cGroup,class cObj,class cGroups>
 			count++;
 	}
 	return(count);
-}	
+}
 
-	
+
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupingKMeans<cGroup,cObj,cGroups>::DisplayInfos(void)
+	void R::RGroupingKMeans<cGroup,cObj,cGroups>::DisplayInfos(void)
 {
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupingKMeans<cGroup,cObj,cGroups>::Run(cGroups* groups,unsigned int itermax,size_t nbclusters)
+	void R::RGroupingKMeans<cGroup,cObj,cGroups>::Run(cGroups* groups,unsigned int itermax,size_t nbclusters)
 {
 	// Verify that some objects must be grouped
 	if(!Objs.GetNb())
@@ -256,10 +256,10 @@ template<class cGroup,class cObj,class cGroups>
 	for(Objs.Start();!Objs.End();Objs.Next())
 	 (*(ptr++))=Objs();
 	Rand->RandOrder(RandObjects,Objs.GetNb());
-	
-	// Initialization 		
+
+	// Initialization
 	InitRandom(nbclusters);
-		
+
 	// Max Iterations
 	double minerror=0.0;
 	double error;
@@ -267,13 +267,13 @@ template<class cGroup,class cObj,class cGroups>
 	{
 		ReAllocate();
 		error=static_cast<double>(CalcNewProtosNb())/static_cast<double>(Protos.GetNb());
-	}	
+	}
 }
 
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroupingKMeans<cGroup,cObj,cGroups>::~RGroupingKMeans(void)
+	R::RGroupingKMeans<cGroup,cObj,cGroups>::~RGroupingKMeans(void)
 {
 	delete RandObjects;
 }

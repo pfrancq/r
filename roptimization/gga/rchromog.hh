@@ -1,10 +1,12 @@
 /*
 
+	R Project Library
+
 	RChromoG.hh
 
 	Class representing a chromosome for a GGA - Inline implementation
 
-	Copyright 2001-2007 by the Université Libre de Bruxelles.
+	Copyright 2001-2008s by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -30,9 +32,9 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RChromoG(cInst *inst,unsigned id)
-		: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
-		  RGroups<cGroup,cObj,cChromo>(inst->Objs,inst->MaxGroups),
+	R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RChromoG(cInst *inst,unsigned id)
+		: R::RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
+		  R::RGroups<cGroup,cObj,cChromo>(inst->Objs,inst->MaxGroups),
 		  Heuristic(0)
 {
 }
@@ -40,10 +42,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(cThreadData *thData)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(cThreadData *thData)
 {
 	// Initialisation of the parent
-	RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
+	R::RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
 
 	// Init "thread-dependent" data
 	Heuristic=thData->Heuristic;
@@ -52,15 +54,15 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Clear(void)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Clear(void)
 {
-	RGroups<cGroup,cObj,cChromo>::ClearGroups();
+	R::RGroups<cGroup,cObj,cChromo>::ClearGroups();
 }
 
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RandomConstruct(void)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RandomConstruct(void)
 {
 	if(this->Instance->Debug)
 		this->Instance->Debug->BeginFunc("RamdomConstruct","RChromoG");
@@ -73,7 +75,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int begin,unsigned int end,unsigned int pos2,unsigned int nb2)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int begin,unsigned int end,unsigned int pos2,unsigned int nb2)
 {
 	unsigned int i,j;
 	cGroup* grp;
@@ -151,7 +153,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(cChromo* parent1,cChromo* parent2)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(cChromo* parent1,cChromo* parent2)
 {
 	unsigned int pos1;              // Position in parent1
 	unsigned int end;               // Number of groups after pos1 to copy from parent1
@@ -216,7 +218,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Mutation(void)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Mutation(void)
 {
 	unsigned int nb;
 
@@ -242,16 +244,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Inversion(void)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Inversion(void)
 {
 	unsigned int g1,g2,hold;
 
 	if(this->Used.GetNb()<3)
 		return;
-	
+
 	if(this->Instance->Debug)
 		this->Instance->Debug->BeginFunc("Inversion","RChromoG");
-	
+
 	g1=this->Instance->RRand(this->Used.GetNb());
 	hold=g2=g1+this->Instance->RRand(this->Used.GetNb()-2)+1;
 	if(g2>this->Used.GetNb()-1)
@@ -268,7 +270,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Modify(void)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Modify(void)
 {
 	if(this->Instance->Debug)
 		this->Instance->Debug->BeginFunc("Modify","RChromoG");
@@ -282,9 +284,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Verify(void)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Verify(void)
 {
-	RGroups<cGroup,cObj,cChromo>::Verify();
+	R::RGroups<cGroup,cObj,cChromo>::Verify();
 	if(!this->Used.GetNb())
 		throw RGAException("No Group used.",RGAException::eGAVerify);
 }
@@ -292,17 +294,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>&
-		RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::operator=(const RChromoG& chromo)
+	R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>&
+		R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::operator=(const RChromoG& chromo)
 {
-	RChromo<cInst,cChromo,cFit,cThreadData>::operator=(chromo);
-	RGroups<cGroup,cObj,cChromo>::operator=(chromo);
+	R::RChromo<cInst,cChromo,cFit,cThreadData>::operator=(chromo);
+	R::RGroups<cGroup,cObj,cChromo>::operator=(chromo);
 	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RChromoG(void)
+	R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::~RChromoG(void)
 {
 }

@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo>
-	RThreadData<cInst,cChromo>::RThreadData(cInst *owner)
+	R::RThreadData<cInst,cChromo>::RThreadData(cInst *owner)
 		: Owner(owner)
 {
 }
@@ -53,8 +53,8 @@ template<class cInst,class cChromo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,const RString& name,RDebug* debug)
-		: RObject(name), Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),bRandomConstruct(false),		
+	R::RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,const R::RString& name,R::RDebug* debug)
+		: RObject(name), Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),bRandomConstruct(false),
 		  VerifyGA(false), DoPostEvaluation(false),
 		  Chromosomes(0), Ranked(0), PopSize(popsize), Gen(0), AgeBest(0), AgeBestPop(0)
 {
@@ -73,22 +73,22 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		Debug->EndFunc("RInst","RInst");
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::SetMutationParams(unsigned int agemut,unsigned int agebestmut,unsigned int nbmut)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::SetMutationParams(unsigned int agemut,unsigned int agebestmut,unsigned int nbmut)
 {
 		if(nbmut>PopSize)
 			throw RGAException("Number of mutations cannot be greather than the population size");
 		NbMutations=nbmut;
 		FreqMutation=agemut;
-		FreqBestMutation=agebestmut;		
+		FreqBestMutation=agebestmut;
 }
-	
-	
+
+
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Init(void)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::Init(void)
 {
 	cChromo **C;
 	unsigned int i;
@@ -115,14 +115,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	BestChromosome->Init(thDatas[0]);
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	int RInst<cInst,cChromo,cFit,cThreadData>::sort_function_cChromosome(const void* a,const void* b)
+	int R::RInst<cInst,cChromo,cFit,cThreadData>::sort_function_cChromosome(const void* a,const void* b)
 {
 	cFit* af=(*((cChromo**)a))->Fitness;
 	cFit* bf=(*((cChromo**)b))->Fitness;
-		
+
 	if((*af)==(*bf)) return(0);
 	if((*af)>(*bf))
 		return(-1);
@@ -133,14 +133,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreaData>
-	void RInst<cInst,cChromo,cFit,cThreaData>::AnalysePop(void)
+	void R::RInst<cInst,cChromo,cFit,cThreaData>::AnalysePop(void)
 {
 	unsigned int i;
 	cChromo **C;
 
 	if(Debug)
 		Debug->BeginFunc("AnalysePop","RInst");
-	
+
 	// Evaluate all the chromosomes if necessary
 	PostNotification("RInst::Interact");
 	for(i=PopSize+1,C=Chromosomes;--i;C++)
@@ -154,7 +154,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 		}
 	}
 	PostNotification("RInst::Interact");
-	
+
 	// If necessary, do a post eveluation
 	if(DoPostEvaluation)
 	{
@@ -162,7 +162,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 		DoPostEvaluation=true;
 	};
 	PostNotification("RInst::Interact");
-	
+
 	// Ranked the chromosomes and verify that the best of the population or the best ever have not changed.
 	memcpy(Ranked,Chromosomes,sizeof(cChromo*)*PopSize);
 	qsort(static_cast<void*>(Ranked),PopSize,sizeof(cChromo*),sort_function_cChromosome);
@@ -199,7 +199,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct(void)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct(void)
 {
 	unsigned int i;
 	cChromo **C;
@@ -221,11 +221,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(Debug)
 		Debug->EndFunc("RandomConstruct","RInst");
 }
-		
+
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Crossover(void)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::Crossover(void)
 {
 	unsigned int i,idx1,idx2;
 	cChromo **C1,**C2,*C3,*s1,*s2;
@@ -316,11 +316,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Mutation(void)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::Mutation(void)
 {
 	if(Debug)
 		Debug->BeginFunc("Mutation","RInst");
-	
+
 	// Normal mutation?
 	if(!AgeNextMutation)
 	{
@@ -330,7 +330,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		{
 			cChromo* p=(*Mut);
 			if(p->Id!=BestInPop->Id)
-			{	
+			{
 				unsigned int id=p->Id;
 				(*p)=(*BestInPop);
 				p->Id=id;
@@ -349,7 +349,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			PostNotification("RInst::Interact");
 		}
 	}
-	
+
 	// Best mutation?
 	if(!AgeNextBestMutation)
 	{
@@ -382,11 +382,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Inversion(void)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::Inversion(void)
 {
 	if(Debug)
 		Debug->BeginFunc("Inversion","RInst");
-		
+
 	// Do the inversion
 	AgeNextInversion=FreqInversion;
 	cChromo* p=Chromosomes[RRand(PopSize)];
@@ -408,7 +408,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Generation(void)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::Generation(void)
 {
 	if(Debug)
 		Debug->BeginFunc("Generation","RInst");
@@ -422,20 +422,20 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		Debug->PrintComment(tmp);
 	}
 	Crossover();
-	PostNotification("RInst::Interact");	
+	PostNotification("RInst::Interact");
 	if(!((AgeNextMutation--)&&(AgeNextBestMutation--)))  // Decrease the number of generations between mutations and verify if a mutation must be done
 	{
 		// Evaluation is necessary since the crossover has been done
 		AnalysePop();
-		PostNotification("RInst::Interact");				
+		PostNotification("RInst::Interact");
 		Mutation();
 	}
-	PostNotification("RInst::Interact");	
+	PostNotification("RInst::Interact");
 	if(!(AgeNextInversion--)) // Decrease the number of generations between inversions and verify if a mutation must be done
 	{
 		// Evaluation is necessary since the crossover has been done (and perhaps Mutation)
 		AnalysePop();
-		PostNotification("RInst::Interact");	
+		PostNotification("RInst::Interact");
 		Inversion();
 	}
 	PostNotification("RInst::Interact");
@@ -449,7 +449,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Run(void)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::Run(void)
 {
 	if(Debug&&(!ExternBreak))
 		Debug->BeginFunc("Run","RInst");
@@ -475,7 +475,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::Verify(void)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::Verify(void)
 {
 	unsigned int i;
 	cChromo **C;
@@ -497,7 +497,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void RInst<cInst,cChromo,cFit,cThreadData>::HandlerNotFound(const RNotification& notification)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::HandlerNotFound(const RNotification& notification)
 {
 	std::cout<<GetName()<<" : Message '"<<notification.GetName()<<"' not treated (Gen="<<Gen<<")."<<std::endl;
 }
@@ -505,7 +505,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	RInst<cInst,cChromo,cFit,cThreadData>::~RInst(void)
+	R::RInst<cInst,cChromo,cFit,cThreadData>::~RInst(void)
 {
 	cChromo **C;
 	unsigned int i;

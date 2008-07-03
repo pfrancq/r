@@ -65,12 +65,12 @@ protected:
 	 * Name of the k-Means
 	 */
 	RString Name;
-	
+
 	/**
 	 * Debugger.
 	 */
 	RDebug* Debug;
-	
+
 	/**
 	* Random number generator to use.
 	*/
@@ -96,12 +96,12 @@ protected:
 	* corresponding group.
 	*/
 	RContainer<cObj,false,false> Protos;
-	
+
 	/**
 	 * Number of Iterations.
 	 */
 	unsigned int NbIterations;
-	
+
 public:
 
 	/**
@@ -122,7 +122,7 @@ public:
 	 * Get the number of interations runned.
 	 */
 	unsigned int GetNbIterations(void) const {return(NbIterations);}
-	
+
 protected:
 
 	/**
@@ -131,7 +131,7 @@ protected:
 	 * @return Pointer to the object which is the prototype.
 	 */
 	cObj* ComputePrototype(cGroup* group);
-	
+
 	/**
 	 * Compute the sum of similarities between a given object and the other
 	 * objects of its group.
@@ -139,7 +139,7 @@ protected:
 	 * @param obj            Object.
 	 */
 	double ComputeSumSim(cGroup* group,cObj* obj);
-		
+
 	/**
 	* Randmoly creates an initialization for the k-Means
 	* @param nbclusters      Number of groups to create.
@@ -157,8 +157,8 @@ protected:
 	* @return Number of different prototypes.
 	*/
 	unsigned int CalcNewProtosNb(void);
-	
-public:	
+
+public:
 
 	/**
 	* Couts many informations on K-Means configuration.
@@ -177,7 +177,7 @@ public:
 	* Run the heuristic.
 	* @param groups          Group to initialize.
 	* @param itermax         Maximal number of iterations.
-	* @param nbclusters      Number of groups to create. 
+	* @param nbclusters      Number of groups to create.
 	*/
 	void Run(cGroups* groups,unsigned int itermax,size_t nbclusters);
 

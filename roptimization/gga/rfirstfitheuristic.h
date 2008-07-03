@@ -79,7 +79,7 @@ public:
 
 
 //------------------------------------------------------------------------------
-// Definitions of templates
+// inline implementation
 #include <rfirstfitheuristic.hh>
 
 

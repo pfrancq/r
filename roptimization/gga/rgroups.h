@@ -4,9 +4,9 @@
 
 	RGroups.h
 
-	Groups - Header
+	Groups - Header.
 
-	Copyright 2001-2007 by the Université Libre de Bruxelles.
+	Copyright 2001-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -70,7 +70,7 @@ template<class cGroup,class cObj,class cGroups>
 		int Compare(const int ID) const {return(GrpId-ID);}
 		int Compare(const GroupId& grp) const {return(GrpId-grp.GrpId);}
 	};
-	
+
 public:
 
 	/**
@@ -229,9 +229,9 @@ public:
 	* This method can be used to verify if two clusterings are similar.
 	* @param groups          Groups to compare.
 	* @return Adjusted Rand Index.
-	*/	
+	*/
 	double ComputeAdjustedRandIndex(const cGroups& groups) const;
-	
+
 	/**
 	* Destruct the groups.
 	*/

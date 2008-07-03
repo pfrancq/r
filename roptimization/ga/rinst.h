@@ -86,7 +86,7 @@ public:
 //------------------------------------------------------------------------------
 /**
 * Instance for the generic GA.
-* 
+*
 * The instance emit several signals:
 * - PostNotification("RInst::Interact") : Possible interactions from the
 *   outside.
@@ -145,7 +145,7 @@ protected:
 	 * Define if the post evalutation must be done.
 	 */
 	bool DoPostEvaluation;
-	
+
 public:
 
 	/**
@@ -157,7 +157,7 @@ public:
 	 * The chromosomes ranked by fitness.
 	 */
 	cChromo** Ranked;
-	
+
 	/**
 	* The best chromosome ever calculated.
 	*/
@@ -169,7 +169,7 @@ public:
 	cChromo* BestInPop;
 
 private:
-	
+
 	/**
 	* Size of the population.
 	*/
@@ -209,12 +209,12 @@ private:
 	 * Number of mutations to do at each mutation operation.
 	 */
 	unsigned int NbMutations;
-	
+
 	/**
 	* Frequence of inversion.
 	*/
 	unsigned int FreqInversion;
-		
+
 	/**
 	* Number of generation left before next mutation.
 	*/
@@ -224,14 +224,14 @@ private:
 	* Number of generation left before mutation of the best chromosome.
 	*/
 	unsigned int AgeNextBestMutation;
-	
+
 	/**
 	* Number of generation left before next inversion.
 	*/
 	unsigned int AgeNextInversion;
 
 public:
-	
+
 	/**
 	* Construct the instance.
 	* @param popsize        The size of the population.
@@ -253,7 +253,7 @@ public:
 	 * @param nbmut          Number of mutations to do at each mutation operation.
 	 */
 	void SetMutationParams(unsigned int agemut,unsigned int agebestmut,unsigned int nbmut);
-	 
+
 	/**
 	* Set if the verifications must be done.
 	* @param verify          Verify?
@@ -269,7 +269,7 @@ public:
 	 * Get the size of the population.
 	 */
 	inline unsigned int GetPopSize(void) const {return(PopSize);}
-	
+
 	/**
 	 * Get the number of generations run.
 	 */
@@ -284,7 +284,7 @@ public:
 	* Get the age of the best chromosome ever calculate.
 	*/
 	inline unsigned int GetAgeBestPop(void) const {return(AgeBestPop);}
-	
+
 	/**
 	* Initialisation of the instance.
 	*/
@@ -305,13 +305,13 @@ public:
 	* needed, the chromosomes are evaluated.
 	*/
 	virtual void AnalysePop(void);
-	
+
 	/**
 	* Do some post evluation traitment. It can be used to implement a
 	* multi-criteria approach like PROMETHEE to classify the chromosomes.
 	*/
 	virtual void PostEvaluate(void) {}
-		
+
 	/**
 	* Random construction of the chromosomes.
 	* @return The function returns true if all chromosomes are constructed.
@@ -374,7 +374,7 @@ public:
 	* @param notification    Notification.
 	*/
 	virtual void HandlerNotFound(const RNotification& notification);
-	
+
 	/**
 	* Return a number in the interval [0,max[ using the current random generator.
 	* @param max            Variable used to calculate the number.
@@ -422,7 +422,7 @@ public:
 
 
 //------------------------------------------------------------------------------
-// Template implementation
+// inline implementation
 #include <rinst.hh>
 
 

@@ -172,7 +172,7 @@ public:
 	* Analyse the population to find the best chromosome of the population and
 	* to verify if the best chromosome ever calculated has to replaced. When
 	* needed, the chromosomes are evaluated.
-	*  
+	*
 	* This method handles the chromosomes that are representing the same solutions. If two
 	* same chromosomes are detect, one of them is replace a random based one
 	* with a probability of 90%.

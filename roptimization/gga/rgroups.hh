@@ -1,10 +1,12 @@
 /*
 
-	RChromoG.hh
+	R Project Library
 
-	Class representing a chromosome for a GGA - Inline implementation
+	RGroups.h
 
-	Copyright 2001-2007 by the Université Libre de Bruxelles.
+	Groups - Implementation.
+
+	Copyright 2001-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,7 +39,7 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroups<cGroup,cObj,cGroups>::RGroups(RCursor<cObj> objs,const unsigned max)
+	R::RGroups<cGroup,cObj,cGroups>::RGroups(R::RCursor<cObj> objs,const unsigned max)
 		: RContainer<cGroup,true,false>(max,max<20?20:max/2), Used(max,max<20?20:max/2),
 		  Objs(objs), ObjsAss(objs.GetNb()), ObjsNoAss(objs.GetNb()),
 		  OrdObjectsAss(0), NewUsedId(0)
@@ -57,7 +59,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroups<cGroup,cObj,cGroups>::Init(void)
+	void R::RGroups<cGroup,cObj,cGroups>::Init(void)
 {
 	unsigned int i;
 
@@ -69,9 +71,9 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroups<cGroup,cObj,cGroups>::ClearGroups(void)
+	void R::RGroups<cGroup,cObj,cGroups>::ClearGroups(void)
 {
-	RCursor<cGroup> Cur(*this);
+	R::RCursor<cGroup> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->Clear();
 	Used.Clear();
@@ -85,7 +87,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	cGroup* RGroups<cGroup,cObj,cGroups>::ReserveGroup(void)
+	cGroup* R::RGroups<cGroup,cObj,cGroups>::ReserveGroup(void)
 {
 	unsigned int i,NewSize;
 	unsigned int* n;
@@ -104,7 +106,7 @@ template<class cGroup,class cObj,class cGroups>
 		for(i=this->GetMaxNb();i<NewSize;i++)
 			InsertPtr(new cGroup(static_cast<cGroups*>(this),i));
 	}
-	RCursor<cGroup> ptr(*this);
+	R::RCursor<cGroup> ptr(*this);
 	ptr.Start();
 	while(ptr()->Reserved)
 		ptr.Next();
@@ -116,7 +118,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroups<cGroup,cObj,cGroups>::ReleaseGroup(cGroup* grp)
+	void R::RGroups<cGroup,cObj,cGroups>::ReleaseGroup(cGroup* grp)
 {
 	if(!grp->Reserved)
 		return;
@@ -128,7 +130,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroups<cGroup,cObj,cGroups>::InsertObj(cGroup* to,const cObj* obj)
+	void R::RGroups<cGroup,cObj,cGroups>::InsertObj(cGroup* to,const cObj* obj)
 {
 	unsigned int tmp,j;
 
@@ -136,7 +138,7 @@ template<class cGroup,class cObj,class cGroups>
 	{
 		tmp=to->SubObjects+to->NbSubObjects;
 		j=to->SubObjects;
-		RCursor<cGroup> G(Used);
+		R::RCursor<cGroup> G(Used);
 		for(G.Start();!G.End();G.Next())
 			if((G()->SubObjects>j)&&(G()->SubObjects!=NoObject))
 				G()->SubObjects++;
@@ -156,7 +158,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroups<cGroup,cObj,cGroups>::DeleteObj(cGroup* from,const cObj* obj)
+	void R::RGroups<cGroup,cObj,cGroups>::DeleteObj(cGroup* from,const cObj* obj)
 {
 	unsigned int j;
 
@@ -167,7 +169,7 @@ template<class cGroup,class cObj,class cGroups>
 	if(!(--from->NbSubObjects))
 		from->SubObjects=NoObject;
 	from->PostDelete(obj);
-	RCursor<cGroup> G(Used);
+	R::RCursor<cGroup> G(Used);
 	for(G.Start();!G.End();G.Next())
 		if((G()->SubObjects>j)&&(G()->SubObjects!=NoObject))
 			G()->SubObjects--;
@@ -176,7 +178,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroups<cGroup,cObj,cGroups>::DeleteObjs(cGroup* from)
+	void R::RGroups<cGroup,cObj,cGroups>::DeleteObjs(cGroup* from)
 {
 	unsigned int j,i,tmp;
 	cObj* tmpObj;
@@ -184,7 +186,7 @@ template<class cGroup,class cObj,class cGroups>
 	if(!(from->NbSubObjects)) return;
 	tmp=from->NbSubObjects;
 	j=from->SubObjects;
-	RCursor<cObj> obj(ObjsAss);
+	R::RCursor<cObj> obj(ObjsAss);
 	for(i=from->NbSubObjects+1,obj.GoTo(from->SubObjects);--i;)
 	{
 		 // No need to increment obj, because delete moves everything
@@ -196,7 +198,7 @@ template<class cGroup,class cObj,class cGroups>
 			from->SubObjects=NoObject;
 		from->PostDelete(tmpObj);
 	}
-	RCursor<cGroup> G(Used);
+	R::RCursor<cGroup> G(Used);
 	for(G.Start();!G.End();G.Next())
 		if((G()->SubObjects>j)&&(G()->SubObjects!=NoObject))
 			G()->SubObjects-=tmp;
@@ -205,12 +207,12 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroups<cGroup,cObj,cGroups>::Verify(void)
+	void R::RGroups<cGroup,cObj,cGroups>::Verify(void)
 {
 	unsigned int i,*list,nbobjs;
 	char tmp[200];
 
-	RCursor<cGroup> Cur(Used);
+	R::RCursor<cGroup> Cur(Used);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->Verify();
 	for(i=Objs.GetNb()+1,list=ObjectsAss,nbobjs=0;--i;list++)
@@ -226,7 +228,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	cGroup* RGroups<cGroup,cObj,cGroups>::GetGroup(unsigned int id) const
+	cGroup* R::RGroups<cGroup,cObj,cGroups>::GetGroup(unsigned int id) const
 {
 	unsigned int idx=ObjectsAss[id];
 
@@ -237,7 +239,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	cGroup* RGroups<cGroup,cObj,cGroups>::GetGroup(const cObj* obj) const
+	cGroup* R::RGroups<cGroup,cObj,cGroups>::GetGroup(const cObj* obj) const
 {
 	unsigned int idx=ObjectsAss[obj->GetId()];
 
@@ -248,20 +250,20 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RCursor<cObj> RGroups<cGroup,cObj,cGroups>::GetObjs(const cGroup& grp) const
+	R::RCursor<cObj> R::RGroups<cGroup,cObj,cGroups>::GetObjs(const cGroup& grp) const
 {
-	return(RCursor<cObj>(ObjsAss,grp.SubObjects,grp.SubObjects+grp.NbSubObjects));
+	return(R::RCursor<cObj>(ObjsAss,grp.SubObjects,grp.SubObjects+grp.NbSubObjects));
 }
 
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroups<cGroup,cObj,cGroups>& RGroups<cGroup,cObj,cGroups>::operator=(const RGroups& grps)
+	R::RGroups<cGroup,cObj,cGroups>& R::RGroups<cGroup,cObj,cGroups>::operator=(const RGroups& grps)
 {
 	cGroup* ptr;
 
 	ClearGroups();
-	RCursor<cGroup> G(grps.Used);
+	R::RCursor<cGroup> G(grps.Used);
 	for(G.Start();!G.End();G.Next())
 	{
 		ptr=ReserveGroup();           // Reserve a new group
@@ -274,7 +276,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroups<cGroup,cObj,cGroups>::ComputeOrd(void)
+	void R::RGroups<cGroup,cObj,cGroups>::ComputeOrd(void)
 {
 	unsigned int *oldo,*newo;
 	unsigned int i,id,nbgrp;
@@ -292,7 +294,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	bool RGroups<cGroup,cObj,cGroups>::SameGroupment(const RGroups* grps) const
+	bool R::RGroups<cGroup,cObj,cGroups>::SameGroupment(const RGroups* grps) const
 {
 	unsigned int i,*ass,*cass;
 
@@ -305,14 +307,15 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RCursor<cObj> RGroups<cGroup,cObj,cGroups>::GetObjsCursor(void) const
+	R::RCursor<cObj> R::RGroups<cGroup,cObj,cGroups>::GetObjsCursor(void) const
 {
-	return(RCursor<cObj>(ObjsAss));
+	return(R::RCursor<cObj>(ObjsAss));
 }
+
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	double RGroups<cGroup,cObj,cGroups>::ComputeAdjustedRandIndex(const cGroups& groups) const
+	double R::RGroups<cGroup,cObj,cGroups>::ComputeAdjustedRandIndex(const cGroups& groups) const
 {
 	unsigned int NbRows,NbCols;                   // Rows and Cols for matrix
 	unsigned int NbObjs;                          // Total Number of objects
@@ -339,8 +342,8 @@ template<class cGroup,class cObj,class cGroups>
 	VectorColsTemp=new double[NbCols];
 
 	// Construction of the container for relation between id and column in the matrix.
-	RContainer<GroupId,true,true> GroupsId(NbCols,NbCols/2);
-	RCursor<cGroup> Cur2(groups.Used);
+	R::RContainer<GroupId,true,true> GroupsId(NbCols,NbCols/2);
+	R::RCursor<cGroup> Cur2(groups.Used);
 	for(Cur2.Start(),col=0;!Cur2.End();Cur2.Next())
 		GroupsId.InsertPtr(new GroupId(Cur2()->GetId(),col++));
 
@@ -356,11 +359,11 @@ template<class cGroup,class cObj,class cGroups>
 	int row,position;
 	row=0;
 
-	RCursor<cGroup> Cur1(this->Used);
+	R::RCursor<cGroup> Cur1(this->Used);
 	for(Cur1.Start();!Cur1.End();Cur1.Next())
 	{
 		memset(VectorColsTemp,0,NbCols*sizeof(double));
-		RCursor<cObj> Objs(GetObjs(*Cur1()));
+		R::RCursor<cObj> Objs(GetObjs(*Cur1()));
 		for(Objs.Start();!Objs.End();Objs.Next())
 		{
 			if(!GetGroup(Objs()))
@@ -399,11 +402,11 @@ template<class cGroup,class cObj,class cGroups>
 	// Return the result
 	return(Total);
 }
-		
-		
+
+
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroups<cGroup,cObj,cGroups>::~RGroups(void)
+	R::RGroups<cGroup,cObj,cGroups>::~RGroups(void)
 {
 	if(ObjectsAss)
 		delete[] ObjectsAss;

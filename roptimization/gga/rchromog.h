@@ -1,10 +1,12 @@
 /*
 
+	R Project Library
+
 	RChromoG.h
 
 	Class representing a chromosome of a GGA - Header
 
-	Copyright 2001-2007 by the Université Libre de Bruxelles.
+	Copyright 2001-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
