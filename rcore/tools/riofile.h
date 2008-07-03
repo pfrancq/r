@@ -6,7 +6,7 @@
 
 	Generic File for Input/Output - Header.
 
-	Copyright 1999-2007 by the Université Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -69,17 +69,17 @@ class RIOFile : public RFile
 	/**
 	* Internal Handle of the file.
 	*/
-	int handle;
+	int Handle;
 
 	/**
 	* Size of the file.
 	*/
-	unsigned int Size;
+	size_t Size;
 
 	/**
 	* Current position in the file.
 	*/
-	unsigned int Pos;
+	size_t Pos;
 
 	/**
 	 * Downloader for non-local files.
@@ -90,6 +90,26 @@ class RIOFile : public RFile
 	 * File which is really treated.
 	 */
 	RString File;
+	
+	/**
+	 * Internal Buffer.
+	 */
+	char* Internal;
+	
+	/**
+	 * Number of internal bytes to read.
+	 */
+	size_t InternalToRead;
+	
+	/**
+	 * Physical (real) position in the file.
+	 */
+	size_t RealPos;
+	
+	/**
+	 * Current byte to read.
+	 */
+	char* CurByte;
 	
 protected:
 
@@ -133,6 +153,15 @@ public:
 	* Close the file.
 	*/
 	virtual void Close(void);
+	
+	/**
+	 * Read a given number of bytes from the current position of the file but
+	 * without to move the internal pointers.
+	 * @param buffer         Buffer (must be allocated).
+	 * @param nb             Number of bytes to read.
+	 * @return Number of bytes readed.
+	 */
+//	size_t NeutralRead(char* buffer,unsigned int nb);	
 
 	/**
 	* Read a given number of bytes at the current position of the file.
@@ -140,8 +169,13 @@ public:
 	* @param nb             Number of bytes to read.
 	* @return Number of bytes readed.
 	*/
-	unsigned int Read(char* buffer,unsigned int nb);
+	size_t Read(char* buffer,unsigned int nb,bool move=true);
 
+	/**
+	 * Read one character at the current position of the file.
+	 */
+//	char Read(void);
+	
 	/**
 	* Write the first number of bytes of a buffer in the current position of
 	* the file.
@@ -165,17 +199,17 @@ public:
 	/**
 	* Return true if the file is at the end.
 	*/
-	bool End(void) const;
+	inline bool End(void) const {return(Pos>=Size);}
 
 	/**
 	* Return the size of the file.
 	*/
-	unsigned int GetSize(void) const;
+	inline size_t GetSize(void) const {return(Size);}
 
 	/**
 	* Return the current position in the file.
 	*/
-	unsigned int GetPos(void) const;
+	inline size_t GetPos(void) const {return(Pos);}
 
 	/**
 	* Destructs the file.

@@ -116,7 +116,7 @@ RIOException::RIOException(const RTextFile* file,const char* str)
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetURI()+" ("+RString::Number(file->ActualLine())+"): "+str);
+		strcpy(Msg,file->GetURI()+" ("+RString::Number(file->GetLineNb())+"): "+str);
 	else
 		strcpy(Msg,str);
 }

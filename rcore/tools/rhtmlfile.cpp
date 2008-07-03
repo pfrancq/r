@@ -797,7 +797,7 @@ void RHTMLFile::InitValidTags(void)
 
 
 //------------------------------------------------------------------------------
-void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs)
+void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, const RString& name)
 {
 	RString htmlName=name;
 	Tag* tag;
@@ -837,7 +837,7 @@ void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, cons
 	}
 
 	// Treat the beginning tag
-	RXMLFile::BeginTag(namespaceURI,lName,htmlName,attrs);
+	RXMLFile::BeginTag(namespaceURI,lName,htmlName);
 
 	//Skip content if cur tag == 'SCRIPT'
 	if(!htmlName.Compare("script"))

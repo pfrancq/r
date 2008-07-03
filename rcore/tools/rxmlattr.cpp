@@ -81,6 +81,13 @@ void RXMLAttr::SetValue(const RString& value)
 
 
 //------------------------------------------------------------------------------
+void RXMLAttr::AddValue(const RString& value)
+{
+	Value+=value;
+}
+
+
+//------------------------------------------------------------------------------
 RXMLAttr::~RXMLAttr(void)
 {
 }

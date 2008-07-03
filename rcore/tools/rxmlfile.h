@@ -6,7 +6,7 @@
 
 	XML file - Header.
 
-	Copyright 2000-2007 by the Université Libre de Bruxelles.
+	Copyright 2000-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -67,7 +67,7 @@ class RXMLFile : public RTextFile
 {
 protected:
 	class Namespace;
-	
+
 	/**
 	* The structure associated with the XML file.
 	*/
@@ -77,7 +77,7 @@ protected:
 	 * The XML Structure was created by RXMLFile.
 	 */
 	bool NewStruct;
-	
+
 	/**
 	* Type of the document as defined in the XML file <!DOCTYPE >. If the tag
 	* is omitted, the string is empty.
@@ -85,9 +85,14 @@ protected:
 	RString DocType;
 
 	/**
-	* The current tag treated.
+	* Current tag treated.
 	*/
 	RXMLTag* CurTag;
+
+	/**
+	 * Current attribute treated.
+	 */
+	RXMLAttr* CurAttr;
 
 	/**
 	* Determine if the current closing tag is a closing one.
@@ -98,22 +103,37 @@ protected:
 	 * Namespaces defined in the XML file.
 	 */
 	RContainer<Namespace,true,true> Namespaces;
-	
+
 	/**
 	 * Default namespace (if any).
 	 */
 	RStack<RString,true,true,true> DefaultNamespace;
-	
+
 	/**
 	 * Avoid spaces in the XML file when creating it.
 	 */
 	bool AvoidSpaces;
-	
+
 	/**
 	 * Current Depth.
 	 */
 	size_t CurDepth;
-	
+
+	/**
+	 * Position of the last "token" extracted.
+	 */
+	size_t LastTokenPos;
+
+	/**
+	 * Current attributes.
+	 */
+	RContainer<RXMLAttr,true,true> Attrs;
+
+	/**
+	 * Determine is the body is currently processed.
+	 */
+	bool ProcessBody;
+
 public:
 
 	/**
@@ -155,7 +175,7 @@ public:
 	 * Avoid spaces when a XML file is created.
 	 */
 	void SetAvoidSpaces(bool as) { AvoidSpaces=as;}
-	
+
 	/**
 	* Set the encoding of the XML document.
 	* @param name           Name of the encoding.
@@ -165,8 +185,13 @@ public:
 	/**
 	 * Get the current depth of the XML tree parsed.
 	 */
-	size_t GetCurrentDepth(void);
-	
+	size_t GetCurrentDepth(void) const;
+
+	/**
+	 * Get the position of the last token extracted
+	 */
+	size_t GetLastTokenPos(void) const;
+
 	/**
 	* Set the doctype of the XML document.
 	* @param docType        Name of the encoding.
@@ -180,11 +205,18 @@ public:
 	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
-	 * Close the file. If the XML structure was created by the file, it is 
+	 * See if the body of the XML file is currently processed or not.
+	 */
+	bool IsProccesBody(void) const {return(ProcessBody);}
+
+	/**
+	 * Close the file. If the XML structure was created by the file, it is
 	 * deleted.
 	 */
 	virtual void Close(void);
-	
+
+protected:
+
 	/**
 	* This function transform a given string that is supposed to represent a
 	* HTML code (ex: "Ucirc") into the corresponding character (ex: û).
@@ -241,13 +273,12 @@ private:
 	* Load the attributes of the current tag and put them in a container. By
 	* default, the tag is supposed to be a normal XML tag ending with either
 	* '/>' or '>'.
-	* @param attrs          Container that will hold the attributes.
-	* @param popdefault     A default namespace is defined for this tag 
+	* @param popdefault     A default namespace is defined for this tag
 	* @param popuri         Namespaces with prefixes defined for this tag.
 	* @param EndTag1        Character than can delimited the tag.
 	* @param EndTag2        Another character than can delimited the tag.
 	*/
-	void LoadAttributes(RContainer<RXMLAttr,true,true>& attrs,bool& popdefault,RContainer<Namespace,false,false>& popuri,RChar EndTag1='/',RChar EndTag2='>');
+	void LoadAttributes(bool& popdefault,RContainer<Namespace,false,false>& popuri,RChar EndTag1='/',RChar EndTag2='>');
 
 	/**
 	* Save the next XML tag into the XML file.
@@ -255,41 +286,50 @@ private:
 	*/
 	void SaveNextTag(int depth);
 
-	/**
-	* Add the next character to the string. "CR" / "LF" is converted to "LF".
-	* @param str            String to which to add the character.
-	*/
-	void AddNextCharacter(RString& str);
-
 protected:
 
 	/**
-	* Function called each time a tag will be treated when reading a XML file.
-	* Acutally, a XMLTag is created and inserted as child of the current tag. At
+	* Method called each time a tag will be treated when reading a XML file.
+	* Actually, a XMLTag is created and inserted as child of the current tag. At
 	* the end, the current tag is set to the new created one.
-	* @param namespaceURI  Name of the namespace (if any).
-	* @param lName         Local name of the tag.
-	* @param name          Complete name of the tag.
-	* @param attrs         Attributes associated to the tag.
-	* @remarks The namespace are not treated for the moment, so the namespaceURI
-	*          and lname parameters are always empty.
+	* @param namespaceURI    Name of the namespace (if any).
+	* @param lName           Local name of the tag.
+	* @param name            Complete name of the tag.
 	*/
-	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs);
+	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name);
 
 	/**
-	* Function called each time a tag was treated when reading a XML file.
-	* Acutally, the current tag is set its parent.
+	* Method called each time an attribute will be treated when reading a XML
+	* file. Actually, the attribute is added to the current tag if one is
+	* defined or to an internal container.
+	* @param namespaceURI    Name of the namespace (if any).
+	* @param lName           Local name of the attribute.
+	* @param name            Complete name of the attribute.
+	* @param value           Value of the attribute (if any).
+	 */
+	virtual void AddAttribute(const RString& namespaceURI, const RString& lName, const RString& name);
+
+	/**
+	* Method called each time some attribute value elements (words or spaces)
+	* are parsed when reading a XML file. Actually, the text is added as
+	* content to value of the current attribute.
+	* @param value           Value processed.
+	 */
+	virtual void Value(const RString& value);
+
+	/**
+	* Method called each time a tag was treated when reading a XML file.
+	* Actually, the current tag is set its parent.
 	* @param namespaceURI  Name of the namespace (if any).
 	* @param lName         Local name of the tag.
 	* @param name          Complete name of the tag.
-	* @remarks The namespace are not treated for the moment, so the namespaceURI
-	*          and lname parameters are always empty.
 	*/
 	virtual void EndTag(const RString& namespaceURI, const RString& lName, const RString& name);
 
 	/**
-	* Function called each time a text is processed when reading a XML file.
-	* Actually, the text is added as content to the current tag.
+	* Method called each time some text elements (words or spaces) are parsed
+	* when reading a XML file. Actually, the text is added as content to the
+	* current tag.
 	* @param text          Text processed.
 	*/
 	virtual void Text(const RString& text);

@@ -6,7 +6,7 @@
 
 	Text File - Header.
 
-	Copyright 1999-2005 by the Université libre de Bruxelles.
+	Copyright 1999-2008 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -119,43 +119,84 @@ public:
 		SingleMultiLineComment   /** Both type of comments are possible. */
 	};
 
+	/**
+	 * The ParseSpaceType enum represents the different way to handle spaces.
+	 * If SkipSpaces is chosen, leading spaces and empty lines are not seen by
+	 * the programmer.
+	 */
+	enum ParseSpaceType
+	{
+		LeaveSpaces              /** Leave spaces. */,
+		SkipAllSpaces            /** Skip all spaces. */
+	};
+	
 protected:
 
 	/**
-	* Buffer containing the file (Used only if read mode).
+	* Temporary buffer (Used only if read mode).
 	*/
-	char* Buffer;
+	char Buffer[512];
 
 	/**
-	* Internal pointer used to read the file (Used only if read mode).
-	*/
-	char* ptr;
+	 * Unicode characters already readed.
+	 */
+	RChar Chars[40];
 
 	/**
-	* All the file reads at once  (Only true is supported yet).
-	*/
-	bool All;
+	 * Size of unicode characters already readed.
+	 */
+	size_t SizeChars[40];
+	
+	/**
+	 * Position of the next unicode to handle.
+	 */
+	size_t PosChars;
+	
+	/**
+	 * Next character to handle.
+	 */
+	RChar* NextRead;
+	
+	/**
+	 * Size of the next character to handle.
+	 */
+	size_t* SizeNextRead;
+	
+	/**
+	 * Next character to treat.
+	 */
+	RChar* NextWrite;
 
+	/**
+	 * Size of the next character to treat.
+	 */
+	size_t* SizeNextWrite;
+	
+	/**
+	 * Number of bytes to skip the next time unicode characters must be extracted.
+	 */
+	size_t SkipBytes;
+	
 	/**
 	* At NewLine? (Used only if created or append mode).
 	*/
 	bool NewLine;
 
 	/**
-	* This string represent a single line comment.
+	* String representing a single line comment.
 	*/
 	RString Rem;
 
 	/**
-	* This string represent the beginning of a multi-line comment.
+	* String representing the beginning of a multi-line comment.
 	*/
 	RString BeginRem;
 
 	/**
-	* This string represent the ending of a multi-line comment.
+	* String representing the ending of a multi-line comment.
 	*/
 	RString EndRem;
-
+	
 	/**
 	* The type of comments that are using for this file.
 	*/
@@ -166,8 +207,11 @@ protected:
 	*/
 	RemType ActivComment;
 
-protected:
-
+	/**
+	 * How to handle spaces.
+	 */
+	ParseSpaceType ParseSpace;
+	
 	/**
 	* This string represent a separator for different elements on the same line
 	*/
@@ -176,12 +220,12 @@ protected:
 	/**
 	* This variable is holding the current line number.
 	*/
-	unsigned int Line;
+	size_t Line;
 
 	/**
 	* This variable is holding the last line where something was readed (or written).
 	*/
-	unsigned int LastLine;
+	size_t LastLine;
 
 	/**
 	* Enconding of the text file.
@@ -192,21 +236,6 @@ protected:
 	* Current character in the buffer.
 	*/
 	RChar Cur;
-
-	/**
-	* Number of bytes used to code the current character.
-	*/
-	unsigned int CurLen;
-
-	/**
-	* Number of bytes left in the file.
-	*/
-	unsigned int Len;
-
-	/**
-	* Total number of bytes in the file.
-	*/
-	unsigned int TotalLen;
 
 public:
 
@@ -237,26 +266,16 @@ public:
 	virtual void Close(void);
 
 	/**
-	* Go to the begining of the file.
-	*/
-	void Begin(void);
-
-	/**
-	* Return the current character.
-	*/
-	RChar GetCur(void) const {return(Cur);}
-
-	/**
-	* Goes to the next character.
-	*/
-	void Next(void);
-
-	/**
 	* Return the next character but without to move internal pointer of the
 	* file.
 	*/
-	RChar GetNextCur(void);
+	RChar GetNextChar(void) const;
 
+	/**
+	* Get the next character.
+	*/
+	RChar GetChar(void);
+		
 	/**
 	* Get the rest of the file.
 	* @return A RString containing the file.
@@ -264,23 +283,25 @@ public:
 	RString GetUntilEnd(void);
 
 protected:
-
+	
 	/**
-	* Read a character of variable size and store the resulting char in a RChar.
-	* If the character to be read is Invalid, it is skipped and the function
-	* returns the number of characters skipped.
-	* @param ptr            Pointer to a buffer of character to read.
-	* @param len            Number of character in the buffer. After the call,
-	*                       this parameter contains the number bytes read.
-	* @param read           The resulting character
-	* @return unsigned int  return the number of bytes that have been skipped.
-	*			0 is returned when the char has been read
-	*			x is returned : the number of char that have been skipped.
+	* Go to the begining of the file.
 	*/
-	unsigned int ReadCar(char* &ptr,unsigned int &len,RChar& read) const;
+	void Begin(void);
+	
+	/**
+	* Goes to the next character.
+	*/
+	void Next(void);
 
 	/**
-	* Return true if a string begin with a end of line.
+	* Read a series of 10 characters of variable size and store the result in
+	* an internal buffer.
+	*/
+	void ReadChars(void);
+
+	/**
+	* Return true if the character defines the end of a line.
 	* @param car            Character.
 	*/
 	static bool Eol(RChar car);
@@ -291,12 +312,14 @@ protected:
 	void SkipEol(void);
 
 	/**
-	* Verify if a string is the next one in the buffer.
-	* @param str           The string to find
-	* @param CaseSensitive  Is the search case sensitive.
-	* @return bool         return true if the string is found.
+	* Verify if a string is the next one in the buffer. If the string is found,
+	* it may be skipped.
+	* @param str             The string to find
+	* @param CaseSensitive   Is the search case sensitive.
+	* @param skip            Must the string be skipped?
+	* @return True if the string is found.
 	*/
-	bool CurString(const RString& str,bool CaseSensitive=true) const;
+	bool CurString(const RString& str,bool CaseSensitive=true,bool skip=true);
 
 	/**
 	* This function skip spaces (Only used if read mode).
@@ -307,11 +330,6 @@ protected:
 	* This function skip spaces (Only used if read mode).
 	*/
 	void SkipSpaces(void);
-
-	/**
-	* This function skip all empty lines (Only used if read mode).
-	*/
-	void SkipEmptyLines(void);
 
 	/**
 	* This function returns true if the current position is the beginning of a
@@ -340,35 +358,57 @@ public:
 	RString GetEncoding(void) const;
 
 	/**
-	* Return true if the file is been treated.
-	*/
-	bool Eof(void);
-
-	/**
 	* Set the style of comments.
 	* @param style          The Style.
 	*/
 	void SetRemStyle(RemType style) {CommentType=style;}
 
 	/**
+	 * Set the way spaces are treated.
+	 */
+	void SetParseSpace(ParseSpaceType parse) {ParseSpace=parse;}
+
+	/**
+	 * Set the way spaces are treated.
+	 */
+	ParseSpaceType GetParseSpace(void) const {return(ParseSpace);}
+	
+	/**
 	* Set the string of comments when single line.
 	* @param c              This string represent the begin of a comment.
 	*/
-	void SetRem(RString c) {Rem=c;}
+	void SetRem(const RString& c);
 
 	/**
 	* Set the begin and the end strings of comments when in multiline.
 	* @param b              This string represent the begin of a comment.
 	* @param e              This string represent the end of a comment.
 	*/
-	void SetRem(RString b,RString e) {BeginRem=b; EndRem=e; }
+	void SetRem(const RString& b,const RString& e) ;
 
 	/**
-	* Return the next word contained in the file. A word is a suite of characters
-	* delemited by spaces.
+	* Get the next word contained in the file. A word is a suite of characters
+	* delimited by spaces.
 	*/
 	RString GetWord(void);
-
+	
+	/**
+	* Get the next token contained in the file. A token is a suite of
+	* characters delimited either by spaces or by specific ending characters.
+	* The ending characters are not skipped.
+	* @param ending1         Ending character.
+	* @param ending2         Ending character.
+	*/
+	RString GetToken(RChar ending1,const RChar ending2=0);
+	
+	/**
+	* Get the next token contained in the file. A token is a suite of
+	* characters delimited either by spaces or by a specific string.
+	* The ending characters are not skipped.
+	* @param ending          Ending String.
+	*/
+	RString GetToken(const RString& ending);
+	
 	/**
 	* Return the next entire line in the file.
 	*/
@@ -609,7 +649,7 @@ public:
 	/**
 	* Return the actual line number.
 	*/
-	unsigned long ActualLine(void) const {return(Line);}
+	unsigned long GetLineNb(void) const {return(Line);}
 
 	/**
 	* Return the last line number where something was read.

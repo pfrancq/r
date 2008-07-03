@@ -129,7 +129,7 @@ public:
 	* @remarks The namespace are not treated for the moment, so the namespaceURI
 	*          and lname parameters are always empty.
 	*/
-	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name,RContainer<RXMLAttr,true,true>& attrs);
+	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name);
 
 	/**
 	* Function called each time a tag was treated when reading a XML file.

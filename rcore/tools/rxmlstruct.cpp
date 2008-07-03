@@ -6,7 +6,7 @@
 
 	XML Structure - Implementation.
 
-	Copyright 2000-2007 by the Université Libre de Bruxelles.
+	Copyright 2000-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -154,6 +154,20 @@ RString RXMLStruct::GetEncoding(void) const
 
 
 //------------------------------------------------------------------------------
+void RXMLStruct::SetDTD(const RString& dtd)
+{
+	DTD=dtd;
+}
+
+
+//------------------------------------------------------------------------------
+RString RXMLStruct::GetDTD(void) const
+{
+	return(DTD);
+}
+
+
+//------------------------------------------------------------------------------
 void RXMLStruct::Clear(void)
 {
 	RTree<RXMLTag,true,false>::Clear();
@@ -209,6 +223,16 @@ RXMLAttr* RXMLStruct::NewAttr(const RString& name,const RString& value,const RSt
 	if(!xmlns.IsEmpty())
 		uri=GetNamespace(xmlns);	
 	return(new RXMLAttr(name,value,uri));
+}
+
+
+//------------------------------------------------------------------------------
+RXMLAttr* RXMLStruct::NewAttr(const RString& name,const RString& xmlns)
+{
+	RURI* uri(0);
+	if(!xmlns.IsEmpty())
+		uri=GetNamespace(xmlns);	
+	return(new RXMLAttr(name,RString::Null,uri));
 }
 
 
