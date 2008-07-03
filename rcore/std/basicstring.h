@@ -99,24 +99,26 @@ public:
 	*/
 	inline bool IsEmpty(void) const {return(!Data->Len);}
 
+protected:
+	
 	/**
 	* Get a uppercase version of the string.
 	* @return String.
 	*/
-	S ToUpper(void) const;
+	inline S ToUpper(void) const;
 
 	/**
 	* Get a lowercase version of the string.
 	* @return String.
 	*/
-	S ToLower(void) const;
+	inline S ToLower(void) const;
 
 	/**
 	* This function return a string by stripping whitespace (or other
 	* characters) from the beginning and end of the string.
 	* @return String.
 	*/
-	S Trim(void) const;
+	inline S Trim(void) const;
 
 	/**
 	* Find the position of a given character in the string.
@@ -127,7 +129,7 @@ public:
 	* @return The position of the first occurence or -1 if the character was not
 	*         found.
 	*/
-	int Find(const C car,int pos=0,bool CaseSensitive=true) const;
+	inline int Find(const C car,int pos=0,bool CaseSensitive=true) const;
 
 	/**
 	* Find the position of a given string in the string.
@@ -138,31 +140,27 @@ public:
 	* @return The position of the first occurence or -1 if the character was not
 	*         found.
 	*/
-	int FindStr(const S& str,int pos=0,bool CaseSensitive=true) const;
-
-protected:
+	inline int FindStr(const S& str,int pos=0,bool CaseSensitive=true) const;
 
 	// Get a sub-string of a given string.
-	template<class B> S Mid(size_t idx,int len=-1) const;
+	template<class B> inline S Mid(size_t idx,int len=-1) const;
 
 	// Set a new length to the string.
-	template<class B> void SetLen(size_t len);
+	template<class B> inline void SetLen(size_t len);
 	
 	// Set a new length to the string and fill it.
-	template<class B> void SetLen(size_t len,const S& str);
+	template<class B> inline void SetLen(size_t len,const S& str);
 
-public:
-
+	// Look if a string contains spaces only.
+	inline bool ContainOnlySpaces(void) const;
+	
 	/**
 	* Split the string to find all the elements separated by a given character.
 	* @param elements        Container that will hold the results.
 	* @param car             Character used as separator.
 	*/
-	void Split(RContainer<S,true,false>& elements,const C car) const;
+	inline void Split(RContainer<S,true,false>& elements,const C car) const;
 };
-
-
-#include <basicstring.hh>
 
 
 }  //-------- End of namespace R ----------------------------------------------

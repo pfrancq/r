@@ -80,7 +80,7 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	S R::BasicString<C,S>::Trim(void) const
+	inline S R::BasicString<C,S>::Trim(void) const
 {
 	S res;
 	size_t len = Data->Len;
@@ -95,7 +95,7 @@ template<class C,class S>
 		len--;
 		ptr--;
 	}
-
+	
 	// Skip beginning spaces
 	if(!len)
 		return(res);
@@ -111,7 +111,7 @@ template<class C,class S>
 	{
 		res+=(*(ptr++));
 		len--;
-	};
+	}
 
 	return(res);
 }
@@ -119,7 +119,7 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	S R::BasicString<C,S>::ToUpper(void) const
+	inline S R::BasicString<C,S>::ToUpper(void) const
 {
 	size_t len = Data->Len;
 	C* ptr = Data->Text;
@@ -148,7 +148,7 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	S R::BasicString<C,S>::ToLower(void) const
+	inline S R::BasicString<C,S>::ToLower(void) const
 {
 	size_t len = Data->Len;
 	C* ptr = Data->Text;
@@ -177,7 +177,7 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	int R::BasicString<C,S>::Find(const C car,int pos,bool CaseSensitive) const
+	inline int R::BasicString<C,S>::Find(const C car,int pos,bool CaseSensitive) const
 {
 	C* start;
 	bool left;
@@ -232,7 +232,7 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	int R::BasicString<C,S>::FindStr(const S& str,int pos,bool CaseSensitive) const
+	inline int R::BasicString<C,S>::FindStr(const S& str,int pos,bool CaseSensitive) const
 {
 	C* start;
 	const C* toFind;
@@ -329,7 +329,7 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S> template<class B>
-	S R::BasicString<C,S>::Mid(size_t idx,int len) const
+	inline S R::BasicString<C,S>::Mid(size_t idx,int len) const
 {
 	S res;
 	size_t Len;
@@ -356,7 +356,7 @@ template<class C,class S> template<class B>
 
 //-----------------------------------------------------------------------------
 template<class C,class S> template<class B>
-	void R::BasicString<C,S>::SetLen(size_t len)
+	inline void R::BasicString<C,S>::SetLen(size_t len)
 {
 	if(len<=Data->Len)
 	{
@@ -380,7 +380,7 @@ template<class C,class S> template<class B>
 
 //-----------------------------------------------------------------------------
 template<class C,class S> template<class B>
-	void R::BasicString<C,S>::SetLen(size_t len,const S& str)
+	inline void R::BasicString<C,S>::SetLen(size_t len,const S& str)
 {
 	size_t oldsize=Data->Len;
 	SetLen<B>(len);
@@ -402,7 +402,23 @@ template<class C,class S> template<class B>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	void R::BasicString<C,S>::Split(R::RContainer<S,true,false>& elements,const C car) const
+	inline bool R::BasicString<C,S>::ContainOnlySpaces(void) const
+{
+	if(!Data->Len)
+		return(false);	
+	C* ptr=Data->Text;
+	while((*ptr)!=0)
+	{
+		if(!isspace(*(ptr++)))
+			return(false);
+	}
+	return(true);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	inline void R::BasicString<C,S>::Split(R::RContainer<S,true,false>& elements,const C car) const
 {
 	S element;
 	size_t len;

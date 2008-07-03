@@ -6,7 +6,7 @@
 
 	C String - Header.
 
-	Copyright 1999-2005 by the Université libre de Bruxelles.
+	Copyright 1999-2008 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -167,7 +167,7 @@ public:
 	* arbitrary data.
 	* @param len             Length of the string.
 	*/
-	inline void SetLen(size_t len) {BasicString<char,RCString>::SetLen<BasicCharBuffer>(len);}
+	void SetLen(size_t len);
 
 	/**
 	* Set the length of the string. If the length is greater than the current
@@ -176,8 +176,13 @@ public:
 	* @param len             Length of the string.
 	* @param str             String used to fill.
 	*/
-	inline void SetLen(size_t len,const RCString& str) {BasicString<char,RCString>::SetLen<BasicCharBuffer>(len,str);}
+	void SetLen(size_t len,const RCString& str);
 	
+	/**
+	 * Look if the string contains only spaces.
+	 */
+	bool ContainOnlySpaces(void) const;
+
 	/**
 	* This function returns the character at a given position in the string.
 	* (Read-Only).
@@ -200,7 +205,7 @@ public:
 	*                        specified, the end of the string is copied.
 	* @returns A RString containing the substring.
 	*/
-	inline RCString Mid(size_t idx,int len=-1) const {return(BasicString<char,RCString>::Mid<BasicCharBuffer>(idx,len));}
+	RCString Mid(size_t idx,int len=-1) const;
 
 	/**
 	* Add another string.
@@ -290,39 +295,23 @@ public:
 	size_t HashIndex(size_t idx) const;
 
 	/**
-	* Return the length of the string.
-	*/
-	inline size_t GetLen(void) const {return(Data->Len);}
-
-	/**
-	* Return the maximal length of the string.
-	*/
-	inline size_t GetMaxLen(void) const {return(Data->MaxLen);}
-
-	/**
-	* Look if the string is empty.
-	* @returns true if the length is null, false else.
-	*/
-	inline bool IsEmpty(void) const {return(!Data->Len);}
-
-	/**
 	* Get a uppercase version of the string.
 	* @return String.
 	*/
-	inline RCString ToUpper(void) const {return(BasicString<char,RCString>::ToUpper());}
+	RCString ToUpper(void) const;
 
 	/**
 	* Get a lowercase version of the string.
 	* @return String.
 	*/
-	inline RCString ToLower(void) const  {return(BasicString<char,RCString>::ToLower());}
+	RCString ToLower(void) const;
 
 	/**
 	* This function return a string by stripping whitespace (or other
 	* characters) from the beginning and end of the string.
 	* @return String.
 	*/
-	inline RCString Trim(void) const  {return(BasicString<char,RCString>::Trim());}
+	RCString Trim(void) const;
 
 	/**
 	* Find the position of a given character in the string.
@@ -333,7 +322,7 @@ public:
 	* @return The position of the first occurence or -1 if the character was not
 	*         found.
 	*/
-	inline int Find(const char car,int pos=0,bool CaseSensitive=true) const {return(BasicString<char,RCString>::Find(car,pos,CaseSensitive));}
+	int Find(const char car,int pos=0,bool CaseSensitive=true) const;
 
 	/**
 	* Find the position of a given string in the string.
@@ -344,14 +333,14 @@ public:
 	* @return The position of the first occurence or -1 if the character was not
 	*         found.
 	*/
-	inline int FindStr(const RCString& str,int pos=0,bool CaseSensitive=true) const {return(BasicString<char,RCString>::FindStr(str,pos,CaseSensitive));}
+	int FindStr(const RCString& str,int pos=0,bool CaseSensitive=true) const;
 
 	/**
 	* Split the string to find all the elements separated by a given character.
 	* @param elements        Container that will hold the results.
 	* @param car             Character used as separator.
 	*/
-	inline void Split(RContainer<RCString,true,false>& elements,const char car) const {BasicString<char,RCString>::Split(elements,car);}
+	void Split(RContainer<RCString,true,false>& elements,const char car) const;
 
 	/**
 	* Destruct the string.

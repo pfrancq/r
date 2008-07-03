@@ -6,7 +6,7 @@
 
 	Unicode String - Implementation.
 
-	Copyright 1999-2005 by the Université libre de Bruxelles.
+	Copyright 1999-2008 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -35,6 +35,7 @@
 #include <rstd.h>
 #include <rstring.h>
 #include <rshareddata.h>
+#include <basicstring.hh>
 using namespace std;
 using namespace R;
 
@@ -131,7 +132,10 @@ RString::RString(RChar src)
 
 	ptr[0]=src;
 	ptr[1]=0;
-	len=src.IsNull();
+	if(src.IsNull())
+		len=0;
+	else
+		len=1;
 	Data=new CharBuffer(ptr,len,maxlen);
 }
 
@@ -254,6 +258,27 @@ void RString::Copy(void)
 
 
 //-----------------------------------------------------------------------------
+void RString::SetLen(size_t len)
+{
+	BasicString<RChar,RString>::SetLen<CharBuffer>(len);
+}
+
+
+//-----------------------------------------------------------------------------
+void RString::SetLen(size_t len,const RString& str)
+{
+	BasicString<RChar,RString>::SetLen<CharBuffer>(len,str);
+}
+
+
+//-----------------------------------------------------------------------------
+bool RString::ContainOnlySpaces(void) const
+{
+	return(BasicString<RChar,RString>::ContainOnlySpaces());
+}
+
+
+//-----------------------------------------------------------------------------
 const char* RString::Latin1(void) const
 {
 	if(!static_cast<CharBuffer*>(Data)->Latin1)
@@ -287,6 +312,13 @@ RChar& RString::operator[](size_t idx)
 		throw std::range_error("RString::operator[] : index outside string");
 	#endif
 	return(Data->Text[idx]);
+}
+
+
+//-----------------------------------------------------------------------------
+RString RString::Mid(size_t idx,int len) const
+{
+	return(BasicString<RChar,RString>::Mid<CharBuffer>(idx,len));
 }
 
 
@@ -558,6 +590,48 @@ char* RString::UnicodeToLatin1(const RChar* src,size_t len)
 	}
 	(*ptr)=0;
 	return(res);
+}
+
+
+//-----------------------------------------------------------------------------
+RString RString::ToUpper(void) const
+{
+	return(BasicString<RChar,RString>::ToUpper());
+}
+
+
+//-----------------------------------------------------------------------------
+RString RString::ToLower(void) const
+{
+	return(BasicString<RChar,RString>::ToLower());
+}
+
+
+//-----------------------------------------------------------------------------
+RString RString::Trim(void) const
+{
+	return(BasicString<RChar,RString>::Trim());
+}
+
+
+//-----------------------------------------------------------------------------
+int RString::Find(const RChar car,int pos,bool CaseSensitive) const
+{
+	return(BasicString<RChar,RString>::Find(car,pos,CaseSensitive));
+}
+
+
+//-----------------------------------------------------------------------------
+int RString::FindStr(const RString& str,int pos,bool CaseSensitive) const
+{
+	return(BasicString<RChar,RString>::FindStr(str,pos,CaseSensitive));
+}
+
+
+//-----------------------------------------------------------------------------
+void RString::Split(RContainer<RString,true,false>& elements,const RChar car) const
+{
+	BasicString<RChar,RString>::Split(elements,car);
 }
 
 

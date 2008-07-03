@@ -6,7 +6,7 @@
 
 	C String - Implementation.
 
-	Copyright 1999-2005 by the Université libre de Bruxelles.
+	Copyright 1999-2008 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -38,6 +38,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rcstring.h>
+#include <basicstring.hh>
 using namespace std;
 using namespace R;
 
@@ -130,7 +131,10 @@ RCString::RCString(char src)
 
 	ptr[0]=src;
 	ptr[1]=0;
-	len=(src>0);
+	if(src)
+		len=1;
+	else
+		len=0;
 	Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
 }
 
@@ -241,6 +245,27 @@ void RCString::Copy(void)
 
 
 //-----------------------------------------------------------------------------
+void RCString::SetLen(size_t len)
+{
+	BasicString<char,RCString>::SetLen<BasicCharBuffer>(len);
+}
+
+
+//-----------------------------------------------------------------------------
+void RCString::SetLen(size_t len,const RCString& str)
+{
+	BasicString<char,RCString>::SetLen<BasicCharBuffer>(len,str);
+}
+
+
+//-----------------------------------------------------------------------------
+bool RCString::ContainOnlySpaces(void) const
+{
+	return(BasicString<char,RCString>::ContainOnlySpaces());
+}
+
+
+//-----------------------------------------------------------------------------
 const char& RCString::operator[](size_t idx) const
 {
 	if(idx>=Data->Len)
@@ -263,6 +288,13 @@ char& RCString::operator[](size_t idx)
 		throw std::range_error("RCString::operator[] : index outside string");
 	#endif
 	return(Data->Text[idx]);
+}
+
+
+//-----------------------------------------------------------------------------
+RCString RCString::Mid(size_t idx,int len) const
+{
+	return(BasicString<char,RCString>::Mid<BasicCharBuffer>(idx,len));
 }
 
 
@@ -391,6 +423,48 @@ size_t RCString::HashIndex(size_t idx) const
 	if((c>=char('a'))&&(c<=char('z')))
 		return(c-char('a'));
 	return(26);
+}
+
+
+//-----------------------------------------------------------------------------
+RCString RCString::ToUpper(void) const
+{
+	return(BasicString<char,RCString>::ToUpper());
+}
+
+
+//-----------------------------------------------------------------------------
+RCString RCString::ToLower(void) const
+{
+	return(BasicString<char,RCString>::ToLower());
+}
+
+
+//-----------------------------------------------------------------------------
+RCString RCString::Trim(void) const
+{
+	return(BasicString<char,RCString>::Trim());
+}
+
+
+//-----------------------------------------------------------------------------
+int RCString::Find(const char car,int pos,bool CaseSensitive) const
+{
+	return(BasicString<char,RCString>::Find(car,pos,CaseSensitive));
+}
+
+
+//-----------------------------------------------------------------------------
+int RCString::FindStr(const RCString& str,int pos,bool CaseSensitive) const
+{
+	return(BasicString<char,RCString>::FindStr(str,pos,CaseSensitive));
+}
+
+
+//-----------------------------------------------------------------------------
+void RCString::Split(RContainer<RCString,true,false>& elements,const char car) const
+{
+	BasicString<char,RCString>::Split(elements,car);
 }
 
 
