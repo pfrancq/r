@@ -129,7 +129,7 @@ public:
 		LeaveSpaces              /** Leave spaces. */,
 		SkipAllSpaces            /** Skip all spaces. */
 	};
-	
+
 protected:
 
 	/**
@@ -146,22 +146,22 @@ protected:
 	 * Size of unicode characters already readed.
 	 */
 	size_t SizeChars[40];
-	
+
 	/**
 	 * Position of the next unicode to handle.
 	 */
 	size_t PosChars;
-	
+
 	/**
 	 * Next character to handle.
 	 */
 	RChar* NextRead;
-	
+
 	/**
 	 * Size of the next character to handle.
 	 */
 	size_t* SizeNextRead;
-	
+
 	/**
 	 * Next character to treat.
 	 */
@@ -171,12 +171,12 @@ protected:
 	 * Size of the next character to treat.
 	 */
 	size_t* SizeNextWrite;
-	
+
 	/**
 	 * Number of bytes to skip the next time unicode characters must be extracted.
 	 */
 	size_t SkipBytes;
-	
+
 	/**
 	* At NewLine? (Used only if created or append mode).
 	*/
@@ -196,7 +196,7 @@ protected:
 	* String representing the ending of a multi-line comment.
 	*/
 	RString EndRem;
-	
+
 	/**
 	* The type of comments that are using for this file.
 	*/
@@ -211,7 +211,7 @@ protected:
 	 * How to handle spaces.
 	 */
 	ParseSpaceType ParseSpace;
-	
+
 	/**
 	* This string represent a separator for different elements on the same line
 	*/
@@ -275,7 +275,7 @@ public:
 	* Get the next character.
 	*/
 	RChar GetChar(void);
-		
+
 	/**
 	* Get the rest of the file.
 	* @return A RString containing the file.
@@ -283,12 +283,12 @@ public:
 	RString GetUntilEnd(void);
 
 protected:
-	
+
 	/**
 	* Go to the begining of the file.
 	*/
 	void Begin(void);
-	
+
 	/**
 	* Goes to the next character.
 	*/
@@ -349,7 +349,7 @@ public:
 	* Set the encoding of the file.
 	* @param name           Name of the encoding.
 	*/
-	void SetEncoding(const RString& name);
+	virtual void SetEncoding(const RString& name);
 
 	/**
 	* Get the encoding of the file.
@@ -372,7 +372,7 @@ public:
 	 * Set the way spaces are treated.
 	 */
 	ParseSpaceType GetParseSpace(void) const {return(ParseSpace);}
-	
+
 	/**
 	* Set the string of comments when single line.
 	* @param c              This string represent the begin of a comment.
@@ -391,7 +391,7 @@ public:
 	* delimited by spaces.
 	*/
 	RString GetWord(void);
-	
+
 	/**
 	* Get the next token contained in the file. A token is a suite of
 	* characters delimited either by spaces or by specific ending characters.
@@ -400,7 +400,7 @@ public:
 	* @param ending2         Ending character.
 	*/
 	RString GetToken(RChar ending1,const RChar ending2=0);
-	
+
 	/**
 	* Get the next token contained in the file. A token is a suite of
 	* characters delimited either by spaces or by a specific string.
@@ -408,7 +408,7 @@ public:
 	* @param ending          Ending String.
 	*/
 	RString GetToken(const RString& ending);
-	
+
 	/**
 	* Return the next entire line in the file.
 	*/
@@ -470,7 +470,7 @@ public:
 	RTextFile& operator>>(unsigned long& nb);
 
 protected:
-	
+
 	/**
 	* Return a next string contained in the that should be a real number with
 	* the following pattern:
@@ -482,7 +482,7 @@ protected:
 	RString GetRealNb(void);
 
 public:
-	
+
 	/**
 	* >> Operator for float.
 	*/
@@ -492,7 +492,7 @@ public:
 	* >> Operator for a double.
 	*/
 	RTextFile& operator>>(double& nb);
-	
+
 	/**
 	* >> Operator for a long double.
 	*/
@@ -602,7 +602,7 @@ public:
 	* Write a char in the file.
 	*/
 	void WriteChar(const char c);
-	
+
 	/**
 	* Write a float.
 	*/
@@ -622,7 +622,7 @@ public:
 	* << Operator for double.
 	*/
 	RTextFile& operator<<(const double nb);
-	
+
 	/**
 	* Write a long double
 	*/

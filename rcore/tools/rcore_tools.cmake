@@ -10,6 +10,7 @@ SET(rcore_tools_INST_INCLUDES rtrace.h
     					 rlang.h
     					 rlocale.h
     					 rxmlattr.h
+    					 rxmlparser.h
     					 rxmlfile.h
     					 rxmlstruct.h
     					 rxmltag.h
@@ -33,6 +34,7 @@ SET(rcore_tools_TARGET_SOURCES random.cpp
                                rtextfile.cpp
                                rchar.cpp
                                rxmlattr.cpp
+                               rxmlparser.cpp
                                rxmlfile.cpp
                                rxmlstruct.cpp
                                rxmltag.cpp

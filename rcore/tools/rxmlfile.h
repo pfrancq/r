@@ -36,7 +36,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rtextfile.h>
+#include <rxmlparser.h>
 #include <rxmlstruct.h>
 #include <rstack.h>
 
@@ -63,11 +63,9 @@ namespace R{
 * @short XML File.
 * @author Pascal Francq.
 */
-class RXMLFile : public RTextFile
+class RXMLFile : public RXMLParser
 {
 protected:
-	class Namespace;
-
 	/**
 	* The structure associated with the XML file.
 	*/
@@ -77,12 +75,6 @@ protected:
 	 * The XML Structure was created by RXMLFile.
 	 */
 	bool NewStruct;
-
-	/**
-	* Type of the document as defined in the XML file <!DOCTYPE >. If the tag
-	* is omitted, the string is empty.
-	*/
-	RString DocType;
 
 	/**
 	* Current tag treated.
@@ -95,44 +87,9 @@ protected:
 	RXMLAttr* CurAttr;
 
 	/**
-	* Determine if the current closing tag is a closing one.
-	*/
-	bool CurTagClosing;
-
-	/**
-	 * Namespaces defined in the XML file.
+	 * Name of an attribute in the headers.
 	 */
-	RContainer<Namespace,true,true> Namespaces;
-
-	/**
-	 * Default namespace (if any).
-	 */
-	RStack<RString,true,true,true> DefaultNamespace;
-
-	/**
-	 * Avoid spaces in the XML file when creating it.
-	 */
-	bool AvoidSpaces;
-
-	/**
-	 * Current Depth.
-	 */
-	size_t CurDepth;
-
-	/**
-	 * Position of the last "token" extracted.
-	 */
-	size_t LastTokenPos;
-
-	/**
-	 * Current attributes.
-	 */
-	RContainer<RXMLAttr,true,true> Attrs;
-
-	/**
-	 * Determine is the body is currently processed.
-	 */
-	bool ProcessBody;
+	RString AttrName;
 
 public:
 
@@ -172,31 +129,10 @@ public:
 	RXMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding="UTF-8");
 
 	/**
-	 * Avoid spaces when a XML file is created.
-	 */
-	void SetAvoidSpaces(bool as) { AvoidSpaces=as;}
-
-	/**
 	* Set the encoding of the XML document.
 	* @param name           Name of the encoding.
 	*/
 	void SetEncoding(const RString& name);
-
-	/**
-	 * Get the current depth of the XML tree parsed.
-	 */
-	size_t GetCurrentDepth(void) const;
-
-	/**
-	 * Get the position of the last token extracted
-	 */
-	size_t GetLastTokenPos(void) const;
-
-	/**
-	* Set the doctype of the XML document.
-	* @param docType        Name of the encoding.
-	*/
-	virtual void SetDocType(const RString& docType);
 
 	/**
 	* Open the file.
@@ -205,80 +141,12 @@ public:
 	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
-	 * See if the body of the XML file is currently processed or not.
-	 */
-	bool IsProccesBody(void) const {return(ProcessBody);}
-
-	/**
 	 * Close the file. If the XML structure was created by the file, it is
 	 * deleted.
 	 */
 	virtual void Close(void);
 
-protected:
-
-	/**
-	* This function transform a given string that is supposed to represent a
-	* HTML code (ex: "Ucirc") into the corresponding character (ex: û).
-	* @param code           HTML Code.
-	* @returns A RChar corresponding to the code or 0 if the code is not
-	* identified.
-	*/
-	virtual RChar CodeToChar(RString& code);
-
-	/**
-	* This function transform a given character (ex: <) into a string that
-	* represents a HTML code (ex: "lt").
-	* @param car            Character.
-	* @param strict          If strict is true, the quotes are also transform,
-	*                        else on < and > are transformed.
-	* @returns A RString corresponding to the character or the character itself
-	* if a code is not identified.
-	*/
-	RString CharToCode(RChar car,bool strict=true);
-
-	/**
-	* This function transform a string containing some XML or HTML code into a
-	* string with normal characters.
-	* @param str            XML string.
-	* @returns A RString containing a normal string.
-	* @exception RIOException An exception is generated if the string contains
-	*                         an invalid XML or HTML code.
-	*/
-	RString XMLToString(const RString& str);
-
-	/**
-	* This function transform a normal string into a valid XML string where some
-	* characters are replaced by codes.
-	* @param str             Normal string.
-	* @param strict          If strict is true, the quotes are also transform,
-	*                        else on < and > are transformed.
-	* @returns A RString containing a valid XML string.
-	*/
-	RString StringToXML(const RString& str,bool strict=true);
-
 private:
-
-	/**
-	* Load the Header of a XML file (or nothing if it seems to be a HTML file).
-	*/
-	void LoadHeader(void);
-
-	/**
-	* Load the next XML tag from a XML file.
-	*/
-	void LoadNextTag(void);
-
-	/**
-	* Load the attributes of the current tag and put them in a container. By
-	* default, the tag is supposed to be a normal XML tag ending with either
-	* '/>' or '>'.
-	* @param popdefault     A default namespace is defined for this tag
-	* @param popuri         Namespaces with prefixes defined for this tag.
-	* @param EndTag1        Character than can delimited the tag.
-	* @param EndTag2        Another character than can delimited the tag.
-	*/
-	void LoadAttributes(bool& popdefault,RContainer<Namespace,false,false>& popuri,RChar EndTag1='/',RChar EndTag2='>');
 
 	/**
 	* Save the next XML tag into the XML file.
@@ -335,17 +203,10 @@ protected:
 	virtual void Text(const RString& text);
 
 	/**
-	* Function that specify if only quotes are allowed to delimit a parameter in
-	* a tag. By default, this function return true which is the syntax of XML.
-	*/
-	virtual bool OnlyQuote(void);
-
-	/**
-	* Function that specify if invalid XML codes (sequences beginning with a '&'
-	* are accepted. By default, this function return false which is the syntax
-	* of XML.
-	*/
-	virtual bool InvalidXMLCodeAccept(void);
+	 * Method called to define the DTD of the XML file.
+	 * @param dtd            DTD.
+	 */
+	virtual void SetDTD(const RString& dtd);
 
 public:
 
