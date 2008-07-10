@@ -52,7 +52,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 // static instance
-RDate RDate::null(1,1,1970,0,0,0);
+RDate RDate::Null(1,1,1970,0,0,0);
 
 
 //------------------------------------------------------------------------------
@@ -278,7 +278,7 @@ void RDate::SetDate(const RString& date)
 
 	if(date.ToUpper()=="NULL")
 	{
-		(*this)=RDate::null;
+		(*this)=RDate::Null;
 		return;
 	}
 	if(!date.IsEmpty())

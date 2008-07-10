@@ -30,8 +30,9 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RMySQL_H
-#define RMySQL_H
+#ifndef RDb_H
+#define RDb_H
+
 
 
 //------------------------------------------------------------------------------
@@ -44,14 +45,6 @@
 #include <rdate.h>
 
 
-//------------------------------------------------------------------------------
-// include files for MySQL
-#ifdef WIN32
-	#include <winsock.h>
-	#include <memory> //for std::auto_ptr
-#endif
-#include <mysql/mysql.h>
-
 
 //------------------------------------------------------------------------------
 namespace R{
@@ -61,11 +54,12 @@ namespace R{
 //------------------------------------------------------------------------------
 // Forward class declaration
 class RTextEncoding;
+class RQuery;
 
 
 //------------------------------------------------------------------------------
 /**
-* Type representing an identifier in a database row/
+* Type representing an identifier in a database row.
 */
 typedef unsigned long long size_raw;
 
@@ -77,46 +71,46 @@ typedef unsigned long long size_raw;
 * @author Pascal Francq
 * @short MySQL Error.
 */
-class RMySQLError : public R::RException
+class RDbException : public R::RException
 {
 public:
 
 	/**
 	* Constructor.
 	*/
-	RMySQLError(void) throw()
-		: R::RException() {}
+	RDbException(void) throw() : RException() {}
 
 	/**
 	* Constructor.
 	* @param str                      Message of the error.
 	*/
-	RMySQLError(const char* str) throw()
-		: R::RException(str) {}
+	RDbException(const char* str) throw() : RException(str) {}
 };
 
 
 
 //------------------------------------------------------------------------------
 /**
-* The RDb class provides a representation of a MySQL database.
+* The RDb class provides a representation of connection to a database.
+* Actually, MySQL and SQLite are supported.
 *
 * Here is a example:
 *
 * @code
 * #include <iostream>
-* #include <rmysql.h>
+* #include <rdb.h>
 * using namespace R;
+* using namespace std;
 *
 *
 * //----------------------------------------------------------------------------
 * void Load(void)
 * {
-* 	RDb db("host","me","mypassword","thedb");
-* 	RQuery q(&db, "SELECT * FROM tbl");
+* 	auto_ptr<RDb> db(RDb::Get(RDb::MySQL,"host","me","mypassword","thedb"));
+* 	auto_ptr<RQuery> q(db->Query("SELECT * FROM tbl");
 *
-* 	for(q.Start();!q.End();q.Next())
-* 		cout<<"Col 1: "<<q[0]<<"   -    Col 2:"<<q[1]<<endl;
+* 	for(q->Start();!q->End();q->Next())
+* 		cout<<"Col 1: "<<(*q)[0]<<"   -    Col 2:"<<(*q)[1]<<endl;
 * }
 *
 *
@@ -127,7 +121,7 @@ public:
 * 	{
 * 		Load();
 * 	}
-* 	catch(RMySQLError &e)
+* 	catch(RDbException &e)
 * 	{
 * 		cout<<"Error: "<<e.GetError()<<endl;
 * 	}
@@ -135,45 +129,58 @@ public:
 * @endcode
 *
 * @author Pascal Francq
-* @short MySQL Database.
+* @short Database.
 */
 class RDb
 {
-	/**
-	* Internal structure.
-	*/
-	MYSQL* connection;
+public:
+
+	enum Db
+	{
+		MySQL,
+		SQLite
+	};
 
 	/**
-	* Internal structure.
-	*/
-	MYSQL mysql;
+	 * Type of the database.
+	 */
+	Db Type;
+
+protected:
 
 	/**
-	* Coding used to read/write to MySQL.
+	* Construct a connection to the database.
+	* @param type            Type of the database.
 	*/
-	RTextEncoding* Coding;
+	RDb(Db type);
 
 public:
 
 	/**
-	* Connstruct a database.
-	* @param host           Host of the database server.
-	* @param user           User to connect with.
-	* @param pwd            Password of the uzer.
-	* @param db             Name of the database.
-	* @param coding         Name of the coding.
-	*/
-	RDb(RString host,RString user,RString pwd,RString db,RString coding="latin1");
+	 * Get the type of the database.
+	 */
+	Db GetType(void) const {return(Type);}
 
 	/**
-	* Create a new database
+	* Create a new MySQL database.
 	* @param host           Host of the database server.
 	* @param user           User to connect with.
 	* @param pwd            Password of the user.
 	* @param name           The name of the new database
 	*/
-	static void CreateDatabase(RString host,RString user,RString pwd,RString name);
+	static void CreateMySQLDatabase(const RString& host,const RString& user,const RString& pwd,const RString& name);
+
+	/**
+	 * Get a connection to a database.
+	 * @param type           Type of the database.
+	 * @param db             Name of the Db.
+	 * @param host           Host of the database.
+	 * @param user           User used for the connection.
+	 * @param pwd            Password used for the connection.
+	 * @param coding         Coding of the database.
+	 * @return Smart pointer on RDb.
+	 */
+	static RDb* Get(Db type,const RString& db,const RString& host=RString::Null,const RString& user=RString::Null,const RString& pwd=RString::Null,const RString& coding="latin1");
 
 	/**
 	* Create a table that will be used to simulate transactions.
@@ -182,22 +189,19 @@ public:
 	* @param ...            Name of the parameters of the transaction (transid
 	                        is reserved).
 	*/
-	void CreateTransactionTable(RString name,unsigned int nb,...);
+	virtual void CreateTransactionTable(const RString& name,unsigned int nb,...);
 
 	/**
-	* Get the protocol version used.
-	* @return a identifier.
-	*/
-	int GetProtocolVersion(void)
-		{return(mysql.protocol_version);}
+	 * Create a query.
+	 * @param sql
+	 * @return Smart pointer on RQuery.
+	 */
+	virtual RQuery* Query(const RString& sql)=0;
 
 	/**
-	* Destruct the database.
+	* Destruct the connection to the database.
 	*/
 	virtual ~RDb(void);
-
-	// Friend class.
-	friend class RQuery;
 };
 
 
@@ -209,18 +213,19 @@ public:
 *
 * @code
 * #include <iostream>
-* #include <rmysql.h>
+* #include <rdb.h>
 * using namespace R;
+* using namespace std;
 *
 *
 * //----------------------------------------------------------------------------
 * void Load(void)
 * {
-* 	RDb db("host","me","mypassword","thedb");
-* 	RQuery q(&db, "SELECT * FROM tbl");
+* 	auto_ptr<RDb> db(RDb::Get(RDb::MySQL,"host","me","mypassword","thedb"));
+* 	auto_ptr<RQuery> q(db->Query("SELECT * FROM tbl");
 *
-* 	for(q.Start();!q.End();q.Next())
-* 		cout<<"Col 1: "<<q[0]<<"   -    Col 2:"<<q[1]<<endl;
+* 	for(q->Start();!q->End();q->Next())
+* 		cout<<"Col 1: "<<(*q)[0]<<"   -    Col 2:"<<(*q)[1]<<endl;
 * }
 *
 *
@@ -231,7 +236,7 @@ public:
 * 	{
 * 		Load();
 * 	}
-* 	catch(RMySQLError &e)
+* 	catch(RDbException &e)
 * 	{
 * 		cout<<"Error: "<<e.GetError()<<endl;
 * 	}
@@ -242,25 +247,7 @@ public:
 */
 class RQuery
 {
-	/**
-	* Internal structure.
-	*/
-	MYSQL_RES *result;
-
-	/**
-	* Actual row.
-	*/
-	MYSQL_ROW row;
-
-	/**
-	* Total number of rows returned by the query.
-	*/
-	size_raw nbrows;
-
-	/**
-	* Number of columns of the query.
-	*/
-	size_raw nbcols;
+protected:
 
 	/**
 	* SQL query.
@@ -268,71 +255,56 @@ class RQuery
 	RString SQL;
 
 	/**
-	* Database.
+	* Total number of rows returned by the query.
 	*/
-	RDb* DB;
+	size_raw NbRows;
 
-public:
+	/**
+	* Number of columns of the query.
+	*/
+	size_raw NbCols;
 
 	/**
 	* Construct a query.
-	* @param db             Pointer to the corresponding database.
 	* @param sql            String containing a SQL query.
 	*/
-	RQuery(RDb* db,RString sql);
-
-	/**
-	* Construct a query.
-	* @param db             Reference to the corresponding database.
-	* @param sql            String containing a SQL query.
-	*/
-	RQuery(RDb& db,RString sql);
-
-	/**
-	* Construct a query.
-	* @param db             Smart pointer to the corresponding database.
-	* @param sql            String containing a SQL query.
-	*/
-	RQuery(std::auto_ptr<R::RDb>& db,RString sql);
-
-protected:
-
-	/**
-	* Does the work of initializing the query.
-	*/
-	void Init(void);
+	RQuery(const RString& sql);
 
 public:
 
 	/**
 	* Get the total number of rows of the query.
-	* @returns Number of row.
+	* @returns Number of rows.
 	*/
-	size_raw GetNb(void)
-		{ return(nbrows); }
+	size_raw GetNbRows(void) {return(NbRows);}
+
+	/**
+	* Get the total number of columns of the query.
+	* @returns Number of columns.
+	*/
+	size_raw GetNbCols(void) {return(NbCols);}
 
 	/**
 	* Look if all rows of the query were treated.
 	* @return True if all rows were treated.
 	*/
-	bool End(void)
-		{ return(!row); }
+	virtual bool End(void) const=0;
 
 	/**
 	* Put the query at the first row.
 	*/
-	void Start(void);
+	virtual void Start(void)=0;
 
 	/**
 	* Increment the current row.
 	*/
-	void Next(void);
+	virtual void Next(void)=0;
 
 	/**
 	* Return a specific field of the current row.
 	* @param index          Index of the field in the query.
 	*/
-	RString operator[](unsigned int index) const;
+	virtual RString operator[](unsigned int index) const=0;
 
 	/**
 	* Transform a string to be used in a SQL (add quotes before and after,
@@ -358,10 +330,9 @@ public:
 
 //------------------------------------------------------------------------------
 /**
-* The RTransactionTable class provides a representation for a transaction table
-* based on MySQL.
+* The RTransactionTable class provides a representation for a transaction table.
 * @author Pascal Francq
-* @short MySQL Transaction Table.
+* @short Transaction Table.
 */
 class RTransactionTable
 {
@@ -393,7 +364,7 @@ public:
 	* Constructor of a transaction table.
 	* @param db             Database.
 	* @param name           Name of the transaction table.
-	* @param nb             Number of paramters.
+	* @param nb             Number of parameters.
 	* @param ...            Name of the parameters of the transaction (transid
 	                        is reserved).
 	*/
@@ -401,17 +372,17 @@ public:
 
 	/**
 	* Write a given transaction.
-	* @param id             Identificator of the transaction (if null, a new is
+	* @param id             Identifier of the transaction (if null, a new is
 	*                       created).
 	* @param ...            Values of the parameters of the transaction (transid
 	                        is reserved).
-	* @return The identificator of the transaction.
+	* @return The identifier of the transaction.
 	*/
 	size_raw WriteTransaction(unsigned int id,...);
 
 	/**
 	* Get a transaction.
-	* @param id             Identificator of the transaction. If null, all the
+	* @param id             Identifier of the transaction. If null, all the
 	*                       existing transactions are loaded.
 	* @param wait           If true, the method waits until at least one
 	*                       transaction arrived.
@@ -422,13 +393,13 @@ public:
 
 	/**
 	* Wait that a given transaction arrived.
-	* @param id             Identificator of the transaction.
+	* @param id             Identifier of the transaction.
 	*/
 	void WaitTransaction(size_raw id);
 
 	/**
 	* Remove a given transaction.
-	* @param id             Identificator of the transaction. If null, all the
+	* @param id             Identifier of the transaction. If null, all the
 	*                       existing transactions are removed.
 	*/
 	void RemoveTransaction(size_raw id);

@@ -54,7 +54,7 @@ using namespace std;
 //------------------------------------------------------------------------------
 RTextFile::RTextFile(const RURI& uri,const RString& encoding)
   : RIOFile(uri), NewLine(true),
-    Rem("%"), BeginRem("/*"), EndRem("*/"), 
+    Rem("%"), BeginRem("/*"), EndRem("*/"),
     CommentType(SingleLineComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
 	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
 {
@@ -110,13 +110,13 @@ void RTextFile::Begin(void)
 		cout<<"networkOrder = FALSE"<<endl;
 		SeekRel(2);
 	}
-	
+
 	// Read the first characters
 	ReadChars();
-	
+
 	// If necessary, skip leading comments and spaces
 	if(ParseSpace==SkipAllSpaces)
-		SkipSpaces();		
+		SkipSpaces();
 }
 
 
@@ -126,9 +126,8 @@ void RTextFile::ReadChars(void)
 	size_t treat,len=20*4,s;
 	char* ptr=Buffer+SkipBytes;
 	bool end;
-	RString res;
-	
-	// Read next 10 Unicode characters
+
+	// Read next 20 Unicode characters
 	len=Read(Buffer,len,false);
 	len-=SkipBytes;
 	SkipBytes=0;
@@ -140,10 +139,9 @@ void RTextFile::ReadChars(void)
 			{
 				(*NextWrite)=Codec->NextUnicode(ptr,s);
 				(*SizeNextWrite)=treat+s;
-				res+=(*NextWrite);
 				ptr+=s;
 				len-=treat+s;
-				if(n>10)
+				if(n<11)
 					SkipBytes+=treat+s;
 				end=true;
 			}
@@ -163,14 +161,14 @@ void RTextFile::ReadChars(void)
 
 //------------------------------------------------------------------------------
 void RTextFile::Next(void)
-{	
+{
 	Cur=(*(NextRead++));
 	SeekRel(*(SizeNextRead++));
-	PosChars++;	
+	PosChars++;
 
 	if(End())
 		return;
-	
+
 	if(PosChars==10)
 	{
 		ReadChars();
@@ -179,7 +177,7 @@ void RTextFile::Next(void)
 	{
 		NextWrite=Chars;
 		SizeNextWrite=SizeChars;
-		ReadChars();		
+		ReadChars();
 	}
 	else if(PosChars==40)
 	{
@@ -257,17 +255,17 @@ void RTextFile::SkipEol(void)
 bool RTextFile::CurString(const RString& str,bool CaseSensitive,bool skip)
 {
 	size_t max=str.GetLen();
-	
+
 	if((!max)||End())
 		return(false);
-	
+
 	const RChar* tofind=str(); // String to find
-	
+
 	// Test if the first characters are the same -> return false
 	if((CaseSensitive&&((*tofind)!=(*NextRead)))||(!CaseSensitive&&(RChar::ToLower(*tofind)!=RChar::ToLower(*NextRead))))
 		return(false);
-	
-	// Place the second character 
+
+	// Place the second character
 	RChar* search;
 	size_t* ssearch;
 	size_t possearch(PosChars+1);
@@ -283,13 +281,13 @@ bool RTextFile::CurString(const RString& str,bool CaseSensitive,bool skip)
 		search=NextRead+1;
 		ssearch=SizeNextRead+1;
 	}
-	
+
 	for(tofind++;(--max)&&(end<GetSize());tofind++)
 	{
 		// If current characters are the same -> return false -> nothing to do
 		if((CaseSensitive&&((*tofind)!=(*search)))||(!CaseSensitive&&(RChar::ToLower(*tofind)!=RChar::ToLower(*search))))
 			return(false);
-		
+
 		// Look for next character
 		end+=(*ssearch);
 		possearch++;
@@ -315,7 +313,7 @@ bool RTextFile::CurString(const RString& str,bool CaseSensitive,bool skip)
 		for(max=str.GetLen()+1;--max;)
 			Next();
 	}
-	
+
 	return(true);
 }
 
@@ -403,7 +401,7 @@ void RTextFile::SkipSpaces(void)
 	{
 		// Suppose nothing was found
 		Cont=false;
-		
+
 		// Skip all spaces (by looking if the next character is a space)
 		while((!End())&&(NextRead->IsSpace()))
 		{
@@ -412,10 +410,10 @@ void RTextFile::SkipSpaces(void)
 				SkipEol();
 			else
 				Next();
-			
+
 			Cont=true;
 		}
-		
+
 		// Look if after these spaces, there are not comments
 		if(BeginComment())
 		{
@@ -463,7 +461,7 @@ void RTextFile::SetRem(const RString& b,const RString& e)
 	BeginRem=b;
 	EndRem=e;
 	if((b.GetLen()>10)||(e.GetLen()>10))
-		throw RIOException(this,"Maximum of 10 characters for defining comments");	
+		throw RIOException(this,"Maximum of 10 characters for defining comments");
 }
 
 
@@ -477,12 +475,12 @@ RString RTextFile::GetWord(void)
 	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment()))
 	{
 		Next();
-		res+=Cur;		
+		res+=Cur;
 	}
-	
+
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();		
+		SkipSpaces();
 
 	return(res);
 }
@@ -497,11 +495,11 @@ RString RTextFile::GetToken(RChar ending1,const RChar ending2)
 	SkipSpaces();
 
 	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(GetNextChar()!=ending1)&&(GetNextChar()!=ending2))
-		res+=GetChar();		
-	
+		res+=GetChar();
+
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();		
+		SkipSpaces();
 
 	return(res);
 }
@@ -518,14 +516,14 @@ RString RTextFile::GetToken(const RString& ending)
 	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(!CurString(ending)))
 	{
 		Next();
-		res+=Cur;		
+		res+=Cur;
 	}
-	
+
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();		
+		SkipSpaces();
 
-	return(res);	
+	return(res);
 }
 
 
@@ -540,12 +538,12 @@ RString RTextFile::GetToken(const RString& ending)
 	while((!End())&&(!Cur.IsSpace())&&(!BeginComment())&&(!CurString(ending1,true,false))&&(!CurString(ending2,true,false)))
 	{
 		Next();
-		res+=Cur;		
+		res+=Cur;
 	}
-	
+
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();		
+		SkipSpaces();
 
 	return(res);
 }*/
@@ -559,14 +557,14 @@ RString RTextFile::GetLine(bool SkipEmpty)
 	if(End())
 		return(RString::Null);
 	RString res;
-		
+
 	while((!End())&&(!Eol(*NextRead)))
-	{	
+	{
 		if(BeginComment())
 			SkipComments();
 		Next();
 		res+=Cur;
-	}	
+	}
 	LastLine=Line;
 
 	if(!End())
@@ -575,8 +573,8 @@ RString RTextFile::GetLine(bool SkipEmpty)
 
 		// Skip spaces if necessary
 		if((!End())&&(ParseSpace==SkipAllSpaces))
-			SkipSpaces();		
-	}	
+			SkipSpaces();
+	}
 
 	// If the line is empty or contains only spaces -> read next line
 	if((res.IsEmpty())&&(SkipEmpty))
@@ -612,7 +610,7 @@ long RTextFile::GetInt(void)
 
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();		
+		SkipSpaces();
 
 	nb=strtol(str,&ptr,10);
 	if(ptr==str)
@@ -646,7 +644,7 @@ unsigned long RTextFile::GetUInt(void)
 
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();		
+		SkipSpaces();
 
 	nb=strtoul(str,&ptr,10);
 	if(ptr==str)
@@ -731,7 +729,7 @@ RTextFile& RTextFile::operator>>(unsigned long &nb)
 RString RTextFile::GetRealNb(void)
 {
 	RString str;
-	
+
 	// Patern [whitespaces][+|-][nnnnn][.nnnnn][e|E[+|-]nnnn]
 	SkipSpaces();
 
@@ -777,8 +775,8 @@ RString RTextFile::GetRealNb(void)
 
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();		
-	
+		SkipSpaces();
+
 	return(str);
 }
 

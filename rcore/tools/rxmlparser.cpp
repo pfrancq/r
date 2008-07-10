@@ -348,8 +348,7 @@ void RXMLParser::LoadHeader(void)
 						DefaultNamespace.Push(new RString(uri));
 					}
 
-					// Skip " and >
-					Next();
+					// Skip >
 					SkipSpaces();
 					Next();
 					SkipSpaces();

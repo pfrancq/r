@@ -238,7 +238,7 @@ public:
 	/**
 	* Represents a null date.
 	*/
-	static RDate null;
+	static RDate Null;
 };
 
 
