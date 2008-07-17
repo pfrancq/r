@@ -71,9 +71,9 @@ namespace R{
 *
 * class MyElement
 * {
-*    unsigned int Id;
+*    size_t Id;
 * public:
-*    MyElement(unsigned int id) : Id(id) {}
+*    MyElement(size_t id) : Id(id) {}
 *    MyElement(const MyElement& e) : Id(e.Id) {}
 *    int Compare(const MyElement& e) const {return(Id-e.Id);}
 *    void DoSomething(double d) {cout<<Id<<":"<<d<<endl;}
@@ -135,7 +135,7 @@ public:
 	* @param i              New increasing value. If null, the old value
 	*                       remains.
 	*/
-	inline void Clear(unsigned int m=0,unsigned int i=0) {RContainer<C,bAlloc,false>::Clear(m,i);}
+	inline void Clear(size_t m=0,size_t i=0) {RContainer<C,bAlloc,false>::Clear(m,i);}
 
 	/**
 	 * Get the current element to treat from the stack (the element is not removed

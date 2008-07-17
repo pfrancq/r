@@ -54,7 +54,7 @@ template<class cNode,class cObj,class cNodes> class RNodedGA;
 
 //------------------------------------------------------------------------------
 // Constance
-const unsigned int NoNode=0xFFFFFFFF;
+const size_t NoNode=0xFFFFFFFF;
 
 
 //------------------------------------------------------------------------------
@@ -170,7 +170,7 @@ public:
 	* attributes.
 	* @param attr           List of attributes.
 	*/
-	unsigned int GetNbCommon(const RAttrList& attr) const;
+	size_t GetNbCommon(const RAttrList& attr) const;
 
 	/**
 	* test if two nodes have the same objects attached.

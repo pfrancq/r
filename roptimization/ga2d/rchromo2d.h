@@ -84,24 +84,24 @@ public:
 	/**
 	* Number of objects to place.
 	*/
-	unsigned int NbObjs;
+	size_t NbObjs;
 
 protected:
 
 	/**
 	* Array representing the area that can be occupied.
 	*/
-	unsigned int** OccupiedY;
+	size_t** OccupiedY;
 
 	/**
 	* Array to hold objects id. This is a "thread-dependent" data.
 	*/
-	unsigned int* thOrder;
+	size_t* thOrder;
 
 	/**
 	* Array to hold objects id. This is a "thread-dependent" data.
 	*/
-	unsigned int* thOrder2;
+	size_t* thOrder2;
 
 	/**
 	* Temporary objects used in crossover and mutation. This is a
@@ -112,7 +112,7 @@ protected:
 	/**
 	* Number of temporary objects.
 	*/
-	unsigned int thNbObjs;
+	size_t thNbObjs;
 
 	/**
 	* Temporary object container used for the crossover. This is a
@@ -143,7 +143,7 @@ public:
 	* @param inst           Pointer to the instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	RChromo2D(cInst* inst,unsigned int id);
+	RChromo2D(cInst* inst,size_t id);
 
 	/**
 	* This function initialises some important data, in particular Infos and
@@ -206,12 +206,12 @@ public:
 	/**
 	* Return the number of levels.
 	*/
-	inline unsigned int GetNbLevels(void) { return(this->NbLevels); }
+	inline size_t GetNbLevels(void) { return(this->NbLevels); }
 
 	/**
 	* Return the ith level of the chromosome.
 	*/
-	RPoint& GetLevel(unsigned int i);
+	RPoint& GetLevel(size_t i);
 
 	/**
 	* Destruct the chromosome.

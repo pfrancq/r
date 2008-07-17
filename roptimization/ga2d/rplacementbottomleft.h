@@ -79,7 +79,7 @@ public:
 	* @param r              The random genrator to use.
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
+	RPlacementBottomLeft(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 
 	/**
 	* Initialize the heuristic.

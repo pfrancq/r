@@ -787,7 +787,7 @@ void RCharCursor::GoTo(size_t idx)
 
 
 //-----------------------------------------------------------------------------
-unsigned int RCharCursor::GetNb(void)
+size_t RCharCursor::GetNb(void)
 {
 	if(!Str)
 		throw RException("No string defined");
@@ -796,7 +796,7 @@ unsigned int RCharCursor::GetNb(void)
 
 
 //-----------------------------------------------------------------------------
-unsigned int RCharCursor::GetPos(void)
+size_t RCharCursor::GetPos(void)
 {
 	if(!Str)
 		throw RException("No string defined");

@@ -44,7 +44,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementBottomLeft::RPlacementBottomLeft(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+RPlacementBottomLeft::RPlacementBottomLeft(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
 }

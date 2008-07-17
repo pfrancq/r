@@ -56,7 +56,7 @@ template<class C,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,bool bOrder>
-	void RRecFile<C,bOrder>::GoToRec(unsigned int nb)
+	void RRecFile<C,bOrder>::GoToRec(size_t nb)
 {
 	Find=false;
 	RIOFile::Seek(nb*RecSize);
@@ -67,7 +67,7 @@ template<class C,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,bool bOrder>
-	void RRecFile<C,bOrder>::GoToRec(unsigned int c,unsigned int l,unsigned int maxc)
+	void RRecFile<C,bOrder>::GoToRec(size_t c,size_t l,size_t maxc)
 {
 	Find=false;
 	Seek((c+(l*maxc))*RecSize);
@@ -79,9 +79,9 @@ template<class C,bool bOrder>
 //------------------------------------------------------------------------------
 template<class C,bool bOrder>
 	template<class TUse>
-		unsigned int RRecFile<C,bOrder>::Search(const TUse& tag)
+		size_t RRecFile<C,bOrder>::Search(const TUse& tag)
 {
-	unsigned int NbMin,NbMax,i=0;
+	size_t NbMin,NbMax,i=0;
 	int Comp=0;
 	bool Cont=true,NotLast=true;
 
@@ -138,7 +138,7 @@ template<class C,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,bool bOrder>
-	unsigned int RRecFile<C,bOrder>::GetRecNb(void) const
+	size_t RRecFile<C,bOrder>::GetRecNb(void) const
 {
 	return(RIOFile::GetSize()/RecSize);
 }
@@ -146,7 +146,7 @@ template<class C,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class C,bool bOrder>
-	unsigned int RRecFile<C,bOrder>::GetCurrentRec(void) const
+	size_t RRecFile<C,bOrder>::GetCurrentRec(void) const
 {
 	return(RIOFile::GetPos()/RecSize);
 }

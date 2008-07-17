@@ -225,7 +225,7 @@ namespace R{
 /**
 * Basic type for representing an identificator.
 */
-typedef unsigned int tId;
+typedef size_t tId;
 
 
 //------------------------------------------------------------------------------

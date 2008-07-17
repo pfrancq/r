@@ -52,7 +52,7 @@ class RSharedData
 	/**
 	* Number of references of the data.
 	*/
-	unsigned int Refs;
+	size_t Refs;
 
 public:
 
@@ -87,7 +87,7 @@ public:
 	/**
 	* Get the number of references to the data.
 	*/
-	unsigned int GetRefs(void) {return(Refs);}
+	size_t GetRefs(void) {return(Refs);}
 
 	/**
 	* Destructor.

@@ -53,7 +53,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPromCriterion::RPromCriterion(tCriteriaType type,double w,const char* name,unsigned int nb)
+RPromCriterion::RPromCriterion(tCriteriaType type,double w,const char* name,size_t nb)
 	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(NullId), Name(name),
 	  Type(type)
 {
@@ -70,7 +70,7 @@ void RPromCriterion::Set(R::RParam*)
 //------------------------------------------------------------------------------
 void RPromCriterion::Normalize(void)
 {
-	unsigned int i;
+	size_t i;
 	double max,min,diff;
 
 	// Compute maximal value
@@ -136,7 +136,7 @@ RPromCriterion::~RPromCriterion(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,double p,double q,double w,const char* name,unsigned int nb)
+RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,double p,double q,double w,const char* name,size_t nb)
 	: RPromCriterion(type,w,name,nb)
 {
 	Set(p,q,w);
@@ -144,7 +144,7 @@ RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,double p,double q,
 
 
 //------------------------------------------------------------------------------
-RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,RParam* params,const char* name,unsigned int nb)
+RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,RParam* params,const char* name,size_t nb)
 	: RPromCriterion(type,0.0,name,nb)
 {
 	Set(params);

@@ -6,7 +6,7 @@
 
 	Binary file - Header.
 
-	Copyright 2006 by the Université Libre de Bruxelles.
+	Copyright 2006-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -134,7 +134,7 @@ public:
 	RBinaryFile& operator>>(int& nb);
 
 	/**
-	* >> Operator for unsigned int.
+	* >> Operator for size_t.
 	*/
 	RBinaryFile& operator>>(unsigned int& nb);
 
@@ -199,7 +199,7 @@ public:
 	RBinaryFile& operator<<(int nb);
 
 	/**
-	* << Operator for unsigned int.
+	* << Operator for size_t.
 	*/
 	RBinaryFile& operator<<(unsigned int nb);
 

@@ -72,7 +72,7 @@ public:
 	/**
 	* Number of "real" objects represented.
 	*/
-	unsigned int RealNb;
+	size_t RealNb;
 
 	/**
 	* Which objects were selected for crossover.

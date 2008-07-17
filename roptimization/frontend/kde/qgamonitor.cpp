@@ -211,7 +211,7 @@ void QGAMonitorGraph::setVScale(const double v)
 
 
 //------------------------------------------------------------------------------
-void QGAMonitorGraph::setHScale(const unsigned int h)
+void QGAMonitorGraph::setHScale(const size_t h)
 {
 	QRect r=rect();
 	hScale=h;
@@ -306,7 +306,7 @@ void QGAMonitorGraph::mousePressEvent(QMouseEvent* e)
 
 	if(e->button()==RightButton)
 	{
-		unsigned int gen=static_cast<unsigned int>(e->x()/FactorX);
+		size_t gen=static_cast<size_t>(e->x()/FactorX);
 		if(gen<receivedValues)
 			InfoBox=new QInfoBox(this,gen,*values.at(gen));
 		else
@@ -345,7 +345,7 @@ QGAMonitor::QGAMonitor(QWidget* parent,const char* name)
 
 
 //------------------------------------------------------------------------------
-void QGAMonitor::slotSetGen(const unsigned int gen,const unsigned int best,const double value)
+void QGAMonitor::slotSetGen(const size_t gen,const size_t best,const double value)
 {
 	static char Txt[20];
 

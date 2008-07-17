@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	R::RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,unsigned int id)
+	R::RChromo<cInst,cChromo,cFit,cThreadData>::RChromo(cInst *inst,size_t id)
 		: Instance(inst),Id(id),ToEval(true)
 {
 	Fitness=new cFit();

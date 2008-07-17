@@ -59,7 +59,7 @@ class RPromSol : protected RContainer<RPromCritValue,true,false>
 	/**
 	* The identifier of the solution.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 	/**
 	* Name of the solution.
@@ -88,7 +88,7 @@ public:
 	* @param id             Identifier of the solution.
 	* @param nbcrit         Number of criterions.
 	*/
-	RPromSol(const unsigned int id,const unsigned int nbcrit=30);
+	RPromSol(const size_t id,const size_t nbcrit=30);
 
 	/**
 	* Construct a Promethee solution.
@@ -96,7 +96,7 @@ public:
 	* @param name           Name of the solution
 	* @param nbcrit         Number of criterions.
 	*/
-	RPromSol(const unsigned int id,const char* name,const unsigned int nbcrit=30);
+	RPromSol(const size_t id,const char* name,const size_t nbcrit=30);
 
 	/**
 	* Compare two Promethee solutions.
@@ -121,7 +121,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
-	int Compare(const unsigned int id) const {return(Id-id);}
+	int Compare(const size_t id) const {return(Id-id);}
 
 	/**
 	* Compare the name of the Promethee solution with another string.
@@ -157,7 +157,7 @@ public:
 	/**
 	* @return Identificator of the solution.
 	*/
-	unsigned int GetId(void) const {return(Id);}
+	size_t GetId(void) const {return(Id);}
 
 	/**
 	* Return the name of the solution.

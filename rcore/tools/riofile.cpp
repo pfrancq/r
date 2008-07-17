@@ -58,6 +58,18 @@ using namespace std;
 const size_t InternalBufferSize=10240;
 
 
+//------------------------------------------------------------------------------
+// Macros proposed by Christian Biere:
+// http://osdir.com/ml/os.netbsd.devel.general/2007-02/msg00000.html
+#define MAX_INT_VAL_STEP(t) \
+        ((t) 1 << (CHAR_BIT * sizeof(t) - 1 - ((t) -1 < 1)))
+#define MAX_INT_VAL(t) \
+        ((MAX_INT_VAL_STEP(t) - 1) + MAX_INT_VAL_STEP(t))
+
+#define MIN_INT_VAL(t) \
+        ((t) -MAX_INT_VAL(t) - 1)
+
+
 
 //------------------------------------------------------------------------------
 //
@@ -66,6 +78,7 @@ const size_t InternalBufferSize=10240;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+const off_t RIOFile::MaxSize=MAX_INT_VAL(off_t);
 RDownload RIOFile::Get;
 
 
@@ -89,7 +102,7 @@ void RIOFile::Open(RIO::ModeType mode)
 	int localmode;
 	struct stat statbuf;
 	bool local=false;
-	
+
 	// If file seems to be open -> close it
 	if(Handle!=-1)
 		Close();
@@ -97,7 +110,7 @@ void RIOFile::Open(RIO::ModeType mode)
 	// Verify that it is not a urn
 	if(URI.GetScheme()=="urn")
 		throw RIOException(this,"URI does not represent a file");
-	
+
 	// look if it is a local file
 	if(URI.GetScheme()=="file")
 	{
@@ -106,7 +119,7 @@ void RIOFile::Open(RIO::ModeType mode)
 	}
 	else
 		File=RFile::GetTempFile();  // File must be download in a temporary file
-	
+
 	RFile::Open(mode);
 	switch(Mode)
 	{
@@ -114,8 +127,6 @@ void RIOFile::Open(RIO::ModeType mode)
 			localmode=O_RDONLY;
 			CanWrite=false;
 			CanRead=true;
-			if(!Internal)
-				Internal=new char[InternalBufferSize];
 			break;
 
 		case RIO::Write:
@@ -128,27 +139,23 @@ void RIOFile::Open(RIO::ModeType mode)
 
 		case RIO::ReadWrite:
 			if(!local)
-				throw RIOException(this,"Cannot write with an URL");			
-			localmode=O_RDWR | O_CREAT;			
+				throw RIOException(this,"Cannot write with an URL");
+			localmode=O_RDWR | O_CREAT;
 			CanWrite=true;
 			CanRead=true;
-			if(!Internal)
-				Internal=new char[InternalBufferSize];			
 			break;
 
 		case RIO::Append:
 			if(!local)
-				throw RIOException(this,"Cannot appen to an URL");			
+				throw RIOException(this,"Cannot appen to an URL");
 			localmode=O_WRONLY | O_CREAT | O_APPEND;
 			CanWrite=true;
 			CanRead=true;
-			if(!Internal)
-				Internal=new char[InternalBufferSize];			
 			break;
 
 		case RIO::Create:
 			if(!local)
-				throw RIOException(this,"Cannot create with an URL");			
+				throw RIOException(this,"Cannot create with an URL");
 			localmode=O_WRONLY | O_CREAT | O_TRUNC;
 			CanWrite=true;
 			CanRead=false;
@@ -157,16 +164,23 @@ void RIOFile::Open(RIO::ModeType mode)
 		default:
 			throw RIOException(this,"No valid mode");
 	};
-	
+
+	// If reading is possible -> create an internal buffer
+	if(CanRead&&(!Internal))
+		Internal=new char[InternalBufferSize];
+
 	// If not local -> Download it
 	if(!local)
 		Get.DownloadFile(URI,File);
-	
+
+	// Play with internal switches
 	#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
 		//do nothing
 	#else
 		localmode|=O_BINARY;
-	#endif	
+	#endif
+
+	// Open the file
 	if(Mode==RIO::Read)
 	{
 		Handle=open(File.Latin1(),localmode);
@@ -175,12 +189,19 @@ void RIOFile::Open(RIO::ModeType mode)
 		Handle=open(File.Latin1(),localmode,S_IREAD|S_IWRITE);
 	if(Handle==-1)
 		throw RIOException(this,"Can't open the file '"+URI+"'");
+
+	// Read the total size of the file
 	fstat(Handle,&statbuf);
 	Size=statbuf.st_size;
+
+	// Position virtually the file at the beginning or at the end if it is open in append mode
 	if(Mode==RIO::Append)
 		Pos=Size;
 	else
 		Pos=0;
+
+	// Suppose nothing is in the buffer
+	RealInternalPos=MaxSize;
 }
 
 
@@ -210,7 +231,7 @@ void RIOFile::Close(void)
 
 
 //------------------------------------------------------------------------------
-size_t RIOFile::Read(char* buffer,unsigned int nb,bool move)
+size_t RIOFile::Read(char* buffer,size_t nb,bool move)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
@@ -219,149 +240,128 @@ size_t RIOFile::Read(char* buffer,unsigned int nb,bool move)
 		throw RIOException(this,"No Read access");
 	if(End())
 		throw RIOException(this,"End of the file reached");
-	
+
 	// Verify if the number of bytes to read must be adapted
-	if(nb>Size-Pos)
+	if(static_cast<off_t>(nb)>Size-Pos)
 		nb=Size-Pos;
 
-	// Verify if the internal buffer is empty
-	if((!InternalToRead)&&(nb<InternalBufferSize))
+	size_t left(nb);   // Number of bytes left to read
+
+	// Verify if something can be read from the internal buffer
+	if((Pos>=RealInternalPos)&&(Pos<RealInternalPos+static_cast<off_t>(InternalBufferSize)))
 	{
-		if(Size-RealPos<InternalBufferSize)
+		// Everything can get from the internal buffer or not
+		if(nb>InternalToRead)
+		{
+			memcpy(buffer,CurByte,InternalToRead);
+			left=nb-InternalToRead;
+			buffer+=InternalToRead;
+			if(move)
+			{
+				Pos+=InternalToRead;
+				InternalToRead=0;
+			}
+		}
+		else
+		{
+			memcpy(buffer,CurByte,nb);
+			if(move)
+			{
+				Pos+=nb;
+				InternalToRead-=nb;
+				CurByte+=nb;
+			}
+			left=0;
+		}
+	}
+
+	// If nothing more to read -> finished
+	if(!left)
+		return(nb);
+
+	// If there is more than the internal size to read or if nothing must be moved -> read (at least) a part directly
+	if((left>InternalBufferSize)||(!move))
+	{
+		off_t total;
+		if(!move)
+			total=left;
+		else
+			total=left-InternalBufferSize;
+		total=read(Handle,buffer,total);
+		left-=total;
+		buffer+=total;
+		if(move)
+		{
+			Pos+=total;
+			RealPos+=total;
+		}
+		else
+			lseek(Handle,-total,SEEK_CUR);  // OK -> Go back
+	}
+
+	// If there is still something to read -> first read in the buffer
+	if(left)
+	{
+		if(Size-RealPos<static_cast<off_t>(InternalBufferSize))
 			InternalToRead=Size-RealPos;
 		else
 			InternalToRead=InternalBufferSize;
+		RealInternalPos=RealPos;
 		RealPos+=read(Handle,Internal,InternalToRead);
 		CurByte=Internal;
-	}
-	
-	// Verify if all the bytes to read are in the internal buffer?
-	if(nb<=InternalToRead)
-	{
-		// Copy the part of the internal buffer
-		memcpy(buffer,CurByte,nb);		
-	}
-	else
-	{
-		// Copy the rest of the buffer
-		memcpy(buffer,CurByte,InternalToRead);
-		buffer+=InternalToRead;
-		
-		// Load the necessary bytes from the file without to touch to the internal buffer
-		read(Handle,buffer,nb-InternalToRead);
-		
-		if(move)
-			RealPos=Pos+nb;   // Correct position in the real file
-		else
-			lseek(Handle,nb-InternalToRead,SEEK_CUR);  // OK -> Go back
+
+		// Copy now the number of bytes for the user
+		memcpy(buffer,CurByte,left);
+		CurByte+=left;
+		Pos+=left;
 	}
 
-	// Move internal pointers if necessary
-	if(move)
-	{
-		CurByte+=nb;
-		Pos+=nb;
-		InternalToRead-=nb;
-	}
-	
 	// Return number of bytes read
 	return(nb);
 }
 
 
 //------------------------------------------------------------------------------
-/*void RIOFile::UnRead(char* buffer,unsigned int nb)
-{
-	// Verify all internal conditions
-	if(handle==-1)
-		throw RIOException(this,"Can't read in the file");
-	if(!CanRead)
-		throw RIOException(this,"No Read access");
-	if(!RealPos)
-		throw RIOException(this,"Nothing was read from the file");
-	if(nb>InternalBufferSize)
-		throw RIOException(this,"Cannot unread more than "+RString::Number(InternalBufferSize)+" bytes");
-	
-	// Verify if the number of bytes to read must be adapted
-	if(nb>Pos)
-		nb=Pos;
-	Pos-=nb;
-	
-	// Look if in the unread is still in the buffer
-	if(nb>RealPos-InternalBufferSize)
-	{
-		// Just seek inside the buffer
-		InternalToRead=RealPos-Pos;
-		CurByte=&Internal[InternalToRead];
-		memcpy(CurByte,buffer,nb);		
-	}
-	else
-	{
-		// Move and re-init the buffer
-		// Seek the file
-		RealPos=Pos;
-		lseek(handle,RealPos,SEEK_CUR);
-				
-		// Dirty the internal buffer
-		if(Size-RealPos<InternalBufferSize)
-			InternalToRead=Size-RealPos;
-		else
-			InternalToRead=InternalBufferSize;
-		RealPos+=read(handle,Internal,InternalToRead);
-		memcpy(Internal,buffer,nb);
-		CurByte=Internal;
-	}
-}
-*/
-
-//------------------------------------------------------------------------------
-/*char RIOFile::Read(void)
-{
-	// Verify all internal conditions
-	if(handle==-1)
-		throw RIOException(this,"Can't read in the file");
-	if(!CanRead)
-		throw RIOException(this,"No Read access");
-	if(End())
-		throw RIOException(this,"End of the file reached");
-	
-	// Verify if the internal buffer is empty
-	if(!InternalToRead)
-	{
-		if(Size-RealPos<InternalBufferSize)
-			InternalToRead=Size-RealPos;
-		else
-			InternalToRead=InternalBufferSize;
-		AlreadyRead+=read(handle,Internal,InternalToRead);
-		CurByte=Internal;
-	}
-	
-	// Increment positions
-	Pos++;
-	InternalToRead--;
-	return((*CurByte)++);
-}
-*/
-
-//------------------------------------------------------------------------------
-void RIOFile::Write(const char* buffer,unsigned int nb)
+void RIOFile::Write(const char* buffer,size_t nb)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
 		throw RIOException(this,"Can't write into the file");
 	if(!CanWrite)
 		throw RIOException(this,"No write access");
+
+	// Write into the file
 	write(Handle,buffer,nb);
 	#ifdef windows
 		flushall();
 	#endif
 
+	// Verify if a part of the buffer must be stored into the internal buffer
+    if((Pos<RealInternalPos+static_cast<off_t>(InternalBufferSize))&&(Pos+static_cast<off_t>(nb)>=RealInternalPos))
+	{
+    	char* begini;
+    	const char* beginb;
+    	size_t len(nb);
+    	if(Pos<RealInternalPos)
+    	{
+    		begini=Internal;
+    		beginb=&buffer[RealInternalPos-Pos];
+    		len-=RealInternalPos-Pos;
+        	if(len>InternalBufferSize)
+        		len=InternalBufferSize;
+    	}
+    	else
+    	{
+    		beginb=buffer;
+    		begini=&Internal[Pos-RealInternalPos];
+    		len=InternalBufferSize-Pos+RealInternalPos;
+    	}
+		memcpy(begini,beginb,len);
+	}
+
 	// Increase the size only if the current position is at the end
-	if(Mode==RIO::Append)
-		Size+=nb;
-	else
-		if(Pos>=Size)
-			Size=Pos+nb;
+	if(Pos>=Size)
+		Size=Pos+nb;
 
 	// Next position
 	Pos+=nb;
@@ -369,7 +369,7 @@ void RIOFile::Write(const char* buffer,unsigned int nb)
 
 
 //------------------------------------------------------------------------------
-void RIOFile::Seek(unsigned long long pos)
+void RIOFile::Seek(off_t pos)
 {
 	// Verify all internal conditions
 	if((pos>=Size)&&(!CanWrite))
@@ -377,43 +377,45 @@ void RIOFile::Seek(unsigned long long pos)
 
 	// Update current position
 	Pos=pos;
-	
+
 	// Look if outside the internal buffer
-	if((Pos>=RealPos)||((RealPos>InternalBufferSize)&&(Pos<RealPos-InternalBufferSize)))
+	if((Pos<RealInternalPos)||(Pos>RealInternalPos+static_cast<off_t>(InternalBufferSize)))
 	{
 		// Seek the file
 		RealPos=Pos;
 		lseek(Handle,RealPos,SEEK_SET);
-		
+
 		// Dirty the internal buffer
 		InternalToRead=0;
+		RealInternalPos=MaxSize;
 	}
 	else
-		CurByte=&Internal[RealPos-Pos];
+		CurByte=&Internal[Pos-RealInternalPos];
 }
 
 
 //------------------------------------------------------------------------------
-void RIOFile::SeekRel(long long rel)
+void RIOFile::SeekRel(off_t rel)
 {
 	// Verify all internal conditions
-	if(Pos+rel<0)//<static_cast<unsigned int>(labs(rel)))
+	if(static_cast<ssize_t>(Pos)+rel<0)//<static_cast<size_t>(labs(rel)))
 		throw RIOException(this,"Position before beginning of the file");
 	if((Pos+rel>Size)&&(!CanWrite))
 		throw RIOException(this,"Position outside of the file");
-	
+
 	// Update current position
 	Pos+=rel;
-	
+
 	// Look if outside the internal buffer
-	if((Pos>=RealPos)||((RealPos>InternalBufferSize)&&(Pos<RealPos-InternalBufferSize)))
+	if((Pos<RealInternalPos)||(Pos>RealInternalPos+static_cast<off_t>(InternalBufferSize)))
 	{
 		// Seek the file
 		RealPos=Pos;
 		lseek(Handle,rel,SEEK_CUR);
-		
+
 		// Dirty the internal buffer
 		InternalToRead=0;
+		RealInternalPos=MaxSize;
 	}
 	else
 		CurByte+=rel;

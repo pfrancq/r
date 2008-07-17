@@ -53,7 +53,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RPoint pos)
+RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const RPoint pos)
 	: Owner(owner), Id(id), Name(RString::Number(id)), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
@@ -63,7 +63,7 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RPoint pos)
 
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RString& name,const RPoint pos)
+RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const RString& name,const RPoint pos)
 	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
@@ -74,7 +74,7 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RString& na
 
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const char* name,const RPoint pos)
+RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const char* name,const RPoint pos)
 	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
@@ -85,7 +85,7 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const char* name,
 
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const unsigned int x,unsigned y)
+RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const size_t x,unsigned y)
 	: Owner(owner), Id(id), Name(RString::Number(id)), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
@@ -96,7 +96,7 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const unsigned in
 
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RString& name,const unsigned int x,unsigned y)
+RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const RString& name,const size_t x,unsigned y)
 	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
@@ -107,7 +107,7 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner,unsigned int id,const RString& na
 
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int x,unsigned y)
+RObj2DConnector::RObj2DConnector(RObj2D* owner, size_t id,const char* name,const size_t x,unsigned y)
 	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
@@ -118,12 +118,12 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const char* name
 
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int nb)
+RObj2DConnector::RObj2DConnector(RObj2D* owner, size_t id,const char* name,const size_t nb)
 	: Owner(owner), Id(id), Name(name), NbPos(nb), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
 	Poss=new RPoint*[NbPos];
-	for(unsigned int i=0;i<NbPos;i++)
+	for(size_t i=0;i<NbPos;i++)
 		Poss[i]=new RPoint[8];
 }
 
@@ -136,7 +136,7 @@ RPoint RObj2DConnector::GetPos(void)
 
 
 //------------------------------------------------------------------------------
-RPoint RObj2DConnector::GetPos(unsigned int i,char o)
+RPoint RObj2DConnector::GetPos(size_t i,char o)
 {
 	return(Poss[i][o]);
 }
@@ -155,13 +155,13 @@ double RObj2DConnector::GetMinDist(RObj2DConnector* c,RGeoInfos* infos,RPoint& p
 	double min=HUGE_VAL,d;
 	RGeoInfo *g1,*g2;
 	RGeoInfoConnector *c1,*c2;
-	unsigned int i,j;
+	size_t i,j;
 	RPoint p1,p2;
 
-	g1=infos->GetPtr<unsigned int>(Owner->GetId());
-	c1=g1->Connectors.GetPtr<unsigned int>(Id);
-	g2=infos->GetPtr<unsigned int>(c->Owner->GetId());
-	c2=g2->Connectors.GetPtr<unsigned int>(c->Id);
+	g1=infos->GetPtr<size_t>(Owner->GetId());
+	c1=g1->Connectors.GetPtr<size_t>(Id);
+	g2=infos->GetPtr<size_t>(c->Owner->GetId());
+	c2=g2->Connectors.GetPtr<size_t>(c->Id);
 	for(i=0;i<c1->NbPos;i++)
 	{
 		p1=c1->Pos[i]+g1->GetPos();
@@ -185,7 +185,7 @@ double RObj2DConnector::GetMinDist(RObj2DConnector* c,RGeoInfos* infos,RPoint& p
 RObj2DConnector::~RObj2DConnector(void)
 {
 	delete[] Pos;
-	for(unsigned int i=0;i<NbPos;i++)
+	for(size_t i=0;i<NbPos;i++)
 		delete Poss[i];
 	delete[] Poss;
 }
@@ -199,21 +199,21 @@ RObj2DConnector::~RObj2DConnector(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RObj2D::RObj2D(unsigned int id,bool deformable)
+RObj2D::RObj2D(size_t id,bool deformable)
 	: Id(id), Name(RString::Number(id)), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RObj2D::RObj2D(unsigned int id,const RString& name,bool deformable)
+RObj2D::RObj2D(size_t id,const RString& name,bool deformable)
 	: Id(id), Name(name), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RObj2D::RObj2D(unsigned int id,const char* name,bool deformable)
+RObj2D::RObj2D(size_t id,const char* name,bool deformable)
 	: Id(id), Name(name), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
 {
 }
@@ -255,7 +255,7 @@ void RObj2D::CalcPolygons(void)
 			RCursor<RObj2DConnector> Cur(Connectors);
 			for(Cur.Start();!Cur.End();Cur.Next())
 			{
-				for(unsigned int j=0;j<Cur()->NbPos;j++)
+				for(size_t j=0;j<Cur()->NbPos;j++)
 				{
 					Cur()->Poss[j][0]=Cur()->Pos[j]-Min;
 				}
@@ -275,7 +275,7 @@ void RObj2D::CalcPolygons(void)
 				RCursor<RObj2DConnector> Cur(Connectors);
 				for(Cur.Start();!Cur.End();Cur.Next())
 				{
-					for(unsigned int j=0;j<Cur()->NbPos;j++)
+					for(size_t j=0;j<Cur()->NbPos;j++)
 					{
 						Cur()->Poss[j][idx]=Cur()->Pos[j];
 						Cur()->Poss[j][idx]-=Min;
@@ -291,7 +291,7 @@ void RObj2D::CalcPolygons(void)
 				RCursor<RObj2DConnector> Cur(Connectors);
 				for(Cur.Start();!Cur.End();Cur.Next())
 				{
-					for(unsigned int j=0;j<Cur()->NbPos;j++)
+					for(size_t j=0;j<Cur()->NbPos;j++)
 					{
 						Cur()->Poss[j][idx]=Cur()->Pos[j];
 						Cur()->Poss[j][idx].ChangeOrientation(Rota90);
@@ -313,7 +313,7 @@ void RObj2D::CalcPolygons(void)
 		RCursor<RObj2DConnector> Cur(Connectors);
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
-			for(unsigned int j=0;j<Cur()->NbPos;j++)
+			for(size_t j=0;j<Cur()->NbPos;j++)
 			{
 				Cur()->Poss[j][i]=Cur()->Pos[j];
 				Cur()->Poss[j][i].ChangeOrientation(*o);
@@ -383,7 +383,7 @@ RObj2D& RObj2D::operator=(const RObj2D &obj)
 
 
 //------------------------------------------------------------------------------
-void RObj2D::AddConnector(unsigned int id,unsigned x,unsigned y)
+void RObj2D::AddConnector(size_t id,unsigned x,unsigned y)
 {
 	Connectors.InsertPtr(new RObj2DConnector(this,id,x,y));
 }
@@ -399,7 +399,7 @@ void RObj2D::CopyConnectors(RObj2D* o)
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		d=new RObj2DConnector(this,Connectors.GetNb(),Cur()->Name,Cur()->NbPos);
-		for(unsigned int i=0;i<Cur()->NbPos;i++)
+		for(size_t i=0;i<Cur()->NbPos;i++)
 			d->Pos[i]=Cur()->Pos[i];
 		Connectors.InsertPtr(d);
 	}

@@ -75,7 +75,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
-	RInstH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::RInstH(unsigned int popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug* debug)
+	RInstH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::RInstH(size_t popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug* debug)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug), Heuristic(h), Objs(objs)
 {
 	ControlAttr=MaxAttr=MaxNodes=0;
@@ -96,7 +96,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	void RInstH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::Init(void)
 {
 	cChromo **C;
-	unsigned int i;
+	size_t i;
 
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
 	for(i=this->GetPopSize()+1,C=this->Chromosomes;--i;C++)

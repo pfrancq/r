@@ -56,7 +56,7 @@ template<class cGroup,class cObj,class cGroups> class RGroups;
 /**
 * Constance representing a non-assignation of an object.
 */
-const unsigned int NoGroup=0xFFFFFFFF;
+const size_t NoGroup=0xFFFFFFFF;
 
 
 //------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ protected:
 	/**
 	* Identificator of the Group.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 	/**
 	* Owner of the group.
@@ -84,12 +84,12 @@ protected:
 	/**
 	* Index of the first object attached to the group.
 	*/
-	unsigned int SubObjects;
+	size_t SubObjects;
 
 	/**
 	* Number of objects attached to the group.
 	*/
-	unsigned int NbSubObjects;
+	size_t NbSubObjects;
 
 	/**
 	* Is the group reserved?
@@ -109,7 +109,7 @@ public:
 	* @param owner          Owner of the group.
 	* @param id             Identificator of the group.
 	*/
-	RGroup(cGroups* owner,const unsigned int id);
+	RGroup(cGroups* owner,const size_t id);
 
 	/**
 	* Verify if the group is not violating the integrity of the system.
@@ -182,25 +182,25 @@ public:
 	/**
 	* Return the identificator of the group.
 	*/
-	unsigned int GetId(void) const {return(Id);}
+	size_t GetId(void) const {return(Id);}
 
 	/**
 	* Get the number of objects in the group.
-	* @return unsigned int.
+	* @return size_t.
 	*/
-	unsigned int GetNbObjs(void) const {return(NbSubObjects);}
+	size_t GetNbObjs(void) const {return(NbSubObjects);}
 
 	/**
 	* Get the position of the first object in the group.
-	* @return unsigned int.
+	* @return size_t.
 	*/
-	unsigned int GetObjsPos(void) const {return(SubObjects);}
+	size_t GetObjsPos(void) const {return(SubObjects);}
 
 	/**
 	* Return true if an object is in the group.
 	* @param id             Identificator of the object to test.
 	*/
-	bool IsIn(const unsigned int id) const;
+	bool IsIn(const size_t id) const;
 
 	/**
 	* Look if the two groups have common objects.
@@ -226,7 +226,7 @@ public:
 	* Return the list of the objects. The list is created by RGroup, but must
 	* be deleted by the caller. The list is ended by a NoObject value.
 	*/
-	unsigned int* GetObjectsId(void) const;
+	size_t* GetObjectsId(void) const;
 
 	/**
 	* Compare two groups. Used for RContainer.
@@ -238,7 +238,7 @@ public:
 	* @param pos            Position.
 	* @returns cObj*
 	*/
-	cObj* GetObjPos(const unsigned int pos) {return(Owner->GetObj(SubObjects+pos));}
+	cObj* GetObjPos(const size_t pos) {return(Owner->GetObj(SubObjects+pos));}
 
 	/**
 	* Destruct the group.

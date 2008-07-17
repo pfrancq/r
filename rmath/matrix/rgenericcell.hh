@@ -37,14 +37,14 @@
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>::RGenericCell(unsigned int id)
+	RGenericCell<C>::RGenericCell(size_t id)
 		: Id(id) , Value(0)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RGenericCell<C>::RGenericCell(unsigned int id, C value)
+	RGenericCell<C>::RGenericCell(size_t id, C value)
 		: Id(id) , Value(value)
 {}
 
@@ -91,7 +91,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	int RGenericCell<C>::Compare(const unsigned int id) const
+	int RGenericCell<C>::Compare(const size_t id) const
 {
 	return (Id-id);
 }

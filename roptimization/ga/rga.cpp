@@ -65,39 +65,39 @@ RGAException::RGAException(const char* str,tException type) throw()
 	: RException(str), Type(type)
 {
 }
-		
-		
+
+
 //------------------------------------------------------------------------------
-RGAException::RGAException(tException type,const unsigned int g,const unsigned int c) throw()
+RGAException::RGAException(tException type,const size_t g,const size_t c) throw()
 	: RException(), Type(type)
 {
 	char tmp[200];
-	
+
 	switch(Type)
 	{
-		case eGAVerify:		
-			sprintf(tmp,"Generation %u: Verify error for chromosome %u",g,c);
+		case eGAVerify:
+			sprintf(tmp,"Generation %z: Verify error for chromosome %z",g,c);
 			break;
-		case eGAMutation:	
-			sprintf(tmp,"Generation %u: Mutation error: Chromsosome %u",g,c);
+		case eGAMutation:
+			sprintf(tmp,"Generation %z: Mutation error: Chromsosome %z",g,c);
 			break;
 		case eGAInversion:
-			sprintf(tmp,"Generation %u: Inversion error: Chromsosome %u",g,c);
+			sprintf(tmp,"Generation %z: Inversion error: Chromsosome %z",g,c);
 			break;
 		case eGAOptimisation:
-			sprintf(tmp,"Generation %u: Optimisation error: Chromsosome %u",g,c);
+			sprintf(tmp,"Generation %z: Optimisation error: Chromsosome %z",g,c);
 			break;
 		case eGARandomConstruct:
-			sprintf(tmp,"Generation %u: Random Construction error: Chromsosome %u",g,c);
+			sprintf(tmp,"Generation %z: Random Construction error: Chromsosome %z",g,c);
 			break;
-		case eGAEvaluation:	
-			sprintf(tmp,"Generation %u: Evaluation error: Chromsosome %u",g,c);
-			break;  		
+		case eGAEvaluation:
+			sprintf(tmp,"Generation %z: Evaluation error: Chromsosome %z",g,c);
+			break;
 		case eGAPostEvaluation:
-			sprintf(tmp,"Generation %u: Post Evaluation error: Chromsosome %u",g,c);
+			sprintf(tmp,"Generation %z: Post Evaluation error: Chromsosome %z",g,c);
 			break;
 		default:
-			sprintf(tmp,"Generation %u: Unknown error for chromosome %u",g,c);
+			sprintf(tmp,"Generation %z: Unknown error for chromosome %z",g,c);
 	}
 	SetMsg(tmp);
 }
@@ -105,11 +105,11 @@ RGAException::RGAException(tException type,const unsigned int g,const unsigned i
 
 
 //------------------------------------------------------------------------------
-RGAException::RGAException(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c) throw()
+RGAException::RGAException(const size_t g,const size_t p1,const size_t p2,const size_t c) throw()
 	: RException(), Type(eGACrossover)
 {
 	char tmp[200];
 
-	sprintf(tmp,"Generation %u: Crossover error: parent %u + parent %u -> Child %u",g,p1,p2,c);
+	sprintf(tmp,"Generation %z: Crossover error: parent %z + parent %z -> Child %z",g,p1,p2,c);
 	SetMsg(tmp);
 }

@@ -213,7 +213,7 @@ void RXMLFile::SaveNextTag(int depth)
 	{
 		if(!AvoidSpaces)
 			for(int i=0;i<depth+1;i++) line+="\t";
-		line+=StringToXML(CurTag->GetContent(),false);
+		line+=StringToXML(CurTag->GetContent().Trim(),false);
 		(*this)<<line<<endl;
 		line.Clear();
 	}
@@ -230,6 +230,13 @@ void RXMLFile::SaveNextTag(int depth)
 		line+="</"+CurTag->GetName()+">";
 		(*this)<<line<<endl;
 	}
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLFile::AddEntity(const RString& name,const RString& value)
+{
+	XMLStruct->InsertEntity(name,value);
 }
 
 

@@ -944,7 +944,7 @@ void RHTMLFile::SkipTagContent(const RString& tag)
 	}
 
 	//The End Tag is found ->skip it ( /tag> )
-	unsigned int skiplen=tag.GetLen()+2;
+	size_t skiplen=tag.GetLen()+2;
 	while((!Cur.IsNull())&&(skiplen--))
 	{
 		Next();

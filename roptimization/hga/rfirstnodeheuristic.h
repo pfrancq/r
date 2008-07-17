@@ -91,7 +91,7 @@ public:
 	* @param arr            A pointer to the array representing the vector.
 	* @param size           The size of the vector.
 	*/
-	template<class T> inline void RandOrder(T* arr,unsigned int size)
+	template<class T> inline void RandOrder(T* arr,size_t size)
 		{this->Random->RandOrder<T>(arr,size);}
 
 	/**

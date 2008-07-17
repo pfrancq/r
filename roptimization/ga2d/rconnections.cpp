@@ -117,7 +117,7 @@ double RConnections::GetCon(RGeoInfos* infos,RGeoInfo* cur)
 
 
 //------------------------------------------------------------------------------
-RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* selected,RRect& bound)
+RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,size_t nb,bool* selected,RRect& bound)
 {
 	RPromKernel Prom("PlacementCenter",nb,2);
 	RPromCriterion *weight,*dist;
@@ -125,7 +125,7 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 	RPromSol** sols=0;
 	RPromSol** best=0;
 	RGeoInfo **treat,*b;
-	unsigned int Nb=0;
+	size_t Nb=0;
 	double w,d;
 	RRect r1,r2;
 	bool bFound;
@@ -221,10 +221,10 @@ RGeoInfo* RConnections::GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* 
 
 
 //------------------------------------------------------------------------------
-RGeoInfo* RConnections::GetMostConnected(RGeoInfos* infos,unsigned int nb,RGeoInfo** order,unsigned int nbok)
+RGeoInfo* RConnections::GetMostConnected(RGeoInfos* infos,size_t nb,RGeoInfo** order,size_t nbok)
 {
 	RGeoInfo **ptr=&order[nbok],*best;
-	unsigned int bestpos,i=nbok+1;
+	size_t bestpos,i=nbok+1;
 	double bestw,w;
 
 	best=(*(ptr++));
@@ -261,8 +261,8 @@ RGeoInfo* RConnections::GetMostConnected(RGeoInfos* infos,unsigned int nb,RGeoIn
 //		f=infos[c->From->Owner->GetId()];
 //		t=infos[c->To->Owner->GetId()];
 //		if((!t->IsValid())||(!f->IsValid())) continue;
-//		cf=f->Connectors.GetPtr<unsigned int>(c->From->GetId());
-//		ct=t->Connectors.GetPtr<unsigned int>(c->To->GetId());
+//		cf=f->Connectors.GetPtr<size_t>(c->From->GetId());
+//		ct=t->Connectors.GetPtr<size_t>(c->To->GetId());
 //		sum+=cf->GetPos().ManhattanDist(ct->GetPos())*c->Weight;
 //	}
 //	return(sum);
@@ -284,8 +284,8 @@ double RConnections::GetDistances(RGeoInfos&/*infos*/,RGeoInfo* /*info*/)
 //		t=infos[c->To->Owner->GetId()];
 //		if((!t->IsValid())||(!f->IsValid())) continue;
 //		if((t!=info)&&(f!=info)) continue;
-//		cf=f->Connectors.GetPtr<unsigned int>(c->From->GetId());
-//		ct=t->Connectors.GetPtr<unsigned int>(c->To->GetId());
+//		cf=f->Connectors.GetPtr<size_t>(c->From->GetId());
+//		ct=t->Connectors.GetPtr<size_t>(c->To->GetId());
 //		sum+=cf->GetPos().ManhattanDist(ct->GetPos())*c->Weight;
 //	}
 	return(sum);

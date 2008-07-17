@@ -96,7 +96,7 @@ public:
 	* @param r              The random genrator to use.
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementCenter(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
+	RPlacementCenter(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 
 	/**
 	* Initialize the heuristic.

@@ -69,7 +69,7 @@ RFreePolygon::RFreePolygon(const RFreePolygon& poly)
 int RFreePolygon::CanContain(const RGeoInfo* info,RPoint& pos) const
 {
 	RPoint act,e1,e2;
-	unsigned int nbpts;
+	size_t nbpts;
 	RPolygon Test;
 
 	nbpts=GetNb();

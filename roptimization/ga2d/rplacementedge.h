@@ -70,7 +70,7 @@ class RPlacementEdge : public RPlacementHeuristic
 	/**
 	* The number of total lines handled.
 	*/
-	unsigned int NbLevels;
+	size_t NbLevels;
 
 	/**
 	* Position where the next object has to be placed.
@@ -90,7 +90,7 @@ class RPlacementEdge : public RPlacementHeuristic
 	/**
 	* Current line handled by the heuristic.
 	*/
-	unsigned int CurLevel;
+	size_t CurLevel;
 
 public:
 
@@ -102,7 +102,7 @@ public:
 	* @param r              The random genrator to use.
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementEdge(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
+	RPlacementEdge(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 
 	/**
 	* Initialize the heuristic.

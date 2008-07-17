@@ -41,7 +41,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGeoInfoConnectionPart::RGeoInfoConnectionPart(const RPoint& pt1,unsigned int id1,const RPoint& pt2,unsigned int id2)
+RGeoInfoConnectionPart::RGeoInfoConnectionPart(const RPoint& pt1,size_t id1,const RPoint& pt2,size_t id2)
 	: Id1(id1), PosCon1(pt1), Id2(id2), PosCon2(pt2)
 {
 }
@@ -95,13 +95,13 @@ int RGeoInfoConnection::Compare(const RGeoInfoConnection&) const
 //------------------------------------------------------------------------------
 bool RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
 {
-	unsigned int count(0);
+	size_t count(0);
 
 	// Go through each connectors
 	RCursor<RObj2DConnector> con(Con->Connect);
 	for(con.Start();!con.End();con.Next())
 	{
-		if(infos->GetPtr<unsigned int>(con()->Owner->GetId())->IsValid())
+		if(infos->GetPtr<size_t>(con()->Owner->GetId())->IsValid())
 		{
 			count++;
 		}
@@ -116,7 +116,7 @@ bool RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
 void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 {
 	RGeoInfo *g1,*g2;
-	unsigned int id1,id2,i;
+	size_t id1,id2,i;
 	RVertex *v1,*v2;
 	RPoint pt1,pt2;
 	RGraph T(Con->Connect.GetNb()),S(Con->Connect.GetNb());
@@ -134,14 +134,14 @@ void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 	for(con.Start(),i=con.GetNb();--i;con.Next())
 	{
 		id1=con()->Owner->GetId();
-		g1=infos->GetPtr<unsigned int>(id1);
+		g1=infos->GetPtr<size_t>(id1);
 		if(g1->IsValid())
 		{
 			v1=T.GetVertex(id1);
 			for(con2.GoTo(con.GetPos()+1);!con2.End();con2.Next())
 			{
 				id2=con2()->Owner->GetId();
-				g2=infos->GetPtr<unsigned int>(id2);
+				g2=infos->GetPtr<size_t>(id2);
 				if(g2->IsValid())
 				{
 					v2=T.GetVertex(id2);
@@ -229,7 +229,7 @@ bool RGeoInfoConnection::IsIn(const RGeoInfo* info)
 //------------------------------------------------------------------------------
 bool RGeoInfoConnection::IsIn(const RGeoInfoConnector* con)
 {
-	unsigned int id;
+	size_t id;
 	RObj2D* owner;
 
 	if(!con) return(false);

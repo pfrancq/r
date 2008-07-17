@@ -160,7 +160,7 @@ QDrawPolygons::QDrawPolygons(RProblem2D* prob,QWidget* parent,const char* name)
 //------------------------------------------------------------------------------
 void QDrawPolygons::addInfo(RGeoInfo* info)
 {
-	unsigned int j;
+	size_t j;
 	QPoint Null(0,0);
 	QPointArray Pts;
 	RPoint Pt;
@@ -209,7 +209,7 @@ void QDrawPolygons::addInfo(RGeoInfo* info)
 //------------------------------------------------------------------------------
 void QDrawPolygons::addFree(RFreePolygon* poly)
 {
-	unsigned int j;
+	size_t j;
 	QPoint Null(0,0);
 	QPointArray Pts;
 	RPoint Pos;
@@ -449,7 +449,7 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 	}
 	if(Changed)
 	{
-		unsigned int j;
+		size_t j;
 		QPoint Null(0,0);
 		QPointArray Pts;
 		RPoint Pos;
@@ -509,7 +509,7 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 			int x,y;
 			Painter->setPen(black);
 			Painter->setBrush(SolidPattern);
-			info=Infos->GetPtr<unsigned int>(Problem->Problem.GetId());
+			info=Infos->GetPtr<size_t>(Problem->Problem.GetId());
 			if(info)
 			{
 				RCursor<RGeoInfoConnector> tab(info->Connectors);

@@ -212,7 +212,7 @@ RString RTextFile::GetUntilEnd(void)
 {
 	RString res;
 	char Buffer[513];
-	unsigned int len;
+	size_t len;
 
 	while(!End())
 	{
@@ -269,7 +269,7 @@ bool RTextFile::CurString(const RString& str,bool CaseSensitive,bool skip)
 	RChar* search;
 	size_t* ssearch;
 	size_t possearch(PosChars+1);
-	size_t end(GetPos()+(*SizeNextRead));
+	off_t end(GetPos()+(*SizeNextRead));
 	if(possearch==40)
 	{
 		search=Chars;
@@ -648,7 +648,7 @@ unsigned long RTextFile::GetUInt(void)
 
 	nb=strtoul(str,&ptr,10);
 	if(ptr==str)
-		throw RIOException(this,"No unsigned Int");
+		throw RIOException(this,"No size_t");
 	return(nb);
 }
 
@@ -863,7 +863,7 @@ void RTextFile::WriteStr(const char* c)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteStr(const char* c,unsigned int l)
+void RTextFile::WriteStr(const char* c,size_t l)
 {
 	if(!l) return;
 	WriteSeparator();

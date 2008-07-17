@@ -62,7 +62,7 @@ void RProblem2D::Load(const RURI& uri)
 	RXMLStruct s;
 	RXMLFile f(uri,&s);
 	RXMLTag *tag;
-	unsigned int i,X,Y;
+	size_t i,X,Y;
 	RString Attr;
 	RContainer<RObj2D,true,true> Templates(50,25);
 	RPoint Tr;
@@ -150,7 +150,7 @@ void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 	RObj2D *obj,*t;
 	bool IsObj;
 	RXMLTag *tag;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 	RPoint Tr;
 
@@ -227,7 +227,7 @@ void RProblem2D::CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts)
 void RProblem2D::CreateConnector(RXMLTag* c,RObj2D* obj,const RPoint& t)
 {
 	RObj2DConnector* con;
-	unsigned int i;
+	size_t i;
 	RXMLTag *pt;
 
 	if(c->GetName()!="Terminal") return;
@@ -293,7 +293,7 @@ void RProblem2D::DetermineLimit(void)
 {
 	RRect r;
 	bool Cont=true;
-	unsigned int j;
+	size_t j;
 
 	Problem.Polygon.Boundary(r);
 	GlobalLimits.X = r.GetWidth();

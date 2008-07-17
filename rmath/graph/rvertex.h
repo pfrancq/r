@@ -58,9 +58,9 @@ public:
 
 	struct VertexStruct
 	{
-		unsigned int id;
-		unsigned int idx;
-		unsigned int nb;
+		size_t id;
+		size_t idx;
+		size_t nb;
 	};
 
 private:

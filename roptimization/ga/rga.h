@@ -64,7 +64,7 @@ namespace R{
 * specify that a variable containing an identificator of an object. is
 * referencing no object.
 */
-const unsigned int NoObject=0xFFFFFFFF;
+const size_t NoObject=0xFFFFFFFF;
 
 
 //------------------------------------------------------------------------------
@@ -95,19 +95,19 @@ public:
 		eGAMutation              /** Mutation failed. */,
 		eGAInversion             /** Inversion failed. */,
 		eGAOptimisation          /** Optimization failed. */,
-		eGARandomConstruct       /** Random initialization failed. */,  
+		eGARandomConstruct       /** Random initialization failed. */,
 		eGAEvaluation            /** Evaluation failed. */,
 		eGAPostEvaluation        /** Post-evaluation failed. */,
 		eGA                      /** Normal GA exception. */
 	};
-	
+
 protected:
 
 	/**
 	 * Type of the exception.
 	 */
 	tException Type;
-	
+
 public:
 
 	/**
@@ -127,19 +127,19 @@ public:
 	* Construct an GA exception.
 	* @param type            Type of the exception.
 	* @param g               Generation.
-	* @param c               Identificator of chromosome.
-	*/	
-	RGAException(tException type,const unsigned int g,const unsigned int c) throw();
+	* @param c               Identifier of chromosome.
+	*/
+	RGAException(tException type,const size_t g,const size_t c) throw();
 
 	/**
 	* Construct the crossover exception.
 	* @param g              Generation.
-	* @param p1             Identificator of the first parent.
-	* @param p2             Identificator of the second parent.
-	* @param c              Identificator of the child.
+	* @param p1             Identifier of the first parent.
+	* @param p2             Identifier of the second parent.
+	* @param c              Identifier of the child.
 	*/
-	RGAException(const unsigned int g,const unsigned p1,const unsigned int p2,const unsigned int c) throw();
-				
+	RGAException(const size_t g,const size_t p1,const size_t p2,const size_t c) throw();
+
 	/**
 	 * Get the type of the exception.
 	 */

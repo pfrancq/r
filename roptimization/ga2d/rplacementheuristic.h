@@ -101,12 +101,12 @@ protected:
 	/**
 	* Total number of objects to place.
 	*/
-	unsigned int NbObjs;
+	size_t NbObjs;
 
 	/**
 	* Number of objects already placed.
 	*/
-	unsigned int NbObjsOk;
+	size_t NbObjsOk;
 
 	/**
 	* The bound rectangle of the resulting placement.
@@ -151,12 +151,12 @@ protected:
 	/**
 	* Maximal number of solutions that can be evaluated.
 	*/
-	unsigned int MaxPromSol;
+	size_t MaxPromSol;
 
 	/**
 	* Number of solutions to be evaluated.
 	*/
-	unsigned int NbPromSol;
+	size_t NbPromSol;
 
 	/**
 	* Array representing different solutions.
@@ -198,7 +198,7 @@ public:
 	* @param r              The random genrator to use.
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
+	RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
 
 	/**
 	* Initialize the heuristic.
@@ -301,7 +301,7 @@ public:
 	/**
 	* Return the number of objects placed.
 	*/
-	inline unsigned int GetNbObjsOk(void) {return(NbObjsOk);}
+	inline size_t GetNbObjsOk(void) {return(NbObjsOk);}
 
 	/**
 	* Return a pointer to all the free polygons.

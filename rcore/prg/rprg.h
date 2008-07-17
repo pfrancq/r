@@ -124,9 +124,9 @@ protected :
 	/**
 	* Count the number of tabs at the begin of a line of source code.
 	* @param line           Line to analyze.
-	* @returns unsigned int.
+	* @returns size_t.
 	*/
-	static unsigned int CountTabs(const RString& line);
+	static size_t CountTabs(const RString& line);
 
 public:
 

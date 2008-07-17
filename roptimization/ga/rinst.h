@@ -90,7 +90,7 @@ public:
 * The instance emit several signals:
 * - PostNotification("RInst::Interact") : Possible interactions from the
 *   outside.
-* - PostNotification("RInst::Best",unsigned int) : The best chromosome has
+* - PostNotification("RInst::Best",size_t) : The best chromosome has
 *   changed at a given generation.
 * - PostNotification("RInst::Generation") : A new generation has be done.
 * @author Pascal Francq
@@ -173,62 +173,62 @@ private:
 	/**
 	* Size of the population.
 	*/
-	unsigned int PopSize;
+	size_t PopSize;
 
 	/**
 	* Number of generations.
 	*/
-	unsigned int Gen;
+	size_t Gen;
 
 	/**
 	* Age of the best chromosome.
 	*/
-	unsigned int AgeBest;
+	size_t AgeBest;
 
 	/**
 	* Age of the best chromosome ever calculate.
 	*/
-	unsigned int AgeBestPop;
+	size_t AgeBestPop;
 
 	/**
 	* Number of crossovers to be done in a generation.
 	*/
-	unsigned int NbCross;
+	size_t NbCross;
 
 	/**
 	* Frequence of mutation.
 	*/
-	unsigned int FreqMutation;
+	size_t FreqMutation;
 
 	/**
 	* Frequence of mutation of the best chromosome.
 	*/
-	unsigned int FreqBestMutation;
+	size_t FreqBestMutation;
 
 	/**
 	 * Number of mutations to do at each mutation operation.
 	 */
-	unsigned int NbMutations;
+	size_t NbMutations;
 
 	/**
 	* Frequence of inversion.
 	*/
-	unsigned int FreqInversion;
+	size_t FreqInversion;
 
 	/**
 	* Number of generation left before next mutation.
 	*/
-	unsigned int AgeNextMutation;
+	size_t AgeNextMutation;
 
 	/**
 	* Number of generation left before mutation of the best chromosome.
 	*/
-	unsigned int AgeNextBestMutation;
+	size_t AgeNextBestMutation;
 
 	/**
 	* Number of generation left before next inversion.
 	*/
-	unsigned int AgeNextInversion;
+	size_t AgeNextInversion;
 
 public:
 
@@ -238,7 +238,7 @@ public:
 	* @param name           Name of the genetic algorithm.
 	* @param debug          Debugger.
 	*/
-	RInst(unsigned int popsize,const RString& name,RDebug* debug=0);
+	RInst(size_t popsize,const RString& name,RDebug* debug=0);
 
 	/**
 	 * Return the name of the class.
@@ -252,7 +252,7 @@ public:
 	 *                       best chromosome.
 	 * @param nbmut          Number of mutations to do at each mutation operation.
 	 */
-	void SetMutationParams(unsigned int agemut,unsigned int agebestmut,unsigned int nbmut);
+	void SetMutationParams(size_t agemut,size_t agebestmut,size_t nbmut);
 
 	/**
 	* Set if the verifications must be done.
@@ -268,22 +268,22 @@ public:
 	/**
 	 * Get the size of the population.
 	 */
-	inline unsigned int GetPopSize(void) const {return(PopSize);}
+	inline size_t GetPopSize(void) const {return(PopSize);}
 
 	/**
 	 * Get the number of generations run.
 	 */
-	inline unsigned int GetGen(void) const {return(Gen);}
+	inline size_t GetGen(void) const {return(Gen);}
 
 	/**
 	* Get the age of the best chromosome.
 	*/
-	inline unsigned int GetAgeBest(void) const {return(AgeBest);}
+	inline size_t GetAgeBest(void) const {return(AgeBest);}
 
 	/**
 	* Get the age of the best chromosome ever calculate.
 	*/
-	inline unsigned int GetAgeBestPop(void) const {return(AgeBestPop);}
+	inline size_t GetAgeBestPop(void) const {return(AgeBestPop);}
 
 	/**
 	* Initialisation of the instance.
@@ -386,7 +386,7 @@ public:
 	* @param arr            A pointer to the array representing the vector.
 	* @param size           The size of the vector.
 	*/
-	template<class T> inline void RandOrder(T* arr,unsigned int size)
+	template<class T> inline void RandOrder(T* arr,size_t size)
 		{Random->RandOrder<T>(arr,size);}
 
 	/**

@@ -6,7 +6,7 @@
 
 	Parameter - Header.
 
-	Copyright 2003-2006 by the Universit�Libre de Bruxelles.
+	Copyright 2003-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -60,10 +60,10 @@ protected:
 	RString Name;
 
 	/**
-	 * Description of the parameter. 
+	 * Description of the parameter.
 	 */
 	RString Description;
-	
+
 public:
 
 	/**
@@ -77,7 +77,7 @@ public:
 	* Get the name of the parameter.
 	*/
 	RString GetName(void) const {return(Name);}
-	
+
 	/**
 	* Get the description of the parameter.
 	*/
@@ -156,7 +156,7 @@ public:
 	* @param desc            Description of the parameter.
 	*/
 	RParamValue(const RString& n,const RString& v,const RString& desc=RString::Null);
-	
+
 	/**
 	* Constructor of the parameter with a 'value' attribute.
 	* @param n               Name of the parameter.
@@ -205,7 +205,6 @@ public:
 
 	/**
 	* Get the content of the parameter.
-	* @return unsigned int.
 	*/
 	unsigned int GetUInt(void);
 

@@ -79,12 +79,12 @@ protected:
 	/**
 	* Number of objects to be grouped.
 	*/
-	unsigned int NbObjs;
+	size_t NbObjs;
 
 	/**
 	* Number of objects already grouped.
 	*/
-	unsigned int NbObjsOk;
+	size_t NbObjsOk;
 
 	/**
 	* Groups.
@@ -179,7 +179,7 @@ public:
 	/**
 	* Return the number of objects grouped.
 	*/
-	inline unsigned int GetNbObjsOk(void) {return(NbObjsOk);}
+	inline size_t GetNbObjsOk(void) {return(NbObjsOk);}
 
 	/**
 	* Return a number in the interval [0,max[ using the current random generator.
@@ -192,7 +192,7 @@ public:
 	* @param arr            A pointer to the array representing the vector.
 	* @param size           The size of the vector.
 	*/
-	template<class T> inline void RandOrder(T* arr,unsigned int size)
+	template<class T> inline void RandOrder(T* arr,size_t size)
 		{Random->RandOrder<T>(arr,size);}
 
 	/**

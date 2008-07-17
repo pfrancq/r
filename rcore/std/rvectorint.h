@@ -184,7 +184,7 @@ private:
 public:
 	
 	/**
-	* Reorder the current list of unsigned integers in ascending order.
+	* Reorder the current list of size_tegers in ascending order.
 	*/
 	void ReOrder(void);
 
@@ -215,7 +215,7 @@ public:
 	
 	/**
 	* Get the number of Integer value in the list.
-	* @return unsigned int
+	* @return size_t
 	*/
 	size_t GetNb(void) const {return(NbInt);}
 

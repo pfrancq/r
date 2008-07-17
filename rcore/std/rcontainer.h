@@ -87,16 +87,16 @@ namespace R{
 *
 * class MyElement
 * {
-*    unsigned int Id;
+*    size_t Id;
 * public:
-*    MyElement(unsigned int id) : Id(id) {}
+*    MyElement(size_t id) : Id(id) {}
 *    MyElement(const MyElement& e) : Id(e.Id) {}
 *    void DoSomething(double d) {cout<<d<<endl;}
 *    int Compare(const MyElement& e) const {return(Id-e.Id);}
-*    int Compare(const unsigned int id) const {return(Id-id);}
+*    int Compare(const size_t id) const {return(Id-id);}
 *    int Compare(const char* text) const
 *    {
-*       unsigned int id=atoi(text);
+*       size_t id=atoi(text);
 *       return(Compare(id));
 *    }
 * };
@@ -239,7 +239,7 @@ public:
 	* @param i              New increasing value. If null, the old value
 	*                       remains.
 	*/
-	inline void Clear(unsigned int m=0,unsigned int i=0) {BasicContainer::Clear(bAlloc,m,i);}
+	inline void Clear(size_t m=0,size_t i=0) {BasicContainer::Clear(bAlloc,m,i);}
 
 	/**
 	* ReOrder the container. This method must be used with caution, because it

@@ -88,7 +88,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 	RPromCriterion *weight,*dist;
 	RPromSol *sol,**sols,**best;
 	RGeoInfo **treat;
-	unsigned int Nb=0;
+	size_t Nb=0;
 	double w,d;
 	RRect r1,r2;
 	bool bFound;

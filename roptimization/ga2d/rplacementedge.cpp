@@ -44,7 +44,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementEdge::RPlacementEdge(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+RPlacementEdge::RPlacementEdge(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
 }
@@ -126,7 +126,7 @@ void RPlacementEdge::NextObjectOri(void)
 //------------------------------------------------------------------------------
 void RPlacementEdge::Place(RPoint& pos)
 {
-	unsigned int i,l;
+	size_t i,l;
 
 	// Assign the object to the current position
 	CurInfo->Assign(pos,Grid);

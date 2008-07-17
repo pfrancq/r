@@ -74,7 +74,7 @@ protected:
 	/**
 	* The identifier of the criterion.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 	/**
 	* Name of the criterion
@@ -100,7 +100,7 @@ public:
 	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromCriterion(tCriteriaType type,double w,const char* name=0,unsigned int nb=30);
+	RPromCriterion(tCriteriaType type,double w,const char* name=0,size_t nb=30);
 
 	/**
 	* Compare the identifier of two criteria.
@@ -124,7 +124,7 @@ public:
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
-	int Compare(const unsigned int id) const {return(Id-id);}
+	int Compare(const size_t id) const {return(Id-id);}
 
 	/**
 	* Compare the name of the criterion with a string.
@@ -169,7 +169,7 @@ private:
 	 * Set the identifier of the criterion. Can only be done by RPromKernel.
 	 * @param id             Identifier of the criterion.
 	 */
-	void SetId(unsigned int id) {Id=id;}
+	void SetId(size_t id) {Id=id;}
 	
 public:
 	
@@ -229,7 +229,7 @@ public:
 	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromLinearCriterion(tCriteriaType type,double p,double q,double w,const char* name=0,unsigned int nb=30);
+	RPromLinearCriterion(tCriteriaType type,double p,double q,double w,const char* name=0,size_t nb=30);
 
 	/**
 	* Construct a criterion.
@@ -238,7 +238,7 @@ public:
 	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromLinearCriterion(tCriteriaType type,RParam* params,const char* name=0,unsigned int nb=30);
+	RPromLinearCriterion(tCriteriaType type,RParam* params,const char* name=0,size_t nb=30);
 
  	/**
  	* Set the parameters.

@@ -36,8 +36,8 @@ template<class cNode,class cObj,class cNodes>
 		: RContainer<cNode,true,false>(maxnodes), Used(maxnodes), Top(0),
 		   Objs(objs), NodesAss(maxnodes), ObjsAss(objs.GetNb()), ObjsNoAss(objs.GetNb()), MaxAttr(maxattr)
 {
-	ObjectsAss = new unsigned int[Objs.GetNb()];
-	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(unsigned int));
+	ObjectsAss = new size_t[Objs.GetNb()];
+	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(size_t));
 
 	// Suppose no object is assigned
 	for(Objs.Start();!Objs.End();Objs.Next())
@@ -70,7 +70,7 @@ template<class cNode,class cObj,class cNodes>
 	ObjsNoAss.Clear();
 	for(Objs.Start();!Objs.End();Objs.Next())
 		ObjsNoAss.InsertPtr(Objs());
-	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(unsigned int));
+	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(size_t));
 }
 
 
@@ -78,7 +78,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	cNode* RNodesGA<cNode,cObj,cNodes>::ReserveNode(void)
 {
-	unsigned int i,NewSize;
+	size_t i,NewSize;
 
 	if(Used.GetNb()+1>this->GetMaxNb())
 	{
@@ -123,7 +123,7 @@ template<class cNode,class cObj,class cNodes>
 		to=Top;
 	if(to->NbSubNodes)
 	{
-		unsigned int tmp=to->SubNodes+to->NbSubNodes;
+		size_t tmp=to->SubNodes+to->NbSubNodes;
 		NodesAss.InsertPtrAt(node,tmp,false);
 		RCursor<cNode> Cur(*this);
 		for(Cur.Start();!Cur.End();Cur.Next())
@@ -169,7 +169,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::DeleteNodes(cNode* from)
 {
-	unsigned int i,j;
+	size_t i,j;
 	cNode* Node;
 
 	if(!(from->NbSubNodes)) return;
@@ -205,7 +205,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::MoveNodes(cNode* to,cNode* from)
 {
-	unsigned int j,i,*ptr;
+	size_t j,i,*ptr;
 	cNode **N,Node;
 
 	if(!from->NbSubNodes)
@@ -219,7 +219,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::InsertObj(cNode* to,const cObj* obj)
 {
-	unsigned int j;
+	size_t j;
 
 	if(to==Top) return;
 	if(to->NbSubObjects)
@@ -247,7 +247,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::DeleteObj(cNode* from,const cObj* obj)
 {
-	unsigned int j;
+	size_t j;
 
 	if(from==Top) return;
 	j=from->SubObjects;
@@ -268,7 +268,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::DeleteObj(const cObj* obj)
 {
-	unsigned int i,j;
+	size_t i,j;
 	cNode* from;
 
 	i=ObjectsAss[obj->GetId()];
@@ -292,7 +292,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::DeleteObjs(cNode* from)
 {
-	unsigned int j;
+	size_t j;
 
 	if(from==Top) return;
 	if(!(from->NbSubObjects)) return;
@@ -363,7 +363,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	bool RNodesGA<cNode,cObj,cNodes>::VerifyNodes(void)
 {
-	unsigned int nbobjs=0;
+	size_t nbobjs=0;
 	RCursor<cNode> Cur(this->GetNodes(Top));
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if(!Cur()->Verify(nbobjs))

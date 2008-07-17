@@ -47,7 +47,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementHeuristic::RPlacementHeuristic(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+RPlacementHeuristic::RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: Random(r), Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori)
 {
 	Order=new RGeoInfo*[maxobjs];
@@ -76,7 +76,7 @@ void RPlacementHeuristic::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 	Distances=0.0;
 
 	// Calculate an order
-	for(unsigned int i=0;i<NbObjs;i++)
+	for(size_t i=0;i<NbObjs;i++)
 		Order[i]=((*Infos)[i]);
 	Random->RandOrder<RGeoInfo*>(Order,NbObjs);
 }
@@ -134,7 +134,7 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 	RRect CurRect(Result);
 	ObjectPos *p;
 	RPromSol* sol;
-	unsigned int i;
+	size_t i;
 
 	// Verify if solution not already exists
 	for(i=NbPromSol+1,p=Sols;--i;p++)
@@ -176,7 +176,7 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 {
 	RPoint pos;
 	RObj2D* obj;
-	unsigned int best;
+	size_t best;
 
 	SelectNextObject();
 	CurInfo->SetOrder(NbObjsOk);

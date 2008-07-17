@@ -65,7 +65,7 @@ public:
 	/**
 	* Identificator of the chromosome.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 	/**
 	* Pointer to the fitness of the chromosome.
@@ -82,7 +82,7 @@ public:
 	* @param inst           Pointer to the instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	RChromo(cInst* inst,unsigned int id);
+	RChromo(cInst* inst,size_t id);
 
 	/**
 	* Initialisation of the chromosome.

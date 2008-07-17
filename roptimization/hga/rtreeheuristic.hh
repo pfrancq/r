@@ -49,7 +49,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RTreeHeuristic<cNode,cObj,cNodes>::Init(cNodes* nodes)
 {
-	unsigned int *Cur;
+	size_t *Cur;
 
 	// Init the data for a grouping
 	NbObjsOk=0;

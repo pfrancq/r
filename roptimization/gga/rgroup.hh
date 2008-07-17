@@ -49,7 +49,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroup<cGroup,cObj,cGroups>::RGroup(cGroups* owner,const unsigned int id)
+	RGroup<cGroup,cObj,cGroups>::RGroup(cGroups* owner,const size_t id)
 		: Id(id), Owner(owner)
 {
 	NbSubObjects= 0;
@@ -62,7 +62,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void RGroup<cGroup,cObj,cGroups>::Verify(void)
 {
-	unsigned int NbObjects=Owner->ObjsAss.GetNb();
+	size_t NbObjects=Owner->ObjsAss.GetNb();
 	char tmp[200];
 
 	// Each group must have a parent.
@@ -202,9 +202,9 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	bool RGroup<cGroup,cObj,cGroups>::IsIn(const unsigned int id) const
+	bool RGroup<cGroup,cObj,cGroups>::IsIn(const size_t id) const
 {
-	unsigned int i;
+	size_t i;
 
 	RCursor<cObj> ptr(Owner->ObjsAss);
 	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next())
@@ -217,7 +217,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	bool RGroup<cGroup,cObj,cGroups>::CommonObjs(const cGroup* grp) const
 {
-	unsigned int i;
+	size_t i;
 
 	RCursor<cObj> ptr(Owner->ObjsAss);
 	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next())
@@ -230,7 +230,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	bool RGroup<cGroup,cObj,cGroups>::SameObjs(const cGroup* grp) const
 {
-	unsigned int i;
+	size_t i;
 
 	if(NbSubObjects!=grp->NbSubObjects) return(false);
 	RCursor<cObj> ptr(Owner->ObjsAss);
@@ -242,13 +242,13 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	unsigned int* RGroup<cGroup,cObj,cGroups>::GetObjectsId(void) const
+	size_t* RGroup<cGroup,cObj,cGroups>::GetObjectsId(void) const
 {
-	unsigned int* tmp;
-	unsigned int* tmp2;
-	unsigned int i;
+	size_t* tmp;
+	size_t* tmp2;
+	size_t i;
 
-	tmp2=tmp=new unsigned int[NbSubObjects+1];
+	tmp2=tmp=new size_t[NbSubObjects+1];
 	RCursor<cObj> ptr(Owner->ObjsAss);
 	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next(),tmp2++)
 		(*tmp2)=ptr()->GetId();

@@ -39,17 +39,17 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	R::RGroups<cGroup,cObj,cGroups>::RGroups(R::RCursor<cObj> objs,const unsigned max)
+	R::RGroups<cGroup,cObj,cGroups>::RGroups(R::RCursor<cObj> objs,size_t max)
 		: RContainer<cGroup,true,false>(max,max<20?20:max/2), Used(max,max<20?20:max/2),
 		  Objs(objs), ObjsAss(objs.GetNb()), ObjsNoAss(objs.GetNb()),
 		  OrdObjectsAss(0), NewUsedId(0)
 {
-	ObjectsAss = new unsigned int[Objs.GetNb()];
-	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(unsigned int));
+	ObjectsAss = new size_t[Objs.GetNb()];
+	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(size_t));
 
 	// Init of the arrays needed.
-	OrdObjectsAss=new unsigned int[Objs.GetNb()];
-	NewUsedId=new unsigned int[this->GetMaxNb()];
+	OrdObjectsAss=new size_t[Objs.GetNb()];
+	NewUsedId=new size_t[this->GetMaxNb()];
 
 	// Suppose no object is assigned
 	for(Objs.Start();!Objs.End();Objs.Next())
@@ -61,7 +61,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroups<cGroup,cObj,cGroups>::Init(void)
 {
-	unsigned int i;
+	size_t i;
 
 	// Create the groups
 	for(i=0;i<this->GetMaxNb();i++)
@@ -81,7 +81,7 @@ template<class cGroup,class cObj,class cGroups>
 	ObjsNoAss.Clear();
 	for(Objs.Start();!Objs.End();Objs.Next())
 		ObjsNoAss.InsertPtr(Objs());
-	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(unsigned int));
+	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(size_t));
 }
 
 
@@ -89,16 +89,16 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	cGroup* R::RGroups<cGroup,cObj,cGroups>::ReserveGroup(void)
 {
-	unsigned int i,NewSize;
-	unsigned int* n;
+	size_t i,NewSize;
+	size_t* n;
 
 	if(Used.GetNb()+1>this->GetMaxNb())
 	{
 		NewSize=this->GetMaxNb()+this->GetIncNb();
 
 		// Recreate a new NewUsedId array with the new size
-		n=new unsigned int[NewSize];
-		memcpy(n,NewUsedId,sizeof(unsigned int)*this->GetMaxNb());
+		n=new size_t[NewSize];
+		memcpy(n,NewUsedId,sizeof(size_t)*this->GetMaxNb());
 		delete[] NewUsedId;
 		NewUsedId=n;
 
@@ -132,7 +132,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroups<cGroup,cObj,cGroups>::InsertObj(cGroup* to,const cObj* obj)
 {
-	unsigned int tmp,j;
+	size_t tmp,j;
 
 	if(to->NbSubObjects)
 	{
@@ -160,7 +160,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroups<cGroup,cObj,cGroups>::DeleteObj(cGroup* from,const cObj* obj)
 {
-	unsigned int j;
+	size_t j;
 
 	j=from->SubObjects;
 	ObjectsAss[obj->GetId()]=NoGroup;
@@ -180,7 +180,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroups<cGroup,cObj,cGroups>::DeleteObjs(cGroup* from)
 {
-	unsigned int j,i,tmp;
+	size_t j,i,tmp;
 	cObj* tmpObj;
 
 	if(!(from->NbSubObjects)) return;
@@ -209,7 +209,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroups<cGroup,cObj,cGroups>::Verify(void)
 {
-	unsigned int i,*list,nbobjs;
+	size_t i,*list,nbobjs;
 	char tmp[200];
 
 	R::RCursor<cGroup> Cur(Used);
@@ -228,9 +228,9 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	cGroup* R::RGroups<cGroup,cObj,cGroups>::GetGroup(unsigned int id) const
+	cGroup* R::RGroups<cGroup,cObj,cGroups>::GetGroup(size_t id) const
 {
-	unsigned int idx=ObjectsAss[id];
+	size_t idx=ObjectsAss[id];
 
 	if(idx==NoObject) return(0);
 	return((*const_cast<RGroups<cGroup,cObj,cGroups>*>(this))[idx]);
@@ -241,7 +241,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	cGroup* R::RGroups<cGroup,cObj,cGroups>::GetGroup(const cObj* obj) const
 {
-	unsigned int idx=ObjectsAss[obj->GetId()];
+	size_t idx=ObjectsAss[obj->GetId()];
 
 	if(idx==NoObject) return(0);
 	return((*const_cast<RGroups<cGroup,cObj,cGroups>*>(this))[idx]);
@@ -278,10 +278,10 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroups<cGroup,cObj,cGroups>::ComputeOrd(void)
 {
-	unsigned int *oldo,*newo;
-	unsigned int i,id,nbgrp;
+	size_t *oldo,*newo;
+	size_t i,id,nbgrp;
 
-	memset(NewUsedId,0xFF,sizeof(unsigned int)*this->GetMaxNb());
+	memset(NewUsedId,0xFF,sizeof(size_t)*this->GetMaxNb());
 	for(i=ObjsAss.GetNb()+1,oldo=ObjectsAss,newo=OrdObjectsAss,nbgrp=0;--i;oldo++,newo++)
 	{
 		id=NewUsedId[*oldo];
@@ -296,7 +296,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	bool R::RGroups<cGroup,cObj,cGroups>::SameGroupment(const RGroups* grps) const
 {
-	unsigned int i,*ass,*cass;
+	size_t i,*ass,*cass;
 
 	for(i=ObjsAss.GetNb()+1,ass=OrdObjectsAss,cass=grps->OrdObjectsAss;--i;ass++,cass++)
 		if((*ass)!=(*cass))
@@ -317,9 +317,9 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	double R::RGroups<cGroup,cObj,cGroups>::ComputeAdjustedRandIndex(const cGroups& groups) const
 {
-	unsigned int NbRows,NbCols;                   // Rows and Cols for matrix
-	unsigned int NbObjs;                          // Total Number of objects
-	unsigned int col;
+	size_t NbRows,NbCols;                   // Rows and Cols for matrix
+	size_t NbObjs;                          // Total Number of objects
+	size_t col;
 	cGroup* Group2;
 	double a,b,c,d,num,den;
 	double* VectorRows=0;                         // Sum of the rows of the matrix

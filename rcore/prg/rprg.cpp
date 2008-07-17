@@ -82,7 +82,7 @@ void RPrg::Load(void)
 
 
 //-----------------------------------------------------------------------------
-unsigned int RPrg::CountTabs(const RString& line)
+size_t RPrg::CountTabs(const RString& line)
 {
 	int tabs;
 	RCharCursor Cur(line);
@@ -106,8 +106,8 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 	RString name;
 	RChar what;
 	char tabs;
-	unsigned int pos;
-	unsigned int len;
+	size_t pos;
+	size_t len;
 	RCharCursor Cur;
 
 	// Read the line
@@ -205,8 +205,8 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 //-----------------------------------------------------------------------------
 void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* values)
 {
-	unsigned int len;
-	unsigned int pos;
+	size_t len;
+	size_t pos;
 	RCharCursor Cur(params);
 
 	while(!Cur.End())

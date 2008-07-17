@@ -50,15 +50,15 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RAttrList::RAttrList(const unsigned int MaxSize)
-	: RVectorInt<unsigned int,true>(MaxSize)
+RAttrList::RAttrList(const size_t MaxSize)
+	: RVectorInt<size_t,true>(MaxSize)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RAttrList::RAttrList(const RAttrList& lst)
-	: RVectorInt<unsigned int,true>(lst)
+	: RVectorInt<size_t,true>(lst)
 {
 }
 
@@ -66,8 +66,8 @@ RAttrList::RAttrList(const RAttrList& lst)
 //------------------------------------------------------------------------------
 bool RAttrList::IsParent(const RAttrList& Child) const
 {
-	unsigned int i=Child.GetNb(),j=GetNb();
-	const unsigned int *ptr1=GetList(),*ptr2=Child.GetList();
+	size_t i=Child.GetNb(),j=GetNb();
+	const size_t *ptr1=GetList(),*ptr2=Child.GetList();
 
 	// Current list cannot be larger than the child list
 	if(GetNb()>i)
@@ -102,8 +102,8 @@ bool RAttrList::IsParent(const RAttrList& Child) const
 //------------------------------------------------------------------------------
 bool RAttrList::IsInter(const RAttrList& PosAttr) const
 {
-	const unsigned int *FstA=GetList(),*SecA=PosAttr.GetList();
-	unsigned int i=GetNb(),j=PosAttr.GetNb();
+	const size_t *FstA=GetList(),*SecA=PosAttr.GetList();
+	size_t i=GetNb(),j=PosAttr.GetNb();
 
 	while(i)
 	{
@@ -122,11 +122,11 @@ bool RAttrList::IsInter(const RAttrList& PosAttr) const
 
 
 //------------------------------------------------------------------------------
-unsigned int RAttrList::GetNbCommon(const RAttrList& PosAttr) const
+size_t RAttrList::GetNbCommon(const RAttrList& PosAttr) const
 {
-	unsigned int count=0;
-	const unsigned int *ptr1=GetList(),*ptr2=PosAttr.GetList();
-	unsigned int i=GetNb(),j=PosAttr.GetNb();
+	size_t count=0;
+	const size_t *ptr1=GetList(),*ptr2=PosAttr.GetList();
+	size_t i=GetNb(),j=PosAttr.GetNb();
 
 	while(i)
 	{
@@ -147,8 +147,8 @@ unsigned int RAttrList::GetNbCommon(const RAttrList& PosAttr) const
 //------------------------------------------------------------------------------
 void RAttrList::Diff(const RAttrList& Top,const RAttrList& Child)
 {
-	const unsigned int *TopA=Top.GetList(),*ChildA=Child.GetList();
-	unsigned int i=Top.GetNb(),j=Child.GetNb();
+	const size_t *TopA=Top.GetList(),*ChildA=Child.GetList();
+	size_t i=Top.GetNb(),j=Child.GetNb();
 
 	Clear();
 	while(j)
@@ -169,8 +169,8 @@ void RAttrList::Diff(const RAttrList& Top,const RAttrList& Child)
 //------------------------------------------------------------------------------
 void RAttrList::Inter(const RAttrList& Fst,const RAttrList& Sec)
 {
-	const unsigned int *FstA=Fst.GetList(),*SecA=Sec.GetList();
-	unsigned int i=Fst.GetNb(),j=Sec.GetNb();
+	const size_t *FstA=Fst.GetList(),*SecA=Sec.GetList();
+	size_t i=Fst.GetNb(),j=Sec.GetNb();
 
 	Clear();
 	while(i)
@@ -189,10 +189,10 @@ void RAttrList::Inter(const RAttrList& Fst,const RAttrList& Sec)
 
 
 //------------------------------------------------------------------------------
-unsigned int RAttrList::FindFirstDiff(const RAttrList& PosAttr) const
+size_t RAttrList::FindFirstDiff(const RAttrList& PosAttr) const
 {
-	const unsigned int *ptr1,*ptr2;
-	unsigned int i;
+	const size_t *ptr1,*ptr2;
+	size_t i;
 
 	for(i=GetNb(),ptr1=GetList(),ptr2=PosAttr.GetList();i--;ptr1++,ptr2++)
 		if(*ptr1!=*ptr2)
@@ -204,7 +204,7 @@ unsigned int RAttrList::FindFirstDiff(const RAttrList& PosAttr) const
 //------------------------------------------------------------------------------
 RAttrList& RAttrList::operator=(const RAttrList& src)
 {
-	RVectorInt<unsigned int,true>::operator=(src);
+	RVectorInt<size_t,true>::operator=(src);
 	return(*this);
 }
 

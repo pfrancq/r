@@ -177,7 +177,7 @@ class QDrawPolygons : public QWidget
 	/**
 	* Number of infos.
 	*/
-	unsigned int NbInfos;
+	size_t NbInfos;
 
 	/**
 	* Pointer to all geometric information.
@@ -312,7 +312,7 @@ public:
 	* Set number of geometric information.
 	* @param nbinfos        Number of geometric information.
 	*/
-	inline void setNbInfos(const unsigned int nbinfos) {NbInfos=nbinfos;}
+	inline void setNbInfos(const size_t nbinfos) {NbInfos=nbinfos;}
 
 	/**
 	* Clear.

@@ -80,7 +80,7 @@ class RPrgInstFor : public RPrgInst
 	/**
 	* Identation of for.
 	*/
-	unsigned int Tabs;
+	size_t Tabs;
 
 public:
 
@@ -89,7 +89,7 @@ public:
 	* @param line           Rest of the line.
 	* @param t              Identation.
 	*/
-	RPrgInstFor(const RString& line,unsigned int t);
+	RPrgInstFor(const RString& line,size_t t);
 
 	/**
 	* Add an instruction to the for.
@@ -105,9 +105,9 @@ public:
 
 	/**
 	* Get the number of tabs.
-	* @return unsigned int.
+	* @return size_t.
 	*/
-	unsigned int GetTabs(void) const {return(Tabs);}
+	size_t GetTabs(void) const {return(Tabs);}
 
 	/**
 	* Destructor of a "for" instruction.

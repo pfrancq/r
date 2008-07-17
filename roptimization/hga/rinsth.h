@@ -148,7 +148,7 @@ public:
 	* @param name           Name of the genetic algorithm.
 	* @param debug          Debugger.
 	*/
-	RInstH(unsigned int popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug* debug=0);
+	RInstH(size_t popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug* debug=0);
 
 	/**
 	 * Return the name of the class.

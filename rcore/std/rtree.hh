@@ -38,7 +38,7 @@
 
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
-	RTree<N,bAlloc,bOrder>::RTree(unsigned int max,unsigned int inc)
+	RTree<N,bAlloc,bOrder>::RTree(size_t max,size_t inc)
 		: RContainer<N,bAlloc,bOrder>(max,inc), Top(0)
 {
 }
@@ -48,7 +48,7 @@ template<class N,bool bAlloc,bool bOrder>
 template<class N,bool bAlloc,bool bOrder>
 	void RTree<N,bAlloc,bOrder>::InsertNode(N* to,N* node)
 {
-	unsigned int tmp;
+	size_t tmp;
 
 	if(node->Tree)
 		throw RException("Node is already inserted in a tree");

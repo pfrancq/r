@@ -43,7 +43,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RObjH::RObjH(const unsigned int id,const RString& name,const unsigned int nb)
+RObjH::RObjH(const size_t id,const RString& name,const size_t nb)
 	: Id(id), Name(name), Attr(nb)
 {
 }

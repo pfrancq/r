@@ -71,7 +71,7 @@ public:
 	* Constructor of the graph.
 	* @param nb	             Number of edges.
 	*/
-	RGraph(unsigned int nb);
+	RGraph(size_t nb);
 
 	/**
 	* Clear the graph and destruct the elements.
@@ -99,7 +99,7 @@ public:
 	* @param id              Identficator.
 	* @returns Pointer to the new created vertex.
 	*/
-	RVertex* CreateVertex(const unsigned int id);
+	RVertex* CreateVertex(const size_t id);
 
 	/**
 	* Get the vertex with a given identificator. If the vertex doesn't exist,
@@ -107,7 +107,7 @@ public:
 	* @param id              Identficator.
 	* @returns Pointer to the vertex.
 	*/
-	RVertex* GetVertex(const unsigned int id);
+	RVertex* GetVertex(const size_t id);
 
 	/**
 	* Create an edge.

@@ -57,7 +57,7 @@ public:
 	/**
 	* The identificator of the object.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 	/**
 	* Name of the object.
@@ -77,7 +77,7 @@ public:
 	* @param name           Name of the object.
 	* @param nb             Number of attributes representing the object.
 	*/
-	RObjH(const unsigned int id,const RString& name,const unsigned int nb);
+	RObjH(const size_t id,const RString& name,const size_t nb);
 
 	/**
 	* Copy constructor.
@@ -93,7 +93,7 @@ public:
 	/**
 	* Return the object identifier.
 	*/
-	unsigned int GetId(void) const {return(Id);}
+	size_t GetId(void) const {return(Id);}
 
 	/**
 	* Return the Name of the object.
@@ -109,7 +109,7 @@ public:
 	* Add a new attribute to the object.
 	* @param a              Attribute to add.
 	*/
-	void AddAttribute(const unsigned int a) {Attr.Insert(a);}
+	void AddAttribute(const size_t a) {Attr.Insert(a);}
 
 	/**
 	* Verify if an object has the exactly the same attributes.

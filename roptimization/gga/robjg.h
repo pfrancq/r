@@ -57,7 +57,7 @@ protected:
 	/**
 	* The identificator of the object.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 	/**
 	* Name of the object.
@@ -71,7 +71,7 @@ public:
 	* @param id             Identificator.
 	* @param name           Name of the object.
 	*/
-	RObjG(const unsigned int id,const RString& name);
+	RObjG(const size_t id,const RString& name);
 
 	/**
 	* Copy Construct.
@@ -82,7 +82,7 @@ public:
 	/**
 	* Comparaison function
 	*/
-	int Compare(const unsigned int id) const;
+	int Compare(const size_t id) const;
 
 	/**
 	* Comparaison function
@@ -97,7 +97,7 @@ public:
 	/**
 	* Return the identificator of the object.
 	*/
-	unsigned int GetId(void) const {return(Id);}
+	size_t GetId(void) const {return(Id);}
 
 	/**
 	* Return the Name of the object.

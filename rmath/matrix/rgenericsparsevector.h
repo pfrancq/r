@@ -64,7 +64,7 @@ private :
 	/**
 	* The id of the vector.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 public :
 
@@ -72,7 +72,7 @@ public :
 	* constructor of RGenericSparseVector
 	* @param id                The Id of the vector.
 	*/
-	RGenericSparseVector(unsigned int id);
+	RGenericSparseVector(size_t id);
 
 	/**
 	* constructor of RGenericSparseVector
@@ -80,7 +80,7 @@ public :
 	* @param nbElem            The initial number of element in the container
 	* @param increment         The number of new element each increase
 	*/
-	RGenericSparseVector(unsigned int id, unsigned int nbElem,unsigned int  increment);
+	RGenericSparseVector(size_t id, size_t nbElem,size_t  increment);
 
 	/**
 	* Construct the generic cell from another one.
@@ -110,13 +110,13 @@ public :
 	* Method used by the container
 	* param id                  The id to be compared.
 	*/
-	int Compare(const unsigned int id) const;
+	int Compare(const size_t id) const;
 
 	/**
 	* Get the id of the cell.
 	* @return id                Int descibing the id of the cell.
 	*/
-	unsigned int GetId(void) const {return Id;}
+	size_t GetId(void) const {return Id;}
 
 	/**
 	* destructor of RGenericSparseVector

@@ -64,7 +64,7 @@ public:
 	* Construct a container of rectangles with a intial maximal size.
 	* @param max            Initial maxiaml size.
 	*/
-	RRects(unsigned int max);
+	RRects(size_t max);
 
 	/**
 	* Construct a container of rectangles from another.

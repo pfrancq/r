@@ -6,7 +6,7 @@
 
 	Parameter - Implementation.
 
-	Copyright 2003-2006 by the Universit�Libre de Bruxelles.
+	Copyright 2003-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -182,7 +182,7 @@ int RParamValue::GetInt(void)
 //------------------------------------------------------------------------------
 unsigned int RParamValue::GetUInt(void)
 {
-	unsigned int v;
+	size_t v;
 	sscanf(Value,"%u",&v);
 	return(v);
 }

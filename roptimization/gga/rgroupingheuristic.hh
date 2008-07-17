@@ -49,7 +49,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::Init(cGroups* groups)
 {
-	unsigned int* ass;
+	size_t* ass;
 
 	// Assign
 	Groups=groups;

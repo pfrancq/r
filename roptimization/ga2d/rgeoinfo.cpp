@@ -69,7 +69,7 @@ RGeoInfoConnector::RGeoInfoConnector(RGeoInfoConnector* con,RGeoInfo* owner)
 {
 	Pos=new RPoint[con->NbPos];
 	NbPos=con->NbPos;
-	for(unsigned int i=0;i<NbPos;i++)
+	for(size_t i=0;i<NbPos;i++)
 		Pos[i]=con->Pos[i];
 }
 
@@ -240,7 +240,7 @@ int RGeoInfo::Compare(const RGeoInfo&) const
 bool RGeoInfo::Test(RPoint& pos,RGrid* grid)
 {
 	RPoint start,end;
-	unsigned int nbpts;
+	size_t nbpts;
 	RDirection FromDir;
 	tCoord X,Y;
 
@@ -439,7 +439,7 @@ bool RGeoInfo::IsIn(RPoint pos) const
 RGeoInfoConnector* RGeoInfo::GetConnector(const RPoint& pos)
 {
 	RPoint p;
-	unsigned int j;
+	size_t j;
 
 	RCursor<RGeoInfoConnector> tab(Connectors);
 	for(tab.Start();!tab.End();tab.Next())

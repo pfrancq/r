@@ -46,7 +46,7 @@ using namespace std;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-double R::Factorial(unsigned int n)
+double R::Factorial(size_t n)
 {
 	double res=1.0;
 
@@ -57,7 +57,7 @@ double R::Factorial(unsigned int n)
 
 
 //-----------------------------------------------------------------------------
-double R::Combinatory(unsigned int n,unsigned int p)
+double R::Combinatory(size_t n,size_t p)
 {
 	return(Factorial(n)/(Factorial(p)*Factorial(n-p)));
 }

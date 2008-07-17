@@ -88,7 +88,7 @@ void RGrid::Clear(void)
 
 
 //------------------------------------------------------------------------------
-void RGrid::Assign(RRect& rect,RPoint& pos,unsigned int id)
+void RGrid::Assign(RRect& rect,RPoint& pos,size_t id)
 {
 	size_t BeginX,BeginY,j,k,H,W;
 	size_t **ptr1,*ptr2;
@@ -509,7 +509,7 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,RRect& bound)
 	RPolygons NewOne;       // Polygons added now
 	RPolygon New;           // New Polygon
 	RPoint start,end;
-	unsigned int nbpts;
+	size_t nbpts;
 	RDirection FromDir;
 	tCoord X,Y;
 	tCoord TestX,TestY;

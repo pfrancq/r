@@ -44,7 +44,7 @@ template<class C,bool bAlloc>
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(unsigned int nbElem, unsigned int increase)
+	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(size_t nbElem, size_t increase)
 		: RContainer<RGenericSparseVector<C,bAlloc>, bAlloc,true>(nbElem,increase)
 {}
 

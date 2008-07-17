@@ -124,7 +124,7 @@ RPolygon& RPolygon::operator-=(const RPoint& pt)
 RPoint RPolygon::GetConX(const RPoint* pt) const
 {
 	const RPoint* next;
-	unsigned int i;
+	size_t i;
 
 	RCursor<RPoint> point(*this);
 	point.Start();
@@ -160,7 +160,7 @@ RPoint RPolygon::GetConX(const RPoint* pt) const
 RPoint RPolygon::GetConY(const RPoint* pt) const
 {
 	const RPoint* next;
-	unsigned int i;
+	size_t i;
 
 	RCursor<RPoint> point(*this);
 	point.Start();
@@ -196,7 +196,7 @@ RPoint RPolygon::GetConY(const RPoint* pt) const
 RPoint RPolygon::GetBottomLeft(void) const
 {
 	RPoint* bl;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 
 	RCursor<RPoint> point(*this);
@@ -217,7 +217,7 @@ RPoint RPolygon::GetBottomLeft(void) const
 RPoint* RPolygon::GetBottomLeft(const tCoord MinX,const tCoord MinY,const tCoord MaxX) const
 {
 	RPoint *bl;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 
 	i=GetNb()+1;
@@ -248,7 +248,7 @@ RPoint* RPolygon::GetBottomLeft(const tCoord MinX,const tCoord MinY,const tCoord
 RPoint* RPolygon::GetLeftBottom(void) const
 {
 	RPoint *lb;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 
 	RCursor<RPoint> point(*this);
@@ -269,7 +269,7 @@ RPoint* RPolygon::GetLeftBottom(void) const
 RPoint* RPolygon::GetLeftBottom(const tCoord MinX,const tCoord MinY,const tCoord MaxY) const
 {
 	RPoint *lb;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 
 	i=GetNb()+1;
@@ -300,7 +300,7 @@ RPoint* RPolygon::GetLeftBottom(const tCoord MinX,const tCoord MinY,const tCoord
 bool RPolygon::Edge(const tCoord X,const tCoord Y) const
 {
 	RPoint *deb;
-	unsigned int i;
+	size_t i;
 	tCoord DiffX,DiffY;
 
 	RCursor<RPoint> point(*this);
@@ -351,7 +351,7 @@ bool RPolygon::Edge(const tCoord X,const tCoord Y) const
 bool RPolygon::Edge(const RPoint* pt1,const RPoint* pt2) const
 {
 	RPoint *deb;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 
 	RReturnValIfFail(pt1&&pt2,false);
@@ -438,7 +438,7 @@ bool RPolygon::IsVertice(const RPoint& pt) const
 bool RPolygon::IsIn(const tCoord X,const tCoord Y) const
 {
 	RPoint p(X,Y),act,next;
-	unsigned int i,count;
+	size_t i,count;
 	tCoord y1,y2;
 
 	// Special cases
@@ -506,7 +506,7 @@ bool RPolygon::IsIn(const RPolygon* poly) const
 	RDirection FromDir;
 	RPoint start,end;
 	tCoord X,Y;
-	unsigned int nbpts;
+	size_t nbpts;
 
 	// Polygon is a rectangle?
 	if(GetNb()==4)
@@ -684,7 +684,7 @@ void RPolygon::RectDecomposition(RContainer<RRect,true,false>& rects) const
 	RPoint Pt2Y;                               // Point at (X2,?)
 	RPoint *Test,tmp;
 	tCoord X1,Y1,X2,Y2;                         // Vertices of the rectangle to insert
-	unsigned int i=0,Count,Nb;
+	size_t i=0,Count,Nb;
 	bool bFind;                                 // To use with GetId
 	bool bFind21;                               // True if Point (X2,?) is (X2,Y1)
 
@@ -849,7 +849,7 @@ void RPolygon::AddPoints(RContainer<RPoint,true,false>& points) const
 void RPolygon::ReOrder(void)
 {
 	RPoint *tmp,*point,next;
-	unsigned int i;
+	size_t i;
 	bool bX;            // Next Vertice is horizontal
 
 	if(!GetNb()) return;
@@ -880,7 +880,7 @@ void RPolygon::ReOrder(void)
 //------------------------------------------------------------------------------
 void RPolygon::ReValid(void)
 {
-	unsigned int i;
+	size_t i;
 	RPoint *pt1,nextx,nexty,pt2;
 	bool c=false;
 
@@ -920,7 +920,7 @@ void RPolygon::ReValid(void)
 //------------------------------------------------------------------------------
 bool RPolygon::DuplicatePoints(void) const
 {
-	unsigned int i;
+	size_t i;
 
 	RCursor<RPoint> Cur1(*this);
 	RCursor<RPoint> Cur2(*this);

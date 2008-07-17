@@ -185,7 +185,7 @@ public:
 	* Seek the file to a specific record number.
 	* @param nb             Number of record.
 	*/
-	void GoToRec(unsigned int nb);
+	void GoToRec(size_t nb);
 
 	/**
 	* Seek the file to a specific record number if the file represent a matrix.
@@ -194,7 +194,7 @@ public:
 	* @param maxc          Number of Columns.
 	* \remarks It is presume that the file is store lines by lines.
 	*/
-	void GoToRec(unsigned int c,unsigned int l,unsigned int maxc);
+	void GoToRec(size_t c,size_t l,size_t maxc);
 
 	/**
 	* This function returns the number of a record represented by tag, and it
@@ -206,7 +206,7 @@ public:
 	* @return Returns the number of the record if it exists or the index where
 	* is has to inserted.
 	*/
-	template<class TUse> unsigned int Search(const TUse& tag);
+	template<class TUse> size_t Search(const TUse& tag);
 
 	/**
 	* Is the file pointing to a valid record?
@@ -216,12 +216,12 @@ public:
 	/**
 	* Get the number of records in the file.
 	*/
-	unsigned int GetRecNb(void) const;
+	size_t GetRecNb(void) const;
 
 	/**
 	* Get the current record number.
 	*/
-	unsigned int GetCurrentRec(void) const;
+	size_t GetCurrentRec(void) const;
 
 	/**
 	* Read the current record.

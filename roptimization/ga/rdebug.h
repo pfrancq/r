@@ -141,7 +141,7 @@ protected:
 	/**
 	* Add an attribute to buf.
 	*/
-	void AddAttribute(unsigned int& nboptions,RString* Value,RString* Att);
+	void AddAttribute(size_t& nboptions,RString* Value,RString* Att);
 
 	/**
 	* Begin to write a Tag. This function must be implement.

@@ -209,7 +209,7 @@ void RCString::Clear(void)
 
 
 //-----------------------------------------------------------------------------
-void RCString::Copy(const char* src,unsigned int nb)
+void RCString::Copy(const char* src,size_t nb)
 {
 	RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
 	if(src)

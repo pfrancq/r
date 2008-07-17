@@ -72,7 +72,7 @@ public:
 	* @param inst           The instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	RChromoG(cInst* inst,unsigned int id);
+	RChromoG(cInst* inst,size_t id);
 
 	/**
 	* Initialisation of the chromosome.
@@ -110,7 +110,7 @@ private:
 	* @param pos2            Position in parent 2.
 	* @param nb2             Number of groups of parent2 of copy.
 	*/
-	void CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int begin,unsigned int end,unsigned int pos2,unsigned int nb2);
+	void CopyGroups(cChromo* parent1,cChromo* parent2,size_t pos1,size_t begin,size_t end,size_t pos2,size_t nb2);
 
 public:
 

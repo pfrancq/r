@@ -85,7 +85,7 @@ public:
 	* @param inst           The instance.
 	* @param id             Identificator of the chromosome.
 	*/
-	RChromoH(cInst* inst,unsigned int id);
+	RChromoH(cInst* inst,size_t id);
 
 	/**
 	* Initialisation of the chromosome.

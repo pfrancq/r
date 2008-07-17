@@ -84,7 +84,7 @@ template<class N,bool bAlloc,bool bOrder> class RNode;
 * class MyTree : public RTree<MyNode,true,true>
 * {
 * public:
-*    MyTree(unsigned int max,unsigned int inc) : RTree<MyNode,true,true>(max,inc) {}
+*    MyTree(size_t max,size_t inc) : RTree<MyNode,true,true>(max,inc) {}
 * };
 *
 * int main()
@@ -124,7 +124,7 @@ public:
 	* @param max            Initial size of the array of top nodes.
 	* @param inc            Increment size of the array.
 	*/
-	RTree(unsigned int max,unsigned int inc);
+	RTree(size_t max,size_t inc);
 
 	/**
 	* Return the top node.
@@ -172,7 +172,7 @@ public:
 	* @param i              New increasing value. If null, the old value
 	*                       remains.
 	*/
-	inline void Clear(unsigned int m=0,unsigned int i=0) {RContainer<N,bAlloc,bOrder>::Clear(m,i); Top=0;}
+	inline void Clear(size_t m=0,size_t i=0) {RContainer<N,bAlloc,bOrder>::Clear(m,i); Top=0;}
 
 	/**
 	* Insert a node and attached it to a parent. If the parent is null,

@@ -66,17 +66,17 @@ public:
 	/**
 	* Number of objects to place.
 	*/
-	unsigned int NbObjs;
+	size_t NbObjs;
 
 	/**
 	* Array of identificators for objects.
 	*/
-	unsigned int* Order;
+	size_t* Order;
 
 	/**
 	* Array of identificators for objects.
 	*/
-	unsigned int* Order2;
+	size_t* Order2;
 
 	/**
 	* Temporary array of pointers to Objects (Crossover & Mutation).
@@ -145,7 +145,7 @@ public:
 	/**
 	* Number of objects.
 	*/
-	unsigned int NbObjs;
+	size_t NbObjs;
 
 	/**
 	* Local Optimisation.
@@ -180,7 +180,7 @@ public:
 	* @param name           Name of the genetic algorithm.
 	* @param debug          Debugger.
 	*/
-	RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,const RString& name,RDebug* debug=0);
+	RInst2D(size_t popsize,RProblem2D* prob,HeuristicType h,const RString& name,RDebug* debug=0);
 
 	/**
 	* Initialisation of the instance.

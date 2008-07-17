@@ -62,7 +62,7 @@ void RDebug::BeginTag(RString Text,unsigned NbAttr,...)
 	va_list ap;
 
 	LevelOutput[++Deep]=false;      // For the moment nothing as child
-	unsigned int NbOptions=0;
+	size_t NbOptions=0;
 	tmpOpt.Clear();
 	va_start(ap, NbAttr);
 	while(NbAttr--)
@@ -74,7 +74,7 @@ void RDebug::BeginTag(RString Text,unsigned NbAttr,...)
 
 
 //------------------------------------------------------------------------------
-void RDebug::AddAttribute(unsigned int& nboptions,RString* Value,RString* Attr)
+void RDebug::AddAttribute(size_t& nboptions,RString* Value,RString* Attr)
 {
 	if(nboptions++)
 		tmpOpt+=" ";

@@ -242,6 +242,13 @@ protected:
 	virtual void SetDocType(const RString& docType);
 
 	/**
+	 * Add a entity found.
+	 * @param name           Name of the entity.
+	 * @param value          Corresponding value.
+	 */
+	virtual void AddEntity(const RString& name,const RString& value);
+
+	/**
 	* Method called each time a tag will be treated when reading a XML file.
 	* Actually, a XMLTag is created and inserted as child of the current tag. At
 	* the end, the current tag is set to the new created one.

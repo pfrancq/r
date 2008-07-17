@@ -146,7 +146,7 @@ public:
 	* @param len            Number of character to convert.
 	* @return RString.
 	*/
-	virtual RString ToUnicode(const char* text,unsigned int len) const;
+	virtual RString ToUnicode(const char* text,size_t len) const;
 
 	/**
 	* Read the next unicode character contained in a string of the given
@@ -156,7 +156,7 @@ public:
 	*                       this parameters contains the number of bytes read.
 	* @return RChar.
 	*/
-	virtual RChar NextUnicode(const char* text,unsigned int& len) const;
+	virtual RChar NextUnicode(const char* text,size_t& len) const;
 
 	/**
 	* Transform a string in Unicode to a string of the given encoding.

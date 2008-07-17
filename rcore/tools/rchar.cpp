@@ -6,7 +6,7 @@
 
 	Unicode character - Implementation.
 
-	Copyright 2003 by the Université Libre de Bruxelles.
+	Copyright 2003-2008 by the UniversitÃ© Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -48,9 +48,9 @@ using namespace R;
 
 
 //------------------------------------------------------------------------------
-int RChar::StrLen(const RChar* str)
+size_t RChar::StrLen(const RChar* str)
 {
-	int len;
+	size_t len;
 	const RChar* ptr;
 
 	if(!str) return(0);

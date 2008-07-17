@@ -100,7 +100,7 @@ protected:
 	/**
 	 * Number of Iterations.
 	 */
-	unsigned int NbIterations;
+	size_t NbIterations;
 
 public:
 
@@ -121,7 +121,7 @@ public:
 	/**
 	 * Get the number of interations runned.
 	 */
-	unsigned int GetNbIterations(void) const {return(NbIterations);}
+	size_t GetNbIterations(void) const {return(NbIterations);}
 
 protected:
 
@@ -156,7 +156,7 @@ protected:
 	* Computing the new prototypes.
 	* @return Number of different prototypes.
 	*/
-	unsigned int CalcNewProtosNb(void);
+	size_t CalcNewProtosNb(void);
 
 public:
 
@@ -179,7 +179,7 @@ public:
 	* @param itermax         Maximal number of iterations.
 	* @param nbclusters      Number of groups to create.
 	*/
-	void Run(cGroups* groups,unsigned int itermax,size_t nbclusters);
+	void Run(cGroups* groups,size_t itermax,size_t nbclusters);
 
 	/**
 	* Destruct the k-Means.

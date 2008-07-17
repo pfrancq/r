@@ -41,7 +41,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RConnection::RConnection(unsigned int nb,double weight)
+RConnection::RConnection(size_t nb,double weight)
 	: Weight(weight), Connect(nb,nb/2)
 {
 }

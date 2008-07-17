@@ -54,7 +54,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // Constance
-const unsigned int NoAttr=UINT_MAX;
+const size_t NoAttr=UINT_MAX;
 
 
 //------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ const unsigned int NoAttr=UINT_MAX;
 * @author Pascal Francq
 * @short List of Attributes.
 */
-class RAttrList : public RVectorInt<unsigned int,true>
+class RAttrList : public RVectorInt<size_t,true>
 {
 public:
 
@@ -73,7 +73,7 @@ public:
 	* Construct the list of attributes.
 	* @param MaxSize        The maximum number of attributes.
 	*/
-	RAttrList(const unsigned int MaxSize);
+	RAttrList(const size_t MaxSize);
 
 	/**
 	* Copy constructor.
@@ -101,7 +101,7 @@ public:
 	* Count the number of attributes in common in the two list.
 	* @param PosAttr        The list of attribute to used for the comparaison.
 	*/
-	unsigned int GetNbCommon(const RAttrList& PosAttr) const;
+	size_t GetNbCommon(const RAttrList& PosAttr) const;
 
 	/**
 	* Compute the difference between two lists in the current one. This means
@@ -124,7 +124,7 @@ public:
 	* @param PosAttr        The list used.
 	* @return The attribute if one different found, NoAttr else.
 	*/
-	unsigned int FindFirstDiff(const RAttrList& PosAttr) const;
+	size_t FindFirstDiff(const RAttrList& PosAttr) const;
 
 	/**
 	* Assignation operator.
@@ -134,9 +134,9 @@ public:
 
 	/**
 	* Get the number of attributes in the list.
-	* @return unsigned int
+	* @return size_t
 	*/
-	unsigned int GetNbAttr(void) const {return(GetNb());}
+	size_t GetNbAttr(void) const {return(GetNb());}
 
 	/**
 	* Destructor of the list.

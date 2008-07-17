@@ -39,7 +39,7 @@
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RChromo2D(cInst *inst,unsigned int id)
+		RChromo2D(cInst *inst,size_t id)
 			: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
 			  RGeoInfos(inst->Problem,true),
 			  Heuristic(0), Grid(0), Objs(),
@@ -101,7 +101,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Crossover(cChromo* parent1,cChromo* parent2)
 {
-	unsigned int NbRealInfos,i;
+	size_t NbRealInfos,i;
 	RGeoInfo *info,*info1=0,*info2=0,*infoprob;
 	double Distances;
 	RPoint T(-Problem->Translation.X,-Problem->Translation.Y);
@@ -168,7 +168,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	// Assign the "real" geometric information
 	for(i=0;i<NbRealInfos;i++)
 	{
-		info=GetPtr<unsigned int>(((*thInfos)[i])->GetObj()->GetId());
+		info=GetPtr<size_t>(((*thInfos)[i])->GetObj()->GetId());
 		(*info)=(*((*thInfos)[i]));
 	}
 	if(info1)
@@ -211,7 +211,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void)
 {
-	unsigned int i;
+	size_t i;
 	char Tmp[200];
 
 	RCursor<RGeoInfo> infoi(*this);
@@ -253,7 +253,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RObj2D* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetObj(tCoord X,tCoord Y)
 {
-	unsigned int obj;
+	size_t obj;
 
 	if((X>Limits.X)||(Y>Limits.Y)) return(0);
 	obj=Grid->GetObjId(X,Y);
@@ -271,7 +271,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	cInfo* RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetInfo(tCoord X,tCoord Y)
 {
-	unsigned int obj;
+	size_t obj;
 
 	if((X>Limits.X)||(Y>Limits.Y)) return(0);
 	obj=Grid->GetObjId(X,Y);
@@ -295,7 +295,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLevel(unsigned int i)
+	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLevel(size_t i)
 {
 	RPoint pt;
 

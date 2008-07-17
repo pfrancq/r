@@ -208,9 +208,9 @@ template<class cGroup,class cObj,class cGroups>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	unsigned int R::RGroupingKMeans<cGroup,cObj,cGroups>::CalcNewProtosNb(void)
+	size_t R::RGroupingKMeans<cGroup,cObj,cGroups>::CalcNewProtosNb(void)
 {
-	unsigned int count;
+	size_t count;
 	R::RCursor<cGroup> Grp;
 	cObj* OldProto;
 
@@ -238,7 +238,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void R::RGroupingKMeans<cGroup,cObj,cGroups>::Run(cGroups* groups,unsigned int itermax,size_t nbclusters)
+	void R::RGroupingKMeans<cGroup,cObj,cGroups>::Run(cGroups* groups,size_t itermax,size_t nbclusters)
 {
 	// Verify that some objects must be grouped
 	if(!Objs.GetNb())

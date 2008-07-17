@@ -196,7 +196,7 @@ public:
 	* @param len             Length of the string.
 	*/
 	void SetLen(size_t len);
-	
+
 	/**
 	* Set the length of the string. If the length is greater than the current
 	* one, the second string is used to fill the first string (eventually it is
@@ -210,7 +210,7 @@ public:
 	 * Look if the string contains only spaces.
 	 */
 	bool ContainOnlySpaces(void) const;
-	
+
 	/**
 	* Transform the string into a "C String" in Latin1 encoding. The resulting
 	* array should be copied (and not destroyed) since it is an internal
@@ -384,7 +384,7 @@ public:
 	static RString Number(const int nb);
 
 	/**
-	 * Transform an unsigned int to a string.
+	 * Transform an size_t to a string.
 	 * @param nb             Number.
 	 */
 	static RString Number(const unsigned int nb);
@@ -427,7 +427,7 @@ public:
 	 * @param format         String representing the format.
 	 */
 	static RString Number(const long double nb,const char* format="%LE");
-	
+
 private:
 
 	/**
@@ -632,12 +632,12 @@ public:
 	/**
 	* Return the number of characters in the string.
 	*/
-	unsigned int GetNb(void);
+	size_t GetNb(void);
 
 	/**
 	* Return the position of the cursor in the string.
 	*/
-	unsigned int GetPos(void);
+	size_t GetPos(void);
 
 	/**
 	* Test if the end of the string is reached.

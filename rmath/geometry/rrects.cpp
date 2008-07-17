@@ -52,7 +52,7 @@ RRects::RRects(void)
 
 
 //------------------------------------------------------------------------------
-RRects::RRects(unsigned int max)
+RRects::RRects(size_t max)
 	: RContainer<RRect,true,false>(max,10)
 {
 }

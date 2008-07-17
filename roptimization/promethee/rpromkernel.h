@@ -85,7 +85,7 @@ public:
 	* @param sol            Number of solutions.
 	* @param crit           Number of criteria.
 	*/
-	RPromKernel(const char* name,unsigned int sol,unsigned int crit);
+	RPromKernel(const char* name,size_t sol,size_t crit);
 
 	/**
 	* Applicates the evaluation functions for the solution.
@@ -166,7 +166,7 @@ public:
 	/**
 	* Return the best solution identifier.
 	*/
-	unsigned int GetBestSolId(void) {return(GetBestSol()->Id);}
+	size_t GetBestSolId(void) {return(GetBestSol()->Id);}
 
 	/**
 	* Clear the kernel.

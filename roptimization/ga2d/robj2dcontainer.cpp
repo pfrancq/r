@@ -46,7 +46,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RObj2DContainer::RObj2DContainer(const unsigned int id,const char* name,const unsigned int nb)
+RObj2DContainer::RObj2DContainer(const size_t id,const char* name,const size_t nb)
 	: RObj2D(id,name,false), RContainer<RGeoInfo,false,false>(nb,nb/2)
 {
 }
@@ -55,7 +55,7 @@ RObj2DContainer::RObj2DContainer(const unsigned int id,const char* name,const un
 //------------------------------------------------------------------------------
 void RObj2DContainer::ClearInfo(void)
 {
-	unsigned int i;
+	size_t i;
 
 	Clear();
 	Connectors.Clear();
@@ -74,7 +74,7 @@ void RObj2DContainer::Add(RGeoInfos* infos,RGeoInfo* info)
 {
 	RGeoInfo* ptr;
 
-	ptr=infos->GetPtr<unsigned int>(info->GetObj()->GetId());
+	ptr=infos->GetPtr<size_t>(info->GetObj()->GetId());
 	InsertPtr(ptr);
 	if(ptr->Pos.X<Translation.X)
 		Translation.X=ptr->Pos.X;
@@ -89,7 +89,7 @@ void RObj2DContainer::Complete(void)
 	RPolygons Polys;
 	RPolygon* p;
 	RObj2DConnector* con;
-	unsigned int k;
+	size_t k;
 
 	// Go through all geometric information to make the translation
 	// Add it to the polygons
@@ -119,16 +119,16 @@ void RObj2DContainer::Complete(void)
 
 
 //------------------------------------------------------------------------------
-void RObj2DContainer::Assign(RGeoInfos* infos,const RPoint& pos,RGrid* grid,const unsigned int order)
+void RObj2DContainer::Assign(RGeoInfos* infos,const RPoint& pos,RGrid* grid,const size_t order)
 {
 	RGeoInfo *ptr;
-	unsigned int k;
+	size_t k;
 	RGeoInfoConnector *con;
 
 	RCursor<RGeoInfo> info(*this);
 	for(info.Start();!info.End();info.Next())
 	{
-		ptr=infos->GetPtr<unsigned int>(info()->GetObj()->GetId());
+		ptr=infos->GetPtr<size_t>(info()->GetObj()->GetId());
 		ptr->Bound=info()->Bound;
 		ptr->Selected=true;
 		ptr->Obj=info()->Obj;
@@ -152,7 +152,7 @@ void RObj2DContainer::Assign(RGeoInfos* infos,const RPoint& pos,RGrid* grid,cons
 
 
 //------------------------------------------------------------------------------
-bool RObj2DContainer::IsIn(unsigned int id)
+bool RObj2DContainer::IsIn(size_t id)
 {
 	RCursor<RGeoInfo> info(*this);
 	for(info.Start();!info.End();info.Next())

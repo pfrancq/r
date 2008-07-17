@@ -52,7 +52,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPromKernel::RPromKernel(const char* name,unsigned int sol,unsigned int crit)
+RPromKernel::RPromKernel(const char* name,size_t sol,size_t crit)
 	: Name(name), Solutions(sol,sol/2), Criteria(crit,crit/2)
 {
 }

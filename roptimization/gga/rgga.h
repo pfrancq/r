@@ -94,7 +94,7 @@ public:
 	* @param g               Generation.
 	* @param c               Identificator of the child.
 	*/
-	RGGAException(tException type,const unsigned int g,const unsigned int c);
+	RGGAException(tException type,const size_t g,const size_t c);
 
 	/**
 	* Construct the modify exception.

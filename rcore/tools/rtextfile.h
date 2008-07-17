@@ -420,7 +420,7 @@ public:
 	long GetInt(void);
 
 	/**
-	* Return the next unsigned integer contained in the file.
+	* Return the next size_teger contained in the file.
 	*/
 	unsigned long GetUInt(void);
 
@@ -455,7 +455,7 @@ public:
 	RTextFile& operator>>(int& nb);
 
 	/**
-	* >> Operator for unsigned int.
+	* >> Operator for size_t.
 	*/
 	RTextFile& operator>>(unsigned int& nb);
 
@@ -528,7 +528,7 @@ public:
 	/**
 	* Write a string of a give length in the file.
 	*/
-	void WriteStr(const char* c,unsigned int l);
+	void WriteStr(const char* c,size_t l);
 
 	/**
 	* << Operator for char *.
@@ -578,7 +578,7 @@ public:
 	RTextFile& operator<<(const unsigned char nb);
 
 	/**
-	* << Operator for unsigned int.
+	* << Operator for size_t.
 	*/
 	RTextFile& operator<<(const unsigned int nb);
 
@@ -642,7 +642,7 @@ public:
 	/**
 	* Write a log entry in the file. First the time is written, and then the
 	* entry. The entry is alone on a line, so end-of-lines are inserted if
-	* ncessary before or after it.
+	* necessary before or after it.
 	*/
 	void WriteLog(const RString& entry);
 
@@ -667,7 +667,7 @@ public:
 	void SetSeparator(const char* str) {Separator=str;}
 
 	/**
-	* Destructs the file.
+	* Destruct the file.
 	*/
 	virtual ~RTextFile(void);
 };

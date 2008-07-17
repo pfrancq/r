@@ -53,8 +53,8 @@ template<class cInst,class cChromo>
 	NbObjs=this->Owner->NbObjs;
 	if(NbObjs)
 	{
-		Order=new unsigned int[NbObjs];
-		Order2=new unsigned int[NbObjs];
+		Order=new size_t[NbObjs];
+		Order2=new size_t[NbObjs];
 		tmpObjs=new RObj2D*[NbObjs];
 		tmpObj1=new RObj2DContainer(NbObjs+1,"Temporary Object 1",NbObjs);
 		tmpObj2=new RObj2DContainer(NbObjs+2,"Temporary Object 2",NbObjs);
@@ -98,7 +98,7 @@ template<class cInst,class cChromo>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RInst2D(unsigned int popsize,RProblem2D* prob,HeuristicType h,const RString& name,RDebug *debug)
+		RInst2D(size_t popsize,RProblem2D* prob,HeuristicType h,const RString& name,RDebug *debug)
 			: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug), Problem(prob), Objs(prob->Objs),
 			 NbObjs(prob->Objs.GetNb()), bLocalOpti(true), Heuristic(h), Limits(prob->Limits)
 {

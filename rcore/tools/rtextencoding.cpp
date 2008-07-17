@@ -55,7 +55,7 @@ RContainer<RTextEncoding,true,true> Encodings(20,10);
 struct EncodingName // Structure representing an official encoding
 {
 	RString Name;
-	unsigned int MIBenum;
+	size_t MIBenum;
 };
 struct EncodingAlias // Structure representing an alias
 {
@@ -75,7 +75,7 @@ struct EncodingAlias // Structure representing an alias
 //------------------------------------------------------------------------------
 RString GetOfficialName(const RString& alias)
 {
-	unsigned int NbMin,NbMax,i=0;
+	size_t NbMin,NbMax,i=0;
 	int Comp=0;
 	bool Cont=true,NotLast=true;
 	const EncodingAlias* ptr;
@@ -121,7 +121,7 @@ public:
 		: RTextEncoding("utf-16")
 	{}
 
-	RString ToUnicode(const char* text,unsigned int len) const
+	RString ToUnicode(const char* text,size_t len) const
 	{
 		const char* ptr=text;
 
@@ -165,7 +165,7 @@ public:
 		: RTextEncoding("latin1")
 		{}
 
-	RString ToUnicode(const char* text,unsigned int) const
+	RString ToUnicode(const char* text,size_t) const
 	{
 		return(RString(text));
 	}
@@ -194,7 +194,7 @@ RTextEncoding::RTextEncoding(const RString& name)
 	FromUTF16=iconv_open(Name,"utf-16");
 	if(FromUTF16==(iconv_t)-1)
 		throw EncodingNotSupported(Name+" encoding not supported");
-	
+
 	// Test the order
 	char Tab[20];
 	char Test[]="test";
@@ -204,7 +204,7 @@ RTextEncoding::RTextEncoding(const RString& name)
 	s2=12;
 	ptr1=Test;
 	ptr2=Tab;
-	#ifdef _LIBICONV_VERSION	
+	#ifdef _LIBICONV_VERSION
 		err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 	#else
 		err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
@@ -246,7 +246,7 @@ int RTextEncoding::Compare(const RString& name) const
 
 
 //------------------------------------------------------------------------------
-RString RTextEncoding::ToUnicode(const char* text,unsigned int len) const
+RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 {
 	char* ptr;
 	char* ptr2;
@@ -261,7 +261,7 @@ RString RTextEncoding::ToUnicode(const char* text,unsigned int len) const
 	{
 		ptr2=Tab;
 		s2=BufSize;
-		#ifdef _LIBICONV_VERSION	
+		#ifdef _LIBICONV_VERSION
 			err=iconv(ToUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
 		#else
 			err=iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
@@ -298,7 +298,7 @@ RString RTextEncoding::ToUnicode(const char* text,unsigned int len) const
 
 
 //------------------------------------------------------------------------------
-RChar RTextEncoding::NextUnicode(const char* text,unsigned int& len) const
+RChar RTextEncoding::NextUnicode(const char* text,size_t& len) const
 {
 	RChar Code;
 	char Tab[sizeof(UChar)];
@@ -310,7 +310,7 @@ RChar RTextEncoding::NextUnicode(const char* text,unsigned int& len) const
 	s1=len;
 	ptr2=Tab;
 	s2=sizeof(UChar);
-	#ifdef _LIBICONV_VERSION	
+	#ifdef _LIBICONV_VERSION
 		err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 	#else
 		err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
@@ -351,7 +351,7 @@ RCString RTextEncoding::FromUnicode(const RString& text) const
 	{
 		ptr2=Tab;
 		s2=BufSize;
-		#ifdef _LIBICONV_VERSION	
+		#ifdef _LIBICONV_VERSION
 			err=iconv(FromUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
 		#else
 			err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);

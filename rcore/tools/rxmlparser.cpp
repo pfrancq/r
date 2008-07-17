@@ -335,6 +335,9 @@ void RXMLParser::LoadHeader(void)
 					if(Cur!='"')
 						throw RIOException(this,"Wrong entities formating");
 
+					// Add the entity
+					AddEntity(ns,uri);
+
 					// Verify if the attribute is a namespace
 					int i=ns.Find(':');
 					if(i!=-1)
@@ -694,6 +697,12 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 void RXMLParser::SetDocType(const RString& docType)
 {
 	DocType=docType;
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::AddEntity(const RString&,const RString&)
+{
 }
 
 

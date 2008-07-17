@@ -119,7 +119,7 @@ protected:
 	/**
 	* Maximal number of groups to allocate by default.
 	*/
-	unsigned int MaxGroups;
+	size_t MaxGroups;
 
 public:
 
@@ -131,7 +131,7 @@ public:
 	* @param name           Name of the genetic algorithm.
 	* @param debug          Debugger.
 	*/
-	RInstG(unsigned int popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug *debug=0);
+	RInstG(size_t popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug *debug=0);
 
 	/**
 	* Initialisation of the instance.

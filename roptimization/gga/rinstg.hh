@@ -69,7 +69,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(unsigned int popsize,R::RCursor<cObj> objs,HeuristicType h,const R::RString& name,R::RDebug* debug)
+	R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(size_t popsize,R::RCursor<cObj> objs,HeuristicType h,const R::RString& name,R::RDebug* debug)
 		: R::RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(objs)
 {
@@ -85,7 +85,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(void)
 {
 	cChromo **C;
-	unsigned int i;
+	size_t i;
 
 	R::RInst<cInst,cChromo,cFit,cThreadData>::Init();
 	for(i=this->GetPopSize()+1,C=this->Chromosomes;--i;C++)
@@ -118,7 +118,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::AnalysePop(void)
 {
 	cChromo **C,**C1,*p;
-	unsigned int i,j;
+	size_t i,j;
 
 	if(this->Debug)
 		this->Debug->BeginFunc("AnalysePop","RInstG");

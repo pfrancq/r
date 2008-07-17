@@ -49,7 +49,9 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RIOFile class represents a file that can do some input and/or output
-* tasks. Here is an example:
+* tasks. To read, the class works with an internal buffer of 10 Kb.
+*
+* Here is an example:
 * @code
 * #include <riofile.h>
 * using namespace R;
@@ -57,7 +59,7 @@ namespace R{
 * char Buffer[81];
 * RIOFile In("/home/user/Test.txt");
 * In.Open(RIO::Read);
-* unsigned int len=In.Read(Buffer,80);
+* size_t len=In.Read(Buffer,80);
 * Buffer[len]=0;
 * cout<<Buffer<<endl;
 * @endcode
@@ -74,43 +76,48 @@ class RIOFile : public RFile
 	/**
 	* Size of the file.
 	*/
-	size_t Size;
+	off_t Size;
 
 	/**
-	* Current position in the file.
+	* Current (virtual) position in the file.
 	*/
-	size_t Pos;
+	off_t Pos;
 
 	/**
 	 * Downloader for non-local files.
 	 */
 	static RDownload Get;
-	
+
 	/**
 	 * File which is really treated.
 	 */
 	RString File;
-	
+
 	/**
 	 * Internal Buffer.
 	 */
 	char* Internal;
-	
+
 	/**
-	 * Number of internal bytes to read.
+	 * Number of internal bytes left to read.
 	 */
 	size_t InternalToRead;
-	
+
 	/**
 	 * Physical (real) position in the file.
 	 */
-	size_t RealPos;
-	
+	off_t RealPos;
+
+	/**
+	 * Physical (real) position of the first byte in the internal buffer.
+	 */
+	off_t RealInternalPos;
+
 	/**
 	 * Current byte to read.
 	 */
 	char* CurByte;
-	
+
 protected:
 
 	/**
@@ -124,6 +131,12 @@ protected:
 	bool CanRead;
 
 public:
+
+	/**
+	 * Maximal size for a file or position.
+	 */
+	static const off_t MaxSize;
+
 
 	/**
 	* Construct a file.
@@ -153,48 +166,35 @@ public:
 	* Close the file.
 	*/
 	virtual void Close(void);
-	
-	/**
-	 * Read a given number of bytes from the current position of the file but
-	 * without to move the internal pointers.
-	 * @param buffer         Buffer (must be allocated).
-	 * @param nb             Number of bytes to read.
-	 * @return Number of bytes readed.
-	 */
-//	size_t NeutralRead(char* buffer,unsigned int nb);	
 
 	/**
 	* Read a given number of bytes at the current position of the file.
 	* @param buffer         Buffer (must be allocated).
 	* @param nb             Number of bytes to read.
+	* @param move           The file position is moved (default).
 	* @return Number of bytes readed.
 	*/
-	size_t Read(char* buffer,unsigned int nb,bool move=true);
+	size_t Read(char* buffer,size_t nb,bool move=true);
 
-	/**
-	 * Read one character at the current position of the file.
-	 */
-//	char Read(void);
-	
 	/**
 	* Write the first number of bytes of a buffer in the current position of
 	* the file.
 	* @param buffer         Buffer.
 	* @param nb             Number of bytes to read.
 	*/
-	void Write(const char* buffer,unsigned int nb);
+	void Write(const char* buffer,size_t nb);
 
 	/**
 	* Go to a specific position of the file.
 	* @param pos            Position to reach.
 	*/
-	void Seek(unsigned long long pos);
+	void Seek(off_t pos);
 
 	/**
 	* Move for a given number of bytes from the current position of the file.
 	* @param pos            Relative position.
 	*/
-	void SeekRel(long long pos);
+	void SeekRel(off_t pos);
 
 	/**
 	* Return true if the file is at the end.
@@ -204,12 +204,12 @@ public:
 	/**
 	* Return the size of the file.
 	*/
-	inline size_t GetSize(void) const {return(Size);}
+	inline off_t GetSize(void) const {return(Size);}
 
 	/**
 	* Return the current position in the file.
 	*/
-	inline size_t GetPos(void) const {return(Pos);}
+	inline off_t GetPos(void) const {return(Pos);}
 
 	/**
 	* Destructs the file.

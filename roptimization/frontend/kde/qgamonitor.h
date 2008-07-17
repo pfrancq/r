@@ -100,7 +100,7 @@ class QGAMonitorGraph : public QWidget
 	/**
 	* The maximal number of generations.
 	*/
-	unsigned int hScale;
+	size_t hScale;
 
 	/**
 	* The maximal value of the fitness.
@@ -110,7 +110,7 @@ class QGAMonitorGraph : public QWidget
 	/**
 	* Number of values received actually.
 	*/
-	unsigned int receivedValues;
+	size_t receivedValues;
 
 	/**
 	* The list of values received.
@@ -171,7 +171,7 @@ public:
 	* Set the maximal value for the X axis.
 	* @param h              Maximal X value.
 	*/
-	void setHScale(const unsigned int h);
+	void setHScale(const size_t h);
 
 	/**
 	* Add a new value.
@@ -241,7 +241,7 @@ public:
 	* Set the maximal number of generations.
 	* @param m              Maximum number of generation.
 	*/
-	void setMaxGen(const unsigned int m) { Graph->setHScale(m); }
+	void setMaxGen(const size_t m) { Graph->setHScale(m); }
 
 	/**
 	* Set the maximal value of the fitness function.
@@ -262,7 +262,7 @@ public slots:
 	* @param best           Age of the best chromosome.
 	* @param value          Value of the best chromosmome.
 	*/
-	void slotSetGen(const unsigned int gen,const unsigned int best,const double value);
+	void slotSetGen(const size_t gen,const size_t best,const double value);
 };
 
 

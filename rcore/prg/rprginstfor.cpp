@@ -47,10 +47,10 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstFor::RPrgInstFor(const RString& line,unsigned int t)
+RPrgInstFor::RPrgInstFor(const RString& line,size_t t)
 	: RPrgInst(), Values(20,10), Insts(50,25), Tabs(t)
 {
-	unsigned int pos;
+	size_t pos;
 	int len;
 	RString Params;
 	RCharCursor Cur(line);

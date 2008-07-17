@@ -45,7 +45,7 @@ namespace R{
 * @param n                   Number.
 * @returns double
 */
-double Factorial(unsigned int n);
+double Factorial(size_t n);
 
 
 //-----------------------------------------------------------------------------
@@ -55,7 +55,7 @@ double Factorial(unsigned int n);
 * @param p                   Number of objects in a combination.
 * @returns double
 */
-double Combinatory(unsigned int n,unsigned int p);
+double Combinatory(size_t n,size_t p);
 
 
 }  //-------- End of namespace R ----------------------------------------------

@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RChromoG(cInst *inst,unsigned id)
+	R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RChromoG(cInst *inst,size_t id)
 		: R::RChromo<cInst,cChromo,cFit,cThreadData>(inst,id),
 		  R::RGroups<cGroup,cObj,cChromo>(inst->Objs,inst->MaxGroups),
 		  Heuristic(0)
@@ -75,9 +75,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::CopyGroups(cChromo* parent1,cChromo* parent2,unsigned int pos1,unsigned int begin,unsigned int end,unsigned int pos2,unsigned int nb2)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::CopyGroups(cChromo* parent1,cChromo* parent2,size_t pos1,size_t begin,size_t end,size_t pos2,size_t nb2)
 {
-	unsigned int i,j;
+	size_t i,j;
 	cGroup* grp;
 	cGroup* src;
 	bool bInsertIt;
@@ -155,11 +155,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(cChromo* parent1,cChromo* parent2)
 {
-	unsigned int pos1;              // Position in parent1
-	unsigned int end;               // Number of groups after pos1 to copy from parent1
-	unsigned int begin;             // Number of first groups to copy from parent1
-	unsigned int pos2;              // Position where the groups must be copied in parent2
-	unsigned int i;
+	size_t pos1;              // Position in parent1
+	size_t end;               // Number of groups after pos1 to copy from parent1
+	size_t begin;             // Number of first groups to copy from parent1
+	size_t pos2;              // Position where the groups must be copied in parent2
+	size_t i;
 	cGroup* grp;
 
 	if(this->Instance->Debug)
@@ -220,7 +220,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Mutation(void)
 {
-	unsigned int nb;
+	size_t nb;
 
 	if(this->Instance->Debug)
 		this->Instance->Debug->BeginFunc("Mutation","RChromoG");
@@ -246,7 +246,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Inversion(void)
 {
-	unsigned int g1,g2,hold;
+	size_t g1,g2,hold;
 
 	if(this->Used.GetNb()<3)
 		return;

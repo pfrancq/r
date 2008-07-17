@@ -80,7 +80,7 @@ public:
 	/**
 	* Number of position for the connector.
 	*/
-	unsigned int NbPos;
+	size_t NbPos;
 
 	/**
 	* Positions of the connector in the geometric information.
@@ -129,7 +129,7 @@ public:
 	* This function is used for the class RContainer.
 	* @param id             Identificator used for the comparaison.
 	*/
-	int Compare(const unsigned int id) const {return(Con->Id-id);}
+	int Compare(const size_t id) const {return(Con->Id-id);}
 
 	/**
 	* Return the position of the connector in absolute (not relative to the
@@ -236,7 +236,7 @@ class RGeoInfo
 	/**
 	* Order of the geometric information.
 	*/
-	unsigned int Order;
+	size_t Order;
 
 public:
 
@@ -345,7 +345,7 @@ public:
 	* with the one of the corresponding object.
 	* @param id             Idenfificator used for the comparaison.
 	*/
-	int Compare(const unsigned int id) const { return(Obj->Compare(id)); }
+	int Compare(const size_t id) const { return(Obj->Compare(id)); }
 
 	/**
 	* Test if the object can be placed at a specific position in regards of the
@@ -392,7 +392,7 @@ public:
 	/**
 	* Return the number of points contained in the polygon.
 	*/
-	inline unsigned int NbPoints(void) const {return(Bound->GetNb());}
+	inline size_t NbPoints(void) const {return(Bound->GetNb());}
 
 	/**
 	* Return the position of the geometric information.
@@ -475,12 +475,12 @@ public:
 	/**
 	* Set the order.
 	*/
-	void SetOrder(unsigned int o) {Order=o;}
+	void SetOrder(size_t o) {Order=o;}
 
 	/**
 	* Get the order.
 	*/
-	unsigned int GetOrder(void) {return(Order);}
+	size_t GetOrder(void) {return(Order);}
 
 	/**
 	* Destruct the geometric information.

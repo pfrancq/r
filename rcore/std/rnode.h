@@ -92,7 +92,7 @@ template<class N,bool bAlloc,bool bOrder> class RTree;
 * class MyTree : public RTree<MyNode,true,true>
 * {
 * public:
-*    MyTree(unsigned int max,unsigned int inc) : RTree<MyNode,true,true>(max,inc) {}
+*    MyTree(size_t max,size_t inc) : RTree<MyNode,true,true>(max,inc) {}
 * };
 *
 * int main()

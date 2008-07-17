@@ -149,7 +149,7 @@ public:
 	* @param src             Text to copy.
 	* @param nb              Number of characters to copy.
 	*/
-	void Copy(const char* src,unsigned int nb);
+	void Copy(const char* src,size_t nb);
 
 public:
 

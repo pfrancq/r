@@ -64,7 +64,7 @@ public:
 	* Construct a container of points with an initial maximal size.
 	* @param max            Initial maximal size of the container.
 	*/
-	RPoints(const unsigned int max);
+	RPoints(const size_t max);
 
 	/**
 	* Construct a container of points from another one.

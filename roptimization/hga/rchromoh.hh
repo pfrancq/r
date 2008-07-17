@@ -32,7 +32,7 @@
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
-	RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::RChromoH(cInst *inst,unsigned id)
+	RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::RChromoH(cInst *inst,size_t id)
 		: RChromo<cInst,cChromo,cFit,cThreadData>(inst,id), RNodesGA<cNode,cObj,cChromo>(inst->Objs,inst->MaxNodes,inst->MaxAttr)
 {
 }
@@ -216,7 +216,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	void RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::Print(void)
 {
-/*	unsigned int i,*ptr;
+/*	size_t i,*ptr;
 
 	for(i=NbTopNodes,ptr=&NodesList[TopNodes];i--;ptr++)
 		Nodes[*ptr]->Print(0);*/

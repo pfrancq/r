@@ -77,7 +77,7 @@ public:
 	/**
 	* Identificator of the connector.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 	/**
 	* Name of the connector.
@@ -87,7 +87,7 @@ public:
 	/**
 	* Number of position for the connector.
 	*/
-	unsigned int NbPos;
+	size_t NbPos;
 
 	/**
 	* Point representing the positions of the connector.
@@ -110,7 +110,7 @@ public:
 	* @param id             Id of the connector.
 	* @param pos            Position of the connector.
 	*/
-	RObj2DConnector(RObj2D* owner, unsigned int id,const RPoint pos);
+	RObj2DConnector(RObj2D* owner, size_t id,const RPoint pos);
 
 	/**
 	* Construct a connector.
@@ -119,7 +119,7 @@ public:
 	* @param name           Name of the connector.
 	* @param pos            Position of the connector.
 	*/
-	RObj2DConnector(RObj2D* owner, unsigned int id,const RString& name,const RPoint pos);
+	RObj2DConnector(RObj2D* owner, size_t id,const RString& name,const RPoint pos);
 
 	/**
 	* Construct a connector.
@@ -128,7 +128,7 @@ public:
 	* @param name           Name of the connector.
 	* @param pos            Position of the connector.
 	*/
-	RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const RPoint pos);
+	RObj2DConnector(RObj2D* owner, size_t id,const char* name,const RPoint pos);
 
 	/**
 	* Construct a connector.
@@ -137,18 +137,7 @@ public:
 	* @param x              X Coordinate of the position of the connector.
 	* @param y              Y Coordinate of the position of the connector.
 	*/
-	RObj2DConnector(RObj2D* owner, unsigned int id,const unsigned int x,unsigned y);
-
-	/**
-	* Construct a connector.
-	* @param owner          Owner of the connector.
-	* @param id             Id of the connector.
-	* @param name           Name of the connector.
-	* @param x              X Coordinate of the position of the connector.
-	* @param y              Y Coordinate of the position of the connector.
-	*/
-	RObj2DConnector(RObj2D* owner, unsigned int id,const RString& name,const unsigned int x,unsigned y);
-
+	RObj2DConnector(RObj2D* owner, size_t id,const size_t x,unsigned y);
 
 	/**
 	* Construct a connector.
@@ -158,7 +147,18 @@ public:
 	* @param x              X Coordinate of the position of the connector.
 	* @param y              Y Coordinate of the position of the connector.
 	*/
-	RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int x,unsigned y);
+	RObj2DConnector(RObj2D* owner, size_t id,const RString& name,const size_t x,unsigned y);
+
+
+	/**
+	* Construct a connector.
+	* @param owner          Owner of the connector.
+	* @param id             Id of the connector.
+	* @param name           Name of the connector.
+	* @param x              X Coordinate of the position of the connector.
+	* @param y              Y Coordinate of the position of the connector.
+	*/
+	RObj2DConnector(RObj2D* owner, size_t id,const char* name,const size_t x,unsigned y);
 
 	/**
 	* Construct a connector.
@@ -167,7 +167,7 @@ public:
 	* @param name           Name of the connector.
 	* @param nb             Number of the connector.
 	*/
-	RObj2DConnector(RObj2D* owner, unsigned int id,const char* name,const unsigned int nb);
+	RObj2DConnector(RObj2D* owner, size_t id,const char* name,const size_t nb);
 
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
@@ -189,7 +189,7 @@ public:
 	* This function is used for the class RContainer.
 	* @param id             Identificator used for the comparaison.
 	*/
-	int Compare(const unsigned int id) const {return(Id-id);}
+	int Compare(const size_t id) const {return(Id-id);}
 
 	/**
 	* This function compares a connector and a name and returns 0 if
@@ -215,7 +215,7 @@ public:
 	/**
 	* Return the identificator of the connector.
 	*/
-	unsigned int GetId(void) {return(Id);}
+	size_t GetId(void) {return(Id);}
 
 	/**
 	* Return the position of the connector relativ to the object.
@@ -227,7 +227,7 @@ public:
 	* @param i             The number.
 	* @param o             The orientation.
 	*/
-	RPoint GetPos(unsigned int i,char o);
+	RPoint GetPos(size_t i,char o);
 
 	/**
 	* Add a connection to this connector.
@@ -276,7 +276,7 @@ public:
 	/**
 	* Identificator of the object.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 	/**
 	* Name of the object.
@@ -328,7 +328,7 @@ public:
 	* @param id             The identificator of the object.
 	* @param deformable     Specify if the object is deformable.
 	*/
-	RObj2D(unsigned int id,bool deformable);
+	RObj2D(size_t id,bool deformable);
 
 	/**
 	* Construct an 2D object.
@@ -336,7 +336,7 @@ public:
 	* @param name           Name of the object.
 	* @param deformable     Specify if the object is deformable.
 	*/
-	RObj2D(unsigned int id,const RString& name,bool deformable);
+	RObj2D(size_t id,const RString& name,bool deformable);
 
 	/**
 	* Construct an 2D object.
@@ -344,7 +344,7 @@ public:
 	* @param name           Name of the object.
 	* @param deformable     Specify if the object is deformable.
 	*/
-	RObj2D(unsigned int id,const char* name,bool deformable);
+	RObj2D(size_t id,const char* name,bool deformable);
 
 	/**
 	* This function compares two cobjects and returns 0 if there are the same.
@@ -366,7 +366,7 @@ public:
 	* This function is used for the class RContainer.
 	* @param id             Identificator used for the comparaison.
 	*/
-	int Compare(const unsigned int id) const {if(IsIn(id)) return(0); else return(Id-id);}
+	int Compare(const size_t id) const {if(IsIn(id)) return(0); else return(Id-id);}
 
 	/**
 	* This function compares an object and a name and returns 0 if
@@ -412,7 +412,7 @@ public:
 	/**
 	* Return the identificator of the object.
 	*/
-	inline unsigned int GetId(void) const {return(Id);}
+	inline size_t GetId(void) const {return(Id);}
 
 	/**
 	* Return the area of the object.
@@ -445,13 +445,13 @@ public:
 	* @param x              X-Coordinate of the connection point.
 	* @param y              Y-Coordinate of the connection point.
 	*/
-	void AddConnector(unsigned int id,unsigned x,unsigned y);
+	void AddConnector(size_t id,unsigned x,unsigned y);
 
 	/**
 	* Return the connector corresponding to a given identificator.
 	* @param id             Identificator used for the search.
 	*/
-	RObj2DConnector* GetConnector(unsigned int id) {return(Connectors.GetPtr<unsigned int>(id));}
+	RObj2DConnector* GetConnector(size_t id) {return(Connectors.GetPtr<size_t>(id));}
 
 	/**
 	* Copy the connectors from a given object.
@@ -464,7 +464,7 @@ public:
 	* @param id             Identificator of the object.
 	* @return true if the object is in, else false.
 	*/
-	virtual bool IsIn(unsigned int id) const {return(Id==id);}
+	virtual bool IsIn(size_t id) const {return(Id==id);}
 
 	/**
 	* Destruct the object.

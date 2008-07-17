@@ -50,7 +50,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementCenter::RPlacementCenter(unsigned int maxobjs,bool calc,bool use,RRandom* r,bool ori)
+RPlacementCenter::RPlacementCenter(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
 {
 }
@@ -76,9 +76,9 @@ void RPlacementCenter::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 void RPlacementCenter::NextObjectOri(void)
 {
 	RPoint Pos;                     // Position to test (X,Y).
-	unsigned int NbPos;
+	size_t NbPos;
 	RPoint Actual,Last;
-	unsigned int i;
+	size_t i;
 	bool LookX;
 	bool LookLeft,LookBottom;
 

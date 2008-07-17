@@ -88,7 +88,7 @@ protected:
 	/**
 	* Assignment of the objects.
 	*/
-	unsigned int* ObjectsAss;
+	size_t* ObjectsAss;
 
 	/**
 	* Container of objects already assigned.
@@ -105,13 +105,13 @@ protected:
 	* found is always 1. This array is used to compare if two solutions are
 	* representing the same "real" groupment.
 	*/
-	unsigned int* OrdObjectsAss;
+	size_t* OrdObjectsAss;
 
 	/**
 	* Array representing the identificators assigned to each group to compute
 	* OrdObjectsAss.
 	*/
-	unsigned int* NewUsedId;
+	size_t* NewUsedId;
 
 public:
 
@@ -120,7 +120,7 @@ public:
 	* @param objs           Objects to group.
 	* @param max            Maximal number of groups to create.
 	*/
-	RGroups(RCursor<cObj> objs,const unsigned int max);
+	RGroups(RCursor<cObj> objs,const size_t max);
 
 	/**
 	* Init the groups.
@@ -175,7 +175,7 @@ public:
 	* @param id             Identificator of the object.
 	* @returns Pointer to cGroup*.
 	*/
-	cGroup* GetGroup(unsigned int id) const;
+	cGroup* GetGroup(size_t id) const;
 
 	/**
 	* Get the group of an object.
@@ -189,7 +189,7 @@ public:
 	* @param idx            Global Index.
 	* @returns cObj*
 	*/
-	cObj* GetObj(unsigned int idx) const {return(const_cast<RContainer<cObj,false,false>&>(ObjsAss)[idx]);}
+	cObj* GetObj(size_t idx) const {return(const_cast<RContainer<cObj,false,false>&>(ObjsAss)[idx]);}
 
 	/**
 	* Return a cursor over the objects of a group. The cursor cannot iterate

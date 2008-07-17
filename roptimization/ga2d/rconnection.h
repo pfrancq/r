@@ -70,7 +70,7 @@ public:
 	* @param nb             Max number of connectors involved.
 	* @param weight         Weight of the connection (Default is 1).
 	*/
-	RConnection(unsigned int nb,double weight=1.0);
+	RConnection(size_t nb,double weight=1.0);
 
 	/**
 	* This function compares two connections returns 0 if

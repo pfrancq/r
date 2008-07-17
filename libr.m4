@@ -112,7 +112,7 @@ AC_DEFUN(R_ALL_INC_CHK,[
 	R_INC_CHK(rcore/std,rstd.h,Cannot find R headers.)
 	R_INC_CHK(rcore/tools,rstring.h,Cannot find R headers.)
 	R_INC_CHK(rcore/prg,rprg.h,Cannot find R headers.)
-	R_INC_CHK(rcore/db,rmysql.h,Cannot find R headers.)
+	R_INC_CHK(rcore/db,rdb.h,Cannot find R headers.)
 	R_INC_CHK(rcore/app,rapplication.h,Cannot find R headers.)
 	R_INC_CHK(rcore/geometry,rpoint.h,Cannot find R headers.)
 	R_INC_CHK(rmath/geometry,rgeometry.h,Cannot find R headers.)

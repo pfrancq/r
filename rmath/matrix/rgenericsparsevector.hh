@@ -38,14 +38,14 @@
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(unsigned int id)
+	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(size_t id)
 		: RContainer<C,bAlloc,true>(3,2) , Id(id)
 {}
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(unsigned int id,unsigned int nbElem, unsigned int increase)
+	RGenericSparseVector<C,bAlloc>::RGenericSparseVector(size_t id,size_t nbElem, size_t increase)
 		: RContainer<C,bAlloc,true>(nbElem,increase) , Id(id)
 {}
 
@@ -85,7 +85,7 @@ template<class C,bool bAlloc>
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>
-	int RGenericSparseVector<C,bAlloc>::Compare(const unsigned int id) const
+	int RGenericSparseVector<C,bAlloc>::Compare(const size_t id) const
 {
 	return (Id-id );
 }

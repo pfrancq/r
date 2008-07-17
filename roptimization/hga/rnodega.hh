@@ -49,10 +49,10 @@ template<class cNode,class cObj,class cNodes>
 	Reserved=node->Reserved;
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	RNodeGA<cNode,cObj,cNodes>::RNodeGA(cNodes* owner,unsigned id,size_t max)
+	RNodeGA<cNode,cObj,cNodes>::RNodeGA(cNodes* owner,size_t id,size_t max)
 		: Id(id), Owner(owner), Attr(max)
 {
 	NbSubNodes=NbSubObjects= 0;
@@ -62,22 +62,22 @@ template<class cNode,class cObj,class cNodes>
 	Reserved=false;
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	void RNodeGA<cNode,cObj,cNodes>::SetAttr(const RAttrList& attr)
 {
 	Attr=attr;
 }
-	
-	
+
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	bool RNodeGA<cNode,cObj,cNodes>::Verify(unsigned int &nbobjs)
+	bool RNodeGA<cNode,cObj,cNodes>::Verify(size_t &nbobjs)
 {
 // 	cNode *ptr;
-// 	unsigned int i,k,*Sub,*Sub2;
-// 	unsigned int j,*obj;
+// 	size_t i,k,*Sub,*Sub2;
+// 	size_t j,*obj;
 // 	bool Ok;
 
 	// Increase the number of attached objects.
@@ -94,9 +94,9 @@ template<class cNode,class cObj,class cNodes>
 	if((!NbSubNodes)&&(!NbSubObjects))
 	{
 		cerr<<"Node n"<<Id<<": No subnode and no objects attched."<<endl;
-		return(false);		
+		return(false);
 	}
-	
+
 	// Verify information about subnodes
 	if(NbSubNodes)
 	{
@@ -197,7 +197,7 @@ template<class cNode,class cObj,class cNodes>
 	for(Sub.Start();!Sub.End();Sub.Next())
 		if(!Sub()->Verify(nbobjs))
 			return(false);
-	
+
 	// return the value of the verification.
 	return(true);
 }
@@ -208,7 +208,7 @@ template<class cNode,class cObj,class cNodes>
 	bool RNodeGA<cNode,cObj,cNodes>::CanAttach(const RAttrList& attr) const
 {
 	if(Id==NoNode)
-		return(false);		
+		return(false);
 	return(Attr.IsParent(attr));
 }
 
@@ -222,10 +222,10 @@ template<class cNode,class cObj,class cNodes>
 	return(Attr.IsSame(attr));
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	unsigned int RNodeGA<cNode,cObj,cNodes>::GetNbCommon(const RAttrList& attr) const
+	size_t RNodeGA<cNode,cObj,cNodes>::GetNbCommon(const RAttrList& attr) const
 {
 	return(Attr.GetNbCommon(attr));
 }
@@ -263,12 +263,12 @@ template<class cNode,class cObj,class cNodes>
 			bool CopyObjs=(!Cur()->HasSomeObjects(objs));
 			if((!CopyObjs)&&(!Cur()->NbSubNodes))
 				continue;
-			
+
 			// Reserve a node
 			cNode* New=Owner->ReserveNode();
 			cNode* Find=New->Copy(Cur(),excluded,objs,CopyObjs);
 			if(Find)
-				Ret=Find;			
+				Ret=Find;
 			if(New->GetNbObjs()||New->GetNbNodes())
 				Insert(New);
 			else
@@ -287,33 +287,33 @@ template<class cNode,class cObj,class cNodes>
 		for(Objs.Start();!Objs.End();Objs.Next())
 			Insert(Objs());
 	}
-	
+
 	// Update other information
 	(*this)=(*from);
 	return(Ret);
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	void RNodeGA<cNode,cObj,cNodes>::PostInsert(const cNode*)
 {
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	void RNodeGA<cNode,cObj,cNodes>::PostDelete(const cNode*)
 {
 }
-	
+
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	void RNodeGA<cNode,cObj,cNodes>::PostInsert(const cObj*)
 {
 }
-	
+
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
@@ -321,7 +321,7 @@ template<class cNode,class cObj,class cNodes>
 {
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	void RNodeGA<cNode,cObj,cNodes>::Clear(void)
@@ -338,11 +338,11 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	void RNodeGA<cNode,cObj,cNodes>::ConstructAllObjects(cObj** objs,unsigned int& nbobjs)
+	void RNodeGA<cNode,cObj,cNodes>::ConstructAllObjects(cObj** objs,size_t& nbobjs)
 {
-	unsigned int i;
+	size_t i;
 	cObj** tmpObjs;
-	unsigned int id;
+	size_t id;
 
 	// Goes in each subnodes to find their subobjects
 	RCursor<cNode> Cur(Owner->GetNodes(*static_cast<cNode*>(this)));
@@ -357,9 +357,9 @@ template<class cNode,class cObj,class cNodes>
 		id=Objs()->GetId();
 
 		// Find where this object must goes -> eventually create a empty place
-		// in objs		
+		// in objs
 		for(i=nbobjs+1,tmpObjs=objs;(--i)&&((*tmpObjs)->GetId()<id);tmpObjs++);
-		if(i) memmove(tmpObjs+1,tmpObjs,sizeof(unsigned int)*i);
+		if(i) memmove(tmpObjs+1,tmpObjs,sizeof(size_t)*i);
 
 		// Put the object in objs
 		nbobjs++;
@@ -368,7 +368,7 @@ template<class cNode,class cObj,class cNodes>
 	}
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	void RNodeGA<cNode,cObj,cNodes>::GetAllObjects(RVectorInt<size_t,true>& objs) const
@@ -384,7 +384,7 @@ template<class cNode,class cObj,class cNodes>
 		objs.Insert(Objs()->GetId());
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	RNodeGA<cNode,cObj,cNodes>& RNodeGA<cNode,cObj,cNodes>::operator=(const RNodeGA<cNode,cObj,cNodes>& node)
@@ -396,12 +396,12 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	unsigned int* RNodeGA<cNode,cObj,cNodes>::GetNodesId(void) const
+	size_t* RNodeGA<cNode,cObj,cNodes>::GetNodesId(void) const
 {
-	unsigned int* tmp;
-	unsigned int* tmp2;
+	size_t* tmp;
+	size_t* tmp2;
 
-	tmp2=tmp=new unsigned int[NbSubNodes+1];
+	tmp2=tmp=new size_t[NbSubNodes+1];
 	RCursor<cNode> Cur(Owner->GetNodes(this));
 	for(Cur.Start();!Cur.End();Cur.Next(),tmp2++)
 		(*tmp2)=Cur()->GetId();
@@ -412,12 +412,12 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	unsigned int* RNodeGA<cNode,cObj,cNodes>::GetObjectsId(void) const
+	size_t* RNodeGA<cNode,cObj,cNodes>::GetObjectsId(void) const
 {
-	unsigned int* tmp;
-	unsigned int* tmp2;
+	size_t* tmp;
+	size_t* tmp2;
 
-	tmp2=tmp=new unsigned int[NbSubObjects+1];
+	tmp2=tmp=new size_t[NbSubObjects+1];
 	RCursor<cObj> Objs(Owner->GetObjs(this));
 	for(Objs.Start();!Objs.End();Objs.Next(),tmp2++)
 		(*tmp2)=Objs()->GetId();
@@ -425,7 +425,7 @@ template<class cNode,class cObj,class cNodes>
 	return(tmp);
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	bool RNodeGA<cNode,cObj,cNodes>::HasSomeObjects(RVectorInt<size_t,true>* objs) const
@@ -438,7 +438,7 @@ template<class cNode,class cObj,class cNodes>
 			return(true);
 	return(false);
 }
-	
+
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>

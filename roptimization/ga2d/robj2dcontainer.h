@@ -70,7 +70,7 @@ public:
 	* @param nb             Number of geometric information that can be
 	*                       contained.
 	*/
-	RObj2DContainer(const unsigned int id,const char* name,const unsigned int nb);
+	RObj2DContainer(const size_t id,const char* name,const size_t nb);
 
 	/**
 	* Clear the geometric information.
@@ -98,14 +98,14 @@ public:
 	* @param grid           Grid.
 	* @param order          Order of the corresponding geometric information.
 	*/
-	virtual void Assign(RGeoInfos* infos,const RPoint &pos,RGrid *grid,const unsigned int order);
+	virtual void Assign(RGeoInfos* infos,const RPoint &pos,RGrid *grid,const size_t order);
 
 	/**
 	* Verify if a given object is in the container or not.
 	* @param id             Identificator of the object.
 	* @return true if the object is in, else false.
 	*/
-	virtual bool IsIn(unsigned int id);
+	virtual bool IsIn(size_t id);
 
 	/**
 	* Destruct the container.

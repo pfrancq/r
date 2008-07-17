@@ -116,7 +116,7 @@ public:
 	*                       analyse.
 	* @return               The geometric information of the object to place.
 	*/
-	RGeoInfo* GetBestConnected(RGeoInfos* infos,unsigned int nb,bool* selected,RRect& bound);
+	RGeoInfo* GetBestConnected(RGeoInfos* infos,size_t nb,bool* selected,RRect& bound);
 
 	/**
 	* Return the object that is not placed and that have the most connected
@@ -127,7 +127,7 @@ public:
 	* @param nbok           Number of objects already placed.
 	* @return The geometric information of the object to place.
 	*/
-	RGeoInfo* GetMostConnected(RGeoInfos* infos,unsigned int nb,RGeoInfo** order,unsigned int nbok);
+	RGeoInfo* GetMostConnected(RGeoInfos* infos,size_t nb,RGeoInfo** order,size_t nbok);
 
 	/**
 	* Calculate the sum of the Manhattant distance between all placed objects

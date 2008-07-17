@@ -44,7 +44,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGGAException::RGGAException(tException type,const unsigned int g,const unsigned int c)
+RGGAException::RGGAException(tException type,const size_t g,const size_t c)
 	: RGAException(type)
 {
 	char tmp[200];
@@ -52,11 +52,11 @@ RGGAException::RGGAException(tException type,const unsigned int g,const unsigned
 	switch(Type)
 	{
 		case eGAModify:
-			sprintf(tmp,"Generation %u: Modify error: Chromsosome %u",g,c);
+			sprintf(tmp,"Generation %z: Modify error: Chromsosome %z",g,c);
 			SetMsg(tmp);
 			break;
 		case eGALocalOptimisation:
-			sprintf(tmp,"Generation %u: Local optimisation error: Chromsosome %u",g,c);
+			sprintf(tmp,"Generation %z: Local optimisation error: Chromsosome %z",g,c);
 			SetMsg(tmp);
 			break;
 		default:

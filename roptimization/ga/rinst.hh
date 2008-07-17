@@ -53,7 +53,7 @@ template<class cInst,class cChromo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	R::RInst<cInst,cChromo,cFit,cThreadData>::RInst(unsigned int popsize,const R::RString& name,R::RDebug* debug)
+	R::RInst<cInst,cChromo,cFit,cThreadData>::RInst(size_t popsize,const R::RString& name,R::RDebug* debug)
 		: RObject(name), Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),bRandomConstruct(false),
 		  VerifyGA(false), DoPostEvaluation(false),
 		  Chromosomes(0), Ranked(0), PopSize(popsize), Gen(0), AgeBest(0), AgeBestPop(0)
@@ -76,7 +76,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	void R::RInst<cInst,cChromo,cFit,cThreadData>::SetMutationParams(unsigned int agemut,unsigned int agebestmut,unsigned int nbmut)
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::SetMutationParams(size_t agemut,size_t agebestmut,size_t nbmut)
 {
 		if(nbmut>PopSize)
 			throw RGAException("Number of mutations cannot be greather than the population size");
@@ -91,7 +91,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	void R::RInst<cInst,cChromo,cFit,cThreadData>::Init(void)
 {
 	cChromo **C;
-	unsigned int i;
+	size_t i;
 
 	if(PopSize)
 	{
@@ -135,7 +135,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreaData>
 	void R::RInst<cInst,cChromo,cFit,cThreaData>::AnalysePop(void)
 {
-	unsigned int i;
+	size_t i;
 	cChromo **C;
 
 	if(Debug)
@@ -190,7 +190,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 		(*BestChromosome)=(*BestInPop);
 		AgeBest=0;
 		AgeNextBestMutation=FreqBestMutation;
-		PostNotification("RInst::Best",(unsigned int)Gen);
+		PostNotification("RInst::Best",(size_t)Gen);
 	}
 	if(Debug)
 		Debug->EndFunc("AnalysePop","RInst");
@@ -201,7 +201,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void R::RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct(void)
 {
-	unsigned int i;
+	size_t i;
 	cChromo **C;
 
 	if(Debug)
@@ -227,9 +227,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void R::RInst<cInst,cChromo,cFit,cThreadData>::Crossover(void)
 {
-	unsigned int i,idx1,idx2;
+	size_t i,idx1,idx2;
 	cChromo **C1,**C2,*C3,*s1,*s2;
-	unsigned int NbToTreat,NbTreated;
+	size_t NbToTreat,NbTreated;
 
 	if(Debug)
 		Debug->BeginFunc("Crossover","RInst");
@@ -326,12 +326,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	{
 		AgeNextMutation=FreqMutation;
 		cChromo** Mut=&Ranked[PopSize-1];
-		for(unsigned int i=NbMutations+1;--i;Mut--)
+		for(size_t i=NbMutations+1;--i;Mut--)
 		{
 			cChromo* p=(*Mut);
 			if(p->Id!=BestInPop->Id)
 			{
-				unsigned int id=p->Id;
+				size_t id=p->Id;
 				(*p)=(*BestInPop);
 				p->Id=id;
 			}
@@ -355,10 +355,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	{
 		AgeNextBestMutation=FreqBestMutation;
 		cChromo** Mut=&Ranked[PopSize-1];
-		for(unsigned int i=NbMutations+1;--i;Mut--)
+		for(size_t i=NbMutations+1;--i;Mut--)
 		{
 			cChromo* p=(*Mut);
-			unsigned int id=p->Id;
+			size_t id=p->Id;
 			(*p)=(*BestChromosome);
 			p->Id=id;
 			if(Debug)
@@ -477,7 +477,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	void R::RInst<cInst,cChromo,cFit,cThreadData>::Verify(void)
 {
-	unsigned int i;
+	size_t i;
 	cChromo **C;
 
 	if(Debug)
@@ -508,7 +508,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	R::RInst<cInst,cChromo,cFit,cThreadData>::~RInst(void)
 {
 	cChromo **C;
-	unsigned int i;
+	size_t i;
 
 	if(Chromosomes)
 	{

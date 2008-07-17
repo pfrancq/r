@@ -44,14 +44,14 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPromSol::RPromSol(const unsigned int id,const unsigned int nbcrit)
+RPromSol::RPromSol(const size_t id,const size_t nbcrit)
 	: RContainer<RPromCritValue,true,false>(nbcrit,nbcrit/2), Id(id)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RPromSol::RPromSol(const unsigned int id,const char* name,const unsigned int nbcrit)
+RPromSol::RPromSol(const size_t id,const char* name,const size_t nbcrit)
 	: RContainer<RPromCritValue,true,false>(nbcrit,nbcrit/2), Id(id), Name(name)
 {
 }

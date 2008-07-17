@@ -45,8 +45,8 @@ QString R::ToQString(const RString& str)
 {
 	QString ret;
 	const RChar* ptr;
-	unsigned int i;
-	unsigned int len=str.GetLen();
+	size_t i;
+	size_t len=str.GetLen();
 
 	ret.setLength(len);
 	for(i=0,ptr=str();i<len;ptr++,i++)
@@ -60,8 +60,8 @@ RString R::FromQString(const QString& str)
 {
 	RString ret;
 	const RChar* ptr;
-	unsigned int i;
-	unsigned int len=str.length();
+	size_t i;
+	size_t len=str.length();
 
 	ret.SetLen(len);
 	for(i=0,ptr=ret();i<len;i++,ptr++)

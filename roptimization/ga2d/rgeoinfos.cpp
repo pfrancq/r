@@ -114,7 +114,7 @@ void RGeoInfos::GetSetInfos(RObj2DContainer* cont,RGrid* /*grid*/,bool* selected
 //------------------------------------------------------------------------------
 void RGeoInfos::Boundary(RRect& rect)
 {
-	unsigned int i;
+	size_t i;
 	RRect tmp;
 
 	rect.Set(0,0,MaxCoord,MaxCoord);

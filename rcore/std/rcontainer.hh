@@ -40,7 +40,7 @@
 template<class C,bool bAlloc,bool bOrder> template<bool b>
 	void RContainer<C,bAlloc,bOrder>::Create(const RContainer<C,b,bOrder>& src)
 {
-	unsigned int i;
+	size_t i;
 	C** tab;
 	C** tab2;
 
@@ -74,7 +74,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 template<class C,bool bAlloc,bool bOrder> template<bool b>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::NormalCopy(const RContainer<C,b,bOrder>& src)
 {
-	unsigned int i;
+	size_t i;
 	C** tab;
 	C** tab2;
 
@@ -104,7 +104,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 template<class C,bool bAlloc,bool bOrder> template<bool b>
 	void RContainer<C,bAlloc,bOrder>::DeepCopy(const RContainer<C,b,bOrder>& src)
 {
-	unsigned int i;
+	size_t i;
 	C** tab;
 	C** tab2;
 
@@ -126,7 +126,7 @@ template<class C,bool bAlloc,bool bOrder> template<bool b>
 template<class C,bool bAlloc,bool bOrder> template<bool b,bool o>
 	RContainer<C,bAlloc,bOrder>& RContainer<C,bAlloc,bOrder>::Add(const RContainer<C,b,o>& src)
 {
-	unsigned int i;
+	size_t i;
 	C** tab;
 	C** tab2;
 

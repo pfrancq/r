@@ -84,7 +84,7 @@ public:
 	virtual bool End(void) const {return(!Row);}
 	virtual void Start(void);
 	virtual void Next(void);
-	virtual RString operator[](unsigned int index) const;
+	virtual RString operator[](size_t index) const;
 	virtual ~RQueryMySQL(void);
 };
 
@@ -120,7 +120,7 @@ public:
 	virtual bool End(void) const {return(DB->Code==SQLITE_DONE);}
 	virtual void Start(void);
 	virtual void Next(void);
-	virtual RString operator[](unsigned int index) const;
+	virtual RString operator[](size_t index) const;
 	virtual ~RQuerySQLite(void);
 };
 
@@ -158,7 +158,7 @@ void RDb::CreateMySQLDatabase(const RString& host,const RString& user,const RStr
 
 
 //------------------------------------------------------------------------------
-void RDb::CreateTransactionTable(const RString& name,unsigned int nb,...)
+void RDb::CreateTransactionTable(const RString& name,size_t nb,...)
 {
 	va_list ap;
 	RString sSql;
@@ -340,7 +340,7 @@ RQueryMySQL::RQueryMySQL(RDbMySQL* db,const RString& sql)
 		throw RDbException("Empty SQL");
 
 	const RChar* ptr;
-	unsigned int size,pos;
+	size_t size,pos;
 	RCString SQL_utf8;
 	RString cmd;
 
@@ -405,7 +405,7 @@ void RQueryMySQL::Next(void)
 
 
 //------------------------------------------------------------------------------
-RString RQueryMySQL::operator[](unsigned int index) const
+RString RQueryMySQL::operator[](size_t index) const
 {
 	const char* val;
 	RString res;
@@ -413,7 +413,7 @@ RString RQueryMySQL::operator[](unsigned int index) const
 	if(index>=NbCols)
 	{
 		char tmp[80];
-		sprintf(tmp,"RQuery::operator[] const : column %zu outside range [0,%zu]",index,NbCols-1);
+		sprintf(tmp,"RQuery::operator[] const : column %z outside range [0,%z]",index,NbCols-1);
 		throw RDbException(tmp);
 	}
 	if(!Row)
@@ -474,12 +474,12 @@ void RQuerySQLite::Next(void)
 
 
 //------------------------------------------------------------------------------
-RString RQuerySQLite::operator[](unsigned int index) const
+RString RQuerySQLite::operator[](size_t index) const
 {
 	if(index>=NbCols)
 	{
 		char tmp[80];
-		sprintf(tmp,"RQuery::operator[] const : column %zu outside range [0,%zu]",index,NbCols-1);
+		sprintf(tmp,"RQuery::operator[] const : column %z outside range [0,%z]",index,NbCols-1);
 		throw RDbException(tmp);
 	}
 	if(End())
@@ -519,7 +519,7 @@ RTransactionTable::RTransactionTable(RDb* db,RString name)
 
 
 //------------------------------------------------------------------------------
-RTransactionTable::RTransactionTable(RDb* db,RString name,unsigned int nb,...)
+RTransactionTable::RTransactionTable(RDb* db,RString name,size_t nb,...)
 	: Name(name), Params(nb,5), DB(db)
 {
 	va_list ap;
@@ -542,7 +542,7 @@ RTransactionTable::RTransactionTable(RDb* db,RString name,unsigned int nb,...)
 
 
 //------------------------------------------------------------------------------
-size_raw RTransactionTable::WriteTransaction(unsigned int id,...)
+size_raw RTransactionTable::WriteTransaction(size_t id,...)
 {
 	va_list ap;
 	RString sSql;

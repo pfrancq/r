@@ -189,7 +189,7 @@ public:
 	* @param ...            Name of the parameters of the transaction (transid
 	                        is reserved).
 	*/
-	virtual void CreateTransactionTable(const RString& name,unsigned int nb,...);
+	virtual void CreateTransactionTable(const RString& name,size_t nb,...);
 
 	/**
 	 * Create a query.
@@ -304,7 +304,7 @@ public:
 	* Return a specific field of the current row.
 	* @param index          Index of the field in the query.
 	*/
-	virtual RString operator[](unsigned int index) const=0;
+	virtual RString operator[](size_t index) const=0;
 
 	/**
 	* Transform a string to be used in a SQL (add quotes before and after,
@@ -368,7 +368,7 @@ public:
 	* @param ...            Name of the parameters of the transaction (transid
 	                        is reserved).
 	*/
-	RTransactionTable(RDb* db,RString name,unsigned int nb,...);
+	RTransactionTable(RDb* db,RString name,size_t nb,...);
 
 	/**
 	* Write a given transaction.
@@ -378,7 +378,7 @@ public:
 	                        is reserved).
 	* @return The identifier of the transaction.
 	*/
-	size_raw WriteTransaction(unsigned int id,...);
+	size_raw WriteTransaction(size_t id,...);
 
 	/**
 	* Get a transaction.

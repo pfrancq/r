@@ -181,9 +181,9 @@ public:
 	* Get the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
-	* @return unsigned int.
+	* @return size_t.
 	*/
-	unsigned int GetUInt(const RString& name,const RString& cat=RString::Null);
+	size_t GetUInt(const RString& name,const RString& cat=RString::Null);
 
 	/**
 	* Get the content of the parameter.
@@ -239,7 +239,7 @@ public:
 	* @param v               Value of the parameter.
 	* @param cat             Category of the parameter.
 	*/
-	void SetUInt(const RString& name,unsigned int v,const RString& cat=RString::Null);
+	void SetUInt(const RString& name,size_t v,const RString& cat=RString::Null);
 
 	/**
 	* Set the content of the parameter.

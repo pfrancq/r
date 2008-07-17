@@ -6,7 +6,7 @@
 
 	Binary file - Implementation.
 
-	Copyright 2006 by the Université Libre de Bruxelles.
+	Copyright 2006-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -123,7 +123,7 @@ RBinaryFile& RBinaryFile::operator>>(int& nb)
 //------------------------------------------------------------------------------
 RBinaryFile& RBinaryFile::operator>>(unsigned int& nb)
 {
-	Read((char*)(&nb),sizeof(unsigned int));
+	Read((char*)(&nb),sizeof(size_t));
 	return(*this);
 }
 
@@ -230,7 +230,7 @@ RBinaryFile& RBinaryFile::operator<<(int nb)
 //------------------------------------------------------------------------------
 RBinaryFile& RBinaryFile::operator<<(unsigned int nb)
 {
-	Write((char*)(&nb),sizeof(unsigned int));
+	Write((char*)(&nb),sizeof(size_t));
 	return(*this);
 }
 

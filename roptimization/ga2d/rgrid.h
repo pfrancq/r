@@ -125,7 +125,7 @@ public:
 	* @param x              X position.
 	* @param y              Y position.
 	*/
-	inline unsigned int GetObjId(tCoord x,tCoord y)
+	inline size_t GetObjId(tCoord x,tCoord y)
 	{
 		RReturnValIfFail(OccupiedX,false);
 		return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]);
@@ -142,7 +142,7 @@ public:
 	* @param pos            The position.
 	* @param id             The identificator to put.
 	*/
-	void Assign(RRect& rect,RPoint& pos,unsigned int id);
+	void Assign(RRect& rect,RPoint& pos,size_t id);
 
 	/**
 	* Find the left most x coordinates that is free of a reference.

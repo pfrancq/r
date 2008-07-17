@@ -43,7 +43,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RObjG::RObjG(const unsigned int id,const RString& name)
+RObjG::RObjG(const size_t id,const RString& name)
 	: Id(id), Name(name)
 {
 }
@@ -57,7 +57,7 @@ RObjG::RObjG(const RObjG* obj)
 
 
 //------------------------------------------------------------------------------
-int RObjG::Compare(const unsigned int id) const
+int RObjG::Compare(const size_t id) const
 {
 	return(Id-id);
 }

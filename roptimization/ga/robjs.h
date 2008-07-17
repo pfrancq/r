@@ -62,7 +62,7 @@ public:
 	* Construct the objects.
 	* @param max            Maximum objects that wilk be created.
 	*/
-	RObjs(const unsigned int max) : RContainer<cObj,true,true>(max,max/2) {}
+	RObjs(const size_t max) : RContainer<cObj,true,true>(max,max/2) {}
 };
 
 

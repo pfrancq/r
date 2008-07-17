@@ -49,7 +49,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGraph::RGraph(unsigned int nb)
+RGraph::RGraph(size_t nb)
 	: Vertices(nb,nb/2), Edges(nb*(nb-1)/2,nb*(nb-1)/4)
 {
 }
@@ -88,7 +88,7 @@ RVertex* RGraph::CreateVertex(void)
 
 
 //------------------------------------------------------------------------------
-RVertex* RGraph::CreateVertex(const unsigned int id)
+RVertex* RGraph::CreateVertex(const size_t id)
 {
 	RVertex *ptr;
 
@@ -98,7 +98,7 @@ RVertex* RGraph::CreateVertex(const unsigned int id)
 
 
 //------------------------------------------------------------------------------
-RVertex* RGraph::GetVertex(const unsigned int id)
+RVertex* RGraph::GetVertex(const size_t id)
 {
 	RVertex *ptr;
 	RVertex::VertexStruct s;
@@ -147,8 +147,8 @@ void RGraph::MinSpanningTree(RGraph* g)
 			if(e()->Weight<bestw)
 			{
 				// Test if only one is in g
-				b1=g->Vertices.IsIn<const unsigned int>(e()->GetVertex1()->GetId());
-				b2=g->Vertices.IsIn<const unsigned int>(e()->GetVertex2()->GetId());
+				b1=g->Vertices.IsIn<const size_t>(e()->GetVertex1()->GetId());
+				b2=g->Vertices.IsIn<const size_t>(e()->GetVertex2()->GetId());
 				if((b1&&!b2)||(!b1&&b2))
 				{
 					best=e();
@@ -161,12 +161,12 @@ void RGraph::MinSpanningTree(RGraph* g)
 		// Insert the vertex
 		if(b)
 		{
-			v1=g->Vertices.GetPtr<const unsigned int>(best->GetVertex1()->GetId());
+			v1=g->Vertices.GetPtr<const size_t>(best->GetVertex1()->GetId());
 			v2=g->CreateVertex(best->GetVertex2()->GetId());
 		}
 		else
 		{
-			v1=g->Vertices.GetPtr<const unsigned int>(best->GetVertex2()->GetId());
+			v1=g->Vertices.GetPtr<const size_t>(best->GetVertex2()->GetId());
 			v2=g->CreateVertex(best->GetVertex1()->GetId());
 		}
 

@@ -48,7 +48,7 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
 * This class represent a Generic Cell to create vector or matrix of generic elements.
-* This Generic Cell in composed of one Id (unsigned int) and a value of Generic Type
+* This Generic Cell in composed of one Id (size_t) and a value of Generic Type
 * This class provides a way to create different type of cells each containing different type of information.
 * @author  Vandaele Valery
 * @short Generic Cell template.
@@ -62,7 +62,7 @@ private :
 	/**
 	* Id of the Cell.
 	*/
-	unsigned int Id;
+	size_t Id;
 
 	/**
 	* Value of the cell (of type C).
@@ -75,14 +75,14 @@ public :
 	* constructor of RGenericCell
 	* @param id             The Id of the cell.
 	*/
-	RGenericCell(unsigned int id);
+	RGenericCell(size_t id);
 
 	/**
 	* constructor of RGenericCell
 	* @param id             The Id of the cell.
 	* @param value          The value of type T
 	*/
-	RGenericCell(unsigned int id, C value);
+	RGenericCell(size_t id, C value);
 
 	/**
 	* Construct the generic cell from another one.
@@ -118,13 +118,13 @@ public :
 	* Method used by the container
 	* param id              The id to be compared.
 	*/
-	int Compare(const unsigned int id) const;
+	int Compare(const size_t id) const;
 
 	/**
 	* Get the id of the cell.
 	* @return id                Int descibing the id of the cell.
 	*/
-	unsigned int GetId(void) const {return Id;}
+	size_t GetId(void) const {return Id;}
 
 	/**
 	* Get The value contained in the cell.

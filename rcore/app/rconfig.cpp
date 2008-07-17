@@ -277,7 +277,7 @@ int RConfig::GetInt(const RString& name,const RString& cat)
 
 
 //-----------------------------------------------------------------------------
-unsigned int RConfig::GetUInt(const RString& name,const RString& cat)
+size_t RConfig::GetUInt(const RString& name,const RString& cat)
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat);
 	if(!param)
@@ -347,7 +347,7 @@ void RConfig::SetInt(const RString& name,int v,const RString& cat)
 
 
 //-----------------------------------------------------------------------------
-void RConfig::SetUInt(const RString& name,unsigned int v,const RString& cat)
+void RConfig::SetUInt(const RString& name,size_t v,const RString& cat)
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat);
 	if(!param)

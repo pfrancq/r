@@ -61,16 +61,16 @@ namespace R{
 *
 * class MyElement
 * {
-*    unsigned int Id;
+*    size_t Id;
 * public:
-*    MyElement(unsigned int id) : Id(id) {}
+*    MyElement(size_t id) : Id(id) {}
 *    MyElement(const MyElement& e) : Id(e.Id) {}
 *    void DoSomething(double d) {cout<<d<<endl;}
 *    int Compare(const MyElement& e) const {return(Id-e.Id);}
-*    int Compare(const unsigned int id) const {return(Id-id);}
+*    int Compare(const size_t id) const {return(Id-id);}
 *    int Compare(const char* text) const
 *    {
-*       unsigned int id=atoi(text);
+*       size_t id=atoi(text);
 *       return(Compare(id));
 *    }
 * };

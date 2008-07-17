@@ -71,7 +71,7 @@ public :
 	* @param nbElem            The initial number of element in the container
 	* @param increment         The number of new element each increase
 	*/
-	RGenericSparseMatrix(unsigned int nbElem,unsigned int increment);
+	RGenericSparseMatrix(size_t nbElem,size_t increment);
 
 	/**
 	* Construct the generic cell from another one.

@@ -58,8 +58,8 @@ class RGeoInfoConnectionPart
 {
 	struct sSearch
 	{
-		unsigned int id1;
-		unsigned int id2;
+		size_t id1;
+		size_t id2;
 	};
 
 public:
@@ -67,7 +67,7 @@ public:
 	/**
 	* Identificator of the first object.
 	*/
-	unsigned int Id1;
+	size_t Id1;
 
 	/**
 	* Position of the first connector.
@@ -77,7 +77,7 @@ public:
 	/**
 	* Identificator of the second object.
 	*/
-	unsigned int Id2;
+	size_t Id2;
 
 	/**
 	* Position of the second connector.
@@ -91,7 +91,7 @@ public:
 	* @param pt2            Position of the second connector.
 	* @param id2            Identifier of the second connector.
 	*/
-	RGeoInfoConnectionPart(const RPoint& pt1,unsigned int id1,const RPoint& pt2,unsigned int id2);
+	RGeoInfoConnectionPart(const RPoint& pt1,size_t id1,const RPoint& pt2,size_t id2);
 
 	/**
 	* Copy contructor.

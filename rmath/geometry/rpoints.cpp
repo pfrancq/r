@@ -54,7 +54,7 @@ RPoints::RPoints(void)
 
 
 //------------------------------------------------------------------------------
-RPoints::RPoints(const unsigned int max)
+RPoints::RPoints(const size_t max)
 	: RContainer<RPoint,true,false>(max,5)
 {
 }
@@ -74,7 +74,7 @@ RPoints::RPoints(const RPoints& points)
 RPoint* RPoints::FindBottom(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 	tCoord AY;
 
@@ -114,7 +114,7 @@ RPoint* RPoints::FindBottom(const RPoint* pt,const RPolygons* polys) const
 RPoint* RPoints::FindLeft(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 	tCoord AX;
 
@@ -154,7 +154,7 @@ RPoint* RPoints::FindLeft(const RPoint* pt,const RPolygons* polys) const
 RPoint* RPoints::FindRight(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 	tCoord AX;
 
@@ -194,7 +194,7 @@ RPoint* RPoints::FindRight(const RPoint* pt,const RPolygons* polys) const
 RPoint* RPoints::FindUp(const RPoint* pt,const RPolygons* polys) const
 {
 	RPoint *Activ;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 	tCoord AY;
 
@@ -234,7 +234,7 @@ RPoint* RPoints::FindUp(const RPoint* pt,const RPolygons* polys) const
 RPoint* RPoints::FindBottomLeft(void) const
 {
 	RPoint *Activ;
-	unsigned int i;
+	size_t i;
 	tCoord X,Y;
 
 	if(!GetNb()) return(0);
@@ -257,7 +257,7 @@ RPoint* RPoints::FindBottomLeft(void) const
 //------------------------------------------------------------------------------
 bool RPoints::DuplicatePoints(void) const
 {
-	unsigned int i;
+	size_t i;
 
 	RCursor<RPoint> Cur1(*this);
 	RCursor<RPoint> Cur2(*this);
