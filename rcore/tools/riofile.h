@@ -118,6 +118,11 @@ class RIOFile : public RFile
 	 */
 	char* CurByte;
 
+	/*
+	 * Internal test method.
+	 */
+	inline void Test(void);
+
 protected:
 
 	/**

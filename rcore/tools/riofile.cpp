@@ -83,6 +83,15 @@ RDownload RIOFile::Get;
 
 
 //------------------------------------------------------------------------------
+inline void RIOFile::Test(void)
+{
+	off_t real=lseek(Handle,0,SEEK_CUR);
+	if(real!=RealPos)
+		cout<<"Internal problem"<<endl;
+}
+
+
+//------------------------------------------------------------------------------
 RIOFile::RIOFile(const RURI& uri)
   : RFile(uri), Handle(-1), Size(0), Pos(0), Internal(0), InternalToRead(0), RealPos(0), CurByte(0)
 {
@@ -260,6 +269,7 @@ size_t RIOFile::Read(char* buffer,size_t nb,bool move)
 			{
 				Pos+=InternalToRead;
 				InternalToRead=0;
+				RealInternalPos=MaxSize;
 			}
 		}
 		else
@@ -312,8 +322,12 @@ size_t RIOFile::Read(char* buffer,size_t nb,bool move)
 
 		// Copy now the number of bytes for the user
 		memcpy(buffer,CurByte,left);
-		CurByte+=left;
-		Pos+=left;
+		if(move)
+		{
+			CurByte+=left;
+			Pos+=left;
+			InternalToRead-=left;
+		}
 	}
 
 	// Return number of bytes read
@@ -330,41 +344,66 @@ void RIOFile::Write(const char* buffer,size_t nb)
 	if(!CanWrite)
 		throw RIOException(this,"No write access");
 
+	// Verify that the internal positions are OK
+	if(Pos!=RealPos)
+	{
+		RealPos=Pos;
+		lseek(Handle,Pos,SEEK_SET);
+	}
+
 	// Write into the file
+	off_t after=Pos+nb;
 	write(Handle,buffer,nb);
 	#ifdef windows
 		flushall();
 	#endif
 
 	// Verify if a part of the buffer must be stored into the internal buffer
-    if((Pos<RealInternalPos+static_cast<off_t>(InternalBufferSize))&&(Pos+static_cast<off_t>(nb)>=RealInternalPos))
+    if((Pos<RealInternalPos+static_cast<off_t>(InternalBufferSize))&&(after>=RealInternalPos))
 	{
-    	char* begini;
-    	const char* beginb;
-    	size_t len(nb);
-    	if(Pos<RealInternalPos)
-    	{
-    		begini=Internal;
-    		beginb=&buffer[RealInternalPos-Pos];
-    		len-=RealInternalPos-Pos;
-        	if(len>InternalBufferSize)
-        		len=InternalBufferSize;
-    	}
-    	else
-    	{
-    		beginb=buffer;
-    		begini=&Internal[Pos-RealInternalPos];
-    		len=InternalBufferSize-Pos+RealInternalPos;
-    	}
-		memcpy(begini,beginb,len);
+		// If after the write, we are still in the internal buffer -> update it
+    	// Else dirtied it.
+		if(after<RealInternalPos+static_cast<off_t>(InternalBufferSize))
+		{
+			char* begini;
+			const char* beginb;
+			size_t len(nb);
+			if(Pos<RealInternalPos)
+			{
+				begini=Internal;
+				beginb=&buffer[RealInternalPos-Pos];
+				len-=RealInternalPos-Pos;
+				if(len>InternalBufferSize)
+					len=InternalBufferSize;
+			}
+			else
+			{
+				beginb=buffer;
+				begini=&Internal[Pos-RealInternalPos];
+				size_t max=InternalBufferSize+RealInternalPos-Pos;
+				if(len>max)
+					len=max;
+			}
+			memcpy(begini,beginb,len);
+
+			size_t pos=static_cast<size_t>(after-RealInternalPos);
+			CurByte=&Internal[pos];
+			InternalToRead=InternalBufferSize-pos-1;
+		}
+		else
+		{
+			RealInternalPos=MaxSize;
+			InternalToRead=0;
+		}
 	}
 
 	// Increase the size only if the current position is at the end
-	if(Pos>=Size)
-		Size=Pos+nb;
+	if(after>=Size)
+		Size=after;
 
 	// Next position
-	Pos+=nb;
+	Pos=after;
+	RealPos=after;
 }
 
 
@@ -390,7 +429,10 @@ void RIOFile::Seek(off_t pos)
 		RealInternalPos=MaxSize;
 	}
 	else
+	{
 		CurByte=&Internal[Pos-RealInternalPos];
+		InternalToRead=InternalBufferSize+RealInternalPos-Pos;
+	}
 }
 
 
@@ -411,14 +453,17 @@ void RIOFile::SeekRel(off_t rel)
 	{
 		// Seek the file
 		RealPos=Pos;
-		lseek(Handle,rel,SEEK_CUR);
+		lseek(Handle,Pos,SEEK_SET);
 
 		// Dirty the internal buffer
 		InternalToRead=0;
 		RealInternalPos=MaxSize;
 	}
 	else
+	{
 		CurByte+=rel;
+		InternalToRead-=rel;
+	}
 }
 
 
