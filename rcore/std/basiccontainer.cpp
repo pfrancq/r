@@ -33,6 +33,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <basiccontainer.h>
+#include <rstring.h>
 using namespace R;
 
 
@@ -108,7 +109,7 @@ void BasicContainer::Clear(bool bAlloc,size_t m,size_t i)
 	}
 	LastPtr=NbPtr=0;
 	if(i)
-		IncPtr=i;	
+		IncPtr=i;
 	if(m)
 		VerifyTab(m);
 }
@@ -218,12 +219,10 @@ const void* BasicContainer::operator[](size_t idx) const
 {
 	if(idx>=LastPtr)
 	{
-		char tmp[80];
 		if(LastPtr)
-			sprintf(tmp,"BasicContainer::operator[] const : index %zu outside range [0,%zu]",idx,LastPtr-1);
+			throw std::range_error("BasicContainer::operator[] const : column "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 		else
-			sprintf(tmp,"BasicContainer::operator[] const : no elements");
-		throw std::range_error(tmp);
+			throw std::range_error("BasicContainer::operator[] const : no elements");
 	}
 	return(Tab[idx]);
 }
@@ -233,13 +232,11 @@ const void* BasicContainer::operator[](size_t idx) const
 void* BasicContainer::operator[](size_t idx)
 {
 	if(idx>=LastPtr)
-	{		
-		char tmp[80];
+	{
 		if(LastPtr)
-			sprintf(tmp,"BasicContainer::operator[] : index %zu outside range [0,%zu]",idx,LastPtr-1);
+			throw std::range_error("BasicContainer::operator[] const : column "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 		else
-			sprintf(tmp,"BasicContainer::operator[] : no elements");
-		throw std::range_error(tmp);
+			throw std::range_error("BasicContainer::operator[] const : no elements");
 	}
 	return(Tab[idx]);
 }
@@ -340,7 +337,7 @@ void BasicContainer::InsertPtrAt(bool bAlloc,const void* ins,size_t pos,bool del
 	}
 	else
 		NbPtr++;
-	(*ptr)=(void*)ins;		
+	(*ptr)=(void*)ins;
 	if(pos+1>LastPtr)
 	{
 		LastPtr=pos+1;
@@ -376,7 +373,7 @@ void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos,bool del)
 	ptr=&Tab[pos];
 	if(bAlloc)
 		Delete(*ptr);
-	
+
 	// If the position is the last one -> find the last position
 	if(pos==LastPtr-1)
 	{
@@ -392,9 +389,9 @@ void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos,bool del)
 			Tab[LastPtr]=0;
 		}
 		else
-			(*ptr)=0;		
+			(*ptr)=0;
 	}
-	
+
 	// Decrease number of elements
 	NbPtr--;
 }

@@ -72,14 +72,14 @@ protected:
 	* Use for objects manipulation functions.
 	*/
 	RVectorInt<size_t,true> tmpObjects;
-	
+
 	/**
 	* Heuristic Used.
 	*/
 	RTreeHeuristic<cNode,cObj,cChromo>* Heuristic;
 
 public:
-	
+
 	/**
 	* Construct the data.
 	* @param owner           Owner of the data.
@@ -87,7 +87,7 @@ public:
 	RThreadDataH(cInst *owner);
 
 	/**
-	* Initialise the data.
+	* Initialize the data.
 	*/
 	virtual void Init(void);
 
@@ -95,7 +95,7 @@ public:
 	* Destruct the data.
 	*/
 	virtual ~RThreadDataH(void);
-	
+
 	friend class RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>;
 	friend class RInstH<cInst,cChromo,cFit,cThreadData,cNode,cObj>;
 };
@@ -116,7 +116,7 @@ protected:
 	/**
 	* Type of the heuristic that used.
 	*/
-	HeuristicType Heuristic;
+	RString Heuristic;
 
 	/**
 	* Objects to group.
@@ -127,19 +127,19 @@ protected:
 	 * Maximum number of attributes for an object.
 	 */
 	size_t MaxAttr;
-	
+
 	/**
 	 * Highest identifier of an attribute.
 	 */
 	size_t ControlAttr;
-	
+
 	/**
 	 * Maximum number of nodes to allocate by default.
 	 */
 	size_t MaxNodes;
 
 public:
-	
+
 	/**
 	* Construct the instance.
 	* @param popsize        Size of the population.
@@ -148,34 +148,34 @@ public:
 	* @param name           Name of the genetic algorithm.
 	* @param debug          Debugger.
 	*/
-	RInstH(size_t popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug* debug=0);
+	RInstH(size_t popsize,RCursor<cObj> objs,const RString& h,const RString& name,RDebug* debug=0);
 
 	/**
 	 * Return the name of the class.
 	 */
 	virtual RCString GetClassName(void) const {return("RInstH");}
-	
+
 	/**
-	* Initialisation of the instance.
+	* Initialization of the instance.
 	*/
 	virtual void Init(void);
 
 	/**
 	* Return the heuristic type.
 	*/
-	inline HeuristicType GetHeuristic(void) {return(Heuristic);}
+	inline RString GetHeuristic(void) const {return(Heuristic);}
 
 	/**
 	 * Get the maximum number of attributes associated to an object.
 	 */
 	size_t GetMaxAttr(void) const {return(MaxAttr);}
-	
+
 	/**
 	 * Get the heuristic of a given thread.
 	 * @param thread         Number of the thread.
 	 */
 	inline RTreeHeuristic<cNode,cObj,cChromo>* GetHeuristic(size_t thread) {return(this->thDatas[thread]->Heuristic);}
-	
+
 	/**
 	* Create a heuristic object.
 	*/
@@ -195,7 +195,7 @@ public:
 	* Destruct the instance.
 	*/
 	virtual ~RInstH(void);
-	
+
 	friend class RThreadDataH<cInst,cChromo,cFit,cThreadData,cNode,cObj>;
 	friend class RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>;
 };

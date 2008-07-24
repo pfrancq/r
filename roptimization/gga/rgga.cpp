@@ -33,6 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rgga.h>
+#include <rstring.h>
 using namespace R;
 
 
@@ -47,17 +48,13 @@ using namespace R;
 RGGAException::RGGAException(tException type,const size_t g,const size_t c)
 	: RGAException(type)
 {
-	char tmp[200];
-
 	switch(Type)
 	{
 		case eGAModify:
-			sprintf(tmp,"Generation %z: Modify error: Chromsosome %z",g,c);
-			SetMsg(tmp);
+			SetMsg("Generation "+RString::Number(g)+" : Modify error for chromosome "+RString::Number(c));
 			break;
 		case eGALocalOptimisation:
-			sprintf(tmp,"Generation %z: Local optimisation error: Chromsosome %z",g,c);
-			SetMsg(tmp);
+			SetMsg("Generation "+RString::Number(g)+" : Local optimization error for chromosome "+RString::Number(c));
 			break;
 		default:
 			RGAException(Type,g,c);

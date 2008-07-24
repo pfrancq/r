@@ -33,6 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rmatrix.h>
+#include <rstring.h>
 using namespace R;
 
 
@@ -72,7 +73,7 @@ RMatrix::RMatrix(const RMatrix& matrix)
 {
 	Init();
 	double **ptrL,*ptrC,**ptrLM,*ptrCM;
-	size_t i,j;	
+	size_t i,j;
 	for(i=Lines+1,ptrL=M,ptrLM=matrix.M;--i;ptrL++,ptrLM++)
 		for(j=Cols+1,ptrC=*ptrL,ptrCM=*ptrLM;--j;ptrC++,ptrCM++)
 			(*ptrC)=(*ptrCM);
@@ -138,11 +139,7 @@ void RMatrix::Symetrize(void)
 double& RMatrix::operator()(size_t i,size_t j) const
 {
 	if((i>Lines)||(j>Cols))
-	{
-		char tmp[80];
-		sprintf(tmp,"RMatrix::operator() const : index %zu, %zu outside range (%zu,%zu)",i,j,Lines,Cols);
-		throw std::range_error(tmp);
-	}
+		throw std::range_error("RMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(Lines)+","+RString::Number(Cols)+")");
 	return(M[i][j]);
 }
 
@@ -151,11 +148,7 @@ double& RMatrix::operator()(size_t i,size_t j) const
 const double* RMatrix::operator[](size_t i) const
 {
 	if(i>Lines)
-	{
-		char tmp[80];
-		sprintf(tmp,"RMatrix::operator[] const : index %zu outside range (0,%zu)",i,Lines);
-		throw std::range_error(tmp);
-	}	
+		throw std::range_error("RMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(Lines)+")");
 	return(M[i]);
 }
 
@@ -164,11 +157,7 @@ const double* RMatrix::operator[](size_t i) const
 double* RMatrix::operator[](size_t i)
 {
 	if(i>Lines)
-	{
-		char tmp[80];
-		sprintf(tmp,"RMatrix::operator[] const : index %zu outside range (0,%zu)",i,Lines);
-		throw std::range_error(tmp);
-	}		
+		throw std::range_error("RMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(Lines)+")");
 	return(M[i]);
 }
 

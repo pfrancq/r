@@ -6,7 +6,7 @@
 
 	Instance for 2D placement GA - Header
 
-	Copyright 1999-2005 by the Université Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -69,12 +69,12 @@ public:
 	size_t NbObjs;
 
 	/**
-	* Array of identificators for objects.
+	* Array of identifiers for objects.
 	*/
 	size_t* Order;
 
 	/**
-	* Array of identificators for objects.
+	* Array of identifiers for objects.
 	*/
 	size_t* Order2;
 
@@ -110,7 +110,7 @@ public:
 	RThreadData2D(cInst* owner);
 
 	/**
-	* Initialise thje data.
+	* Initialize the data.
 	*/
 	virtual void Init(void);
 
@@ -148,7 +148,7 @@ public:
 	size_t NbObjs;
 
 	/**
-	* Local Optimisation.
+	* Local Optimization.
 	*/
 	bool bLocalOpti;
 
@@ -160,9 +160,9 @@ public:
 protected:
 
 	/**
-	* Type of the heuristic that used.
+	* Name of the heuristic that used.
 	*/
-	HeuristicType Heuristic;
+	RString Heuristic;
 
 public:
 
@@ -176,14 +176,14 @@ public:
 	* of the objects to place.
 	* @param popsize        The size of the population.
 	* @param prob           Pointer to the problem.
-	* @param h              The heuristic that has to be used.
+	* @param h              Name of the heuristic that has to be used.
 	* @param name           Name of the genetic algorithm.
 	* @param debug          Debugger.
 	*/
-	RInst2D(size_t popsize,RProblem2D* prob,HeuristicType h,const RString& name,RDebug* debug=0);
+	RInst2D(size_t popsize,RProblem2D* prob,const RString& h,const RString& name,RDebug* debug=0);
 
 	/**
-	* Initialisation of the instance.
+	* Initialization of the instance.
 	*/
 	virtual void Init(void);
 
@@ -195,22 +195,22 @@ public:
 	/**
 	* Return the heuristic type.
 	*/
-	inline HeuristicType GetHeuristic(void) { return(Heuristic); }
+	RString GetHeuristic(void) const {return(Heuristic);}
 
 	/**
 	* Set the parameters for the "area" criterion.
 	* @param params         The parameters.
 	*/
-	void SetAreaParams(const RPromCriterionParams& params);
+	void SetAreaParams(const RParam& params);
 
 	/**
 	* Set the parameters for the "area" criterion.
 	* @param params         The parameters.
 	*/
-	void SetDistParams(const RPromCriterionParams& params);
+	void SetDistParams(const RParam& params);
 
 	/**
-	* Return true if a local optimisation is needed.
+	* Return true if a local optimization is needed.
 	*/
 	inline bool LocalOpti(void) { return(bLocalOpti); }
 };

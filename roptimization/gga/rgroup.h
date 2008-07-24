@@ -56,7 +56,7 @@ template<class cGroup,class cObj,class cGroups> class RGroups;
 /**
 * Constance representing a non-assignation of an object.
 */
-const size_t NoGroup=0xFFFFFFFF;
+const size_t NoGroup=size_t(-1);
 
 
 //------------------------------------------------------------------------------

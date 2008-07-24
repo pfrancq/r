@@ -405,6 +405,12 @@ public:
 	 * Transform an unsigned long long to a string.
 	 * @param nb             Number.
 	 */
+	static RString Number(const long long nb);
+
+	/**
+	 * Transform an unsigned long long to a string.
+	 * @param nb             Number.
+	 */
 	static RString Number(const unsigned long long nb);
 
 	/**

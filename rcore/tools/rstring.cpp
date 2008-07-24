@@ -689,6 +689,18 @@ RString RString::Number(const unsigned long nb)
 
 
 //------------------------------------------------------------------------------
+RString RString::Number(const long long nb)
+{
+	char Tmp[20];
+	RString res;
+
+	sprintf(Tmp,"%lld",nb);
+	res=Tmp;
+	return(res);
+}
+
+
+//------------------------------------------------------------------------------
 RString RString::Number(const unsigned long long nb)
 {
 	char Tmp[20];

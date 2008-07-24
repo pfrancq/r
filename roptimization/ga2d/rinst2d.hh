@@ -6,7 +6,7 @@
 
 	Instance for 2D placement GA - Inline Implementation
 
-	Copyright 1999-2005 by the Université Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -60,18 +60,13 @@ template<class cInst,class cChromo>
 		tmpObj2=new RObj2DContainer(NbObjs+2,"Temporary Object 2",NbObjs);
 		tmpInfos=new RGeoInfos(this->Owner->Problem,true);
 	}
-	switch(this->Owner->GetHeuristic())
-	{
-		case BottomLeft:
-			Heuristic = new RPlacementBottomLeft(NbObjs+2,true,true,this->Owner->Random,true);
-			break;
-		case Edge:
-			Heuristic = new RPlacementEdge(NbObjs+2,true,true,this->Owner->Random,true);
-			break;
-		case Center:
-			Heuristic = new RPlacementCenter(NbObjs+2,true,true,this->Owner->Random,true);
-			break;
-	}
+	RString Heur(this->Owner->GetHeuristic());
+	if(Heur=="BottomLeft")
+		Heuristic=new RPlacementBottomLeft(NbObjs+2,true,true,this->Owner->Random,true);
+	if(Heur=="Edge")
+		Heuristic=new RPlacementEdge(NbObjs+2,true,true,this->Owner->Random,true);
+	if(Heur=="Center")
+		Heuristic=new RPlacementCenter(NbObjs+2,true,true,this->Owner->Random,true);
 }
 
 
@@ -98,7 +93,7 @@ template<class cInst,class cChromo>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RInst2D(size_t popsize,RProblem2D* prob,HeuristicType h,const RString& name,RDebug *debug)
+		RInst2D(size_t popsize,RProblem2D* prob,const RString& h,const RString& name,RDebug *debug)
 			: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug), Problem(prob), Objs(prob->Objs),
 			 NbObjs(prob->Objs.GetNb()), bLocalOpti(true), Heuristic(h), Limits(prob->Limits)
 {
@@ -125,7 +120,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetAreaParams(const RPromCriterionParams& params)
+	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetAreaParams(const RParam& params)
 {
 	this->thDatas[0]->Heuristic->SetAreaParams(params);
 }
@@ -133,7 +128,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetDistParams(const RPromCriterionParams& params)
+	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetDistParams(const RParam& params)
 {
 	this->thDatas[0]->Heuristic->SetDistParams(params);
 }

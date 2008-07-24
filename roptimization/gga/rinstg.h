@@ -75,7 +75,7 @@ public:
 	RThreadDataG(cInst* owner);
 
 	/**
-	* Initialise thje data.
+	* Initialize the data.
 	*/
 	virtual void Init(void);
 
@@ -101,9 +101,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 protected:
 
 	/**
-	* Type of the heuristic that used.
+	* Name of the heuristic used.
 	*/
-	HeuristicType Heuristic;
+	RString Heuristic;
 
 	/**
 	* Determine if the groups modified during a crossover must be emptied, or
@@ -127,21 +127,21 @@ public:
 	* Construct the instance.
 	* @param popsize        Size of the population.
 	* @param objs           Objects to groups.
-	* @param h              The heuristic that has to be used.
+	* @param h              Name of the heuristic that has to be used.
 	* @param name           Name of the genetic algorithm.
 	* @param debug          Debugger.
 	*/
-	RInstG(size_t popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug *debug=0);
+	RInstG(size_t popsize,RCursor<cObj> objs,const RString& h,const RString& name,RDebug *debug=0);
 
 	/**
-	* Initialisation of the instance.
+	* Initialization of the instance.
 	*/
 	virtual void Init(void);
 
 	/**
 	* Return the heuristic type.
 	*/
-	inline HeuristicType GetHeuristic(void) {return(Heuristic);}
+	inline RString GetHeuristic(void) const {return(Heuristic);}
 
 	/**
 	* Look if the groups containing objects that are also contained in groups

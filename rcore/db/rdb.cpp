@@ -411,11 +411,7 @@ RString RQueryMySQL::operator[](size_t index) const
 	RString res;
 
 	if(index>=NbCols)
-	{
-		char tmp[80];
-		sprintf(tmp,"RQuery::operator[] const : column %z outside range [0,%z]",index,NbCols-1);
-		throw RDbException(tmp);
-	}
+		throw RDbException("RQueryMySQL::operator[] const : column "+RString::Number(index)+" outside range [0,"+RString::Number(NbCols-1)+"]");
 	if(!Row)
 		throw RDbException("Treated set");
 	val=Row[index];
@@ -477,11 +473,7 @@ void RQuerySQLite::Next(void)
 RString RQuerySQLite::operator[](size_t index) const
 {
 	if(index>=NbCols)
-	{
-		char tmp[80];
-		sprintf(tmp,"RQuery::operator[] const : column %z outside range [0,%z]",index,NbCols-1);
-		throw RDbException(tmp);
-	}
+		throw RDbException("RQuerySQLite::operator[] const : column "+RString::Number(index)+" outside range [0,"+RString::Number(NbCols-1)+"]");
 	if(End())
 		throw RDbException("Treated set");
 	return(RString(static_cast<const RChar*>(sqlite3_column_text16(Result,index))));

@@ -33,6 +33,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <basiccursor.h>
+#include <rstring.h>
 using namespace R;
 
 
@@ -132,11 +133,7 @@ void BasicCursor::GoTo(size_t idx)
 {
 	idx+=FirstPtr;
 	if(idx>=LastPtr)
-	{
-		char tmp[80];
-		sprintf(tmp,"void BasicCursor::GoTo(size_t) : index %zu outside range [%zu,%zu]",idx,FirstPtr,LastPtr-1);
-		throw std::range_error(tmp);
-	}
+		throw std::range_error("void BasicCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(FirstPtr)+","+RString::Number(LastPtr-1)+"]");
 	Current=&Tab[idx];
 	ActPtr=idx;
 }

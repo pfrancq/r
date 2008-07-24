@@ -75,7 +75,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
-	RInstH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::RInstH(size_t popsize,RCursor<cObj> objs,HeuristicType h,const RString& name,RDebug* debug)
+	RInstH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::RInstH(size_t popsize,RCursor<cObj> objs,const RString& h,const RString& name,RDebug* debug)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug), Heuristic(h), Objs(objs)
 {
 	ControlAttr=MaxAttr=MaxNodes=0;
@@ -109,17 +109,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	RTreeHeuristic<cNode,cObj,cChromo>* RInstH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::CreateHeuristic(void)
 {
-	RTreeHeuristic<cNode,cObj,cChromo>* h;
+	RTreeHeuristic<cNode,cObj,cChromo>* h(0);
 
-	switch(Heuristic)
-	{
-		case FirstFit:
-			h = new RFirstNodeHeuristic<cNode,cObj,cChromo>(this->Random,Objs,this->Debug);
-			break;
-		default:
-			h=0;
-			break;
-	}
+	if(Heuristic=="FirstFit")
+		h=new RFirstNodeHeuristic<cNode,cObj,cChromo>(this->Random,Objs,this->Debug);
 	return(h);
 }
 

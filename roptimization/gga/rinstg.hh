@@ -69,7 +69,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(size_t popsize,R::RCursor<cObj> objs,HeuristicType h,const R::RString& name,R::RDebug* debug)
+	R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(size_t popsize,R::RCursor<cObj> objs,const RString& h,const R::RString& name,R::RDebug* debug)
 		: R::RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(objs)
 {
@@ -98,17 +98,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	R::RGroupingHeuristic<cGroup,cObj,cChromo>* R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::CreateHeuristic(void)
 {
-	R::RGroupingHeuristic<cGroup,cObj,cChromo>* h;
+	R::RGroupingHeuristic<cGroup,cObj,cChromo>* h(0);
 
-	switch(Heuristic)
-	{
-		case FirstFit:
-			h = new R::RFirstFitHeuristic<cGroup,cObj,cChromo>(this->Random,Objs,this->Debug);
-			break;
-		default:
-			h=0;
-			break;
-	}
+	if(Heuristic=="FirstFit")
+		h = new R::RFirstFitHeuristic<cGroup,cObj,cChromo>(this->Random,Objs,this->Debug);
 	return(h);
 }
 

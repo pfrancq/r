@@ -60,11 +60,11 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 /**
-* This constance represent a non-identificator. It is used, for example, to
-* specify that a variable containing an identificator of an object. is
+* This constant represent a non-identifier. It is used, for example, to
+* specify that a variable containing an identifier of an object. is
 * referencing no object.
 */
-const size_t NoObject=0xFFFFFFFF;
+const size_t NoObject=size_t(-1);
 
 
 //------------------------------------------------------------------------------

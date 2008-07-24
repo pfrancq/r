@@ -71,35 +71,35 @@ RGAException::RGAException(const char* str,tException type) throw()
 RGAException::RGAException(tException type,const size_t g,const size_t c) throw()
 	: RException(), Type(type)
 {
-	char tmp[200];
-
+	RString Msg("Generation "+RString::Number(g)+": ");
 	switch(Type)
 	{
 		case eGAVerify:
-			sprintf(tmp,"Generation %z: Verify error for chromosome %z",g,c);
+			Msg+="Verify";
 			break;
 		case eGAMutation:
-			sprintf(tmp,"Generation %z: Mutation error: Chromsosome %z",g,c);
+			Msg+="Mutation";
 			break;
 		case eGAInversion:
-			sprintf(tmp,"Generation %z: Inversion error: Chromsosome %z",g,c);
+			Msg+="Inversion";
 			break;
 		case eGAOptimisation:
-			sprintf(tmp,"Generation %z: Optimisation error: Chromsosome %z",g,c);
+			Msg+="Optimization";
 			break;
 		case eGARandomConstruct:
-			sprintf(tmp,"Generation %z: Random Construction error: Chromsosome %z",g,c);
+			Msg+="Random construction";
 			break;
 		case eGAEvaluation:
-			sprintf(tmp,"Generation %z: Evaluation error: Chromsosome %z",g,c);
+			Msg+="Evaluation";
 			break;
 		case eGAPostEvaluation:
-			sprintf(tmp,"Generation %z: Post Evaluation error: Chromsosome %z",g,c);
+			Msg+="Post-evaluation";
 			break;
 		default:
-			sprintf(tmp,"Generation %z: Unknown error for chromosome %z",g,c);
+			Msg+="Unknown";
 	}
-	SetMsg(tmp);
+	Msg+=" error for chromosome "+RString::Number(c);
+	SetMsg(Msg);
 }
 
 
@@ -108,8 +108,5 @@ RGAException::RGAException(tException type,const size_t g,const size_t c) throw(
 RGAException::RGAException(const size_t g,const size_t p1,const size_t p2,const size_t c) throw()
 	: RException(), Type(eGACrossover)
 {
-	char tmp[200];
-
-	sprintf(tmp,"Generation %z: Crossover error: parent %z + parent %z -> Child %z",g,p1,p2,c);
-	SetMsg(tmp);
+	SetMsg("Generation "+RString::Number(g)+": Crossover error: parent "+RString::Number(p1)+" + parent "+RString::Number(p2)+" -> Child "+RString::Number(c));
 }

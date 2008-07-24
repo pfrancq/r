@@ -6,7 +6,7 @@
 
 	2D Placement Genetic Algorithm - Header
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -58,7 +58,7 @@ public:
 	 * Heuristic used for the placement failed.
 	 */
 	static const RGAException::tException ePlacementHeuristic=RGAException::tException(RGAException::eGA+1);
-	
+
 	/**
 	 * Normal GA2D exception.
 	 */
@@ -81,13 +81,6 @@ class RObj2DContainer;
 template<class cInst,class cChromo>	class RThreadData2D;
 template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RInst2D;
 template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RChromo2D;
-
-
-//------------------------------------------------------------------------------
-/**
-* Different heuristic usable in the 2DGA.
-*/
-enum HeuristicType{BottomLeft=0,Edge=1,Center=2};
 
 
 }//------- End of namespace R --------------------------------------------------
