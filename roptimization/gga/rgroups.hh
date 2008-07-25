@@ -210,7 +210,6 @@ template<class cGroup,class cObj,class cGroups>
 	void R::RGroups<cGroup,cObj,cGroups>::Verify(void)
 {
 	size_t i,*list,nbobjs;
-	char tmp[200];
 
 	R::RCursor<cGroup> Cur(Used);
 	for(Cur.Start();!Cur.End();Cur.Next())
@@ -219,10 +218,7 @@ template<class cGroup,class cObj,class cGroups>
 		if((*list)!=NoGroup)
 			nbobjs++;
 	if(ObjsAss.GetNb()+ObjsNoAss.GetNb()!=Objs.GetNb())
-	{
-		sprintf(tmp,"Problem with the number of objects: ObjsAss=%u and ObjsNoAss=%u",ObjsAss.GetNb(),ObjsNoAss.GetNb());
-		throw RGAException(tmp,RGAException::eGAVerify);
-	}
+		throw RGAException("Problem with the number of objects: ObjsAss="+RString::Number(ObjsAss.GetNb())+" and ObjsNoAss="+RString::Number(ObjsNoAss.GetNb()),RGAException::eGAVerify);
 }
 
 

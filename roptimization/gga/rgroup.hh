@@ -63,47 +63,31 @@ template<class cGroup,class cObj,class cGroups>
 	void RGroup<cGroup,cObj,cGroups>::Verify(void)
 {
 	size_t NbObjects=Owner->ObjsAss.GetNb();
-	char tmp[200];
 
 	// Each group must have a parent.
 	if(!Owner)
-	{
-		sprintf(tmp,"No Owner for group %u",Id);
-		throw RGAException(tmp,RGAException::eGAVerify);
-	}
+		throw RGAException("No Owner for used group "+RString::Number(Id),RGAException::eGAVerify);
 
 	// Verify objects attached.
 	if(SubObjects!=NoObject)
 	{
 		// The number of objects attached can't be null.
 		if(!NbSubObjects)
-		{
-			sprintf(tmp,"!NbSubObjects for group %u",Id);
-			throw RGAException(tmp,RGAException::eGAVerify);
-		}
+			throw RGAException("!NbSubObjects for used group "+RString::Number(Id),RGAException::eGAVerify);
 
 		// The index of the first objects attached can not exceed the total number of objects.
 		if(SubObjects>NbObjects)
-		{
-			sprintf(tmp,"SubObjects>NbObjects for group %u",Id);
-			throw RGAException(tmp,RGAException::eGAVerify);
-		}
+			throw RGAException("SubObjects>NbObjects for group "+RString::Number(Id),RGAException::eGAVerify);
 
 		// The index of the last objects attached can not exceed the total number of objects.
 		if(SubObjects+NbSubObjects>NbObjects+1)
-		{
-			sprintf(tmp,"SubObjects+NbSubObjects>NbObjects+1 for group %u",Id);
-			throw RGAException(tmp,RGAException::eGAVerify);
-		}
+			throw RGAException("SubObjects+NbSubObjects>NbObjects+1 for group "+RString::Number(Id),RGAException::eGAVerify);
 	}
 	else
 	{
 		// The number of objects attached must be null.
 		if(NbSubObjects)
-		{
-			sprintf(tmp,"NbSubObjects for group %u",Id);
-			throw RGAException(tmp,RGAException::eGAVerify);
-		}
+			throw RGAException("NbSubObjects for empty group "+RString::Number(Id),RGAException::eGAVerify);
 	}
 
 	// Verify coherence with the objects.
@@ -111,15 +95,9 @@ template<class cGroup,class cObj,class cGroups>
 	for(ptr.Start();!ptr.End();ptr.Next())
 	{
 		if(!ptr())
-		{
-			sprintf(tmp,"Owner->ObjsAss is null for group %u",Id);
-			throw RGAException(tmp,RGAException::eGAVerify);
-		}
+			throw RGAException("Owner->ObjsAss is null for group "+RString::Number(Id),RGAException::eGAVerify);
 		if(Owner->ObjectsAss[ptr()->GetId()]!=Id)
-		{
-			sprintf(tmp,"Owner->ObjsAss[(*obj)->GetId()]!=Id for group %u and object %u",Id,ptr()->GetId());
-			throw RGAException(tmp,RGAException::eGAVerify);
-		}
+			throw RGAException("Owner->ObjsAss[(*obj)->GetId()]!=Id for group "+RString::Number(Id)+" and object "+RString::Number(ptr()->GetId()),RGAException::eGAVerify);
 	}
 }
 

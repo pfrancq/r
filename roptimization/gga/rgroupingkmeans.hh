@@ -78,7 +78,7 @@ template<class cGroup,class cObj,class cGroups>
 	if(!group->GetNbObjs())
 		return(0);
 
-	// Suppose the first element is the most relevant.
+	// Suppose the first object is the most relevant.
 	RCursor<cObj> ptr(Groups->GetObjs(*group));
 	ptr.Start();
 	Relevant=(ptr());
@@ -129,7 +129,6 @@ template<class cGroup,class cObj,class cGroups>
 		for(Grp.Start(),Proto.Start(),maxsim=-1.0,grp=0;!Grp.End();Grp.Next(),Proto.Next())
 		{
 			double sim=Similarity(*ptr,Proto());
-			std::cout<<"Sim="<<sim<<std::endl;
 			if(sim>maxsim)
 			{
 				maxsim=sim;
@@ -166,12 +165,12 @@ template<class cGroup,class cObj,class cGroups>
 	for(CurP.Start();!CurP.End();CurP.Next())
 		Groups->ReserveGroup()->Insert(CurP());
 
-	// Go through the ranbomly ordered subprofiles and put them in the group of the
+	// Go through the randomly ordered objects and put them in the group of the
 	// most similar prototype.
 	unsigned nb;
 	for(Cur=RandObjects,nb=Objs.GetNb()+1;--nb;Cur++)
 	{
-		// If the subprofile is a prototype -> already in a group
+		// If the object is a prototype -> already in a group
 		if(Protos.IsIn(*Cur))
 			continue;
 
@@ -183,7 +182,7 @@ template<class cGroup,class cObj,class cGroups>
 			if(!Grp()->CanInsert(*Cur))
 				continue;
 
-			// Compute similarity with the relevant profile of the group.
+			// Compute similarity with the relevant object of the group.
 			sim=Similarity(CurP(),*Cur);
 			if(sim>maxsim)
 			{
@@ -192,7 +191,7 @@ template<class cGroup,class cObj,class cGroups>
 			}
 		}
 
-		// If no group find -> Create a new group and make the current subprofile the
+		// If no group find -> Create a new group and make the current object the
 		// prototype of it.
 		if(!grp)
 		{
@@ -200,7 +199,7 @@ template<class cGroup,class cObj,class cGroups>
 			Protos.InsertPtrAt(*Cur,grp->GetId());
 		}
 
-		// Insert the subprofile in the current group.
+		// Insert the object in the current group.
 		grp->Insert(*Cur);
 	}
 }

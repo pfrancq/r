@@ -105,12 +105,16 @@ ENDMACRO(SUBDIR_PATH_MANIPULATION)
 ## in this file, define the source list with a SET(${current_target}_current_path_to_dir_from_target_dir_with_underscore_in_place_of_path_separator_TARGET_SOURCES list of SOURCE FILES)
 ## also define the header list for installation with a SET(${current_target}_current_path_to_dir_from_target_dir_with_underscore_in_place_of_path_separator_INCLUDES list of HEADER FILES)
 MACRO(ADD_SOURCE_FILE _for_target _in_dir _includes)
+    
+  #MESSAGE(STATUS "ADD_SOURCE_FILE ${_for_target} ${_in_dir}")
+
+    SET(R_CUR_PATH ${PROJECT_SOURCE_DIR})
     #check the source base path or set the project source dir if not already set
-    IF(R_CUR_PATH)
-        #MESSAGE(STATUS "Current path for sub dir is ${R_CUR_PATH}")
-    ELSE(R_CUR_PATH)
-        SET(R_CUR_PATH ${PROJECT_SOURCE_DIR})
-    ENDIF(R_CUR_PATH)
+    #IF(R_CUR_PATH)
+    #    MESSAGE(STATUS "Current path for sub dir is ${R_CUR_PATH}")
+    #ELSE(R_CUR_PATH)
+    #    SET(R_CUR_PATH ${PROJECT_SOURCE_DIR})
+    #ENDIF(R_CUR_PATH)
 
     #save path for recursion
     SET(TMP_R_CUR_PATH ${R_CUR_PATH})
@@ -120,7 +124,9 @@ MACRO(ADD_SOURCE_FILE _for_target _in_dir _includes)
     SET(${_includes} ${${_includes}} ${R_CUR_PATH})
 
     #include sub directory content
+    #MESSAGE(STATUS "Sub dir content ${R_CUR_PATH}/${_for_target}_${_in_dir}")
     INCLUDE(${R_CUR_PATH}/${_for_target}_${_in_dir}.cmake)
+
 
     #for each source file, add it to the list of file to build
     FOREACH(${_for_target}_${_in_dir}file ${${_for_target}_${_in_dir}_TARGET_SOURCES})
