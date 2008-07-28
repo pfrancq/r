@@ -51,7 +51,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RProblem2D::RProblem2D(void)
-	: Problem(NoObject,"Problem",false), Objs(100,50), Cons()
+	: Problem(cNoRef,"Problem",false), Objs(100,50), Cons()
 {
 }
 

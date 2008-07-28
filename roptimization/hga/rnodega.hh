@@ -58,7 +58,7 @@ template<class cNode,class cObj,class cNodes>
 	NbSubNodes=NbSubObjects= 0;
 	Parent=0;
 	SubNodes = NoNode;
-	SubObjects = NoObject;
+	SubObjects = cNoRef;
 	Reserved=false;
 }
 
@@ -132,7 +132,7 @@ template<class cNode,class cObj,class cNodes>
 	}
 
 	// Verify objects attached.
-// 	if(SubObjects!=NoObject)
+// 	if(SubObjects!=cNoRef)
 // 	{
 // 		// The number of objects attached can't be null.
 // 		if(!NbSubObjects)
@@ -328,7 +328,7 @@ template<class cNode,class cObj,class cNodes>
 {
 	Reserved=false;
 	Parent=0;
-	SubObjects=NoObject;
+	SubObjects=cNoRef;
 	NbSubObjects=0;
 	SubNodes=NoNode;
 	NbSubNodes=0;
@@ -421,7 +421,7 @@ template<class cNode,class cObj,class cNodes>
 	RCursor<cObj> Objs(Owner->GetObjs(this));
 	for(Objs.Start();!Objs.End();Objs.Next(),tmp2++)
 		(*tmp2)=Objs()->GetId();
-	(*tmp2)=NoObject;
+	(*tmp2)=cNoRef;
 	return(tmp);
 }
 

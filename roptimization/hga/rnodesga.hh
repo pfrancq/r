@@ -227,7 +227,7 @@ template<class cNode,class cObj,class cNodes>
 		j=to->SubObjects;
 		RCursor<cNode> Cur(Used);
 		for(Cur.Start();!Cur.End();Cur.Next())
-			if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=NoObject))
+			if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 				Cur()->SubObjects++;
 		ObjsAss.InsertPtrAt(obj,to->SubObjects+to->NbSubObjects,false);
 	}
@@ -255,11 +255,11 @@ template<class cNode,class cObj,class cNodes>
 	ObjsAss.DeletePtr(obj);
 	ObjsNoAss.InsertPtr(obj);
 	if(!(--(from->NbSubObjects)))
-		from->SubObjects=NoObject;
+		from->SubObjects=cNoRef;
 	from->PostDelete(obj);
 	RCursor<cNode> Cur(Used);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=NoObject))
+		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 			Cur()->SubObjects--;
 }
 
@@ -279,11 +279,11 @@ template<class cNode,class cObj,class cNodes>
 	ObjsAss.DeletePtr(obj);
 	ObjsNoAss.InsertPtr(obj);
 	if(!(--(from->NbSubObjects)))
-		from->SubObjects=NoObject;
+		from->SubObjects=cNoRef;
 	from->PostDelete(obj);
 	RCursor<cNode> Cur(Used);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=NoObject))
+		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 			Cur()->SubObjects--;
 }
 
@@ -304,13 +304,13 @@ template<class cNode,class cObj,class cNodes>
 		ObjsNoAss.InsertPtr(o());
 		ObjsAss.DeletePtr(o());
 		if(!(--from->NbSubObjects))
-			from->SubObjects=NoObject;
+			from->SubObjects=cNoRef;
 		from->PostDelete(o());
 	}
 	j=from->SubObjects;
 	RCursor<cNode> Cur(Used);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=NoObject))
+		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 			Cur()->SubObjects-=from->NbSubObjects;
 }
 

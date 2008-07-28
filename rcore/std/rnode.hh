@@ -39,7 +39,7 @@
 //------------------------------------------------------------------------------
 template<class N,bool bAlloc,bool bOrder>
 	RNode<N,bAlloc,bOrder>::RNode(void)
-		: Tree(0), Parent(0), SubNodes(NullId), NbSubNodes(0), Index(SIZE_MAX)
+		: Tree(0), Parent(0), SubNodes(cNoRef), NbSubNodes(0), Index(cNoRef)
 {
 }
 

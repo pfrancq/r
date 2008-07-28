@@ -54,7 +54,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RPromCriterion::RPromCriterion(tCriteriaType type,double w,const char* name,size_t nb)
-	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(NullId), Name(name),
+	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(cNoRef), Name(name),
 	  Type(type)
 {
 	Weight=w;
@@ -188,16 +188,16 @@ void RPromLinearCriterion::Set(double p,double q,double w)
 double RPromLinearCriterion::ComputePref(double u,double v)
 {
 	double d=fabs(u-v);
-	
+
 	// No solution is better
 	if(d<=Q)
-		return(0.0);  
-	
+		return(0.0);
+
 	// One solution is better than the other one but it depends of:
 	// If u>v or v<u
 	// If the criteria should be maximized or minimized
 	if(d>=P)
-	{		
+	{
 		if(Type==Maximize)
 		{
 			if(u>v)
@@ -210,10 +210,10 @@ double RPromLinearCriterion::ComputePref(double u,double v)
 			if(u<v)
 				return(1.0);
 			else
-				return(0.0);			
+				return(0.0);
 		}
 	}
-	
+
 	// Betwwen Q and P -> Compute the prefrence.
 	if(Type==Maximize)
 	{
@@ -227,6 +227,6 @@ double RPromLinearCriterion::ComputePref(double u,double v)
 		if(u<v)
 			return((d-Q)/(P-Q));
 		else
-			return(0);			
+			return(0);
 	}
 }

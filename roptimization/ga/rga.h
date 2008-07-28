@@ -58,15 +58,6 @@ namespace R{
 //------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
-/**
-* This constant represent a non-identifier. It is used, for example, to
-* specify that a variable containing an identifier of an object. is
-* referencing no object.
-*/
-const size_t NoObject=size_t(-1);
-
-
 //------------------------------------------------------------------------------
 // General Variables
 /**

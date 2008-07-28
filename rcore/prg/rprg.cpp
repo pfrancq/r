@@ -6,7 +6,7 @@
 
 	Generic script program - Implementation.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -51,6 +51,27 @@ using namespace R;
 
 
 
+//------------------------------------------------------------------------------
+//
+// class RPrgException
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+RPrgException::RPrgException(const RPrg* prg) throw()
+	: RException(), Prg(prg)
+{
+}
+
+
+//------------------------------------------------------------------------------
+RPrgException::RPrgException(const RPrg* prg,const char* str) throw()
+	: RException(prg->WhatTreated()+": "+str), Prg(prg)
+{
+}
+
+
+
 //-----------------------------------------------------------------------------
 //
 // RPrg
@@ -60,7 +81,9 @@ using namespace R;
 //-----------------------------------------------------------------------------
 RPrg::RPrg(RString f,RPrgOutput* o)
 	: FileName(f), Cout(o), Insts(40), Vars(10,5), Classes(10,5), Prg(FileName)
+
 {
+	Prg.SetRem("#");
 }
 
 
@@ -70,7 +93,6 @@ void RPrg::Load(void)
 	RPrgInst* i;
 
 	Prg.Open(RIO::Read);
-	Prg.SetRem("#");
 	ReadLine=true;
 	while((!ReadLine)||(!Prg.End()&&(ReadLine)))
 	{
@@ -99,6 +121,13 @@ size_t RPrg::CountTabs(const RString& line)
 
 
 //-----------------------------------------------------------------------------
+RString RPrg::WhatTreated(void) const
+{
+	return(FileName+"("+RString::Number(Line)+")");
+}
+
+
+//-----------------------------------------------------------------------------
 RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 {
 	RString l;
@@ -111,6 +140,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 	RCharCursor Cur;
 
 	// Read the line
+	Line=prg.GetLineNb();
 	if(ReadLine)
 		buf=prg.GetLine();
 	Cur.Set(buf);
@@ -142,6 +172,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 			RPrgInstFor* f=new RPrgInstFor(buf.Mid(Cur.GetPos(),buf.GetLen()-Cur.GetPos()+1),tabs);
 
 			// Read the next lines
+			Line=prg.GetLineNb();
 			buf=Prg.GetLine();
 			if(buf.IsEmpty()) return(f);
 			pos=0;
@@ -153,6 +184,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 				f->AddInst(AnalyseLine(prg));
 				if(ReadLine)
 				{
+					Line=prg.GetLineNb();
 					buf=prg.GetLine();
 					if(buf.IsEmpty()) return(f);
 					pos=0;
@@ -161,7 +193,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 			}
 			return(f);
 		}
-		throw RException(RString("Instruction \"")+RString(obj)+"\" does not exist.");
+		throw RPrgException(this,RString("Instruction \"")+RString(obj)+"\" does not exist.");
 	}
 
 	// Look if call to an object
@@ -170,7 +202,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 		// Look if the object is known
 		RPrgClass* c=Classes.GetPtr<RString>(obj);
 		if(!c)
-			throw RException(RString("Object \"")+obj+"\" unknown");
+			throw RPrgException(this,RString("Object \"")+obj+"\" unknown");
 
 		// Read the methods name
 		len=0;
@@ -187,7 +219,7 @@ RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
 		{
 			RString msg("Method \"");
 			msg+=name+"\" unknown for object \""+obj+"\"";
-			throw RException(msg);
+			throw RPrgException(this,msg);
 		}
 
 		// Create the instruction

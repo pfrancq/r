@@ -66,10 +66,10 @@ typedef unsigned long long size_raw;
 
 //------------------------------------------------------------------------------
 /**
-* The RMySQL class provides a representation of an error that occurs while
-* working with a MySQL database.
+* The RDbExcetion class provides a representation of an error that occurs while
+* working with a database.
 * @author Pascal Francq
-* @short MySQL Error.
+* @short Database Error.
 */
 class RDbException : public R::RException
 {
@@ -185,7 +185,7 @@ public:
 	/**
 	* Create a table that will be used to simulate transactions.
 	* @param name           Name of the transaction.
-	* @param nb             Number of paramters.
+	* @param nb             Number of parameters.
 	* @param ...            Name of the parameters of the transaction (transid
 	                        is reserved).
 	*/
@@ -199,6 +199,11 @@ public:
 	virtual RQuery* Query(const RString& sql)=0;
 
 	/**
+	 * Get the last auto-increment identifier inserted.
+	 */
+	virtual size_t GetLastInsertId(void)=0;
+
+	/**
 	* Destruct the connection to the database.
 	*/
 	virtual ~RDb(void);
@@ -207,7 +212,7 @@ public:
 
 //------------------------------------------------------------------------------
 /**
-* The RQuery class provides a representation of a query.
+* The RQuery class provides a representation of a query for a given database.
 *
 * Here is a example:
 *
@@ -243,7 +248,7 @@ public:
 * }
 * @endcode
 * @author Pascal Francq
-* @short MySQL Query.
+* @short Query.
 */
 class RQuery
 {
@@ -253,11 +258,6 @@ protected:
 	* SQL query.
 	*/
 	RString SQL;
-
-	/**
-	* Total number of rows returned by the query.
-	*/
-	size_raw NbRows;
 
 	/**
 	* Number of columns of the query.
@@ -271,12 +271,6 @@ protected:
 	RQuery(const RString& sql);
 
 public:
-
-	/**
-	* Get the total number of rows of the query.
-	* @returns Number of rows.
-	*/
-	size_raw GetNbRows(void) {return(NbRows);}
 
 	/**
 	* Get the total number of columns of the query.

@@ -82,7 +82,7 @@ RVertex* RGraph::CreateVertex(void)
 {
 	RVertex *ptr;
 
-	Vertices.InsertPtr(ptr=new RVertex(Vertices.GetNb(),Vertices.GetNb(),Vertices.GetMaxNb()));
+	Vertices.InsertPtr(ptr=new RVertex(Vertices.GetNb(),Vertices.GetMaxNb()));
 	return(ptr);
 }
 
@@ -92,7 +92,7 @@ RVertex* RGraph::CreateVertex(const size_t id)
 {
 	RVertex *ptr;
 
-	Vertices.InsertPtr(ptr=new RVertex(id,Vertices.GetNb(),Vertices.GetMaxNb()));
+	Vertices.InsertPtr(ptr=new RVertex(id,Vertices.GetMaxNb()));
 	return(ptr);
 }
 

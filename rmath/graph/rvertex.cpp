@@ -43,8 +43,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RVertex::RVertex(size_t id,size_t idx,size_t nb)
-	: Id(id), Index(idx), Edges(nb,nb/2)
+RVertex::RVertex(size_t id,size_t nb)
+	: Id(id), Edges(nb,nb/2)
 {
 }
 
@@ -58,7 +58,7 @@ RVertex::RVertex(const RVertex& v)
 
 //------------------------------------------------------------------------------
 RVertex::RVertex(const VertexStruct& s)
-	: Id(s.id), Index(s.idx), Edges(s.nb,s.nb/2)
+	: Id(s.id), Edges(s.nb,s.nb/2)
 {
 }
 

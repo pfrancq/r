@@ -53,7 +53,7 @@ template<class cGroup,class cObj,class cGroups>
 		: Id(id), Owner(owner)
 {
 	NbSubObjects= 0;
-	SubObjects = NoObject;
+	SubObjects = cNoRef;
 	Reserved=false;
 }
 
@@ -69,7 +69,7 @@ template<class cGroup,class cObj,class cGroups>
 		throw RGAException("No Owner for used group "+RString::Number(Id),RGAException::eGAVerify);
 
 	// Verify objects attached.
-	if(SubObjects!=NoObject)
+	if(SubObjects!=cNoRef)
 	{
 		// The number of objects attached can't be null.
 		if(!NbSubObjects)
@@ -107,7 +107,7 @@ template<class cGroup,class cObj,class cGroups>
 	void RGroup<cGroup,cObj,cGroups>::Clear(void)
 {
 	Reserved=false;
-	SubObjects=NoObject;
+	SubObjects=cNoRef;
 	NbSubObjects=0;
 }
 
@@ -230,7 +230,7 @@ template<class cGroup,class cObj,class cGroups>
 	RCursor<cObj> ptr(Owner->ObjsAss);
 	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next(),tmp2++)
 		(*tmp2)=ptr()->GetId();
-	(*tmp2)=NoObject;
+	(*tmp2)=cNoRef;
 	return(tmp);
 }
 

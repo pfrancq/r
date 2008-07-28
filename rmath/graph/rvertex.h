@@ -66,14 +66,9 @@ public:
 private:
 
 	/**
-	* Identificator of the vertex.
+	* Identifier of the vertex.
 	*/
 	size_t Id;
-
-	/**
-	* Index of the vertex in the graph's container.
-	*/
-	size_t Index;
 
 	/**
 	* All the edges connecting the given vertex.
@@ -84,11 +79,10 @@ public:
 
 	/**
 	* Constructor of the vertex.
-	* @param id              Identificator.
-	* @param idx             Index.
-	* @param nb              Number of edges.
+	* @param id              Identifier.
+	* @param nb              Supposed number of edges.
 	*/
-	RVertex(size_t id,size_t idx,size_t nb);
+	RVertex(size_t id,size_t nb=10);
 
 	/**
 	* Copy constructor.
@@ -103,7 +97,7 @@ public:
 	RVertex(const VertexStruct& s);
 
 	/**
-	* Get the identificator of the vertex.
+	* Get the identifier of the vertex.
 	*/
 	size_t GetId(void) const {return(Id);}
 
@@ -115,15 +109,15 @@ public:
 	/**
 	* Is used to compare two vertices. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param v               Vertex used for the comparaison.
+	* @param v               Vertex used for the comparison.
 	*/
 	int Compare(const RVertex& v) const {return(this!=&v);}
 
 	/**
-	* Is used to compare a vertex and an identificator. The function returns
+	* Is used to compare a vertex and an identifier. The function returns
 	* the same type of information than the strcmp function from the standard
 	* C library.
-	* @param i               Identificator used for the comparaison.
+	* @param i               Identifier used for the comparison.
 	*/
 	int Compare(const size_t i) const {return(Id-i);}
 
@@ -131,12 +125,12 @@ public:
 	* Is used to compare a vertex and a structure. The function returns
 	* the same type of information than the strcmp function from the standard
 	* C library.
-	* @param s               Structure used for the comparaison.
+	* @param s               Structure used for the comparison.
 	*/
 	int Compare(const VertexStruct& s) const {return(Id-s.id);}
 
 	/**
-	* Destructor of the vertex.
+	* Destruct the vertex.
 	*/
 	~RVertex(void);
 

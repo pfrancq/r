@@ -60,7 +60,7 @@ RGrid::RGrid(RPoint &limits)
 	#else
 		InternalLimits=Limits;
 	#endif
-		
+
 	// Init Occupied
 	OccupiedX = new size_t*[GetMaxX()];
 	for(size_t R=0;R<GetMaxX();R++)
@@ -119,7 +119,7 @@ bool RGrid::IsFree(tCoord x,tCoord y)
 	RReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.X)||y<0||y>(InternalLimits.Y))
 		return(true);
-	return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]==NoObject);
+	return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]==cNoRef);
 }
 
 
@@ -129,7 +129,7 @@ bool RGrid::IsOcc(tCoord x,tCoord y)
 	RReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.X)||y<0||y>(InternalLimits.Y))
 		return(false);
-	return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]!=NoObject);
+	return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]!=cNoRef);
 }
 
 
@@ -139,7 +139,7 @@ tCoord RGrid::LookLeft(RPoint& pt)
 	size_t* ptr=&OccupiedY[static_cast<size_t>(pt.Y)][static_cast<size_t>(pt.X)];
 	tCoord x=pt.X;
 
-	while(x&&((*ptr)==NoObject))
+	while(x&&((*ptr)==cNoRef))
 	{
 		ptr--;
 		x--;
@@ -154,7 +154,7 @@ tCoord RGrid::LookRight(RPoint& pt)
 	size_t *ptr=&OccupiedY[static_cast<size_t>(pt.Y)][static_cast<size_t>(pt.X)];
 	tCoord x=pt.X;
 
-	while((x<InternalLimits.X)&&((*ptr)==NoObject))
+	while((x<InternalLimits.X)&&((*ptr)==cNoRef))
 	{
 		ptr++;
 		x++;
@@ -169,7 +169,7 @@ tCoord RGrid::LookUp(RPoint& pt)
 	size_t *ptr=&OccupiedX[static_cast<size_t>(pt.Y)][static_cast<size_t>(pt.X)];
 	tCoord y=pt.Y;
 
-	while((y<=InternalLimits.Y)&&((*ptr)==NoObject))
+	while((y<=InternalLimits.Y)&&((*ptr)==cNoRef))
 	{
 		ptr++;
 		y++;
@@ -184,7 +184,7 @@ tCoord RGrid::LookDown(RPoint& pt)
 	size_t *ptr=&OccupiedX[static_cast<size_t>(pt.Y)][static_cast<size_t>(pt.X)];
 	tCoord y=pt.Y;
 
-	while(y&&((*ptr)==NoObject))
+	while(y&&((*ptr)==cNoRef))
 	{
 		ptr--;
 		y--;
@@ -205,7 +205,7 @@ tCoord RGrid::SkirtLeft(RPoint& pt,RRect& bound)
 	if(pt.Y<InternalLimits.Y) ptrU=&OccupiedY[static_cast<size_t>(pt.Y+1)][static_cast<size_t>(pt.X-1)]; else ptrU=0;
 
 	// While next point is free and not a bifurcation, go to left
-	while((x>=Limit)&&((*ptr)==NoObject)&&!((ptrU&&((*ptrU)==NoObject))&&(ptrD&&((*ptrD)==NoObject))))
+	while((x>=Limit)&&((*ptr)==cNoRef)&&!((ptrU&&((*ptrU)==cNoRef))&&(ptrD&&((*ptrD)==cNoRef))))
 	{
 		ptr--;
 		if(ptrU) ptrU--;
@@ -214,7 +214,7 @@ tCoord RGrid::SkirtLeft(RPoint& pt,RRect& bound)
 	}
 
 	// If bifucation and next left point is free, go to it
-	if((ptrU&&((*ptrU)==NoObject))&&(ptrD&&((*ptrD)==NoObject))&&((x!=pt.X)&&(x>=Limit)&&((*(ptr))==NoObject)))
+	if((ptrU&&((*ptrU)==cNoRef))&&(ptrD&&((*ptrD)==cNoRef))&&((x!=pt.X)&&(x>=Limit)&&((*(ptr))==cNoRef)))
 		x--;
 
 	return(x);
@@ -233,7 +233,7 @@ tCoord RGrid::SkirtRight(RPoint& pt,RRect& bound)
 	if(pt.Y<InternalLimits.Y) ptrU=&OccupiedY[static_cast<size_t>(pt.Y+1)][static_cast<size_t>(pt.X+1)]; else ptrU=0;
 
    // While next point is free and not a bifurcation, go to right
-	while((x<=Limit)&&((*ptr)==NoObject)&&!((ptrU&&((*ptrU)==NoObject))&&(ptrD&&((*ptrD)==NoObject))))
+	while((x<=Limit)&&((*ptr)==cNoRef)&&!((ptrU&&((*ptrU)==cNoRef))&&(ptrD&&((*ptrD)==cNoRef))))
 	{
 		ptr++;
 		if(ptrU) ptrU++;
@@ -242,7 +242,7 @@ tCoord RGrid::SkirtRight(RPoint& pt,RRect& bound)
 	}
 
 	// If bifucation and next right point is free, go to it
-	if((ptrU&&((*ptrU)==NoObject))&&(ptrD&&((*ptrD)==NoObject))&&((x!=pt.X)&&(x<=Limit)&&((*(ptr))==NoObject)))
+	if((ptrU&&((*ptrU)==cNoRef))&&(ptrD&&((*ptrD)==cNoRef))&&((x!=pt.X)&&(x<=Limit)&&((*(ptr))==cNoRef)))
 		x++;
 	return(x);
 }
@@ -260,7 +260,7 @@ tCoord RGrid::SkirtUp(RPoint& pt,RRect& bound)
 	if(pt.X<InternalLimits.X) ptrR=&OccupiedX[static_cast<size_t>(pt.X+1)][static_cast<size_t>(pt.Y+1)]; else ptrR=0;
 
 	// While next point is free and not a bifurcation, go to up
-	while((y<=Limit)&&((*ptr)==NoObject)&&!((ptrR&&((*ptrR)==NoObject))&&(ptrL&&((*ptrL)==NoObject))))
+	while((y<=Limit)&&((*ptr)==cNoRef)&&!((ptrR&&((*ptrR)==cNoRef))&&(ptrL&&((*ptrL)==cNoRef))))
 	{
 		ptr++;
 		if(ptrL) ptrL++;
@@ -269,7 +269,7 @@ tCoord RGrid::SkirtUp(RPoint& pt,RRect& bound)
 	}
 
 	// If bifucation and next up point is free, go to it
-	if((ptrL&&((*ptrL)==NoObject))&&(ptrR&&((*ptrR)==NoObject))&&((y!=pt.Y)&&(y<=Limit)&&((*(ptr))==NoObject)))
+	if((ptrL&&((*ptrL)==cNoRef))&&(ptrR&&((*ptrR)==cNoRef))&&((y!=pt.Y)&&(y<=Limit)&&((*(ptr))==cNoRef)))
 		y++;
 
 	return(y);
@@ -288,7 +288,7 @@ tCoord RGrid::SkirtDown(RPoint& pt,RRect& bound)
 	if(pt.X<InternalLimits.X) ptrR=&OccupiedX[static_cast<size_t>(pt.X+1)][static_cast<size_t>(pt.Y-1)]; else ptrR=0;
 
 	// While next point is free and not a bifurcation, go to down
-	while((y>=Limit)&&((*ptr)==NoObject)&&!((ptrR&&((*ptrR)==NoObject))&&(ptrL&&((*ptrL)==NoObject))))
+	while((y>=Limit)&&((*ptr)==cNoRef)&&!((ptrR&&((*ptrR)==cNoRef))&&(ptrL&&((*ptrL)==cNoRef))))
 	{
 		ptr--;
 		if(ptrL) ptrL--;
@@ -297,7 +297,7 @@ tCoord RGrid::SkirtDown(RPoint& pt,RRect& bound)
 	}
 
 	// If bifucation and next down point is free, go to it
-	if((ptrL&&((*ptrL)==NoObject))&&(ptrR&&((*ptrR)==NoObject))&&((y!=pt.Y)&&(y>=Limit)&&((*(ptr))==NoObject)))
+	if((ptrL&&((*ptrL)==cNoRef))&&(ptrR&&((*ptrR)==cNoRef))&&((y!=pt.Y)&&(y>=Limit)&&((*(ptr))==cNoRef)))
 		y--;
 
 	return(y);

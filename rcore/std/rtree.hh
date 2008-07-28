@@ -72,9 +72,9 @@ template<class N,bool bAlloc,bool bOrder>
 		node->Index=tmp;
 		RCursor<N> Nodes(*this);
 		for(Nodes.Start();!Nodes.End();Nodes.Next())
-			if((Nodes()->SubNodes>to->SubNodes)&&(Nodes()->SubNodes!=NullId))
+			if((Nodes()->SubNodes>to->SubNodes)&&(Nodes()->SubNodes!=cNoRef))
 				Nodes()->SubNodes++;
-		if((Top->SubNodes>to->SubNodes)&&(Top->SubNodes!=NullId))
+		if((Top->SubNodes>to->SubNodes)&&(Top->SubNodes!=cNoRef))
 			Top->SubNodes++;
 	}
 	else
@@ -113,10 +113,10 @@ template<class N,bool bAlloc,bool bOrder>
 	DeletePtrAt(node->Index);
 	size_t j=from->SubNodes;
 	if(!(--from->NbSubNodes))
-		from->SubNodes=NullId;
+		from->SubNodes=cNoRef;
 	RCursor<N> Nodes(*this);
 	for(Nodes.Start();!Nodes.End();Nodes.Next())
-		if((Nodes()->SubNodes>j)&&(Nodes()->SubNodes!=NullId))
+		if((Nodes()->SubNodes>j)&&(Nodes()->SubNodes!=cNoRef))
 			Nodes()->SubNodes--;
 }
 

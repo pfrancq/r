@@ -56,7 +56,7 @@ QInfoBox::QInfoBox(QWidget* parent,RGeoInfo* info)
 
 	Tmp="Object '"+ToQString(info->GetObj()->Name)+"'";
 	insertItem(Tmp);
-	if(info->GetOrder()!=NoObject)
+	if(info->GetOrder()!=cNoRef)
 	{
 		Tmp="Order: "+QString::number(info->GetOrder());
 		insertItem(Tmp);

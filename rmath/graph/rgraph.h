@@ -55,6 +55,8 @@ namespace R{
 */
 class RGraph
 {
+protected:
+
 	/**
 	* The vertices of the graph.
 	*/

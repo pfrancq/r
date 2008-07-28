@@ -294,7 +294,7 @@ public:
 
 	/**
 	* Return the list of the objects. The list is created by RNode, but must
-	* be deleted by the caller. The list is ended by a NoObject value.
+	* be deleted by the caller. The list is ended by a cNoRef value.
 	*/
 	size_t* GetObjectsId(void) const;
 

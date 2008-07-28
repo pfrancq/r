@@ -182,7 +182,7 @@ int RParamValue::GetInt(void)
 //------------------------------------------------------------------------------
 unsigned int RParamValue::GetUInt(void)
 {
-	size_t v;
+	unsigned int v;
 	sscanf(Value,"%u",&v);
 	return(v);
 }

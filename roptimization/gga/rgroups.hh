@@ -140,7 +140,7 @@ template<class cGroup,class cObj,class cGroups>
 		j=to->SubObjects;
 		R::RCursor<cGroup> G(Used);
 		for(G.Start();!G.End();G.Next())
-			if((G()->SubObjects>j)&&(G()->SubObjects!=NoObject))
+			if((G()->SubObjects>j)&&(G()->SubObjects!=cNoRef))
 				G()->SubObjects++;
 		ObjsAss.InsertPtrAt(obj,tmp,false);
 	}
@@ -167,11 +167,11 @@ template<class cGroup,class cObj,class cGroups>
 	ObjsNoAss.InsertPtr(obj);
 	ObjsAss.DeletePtr(obj);
 	if(!(--from->NbSubObjects))
-		from->SubObjects=NoObject;
+		from->SubObjects=cNoRef;
 	from->PostDelete(obj);
 	R::RCursor<cGroup> G(Used);
 	for(G.Start();!G.End();G.Next())
-		if((G()->SubObjects>j)&&(G()->SubObjects!=NoObject))
+		if((G()->SubObjects>j)&&(G()->SubObjects!=cNoRef))
 			G()->SubObjects--;
 }
 
@@ -195,12 +195,12 @@ template<class cGroup,class cObj,class cGroups>
 		ObjsNoAss.InsertPtr(tmpObj);
 		ObjsAss.DeletePtr(tmpObj);
 		if(!(--from->NbSubObjects))
-			from->SubObjects=NoObject;
+			from->SubObjects=cNoRef;
 		from->PostDelete(tmpObj);
 	}
 	R::RCursor<cGroup> G(Used);
 	for(G.Start();!G.End();G.Next())
-		if((G()->SubObjects>j)&&(G()->SubObjects!=NoObject))
+		if((G()->SubObjects>j)&&(G()->SubObjects!=cNoRef))
 			G()->SubObjects-=tmp;
 }
 
@@ -228,7 +228,7 @@ template<class cGroup,class cObj,class cGroups>
 {
 	size_t idx=ObjectsAss[id];
 
-	if(idx==NoObject) return(0);
+	if(idx==cNoRef) return(0);
 	return((*const_cast<RGroups<cGroup,cObj,cGroups>*>(this))[idx]);
 }
 
@@ -239,7 +239,7 @@ template<class cGroup,class cObj,class cGroups>
 {
 	size_t idx=ObjectsAss[obj->GetId()];
 
-	if(idx==NoObject) return(0);
+	if(idx==cNoRef) return(0);
 	return((*const_cast<RGroups<cGroup,cObj,cGroups>*>(this))[idx]);
 }
 

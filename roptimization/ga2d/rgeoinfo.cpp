@@ -129,7 +129,7 @@ RPoint RRelPointCursor::operator()(void) const
 //------------------------------------------------------------------------------
 RGeoInfo::RGeoInfo(void)
 	: Obj(0), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(0),
-		Rects(0), Order(NoObject), Connectors(10,5)
+		Rects(0), Order(cNoRef), Connectors(10,5)
 {
 }
 
@@ -137,7 +137,7 @@ RGeoInfo::RGeoInfo(void)
 //------------------------------------------------------------------------------
 RGeoInfo::RGeoInfo(RPolygon* poly)
 	: Obj(0), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(poly),
-		Rects(0), Order(NoObject), Connectors(10,5)
+		Rects(0), Order(cNoRef), Connectors(10,5)
 {
 }
 
@@ -145,7 +145,7 @@ RGeoInfo::RGeoInfo(RPolygon* poly)
 //------------------------------------------------------------------------------
 RGeoInfo::RGeoInfo(RObj2D* obj)
 	: Obj(obj), Selected(false), Pos(MaxCoord,MaxCoord), Ori(-1), Bound(0),
-		Rects(0), Order(NoObject), Connectors(10,5)
+		Rects(0), Order(cNoRef), Connectors(10,5)
 {
 	RCursor<RObj2DConnector> Cur(obj->Connectors);
 	for(Cur.Start();!Cur.End();Cur.Next())
@@ -180,7 +180,7 @@ void RGeoInfo::ClearInfo(void)
 	Bound=0;
 	Rects=0;
 	Ori=-1;
-	Order=NoObject;
+	Order=cNoRef;
 }
 
 

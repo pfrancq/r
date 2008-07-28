@@ -223,16 +223,9 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* Basic type for representing an identificator.
+* The cNoRef constant represented an undefined identifier reference.
 */
-typedef size_t tId;
-
-
-//------------------------------------------------------------------------------
-/**
-* NullId represents a undefined identificator reference.
-*/
-const tId NullId=0xFFFFFFFF;
+const size_t cNoRef=(size_t)(-1);
 
 
 //------------------------------------------------------------------------------

@@ -121,7 +121,7 @@ public:
 	
 	/**
 	* This function returns the identificator of the object placed at position
-	* (x,y) or NoObject if no object is placed there.
+	* (x,y) or cNoRef if no object is placed there.
 	* @param x              X position.
 	* @param y              Y position.
 	*/

@@ -257,7 +257,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 	if((X>Limits.X)||(Y>Limits.Y)) return(0);
 	obj=Grid->GetObjId(X,Y);
-	if(obj!=NoObject)
+	if(obj!=cNoRef)
 	{
 		Objs.GoTo(obj);
 		return(Objs());
@@ -275,7 +275,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 	if((X>Limits.X)||(Y>Limits.Y)) return(0);
 	obj=Grid->GetObjId(X,Y);
-	if(obj!=NoObject)
+	if(obj!=cNoRef)
 		return(this->Infos[obj]);
 	else
 		return(0);

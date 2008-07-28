@@ -68,6 +68,7 @@ public:
 
 	RDbMySQL(Db type,const RString& host,const RString& user,const RString& pwd,const RString& db,const RString& coding);
 	virtual RQuery* Query(const RString& sql);
+	virtual size_t GetLastInsertId(void);
 	virtual ~RDbMySQL(void);
 };
 
@@ -105,6 +106,7 @@ public:
 
 	RDbSQLite(Db type,const RString& db);
 	virtual RQuery* Query(const RString& sql);
+	virtual size_t GetLastInsertId(void);
 	virtual ~RDbSQLite(void);
 };
 
@@ -115,9 +117,10 @@ class RQuerySQLite : public RQuery
 public:
 	RDbSQLite* DB;
 	sqlite3_stmt* Result;
+	int Code;              // Result of the last operation
 
 	RQuerySQLite(RDbSQLite* db,const RString& sql);
-	virtual bool End(void) const {return(DB->Code==SQLITE_DONE);}
+	virtual bool End(void) const {return(Code==SQLITE_DONE);}
 	virtual void Start(void);
 	virtual void Next(void);
 	virtual RString operator[](size_t index) const;
@@ -238,6 +241,15 @@ RQuery* RDbMySQL::Query(const RString& sql)
 
 
 //------------------------------------------------------------------------------
+size_t RDbMySQL::GetLastInsertId(void)
+{
+	RQueryMySQL LastInsert(this,"SELECT LAST_INSERT_ID()");
+	LastInsert.Start();
+	return(atoi(LastInsert[0]));
+}
+
+
+//------------------------------------------------------------------------------
 RDbMySQL::~RDbMySQL(void)
 {
 	if(Connection)
@@ -266,6 +278,13 @@ RDbSQLite::RDbSQLite(Db type,const RString& db)
 RQuery* RDbSQLite::Query(const RString& sql)
 {
 	return(new RQuerySQLite(this,sql));
+}
+
+
+//------------------------------------------------------------------------------
+size_t RDbSQLite::GetLastInsertId(void)
+{
+	return(sqlite3_last_insert_rowid(Connection));
 }
 
 
@@ -378,12 +397,11 @@ RQueryMySQL::RQueryMySQL(RDbMySQL* db,const RString& sql)
 		Result=mysql_store_result(dynamic_cast<RDbMySQL*>(DB)->Connection);
 		if(!Result)
 			throw RDbException(mysql_error(&dynamic_cast<RDbMySQL*>(DB)->MySQL));
-		NbRows=mysql_num_rows(Result);
 		NbCols=mysql_num_fields(Result);
 	}
 	else
 	{
-		NbCols=NbRows=0;
+		NbCols=0;
 		Row=0;
 		Result=0;
 	}
@@ -446,12 +464,11 @@ RQuerySQLite::RQuerySQLite(RDbSQLite* db,const RString& sql)
 		throw RDbException("Empty SQL");
 
 	const void *pzTail;
-	DB->Code=sqlite3_prepare16(DB->Connection,sql(),-1,&Result,&pzTail);
-	if(DB->Code!=SQLITE_OK)
+	Code=sqlite3_prepare16(DB->Connection,sql(),-1,&Result,&pzTail);
+	if(Code!=SQLITE_OK)
 		throw RDbException(sqlite3_errmsg(DB->Connection));
 
-	DB->Code=sqlite3_step(Result);
-	NbRows=sqlite3_data_count(Result);
+	Code=sqlite3_step(Result);
 	NbCols=sqlite3_column_count(Result);
 }
 
@@ -465,7 +482,7 @@ void RQuerySQLite::Start(void)
 //------------------------------------------------------------------------------
 void RQuerySQLite::Next(void)
 {
-	DB->Code=sqlite3_step(Result);
+	Code=sqlite3_step(Result);
 }
 
 
@@ -591,7 +608,7 @@ RQuery* RTransactionTable::ReadTransaction(size_raw id,bool wait)
 			Access=DB->Query(sSql);
 			Access->Start();
 		}
-		while((wait)&&(!Access->GetNbRows()));
+		while((wait)&&(Access->End()));
 	}
 	catch(...)
 	{
@@ -624,7 +641,7 @@ void RTransactionTable::WaitTransaction(size_raw id)
 			Access=DB->Query(sSql);
 			Access->Start();
 		}
-		while(!Access->GetNbRows());
+		while(Access->End());
 		delete Access;
 	}
 	catch(...)
