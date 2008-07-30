@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgVarVal.h
+	RPrgInstBlock.h
 
-	Variable containing a value - Header.
+	Block of Instructions - Header.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -31,13 +31,15 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPrgVarValH
-#define RPrgVarValH
+#ifndef RPrgInstBlockH
+#define RPrgInstBlockH
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprgvar.h>
+#include <rstring.h>
+#include <rcontainer.h>
+#include <rprginst.h>
 
 
 //------------------------------------------------------------------------------
@@ -46,44 +48,63 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
+// forward class declaration
+class RPrgVar;
+class RPrg;
+class RPrgOutput;
+
+
+//------------------------------------------------------------------------------
 /**
-* The RPrgVarCons provides a class for a variable with a value.
+* The RPrgInstBlock provides a class for a block of instructions.
 * @author Pascal Francq
-* @short Variable.
+* @short Instructions Block.
 */
-class RPrgVarVal : public RPrgVar
+class RPrgInstBlock : public RPrgInst
 {
+protected:
+
 	/**
-	* Value of the variable.
+	* List of all "Instructions" to execute.
 	*/
-	RString Value;
+	R::RContainer<RPrgInst,true,false> Insts;
+
+	/**
+	* List of all local "Variables" defined in the block.
+	*/
+	R::RContainer<RPrgVar,true,false> Vars;
+
+	/**
+	* Indentation corresponding to this block.
+	*/
+	size_t Tabs;
 
 public:
 
 	/**
-	* Costructor of a variable.
-	* @param name           Name.
-	* @param value          Value.
+	* Construct a block of instructions.
+	* @param line           Rest of the line.
+	* @param t              Indentation.
 	*/
-	RPrgVarVal(const RString& name,const RString& value);
+	RPrgInstBlock(size_t t);
 
 	/**
-	* Assign some data to the variable.
-	* @param data           Data.
+	* Add an instruction to the for.
 	*/
-	virtual void Assign(const void* data);
+	void AddInst(RPrgInst* ins);
 
 	/**
-	* Get the value of the variable.
-	* @param prg            Program.
-	* @return "C" string representing the value of the variable.
+	* Get the number of tabs.
+	* @return size_t.
 	*/
-	virtual RString GetValue(RPrg* prg);
+	size_t GetTabs(void) const {return(Tabs);}
 
 	/**
-	* Destructor of a variable.
+	* Destruct the block of instructions.
 	*/
-	virtual ~RPrgVarVal(void);
+	virtual ~RPrgInstBlock(void);
+
+	friend class RPrg;
 };
 
 

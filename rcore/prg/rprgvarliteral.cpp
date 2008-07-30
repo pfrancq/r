@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RPrgInst.cpp
+	RPrgVarLiteral.cpp
 
-	Generic instruction - Implementation.
+	Const Variable - Implementation.
 
 	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
@@ -32,44 +32,39 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprginst.h>
+#include <rprgvarliteral.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// RPrgInst
+// RPrgVarLiteral
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInst::RPrgInst(void)
+RPrgVarLiteral::RPrgVarLiteral(const RString& value)
+	: RPrgVar(value,"String")
 {
 }
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const RPrgInst&) const
+void RPrgVarLiteral::Assign(const void* data)
 {
-	return(-1);
+	Name=static_cast<const char*>(data);
 }
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const RString&) const
+RString RPrgVarLiteral::GetValue(RPrg*)
 {
-	return(-1);
+	return(Name);
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgInst::Run(RPrg*,RPrgOutput*)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RPrgInst::~RPrgInst(void)
+RPrgVarLiteral::~RPrgVarLiteral(void)
 {
 }

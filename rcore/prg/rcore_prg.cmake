@@ -1,23 +1,29 @@
 SET(rcore_prg_INST_INCLUDES rprgfunc.h 
                        rprginst.h 
-                       rprgvarconst.h 
+                       rprgvarliteral.h 
                        rprgvarref.h
+                       rprgvarinst.h
 		               rprg.h 
 		               rprgclass.h 
-		               rprginstfor.h 
+		               rprginstfor.h
+		               rprginstassign.h
+		               rprginstblock.h  
 		               rprgoutput.h
 		               rprginstmethod.h 
 		               rprgvar.h 
-		               rprgvarval.h)
+		               rprgvarstring.h)
 		               
 SET(rcore_prg_TARGET_SOURCES rprgfunc.cpp 
                           rprginstfor.cpp
-		                  rprgvarconst.cpp 
-		                  rprgvarref.cpp 
+                          rprginstassign.cpp
+                          rprginstblock.cpp
+		                  rprgvarliteral.cpp 
+		                  rprgvarref.cpp
+		                  rprgvarinst.cpp 
 		                  rprg.cpp 
 		                  rprgoutput.cpp
 		                  rprgclass.cpp 
 		                  rprginst.cpp 
 		                  rprginstmethod.cpp 
 		                  rprgvar.cpp 
-		                  rprgvarval.cpp)
+		                  rprgvarstring.cpp)

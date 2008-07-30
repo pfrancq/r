@@ -6,7 +6,7 @@
 
 	k-Means Algorithm - Inline Implemenation
 
-	Copyright 2003-2007 by the Université Libre de Bruxelles.
+	Copyright 2003-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -110,25 +110,23 @@ template<class cGroup,class cObj,class cGroups>
 	if(nbclusters>Objs.GetNb())
 		throw RException("KMeans : Cannot find valid prototypes");
 
-	Protos.Clear();
-
 	// Reserve the correct number of groups and allocate one object to each group
+	Protos.Clear();
 	Groups->ClearGroups();
 	for(i=nbclusters+1,ptr=RandObjects,nbtoplace=0;--i;ptr++,nbtoplace++)
 	{
 		grp=Groups->ReserveGroup();
 		grp->Insert(*ptr);
-		Protos.InsertPtr(*ptr);
+		Protos.InsertPtrAt(*ptr,grp->GetId(),true);
 	}
 
 	// Allocate the rest of the objects
 	R::RCursor<cGroup> Grp(Groups->Used);
-	R::RCursor<cObj> Proto(Protos);
 	for(;nbtoplace<Objs.GetNb();ptr++,nbtoplace++)
 	{
-		for(Grp.Start(),Proto.Start(),maxsim=-1.0,grp=0;!Grp.End();Grp.Next(),Proto.Next())
+		for(Grp.Start(),maxsim=-1.0,grp=0;!Grp.End();Grp.Next())
 		{
-			double sim=Similarity(*ptr,Proto());
+			double sim=Similarity(*ptr,Protos[Grp()->GetId()]);
 			if(sim>maxsim)
 			{
 				maxsim=sim;
@@ -148,26 +146,17 @@ template<class cGroup,class cObj,class cGroups>
 	cGroup* grp;
 	cObj** Cur;
 
-	// Put the prototypes in Protos
-	Protos.Clear();
+	// Put the prototypes in each group
 	R::RCursor<cGroup> Grp(*Groups);
 	for(Grp.Start();!Grp.End();Grp.Next())
 	{
-		cObj* obj=ComputePrototype(Grp());
-		Protos.InsertPtr(obj);
+		Groups->DeleteObjs(Grp());
+		Grp()->Insert(Protos[Grp()->GetId()]);
 	}
-
-	// Clear the groups
-	Groups->ClearGroups();
-
-	// Insert the Prototypes in a group
-	R::RCursor<cObj> CurP(Protos);
-	for(CurP.Start();!CurP.End();CurP.Next())
-		Groups->ReserveGroup()->Insert(CurP());
 
 	// Go through the randomly ordered objects and put them in the group of the
 	// most similar prototype.
-	unsigned nb;
+	size_t nb;
 	for(Cur=RandObjects,nb=Objs.GetNb()+1;--nb;Cur++)
 	{
 		// If the object is a prototype -> already in a group
@@ -176,14 +165,14 @@ template<class cGroup,class cObj,class cGroups>
 
 		// Find the group with the most similar prototype
 		R::RCursor<cGroup> Grp(Groups->Used);
-		for(Grp.Start(),CurP.Start(),maxsim=-1.0;!Grp.End();Grp.Next(),CurP.Next())
+		for(Grp.Start(),maxsim=-1.0;!Grp.End();Grp.Next())
 		{
 			// If all the hard constraints are not respected -> skip the group.
 			if(!Grp()->CanInsert(*Cur))
 				continue;
 
 			// Compute similarity with the relevant object of the group.
-			sim=Similarity(CurP(),*Cur);
+			sim=Similarity(Protos[Grp()->GetId()],*Cur);
 			if(sim>maxsim)
 			{
 				maxsim=sim;
@@ -209,16 +198,12 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	size_t R::RGroupingKMeans<cGroup,cObj,cGroups>::CalcNewProtosNb(void)
 {
-	size_t count;
-	R::RCursor<cGroup> Grp;
-	cObj* OldProto;
-
 	// Computed the prototypes for each groups and count the number in Protos
-	Grp.Set(Groups->Used);
-	RCursor<cObj> CurP(Protos);
-	for(Grp.Start(),CurP.Start(),count=0;!Grp.End();Grp.Next(),CurP.Next())
+	size_t count;
+	R::RCursor<cGroup> Grp(Groups->Used);
+	for(Grp.Start(),count=0;!Grp.End();Grp.Next())
 	{
-		OldProto=CurP();
+		cObj* OldProto(Protos[Grp()->GetId()]);
 		cObj* obj=ComputePrototype(Grp());
 		Protos.InsertPtrAt(obj,Grp()->GetId(),true);
 		if(OldProto!=obj)
@@ -248,7 +233,7 @@ template<class cGroup,class cObj,class cGroups>
 	cObj** ptr;
 	if(RandObjects)
 	{
-		delete RandObjects;
+		delete[] RandObjects;
 		RandObjects=0;
 	}
 	ptr=RandObjects=new cObj*[Objs.GetNb()];
@@ -274,5 +259,6 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	R::RGroupingKMeans<cGroup,cObj,cGroups>::~RGroupingKMeans(void)
 {
-	delete RandObjects;
+	if(RandObjects)
+		delete[] RandObjects;
 }

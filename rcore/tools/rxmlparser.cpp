@@ -307,7 +307,7 @@ void RXMLParser::LoadHeader(void)
 		if(!CurString("DOCTYPE",false))
 			throw RIOException(this,"Wrong DOCTYPE command");
 
-		RString Content(GetToken('>','['));
+		RString Content(GetToken(">["));
 		SetDocType(XMLToString(Content));
 		SkipSpaces();
 
@@ -405,7 +405,7 @@ void RXMLParser::LoadNextTag(void)
 
 	// Read name of the tag
 	LastTokenPos=GetPos();
-	TagName=GetToken('>','/');
+	TagName=GetToken(">/");
 
 	// Treat the tag
 	// Search if it has a namespace
@@ -466,7 +466,7 @@ void RXMLParser::LoadNextTag(void)
 				while(!CurString("]]>"))
 				{
 					LastTokenPos=GetPos();
-					RString tmp(GetToken("]]>"));
+					RString tmp(GetTokenString("]]>"));
 					if(tmp.GetLen())
 						Text(tmp);
 
@@ -480,9 +480,9 @@ void RXMLParser::LoadNextTag(void)
 			}
 			else
 			{
-				CurDepth++;   	// Increase de depth
+				CurDepth++;   	// Increase the depth
 				LoadNextTag();
-				CurDepth--;   	// Decrease de depth
+				CurDepth--;   	// Decrease the depth
 			}
 		}
 		else
@@ -515,7 +515,7 @@ void RXMLParser::LoadNextTag(void)
 					while(!CurString("]]>"))
 					{
 						LastTokenPos=GetPos();
-						RString tmp(GetToken("]]>"));
+						RString tmp(GetTokenString("]]>"));
 						if(tmp.GetLen())
 							Text(tmp);
 
@@ -573,7 +573,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 
 		// Read the name of the attribute
 		LastTokenPos=GetPos();
-		RString attrn=GetToken('=','>');
+		RString attrn=GetToken("=>");
 
 		// Verify if the attribute name has a namespace
 		int i=attrn.Find(':');
@@ -655,7 +655,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 				{
 					// Get the next word
 					LastTokenPos=GetPos();
-					RString tmp(GetToken(EndTag1,EndTag2));
+					RString tmp(GetToken(RString(EndTag1)+EndTag2));
 					if(tmp.GetLen())
 						Value(tmp);
 

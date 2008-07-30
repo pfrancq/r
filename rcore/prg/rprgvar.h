@@ -52,7 +52,7 @@ class RPrg;
 
 //------------------------------------------------------------------------------
 /**
-* The RPrgVar provides a class for a generic variable.
+* The RPrgVar provides a class for a generic variable of a given type.
 * @author Pascal Francq
 * @short Generic Variable.
 */
@@ -65,13 +65,19 @@ protected:
 	*/
 	RString Name;
 
+	/**
+	 * Type of the variable.
+	 */
+	RString Type;
+
 public:
 
 	/**
 	* Constructor of a variable.
 	* @param name           Name.
+	* @param type           Type of the variable.
 	*/
-	RPrgVar(const RString& name);
+	RPrgVar(const RString& name,const RString& type);
 
 	/**
 	* This methods compares two variables using their names and works like the
@@ -100,12 +106,21 @@ public:
 	/**
 	* Get the value of the variable.
 	* @param prg            Program.
-	* @return "C" string representing the variable.
 	*/
 	virtual RString GetValue(RPrg* prg);
 
 	/**
-	* Destructor of the variable.
+	 * Get the type of the variable.
+	 */
+	RString GetType(void) const {return(Type);}
+
+	/**
+	 * Get the name of the variable.
+	 */
+	RString GetName(void) const {return(Name);}
+
+	/**
+	* Destruct the variable.
 	*/
 	virtual ~RPrgVar(void);
 };

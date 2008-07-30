@@ -6,7 +6,7 @@
 
 	Method of a class - Header.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -64,9 +64,14 @@ class RPrgInstMethod : public RPrgInst
 protected:
 
 	/**
-	* Pointer to the method.
+	 * Name of the instance.
+	 */
+	RString Inst;
+
+	/**
+	* Name of the method.
 	*/
-	RPrgFunc* Method;
+	RString Method;
 
 	/**
 	* Parameters of the method.
@@ -77,22 +82,17 @@ public:
 
 	/**
 	* Constructor of a class method.
-	* @param inst           Function to execute.
+	* @param prg            Program.
+	* @param name           Name of the instance.
+	* @param method         Name of the method.
 	*/
-	RPrgInstMethod(RPrgFunc* inst);
+	RPrgInstMethod(RPrg* prg,const RString& name,const RString& method);
 
 	/**
 	* Add a parameter to the method.
 	* @param var            Parameter to add.
 	*/
 	void AddParam(RPrgVar* var);
-
-	/**
-	* Analyse a list of parameters.
-	* @param params         Parameters to analyse.
-	* @returns Variable created.
-	*/
-	void AnalyseParam(const RString& params);
 
 	/**
 	* Run the method.

@@ -56,7 +56,7 @@ namespace R{
 *                            the stack.
 * @param bPopTop             Specify if a new element is removed from the top
 *                            of the stack.
-* 
+*
 * To make the necessary comparaisons, the stack needs that a compare function
 * must be implemented in the class C:
 * @code
@@ -126,7 +126,7 @@ public:
 	* @return size_t.
 	*/
 	inline size_t GetNb(void) const {return(RContainer<C,bAlloc,false>::NbPtr);}
-	
+
 	/**
 	* Clear the stack and destruct the elements if it is responsible for
 	* the desallocation. The stack may also be extended.
@@ -149,7 +149,7 @@ public:
 		else
 			return(RContainer<C,bAlloc,false>::operator[](RContainer<C,bAlloc,false>::LastPtr-1));
 	}
-	
+
 	/**
 	 * Get the current element to treat from the stack (the element is not removed
 	 * from the stack.
@@ -162,7 +162,21 @@ public:
 		else
 			return(RContainer<C,bAlloc,false>::operator[](RContainer<C,bAlloc,false>::LastPtr-1));
 	}
-	
+
+	/**
+	* Get a pointer to the ith element in the container (Only read).
+	* @param idx             Index of the element to get.
+	* @return Return the pointer.
+	*/
+	inline const C* operator[](size_t idx) const {return(static_cast<const C*>(RContainer<C,bAlloc,false>::operator[](idx)));}
+
+	/**
+	* Get a pointer to the ith element in the container (Read/Write).
+	* @param idx             Index of the element to get.
+	* @return Return the pointer.
+	*/
+	inline C* operator[](size_t idx) {return(static_cast<C*>(RContainer<C,bAlloc,false>::operator[](idx)));}
+
 	/**
 	 * Remove the next element from the stack.
 	 */
@@ -171,9 +185,9 @@ public:
 		if(bPopTop)
 			RContainer<C,bAlloc,false>::DeletePtrAt(0,true);
 		else
-			RContainer<C,bAlloc,false>::DeletePtrAt(RContainer<C,bAlloc,false>::LastPtr-1,true);		
+			RContainer<C,bAlloc,false>::DeletePtrAt(RContainer<C,bAlloc,false>::LastPtr-1,true);
 	}
-	
+
 	/**
 	 * Add an element to the stack.
 	 * @return ptr           Element to push.
@@ -183,7 +197,7 @@ public:
 		if(bPushTop)
 			RContainer<C,bAlloc,false>::InsertPtrAt(ptr,0,false);
 		else
-			RContainer<C,bAlloc,false>::InsertPtr(ptr);		
+			RContainer<C,bAlloc,false>::InsertPtr(ptr);
 	}
 };
 

@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RPrgInst.h
+	RPrgInstAssign.h
 
-	Generic instruction - Header.
+	Assignment Instructions - Header.
 
 	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
@@ -31,14 +31,13 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPrgInstH
-#define RPrgInstH
+#ifndef RPrgInstAssignH
+#define RPrgInstAssignH
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd.h>
-#include <rstring.h>
+#include <rprginst.h>
 
 
 //------------------------------------------------------------------------------
@@ -47,54 +46,98 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// forward declaration
+// forward class declaration
+class RPrgVar;
 class RPrg;
+class RPrgClass;
 class RPrgOutput;
 
 
 //------------------------------------------------------------------------------
 /**
-* The RPrgInst provides a class for a generic instruction.
-*
-* The Compare methods needed by R::RContainer are implemented so that it is
-* impossible to construct an ordered container of instructions.
+* The RPrgInstNew provides a class for a "new" instruction.
 * @author Pascal Francq
-* @short Generic Instruction.
+* @short "new" Instruction.
 */
-class RPrgInst
+class RPrgInstNew : public RPrgInst
 {
+	/**
+	* Variable to create.
+	*/
+	RString Var;
+
+	/**
+	 * Class of the variable.
+	 */
+	RPrgClass* Class;
+
+	/**
+	* Parameters of the constructors.
+	*/
+	RContainer<RPrgVar,true,false> Params;
+
 public:
 
 	/**
-	* Constructor of a generic instruction.
+	* Construct a "new" instruction.
+	* @param prg            Program.
+	* @param var            Name of the variable.
+	* @param c              Class of the variable.
 	*/
-	RPrgInst(void);
+	RPrgInstNew(RPrg* prg,const RString& name,RPrgClass* c);
 
 	/**
-	* This method compares two instructions.
-	* @see R::RContainer.
-	* @return -1
-	*/
-	int Compare(const RPrgInst& t) const;
-
-	/**
-	* This method compares two instructions.
-	* @see R::RContainer.
-	* @return -1
-	*/
-	int Compare(const RString& t) const;
-
-	/**
-	* Run the instruction.
+	* Run the instructions in the for for the different values of its variable.
 	* @param prg            Program.
 	* @param o              Output.
 	*/
 	virtual void Run(RPrg* prg,RPrgOutput* o);
 
 	/**
-	* Destructor of a generic instruction.
+	* Destruct the "new" instruction.
 	*/
-	virtual ~RPrgInst(void);
+	virtual ~RPrgInstNew(void);
+};
+
+
+//------------------------------------------------------------------------------
+/**
+* The RPrgInstAssignRef provides a class for the assignment instruction.
+* @author Pascal Francq
+* @short Assignment Instruction (=).
+*/
+class RPrgInstAssignVar : public RPrgInst
+{
+	/**
+	* Variable to assign to.
+	*/
+	RString Var;
+
+	/**
+	 * What to assign.
+	 */
+	RPrgVar* Assign;
+
+public:
+
+	/**
+	* Construct a assignment instruction.
+	* @param var            Name of the variable.
+	* @param assign         What to assign. It is destroy by the instruction.
+	*/
+	RPrgInstAssignVar(const RString& name,RPrgVar* assign);
+
+	/**
+	* Run the instructions in the for for the different values of its variable.
+	* @param prg            Program.
+	* @param o              Output.
+	*/
+	virtual void Run(RPrg* prg,RPrgOutput* o);
+
+	/**
+	* Destruct the assignment instruction.
+	*/
+	virtual ~RPrgInstAssignVar(void);
 };
 
 

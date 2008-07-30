@@ -6,7 +6,7 @@
 
 	Generic function - Implementation.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -75,12 +75,6 @@ RString RPrgFunc::GetName(void) const
 RString RPrgFunc::GetDescription(void) const
 {
 	return(Description);
-}
-
-
-//------------------------------------------------------------------------------
-void RPrgFunc::Run(RPrg*,RPrgOutput*,RContainer<RPrgVar,true,false>*)
-{
 }
 
 

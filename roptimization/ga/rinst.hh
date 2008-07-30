@@ -234,7 +234,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		return;
 	}
 
-	// Apply Tournement - tmpChrom1 -> tmpChrom2
+	// Apply Tournament - tmpChrom1 -> tmpChrom2
 	NbToTreat=PopSize;
 	NbTreated=PopSize-1;
 	memcpy(tmpChrom1,Chromosomes,sizeof(cChromo*)*PopSize);

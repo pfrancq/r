@@ -61,7 +61,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 protected:
 
 	/**
-	* Heuristic used for the groupment.
+	* Heuristic used for the clustering.
 	*/
 	RGroupingHeuristic<cGroup,cObj,cChromo>* Heuristic;
 
@@ -70,12 +70,12 @@ public:
 	/**
 	* Construct the chromosome.
 	* @param inst           The instance.
-	* @param id             Identificator of the chromosome.
+	* @param id             Identifier of the chromosome.
 	*/
 	RChromoG(cInst* inst,size_t id);
 
 	/**
-	* Initialisation of the chromosome.
+	* Initialization of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the
 	*                       chromosome.
 	*/
@@ -88,7 +88,7 @@ public:
 
 	/**
 	* Construct a valid solution.
-	* @return The function must retrun true if a solution has been constructed.
+	* @return The function must return true if a solution has been constructed.
 	*/
 	virtual void RandomConstruct(void);
 
@@ -119,7 +119,7 @@ public:
 	* implemented is the BPX (bin packing crossover). The groups of parent1
 	* containing objects that are inserted from parent2 are removed. Also, if
 	* a group of parent1 is not compatible (IsCompatible) with one of the
-	* groups inseeted from parent2 it is also removed.
+	* groups inserted from parent2 it is also removed.
 	* @param parent1        First parent used.
 	* @param parent2        Second parent used.
 	*/
@@ -138,14 +138,14 @@ public:
 	virtual void Inversion(void);
 
 	/**
-	* Perform a local optimisation. This function is called by the crossover
+	* Perform a local optimization. This function is called by the crossover
 	* and the mutation operators just before the use of the heuristic to find
 	* a group for the objects not yet assigned.
 	*/
 	virtual void LocalOptimisation(void) {}
 
 	/**
-	* Perform an optimisation. This function is called at the end of the
+	* Perform an optimization. This function is called at the end of the
 	* crossover and the mutation operators.
 	*/
 	virtual void Optimisation(void) {}

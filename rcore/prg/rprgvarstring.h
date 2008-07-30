@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RPrgInst.cpp
+	RPrgVarString.h
 
-	Generic instruction - Implementation.
+	Variable containing a string value - Header.
 
 	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
@@ -31,45 +31,63 @@
 
 
 //------------------------------------------------------------------------------
+#ifndef RPrgVarStringH
+#define RPrgVarStringH
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rprginst.h>
-using namespace R;
-
+#include <rprgvar.h>
 
 
 //------------------------------------------------------------------------------
-//
-// RPrgInst
-//
+namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
-RPrgInst::RPrgInst(void)
+/**
+* The RPrgVarVal provides a class for a string variable.
+* @author Pascal Francq
+* @short String Variable.
+*/
+class RPrgVarString : public RPrgVar
 {
-}
+	/**
+	* Value of the variable.
+	*/
+	RString String;
+
+public:
+
+	/**
+	* Construct the variable.
+	* @param name           Name.
+	* @param value          Value.
+	*/
+	RPrgVarString(const RString& name,const RString& value);
+
+	/**
+	* Assign some data to the variable.
+	* @param data           Data.
+	*/
+	virtual void Assign(const void* data);
+
+	/**
+	* Get the value of the variable.
+	* @param prg            Program.
+	*/
+	virtual RString GetValue(RPrg* prg);
+
+	/**
+	* Destruct the variable.
+	*/
+	virtual ~RPrgVarString(void);
+};
+
+
+}  //-------- End of namespace R -----------------------------------------------
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const RPrgInst&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-int RPrgInst::Compare(const RString&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-void RPrgInst::Run(RPrg*,RPrgOutput*)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RPrgInst::~RPrgInst(void)
-{
-}
+#endif

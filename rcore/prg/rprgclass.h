@@ -6,7 +6,7 @@
 
 	Generic Class - Header.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -49,6 +49,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // forward class declaration
+class RPrg;
 class RPrgVar;
 class RPrgFunc;
 
@@ -81,7 +82,7 @@ protected:
 public:
 
 	/**
-	* Concstructor of a class.
+	* Construct the class.
 	* @param name           Name.
 	*/
 	RPrgClass(const RString& name);
@@ -122,9 +123,44 @@ public:
 	RCursor<RPrgFunc> GetMethods(void) const;
 
 	/**
-	* Destructor of a class.
+	 * Create a variable.
+	 * @param prg            Program asking the creation.
+	 * @param name           Name of the variable to create.
+	 * @param params         Parameters of the constructor.
+	 * @return
+	 */
+	virtual RPrgVar* NewVar(RPrg* prg,const RString& name,RContainer<RPrgVar,true,false>& params)=0;
+
+	/**
+	* Destruct the class.
 	*/
 	virtual ~RPrgClass(void);
+};
+
+
+//------------------------------------------------------------------------------
+/**
+ * The RPrgStringClass provides a representation for a string class.
+ * @author Pascal Francq
+ * @short String Class.
+ */
+class RPrgStringClass : public RPrgClass
+{
+public:
+
+	/**
+	 * Construct the String class.
+	 */
+	RPrgStringClass(void);
+
+	/**
+	 * Create a string instance.
+	 * @param prg            Program asking the creation.
+	 * @param name           Name of the variable to create.
+	 * @param params         Parameters of the constructor.
+	 * @return
+	 */
+	virtual RPrgVar* NewVar(RPrg* prg,const RString& name,RContainer<RPrgVar,true,false>& params);
 };
 
 

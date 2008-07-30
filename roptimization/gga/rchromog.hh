@@ -6,7 +6,7 @@
 
 	Class representing a chromosome for a GGA - Inline implementation
 
-	Copyright 2001-2008s by the Université Libre de Bruxelles.
+	Copyright 2001-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -44,7 +44,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(cThreadData *thData)
 {
-	// Initialisation of the parent
+	// Initialization of the parent
 	R::RChromo<cInst,cChromo,cFit,cThreadData>::Init(thData);
 
 	// Init "thread-dependent" data
@@ -201,12 +201,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 			(*grp)=(*Cur());
 	}
 
-	// Insert groups from parent2<pos2 and verify that they dont contains "new"
+	// Insert groups from parent2<pos2 and verify that they don't contains "new"
 	// objects insert from parent1.
 	CopyGroups(parent1,parent2,pos1,begin,end,pos2,parent2->Used.GetNb()-pos2);
 
-	// Insert missing objects after a local optimisation
-	LocalOptimisation();
+	// Insert missing objects after a local optimization
+	if(this->Instance->DoLocalOptimisation)
+		LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
 	Optimisation();
 	this->ComputeOrd();
@@ -233,7 +234,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	while(--nb)
 		ReleaseGroup(this->Used[this->Instance->RRand(this->Used.GetNb())]);
 
-	// Insert missing objects after a local optimisation
+	// Insert missing objects after a local optimization
+	if(this->Instance->DoLocalOptimisation)
+		LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
 	this->ComputeOrd();
 

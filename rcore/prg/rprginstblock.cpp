@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgVarConst.cpp
+	RPrgInstBlock.cpp
 
-	Const Variable - Implementation.
+	Block of Instructions - Implementation.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -32,39 +32,33 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprgvarconst.h>
+#include <rprginstblock.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// RPrgVarConst
+// RPrgInstBlock
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVarConst::RPrgVarConst(const RString& value)
-	: RPrgVar(value)
+RPrgInstBlock::RPrgInstBlock(size_t t)
+	: RPrgInst(), Insts(50,25), Vars(20,20), Tabs(t)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgVarConst::Assign(const void* data)
+void RPrgInstBlock::AddInst(RPrgInst* ins)
 {
-	Name=static_cast<const char*>(data);
+	if(ins)
+		Insts.InsertPtr(ins);
 }
 
 
 //------------------------------------------------------------------------------
-RString RPrgVarConst::GetValue(RPrg*)
-{
-	return(Name);
-}
-
-
-//------------------------------------------------------------------------------
-RPrgVarConst::~RPrgVarConst(void)
+RPrgInstBlock::~RPrgInstBlock(void)
 {
 }

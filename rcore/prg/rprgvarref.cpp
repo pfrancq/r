@@ -6,7 +6,7 @@
 
 	Reference to a Variable - Implementation.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -46,7 +46,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RPrgVarRef::RPrgVarRef(const RString& ref)
-	: RPrgVar(ref)
+	: RPrgVar(ref,"VarRef")
 {
 }
 

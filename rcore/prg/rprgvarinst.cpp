@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RPrgInst.cpp
+	RPrgVarInst.cpp
 
-	Generic instruction - Implementation.
+	Variable representing a instance of class - Implementation.
 
 	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
@@ -32,44 +32,40 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprginst.h>
+#include <rprgvarinst.h>
+#include <rprgclass.h>
+#include <rprg.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// RPrgInst
+// RPrgVarInst
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInst::RPrgInst(void)
+RPrgVarInst::RPrgVarInst(const RString& name,RPrgClass* c)
+	: RPrgVar(name,c->GetName()), Class(c)
 {
 }
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const RPrgInst&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-int RPrgInst::Compare(const RString&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-void RPrgInst::Run(RPrg*,RPrgOutput*)
+void RPrgVarInst::Assign(const void*)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RPrgInst::~RPrgInst(void)
+RString RPrgVarInst::GetValue(RPrg* prg)
+{
+	throw RPrgException(prg,"Instance has no value");
+}
+
+
+//------------------------------------------------------------------------------
+RPrgVarInst::~RPrgVarInst(void)
 {
 }

@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RPrgInst.cpp
+	RPrgVarLiteral.h
 
-	Generic instruction - Implementation.
+	Const Variable - Header.
 
 	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
@@ -31,45 +31,57 @@
 
 
 //------------------------------------------------------------------------------
+#ifndef RPrgVarLiteralH
+#define RPrgVarLiteralH
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rprginst.h>
-using namespace R;
-
+#include <rprgvar.h>
 
 
 //------------------------------------------------------------------------------
-//
-// RPrgInst
-//
+namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
-RPrgInst::RPrgInst(void)
+/**
+* The RPrgVarLiteral provides a class for a literal variable of the 'String'.
+* @author Pascal Francq
+* @short Literal Variable.
+*/
+class RPrgVarLiteral : public RPrgVar
 {
-}
+public:
+
+	/**
+	* Construct the literal variable.
+	* @param value          Name.
+	*/
+	RPrgVarLiteral(const RString& value);
+
+	/**
+	* Assign some data to the literal variable.
+	* @param data           Data.
+	*/
+	virtual void Assign(const void* data);
+
+	/**
+	* Get the value of the literal variable.
+	* @param prg            Program.
+	*/
+	virtual RString GetValue(RPrg* prg);
+
+	/**
+	* Destruct the literal variable.
+	*/
+	virtual ~RPrgVarLiteral(void);
+};
+
+
+}  //-------- End of namespace R -----------------------------------------------
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const RPrgInst&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-int RPrgInst::Compare(const RString&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-void RPrgInst::Run(RPrg*,RPrgOutput*)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RPrgInst::~RPrgInst(void)
-{
-}
+#endif

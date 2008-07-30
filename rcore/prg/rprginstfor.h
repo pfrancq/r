@@ -6,7 +6,7 @@
 
 	"for" Instruction - Header.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -37,9 +37,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstring.h>
-#include <rcontainer.h>
-#include <rprginst.h>
+#include <rprginstblock.h>
 
 
 //------------------------------------------------------------------------------
@@ -60,7 +58,7 @@ class RPrgOutput;
 * @author Pascal Francq
 * @short "for" Instruction.
 */
-class RPrgInstFor : public RPrgInst
+class RPrgInstFor : public RPrgInstBlock
 {
 	/**
 	* Variable defined in the for.
@@ -72,29 +70,14 @@ class RPrgInstFor : public RPrgInst
 	*/
 	RContainer<RPrgVar,true,false> Values;
 
-	/**
-	* List of all "Instructions" to execute.
-	*/
-	R::RContainer<RPrgInst,true,false> Insts;
-
-	/**
-	* Identation of for.
-	*/
-	size_t Tabs;
-
 public:
 
 	/**
-	* Cronstructor of a "for" instruction.
-	* @param line           Rest of the line.
-	* @param t              Identation.
+	* Construct a "for" instruction.
+	* @param prg            Program.
+	* @param t              Indentation.
 	*/
-	RPrgInstFor(const RString& line,size_t t);
-
-	/**
-	* Add an instruction to the for.
-	*/
-	void AddInst(RPrgInst* ins);
+	RPrgInstFor(RPrg* prg,size_t t);
 
 	/**
 	* Run the instructions in the for for the different values of its variable.
@@ -104,13 +87,7 @@ public:
 	virtual void Run(RPrg* prg,RPrgOutput* o);
 
 	/**
-	* Get the number of tabs.
-	* @return size_t.
-	*/
-	size_t GetTabs(void) const {return(Tabs);}
-
-	/**
-	* Destructor of a "for" instruction.
+	* Destruct the "for" instruction.
 	*/
 	virtual ~RPrgInstFor(void);
 };

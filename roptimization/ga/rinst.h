@@ -72,7 +72,7 @@ public:
 	RThreadData(cInst *owner);
 
 	/**
-	* Initialise the data.
+	* Initialize the data.
 	*/
 	virtual void Init(void) {}
 
@@ -142,7 +142,7 @@ protected:
 	bool VerifyGA;
 
 	/**
-	 * Define if the post evalutation must be done.
+	 * Define if the post evaluation must be done.
 	 */
 	bool DoPostEvaluation;
 
@@ -196,12 +196,12 @@ private:
 	size_t NbCross;
 
 	/**
-	* Frequence of mutation.
+	* Frequency of mutation.
 	*/
 	size_t FreqMutation;
 
 	/**
-	* Frequence of mutation of the best chromosome.
+	* Frequency of mutation of the best chromosome.
 	*/
 	size_t FreqBestMutation;
 
@@ -211,7 +211,7 @@ private:
 	size_t NbMutations;
 
 	/**
-	* Frequence of inversion.
+	* Frequency of inversion.
 	*/
 	size_t FreqInversion;
 
@@ -286,7 +286,23 @@ public:
 	inline size_t GetAgeBestPop(void) const {return(AgeBestPop);}
 
 	/**
-	* Initialisation of the instance.
+	 * Set the seed value of the internal random number generator.
+	 *
+	 * By default,the generator is always seeded with the same value, which
+	 * means that the generated sequence is always the same. The GA will
+	 * therefore always produce an identical result for the same problem. This
+	 * is wanted most of the time (in particular for debugging purposes).
+	 * @param seed           The seeded value.
+	 */
+	void SetSeed(int seed) {Random->Reset(seed);}
+
+	/**
+	 * Return the seed value of the internal random number generator.
+	 */
+	int GetSeed(void) const {return(Random->Seed());}
+
+	/**
+	* Initialization of the instance.
 	*/
 	virtual void Init(void);
 
@@ -300,14 +316,14 @@ public:
 	static int sort_function_cChromosome(const void *a,const void *b);
 
 	/**
-	* Analyse the population to find the best chromosome of the population and
+	* Analyze the population to find the best chromosome of the population and
 	* to verify if the best chromosome ever calculated has to replaced. When
 	* needed, the chromosomes are evaluated.
 	*/
 	virtual void AnalysePop(void);
 
 	/**
-	* Do some post evluation traitment. It can be used to implement a
+	* Do some post evaluation treatment. It can be used to implement a
 	* multi-criteria approach like PROMETHEE to classify the chromosomes.
 	*/
 	virtual void PostEvaluate(void) {}
@@ -326,7 +342,7 @@ public:
 	virtual bool StopCondition(void)=0;
 
 	/**
-	* This function can be used to do a traitement after the GA stops.
+	* This function can be used to do a treatment after the GA stops.
 	*/
 	virtual void PostRun(void) {}
 
@@ -369,7 +385,7 @@ public:
 
 	/**
 	* This is the handler that is called when an object does not find any
-	* handler for a sended notification. By default, it prints the name of the
+	* handler for a send notification. By default, it prints the name of the
 	* message and the generation numbers.
 	* @param notification    Notification.
 	*/
@@ -383,11 +399,11 @@ public:
 
 	/**
 	* Random the position of elements of a vector using the current random generator.
-	* @param arr            A pointer to the array representing the vector.
+	* @param array          A pointer to the array representing the vector.
 	* @param size           The size of the vector.
 	*/
-	template<class T> inline void RandOrder(T* arr,size_t size)
-		{Random->RandOrder<T>(arr,size);}
+	template<class T> inline void RandOrder(T* array,size_t size)
+		{Random->RandOrder<T>(array,size);}
 
 	/**
 	* Destruct the instance.

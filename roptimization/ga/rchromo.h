@@ -63,7 +63,7 @@ public:
 	cInst* Instance;
 
 	/**
-	* Identificator of the chromosome.
+	* Identifier of the chromosome.
 	*/
 	size_t Id;
 
@@ -80,12 +80,12 @@ public:
 
 	/** Construct the chromosome.
 	* @param inst           Pointer to the instance.
-	* @param id             Identificator of the chromosome.
+	* @param id             Identifier of the chromosome.
 	*/
 	RChromo(cInst* inst,size_t id);
 
 	/**
-	* Initialisation of the chromosome.
+	* Initialization of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
 	*/
 	virtual void Init(cThreadData* thData);
@@ -118,7 +118,7 @@ public:
 	virtual void Inversion(void) {}
 
 	/**
-	* Perform an optimisation. This function is called every time a chromosome
+	* Perform an optimization. This function is called every time a chromosome
 	* is modified by the crossover, inversion, or the mutation operator.
 	*/
 	virtual void Optimisation(void)  {}

@@ -121,6 +121,11 @@ protected:
 	*/
 	size_t MaxGroups;
 
+	/**
+	 * Must a local optimization be performed.
+	 */
+	bool DoLocalOptimisation;
+
 public:
 
 	/**
@@ -142,6 +147,19 @@ public:
 	* Return the heuristic type.
 	*/
 	inline RString GetHeuristic(void) const {return(Heuristic);}
+
+	/**
+	 * Look if a local optimization is performed.
+	 * @return true or false.
+	 */
+	inline bool MustLocalOptimisation(void) const {return(DoLocalOptimisation);}
+
+	/**
+	 * Set if a local optimization must be done or not. By default, the GGA
+	 * does local optimization.
+	 * @param localopti      Perform local optimization?
+	 */
+	void SetLocalOptimisation(bool localopti);
 
 	/**
 	* Look if the groups containing objects that are also contained in groups
@@ -169,7 +187,7 @@ public:
 	virtual RGroupingHeuristic<cGroup,cObj,cChromo>* CreateHeuristic(void);
 
 	/**
-	* Analyse the population to find the best chromosome of the population and
+	* Analyze the population to find the best chromosome of the population and
 	* to verify if the best chromosome ever calculated has to replaced. When
 	* needed, the chromosomes are evaluated.
 	*

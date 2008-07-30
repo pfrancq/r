@@ -6,7 +6,7 @@
 
 	Generic output - Header.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -57,7 +57,7 @@ class RPrgOutput
 public:
 
 	/**
-	* Constructor of a generic output.
+	* Construct a generic output.
 	*/
 	RPrgOutput(void);
 
@@ -69,7 +69,7 @@ public:
 	virtual void WriteStr(const RString& str);
 
 	/**
-	* Destructor of a generic output.
+	* Destruct the generic output.
 	*/
 	virtual ~RPrgOutput(void);
 };

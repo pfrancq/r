@@ -6,7 +6,7 @@
 
 	Method of a class - Implementation.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -33,9 +33,11 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rprginstmethod.h>
-#include <rprgvar.h>
+#include <rprgvarinst.h>
 #include <rprg.h>
+#include <rprgclass.h>
 #include <rprgfunc.h>
+using namespace std;
 using namespace R;
 
 
@@ -47,16 +49,27 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstMethod::RPrgInstMethod(RPrgFunc* inst)
-	: RPrgInst(), Method(inst), Params(10,5)
+RPrgInstMethod::RPrgInstMethod(RPrg* prg,const RString& name,const RString& method)
+	: RPrgInst(), Inst(name), Method(method), Params(10,5)
 {
+	// Read Values
+	prg->AnalyseParam(Params);
 }
 
 
 //------------------------------------------------------------------------------
 void RPrgInstMethod::Run(RPrg* prg,RPrgOutput* r)
 {
-	Method->Run(prg,r,&Params);
+	RPrgVar* Var=prg->Find(Inst);
+	if(!Var)
+		throw RPrgException(prg,"Unknown variable '"+Inst+"'");
+	RPrgVarInst* Instance=dynamic_cast<RPrgVarInst*>(Var);
+	if(!Instance)
+		throw RPrgException(prg,"Variable '"+Inst+"' is not an object instance.");
+	RPrgFunc* MethodPtr(Instance->GetClass()->GetMethod(Method));
+	if(!MethodPtr)
+		throw RPrgException(prg,"Unknown method '"+Method+"' for object '"+Inst+"'");
+	MethodPtr->Run(prg,r,Instance,&Params);
 }
 
 
@@ -64,13 +77,6 @@ void RPrgInstMethod::Run(RPrg* prg,RPrgOutput* r)
 void RPrgInstMethod::AddParam(RPrgVar* var)
 {
 	Params.InsertPtr(var);
-}
-
-
-//------------------------------------------------------------------------------
-void RPrgInstMethod::AnalyseParam(const RString& params)
-{
-	RPrg::AnalyseParam(params,&Params);
 }
 
 

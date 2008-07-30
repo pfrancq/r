@@ -347,12 +347,8 @@ QGAMonitor::QGAMonitor(QWidget* parent,const char* name)
 //------------------------------------------------------------------------------
 void QGAMonitor::slotSetGen(const size_t gen,const size_t best,const double value)
 {
-	static char Txt[20];
-
-	sprintf(Txt,"%u",gen);
-	Stats->setGen(Txt);
-	sprintf(Txt,"%u",best);
-	Stats->setBest(Txt);
+	Stats->setGen(QString::number(gen));
+	Stats->setBest(QString::number(best));
 	Graph->AddValue(value);
 	repaint();
 }

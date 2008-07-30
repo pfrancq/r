@@ -6,7 +6,7 @@
 
 	"for" Instruction - Implementation.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -33,9 +33,10 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rprginstfor.h>
-#include <rprgvarval.h>
+#include <rprgvarstring.h>
 #include <rprg.h>
 #include <rcursor.h>
+using namespace std;
 using namespace R;
 
 
@@ -47,45 +48,31 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstFor::RPrgInstFor(const RString& line,size_t t)
-	: RPrgInst(), Values(20,10), Insts(50,25), Tabs(t)
+RPrgInstFor::RPrgInstFor(RPrg* prg,size_t t)
+	: RPrgInstBlock(t), Values(20,10)
 {
-	size_t pos;
-	int len;
-	RString Params;
-	RCharCursor Cur(line);
-
 	// Read name of variable
-	pos=0;
-	len=line.Find(' ');
-	Var=line.Mid(0,len);
+	Var=prg->Prg.GetWord();
 
-	// Skip "in "
-	pos=len+1;
-	Cur.GoTo(len+1);
-	while((!Cur.End())&&(!Cur().IsSpace()))
-		Cur.Next();
-	while((!Cur.End())&&(Cur().IsSpace()))
-		Cur.Next();
+	// Read next word -> must be "in"
+	RString Cmd(prg->Prg.GetWord());
+	if(Cmd!="in")
+		throw RPrgException(prg,"'"+Cmd+"' is not valid for a 'for' instruction");
 
 	// Read Values
-	Params=line.Mid(Cur.GetPos(),line.GetLen()-Cur.GetPos()+1);
-	RPrg::AnalyseParam(Params,&Values);
-}
+	prg->AnalyseParam(Values);
 
-
-//------------------------------------------------------------------------------
-void RPrgInstFor::AddInst(RPrgInst* ins)
-{
-	if(ins)
-		Insts.InsertPtr(ins);
+	// Analyze the rest of the line (which must contain a ':')
+	Cmd=prg->Prg.GetLine().Trim();
+	if(Cmd!=":")
+		throw RPrgException(prg,"for must finish with a :");
 }
 
 
 //------------------------------------------------------------------------------
 void RPrgInstFor::Run(RPrg* prg,RPrgOutput* o)
 {
-	RPrgVarVal* local=new RPrgVarVal(Var,"");
+	RPrgVarString* local=new RPrgVarString(Var,"");
 
 	prg->AddVar(local);
 	RCursor<RPrgVar> Cur(Values);

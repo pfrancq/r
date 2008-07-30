@@ -44,8 +44,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVar::RPrgVar(const RString& name)
-	: Name(name)
+RPrgVar::RPrgVar(const RString& name,const RString& type)
+	: Name(name), Type(type)
 {
 }
 

@@ -47,7 +47,8 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RPrgVar provides a class for a reference to a variable.
+* The RPrgVar provides a class for a reference to a variable, i.e. a variable
+* of the type 'VarRef'.
 * @author Pascal Francq
 * @short Variable Reference.
 */
@@ -56,7 +57,7 @@ class RPrgVarRef : public RPrgVar
 public:
 
 	/**
-	* Constructor of a variable.
+	* Construct the variable.
 	* @param ref            Name of the variable referenced.
 	*/
 	RPrgVarRef(const RString& ref);
@@ -70,12 +71,11 @@ public:
 	/**
 	* Get the value of the variable.
 	* @param prg            Program.
-	* @return "C" string representing the content of the variable.
 	*/
 	virtual RString GetValue(RPrg* prg);
 
 	/**
-	* Destructor of a variable.
+	* Destruct the variable.
 	*/
 	virtual ~RPrgVarRef(void);
 };

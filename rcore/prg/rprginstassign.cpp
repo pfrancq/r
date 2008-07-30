@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RPrgVarVal.cpp
+	RPrgInstAssign.h
 
-	Variable containing a value  - Implementation.
+	Assignment Instructions - Implementation.
 
 	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
@@ -32,39 +32,71 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprgvarval.h>
+#include <rprginstassign.h>
+#include <rprgvarstring.h>
+#include <rprgclass.h>
+#include <rprg.h>
+#include <rcursor.h>
+using namespace std;
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// RPrgVarVal
+// RPrgInstNew
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgVarVal::RPrgVarVal(const RString& name,const RString& value)
-	: RPrgVar(name), Value(value)
+RPrgInstNew::RPrgInstNew(RPrg* prg,const RString& name,RPrgClass* c)
+	: RPrgInst(), Var(name), Class(c), Params(20,10)
+{
+	// Read Values
+	prg->AnalyseParam(Params);
+}
+
+
+//------------------------------------------------------------------------------
+void RPrgInstNew::Run(RPrg* prg,RPrgOutput*)
+{
+	RPrgVar* Ptr=Class->NewVar(prg,Var,Params);
+	prg->AddVar(Ptr);
+}
+
+
+//------------------------------------------------------------------------------
+RPrgInstNew::~RPrgInstNew(void)
+{
+}
+
+
+
+//------------------------------------------------------------------------------
+//
+// RPrgInstAssignVar
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+RPrgInstAssignVar::RPrgInstAssignVar(const RString& name,RPrgVar* assign)
+	: RPrgInst(), Var(name), Assign(assign)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgVarVal::Assign(const void* data)
+void RPrgInstAssignVar::Run(RPrg* prg,RPrgOutput*)
 {
-	Value=static_cast<const char*>(data);
+	RPrgVar* Ptr=prg->Find(Var);
+	if(!Ptr)
+		throw RPrgException(prg,"Unknown Variable '"+Var+"'");
+	Ptr->Assign(Assign->GetValue(prg));
 }
 
 
 //------------------------------------------------------------------------------
-RString RPrgVarVal::GetValue(RPrg*)
+RPrgInstAssignVar::~RPrgInstAssignVar(void)
 {
-	return(Value);
-}
-
-
-//------------------------------------------------------------------------------
-RPrgVarVal::~RPrgVarVal(void)
-{
+	delete Assign;
 }

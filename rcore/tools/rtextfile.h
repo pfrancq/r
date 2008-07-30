@@ -121,8 +121,8 @@ public:
 
 	/**
 	 * The ParseSpaceType enum represents the different way to handle spaces.
-	 * If SkipSpaces is chosen, leading spaces and empty lines are not seen by
-	 * the programmer.
+	 * If SkipAllSpaces is chosen, leading spaces and empty lines are not seen
+	 * by the programmer.
 	 */
 	enum ParseSpaceType
 	{
@@ -277,7 +277,7 @@ public:
 	RChar GetChar(void);
 
 	/**
-	* Get the rest of the file.
+	* Read the rest of the file.
 	* @return A RString containing the file.
 	*/
 	RString GetUntilEnd(void);
@@ -285,7 +285,7 @@ public:
 protected:
 
 	/**
-	* Go to the begining of the file.
+	* Go to the beginning of the file.
 	*/
 	void Begin(void);
 
@@ -301,35 +301,9 @@ protected:
 	void ReadChars(void);
 
 	/**
-	* Return true if the character defines the end of a line.
-	* @param car            Character.
-	*/
-	static bool Eol(RChar car);
-
-	/**
 	* This function skip a end of line.
 	*/
 	void SkipEol(void);
-
-	/**
-	* Verify if a string is the next one in the buffer. If the string is found,
-	* it may be skipped.
-	* @param str             The string to find
-	* @param CaseSensitive   Is the search case sensitive.
-	* @param skip            Must the string be skipped?
-	* @return True if the string is found.
-	*/
-	bool CurString(const RString& str,bool CaseSensitive=true,bool skip=true);
-
-	/**
-	* This function skip spaces (Only used if read mode).
-	*/
-	void SkipComments(void);
-
-	/**
-	* This function skip spaces (Only used if read mode).
-	*/
-	void SkipSpaces(void);
 
 	/**
 	* This function returns true if the current position is the beginning of a
@@ -344,6 +318,32 @@ protected:
 	bool EndComment(void);
 
 public:
+
+	/**
+	* Return true if the character defines the end of a line.
+	* @param car            Character.
+	*/
+	static bool Eol(RChar car);
+
+	/**
+	* Verify if a string is the next one in the buffer. If the string is found,
+	* it may be skipped.
+	* @param str             The string to find
+	* @param CaseSensitive   Is the search case sensitive.
+	* @param skip            Must the string be skipped?
+	* @return True if the string is found.
+	*/
+	bool CurString(const RString& str,bool CaseSensitive=true,bool skip=true);
+
+	/**
+	* This function skip comments (Only used if read mode).
+	*/
+	void SkipComments(void);
+
+	/**
+	* This function skip spaces (Only used if read mode).
+	*/
+	void SkipSpaces(void);
 
 	/**
 	* Set the encoding of the file.
@@ -394,20 +394,19 @@ public:
 
 	/**
 	* Get the next token contained in the file. A token is a suite of
-	* characters delimited either by spaces or by specific ending characters.
-	* The ending characters are not skipped.
-	* @param ending1         Ending character.
-	* @param ending2         Ending character.
+	* characters delimited either by spaces or by a specific ending character.
+	* The ending character is not skipped.
+	* @param endingchar      String containing all possible ending characters.
 	*/
-	RString GetToken(RChar ending1,const RChar ending2=0);
+	RString GetToken(const RString& endingchar);
 
 	/**
-	* Get the next token contained in the file. A token is a suite of
-	* characters delimited either by spaces or by a specific string.
-	* The ending characters are not skipped.
-	* @param ending          Ending String.
+	* Get the next token contained in the file, i.e a suite of characters
+	* delimited either by spaces or by a specific string.
+	* The ending string is not skipped.
+	* @param endingstr       Ending String.
 	*/
-	RString GetToken(const RString& ending);
+	RString GetTokenString(const RString& endingstr);
 
 	/**
 	* Return the next entire line in the file.

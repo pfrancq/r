@@ -120,7 +120,6 @@ template<class cGroup,class cObj,class cGroups>
 	RCursor<cObj> ptr(grp->Owner->GetObjs(*grp));
 	for(ptr.Start();!ptr.End();ptr.Next())
 		Insert(ptr());
-
 }
 
 

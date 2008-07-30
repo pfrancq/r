@@ -6,7 +6,7 @@
 
 	Generic Class - Implementation.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -34,7 +34,9 @@
 // include files for R Project
 #include <rprgclass.h>
 #include <rprgfunc.h>
-#include <rprgvar.h>
+#include <rprg.h>
+#include <rprgvarstring.h>
+using namespace std;
 using namespace R;
 
 
@@ -89,4 +91,32 @@ RCursor<RPrgFunc> RPrgClass::GetMethods(void) const
 //------------------------------------------------------------------------------
 RPrgClass::~RPrgClass(void)
 {
+}
+
+
+
+//------------------------------------------------------------------------------
+//
+// class RPrgStringClass
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+RPrgStringClass::RPrgStringClass(void)
+	: RPrgClass("String")
+{
+}
+
+
+//------------------------------------------------------------------------------
+RPrgVar* RPrgStringClass::NewVar(RPrg* prg,const RString& name,RContainer<RPrgVar,true,false>& params)
+{
+	if(params.GetNb()>1)
+		throw RPrgException(prg,"String constructor has maximum one parameter");
+	RPrgVarString* Var;
+	if(params.GetNb())
+		Var=new RPrgVarString(name,params[0]->GetValue(prg));
+	else
+		Var=new RPrgVarString(name,"");
+	return(Var);
 }

@@ -38,7 +38,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rtextfile.h>
-#include <rcontainer.h>
+#include <rstack.h>
 #include <rcursor.h>
 
 
@@ -51,6 +51,7 @@ namespace R{
 // forward class declaration
 class RPrgOutput;
 class RPrgInst;
+class RPrgInstBlock;
 class RPrgVar;
 class RPrgClass;
 class RPrg;
@@ -119,7 +120,7 @@ protected:
 	R::RContainer<RPrgInst,true,false> Insts;
 
 	/**
-	* List of all "Variables" defined in the program.
+	* List of all global "Variables" defined in the program.
 	*/
 	R::RContainer<RPrgVar,true,false> Vars;
 
@@ -127,6 +128,11 @@ protected:
 	* List of all "Classes" defined in the program.
 	*/
 	R::RContainer<RPrgClass,true,false> Classes;
+
+	/**
+	 * Stack of blocks of instructions
+	 */
+	R::RStack<RPrgInstBlock,false,true,true> Blocks;
 
 	/**
 	* Program file.
@@ -162,17 +168,6 @@ public:
 	*/
 	void Load(void);
 
-protected :
-
-	/**
-	* Count the number of tabs at the begin of a line of source code.
-	* @param line           Line to analyze.
-	* @returns size_t.
-	*/
-	static size_t CountTabs(const RString& line);
-
-public:
-
 	/**
 	 * Return a string of the form "filename(line)" representing the current
 	 * element treated.
@@ -185,23 +180,31 @@ public:
 	size_t GetNbLine(void) const {return(Line);}
 
 	/**
-	* Analyze a line of source code.
-	* @param prg            File containing the program.
-	* @returns Instruction to insert.
-	*/
-	RPrgInst* AnalyseLine(R::RTextFile& prg);
-
-	/**
-	* Analyze a parameter.
-	* @param params         Parameter to analyze.
-	* @param values         Values of the parameter.
-	*/
-	static void AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* values);
-
-	/**
 	* Execute a "program".
 	*/
 	void Exec(void);
+
+protected :
+
+	/**
+	* Count the number of tabs at the begin of a line of source code.
+	* @param line           Line to analyze.
+	* @returns size_t.
+	*/
+	size_t CountTabs(const RString& line);
+
+	/**
+	* Analyze the parameters.
+	* @param values         Values of the parameter.
+	*/
+	void AnalyseParam(RContainer<RPrgVar,true,false>& values);
+
+	/**
+	 * Read a literal value.
+	 */
+	RString ReadLiteral(void);
+
+public:
 
 	/**
 	* Add a variable.
@@ -214,6 +217,19 @@ public:
 	* @param var             Pointer to the variable.
 	*/
 	void DelVar(RPrgVar* var);
+
+	/**
+	 * Add an instruction.
+	 * @param inst           Instruction.
+	 */
+	void AddInst(RPrgInst* inst);
+
+	/**
+	 * Find a variable by searching in all local blocks.
+	 * @param name           Name of the variable.
+	 * @return Pointer to the variable or 0 if not found.
+	 */
+	RPrgVar* Find(const RString& name) const;
 
 	/**
 	* Get the value of the variable.
@@ -247,6 +263,11 @@ public:
 	* Destruct of the program.
 	*/
 	virtual ~RPrg(void);
+
+	// friend class
+	friend class RPrgInstFor;
+	friend class RPrgInstMethod;
+	friend class RPrgInstNew;
 };
 
 

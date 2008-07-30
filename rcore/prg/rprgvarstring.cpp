@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgVarConst.h
+	RPrgVarString.cpp
 
-	Const Variable - Header.
+	Variable containing a string value - Implementation.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -31,58 +31,40 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPrgVarConstH
-#define RPrgVarConstH
-
-
-//------------------------------------------------------------------------------
 // include files for R Project
-#include <rprgvar.h>
+#include <rprgvarstring.h>
+using namespace R;
 
-
-//------------------------------------------------------------------------------
-namespace R{
-//------------------------------------------------------------------------------
 
 
 //------------------------------------------------------------------------------
-/**
-* The RPrgVarCons provides a class for a const variable.
-* @author Pascal Francq
-* @short Const Variable.
-*/
-class RPrgVarConst : public RPrgVar
+//
+// RPrgVarString
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+RPrgVarString::RPrgVarString(const RString& name,const RString& value)
+	: RPrgVar(name,"String"), String(value)
 {
-public:
-
-	/**
-	* Constructor of a const variable.
-	* @param value          Name.
-	*/
-	RPrgVarConst(const RString& value);
-
-	/**
-	* Assign some data to the const variable.
-	* @param data           Data.
-	*/
-	virtual void Assign(const void* data);
-
-	/**
-	* Get the value of the const variable.
-	* @param prg            Program.
-	* @return "C" string representing the content of the const variable.
-	*/
-	virtual RString GetValue(RPrg* prg);
-
-	/**
-	* Destructor of a const variable.
-	*/
-	virtual ~RPrgVarConst(void);
-};
-
-
-}  //-------- End of namespace R -----------------------------------------------
+}
 
 
 //------------------------------------------------------------------------------
-#endif
+void RPrgVarString::Assign(const void* data)
+{
+	String=static_cast<const char*>(data);
+}
+
+
+//------------------------------------------------------------------------------
+RString RPrgVarString::GetValue(RPrg*)
+{
+	return(String);
+}
+
+
+//------------------------------------------------------------------------------
+RPrgVarString::~RPrgVarString(void)
+{
+}

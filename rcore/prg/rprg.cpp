@@ -41,12 +41,13 @@
 // include files for R Project
 #include <rprg.h>
 #include <rprginstfor.h>
+#include <rprginstassign.h>
 #include <rprginstmethod.h>
-#include <rprgvarconst.h>
+#include <rprgvarliteral.h>
 #include <rprgvarref.h>
 #include <rprgclass.h>
 #include <rprgfunc.h>
-#include <rcursor.h>
+using namespace std;
 using namespace R;
 
 
@@ -80,42 +81,119 @@ RPrgException::RPrgException(const RPrg* prg,const char* str) throw()
 
 //-----------------------------------------------------------------------------
 RPrg::RPrg(RString f,RPrgOutput* o)
-	: FileName(f), Cout(o), Insts(40), Vars(10,5), Classes(10,5), Prg(FileName)
+	: FileName(f), Cout(o), Insts(40,40), Vars(10,5), Classes(10,5), Blocks(10,5),
+	  Prg(FileName)
 
 {
 	Prg.SetRem("#");
+	Prg.SetParseSpace(RTextFile::LeaveSpaces);
+	Classes.InsertPtr(new RPrgStringClass());
 }
 
 
 //-----------------------------------------------------------------------------
 void RPrg::Load(void)
 {
-	RPrgInst* i;
-
 	Prg.Open(RIO::Read);
-	ReadLine=true;
-	while((!ReadLine)||(!Prg.End()&&(ReadLine)))
+	if(Prg.End())
+		return;
+
+	// Treat the file
+	while(!Prg.End())
 	{
-		i=AnalyseLine(Prg);
-		if(i)
-			Insts.InsertPtr(i);
+		// Skip Spaces and count tabs
+		size_t tabs=CountTabs(buf);
+
+		// Verify the correct tabs
+		if(Blocks.GetNb())
+		{
+			if(tabs==Blocks()->GetTabs()-1)
+			{
+				// Leaving current block
+				Blocks.Pop();
+			}
+			else if(tabs!=Blocks()->GetTabs())
+				RPrgException(this,"Wrong number of tabs");
+		}
+		else if(tabs)
+			throw RPrgException(this,"No tabs are allowed");
+
+		// Read next instruction (in Inst)
+		Line=Prg.GetLineNb();
+		RString Inst=Prg.GetToken(".(=");
+		switch(Prg.GetChar().Latin1())
+		{
+			case '(': // Read of an instruction
+			{
+				// If is "for"
+				if(Inst=="for")
+				{
+					RPrgInstFor* f=new RPrgInstFor(this,tabs);
+					AddInst(f);
+					Blocks.Push(f);
+				}
+				else
+					throw RPrgException(this,RString("Unknown instruction '")+Inst+"'.");
+				break;
+			}
+			case '.':   // Call to the method of an object
+			{
+				// Read the methods name
+				RString Method(Prg.GetToken("("));
+				if(Prg.GetChar()!='(')
+					throw RPrgException(this,"Wrong call to the method '"+Method+"' for object '"+Inst+"'");
+
+				// Create the instruction
+				AddInst(new RPrgInstMethod(this,Inst,Method));
+				break;
+			}
+			case '=':     // Must be an assignment
+			{
+				// Get the next token after the = and the first "
+				RString Cmd(Prg.GetToken('\"'));
+
+				if(Cmd=="new")
+				{
+					// Read the class name
+					RString ClassName(Prg.GetToken("("));
+					RPrgClass* Class=Classes.GetPtr(ClassName);
+					if(!Class)
+						throw RPrgException(this,"Unknown class '"+ClassName+"'");
+					Prg.GetChar(); // Skip (
+
+					// Create the instruction
+					AddInst(new RPrgInstNew(this,Inst,Class));
+				}
+				else if(!Cmd.IsEmpty())
+				{
+					// Assign of an existing variable
+					AddInst(new RPrgInstAssignVar(Inst,new RPrgVarRef(Prg.GetWord())));
+				}
+				else
+				{
+					// Assign of an literal.
+					Prg.GetChar(); // Skip "
+					RString Val=ReadLiteral();
+					AddInst(new RPrgInstAssignVar(Inst,new RPrgVarLiteral(Val)));//ReadLiteral())));  // = Literal
+				}
+				break;
+			}
+		}
 	}
 }
 
 
 //-----------------------------------------------------------------------------
-size_t RPrg::CountTabs(const RString& line)
+size_t RPrg::CountTabs(const RString&)
 {
-	int tabs;
-	RCharCursor Cur(line);
-
-	// Count tabs
-	tabs=0;
-	while((!Cur.End())&&(Cur()=='\t'))
+	// Count leading spaces
+	size_t tabs(0);
+	while((!Prg.End())&&(Prg.GetNextChar()=='\t'))
 	{
 		tabs++;
-		Cur.Next();
+		Prg.GetChar();
 	}
+	Prg.SkipSpaces();
 	return(tabs);
 }
 
@@ -128,162 +206,66 @@ RString RPrg::WhatTreated(void) const
 
 
 //-----------------------------------------------------------------------------
-RPrgInst* RPrg::AnalyseLine(RTextFile& prg)
+RString RPrg::ReadLiteral(void)
 {
-	RString l;
-	RString obj;
-	RString name;
-	RChar what;
-	char tabs;
-	size_t pos;
-	size_t len;
-	RCharCursor Cur;
-
-	// Read the line
-	Line=prg.GetLineNb();
-	if(ReadLine)
-		buf=prg.GetLine();
-	Cur.Set(buf);
-
-	// Skip Spaces and count tabs
-	tabs=CountTabs(buf);
-	while((!Cur.End())&&(Cur().IsSpace()))
-		Cur.Next();
-
-	// Read if it is an Object or instruction or something dummy
-	pos=Cur.GetPos();
-	len=0;
-	while((!Cur.End())&&(Cur()!=RChar('.'))&&(Cur()!=RChar('='))&&(Cur()!=RChar('('))&&(!Cur().IsSpace()))
+	bool Cont(true);
+	RString Val;
+	while(Cont)
 	{
-		Cur.Next();
-		len++;
-	}
-	obj=buf.Mid(pos,len);
-	what=Cur();
-	Cur.Next();
-	pos=Cur.GetPos();
-
-	// Look if instruction
-	if(what=='(')
-	{
-		// If is "for"
-		if(obj=="for")
+		RString Part(Prg.GetToken("\""));
+		Val+=Part;
+		RChar end=Prg.GetChar();
+		if(end=='"')
+			Cont=false;
+		else
 		{
-			RPrgInstFor* f=new RPrgInstFor(buf.Mid(Cur.GetPos(),buf.GetLen()-Cur.GetPos()+1),tabs);
-
-			// Read the next lines
-			Line=prg.GetLineNb();
-			buf=Prg.GetLine();
-			if(buf.IsEmpty()) return(f);
-			pos=0;
-			ReadLine=false;
-			while((!ReadLine)||(!Prg.End()&&(ReadLine)))
-			{
-				if(CountTabs(buf)<=f->GetTabs())
-					break;
-				f->AddInst(AnalyseLine(prg));
-				if(ReadLine)
-				{
-					Line=prg.GetLineNb();
-					buf=prg.GetLine();
-					if(buf.IsEmpty()) return(f);
-					pos=0;
-					ReadLine=false;
-				}
-			}
-			return(f);
+			// Can be a space but not an end of line
+			if(RTextFile::Eol(end))
+				throw RPrgException(this,"A value cannot be separated on multiple lines");
+			Val+=end;
 		}
-		throw RPrgException(this,RString("Instruction \"")+RString(obj)+"\" does not exist.");
 	}
-
-	// Look if call to an object
-	if(what=='.')
-	{
-		// Look if the object is known
-		RPrgClass* c=Classes.GetPtr<RString>(obj);
-		if(!c)
-			throw RPrgException(this,RString("Object \"")+obj+"\" unknown");
-
-		// Read the methods name
-		len=0;
-		pos=Cur.GetPos();
-		while((!Cur.End())&&(Cur()!=RChar('(')))
-		{
-			//ptr++;
-			Cur.Next();
-			len++;
-		}
-		RPrgFunc* method=c->GetMethod(buf.Mid(pos,len));
-		Cur.Next();
-		if(!method)
-		{
-			RString msg("Method \"");
-			msg+=name+"\" unknown for object \""+obj+"\"";
-			throw RPrgException(this,msg);
-		}
-
-		// Create the instruction
-		RPrgInstMethod* inst=new RPrgInstMethod(method);
-		inst->AnalyseParam(buf.Mid(Cur.GetPos(),buf.GetLen()-Cur.GetPos()+1));
-		ReadLine=true;
-		return(inst);
-	}
-
-	ReadLine=true;
-	return(0);
+	return(Val);
 }
 
 
 //-----------------------------------------------------------------------------
-void RPrg::AnalyseParam(const RString& params,RContainer<RPrgVar,true,false>* values)
+void RPrg::AnalyseParam(RContainer<RPrgVar,true,false>& values)
 {
-	size_t len;
-	size_t pos;
-	RCharCursor Cur(params);
+	bool SomethingToRead=false;
 
-	while(!Cur.End())
+	// This function reads something such as "val1",val,"val3"....,"valn")
+	while(Prg.GetNextChar()!=')')
 	{
-		// Skip before something
-		while((!Cur.End())&&(Cur()!=RChar('"'))&&(!Cur().IsAlpha()))
-			Cur.Next();
-		if(Cur.End())
-			return;
+		Prg.SkipSpaces();
 
-		if(Cur()==RChar('"'))
+		// Two possibilities:
+		// " : Value
+		// Either : Reference
+		RChar What=Prg.GetChar();
+		if(What=='"')
 		{
-			Cur.Next();
-
-			// Read Value and skip " and next thing
-			len=0;
-			pos=Cur.GetPos();
-			while((!Cur.End())&&(Cur()!=RChar('"')))
-			{
-				Cur.Next();
-				len++;
-			}
-
-			// Value
-			values->InsertPtr(new RPrgVarConst(params.Mid(pos,len)));
-
-			Cur.Next();
+			values.InsertPtr(new RPrgVarLiteral(ReadLiteral()));
+			SomethingToRead=false;
 		}
 		else
 		{
-			// Look until , or )
-			len=0;
-			pos=Cur.GetPos();
-			while((!Cur.End())&&(Cur()!=RChar(','))&&(Cur()!=RChar(')')))
-			{
-				Cur.Next();
-				len++;
-			}
+			RString Var(What+Prg.GetToken("),"));
+			values.InsertPtr(new RPrgVarRef(Var));
+			SomethingToRead=false;
+		}
 
-			// Ref
-			values->InsertPtr(new RPrgVarRef(params.Mid(pos,len)));
-
-			Cur.Next();
+		// Skip spaces
+		Prg.SkipSpaces();
+		if(Prg.GetNextChar()==',')
+		{
+			SomethingToRead=true;
+			Prg.GetChar();
 		}
 	}
+	if(SomethingToRead)
+		throw RPrgException(this,"A parameter is missing");
+	Prg.GetChar();     	// Skip )
 }
 
 
@@ -299,22 +281,56 @@ void RPrg::Exec(void)
 //-----------------------------------------------------------------------------
 void RPrg::AddVar(RPrgVar* var)
 {
-	Vars.InsertPtr(var);
+	if(!var)
+		return;
+	if(Blocks.GetNb())
+		Blocks()->Vars.InsertPtr(var,true);
+	else
+		Vars.InsertPtr(var,true);
 }
 
 
 //-----------------------------------------------------------------------------
 void RPrg::DelVar(RPrgVar* var)
 {
-	Vars.DeletePtr(*var);
+	if(!var)
+		return;
+	if(Blocks.GetNb())
+		Blocks()->Vars.DeletePtr(*var);
+	else
+		Vars.DeletePtr(*var);
+}
+
+
+//-----------------------------------------------------------------------------
+void RPrg::AddInst(RPrgInst* inst)
+{
+	if(!inst)
+		return;
+	if(Blocks.GetNb())
+		Blocks()->AddInst(inst);
+	else
+		Insts.InsertPtr(inst);
+}
+
+
+//-----------------------------------------------------------------------------
+RPrgVar* RPrg::Find(const RString& name) const
+{
+	for(size_t i=0;i<Blocks.GetNb();i++)
+	{
+		RPrgVar* v=Blocks[i]->Vars.GetPtr(name);
+		if(v)
+			return(v);
+	}
+	return(Vars.GetPtr(name));
 }
 
 
 //-----------------------------------------------------------------------------
 RString RPrg::GetValue(const RString& var)
 {
-	RPrgVar* v=Vars.GetPtr<const char*>(var);
-
+	RPrgVar* v=Find(var);
 	if(!v) return(RString::Null);
 	return(v->GetValue(this));
 }

@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgInst.cpp
+	RPrgVarInst.h
 
-	Generic instruction - Implementation.
+	Variable representing a instance of class - Header.
 
-	Copyright 2002-2008 by the Université Libre de Bruxelles.
+	Copyright 2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -31,45 +31,76 @@
 
 
 //------------------------------------------------------------------------------
+#ifndef RPrgVarInstH
+#define RPrgVarInstH
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rprginst.h>
-using namespace R;
-
+#include <rprgvar.h>
 
 
 //------------------------------------------------------------------------------
-//
-// RPrgInst
-//
+namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
-RPrgInst::RPrgInst(void)
+// forward class declaration
+class RPrg;
+class RPrgClass;
+
+
+//------------------------------------------------------------------------------
+/**
+* The RPrgVarInst provides a class for an instance of a class.
+* @author Pascal Francq
+* @short Class Instance.
+*/
+class RPrgVarInst : public RPrgVar
 {
-}
+protected:
+
+	/**
+	 * Class of the variable.
+	 */
+	RPrgClass* Class;
+
+public:
+
+	/**
+	* Construct an instance of a class.
+	* @param name           Name.
+	* @param c              Class.
+	*/
+	RPrgVarInst(const RString& name,RPrgClass* c);
+
+	/**
+	* Assign some data to the variable.
+	* @param data           Data.
+	*/
+	virtual void Assign(const void* data);
+
+	/**
+	* Get the value of the variable.
+	* @param prg            Program.
+	*/
+	virtual RString GetValue(RPrg* prg);
+
+	/**
+	 * Get the class of the instance.
+	 */
+	RPrgClass* GetClass(void) const {return(Class);}
+
+	/**
+	* Destruct the variable.
+	*/
+	virtual ~RPrgVarInst(void);
+};
+
+
+}  //-------- End of namespace R -----------------------------------------------
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const RPrgInst&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-int RPrgInst::Compare(const RString&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-void RPrgInst::Run(RPrg*,RPrgOutput*)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RPrgInst::~RPrgInst(void)
-{
-}
+#endif

@@ -71,7 +71,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(size_t popsize,R::RCursor<cObj> objs,const RString& h,const R::RString& name,R::RDebug* debug)
 		: R::RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
-		  Heuristic(h), EmptyModifiedGroups(true), Objs(objs)
+		  Heuristic(h), EmptyModifiedGroups(true), Objs(objs), DoLocalOptimisation(true)
 {
 	if(Objs.GetNb()<11)
 		MaxGroups=10;
@@ -91,6 +91,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	for(i=this->GetPopSize()+1,C=this->Chromosomes;--i;C++)
 		(static_cast<R::RGroups<cGroup,cObj,cChromo>*>(*C))->Init();
 	(static_cast<R::RGroups<cGroup,cObj,cChromo>*>(this->BestChromosome))->Init();
+}
+
+
+//------------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
+	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::SetLocalOptimisation(bool localopti)
+{
+	DoLocalOptimisation=localopti;
 }
 
 

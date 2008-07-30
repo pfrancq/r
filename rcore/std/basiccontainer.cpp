@@ -234,9 +234,9 @@ void* BasicContainer::operator[](size_t idx)
 	if(idx>=LastPtr)
 	{
 		if(LastPtr)
-			throw std::range_error("BasicContainer::operator[] const : column "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+			throw std::range_error("BasicContainer::operator[] : column "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 		else
-			throw std::range_error("BasicContainer::operator[] const : no elements");
+			throw std::range_error("BasicContainer::operator[] : no elements");
 	}
 	return(Tab[idx]);
 }

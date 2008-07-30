@@ -6,7 +6,7 @@
 
 	Generic function - Header.
 
-	Copyright 2002-2003 by the Universit�Libre de Bruxelles.
+	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -51,6 +51,7 @@ namespace R{
 // forward declaration
 class RPrgVar;
 class RPrg;
+class RPrgVarInst;
 class RPrgOutput;
 
 
@@ -77,7 +78,7 @@ protected:
 public:
 
 	/**
-	* Costructor of a function.
+	* Construct the function.
 	* @param name           Name.
 	* @param desc           Description.
 	*/
@@ -115,12 +116,13 @@ public:
 	* Execute the function.
 	* @param prg            Program.
 	* @param o              Output.
+	* @param inst           Instance of the class.
 	* @param args           Parameters of the function.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o,RContainer<RPrgVar,true,false>* args);
+	virtual void Run(RPrg* prg,RPrgOutput* o,RPrgVarInst* inst,RContainer<RPrgVar,true,false>* args)=0;
 
 	/**
-	* Destructor of a function.
+	* Destruct the function.
 	*/
 	virtual ~RPrgFunc(void);
 };

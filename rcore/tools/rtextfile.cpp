@@ -487,14 +487,14 @@ RString RTextFile::GetWord(void)
 
 
 //------------------------------------------------------------------------------
-RString RTextFile::GetToken(RChar ending1,const RChar ending2)
+RString RTextFile::GetToken(const RString& endingchar)
 {
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
 	RString res;
 	SkipSpaces();
 
-	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(GetNextChar()!=ending1)&&(GetNextChar()!=ending2))
+	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(endingchar.Find(GetNextChar())==-1))
 		res+=GetChar();
 
 	// Skip spaces if necessary
@@ -506,14 +506,14 @@ RString RTextFile::GetToken(RChar ending1,const RChar ending2)
 
 
 //------------------------------------------------------------------------------
-RString RTextFile::GetToken(const RString& ending)
+RString RTextFile::GetTokenString(const RString& endingstr)
 {
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
 	RString res;
 	SkipSpaces();
 
-	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(!CurString(ending)))
+	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(!CurString(endingstr)))
 	{
 		Next();
 		res+=Cur;
