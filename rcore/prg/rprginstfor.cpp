@@ -49,7 +49,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RPrgInstFor::RPrgInstFor(RPrg* prg,size_t t)
-	: RPrgInstBlock(t), Values(20,10)
+	: RPrgInstBlock(prg,t), Values(20,10)
 {
 	// Read name of variable
 	Var=prg->Prg.GetWord();
@@ -61,11 +61,6 @@ RPrgInstFor::RPrgInstFor(RPrg* prg,size_t t)
 
 	// Read Values
 	prg->AnalyseParam(Values);
-
-	// Analyze the rest of the line (which must contain a ':')
-	Cmd=prg->Prg.GetLine().Trim();
-	if(Cmd!=":")
-		throw RPrgException(prg,"for must finish with a :");
 }
 
 
@@ -74,6 +69,7 @@ void RPrgInstFor::Run(RPrg* prg,RPrgOutput* o)
 {
 	RPrgVarString* local=new RPrgVarString(Var,"");
 
+	prg->Blocks.Push(this);
 	prg->AddVar(local);
 	RCursor<RPrgVar> Cur(Values);
 	for(Cur.Start();!Cur.End();Cur.Next())
@@ -83,7 +79,8 @@ void RPrgInstFor::Run(RPrg* prg,RPrgOutput* o)
 		for(Cur2.Start();!Cur2.End();Cur2.Next())
 			Cur2()->Run(prg,o);
 	}
-	prg->DelVar(local);
+	Vars.Clear();
+	prg->Blocks.Pop();
 }
 
 

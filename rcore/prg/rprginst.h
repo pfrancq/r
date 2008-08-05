@@ -63,12 +63,18 @@ class RPrgOutput;
 */
 class RPrgInst
 {
+	/**
+	 * Line in the source file.
+	 */
+	size_t Line;
+
 public:
 
 	/**
-	* Constructor of a generic instruction.
+	* Construct a generic instruction.
+	* @param line            Line.
 	*/
-	RPrgInst(void);
+	RPrgInst(size_t line);
 
 	/**
 	* This method compares two instructions.
@@ -85,6 +91,11 @@ public:
 	int Compare(const RString& t) const;
 
 	/**
+	 * Get the line number of the instruction.
+	 */
+	size_t GetLine(void) const {return(Line);}
+
+	/**
 	* Run the instruction.
 	* @param prg            Program.
 	* @param o              Output.
@@ -92,7 +103,7 @@ public:
 	virtual void Run(RPrg* prg,RPrgOutput* o);
 
 	/**
-	* Destructor of a generic instruction.
+	* Destruct the generic instruction.
 	*/
 	virtual ~RPrgInst(void);
 };

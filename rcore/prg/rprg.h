@@ -115,22 +115,12 @@ protected:
 	R::RPrgOutput* Cout;
 
 	/**
-	* List of all "Instructions" to execute.
-	*/
-	R::RContainer<RPrgInst,true,false> Insts;
-
-	/**
-	* List of all global "Variables" defined in the program.
-	*/
-	R::RContainer<RPrgVar,true,false> Vars;
-
-	/**
 	* List of all "Classes" defined in the program.
 	*/
 	R::RContainer<RPrgClass,true,false> Classes;
 
 	/**
-	 * Stack of blocks of instructions
+	 * LIFO Stack  of blocks of instructions
 	 */
 	R::RStack<RPrgInstBlock,false,true,true> Blocks;
 
@@ -140,19 +130,19 @@ protected:
 	R::RTextFile Prg;
 
 	/**
-	* Temporary string.
-	*/
-	RString buf;
-
-	/**
-	* Must a line be read;
-	*/
-	bool ReadLine;
-
-	/**
 	 * Number of the line where the last instruction begins.
 	 */
 	size_t Line;
+
+	/**
+	 * Main block of instructions.
+	 */
+	RPrgInstBlock* Main;
+
+	/**
+	 * The file has been loaded.
+	 */
+	bool HasLoad;
 
 public:
 
@@ -162,11 +152,6 @@ public:
 	* @param o              Output.
 	*/
 	RPrg(R::RString f,RPrgOutput* o);
-
-	/**
-	* Load the script file.
-	*/
-	void Load(void);
 
 	/**
 	 * Return a string of the form "filename(line)" representing the current
@@ -187,13 +172,6 @@ public:
 protected :
 
 	/**
-	* Count the number of tabs at the begin of a line of source code.
-	* @param line           Line to analyze.
-	* @returns size_t.
-	*/
-	size_t CountTabs(const RString& line);
-
-	/**
 	* Analyze the parameters.
 	* @param values         Values of the parameter.
 	*/
@@ -203,6 +181,17 @@ protected :
 	 * Read a literal value.
 	 */
 	RString ReadLiteral(void);
+
+	/**
+	 * Treat end of line
+	 * @param dbl            Must the line contains a double point.
+	 */
+	void Eol(bool dbl);
+
+	/**
+	* Load the script file.
+	*/
+	void Load(void);
 
 public:
 
@@ -265,9 +254,12 @@ public:
 	virtual ~RPrg(void);
 
 	// friend class
+	friend class RPrgInstBlock;
 	friend class RPrgInstFor;
 	friend class RPrgInstMethod;
 	friend class RPrgInstNew;
+	friend class RPrgInstDelete;
+	friend class RPrgInstAssignVar;
 };
 
 

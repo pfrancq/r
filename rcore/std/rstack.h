@@ -50,14 +50,14 @@ namespace R{
 * This class represent a template for a stack of elements. These elements are
 * stored in an array of pointers which will be increase when necessary.
 * @param C                   The class of the elements.
-* @param bAlloc              Specify if the elements are desallocated when
-*                            removed from the stack.
+* @param bAlloc              Specify if the elements are destroyed when removed
+*                            from the stack.
 * @param bPushTop            Specify if a new element is added at the top of
 *                            the stack.
-* @param bPopTop             Specify if a new element is removed from the top
-*                            of the stack.
+* @param bPopTop             Specify if the next element is removed from the
+*                            top of the stack.
 *
-* To make the necessary comparaisons, the stack needs that a compare function
+* To make the necessary comparisons, the stack needs that a compare function
 * must be implemented in the class C:
 * @code
 * int Compare(const C&) const;
@@ -81,7 +81,7 @@ namespace R{
 *
 * int main()
 * {
-*    R::RStack<MyElement,true,true,true> c(20,10); // First-in ; First-out
+*    R::RStack<MyElement,true,true,true> c(20,10); // Last-in - Last-out
 *    c.Push(new MyElement(5));
 *    c.Push(new MyElement(10));
 *    while(c.GetNb())

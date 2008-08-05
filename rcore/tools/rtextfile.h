@@ -290,6 +290,11 @@ protected:
 	void Begin(void);
 
 	/**
+	 * Must the buffer be filled again.
+	 */
+	inline void FillBuffer(void);
+
+	/**
 	* Goes to the next character.
 	*/
 	void Next(void);
@@ -303,7 +308,7 @@ protected:
 	/**
 	* This function skip a end of line.
 	*/
-	void SkipEol(void);
+	inline void SkipEol(void);
 
 	/**
 	* This function returns true if the current position is the beginning of a
@@ -323,7 +328,8 @@ public:
 	* Return true if the character defines the end of a line.
 	* @param car            Character.
 	*/
-	static bool Eol(RChar car);
+	static inline bool Eol(RChar car)
+	{return((car==10)||(car==13));}
 
 	/**
 	* Verify if a string is the next one in the buffer. If the string is found,
@@ -344,6 +350,14 @@ public:
 	* This function skip spaces (Only used if read mode).
 	*/
 	void SkipSpaces(void);
+
+	/**
+	* This function skip spaces and counts the number of a given character at
+	* the beginning on the last line read (Only used if read mode).
+	* @param car             Character (must be a space character such as a
+	*                        tab).
+	*/
+	size_t SkipCountSpaces(RChar car);
 
 	/**
 	* Set the encoding of the file.

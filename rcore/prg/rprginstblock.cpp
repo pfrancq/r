@@ -33,6 +33,8 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rprginstblock.h>
+#include <rprg.h>
+#include <rprgvar.h>
 using namespace R;
 
 
@@ -44,8 +46,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstBlock::RPrgInstBlock(size_t t)
-	: RPrgInst(), Insts(50,25), Vars(20,20), Tabs(t)
+RPrgInstBlock::RPrgInstBlock(RPrg* prg,size_t t)
+	: RPrgInst(prg->Line), Insts(50,25), Vars(20,20), Tabs(t)
 {
 }
 

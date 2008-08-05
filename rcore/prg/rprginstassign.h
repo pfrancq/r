@@ -122,10 +122,11 @@ public:
 
 	/**
 	* Construct a assignment instruction.
+	* @param prg            Program.
 	* @param var            Name of the variable.
 	* @param assign         What to assign. It is destroy by the instruction.
 	*/
-	RPrgInstAssignVar(const RString& name,RPrgVar* assign);
+	RPrgInstAssignVar(RPrg* prg,const RString& name,RPrgVar* assign);
 
 	/**
 	* Run the instructions in the for for the different values of its variable.

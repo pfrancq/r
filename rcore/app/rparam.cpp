@@ -173,8 +173,8 @@ RParamValue::RParamValue(const RString& n,bool v,const RString& desc)
 //------------------------------------------------------------------------------
 int RParamValue::GetInt(void)
 {
-	int v;
-	sscanf(Value,"%i",&v);
+	bool b;
+	int v=Value.ToInt(b);
 	return(v);
 }
 
@@ -182,8 +182,8 @@ int RParamValue::GetInt(void)
 //------------------------------------------------------------------------------
 unsigned int RParamValue::GetUInt(void)
 {
-	unsigned int v;
-	sscanf(Value,"%u",&v);
+	bool b;
+	unsigned int v=Value.ToUInt(b);
 	return(v);
 }
 
@@ -191,8 +191,8 @@ unsigned int RParamValue::GetUInt(void)
 //------------------------------------------------------------------------------
 double RParamValue::GetDouble(void)
 {
-	double v;
-	sscanf(Value,"%lf",&v);
+	bool b;
+	double v=Value.ToDouble(b);
 	return(v);
 }
 
@@ -207,9 +207,9 @@ RString RParamValue::Get(void)
 //------------------------------------------------------------------------------
 bool RParamValue::GetBool(void)
 {
-	if(Value=="True")
-		return(true);
-	return(false);
+	bool b;
+	bool Val=Value.ToBool(b);
+	return(Val);
 }
 
 

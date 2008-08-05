@@ -50,7 +50,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RPrgInstNew::RPrgInstNew(RPrg* prg,const RString& name,RPrgClass* c)
-	: RPrgInst(), Var(name), Class(c), Params(20,10)
+	: RPrgInst(prg->Line), Var(name), Class(c), Params(20,10)
 {
 	// Read Values
 	prg->AnalyseParam(Params);
@@ -58,9 +58,9 @@ RPrgInstNew::RPrgInstNew(RPrg* prg,const RString& name,RPrgClass* c)
 
 
 //------------------------------------------------------------------------------
-void RPrgInstNew::Run(RPrg* prg,RPrgOutput*)
+void RPrgInstNew::Run(RPrg* prg,RPrgOutput* o)
 {
-	RPrgVar* Ptr=Class->NewVar(prg,Var,Params);
+	RPrgVar* Ptr=Class->NewVar(prg,o,Var,Params);
 	prg->AddVar(Ptr);
 }
 
@@ -79,8 +79,8 @@ RPrgInstNew::~RPrgInstNew(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstAssignVar::RPrgInstAssignVar(const RString& name,RPrgVar* assign)
-	: RPrgInst(), Var(name), Assign(assign)
+RPrgInstAssignVar::RPrgInstAssignVar(RPrg* prg,const RString& name,RPrgVar* assign)
+	: RPrgInst(prg->Line), Var(name), Assign(assign)
 {
 }
 

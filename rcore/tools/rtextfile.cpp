@@ -160,19 +160,10 @@ void RTextFile::ReadChars(void)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::Next(void)
+inline void RTextFile::FillBuffer(void)
 {
-	Cur=(*(NextRead++));
-	SeekRel(*(SizeNextRead++));
-	PosChars++;
-
-	if(End())
-		return;
-
 	if(PosChars==10)
-	{
 		ReadChars();
-	}
 	else if(PosChars==30)
 	{
 		NextWrite=Chars;
@@ -184,6 +175,42 @@ void RTextFile::Next(void)
 		PosChars=0;
 		NextRead=Chars;
 		SizeNextRead=SizeChars;
+	}
+}
+
+//------------------------------------------------------------------------------
+void RTextFile::Next(void)
+{
+	bool ReadTwice(false);
+
+	Cur=(*(NextRead++));
+	SeekRel(*(SizeNextRead++));
+	PosChars++;
+
+	if(Cur==10)          // UNIX case
+	{
+		Line++;
+	}
+	else if(Cur==13) 	 // MAC and DOS
+	{
+		Line++;
+
+		// DOS only
+		if((*NextRead)==10) ReadTwice=true;
+	}
+
+	if(End())
+		return;
+
+	FillBuffer();
+
+	if(ReadTwice)
+	{
+		Cur=(*(NextRead++));
+		SeekRel(*(SizeNextRead++));
+		PosChars++;
+
+		FillBuffer();
 	}
 }
 
@@ -226,28 +253,10 @@ RString RTextFile::GetUntilEnd(void)
 
 
 //------------------------------------------------------------------------------
-bool RTextFile::Eol(RChar car)
+inline void RTextFile::SkipEol(void)
 {
-	return((car==10)||(car==13));
-}
-
-
-//------------------------------------------------------------------------------
-void RTextFile::SkipEol(void)
-{
-	if((*NextRead)==10)          // UNIX case
-	{
+	if(((*NextRead)==10)||((*NextRead)==13))
 		Next();
-		Line++;
-	}
-	else if((*NextRead)==13) 	 // MAC and DOS
-	{
-		Next();
-		Line++;
-
-		// DOS only
-		if((*NextRead)==10) Next();
-	}
 }
 
 
@@ -405,12 +414,7 @@ void RTextFile::SkipSpaces(void)
 		// Skip all spaces (by looking if the next character is a space)
 		while((!End())&&(NextRead->IsSpace()))
 		{
-			// If new line -> must update line numbers
-			if(Eol(GetNextChar()))
-				SkipEol();
-			else
-				Next();
-
+			Next();
 			Cont=true;
 		}
 
@@ -421,6 +425,39 @@ void RTextFile::SkipSpaces(void)
 			Cont=true;
 		}
 	}
+}
+
+
+//------------------------------------------------------------------------------
+size_t RTextFile::SkipCountSpaces(RChar car)
+{
+	size_t nb(0);
+
+	for(bool Cont=true;Cont;)
+	{
+		// Suppose nothing was found
+		Cont=false;
+
+		// Skip all spaces (by looking if the next character is a space)
+		while((!End())&&(NextRead->IsSpace()))
+		{
+			if(Eol(*NextRead))
+				nb=0;
+			else if((*NextRead)==car)
+				nb++;
+			Next();
+			Cont=true;
+		}
+
+		// Look if after these spaces, there are not comments
+		if(BeginComment())
+		{
+			nb=0;
+			SkipComments();
+			Cont=true;
+		}
+	}
+	return(nb);
 }
 
 
@@ -528,28 +565,6 @@ RString RTextFile::GetTokenString(const RString& endingstr)
 
 
 //------------------------------------------------------------------------------
-/*RString RTextFile::GetToken(const RString& ending1,const RString& ending2)
-{
-	if(!CanRead)
-		throw RIOException(this,"File Mode is not Read");
-	RString res;
-	SkipSpaces();
-
-	while((!End())&&(!Cur.IsSpace())&&(!BeginComment())&&(!CurString(ending1,true,false))&&(!CurString(ending2,true,false)))
-	{
-		Next();
-		res+=Cur;
-	}
-
-	// Skip spaces if necessary
-	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();
-
-	return(res);
-}*/
-
-
-//------------------------------------------------------------------------------
 RString RTextFile::GetLine(bool SkipEmpty)
 {
 	if(!CanRead)
@@ -580,7 +595,7 @@ RString RTextFile::GetLine(bool SkipEmpty)
 	if((res.IsEmpty())&&(SkipEmpty))
 		return(GetLine());
 
-	// Return readed line
+	// Return read line
 	return(res);
 }
 

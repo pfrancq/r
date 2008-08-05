@@ -504,6 +504,51 @@ public:
 	void Split(RContainer<RString,true,false>& elements,const RChar car) const;
 
 	/**
+	* Try to transform a string into an integer.
+	* @param valid           Variable becomes true if the conversion was done.
+	*/
+	int ToInt(bool& valid);
+
+	/**
+	* Try to transform a string into an unsigned integer.
+	* @param valid           Variable becomes true if the conversion was done.
+	*/
+	unsigned int ToUInt(bool& valid);
+
+	/**
+	* Try to transform a string into a long.
+	* @param valid           Variable becomes true if the conversion was done.
+	*/
+	long ToLong(bool& valid);
+
+	/**
+	* Try to transform a string into an unsigned long.
+	* @param valid           Variable becomes true if the conversion was done.
+	*/
+	unsigned long ToULong(bool& valid);
+
+	/**
+	* * Try to transform a string into a float.
+	* @param valid           Variable becomes true if the conversion was done.
+	*/
+	float ToFloat(bool& valid);
+
+	/**
+	* * Try to transform a string into a double.
+	* @param valid           Variable becomes true if the conversion was done.
+	*/
+	double ToDouble(bool& valid);
+
+	/**
+	* Try to transform a string into a boolean value. It recognizes the strings
+	* "0", "1", "true" and "false".
+	* @param valid           Variable becomes true if the conversion was done.
+	* @param strict          Define if the string recognition is strict ("true"
+	*                        and "false") or if uppercaser letters are allowed.
+	*/
+	bool ToBool(bool& valid,bool strict=false);
+
+	/**
 	* Destruct the string.
 	*/
 	~RString(void);

@@ -52,6 +52,7 @@ namespace R{
 class RPrg;
 class RPrgVar;
 class RPrgFunc;
+class RPrgOutput;
 
 
 //------------------------------------------------------------------------------
@@ -125,11 +126,12 @@ public:
 	/**
 	 * Create a variable.
 	 * @param prg            Program asking the creation.
+	 * @param o              Output.
 	 * @param name           Name of the variable to create.
 	 * @param params         Parameters of the constructor.
 	 * @return
 	 */
-	virtual RPrgVar* NewVar(RPrg* prg,const RString& name,RContainer<RPrgVar,true,false>& params)=0;
+	virtual RPrgVar* NewVar(RPrg* prg,RPrgOutput* o,const RString& name,RContainer<RPrgVar,true,false>& params)=0;
 
 	/**
 	* Destruct the class.
@@ -156,11 +158,12 @@ public:
 	/**
 	 * Create a string instance.
 	 * @param prg            Program asking the creation.
+	 * @param o              Output.
 	 * @param name           Name of the variable to create.
 	 * @param params         Parameters of the constructor.
 	 * @return
 	 */
-	virtual RPrgVar* NewVar(RPrg* prg,const RString& name,RContainer<RPrgVar,true,false>& params);
+	virtual RPrgVar* NewVar(RPrg* prg,RPrgOutput* o,const RString& name,RContainer<RPrgVar,true,false>& params);
 };
 
 

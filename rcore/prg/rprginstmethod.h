@@ -102,7 +102,7 @@ public:
 	virtual void Run(RPrg* prg,RPrgOutput* o);
 
 	/**
-	* Destructor of a class method.
+	* Destruct the class method.
 	*/
 	virtual ~RPrgInstMethod(void);
 };

@@ -50,7 +50,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RPrgInstMethod::RPrgInstMethod(RPrg* prg,const RString& name,const RString& method)
-	: RPrgInst(), Inst(name), Method(method), Params(10,5)
+	: RPrgInst(prg->Line), Inst(name), Method(method), Params(10,5)
 {
 	// Read Values
 	prg->AnalyseParam(Params);
@@ -69,7 +69,7 @@ void RPrgInstMethod::Run(RPrg* prg,RPrgOutput* r)
 	RPrgFunc* MethodPtr(Instance->GetClass()->GetMethod(Method));
 	if(!MethodPtr)
 		throw RPrgException(prg,"Unknown method '"+Method+"' for object '"+Inst+"'");
-	MethodPtr->Run(prg,r,Instance,&Params);
+	MethodPtr->Run(prg,r,Instance,Params);
 }
 
 

@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RPrgInst.cpp
+	RPrgInstDelete.cpp
 
-	Generic instruction - Implementation.
+	Delete instruction - Implementation.
 
 	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
@@ -32,45 +32,38 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprginst.h>
+#include <rprginstdelete.h>
+#include <rprg.h>
+using namespace std;
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// RPrgInst
+// RPrgInstDelete
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInst::RPrgInst(size_t line)
-	: Line(line)
+RPrgInstDelete::RPrgInstDelete(RPrg* prg)
+	: RPrgInst(prg->Line)
 {
+	// Read name of variable
+	Var=prg->Prg.GetToken(")");
+	prg->Prg.SkipSpaces();
+	prg->Prg.GetChar(); // Skip (
 }
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const RPrgInst&) const
+void RPrgInstDelete::Run(RPrg* prg,RPrgOutput*)
 {
-	return(-1);
+	prg->DelVar(prg->Find(Var));
 }
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const RString&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-void RPrgInst::Run(RPrg*,RPrgOutput*)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RPrgInst::~RPrgInst(void)
+RPrgInstDelete::~RPrgInstDelete(void)
 {
 }

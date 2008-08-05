@@ -109,7 +109,7 @@ RPrgStringClass::RPrgStringClass(void)
 
 
 //------------------------------------------------------------------------------
-RPrgVar* RPrgStringClass::NewVar(RPrg* prg,const RString& name,RContainer<RPrgVar,true,false>& params)
+RPrgVar* RPrgStringClass::NewVar(RPrg* prg,RPrgOutput*,const RString& name,RContainer<RPrgVar,true,false>& params)
 {
 	if(params.GetNb()>1)
 		throw RPrgException(prg,"String constructor has maximum one parameter");

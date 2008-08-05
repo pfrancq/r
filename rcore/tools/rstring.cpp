@@ -635,6 +635,78 @@ void RString::Split(RContainer<RString,true,false>& elements,const RChar car) co
 }
 
 
+//------------------------------------------------------------------------------
+int RString::ToInt(bool& valid)
+{
+	int v;
+	valid=(sscanf(Latin1(),"%d",&v)>0);
+	return(v);
+}
+
+
+//------------------------------------------------------------------------------
+unsigned int RString::ToUInt(bool& valid)
+{
+	unsigned int v;
+	valid=(sscanf(Latin1(),"%u",&v)>0);
+	return(v);
+}
+
+
+//------------------------------------------------------------------------------
+long RString::ToLong(bool& valid)
+{
+	long v;
+	valid=(sscanf(Latin1(),"%ld",&v)>0);
+	return(v);
+}
+
+
+//------------------------------------------------------------------------------
+unsigned long RString::ToULong(bool& valid)
+{
+	unsigned long v;
+	valid=(sscanf(Latin1(),"%lu",&v)>0);
+	return(v);
+}
+
+
+//------------------------------------------------------------------------------
+float RString::ToFloat(bool& valid)
+{
+	float v;
+	valid=(sscanf(Latin1(),"%f",&v)>0);
+	return(v);
+}
+
+
+//------------------------------------------------------------------------------
+double RString::ToDouble(bool& valid)
+{
+	double v;
+	valid=(sscanf(Latin1(),"%lf",&v)>0);
+	return(v);
+}
+
+
+//------------------------------------------------------------------------------
+bool RString::ToBool(bool& valid,bool strict)
+{
+	RString tmp;
+	if(!strict)
+		tmp=ToLower();
+	else
+		tmp=(*this);
+	valid=true;
+	if((tmp=="true")||(tmp=="1"))
+		return(true);
+	if((tmp=="false")||(tmp=="0"))
+		return(false);
+	valid=false;
+	return(false);
+}
+
+
 //-----------------------------------------------------------------------------
 RString::~RString(void)
 {

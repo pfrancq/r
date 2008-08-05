@@ -41,6 +41,7 @@
 // include files for R Project
 #include <rprg.h>
 #include <rprginstfor.h>
+#include <rprginstdelete.h>
 #include <rprginstassign.h>
 #include <rprginstmethod.h>
 #include <rprgvarliteral.h>
@@ -81,12 +82,17 @@ RPrgException::RPrgException(const RPrg* prg,const char* str) throw()
 
 //-----------------------------------------------------------------------------
 RPrg::RPrg(RString f,RPrgOutput* o)
-	: FileName(f), Cout(o), Insts(40,40), Vars(10,5), Classes(10,5), Blocks(10,5),
-	  Prg(FileName)
+	: FileName(f), Cout(o), Classes(10,5), Blocks(10,5),
+	  Prg(FileName), Line(0), Main(0), HasLoad(false)
 
 {
+	// Program settings
 	Prg.SetRem("#");
 	Prg.SetParseSpace(RTextFile::LeaveSpaces);
+
+	// Create the main Blocks
+	Main=new RPrgInstBlock(this,0);
+	Blocks.Push(Main);
 	Classes.InsertPtr(new RPrgStringClass());
 }
 
@@ -94,6 +100,7 @@ RPrg::RPrg(RString f,RPrgOutput* o)
 //-----------------------------------------------------------------------------
 void RPrg::Load(void)
 {
+	// Open the file
 	Prg.Open(RIO::Read);
 	if(Prg.End())
 		return;
@@ -102,35 +109,41 @@ void RPrg::Load(void)
 	while(!Prg.End())
 	{
 		// Skip Spaces and count tabs
-		size_t tabs=CountTabs(buf);
+		size_t tabs=Prg.SkipCountSpaces('\t');
 
 		// Verify the correct tabs
-		if(Blocks.GetNb())
+		if(tabs==Blocks()->GetTabs()-1)
 		{
-			if(tabs==Blocks()->GetTabs()-1)
-			{
-				// Leaving current block
-				Blocks.Pop();
-			}
-			else if(tabs!=Blocks()->GetTabs())
-				RPrgException(this,"Wrong number of tabs");
+			// Leaving current block
+			Blocks.Pop();
 		}
-		else if(tabs)
-			throw RPrgException(this,"No tabs are allowed");
+		else if(tabs!=Blocks()->GetTabs())
+			RPrgException(this,"Wrong number of tabs");
 
 		// Read next instruction (in Inst)
 		Line=Prg.GetLineNb();
 		RString Inst=Prg.GetToken(".(=");
-		switch(Prg.GetChar().Latin1())
+		Prg.SkipSpaces();  // Spaces between the instruction are allowed
+		char Car=Prg.GetChar().Latin1();
+		if(!Car)
+			continue;
+		//cout<<"("<<Line<<","<<tabs<<","<<Blocks()->GetTabs()<<"): "<<Inst<<endl;
+		switch(Car)
 		{
 			case '(': // Read of an instruction
 			{
 				// If is "for"
 				if(Inst=="for")
 				{
-					RPrgInstFor* f=new RPrgInstFor(this,tabs);
+					RPrgInstFor* f=new RPrgInstFor(this,tabs+1);
 					AddInst(f);
 					Blocks.Push(f);
+					Eol(true);
+				}
+				else if(Inst=="delete")
+				{
+					AddInst(new RPrgInstDelete(this));
+					Eol(false);
 				}
 				else
 					throw RPrgException(this,RString("Unknown instruction '")+Inst+"'.");
@@ -145,6 +158,7 @@ void RPrg::Load(void)
 
 				// Create the instruction
 				AddInst(new RPrgInstMethod(this,Inst,Method));
+				Eol(false);
 				break;
 			}
 			case '=':     // Must be an assignment
@@ -166,35 +180,57 @@ void RPrg::Load(void)
 				}
 				else if(!Cmd.IsEmpty())
 				{
-					// Assign of an existing variable
-					AddInst(new RPrgInstAssignVar(Inst,new RPrgVarRef(Prg.GetWord())));
+					bool ok;
+					Cmd.ToULong(ok);
+					if(ok)
+					{
+						AddInst(new RPrgInstAssignVar(this,Inst,new RPrgVarLiteral(Cmd)));
+					}
+					else
+					{
+						Cmd.ToLong(ok);
+						if(ok)
+						{
+							AddInst(new RPrgInstAssignVar(this,Inst,new RPrgVarLiteral(Cmd)));
+						}
+						else
+						{
+							bool b=Cmd.ToBool(ok,true);
+							if(ok)
+							{
+								if(b)
+									AddInst(new RPrgInstAssignVar(this,Inst,new RPrgVarLiteral("1")));
+								else
+									AddInst(new RPrgInstAssignVar(this,Inst,new RPrgVarLiteral("0")));
+							}
+							else
+							{
+								// Assign of an existing variable
+								AddInst(new RPrgInstAssignVar(this,Inst,new RPrgVarRef(Cmd)));
+							}
+						}
+					}
 				}
 				else
 				{
 					// Assign of an literal.
 					Prg.GetChar(); // Skip "
-					RString Val=ReadLiteral();
-					AddInst(new RPrgInstAssignVar(Inst,new RPrgVarLiteral(Val)));//ReadLiteral())));  // = Literal
+					AddInst(new RPrgInstAssignVar(this,Inst,new RPrgVarLiteral(ReadLiteral())));
 				}
+				Eol(false);
 				break;
 			}
+			default:
+				throw RPrgException(this,"Invalid '"+RString(Car)+"' character after '"+Inst+"'");
 		}
-	}
-}
 
-
-//-----------------------------------------------------------------------------
-size_t RPrg::CountTabs(const RString&)
-{
-	// Count leading spaces
-	size_t tabs(0);
-	while((!Prg.End())&&(Prg.GetNextChar()=='\t'))
-	{
-		tabs++;
-		Prg.GetChar();
+		// Reading end of line
+/*		RString End=Prg.GetLine().Trim();
+		cout<<"*"<<End<<"*"<<endl;
+		if(!End.IsEmpty())
+			throw RPrgException(this,"Only spaces allowed at the end of the line");*/
 	}
-	Prg.SkipSpaces();
-	return(tabs);
+	HasLoad=true;
 }
 
 
@@ -251,7 +287,35 @@ void RPrg::AnalyseParam(RContainer<RPrgVar,true,false>& values)
 		else
 		{
 			RString Var(What+Prg.GetToken("),"));
-			values.InsertPtr(new RPrgVarRef(Var));
+			bool ok;
+			Var.ToULong(ok);
+			if(ok)
+			{
+				values.InsertPtr(new RPrgVarLiteral(Var));
+			}
+			else
+			{
+				Var.ToLong(ok);
+				if(ok)
+				{
+					values.InsertPtr(new RPrgVarLiteral(Var));
+				}
+				else
+				{
+					bool b=Var.ToBool(ok,true);
+					if(ok)
+					{
+						if(b)
+							values.InsertPtr(new RPrgVarLiteral("1"));
+						else
+							values.InsertPtr(new RPrgVarLiteral("0"));
+					}
+					else
+					{
+						values.InsertPtr(new RPrgVarRef(Var));
+					}
+				}
+			}
 			SomethingToRead=false;
 		}
 
@@ -270,11 +334,41 @@ void RPrg::AnalyseParam(RContainer<RPrgVar,true,false>& values)
 
 
 //-----------------------------------------------------------------------------
+void RPrg::Eol(bool dbl)
+{
+	bool One=false;
+
+	while((!Prg.End())&&(!RTextFile::Eol(Prg.GetNextChar())))
+	{
+		RChar car=Prg.GetChar();
+		if(dbl&&(car==':'))
+		{
+			if(One)
+				throw RPrgException(this,"Only one ':' is accepted");
+			One=true;
+		}
+		else if(!car.IsSpace())
+			throw RPrgException(this,"Only spaces are allowed");
+	}
+
+	if((!Prg.End())&&(RTextFile::Eol(Prg.GetNextChar())))
+		Prg.GetChar();
+}
+
+
+//-----------------------------------------------------------------------------
 void RPrg::Exec(void)
 {
-	RCursor<RPrgInst> Cur(Insts);
+	if(!HasLoad)
+		Load();
+	Blocks.Clear();
+	Blocks.Push(Main);
+	RCursor<RPrgInst> Cur(Main->Insts);
 	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		Line=Cur()->GetLine();
 		Cur()->Run(this,Cout);
+	}
 }
 
 
@@ -283,10 +377,7 @@ void RPrg::AddVar(RPrgVar* var)
 {
 	if(!var)
 		return;
-	if(Blocks.GetNb())
-		Blocks()->Vars.InsertPtr(var,true);
-	else
-		Vars.InsertPtr(var,true);
+	Blocks()->Vars.InsertPtr(var,true);
 }
 
 
@@ -295,10 +386,7 @@ void RPrg::DelVar(RPrgVar* var)
 {
 	if(!var)
 		return;
-	if(Blocks.GetNb())
-		Blocks()->Vars.DeletePtr(*var);
-	else
-		Vars.DeletePtr(*var);
+	Blocks()->Vars.DeletePtr(*var);
 }
 
 
@@ -307,10 +395,7 @@ void RPrg::AddInst(RPrgInst* inst)
 {
 	if(!inst)
 		return;
-	if(Blocks.GetNb())
-		Blocks()->AddInst(inst);
-	else
-		Insts.InsertPtr(inst);
+	Blocks()->AddInst(inst);
 }
 
 
@@ -323,7 +408,7 @@ RPrgVar* RPrg::Find(const RString& name) const
 		if(v)
 			return(v);
 	}
-	return(Vars.GetPtr(name));
+	return(0);
 }
 
 
@@ -331,7 +416,8 @@ RPrgVar* RPrg::Find(const RString& name) const
 RString RPrg::GetValue(const RString& var)
 {
 	RPrgVar* v=Find(var);
-	if(!v) return(RString::Null);
+	if(!v)
+		throw RPrgException(this,"Unknown variable '"+var+"'");
 	return(v->GetValue(this));
 }
 
@@ -346,4 +432,6 @@ RCursor<RPrgClass> RPrg::GetClasses(void) const
 //-----------------------------------------------------------------------------
 RPrg::~RPrg(void)
 {
+	if(Main)
+		delete Main;
 }

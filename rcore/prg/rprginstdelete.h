@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RPrgInst.cpp
+	RPrgInstDelete.h
 
-	Generic instruction - Implementation.
+	Delete instruction - Header.
 
 	Copyright 2002-2008 by the Université Libre de Bruxelles.
 
@@ -31,46 +31,59 @@
 
 
 //------------------------------------------------------------------------------
+#ifndef RPrgInstDeleteH
+#define RPrgInstDeleteH
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
+#include <rstd.h>
+#include <rstring.h>
 #include <rprginst.h>
-using namespace R;
-
 
 
 //------------------------------------------------------------------------------
-//
-// RPrgInst
-//
+namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
-RPrgInst::RPrgInst(size_t line)
-	: Line(line)
+/**
+* The RPrgInstDelete provides a class for a delete instruction.
+* @author Pascal Francq
+* @short Delete Instruction.
+*/
+class RPrgInstDelete : public RPrgInst
 {
-}
+	/**
+	* Variable to delete.
+	*/
+	RString Var;
+
+public:
+
+	/**
+	* Construct a generic instruction.
+	* @param prg            Program.
+	*/
+	RPrgInstDelete(RPrg* prg);
+
+	/**
+	* Run the instruction.
+	* @param prg            Program.
+	* @param o              Output.
+	*/
+	virtual void Run(RPrg* prg,RPrgOutput* o);
+
+	/**
+	* Destruct the generic instruction.
+	*/
+	virtual ~RPrgInstDelete(void);
+};
+
+
+}  //-------- End of namespace R -----------------------------------------------
 
 
 //------------------------------------------------------------------------------
-int RPrgInst::Compare(const RPrgInst&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-int RPrgInst::Compare(const RString&) const
-{
-	return(-1);
-}
-
-
-//------------------------------------------------------------------------------
-void RPrgInst::Run(RPrg*,RPrgOutput*)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RPrgInst::~RPrgInst(void)
-{
-}
+#endif

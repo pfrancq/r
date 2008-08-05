@@ -6,7 +6,7 @@
 
 	Basic Container - Header.
 
-	Copyright 2005 by the Université Libre de Bruxelles.
+	Copyright 2005-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -53,7 +53,7 @@ class BasicCursor;
 //-----------------------------------------------------------------------------
 /**
  * This class represent a basic container. This class cannot be instantiated,
- * use R::RContainer instead. 
+ * use R::RContainer instead.
  * @author Pascal Francq
  * @short Basic Container.
  */

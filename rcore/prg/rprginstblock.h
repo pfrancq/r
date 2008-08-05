@@ -72,7 +72,7 @@ protected:
 	/**
 	* List of all local "Variables" defined in the block.
 	*/
-	R::RContainer<RPrgVar,true,false> Vars;
+	R::RContainer<RPrgVar,true,true> Vars;
 
 	/**
 	* Indentation corresponding to this block.
@@ -83,10 +83,10 @@ public:
 
 	/**
 	* Construct a block of instructions.
-	* @param line           Rest of the line.
+	* @param prg            Program.
 	* @param t              Indentation.
 	*/
-	RPrgInstBlock(size_t t);
+	RPrgInstBlock(RPrg* prg,size_t t);
 
 	/**
 	* Add an instruction to the for.
