@@ -74,5 +74,5 @@ void RObject::HandlerNotFound(const RNotification& notification)
 //-----------------------------------------------------------------------------
 RObject::~RObject(void)
 {
-	NotificationCenter.DeleteObserver(this);
+	NotificationCenter.DeleteObject(this);
 }

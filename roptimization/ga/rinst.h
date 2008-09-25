@@ -91,8 +91,9 @@ public:
 * - PostNotification("RInst::Interact") : Possible interactions from the
 *   outside.
 * - PostNotification("RInst::Best",size_t) : The best chromosome has
-*   changed at a given generation.
-* - PostNotification("RInst::Generation") : A new generation has be done.
+*   changed and the generation number is given as parameter.
+* - PostNotification("RInst::Generation",size_t) : A new generation has be done
+*   which number is passed as parameter.
 * @author Pascal Francq
 * @short Generic GA instance.
 */
@@ -145,6 +146,11 @@ protected:
 	 * Define if the post evaluation must be done.
 	 */
 	bool DoPostEvaluation;
+
+	/**
+	 * Must an optimization be performed.
+	 */
+	bool DoOptimisation;
 
 public:
 
@@ -264,6 +270,19 @@ public:
 	* See if the verifications are made by the GA.
 	*/
 	inline bool GetVerify(void) const {return(VerifyGA);}
+
+	/**
+	 * Look if a optimization is performed.
+	 * @return true or false.
+	 */
+	inline bool MustOptimisation(void) const {return(DoOptimisation);}
+
+	/**
+	 * Set if a optimization must be done or not. By default, the GA
+	 * does optimization.
+	 * @param opti           Perform optimization?
+	 */
+	void SetOptimisation(bool opti);
 
 	/**
 	 * Get the size of the population.
@@ -395,7 +414,7 @@ public:
 	* Return a number in the interval [0,max[ using the current random generator.
 	* @param max            Variable used to calculate the number.
 	*/
-	long RRand(long max) {return(Random->Value(max));}
+	long RRand(long max) {return(Random->GetValue(max));}
 
 	/**
 	* Random the position of elements of a vector using the current random generator.

@@ -52,13 +52,14 @@ class RObject;
 /**
 * The RNotificationCenter class provides a representation for a notification
 * center that dispatch notifications send by objects.
-* * class MyObject : public RObject
+* @code
+* class MyObject : public RObject
 * {
 * public:
 *    MyObject(const RString& name) : RObject(name)
 *    {
 *       InsertObserver(HANDLER(MyObject::Handle),"Example");
-*    } 
+*    }
 *    virtual RCString GetClassName(void) const {return("MyObject");}
 *    void Handle(const RNotification& notification)
 *    {
@@ -71,7 +72,8 @@ class RObject;
 *    MyObject Obj1("Object 1");
 *    MyObject Obj2("Object 2");
 *    NotificationCenter.PostNotification("Message",(long)3);
-* } 
+* }
+* @endcode
 * @short Notification Center
 * @author Pascal Francq
 */
@@ -112,7 +114,7 @@ public:
 	*    notification for any object.
 	* -# handle is null, but object isn't. The handler catches every notification
 	*    for a particular object.
-	* -# hanlde and object are null. The handler catches every notification of
+	* -# handle and object are null. The handler catches every notification of
 	*    every object.
 	*/
 	void InsertObserver(tNotificationHandler handler,RObject* observer,hNotification handle=0,RObject* object=0);
@@ -199,10 +201,23 @@ public:
 		DeleteObserver(observer,GetNotificationHandle(name),object);
 	}
 
+private:
+
 	/**
-	* Destructor of the notification center.
+	 * An object is deleted. It must be removed from the observer and no other
+	 * objects can observed it anymore.
+	 * @param obj
+	 */
+	void DeleteObject(RObject* obj);
+
+public:
+
+	/**
+	* Destruct the notification center.
 	*/
 	~RNotificationCenter(void);
+
+	friend class RObject;
 };
 
 

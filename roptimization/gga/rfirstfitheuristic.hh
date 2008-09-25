@@ -46,13 +46,13 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	cGroup* RFirstFitHeuristic<cGroup,cObj,cGroups>::FindGroup(void)
+	cGroup* RFirstFitHeuristic<cGroup,cObj,cGroups>::FindGroup(cObj* obj)
 {
 	cGroup* grp;
 
 	RCursor<cGroup> G(this->Groups->Used);
 	for(G.Start();!G.End();G.Next())
-		if(G()->CanInsert(this->CurObj))
+		if(G()->CanInsert(obj))
 			return(G());
 	grp=this->Groups->ReserveGroup();
 	return(grp);

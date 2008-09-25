@@ -53,6 +53,12 @@ namespace R{
 
 
 //-----------------------------------------------------------------------------
+// forward declaration
+class RCString;
+//class RCString::BasicCharBuffer;
+
+
+//-----------------------------------------------------------------------------
 /**
 * This class implements a C string (char*) as a class.
 * @author Pascal Francq
@@ -65,7 +71,7 @@ protected:
 	/**
 	* Pointer to the buffer representing the null string.
 	*/
-	static BasicString<char,RCString>::BasicCharBuffer* DataNull;
+	static CharBuffer* DataNull;
 
 public:
 
@@ -111,13 +117,19 @@ public:
 	*/
 	RCString(const RCString& src);
 
+	/**
+	* Deep copy of the string if necessary, i.e. when the string points to an
+	* internal buffer referenced by other strings, make a copy of it.
+	*/
+	inline void Copy(void) {BasicString<char,RCString>::Copy();};
+
 private:
 
 	/**
 	* Return the pointer to the "null" buffer. If it is not created, create it.
 	* @return Pointer to the "null" buffer.
 	*/
-	static BasicCharBuffer* GetDataNull(void);
+	static CharBuffer* GetDataNull(void);
 
 public:
 
@@ -154,14 +166,6 @@ public:
 public:
 
 	/**
-	* Deep copy of the string if necessary, i.e. when the string points to an
-	* internal buffer referenced by other strings, make a copy of it.
-	*/
-	void Copy(void);
-
-public:
-
-	/**
 	* Set the length of the string. If the length is greater than the current
 	* one, the internal buffer is updated. Any new space allocated contains
 	* arbitrary data.
@@ -177,7 +181,7 @@ public:
 	* @param str             String used to fill.
 	*/
 	void SetLen(size_t len,const RCString& str);
-	
+
 	/**
 	 * Look if the string contains only spaces.
 	 */
@@ -341,6 +345,26 @@ public:
 	* @param car             Character used as separator.
 	*/
 	void Split(RContainer<RCString,true,false>& elements,const char car) const;
+
+	/**
+	 * Replace a given character in the string.
+	 * @param search         Character to search.
+	 * @param rep            Character that will put in.
+	 * @param first          Must it stops after the first occurrence.
+	 * @param pos            Position to start. Negative values start the
+	 *                       search from the end.
+	 */
+	void Replace(const char search,const char rep,bool first=false,int pos=0);
+
+	/**
+	 * Replace a given sub-string in the string.
+	 * @param search         String to search.
+	 * @param rep            String that will put in.
+	 * @param first          Must it stops after the first occurrence.
+	 * @param pos            Position to start. Negative values start the
+	 *                       search from the end.
+	 */
+	void ReplaceStr(const RCString& search,const RCString& rep,bool first=false,int pos=0);
 
 	/**
 	* Destruct the string.

@@ -88,6 +88,7 @@ RPrg::RPrg(RString f,RPrgOutput* o)
 {
 	// Program settings
 	Prg.SetRem("#");
+	Prg.SetRemStyle(RTextFile::SingleLineComment);
 	Prg.SetParseSpace(RTextFile::LeaveSpaces);
 
 	// Create the main Blocks

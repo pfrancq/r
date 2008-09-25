@@ -209,7 +209,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	if(this->Instance->DoLocalOptimisation)
 		LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
-	Optimisation();
+	if(this->Instance->DoOptimisation)
+		Optimisation();
 	this->ComputeOrd();
 
 	if(this->Instance->Debug)
@@ -238,6 +239,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	if(this->Instance->DoLocalOptimisation)
 		LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
+	if(this->Instance->DoOptimisation)
+		Optimisation();
 	this->ComputeOrd();
 
 	if(this->Instance->Debug)

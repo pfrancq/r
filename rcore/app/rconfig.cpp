@@ -78,6 +78,7 @@ int RConfig::lParams::Compare(const RString& params) const
 RConfig::RConfig(const RString& cat,const RString& name)
 	: Category(cat), Name(name), Params(5)
 {
+	Name.Replace('/','-');
 }
 
 
@@ -107,6 +108,7 @@ void RConfig::Analyse(RXMLTag* tag,lParams* cat)
 void RConfig::SetConfigInfos(const RString& cat,const RString& name)
 {
 	Name=name;
+	Name.Replace('/','-');
 	Category=cat;
 }
 
@@ -143,7 +145,7 @@ void RConfig::Load(bool global)
 		RURI Where(Home+"/.r/config/"+Category+"/"+Name+".config");
 		if(Root)
 		{
-			RXMLStruct Local;			
+			RXMLStruct Local;
 			RXMLFile File(Where,Local);
 			File.Open(R::RIO::Read);
 			Config.Merge(Local);
@@ -158,7 +160,7 @@ void RConfig::Load(bool global)
 	catch(RException& e)
 	{
 		std::cout<<"Error "<<e.GetMsg()<<std::endl;
-	}	
+	}
 	catch(...)
 	{
 		std::cout<<"Warning: Local config file '"<<Home+"/.r/config/"+Category+"/"+Name+".config"<<"' not found."<<std::endl;

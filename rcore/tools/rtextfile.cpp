@@ -55,7 +55,7 @@ using namespace std;
 RTextFile::RTextFile(const RURI& uri,const RString& encoding)
   : RIOFile(uri), NewLine(true),
     Rem("%"), BeginRem("/*"), EndRem("*/"),
-    CommentType(SingleLineComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
+    CommentType(NoComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
 	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
 {
 }
@@ -65,7 +65,7 @@ RTextFile::RTextFile(const RURI& uri,const RString& encoding)
 RTextFile::RTextFile(RIOFile& file,const RString& encoding)
 	: RIOFile(file), NewLine(true),
 	Rem("%"), BeginRem("/*"), EndRem("*/"),
-	CommentType(SingleLineComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
+	CommentType(NoComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
 	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
 {
 }
@@ -610,17 +610,17 @@ long RTextFile::GetInt(void)
 	SkipSpaces();
 
 	// Get the sign
-	if((Cur=='+')||(Cur=='-'))
+	if((GetNextChar()=='+')||(GetNextChar()=='-'))
 	{
-		str+=Cur;
 		Next();
+		str+=Cur;
 	}
 
 	// Get number
-	while(Cur.IsDigit())
+	while(GetNextChar().IsDigit())
 	{
-		str+=Cur;
 		Next();
+		str+=Cur;
 	}
 
 	// Skip spaces if necessary
@@ -644,17 +644,17 @@ unsigned long RTextFile::GetUInt(void)
 	SkipSpaces();
 
 	// Get the sign
-	if((Cur=='+')||(Cur=='-'))
+	if((GetNextChar()=='+')||(GetNextChar()=='-'))
 	{
-		str+=Cur;
 		Next();
+		str+=Cur;
 	}
 
 	// Get Number
-	while(Cur.IsDigit())
+	while(GetNextChar().IsDigit())
 	{
-		str+=Cur;
 		Next();
+		str+=Cur;
 	}
 
 	// Skip spaces if necessary

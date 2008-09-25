@@ -62,7 +62,7 @@ template<class cGroup,class cObj,class cGroups>
 	class GroupId
 	{
 	public:
-		int GrpId;       // Group Identificator.
+		int GrpId;       // Group Identifier.
 		int position;    // Position of the group.
 
 		// Constructor and Compare methods.
@@ -101,14 +101,14 @@ protected:
 	RContainer<cObj,false,false> ObjsNoAss;
 
 	/**
-	* Assignment of the objects where the identificator of the first group
+	* Assignment of the objects where the identifier of the first group
 	* found is always 1. This array is used to compare if two solutions are
-	* representing the same "real" groupment.
+	* representing the same "real" clustering.
 	*/
 	size_t* OrdObjectsAss;
 
 	/**
-	* Array representing the identificators assigned to each group to compute
+	* Array representing the identifiers assigned to each group to compute
 	* OrdObjectsAss.
 	*/
 	size_t* NewUsedId;
@@ -172,14 +172,14 @@ public:
 
 	/**
 	* Get the group of an object.
-	* @param id             Identificator of the object.
+	* @param id             Identifier of the object.
 	* @returns Pointer to cGroup*.
 	*/
 	cGroup* GetGroup(size_t id) const;
 
 	/**
 	* Get the group of an object.
-	* @param obj            Pionter to the object.
+	* @param obj            Pointer to the object.
 	* @returns Pointer to cGroup*.
 	*/
 	cGroup* GetGroup(const cObj* obj) const;
@@ -199,7 +199,7 @@ public:
 	RCursor<cObj> GetObjs(const cGroup& grp) const;
 
 	/**
-	* The assigment operator.
+	* The assignment operator.
 	* @param grps           Source groups.
 	*/
 	RGroups& operator=(const RGroups& grps);
@@ -211,8 +211,8 @@ public:
 
 	/**
 	* This method look if the two configurations are representing the same
-	* groupement.
-	* @param grps           Configuration used for the comparaison.
+	* clustering.
+	* @param grps           Configuration used for the comparison.
 	*/
 	bool SameGroupment(const RGroups* grps) const;
 

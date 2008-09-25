@@ -6,7 +6,7 @@
 
 	Class representing random number generators:
 
-	Copyright 1999-2003 by the Université Libre de Bruxelles.
+	Copyright 1999-2003 by the Universitï¿½ Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -73,18 +73,19 @@ static const int MASK=123456987;
 //------------------------------------------------------------------------------
 void RRandomGood::Reset(const int seed)
 {
-	_seed = _seed == MASK ? 1 : MASK ^ seed; //  xor prevents seed == 0
-	_value = _seed; //  _value starts as _seed
+	Seed=(Seed==(MASK?1:MASK^seed)); // XOR prevents seed == 0
+	Value=Seed;                      // Value starts as Seed
 }
 
 
 //------------------------------------------------------------------------------
-double RRandomGood::Value(void)
+double RRandomGood::GetValue(void)
 {
-	int k = _value / q;
-	_value = a * (_value - k * q) - r * k; // Schrage's technique
-	if (_value < 0) _value += INT_MAX;
-	return _value * Minv;
+	int k(Value/q);
+	Value=(a*(Value-(k*q)))-(r*k); // Schrage's technique
+	if(Value<0)
+		Value+=INT_MAX;
+	return(Value*Minv);
 }
 
 
@@ -98,41 +99,42 @@ double RRandomGood::Value(void)
 //------------------------------------------------------------------------------
 int RRandomBetter::Calc(void)
 {
-	int k = _value / q;
-	_value = a * (_value - k * q) - r * k; // Schrage's technique
-	if (_value < 0) _value += INT_MAX;
-	return _value;
+	int k(Value/q);
+	Value=(a*(Value-(k*q)))-(r*k); // Schrage's technique
+	if(Value<0)
+		Value+=INT_MAX;
+	return(Value);
 }
 
 
 //------------------------------------------------------------------------------
 void RRandomBetter::Reset(const int seed)
 {
-	_seed = _seed == MASK ? 1 : MASK ^ seed; //  xor prevents seed == 0
-	_value = _seed; //  _value starts as _seed
+	Seed=(Seed==MASK?1:MASK^seed); // XOR prevents seed == 0
+	Value=Seed;                    // Value starts as Seed
 
-	//  1st, a few warmups
-	for (int i = 0; i < 8; i++)
+	// 1st, a few warmups
+	for(int i=0;i<8;i++)
 		Calc();
 
-	//  ok, NOW fill the table
-	for (int i = 31; i >= 0; i--)
-		_table[i] = Calc();
-
-	_aux = _table[0];
+	// Ok, NOW fill the table
+	for(int i=31;i>=0;i--)
+		Table[i] = Calc();
+	Aux=Table[0];
 }
 
 
 //------------------------------------------------------------------------------
-double RRandomBetter::Value(void)
+double RRandomBetter::GetValue(void)
 {
-	Calc();                   //  calc a new _value
-	int j = _aux / NDIV;      //  calc an index. j is in [0..31]
-	_aux = _table[j];         //  return value at index
-	_table[j] = _value;       //  save new value
-	double Result = _aux * Minv;    //  float it
-	if(Result > MaxR) Result = MaxR;
-	return Result;
+	Calc();                   // Compute a new _value
+	int j(Aux/NDIV);          // Compute an index. j is in [0..31]
+	Aux=Table[j];             // Return value at index
+	Table[j]=Value;           // Save new value
+	double Result(Aux*Minv);  // float it
+	if(Result>MaxR)
+		Result=MaxR;
+	return(Result);
 }
 
 
@@ -146,53 +148,56 @@ double RRandomBetter::Value(void)
 //------------------------------------------------------------------------------
 int RRandomBest::Calc1(void)
 {
-	int k = _value / q1;
-	_value = a1 * (_value - k * q1) - r1 * k; // Schrage's technique
-	if (_value < 0) _value += M1;
-	return _value;
+	int k(Value/q1);
+	Value=(a1*(Value-(k*q1)))-(r*k); // Schrage's technique
+	if(Value<0)
+		Value+=M1;
+	return(Value);
 }
 
 
 //------------------------------------------------------------------------------
 int RRandomBest::Calc2(void)
 {
-	int k = _aux2 / q2;
-	_aux2 = a2 * (_aux2 - k * q2) - r2 * k; // Schrage's technique
-	if (_aux2 < 0) _aux2 += M2;
-	return _aux2;
+	int k(Aux2/q2);
+	Aux2=(a2*(Aux2-(k*q2)))-(r2*k); // Schrage's technique
+	if(Aux2<0)
+		Aux2+=M2;
+	return(Aux2);
 }
 
 
 //------------------------------------------------------------------------------
 void RRandomBest::Reset(const int seed)
 {
-	_seed = _seed == MASK ? 1 : MASK ^ seed; //  xor prevents seed == 0
-	_value = _seed; //  _value starts as _seed
-	_aux2 = _seed;
+	Seed=(Seed==MASK?1:MASK^seed);  // XOR prevents seed == 0
+	Value=Seed;                   // Value starts as Seed
+	Aux2=Seed;
 
-	//  1st, a few warmups
-	for (int i = 0; i < 8; i++)
+	// 1st, a few warmups
+	for(int i=0;i< 8;i++)
 		Calc1();
 
-	//  ok, NOW fill the table
-	for (int i = 31; i >= 0; i--)
-	_table[i] = Calc1();
+	// Ok, NOW fill the table
+	for(int i=31;i>=0;i--)
+		Table[i]=Calc1();
 
-	_aux1 = _table[0];
+	Aux1=Table[0];
 }
 
 
 //------------------------------------------------------------------------------
-double RRandomBest::Value(void)
+double RRandomBest::GetValue(void)
 {
 	Calc1();
 	Calc2();
-	int j = _aux1 / NDIVB;   //  calc an index. j is in [0..31]
-	_aux1 = _table[j] - _aux2; //  combine series
-	_table[j] = _value;           //  save new value
-	if (_aux1 < 0)
-		_aux1 += M1; //  ensure subscript remains in range
-	double Result = _aux1 * MinvB;      //  float it
-	if (Result > MaxR) Result = MaxR;
-	return Result;
+	int j(Aux1/NDIVB);    // Compute an index. j is in [0..31]
+	Aux1=Table[j]-Aux2;   // Combine series
+	Table[j]=Value;       // Save new value
+	if(Aux1<0)
+		Aux1+=M1;               // Ensure subscript remains in range
+	double Result(Aux1*MinvB);  // Float it
+	if(Result>MaxR)
+		Result=MaxR;
+	return(Result);
 }

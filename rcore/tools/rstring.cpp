@@ -157,7 +157,7 @@ RString::CharBuffer* RString::GetDataNull(void)
 		RString::DataNull=new CharBuffer(ptr2,0,0);
 	}
 	else
-		RIncRef<BasicCharBuffer>(RString::DataNull);
+		RIncRef<CharBuffer>(RString::DataNull);
 	return(static_cast<RString::CharBuffer*>(DataNull));
 }
 
@@ -166,7 +166,7 @@ RString::CharBuffer* RString::GetDataNull(void)
 RString& RString::operator=(const RString& src)
 {
 	RIncRef(src.Data);
-	RDecRef<BasicCharBuffer>(Data);
+	RDecRef<CharBuffer>(Data);
 	Data=src.Data;
 	return(*this);
 }
@@ -176,7 +176,7 @@ RString& RString::operator=(const RString& src)
 RString& RString::operator=(const char* src)
 {
 	size_t len,maxlen=0;
-	RDecRef<BasicCharBuffer>(Data);
+	RDecRef<CharBuffer>(Data);
 	RChar* ptr=Latin1ToUnicode(src,len,maxlen);
 	Data=new CharBuffer(ptr,len,maxlen);
 	return(*this);
@@ -187,7 +187,7 @@ RString& RString::operator=(const char* src)
 RString& RString::operator=(const std::string& src)
 {
 	size_t len,maxlen=0;
-	RDecRef<BasicCharBuffer>(Data);
+	RDecRef<CharBuffer>(Data);
 	RChar* ptr=Latin1ToUnicode(src.c_str(),len,maxlen);
 	Data=new CharBuffer(ptr,len,maxlen);
 	return(*this);
@@ -199,8 +199,8 @@ void RString::Clear(void)
 {
 	if(Data!=DataNull)
 	{
-		RDecRef<BasicCharBuffer>(Data);
-		RIncRef<BasicCharBuffer>(DataNull);
+		RDecRef<CharBuffer>(Data);
+		RIncRef<CharBuffer>(DataNull);
 		Data=DataNull;
 	}
 }
@@ -209,7 +209,7 @@ void RString::Clear(void)
 //-----------------------------------------------------------------------------
 void RString::Copy(const char* text,size_t nb)
 {
-	RDecRef<BasicCharBuffer>(Data);
+	RDecRef<CharBuffer>(Data);
 	if(text)
 	{
 		size_t len,maxlen=nb;
@@ -224,7 +224,7 @@ void RString::Copy(const char* text,size_t nb)
 //-----------------------------------------------------------------------------
 void RString::Copy(const RChar* text,size_t nb)
 {
-	RDecRef<BasicCharBuffer>(Data);
+	RDecRef<CharBuffer>(Data);
 	if(text&&(!text->IsNull()))
 	{
 		size_t len=RChar::StrLen(text);
@@ -237,23 +237,6 @@ void RString::Copy(const RChar* text,size_t nb)
 	}
 	else
 		Data=GetDataNull();
-}
-
-
-//-----------------------------------------------------------------------------
-void RString::Copy(void)
-{
-	if(Data&&(Data->GetRefs()!=1))
-	{
-		if(Data!=DataNull)
-		{
-			RChar* ptr=new RChar[Data->MaxLen+1];
-			size_t len=Data->Len,maxlen=Data->MaxLen;
-			memcpy(ptr,Data->Text,sizeof(RChar)*(len+1));
-			RDecRef<BasicCharBuffer>(Data);
-			Data=new CharBuffer(ptr,len,maxlen);
-		}
-	}
 }
 
 
@@ -399,7 +382,7 @@ RString& RString::operator+=(const char src)
 		{
 			size_t maxlen=1,len=1;
 			char tab[2]={src,0};
-			RDecRef<BasicCharBuffer>(Data);
+			RDecRef<CharBuffer>(Data);
 			RChar* ptr=Latin1ToUnicode(tab,len,maxlen);
 			Data=new CharBuffer(ptr,len,maxlen);
 		}
@@ -425,7 +408,7 @@ RString& RString::operator+=(const RChar src)
 		if(Data==DataNull)
 		{
 			size_t maxlen=1,len=1;
-			RDecRef<BasicCharBuffer>(Data);
+			RDecRef<CharBuffer>(Data);
 			RChar* ptr=new RChar[2];
 			ptr[0]=src;
 			ptr[1]=0;
@@ -629,6 +612,20 @@ int RString::FindStr(const RString& str,int pos,bool CaseSensitive) const
 
 
 //-----------------------------------------------------------------------------
+void RString::Replace(const RChar search,const RChar rep,bool first,int pos)
+{
+	BasicString<RChar,RString>::Replace(search,rep,first,pos);
+}
+
+
+//-----------------------------------------------------------------------------
+void RString::ReplaceStr(const RString& search,const RString& rep,bool first,int pos)
+{
+	BasicString<RChar,RString>::ReplaceStr<CharBuffer>(search,rep,first,pos);
+}
+
+
+//-----------------------------------------------------------------------------
 void RString::Split(RContainer<RString,true,false>& elements,const RChar car) const
 {
 	BasicString<RChar,RString>::Split(elements,car);
@@ -672,6 +669,19 @@ unsigned long RString::ToULong(bool& valid)
 
 
 //------------------------------------------------------------------------------
+size_t RString::ToSizeT(bool& valid)
+{
+	size_t v;
+	#if __WORDSIZE == 32
+		valid=(sscanf(Latin1(),"%u",&v)>0);
+	#elif __WORDSIZE == 64
+		valid=(sscanf(Latin1(),"%lu",&v)>0);
+	#endif
+	return(v);
+}
+
+
+//------------------------------------------------------------------------------
 float RString::ToFloat(bool& valid)
 {
 	float v;
@@ -710,7 +720,7 @@ bool RString::ToBool(bool& valid,bool strict)
 //-----------------------------------------------------------------------------
 RString::~RString(void)
 {
-	RDecRef<BasicCharBuffer>(Data);
+	RDecRef<CharBuffer>(Data);
 }
 
 

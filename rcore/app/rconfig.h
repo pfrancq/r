@@ -85,10 +85,10 @@ public:
 	* Constructor. The category is used to specify where to search. Examples:
 	* - "app", for an application.
 	* - "lib/galilei" for a library.
-	* - "lib/galilei/plugins/profiles" for a specific type of plugin of a
-	*  specifc library 'galilei'.
+	* - "lib/galilei/plugins/profiles" for a specific type of plug-in of a
+	*  specific library 'galilei'.
 	* @param cat             Category of the config.
-	* @param name            Name of the config.
+	* @param name            Name of the config ('/' are replaced by '-').
 	*/
 	RConfig(const RString& cat=RString::Null,const RString& name=RString::Null);
 
@@ -107,7 +107,7 @@ public:
 	/**
 	* Set the information about the configuration.
 	* @param cat             Category of the config.
-	* @param name            Name of the config.
+	* @param name            Name of the config ('/' are replaced by '-').
 	*/
 	void SetConfigInfos(const RString& cat,const RString& name);
 

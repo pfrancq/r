@@ -97,16 +97,6 @@ protected:
 	cObj** Order;
 
 	/**
-	* Current object to place.
-	*/
-	cObj* CurObj;
-
-	/**
-	* Current group manipulated.
-	*/
-	cGroup* CurGroup;
-
-	/**
 	* Pointer to a "debugger" holding information about the GA when it is running.
 	*/
 	RDebug* Debug;
@@ -135,30 +125,20 @@ public:
 	virtual void Init(cGroups* groups);
 
 	/**
-	* Select the next object to place.
-	* The CurObj must pointed to object to place.
-	*/
-	virtual void SelectNextObject(void);
-
-	/**
-	* Return the current object to place.
-	*/
-	cObj* GetNextObject(void) {return(CurObj);}
-
-	/**
-	* Return the current group.
-	*/
-	cGroup* GetGroup(void) {return(CurGroup);}
+	 * Build the order in which the objects that are not assigned must be
+	 * grouped. By default, the methods treats them in random order.
+	 *
+	 * The array Order must be filled with the pointer to the objects to treat
+	 * in the correct order and the variable NbObjs must be set with the
+	 * correct number of objects to treat.
+	 */
+	virtual void BuildOrder(void);
 
 	/**
 	* Find a group for the next object.
+	* @param obj             Object.
 	*/
-	virtual cGroup* FindGroup(void)=0;
-
-	/**
-	* Put the next object into a group.
-	*/
-	void PutNextObject(void);
+	virtual cGroup* FindGroup(cObj* obj)=0;
 
 	/**
 	* Run the heuristic.
@@ -185,7 +165,7 @@ public:
 	* Return a number in the interval [0,max[ using the current random generator.
 	* @param max            Variable used to calculate the number.
 	*/
-	long RRand(long max) {return(Random->Value(max));}
+	long RRand(long max) {return(Random->GetValue(max));}
 
 	/**
 	* Random the position of elements of a vector using the current random generator.

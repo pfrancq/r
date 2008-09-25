@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	RObjg.h
+	RObjG.h
 
 	Object to place in a specific node - Header.
 
@@ -46,7 +46,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The Robjg class provides a representation of an object to place in a group.
+* The RObjg class provides a representation of an object to place in a group.
 * @author Pascal Francq
 * @short Object.
 */
@@ -55,7 +55,7 @@ class RObjG
 protected:
 
 	/**
-	* The identificator of the object.
+	* The identifier of the object.
 	*/
 	size_t Id;
 
@@ -68,7 +68,7 @@ public:
 
 	/**
 	* Construct the object.
-	* @param id             Identificator.
+	* @param id             Identifier.
 	* @param name           Name of the object.
 	*/
 	RObjG(const size_t id,const RString& name);
@@ -80,22 +80,22 @@ public:
 	RObjG(const RObjG* obj);
 
 	/**
-	* Comparaison function
+	* Comparison function
 	*/
 	int Compare(const size_t id) const;
 
 	/**
-	* Comparaison function
+	* Comparison function
 	*/
 	int Compare(const RObjG& obj) const;
 
 	/**
-	* Comparaison function
+	* Comparison function
 	*/
 	int Compare(const RObjG* obj) const;
 
 	/**
-	* Return the identificator of the object.
+	* Return the identifier of the object.
 	*/
 	size_t GetId(void) const {return(Id);}
 

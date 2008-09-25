@@ -70,19 +70,6 @@ namespace R{
 */
 class RString : public BasicString<RChar,RString>
 {
-	class CharBuffer : public BasicCharBuffer
-	{
-	public:
-		char* Latin1;        // Latin1 version of the string.
-
-		CharBuffer(void)
-			: BasicCharBuffer(), Latin1(0) {}
-		CharBuffer(RChar* tab,size_t len,size_t maxlen)
-			: BasicCharBuffer(tab,len,maxlen), Latin1(0) {}
-		void InvalidLatin1(void) {delete[] Latin1; Latin1=0;}
-		virtual ~CharBuffer(void) {delete[] Latin1;}
-	};
-
 	/**
 	* Pointer to the buffer representing the null string.
 	*/
@@ -187,7 +174,7 @@ public:
 	* Deep copy of the string if necessary, i.e. when the string points to an
 	* internal buffer referenced by other strings, make a copy of it.
 	*/
-	void Copy(void);
+	inline void Copy(void) {BasicString<RChar,RString>::Copy();};
 
 	/**
 	* Set the length of the string. If the length is greater than the current
@@ -237,7 +224,7 @@ public:
 	/**
 	* Get a sub-string of a given string.
 	* @param idx             Index of the first character.
-	* @param len             Length of the sub-string. If the legnth is not
+	* @param len             Length of the sub-string. If the length is not
 	*                        specified, the end of the string is copied.
 	* @returns A RString containing the substring.
 	*/
@@ -291,13 +278,13 @@ public:
 	operator const char* () const;
 
 	/**
-	* Get a normal C++ string representring the current string.
+	* Get a normal C++ string representing the current string.
 	* @return std::string.
 	*/
 	operator std::string () const;
 
 	/**
-	* Get a normal C++ string representring the current string.
+	* Get a normal C++ string representing the current string.
 	* @return std::string.
 	*/
 	std::string ToString(void) const;
@@ -480,7 +467,7 @@ public:
 	* @param pos             Position to start the search. Negative values
 	*                        start the search from the end.
 	* @param CaseSensitive   Is the search case sensitive.
-	* @return The position of the first occurence or -1 if the character was not
+	* @return The position of the first occurrence or -1 if the character was not
 	*         found.
 	*/
 	int Find(const RChar car,int pos=0,bool CaseSensitive=true) const;
@@ -491,10 +478,30 @@ public:
 	* @param pos             Position to start the search. Negative values
 	*                        start the search from the end.
 	* @param CaseSensitive   Is the search case sensitive.
-	* @return The position of the first occurence or -1 if the character was not
+	* @return The position of the first occurrence or -1 if the character was not
 	*         found.
 	*/
 	int FindStr(const RString& str,int pos=0,bool CaseSensitive=true) const;
+
+	/**
+	 * Replace a given character in the string.
+	 * @param search         Character to search.
+	 * @param rep            Character that will put in.
+	 * @param first          Must it stops after the first occurrence.
+	 * @param pos            Position to start. Negative values start the
+	 *                       search from the end.
+	 */
+	void Replace(const RChar search,const RChar rep,bool first=false,int pos=0);
+
+	/**
+	 * Replace a given sub-string in the string.
+	 * @param search         String to search.
+	 * @param rep            String that will put in.
+	 * @param first          Must it stops after the first occurrence.
+	 * @param pos            Position to start. Negative values start the
+	 *                       search from the end.
+	 */
+	void ReplaceStr(const RString& search,const RString& rep,bool first=false,int pos=0);
 
 	/**
 	* Split the string to find all the elements separated by a given character.
@@ -526,6 +533,12 @@ public:
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
 	unsigned long ToULong(bool& valid);
+
+	/**
+	* Try to transform a string into a size_t.
+	* @param valid           Variable becomes true if the conversion was done.
+	*/
+	size_t ToSizeT(bool& valid);
 
 	/**
 	* * Try to transform a string into a float.

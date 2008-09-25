@@ -59,7 +59,44 @@ namespace R{
 template<class cGroup,class cObj,class cGroups>
 	class RGroupingKMeans
 {
+public:
+
+	/**
+	* How to start the kMeans.
+	*/
+	enum tInitial
+	{
+		Incremental    /** Start from the existing clustering.*/,
+		Refine         /** Use several sub-samples to initialize.*/,
+		kMeansPlusPlus /** Use the kMeans++ method.*/,
+		Random         /** Initialize randomly.*/
+	};
+
 protected:
+
+	// Internal classes
+	class Group : public R::RContainer<cObj,false,false>
+	{
+	public:
+
+		size_t Id;
+
+		Group(size_t id,size_t max) : R::RContainer<cObj,false,false>(max), Id(id) {}
+		int Compare(const Group& tmp) const {return(Id-tmp.Id);}
+	};
+
+	class Centroid
+	{
+	public:
+
+		cObj* Obj;       // Object being the centroid
+		double AvgSim;   // Average similarity with the objects.
+
+		Centroid(void) : Obj(0), AvgSim(-2.0) {}
+		void SetObj(cObj* obj) {Obj=obj; AvgSim=-2.0;}
+		int Compare(const Centroid&) const {return(-1);}
+		int Compare(const cObj* obj) const {return(Obj!=obj);}
+	};
 
 	/**
 	 * Name of the k-Means
@@ -77,25 +114,35 @@ protected:
 	RRandom* Rand;
 
 	/**
-	* Objects to be grouped.
-	*/
-	 RCursor<cObj> Objs;
-
-	/**
 	* Groups.
 	*/
 	cGroups* Groups;
 
 	/**
-	* random table of objects;
+	* Objects to group;
 	*/
-	cObj** RandObjects;
+	cObj** Objs;
+
+	/**
+	 * Number of objects.
+	 */
+	size_t NbObjs;
+
+	/**
+	 * Objects used to build the clusters.
+	 */
+	cObj** ObjsUsed;
+
+	/**
+	 * Number of objects used to build the clusters.
+	 */
+	size_t NbObjsUsed;
 
 	/**
 	* Prototypes of the groups. The order of the prototypes is identical as the
 	* corresponding group.
 	*/
-	RContainer<cObj,false,false> Protos;
+	RContainer<Centroid,true,false> Protos;
 
 	/**
 	 * Number of Iterations.
@@ -119,7 +166,7 @@ public:
 	RString GetName(void) const {return(Name);}
 
 	/**
-	 * Get the number of interations runned.
+	 * Get the number of iterations run.
 	 */
 	size_t GetNbIterations(void) const {return(NbIterations);}
 
@@ -128,9 +175,8 @@ protected:
 	/**
 	 * Compute the prototype of a given group.
 	 * @param group          Group.
-	 * @return Pointer to the object which is the prototype.
 	 */
-	cObj* ComputePrototype(cGroup* group);
+	void ComputePrototype(cGroup* group);
 
 	/**
 	 * Compute the sum of similarities between a given object and the other
@@ -138,13 +184,30 @@ protected:
 	 * @param group          Group.
 	 * @param obj            Object.
 	 */
-	double ComputeSumSim(cGroup* group,cObj* obj);
+	double ComputeSumSim(cGroup* group,const cObj* obj);
 
 	/**
-	* Randmoly creates an initialization for the k-Means
-	* @param nbclusters      Number of groups to create.
-	*/
-	void InitRandom(size_t nbclusters);
+	 * Creates the initial prototypes by randomly choosing them.
+	 * @param nb              Number of groups to create.
+	 */
+	void InitRandom(size_t nb);
+
+	/**
+	 * Creates the initial prototypes by using a given number of samples
+	 * containing a given percentage of the objects to group and running the
+	 * kMeans. The best centroids of the sample are used.
+	 * @param nb              Number of groups to create.
+	 * @param max             Maximal number of iterations.
+	 * @param sub             Number of samples to use.
+	 * @param level           Percentage of objects to group for each sample.
+	 */
+	void InitRefine(size_t nb,size_t max,size_t nbsub=5,int level=5);
+
+	/**
+	 * Creates the initial prototypes by using the kMeans++ method.
+	 * @param nb              Number of groups to create.
+	 */
+	void InitkMeansPlusPlus(size_t nb);
 
 	/**
 	* Re-Allocation step where the objects are put in the group of the most
@@ -161,25 +224,36 @@ protected:
 public:
 
 	/**
-	* Couts many informations on K-Means configuration.
-	*/
-	void DisplayInfos(void);
-
-	/**
-	* Calculates the similarity between two objects. It is suppose that if the
+	* Compute the similarity between two objects. It is suppose that if the
 	* similarity is between -1 and 1 (same objects).
 	* @param obj1            First object.
 	* @param obj2            Second object.
 	*/
-	virtual double Similarity(cObj* obj1, cObj* obj2)=0;
+	virtual double Similarity(const cObj* obj1,const cObj* obj2)=0;
+
+	/**
+	* Compute the fitness of the given clustering (the higher is the fitness,
+	* the best is the clustering.
+	*
+	* By default, it computes the fraction between the average intra-similarity
+	* with the maximal similarity between the centroids.
+	*/
+	virtual double Fitness(void);
+
+	/**
+	 * Perform a kMeans.
+	 * @param max             Maximal number of iterations.
+	 */
+	void DokMeans(size_t max);
 
 	/**
 	* Run the heuristic.
 	* @param groups          Group to initialize.
-	* @param itermax         Maximal number of iterations.
-	* @param nbclusters      Number of groups to create.
+	* @param max             Maximal number of iterations.
+	* @param nb              Number of groups to create.
+	* @param start           How to the start the clustering.
 	*/
-	void Run(cGroups* groups,size_t itermax,size_t nbclusters);
+	void Run(cGroups* groups,size_t max,size_t nb,tInitial start=Random);
 
 	/**
 	* Destruct the k-Means.

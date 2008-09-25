@@ -56,7 +56,7 @@ namespace R{
 *    MyObject(const RString& name) : RObject(name)
 *    {
 *       InsertObserver(HANDLER(MyObject::Handle),"Example");
-*    } 
+*    }
 *    virtual RCString GetClassName(void) const {return("MyObject");}
 *    void Handle(const RNotification& notification)
 *    {
@@ -69,10 +69,10 @@ namespace R{
 *    MyObject Obj1("Object 1");
 *    MyObject Obj2("Object 2");
 *    NotificationCenter.PostNotification("Example",(long)3);
-* } 
+* }
 
 * @endcode
-* 
+*
 * It may append that a call to a method InsertObserver does not work well when
 * objects inheriting from RObject also inherit from other objects libraries
 * (such as Qt). The results is that the 'this' may not point to the real
@@ -81,7 +81,7 @@ namespace R{
 *    MyObject(const RString& name) : RObject(name)
 *    {
 *       reinterpret_cast<RObject*>(this)->InsertObserver(HANDLER(MyObject::Handle),"Example");
-*    } 
+*    }
 * @endcode
 * @short Object.
 * @author Pascal Francq
@@ -178,9 +178,9 @@ public:
 	* Add a handler for a particular notification for a particular object.
 	* @param handler         Handler of the notification.
 	* @param handle          Handle of the notification.
-	* @param object          Object emitting the notification.
+	* @param object          Object posting the notification.
 	*/
-	void InsertObserver(tNotificationHandler handler,hNotification handle,RObject* object)
+	inline void InsertObserver(tNotificationHandler handler,hNotification handle,RObject* object)
 	{
 		NotificationCenter.InsertObserver(handler,this,handle,object);
 	}
@@ -191,7 +191,7 @@ public:
 	* @param name            Name of the notification.
 	* @param object          Object emitting the notification.
 	*/
-	void InsertObserver(tNotificationHandler handler,const RCString& name,RObject* object)
+	inline void InsertObserver(tNotificationHandler handler,const RCString& name,RObject* object)
 	{
 		NotificationCenter.InsertObserver(handler,this,name,object);
 	}
@@ -201,7 +201,7 @@ public:
 	* @param handler         Handler of the notification.
 	* @param handle          Handle of the notification.
 	*/
-	void InsertObserver(tNotificationHandler handler,hNotification handle)
+	inline void InsertObserver(tNotificationHandler handler,hNotification handle)
 	{
 		NotificationCenter.InsertObserver(handler,this,handle,0);
 	}
@@ -211,7 +211,7 @@ public:
 	* @param handler         Handler of the notification.
 	* @param name            Name of the notification.
 	*/
-	void InsertObserver(tNotificationHandler handler,const RCString& name)
+	inline void InsertObserver(tNotificationHandler handler,const RCString& name)
 	{
 		NotificationCenter.InsertObserver(handler,this,name,0);
 	}
@@ -219,9 +219,9 @@ public:
 	/**
 	* Add a handler for every notification of a particular object.
 	* @param handler         Handler of the notification.
-	* @param object          Object emitting the notification.
+	* @param object          Object posting the notification.
 	*/
-	void InsertObserver(tNotificationHandler handler,RObject* object)
+	inline void InsertObserver(tNotificationHandler handler,RObject* object)
 	{
 		NotificationCenter.InsertObserver(handler,this,0,object);
 	}
@@ -230,9 +230,18 @@ public:
 	* Add a handler for every notification of every object.
 	* @param handler         Handler of the notification.
 	*/
-	void InsertObserver(tNotificationHandler handler)
+	inline void InsertObserver(tNotificationHandler handler)
 	{
 		NotificationCenter.InsertObserver(handler,this,0,0);
+	}
+
+	/**
+	 * Delete the object as observer.
+	 * @param
+	 */
+	inline void DeleteObserver(void)
+	{
+		NotificationCenter.DeleteObserver(this);
 	}
 
 	/**
@@ -255,7 +264,7 @@ public:
 	}
 
 	/**
-	* Destructor of the object.
+	* Destruct the object.
 	*/
 	virtual ~RObject(void);
 

@@ -153,7 +153,6 @@ public:
 	/**
 	* Modify a given chromosome when it is identical to another one. By
 	* default, the mutation operator of the chromosome is called.
-	* destroy them.
 	*/
 	virtual void Modify(void);
 
@@ -163,7 +162,7 @@ public:
 	virtual void Verify(void);
 
 	/**
-	* The assigment operator.
+	* The assignment operator.
 	* @param chromo         The chromosome used as source.
 	*/
 	RChromoG& operator=(const RChromoG& chromo);

@@ -66,13 +66,13 @@ public:
 	 * @param data           Original data.
 	 */
 	RSharedData(const RSharedData& data);
-	  
+
 	/**
-	 * Assignement operator.
+	 * Assignment operator.
 	 * @param data           Original data.
 	 */
 	RSharedData& operator=(const RSharedData& data);
-	
+
 	/**
 	* Increment the number of references of the data.
 	*/
@@ -90,9 +90,9 @@ public:
 	size_t GetRefs(void) {return(Refs);}
 
 	/**
-	* Destructor.
+	* Destruct.
 	*/
-	virtual ~RSharedData(void) {}
+	~RSharedData(void) {}
 };
 
 
@@ -150,14 +150,14 @@ template<class C>
 	 * Pointer.
 	 */
 	C* Ptr;
-	
+
 	/**
 	 * Method called by all constructors.
 	 */
 	inline void Init(void) {RIncRef(Ptr);}
-	
+
 public:
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -168,13 +168,13 @@ public:
 	 * @param ptr            Pointer to the object.
 	 */
 	RSmartPtr(C* ptr) : Ptr(ptr) {Init();}
-	
+
 	/**
 	 * Copy constructor.
 	 * @param ptr            Original smart pointer.
 	 */
 	RSmartPtr(const RSmartPtr& ptr) : Ptr(ptr.Ptr) {Init();}
-  
+
 	/**
 	 * Assignment operator.
 	 * @param ptr            Original smart pointer.
@@ -184,23 +184,23 @@ public:
 		if(Ptr!=ptr.Ptr)
 		{
 			C* OldPtr=Ptr;
-            Ptr=ptr.Ptr;                      
-            Init(); 
-            RRefDec(OldPtr);                
+            Ptr=ptr.Ptr;
+            Init();
+            RRefDec(OldPtr);
 		}
 		return(*this);
 	}
-	
+
 	/**
 	 * The -> operator.
-	 */ 
+	 */
 	C* operator->() const {return(Ptr);}
-  
+
 	/**
 	 * The * operator.
 	 */
 	C& operator*() const {return(*Ptr);}
-  
+
 	/**
 	 * Destructor.
 	 */

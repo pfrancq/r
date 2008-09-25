@@ -28,6 +28,7 @@
 */
 
 
+
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rcursor.h>
@@ -38,7 +39,7 @@ using namespace std;
 
 
 //-----------------------------------------------------------------------------
-// Member shared accross the application
+// Member shared across the application
 RNotificationCenter R::NotificationCenter;
 static bool Created=false;
 
@@ -54,10 +55,10 @@ static bool Created=false;
 struct IListener
 {
 public:
-	tNotificationHandler Handler;
-	RObject* Observer;
-	hNotification Handle;
-	RObject* Object;
+	tNotificationHandler Handler;          // The handler.
+	RObject* Observer;                     // The observer.
+	hNotification Handle;                  // The notification.
+	RObject* Object;                       // Eventually, a particular object
 
 	IListener(tNotificationHandler handler,RObject* observer,hNotification handle,RObject* object)
 		: Handler(handler), Observer(observer), Handle(handle), Object(object) {}
@@ -84,17 +85,32 @@ struct INotifications : public RContainer<IListener,true,true>
 	INotifications(const RCString& name) : RContainer<IListener,true,true>(50), Name(name) {}
 	int Compare(const INotifications& msg) const {return(Name.Compare(msg.Name));}
 	int Compare(const RCString& name) const {return(Name.Compare(name));}
-	void Delete(const RObject* observer);
+	void DeleteObserver(const RObject* observer);
+	void DeleteObject(const RObject* obj);
 };
 
 
 //-----------------------------------------------------------------------------
-void INotifications::Delete(const RObject* observer)
+void INotifications::DeleteObserver(const RObject* observer)
 {
 	RContainer<IListener,false,false> Dels(20);
 	RCursor<IListener> List(*this);
 	for(List.Start();!List.End();List.Next())
 		if(List()->Observer==observer)
+			Dels.InsertPtr(List());
+	List.Set(Dels);
+	for(List.Start();!List.End();List.Next())
+		DeletePtr(*List());
+}
+
+
+//-----------------------------------------------------------------------------
+void INotifications::DeleteObject(const RObject* obj)
+{
+	RContainer<IListener,false,false> Dels(20);
+	RCursor<IListener> List(*this);
+	for(List.Start();!List.End();List.Next())
+		if(List()->Object==obj)
 			Dels.InsertPtr(List());
 	List.Set(Dels);
 	for(List.Start();!List.End();List.Next())
@@ -121,12 +137,12 @@ struct IObjects : public RContainer<IListener,true,true>
 
 	int Compare(const IObjects& object) const {return(Object-object.Object);}
 	int Compare(RObject* object) const {return(Object-object);}
-	void Delete(const RObject* observer,hNotification type);
+	void DeleteObserver(const RObject* observer,hNotification type);
 };
 
 
 //-----------------------------------------------------------------------------
-void IObjects::Delete(const RObject* observer,hNotification handle)
+void IObjects::DeleteObserver(const RObject* observer,hNotification handle)
 {
 	RContainer<IListener,false,false> Dels(20);
 	RCursor<IListener> List(*this);
@@ -284,15 +300,15 @@ void RNotificationCenter::DeleteObserver(RObject* observer)
 	RReturnIfFail(observer);
 	RContainer<IListener,false,false> Dels(20);
 
-	// Goes through to all listerners that receive a particular notification
+	// Goes through to all listeners that receive a particular notification
 	RCursor<INotifications> Notifications(Data->Notifications);
 	for(Notifications.Start();!Notifications.End();Notifications.Next())
-		Notifications()->Delete(observer);
+		Notifications()->DeleteObserver(observer);
 
-	// Goes through to all listerners that receive notifications for a particular object
+	// Goes through to all listeners that receive notifications for a particular object
 	RCursor<IObjects> Objects(Data->Objects);
 	for(Objects.Start();!Objects.End();Objects.Next())
-		Objects()->Delete(observer,0);
+		Objects()->DeleteObserver(observer,0);
 
 	// Go trough the all default listeners
 	RCursor<IListener> Listener(Data->Defaults);
@@ -314,13 +330,13 @@ void RNotificationCenter::DeleteObserver(RObject* observer,hNotification handle,
 	// Verify that the observer is not null
 	RReturnIfFail(observer);
 
-	// Goes through to all listerners that receive a particular notification
+	// Goes through to all listeners that receive a particular notification
 	if(handle&&(!object))
-		reinterpret_cast<INotifications*>(handle)->Delete(observer);
+		reinterpret_cast<INotifications*>(handle)->DeleteObserver(observer);
 
-	// Goes through to all listerners that receive notifications for a particular object
+	// Goes through to all listeners that receive notifications for a particular object
 	if(object&&object->Handlers)
-		static_cast<IObjects*>(object->Handlers)->Delete(observer,handle);
+		static_cast<IObjects*>(object->Handlers)->DeleteObserver(observer,handle);
 
 	// Go trough the all default listeners
 	if((!handle)&&(!object))
@@ -334,6 +350,22 @@ void RNotificationCenter::DeleteObserver(RObject* observer,hNotification handle,
 		for(Listener.Start();!Listener.End();Listener.Next())
 			Dels.DeletePtr(*Listener());
 	}
+}
+
+
+//-----------------------------------------------------------------------------
+void RNotificationCenter::DeleteObject(RObject* obj)
+{
+	// Delete the objects are observer
+	DeleteObserver(obj);
+
+	// Delete all notifications related to the objects
+	RCursor<INotifications> Notifications(Data->Notifications);
+	for(Notifications.Start();!Notifications.End();Notifications.Next())
+		Notifications()->DeleteObject(obj);
+
+	// Delete all listeners for the particular object
+	Data->Objects.DeletePtr(obj);
 }
 
 

@@ -55,7 +55,7 @@ template<class cInst,class cChromo>
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	R::RInst<cInst,cChromo,cFit,cThreadData>::RInst(size_t popsize,const R::RString& name,R::RDebug* debug)
 		: RObject(name), Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),bRandomConstruct(false),
-		  VerifyGA(false), DoPostEvaluation(false),
+		  VerifyGA(false), DoPostEvaluation(false), DoOptimisation(true),
 		  Chromosomes(0), Ranked(0), PopSize(popsize), Gen(0), AgeBest(0), AgeBestPop(0)
 {
 	if(Debug)
@@ -79,10 +79,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	void R::RInst<cInst,cChromo,cFit,cThreadData>::SetMutationParams(size_t agemut,size_t agebestmut,size_t nbmut)
 {
 		if(nbmut>PopSize)
-			throw RGAException("Number of mutations cannot be greather than the population size");
+			throw RGAException("Number of mutations cannot be greater than the population size");
 		NbMutations=nbmut;
 		FreqMutation=agemut;
 		FreqBestMutation=agebestmut;
+}
+
+
+//------------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::SetOptimisation(bool opti)
+{
+	DoOptimisation=opti;
 }
 
 
@@ -155,7 +163,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	}
 	PostNotification("RInst::Interact");
 
-	// If necessary, do a post eveluation
+	// If necessary, do a post evaluation
 	if(DoPostEvaluation)
 	{
 		PostEvaluate();
@@ -408,7 +416,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	}
 	PostNotification("RInst::Interact");
 	AnalysePop();
-	PostNotification("RInst::Generation");
+	PostNotification("RInst::Generation",(size_t)Gen);
 	PostNotification("RInst::Interact");
 	if(Debug)
 		Debug->EndFunc("Generation","RInst");
@@ -426,7 +434,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		RandomConstruct();
 		PostNotification("RInst::Interact");
 		AnalysePop();
-		PostNotification("RInst::Generation");
+		PostNotification("RInst::Generation",(size_t)Gen);
 		DisplayInfos();
 	}
 	ExternBreak = false;

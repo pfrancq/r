@@ -72,7 +72,7 @@ template<class cGroup,class cObj,class cGroups>
 protected:
 
 	/**
-	* Identificator of the Group.
+	* Identifier of the Group.
 	*/
 	size_t Id;
 
@@ -107,7 +107,7 @@ public:
 	/**
 	* Construct the group.
 	* @param owner          Owner of the group.
-	* @param id             Identificator of the group.
+	* @param id             Identifier of the group.
 	*/
 	RGroup(cGroups* owner,const size_t id);
 
@@ -180,7 +180,7 @@ public:
 	RGroup& operator=(const RGroup& grp);
 
 	/**
-	* Return the identificator of the group.
+	* Return the identifier of the group.
 	*/
 	size_t GetId(void) const {return(Id);}
 
@@ -197,8 +197,13 @@ public:
 	size_t GetObjsPos(void) const {return(SubObjects);}
 
 	/**
+	* Return a cursor over the objects of a group.
+	*/
+	RCursor<cObj> inline GetObjs(void) const {return(Owner->GetObjs(static_cast<const cGroup&>(*this)));}
+
+	/**
 	* Return true if an object is in the group.
-	* @param id             Identificator of the object to test.
+	* @param id             Identifier of the object to test.
 	*/
 	bool IsIn(const size_t id) const;
 

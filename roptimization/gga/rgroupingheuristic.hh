@@ -49,20 +49,25 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::Init(cGroups* groups)
 {
-	size_t* ass;
-
-	// Assign
 	Groups=groups;
-	NbObjs=0;
+}
 
-	// Init the data for a grouping
-	NbObjsOk=0;
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
+	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::BuildOrder(void)
+{
+	size_t* ass;
+	cObj** tab;
 
 	// Calculate an order
-	for(Objs.Start(),ass=groups->ObjectsAss;!Objs.End();ass++,Objs.Next())
+	for(Objs.Start(),ass=Groups->ObjectsAss,tab=Order,NbObjs=0;!Objs.End();ass++,Objs.Next())
 	{
 		if((*ass)==NoGroup)
-			Order[NbObjs++]=Objs();
+		{
+			(*(tab++))=Objs();
+			NbObjs++;
+		}
 	}
 	if(NbObjs)
 		RandOrder<cObj*>(Order,NbObjs);
@@ -71,31 +76,20 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::SelectNextObject(void)
-{
-	CurObj=Order[NbObjsOk];
-}
-
-
-//------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
-	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::PutNextObject(void)
-{
-	SelectNextObject();
-	CurGroup=FindGroup();
-	CurGroup->Insert(CurObj);
-	NbObjsOk++;
-}
-
-
-//------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
 	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::Run(cGroups* groups)
 {
+	// Initialize
 	Init(groups);
-	while(NbObjsOk<NbObjs)
+	BuildOrder();
+
+	// Group resting objects
+	cObj** CurObj;
+	for(NbObjsOk=0,CurObj=Order;NbObjsOk<NbObjs;CurObj++,NbObjsOk++)
 	{
-		PutNextObject();
+		cGroup* CurGroup=FindGroup(*CurObj);
+		if(!CurGroup)
+			throw RGAException("No Group find.",RGAException::eGAHeuristic);
+		CurGroup->Insert(*CurObj);
 	}
 	PostRun();
 }

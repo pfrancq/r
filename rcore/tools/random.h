@@ -57,14 +57,14 @@ protected:
 	/**
 	* Next random value.
 	*/
-	int _seed;
+	int Seed;
 
 public:
 
 	/**
 	* Construct the random generator.
 	*/
-	RRandom(void) {_seed=0;}
+	RRandom(void) {Seed=0;}
 
 	/**
 	* Restart the sequence.
@@ -72,24 +72,26 @@ public:
 	virtual void Reset(const int) {}
 
 	/**
-	* Return the next value in the sequence. This is an pure virtual function
-	* that	must be implement for a real random generator.
+	* Return the next value in [0,1] from the sequence.
+	*
+	* This is an pure virtual function that	must be implement for a real random
+	* generator.
 	*/
-	virtual double Value(void)=0;
+	virtual double GetValue(void)=0;
 
 	/**
 	* Return a number in the interval [0,max[.
 	* @param max            Variable used to calculate the number.
 	*/
-	long Value(const long max)
+	long GetValue(const long max)
 	{
-		return(static_cast<long>(max*Value()));
+		return(static_cast<long>(max*GetValue()));
 	}
 
 	/**
 	* Return the seed value.
 	*/
-	int Seed(void) const { return(_seed); }
+	int GetSeed(void) const {return(Seed);}
 
 	/**
 	* Random the position of elements of a vector.
@@ -102,12 +104,12 @@ public:
 		T aux;
 		register T* p1;
 		register T* p2;
-		
+
 		if(size>1)
 		{
 			for(p1=arr,i=size;;p1++)
 			{
-				if((jump=Value(i))) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
+				if((jump=GetValue(i))) { aux=*(p2=p1+jump); *p2=*p1; *p1=aux; }
 				if(!--i) break;
 			}
 		}
@@ -129,14 +131,14 @@ class RRandomGood : public RRandom
 	/**
 	* Variable for Internal use.
 	*/
-	int _value;
+	int Value;
 
 public:
 
 	/**
 	* Construct the random generator.
 	*/
-	RRandomGood(const int seed=0) : RRandom() {_seed=seed;}
+	RRandomGood(const int seed=0) : RRandom() {Seed=seed;}
 
 	/**
 	* Restart the sequence.
@@ -145,9 +147,9 @@ public:
 	virtual void Reset(const int seed);
 
 	/**
-	* Return the next value in the sequence.
+	* Return the next value in [0,1] from the sequence.
 	*/
-	virtual double Value(void);
+	virtual double GetValue(void);
 };
 
 
@@ -163,17 +165,17 @@ class RRandomBetter : public RRandom
 	/**
 	* Variable for Internal use.
 	*/
-	int _aux;
+	int Aux;
 
 	/**
 	* Variable for Internal use.
 	*/
-	int _table[32];
+	int Table[32];
 
 	/**
 	* Variable for Internal use.
 	*/
-	int _value;
+	int Value;
 
 	/**
 	* Calculation function for Internal use.
@@ -185,7 +187,7 @@ public:
 	/**
 	* Construct the random generator.
 	*/
-	RRandomBetter(const int seed=0) : RRandom() {_seed=seed;}
+	RRandomBetter(const int seed=0) : RRandom() {Seed=seed;}
 
 	/**
 	* Restart the sequence.
@@ -194,9 +196,9 @@ public:
 	virtual void Reset(const int seed);
 
 	/**
-	* Return the next value in the sequence.
+	* Return the next value in [0,1] from the sequence.
 	*/
-	virtual double Value(void);
+	virtual double GetValue(void);
 };
 
 
@@ -212,22 +214,22 @@ class RRandomBest : public RRandom
 	/**
 	* Variable for Internal use.
 	*/
-	int _aux1;
+	int Aux1;
 
 	/**
 	* Variable for Internal use.
 	*/
-	int _aux2;
+	int Aux2;
 
 	/**
 	* Variable for Internal use.
 	*/
-	int _table[32];
+	int Table[32];
 
 	/**
 	* Variable for Internal use.
 	*/
-	int _value;
+	int Value;
 
 	/**
 	* Calculation function for Internal use.
@@ -244,7 +246,7 @@ public:
 	/**
 	* Construct the random generator.
 	*/
-	RRandomBest(const int seed=0) : RRandom() {_seed=seed;}
+	RRandomBest(const int seed=0) : RRandom() {Seed=seed;}
 
 	/**
 	* Restart the sequence.
@@ -253,9 +255,9 @@ public:
 	virtual void Reset(const int seed);
 
 	/**
-	* Return the next value in the sequence.
+	* Return the next value in [0,1] from the sequence.
 	*/
-	virtual double Value(void);
+	virtual double GetValue(void);
 };
 
 

@@ -89,6 +89,7 @@ public:
 		eGARandomConstruct       /** Random initialization failed. */,
 		eGAEvaluation            /** Evaluation failed. */,
 		eGAPostEvaluation        /** Post-evaluation failed. */,
+		eGAHeuristic             /** Heuristic failed. */,
 		eGA                      /** Normal GA exception. */
 	};
 

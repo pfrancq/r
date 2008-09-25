@@ -68,8 +68,9 @@ public:
 
 	/**
 	* Find a group for the next object.
+	* @param obj             Object.
 	*/
-	virtual cGroup* FindGroup(void);
+	virtual cGroup* FindGroup(cObj* obj);
 
 	/**
 	* Destruct the grouping heuristic.

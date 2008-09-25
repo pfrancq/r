@@ -37,7 +37,7 @@
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-template<class C,class S> void R::BasicString<C,S>::BasicCharBuffer::Verify(size_t maxlen)
+template<class C,class S> void R::BasicString<C,S>::CharBuffer::Verify(size_t maxlen)
 {
 	if(MaxLen<maxlen)
 	{
@@ -74,7 +74,22 @@ template<class C,class S>
 	R::BasicString<C,S>::BasicString(const BasicString& str)
 	:  Data(str.Data)
 {
-	RIncRef<BasicCharBuffer>(Data);
+	RIncRef<CharBuffer>(Data);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	void R::BasicString<C,S>::Copy(void)
+{
+	if(Data&&(Data->GetRefs()!=1)&&(Data->Len))
+	{
+		C* ptr=new C[Data->MaxLen+1];
+		size_t len=Data->Len,maxlen=Data->MaxLen;
+		memcpy(ptr,Data->Text,sizeof(C)*(len+1));
+		RDecRef<CharBuffer>(Data);
+		Data=new CharBuffer(ptr,len,maxlen);
+	}
 }
 
 
@@ -95,7 +110,7 @@ template<class C,class S>
 		len--;
 		ptr--;
 	}
-	
+
 	// Skip beginning spaces
 	if(!len)
 		return(res);
@@ -184,7 +199,7 @@ template<class C,class S>
 	size_t max;        // Maximal number of character to search.
 	C search;
 
-	// Initialise the search
+	// Initialize the search
 	if(!CaseSensitive)
 		search=toupper(car);
 	else
@@ -242,7 +257,7 @@ template<class C,class S>
 	int incr;
 	S search(str);
 
-	// Initialise the search
+	// Initialize the search
 	if(!CaseSensitive)
 		search=search.ToUpper();
 	if(pos<0)
@@ -328,6 +343,121 @@ template<class C,class S>
 
 
 //-----------------------------------------------------------------------------
+template<class C,class S>
+	inline void R::BasicString<C,S>::Replace(const C search,const C rep,bool first,int pos)
+{
+	C* start;
+	bool left;
+	size_t max;        // Maximal number of character to search.
+	bool found(false);
+
+	if(pos<0)
+	{
+		// From right
+		left=false;
+
+		// Start from Length-(-pos) with maximal pos+1 character to test.
+		pos=Data->Len+pos;
+		if(pos<=0) return;
+		start=&Data->Text[pos];
+		max=pos+1;
+	}
+	else
+	{
+		// From left
+		left=true;
+
+		// Start from 0 with maximal Len-pos+1 character to test.
+		start=&Data->Text[pos];
+		max=Data->Len-pos+1;
+	}
+
+	// Search for the maximal number of character
+	for(max++;--max;)
+	{
+		if((*start)==search)
+		{
+			if(!found)
+			{
+				Copy();
+				start=&Data->Text[pos];
+				found=true;
+			}
+			(*start)=rep;
+			if(first)
+				return;
+		}
+		if(left)
+		{
+			start++;
+			pos++;
+		}
+		else
+		{
+			pos--;
+			start--;
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S> template<class B>
+	inline void R::BasicString<C,S>::ReplaceStr(const S& search,const S& rep,bool first,int pos)
+{
+	if(!GetLen())
+		return;
+
+	size_t skip=search.GetLen();         // Number of character to skip (+1)
+
+	if(pos<0)
+	{
+		// From right
+		pos=FindStr(search,pos);
+		while(pos!=-1)
+		{
+			// Find one -> replace
+			Copy(); // Make a deep copy if necessary
+			S tmp(Mid<B>(0,pos));
+			tmp+=rep;
+			tmp+=Mid<B>(pos+skip);
+			(*static_cast<S*>(this))=tmp;
+
+			// If first -> stop
+			if(first)
+				break;
+
+			// Find the next occurrence
+			pos=FindStr(search,-pos);
+		}
+	}
+	else
+	{
+		// From left
+		int Add=rep.GetLen()-search.GetLen();  // Number of character added.
+		pos=FindStr(search,pos);
+		while(pos!=-1)
+		{
+			// Find one -> replace
+			Copy(); // Make a deep copy if necessary
+			S tmp(Mid<B>(0,pos));
+			tmp+=rep;
+			tmp+=Mid<B>(pos+skip);
+			(*static_cast<S*>(this))=tmp;
+
+			// If first -> stop
+			if(first)
+				break;
+
+			// Find the next occurrence
+			pos+=skip+Add;
+			pos=FindStr(search,pos);
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
 template<class C,class S> template<class B>
 	inline S R::BasicString<C,S>::Mid(size_t idx,int len) const
 {
@@ -367,7 +497,7 @@ template<class C,class S> template<class B>
 		if(Data==S::DataNull)
 		{
 			C* ptr=new C[len+1];
-			RDecRef<BasicCharBuffer>(Data);
+			RDecRef<CharBuffer>(Data);
 			Data=new B(ptr,len,len);
 		}
 		else
@@ -405,7 +535,7 @@ template<class C,class S>
 	inline bool R::BasicString<C,S>::ContainOnlySpaces(void) const
 {
 	if(!Data->Len)
-		return(false);	
+		return(false);
 	C* ptr=Data->Text;
 	while((*ptr)!=0)
 	{

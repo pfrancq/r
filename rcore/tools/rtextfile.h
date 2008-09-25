@@ -138,12 +138,12 @@ protected:
 	char Buffer[512];
 
 	/**
-	 * Unicode characters already readed.
+	 * Unicode characters already read.
 	 */
 	RChar Chars[40];
 
 	/**
-	 * Size of unicode characters already readed.
+	 * Size of unicode characters already read.
 	 */
 	size_t SizeChars[40];
 
@@ -203,7 +203,7 @@ protected:
 	RemType CommentType;
 
 	/**
-	* The type of comments currently activ.
+	* The type of comments currently active.
 	*/
 	RemType ActivComment;
 
@@ -223,12 +223,12 @@ protected:
 	size_t Line;
 
 	/**
-	* This variable is holding the last line where something was readed (or written).
+	* This variable is holding the last line where something was read (or written).
 	*/
 	size_t LastLine;
 
 	/**
-	* Enconding of the text file.
+	* Encoding of the text file.
 	*/
 	RTextEncoding* Codec;
 
@@ -317,7 +317,7 @@ protected:
 	bool BeginComment(void);
 
 	/**
-	* This function returns true if hte current position is the ending of a
+	* This function returns true if the current position is the ending of a
 	* comment and skip the end characters if MultiLineComment.
 	*/
 	bool EndComment(void);
@@ -394,7 +394,7 @@ public:
 	void SetRem(const RString& c);
 
 	/**
-	* Set the begin and the end strings of comments when in multiline.
+	* Set the begin and the end strings of comments when in multi-line.
 	* @param b              This string represent the begin of a comment.
 	* @param e              This string represent the end of a comment.
 	*/
@@ -433,7 +433,7 @@ public:
 	long GetInt(void);
 
 	/**
-	* Return the next size_teger contained in the file.
+	* Return the next unsigned integer contained in the file.
 	*/
 	unsigned long GetUInt(void);
 

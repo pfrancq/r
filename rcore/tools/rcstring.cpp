@@ -49,7 +49,7 @@ using namespace R;
 // Static data
 //
 //-----------------------------------------------------------------------------
-BasicString<char,RCString>::BasicCharBuffer* RCString::DataNull=0;
+BasicString<char,RCString>::CharBuffer* RCString::DataNull=0;
 const RCString RCString::Null;
 
 
@@ -78,7 +78,7 @@ RCString::RCString(const char* src)
 		len=maxlen=strlen(src);
 		char* ptr=new char[maxlen+1];
 		memcpy(ptr,src,sizeof(char)*(len+1));
-		Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
+		Data=new BasicString<char,RCString>::CharBuffer(ptr,len,maxlen);
 	}
 	else
 		Data=GetDataNull();
@@ -96,7 +96,7 @@ RCString::RCString(const char* src,size_t len)
 		char* ptr=new char[maxlen+1];
 		memcpy(ptr,src,sizeof(char)*len);
 		ptr[len]=0;
-		Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
+		Data=new BasicString<char,RCString>::CharBuffer(ptr,len,maxlen);
 	}
 	else
 		Data=GetDataNull();
@@ -115,7 +115,7 @@ RCString::RCString(const std::string& src)
 		size_t maxlen=len;
 		char* ptr=new char[maxlen+1];
 		memcpy(ptr,tab,sizeof(char)*(len+1));
-		Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
+		Data=new BasicString<char,RCString>::CharBuffer(ptr,len,maxlen);
 	}
 	else
 		Data=GetDataNull();
@@ -135,7 +135,7 @@ RCString::RCString(char src)
 		len=1;
 	else
 		len=0;
-	Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
+	Data=new BasicString<char,RCString>::CharBuffer(ptr,len,maxlen);
 }
 
 
@@ -147,18 +147,18 @@ RCString::RCString(const RCString& src)
 
 
 //-----------------------------------------------------------------------------
-BasicString<char,RCString>::BasicCharBuffer* RCString::GetDataNull(void)
+BasicString<char,RCString>::CharBuffer* RCString::GetDataNull(void)
 {
 	if(!RCString::DataNull)
 	{
 		char* ptr2=new char[1];
 		(*ptr2)=0;
-		RCString::DataNull=new BasicString<char,RCString>::BasicCharBuffer(ptr2,0,0);
+		RCString::DataNull=new BasicString<char,RCString>::CharBuffer(ptr2,0,0);
 		RCString* ptr=const_cast<RCString*>(&RCString::Null);
 		ptr->Data = RCString::DataNull;
 	}
 	else
-		RIncRef<BasicString<char,RCString>::BasicCharBuffer>(RCString::DataNull);
+		RIncRef<BasicString<char,RCString>::CharBuffer>(RCString::DataNull);
 	return(RCString::DataNull);
 }
 
@@ -167,7 +167,7 @@ BasicString<char,RCString>::BasicCharBuffer* RCString::GetDataNull(void)
 RCString& RCString::operator=(const RCString& src)
 {
 	RIncRef(src.Data);
-	RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
+	RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
 	Data=src.Data;
 	return(*this);
 }
@@ -178,12 +178,12 @@ RCString& RCString::operator=(const char* src)
 {
 	size_t len,maxlen;
 
-	RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
+	RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
 	maxlen=len=strlen(src);
 	char* ptr=new char[maxlen+1];
 	memcpy(ptr,src,sizeof(char)*len);
 	ptr[len]=0;
-	Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
+	Data=new BasicString<char,RCString>::CharBuffer(ptr,len,maxlen);
 	return(*this);
 }
 
@@ -201,8 +201,8 @@ void RCString::Clear(void)
 {
 	if(Data!=DataNull)
 	{
-		RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
-		RIncRef<BasicString<char,RCString>::BasicCharBuffer>(DataNull);
+		RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
+		RIncRef<BasicString<char,RCString>::CharBuffer>(DataNull);
 		Data=DataNull;
 	}
 }
@@ -211,7 +211,7 @@ void RCString::Clear(void)
 //-----------------------------------------------------------------------------
 void RCString::Copy(const char* src,size_t nb)
 {
-	RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
+	RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
 	if(src)
 	{
 		size_t len=strlen(src);
@@ -220,7 +220,7 @@ void RCString::Copy(const char* src,size_t nb)
 		char* ptr=new char[nb+1];
 		memcpy(ptr,src,sizeof(char)*len);
 		ptr[len]=0;
-		Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,nb);
+		Data=new BasicString<char,RCString>::CharBuffer(ptr,len,nb);
 	}
 	else
 		Data=GetDataNull();
@@ -228,33 +228,16 @@ void RCString::Copy(const char* src,size_t nb)
 
 
 //-----------------------------------------------------------------------------
-void RCString::Copy(void)
-{
-	if(Data&&(Data->GetRefs()!=1))
-	{
-		if(Data!=DataNull)
-		{
-			char* ptr=new char[Data->MaxLen+1];
-			size_t len=Data->Len,maxlen=Data->MaxLen;
-			memcpy(ptr,Data->Text,sizeof(char)*(len+1));
-			RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
-			Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
-		}
-	}
-}
-
-
-//-----------------------------------------------------------------------------
 void RCString::SetLen(size_t len)
 {
-	BasicString<char,RCString>::SetLen<BasicCharBuffer>(len);
+	BasicString<char,RCString>::SetLen<CharBuffer>(len);
 }
 
 
 //-----------------------------------------------------------------------------
 void RCString::SetLen(size_t len,const RCString& str)
 {
-	BasicString<char,RCString>::SetLen<BasicCharBuffer>(len,str);
+	BasicString<char,RCString>::SetLen<CharBuffer>(len,str);
 }
 
 
@@ -294,7 +277,7 @@ char& RCString::operator[](size_t idx)
 //-----------------------------------------------------------------------------
 RCString RCString::Mid(size_t idx,int len) const
 {
-	return(BasicString<char,RCString>::Mid<BasicCharBuffer>(idx,len));
+	return(BasicString<char,RCString>::Mid<CharBuffer>(idx,len));
 }
 
 
@@ -346,10 +329,10 @@ RCString& RCString::operator+=(const char src)
 		if(Data==DataNull)
 		{
 			size_t maxlen=1,len=1;
-			RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
+			RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
 			char* ptr=new char[2];
 			ptr[0]=src; ptr[1]=0;
-			Data=new BasicString<char,RCString>::BasicCharBuffer(ptr,len,maxlen);
+			Data=new BasicString<char,RCString>::CharBuffer(ptr,len,maxlen);
 		}
 		else
 		{
@@ -462,6 +445,20 @@ int RCString::FindStr(const RCString& str,int pos,bool CaseSensitive) const
 
 
 //-----------------------------------------------------------------------------
+void RCString::Replace(const char search,const char rep,bool first,int pos)
+{
+	BasicString<char,RCString>::Replace(search,rep,first,pos);
+}
+
+
+//-----------------------------------------------------------------------------
+void RCString::ReplaceStr(const RCString& search,const RCString& rep,bool first,int pos)
+{
+	BasicString<char,RCString>::ReplaceStr<CharBuffer>(search,rep,first,pos);
+}
+
+
+//-----------------------------------------------------------------------------
 void RCString::Split(RContainer<RCString,true,false>& elements,const char car) const
 {
 	BasicString<char,RCString>::Split(elements,car);
@@ -471,5 +468,5 @@ void RCString::Split(RContainer<RCString,true,false>& elements,const char car) c
 //-----------------------------------------------------------------------------
 RCString::~RCString(void)
 {
-	RDecRef<BasicString<char,RCString>::BasicCharBuffer>(Data);
+	RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
 }
