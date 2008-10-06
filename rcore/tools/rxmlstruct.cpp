@@ -51,7 +51,7 @@ RXMLStruct::RXMLStruct(void)
 {
 }
 
-	
+
 //------------------------------------------------------------------------------
 RURI* RXMLStruct::GetNamespace(const RString& xmlns)
 {
@@ -174,7 +174,7 @@ void RXMLStruct::Clear(void)
 	Entities.Clear();
 	Version.Clear();
 	Encoding.Clear();
-	Namespaces.Clear();	
+	Namespaces.Clear();
 }
 
 
@@ -221,7 +221,7 @@ RXMLAttr* RXMLStruct::NewAttr(const RString& name,const RString& value,const RSt
 {
 	RURI* uri(0);
 	if(!xmlns.IsEmpty())
-		uri=GetNamespace(xmlns);	
+		uri=GetNamespace(xmlns);
 	return(new RXMLAttr(name,value,uri));
 }
 
@@ -231,7 +231,7 @@ RXMLAttr* RXMLStruct::NewAttr(const RString& name,const RString& xmlns)
 {
 	RURI* uri(0);
 	if(!xmlns.IsEmpty())
-		uri=GetNamespace(xmlns);	
+		uri=GetNamespace(xmlns);
 	return(new RXMLAttr(name,RString::Null,uri));
 }
 

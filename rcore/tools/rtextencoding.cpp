@@ -298,29 +298,39 @@ RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 
 
 //------------------------------------------------------------------------------
-RChar RTextEncoding::NextUnicode(const char* text,size_t& len) const
+RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size_t& len) const
 {
-	RChar Code;
-	char Tab[sizeof(UChar)];
+	UnicodeCharacter Code;
 	char* ptr2;
 	char* ptr1;
 	size_t s1,s2,err;
+	bool ToFill=true;
+	char Tab[4];
 
 	ptr1=(char*)text;
 	s1=len;
-	ptr2=Tab;
-	s2=sizeof(UChar);
-	#ifdef _LIBICONV_VERSION
-		err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
-	#else
-		err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
-	#endif
-	if(err==(size_t)-1)
+	ptr2=(char*)Code.Codes;
+//	ptr2=Tab;
+	for(s2=0;ToFill;)
 	{
-		switch(errno)
+		s2+=2;
+		if(s2==6)
+			throw RException("Big Error in RTextEncoding::NextUnicode");
+		#ifdef _LIBICONV_VERSION
+			err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+		#else
+			err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+		#endif
+		if(err==(size_t)-1)
 		{
+			switch(errno)
+			{
 			case EILSEQ:
 				throw InvalidByteSequence("Invalid byte sequence for encoding "+Name);
+				break;
+			case E2BIG:
+				if(!s2)
+					ToFill=false;
 				break;
 			case EINVAL:
 				throw IncompleteByteSequence("Incomplete byte sequence for encoding "+Name);
@@ -328,10 +338,14 @@ RChar RTextEncoding::NextUnicode(const char* text,size_t& len) const
 			case EBADF:
 				throw RException("Invalid descriptor for encoding  "+Name);
 				break;
+			}
 		}
+		else
+			ToFill=false;
 	}
 	len-=s1;
-	Code=RChar((*((UChar*)(Tab))));
+	if(len<2)
+		Code.Codes[1]=0;
 	return(Code);
 }
 

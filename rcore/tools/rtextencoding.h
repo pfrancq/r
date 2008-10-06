@@ -66,7 +66,7 @@ NEWREXCEPTION(EncodingNotSupported);
 NEWREXCEPTION(InvalidByteSequence);
 
 /**
-* Exception specifying that the byte sequence is incompleted..
+* Exception specifying that the byte sequence is incomplete.
 */
 NEWREXCEPTION(IncompleteByteSequence);
 
@@ -83,8 +83,26 @@ NEWREXCEPTION(IncompleteByteSequence);
 */
 class RTextEncoding
 {
+public:
+
 	/**
-	* The name of the enconding (always in uppercas).
+	 * Structure representing a Unicode character encoded using a RChar. If
+	 * only one RChar is necessary to store the character, the second one is
+	 * set to null.
+	 */
+	struct UnicodeCharacter
+	{
+		/**
+		 * Maximum two RChar are necessary to store a Unicode character.
+		 */
+		RChar Codes[2];
+	};
+
+
+private:
+
+	/**
+	* The name of the encoding (always in uppercase).
 	*/
 	RString Name;
 
@@ -106,7 +124,7 @@ class RTextEncoding
 public:
 
 	/**
-	* Construct a particular enconding.
+	* Construct a particular encoding.
 	* @param name           Name of the encoding.
 	*/
 	RTextEncoding(const RString& name);
@@ -149,14 +167,13 @@ public:
 	virtual RString ToUnicode(const char* text,size_t len) const;
 
 	/**
-	* Read the next unicode character contained in a string of the given
+	* Read the next Unicode character contained in a string of the given
 	* encoding.
 	* @param text           Text in the given encoding.
 	* @param len            Number of character to analyzed. After the call,
 	*                       this parameters contains the number of bytes read.
-	* @return RChar.
 	*/
-	virtual RChar NextUnicode(const char* text,size_t& len) const;
+	virtual UnicodeCharacter NextUnicode(const char* text,size_t& len) const;
 
 	/**
 	* Transform a string in Unicode to a string of the given encoding.
@@ -176,7 +193,7 @@ public:
 	static RTextEncoding* GetTextEncoding(const RString& name);
 
 	/**
-	* Destructor of the encoding.
+	* Destruct the encoding.
 	*/
 	virtual ~RTextEncoding(void);
 };

@@ -99,6 +99,7 @@ void RTextFile::Begin(void)
 	SizeNextWrite=SizeNextRead=SizeChars;
 	PosChars=0;
 	SkipBytes=0;
+	Resting=0;
 	Read(Buffer,2,false);
 	if((Buffer[0]==char(0xfe))&&(Buffer[1]==char(0xff)))
 	{
@@ -126,6 +127,7 @@ void RTextFile::ReadChars(void)
 	size_t treat,len=20*4,s;
 	char* ptr=Buffer+SkipBytes;
 	bool end;
+	RTextEncoding::UnicodeCharacter NextCar;
 
 	// Read next 20 Unicode characters
 	len=Read(Buffer,len,false);
@@ -137,12 +139,25 @@ void RTextFile::ReadChars(void)
 		{
 			try
 			{
-				(*NextWrite)=Codec->NextUnicode(ptr,s);
-				(*SizeNextWrite)=treat+s;
+				if(Resting.Unicode())
+				{
+					(*NextWrite)=Resting;
+					(*SizeNextWrite)=0;;
+					Resting=0;
+					end=true;
+					continue;
+				}
+				NextCar=Codec->NextUnicode(ptr,s);
+				(*NextWrite)=NextCar.Codes[0];
 				ptr+=s;
 				len-=treat+s;
 				if(n<11)
 					SkipBytes+=treat+s;
+				if(s>2)
+					Resting=NextCar.Codes[1];
+				else
+					Resting=0;
+				(*SizeNextWrite)=treat+s;
 				end=true;
 			}
 			catch(InvalidByteSequence)
@@ -532,7 +547,9 @@ RString RTextFile::GetToken(const RString& endingchar)
 	SkipSpaces();
 
 	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(endingchar.Find(GetNextChar())==-1))
+	{
 		res+=GetChar();
+	}
 
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))

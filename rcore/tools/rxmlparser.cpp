@@ -108,6 +108,14 @@ size_t RXMLParser::GetLastTokenPos(void) const
 void RXMLParser::Open(RIO::ModeType mode)
 {
 	RTextFile::Open(mode);
+
+	// Create default namespaces
+	Namespaces.Clear();
+	DefaultNamespace.Clear();
+	Namespace* ptr=Namespaces.GetInsertPtr("xmlns");
+	ptr->URI.Push(new RString("http://www.w3.org/2000/xmlns"));
+
+	// Treat the different modes
 	switch(Mode)
 	{
 		case RIO::Read:
@@ -581,10 +589,10 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 		{
 			// Namespace defined
 			RString prefix=attrn.Mid(0,i);
-			lname=attrn.Mid(i+1,attrn.GetLen()-i);
+			lname=attrn.Mid(i+1,attrn.GetLen()-i-1);
 			if(prefix=="xmlns")
 			{
-				uri="xmlns";  // New namespace declared
+				uri="http://www.w3.org/2000/xmlns";  // New namespace declared
 				GetNs=true;
 			}
 			else
@@ -600,7 +608,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 			lname=attrn;
 			if(attrn=="xmlns")
 			{
-				uri="xmlns";  // New namespace declared
+				uri="http://www.w3.org/2000/xmlns";  // New namespace declared
 				GetNs=true;
 			}
 			else
@@ -647,7 +655,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 			}
 			else
 			{
-				// If Quote must be used -> generate an exeception
+				// If Quote must be used -> generate an exception
 				if(OnlyQuote())
 					throw RIOException(this,"Quote must be used to delimit the parameter value in a tag.");
 				SetParseSpace(RTextFile::LeaveSpaces);

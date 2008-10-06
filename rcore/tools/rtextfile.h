@@ -148,7 +148,12 @@ protected:
 	size_t SizeChars[40];
 
 	/**
-	 * Position of the next unicode to handle.
+	 * Resting (if any) character if a 4-byte Unicode character is read.
+	 */
+	RChar Resting;
+
+	/**
+	 * Position of the next Unicode to handle.
 	 */
 	size_t PosChars;
 
