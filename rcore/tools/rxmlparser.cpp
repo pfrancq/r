@@ -501,7 +501,7 @@ void RXMLParser::LoadNextTag(void)
 			{
 				// Get the next word
 				LastTokenPos=GetPos();
-				RString tmp(GetToken(RChar('<')));
+				RString tmp(GetToken("<"));
 				if(tmp.GetLen())
 					Text(XMLToString(tmp));
 

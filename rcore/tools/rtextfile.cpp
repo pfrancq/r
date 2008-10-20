@@ -535,6 +535,7 @@ RString RTextFile::GetWord(void)
 		{
 			(*ptr)=0;
 			res+=TmpBuffer;
+			ptr=TmpBuffer;
 			i=0;
 		}
 	}
@@ -570,6 +571,7 @@ RString RTextFile::GetToken(const RString& endingchar)
 		{
 			(*ptr)=0;
 			res+=TmpBuffer;
+			ptr=TmpBuffer;
 			i=0;
 		}
 	}
@@ -605,6 +607,7 @@ RString RTextFile::GetTokenString(const RString& endingstr)
 		{
 			(*ptr)=0;
 			res+=TmpBuffer;
+			ptr=TmpBuffer;
 			i=0;
 		}
 	}
@@ -643,6 +646,7 @@ RString RTextFile::GetLine(bool SkipEmpty)
 		{
 			(*ptr)=0;
 			res+=TmpBuffer;
+			ptr=TmpBuffer;
 			i=0;
 		}
 	}
