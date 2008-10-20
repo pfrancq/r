@@ -4,13 +4,9 @@
 
 	RRandom
 
-	Class representing random number generators:
-	RRandom       A pure base class
-	RRandomGood	  Park & Miller minimal standard congruential generator
-	RRandomBetter Park & Miller with a Bays & Durham shuffle
-	RRandomBest   L'Ecuyer's two-series combo plus a shuffle for a period > 2e18
+	Class representing random number generators.
 
-	Copyright 1999-2007 by the Université Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -46,12 +42,29 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* This is a abstract class for random number generation classes.
+* This is a class representing a random generator. In practice, it is an abstract
+* class internally re-implemented.
 * @author Pascal Francq
-* @short Generic Random Generator.
+* @short Random Generator.
 */
 class RRandom
 {
+public:
+
+	/**
+	 * Type of the random generator.
+	 */
+	enum Type
+	{
+		Good     /* A good and fast random generator using the Park & Miller
+		            minimal standard congruential generator.*/,
+		Better   /* A better but slower random generator using the Park &
+		            Miller with a Bays & Durham shuffle*/,
+		Best     /* The best but also the slower random generator using the
+		            L'Ecuyer's two-series combo plus a shuffle for a period
+		             > 2e18 */
+	};
+
 protected:
 
 	/**
@@ -63,13 +76,17 @@ public:
 
 	/**
 	* Construct the random generator.
+	* @param seed            Initial seed. Since this value cannot be null, if
+	*                        so, seed is set to 1.
 	*/
-	RRandom(void) {Seed=0;}
+	RRandom(const int seed=1) {Seed=seed;}
 
 	/**
 	* Restart the sequence.
+	* @param seed            Initial seed. Since this value cannot be null, if
+	*                        so, seed is set to 1.
 	*/
-	virtual void Reset(const int) {}
+	virtual void Reset(const int seed);
 
 	/**
 	* Return the next value in [0,1] from the sequence.
@@ -94,9 +111,9 @@ public:
 	int GetSeed(void) const {return(Seed);}
 
 	/**
-	* Random the position of elements of a vector.
-	* @param arr            A pointer to the array representing the vector.
-	* @param size           The size of the vector.
+	* Randomize the position of elements of a vector.
+	* @param arr            Pointer to the array representing the vector.
+	* @param size           Size of the vector.
 	*/
     template<class T> inline void RandOrder(T *arr,unsigned size)
     {
@@ -115,149 +132,16 @@ public:
 		}
 	}
 
-	virtual ~RRandom(void) {}
-};
+    /**
+     * Create a random number generator.
+     * @param type           Type of the generator.
+     * @param seed           Initial seed.
+     */
+    static RRandom* Create(Type type,const int seed=0);
 
-
-//------------------------------------------------------------------------------
-/**
-* A good and fast random generator using the Park & Miller minimal standard
-*	congruential generator.
-* @author Pascal Francq
-* @short Good Random Generator.
-*/
-class RRandomGood : public RRandom
-{
-	/**
-	* Variable for Internal use.
-	*/
-	int Value;
-
-public:
-
-	/**
-	* Construct the random generator.
-	*/
-	RRandomGood(const int seed=0) : RRandom() {Seed=seed;}
-
-	/**
-	* Restart the sequence.
-	* @param seed           Value used to restart.
-	*/
-	virtual void Reset(const int seed);
-
-	/**
-	* Return the next value in [0,1] from the sequence.
-	*/
-	virtual double GetValue(void);
-};
-
-
-//------------------------------------------------------------------------------
-/**
-* A better but slower random generator using the Park & Miller with a Bays &
-* Durham shuffle.
-* author Pascal Francq
-* @short Better Random Generator.
-*/
-class RRandomBetter : public RRandom
-{
-	/**
-	* Variable for Internal use.
-	*/
-	int Aux;
-
-	/**
-	* Variable for Internal use.
-	*/
-	int Table[32];
-
-	/**
-	* Variable for Internal use.
-	*/
-	int Value;
-
-	/**
-	* Calculation function for Internal use.
-	*/
-	int Calc(void);
-
-public:
-
-	/**
-	* Construct the random generator.
-	*/
-	RRandomBetter(const int seed=0) : RRandom() {Seed=seed;}
-
-	/**
-	* Restart the sequence.
-	* @param seed           Value used to restart.
-	*/
-	virtual void Reset(const int seed);
-
-	/**
-	* Return the next value in [0,1] from the sequence.
-	*/
-	virtual double GetValue(void);
-};
-
-
-//------------------------------------------------------------------------------
-/**
-* The best but also the slower random generator using the L'Ecuyer's two-series
-* combo plus a shuffle for a period > 2e18.
-* @author Pascal Francq
-* @short Best Random Generator.
-*/
-class RRandomBest : public RRandom
-{
-	/**
-	* Variable for Internal use.
-	*/
-	int Aux1;
-
-	/**
-	* Variable for Internal use.
-	*/
-	int Aux2;
-
-	/**
-	* Variable for Internal use.
-	*/
-	int Table[32];
-
-	/**
-	* Variable for Internal use.
-	*/
-	int Value;
-
-	/**
-	* Calculation function for Internal use.
-	*/
-	int Calc1(void);
-
-	/**
-	* Calculation function for Internal use.
-	*/
-	int Calc2(void);
-
-public:
-
-	/**
-	* Construct the random generator.
-	*/
-	RRandomBest(const int seed=0) : RRandom() {Seed=seed;}
-
-	/**
-	* Restart the sequence.
-	* @param seed           Value used to restart.
-	*/
-	virtual void Reset(const int seed);
-
-	/**
-	* Return the next value in [0,1] from the sequence.
-	*/
-	virtual double GetValue(void);
+    /**
+     */
+	virtual ~RRandom(void);
 };
 
 

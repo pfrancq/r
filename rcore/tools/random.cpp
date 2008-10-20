@@ -6,7 +6,7 @@
 
 	Class representing random number generators:
 
-	Copyright 1999-2003 by the Universit� Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -66,6 +66,193 @@ static const int MASK=123456987;
 
 //------------------------------------------------------------------------------
 //
+// Class definition
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+/**
+* A good and fast random generator using the Park & Miller minimal standard
+*	congruential generator.
+* @author Pascal Francq
+* @short Good Random Generator.
+*/
+class RRandomGood : public RRandom
+{
+	/**
+	* Variable for Internal use.
+	*/
+	int Value;
+
+public:
+
+	/**
+	* Construct the random generator.
+	*/
+	RRandomGood(const int seed) : RRandom(seed) {Reset(seed);}
+
+	/**
+	* Restart the sequence.
+	* @param seed           Value used to restart.
+	*/
+	virtual void Reset(const int seed);
+
+	/**
+	* Return the next value in [0,1] from the sequence.
+	*/
+	virtual double GetValue(void);
+};
+
+
+//------------------------------------------------------------------------------
+/**
+* A better but slower random generator using the Park & Miller with a Bays &
+* Durham shuffle.
+* author Pascal Francq
+* @short Better Random Generator.
+*/
+class RRandomBetter : public RRandom
+{
+	/**
+	* Variable for Internal use.
+	*/
+	int Aux;
+
+	/**
+	* Variable for Internal use.
+	*/
+	int Table[32];
+
+	/**
+	* Variable for Internal use.
+	*/
+	int Value;
+
+	/**
+	* Calculation function for Internal use.
+	*/
+	int Calc(void);
+
+public:
+
+	/**
+	* Construct the random generator.
+	*/
+	RRandomBetter(const int seed) : RRandom(seed) {Reset(seed);}
+
+	/**
+	* Restart the sequence.
+	* @param seed           Value used to restart.
+	*/
+	virtual void Reset(const int seed);
+
+	/**
+	* Return the next value in [0,1] from the sequence.
+	*/
+	virtual double GetValue(void);
+};
+
+
+//------------------------------------------------------------------------------
+/**
+* The best but also the slower random generator using the L'Ecuyer's two-series
+* combo plus a shuffle for a period > 2e18.
+* @author Pascal Francq
+* @short Best Random Generator.
+*/
+class RRandomBest : public RRandom
+{
+	/**
+	* Variable for Internal use.
+	*/
+	int Aux1;
+
+	/**
+	* Variable for Internal use.
+	*/
+	int Aux2;
+
+	/**
+	* Variable for Internal use.
+	*/
+	int Table[32];
+
+	/**
+	* Variable for Internal use.
+	*/
+	int Value;
+
+	/**
+	* Calculation function for Internal use.
+	*/
+	int Calc1(void);
+
+	/**
+	* Calculation function for Internal use.
+	*/
+	int Calc2(void);
+
+public:
+
+	/**
+	* Construct the random generator.
+	*/
+	RRandomBest(const int seed) : RRandom(seed) {Reset(seed);}
+
+	/**
+	* Restart the sequence.
+	* @param seed           Value used to restart.
+	*/
+	virtual void Reset(const int seed);
+
+	/**
+	* Return the next value in [0,1] from the sequence.
+	*/
+	virtual double GetValue(void);
+};
+
+
+
+//------------------------------------------------------------------------------
+//
+// RRandom
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+void RRandom::Reset(const int)
+{
+}
+
+
+//------------------------------------------------------------------------------
+RRandom* RRandom::Create(Type type,const int seed)
+{
+	switch(type)
+	{
+		case Good:
+			return(new RRandomGood(seed));
+			break;
+		case Better:
+			return(new RRandomBetter(seed));
+			break;
+		case Best:
+			return(new RRandomBest(seed));
+			break;
+	}
+	return(0);
+}
+
+
+//------------------------------------------------------------------------------
+RRandom::~RRandom(void)
+{
+}
+
+
+
+//------------------------------------------------------------------------------
+//
 // RRandomGood
 //
 //------------------------------------------------------------------------------
@@ -73,7 +260,10 @@ static const int MASK=123456987;
 //------------------------------------------------------------------------------
 void RRandomGood::Reset(const int seed)
 {
-	Seed=(Seed==(MASK?1:MASK^seed)); // XOR prevents seed == 0
+	if(!seed)
+		Seed=1;
+	else
+		Seed=seed;
 	Value=Seed;                      // Value starts as Seed
 }
 
@@ -110,7 +300,10 @@ int RRandomBetter::Calc(void)
 //------------------------------------------------------------------------------
 void RRandomBetter::Reset(const int seed)
 {
-	Seed=(Seed==MASK?1:MASK^seed); // XOR prevents seed == 0
+	if(!seed)
+		Seed=1;
+	else
+		Seed=seed;
 	Value=Seed;                    // Value starts as Seed
 
 	// 1st, a few warmups
@@ -170,7 +363,10 @@ int RRandomBest::Calc2(void)
 //------------------------------------------------------------------------------
 void RRandomBest::Reset(const int seed)
 {
-	Seed=(Seed==MASK?1:MASK^seed);  // XOR prevents seed == 0
+	if(!seed)
+		Seed=1;
+	else
+		Seed=seed;
 	Value=Seed;                   // Value starts as Seed
 	Aux2=Seed;
 

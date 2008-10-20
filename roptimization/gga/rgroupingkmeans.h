@@ -6,7 +6,7 @@
 
 	k-Means Algorithm - Header
 
-	Copyright 2003-2007 by the Université Libre de Bruxelles.
+	Copyright 2003-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -225,7 +225,7 @@ public:
 
 	/**
 	* Compute the similarity between two objects. It is suppose that if the
-	* similarity is between -1 and 1 (same objects).
+	* similarity is between 0 and 1 (same objects).
 	* @param obj1            First object.
 	* @param obj2            Second object.
 	*/
@@ -235,8 +235,8 @@ public:
 	* Compute the fitness of the given clustering (the higher is the fitness,
 	* the best is the clustering.
 	*
-	* By default, it computes the fraction between the average intra-similarity
-	* with the maximal similarity between the centroids.
+	* By default, it computes the ratio between the average intra-similarity
+	* and the similarity between the centroids and the meta-centroid.
 	*/
 	virtual double Fitness(void);
 

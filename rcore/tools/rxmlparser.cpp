@@ -447,8 +447,6 @@ void RXMLParser::LoadNextTag(void)
 		Next();
 	SkipSpaces();
 
-
-
 	// Verify if it has sub-tags
 	if(CurTagClosing)
 	{

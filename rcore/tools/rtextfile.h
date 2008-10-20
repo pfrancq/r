@@ -242,6 +242,11 @@ protected:
 	*/
 	RChar Cur;
 
+	/**
+	 * Temporary buffer of characters.
+	 */
+	RChar TmpBuffer[256];
+
 public:
 
 	/**
@@ -287,7 +292,7 @@ public:
 	*/
 	RString GetUntilEnd(void);
 
-protected:
+private:
 
 	/**
 	* Go to the beginning of the file.
@@ -298,11 +303,6 @@ protected:
 	 * Must the buffer be filled again.
 	 */
 	inline void FillBuffer(void);
-
-	/**
-	* Goes to the next character.
-	*/
-	void Next(void);
 
 	/**
 	* Read a series of 10 characters of variable size and store the result in
@@ -326,6 +326,13 @@ protected:
 	* comment and skip the end characters if MultiLineComment.
 	*/
 	bool EndComment(void);
+
+protected:
+
+	/**
+	* Goes to the next character.
+	*/
+	void Next(void);
 
 public:
 

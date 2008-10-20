@@ -67,7 +67,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	FreqMutation=AgeNextMutation=5;
 	FreqBestMutation=AgeNextBestMutation=10;
 	BestInPop=BestChromosome=0;
-	Random = new RRandomGood(0);
+	Random = RRandom::Create(RRandom::Good,0);
 	Random->Reset(12345);
 	if(Debug)
 		Debug->EndFunc("RInst","RInst");

@@ -488,7 +488,7 @@ template<class C,class S> template<class B>
 template<class C,class S> template<class B>
 	inline void R::BasicString<C,S>::SetLen(size_t len)
 {
-	if(len<=Data->Len)
+	if(len<=Data->MaxLen)
 	{
 		Data->Len=len;
 	}

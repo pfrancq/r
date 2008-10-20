@@ -382,23 +382,23 @@ template<class cGroup,class cObj,class cGroups>
 
 	double J(0.0);
 	double max(-2.0),tmp;
-	size_t i;
 	RCursor<Centroid> Grp(Protos);
 	RCursor<Centroid> Grp2(Protos);
-	for(Grp.Start(),i=0;!Grp.End();Grp.Next(),i++)
+	for(Grp.Start();!Grp.End();Grp.Next())
 	{
 		J+=Grp()->AvgSim;
-		if(i<Protos.GetNb()-1)
+		double avg(0.0);
+		for(Grp2.Start();!Grp2.End();Grp2.Next())
 		{
-			for(Grp2.GoTo(i+1);!Grp2.End();Grp2.Next())
-			{
-				tmp=Similarity(Grp()->Obj,Grp2()->Obj);
-				if(tmp>max)
-					max=tmp;
-			}
+			if(Grp()==Grp2()) continue;
+			tmp=Similarity(Grp()->Obj,Grp2()->Obj);
+			avg+=tmp;
 		}
+		avg/=static_cast<double>(Protos.GetNb()-1);
+		if(avg>max)
+			max=avg;
 	}
-	return(J/(Protos.GetNb()*(2+max)));
+	return(J/(Protos.GetNb()*max));
 }
 
 
@@ -406,8 +406,8 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroupingKMeans<cGroup,cObj,cGroups>::DokMeans(size_t max)
 {
-	double minerror=0.0;
-	double error;
+	double minerror(0.0);
+	double error(1.0);
 	for(NbIterations=0,error=1.0;((!max)||(max&&(NbIterations<max)))&&(error>minerror);NbIterations++)
 	{
 		ReAllocate();

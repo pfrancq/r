@@ -112,14 +112,11 @@ void RPrg::Load(void)
 		// Skip Spaces and count tabs
 		size_t tabs=Prg.SkipCountSpaces('\t');
 
-		// Verify the correct tabs
-		if(tabs==Blocks()->GetTabs()-1)
-		{
-			// Leaving current block
+		// Verify the correct tabs and eventually pop the blocks
+		if(tabs>Blocks()->GetTabs())
+			throw RPrgException(this,"Wrong number of tabs");
+		while(tabs<Blocks()->GetTabs())
 			Blocks.Pop();
-		}
-		else if(tabs!=Blocks()->GetTabs())
-			RPrgException(this,"Wrong number of tabs");
 
 		// Read next instruction (in Inst)
 		Line=Prg.GetLineNb();
@@ -224,12 +221,6 @@ void RPrg::Load(void)
 			default:
 				throw RPrgException(this,"Invalid '"+RString(Car)+"' character after '"+Inst+"'");
 		}
-
-		// Reading end of line
-/*		RString End=Prg.GetLine().Trim();
-		cout<<"*"<<End<<"*"<<endl;
-		if(!End.IsEmpty())
-			throw RPrgException(this,"Only spaces allowed at the end of the line");*/
 	}
 	HasLoad=true;
 }
@@ -238,7 +229,7 @@ void RPrg::Load(void)
 //-----------------------------------------------------------------------------
 RString RPrg::WhatTreated(void) const
 {
-	return(FileName+"("+RString::Number(Line)+")");
+	return(FileName+"("+RString::Number(Prg.GetLineNb())+")");
 }
 
 

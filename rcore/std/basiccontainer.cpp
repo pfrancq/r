@@ -57,16 +57,16 @@ BasicContainer::BasicContainer(size_t m,size_t i)
 {
 	if(MaxPtr)
 	{
-		Tab = new void*[MaxPtr];
-		memset(Tab,0,MaxPtr*sizeof(void*));
 		if(!IncPtr) IncPtr=MaxPtr/2;
 		if(!IncPtr) IncPtr=10;
+		Tab = new void*[MaxPtr];
+		memset(Tab,0x0,MaxPtr*sizeof(void*));
 	}
 	else
 	{
 		MaxPtr=10;
 		Tab = new void*[MaxPtr];
-		memset(Tab,0,MaxPtr*sizeof(void*));
+		memset(Tab,0x0,MaxPtr*sizeof(void*));
 		if(!IncPtr) IncPtr=10;
 	}
 }
@@ -88,7 +88,7 @@ void BasicContainer::VerifyTab(size_t max)
 		memcpy(ptr,Tab,OldSize*sizeof(void*));
 		delete[] Tab;
 		Tab=ptr;
-		memset(&Tab[OldSize],0,(MaxPtr-OldSize)*sizeof(void*));
+		memset(&Tab[OldSize],0x0,(MaxPtr-OldSize)*sizeof(void*));
 	}
 }
 
@@ -105,7 +105,7 @@ void BasicContainer::Clear(bool bAlloc,size_t m,size_t i)
 			if(*ptr)
 				Delete(*ptr);
 		}
-		memset(Tab,0,MaxPtr*sizeof(void*));
+		memset(Tab,0x0,MaxPtr*sizeof(void*));
 	}
 	LastPtr=NbPtr=0;
 	if(i)

@@ -34,6 +34,7 @@
 // include files for R Project
 #include <rprginstfor.h>
 #include <rprgvarstring.h>
+#include <rprgvarliteral.h>
 #include <rprg.h>
 #include <rcursor.h>
 using namespace std;
@@ -56,11 +57,41 @@ RPrgInstFor::RPrgInstFor(RPrg* prg,size_t t)
 
 	// Read next word -> must be "in"
 	RString Cmd(prg->Prg.GetWord());
-	if(Cmd!="in")
-		throw RPrgException(prg,"'"+Cmd+"' is not valid for a 'for' instruction");
+	if(Cmd=="in")
+	{
+		// The variable takes values from a list given as parameter
+		prg->AnalyseParam(Values); // Read Values
+	}
+	else if(Cmd=="from")
+	{
+		bool ok;
 
-	// Read Values
-	prg->AnalyseParam(Values);
+		// The variable takes a list of numbers given by a range and a step
+		RString Next(prg->Prg.GetWord());
+		long start=Next.ToLong(ok);
+		if(!ok)
+			throw RPrgException(prg,"'"+Next+"' is not valid parameter of 'from'");
+		Next=prg->Prg.GetWord();
+		if(Next!="to")
+			throw RPrgException(prg,"'to' is excepted and not '"+Next+"'");
+		Next=prg->Prg.GetWord();
+		long end=Next.ToLong(ok);
+		if(!ok)
+			throw RPrgException(prg,"'"+Next+"' is not valid parameter of 'to'");
+		Next=prg->Prg.GetWord();
+		if(Next!="step")
+			throw RPrgException(prg,"'step' is excepted and not '"+Next+"'");
+		Next=prg->Prg.GetWord();
+		long step=Next.ToLong(ok);
+		if(!ok)
+			throw RPrgException(prg,"'"+Next+"' is not valid parameter of 'step'");
+		for(long i=start;i<=end;i+=step)
+		{
+			Values.InsertPtr(new RPrgVarLiteral(RString::Number(i)));
+		}
+	}
+	else
+		throw RPrgException(prg,"'"+Cmd+"' is not valid for a 'for' instruction");
 }
 
 

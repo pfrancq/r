@@ -522,18 +522,32 @@ RString RTextFile::GetWord(void)
 {
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
-	RString res;
+	RString res(RString::Null);
 	SkipSpaces();
+	RChar* ptr=TmpBuffer;
+	size_t i(0);
+
 	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment()))
 	{
-		Next();
-		res+=Cur;
+		(*(ptr++))=GetChar();
+		i++;
+		if(i==255)
+		{
+			(*ptr)=0;
+			res+=TmpBuffer;
+			i=0;
+		}
 	}
 
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))
 		SkipSpaces();
 
+	if(i)
+	{
+		(*ptr)=0;
+		res+=TmpBuffer;
+	}
 	return(res);
 }
 
@@ -543,18 +557,32 @@ RString RTextFile::GetToken(const RString& endingchar)
 {
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
-	RString res;
+	RString res(RString::Null);
 	SkipSpaces();
+	RChar* ptr=TmpBuffer;
+	size_t i(0);
 
 	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(endingchar.Find(GetNextChar())==-1))
 	{
-		res+=GetChar();
+		(*(ptr++))=GetChar();
+		i++;
+		if(i==255)
+		{
+			(*ptr)=0;
+			res+=TmpBuffer;
+			i=0;
+		}
 	}
 
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))
 		SkipSpaces();
 
+	if(i)
+	{
+		(*ptr)=0;
+		res+=TmpBuffer;
+	}
 	return(res);
 }
 
@@ -564,19 +592,32 @@ RString RTextFile::GetTokenString(const RString& endingstr)
 {
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
-	RString res;
+	RString res(RString::Null);
 	SkipSpaces();
+	RChar* ptr=TmpBuffer;
+	size_t i(0);
 
 	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(!CurString(endingstr)))
 	{
-		Next();
-		res+=Cur;
+		(*(ptr++))=GetChar();
+		i++;
+		if(i==255)
+		{
+			(*ptr)=0;
+			res+=TmpBuffer;
+			i=0;
+		}
 	}
 
 	// Skip spaces if necessary
 	if((!End())&&(ParseSpace==SkipAllSpaces))
 		SkipSpaces();
 
+	if(i)
+	{
+		(*ptr)=0;
+		res+=TmpBuffer;
+	}
 	return(res);
 }
 
@@ -588,14 +629,22 @@ RString RTextFile::GetLine(bool SkipEmpty)
 		throw(RIOException(this,"File Mode is not Read"));
 	if(End())
 		return(RString::Null);
-	RString res;
+	RString res(RString::Null);
+	RChar* ptr=TmpBuffer;
+	size_t i(0);
 
 	while((!End())&&(!Eol(*NextRead)))
 	{
 		if(BeginComment())
 			SkipComments();
-		Next();
-		res+=Cur;
+		(*(ptr++))=GetChar();
+		i++;
+		if(i==255)
+		{
+			(*ptr)=0;
+			res+=TmpBuffer;
+			i=0;
+		}
 	}
 	LastLine=Line;
 
@@ -606,6 +655,12 @@ RString RTextFile::GetLine(bool SkipEmpty)
 		// Skip spaces if necessary
 		if((!End())&&(ParseSpace==SkipAllSpaces))
 			SkipSpaces();
+	}
+
+	if(i)
+	{
+		(*ptr)=0;
+		res+=TmpBuffer;
 	}
 
 	// If the line is empty or contains only spaces -> read next line
