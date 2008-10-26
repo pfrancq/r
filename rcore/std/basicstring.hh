@@ -32,6 +32,17 @@
 
 //-----------------------------------------------------------------------------
 //
+// Static Data
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+template<class C,class S> class R::BasicString<C,S>::CharBuffer* R::BasicString<C,S>::DataNull=0;
+
+
+
+//-----------------------------------------------------------------------------
+//
 // BasicCharBuffer
 //
 //-----------------------------------------------------------------------------
@@ -80,6 +91,57 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
+	R::BasicString<C,S>::BasicString(const C* src)
+{
+	if(src)
+	{
+		size_t len=std::strlen(src);
+		C* ptr=new C[len+1];
+		memcpy(ptr,src,sizeof(C)*len);
+		ptr[len]=0;
+		Data=new CharBuffer(ptr,len,len);
+	}
+	else
+		Data=GetDataNull();
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	R::BasicString<C,S>::BasicString(const C* src,size_t len)
+{
+	if(src)
+	{
+		size_t maxlen;
+		maxlen=len;
+		C* ptr=new C[maxlen+1];
+		memcpy(ptr,src,sizeof(C)*len);
+		ptr[len]=0;
+		Data=new CharBuffer(ptr,len,maxlen);
+	}
+	else
+		Data=GetDataNull();
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	class R::BasicString<C,S>::CharBuffer* R::BasicString<C,S>::GetDataNull(void)
+{
+	if(!S::DataNull)
+	{
+		C* ptr2=new C[1];
+		(*ptr2)=0;
+		R::BasicString<C,S>::DataNull=new CharBuffer(ptr2,0,0);
+	}
+	else
+		RIncRef<CharBuffer>(R::BasicString<C,S>::DataNull);
+	return(static_cast<class R::BasicString<C,S>::CharBuffer*>(DataNull));
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
 	void R::BasicString<C,S>::Copy(void)
 {
 	if(Data&&(Data->GetRefs()!=1)&&(Data->Len))
@@ -95,7 +157,155 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	inline S R::BasicString<C,S>::Trim(void) const
+	void R::BasicString<C,S>::Copy(const C* text,size_t nb)
+{
+	RDecRef<CharBuffer>(Data);
+	if(text)
+	{
+		size_t len=std::strlen(text);
+		if(nb>len)
+			nb=len;
+		C* ptr=new C[nb+1];
+		memcpy(ptr,text,sizeof(C)*nb);
+		ptr[nb]=0;
+		Data=new CharBuffer(ptr,nb,nb);
+	}
+	else
+		Data=GetDataNull();
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	R::BasicString<C,S>& R::BasicString<C,S>::operator=(const R::BasicString<C,S>& src)
+{
+	RIncRef(src.Data);
+	RDecRef<CharBuffer>(Data);
+	Data=src.Data;
+	return(*this);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	void R::BasicString<C,S>::SetLen(size_t len)
+{
+	if(len<=Data->MaxLen)
+	{
+		Data->Len=len;
+	}
+	else
+	{
+		if(Data==S::DataNull)
+		{
+			C* ptr=new C[len+1];
+			RDecRef<CharBuffer>(Data);
+			Data=new CharBuffer(ptr,len,len);
+		}
+		else
+			Data->Verify(len+1);
+	}
+	if(Data!=S::DataNull)
+		Data->Text[len]=0;
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	void R::BasicString<C,S>::SetLen(size_t len,const S& str)
+{
+	size_t oldsize=Data->Len;
+	SetLen(len);
+	Data->Len=len;
+	if(oldsize<len)
+	{
+		C* ptr=&Data->Text[oldsize];
+		C* ptr2=str.Data->Text;
+		for(;oldsize<len;oldsize++,ptr++,ptr2++)
+		{
+			if(!(*ptr2))
+				ptr2=str.Data->Text;
+			if((*ptr2)!=0)
+				(*ptr)=(*ptr2);
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	void R::BasicString<C,S>::Clear(void)
+{
+	if(Data!=DataNull)
+	{
+		RDecRef<CharBuffer>(Data);
+		RIncRef<CharBuffer>(DataNull);
+		Data=DataNull;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	S R::BasicString<C,S>::ToUpper(void) const
+{
+	size_t len = Data->Len;
+	C* ptr = Data->Text;
+
+	while(len)
+	{
+		if((*ptr)!=std::toupper(*ptr))
+		{
+			S str(*static_cast<const S*>(this));
+			str.BasicString<C,S>::Copy();
+			ptr = str.Data->Text+(ptr-Data->Text);
+	    	while(len)
+			{
+				(*ptr) = std::toupper(*ptr);
+				len--;
+				ptr++;
+			}
+			return(str);
+		}
+		len--;
+		ptr++;
+	}
+	return(*static_cast<const S*>(this));
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	S R::BasicString<C,S>::ToLower(void) const
+{
+	size_t len = Data->Len;
+	C* ptr = Data->Text;
+
+	while(len)
+	{
+		if((*ptr)!=std::tolower(*ptr))
+		{
+			S str(*static_cast<const S*>(this));
+			str.BasicString<C,S>::Copy();
+			ptr = str.Data->Text+(ptr-Data->Text);
+	    	while(len)
+			{
+				(*ptr) = std::tolower(*ptr);
+				len--;
+				ptr++;
+			}
+			return(str);
+		}
+		len--;
+		ptr++;
+	}
+	return(*static_cast<const S*>(this));
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	S R::BasicString<C,S>::Trim(void) const
 {
 	S res;
 	size_t len = Data->Len;
@@ -105,7 +315,7 @@ template<class C,class S>
 	if(!len)
 		return(res);
 	ptr=&Data->Text[len-1];
-	while(len&&isspace(*ptr))
+	while(len&&std::isspace(*ptr))
 	{
 		len--;
 		ptr--;
@@ -115,7 +325,7 @@ template<class C,class S>
 	if(!len)
 		return(res);
 	ptr=Data->Text;
-	while(len&&isspace(*ptr))
+	while(len&&std::isspace(*ptr))
 	{
 		len--;
 		ptr++;
@@ -134,65 +344,67 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	inline S R::BasicString<C,S>::ToUpper(void) const
+	bool R::BasicString<C,S>::ContainOnlySpaces(void) const
 {
-	size_t len = Data->Len;
-	C* ptr = Data->Text;
-
-	while(len)
+	if(!Data->Len)
+		return(false);
+	C* ptr=Data->Text;
+	while((*ptr)!=0)
 	{
-		if((*ptr)!=toupper(*ptr))
-		{
-			S str(*static_cast<const S*>(this));
-			str.Copy();
-			ptr = str.Data->Text+(ptr-Data->Text);
-	    	while(len)
-			{
-				(*ptr) = toupper(*ptr);
-				len--;
-				ptr++;
-			}
-			return(str);
-		}
-		len--;
-		ptr++;
+		if(!std::isspace(*(ptr++)))
+			return(false);
 	}
-	return(*static_cast<const S*>(this));
+	return(true);
 }
 
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	inline S R::BasicString<C,S>::ToLower(void) const
+	S& R::BasicString<C,S>::operator+=(const S& src)
 {
-	size_t len = Data->Len;
-	C* ptr = Data->Text;
-
-	while(len)
+	if(src.Data==DataNull)
+		return(static_cast<S&>(*this));
+	if(Data==DataNull)
 	{
-		if((*ptr)!=tolower(*ptr))
-		{
-			S str(*static_cast<const S*>(this));
-			str.Copy();
-			ptr = str.Data->Text+(ptr-Data->Text);
-	    	while(len)
-			{
-				(*ptr) = tolower(*ptr);
-				len--;
-				ptr++;
-			}
-			return(str);
-		}
-		len--;
-		ptr++;
+		(*this)=src;
 	}
-	return(*static_cast<const S*>(this));
+	else
+	{
+		Copy();
+		Data->Verify(src.Data->Len+Data->Len+1);
+		memcpy(&Data->Text[Data->Len],src.Data->Text,(src.Data->Len+1)*sizeof(C));
+		Data->Len+=src.Data->Len;
+		static_cast<CharBuffer*>(Data)->InvalidLatin1();
+	}
+	return(static_cast<S&>(*this));
 }
 
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	inline int R::BasicString<C,S>::Find(const C car,int pos,bool CaseSensitive) const
+	S& R::BasicString<C,S>::operator+=(const C* src)
+{
+	RReturnValIfFail(src,static_cast<S&>(*this));
+	if(Data==DataNull)
+	{
+		(*this)=src;
+	}
+	else
+	{
+		size_t len=std::strlen(src);
+		Copy();
+		Data->Verify(len+Data->Len+1);
+		memcpy(&Data->Text[Data->Len],src,sizeof(C)*len+1);
+		Data->Len+=len;
+		static_cast<CharBuffer*>(Data)->InvalidLatin1();
+	}
+	return(static_cast<S&>(*this));
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	int R::BasicString<C,S>::Find(const C car,int pos,bool CaseSensitive) const
 {
 	C* start;
 	bool left;
@@ -201,7 +413,7 @@ template<class C,class S>
 
 	// Initialize the search
 	if(!CaseSensitive)
-		search=toupper(car);
+		search=std::toupper(car);
 	else
 		search=car;
 	if(pos<0)
@@ -228,7 +440,7 @@ template<class C,class S>
 	// Search for the maximal number of character
 	for(max++;--max;)
 	{
-		if(((CaseSensitive)&&((*start)==search)) || ((!CaseSensitive)&&(toupper(*start)==search)))
+		if(((CaseSensitive)&&((*start)==search)) || ((!CaseSensitive)&&(std::toupper(*start)==search)))
 			return(pos);
 		if(left)
 		{
@@ -247,7 +459,7 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	inline int R::BasicString<C,S>::FindStr(const S& str,int pos,bool CaseSensitive) const
+	int R::BasicString<C,S>::FindStr(const S& str,int pos,bool CaseSensitive) const
 {
 	C* start;
 	const C* toFind;
@@ -295,7 +507,7 @@ template<class C,class S>
 	// Search for the maximal number of character
 	for(max++;--max;)
 	{
-		if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(toupper(*start)==(*toFind))))
+		if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(std::toupper(*start)==(*toFind))))
 		{
 			if(max>=search.GetLen())
 			{
@@ -304,7 +516,7 @@ template<class C,class S>
 				bool found=true;
 				for(maxlen++;--maxlen,found;)
 				{
-					if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(toupper(*start)==(*toFind))))
+					if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(std::toupper(*start)==(*toFind))))
 					{
 						if(!(maxlen-1))
 						{
@@ -344,7 +556,7 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	inline void R::BasicString<C,S>::Replace(const C search,const C rep,bool first,int pos)
+	void R::BasicString<C,S>::Replace(const C search,const C rep,bool first,int pos)
 {
 	C* start;
 	bool left;
@@ -402,8 +614,8 @@ template<class C,class S>
 
 
 //-----------------------------------------------------------------------------
-template<class C,class S> template<class B>
-	inline void R::BasicString<C,S>::ReplaceStr(const S& search,const S& rep,bool first,int pos)
+template<class C,class S>
+	void R::BasicString<C,S>::ReplaceStr(const S& search,const S& rep,bool first,int pos)
 {
 	if(!GetLen())
 		return;
@@ -418,9 +630,9 @@ template<class C,class S> template<class B>
 		{
 			// Find one -> replace
 			Copy(); // Make a deep copy if necessary
-			S tmp(Mid<B>(0,pos));
+			S tmp(Mid(0,pos));
 			tmp+=rep;
-			tmp+=Mid<B>(pos+skip);
+			tmp+=Mid(pos+skip);
 			(*static_cast<S*>(this))=tmp;
 
 			// If first -> stop
@@ -440,9 +652,9 @@ template<class C,class S> template<class B>
 		{
 			// Find one -> replace
 			Copy(); // Make a deep copy if necessary
-			S tmp(Mid<B>(0,pos));
+			S tmp(Mid(0,pos));
 			tmp+=rep;
-			tmp+=Mid<B>(pos+skip);
+			tmp+=Mid(pos+skip);
 			(*static_cast<S*>(this))=tmp;
 
 			// If first -> stop
@@ -458,16 +670,44 @@ template<class C,class S> template<class B>
 
 
 //-----------------------------------------------------------------------------
-template<class C,class S> template<class B>
-	inline S R::BasicString<C,S>::Mid(size_t idx,int len) const
+template<class C,class S>
+	const C& R::BasicString<C,S>::operator[](size_t idx) const
+{
+	if(idx>=Data->Len)
+	#ifdef __GNUC__
+		throw std::range_error(__PRETTY_FUNCTION__);
+	#else
+		throw std::range_error("BasicString::operator[] const : index outside string");
+	#endif
+	return(Data->Text[idx]);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	C& R::BasicString<C,S>::operator[](size_t idx)
+{
+	if(idx>=Data->Len)
+	#ifdef __GNUC__
+		throw std::range_error(__PRETTY_FUNCTION__);
+	#else
+		throw std::range_error("BasicString::operator[] : index outside string");
+	#endif
+	return(Data->Text[idx]);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	S R::BasicString<C,S>::Mid(size_t idx,int len) const
 {
 	S res;
 	size_t Len;
 
-	// If the index is greather than the length -> return a null string.
+	// If the index is greater than the length -> return a null string.
 	if(Data->Len<=idx) return("");
 
-	// Computed the number of caracters to copied
+	// Computed the number of characters to copied
 	if(len<0)
 		Len=Data->Len-idx;
 	else
@@ -479,76 +719,45 @@ template<class C,class S> template<class B>
 	C* ptr=new C[Len+1];
 	memcpy(ptr,&Data->Text[idx],sizeof(C)*Len);
 	ptr[Len]=0;
-	res.Data=new B(ptr,Len,Len);
+	res.Data=new CharBuffer(ptr,Len,Len);
 	return(res);
 }
 
 
 //-----------------------------------------------------------------------------
-template<class C,class S> template<class B>
-	inline void R::BasicString<C,S>::SetLen(size_t len)
+/*template<class C,class S>
+	inline R::BasicString<C,S>::Ref R::BasicString<C,S>::MidRef(size_t idx,int len) const
 {
-	if(len<=Data->MaxLen)
-	{
-		Data->Len=len;
-	}
+	Ref res;
+	size_t Len;
+
+	// If the index is greater than the length -> return a null string.
+	if(Data->Len<=idx) return(res);
+
+	// Computed the number of characters to copied
+	if(len<0)
+		Len=Data->Len-idx;
 	else
-	{
-		if(Data==S::DataNull)
-		{
-			C* ptr=new C[len+1];
-			RDecRef<CharBuffer>(Data);
-			Data=new B(ptr,len,len);
-		}
-		else
-			Data->Verify(len+1);
-	}
-	if(Data!=S::DataNull)
-		Data->Text[len]=0;
-}
+		Len=len;
+	if(Data->Len-idx+1<Len)
+		Len=Data->Len-idx+1;*/
 
+	// Verify the the string can hold the number to copied
+/*	C* ptr=new C[Len+1];
+	memcpy(ptr,&Data->Text[idx],sizeof(C)*Len);
+	ptr[Len]=0;
+	res.Data=new B(ptr,Len,Len);*/
+/*	Ref.Pos=idx;
+	Ref.Len=Len;
+	Ref.Str=this;
+	return(res);
+}*/
 
-//-----------------------------------------------------------------------------
-template<class C,class S> template<class B>
-	inline void R::BasicString<C,S>::SetLen(size_t len,const S& str)
-{
-	size_t oldsize=Data->Len;
-	SetLen<B>(len);
-	Data->Len=len;
-	if(oldsize<len)
-	{
-		C* ptr=&Data->Text[oldsize];
-		C* ptr2=str.Data->Text;
-		for(;oldsize<len;oldsize++,ptr++,ptr2++)
-		{
-			if(!(*ptr2))
-				ptr2=str.Data->Text;
-			if((*ptr2)!=0)
-				(*ptr)=(*ptr2);
-		}
-	}
-}
 
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	inline bool R::BasicString<C,S>::ContainOnlySpaces(void) const
-{
-	if(!Data->Len)
-		return(false);
-	C* ptr=Data->Text;
-	while((*ptr)!=0)
-	{
-		if(!isspace(*(ptr++)))
-			return(false);
-	}
-	return(true);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class C,class S>
-	inline void R::BasicString<C,S>::Split(R::RContainer<S,true,false>& elements,const C car) const
+	void R::BasicString<C,S>::Split(R::RContainer<S,true,false>& elements,const C car) const
 {
 	S element;
 	size_t len;
@@ -560,13 +769,53 @@ template<class C,class S>
 		if((*ptr)==car)
 		{
 			// Insert element
-			if(!element.IsEmpty())
-				elements.InsertPtr(new S(element));
+			elements.InsertPtr(new S(element));
 			element="";
 		}
 		else
 			element+=(*ptr);
 	}
-	if(!element.IsEmpty())
-		elements.InsertPtr(new S(element));
+	elements.InsertPtr(new S(element));
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	R::BasicString<C,S>::~BasicString(void)
+{
+	RDecRef<CharBuffer>(Data);
+}
+
+
+
+//-----------------------------------------------------------------------------
+//
+// Dummy part
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	void R::BasicString<C,S>::Dummy(void)
+{
+	S Str;
+	R::RContainer<S,true,false> Cont(5);
+	Str.ToLower();
+	Str.ToUpper();
+	Str.Trim();
+	Str.Find('c');
+	Str.FindStr("c");
+	Str.Replace('s','r');
+	Str.ReplaceStr("search","rep");
+	Str.Mid(0);
+	Str.SetLen(0);
+	Str.SetLen(0,"str");
+	Str.ContainOnlySpaces();
+	Str.Split(Cont,';');
+	Str.Clear();
+	Str.Copy((C*)"coucou",2);
+	Str.Copy(S("coucou"),2);
+	static_cast<const S&>(Str)[2];
+	Str[2]=C('d');
+	Str+=(C*)"e";
 }

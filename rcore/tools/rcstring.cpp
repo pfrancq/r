@@ -49,7 +49,6 @@ using namespace R;
 // Static data
 //
 //-----------------------------------------------------------------------------
-BasicString<char,RCString>::CharBuffer* RCString::DataNull=0;
 const RCString RCString::Null;
 
 
@@ -70,36 +69,15 @@ RCString::RCString(void)
 
 //-----------------------------------------------------------------------------
 RCString::RCString(const char* src)
-	: BasicString<char,RCString>()
+	: BasicString<char,RCString>(src)
 {
-	if(src)
-	{
-		size_t len,maxlen;
-		len=maxlen=strlen(src);
-		char* ptr=new char[maxlen+1];
-		memcpy(ptr,src,sizeof(char)*(len+1));
-		Data=new BasicString<char,RCString>::CharBuffer(ptr,len,maxlen);
-	}
-	else
-		Data=GetDataNull();
 }
 
 
 //-----------------------------------------------------------------------------
 RCString::RCString(const char* src,size_t len)
-	: BasicString<char,RCString>()
+	: BasicString<char,RCString>(src,len)
 {
-	if(src)
-	{
-		size_t maxlen;
-		maxlen=len;
-		char* ptr=new char[maxlen+1];
-		memcpy(ptr,src,sizeof(char)*len);
-		ptr[len]=0;
-		Data=new BasicString<char,RCString>::CharBuffer(ptr,len,maxlen);
-	}
-	else
-		Data=GetDataNull();
 }
 
 
@@ -147,33 +125,6 @@ RCString::RCString(const RCString& src)
 
 
 //-----------------------------------------------------------------------------
-BasicString<char,RCString>::CharBuffer* RCString::GetDataNull(void)
-{
-	if(!RCString::DataNull)
-	{
-		char* ptr2=new char[1];
-		(*ptr2)=0;
-		RCString::DataNull=new BasicString<char,RCString>::CharBuffer(ptr2,0,0);
-		RCString* ptr=const_cast<RCString*>(&RCString::Null);
-		ptr->Data = RCString::DataNull;
-	}
-	else
-		RIncRef<BasicString<char,RCString>::CharBuffer>(RCString::DataNull);
-	return(RCString::DataNull);
-}
-
-
-//-----------------------------------------------------------------------------
-RCString& RCString::operator=(const RCString& src)
-{
-	RIncRef(src.Data);
-	RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
-	Data=src.Data;
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
 RCString& RCString::operator=(const char* src)
 {
 	size_t len,maxlen;
@@ -197,131 +148,6 @@ RCString& RCString::operator=(const std::string& src)
 
 
 //-----------------------------------------------------------------------------
-void RCString::Clear(void)
-{
-	if(Data!=DataNull)
-	{
-		RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
-		RIncRef<BasicString<char,RCString>::CharBuffer>(DataNull);
-		Data=DataNull;
-	}
-}
-
-
-//-----------------------------------------------------------------------------
-void RCString::Copy(const char* src,size_t nb)
-{
-	RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
-	if(src)
-	{
-		size_t len=strlen(src);
-		if(nb<len)
-			nb=len;
-		char* ptr=new char[nb+1];
-		memcpy(ptr,src,sizeof(char)*len);
-		ptr[len]=0;
-		Data=new BasicString<char,RCString>::CharBuffer(ptr,len,nb);
-	}
-	else
-		Data=GetDataNull();
-}
-
-
-//-----------------------------------------------------------------------------
-void RCString::SetLen(size_t len)
-{
-	BasicString<char,RCString>::SetLen<CharBuffer>(len);
-}
-
-
-//-----------------------------------------------------------------------------
-void RCString::SetLen(size_t len,const RCString& str)
-{
-	BasicString<char,RCString>::SetLen<CharBuffer>(len,str);
-}
-
-
-//-----------------------------------------------------------------------------
-bool RCString::ContainOnlySpaces(void) const
-{
-	return(BasicString<char,RCString>::ContainOnlySpaces());
-}
-
-
-//-----------------------------------------------------------------------------
-const char& RCString::operator[](size_t idx) const
-{
-	if(idx>=Data->Len)
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("RCString::operator[] const : index outside string");
-	#endif
-	return(Data->Text[idx]);
-}
-
-
-//-----------------------------------------------------------------------------
-char& RCString::operator[](size_t idx)
-{
-	if(idx>=Data->Len)
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("RCString::operator[] : index outside string");
-	#endif
-	return(Data->Text[idx]);
-}
-
-
-//-----------------------------------------------------------------------------
-RCString RCString::Mid(size_t idx,int len) const
-{
-	return(BasicString<char,RCString>::Mid<CharBuffer>(idx,len));
-}
-
-
-//-----------------------------------------------------------------------------
-RCString& RCString::operator+=(const RCString& src)
-{
-	if(src.Data==DataNull)
-		return(*this);
-	if(Data==DataNull)
-	{
-		(*this)=src;
-	}
-	else
-	{
-		Copy();
-		Data->Verify(src.Data->Len+Data->Len+1);
-		memcpy(&Data->Text[Data->Len],src.Data->Text,(src.Data->Len+1)*sizeof(char));
-		Data->Len+=src.Data->Len;
-	}
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RCString& RCString::operator+=(const char* src)
-{
-	RReturnValIfFail(src,*this);
-	if(Data==DataNull)
-	{
-		(*this)=src;
-	}
-	else
-	{
-		size_t len=strlen(src);
-		Copy();
-		Data->Verify(len+Data->Len+1);
-		memcpy(&Data->Text[Data->Len],src,sizeof(char)*len+1);
-		Data->Len+=len;
-	}
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
 RCString& RCString::operator+=(const char src)
 {
 	if(src)
@@ -336,7 +162,7 @@ RCString& RCString::operator+=(const char src)
 		}
 		else
 		{
-			Copy();
+			BasicString<char,RCString>::Copy();
 			Data->Verify(Data->Len+1);
 			char* ptr=&Data->Text[Data->Len++];
 			(*(ptr++))=src;
@@ -409,64 +235,15 @@ size_t RCString::HashIndex(size_t idx) const
 }
 
 
-//-----------------------------------------------------------------------------
-RCString RCString::ToUpper(void) const
-{
-	return(BasicString<char,RCString>::ToUpper());
-}
-
 
 //-----------------------------------------------------------------------------
-RCString RCString::ToLower(void) const
-{
-	return(BasicString<char,RCString>::ToLower());
-}
-
+//
+// Dummy part
+//
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RCString RCString::Trim(void) const
+void RCString::Dummy(void)
 {
-	return(BasicString<char,RCString>::Trim());
-}
-
-
-//-----------------------------------------------------------------------------
-int RCString::Find(const char car,int pos,bool CaseSensitive) const
-{
-	return(BasicString<char,RCString>::Find(car,pos,CaseSensitive));
-}
-
-
-//-----------------------------------------------------------------------------
-int RCString::FindStr(const RCString& str,int pos,bool CaseSensitive) const
-{
-	return(BasicString<char,RCString>::FindStr(str,pos,CaseSensitive));
-}
-
-
-//-----------------------------------------------------------------------------
-void RCString::Replace(const char search,const char rep,bool first,int pos)
-{
-	BasicString<char,RCString>::Replace(search,rep,first,pos);
-}
-
-
-//-----------------------------------------------------------------------------
-void RCString::ReplaceStr(const RCString& search,const RCString& rep,bool first,int pos)
-{
-	BasicString<char,RCString>::ReplaceStr<CharBuffer>(search,rep,first,pos);
-}
-
-
-//-----------------------------------------------------------------------------
-void RCString::Split(RContainer<RCString,true,false>& elements,const char car) const
-{
-	BasicString<char,RCString>::Split(elements,car);
-}
-
-
-//-----------------------------------------------------------------------------
-RCString::~RCString(void)
-{
-	RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
+	BasicString<char,RCString>::Dummy();
 }

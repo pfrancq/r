@@ -65,16 +65,13 @@ namespace R{
 * @endcode
 * The strings str1 and str2 use (as long as none of them is modified) the same
 * copy of the characters string.
+* See the BasicString class to see information on the different methods
+* available.
 * @author Pascal Francq
 * @short Unicode String
 */
 class RString : public BasicString<RChar,RString>
 {
-	/**
-	* Pointer to the buffer representing the null string.
-	*/
-	static CharBuffer* DataNull;
-
 public:
 
 	/**
@@ -100,6 +97,14 @@ public:
 	RString(const RChar* src);
 
 	/**
+	* Construct a string by doing a deep copy of the first characters of a "C"
+	* string.
+	* @param src             C string used as reference.
+	* @param len             Length.
+	*/
+	RString(const RChar* src,size_t len);
+
+	/**
 	* Construct a string from a string.
 	* @param src             String used as reference.
 	*/
@@ -123,21 +128,7 @@ public:
 	*/
 	RString(const RString& src);
 
-private:
-
-	/**
-	* Return the pointer to the "null" buffer. If it is not created, create it.
-	* @return Pointer to the "null" buffer.
-	*/
-	static CharBuffer* GetDataNull(void);
-
 public:
-
-	/**
-	* Assignment operator using another string.
-	* @param src             Source string.
-	*/
-	RString& operator=(const RString& src);
 
 	/**
 	* Assignment operator using a "C string".
@@ -152,9 +143,11 @@ public:
 	RString& operator=(const std::string& src);
 
 	/**
-	* Clear the content of the string.
+	* Copy a certain number of characters in the string.
+	* @param text            Text to copy.
+	* @param nb              Number of characters to copy.
 	*/
-	void Clear(void);
+	inline void Copy(const RChar* text,size_t nb) {BasicString<RChar,RString>::Copy(text,nb);}
 
 	/**
 	* Copy a certain number of characters in the string.
@@ -162,41 +155,6 @@ public:
 	* @param nb              Number of characters to copy.
 	*/
 	void Copy(const char* text,size_t nb);
-
-	/**
-	* Copy a certain number of characters in the string.
-	* @param text            Text to copy.
-	* @param nb              Number of characters to copy.
-	*/
-	void Copy(const RChar* text,size_t nb);
-
-	/**
-	* Deep copy of the string if necessary, i.e. when the string points to an
-	* internal buffer referenced by other strings, make a copy of it.
-	*/
-	inline void Copy(void) {BasicString<RChar,RString>::Copy();};
-
-	/**
-	* Set the length of the string. If the length is greater than the current
-	* one, the internal buffer is updated. Any new space allocated contains
-	* arbitrary data.
-	* @param len             Length of the string.
-	*/
-	void SetLen(size_t len);
-
-	/**
-	* Set the length of the string. If the length is greater than the current
-	* one, the second string is used to fill the first string (eventually it is
-	* copid several times).
-	* @param len             Length of the string.
-	* @param str             String used to fill.
-	*/
-	void SetLen(size_t len,const RString& str);
-
-	/**
-	 * Look if the string contains only spaces.
-	 */
-	bool ContainOnlySpaces(void) const;
 
 	/**
 	* Transform the string into a "C String" in Latin1 encoding. The resulting
@@ -207,46 +165,22 @@ public:
 	const char* Latin1(void) const;
 
 	/**
-	* This function returns the character at a given position in the string.
-	* (Read only).
-	* @param idx             Position of the character.
-	* @returns RChar.
+	* Add another string.
+	* @param src             Source string.
 	*/
-	const RChar& operator[](size_t idx) const;
-
-	/**
-	* This function returns the character at a given position in the string.
-	* @param idx             Position of the character.
-	* @returns RChar.
-	*/
-	RChar& operator[](size_t idx);
-
-	/**
-	* Get a sub-string of a given string.
-	* @param idx             Index of the first character.
-	* @param len             Length of the sub-string. If the length is not
-	*                        specified, the end of the string is copied.
-	* @returns A RString containing the substring.
-	*/
-	RString Mid(size_t idx,int len=-1) const;
+	inline RString& operator+=(const RString& src) {return(BasicString<RChar,RString>::operator+=(src));}
 
 	/**
 	* Add another string.
 	* @param src             Source string.
 	*/
-	RString& operator+=(const RString& src);
+	inline RString& operator+=(const RChar* src) {return(BasicString<RChar,RString>::operator+=(src));}
 
 	/**
 	* Add a "C string" to the string.
 	* @param src             Source string.
 	*/
 	RString& operator+=(const char* src);
-
-	/**
-	* Add a string to the string.
-	* @param src             Source string.
-	*/
-	RString& operator+=(const RChar* src);
 
 	/**
 	* Add a character to the string.
@@ -443,74 +377,6 @@ private:
 public:
 
 	/**
-	* Get a uppercase version of the string.
-	* @return String.
-	*/
-	RString ToUpper(void) const;
-
-	/**
-	* Get a lowercase version of the string.
-	* @return String.
-	*/
-	RString ToLower(void) const;
-
-	/**
-	* This function return a string by stripping whitespace (or other
-	* characters) from the beginning and end of the string.
-	* @return String.
-	*/
-	RString Trim(void) const;
-
-	/**
-	* Find the position of a given character in the string.
-	* @param car             Character to find.
-	* @param pos             Position to start the search. Negative values
-	*                        start the search from the end.
-	* @param CaseSensitive   Is the search case sensitive.
-	* @return The position of the first occurrence or -1 if the character was not
-	*         found.
-	*/
-	int Find(const RChar car,int pos=0,bool CaseSensitive=true) const;
-
-	/**
-	* Find the position of a given string in the string.
-	* @param str             String to find.
-	* @param pos             Position to start the search. Negative values
-	*                        start the search from the end.
-	* @param CaseSensitive   Is the search case sensitive.
-	* @return The position of the first occurrence or -1 if the character was not
-	*         found.
-	*/
-	int FindStr(const RString& str,int pos=0,bool CaseSensitive=true) const;
-
-	/**
-	 * Replace a given character in the string.
-	 * @param search         Character to search.
-	 * @param rep            Character that will put in.
-	 * @param first          Must it stops after the first occurrence.
-	 * @param pos            Position to start. Negative values start the
-	 *                       search from the end.
-	 */
-	void Replace(const RChar search,const RChar rep,bool first=false,int pos=0);
-
-	/**
-	 * Replace a given sub-string in the string.
-	 * @param search         String to search.
-	 * @param rep            String that will put in.
-	 * @param first          Must it stops after the first occurrence.
-	 * @param pos            Position to start. Negative values start the
-	 *                       search from the end.
-	 */
-	void ReplaceStr(const RString& search,const RString& rep,bool first=false,int pos=0);
-
-	/**
-	* Split the string to find all the elements separated by a given character.
-	* @param elements        Container that will hold the results.
-	* @param car             Character used as separator.
-	*/
-	void Split(RContainer<RString,true,false>& elements,const RChar car) const;
-
-	/**
 	* Try to transform a string into an integer.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
@@ -561,10 +427,9 @@ public:
 	*/
 	bool ToBool(bool& valid,bool strict=false);
 
-	/**
-	* Destruct the string.
-	*/
-	~RString(void);
+private:
+
+	void Dummy(void);
 
 	// friend classes
 	friend class RCharCursor;

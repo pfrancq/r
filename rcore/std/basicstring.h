@@ -42,16 +42,30 @@ namespace R{
 
 
 //-----------------------------------------------------------------------------
-/*
-* This class implements a generic string.
+/**
+* This class implements a generic string. It is used to instantiate RString and
+* RCString. Its role is to centralize as much code as possible.
 * @author Pascal Francq
 * @short Generic String
 */
 template<class C,class S>
 	class BasicString
 {
+public:
+
+	class Ref
+	{
+	public:
+		size_t Pos;
+		size_t Len;
+		S* Str;
+	};
+
 protected:
 
+	/**
+	 * This class implement a string that can be shared between strings.
+	 */
 	class CharBuffer : public RSharedData
 	{
 	public:
@@ -69,22 +83,69 @@ protected:
 		~CharBuffer(void){delete[] Text; delete[] Latin1;}
 	};
 
-	/*
+	/**
+	* Pointer to the buffer representing the null string.
+	*/
+	static CharBuffer* DataNull;
+
+	/**
 	* Pointer to the buffer of the string.
 	*/
 	CharBuffer* Data;
 
-	/*
+	/**
 	* Construct a null string.
 	*/
 	BasicString(void);
 
-	/*
+	/**
 	* Copy constructor.
+	* @param str             Original string.
 	*/
 	BasicString(const BasicString& str);
 
+	/**
+	* Construct a string from an array.
+	* @param src             Array used as reference.
+	*/
+	BasicString(const C* src);
+
+	/**
+	* Construct a string by doing a deep copy of the first characters of a "C"
+	* string.
+	* @param src             C string used as reference.
+	* @param len             Length.
+	*/
+	BasicString(const C* src,size_t len);
+
+protected:
+
+	/**
+	* Return the pointer to the "null" buffer. If it is not created, create it.
+	* @return Pointer to the "null" buffer.
+	*/
+	static CharBuffer* GetDataNull(void);
+
+	/**
+	* Deep copy of the string if necessary, i.e. when the string points to an
+	* internal buffer referenced by other strings, make a copy of it.
+	*/
+	void Copy(void);
+
 public:
+
+	/**
+	* Copy a certain number of characters in the string.
+	* @param text            Text to copy.
+	* @param nb              Number of characters to copy.
+	*/
+	void Copy(const C* text,size_t nb);
+
+	/**
+	* Assignment operator using another string.
+	* @param src             Source string.
+	*/
+	BasicString& operator=(const BasicString& src);
 
 	/**
 	* Return the length of the string.
@@ -97,37 +158,68 @@ public:
 	inline size_t GetMaxLen(void) const {return(Data->MaxLen);}
 
 	/**
+	* Set the length of the string. If the length is greater than the current
+	* one, the internal buffer is updated. Any new space allocated contains
+	* arbitrary data.
+	* @param len             Length of the string.
+	*/
+	void SetLen(size_t len);
+
+	/**
+	* Set the length of the string. If the length is greater than the current
+	* one, the second string is used to fill the first string (eventually it is
+	* copied several times).
+	* @param len             Length of the string.
+	* @param str             String used to fill.
+	*/
+	void SetLen(size_t len,const S& str);
+
+	/**
 	* Look if the string is empty.
 	* @returns true if the length is null, false else.
 	*/
 	inline bool IsEmpty(void) const {return(!Data->Len);}
 
 	/**
-	* Deep copy of the string if necessary, i.e. when the string points to an
-	* internal buffer referenced by other strings, make a copy of it.
+	* Clear the content of the string.
 	*/
-	void Copy(void);
-
-protected:
+	void Clear(void);
 
 	/**
 	* Get a uppercase version of the string.
 	* @return String.
 	*/
-	inline S ToUpper(void) const;
+	S ToUpper(void) const;
 
 	/**
 	* Get a lowercase version of the string.
 	* @return String.
 	*/
-	inline S ToLower(void) const;
+	S ToLower(void) const;
 
 	/**
 	* This function return a string by stripping whitespace (or other
 	* characters) from the beginning and end of the string.
 	* @return String.
 	*/
-	inline S Trim(void) const;
+	S Trim(void) const;
+
+	/**
+	 * Look if the string contains only spaces.
+	 */
+	bool ContainOnlySpaces(void) const;
+
+	/**
+	* Add another string.
+	* @param src             Source string.
+	*/
+	S& operator+=(const S& src);
+
+	/**
+	* Add a string to the string.
+	* @param src             Source string.
+	*/
+	S& operator+=(const C* src);
 
 	/**
 	* Find the position of a given character in the string.
@@ -138,7 +230,7 @@ protected:
 	* @return The position of the first occurrence or -1 if the character was not
 	*         found.
 	*/
-	inline int Find(const C car,int pos=0,bool CaseSensitive=true) const;
+	int Find(const C car,int pos=0,bool CaseSensitive=true) const;
 
 	/**
 	* Find the position of a given string in the string.
@@ -149,7 +241,7 @@ protected:
 	* @return The position of the first occurrence or -1 if the character was not
 	*         found.
 	*/
-	inline int FindStr(const S& str,int pos=0,bool CaseSensitive=true) const;
+	int FindStr(const S& str,int pos=0,bool CaseSensitive=true) const;
 
 	/**
 	 * Replace a given character in the string.
@@ -159,7 +251,7 @@ protected:
 	 * @param pos            Position to start. Negative values start the
 	 *                       search from the end.
 	 */
-	inline void Replace(const C search,const C rep,bool first=false,int pos=0);
+	void Replace(const C search,const C rep,bool first=false,int pos=0);
 
 	/**
 	 * Replace a given sub-string in the string.
@@ -169,26 +261,46 @@ protected:
 	 * @param pos            Position to start. Negative values start the
 	 *                       search from the end.
 	 */
-	template<class B> inline void ReplaceStr(const S& search,const S& rep,bool first=false,int pos=0);
+	void ReplaceStr(const S& search,const S& rep,bool first=false,int pos=0);
 
-	// Get a sub-string of a given string.
-	template<class B> inline S Mid(size_t idx,int len=-1) const;
+	/**
+	* This function returns the character at a given position in the string.
+	* (Read only).
+	* @param idx             Position of the character.
+	*/
+	const C& operator[](size_t idx) const;
 
-	// Set a new length to the string.
-	template<class B> inline void SetLen(size_t len);
+	/**
+	* This function returns the character at a given position in the string.
+	* @param idx             Position of the character.
+	*/
+	C& operator[](size_t idx);
 
-	// Set a new length to the string and fill it.
-	template<class B> inline void SetLen(size_t len,const S& str);
-
-	// Look if a string contains spaces only.
-	inline bool ContainOnlySpaces(void) const;
+	/**
+	* Get a sub-string of a given string.
+	* @param idx             Index of the first character.
+	* @param len             Length of the sub-string. If the length is not
+	*                        specified, the end of the string is copied.
+	* @returns A string containing the substring.
+	*/
+	S Mid(size_t idx,int len=-1) const;
 
 	/**
 	* Split the string to find all the elements separated by a given character.
-	* @param elements        Container that will hold the results.
+	* @param elements        Container that will hold the results. It is not
+	*                        emptied by the method.
 	* @param car             Character used as separator.
 	*/
-	inline void Split(RContainer<S,true,false>& elements,const C car) const;
+	void Split(RContainer<S,true,false>& elements,const C car) const;
+
+	/**
+	 * Destruct the string.
+	 */
+	~BasicString(void);
+
+protected:
+
+	void Dummy(void);
 };
 
 

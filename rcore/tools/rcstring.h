@@ -55,7 +55,6 @@ namespace R{
 //-----------------------------------------------------------------------------
 // forward declaration
 class RCString;
-//class RCString::BasicCharBuffer;
 
 
 //-----------------------------------------------------------------------------
@@ -66,13 +65,6 @@ class RCString;
 */
 class RCString : public BasicString<char,RCString>
 {
-protected:
-
-	/**
-	* Pointer to the buffer representing the null string.
-	*/
-	static CharBuffer* DataNull;
-
 public:
 
 	/**
@@ -92,7 +84,7 @@ public:
 	RCString(const char* src);
 
 	/**
-	* Construct a string by doing a deep copy of the first caracters of a "C"
+	* Construct a string by doing a deep copy of the first characters of a "C"
 	* string.
 	* @param src             C string used as reference.
 	* @param len             Length.
@@ -117,27 +109,7 @@ public:
 	*/
 	RCString(const RCString& src);
 
-	/**
-	* Deep copy of the string if necessary, i.e. when the string points to an
-	* internal buffer referenced by other strings, make a copy of it.
-	*/
-	inline void Copy(void) {BasicString<char,RCString>::Copy();};
-
-private:
-
-	/**
-	* Return the pointer to the "null" buffer. If it is not created, create it.
-	* @return Pointer to the "null" buffer.
-	*/
-	static CharBuffer* GetDataNull(void);
-
 public:
-
-	/**
-	* Assignment operator using another string.
-	* @param src             Source string.
-	*/
-	RCString& operator=(const RCString &src);
 
 	/**
 	* Assignment operator using a "C string".
@@ -152,76 +124,16 @@ public:
 	RCString& operator=(const std::string& src);
 
 	/**
-	* Clear the content of the string.
+	* Add another string.
+	* @param src             Source string.
 	*/
-	void Clear(void);
-
-	/**
-	* Copy a certain number of characters in the string.
-	* @param src             Text to copy.
-	* @param nb              Number of characters to copy.
-	*/
-	void Copy(const char* src,size_t nb);
-
-public:
-
-	/**
-	* Set the length of the string. If the length is greater than the current
-	* one, the internal buffer is updated. Any new space allocated contains
-	* arbitrary data.
-	* @param len             Length of the string.
-	*/
-	void SetLen(size_t len);
-
-	/**
-	* Set the length of the string. If the length is greater than the current
-	* one, the second string is used to fill the first string (eventually it is
-	* copid several times).
-	* @param len             Length of the string.
-	* @param str             String used to fill.
-	*/
-	void SetLen(size_t len,const RCString& str);
-
-	/**
-	 * Look if the string contains only spaces.
-	 */
-	bool ContainOnlySpaces(void) const;
-
-	/**
-	* This function returns the character at a given position in the string.
-	* (Read-Only).
-	* @param idx             Index of the character.
-	* @returns RChar.
-	*/
-	const char& operator[](size_t idx) const;
-
-	/**
-	* This function returns the character at a given position in the string.
-	* @param idx             Index of the character.
-	* @returns RChar.
-	*/
-	char& operator[](size_t idx);
-
-	/**
-	* Get a sub-string of a given string.
-	* @param idx             Index of the first character.
-	* @param len             Length of the sub-string. If the legnth is not
-	*                        specified, the end of the string is copied.
-	* @returns A RString containing the substring.
-	*/
-	RCString Mid(size_t idx,int len=-1) const;
+	inline RCString& operator+=(const RCString& src) {return(BasicString<char,RCString>::operator+=(src));}
 
 	/**
 	* Add another string.
 	* @param src             Source string.
 	*/
-	RCString& operator+=(const RCString& src);
-
-	/**
-	* Add a "C string" to the string.
-	* @param src             Source string.
-	*/
-	RCString& operator+=(const char* src);
+	inline RCString& operator+=(const char* src) {return(BasicString<char,RCString>::operator+=(src));}
 
 	/**
 	* Add a character to the string.
@@ -298,78 +210,9 @@ public:
 	*/
 	size_t HashIndex(size_t idx) const;
 
-	/**
-	* Get a uppercase version of the string.
-	* @return String.
-	*/
-	RCString ToUpper(void) const;
+private:
 
-	/**
-	* Get a lowercase version of the string.
-	* @return String.
-	*/
-	RCString ToLower(void) const;
-
-	/**
-	* This function return a string by stripping whitespace (or other
-	* characters) from the beginning and end of the string.
-	* @return String.
-	*/
-	RCString Trim(void) const;
-
-	/**
-	* Find the position of a given character in the string.
-	* @param car             Character to find.
-	* @param pos             Position to start the search. Negative values
-	*                        start the search from the end.
-	* @param CaseSensitive   Is the search case sensitive.
-	* @return The position of the first occurence or -1 if the character was not
-	*         found.
-	*/
-	int Find(const char car,int pos=0,bool CaseSensitive=true) const;
-
-	/**
-	* Find the position of a given string in the string.
-	* @param str             String to find.
-	* @param pos             Position to start the search. Negative values
-	*                        start the search from the end.
-	* @param CaseSensitive   Is the search case sensitive.
-	* @return The position of the first occurence or -1 if the character was not
-	*         found.
-	*/
-	int FindStr(const RCString& str,int pos=0,bool CaseSensitive=true) const;
-
-	/**
-	* Split the string to find all the elements separated by a given character.
-	* @param elements        Container that will hold the results.
-	* @param car             Character used as separator.
-	*/
-	void Split(RContainer<RCString,true,false>& elements,const char car) const;
-
-	/**
-	 * Replace a given character in the string.
-	 * @param search         Character to search.
-	 * @param rep            Character that will put in.
-	 * @param first          Must it stops after the first occurrence.
-	 * @param pos            Position to start. Negative values start the
-	 *                       search from the end.
-	 */
-	void Replace(const char search,const char rep,bool first=false,int pos=0);
-
-	/**
-	 * Replace a given sub-string in the string.
-	 * @param search         String to search.
-	 * @param rep            String that will put in.
-	 * @param first          Must it stops after the first occurrence.
-	 * @param pos            Position to start. Negative values start the
-	 *                       search from the end.
-	 */
-	void ReplaceStr(const RCString& search,const RCString& rep,bool first=false,int pos=0);
-
-	/**
-	* Destruct the string.
-	*/
-	virtual ~RCString(void);
+	void Dummy(void);
 
 	friend class BasicString<char,RCString>;
 };

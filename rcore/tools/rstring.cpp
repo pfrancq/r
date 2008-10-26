@@ -46,7 +46,7 @@ using namespace R;
 // Static data
 //
 //-----------------------------------------------------------------------------
-RString::CharBuffer* RString::DataNull=0;
+//RString::CharBuffer* RString::DataNull=0;
 const RString RString::Null;
 
 
@@ -82,18 +82,14 @@ RString::RString(const char* src)
 
 //-----------------------------------------------------------------------------
 RString::RString(const RChar* src)
-	: BasicString<RChar,RString>()
+	: BasicString<RChar,RString>(src)
 {
-	if(src&&(!src->IsNull()))
-	{
-		size_t len=RChar::StrLen(src);
-		RChar* ptr=new RChar[len+1];
-		memcpy(ptr,src,sizeof(RChar)*len);
-		ptr[len]=0;
-		Data=new CharBuffer(ptr,len,len);
-	}
-	else
-		Data=GetDataNull();
+}
+
+//-----------------------------------------------------------------------------
+RString::RString(const RChar* src,size_t len)
+	: BasicString<RChar,RString>(src,len)
+{
 }
 
 
@@ -148,31 +144,6 @@ RString::RString(const RString& src)
 
 
 //-----------------------------------------------------------------------------
-RString::CharBuffer* RString::GetDataNull(void)
-{
-	if(!RString::DataNull)
-	{
-		RChar* ptr2=new RChar[1];
-		(*ptr2)=0;
-		RString::DataNull=new CharBuffer(ptr2,0,0);
-	}
-	else
-		RIncRef<CharBuffer>(RString::DataNull);
-	return(static_cast<RString::CharBuffer*>(DataNull));
-}
-
-
-//-----------------------------------------------------------------------------
-RString& RString::operator=(const RString& src)
-{
-	RIncRef(src.Data);
-	RDecRef<CharBuffer>(Data);
-	Data=src.Data;
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
 RString& RString::operator=(const char* src)
 {
 	size_t len,maxlen=0;
@@ -195,18 +166,6 @@ RString& RString::operator=(const std::string& src)
 
 
 //-----------------------------------------------------------------------------
-void RString::Clear(void)
-{
-	if(Data!=DataNull)
-	{
-		RDecRef<CharBuffer>(Data);
-		RIncRef<CharBuffer>(DataNull);
-		Data=DataNull;
-	}
-}
-
-
-//-----------------------------------------------------------------------------
 void RString::Copy(const char* text,size_t nb)
 {
 	RDecRef<CharBuffer>(Data);
@@ -222,46 +181,6 @@ void RString::Copy(const char* text,size_t nb)
 
 
 //-----------------------------------------------------------------------------
-void RString::Copy(const RChar* text,size_t nb)
-{
-	RDecRef<CharBuffer>(Data);
-	if(text&&(!text->IsNull()))
-	{
-		size_t len=RChar::StrLen(text);
-		if(nb>len)
-			nb=len;
-		RChar* ptr=new RChar[nb+1];
-		memcpy(ptr,text,sizeof(RChar)*nb);
-		ptr[nb]=0;
-		Data=new CharBuffer(ptr,nb,nb);
-	}
-	else
-		Data=GetDataNull();
-}
-
-
-//-----------------------------------------------------------------------------
-void RString::SetLen(size_t len)
-{
-	BasicString<RChar,RString>::SetLen<CharBuffer>(len);
-}
-
-
-//-----------------------------------------------------------------------------
-void RString::SetLen(size_t len,const RString& str)
-{
-	BasicString<RChar,RString>::SetLen<CharBuffer>(len,str);
-}
-
-
-//-----------------------------------------------------------------------------
-bool RString::ContainOnlySpaces(void) const
-{
-	return(BasicString<RChar,RString>::ContainOnlySpaces());
-}
-
-
-//-----------------------------------------------------------------------------
 const char* RString::Latin1(void) const
 {
 	if(!static_cast<CharBuffer*>(Data)->Latin1)
@@ -269,81 +188,6 @@ const char* RString::Latin1(void) const
 		static_cast<CharBuffer*>(Data)->Latin1=UnicodeToLatin1(Data->Text,Data->Len);
 	}
 	return(static_cast<CharBuffer*>(Data)->Latin1);
-}
-
-
-//-----------------------------------------------------------------------------
-const RChar& RString::operator[](size_t idx) const
-{
-	if(idx>=Data->Len)
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("RString::operator[] const : index outside string");
-	#endif
-	return(Data->Text[idx]);
-}
-
-
-//-----------------------------------------------------------------------------
-RChar& RString::operator[](size_t idx)
-{
-	if(idx>=Data->Len)
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("RString::operator[] : index outside string");
-	#endif
-	return(Data->Text[idx]);
-}
-
-
-//-----------------------------------------------------------------------------
-RString RString::Mid(size_t idx,int len) const
-{
-	return(BasicString<RChar,RString>::Mid<CharBuffer>(idx,len));
-}
-
-
-//-----------------------------------------------------------------------------
-RString& RString::operator+=(const RString& src)
-{
-	if(src.Data==DataNull)
-		return(*this);
-	if(Data==DataNull)
-	{
-		(*this)=src;
-	}
-	else
-	{
-		Copy();
-		Data->Verify(src.Data->Len+Data->Len+1);
-		memcpy(&Data->Text[Data->Len],src.Data->Text,(src.Data->Len+1)*sizeof(RChar));
-		Data->Len+=src.Data->Len;
-		static_cast<CharBuffer*>(Data)->InvalidLatin1();
-	}
-	return(*this);
-}
-
-
-//-----------------------------------------------------------------------------
-RString& RString::operator+=(const RChar* src)
-{
-	RReturnValIfFail(src,*this);
-	if(Data==DataNull)
-	{
-		(*this)=src;
-	}
-	else
-	{
-		size_t len=RChar::StrLen(src);
-		Copy();
-		Data->Verify(len+Data->Len+1);
-		memcpy(&Data->Text[Data->Len],src,sizeof(RChar)*len+1);
-		Data->Len+=len;
-		static_cast<CharBuffer*>(Data)->InvalidLatin1();
-	}
-	return(*this);
 }
 
 
@@ -360,7 +204,7 @@ RString& RString::operator+=(const char* src)
 	{
 		const char* ptr1=src;
 		size_t len=strlen(src);
-		Copy();
+		BasicString<RChar,RString>::Copy();
 		Data->Verify(len+Data->Len+1);
 		RChar* ptr2=&Data->Text[Data->Len];
 		while(*ptr1)
@@ -388,7 +232,7 @@ RString& RString::operator+=(const char src)
 		}
 		else
 		{
-			Copy();
+			BasicString<RChar,RString>::Copy();
 			Data->Verify(Data->Len+1);
 			RChar* ptr=&Data->Text[Data->Len++];
 			(*(ptr++))=src;
@@ -416,7 +260,7 @@ RString& RString::operator+=(const RChar src)
 		}
 		else
 		{
-			Copy();
+			BasicString<RChar,RString>::Copy();
 			Data->Verify(Data->Len+1);
 			RChar* ptr=&Data->Text[Data->Len++];
 			(*(ptr++))=src;
@@ -576,62 +420,6 @@ char* RString::UnicodeToLatin1(const RChar* src,size_t len)
 }
 
 
-//-----------------------------------------------------------------------------
-RString RString::ToUpper(void) const
-{
-	return(BasicString<RChar,RString>::ToUpper());
-}
-
-
-//-----------------------------------------------------------------------------
-RString RString::ToLower(void) const
-{
-	return(BasicString<RChar,RString>::ToLower());
-}
-
-
-//-----------------------------------------------------------------------------
-RString RString::Trim(void) const
-{
-	return(BasicString<RChar,RString>::Trim());
-}
-
-
-//-----------------------------------------------------------------------------
-int RString::Find(const RChar car,int pos,bool CaseSensitive) const
-{
-	return(BasicString<RChar,RString>::Find(car,pos,CaseSensitive));
-}
-
-
-//-----------------------------------------------------------------------------
-int RString::FindStr(const RString& str,int pos,bool CaseSensitive) const
-{
-	return(BasicString<RChar,RString>::FindStr(str,pos,CaseSensitive));
-}
-
-
-//-----------------------------------------------------------------------------
-void RString::Replace(const RChar search,const RChar rep,bool first,int pos)
-{
-	BasicString<RChar,RString>::Replace(search,rep,first,pos);
-}
-
-
-//-----------------------------------------------------------------------------
-void RString::ReplaceStr(const RString& search,const RString& rep,bool first,int pos)
-{
-	BasicString<RChar,RString>::ReplaceStr<CharBuffer>(search,rep,first,pos);
-}
-
-
-//-----------------------------------------------------------------------------
-void RString::Split(RContainer<RString,true,false>& elements,const RChar car) const
-{
-	BasicString<RChar,RString>::Split(elements,car);
-}
-
-
 //------------------------------------------------------------------------------
 int RString::ToInt(bool& valid)
 {
@@ -714,13 +502,6 @@ bool RString::ToBool(bool& valid,bool strict)
 		return(false);
 	valid=false;
 	return(false);
-}
-
-
-//-----------------------------------------------------------------------------
-RString::~RString(void)
-{
-	RDecRef<CharBuffer>(Data);
 }
 
 
@@ -946,4 +727,18 @@ RChar RCharCursor::operator[](size_t idx) const
 		throw std::range_error("RCursor::operator[] : index outside string");
 	#endif
 	return(Str->Data->Text[idx]);
+}
+
+
+
+//-----------------------------------------------------------------------------
+//
+// Dummy part
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+void RString::Dummy(void)
+{
+	BasicString<RChar,RString>::Dummy();
 }
