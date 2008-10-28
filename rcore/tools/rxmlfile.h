@@ -94,6 +94,11 @@ protected:
 public:
 
 	/**
+	 * Default constructor.
+	 */
+	RXMLFile(void);
+
+	/**
 	* Construct a XML file. If the pointer to the XML structure is null, a
 	* default structure is created and destroy when the file is closed.
 	* @param uri            URI of the file.
@@ -104,29 +109,12 @@ public:
 
 	/**
 	* Construct a XML file.
-	* @param uri            URI of the file.
-	* @param xmlstruct      The XML tree associated with the file
-	* @param encoding       The encoding scheme of the file.
-	*/
-	RXMLFile(const RURI& uri,RXMLStruct& xmlstruct,const RString& encoding="UTF-8");
-
-	/**
-	* Construct a XML file.
 	* @param file           A generic input/output file that should be treated
 	*                       as XML file.
 	* @param xmlstruct      The XML tree associated with the file
 	* @param encoding       The encoding scheme of the file.
 	*/
 	RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding="UTF-8");
-
-	/**
-	* Construct a XML file.
-	* @param file           A generic input/output file that should be treated
-	*                       as XML file.
-	* @param xmlstruct      The XML tree associated with the file
-	* @param encoding       The encoding scheme of the file.
-	*/
-	RXMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding="UTF-8");
 
 	/**
 	* Set the encoding of the XML document.
@@ -139,6 +127,15 @@ public:
 	* @param mode           The open mode for the file.
 	*/
 	virtual void Open(RIO::ModeType mode=RIO::Read);
+
+	/**
+	 * Open the file
+	 * @param uri            URI of the file.
+	 * @param xmlstruct      The XML tree associated with the file
+	 * @param mode           The open mode for the file.
+	 * @param encoding       The encoding scheme of the file.
+	 */
+	void Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode=RIO::Read,const RString& encoding="UTF-8");
 
 	/**
 	 * Close the file. If the XML structure was created by the file, it is

@@ -341,78 +341,75 @@ public:
 };
 
 
+}  //-------- End of namespace R -----------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// Same functions for RChar as for char (used in BasicString).
+namespace std
+{
 /**
 * Test if the character is a printable one.
 * @return bool.
 */
-inline bool isprint(const RChar c)                      { return(c.IsPrint()); }
+inline bool isprint(const R::RChar c)                      { return(c.IsPrint()); }
 
 /**
 * Test if the character is a punctuation one.
 * @return bool.
 */
-inline bool ispunct(const RChar c)                      { return(c.IsPunct()); }
+inline bool ispunct(const R::RChar c)                      { return(c.IsPunct()); }
 
 /**
 * Test if the character is a space one.
 * @return bool.
 */
-inline bool isspace(const RChar c)                      { return(c.IsSpace()); }
+inline bool isspace(const R::RChar c)                      { return(c.IsSpace()); }
 
 /**
 * Test if the character is a letter.
 * @return bool.
 */
-inline bool isalpha(const RChar c)                      { return(c.IsAlpha()); }
+inline bool isalpha(const R::RChar c)                      { return(c.IsAlpha()); }
 
 /**
 * Test if the character is a digit.
 * @return bool.
 */
-inline bool isdigit(const RChar c)                     { return(c.IsDigit()); }
+inline bool isdigit(const R::RChar c)                     { return(c.IsDigit()); }
 
 /**
 * Test if the character is alphanumeric.
 * @return bool.
 */
-inline bool isalnum(const RChar c)                      { return(c.IsAlNum()); }
+inline bool isalnum(const R::RChar c)                      { return(c.IsAlNum()); }
 
 /**
 * Test if the character is a graphical one.
 * @return bool.
 */
-inline bool isgraph(const RChar c)                      { return(c.IsGraph()); }
+inline bool isgraph(const R::RChar c)                      { return(c.IsGraph()); }
 
 /**
 * Transform an Unicode character in lowercase.
 * @param c               Character.
 * return RChar.
 */
-inline RChar tolower(const RChar c)                { return(RChar::ToLower(c)); }
-
-/**
-* Transform a character in lowercase.
-* @param c               Character.
-* return char.
-*/
-inline char tolower(const char c)                   { return(std::tolower(c)); }
+inline R::RChar tolower(const R::RChar c)                { return(R::RChar::ToLower(c)); }
 
 /**
 * Transform an Unicode character in upperrcase.
 * @param c               Character.
 * return RChar.
 */
-inline RChar toupper(const RChar c)                { return(RChar::ToUpper(c)); }
+inline R::RChar toupper(const R::RChar c)                { return(R::RChar::ToUpper(c)); }
 
 /**
-* Transform a character in uppercase.
-* @param c               Character.
-* return char.
+* Compute the length of an array of RChar.
+* @return int.
 */
-inline char toupper(const char c)                   { return(std::toupper(c)); }
-
-
-}  //-------- End of namespace R -----------------------------------------------
+size_t inline strlen(const R::RChar* str)                { return(R::RChar::StrLen(str)); }
+}
 
 
 //------------------------------------------------------------------------------

@@ -45,6 +45,13 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+RBinaryFile::RBinaryFile(void)
+	: RIOFile()
+{
+}
+
+
+//------------------------------------------------------------------------------
 RBinaryFile::RBinaryFile(const RString &name)
 	: RIOFile(name)
 {
@@ -55,6 +62,19 @@ RBinaryFile::RBinaryFile(const RString &name)
 RBinaryFile::RBinaryFile(RIOFile& file)
 	: RIOFile(file)
 {
+}
+
+//------------------------------------------------------------------------------
+void RBinaryFile::Open(RIO::ModeType mode)
+{
+	RIOFile::Open(mode);
+}
+
+
+//------------------------------------------------------------------------------
+void RBinaryFile::Open(const RURI& uri,RIO::ModeType mode)
+{
+	RIOFile::Open(uri,mode);
 }
 
 

@@ -44,6 +44,8 @@
 #include <fcntl.h>
 #include <string.h>
 #include <time.h>
+#include <errno.h>
+
 
 
 //------------------------------------------------------------------------------
@@ -92,6 +94,13 @@ inline void RIOFile::Test(void)
 
 
 //------------------------------------------------------------------------------
+RIOFile::RIOFile(void)
+  : RFile(), Handle(-1), Size(0), Pos(0), Internal(0), InternalToRead(0), RealPos(0), CurByte(0)
+{
+}
+
+
+//------------------------------------------------------------------------------
 RIOFile::RIOFile(const RURI& uri)
   : RFile(uri), Handle(-1), Size(0), Pos(0), Internal(0), InternalToRead(0), RealPos(0), CurByte(0)
 {
@@ -130,6 +139,7 @@ void RIOFile::Open(RIO::ModeType mode)
 		File=RFile::GetTempFile();  // File must be download in a temporary file
 
 	RFile::Open(mode);
+	Pos=0;
 	switch(Mode)
 	{
 		case RIO::Read:
@@ -156,7 +166,7 @@ void RIOFile::Open(RIO::ModeType mode)
 
 		case RIO::Append:
 			if(!local)
-				throw RIOException(this,"Cannot appen to an URL");
+				throw RIOException(this,"Cannot append to an URL");
 			localmode=O_WRONLY | O_CREAT | O_APPEND;
 			CanWrite=true;
 			CanRead=true;
@@ -197,7 +207,33 @@ void RIOFile::Open(RIO::ModeType mode)
 	else
 		Handle=open(File.Latin1(),localmode,S_IREAD|S_IWRITE);
 	if(Handle==-1)
-		throw RIOException(this,"Can't open the file '"+URI+"'");
+	{
+		switch(errno)
+		{
+			case EACCES:
+				throw RIOException(this,"The file exists but it cannot be access at the requested mode");
+			case EEXIST:
+				throw RIOException(this,"Both O_CREAT and O_EXCL are set, and the named file already exists");
+			case EINTR:
+				throw RIOException(this,"The open operation was interrupted by a signal");
+			case EISDIR:
+				throw RIOException(this,"The mode specified is write access, but the file is a directory");
+			case EMFILE:
+				throw RIOException(this,"The process has too many files open");
+			case ENFILE:
+				throw RIOException(this,"The system has too many files open");
+			case ENOENT:
+				throw RIOException(this,"The named file does not exist, and Create is not specified");
+			case ENOSPC:
+				throw RIOException(this,"No disk space left");
+			case ENXIO:
+				throw RIOException(this,"O_NONBLOCK and O_WRONLY are both set in the arguments, and the file is a FIFO");
+			case EROFS:
+				throw RIOException(this,"The file resides on a read-only file system or the file does not exist");
+			default:
+				throw RIOException(this,"Cannot open the file");
+		}
+	}
 
 	// Read the total size of the file
 	fstat(Handle,&statbuf);
@@ -206,11 +242,16 @@ void RIOFile::Open(RIO::ModeType mode)
 	// Position virtually the file at the beginning or at the end if it is open in append mode
 	if(Mode==RIO::Append)
 		Pos=Size;
-	else
-		Pos=0;
 
 	// Suppose nothing is in the buffer
 	RealInternalPos=MaxSize;
+}
+
+
+//------------------------------------------------------------------------------
+void RIOFile::Open(const RURI& uri,RIO::ModeType mode)
+{
+	RFile::Open(uri,mode);
 }
 
 
@@ -226,7 +267,21 @@ void RIOFile::Close(void)
 {
 	if(Handle!=-1)
 	{
-		close(Handle);
+		if(close(Handle)==-1)
+		{
+			switch(errno)
+			{
+				case EBADF:
+					throw RIOException(this,"Not a valid descriptor");
+				case EINTR:
+					throw RIOException(this,"The close call was interrupted by a signal");
+				case EIO:
+				case EDQUOT:
+					throw RIOException(this,"When the file is accessed by NFS, these errors from write can sometimes not be detected until close");
+				default:
+					throw RIOException(this,"Cannot close the file");
+			}
+		}
 		Handle=-1;
 	}
 	// If non-local file -> remove the temporary file

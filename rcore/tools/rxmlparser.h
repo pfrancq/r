@@ -127,6 +127,11 @@ protected:
 public:
 
 	/**
+	 * Default constructor.
+	 */
+	RXMLParser(void);
+
+	/**
 	* Construct a XML file. If the pointer to the XML structure is null, a
 	* default structure is created and destroy when the file is closed.
 	* @param uri            URI of the file.
@@ -162,6 +167,14 @@ public:
 	* @param mode           The open mode for the file.
 	*/
 	virtual void Open(RIO::ModeType mode=RIO::Read);
+
+	/**
+	 * Open the file
+	 * @param uri            URI of the file.
+	 * @param mode           The open mode for the file.
+	 * @param encoding       The encoding scheme of the file.
+	 */
+	void Open(const RURI& uri,RIO::ModeType mode=RIO::Read,const RString& encoding="UTF-8");
 
 	/**
 	 * Get the current section treated.

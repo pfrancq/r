@@ -45,6 +45,13 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+RXMLFile::RXMLFile(void)
+ : RXMLParser(), XMLStruct(0), NewStruct(false), CurTag(0)
+{
+}
+
+
+//------------------------------------------------------------------------------
 RXMLFile::RXMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding)
  : RXMLParser(uri,encoding), XMLStruct(xmlstruct), NewStruct(false), CurTag(0)
 {
@@ -52,22 +59,8 @@ RXMLFile::RXMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding
 
 
 //------------------------------------------------------------------------------
-RXMLFile::RXMLFile(const RURI& uri,RXMLStruct& xmlstruct,const RString& encoding)
- : RXMLParser(uri,encoding), XMLStruct(&xmlstruct), NewStruct(false),CurTag(0)
-{
-}
-
-
-//------------------------------------------------------------------------------
 RXMLFile::RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
  : RXMLParser(file,encoding), XMLStruct(xmlstruct), NewStruct(false),CurTag(0)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RXMLFile::RXMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding)
- : RXMLParser(file,encoding), XMLStruct(&xmlstruct), CurTag(0)
 {
 }
 
@@ -152,6 +145,14 @@ void RXMLFile::Open(RIO::ModeType mode)
 		default:
 			throw RIOException("No Valid Mode");
 	};
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLFile::Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode,const RString& encoding)
+{
+	XMLStruct=xmlstruct;
+	RXMLParser::Open(uri,mode,encoding);
 }
 
 

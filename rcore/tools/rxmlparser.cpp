@@ -67,6 +67,16 @@ public:
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+RXMLParser::RXMLParser(void)
+	: RTextFile(), Namespaces(20),
+  DefaultNamespace(5), AvoidSpaces(false), Attrs(10)
+{
+	SetRemStyle(MultiLineComment);
+	SetRem("<!--","-->");
+}
+
+
+//------------------------------------------------------------------------------
 RXMLParser::RXMLParser(const RURI& uri,const RString& encoding)
  : RTextFile(uri,encoding), Namespaces(20),
    DefaultNamespace(5), AvoidSpaces(false), Attrs(10)
@@ -134,6 +144,13 @@ void RXMLParser::Open(RIO::ModeType mode)
 		default:
 			throw RIOException("No Valid Mode");
 	};
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::Open(const RURI& uri,RIO::ModeType mode,const RString& encoding)
+{
+	RTextFile::Open(uri,mode,encoding);
 }
 
 
@@ -210,7 +227,7 @@ RString RXMLParser::XMLToString(const RString& str)
 			Cur.Next();
 
 			// Read what could be a code
-			Code.Clear();
+			Code.SetLen(0);
 			while((!Cur.End())&&(Cur()!=RChar(';'))&&(!Cur().IsSpace()))
 			{
 				Code+=Cur();
@@ -494,7 +511,7 @@ void RXMLParser::LoadNextTag(void)
 		else
 		{
 			// It is content -> read it as long as there is no open tag.
-			Contains.Clear();
+			Contains.SetLen(0);
 			CDATA=true; // Suppose that first '<' found is a "<![CDATA["
 			SetParseSpace(RTextFile::LeaveSpaces);
 			while(CDATA)

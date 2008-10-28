@@ -75,6 +75,11 @@ protected:
 public:
 
 	/**
+	 * Default constructor.
+	 */
+	RFile(void);
+
+	/**
 	* Construct a file.
 	* @param uri             URI of the file.
 	*/
@@ -88,9 +93,16 @@ public:
 
 	/**
 	* Open the file
-	* @param mode           The open mode for the file.
+	* @param mode            The open mode for the file.
 	*/
-	virtual void Open(RIO::ModeType mode=RIO::Read);
+	virtual void Open(RIO::ModeType mode);
+
+	/**
+	* Open the file
+	* @param uri             URI of the file.
+	* @param mode            The open mode for the file.
+	*/
+	void Open(const RURI& uri,RIO::ModeType mode);
 
 	/**
 	* Close the file.
@@ -131,7 +143,7 @@ public:
 	* @param uri             RURI.
 	*/
 	void SetURI(const RString& uri);
-	
+
 	/**
 	* Return the name of the file. If the fullname doesn't have a slash at the
 	* end, the part between the last slash and the end of the fullname is
@@ -157,13 +169,13 @@ public:
 	* @return Name of the file.
 	*/
 	static RString GetTempFile(void);
-	
+
 	/**
 	 * Test if a file exists.
 	 * @param name           Name of the file.
 	 */
 	static bool Exists(const RString& name);
-	
+
 	/**
 	* Destructs the file.
 	*/

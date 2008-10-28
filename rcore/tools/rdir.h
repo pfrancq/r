@@ -6,7 +6,7 @@
 
 	Directory - Header.
 
-	Copyright 2004 by the Universit�Libre de Bruxelles.
+	Copyright 2004-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -109,6 +109,11 @@ public:
 	* Close the file.
 	*/
 	virtual void Close(void);
+
+	/**
+	 * Remove the all files in the directory.
+	 */
+	void Clear(void);
 
 	/**
 	* Create if a directory if it does not exist.

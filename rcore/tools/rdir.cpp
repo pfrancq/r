@@ -6,7 +6,7 @@
 
 	Directory - Implementation.
 
-	Copyright 2004 by the Université Libre de Bruxelles.
+	Copyright 2004-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -152,6 +152,40 @@ void RDir::OpenEntries(void)
 
 		// Close file
 		close(handle);
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+void RDir::Clear(void)
+{
+	struct dirent* ep;
+	RString Name;
+	struct stat statbuf;
+	int handle;
+	bool IsDir;
+
+	Data->Handle=opendir(URI.GetPath().Latin1());
+	if(!Data->Handle)
+		throw(RIOException(this,"Directory does not exist"));
+	RString Path=URI.GetPath()+RFile::GetDirSeparator();
+	while((ep=readdir(Data->Handle)))
+	{
+		// Name of the 'file"
+		Name=ep->d_name;
+		if((Name==".")||(Name==".."))
+			continue;
+
+		// If it is a directory, remove first its content
+		handle=open(Path+Name,O_RDONLY);
+		fstat(handle, &statbuf);
+		IsDir=S_ISDIR(statbuf.st_mode);
+		close(handle);
+		if(IsDir)
+			Clear();
+
+		// Remove the file/directory.
+		remove(Path+Name);
 	}
 }
 

@@ -62,6 +62,13 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+RFile::RFile(void)
+	: Mode(RIO::Undefined), URI()
+{
+}
+
+
+//------------------------------------------------------------------------------
 RFile::RFile(const RURI& uri)
   : Mode(RIO::Undefined), URI(uri)
 {
@@ -79,6 +86,14 @@ RFile::RFile(const RFile& file)
 void RFile::Open(RIO::ModeType mode)
 {
 	Mode=mode;
+}
+
+
+//------------------------------------------------------------------------------
+void RFile::Open(const RURI& uri,RIO::ModeType mode)
+{
+	URI=uri;
+	Open(mode);
 }
 
 
@@ -121,7 +136,7 @@ const RString RFile::GetFileName(void) const
 {
 	RString res;
 	RString Name(URI.GetPath());
-	
+
 	int pos=Name.Find('/',-1)+1;
 	if(pos<=0)
 		res=Name;

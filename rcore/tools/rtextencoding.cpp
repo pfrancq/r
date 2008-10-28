@@ -305,12 +305,10 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 	char* ptr1;
 	size_t s1,s2,err;
 	bool ToFill=true;
-	char Tab[4];
 
 	ptr1=(char*)text;
 	s1=len;
 	ptr2=(char*)Code.Codes;
-//	ptr2=Tab;
 	for(s2=0;ToFill;)
 	{
 		s2+=2;

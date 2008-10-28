@@ -124,7 +124,7 @@ void RConfig::Load(bool global)
 		RURI Where("/usr/r/config/"+Category+"/"+Name+".config");
 		try
 		{
-			RXMLFile File(Where,Config);
+			RXMLFile File(Where,&Config);
 			File.Open(R::RIO::Read);
 		}
 		catch(RException& e)
@@ -146,13 +146,13 @@ void RConfig::Load(bool global)
 		if(Root)
 		{
 			RXMLStruct Local;
-			RXMLFile File(Where,Local);
+			RXMLFile File(Where,&Local);
 			File.Open(R::RIO::Read);
 			Config.Merge(Local);
 		}
 		else
 		{
-			RXMLFile File(Where,Config);
+			RXMLFile File(Where,&Config);
 			File.Open(R::RIO::Read);
 			Root=Config.GetTop();
 		}
@@ -227,7 +227,7 @@ void RConfig::Save(void)
 	{
 		// Always save localy
 		RDir::CreateDirIfNecessary(Home+"/.r/config/"+Category,true);
-		RXMLFile File(Where,Config);
+		RXMLFile File(Where,&Config);
 		File.Open(R::RIO::Create);
 	}
 	catch(...)

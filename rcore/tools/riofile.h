@@ -142,6 +142,10 @@ public:
 	 */
 	static const off_t MaxSize;
 
+	/**
+	* Default constructor for a file.
+	*/
+	RIOFile(void);
 
 	/**
 	* Construct a file.
@@ -159,7 +163,14 @@ public:
 	* Open the file
 	* @param mode           The open mode for the file.
 	*/
-	virtual void Open(RIO::ModeType mode=RIO::Read);
+	virtual void Open(RIO::ModeType mode);
+
+	/**
+	* Open the file
+	* @param uri             URI of the file.
+	* @param mode            The open mode for the file.
+	*/
+	void Open(const RURI& uri,RIO::ModeType mode);
 
 	/**
 	* Verify if the file is opened or not.

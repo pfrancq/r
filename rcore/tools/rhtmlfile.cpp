@@ -641,15 +641,15 @@ struct RCharCode
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding)
- : RXMLFile(uri,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
+RHTMLFile::RHTMLFile(void)
+ : RXMLFile(), Tags(200,10), FoundClosingHTML(false)
 {
 	InitValidTags();
 }
 
 
 //------------------------------------------------------------------------------
-RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct& xmlstruct,const RString& encoding)
+RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding)
  : RXMLFile(uri,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
 {
 	InitValidTags();
@@ -665,10 +665,9 @@ RHTMLFile::RHTMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding
 
 
 //------------------------------------------------------------------------------
-RHTMLFile::RHTMLFile(RIOFile& file,RXMLStruct& xmlstruct,const RString& encoding)
- : RXMLFile(file,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
+void RHTMLFile::Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode,const RString& encoding)
 {
-	InitValidTags();
+	RXMLFile::Open(uri,xmlstruct,mode,encoding);
 }
 
 

@@ -6,7 +6,7 @@
 
 	Container - Header.
 
-	Copyright 1999-2007 by the Université Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -56,7 +56,7 @@ namespace R{
 *                            container.
 * @param bOrder              Specify if the elements are ordered in the
 *                            container.
-* 
+*
 * To make the necessary comparaisons, the container uses member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
@@ -270,7 +270,14 @@ public:
 	inline void Exchange(size_t pos1,size_t pos2) {BasicContainer::Exchange(pos1,pos2);}
 
 	/**
-	* The assignement operator.
+	 * Transfer a container into another one. The destination container is
+	 * cleared before.
+	 * @param src            Source container.
+	 */
+	template<bool a,bool o> inline void Transfer(RContainer<C,a,o>& src) {BasicContainer::Transfer(bAlloc,src);}
+
+	/**
+	* The assignment operator.
 	* @param src             Container used as source.
 	* \warning If the container is not a responsible for the allocation, the
 	* elements of src are just copied and not re-created. Use Copy if you want a
@@ -279,7 +286,7 @@ public:
 	inline RContainer& operator=(const RContainer<C,true,bOrder>& src) {return(NormalCopy<true>(src));}
 
 	/**
-	* The assignement operator.
+	* The assignment operator.
 	* @param src             Container used as source.
 	* \warning If the container is not a responsible for the allocation, the
 	* elements of src are just copied and not re-created. Use Copy if you want a
@@ -487,7 +494,7 @@ public:
 	inline void DeletePtrAt(size_t pos,bool shift=true) {BasicContainer::DeletePtrAt(bAlloc,pos,shift);}
 
 	/**
-	* Destructs the container.
+	* Destruct the container.
 	*/
 	virtual ~RContainer(void);
 

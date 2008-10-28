@@ -135,6 +135,21 @@ void BasicContainer::Exchange(size_t pos1,size_t pos2)
 
 
 //-----------------------------------------------------------------------------
+void BasicContainer::Transfer(bool bAlloc,BasicContainer& src)
+{
+	Clear(bAlloc,src.LastPtr,0);
+	if(!src.NbPtr)
+		return;
+	memcpy(Tab,src.Tab,src.LastPtr*sizeof(void*));
+	NbPtr=src.NbPtr;
+	LastPtr=src.LastPtr;
+	src.NbPtr=0;
+	src.LastPtr=0;
+	memset(src.Tab,0x0,src.MaxPtr*sizeof(void*));
+}
+
+
+//-----------------------------------------------------------------------------
 size_t BasicContainer::GetIndex(bool bOrder,const void* tag,bool& find,size_t min, size_t max,int compare(const void*,const void*)) const
 {
 	size_t NbMin,NbMax,i=0;
@@ -220,7 +235,7 @@ const void* BasicContainer::operator[](size_t idx) const
 	if(idx>=LastPtr)
 	{
 		if(LastPtr)
-			throw std::range_error("BasicContainer::operator[] const : column "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+			throw std::range_error("BasicContainer::operator[] const : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 		else
 			throw std::range_error("BasicContainer::operator[] const : no elements");
 	}
@@ -234,7 +249,7 @@ void* BasicContainer::operator[](size_t idx)
 	if(idx>=LastPtr)
 	{
 		if(LastPtr)
-			throw std::range_error("BasicContainer::operator[] : column "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+			throw std::range_error("BasicContainer::operator[] : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 		else
 			throw std::range_error("BasicContainer::operator[] : no elements");
 	}

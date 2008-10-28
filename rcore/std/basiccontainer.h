@@ -111,7 +111,7 @@ protected:
 
 	/**
 	* Clear the container and destruct the elements if he is responsible for
-	* the desallocation.
+	* the deallocation.
 	*/
 	void Clear(bool bAlloc,size_t m,size_t i);
 
@@ -125,6 +125,12 @@ protected:
 	* exchange is compatible with the ordering of the container.
 	*/
 	void Exchange(size_t pos1,size_t pos2);
+
+	/**
+	 * Transfer a container into another one. The destination container is
+	 * cleared before.
+	 */
+	void Transfer(bool bAlloc,BasicContainer& src);
 
 	/*
 	* This function returns the index of an given element.
@@ -184,7 +190,7 @@ protected:
 	void DeletePtrAt(bool bAlloc,size_t pos,bool del);
 
 	/**
-	* Destructor of the container.
+	* Destruct the container.
 	*/
 	virtual ~BasicContainer(void);
 

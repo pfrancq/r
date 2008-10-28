@@ -47,7 +47,7 @@ namespace R{
 /**
  * This class implements a basic support of URI (Uniform Resource Identifier),
  * in particular for the schemes involving files.
- * 
+ *
  * Here are two examples explaining how it is handle by the RURI class:
  * @code
  *   foo://example.com:8042/over/there?name=ferret#nose
@@ -69,22 +69,22 @@ class RURI : public RString
 	{
 		size_t Pos;
 		size_t Size;
-		
+
 		inline PartString(void) : Pos(0), Size(0) {}
 		inline PartString(const PartString& part) : Pos(part.Pos), Size(part.Size) {}
 		inline void Clear(void) {Pos=0; Size=0;}
 	};
-	
+
 	/**
 	 * Structure identifying the schema of the URI.
 	 */
 	PartString Scheme;
-	
+
 	/**
 	 * Structure identifying the authority of the URI.
 	 */
 	PartString Authority;
-	
+
 	/**
 	 * Structure identifying the path of the URI
 	 */
@@ -99,28 +99,19 @@ class RURI : public RString
 	 * Structure identifying the query of the URI.
 	 */
 	PartString Query;
-	
+
 	/**
 	 * Structure identifying the fragment of the URI.
 	 */
 	PartString Fragment;
-	
-public:
-	
-	/**
-	* Undefined uniform resource identifier.
-	*/
-	static const RURI Null;
 
-private:
-	
+public:
+
 	/**
 	 * Default constructor.
 	 */
 	RURI(void);
-	
-public:
-	
+
 	/**
 	 * Constructor of uniform resource identifier.
 	 * @param uri            String representing the URI.
@@ -138,14 +129,14 @@ public:
 	 * @param uri            Uniform resource identifier.
 	 */
 	RURI(const RURI& uri);
-	
+
 private:
-	
+
 	/**
 	 * Analyze the current URI.
 	 */
 	void AnalyzeString(void);
-	
+
 	/**
 	 * Extract a given part of the URI based on a structure.
 	 */
@@ -157,19 +148,19 @@ private:
 	}
 
 public:
-	
+
 	/**
 	 * Compare method used by R::RContainer.
 	 * @param uri            URI used for the comparisons.
 	 */
 	int Compare(const RURI& uri) const {return(RString::Compare(uri));}
-	
+
 	/**
 	 * Compare method used by R::RContainer.
 	 * @param uri            URI used for the comparisons.
 	 */
 	int Compare(const RString& uri) const {return(RString::Compare(uri));}
-	
+
 	/**
 	 * Compare method used by R::RContainer.
 	 * @param uri            URI used for the comparisons.
@@ -180,31 +171,37 @@ public:
 	 * Get the Scheme part of the uniform resource identifier.
 	 */
 	inline RString GetScheme(void) const {return(Extract(Scheme));}
-	
+
 	/**
 	 * Get the authority part of the uniform resource identifier.
 	 */
 	inline RString GetAuthority(void) const {return(Extract(Authority));}
-	
+
 	/**
 	 * Get the path part of the uniform resource identifier.
 	 */
 	inline RString GetPath(void) const {return(Extract(Path));}
-	
+
 	/**
 	 * Get the port part of the uniform resource identifier.
 	 */
 	inline RString GetPort(void) const {return(Extract(Port));}
-	
+
 	/**
 	 * Get the query part of the uniform resource identifier.
 	 */
 	inline RString GetQuery(void) const {return(Extract(Query));}
-	
+
 	/**
 	 * Get the fragment part of the uniform resource identifier.
 	 */
-	inline RString GetFragment(void) const {return(Extract(Fragment));}	
+	inline RString GetFragment(void) const {return(Extract(Fragment));}
+
+	/**
+	* Assignment operator using another URI.
+	* @param src             Source URI.
+	*/
+	RURI& operator=(const RURI& uri);
 };
 
 

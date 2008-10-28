@@ -6,7 +6,7 @@
 
 	R Standard Library - Header.
 
-	Copyright 1999-2007 by the Université Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -344,7 +344,7 @@ public:
 
 
 //------------------------------------------------------------------------------
-// Macro to create a new exception directlty derived from RException
+// Macro to create a new exception directly derived from RException
 #define NEWREXCEPTION(name)                                                   \
 class name : public R::RException                                             \
 {                                                                             \

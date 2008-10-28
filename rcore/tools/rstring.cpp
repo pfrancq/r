@@ -183,6 +183,8 @@ void RString::Copy(const char* text,size_t nb)
 //-----------------------------------------------------------------------------
 const char* RString::Latin1(void) const
 {
+	if(Data==DataNull)
+		return("");
 	if(!static_cast<CharBuffer*>(Data)->Latin1)
 	{
 		static_cast<CharBuffer*>(Data)->Latin1=UnicodeToLatin1(Data->Text,Data->Len);
@@ -194,7 +196,6 @@ const char* RString::Latin1(void) const
 //-----------------------------------------------------------------------------
 RString& RString::operator+=(const char* src)
 {
-
 	RReturnValIfFail(src,*this);
 	if(Data==DataNull)
 	{

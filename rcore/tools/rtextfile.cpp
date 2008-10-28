@@ -52,6 +52,15 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+RTextFile::RTextFile(void)
+  : RIOFile(), NewLine(true),
+    Rem("%"), BeginRem("/*"), EndRem("*/"),
+    CommentType(NoComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
+	Separator(" "), Line(0), LastLine(0), Codec(0)
+{
+}
+
+//------------------------------------------------------------------------------
 RTextFile::RTextFile(const RURI& uri,const RString& encoding)
   : RIOFile(uri), NewLine(true),
     Rem("%"), BeginRem("/*"), EndRem("*/"),
@@ -84,8 +93,17 @@ void RTextFile::Open(RIO::ModeType mode)
 
 
 //------------------------------------------------------------------------------
+void RTextFile::Open(const RURI& uri,RIO::ModeType mode,const RString& encoding)
+{
+	SetEncoding(encoding);
+	RIOFile::Open(uri,mode);
+}
+
+
+//------------------------------------------------------------------------------
 void RTextFile::Close(void)
 {
+	RIOFile::Close();
 }
 
 

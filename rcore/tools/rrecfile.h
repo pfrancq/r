@@ -49,14 +49,14 @@ namespace R{
 /**
 * @param C                   The class of the elements to be read/write.
 * @param bOrder              Specify if the elements are ordered in the file.
-* 
+*
 * The RRecFile class implements some basic functions needed when working with
 * files for records. This files can be accessed as ordered or not. Opening a
 * non ordered file as ordered gives problems.
 *
 * As for the RContainer class, the TUse represent a class or a structure used
 * for the comparaisons.
-* 
+*
 *
 * At least, one read function must be implemented in the class C:
 * @code
@@ -166,8 +166,13 @@ protected:
 	 * Size of a record.
 	 */
 	 size_t RecSize;
-	  
+
 public:
+
+	/**
+	 * Default constructor.
+	 */
+	RRecFile(void);
 
 	/**
 	* Construct a binary file for records.
@@ -175,6 +180,20 @@ public:
 	* @param recsize        Size of a given record.
 	*/
 	RRecFile(const RURI& uri,size_t recsize);
+
+	/**
+	* Open the file
+	* @param mode            The open mode for the file.
+	*/
+	virtual void Open(RIO::ModeType mode);
+
+	/**
+	* Open the file
+	* @param uri             URI of the file.
+	* @param recsize         Size of a given record.
+	* @param mode            The open mode for the file.
+	*/
+	void Open(const RURI& uri,size_t recsize,RIO::ModeType mode=RIO::Read);
 
 	/**
 	* Close the file

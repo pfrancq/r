@@ -38,9 +38,34 @@
 
 //------------------------------------------------------------------------------
 template<class C,bool bOrder>
+	RRecFile<C,bOrder>::RRecFile(void)
+		: RBinaryFile(), Find(false), Dirty(true), RecSize(0)
+{
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,bool bOrder>
 	RRecFile<C,bOrder>::RRecFile(const RURI& uri,size_t recsize)
 		: RBinaryFile(uri), Find(false), Dirty(true), RecSize(recsize)
 {
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,bool bOrder>
+	void RRecFile<C,bOrder>::Open(RIO::ModeType mode)
+{
+	RBinaryFile::Open(mode);
+}
+
+
+//------------------------------------------------------------------------------
+template<class C,bool bOrder>
+	void RRecFile<C,bOrder>::Open(const RURI& uri,size_t recsize,RIO::ModeType mode)
+{
+	RecSize=recsize;
+	RBinaryFile::Open(uri,mode);
 }
 
 

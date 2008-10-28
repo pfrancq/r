@@ -38,22 +38,21 @@ using namespace R;
 
 //-----------------------------------------------------------------------------
 //
-// Static data
-//
-//-----------------------------------------------------------------------------
-const RURI RURI::Null;
-
-
-
-//-----------------------------------------------------------------------------
-//
 // class RURI
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 RURI::RURI(void)
+	: RString(RString::Null)
 {
+	// Clear all elements
+	Scheme.Clear();
+	Authority.Clear();
+	Path.Clear();
+	Port.Clear();
+	Query.Clear();
+	Fragment.Clear();
 }
 
 
@@ -77,7 +76,7 @@ RURI::RURI(const char* uri)
 RURI::RURI(const RURI& uri)
 	: RString(uri),	Scheme(uri.Scheme), Authority(uri.Authority), Path(uri.Path),
 	  Port(uri.Port), Query(uri.Query), Fragment(uri.Fragment)
-{	
+{
 }
 
 
@@ -93,7 +92,7 @@ void RURI::AnalyzeString(void)
 	Port.Clear();
 	Query.Clear();
 	Fragment.Clear();
-	
+
 	// Test if it is a local file
 	if((*this)[static_cast<size_t>(0)]=='/')
 	{
@@ -104,23 +103,23 @@ void RURI::AnalyzeString(void)
 		(*this)="file:"+(*this);
 		return;
 	}
-	
+
 	// Extract Scheme (search first :)
 	for(i=0;(i<GetLen())&&((*this)[i]!=':');i++,Scheme.Size++);
 	if(i==GetLen())
 		throw RException((*this)+" is not a valid URI");
-	
+
 	// Test if it is a local file
 	if(GetScheme()=="file")
 	{
 		// No, it is a path -> add file:
 		Scheme.Size=4;
 		Path.Pos=5;
-		Path.Size=GetLen()-5;		
+		Path.Size=GetLen()-5;
 		return;
 	}
-	
-	
+
+
 	// Skip ":"
 	i++;
 	if(i==GetLen())
@@ -128,12 +127,12 @@ void RURI::AnalyzeString(void)
 	RChar c1=(*this)[i];
 	i++;
 	if(i==GetLen())
-		throw RException((*this)+" is not a valid URI");	
+		throw RException((*this)+" is not a valid URI");
 	RChar c2=(*this)[i];
 	if(i==GetLen())
 		throw RException((*this)+" is not a valid URI");
 	i++;
-	
+
 	if((c1=='/')&&(c2=='/'))
 	{
 		// Next characters are '//' -> URL
@@ -147,22 +146,22 @@ void RURI::AnalyzeString(void)
 		{
 			i++;
 			if(i==GetLen())
-				throw RException((*this)+" is not a valid URI");			
+				throw RException((*this)+" is not a valid URI");
 			for(Port.Pos=i;((i<GetLen())&&((*this)[i]!='/'));i++,Port.Size++);
 		}
-		
+
 		// Extract the path
 		for(Path.Pos=i;((i<GetLen())&&((*this)[i]!='?'));i++,Path.Size++);
 		if(i==GetLen())
-			return; 
-		
+			return;
+
 		// Must be a query and/or a fragment
 		if((*this)[i]=='?')
 		{
 			// Test Query
 			i++;
 			if(i==GetLen())
-				throw RException((*this)+" is not a valid URI");			
+				throw RException((*this)+" is not a valid URI");
 			for(Query.Pos=i;((i<GetLen())&&((*this)[i]!='#'));i++,Query.Size++);
 		}
 		if((*this)[i]=='#')
@@ -170,15 +169,23 @@ void RURI::AnalyzeString(void)
 			// Test Query
 			i++;
 			if(i==GetLen())
-				throw RException((*this)+" is not a valid URI");			
+				throw RException((*this)+" is not a valid URI");
 			for(Fragment.Pos=i;i<GetLen();i++,Fragment.Size++);
 		}
-		
+
 		return;
 	}
-	
+
 	// Normal URI -> rest is the path.
 	Path.Pos=i-2;  // Must use car1 and car2
 	Path.Size=GetLen()-i+2;
 }
 
+
+//-----------------------------------------------------------------------------
+RURI& RURI::operator=(const RURI& src)
+{
+	RString::operator=(src);
+	AnalyzeString();
+	return(*this);
+}

@@ -91,6 +91,11 @@ class RBinaryFile : public RIOFile
 public:
 
 	/**
+	 * Default constructor.
+	 */
+	RBinaryFile(void);
+
+	/**
 	* Construct a binary file.
 	* @param name           The name of the file.
 	*/
@@ -102,6 +107,19 @@ public:
 	*                       as binary file.
 	*/
 	RBinaryFile(RIOFile& file);
+
+	/**
+	* Open the file
+	* @param mode            The open mode for the file.
+	*/
+	virtual void Open(RIO::ModeType mode);
+
+	/**
+	* Open the file
+	* @param uri             URI of the file.
+	* @param mode            The open mode for the file.
+	*/
+	void Open(const RURI& uri,RIO::ModeType mode);
 
 	/**
 	* >> Operator for bool.

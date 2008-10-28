@@ -6,7 +6,7 @@
 
 	R Standard Library - Implementation.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -34,6 +34,7 @@
 // include files for R Project
 #include <rstd.h>
 using namespace R;
+using namespace std;
 
 
 //------------------------------------------------------------------------------
@@ -65,6 +66,7 @@ RException::RException(const char* str) throw()
 	}
 	else
 		Msg[0]='\0';
+	cerr<<Msg<<endl;
 }
 
 
@@ -78,6 +80,7 @@ void RException::SetMsg(const char* str)
 	}
 	else
 		Msg[0]='\0';
+	cerr<<Msg<<endl;
 }
 
 
