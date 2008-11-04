@@ -1,11 +1,11 @@
 PROJECT(rmath)
 
 INCLUDE_DIRECTORIES(.)
-INCLUDE_DIRECTORIES(../rcore/std)
+INCLUDE_DIRECTORIES(../rcore/io)
 INCLUDE_DIRECTORIES(../rcore/tools)
 INCLUDE_DIRECTORIES(../rcore/geometry)
 IF(WIN32)
-    INCLUDE_DIRECTORIES(../rcore/win32support)
+   INCLUDE_DIRECTORIES(../rcore/win32support)
 ENDIF(WIN32)
 
 SET(rmath_INST_INCLUDES rmath.h)

@@ -1,7 +1,8 @@
 PROJECT(roptimization)
 
 INCLUDE_DIRECTORIES(.)
-INCLUDE_DIRECTORIES(../rcore/std)
+INCLUDE_DIRECTORIES(../rcore/io)
+INCLUDE_DIRECTORIES(../rcore/xml)
 INCLUDE_DIRECTORIES(../rcore/tools)
 INCLUDE_DIRECTORIES(../rcore/app)
 INCLUDE_DIRECTORIES(../rcore/geometry)

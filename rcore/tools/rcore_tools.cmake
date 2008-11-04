@@ -1,49 +1,43 @@
-SET(rcore_tools_INST_INCLUDES rtrace.h
+SET(rcore_tools_INST_INCLUDES rstd.h
+                       rcontainer.h
+                       rcontainer.hh
+                       rstack.h
+                       rcursor.h
+                       rhashcontainer.h
+                       rdblhashcontainer.h
+                       rnode.h
+                       rnode.hh
+                       rtree.h
+                       rtree.hh
+                       rshareddata.h
+                       basiccontainer.h
+                       basiccursor.h
+                       basicstring.h
+                       basicstring.hh
+                       rportsmacro.h
+                       rvectorint.h
+                       rvectorint.hh 
+                         rtrace.h
                          rstring.h
                          rchar.h
     					 random.h
-    					 rio.h
-                         rtextfile.h
-                         rrecfile.h
-                         rrecfile.hh
                          rdate.h
     					 rlang.h
     					 rlocale.h
-    					 rxmlattr.h
-    					 rxmlparser.h
-    					 rxmlfile.h
-    					 rxmlstruct.h
-    					 rxmltag.h
-    					 rhtmlfile.h
-    					 rdownload.h
     					 rtextencoding.h
     					 rcstring.h
-    					 rfile.h
-    					 rdir.h
-    					 riofile.h
-    					 rbinaryfile.h
-						 ruri.h)
+)
 
 SET(rcore_tools_TARGET_SOURCES random.cpp
                                rdate.cpp
-                               rio.cpp
                                rlang.cpp
                                rlocale.cpp
                                rtrace.cpp
                                rstring.cpp
-                               rtextfile.cpp
                                rchar.cpp
-                               rxmlattr.cpp
-                               rxmlparser.cpp
-                               rxmlfile.cpp
-                               rxmlstruct.cpp
-                               rxmltag.cpp
-                               rhtmlfile.cpp
-                               rdownload.cpp
                                rtextencoding.cpp
                                rcstring.cpp
-                               rfile.cpp
-                               rdir.cpp
-                               riofile.cpp
-                               rbinaryfile.cpp
-                				 ruri.cpp)
+                               basiccontainer.cpp
+                               basiccursor.cpp
+                               rstd.cpp
+)
