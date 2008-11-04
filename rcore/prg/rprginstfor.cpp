@@ -36,6 +36,7 @@
 #include <rprgvarstring.h>
 #include <rprgvarliteral.h>
 #include <rprg.h>
+#include <rinterpreter.h>
 #include <rcursor.h>
 using namespace std;
 using namespace R;
@@ -49,14 +50,14 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstFor::RPrgInstFor(RPrg* prg,size_t t)
+RPrgInstFor::RPrgInstFor(RInterpreter* prg,size_t t)
 	: RPrgInstBlock(prg,t), Values(20,10)
 {
 	// Read name of variable
-	Var=prg->Prg.GetWord();
+	Var=prg->GetWord();
 
 	// Read next word -> must be "in"
-	RString Cmd(prg->Prg.GetWord());
+	RString Cmd(prg->GetWord());
 	if(Cmd=="in")
 	{
 		// The variable takes values from a list given as parameter
@@ -67,21 +68,21 @@ RPrgInstFor::RPrgInstFor(RPrg* prg,size_t t)
 		bool ok;
 
 		// The variable takes a list of numbers given by a range and a step
-		RString Next(prg->Prg.GetWord());
+		RString Next(prg->GetWord());
 		long start=Next.ToLong(ok);
 		if(!ok)
 			throw RPrgException(prg,"'"+Next+"' is not valid parameter of 'from'");
-		Next=prg->Prg.GetWord();
+		Next=prg->GetWord();
 		if(Next!="to")
 			throw RPrgException(prg,"'to' is excepted and not '"+Next+"'");
-		Next=prg->Prg.GetWord();
+		Next=prg->GetWord();
 		long end=Next.ToLong(ok);
 		if(!ok)
 			throw RPrgException(prg,"'"+Next+"' is not valid parameter of 'to'");
-		Next=prg->Prg.GetWord();
+		Next=prg->GetWord();
 		if(Next!="step")
 			throw RPrgException(prg,"'step' is excepted and not '"+Next+"'");
-		Next=prg->Prg.GetWord();
+		Next=prg->GetWord();
 		long step=Next.ToLong(ok);
 		if(!ok)
 			throw RPrgException(prg,"'"+Next+"' is not valid parameter of 'step'");
@@ -96,7 +97,7 @@ RPrgInstFor::RPrgInstFor(RPrg* prg,size_t t)
 
 
 //------------------------------------------------------------------------------
-void RPrgInstFor::Run(RPrg* prg,RPrgOutput* o)
+void RPrgInstFor::Run(RInterpreter* prg,RPrgOutput* o)
 {
 	RPrgVarString* local=new RPrgVarString(Var,"");
 
@@ -111,6 +112,7 @@ void RPrgInstFor::Run(RPrg* prg,RPrgOutput* o)
 			Cur2()->Run(prg,o);
 	}
 	Vars.Clear();
+	prg->DelVar(local);
 	prg->Blocks.Pop();
 }
 

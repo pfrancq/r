@@ -6,7 +6,7 @@
 
 	Notification center - Header.
 
-	Copyright 2006 by Pascal Francq.
+	Copyright 2006-2008 by Pascal Francq.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).

@@ -44,6 +44,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <rportsmacro.h>
+#define __STDC_LIMIT_MACROS
+#include <stdint.h>
+#include <limits.h>
 
 
 //------------------------------------------------------------------------------
@@ -244,7 +247,38 @@ inline tCoord Abs(tCoord x) {return(x<0.0?-x:x);}
 
 //------------------------------------------------------------------------------
 /**
-* The MaxCoord constante represent the maximal positive value that a
+ * Inline function to compare two identifiers. Useful for R::RContainer.
+ * @param id1                First identifier.
+ * @param id2                Second identifier.
+ * @return
+ */
+inline int CompareIds(size_t id1,size_t id2)
+{
+	if(id1>id2) return (1);
+	else if(id1<id2) return(-1);
+	return(0);
+}
+
+
+//------------------------------------------------------------------------------
+/**
+ * Inline function to compare two pointers. Useful for R::RContainer.
+ * @param ptr1               First pointer.
+ * @param ptr2               Second pointer.
+ * @return
+ */
+template<class C>
+	inline int ComparePtrs(C* ptr1,C* ptr2)
+{
+	if(ptr1>ptr2) return (1);
+	else if(ptr1<ptr2) return(-1);
+	return(0);
+}
+
+
+//------------------------------------------------------------------------------
+/**
+* The MaxCoord constant represent the maximal positive value that a
 * coordinate can have. It is used to indicate an invalid coordinate.
 */
 const tCoord MaxCoord=3.40282347e+38;

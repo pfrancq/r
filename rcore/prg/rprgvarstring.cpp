@@ -58,7 +58,7 @@ void RPrgVarString::Assign(const void* data)
 
 
 //------------------------------------------------------------------------------
-RString RPrgVarString::GetValue(RPrg*)
+RString RPrgVarString::GetValue(RInterpreter*)
 {
 	return(String);
 }

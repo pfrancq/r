@@ -129,7 +129,7 @@ void RGraph::MinSpanningTree(RGraph* g)
 	RVertex *v1, *v2;
 	REdge *best=0;
 	double bestw;
-	unsigned nb=Vertices.GetNb();
+	size_t nb=Vertices.GetNb();
 	bool b1,b2,b;
 
 	g->Clear();

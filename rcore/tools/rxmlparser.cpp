@@ -97,7 +97,7 @@ RXMLParser::RXMLParser(RIOFile& file,const RString& encoding)
 
 
 //------------------------------------------------------------------------------
-size_t RXMLParser::GetCurrentDepth(void) const
+char RXMLParser::GetCurrentDepth(void) const
 {
 	if(Mode!=RIO::Read)
 		throw RIOException("File not in read mode");

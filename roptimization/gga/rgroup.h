@@ -236,7 +236,7 @@ public:
 	/**
 	* Compare two groups. Used for RContainer.
 	*/
-	int Compare(const cGroup& grp) const {return(Id-grp.Id);}
+	int Compare(const cGroup& grp) const {return(CompareIds(Id,grp.Id));}
 
 	/**
 	* Get a pointer to an object at a given position in the group.

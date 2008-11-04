@@ -37,14 +37,13 @@
 
 //-----------------------------------------------------------------------------
 // include file for ANSI C/C++
-#include <string>
+#include <cstring>
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
 #include <rcontainer.h>
-#include <rcstring.h>
 #include <rchar.h>
 #include <basicstring.h>
 
@@ -377,6 +376,12 @@ private:
 public:
 
 	/**
+	* Try to transform a string into a char (as a number).
+	* @param valid           Variable becomes true if the conversion was done.
+	*/
+	char ToChar(bool& valid);
+
+	/**
 	* Try to transform a string into an integer.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
@@ -433,7 +438,6 @@ private:
 
 	// friend classes
 	friend class RCharCursor;
-	friend class BasicString<RChar,RString>;
 };
 
 

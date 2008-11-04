@@ -86,7 +86,7 @@ public:
 	/**
 	* Construct a Promethee solution.
 	* @param id             Identifier of the solution.
-	* @param nbcrit         Number of criterions.
+	* @param nbcrit         Number of criteria.
 	*/
 	RPromSol(const size_t id,const size_t nbcrit=30);
 
@@ -94,38 +94,38 @@ public:
 	* Construct a Promethee solution.
 	* @param id             Identifier of the solution.
 	* @param name           Name of the solution
-	* @param nbcrit         Number of criterions.
+	* @param nbcrit         Number of criteria.
 	*/
 	RPromSol(const size_t id,const char* name,const size_t nbcrit=30);
 
 	/**
 	* Compare two Promethee solutions.
-	* @param sol            The solution used for the comparaison.
+	* @param sol            The solution used for the comparison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
-	int Compare(const RPromSol& sol) const {return(Id-sol.Id);}
+	int Compare(const RPromSol& sol) const {return(CompareIds(Id,sol.Id));}
 
 	/**
 	* Compare two Promethee solutions.
-	* @param sol            The solution used for the comparaison.
+	* @param sol            The solution used for the comparison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
-	int Compare(const RPromSol* sol) const {return(Id-sol->Id);}
+	int Compare(const RPromSol* sol) const {return(CompareIds(Id,sol->Id));}
 
 	/**
 	* Compare the identifier of the Promethee solution with another
 	* identificator.
-	* @param id             The identifier used for the comparaison.
+	* @param id             The identifier used for the comparison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
-	int Compare(const size_t id) const {return(Id-id);}
+	int Compare(const size_t id) const {return(CompareIds(Id,id));}
 
 	/**
 	* Compare the name of the Promethee solution with another string.
-	* @param name           The string used for the comparaison.
+	* @param name           The string used for the comparison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
@@ -133,7 +133,7 @@ public:
 
 	/**
 	* Compare the name of the Promethee solution with another string.
-	* @param name           The string used for the comparaison.
+	* @param name           The string used for the comparison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current solution is less, equal or greater than the one passed as argument.
 	*/

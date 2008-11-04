@@ -35,6 +35,11 @@
 #define BasicString_H
 
 
+//-----------------------------------------------------------------------------
+// include files for R Project
+#include <rstd.h>
+#include <rshareddata.h>
+
 
 //-----------------------------------------------------------------------------
 namespace R{
@@ -283,7 +288,7 @@ public:
 	*                        specified, the end of the string is copied.
 	* @returns A string containing the substring.
 	*/
-	S Mid(size_t idx,int len=-1) const;
+	S Mid(size_t idx,size_t len=(size_t)-1) const;
 
 	/**
 	* Split the string to find all the elements separated by a given character.

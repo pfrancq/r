@@ -171,7 +171,7 @@ void RXMLFile::Close(void)
 //------------------------------------------------------------------------------
 void RXMLFile::SaveNextTag(int depth)
 {
-	int i;
+	size_t i;
 	RString text;
 	RCursor<RXMLAttr> Cur;
 	RCursor<RXMLTag> Tags;

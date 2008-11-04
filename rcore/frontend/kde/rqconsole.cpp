@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgInstMethod.cpp
+	RQConsole.cpp
 
-	Method of a class - Implementation.
+	Widget that simulates a console - Implementation.
 
-	Copyright 2002-2008 by the Université Libre de Bruxelles.
+	Copyright 2008 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -32,56 +32,71 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprginstmethod.h>
-#include <rprgvarinst.h>
-#include <rprg.h>
-#include <rinterpreter.h>
-#include <rprgclass.h>
-#include <rprgfunc.h>
-using namespace std;
+#include <rqconsole.h>
+#include <rqt.h>
 using namespace R;
+using namespace std;
 
 
 
 //------------------------------------------------------------------------------
 //
-// RPrgInst
+// class RQConsole
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstMethod::RPrgInstMethod(RInterpreter* prg,const RString& name,const RString& method)
-	: RPrgInst(prg->GetLine()), Inst(name), Method(method), Params(10,5)
+RQConsole::RQConsole(QWidget* parent,const QString& name)
+	: QTextEdit(parent,name)
 {
-	// Read Values
-	prg->AnalyseParam(Params);
+    setTextFormat( QTextEdit::RichText );
+    setWordWrap( QTextEdit::FixedColumnWidth );
+    setReadOnly(false);
+    setTextFormat(Qt::PlainText);
+    append(">");
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgInstMethod::Run(RInterpreter* prg,RPrgOutput* r)
+void RQConsole::keyPressEvent(QKeyEvent * e )
 {
-	RPrgVar* Var=prg->Find(Inst);
-	if(!Var)
-		throw RPrgException(prg,"Unknown variable '"+Inst+"'");
-	RPrgVarInst* Instance=dynamic_cast<RPrgVarInst*>(Var);
-	if(!Instance)
-		throw RPrgException(prg,"Variable '"+Inst+"' is not an object instance.");
-	RPrgFunc* MethodPtr(Instance->GetClass()->GetMethod(Method));
-	if(!MethodPtr)
-		throw RPrgException(prg,"Unknown method '"+Method+"' for object '"+Inst+"'");
-	MethodPtr->Run(prg,r,Instance,Params);
+	int index;
+	switch(e->key())
+	{
+		case Qt::Key_Up:
+			break;
+		case Qt::Key_Backspace:
+		case Qt::Key_Left:
+			getCursorPosition(&Para,&index);
+			if(index>1)
+				QTextEdit::keyPressEvent(e);
+			break;
+		case Qt::Key_Return:
+		case Qt::Key_Enter:
+		{
+			getCursorPosition(&Para,&index);
+			QString line(text(Para));
+			QTextEdit::keyPressEvent(e);
+			emit EnterCmd(line.right(line.length()-1));
+			append(">");
+			setCursorPosition(++Para,1);
+			break;
+		}
+		default:
+			QTextEdit::keyPressEvent(e);
+	}
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgInstMethod::AddParam(RPrgVar* var)
+void RQConsole::WriteStr(const RString& str)
 {
-	Params.InsertPtr(var);
-}
-
-
-//------------------------------------------------------------------------------
-RPrgInstMethod::~RPrgInstMethod(void)
-{
+//	int para,index;
+//	getCursorPosition(&para,&index);
+//	setCursorPosition(para-1,0);
+	append(ToQString(str));
+	Para++;
+//	getCursorPosition(&para,&index);
+//	setCursorPosition(para+2,0);
+//	cout<<str<<endl;
 }

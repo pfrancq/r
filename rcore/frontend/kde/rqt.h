@@ -1,10 +1,12 @@
 /*
 
+	R Project Library
+
 	RQt.h
 
 	Generic function used for Qt compatibility - Header.
 
-	Copyright 2004 by the Universit�Libre de Bruxelles.
+	Copyright 2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).

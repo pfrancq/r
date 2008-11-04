@@ -107,7 +107,7 @@ protected:
 	/**
 	 * Current Depth.
 	 */
-	size_t CurDepth;
+	char CurDepth;
 
 	/**
 	 * Position of the last "token" extracted.
@@ -155,7 +155,7 @@ public:
 	/**
 	 * Get the current depth of the XML tree parsed.
 	 */
-	size_t GetCurrentDepth(void) const;
+	char GetCurrentDepth(void) const;
 
 	/**
 	 * Get the position of the last token extracted

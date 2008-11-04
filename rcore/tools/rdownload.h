@@ -74,7 +74,7 @@ class RDownload
 	 * Valid Content?
 	 */
 	bool ValidContent;
-	
+
 	/**
 	 * Current MIME Type;
 	 */
@@ -137,7 +137,7 @@ protected:
 	 * @return true if the file should be downloaded (default).
 	 */
 	virtual bool IsValidContent(const R::RString& MIME);
-	
+
 	/**
 	 * Method called when the download of file starts.
 	 * @return true if the file should really be downloaded (default).
@@ -145,14 +145,14 @@ protected:
 	virtual bool StartDownload(void);
 
 public:
-	
+
 	/**
 	 * Get the current MIME type.
 	 */
 	RString GetMIMEType(void);
-	
+
 	/**
-	* Destructor of the downloader.
+	* Destruct the downloader.
 	*/
 	virtual ~RDownload(void);
 };

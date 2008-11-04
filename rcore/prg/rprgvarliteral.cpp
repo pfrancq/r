@@ -58,7 +58,7 @@ void RPrgVarLiteral::Assign(const void* data)
 
 
 //------------------------------------------------------------------------------
-RString RPrgVarLiteral::GetValue(RPrg*)
+RString RPrgVarLiteral::GetValue(RInterpreter*)
 {
 	return(Name);
 }

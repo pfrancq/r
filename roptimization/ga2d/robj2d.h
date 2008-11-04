@@ -6,7 +6,7 @@
 
 	Object for 2D placement GA - Header
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -75,7 +75,7 @@ public:
 	RObj2D* Owner;
 
 	/**
-	* Identificator of the connector.
+	* Identifier of the connector.
 	*/
 	size_t Id;
 
@@ -137,7 +137,7 @@ public:
 	* @param x              X Coordinate of the position of the connector.
 	* @param y              Y Coordinate of the position of the connector.
 	*/
-	RObj2DConnector(RObj2D* owner, size_t id,const size_t x,unsigned y);
+	RObj2DConnector(RObj2D* owner, size_t id,tCoord x,tCoord y);
 
 	/**
 	* Construct a connector.
@@ -147,7 +147,7 @@ public:
 	* @param x              X Coordinate of the position of the connector.
 	* @param y              Y Coordinate of the position of the connector.
 	*/
-	RObj2DConnector(RObj2D* owner, size_t id,const RString& name,const size_t x,unsigned y);
+	RObj2DConnector(RObj2D* owner, size_t id,const RString& name,tCoord x,tCoord y);
 
 
 	/**
@@ -158,7 +158,7 @@ public:
 	* @param x              X Coordinate of the position of the connector.
 	* @param y              Y Coordinate of the position of the connector.
 	*/
-	RObj2DConnector(RObj2D* owner, size_t id,const char* name,const size_t x,unsigned y);
+	RObj2DConnector(RObj2D* owner, size_t id,const char* name,tCoord x,tCoord y);
 
 	/**
 	* Construct a connector.
@@ -172,30 +172,30 @@ public:
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param c              Connector used for the comparaison.
+	* @param c              Connector used for the comparison.
 	*/
-	int Compare(const RObj2DConnector* c) const {return(Id-c->Id);}
+	int Compare(const RObj2DConnector* c) const {return(CompareIds(Id,c->Id));}
 
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param c              Connector used for the comparaison.
+	* @param c              Connector used for the comparison.
 	*/
-	int Compare(const RObj2DConnector& c) const {return(Id-c.Id);}
+	int Compare(const RObj2DConnector& c) const {return(CompareIds(Id,c.Id));}
 
 	/**
-	* This function compares a connector and an identificator and returns 0 if
+	* This function compares a connector and an identifier and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param id             Identificator used for the comparaison.
+	* @param id             Identifier used for the comparison.
 	*/
-	int Compare(const size_t id) const {return(Id-id);}
+	int Compare(const size_t id) const {return(CompareIds(Id,id));}
 
 	/**
 	* This function compares a connector and a name and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param name           Name used for the comparaison.
+	* @param name           Name used for the comparison.
 	*/
 	int Compare(const RString& name) const {return(Name.Compare(name));}
 
@@ -203,7 +203,7 @@ public:
 	* This function compares a connector and a name and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param name           Name used for the comparaison.
+	* @param name           Name used for the comparison.
 	*/
 	int Compare(const char* name) const {return(Name.Compare(name));}
 
@@ -218,7 +218,7 @@ public:
 	size_t GetId(void) {return(Id);}
 
 	/**
-	* Return the position of the connector relativ to the object.
+	* Return the position of the connector relative to the object.
 	*/
 	RPoint GetPos(void);
 
@@ -243,7 +243,7 @@ public:
 	/**
 	* Return the minimum distance between two connectors.
 	* @param c              The second connector.
-	* @param infos          The goemetric information representing the placed objects.
+	* @param infos          The geometric information representing the placed objects.
 	* @param pt1            The first connector point used.
 	* @param pt2            The second connector point used.
 	*/
@@ -274,7 +274,7 @@ class RObj2D
 public:
 
 	/**
-	* Identificator of the object.
+	* Identifier of the object.
 	*/
 	size_t Id;
 
@@ -347,26 +347,26 @@ public:
 	RObj2D(size_t id,const char* name,bool deformable);
 
 	/**
-	* This function compares two cobjects and returns 0 if there are the same.
+	* This function compares two objects and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param o              Object used for the comparaison.
+	* @param o              Object used for the comparison.
 	*/
-	int Compare(const RObj2D* o) const {if(IsIn(o->Id)) return(0); else return(Id-o->Id);}
+	int Compare(const RObj2D* o) const {if(IsIn(o->Id)) return(0); else return(CompareIds(Id,o->Id));}
 
 	/**
-	* This function compares two cobjects and returns 0 if there are the same.
+	* This function compares two objects and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param o              Object used for the comparaison.
+	* @param o              Object used for the comparison.
 	*/
-	int Compare(const RObj2D& o) const {if(IsIn(o.Id)) return(0); else return(Id-o.Id);}
+	int Compare(const RObj2D& o) const {if(IsIn(o.Id)) return(0); else return(CompareIds(Id,o.Id));}
 
 	/**
 	* This function compares an object and an identificator and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param id             Identificator used for the comparaison.
+	* @param id             Identificator used for the comparison.
 	*/
-	int Compare(const size_t id) const {if(IsIn(id)) return(0); else return(Id-id);}
+	int Compare(const size_t id) const {if(IsIn(id)) return(0); else return(CompareIds(Id,id));}
 
 	/**
 	* This function compares an object and a name and returns 0 if

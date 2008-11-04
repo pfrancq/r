@@ -88,7 +88,7 @@ public:
 	/**
 	* Compare function used by container.
 	*/
-	int Compare(const RObjH& obj) const {return(Id-obj.Id);}
+	int Compare(const RObjH& obj) const {return(CompareIds(Id,obj.Id));}
 
 	/**
 	* Return the object identifier.

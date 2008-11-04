@@ -54,7 +54,7 @@ size_t RChar::StrLen(const RChar* str)
 	const RChar* ptr;
 
 	if(!str) return(0);
-	for(len=0,ptr=str;!ptr->IsNull();len++,ptr++);
+	for(len=0,ptr=str;!ptr->IsNull();len++,ptr++) ;
 	return(len);
 }
 

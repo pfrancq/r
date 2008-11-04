@@ -228,7 +228,7 @@ int RCString::Compare(const char* src) const
 size_t RCString::HashIndex(size_t idx) const
 {
 	if((!Data)||(Data->Len<idx)) return(26);
-	char c(tolower(Data->Text[idx-1]));
+	char c(static_cast<char>(tolower(Data->Text[idx-1])));
 	if((c>=char('a'))&&(c<=char('z')))
 		return(c-char('a'));
 	return(26);

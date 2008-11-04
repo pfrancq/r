@@ -82,7 +82,7 @@ template<class I,bool bOrder>
 	{
 		I* ptr;
 		size_t OldSize;
-		
+
 		OldSize=MaxInt;
 		MaxInt+=(MaxInt/2);
 		if(max>MaxInt)
@@ -95,13 +95,13 @@ template<class I,bool bOrder>
 	}
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
 	size_t RVectorInt<I,bOrder>::GetId(I nb,bool& find) const
 {
 	size_t NbMin,NbMax,i=0;
-	int Comp=0;
+	bool CompNeg(true);
 	bool Cont=true,NotLast=true;
 	I ptr,*ptr2;
 
@@ -118,13 +118,12 @@ template<class I,bool bOrder>
 			{
 				i=(NbMax+NbMin)/2;
 				ptr=List[i];
-				Comp=ptr-nb;
-				if(!Comp)
+				if(ptr==nb)
 				{
 					find=true;
 					return(i);
 				}
-				if(Comp>0)
+				if(ptr>nb)
 				{
 					NbMax = i;
 					if(i) NbMax--;
@@ -138,14 +137,15 @@ template<class I,bool bOrder>
 		else
 		{
 			i = 0;
-			Comp=(*List)-nb;
-			if(!Comp)
+			if((*List)==nb)
 			{
 				find=true;
 				return(0);
 			}
+			else if((*List)>nb)
+				CompNeg=false;
 		}
-		if(Comp<0) i++;
+		if(CompNeg) i++;
 		return(i);
 	}
 	else
@@ -220,14 +220,14 @@ template<class I,bool bOrder>
 	void RVectorInt<I,bOrder>::InsertAt(I ins,size_t pos)
 {
 	I* ptr;
-	
+
 	if(pos+1>MaxInt)
 		Verify(pos+1);
 	ptr=&List[pos];
 	if(pos<NbInt)
 		memmove(ptr+1,ptr,(NbInt-pos)*sizeof(I));
 	(*ptr)=ins;
-	NbInt++;	
+	NbInt++;
 }
 
 
@@ -284,7 +284,7 @@ template<class I,bool bOrder>
 	rand->RandOrder<I>(List,nb);
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
 	RVectorInt<I,bOrder>& RVectorInt<I,bOrder>::operator=(const RVectorInt& src)

@@ -2,11 +2,11 @@
 
 	RStep Project Library
 
-	RNotificationCenter.h
+	RNotificationCenter.coo
 
-	Notification center - Header.
+	Notification center - Implementation.
 
-	Copyright 2006 by Pascal Francq.
+	Copyright 2006-2008 by Pascal Francq.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -34,6 +34,7 @@
 #include <rcursor.h>
 #include <rnotificationcenter.h>
 #include <robject.h>
+#include <rstd.h>
 using namespace R;
 using namespace std;
 
@@ -62,8 +63,8 @@ public:
 
 	IListener(tNotificationHandler handler,RObject* observer,hNotification handle,RObject* object)
 		: Handler(handler), Observer(observer), Handle(handle), Object(object) {}
-	int Compare(const IListener& listener) const {return(this-&listener);}
-	int Compare(const IListener* listener) const {return(this-listener);}
+	int Compare(const IListener& listener) const {return(ComparePtrs(this,&listener));}
+	int Compare(const IListener* listener) const {return(ComparePtrs(this,listener));}
 };
 
 
@@ -135,8 +136,8 @@ struct IObjects : public RContainer<IListener,true,true>
 
 	IObjects(RObject* object) : RContainer<IListener,true,true>(50), Object(object) {}
 
-	int Compare(const IObjects& object) const {return(Object-object.Object);}
-	int Compare(RObject* object) const {return(Object-object);}
+	int Compare(const IObjects& object) const {return(ComparePtrs(Object,object.Object));}
+	int Compare(RObject* object) const {return(ComparePtrs(Object,object));}
 	void DeleteObserver(const RObject* observer,hNotification type);
 };
 

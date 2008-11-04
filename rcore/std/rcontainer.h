@@ -223,6 +223,12 @@ public:
 	inline size_t GetIncNb(void) const {return(IncPtr);}
 
 	/**
+	 * Verify if an index is a valid one in the container.
+	 * @param idx            Index.
+	 */
+	inline bool VerifyIndex(size_t idx) const {if(!NbPtr) return(0); return(idx<LastPtr);}
+
+	/**
 	* Verify if the container can hold a certain number of elements. If not,
 	* the container is extended.
     * @param max             Maximal number of elements that must be contained.

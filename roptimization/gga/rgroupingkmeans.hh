@@ -100,7 +100,7 @@ template<class cGroup,class cObj,class cGroups>
 			Relevant->AvgSim=SumSim;
 		}
 	}
-	Relevant->AvgSim/=(group->GetNbObjs()-1);
+	Relevant->AvgSim/=static_cast<double>(group->GetNbObjs()-1);
 }
 
 
@@ -398,7 +398,7 @@ template<class cGroup,class cObj,class cGroups>
 		if(avg>max)
 			max=avg;
 	}
-	return(J/(Protos.GetNb()*max));
+	return(J/(static_cast<double>(Protos.GetNb())*max));
 }
 
 

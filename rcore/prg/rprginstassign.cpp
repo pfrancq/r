@@ -36,6 +36,7 @@
 #include <rprgvarstring.h>
 #include <rprgclass.h>
 #include <rprg.h>
+#include <rinterpreter.h>
 #include <rcursor.h>
 using namespace std;
 using namespace R;
@@ -49,8 +50,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstNew::RPrgInstNew(RPrg* prg,const RString& name,RPrgClass* c)
-	: RPrgInst(prg->Line), Var(name), Class(c), Params(20,10)
+RPrgInstNew::RPrgInstNew(RInterpreter* prg,const RString& name,RPrgClass* c)
+	: RPrgInst(prg->GetLine()), Var(name), Class(c), Params(20,10)
 {
 	// Read Values
 	prg->AnalyseParam(Params);
@@ -58,7 +59,7 @@ RPrgInstNew::RPrgInstNew(RPrg* prg,const RString& name,RPrgClass* c)
 
 
 //------------------------------------------------------------------------------
-void RPrgInstNew::Run(RPrg* prg,RPrgOutput* o)
+void RPrgInstNew::Run(RInterpreter* prg,RPrgOutput* o)
 {
 	RPrgVar* Ptr=Class->NewVar(prg,o,Var,Params);
 	prg->AddVar(Ptr);
@@ -79,14 +80,14 @@ RPrgInstNew::~RPrgInstNew(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstAssignVar::RPrgInstAssignVar(RPrg* prg,const RString& name,RPrgVar* assign)
-	: RPrgInst(prg->Line), Var(name), Assign(assign)
+RPrgInstAssignVar::RPrgInstAssignVar(RInterpreter* prg,const RString& name,RPrgVar* assign)
+	: RPrgInst(prg->GetLine()), Var(name), Assign(assign)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgInstAssignVar::Run(RPrg* prg,RPrgOutput*)
+void RPrgInstAssignVar::Run(RInterpreter* prg,RPrgOutput*)
 {
 	RPrgVar* Ptr=prg->Find(Var);
 	if(!Ptr)

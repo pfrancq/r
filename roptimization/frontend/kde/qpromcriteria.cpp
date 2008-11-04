@@ -161,10 +161,10 @@ void QPromCriteria::InsertCriterion(const char* crit)
 {
 	QPromCriterion* ptr;
 
-	ptr=new QPromCriterion(crit,Crits.GetNb());
-	Direct->insertItem(crit,Crits.GetNb());
+	ptr=new QPromCriterion(crit,static_cast<int>(Crits.GetNb()));
+	Direct->insertItem(crit,static_cast<int>(Crits.GetNb()));
 	Crits.InsertPtr(ptr);
-	Current=Crits.GetNb()-1;
+	Current=static_cast<int>(Crits.GetNb()-1);
 }
 
 

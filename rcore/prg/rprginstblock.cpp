@@ -46,8 +46,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstBlock::RPrgInstBlock(RPrg* prg,size_t t)
-	: RPrgInst(prg->Line), Insts(50,25), Vars(20,20), Tabs(t)
+RPrgInstBlock::RPrgInstBlock(RInterpreter* prg,size_t depth)
+	: RPrgInst(prg->GetLine()), Insts(50,25), Vars(20,20), Depth(depth)
 {
 }
 
@@ -57,6 +57,13 @@ void RPrgInstBlock::AddInst(RPrgInst* ins)
 {
 	if(ins)
 		Insts.InsertPtr(ins);
+}
+
+
+//------------------------------------------------------------------------------
+void RPrgInstBlock::ClearInstructions(void)
+{
+	Insts.Clear();
 }
 
 

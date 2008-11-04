@@ -224,14 +224,14 @@ bool RParamValue::Set(RXMLTag* tag)
 
 
 //------------------------------------------------------------------------------
-void RParamValue::SetInt(int v)
+void RParamValue::SetInt(long long int v)
 {
 	Value=RString::Number(v);
 }
 
 
 //------------------------------------------------------------------------------
-void RParamValue::SetUInt(unsigned int v)
+void RParamValue::SetUInt(unsigned long long int v)
 {
 	Value=RString::Number(v);
 }

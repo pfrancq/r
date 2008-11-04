@@ -50,7 +50,7 @@ namespace R{
 //------------------------------------------------------------------------------
 // forward declaration
 class RPrgVar;
-class RPrg;
+class RInterpreter;
 class RPrgVarInst;
 class RPrgOutput;
 
@@ -119,7 +119,7 @@ public:
 	* @param inst           Instance of the class.
 	* @param args           Parameters of the function.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o,RPrgVarInst* inst,RContainer<RPrgVar,true,false>& args)=0;
+	virtual void Run(RInterpreter* prg,RPrgOutput* o,RPrgVarInst* inst,RContainer<RPrgVar,true,false>& args)=0;
 
 	/**
 	* Destruct the function.

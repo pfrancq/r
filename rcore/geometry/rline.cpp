@@ -6,7 +6,7 @@
 
 	Line - Implementation.
 
-	Copyright 1999-2003 by the Universit� Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -59,7 +59,7 @@ RLine::RLine(const RPoint* pt1,const RPoint* pt2,const bool seg)
 
 
 //------------------------------------------------------------------------------
-float RLine::Length(void) const
+double RLine::Length(void) const
 {
 	tCoord X=Abs(Pt2.X-Pt1.X),Y=Abs(Pt2.Y-Pt1.Y);
 	return(sqrt(static_cast<double>(X*X+Y*Y)));

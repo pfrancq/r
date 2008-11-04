@@ -225,7 +225,7 @@ RPoint* RPolygon::GetBottomLeft(const tCoord MinX,const tCoord MinY,const tCoord
 	point.Start();
 	X=point()->X;
 	Y=point()->Y;
-	while((Y<MinY)||(X<MinX)&&(X>MaxX))
+	while((Y<MinY)||((X<MinX)&&(X>MaxX)))
 	{
 		point.Next();
 		i--;
@@ -576,7 +576,7 @@ bool RPolygon::IsIn(const RPolygon* poly) const
 				case Up:
 					Y--;
 					break;
-					
+
 				default:
 					RAssertMsg("Not a valid Direction in this context");
 					break;
@@ -605,7 +605,7 @@ tCoord RPolygon::Area(void) const
 {
 	RContainer<RRect,true,false> r(50);
 	double Area=0.0;
-	
+
 	RectDecomposition(r);
 	RCursor<RRect> Cur(r);
 	for(Cur.Start();!Cur.End();Cur.End())

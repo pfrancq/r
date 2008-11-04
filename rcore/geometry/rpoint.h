@@ -6,7 +6,7 @@
 
 	Point - Header
 
-	Copyright 1999-2007 by the Université Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -93,39 +93,39 @@ public:
 
 	/**
 	* The equal operator.
-	* @param pt             Point used for the comparaison.
+	* @param pt             Point used for the comparison.
 	*/
 	inline bool operator==(const RPoint& pt) const {return((X==pt.X)&&(Y==pt.Y));}
 
 	/**
 	* The non-equal operator.
-	 @param pt             Point used for the comparaison.
+	 @param pt             Point used for the comparison.
 	*/
 	inline bool operator!=(const RPoint& pt) const {return((X!=pt.X)||(Y!=pt.Y));}
 
 	/**
 	* Make a translation of the point.
-	* @param pt             Point used for the comparaison.
+	* @param pt             Point used for the comparison.
 	*/
 	RPoint& operator+=(const RPoint& pt) {X+=pt.X;Y+=pt.Y;return(*this);}
 
 	/**
 	* Make a translation of the point.
-	* @param pt             Point used for the comparaison.
+	* @param pt             Point used for the comparison.
 	*/
 	RPoint& operator-=(const RPoint& pt) {X-=pt.X;Y-=pt.Y;return(*this);}
 
 	/**
 	* Compare two points and return 0 if there are at the same position. This function
 	* is used with the class RContainer.
-	* @param pt             Point used for the comparaison.
+	* @param pt             Point used for the comparison.
 	*/
 	inline int Compare(const RPoint* pt) const { return((*this)!=(*pt)); }
 
 	/**
 	* Compare two points and return 0 if there are at the same position. This function
 	* is used with the class RContainer.
-	* @param pt             Point used for the comparaison.
+	* @param pt             Point used for the comparison.
 	*/
 	inline int Compare(const RPoint& pt) const { return((*this)!=pt); }
 
@@ -149,7 +149,7 @@ public:
 	inline void Set(tCoord x,tCoord y) {X=x; Y=y;}
 
 	/**
-	* Return the manhatan distance from a given point.
+	* Return the Manhattan distance from a given point.
 	* @param pt              Reference point.
 	*/
 	tCoord ManhattanDist(const RPoint& pt) const;
@@ -211,7 +211,7 @@ inline RPoint operator+(const RPoint& arg1,const RPoint& arg2)  {return(RPoint(a
 
 //------------------------------------------------------------------------------
 /**
-* Substract two points.
+* Subtract two points.
 */
 inline RPoint operator-(const RPoint& arg1,const RPoint& arg2) {return(RPoint(arg1)-=arg2);}
 

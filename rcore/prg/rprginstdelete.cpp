@@ -33,7 +33,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rprginstdelete.h>
-#include <rprg.h>
+#include <rinterpreter.h>
 using namespace std;
 using namespace R;
 
@@ -46,18 +46,16 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstDelete::RPrgInstDelete(RPrg* prg)
-	: RPrgInst(prg->Line)
+RPrgInstDelete::RPrgInstDelete(RInterpreter* prg)
+	: RPrgInst(prg->GetLine())
 {
 	// Read name of variable
-	Var=prg->Prg.GetToken(")");
-	prg->Prg.SkipSpaces();
-	prg->Prg.GetChar(); // Skip (
+	Var=prg->GetToken(')');
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgInstDelete::Run(RPrg* prg,RPrgOutput*)
+void RPrgInstDelete::Run(RInterpreter* prg,RPrgOutput*)
 {
 	prg->DelVar(prg->Find(Var));
 }

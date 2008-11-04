@@ -186,7 +186,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	if((*BestInPop->Fitness)>(*BestChromosome->Fitness))
 	{
 		if(Debug)
-			Debug->PrintInfo("Chromosome "+RString(BestInPop->Id)+" best ever");
+			Debug->PrintInfo("Chromosome "+RString::Number(BestInPop->Id)+" best ever");
 		(*BestChromosome)=(*BestInPop);
 		AgeBest=0;
 		AgeNextBestMutation=FreqBestMutation;
@@ -396,7 +396,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	AgeBest++;
 	AgeBestPop++;
 	if(Debug)
-		Debug->PrintComment("Gen="+RString(Gen)+"  ;  AgeBest="+RString::Number(AgeBest)+"  -  AgeBestPop="+AgeBestPop);
+		Debug->PrintComment("Gen="+RString::Number(Gen)+"  ;  AgeBest="+RString::Number(AgeBest)+"  -  AgeBestPop="+AgeBestPop);
 	Crossover();
 	PostNotification("RInst::Interact");
 	if(!((AgeNextMutation--)&&(AgeNextBestMutation--)))  // Decrease the number of generations between mutations and verify if a mutation must be done

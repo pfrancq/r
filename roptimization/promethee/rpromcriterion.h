@@ -70,7 +70,7 @@ public:
 	};
 
 protected:
-	
+
 	/**
 	* The identifier of the criterion.
 	*/
@@ -90,7 +90,7 @@ protected:
 	* Weight of this criterion.
 	*/
 	double Weight;
-	
+
 public:
 
 	/**
@@ -104,31 +104,31 @@ public:
 
 	/**
 	* Compare the identifier of two criteria.
-	* @param crit           The criterion used for the comparaison.
+	* @param crit           The criterion used for the comparison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
-	int Compare(const RPromCriterion& crit) const {return(Id-crit.Id);}
+	int Compare(const RPromCriterion& crit) const {return(CompareIds(Id,crit.Id));}
 
 	/**
 	* Compare the identifier of two criteria.
-	* @param crit           The criterion used for the comparaison.
+	* @param crit           The criterion used for the comparison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
-	int Compare(const RPromCriterion* crit) const {return(Id-crit->Id);}
+	int Compare(const RPromCriterion* crit) const {return(CompareIds(Id,crit->Id));}
 
 	/**
 	* Compare the identifier of the criterion with a parameter.
-	* @param id             The identifier used for the comparaison.
+	* @param id             The identifier used for the comparison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
-	int Compare(const size_t id) const {return(Id-id);}
+	int Compare(const size_t id) const {return(CompareIds(Id,id));}
 
 	/**
 	* Compare the name of the criterion with a string.
-	* @param name           The string used for the comparaison.
+	* @param name           The string used for the comparison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
@@ -136,7 +136,7 @@ public:
 
 	/**
 	* Compare the name of the criterion with a string.
-	* @param name           The string used for the comparaison.
+	* @param name           The string used for the comparison.
 	* @return The function returns -1,0,+1 depends if the identifier of the
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
@@ -146,12 +146,12 @@ public:
 	 * Get the type of criteria.
 	 */
 	tCriteriaType GetType(void) const {return(Type);}
-	
+
 	/**
 	* Get the weight.
 	*/
 	double GetWeight(void) const {return(Weight);}
-	
+
 	/**
 	 * Get the name of the criterion.
 	 */
@@ -162,17 +162,17 @@ public:
 	* @param param           Pointer to a structure parameter.
 	*/
 	virtual void Set(R::RParam* param);
-	
+
 private:
-	
+
 	/**
 	 * Set the identifier of the criterion. Can only be done by RPromKernel.
 	 * @param id             Identifier of the criterion.
 	 */
 	void SetId(size_t id) {Id=id;}
-	
+
 public:
-	
+
 	/**
 	* Normalize the values for the solutions such that they are in [0,1].
 	*/
@@ -208,7 +208,7 @@ public:
 class RPromLinearCriterion : public RPromCriterion
 {
 protected:
-	
+
 	/**
 	* Value for the preference threshold of the Promethee method.
 	*/
@@ -245,7 +245,7 @@ public:
  	* @param p              Preference's threshold.
  	* @param q              Indifference's threshold.
  	* @param w              Weight of the criterion.
- 	*/	
+ 	*/
 	void Set(double p,double q,double w);
 
 	/**
@@ -253,7 +253,7 @@ public:
 	* @param param           Pointer to a structure parameter.
 	*/
 	virtual void Set(R::RParam* param);
-	
+
 	/**
 	* Get the preference's threshold.
 	*/
@@ -263,24 +263,24 @@ public:
 	* Get the indifference's threshold.
 	*/
 	double GetQ(void) const {return(Q);}
-	
+
 	/**
 	* Compute the preference of a solution with the value u and a solution with
 	* the value v. This preference must be in [0,1].
-	* 
+	*
 	* This method compares the normalized difference of values, d:
 	* -# If d<Q=: No solutions must be prefered to the other one. The method
 	*            returns 0.
 	* -# If Q<d<P: One of the solution has a degree of preference computed as
 	*              (d-Q)/(P-Q).
 	* -# If d>=P: One of the solution must always be prefered. The method
-	*            returns 1. 
+	*            returns 1.
 	* @param u              Value of the first solution.
 	* @param v              Value of the second solution.
 	* @return The result of the preference function defined.
 	*/
 	virtual double ComputePref(double u,double v);
-	
+
 	/**
 	* Create a parameter corresponding to a promethee criteria.
 	* @param name            Name of the criteria.

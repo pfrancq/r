@@ -12,7 +12,8 @@ SET(rcore_prg_INST_INCLUDES rprgfunc.h
 		               rprgoutput.h
 		               rprginstmethod.h 
 		               rprgvar.h 
-		               rprgvarstring.h)
+		               rprgvarstring.h
+		               rinterpreter.h)
 		               
 SET(rcore_prg_TARGET_SOURCES rprgfunc.cpp 
                           rprginstfor.cpp
@@ -28,4 +29,5 @@ SET(rcore_prg_TARGET_SOURCES rprgfunc.cpp
 		                  rprginstdelete.cpp 
 		                  rprginstmethod.cpp 
 		                  rprgvar.cpp 
-		                  rprgvarstring.cpp)
+		                  rprgvarstring.cpp
+		                  rinterpreter.cpp)

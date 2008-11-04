@@ -47,7 +47,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // forward class declaration
-class RPrg;
+class RInterpreter;
 
 
 //------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ public:
 	* Get the value of the variable.
 	* @param prg            Program.
 	*/
-	virtual RString GetValue(RPrg* prg);
+	virtual RString GetValue(RInterpreter* prg);
 
 	/**
 	 * Get the type of the variable.
@@ -123,6 +123,8 @@ public:
 	* Destruct the variable.
 	*/
 	virtual ~RPrgVar(void);
+
+	friend class RInterpreter;
 };
 
 

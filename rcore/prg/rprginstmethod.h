@@ -86,7 +86,7 @@ public:
 	* @param name           Name of the instance.
 	* @param method         Name of the method.
 	*/
-	RPrgInstMethod(RPrg* prg,const RString& name,const RString& method);
+	RPrgInstMethod(RInterpreter* prg,const RString& name,const RString& method);
 
 	/**
 	* Add a parameter to the method.
@@ -99,7 +99,7 @@ public:
 	* @param prg            Program.
 	* @param o              Output.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o);
+	virtual void Run(RInterpreter* prg,RPrgOutput* o);
 
 	/**
 	* Destruct the class method.

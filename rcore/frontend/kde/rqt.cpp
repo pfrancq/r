@@ -1,10 +1,12 @@
 /*
 
+	R Project Library
+
 	RQt.cpp
 
 	Generic function used for Qt compatibility - Implementation.
 
-	Copyright 2004 by the Universit�Libre de Bruxelles.
+	Copyright 2004 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -46,7 +48,7 @@ QString R::ToQString(const RString& str)
 	QString ret;
 	const RChar* ptr;
 	size_t i;
-	size_t len=str.GetLen();
+	uint len(static_cast<uint>(str.GetLen()));
 
 	ret.setLength(len);
 	for(i=0,ptr=str();i<len;ptr++,i++)
@@ -61,7 +63,7 @@ RString R::FromQString(const QString& str)
 	RString ret;
 	const RChar* ptr;
 	size_t i;
-	size_t len=str.length();
+	uint len(str.length());
 
 	ret.SetLen(len);
 	for(i=0,ptr=ret();i<len;i++,ptr++)

@@ -65,7 +65,7 @@ int RPrgInst::Compare(const RString&) const
 
 
 //------------------------------------------------------------------------------
-void RPrgInst::Run(RPrg*,RPrgOutput*)
+void RPrgInst::Run(RInterpreter*,RPrgOutput*)
 {
 }
 

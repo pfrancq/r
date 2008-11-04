@@ -53,14 +53,14 @@ RObject::RObject(const RString& name)
 //-----------------------------------------------------------------------------
 int RObject::Compare(const RObject& obj) const
 {
-	return(this-&obj);
+	return(ComparePtrs(this,&obj));
 }
 
 
 //-----------------------------------------------------------------------------
 int RObject::Compare(const RObject* obj) const
 {
-	return(this-obj);
+	return(ComparePtrs(this,obj));
 }
 
 

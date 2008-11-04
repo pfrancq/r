@@ -244,11 +244,11 @@ void RDate::SetToday(void)
 	now=time((time_t *)0);
 	l_time = localtime(&now);
 	Year=l_time->tm_year+1900;
-	Month=l_time->tm_mon+1;
-	Day=l_time->tm_mday;
-	Hour=l_time->tm_hour;
-	Minute=l_time->tm_min;
-	Second=l_time->tm_sec;
+	Month=static_cast<char>(l_time->tm_mon+1);
+	Day=static_cast<char>(l_time->tm_mday);
+	Hour=static_cast<char>(l_time->tm_hour);
+	Minute=static_cast<char>(l_time->tm_min);
+	Second=static_cast<char>(l_time->tm_sec);
 }
 
 
@@ -311,7 +311,7 @@ void RDate::SetDate(const RString& date)
 		(*begin)=0;
 		if(!ptr->IsNull())
 			ptr++; // Skip "-"
-		month=atoi(num);
+		month=static_cast<char>(atoi(num));
 
 		// Read Day
 		begin=num;
@@ -321,7 +321,7 @@ void RDate::SetDate(const RString& date)
 			ptr++;
 		}
 		(*begin)=0;
-		day=atoi(num);
+		day=static_cast<char>(atoi(num));
 
 		// Skip spaces
 		while((!ptr->IsNull())&&(ptr->IsSpace()))
@@ -337,7 +337,7 @@ void RDate::SetDate(const RString& date)
 		(*begin)=0;
 		if(!ptr->IsNull())
 			ptr++; // Skip ":"
-		hour=atoi(num);
+		hour=static_cast<char>(atoi(num));
 
 		// Read Minute
 		begin=num;
@@ -349,7 +349,7 @@ void RDate::SetDate(const RString& date)
 		(*begin)=0;
 		if(!ptr->IsNull())
 			ptr++; // Skip ":"
-		minute=atoi(num);
+		minute=static_cast<char>(atoi(num));
 
 		// Read Second
 		begin=num;
@@ -361,7 +361,7 @@ void RDate::SetDate(const RString& date)
 		(*begin)=0;
 		if(!ptr->IsNull())
 			ptr++; // Skip ":"
-		second=atoi(num);
+		second=static_cast<char>(atoi(num));
 
 		// Set the date
 		SetDate(day,month,year,hour,minute,second);

@@ -33,6 +33,7 @@
 // include files for ANSI C/C++
 #include <string.h>
 #include <stdarg.h>
+#include <memory>
 
 
 //------------------------------------------------------------------------------
@@ -493,7 +494,7 @@ RString RQuerySQLite::operator[](size_t index) const
 		throw RDbException("RQuerySQLite::operator[] const : column "+RString::Number(index)+" outside range [0,"+RString::Number(NbCols-1)+"]");
 	if(End())
 		throw RDbException("Treated set");
-	return(RString(static_cast<const RChar*>(sqlite3_column_text16(Result,index))));
+	return(RString(static_cast<const RChar*>(sqlite3_column_text16(Result,static_cast<int>(index)))));
 }
 
 

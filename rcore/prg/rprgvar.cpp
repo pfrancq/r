@@ -71,7 +71,7 @@ void RPrgVar::Assign(const void*)
 
 
 //------------------------------------------------------------------------------
-RString RPrgVar::GetValue(RPrg*)
+RString RPrgVar::GetValue(RInterpreter*)
 {
 	return(RString::Null);
 }

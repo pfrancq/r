@@ -49,7 +49,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // forward class declaration
-class RPrg;
+class RInterpreter;
 class RPrgVar;
 class RPrgFunc;
 class RPrgOutput;
@@ -131,7 +131,7 @@ public:
 	 * @param params         Parameters of the constructor.
 	 * @return
 	 */
-	virtual RPrgVar* NewVar(RPrg* prg,RPrgOutput* o,const RString& name,RContainer<RPrgVar,true,false>& params)=0;
+	virtual RPrgVar* NewVar(RInterpreter* prg,RPrgOutput* o,const RString& name,RContainer<RPrgVar,true,false>& params)=0;
 
 	/**
 	* Destruct the class.
@@ -163,7 +163,7 @@ public:
 	 * @param params         Parameters of the constructor.
 	 * @return
 	 */
-	virtual RPrgVar* NewVar(RPrg* prg,RPrgOutput* o,const RString& name,RContainer<RPrgVar,true,false>& params);
+	virtual RPrgVar* NewVar(RInterpreter* prg,RPrgOutput* o,const RString& name,RContainer<RPrgVar,true,false>& params);
 };
 
 

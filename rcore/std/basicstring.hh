@@ -95,7 +95,7 @@ template<class C,class S>
 {
 	if(src)
 	{
-		size_t len=std::strlen(src);
+		size_t len=strlen(src);
 		C* ptr=new C[len+1];
 		memcpy(ptr,src,sizeof(C)*len);
 		ptr[len]=0;
@@ -162,7 +162,7 @@ template<class C,class S>
 	RDecRef<CharBuffer>(Data);
 	if(text)
 	{
-		size_t len=std::strlen(text);
+		size_t len=strlen(text);
 		if(nb>len)
 			nb=len;
 		C* ptr=new C[nb+1];
@@ -261,7 +261,7 @@ template<class C,class S>
 			ptr = str.Data->Text+(ptr-Data->Text);
 	    	while(len)
 			{
-				(*ptr) = std::toupper(*ptr);
+				(*ptr) = static_cast<C>(toupper(*ptr));
 				len--;
 				ptr++;
 			}
@@ -290,7 +290,7 @@ template<class C,class S>
 			ptr = str.Data->Text+(ptr-Data->Text);
 	    	while(len)
 			{
-				(*ptr) = std::tolower(*ptr);
+				(*ptr) = static_cast<C>(tolower(*ptr));
 				len--;
 				ptr++;
 			}
@@ -391,7 +391,7 @@ template<class C,class S>
 	}
 	else
 	{
-		size_t len=std::strlen(src);
+		size_t len=strlen(src);
 		Copy();
 		Data->Verify(len+Data->Len+1);
 		memcpy(&Data->Text[Data->Len],src,sizeof(C)*len+1);
@@ -413,7 +413,7 @@ template<class C,class S>
 
 	// Initialize the search
 	if(!CaseSensitive)
-		search=std::toupper(car);
+		search=static_cast<C>(toupper(car));
 	else
 		search=car;
 	if(pos<0)
@@ -422,7 +422,7 @@ template<class C,class S>
 		left=false;
 
 		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=Data->Len+pos;
+		pos=static_cast<int>(Data->Len)+pos;
 		if(pos<=0) return(-1);
 		start=&Data->Text[pos];
 		max=pos+1;
@@ -478,7 +478,7 @@ template<class C,class S>
 		incr=-1;
 
 		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=Data->Len+pos;
+		pos=static_cast<int>(Data->Len)+pos;
 		if(pos<=0) return(-1);
 		start=&Data->Text[pos];
 		max=pos+1;
@@ -524,7 +524,7 @@ template<class C,class S>
 							if(incr>0)
 								return(pos);
 							else
-								return(pos-search.GetLen()+1);
+								return(pos-static_cast<int>(search.GetLen())+1);
 						}
 						start+=incr;
 						toFind+=incr;
@@ -543,7 +543,7 @@ template<class C,class S>
 					if(incr>0)
 						return(pos);
 					else
-						return(pos-search.GetLen()+1);
+						return(pos-static_cast<int>(search.GetLen()+1));
 				}
 			}
 		}
@@ -569,7 +569,7 @@ template<class C,class S>
 		left=false;
 
 		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=Data->Len+pos;
+		pos=static_cast<int>(Data->Len)+pos;
 		if(pos<=0) return;
 		start=&Data->Text[pos];
 		max=pos+1;
@@ -620,7 +620,7 @@ template<class C,class S>
 	if(!GetLen())
 		return;
 
-	size_t skip=search.GetLen();         // Number of character to skip (+1)
+	int skip=static_cast<int>(search.GetLen());         // Number of character to skip (+1)
 
 	if(pos<0)
 	{
@@ -646,7 +646,7 @@ template<class C,class S>
 	else
 	{
 		// From left
-		int Add=rep.GetLen()-search.GetLen();  // Number of character added.
+		int Add=static_cast<int>(rep.GetLen())-static_cast<int>(search.GetLen());  // Number of character added.
 		pos=FindStr(search,pos);
 		while(pos!=-1)
 		{
@@ -699,7 +699,7 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	S R::BasicString<C,S>::Mid(size_t idx,int len) const
+	S R::BasicString<C,S>::Mid(size_t idx,size_t len) const
 {
 	S res;
 	size_t Len;
@@ -708,7 +708,7 @@ template<class C,class S>
 	if(Data->Len<=idx) return("");
 
 	// Computed the number of characters to copied
-	if(len<0)
+	if(len==(size_t)-1)
 		Len=Data->Len-idx;
 	else
 		Len=len;

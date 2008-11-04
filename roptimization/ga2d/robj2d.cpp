@@ -6,7 +6,7 @@
 
 	Object for 2D placement GA - Implementation
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -85,7 +85,7 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const char* name,const 
 
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const size_t x,unsigned y)
+RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,tCoord x,tCoord y)
 	: Owner(owner), Id(id), Name(RString::Number(id)), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
@@ -96,7 +96,7 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const size_t x,unsigned
 
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const RString& name,const size_t x,unsigned y)
+RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const RString& name,tCoord x,tCoord y)
 	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
@@ -107,7 +107,7 @@ RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const RString& name,con
 
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner, size_t id,const char* name,const size_t x,unsigned y)
+RObj2DConnector::RObj2DConnector(RObj2D* owner, size_t id,const char* name,tCoord x,tCoord y)
 	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
 {
 	Pos=new RPoint[NbPos];
@@ -138,7 +138,7 @@ RPoint RObj2DConnector::GetPos(void)
 //------------------------------------------------------------------------------
 RPoint RObj2DConnector::GetPos(size_t i,char o)
 {
-	return(Poss[i][o]);
+	return(Poss[i][static_cast<size_t>(o)]);
 }
 
 
@@ -222,7 +222,7 @@ RObj2D::RObj2D(size_t id,const char* name,bool deformable)
 //------------------------------------------------------------------------------
 void RObj2D::Init(void)
 {
-	char i,j;
+	int i,j;
 	RPolygon *p;
 	RRects *r;
 
@@ -339,7 +339,7 @@ void RObj2D::SetOri(ROrientation o)
 //------------------------------------------------------------------------------
 bool RObj2D::IsOriSet(ROrientation o)
 {
-	char i;
+	int i;
 	ROrientation *ptr;
 
 	for(i=NbPossOri+1,ptr=PossOri;--i;ptr++)
@@ -367,7 +367,7 @@ RRects* RObj2D::GetRects(int i)
 //------------------------------------------------------------------------------
 RObj2D& RObj2D::operator=(const RObj2D &obj)
 {
-	char i;
+	int i;
 	RPolygon *ptr;
 	const RPolygon *ptr2;
 

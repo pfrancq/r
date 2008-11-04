@@ -35,6 +35,7 @@
 #include <rprgvarinst.h>
 #include <rprgclass.h>
 #include <rprg.h>
+#include <rinterpreter.h>
 using namespace R;
 
 
@@ -59,7 +60,7 @@ void RPrgVarInst::Assign(const void*)
 
 
 //------------------------------------------------------------------------------
-RString RPrgVarInst::GetValue(RPrg* prg)
+RString RPrgVarInst::GetValue(RInterpreter* prg)
 {
 	throw RPrgException(prg,"Instance has no value");
 }

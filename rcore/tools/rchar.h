@@ -229,7 +229,7 @@ public:
 	* Get a Latin1 character.
 	* @return The character or 0 if is not Latin1.
 	*/
-	char Latin1(void) const                       { return(Car>0xff?0:(char)Car); }
+	char Latin1(void) const                       { return(static_cast<char>(Car>0xff?0:static_cast<char>(Car))); }
 
 	/**
 	* Get a Unicode character.

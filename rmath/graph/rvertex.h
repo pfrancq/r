@@ -119,7 +119,7 @@ public:
 	* C library.
 	* @param i               Identifier used for the comparison.
 	*/
-	int Compare(const size_t i) const {return(Id-i);}
+	int Compare(const size_t i) const {return(CompareIds(Id,i));}
 
 	/**
 	* Is used to compare a vertex and a structure. The function returns
@@ -127,7 +127,7 @@ public:
 	* C library.
 	* @param s               Structure used for the comparison.
 	*/
-	int Compare(const VertexStruct& s) const {return(Id-s.id);}
+	int Compare(const VertexStruct& s) const {return(CompareIds(Id,s.id));}
 
 	/**
 	* Destruct the vertex.

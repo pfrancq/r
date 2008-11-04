@@ -70,7 +70,7 @@ public:
 	* @param parent        Parent of the widget.
 	* @param gen           Generation.
 	*/
-	QInfoBox(QWidget* parent,int gen);
+	QInfoBox(QWidget* parent,size_t gen);
 
 	/**
 	* Constructor of the popup.
@@ -78,7 +78,7 @@ public:
 	* @param gen           Generation.
 	* @param fit           Fitness.
 	*/
-	QInfoBox(QWidget* parent,int gen,double fit);
+	QInfoBox(QWidget* parent,size_t gen,double fit);
 
 protected:
 
@@ -91,12 +91,12 @@ protected:
 
 
 //------------------------------------------------------------------------------
-QInfoBox::QInfoBox(QWidget* parent,int gen)
+QInfoBox::QInfoBox(QWidget* parent,size_t gen)
 	: QPopupMenu(0,"Info Box")
 {
 	char Tmp[50];
 
-	sprintf(Tmp,"Generation %u not executed",gen);
+	sprintf(Tmp,"Generation %zd not executed",gen);
 	insertItem(Tmp);
 	afterFocus=parent;
 	afterFocus->parentWidget()->setFocus();
@@ -104,12 +104,12 @@ QInfoBox::QInfoBox(QWidget* parent,int gen)
 
 
 //------------------------------------------------------------------------------
-QInfoBox::QInfoBox(QWidget* parent,int gen,double fit)
+QInfoBox::QInfoBox(QWidget* parent,size_t gen,double fit)
 	: QPopupMenu(0,"Info Box")
 {
 	char Tmp[50];
 
-	sprintf(Tmp,"Generation %u",gen);
+	sprintf(Tmp,"Generation %zd",gen);
 	insertItem(Tmp);
 	sprintf(Tmp,"Fitness=%f",fit);
 	insertItem(Tmp);
@@ -232,10 +232,10 @@ void QGAMonitorGraph::AddValue(const double value)
 	QPainter *painter=new QPainter(pixmap);
 	CHECK_PTR(painter);
 	painter->setPen(red);
-	NewX=static_cast<int>(receivedValues*FactorX);
+	NewX=static_cast<int>(static_cast<double>(receivedValues)*FactorX);
 	NewY=r.height()-static_cast<int>(value*FactorY);
 	if(LastValue)
-		painter->drawLine(static_cast<int>((receivedValues-1)*FactorX),r.height()-static_cast<int>((*LastValue)*FactorY),
+		painter->drawLine(static_cast<int>((static_cast<double>(receivedValues)-1)*FactorX),r.height()-static_cast<int>((*LastValue)*FactorY),
 		                  NewX,NewY);
 	else
 		painter->drawPoint(NewX,NewY);

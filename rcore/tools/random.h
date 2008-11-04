@@ -35,6 +35,11 @@
 #define RRandom_H
 
 
+//-----------------------------------------------------------------------------
+// include file for ANSI C/C++
+#include <stdlib.h>
+
+
 //------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
@@ -102,7 +107,7 @@ public:
 	*/
 	long GetValue(const long max)
 	{
-		return(static_cast<long>(max*GetValue()));
+		return(static_cast<long>(static_cast<double>(max)*GetValue()));
 	}
 
 	/**
@@ -115,9 +120,9 @@ public:
 	* @param arr            Pointer to the array representing the vector.
 	* @param size           Size of the vector.
 	*/
-    template<class T> inline void RandOrder(T *arr,unsigned size)
+    template<class T> inline void RandOrder(T *arr,size_t size)
     {
-		register unsigned i,jump;
+		register size_t i,jump;
 		T aux;
 		register T* p1;
 		register T* p2;

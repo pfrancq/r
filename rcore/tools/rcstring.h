@@ -34,16 +34,17 @@
 #ifndef RCString_H
 #define RCString_H
 
+
 //-----------------------------------------------------------------------------
 // include file for ANSI C/C++
-#include <string>
+#include <string.h>
+#include <stdlib.h>
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
 #include <rcontainer.h>
-#include <rshareddata.h>
 #include <basicstring.h>
 
 
@@ -213,8 +214,6 @@ public:
 private:
 
 	void Dummy(void);
-
-	friend class BasicString<char,RCString>;
 };
 
 

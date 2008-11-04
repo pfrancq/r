@@ -77,7 +77,7 @@ public:
 	* Get the value of the variable.
 	* @param prg            Program.
 	*/
-	virtual RString GetValue(RPrg* prg);
+	virtual RString GetValue(RInterpreter* prg);
 
 	/**
 	* Destruct the variable.

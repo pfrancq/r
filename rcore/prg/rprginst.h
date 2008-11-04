@@ -48,7 +48,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // forward declaration
-class RPrg;
+class RInterpreter;
 class RPrgOutput;
 
 
@@ -100,7 +100,12 @@ public:
 	* @param prg            Program.
 	* @param o              Output.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o);
+	virtual void Run(RInterpreter* prg,RPrgOutput* o);
+
+	/**
+	 * Need the instruction a block of instructions.
+	 */
+	virtual bool NeedBlock(void) const {return(false);}
 
 	/**
 	* Destruct the generic instruction.

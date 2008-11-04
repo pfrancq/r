@@ -121,7 +121,7 @@ public:
 	virtual void Reset(void);
 
 	/**
-	* Destructor.
+	* Destruct.
 	*/
 	virtual ~RParam(void);
 };
@@ -238,13 +238,13 @@ public:
 	* Set the content of the parameter.
 	* @param v               Value of the parameter.
 	*/
-	void SetInt(int v);
+	void SetInt(long long int v);
 
 	/**
 	* Set the content of the parameter.
 	* @param v               Value of the parameter.
 	*/
-	void SetUInt(unsigned int v);
+	void SetUInt(unsigned long long int v);
 
 	/**
 	* Set the content of the parameter.

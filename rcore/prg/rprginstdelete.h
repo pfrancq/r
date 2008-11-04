@@ -66,14 +66,14 @@ public:
 	* Construct a generic instruction.
 	* @param prg            Program.
 	*/
-	RPrgInstDelete(RPrg* prg);
+	RPrgInstDelete(RInterpreter* prg);
 
 	/**
 	* Run the instruction.
 	* @param prg            Program.
 	* @param o              Output.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o);
+	virtual void Run(RInterpreter* prg,RPrgOutput* o);
 
 	/**
 	* Destruct the generic instruction.

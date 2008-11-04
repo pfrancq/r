@@ -58,7 +58,7 @@ void RPrgVarRef::Assign(const void*)
 
 
 //------------------------------------------------------------------------------
-RString RPrgVarRef::GetValue(RPrg* prg)
+RString RPrgVarRef::GetValue(RInterpreter* prg)
 {
 	return(prg->GetValue(Name));
 }

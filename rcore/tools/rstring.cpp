@@ -35,8 +35,8 @@
 #include <rstd.h>
 #include <rstring.h>
 #include <rshareddata.h>
-#include <basicstring.hh>
 using namespace std;
+#include <basicstring.hh>
 using namespace R;
 
 
@@ -303,7 +303,7 @@ RString::operator std::string () const
 	ptr=Data->Text;
 	while(!ptr->IsNull())
 	{
-		text+=ptr->Unicode();
+		text+=ptr->Latin1();
 		ptr++;
 	}
 	return(text);
@@ -418,6 +418,15 @@ char* RString::UnicodeToLatin1(const RChar* src,size_t len)
 	}
 	(*ptr)=0;
 	return(res);
+}
+
+
+//------------------------------------------------------------------------------
+char RString::ToChar(bool& valid)
+{
+	int v;
+	valid=(sscanf(Latin1(),"%d",&v)>0);
+	return(static_cast<char>(v));
 }
 
 

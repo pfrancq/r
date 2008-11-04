@@ -62,9 +62,9 @@ int RDownload::WriteTmpFile(void* buffer,size_t size,size_t nmemb,void* param)
 		{
 			((RDownload*)param)->ValidContent=false;
         	return(-1);
-		}		
+		}
 	}
-	return(fwrite(buffer,size,nmemb,((RDownload*)param)->Stream));
+	return(static_cast<int>(fwrite(buffer,size,nmemb,((RDownload*)param)->Stream)));
 }
 
 
@@ -96,7 +96,7 @@ int RDownload::TreatHeader(void* buffer,size_t size,size_t nmemb,void* param)
 				return(-1);
 			}
 		}
-        return(nmemb);
+        return(static_cast<int>(nmemb));
     }
     return(0);
 }
@@ -122,7 +122,7 @@ RDownload::RDownload(void)
 	curl_easy_setopt(Lib, CURLOPT_NOPROGRESS, 1);
 	curl_easy_setopt(Lib, CURLOPT_USERAGENT, "libcurl-agent/1.0");
  	curl_easy_setopt(Lib, CURLOPT_COOKIEFILE, "");
- 	curl_easy_setopt(Lib, CURLOPT_NOSIGNAL, 1);	
+ 	curl_easy_setopt(Lib, CURLOPT_NOSIGNAL, 1);
 	curl_easy_setopt(Lib, CURLOPT_WRITEHEADER,this);
  	curl_easy_setopt(Lib, CURLOPT_WRITEDATA,this);
 }
@@ -138,14 +138,14 @@ void RDownload::DownloadFile(const RURI& uri,const RString& local)
 	Stream=fopen(local, "wb");
 	if(!Stream)
 		throw RException("Cannot create file '"+local+"'");
-	
+
 	// Download the file
 	curl_easy_setopt(Lib, CURLOPT_URL, uri.Latin1());
 	CURLcode err=curl_easy_perform(Lib);
 
-	// Done Part	
+	// Done Part
 	if(Stream)
-		fclose(Stream);		
+		fclose(Stream);
 	if(err)
 	{
 		if(!ValidContent)

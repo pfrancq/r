@@ -39,6 +39,7 @@
 #include <rxmlstruct.h>
 #include <rxmlfile.h>
 #include <rproblem2d.h>
+#include <rsize.h>
 using namespace R;
 
 
@@ -62,7 +63,8 @@ void RProblem2D::Load(const RURI& uri)
 	RXMLStruct s;
 	RXMLFile f(uri,&s);
 	RXMLTag *tag;
-	size_t i,X,Y;
+	size_t i;
+	tCoord X,Y;
 	RString Attr;
 	RContainer<RObj2D,true,true> Templates(50,25);
 	RPoint Tr;

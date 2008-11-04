@@ -84,14 +84,14 @@ public:
 	* @param var            Name of the variable.
 	* @param c              Class of the variable.
 	*/
-	RPrgInstNew(RPrg* prg,const RString& name,RPrgClass* c);
+	RPrgInstNew(RInterpreter* prg,const RString& name,RPrgClass* c);
 
 	/**
 	* Run the instructions in the for for the different values of its variable.
 	* @param prg            Program.
 	* @param o              Output.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o);
+	virtual void Run(RInterpreter* prg,RPrgOutput* o);
 
 	/**
 	* Destruct the "new" instruction.
@@ -126,14 +126,14 @@ public:
 	* @param var            Name of the variable.
 	* @param assign         What to assign. It is destroy by the instruction.
 	*/
-	RPrgInstAssignVar(RPrg* prg,const RString& name,RPrgVar* assign);
+	RPrgInstAssignVar(RInterpreter* prg,const RString& name,RPrgVar* assign);
 
 	/**
 	* Run the instructions in the for for the different values of its variable.
 	* @param prg            Program.
 	* @param o              Output.
 	*/
-	virtual void Run(RPrg* prg,RPrgOutput* o);
+	virtual void Run(RInterpreter* prg,RPrgOutput* o);
 
 	/**
 	* Destruct the assignment instruction.

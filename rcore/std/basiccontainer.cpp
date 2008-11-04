@@ -64,9 +64,6 @@ BasicContainer::BasicContainer(size_t m,size_t i)
 	}
 	else
 	{
-		MaxPtr=10;
-		Tab = new void*[MaxPtr];
-		memset(Tab,0x0,MaxPtr*sizeof(void*));
 		if(!IncPtr) IncPtr=10;
 	}
 }
@@ -393,7 +390,7 @@ void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos,bool del)
 	if(pos==LastPtr-1)
 	{
 		(*ptr)=0;
-		for(;(!(*ptr))&&LastPtr;ptr--,LastPtr--);
+		for(;(!(*ptr))&&LastPtr;ptr--,LastPtr--) ;
 	}
 	else
 	{

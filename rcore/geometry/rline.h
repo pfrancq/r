@@ -6,7 +6,7 @@
 
 	Line - Header.
 
-	Copyright 1999-2003 by the Universit�Libre de Bruxelles.
+	Copyright 1999-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -90,7 +90,7 @@ public:
 	/**
 	* Return the length of the line.
 	*/
-	float Length(void) const;
+	double Length(void) const;
 
 	/**
 	* Determine if there is an intersection between two lines (To verify!!!).

@@ -41,8 +41,10 @@
 #include <rpoint.h>
 #include <rrect.h>
 #include <rpolygon.h>
+#include <rstd.h>
 #include <robj2d.h>
 #include <rgrid.h>
+#include <rstd.h>
 
 
 //------------------------------------------------------------------------------
@@ -112,24 +114,24 @@ public:
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param c              Connector used for the comparaison.
+	* @param c              Connector used for the comparison.
 	*/
-	int Compare(const RGeoInfoConnector* c) const {return(Con->Id-c->Con->Id);}
+	int Compare(const RGeoInfoConnector* c) const {return(CompareIds(Con->Id,c->Con->Id));}
 
 	/**
 	* This function compares two connectors and returns 0 if there are the same.
 	* This function is used for the class RContainer.
-	* @param c              Connector used for the comparaison.
+	* @param c              Connector used for the comparison.
 	*/
-	int Compare(const RGeoInfoConnector& c) const {return(Con->Id-c.Con->Id);}
+	int Compare(const RGeoInfoConnector& c) const {return(CompareIds(Con->Id,c.Con->Id));}
 
 	/**
 	* This function compares a connector and an identificator and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param id             Identificator used for the comparaison.
+	* @param id             Identificator used for the comparison.
 	*/
-	int Compare(const size_t id) const {return(Con->Id-id);}
+	int Compare(const size_t id) const {return(CompareIds(Con->Id,id));}
 
 	/**
 	* Return the position of the connector in absolute (not relative to the

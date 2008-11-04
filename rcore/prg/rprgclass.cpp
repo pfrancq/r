@@ -35,6 +35,7 @@
 #include <rprgclass.h>
 #include <rprgfunc.h>
 #include <rprg.h>
+#include <rinterpreter.h>
 #include <rprgvarstring.h>
 using namespace std;
 using namespace R;
@@ -74,6 +75,7 @@ RPrgFunc* RPrgClass::GetMethod(const RString& method) const
 	return(Methods.GetPtr(method));
 }
 
+
 //------------------------------------------------------------------------------
 RString RPrgClass::GetName(void) const
 {
@@ -109,7 +111,7 @@ RPrgStringClass::RPrgStringClass(void)
 
 
 //------------------------------------------------------------------------------
-RPrgVar* RPrgStringClass::NewVar(RPrg* prg,RPrgOutput*,const RString& name,RContainer<RPrgVar,true,false>& params)
+RPrgVar* RPrgStringClass::NewVar(RInterpreter* prg,RPrgOutput*,const RString& name,RContainer<RPrgVar,true,false>& params)
 {
 	if(params.GetNb()>1)
 		throw RPrgException(prg,"String constructor has maximum one parameter");

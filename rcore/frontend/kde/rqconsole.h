@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgInstBlock.h
+	RQConsole.h
 
-	Block of Instructions - Header.
+	Widget that simulates a console - Header.
 
-	Copyright 2002-2008 by the Université Libre de Bruxelles.
+	Copyright 2008 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -31,15 +31,18 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPrgInstBlockH
-#define RPrgInstBlockH
+#ifndef RQConsole_H
+#define RQConsole_H
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstring.h>
-#include <rcontainer.h>
-#include <rprginst.h>
+#include <rprgoutput.h>
+
+
+//------------------------------------------------------------------------------
+// include files for Qt
+#include <qtextedit.h>
 
 
 //------------------------------------------------------------------------------
@@ -48,68 +51,50 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// forward class declaration
-class RPrgVar;
-class RInterpreter;
-class RPrgOutput;
-
-
-//------------------------------------------------------------------------------
 /**
-* The RPrgInstBlock provides a class for a block of instructions.
-* @author Pascal Francq
-* @short Instructions Block.
-*/
-class RPrgInstBlock : public RPrgInst
+ * The RQConsole class provides a Qt widget that simulates a console. In
+ * particular, this widget can be used in interaction with a RInterpreter
+ * instance.
+ * @author Pascal Francq.
+ * @short Console Widget.
+ */
+class RQConsole : public QTextEdit, public RPrgOutput
 {
-protected:
+	Q_OBJECT
 
 	/**
-	* List of all "Instructions" to execute.
-	*/
-	R::RContainer<RPrgInst,true,false> Insts;
-
-	/**
-	* List of all local "Variables" defined in the block.
-	*/
-	R::RContainer<RPrgVar,true,true> Vars;
-
-	/**
-	* Depth corresponding to this block.
-	*/
-	size_t Depth;
+	 * Current paragraph treated.
+	 */
+	int Para;
 
 public:
 
 	/**
-	* Construct a block of instructions.
-	* @param prg            Program.
-	* @param depth          Indentation.
-	*/
-	RPrgInstBlock(RInterpreter* prg,size_t depth);
-
-	/**
-	* Add an instruction to the for.
-	*/
-	void AddInst(RPrgInst* ins);
-
-	/**
-	* Get the number of tabs.
-	* @return size_t.
-	*/
-	size_t GetDepth(void) const {return(Depth);}
-
-	/**
-	 * Clear the instructions associated to the block.
+	 * Construct the console.
+	 * @param parent         Parent widget.
+	 * @param name           Name of the widget
 	 */
-	void ClearInstructions(void);
+	RQConsole(QWidget* parent,const QString& name);
 
 	/**
-	* Destruct the block of instructions.
-	*/
-	virtual ~RPrgInstBlock(void);
+	 * Catch the key event to simulate a real console.
+	 * @param e              Event.
+	 */
+	virtual void keyPressEvent(QKeyEvent* e);
 
-	friend class RInterpreter;
+	/**
+	 * Write some messages, for example if a RInterpreter generates an
+	 * exception.
+	 * @param str            Message to print.
+	 */
+	virtual void WriteStr(const RString& str);
+
+signals:
+
+	/**
+	 * Signal emits when a command was entered.
+	 */
+	void EnterCmd(QString cmd);
 };
 
 

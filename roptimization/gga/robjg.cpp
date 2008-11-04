@@ -59,21 +59,21 @@ RObjG::RObjG(const RObjG* obj)
 //------------------------------------------------------------------------------
 int RObjG::Compare(const size_t id) const
 {
-	return(Id-id);
+	return(CompareIds(Id,id));
 }
 
 
 //------------------------------------------------------------------------------
 int RObjG::Compare(const RObjG& obj) const
 {
-  return(Id-obj.Id);
+  return(CompareIds(Id,obj.Id));
 }
 
 
 //------------------------------------------------------------------------------
 int RObjG::Compare(const RObjG* obj) const
 {
-  return(Id-obj->Id);
+  return(CompareIds(Id,obj->Id));
 }
 
 

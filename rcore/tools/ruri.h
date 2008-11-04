@@ -143,7 +143,7 @@ private:
 	inline RString Extract(const PartString& part) const
 	{
 		if(part.Size)
-			return(Mid(part.Pos,part.Size));
+			return(Mid(part.Pos,static_cast<int>(part.Size)));
 		return(RString::Null);
 	}
 
