@@ -38,6 +38,8 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
+#include <rchar.h>
+#include <rcontainer.h>
 #include <rshareddata.h>
 
 
@@ -110,6 +112,12 @@ protected:
 	BasicString(const BasicString& str);
 
 	/**
+	* Construct a string with one character.
+	* @param car             Character.
+	*/
+	BasicString(const C car);
+
+	/**
 	* Construct a string from an array.
 	* @param src             Array used as reference.
 	*/
@@ -150,7 +158,13 @@ public:
 	* Assignment operator using another string.
 	* @param src             Source string.
 	*/
-	BasicString& operator=(const BasicString& src);
+	S& operator=(const S& src);
+
+	/**
+	* Assignment operator using another string.
+	* @param src             Source string.
+	*/
+	S& operator=(const C* src);
 
 	/**
 	* Return the length of the string.
@@ -208,6 +222,14 @@ public:
 	* @return String.
 	*/
 	S Trim(void) const;
+
+	/**
+	* This function return a string by stripping a given sub-string from the
+	* beginning and end of the string.
+	* @param str             Sub-string to strip.
+	* @return String.
+	*/
+	S Trim(const S& str) const;
 
 	/**
 	 * Look if the string contains only spaces.
@@ -299,14 +321,24 @@ public:
 	void Split(RContainer<S,true,false>& elements,const C car) const;
 
 	/**
+	* Return a number between 0 and 26 according to the character at position
+	* idx in the string.
+	* @remark Supported values for idx are 1 and 2.
+	* @param idx             Index of hash asked.
+	* @see R::RHashContainer and R::RDblHashContainer.
+	*/
+	size_t HashIndex(size_t idx) const;
+
+	/**
 	 * Destruct the string.
 	 */
 	~BasicString(void);
-
-protected:
-
-	void Dummy(void);
 };
+
+
+//-----------------------------------------------------------------------------
+// Template implementation
+#include <basicstring.hh>
 
 
 }  //-------- End of namespace R ----------------------------------------------

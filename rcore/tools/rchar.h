@@ -226,6 +226,19 @@ public:
 	bool operator>=(const RChar c) const {return(Car>=c.Car);}
 
 	/**
+	 * Add a character to another one.
+	 * @param c               Character.
+	 */
+	RChar& operator+=(const RChar& c) {Car=static_cast<UChar>(static_cast<unsigned short>(Car)+static_cast<unsigned short>(c.Car));return(*this);}
+
+	/**
+	 * Substract a character to another one.
+	 * @param c               Character.
+	 * @return
+	 */
+	RChar& operator-=(const RChar& c) {Car=static_cast<UChar>(static_cast<unsigned short>(Car)-static_cast<unsigned short>(c.Car));return(*this);}
+
+	/**
 	* Get a Latin1 character.
 	* @return The character or 0 if is not Latin1.
 	*/
@@ -333,6 +346,30 @@ public:
 	static int StrCmp(const char* str1,const RChar* str2);
 
 	/**
+	* Compare two RChar array, except that no more than size characters are
+	* compared.
+	* @return 0 if the two strings are identical, >0 of the first string is
+	* "greater" than the second and <0 else.
+	*/
+	static int StrNCmp(const RChar* str1,const RChar* str2,size_t size);
+
+	/**
+	* Compare a RChar array and a "C" string, except that no more than size
+	* characters are compared.
+	* @return 0 if the two strings are identical, >0 of the first string is
+	* "greater" than the second and <0 else.
+	*/
+	static int StrNCmp(const RChar* str1,const char* str2,size_t size);
+
+	/**
+	* Compare a RChar array and a "C" string, except that no more than size
+	* characters are compared.
+	* @return 0 if the two strings are identical, >0 of the first string is
+	* "greater" than the second and <0 else.
+	*/
+	static int StrNCmp(const char* str1,const RChar* str2,size_t size);
+
+	/**
 	* Test if a given character is in a string.
 	* @return 0 if the the character was not found, or point to the first
 	* occurrence of the character in the string.
@@ -346,8 +383,6 @@ public:
 
 //------------------------------------------------------------------------------
 // Same functions for RChar as for char (used in BasicString).
-namespace std
-{
 /**
 * Test if the character is a printable one.
 * @return bool.
@@ -398,7 +433,7 @@ inline bool isgraph(const R::RChar c)                      { return(c.IsGraph())
 inline R::RChar tolower(const R::RChar c)                { return(R::RChar::ToLower(c)); }
 
 /**
-* Transform an Unicode character in upperrcase.
+* Transform an Unicode character in uppercase.
 * @param c               Character.
 * return RChar.
 */
@@ -408,8 +443,40 @@ inline R::RChar toupper(const R::RChar c)                { return(R::RChar::ToUp
 * Compute the length of an array of RChar.
 * @return int.
 */
-size_t inline strlen(const R::RChar* str)                { return(R::RChar::StrLen(str)); }
-}
+inline size_t strlen(const R::RChar* str)                { return(R::RChar::StrLen(str)); }
+
+/**
+* Compare two RChar array.
+*/
+inline int strcmp(const R::RChar* str1,const R::RChar* str2)   { return(R::RChar::StrCmp(str1,str2)); }
+
+/**
+* Compare a RChar array and a "C" string.
+*/
+inline int strcmp(const R::RChar* str1,const char* str2)    { return(R::RChar::StrCmp(str1,str2)); }
+
+/**
+* Compare a RChar array and a "C" string.
+*/
+inline int strcmp(const char* str1,const R::RChar* str2)    { return(R::RChar::StrCmp(str1,str2)); }
+
+/**
+* Compare two RChar array, except that no more than size characters are
+* compared.
+*/
+inline int strncmp(const R::RChar* str1,const R::RChar* str2,size_t size)      { return(R::RChar::StrNCmp(str1,str2,size)); }
+
+/**
+* Compare a RChar array and a "C" string, except that no more than size
+* characters are compared.
+*/
+inline int strncmp(const R::RChar* str1,const char* str2,size_t size)       { return(R::RChar::StrNCmp(str1,str2,size)); }
+
+/**
+* Compare a RChar array and a "C" string, except that no more than size
+* characters are compared.
+*/
+inline int strncmp(const char* str1,const R::RChar* str2,size_t size)       { return(R::RChar::StrNCmp(str1,str2,size)); }
 
 
 //------------------------------------------------------------------------------

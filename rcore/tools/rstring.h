@@ -42,9 +42,6 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd.h>
-#include <rcontainer.h>
-#include <rchar.h>
 #include <basicstring.h>
 
 
@@ -64,8 +61,6 @@ namespace R{
 * @endcode
 * The strings str1 and str2 use (as long as none of them is modified) the same
 * copy of the characters string.
-* See the BasicString class to see information on the different methods
-* available.
 * @author Pascal Francq
 * @short Unicode String
 */
@@ -111,15 +106,15 @@ public:
 
 	/**
 	* Construct a string from a character.
-	* @param src             Character.
+	* @param car             Character.
 	*/
-	RString(char src);
+	RString(char car);
 
 	/**
 	* Construct a string from a character.
-	* @param src             Character.
+	* @param car             Character.
 	*/
-	RString(RChar src);
+	RString(RChar car);
 
 	/**
 	* Construct a string from another string.
@@ -127,25 +122,9 @@ public:
 	*/
 	RString(const RString& src);
 
-public:
+	/** @name Internal methods	*/ // @{
 
-	/**
-	* Assignment operator using a "C string".
-	* @param src             Source string.
-	*/
-	RString& operator=(const char* src);
-
-	/**
-	* Assignment operator using a string.
-	* @param src             Source string.
-	*/
-	RString& operator=(const std::string& src);
-
-	/**
-	* Copy a certain number of characters in the string.
-	* @param text            Text to copy.
-	* @param nb              Number of characters to copy.
-	*/
+	/** @copydoc BasicString(const C*,size_t)*/
 	inline void Copy(const RChar* text,size_t nb) {BasicString<RChar,RString>::Copy(text,nb);}
 
 	/**
@@ -164,57 +143,9 @@ public:
 	const char* Latin1(void) const;
 
 	/**
-	* Add another string.
-	* @param src             Source string.
-	*/
-	inline RString& operator+=(const RString& src) {return(BasicString<RChar,RString>::operator+=(src));}
-
-	/**
-	* Add another string.
-	* @param src             Source string.
-	*/
-	inline RString& operator+=(const RChar* src) {return(BasicString<RChar,RString>::operator+=(src));}
-
-	/**
-	* Add a "C string" to the string.
-	* @param src             Source string.
-	*/
-	RString& operator+=(const char* src);
-
-	/**
-	* Add a character to the string.
-	* @param src             Character.
-	*/
-	RString& operator+=(const char src);
-
-	/**
-	* Add a character to the string.
-	* @param src             Character.
-	*/
-	RString& operator+=(const RChar src);
-
-	/**
 	* Return the string in UTF16.
 	*/
-	const RChar* UTF16(void) const;
-
-	/**
-	* Return the string.  The resulting array should be copied (and not
-	* destroyed) since it is an internal structure.
-	*/
-	const RChar* operator()(void) const;
-
-	/**
-	* Return the string.  The resulting array should be copied (and not
-	* destroyed) since it is an internal structure.
-	*/
-	operator const char* () const;
-
-	/**
-	* Get a normal C++ string representing the current string.
-	* @return std::string.
-	*/
-	operator std::string () const;
+	inline const RChar* UTF16(void) const {return(Data->Text);}
 
 	/**
 	* Get a normal C++ string representing the current string.
@@ -222,6 +153,64 @@ public:
 	*/
 	std::string ToString(void) const;
 
+private:
+
+	/**
+	* Transform a C string into an array of RChar. The resulting array should be
+	* destroyed by the caller of the function.
+	* @param src             Source "C String".
+	* @param len             Length of the string (computed by the function).
+	* @param maxlen          Maximum length (may be updated by the function).
+	*/
+	static RChar* Latin1ToUnicode(const char* src,size_t& len,size_t& maxlen);
+
+	/**
+	* Transform an array of RChar into C string. The resulting C string should
+	* be destroyed by the caller of the function.
+	* @param src             Source array of RChar.
+	* @param len             Number of characters in the array.
+	*/
+	static char* UnicodeToLatin1(const RChar* src,size_t len);
+
+public:
+
+	inline void SetLen(size_t len) {BasicString<RChar,RString>::SetLen(len);}
+
+	/** @copydoc BasicString::SetLen(size_t,const S&) */
+	inline void SetLen(size_t len,const RString& str) {BasicString<RChar,RString>::SetLen(len,str);}
+	//@} Internal methods
+
+	/** @name Manipulation methods	*/ // @{
+	inline RString ToUpper(void) const {return(BasicString<RChar,RString>::ToUpper());}
+
+	inline RString ToLower(void) const {return(BasicString<RChar,RString>::ToLower());}
+
+	inline RString Trim(void) const {return(BasicString<RChar,RString>::Trim());}
+
+	/** @copydoc BasicString::Trim(const S&) const */
+	inline RString Trim(const RString& str) const {return(BasicString<RChar,RString>::Trim(str));}
+
+	inline bool ContainOnlySpaces(void) const {return(BasicString<RChar,RString>::ContainOnlySpaces());}
+
+	/** @copydoc BasicString::Find(const C,int,bool) const */
+	inline int Find(const RChar car,int pos=0,bool CaseSensitive=true) const {return(BasicString<RChar,RString>::Find(car,pos,CaseSensitive));}
+
+	/** @copydoc BasicString::FindStr(const S&,int,bool) const */
+	inline int FindStr(const RString& str,int pos=0,bool CaseSensitive=true) const {return(BasicString<RChar,RString>::FindStr(str,pos,CaseSensitive));}
+
+	/** @copydoc BasicString::Replace(const C,const C,bool,int) */
+	inline void Replace(const RChar search,const RChar rep,bool first=false,int pos=0) {BasicString<RChar,RString>::Replace(search,rep,first,pos);}
+
+	/** @copydoc BasicString::ReplaceStr(const S&,const S&,bool,int) */
+	inline void ReplaceStr(const RString& search,const RString& rep,bool first=false,int pos=0) {BasicString<RChar,RString>::ReplaceStr(search,rep,first,pos);}
+
+	inline RString Mid(size_t idx,size_t len=(size_t)-1) const {return(BasicString<RChar,RString>::Mid(idx,len));}
+
+	/** @copydoc BasicString::Split(RContainer<S,true,false>&,const C) const */
+	inline void Split(RContainer<RString,true,false>& elements,const RChar car) const {BasicString<RChar,RString>::Split(elements,car);}
+	//@} Manipulation methods
+
+	/** @name Methods related to R::RContainer	*/ // @{
 	/**
 	* Lexically compares two strings and returns an integer less than, equal
 	* to, or greater than zero if this is less than, equal to, or greater than
@@ -229,7 +218,7 @@ public:
 	* @param src             String to compare with.
 	* @see R::RContainer.
 	*/
-	int Compare(const RString& src) const;
+	inline int Compare(const RString& src) const {return(strcmp(Data->Text,src.Data->Text));}
 
 	/**
 	* Lexically compares two strings and returns an integer less than, equal
@@ -238,7 +227,7 @@ public:
 	* @param src             String to compare with.
 	* @see R::RContainer.
 	*/
-	int Compare(const char* src) const;
+	inline int Compare(const char* src) const {return(strcmp(Data->Text,src)); }
 
 	/**
 	* Lexically compares two strings and returns an integer less than, equal
@@ -247,7 +236,40 @@ public:
 	* @param src             String to compare with.
 	* @see R::RContainer.
 	*/
-	int Compare(const RChar* src) const;
+	inline int Compare(const RChar* src) const {return(strcmp(Data->Text,src));}
+
+	/**
+	* Return a number between 0 and 26 according to the character at position
+	* idx in the string.
+	* @remark Supported values for idx are 1 and 2.
+	* @param idx             Index of hash asked.
+	* @see R::RHashContainer and R::RDblHashContainer.
+	*/
+	size_t HashIndex(size_t idx) const;
+	//@} Methods related to R::RContainer
+
+	/** @name Operators	*/ // @{
+	/**
+	* Return the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
+	*/
+	inline const RChar* operator()(void) const {return(Data->Text);}
+
+	/**
+	* Return the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
+	*/
+	inline operator const char* (void) const {return(Latin1());}
+
+	/**
+	* Get a normal C++ string representing the current string.
+	* @return std::string.
+	*/
+	operator std::string () const;
+
+	inline const RChar& operator[](size_t idx) const {return(BasicString<RChar,RString>::operator[](idx));}
+
+	inline RChar& operator[](size_t idx) {return(BasicString<RChar,RString>::operator[](idx));}
 
 	/**
 	* Equal operator.
@@ -285,18 +307,52 @@ public:
 	*/
 	inline bool operator!=(const RChar* src) const {return(Compare(src));}
 
+	/** @copydoc BasicString::operator=(const S&) */
+	RString& operator=(const RString& src) {return(BasicString<RChar,RString>::operator=(src));}
+
+	/** @copydoc BasicString::operator=(const C*) */
+	RString& operator=(const RChar* src) {return(BasicString<RChar,RString>::operator=(src));}
+
 	/**
-	* Return a number between 0 and 26 according to the character at position
-	* idx in the string.
-	* @remark Supported values for idx are 1 and 2.
-	* @param idx             Index of hash asked.
-	* @see R::RHashContainer and R::RDblHashContainer.
+	* Assignment operator using a "C string".
+	* @param src             Source string.
 	*/
-	size_t HashIndex(size_t idx) const;
+	RString& operator=(const char* src);
+
+	/**
+	* Assignment operator using a string.
+	* @param src             Source string.
+	*/
+	RString& operator=(const std::string& src);
+
+	/** @copydoc BasicString::operator+=(const S&) */
+	inline RString& operator+=(const RString& src) {return(BasicString<RChar,RString>::operator+=(src));}
+
+	/** @copydoc BasicString::operator+=(const C*) */
+	inline RString& operator+=(const RChar* src) {return(BasicString<RChar,RString>::operator+=(src));}
+
+	/**
+	* Add a "C string" to the string.
+	* @param src             Source string.
+	*/
+	RString& operator+=(const char* src);
+
+	/**
+	* Add a character to the string.
+	* @param src             Character.
+	*/
+	RString& operator+=(const char src);
+
+	/**
+	* Add a character to the string.
+	* @param src             Character.
+	*/
+	RString& operator+=(const RChar src);
+	//@} Operators
 
 	//-----------------------------------------------------------------------------
 	// Static conversion functions
-
+	/** @name Number to string methods	*/ // @{
 	/**
 	 * Transform an int to a string.
 	 * @param nb             Number.
@@ -353,28 +409,9 @@ public:
 	 * @param format         String representing the format.
 	 */
 	static RString Number(const long double nb,const char* format="%LE");
+	//@} Number to string methods
 
-private:
-
-	/**
-	* Transform a C string into an array of RChar. The resulting array should be
-	* destroyed by the caller of the function.
-	* @param src             Source "C String".
-	* @param len             Length of the string (computed by the function).
-	* @param maxlen          Maximum length (may be updated by the function).
-	*/
-	static RChar* Latin1ToUnicode(const char* src,size_t& len,size_t& maxlen);
-
-	/**
-	* Transform an array of RChar into C string. The resulting C string should
-	* be destroyed by the caller of the function.
-	* @param src             Source array of RChar.
-	* @param len             Number of characters in the array.
-	*/
-	static char* UnicodeToLatin1(const RChar* src,size_t len);
-
-public:
-
+	/** @name String to number methods	*/ // @{
 	/**
 	* Try to transform a string into a char (as a number).
 	* @param valid           Variable becomes true if the conversion was done.
@@ -431,10 +468,7 @@ public:
 	*                        and "false") or if uppercaser letters are allowed.
 	*/
 	bool ToBool(bool& valid,bool strict=false);
-
-private:
-
-	void Dummy(void);
+	//@} String to number methods
 
 	// friend classes
 	friend class RCharCursor;

@@ -135,6 +135,93 @@ int RChar::StrCmp(const char* str1,const RChar* str2)
 
 
 //------------------------------------------------------------------------------
+int RChar::StrNCmp(const RChar* str1,const RChar* str2,size_t size)
+{
+	UChar u1,u2;
+
+	if(!str1)
+	{
+		if(!str2) return(0);
+		return(-1);
+	}
+	else if(!str2)
+		return(1);
+	size_t nb(0);
+	while((nb<size)&&(!str1->IsNull())&&(!str2->IsNull()))
+	{
+		u1=(*str1).Unicode();
+		u2=(*str2).Unicode();
+		if(u1!=u2)
+			return(u1-u2);
+		str1++;
+		str2++;
+		nb++;
+	}
+	if(nb==size)
+		return(0);
+	return((*str1).Unicode()-(*str2).Unicode());
+}
+
+
+//------------------------------------------------------------------------------
+int RChar::StrNCmp(const RChar* str1,const char* str2,size_t size)
+{
+	UChar u1,u2;
+
+	if(!str1)
+	{
+		if(!str2) return(0);
+		return(-1);
+	}
+	else if(!str2)
+		return(1);
+	size_t nb(0);
+	while((nb<size)&&(!str1->IsNull())&&(*str2))
+	{
+		u1=(*str1).Unicode();
+		u2=RChar(*str2).Unicode();
+		if(u1!=u2)
+			return(u1-u2);
+		str1++;
+		str2++;
+		nb++;
+	}
+	if(nb==size)
+		return(0);
+	return((*str1).Unicode()-RChar(*str2).Unicode());
+}
+
+
+//------------------------------------------------------------------------------
+int RChar::StrNCmp(const char* str1,const RChar* str2,size_t size)
+{
+	UChar u1,u2;
+
+	if(!str1)
+	{
+		if(!str2) return(0);
+		return(-1);
+	}
+	else if(!str2)
+		return(1);
+	size_t nb(0);
+	while((nb<size)&&(*str1)&&(!str2->IsNull()))
+	{
+		u1=RChar(*str1).Unicode();
+		u2=(*str2).Unicode();
+		if(u1!=u2)
+			return(u1-u2);
+		str1++;
+		str2++;
+		nb++;
+	}
+	if(nb==size)
+		return(0);
+	return(RChar(*str1).Unicode()-(*str2).Unicode());
+}
+
+
+//------------------------------------------------------------------------------
 const RChar* RChar::StrChr(const RChar* str1,const RChar c)
 {
 	UChar u1,u2;

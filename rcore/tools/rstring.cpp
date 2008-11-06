@@ -32,11 +32,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rstd.h>
 #include <rstring.h>
-#include <rshareddata.h>
 using namespace std;
-#include <basicstring.hh>
 using namespace R;
 
 
@@ -86,6 +83,7 @@ RString::RString(const RChar* src)
 {
 }
 
+
 //-----------------------------------------------------------------------------
 RString::RString(const RChar* src,size_t len)
 	: BasicString<RChar,RString>(src,len)
@@ -106,33 +104,16 @@ RString::RString(const std::string& src)
 
 
 //-----------------------------------------------------------------------------
-RString::RString(char src)
-	: BasicString<RChar,RString>()
+RString::RString(char car)
+	: BasicString<RChar,RString>(car)
 {
-	size_t len,maxlen=1;
-	RChar* ptr=new RChar[2];
-
-	ptr[0]=RChar(src);
-	ptr[1]=0;
-	len=(src>0);
-	Data=new CharBuffer(ptr,len,maxlen);
 }
 
 
 //-----------------------------------------------------------------------------
-RString::RString(RChar src)
-	: BasicString<RChar,RString>()
+RString::RString(RChar car)
+	: BasicString<RChar,RString>(car)
 {
-	size_t len,maxlen=1;
-	RChar* ptr=new RChar[2];
-
-	ptr[0]=src;
-	ptr[1]=0;
-	if(src.IsNull())
-		len=0;
-	else
-		len=1;
-	Data=new CharBuffer(ptr,len,maxlen);
 }
 
 
@@ -274,27 +255,6 @@ RString& RString::operator+=(const RChar src)
 
 
 //-----------------------------------------------------------------------------
-const RChar* RString::UTF16(void) const
-{
-	return(Data->Text);
-}
-
-
-//-----------------------------------------------------------------------------
-const RChar* RString::operator()(void) const
-{
-	return(Data->Text);
-}
-
-
-//-----------------------------------------------------------------------------
-RString::operator const char* () const
-{
-	return(Latin1());
-}
-
-
-//-----------------------------------------------------------------------------
 RString::operator std::string () const
 {
 	RChar* ptr;
@@ -314,51 +274,6 @@ RString::operator std::string () const
 std::string RString::ToString(void) const
 {
 	return(operator std::string());
-}
-
-
-//-----------------------------------------------------------------------------
-int RString::Compare(const RString& src) const
-{
-	if(!Data)
-	{
-		if(!src.Data)
-			return(0);
-		return(-1);
-	}
-	else if(!src.Data)
-		return(1);
-	return(RChar::StrCmp(Data->Text,src.Data->Text));
-}
-
-
-//-----------------------------------------------------------------------------
-int RString::Compare(const char* src) const
-{
-	if(!Data)
-	{
-		if(!src)
-			return(0);
-		return(-1);
-	}
-	else if(!src)
-		return(1);
-	return(RChar::StrCmp(Data->Text,src));
-}
-
-
-//-----------------------------------------------------------------------------
-int RString::Compare(const RChar* src) const
-{
-	if(!Data)
-	{
-		if(!src)
-			return(0);
-		return(-1);
-	}
-	else if(!src)
-		return(1);
-	return(RChar::StrCmp(Data->Text,src));
 }
 
 
@@ -737,18 +652,4 @@ RChar RCharCursor::operator[](size_t idx) const
 		throw std::range_error("RCursor::operator[] : index outside string");
 	#endif
 	return(Str->Data->Text[idx]);
-}
-
-
-
-//-----------------------------------------------------------------------------
-//
-// Dummy part
-//
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-void RString::Dummy(void)
-{
-	BasicString<RChar,RString>::Dummy();
 }

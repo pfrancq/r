@@ -38,7 +38,6 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rcstring.h>
-#include <basicstring.hh>
 using namespace std;
 using namespace R;
 
@@ -101,19 +100,9 @@ RCString::RCString(const std::string& src)
 
 
 //-----------------------------------------------------------------------------
-RCString::RCString(char src)
-	: BasicString<char,RCString>()
+RCString::RCString(char car)
+	: BasicString<char,RCString>(car)
 {
-	size_t len,maxlen=1;
-	char* ptr=new char[2];
-
-	ptr[0]=src;
-	ptr[1]=0;
-	if(src)
-		len=1;
-	else
-		len=0;
-	Data=new BasicString<char,RCString>::CharBuffer(ptr,len,maxlen);
 }
 
 
@@ -121,21 +110,6 @@ RCString::RCString(char src)
 RCString::RCString(const RCString& src)
 	: BasicString<char,RCString>(src)
 {
-}
-
-
-//-----------------------------------------------------------------------------
-RCString& RCString::operator=(const char* src)
-{
-	size_t len,maxlen;
-
-	RDecRef<BasicString<char,RCString>::CharBuffer>(Data);
-	maxlen=len=strlen(src);
-	char* ptr=new char[maxlen+1];
-	memcpy(ptr,src,sizeof(char)*len);
-	ptr[len]=0;
-	Data=new BasicString<char,RCString>::CharBuffer(ptr,len,maxlen);
-	return(*this);
 }
 
 
@@ -174,57 +148,6 @@ RCString& RCString::operator+=(const char src)
 
 
 //-----------------------------------------------------------------------------
-const char* RCString::operator()(void) const
-{
-	return(Data->Text);
-}
-
-
-//-----------------------------------------------------------------------------
-RCString::operator std::string () const
-{
-	return(Data->Text);
-}
-
-
-//-----------------------------------------------------------------------------
-RCString::operator const char* () const
-{
-	return(Data->Text);
-}
-
-
-//-----------------------------------------------------------------------------
-int RCString::Compare(const RCString& src) const
-{
-	if(!Data)
-	{
-		if(!src.Data)
-			return(0);
-		return(-1);
-	}
-	else if(!src.Data)
-		return(1);
-	return(strcmp(Data->Text,src.Data->Text));
-}
-
-
-//-----------------------------------------------------------------------------
-int RCString::Compare(const char* src) const
-{
-	if(!Data)
-	{
-		if(!src)
-			return(0);
-		return(-1);
-	}
-	else if(!src)
-		return(1);
-	return(strcmp(Data->Text,src));
-}
-
-
-//-----------------------------------------------------------------------------
 size_t RCString::HashIndex(size_t idx) const
 {
 	if((!Data)||(Data->Len<idx)) return(26);
@@ -232,18 +155,4 @@ size_t RCString::HashIndex(size_t idx) const
 	if((c>=char('a'))&&(c<=char('z')))
 		return(c-char('a'));
 	return(26);
-}
-
-
-
-//-----------------------------------------------------------------------------
-//
-// Dummy part
-//
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-void RCString::Dummy(void)
-{
-	BasicString<char,RCString>::Dummy();
 }

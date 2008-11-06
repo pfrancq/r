@@ -91,6 +91,23 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
+	R::BasicString<C,S>::BasicString(const C car)
+{
+	size_t len,maxlen=1;
+	C* ptr=new C[2];
+
+	ptr[0]=car;
+	ptr[1]=0;
+	if(!car)
+		len=0;
+	else
+		len=1;
+	Data=new CharBuffer(ptr,len,maxlen);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
 	R::BasicString<C,S>::BasicString(const C* src)
 {
 	if(src)
@@ -177,12 +194,21 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	R::BasicString<C,S>& R::BasicString<C,S>::operator=(const R::BasicString<C,S>& src)
+	S& R::BasicString<C,S>::operator=(const S& src)
 {
 	RIncRef(src.Data);
 	RDecRef<CharBuffer>(Data);
 	Data=src.Data;
-	return(*this);
+	return(*static_cast<S*>(this));
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	S& R::BasicString<C,S>::operator=(const C* src)
+{
+	Copy(src,size_t(-1));
+	return(*static_cast<S*>(this));
 }
 
 
@@ -216,6 +242,7 @@ template<class C,class S>
 {
 	size_t oldsize=Data->Len;
 	SetLen(len);
+	Copy();
 	Data->Len=len;
 	if(oldsize<len)
 	{
@@ -254,7 +281,7 @@ template<class C,class S>
 
 	while(len)
 	{
-		if((*ptr)!=std::toupper(*ptr))
+		if((*ptr)!=toupper(*ptr))
 		{
 			S str(*static_cast<const S*>(this));
 			str.BasicString<C,S>::Copy();
@@ -283,7 +310,7 @@ template<class C,class S>
 
 	while(len)
 	{
-		if((*ptr)!=std::tolower(*ptr))
+		if((*ptr)!=tolower(*ptr))
 		{
 			S str(*static_cast<const S*>(this));
 			str.BasicString<C,S>::Copy();
@@ -307,38 +334,70 @@ template<class C,class S>
 template<class C,class S>
 	S R::BasicString<C,S>::Trim(void) const
 {
-	S res;
-	size_t len = Data->Len;
-	C* ptr = Data->Text;
+	size_t pos(0);
+	size_t len(Data->Len);
+	C* ptr;
 
 	// Skip ending spaces
-	if(!len)
-		return(res);
-	ptr=&Data->Text[len-1];
-	while(len&&std::isspace(*ptr))
+	if(len)
 	{
-		len--;
-		ptr--;
+		ptr=&Data->Text[len-1];
+		while(len&&isspace(*ptr))
+		{
+			len--;
+			ptr--;
+		}
 	}
 
 	// Skip beginning spaces
-	if(!len)
-		return(res);
-	ptr=Data->Text;
-	while(len&&std::isspace(*ptr))
+	if(len)
 	{
-		len--;
-		ptr++;
+		ptr=Data->Text;
+		while(len&&isspace(*ptr))
+		{
+			len--;
+			ptr++;
+			pos++;
+		}
 	}
 
-	// Get the rest of the string
-	while(len)
+	return(Mid(pos,len));
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	S R::BasicString<C,S>::Trim(const S& str) const
+{
+	size_t pos(0);
+	size_t len(Data->Len);
+	size_t slen(str.Data->Len);
+	C* ptr;
+
+	// Skip ending spaces
+	if(len>=slen)
 	{
-		res+=(*(ptr++));
-		len--;
+		ptr=&Data->Text[len-slen];
+		while(len&&(!strncmp(str.Data->Text,ptr,slen)))
+		{
+			len-=slen;
+			ptr-=slen;
+		}
 	}
 
-	return(res);
+	// Skip beginning spaces
+	if(len>=slen)
+	{
+		ptr=Data->Text;
+		while(len&&(!strncmp(str.Data->Text,ptr,slen)))
+		{
+			len-=slen;
+			ptr+=slen;
+			pos+=slen;
+		}
+	}
+
+	return(Mid(pos,len));
 }
 
 
@@ -351,7 +410,7 @@ template<class C,class S>
 	C* ptr=Data->Text;
 	while((*ptr)!=0)
 	{
-		if(!std::isspace(*(ptr++)))
+		if(!isspace(*(ptr++)))
 			return(false);
 	}
 	return(true);
@@ -387,7 +446,7 @@ template<class C,class S>
 	RReturnValIfFail(src,static_cast<S&>(*this));
 	if(Data==DataNull)
 	{
-		(*this)=src;
+		static_cast<S&>(*this)=src;
 	}
 	else
 	{
@@ -440,7 +499,7 @@ template<class C,class S>
 	// Search for the maximal number of character
 	for(max++;--max;)
 	{
-		if(((CaseSensitive)&&((*start)==search)) || ((!CaseSensitive)&&(std::toupper(*start)==search)))
+		if(((CaseSensitive)&&((*start)==search)) || ((!CaseSensitive)&&(toupper(*start)==search)))
 			return(pos);
 		if(left)
 		{
@@ -507,7 +566,7 @@ template<class C,class S>
 	// Search for the maximal number of character
 	for(max++;--max;)
 	{
-		if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(std::toupper(*start)==(*toFind))))
+		if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(toupper(*start)==(*toFind))))
 		{
 			if(max>=search.GetLen())
 			{
@@ -516,7 +575,7 @@ template<class C,class S>
 				bool found=true;
 				for(maxlen++;--maxlen,found;)
 				{
-					if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(std::toupper(*start)==(*toFind))))
+					if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(toupper(*start)==(*toFind))))
 					{
 						if(!(maxlen-1))
 						{
@@ -705,7 +764,7 @@ template<class C,class S>
 	size_t Len;
 
 	// If the index is greater than the length -> return a null string.
-	if(Data->Len<=idx) return("");
+	if(Data->Len<=idx) return(S::Null);
 
 	// Computed the number of characters to copied
 	if(len==(size_t)-1)
@@ -784,38 +843,4 @@ template<class C,class S>
 	R::BasicString<C,S>::~BasicString(void)
 {
 	RDecRef<CharBuffer>(Data);
-}
-
-
-
-//-----------------------------------------------------------------------------
-//
-// Dummy part
-//
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-template<class C,class S>
-	void R::BasicString<C,S>::Dummy(void)
-{
-	S Str;
-	R::RContainer<S,true,false> Cont(5);
-	Str.ToLower();
-	Str.ToUpper();
-	Str.Trim();
-	Str.Find('c');
-	Str.FindStr("c");
-	Str.Replace('s','r');
-	Str.ReplaceStr("search","rep");
-	Str.Mid(0);
-	Str.SetLen(0);
-	Str.SetLen(0,"str");
-	Str.ContainOnlySpaces();
-	Str.Split(Cont,';');
-	Str.Clear();
-	Str.Copy((C*)"coucou",2);
-	Str.Copy(S("coucou"),2);
-	static_cast<const S&>(Str)[2];
-	Str[2]=C('d');
-	Str+=(C*)"e";
 }
