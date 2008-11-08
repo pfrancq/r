@@ -47,7 +47,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RPrgInstBlock::RPrgInstBlock(RInterpreter* prg,size_t depth)
-	: RPrgInst(prg->GetLine()), Insts(50,25), Vars(20,20), Depth(depth)
+	: RPrgInst(prg->GetLine()), Insts(50,25), Vars(0), Depth(depth)
 {
 }
 
@@ -60,6 +60,25 @@ void RPrgInstBlock::AddInst(RPrgInst* ins)
 }
 
 
+//-----------------------------------------------------------------------------
+void RPrgInstBlock::AddVar(RPrgVar* var)
+{
+	if(!var)
+		return;
+//	cout<<"AddVar '"<<var->GetName()<<"' in "<<GetDepth()<<endl;
+	Vars->InsertPtr(var,true);
+}
+
+
+//-----------------------------------------------------------------------------
+void RPrgInstBlock::DelVar(RPrgVar* var)
+{
+	if(!var)
+		return;
+//	cout<<"DelVar '"<<var->GetName()<<"' in "<<GetDepth()<<endl;
+	Vars->DeletePtr(*var);
+}
+
 //------------------------------------------------------------------------------
 void RPrgInstBlock::ClearInstructions(void)
 {
@@ -67,7 +86,27 @@ void RPrgInstBlock::ClearInstructions(void)
 }
 
 
+//-----------------------------------------------------------------------------
+void RPrgInstBlock::RunBlock(RInterpreter* prg,RPrgOutput* o)
+{
+	RCursor<RPrgInst> Cur(Insts);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Cur()->Run(prg,o);
+}
+
+
+//------------------------------------------------------------------------------
+void RPrgInstBlock::Run(RInterpreter* prg,RPrgOutput* o)
+{
+	prg->Scopes.Push(Vars=new RPrgScope());
+	RunBlock(prg,o);
+	prg->Scopes.Pop();
+	Vars=0;
+}
+
+
 //------------------------------------------------------------------------------
 RPrgInstBlock::~RPrgInstBlock(void)
 {
+	delete Vars;
 }

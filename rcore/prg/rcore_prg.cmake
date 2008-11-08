@@ -13,7 +13,9 @@ SET(rcore_prg_INST_INCLUDES rprgfunc.h
 		               rprginstmethod.h 
 		               rprgvar.h 
 		               rprgvarstring.h
-		               rinterpreter.h)
+		               rinterpreter.h
+		               rprgscope.h
+)
 		               
 SET(rcore_prg_TARGET_SOURCES rprgfunc.cpp 
                           rprginstfor.cpp
@@ -30,4 +32,6 @@ SET(rcore_prg_TARGET_SOURCES rprgfunc.cpp
 		                  rprginstmethod.cpp 
 		                  rprgvar.cpp 
 		                  rprgvarstring.cpp
-		                  rinterpreter.cpp)
+		                  rinterpreter.cpp
+		                  rprgscope.cpp
+)

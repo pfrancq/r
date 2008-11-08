@@ -40,6 +40,7 @@
 #include <rstring.h>
 #include <rcontainer.h>
 #include <rprginst.h>
+#include <rprgscope.h>
 
 
 //------------------------------------------------------------------------------
@@ -70,9 +71,9 @@ protected:
 	R::RContainer<RPrgInst,true,false> Insts;
 
 	/**
-	* List of all local "Variables" defined in the block.
+	* Scope of the block.
 	*/
-	R::RContainer<RPrgVar,true,true> Vars;
+	RPrgScope* Vars;
 
 	/**
 	* Depth corresponding to this block.
@@ -89,9 +90,21 @@ public:
 	RPrgInstBlock(RInterpreter* prg,size_t depth);
 
 	/**
-	* Add an instruction to the for.
+	* Add an instruction to the block.
 	*/
 	void AddInst(RPrgInst* ins);
+
+	/**
+	* Add a variable.
+	* @param var             Pointer to the variable.
+	*/
+	void AddVar(RPrgVar* var);
+
+	/**
+	* Remove a variable.
+	* @param var             Pointer to the variable.
+	*/
+	void DelVar(RPrgVar* var);
 
 	/**
 	* Get the number of tabs.
@@ -103,6 +116,22 @@ public:
 	 * Clear the instructions associated to the block.
 	 */
 	void ClearInstructions(void);
+
+	/**
+	* Run the all instructions in the block. This is the method that should be
+	* overloaded by child classes.
+	* @param prg            Program.
+	* @param o              Output.
+	*/
+	virtual void RunBlock(RInterpreter* prg,RPrgOutput* o);
+
+	/**
+	* Run the blocks. In practice, the methods creates a local
+	* scope and execute the method 'RunBlock'.
+	* @param prg            Program.
+	* @param o              Output.
+	*/
+	virtual void Run(RInterpreter* prg,RPrgOutput* o);
 
 	/**
 	* Destruct the block of instructions.

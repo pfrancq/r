@@ -62,8 +62,6 @@ RPrgInstMethod::RPrgInstMethod(RInterpreter* prg,const RString& name,const RStri
 void RPrgInstMethod::Run(RInterpreter* prg,RPrgOutput* r)
 {
 	RPrgVar* Var=prg->Find(Inst);
-	if(!Var)
-		throw RPrgException(prg,"Unknown variable '"+Inst+"'");
 	RPrgVarInst* Instance=dynamic_cast<RPrgVarInst*>(Var);
 	if(!Instance)
 		throw RPrgException(prg,"Variable '"+Inst+"' is not an object instance.");

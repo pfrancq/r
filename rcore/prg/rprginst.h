@@ -103,11 +103,6 @@ public:
 	virtual void Run(RInterpreter* prg,RPrgOutput* o);
 
 	/**
-	 * Need the instruction a block of instructions.
-	 */
-	virtual bool NeedBlock(void) const {return(false);}
-
-	/**
 	* Destruct the generic instruction.
 	*/
 	virtual ~RPrgInst(void);

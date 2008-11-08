@@ -40,6 +40,7 @@
 #include <rtextfile.h>
 #include <rstack.h>
 #include <rcursor.h>
+#include <rprgscope.h>
 
 
 //------------------------------------------------------------------------------
@@ -97,9 +98,14 @@ protected:
 	R::RContainer<RPrgClass,true,false> Classes;
 
 	/**
-	 * LIFO Stack of blocks of instructions
+	 * Temporary LIFO Stack of instructions blocks (used for analyze).
 	 */
-	R::RStack<RPrgInstBlock,true,true,true> Blocks;
+	R::RStack<RPrgInstBlock,false,true,true> tmpBlocks;
+
+	/**
+	 * LIFO Stack of scopes.
+	 */
+	R::RStack<RPrgScope,true,true,true> Scopes;
 
 	/**
 	 * Next character to treat.
@@ -243,8 +249,8 @@ public:
 	// friend class
 	friend class RPrg;
 	friend class RPrgVarRef;
-	friend class RPrgInstBlock;
 	friend class RPrgInstFor;
+	friend class RPrgInstBlock;
 	friend class RPrgInstMethod;
 	friend class RPrgInstNew;
 	friend class RPrgInstDelete;

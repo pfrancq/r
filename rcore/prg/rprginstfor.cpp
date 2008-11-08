@@ -97,23 +97,17 @@ RPrgInstFor::RPrgInstFor(RInterpreter* prg,size_t t)
 
 
 //------------------------------------------------------------------------------
-void RPrgInstFor::Run(RInterpreter* prg,RPrgOutput* o)
+void RPrgInstFor::RunBlock(RInterpreter* prg,RPrgOutput* o)
 {
-	RPrgVarString* local=new RPrgVarString(Var,"");
-
-	prg->Blocks.Push(this);
-	prg->AddVar(local);
+	RPrgVarString* local;
+	AddVar(local=new RPrgVarString(Var,""));
 	RCursor<RPrgVar> Cur(Values);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		local->Assign(Cur()->GetValue(prg));
-		RCursor<RPrgInst> Cur2(Insts);
-		for(Cur2.Start();!Cur2.End();Cur2.Next())
-			Cur2()->Run(prg,o);
+		RPrgInstBlock::RunBlock(prg,o);
 	}
-	Vars.Clear();
-	prg->DelVar(local);
-	prg->Blocks.Pop();
+	DelVar(local);
 }
 
 

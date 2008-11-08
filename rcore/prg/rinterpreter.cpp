@@ -77,13 +77,14 @@ RPrgException::RPrgException(const RInterpreter* kernel,const char* str) throw()
 
 //-----------------------------------------------------------------------------
 RInterpreter::RInterpreter(RPrgOutput* o)
-	: Cout(o), Classes(10,5), Blocks(10,5), Char(0), File()
+	: Cout(o), Classes(10,5), tmpBlocks(10,5), Scopes(20,10), Char(0), File()
 
 {
 	Classes.InsertPtr(new RPrgStringClass());
 
 	// Push the main block (containing only global variables and classes).
-	Blocks.Push(new RPrgInstBlock(this,0));
+	tmpBlocks.Push(new RPrgInstBlock(this,0));
+	Scopes.Push(new RPrgScope());
 }
 
 
@@ -91,10 +92,10 @@ RInterpreter::RInterpreter(RPrgOutput* o)
 void RInterpreter::TreatLine(size_t depth,RString line)
 {
 	// Verify the correct tabs and eventually pop the blocks
-	if(depth>Blocks()->GetDepth())
+	if(depth>tmpBlocks()->GetDepth())
 		throw RPrgException(this,"Wrong number of tabs");
-	while(depth<Blocks()->GetDepth())
-		Blocks.Pop();
+	while(depth<tmpBlocks()->GetDepth())
+		tmpBlocks.Pop();
 
 	// Read next instruction (in Inst)
 	if(line.IsEmpty())
@@ -115,7 +116,7 @@ void RInterpreter::TreatLine(size_t depth,RString line)
 			{
 				RPrgInstFor* f=new RPrgInstFor(this,depth+1);
 				AddInst(f);
-				Blocks.Push(f);
+				tmpBlocks.Push(f);
 				Eol(true);
 			}
 			else if(Inst=="delete")
@@ -333,7 +334,7 @@ void RInterpreter::Eol(bool dbl)
 //-----------------------------------------------------------------------------
 void RInterpreter::Exec(void)
 {
-	RCursor<RPrgInst> Cur(Blocks()->Insts);
+	RCursor<RPrgInst> Cur(tmpBlocks()->Insts);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->Run(this,Cout);
 }
@@ -348,7 +349,8 @@ void RInterpreter::Run(const RURI& uri)
 	Prg.Open(RIO::Read);
 
 	// Load the instructions
-	Blocks.Push(new RPrgInstBlock(this,1));  // Create a block for the program
+	tmpBlocks.Push(new RPrgInstBlock(this,1));  // Create a block for the program
+	Scopes.Push(new RPrgScope());
 	while(!Prg.End())
 	{
 		// Skip Spaces and count tabs
@@ -356,8 +358,11 @@ void RInterpreter::Run(const RURI& uri)
 		Line=Prg.GetLineNb();
 		TreatLine(depth,Prg.GetLine());
 	}
-	Exec();               // Execute the instructions
-	Blocks.Pop();         // Remove the block of the program
+	while(1<tmpBlocks()->GetDepth())
+		tmpBlocks.Pop();
+	Exec();                  // Execute the instructions
+	tmpBlocks.Pop();         // Remove the block of the program
+	Scopes.Pop();
 }
 
 
@@ -386,7 +391,7 @@ void RInterpreter::Exec(const RString& insts)
 		else
 			throw RPrgException(this,"RInterpreter: Unknown error");
 	}
-	Blocks()->ClearInstructions();
+	tmpBlocks()->ClearInstructions();
 }
 
 
@@ -395,7 +400,8 @@ void RInterpreter::AddVar(RPrgVar* var)
 {
 	if(!var)
 		return;
-	Blocks()->Vars.InsertPtr(var,true);
+//	cout<<"AddVar '"<<var->GetName()<<"' in "<<Blocks()->GetDepth()<<endl;
+	Scopes()->InsertPtr(var,true);
 }
 
 
@@ -404,7 +410,8 @@ void RInterpreter::DelVar(RPrgVar* var)
 {
 	if(!var)
 		return;
-	Blocks()->Vars.DeletePtr(*var);
+//	cout<<"DelVar '"<<var->GetName()<<"' in "<<Blocks()->GetDepth()<<endl;
+	Scopes()->DeletePtr(*var);
 }
 
 
@@ -420,20 +427,20 @@ void RInterpreter::AddInst(RPrgInst* inst)
 {
 	if(!inst)
 		return;
-	Blocks()->AddInst(inst);
+	tmpBlocks()->AddInst(inst);
 }
 
 
 //-----------------------------------------------------------------------------
 RPrgVar* RInterpreter::Find(const RString& name) const
 {
-	for(size_t i=0;i<Blocks.GetNb();i++)
+	for(size_t i=0;i<Scopes.GetNb();i++)
 	{
-		RPrgVar* v=Blocks[i]->Vars.GetPtr(name);
+		RPrgVar* v=Scopes[i]->GetPtr(name);
 		if(v)
 			return(v);
 	}
-	return(0);
+	throw RPrgException(this,"RInterpreter::Find(const RString&): Unknown variable '"+name+"'");
 }
 
 
@@ -441,8 +448,6 @@ RPrgVar* RInterpreter::Find(const RString& name) const
 RString RInterpreter::GetValue(const RString& var)
 {
 	RPrgVar* v=Find(var);
-	if(!v)
-		throw RPrgException(this,"Unknown variable '"+var+"'");
 	return(v->GetValue(this));
 }
 
