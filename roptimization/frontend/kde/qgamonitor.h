@@ -31,11 +31,10 @@
 
 //------------------------------------------------------------------------------
 // include files for Qt
-#include <qwidget.h>
-#include <qlabel.h>
-#include <qgroupbox.h>
-#include <qsplitter.h>
-#include <qpixmap.h>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QSplitter>
+#include <QtGui/QPixmap>
 
 
 
@@ -68,21 +67,20 @@ public:
 	/**
 	* Constructor for the statistics viewer.
 	* @param parent         Parent of the widget.
-	* @param name           Name of the instance.
 	*/
-	QGAMonitorStats(QWidget* parent=0,const char* name=0);
+	QGAMonitorStats(QWidget* parent=0);
 
 	/**
 	* Set the Gen label.
 	* @param text          Text.
 	*/
-	void setGen(const char* text) {Gen->setText(text);}
+	void setGen(const QString& text) {Gen->setText(text);}
 
 	/**
 	* Set the Best label.
 	* @param text          Text.
 	*/
-	void setBest(const char* text) {Best->setText(text);}
+	void setBest(const QString& text) {Best->setText(text);}
 };
 
 
@@ -120,7 +118,7 @@ class QGAMonitorGraph : public QWidget
 	/**
 	* The last value added.
 	*/
-	double* LastValue;
+	double LastValue;
 
 	/**
 	* The values representing the graph have changed.
@@ -147,9 +145,8 @@ public:
 	/**
 	* Constructor of the graph display.
 	* @param parent         Parent of the widget.
-	* @param name           Name of the instance.
 	*/
-	QGAMonitorGraph(QWidget* parent=0,const char* name=0);
+	QGAMonitorGraph(QWidget* parent=0);
 
 	/**
 	* Returns a recommended size for the graph.
@@ -233,9 +230,8 @@ public:
 	/**
 	* Construct the information display.
 	* @param parent         Parent of the widget.
-	* @param name           Name of the instance.
 	*/
-	QGAMonitor(QWidget* parent=0,const char* name=0);
+	QGAMonitor(QWidget* parent=0);
 
 	/**
 	* Set the maximal number of generations.

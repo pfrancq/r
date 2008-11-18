@@ -45,14 +45,14 @@ using namespace R;
 //------------------------------------------------------------------------------
 QString R::ToQString(const RString& str)
 {
-	QString ret;
+
 	const RChar* ptr;
 	size_t i;
 	uint len(static_cast<uint>(str.GetLen()));
+	QString ret;
 
-	ret.setLength(len);
 	for(i=0,ptr=str();i<len;ptr++,i++)
-		ret[i]=ptr->Unicode();
+		ret+=ptr->Unicode();
 	return(ret);
 }
 
@@ -67,6 +67,6 @@ RString R::FromQString(const QString& str)
 
 	ret.SetLen(len);
 	for(i=0,ptr=ret();i<len;i++,ptr++)
-		(*const_cast<RChar*>(ptr))=str[i].unicode();
+		(*const_cast<RChar*>(ptr))=str.at(i).unicode();
 	return(ret);
 }

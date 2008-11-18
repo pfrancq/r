@@ -68,8 +68,7 @@ public:
 
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(void)
-	: RTextFile(), Namespaces(20),
-  DefaultNamespace(5), AvoidSpaces(false), Attrs(10)
+	: RTextFile(), Namespaces(20),DefaultNamespace(5), AvoidSpaces(false), Attrs(10), InvalidXMLCodes(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -78,8 +77,7 @@ RXMLParser::RXMLParser(void)
 
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(const RURI& uri,const RString& encoding)
- : RTextFile(uri,encoding), Namespaces(20),
-   DefaultNamespace(5), AvoidSpaces(false), Attrs(10)
+ : RTextFile(uri,encoding), Namespaces(20), DefaultNamespace(5), AvoidSpaces(false), Attrs(10), InvalidXMLCodes(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -88,8 +86,7 @@ RXMLParser::RXMLParser(const RURI& uri,const RString& encoding)
 
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(RIOFile& file,const RString& encoding)
- : RTextFile(file,encoding), Namespaces(20),
-   DefaultNamespace(5), AvoidSpaces(false), Attrs(10)
+ : RTextFile(file,encoding), Namespaces(20), DefaultNamespace(5), AvoidSpaces(false), Attrs(10), InvalidXMLCodes(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -240,7 +237,7 @@ RString RXMLParser::XMLToString(const RString& str)
 				What=CodeToChar(Code);
 				if(What.IsNull())
 				{
-					if(InvalidXMLCodeAccept())
+					if(InvalidXMLCodes)
 						return(Code);
 					throw RIOException(this,"Invalid XML/HTML code \""+Code+"\"");
 				}
@@ -253,7 +250,7 @@ RString RXMLParser::XMLToString(const RString& str)
 			}
 			else
 			{
-				if(InvalidXMLCodeAccept())
+				if(InvalidXMLCodes)
 					return(Code);
 				throw RIOException(this,"Invalid XML/HTML code \""+Code+"\"");
 			}
@@ -486,8 +483,10 @@ void RXMLParser::LoadNextTag(void)
 				SkipSpaces();
 				SetParseSpace(RTextFile::LeaveSpaces);
 
-				while(!CurString("]]>"))
+				while(!CurString("]]>",false))
 				{
+					if(End())
+						throw RIOException(this,"Invalid '[CDATA[]]>'.");
 					LastTokenPos=GetPos();
 					RString tmp(GetTokenString("]]>"));
 					if(tmp.GetLen())
@@ -537,6 +536,8 @@ void RXMLParser::LoadNextTag(void)
 
 					while(!CurString("]]>"))
 					{
+						if(End())
+							throw RIOException(this,"Invalid '[CDATA[]]>'.");
 						LastTokenPos=GetPos();
 						RString tmp(GetTokenString("]]>"));
 						if(tmp.GetLen())
@@ -770,14 +771,6 @@ bool RXMLParser::OnlyQuote(void)
 {
 	return(true);
 }
-
-
-//------------------------------------------------------------------------------
-bool RXMLParser::InvalidXMLCodeAccept(void)
-{
-	return(false);
-}
-
 
 
 //------------------------------------------------------------------------------

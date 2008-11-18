@@ -652,6 +652,7 @@ RHTMLFile::RHTMLFile(void)
 RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding)
  : RXMLFile(uri,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
 {
+	SetInvalidXMLCodes(true);
 	InitValidTags();
 }
 
@@ -660,6 +661,7 @@ RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encodi
 RHTMLFile::RHTMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
  : RXMLFile(file,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
 {
+	SetInvalidXMLCodes(true);
 	InitValidTags();
 }
 
@@ -955,13 +957,6 @@ void RHTMLFile::SkipTagContent(const RString& tag)
 bool RHTMLFile::OnlyQuote(void)
 {
 	return(false);
-}
-
-
-//------------------------------------------------------------------------------
-bool RHTMLFile::InvalidXMLCodeAccept(void)
-{
-	return(true);
 }
 
 

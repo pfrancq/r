@@ -41,6 +41,7 @@
 #include <rstack.h>
 #include <rcursor.h>
 #include <rprgscope.h>
+#include <rprgoutput.h>
 
 
 //------------------------------------------------------------------------------
@@ -50,7 +51,6 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // forward class declaration
-class RPrgOutput;
 class RPrgInst;
 class RPrgInstBlock;
 class RPrgVar;
@@ -90,7 +90,7 @@ protected:
 	/**
 	* Generic output.
 	*/
-	R::RPrgOutput* Cout;
+	RPrgOutput* Cout;
 
 	/**
 	* List of all "Classes" defined in the program.

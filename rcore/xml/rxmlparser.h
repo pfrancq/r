@@ -124,6 +124,11 @@ protected:
 	 */
 	SectionType Section;
 
+	/**
+	 * Specify if only invalid XML codes are accepted.
+	 */
+	bool InvalidXMLCodes;
+
 public:
 
 	/**
@@ -319,14 +324,21 @@ protected:
 	*/
 	virtual bool OnlyQuote(void);
 
+public:
+
 	/**
 	* Method that specify if invalid XML codes (sequences beginning with a '&'
-	* are accepted. By default, this function return false which is the syntax
-	* of XML.
+	* and finish with a ';') are accepted.
+	* By default, this function return false which is the syntax of XML. This
+	* can be changed with the method 'SetInvalidXMLCodes'.
 	*/
-	virtual bool InvalidXMLCodeAccept(void);
+	bool AcceptInvalidXMLCodes(void) {return(InvalidXMLCodes);}
 
-public:
+	/**
+	 * Specify if invalid XML codes should be accepted.
+	 * @param accepted       Yes/No.
+	 */
+	void SetInvalidXMLCodes(bool accepted) {InvalidXMLCodes=accepted;}
 
 	/**
 	* Destruct the XML file.

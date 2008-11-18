@@ -617,7 +617,7 @@ RString RTextFile::GetTokenString(const RString& endingstr)
 	RChar* ptr=TmpBuffer;
 	size_t i(0);
 
-	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(!CurString(endingstr)))
+	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(!CurString(endingstr,true,false)))
 	{
 		(*(ptr++))=GetChar();
 		i++;

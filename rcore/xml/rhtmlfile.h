@@ -109,7 +109,7 @@ public:
 private:
 
 	/**
-	* This methode creates all the tags valid for the HTML version supported.
+	* This method creates all the tags valid for the HTML version supported.
 	*/
 	void InitValidTags(void);
 
@@ -157,12 +157,6 @@ public:
 	* a tag. This function return false since quote can be omitted in HTML.
 	*/
 	virtual bool OnlyQuote(void);
-
-	/**
-	* Function that specify if invalid XML codes (sequences beginning with a '&'
-	* are accepted). This function return true since it is allowed in HTML.
-	*/
-	virtual bool InvalidXMLCodeAccept(void);
 
 	/**
 	* Destruct the XML file.

@@ -5,7 +5,7 @@
 
 	Qt XML Debugger - Header.
 
-	Copyright 2000-2007 by the Université Libre de Bruxelles.
+	Copyright 2000-2008 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -40,7 +40,7 @@
 
 //------------------------------------------------------------------------------
 // include files for Qt
-#include <qlistview.h>
+#include <QtGui/QTreeWidget>
 
 
 //------------------------------------------------------------------------------
@@ -55,23 +55,22 @@ namespace R{
 * @author Pascal Francq.
 * @short XML Debug Qt Widget.
 */
-class QXMLContainer : public QListView, public RDebug
+class QXMLContainer : public QTreeWidget, public RDebug
 {
 	Q_OBJECT
 
 	/**
 	* The array is used to manage the deepest of the XML structure.
 	*/
-	QListViewItem* Items[50];
+	QTreeWidgetItem* Items[50];
 
 public:
 
 	/**
 	* Construct the XML debug widget.
 	* @param parent         Parent of the widget.
-	* @param name           Name of the instance.
 	*/
-	QXMLContainer(QWidget* parent=0,RString name=RString::Null);
+	QXMLContainer(QWidget* parent=0);
 
 	/**
 	* Clear the XML.

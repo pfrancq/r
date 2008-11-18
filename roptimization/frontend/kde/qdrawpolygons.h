@@ -1,10 +1,15 @@
 /*
 
+	R Project Library
+
 	QDrawPolygons.h
 
 	Qt Widget to draw polygons - Header.
 
-	(c) 2000-2001 by P. Francq.
+	Copyright 2000-2008 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -41,9 +46,9 @@
 
 //------------------------------------------------------------------------------
 // include files for Qt
-#include <qwidget.h>
-#include <qpixmap.h>
-#include <qpopupmenu.h>
+#include <QtGui/QPixmap>
+#include <QtGui/QBrush>
+#include <QtGui/QMenu>
 
 
 //------------------------------------------------------------------------------
@@ -58,7 +63,7 @@ namespace R{
 * @author Pascal Francq
 * @short Popup object information
 */
-class QInfoBox : public QPopupMenu
+class QInfoBox : public QMenu
 {
 	/**
 	* Is the popup empty?
@@ -113,7 +118,7 @@ public:
 protected:
 
 	/**
-	* Mouse release event method. When the mouse bouton is released, the popup
+	* Mouse release event method. When the mouse button is released, the popup
 	* is closed.
 	*/
 	virtual void mouseReleaseEvent(QMouseEvent*);
@@ -170,12 +175,12 @@ class QDrawPolygons : public QWidget
 	bool Changed;
 
 	/**
-	* Last Information drawed.
+	* Last Information draw.
 	*/
 	RGeoInfo* Last;
 
 	/**
-	* Number of infos.
+	* Number of information.
 	*/
 	size_t NbInfos;
 
@@ -255,17 +260,15 @@ public:
 	/**
 	* Construct the widget.
 	* @param parent         Pointer to window holding this widget.
-	* @param name           Name of the widget.
 	*/
-	QDrawPolygons(QWidget* parent=0,const char* name="Draw Polygons");
+	QDrawPolygons(QWidget* parent=0);
 
 	/**
 	* Construct the widget.
 	* @param prob           Pointer to the problem.
 	* @param parent         Pointer to window holding this widget.
-	* @param name           Name of the widget.
 	*/
-	QDrawPolygons(RProblem2D* prob,QWidget* parent=0,const char* name="Draw Polygons");
+	QDrawPolygons(RProblem2D* prob,QWidget* parent=0);
 
 	/**
 	* The widget has changed and has to be repainted.

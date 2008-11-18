@@ -39,13 +39,13 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 // include files for Qt
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
-#include <qvalidator.h>
-#include <qcombobox.h>
-#include <qlayout.h>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QToolTip>
+#include <QtGui/QWhatsThis>
+#include <QtGui/QValidator>
+#include <QtGui/QComboBox>
+#include <QtGui/QLayout>
 
 
 //------------------------------------------------------------------------------
@@ -85,65 +85,65 @@ public:
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QPromCriteria::QPromCriteria(QWidget* parent,const char* name)
-	: QGroupBox(parent,name), Current(-1), Crits(10,5)
+QPromCriteria::QPromCriteria(QWidget* parent, QString& name)
+	: QGroupBox(parent), Current(-1), Crits(10,5)
 {
 	setTitle(name);
 
-	QVBoxLayout* WLayout= new QVBoxLayout(this,5,5,"Promethee Criteria");
+	QVBoxLayout* WLayout= new QVBoxLayout(this);
 	WLayout->addSpacing(10);
 
-	QHBoxLayout* Layout2 = new QHBoxLayout(0,0,0);
+	QHBoxLayout* Layout2 = new QHBoxLayout();
 	Layout2->addSpacing(5);
-	Direct=new QComboBox(this,"Direct");
-	QToolTip::add(Direct,i18n("Select the criterion to configure."));
-	QWhatsThis::add(Direct,i18n("With the combo box, the user chooses the criterion to configure below."));
+	Direct=new QComboBox(this);
+	Direct->setToolTip(i18n("Select the criterion to configure."));
+	Direct->setWhatsThis(i18n("With the combo box, the user chooses the criterion to configure below."));
 	Layout2->addWidget(Direct);
 	Layout2->addSpacing(5);
 	WLayout->addLayout(Layout2);
 	WLayout->addSpacing(5);
 
-	QHBoxLayout* Layout1 = new QHBoxLayout(0,0,0,"Promethee Layout");
+	QHBoxLayout* Layout1 = new QHBoxLayout();
 	Layout1->addSpacing(5);
 
 	// Parameter "P".
-	QLabel* txtP=new QLabel(this,"txtP");
+	QLabel* txtP=new QLabel(this);
 	txtP->setText(i18n("p"));
 	Layout1->addWidget(txtP);
 	Layout1->addSpacing(5);
-	P = new QLineEdit(this,"Preference threshold");
+	P = new QLineEdit(this);
 	P->setValidator(new QDoubleValidator(0.0,1.0,3,P));
 	Layout1->addWidget(P);
 	Layout1->addSpacing(10);
-	QToolTip::add(P,i18n("Set the preference threshold for the criterion"));
-	QWhatsThis::add(P,i18n("When the relativ difference for two solutions for the criterion"
+	P->setToolTip(i18n("Set the preference threshold for the criterion"));
+	P->setWhatsThis(i18n("When the relativ difference for two solutions for the criterion"
 	                       " is greather than <b>p</p>, the best solution is prefered."));
 	Layout1->addItem(new QSpacerItem(10,0,QSizePolicy::Expanding, QSizePolicy::Minimum));
 
 	// Parameter "Q".
-	QLabel* txtQ=new QLabel(this,"txtQ");
+	QLabel* txtQ=new QLabel(this);
 	txtQ->setText(i18n("q"));
 	Layout1->addWidget(txtQ);
 	Layout1->addSpacing(5);
-	Q = new QLineEdit(this,"Indeference threshold");
+	Q = new QLineEdit(this);
 	Q->setValidator(new QDoubleValidator(0.0,1.0,3,Q));
 	Layout1->addWidget(Q);
 	Layout1->addSpacing(10);
-	QToolTip::add(Q,i18n("Set the indeference threshold for the criterion"));
-	QWhatsThis::add(Q,i18n("When the relativ difference for two solutions for the criterion"
+	Q->setToolTip(i18n("Set the indeference threshold for the criterion"));
+	Q->setWhatsThis(i18n("When the relativ difference for two solutions for the criterion"
 	                       " is smaller than <b>q</p>, the two solutions are considered to be similar."));
 	Layout1->addItem(new QSpacerItem(10,0,QSizePolicy::Expanding, QSizePolicy::Minimum));
 
 	// Parameter Weight.
-	QLabel* txtW=new QLabel(this,"txtW");
+	QLabel* txtW=new QLabel(this);
 	txtW->setText(i18n("W"));
 	Layout1->addWidget(txtW);
 	Layout1->addSpacing(5);
-	W = new QLineEdit(this,"W");
+	W = new QLineEdit(this);
 	Layout1->addWidget(W);
 	Layout1->addSpacing(5);
-	QToolTip::add(W,i18n("Set the weight for the criterion"));
-	QWhatsThis::add(W,i18n("The <b>weight</b> for the criterion"
+	W->setToolTip(i18n("Set the weight for the criterion"));
+	W->setWhatsThis(i18n("The <b>weight</b> for the criterion"
 	                       " specify its importance in comparison to the others criteria."));
 	WLayout->addLayout(Layout1);
 	WLayout->addItem(new QSpacerItem(0,0,QSizePolicy::Minimum, QSizePolicy::Expanding));
@@ -162,7 +162,7 @@ void QPromCriteria::InsertCriterion(const char* crit)
 	QPromCriterion* ptr;
 
 	ptr=new QPromCriterion(crit,static_cast<int>(Crits.GetNb()));
-	Direct->insertItem(crit,static_cast<int>(Crits.GetNb()));
+	Direct->addItem(crit,static_cast<int>(Crits.GetNb()));
 	Crits.InsertPtr(ptr);
 	Current=static_cast<int>(Crits.GetNb()-1);
 }

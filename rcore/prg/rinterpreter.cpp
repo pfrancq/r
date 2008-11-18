@@ -48,7 +48,6 @@
 #include <rprgvarliteral.h>
 #include <rprgvarref.h>
 #include <rprgclass.h>
-#include <rprgoutput.h>
 #include <rprgfunc.h>
 using namespace std;
 using namespace R;

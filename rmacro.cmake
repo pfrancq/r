@@ -200,7 +200,7 @@ ENDMACRO(PRINT_LIST_WITH_MESSAGE _message _values)
 MACRO(ADD_FRONTEND _frontend_for_target _lt_vers _so_vers _vers _libdest _include_dest _includes)
     FOREACH(${_frontend_for_target}_fe ${${_frontend_for_target}_AVAILABLE_FRONTENDS})
         INCLUDE_DIRECTORIES(${${_includes}})
-        ADD_LIBRARY(${_frontend_for_target}${${_frontend_for_target}_fe} SHARED ${${_frontend_for_target}_${${_frontend_for_target}_fe}_TARGET_SOURCES})
+        kde4_add_library(${_frontend_for_target}${${_frontend_for_target}_fe} SHARED ${${_frontend_for_target}_${${_frontend_for_target}_fe}_TARGET_SOURCES})
         TARGET_LINK_LIBRARIES(${_frontend_for_target}${${_frontend_for_target}_fe} ${_frontend_for_target} ${${_frontend_for_target}_${${_frontend_for_target}_fe}_DEPENDENCY})
         SET_TARGET_PROPERTIES(${_frontend_for_target}${${_frontend_for_target}_fe} PROPERTIES LT_VERSION_CURRENT ${_lt_vers}
                                                VERSION ${_vers}
@@ -260,6 +260,7 @@ MACRO(DO_R_LIB_INCLUDE _libPath)
         LINK_DIRECTORIES(${_libPath}/build/rcore)
         LINK_DIRECTORIES(${_libPath}/build/rmath)
         LINK_DIRECTORIES(${_libPath}/build/roptimization)
+        LINK_DIRECTORIES(${_libPath}/build/lib)
 ENDMACRO(DO_R_LIB_INCLUDE)
 
 MACRO(ADD_R_INCLUDES _libName _libInstallName _libPath)

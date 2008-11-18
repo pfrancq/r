@@ -31,8 +31,14 @@
 
 
 //------------------------------------------------------------------------------
+// include files for Qt
+#include <QtGui/QKeyEvent>
+#include <QtGui/QTextBlock>
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
-#include <rqconsole.h>
+#include <qrconsole.h>
 #include <rqt.h>
 using namespace R;
 using namespace std;
@@ -41,45 +47,44 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 //
-// class RQConsole
+// class QRConsole
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RQConsole::RQConsole(QWidget* parent,const QString& name)
-	: QTextEdit(parent,name)
+QRConsole::QRConsole(QWidget* parent)
+	: QTextEdit(parent)
 {
-    setTextFormat( QTextEdit::RichText );
-    setWordWrap( QTextEdit::FixedColumnWidth );
-    setReadOnly(false);
-    setTextFormat(Qt::PlainText);
-    append(">");
+    Cursor=textCursor();
+    Cursor.insertText(">");
 }
 
 
 //------------------------------------------------------------------------------
-void RQConsole::keyPressEvent(QKeyEvent * e )
+void QRConsole::keyPressEvent(QKeyEvent * e )
 {
-	int index;
 	switch(e->key())
 	{
 		case Qt::Key_Up:
 			break;
 		case Qt::Key_Backspace:
 		case Qt::Key_Left:
-			getCursorPosition(&Para,&index);
-			if(index>1)
+		{
+			Cursor=textCursor();
+			if(Cursor.position()>1)
 				QTextEdit::keyPressEvent(e);
 			break;
+		}
 		case Qt::Key_Return:
 		case Qt::Key_Enter:
 		{
-			getCursorPosition(&Para,&index);
-			QString line(text(Para));
+			Cursor=textCursor();
+			QString line(Cursor.block().text());
 			QTextEdit::keyPressEvent(e);
 			emit EnterCmd(line.right(line.length()-1));
-			append(">");
-			setCursorPosition(++Para,1);
+			Cursor=textCursor();
+			Cursor.insertText(">");
+			setTextCursor(Cursor);
 			break;
 		}
 		default:
@@ -89,14 +94,14 @@ void RQConsole::keyPressEvent(QKeyEvent * e )
 
 
 //------------------------------------------------------------------------------
-void RQConsole::WriteStr(const RString& str)
+void QRConsole::WriteStr(const RString& str)
 {
-//	int para,index;
-//	getCursorPosition(&para,&index);
-//	setCursorPosition(para-1,0);
-	append(ToQString(str));
-	Para++;
-//	getCursorPosition(&para,&index);
-//	setCursorPosition(para+2,0);
-//	cout<<str<<endl;
+	Cursor=textCursor();
+	Cursor.insertText(ToQString(str+"\n"));
+}
+
+
+//------------------------------------------------------------------------------
+QRConsole::~QRConsole(void)
+{
 }

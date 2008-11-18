@@ -80,11 +80,12 @@ public:
 		                                 exists, it is destruct.*/,
 		Undefined                    /** The mode of the file is undefined.*/
 	};
-	
+
 	/**
-	 * This class provides a "smart" temporary file, i.e. if the name of the file
-	 * is requested, it is removed by the destructor if it is not explicily
-	 * asked to leave it. It can be usefull in an exception environment.
+	 * This class provides a "smart" temporary file. In practice, if the class
+	 * is asked for a temporary file, this file is automatically removed. The
+	 * temporary file may be explicitly leave. It can be useful in an exception
+	 * environment, since temporary files are always removed.
 	 * @author Pascal Francq
 	 * @short Smart Temporary File.
 	 */
@@ -94,7 +95,7 @@ public:
 		 * Name of the temporary file.
 		 */
 		R::RString Name;
-		
+
 		/**
 		 * Name requested?
 		 */
@@ -104,22 +105,22 @@ public:
 		 * Temporary file must be removed.
 		 */
 		bool Remove;
-		
+
 	public:
-		
+
 		/**
 		 * Constructor.
 		 */
 		RSmartTempFile(void);
-		
+
 		/**
 		 * Get the name of the temporary file.
 		 * @param remove     File must be removed?
 		 */
 		RString GetName(bool remove=true);
-		
+
 		/**
-		 * Destructor. If the name was requested, the temporary file is
+		 * Destruct. If the name was requested, the temporary file is
 		 * removed.
 		 */
 		~RSmartTempFile(void);

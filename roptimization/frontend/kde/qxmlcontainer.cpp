@@ -23,9 +23,8 @@
 	You should have received a copy of the GNU Library General Public
 	License along with this library, as a file COPYING.LIB; if not, write
 	to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
-	Boston, MA  02111-1307  USA* 
+	Boston, MA  02111-1307  USA*
 
-	 QXMLContainer.cpp
 */
 
 
@@ -50,15 +49,14 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QXMLContainer::QXMLContainer(QWidget* parent,RString name)
-	: QListView(parent,name), RDebug()
+QXMLContainer::QXMLContainer(QWidget* parent)
+	: QTreeWidget(parent), RDebug()
 {
-	memset(Items,0,50*sizeof(QListViewItem *));
-	addColumn("Steps");
-	addColumn("Params");
-	addColumn("Infos");
+	memset(Items,0,50*sizeof(QTreeWidgetItem *));
+	setColumnCount(3);
+	setHeaderLabels(QStringList() << "Steps" << "Params" << "Infos");
 	setRootIsDecorated(true);
-	setSorting(-1,true);
+//	setSorting(-1,true);
 	setAllColumnsShowFocus(true);
 	BeginTag("RDebug");
 }
@@ -67,8 +65,8 @@ QXMLContainer::QXMLContainer(QWidget* parent,RString name)
 //------------------------------------------------------------------------------
 void QXMLContainer::clear(void)
 {
-	QListView::clear();
-	memset(Items,0,50*sizeof(QListViewItem *));
+	QTreeWidget::clear();
+	memset(Items,0,50*sizeof(QTreeWidgetItem *));
 	Deep=-1;
 }
 
@@ -76,18 +74,19 @@ void QXMLContainer::clear(void)
 //------------------------------------------------------------------------------
 void QXMLContainer::WriteBeginTag(RString tag,RString options)
 {
-	QListViewItem *ptr;
+	QTreeWidgetItem *ptr;
 
 	if(Deep)
 	{
 		ptr=Items[Deep];
 		if(ptr)
-			Items[Deep]=new QListViewItem(Items[Deep-1],ptr,ToQString(tag));
+			Items[Deep]=new QTreeWidgetItem(Items[Deep-1],ptr);
 		else
-			Items[Deep]=new QListViewItem(Items[Deep-1],ToQString(tag));
+			Items[Deep]=new QTreeWidgetItem(Items[Deep-1]);
 	}
 	else
-		Items[Deep]=new QListViewItem(this,ToQString(tag));
+		Items[Deep]=new QTreeWidgetItem(this);
+	Items[Deep]->setText(0,ToQString(tag));
 	if(!options.IsEmpty())
 	{
 		Items[Deep]->setText(1,ToQString(options));

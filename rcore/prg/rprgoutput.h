@@ -39,6 +39,12 @@
 // include files for R Project
 #include <rstring.h>
 
+class Coucou
+{
+public:
+Coucou(void) {}
+void Test(void);
+};
 
 //-----------------------------------------------------------------------------
 namespace R{
@@ -66,7 +72,7 @@ public:
 	* information.
 	* @param str            String to output.
 	*/
-	virtual void WriteStr(const RString& str);
+	virtual void WriteStr(const R::RString& str);
 
 	/**
 	* Destruct the generic output.

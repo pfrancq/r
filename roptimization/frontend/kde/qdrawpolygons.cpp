@@ -1,10 +1,15 @@
 /*
 
+	R Project Library
+
 	QDrawPolygons.cpp
 
 	Qt Widget to draw polygons - Implementation.
 
-	(c) 2000-2001 by P. Francq.
+	Copyright 2000-2008 by the Université Libre de Bruxelles.
+
+	Authors:
+		Pascal Francq (pfrancq@ulb.ac.be).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -31,7 +36,10 @@
 
 //------------------------------------------------------------------------------
 // include files for Qt
-#include <qpainter.h>
+#include <QtGui/QPainter>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QMouseEvent>
 
 
 //------------------------------------------------------------------------------
@@ -50,24 +58,24 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 QInfoBox::QInfoBox(QWidget* parent,RGeoInfo* info)
-	: QPopupMenu(0,"Info Box"), Empty(true), pixmap(0), tmppixmap(0)
+	: QMenu(0), Empty(true), pixmap(0), tmppixmap(0)
 {
 	QString Tmp;
 
 	Tmp="Object '"+ToQString(info->GetObj()->Name)+"'";
-	insertItem(Tmp);
+	addAction(Tmp);
 	if(info->GetOrder()!=cNoRef)
 	{
 		Tmp="Order: "+QString::number(info->GetOrder());
-		insertItem(Tmp);
+		addAction(Tmp);
 	}
-	insertItem("Points:");
+	addAction("Points:");
 
 	RRelPointCursor Cur(*info);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		Tmp="    ("+QString::number(Cur().X)+","+QString::number(Cur().Y)+")";
-		insertItem(Tmp);
+		addAction(Tmp);
 	}
 	afterFocus=parent;
 	afterFocus->parentWidget()->setFocus();
@@ -76,12 +84,12 @@ QInfoBox::QInfoBox(QWidget* parent,RGeoInfo* info)
 
 //------------------------------------------------------------------------------
 QInfoBox::QInfoBox(QWidget* parent,RGeoInfoConnector* con)
-	: QPopupMenu(0,"Info Box"), Empty(true), pixmap(0), tmppixmap(0)
+	: QMenu(0), Empty(true), pixmap(0), tmppixmap(0)
 {
 	QString Tmp;
 
 	Tmp="Connector '"+ToQString(con->Con->Name)+"'";
-	insertItem(Tmp);
+	addAction(Tmp);
 	afterFocus=parent;
 	afterFocus->parentWidget()->setFocus();
 }
@@ -89,7 +97,7 @@ QInfoBox::QInfoBox(QWidget* parent,RGeoInfoConnector* con)
 
 //------------------------------------------------------------------------------
 QInfoBox::QInfoBox(QWidget* parent, QPixmap* p,QPixmap* pt)
-	: QPopupMenu(0,"Info Box"), Empty(true), pixmap(p), tmppixmap(pt)
+	: QMenu(0), Empty(true), pixmap(p), tmppixmap(pt)
 {
 	afterFocus=parent;
 	afterFocus->parentWidget()->setFocus();
@@ -104,12 +112,12 @@ void QInfoBox::AddConnectionInfo(RGeoInfoConnection* con)
 	if(Empty)
 		Empty=false;
 	else
-		insertSeparator();
+		addSeparator();
 	RCursor<RObj2DConnector> Cur(con->Con->Connect);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		Tmp="Connector '"+ToQString(Cur()->Owner->Name)+"\t|\t"+ToQString(Cur()->Name)+"'";
-		insertItem(Tmp);
+		addAction(Tmp);
 	}
 }
 
@@ -119,7 +127,7 @@ void QInfoBox::mouseReleaseEvent(QMouseEvent*)
 {
 	if(pixmap)
 	{
-		bitBlt(afterFocus,afterFocus->rect().topLeft(),pixmap);
+		afterFocus->render(pixmap);
 		delete tmppixmap;
 	}
 	afterFocus->parentWidget()->setFocus();
@@ -135,22 +143,22 @@ void QInfoBox::mouseReleaseEvent(QMouseEvent*)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QDrawPolygons::QDrawPolygons(QWidget* parent,const char* name)
-	: QWidget(parent,name), Problem(0), Limits(1,1), pixmap(0), tmppixmap(0),Changed(false), Last(0),
-	  NbInfos(0), Infos(0), Painter(0), FreePolygons(0), brBlack(black,BDiagPattern),
-	  brGreen(green,BDiagPattern),brYellow(yellow,BDiagPattern),
-	  brBlue(blue,BDiagPattern), brRed(red,SolidPattern)
+QDrawPolygons::QDrawPolygons(QWidget* parent)
+	: QWidget(parent), Problem(0), Limits(1,1), pixmap(0), tmppixmap(0),Changed(false), Last(0),
+	  NbInfos(0), Infos(0), Painter(0), FreePolygons(0), brBlack(Qt::black,Qt::BDiagPattern),
+	  brGreen(Qt::green,Qt::BDiagPattern),brYellow(Qt::yellow,Qt::BDiagPattern),
+	  brBlue(Qt::blue,Qt::BDiagPattern), brRed(Qt::red,Qt::SolidPattern)
 {
 	Translation.Set(10,10);
 }
 
 
 //------------------------------------------------------------------------------
-QDrawPolygons::QDrawPolygons(RProblem2D* prob,QWidget* parent,const char* name)
-	: QWidget(parent,name), Problem(prob), Limits(1,1), pixmap(0), tmppixmap(0),Changed(false),
-	  Last(0), NbInfos(0), Infos(0), Painter(0), FreePolygons(0), brBlack(black,BDiagPattern),
-	  brGreen(green,BDiagPattern),brYellow(yellow,BDiagPattern),
-	  brBlue(blue,BDiagPattern), brRed(red,SolidPattern)
+QDrawPolygons::QDrawPolygons(RProblem2D* prob,QWidget* parent)
+	: QWidget(parent), Problem(prob), Limits(1,1), pixmap(0), tmppixmap(0),Changed(false),
+	  Last(0), NbInfos(0), Infos(0), Painter(0), FreePolygons(0), brBlack(Qt::black,Qt::BDiagPattern),
+	  brGreen(Qt::green,Qt::BDiagPattern),brYellow(Qt::yellow,Qt::BDiagPattern),
+	  brBlue(Qt::blue,Qt::BDiagPattern), brRed(Qt::red,Qt::SolidPattern)
 {
 	Limits.Set(prob->GlobalLimits.X+20,prob->GlobalLimits.Y+20);
 	Translation.Set(prob->Translation.X+10,prob->Translation.Y+10);
@@ -162,7 +170,7 @@ void QDrawPolygons::addInfo(RGeoInfo* info)
 {
 	int j;
 	QPoint Null(0,0);
-	QPointArray Pts;
+	QPolygon Pts;
 	RPoint Pt;
 	RRelPointCursor Cur;
 
@@ -175,8 +183,7 @@ void QDrawPolygons::addInfo(RGeoInfo* info)
 		Changed=true;
 	}
 	Painter=new QPainter(pixmap);
-	CHECK_PTR(Painter);
-	Painter->setPen(black);
+	Painter->setPen(Qt::black);
 	if(Last&&Last->IsValid())
 	{
 		Painter->setBrush(brBlue);
@@ -211,7 +218,7 @@ void QDrawPolygons::addFree(RFreePolygon* poly)
 {
 	int j;
 	QPoint Null(0,0);
-	QPointArray Pts;
+	QPolygon Pts;
 	RPoint Pos;
 
 	if(!pixmap)
@@ -223,8 +230,7 @@ void QDrawPolygons::addFree(RFreePolygon* poly)
 		Changed=true;
 	}
 	Painter=new QPainter(pixmap);
-	CHECK_PTR(Painter);
-	Painter->setPen(black);
+	Painter->setPen(Qt::black);
 	Painter->setBrush(brYellow);
 	Pts.fill(Null,static_cast<int>(poly->GetNb()));
 	RCursor<RPoint> Pt(*poly);
@@ -247,7 +253,7 @@ void QDrawPolygons::setLimits(const RPoint& limits)
 	if(pixmap)
 	{
 		QRect r=rect();
-		pixmap->resize(r.size());
+		pixmap->scaled(r.size());
 		FactorX=((double)r.width())/((double)Limits.X);
 		FactorY=((double)r.height())/((double)Limits.Y);
 		Changed=true;
@@ -259,7 +265,6 @@ void QDrawPolygons::setLimits(const RPoint& limits)
 QPainter* QDrawPolygons::begin(void)
 {
 	Painter=new QPainter(pixmap);
-	CHECK_PTR(Painter);
 	return(Painter);
 }
 
@@ -278,8 +283,8 @@ void QDrawPolygons::paintConnectors(RGeoInfo* info,QPainter* Painter)
 	size_t j;
 	tCoord x,y;
 
-	Painter->setPen(black);
-	Painter->setBrush(SolidPattern);
+	Painter->setPen(Qt::black);
+	Painter->setBrush(Qt::SolidPattern);
 	RCursor<RGeoInfoConnector> Cur(info->Connectors);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
@@ -451,14 +456,13 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 	{
 		int j;
 		QPoint Null(0,0);
-		QPointArray Pts;
+		QPolygon Pts;
 		RPoint Pos;
 		RCursor<RPoint> Pt;
 
 		pixmap->fill(this,r.topLeft());
 		Painter=new QPainter(pixmap);
-		CHECK_PTR(Painter);
-		Painter->setPen(black);
+		Painter->setPen(Qt::black);
 		if(Infos)
 		{
 			RCursor<RGeoInfo> Cur(*Infos);
@@ -497,8 +501,8 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 				Painter->drawPolygon(Pts);
 			}
 		}
-		Painter->setBrush(NoBrush);
-		Painter->setPen(red);
+		Painter->setBrush(Qt::NoBrush);
+		Painter->setPen(Qt::red);
 		Painter->drawRect(0,0,r.width(),r.height());
 		if(Problem&&Infos)
 		{
@@ -507,8 +511,8 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 			unsigned j;
 			RGeoInfo* info;
 			int x,y;
-			Painter->setPen(black);
-			Painter->setBrush(SolidPattern);
+			Painter->setPen(Qt::black);
+			Painter->setBrush(Qt::SolidPattern);
 			info=Infos->GetPtr<size_t>(Problem->Problem.GetId());
 			if(info)
 			{
@@ -529,7 +533,7 @@ void QDrawPolygons::paintEvent(QPaintEvent*)
 		Painter=0;
 		Changed=false;
 	}
-	bitBlt(this,r.topLeft(),pixmap);
+	render(pixmap);
 }
 
 
@@ -539,7 +543,7 @@ void QDrawPolygons::resizeEvent(QResizeEvent*)
 	if(pixmap)
 	{
 		QRect r=rect();
-		pixmap->resize(r.size());
+		pixmap->scaled(r.size());
 		FactorX=((double)r.width())/((double)Limits.X);
 		FactorY=((double)r.height())/((double)Limits.Y);
 		Changed=true;
@@ -550,11 +554,11 @@ void QDrawPolygons::resizeEvent(QResizeEvent*)
 //------------------------------------------------------------------------------
 void QDrawPolygons::mouseReleaseEvent(QMouseEvent* e)
 {
-	if((tmppixmap)&&(e->button()==RightButton))
+	if((tmppixmap)&&(e->button()==Qt::RightButton))
 	{
 		QRect r(rect());
 
-		bitBlt(this,r.topLeft(),pixmap);
+		render(pixmap);
 		delete tmppixmap;
 		tmppixmap=0;
 	}
@@ -564,7 +568,7 @@ void QDrawPolygons::mouseReleaseEvent(QMouseEvent* e)
 //------------------------------------------------------------------------------
 void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 {
-	if(e->button()==RightButton)
+	if(e->button()==Qt::RightButton)
 	{
 		RGeoInfoConnector* con;
 		RGeoInfo** info;
@@ -573,13 +577,12 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 		QInfoBox *InfoBox;
 
 		r=rect();
-		if(e->state()==ControlButton)
+		if(e->modifiers()==Qt::ControlModifier)
 		{
 			// Click with Left Button + Ctrl -> Show all connections
  			tmppixmap=new QPixmap(*pixmap);
  			Painter=new QPainter(tmppixmap);
- 			CHECK_PTR(Painter);
- 			Painter->setPen(red);
+ 			Painter->setPen(Qt::red);
 			RCursor<RGeoInfoConnection> Cur(Infos->Cons);
 			for(Cur.Start();!Cur.End();Cur.Next())
 			{
@@ -587,7 +590,7 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 			}
 			delete Painter;
 			Painter=0;
-			bitBlt(this,r.topLeft(),tmppixmap);
+			render(tmppixmap);
 		}
 		else
 		{
@@ -608,13 +611,12 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 				if(Cur()->IsIn(Pos))
 				{
 					con=Cur()->GetConnector(Pos);
-					if(e->state()==ShiftButton)
+					if(e->modifiers()==Qt::ShiftModifier)
 					{
 						// Click with Left Button -> Show the Connections
 						tmppixmap=new QPixmap(*pixmap);
 						Painter=new QPainter(tmppixmap);
-						CHECK_PTR(Painter);
-						Painter->setPen(red);
+						Painter->setPen(Qt::red);
 						Painter->setBrush(brRed);
 						InfoBox=0;
 						RCursor<RGeoInfoConnection> Cons(Infos->Cons);
@@ -643,7 +645,7 @@ void QDrawPolygons::mousePressEvent(QMouseEvent* e)
 						}
 						delete Painter;
 						Painter=0;
-						bitBlt(this,r.topLeft(),tmppixmap);
+						render(tmppixmap);
 						if(InfoBox)
 						{
 							QPoint pt(0,0);

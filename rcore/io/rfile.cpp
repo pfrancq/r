@@ -125,9 +125,9 @@ int RFile::Compare(const RString& uri) const
 
 
 //------------------------------------------------------------------------------
-void RFile::SetURI(const RString& uri)
+void RFile::SetURI(const RURI& uri)
 {
-		this->URI=uri;
+	URI=uri;
 }
 
 
@@ -158,28 +158,23 @@ RChar RFile::GetDirSeparator(void)
 
 
 //------------------------------------------------------------------------------
-void RFile::RemoveFile(const RString& name)
+void RFile::RemoveFile(const RURI& uri)
 {
-	remove(name.Latin1());
+	remove(uri.GetPath());
 }
 
 
 //------------------------------------------------------------------------------
-RString RFile::GetTempFile(void)
+RURI RFile::GetTempFile(void)
 {
-	char filename[L_tmpnam+1];
-	RString res;
-
-	tmpnam(filename);
-	res=filename;
-	return(res);
+	return(RURI(tmpnam(0)));
 }
 
 
 //------------------------------------------------------------------------------
-bool RFile::Exists(const RString& name)
+bool RFile::Exists(const RURI& uri)
 {
-    if(FILE* file=fopen(name,"r"))
+    if(FILE* file=fopen(uri.GetPath(),"r"))
     {
         fclose(file);
         return(true);

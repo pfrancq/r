@@ -1,6 +1,6 @@
-IF(KDE3_FOUND)	
+IF(KDE4_FOUND)	
     SET(roptimization_AVAILABLE_FRONTENDS ${rcore_AVAILABLE_FRONTENDS} kde)
-    SET(roptimization_kde_DEPENDENCY rcorekde ${QT_AND_KDECORE_LIBS})
+    SET(roptimization_kde_DEPENDENCY rcorekde ${KDE4_KDEUI_LIBS})
     ADD_FRONTEND_SOURCE_FILE(roptimization_frontend roptimization kde ROPTIMIZATION_INCLUDES)
-ENDIF(KDE3_FOUND)
+ENDIF(KDE4_FOUND)
   

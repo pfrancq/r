@@ -140,9 +140,9 @@ public:
 
 	/**
 	* Set the URI of the file.
-	* @param uri             RURI.
+	* @param uri             URI of the file.
 	*/
-	void SetURI(const RString& uri);
+	void SetURI(const RURI& uri);
 
 	/**
 	* Return the name of the file. If the fullname doesn't have a slash at the
@@ -160,24 +160,24 @@ public:
 
 	/**
 	* Remove a file from the disk.
-	* @param name            Name of the file.
+	* @param uri             URI of the file.
 	*/
-	static void RemoveFile(const RString& name);
+	static void RemoveFile(const RURI& uri);
 
 	/**
 	* Get a name for temporary file.
 	* @return Name of the file.
 	*/
-	static RString GetTempFile(void);
+	static RURI GetTempFile(void);
 
 	/**
 	 * Test if a file exists.
-	 * @param name           Name of the file.
+	 * @param uri            URI of the file.
 	 */
-	static bool Exists(const RString& name);
+	static bool Exists(const RURI& uri);
 
 	/**
-	* Destructs the file.
+	* Destruct the file.
 	*/
 	virtual ~RFile(void);
 };

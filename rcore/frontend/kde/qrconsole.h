@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	RQConsole.h
+	QRConsole.h
 
 	Widget that simulates a console - Header.
 
@@ -31,8 +31,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RQConsole_H
-#define RQConsole_H
+#ifndef QRConsole_H
+#define QRConsole_H
 
 
 //------------------------------------------------------------------------------
@@ -42,7 +42,7 @@
 
 //------------------------------------------------------------------------------
 // include files for Qt
-#include <qtextedit.h>
+#include <QtGui/QTextEdit>
 
 
 //------------------------------------------------------------------------------
@@ -58,23 +58,22 @@ namespace R{
  * @author Pascal Francq.
  * @short Console Widget.
  */
-class RQConsole : public QTextEdit, public RPrgOutput
+class QRConsole : public QTextEdit, public RPrgOutput
 {
 	Q_OBJECT
 
 	/**
-	 * Current paragraph treated.
+	 * Current cursor.
 	 */
-	int Para;
+	QTextCursor Cursor;
 
 public:
 
 	/**
 	 * Construct the console.
 	 * @param parent         Parent widget.
-	 * @param name           Name of the widget
 	 */
-	RQConsole(QWidget* parent,const QString& name);
+	QRConsole(QWidget* parent);
 
 	/**
 	 * Catch the key event to simulate a real console.
@@ -95,6 +94,10 @@ signals:
 	 * Signal emits when a command was entered.
 	 */
 	void EnterCmd(QString cmd);
+
+public:
+
+	~QRConsole(void);
 };
 
 

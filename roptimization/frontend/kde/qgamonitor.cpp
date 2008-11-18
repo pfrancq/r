@@ -32,8 +32,9 @@
 
 //------------------------------------------------------------------------------
 // include files for Qt
-#include <qpainter.h>
-#include <qpopupmenu.h>
+#include <QtGui/QPainter>
+#include <QtGui/QMenu>
+#include <QtGui/QMouseEvent>
 
 
 //------------------------------------------------------------------------------
@@ -51,12 +52,12 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 /**
-* The QInfoBox class provides a popupmenu that display informartion about a
+* The QInfoBox class provides a popupmenu that display information about a
 * specific object and geometric information.
 * @author Pascal Francq
 * @short Popup object information
 */
-class QInfoBox : public QPopupMenu
+class QInfoBox : public QMenu
 {
 	/**
 	* Widget that must have the focus after.
@@ -92,12 +93,9 @@ protected:
 
 //------------------------------------------------------------------------------
 QInfoBox::QInfoBox(QWidget* parent,size_t gen)
-	: QPopupMenu(0,"Info Box")
+	: QMenu(0)
 {
-	char Tmp[50];
-
-	sprintf(Tmp,"Generation %zd not executed",gen);
-	insertItem(Tmp);
+	addAction("Generation "+QString::number(gen)+" not executed");
 	afterFocus=parent;
 	afterFocus->parentWidget()->setFocus();
 }
@@ -105,14 +103,10 @@ QInfoBox::QInfoBox(QWidget* parent,size_t gen)
 
 //------------------------------------------------------------------------------
 QInfoBox::QInfoBox(QWidget* parent,size_t gen,double fit)
-	: QPopupMenu(0,"Info Box")
+	: QMenu(0)
 {
-	char Tmp[50];
-
-	sprintf(Tmp,"Generation %zd",gen);
-	insertItem(Tmp);
-	sprintf(Tmp,"Fitness=%f",fit);
-	insertItem(Tmp);
+	addAction("Generation "+QString::number(gen));
+	addAction("Fitness="+QString::number(fit));
 	afterFocus=parent;
 	afterFocus->parentWidget()->setFocus();
 }
@@ -134,8 +128,8 @@ void QInfoBox::mouseReleaseEvent(QMouseEvent*)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QGAMonitorStats::QGAMonitorStats(QWidget* parent,const char* name)
-	: QGroupBox(parent,name)
+QGAMonitorStats::QGAMonitorStats(QWidget* parent)
+	: QGroupBox(parent)
 {
 	QLabel *l;
 
@@ -159,16 +153,15 @@ QGAMonitorStats::QGAMonitorStats(QWidget* parent,const char* name)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QGAMonitorGraph::QGAMonitorGraph(QWidget* parent,const char* name)
-	: QWidget(parent,name),values(),LastValue(0),pixmap(0)
+QGAMonitorGraph::QGAMonitorGraph(QWidget* parent)
+	: QWidget(parent),values(),LastValue(0),pixmap(0)
 {
 	QRect r;
 
 	vScale=1.0;
 	hScale=1;
 	receivedValues=0;
-	values.setAutoDelete(true);
-	setBackgroundColor(black);
+//	setBackgroundRole(QPalette(Qt::black));
 	setMinimumSize(200,100);
 	r=rect();
 	FactorX=(static_cast<double>(r.width()))/(static_cast<double>(hScale));
@@ -186,7 +179,7 @@ QSize QGAMonitorGraph::sizeHint() const
 //------------------------------------------------------------------------------
 void QGAMonitorGraph::clear()
 {
-	erase();
+//	erase();
 	values.clear();
 	receivedValues=0;
 	LastValue=0;
@@ -226,30 +219,27 @@ void QGAMonitorGraph::AddValue(const double value)
 {
 	int NewX,NewY;
 	QRect r=rect();
-	double *tmp=new double(value);
-	CHECK_PTR(tmp);
-	values.append(tmp);
+	values.append(value);
 	QPainter *painter=new QPainter(pixmap);
-	CHECK_PTR(painter);
-	painter->setPen(red);
+	painter->setPen(Qt::red);
 	NewX=static_cast<int>(static_cast<double>(receivedValues)*FactorX);
 	NewY=r.height()-static_cast<int>(value*FactorY);
 	if(LastValue)
-		painter->drawLine(static_cast<int>((static_cast<double>(receivedValues)-1)*FactorX),r.height()-static_cast<int>((*LastValue)*FactorY),
+		painter->drawLine(static_cast<int>((static_cast<double>(receivedValues)-1)*FactorX),r.height()-static_cast<int>(LastValue*FactorY),
 		                  NewX,NewY);
 	else
 		painter->drawPoint(NewX,NewY);
 	delete painter;
 	receivedValues++;
-	LastValue=tmp;
-	bitBlt(this,r.topLeft(),pixmap);
+	LastValue=value;
+	render(pixmap);
 }
 
 
 //------------------------------------------------------------------------------
 void QGAMonitorGraph::paintEvent(QPaintEvent*)
 {
-	double *tmp;
+	double tmp;
 	QRect r;
 	double Last;
 
@@ -261,24 +251,23 @@ void QGAMonitorGraph::paintEvent(QPaintEvent*)
 		pixmap->fill(this,r.topLeft());
 		Changed=false;
 		QPainter *painter=new QPainter(pixmap);
-		CHECK_PTR(painter);
-		painter->setPen(red);
+		painter->setPen(Qt::red);
 		tmp=values.first();
 		if(tmp)
 		{
-			painter->drawPoint(0,static_cast<int>((vScale-(*tmp))*FactorY));
-			Last=(*tmp);
-			tmp=values.next();
-			for(int i=1;tmp;tmp=values.next(),i++)
+			painter->drawPoint(0,static_cast<int>((vScale-tmp)*FactorY));
+			Last=tmp;
+			for(int i=1;tmp;i++)
 			{
+				tmp=values.at(i);
 				painter->drawLine(static_cast<int>((i-1)*FactorX),static_cast<int>((vScale-Last)*FactorY),
-				                  static_cast<int>(i*FactorX),static_cast<int>((vScale-(*tmp))*FactorY));
-				Last=(*tmp);
+				                  static_cast<int>(i*FactorX),static_cast<int>((vScale-tmp)*FactorY));
+				Last=tmp;
 			}
 		}
 		delete painter;
 	}
-	bitBlt(this,r.topLeft(),pixmap);
+	render(pixmap);
 }
 
 
@@ -290,7 +279,7 @@ void QGAMonitorGraph::resizeEvent(QResizeEvent*)
 	double tmp;
 
 	if(pixmap)
-		pixmap->resize(rect().size());
+		pixmap->scaled(rect().size());
 	Changed=true;
 	FactorX=(static_cast<double>(r.width()))/(static_cast<double>(hScale));
 	tmp=i/vScale;
@@ -304,11 +293,11 @@ void QGAMonitorGraph::mousePressEvent(QMouseEvent* e)
 {
 	QInfoBox* InfoBox;
 
-	if(e->button()==RightButton)
+	if(e->button()==Qt::RightButton)
 	{
 		size_t gen=static_cast<size_t>(e->x()/FactorX);
 		if(gen<receivedValues)
-			InfoBox=new QInfoBox(this,gen,*values.at(gen));
+			InfoBox=new QInfoBox(this,gen,values.at(gen));
 		else
 			InfoBox = new QInfoBox(this,gen);
 		InfoBox->popup(e->globalPos());
@@ -334,10 +323,10 @@ QGAMonitorGraph::~QGAMonitorGraph(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QGAMonitor::QGAMonitor(QWidget* parent,const char* name)
-	: QSplitter(parent,name)
+QGAMonitor::QGAMonitor(QWidget* parent)
+	: QSplitter(parent)
 {
-	setBackgroundMode(PaletteBase);
+//	setBackgroundMode(Qt::PaletteBase);
 	Stats = new QGAMonitorStats(this);
 	Graph = new QGAMonitorGraph(this);
 	Graph->setMinimumSize(Graph->sizeHint());

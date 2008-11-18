@@ -43,7 +43,7 @@
 
 //------------------------------------------------------------------------------
 // include files for Qt
-#include <qgroupbox.h>
+#include <QtGui/QGroupBox>
 class QComboBox;
 class QVBoxLayout;
 class QLineEdit;
@@ -56,7 +56,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The QPromCriteria class provides a QT widget to configure a list of Prom�h�
+* The QPromCriteria class provides a QT widget to configure a list of PROMETHEE
 * Criterion.
 * @short Configuration of PROMETHEE Criteria.
 * @author Pascal Francq.
@@ -102,9 +102,9 @@ public:
 	/**
 	* Construct a criterion.
 	* @param parent          Parent widget.
-	* @param name            Name of the widget.
+	* @param name            Name of the criterion.
 	*/
-	QPromCriteria(QWidget* parent,const char* name);
+	QPromCriteria(QWidget* parent, QString& name);
 
 	/**
 	* Insert a criterion.
