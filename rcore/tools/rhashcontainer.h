@@ -207,12 +207,12 @@ private:
 	 * Maximum size of last container.
 	 */
 	size_t Max;
-	
+
 	/**
 	 * Incremental size of last container.
-	 */	
+	 */
 	size_t Inc;
-	
+
 public:
 
 	/**
@@ -269,7 +269,7 @@ public:
 	}
 
 private:
-	
+
 	/**
 	 * Get a pointer to the hash table.
 	 * @param hash           Hash index.
@@ -293,9 +293,9 @@ private:
 			HashTable.InsertPtrAt(ptr=new Hash(Max,Inc),hash);
 		return(ptr);
 	}
-	
+
 public:
-	
+
 	/**
 	* Look if a certain element is in the container.
 	* @param TUse            The type of tag, the container uses the Compare(TUse &)
@@ -308,7 +308,7 @@ public:
 	*/
 	template<class TUse> inline bool IsIn(const TUse& tag,bool sortkey=true) const
 	{
-		
+
 		const Hash* ptr=GetHash(tag.HashIndex(1));
 		if(!ptr)
 			return(false);
@@ -367,21 +367,23 @@ public:
 	}
 
 	/**
-	* Delete an element from the container. The element is destruct if the
-	* container is responsible of the desallocation.
+	* Delete an element from the container.
 	* @param TUse            The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param sortkey         The tag represents the sorting key. The default value
 	*                        depends if the container is ordered (true) or not
 	*                        (false).
+	* @param del             Specify if the object must deleted or not. By
+	*                        default, the element is destruct if the container
+	*                        is responsible of the desallocation.
 	*/
-	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=true)
+	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=true,bool del=bAlloc)
 	{
 		Hash* ptr=GetHash(tag.HashIndex(1));
 		if(!ptr)
 			return;
-		ptr->DeletePtr<TUse>(tag,sortkey);
+		ptr->DeletePtr<TUse>(tag,sortkey,del);
 	}
 
 	/**

@@ -278,6 +278,13 @@ void RXMLFile::BeginTag(const RString& namespaceURI, const RString&, const RStri
 
 
 //------------------------------------------------------------------------------
+void RXMLFile::ResolveNamespace(const RString& namespaceURI)
+{
+	CurTag->SetNamespace(XMLStruct->GetNamespace(namespaceURI));
+}
+
+
+//------------------------------------------------------------------------------
 void RXMLFile::AddAttribute(const RString& namespaceURI,const RString& lName, const RString&)
 {
 	if(CurTag)

@@ -476,28 +476,32 @@ public:
 	inline void InsertPtrAt(const C* ins,size_t pos,bool del=bAlloc)  {BasicContainer::InsertPtrAt(bAlloc,static_cast<const void*>(ins),pos,del);}
 
 	/**
-	* Delete an element from the container. The element is destruct if the
-	* container is responsible of the desallocation.  This method can be
-	* limited to a part of the container.
+	* Delete an element from the container. This method can be limited to a
+	* part of the container.
 	* @param TUse            The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param sortkey         The tag represents the sorting key. The default value
 	*                        depends if the container is ordered (true) or not
 	*                        (false).
+	* @param del             Specify if the object must deleted or not. By
+	*                        default, the element is destruct if the container
+	*                        is responsible of the desallocation.
 	* @param min             Starting index of the container's part concerned.
 	* @param max             Ending index of the container's part concerned.
 	*/
-	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=bOrder,size_t min=0, size_t max=0) {BasicContainer::DeletePtr(bOrder,bAlloc,static_cast<const void*>(&tag),sortkey,min,max,Compare<TUse>);}
+	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=bOrder,bool del=bAlloc,size_t min=0, size_t max=0) {BasicContainer::DeletePtr(bOrder,del,static_cast<const void*>(&tag),sortkey,min,max,Compare<TUse>);}
 
 	/**
-	* Delete an element from the container at a given position. The element is
-	* destruct if the container is responsible of the desallocation.
+	* Delete an element from the container at a given position.
 	* @param pos             Position of the element.
 	* @param shift           Specify if the the container should be shifted or
 	*                        if the position should be left empty.
+	* @param del             Specify if the object must deleted or not. By
+	*                        default, the element is destruct if the container
+	*                        is responsible of the desallocation.
 	*/
-	inline void DeletePtrAt(size_t pos,bool shift=true) {BasicContainer::DeletePtrAt(bAlloc,pos,shift);}
+	inline void DeletePtrAt(size_t pos,bool shift=true,bool del=bAlloc) {BasicContainer::DeletePtrAt(del,pos,shift);}
 
 	/**
 	* Destruct the container.

@@ -90,12 +90,12 @@ class RXMLStruct : public RTree<RXMLTag,true,false>
 	 * URI of the DTD.
 	 */
 	RString DTD;
-		
+
 	/**
 	 * All the namespaces used.
 	 */
 	RContainer<RURI,true,true> Namespaces;
-	
+
 public:
 
 	/**
@@ -108,12 +108,12 @@ public:
 	 * @param xmlns          Namespace.
 	 */
 	RURI* GetNamespace(const RString& xmlns);
-	
+
 	/**
-	 * Get a cursor over all XML namespaces used by this XML structire.
+	 * Get a cursor over all XML namespaces used by this XML structure.
 	 */
 	RCursor<RURI> GetNamespaces(void) const {return(RCursor<RURI>(Namespaces));}
-	
+
 	/**
 	* Find the first tag with a given name.
 	* @param name           Name of the tag to find.
@@ -204,18 +204,18 @@ public:
 	 * @param dtd            DTD to assign.
 	 */
 	void SetDTD(const RString& dtd);
-	
+
 	/**
 	 * Get the DTD corresponding to the XML structure.
 	 * @return RString.
 	 */
 	RString GetDTD(void) const;
-	
+
 	/**
 	 * Clear the XML structure.
 	 */
 	virtual void Clear(void);
-	
+
 	/**
 	* Compare two tags to see if it is the same tag. By default, the names
 	* must be the same, and that all common attributes have the same values.
@@ -249,7 +249,7 @@ public:
 	* @return Pointer to a attribute.
 	*/
 	virtual RXMLAttr* NewAttr(const RString& name,const RString& value,const RString& xmlns);
-	
+
 	/**
 	* Create a new attribute with a given name. By default, the method creates
 	* a RXMLAttr.

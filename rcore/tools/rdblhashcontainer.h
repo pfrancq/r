@@ -317,7 +317,7 @@ public:
 				return(0);
 			return(ptr);
 		}
-			
+
 		/**
 		 * Get a pointer to the hash table.
 		 * @param hash           Hash index 1.
@@ -331,7 +331,7 @@ public:
 				this->InsertPtrAt(ptr=new Hash2(m,i),hash);
 			return(ptr);
 		}
-			
+
 		friend class RDblHashContainer;
 	};
 
@@ -341,20 +341,20 @@ private:
 	* This container represents the hash table of the elements.
 	*/
 	RContainer<Hash,true,true> HashTable;
-	
+
 	/**
 	 * Initial size of the second hash index.
 	 */
 	size_t Size;
-	
+
 	/**
 	 * Maximum size of last container.
 	 */
 	size_t Max;
-	
+
 	/**
 	 * Incremental size of last container.
-	 */	
+	 */
 	size_t Inc;
 
 public:
@@ -423,7 +423,7 @@ public:
 	}
 
 private:
-	
+
 	/**
 	 * Get a pointer to the hash table.
 	 * @param hash           Hash index.
@@ -435,7 +435,7 @@ private:
 			return(0);
 		return(ptr);
 	}
-	
+
 	/**
 	 * Get a pointer to the hash table.
 	 * @param hash           Hash index.
@@ -447,9 +447,9 @@ private:
 			HashTable.InsertPtrAt(ptr=new Hash(Size,Max,Inc),hash);
 		return(ptr);
 	}
-	
+
 public:
-	
+
 	/**
 	* Verify if an element is in the hash container.
 	* @param TUse           The type of tag, the hash container uses the
@@ -468,7 +468,7 @@ public:
 			return(false);
 		const Hash2* ptr2=ptr->GetHash(tag.HashIndex(2));
 		if(!ptr2)
-			return(false);		
+			return(false);
 		return(ptr2->IsIn<TUse>(tag,sortkey));
 	}
 
@@ -536,16 +536,19 @@ public:
 	* @param sortkey        The tag represents the sorting key. The default
 	*                       value depends if the container is ordered (true) or
 	*                       not (false).
+	* @param del             Specify if the object must deleted or not. By
+	*                        default, the element is destruct if the container
+	*                        is responsible of the desallocation.
 	*/
-	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=true)
+	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=true,bool del=bAlloc)
 	{
 		Hash* ptr=GetHash(tag.HashIndex(1));
 		if(!ptr)
 			return;
 		Hash2* ptr2=ptr->GetHash(tag.HashIndex(2),Max,Inc);
 		if(!ptr2)
-			return;		
-		ptr2->DeletePtr<TUse>(tag,sortkey);
+			return;
+		ptr2->DeletePtr<TUse>(tag,sortkey,del);
 	}
 
 	/**

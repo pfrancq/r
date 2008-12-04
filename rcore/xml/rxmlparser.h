@@ -115,11 +115,6 @@ protected:
 	size_t LastTokenPos;
 
 	/**
-	 * Current attributes.
-	 */
-	RContainer<RXMLAttr,true,true> Attrs;
-
-	/**
 	 * Determine what is currently treated.
 	 */
 	SectionType Section;
@@ -270,17 +265,24 @@ protected:
 	* Method called each time a tag will be treated when reading a XML file.
 	* Actually, a XMLTag is created and inserted as child of the current tag. At
 	* the end, the current tag is set to the new created one.
-	* @param namespaceURI    Name of the namespace (if any).
+	* @param namespaceURI    Namespace (if any).
 	* @param lName           Local name of the tag.
 	* @param name            Complete name of the tag.
 	*/
 	virtual void BeginTag(const RString& namespaceURI,const RString& lName,const RString& name);
 
 	/**
+	* Method called each time a tag defines a unknown namespace which is
+	* resolved by one of its attributes.
+	* @param namespaceURI    Namespace to assign to the current tag.
+	*/
+	virtual void ResolveNamespace(const RString& namespaceURI);
+
+	/**
 	* Method called each time an attribute will be treated when reading a XML
 	* file. Actually, the attribute is added to the current tag if one is
 	* defined or to an internal container.
-	* @param namespaceURI    Name of the namespace (if any).
+	* @param namespaceURI    Namespace (if any).
 	* @param lName           Local name of the attribute.
 	* @param name            Complete name of the attribute.
 	* @param value           Value of the attribute (if any).
@@ -298,7 +300,7 @@ protected:
 	/**
 	* Method called each time a tag was treated when reading a XML file.
 	* Actually, the current tag is set its parent.
-	* @param namespaceURI  Name of the namespace (if any).
+	* @param namespaceURI  Namespace (if any).
 	* @param lName         Local name of the tag.
 	* @param name          Complete name of the tag.
 	*/

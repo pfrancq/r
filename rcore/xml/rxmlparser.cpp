@@ -68,7 +68,7 @@ public:
 
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(void)
-	: RTextFile(), Namespaces(20),DefaultNamespace(5), AvoidSpaces(false), Attrs(10), InvalidXMLCodes(false)
+	: RTextFile(), Namespaces(20),DefaultNamespace(5), AvoidSpaces(false), InvalidXMLCodes(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -77,7 +77,7 @@ RXMLParser::RXMLParser(void)
 
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(const RURI& uri,const RString& encoding)
- : RTextFile(uri,encoding), Namespaces(20), DefaultNamespace(5), AvoidSpaces(false), Attrs(10), InvalidXMLCodes(false)
+ : RTextFile(uri,encoding), Namespaces(20), DefaultNamespace(5), AvoidSpaces(false), InvalidXMLCodes(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -86,7 +86,7 @@ RXMLParser::RXMLParser(const RURI& uri,const RString& encoding)
 
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(RIOFile& file,const RString& encoding)
- : RTextFile(file,encoding), Namespaces(20), DefaultNamespace(5), AvoidSpaces(false), Attrs(10), InvalidXMLCodes(false)
+ : RTextFile(file,encoding), Namespaces(20), DefaultNamespace(5), AvoidSpaces(false), /*Attrs(10),*/ InvalidXMLCodes(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -297,7 +297,6 @@ void RXMLParser::LoadHeader(void)
 		// Search for parameters until ?> is found
 		bool PopDefault;
 		RContainer<Namespace,false,false> PopURI(5);
-		Attrs.Clear();
 		LoadAttributes(PopDefault,PopURI,'?','>');
 
 		// Skip '>' and the spaces after that
@@ -314,7 +313,6 @@ void RXMLParser::LoadHeader(void)
 		// Search for parameters until ?> is found
 		bool PopDefault;
 		RContainer<Namespace,false,false> PopURI(5);
-		Attrs.Clear();
 		LoadAttributes(PopDefault,PopURI,'?','>');
 
 		// Skip '>' and the spaces after that
@@ -420,6 +418,7 @@ void RXMLParser::LoadNextTag(void)
 	bool PopDefault;
 	RContainer<Namespace,false,false> PopURI(5);
 	bool CDATA;
+	bool Resolve(false);
 
 	// If not a tag -> Error
 	if(GetChar()!='<')
@@ -432,28 +431,47 @@ void RXMLParser::LoadNextTag(void)
 	// Treat the tag
 	// Search if it has a namespace
 	RString uri,lname;
+	RString prefix;
 	int i=TagName.Find(':');
 	if(i!=-1)
 	{
-		RString prefix=TagName.Mid(0,i);
+		prefix=TagName.Mid(0,i);
 		Namespace* ptr=Namespaces.GetPtr(prefix);
 		if(!ptr)
-			throw RIOException(this,"Namespace with prefix '"+prefix+"' no defined");
-		uri=(*ptr->URI());
+			Resolve=true;       // Search after the attribute
+		else
+			uri=(*ptr->URI());
 		lname=TagName.Mid(i+1,TagName.GetLen()-i);
 	}
 	else
 	{
 		if(DefaultNamespace.GetNb())
 			uri=(*DefaultNamespace()); // Default namespace.
+		else
+			Resolve=true;    // Search after the attribute
 		lname=TagName;
 	}
 
 	BeginTag(uri,lname,TagName);
 
 	// Read Attributes
-	Attrs.Clear();
 	LoadAttributes(PopDefault,PopURI);
+	if(Resolve)
+	{
+		if(!prefix.IsEmpty())
+		{
+			Namespace* ptr=Namespaces.GetPtr(prefix);
+			if(!ptr)
+				throw RIOException(this,"Namespace with prefix '"+prefix+"' no defined");
+			uri=(*ptr->URI());
+			ResolveNamespace(uri);
+		}
+		else if(DefaultNamespace.GetNb())
+		{
+			uri=(*DefaultNamespace()); // Default namespace.
+			ResolveNamespace(uri);
+		}
+	}
 
 	// It is a closing tag? -> Skip / and > -> else Skip >
 	CurTagClosing=(Cur==RChar('/'));
@@ -732,6 +750,12 @@ void RXMLParser::AddEntity(const RString&,const RString&)
 
 //------------------------------------------------------------------------------
 void RXMLParser::BeginTag(const RString&,const RString&,const RString&)
+{
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::ResolveNamespace(const RString& namespaceURI)
 {
 }
 

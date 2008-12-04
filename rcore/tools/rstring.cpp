@@ -439,9 +439,9 @@ bool RString::ToBool(bool& valid,bool strict)
 //-----------------------------------------------------------------------------
 RString RString::Number(const int nb)
 {
-	char Tmp[20];
+	char Tmp[30];
 
-	sprintf(Tmp,"%i",nb);
+	snprintf(Tmp,30,"%i",nb);
 	return(RString(Tmp));
 }
 
@@ -449,9 +449,9 @@ RString RString::Number(const int nb)
 //-----------------------------------------------------------------------------
 RString RString::Number(const unsigned int nb)
 {
-	char Tmp[20];
+	char Tmp[30];
 
-	sprintf(Tmp,"%u",nb);
+	snprintf(Tmp,30,"%u",nb);
 	return(RString(Tmp));
 }
 
@@ -459,9 +459,9 @@ RString RString::Number(const unsigned int nb)
 //-----------------------------------------------------------------------------
 RString RString::Number(const long nb)
 {
-	char Tmp[20];
+	char Tmp[30];
 
-	sprintf(Tmp,"%li",nb);
+	snprintf(Tmp,30,"%li",nb);
 	return(RString(Tmp));
 }
 
@@ -469,9 +469,9 @@ RString RString::Number(const long nb)
 //-----------------------------------------------------------------------------
 RString RString::Number(const unsigned long nb)
 {
-	char Tmp[20];
+	char Tmp[30];
 
-	sprintf(Tmp,"%lu",nb);
+	snprintf(Tmp,30,"%lu",nb);
 	return(RString(Tmp));
 }
 
@@ -479,10 +479,10 @@ RString RString::Number(const unsigned long nb)
 //------------------------------------------------------------------------------
 RString RString::Number(const long long nb)
 {
-	char Tmp[20];
+	char Tmp[30];
 	RString res;
 
-	sprintf(Tmp,"%lld",nb);
+	snprintf(Tmp,30,"%lld",nb);
 	res=Tmp;
 	return(res);
 }
@@ -491,10 +491,10 @@ RString RString::Number(const long long nb)
 //------------------------------------------------------------------------------
 RString RString::Number(const unsigned long long nb)
 {
-	char Tmp[20];
+	char Tmp[30];
 	RString res;
 
-	sprintf(Tmp,"%llu",nb);
+	snprintf(Tmp,30,"%llu",nb);
 	res=Tmp;
 	return(res);
 }
@@ -503,9 +503,9 @@ RString RString::Number(const unsigned long long nb)
 //-----------------------------------------------------------------------------
 RString RString::Number(const float nb,const char* format)
 {
-	char Tmp[20];
+	char Tmp[30];
 
-	sprintf(Tmp,format,nb);
+	snprintf(Tmp,30,format,nb);
 	return(RString(Tmp));
 }
 
@@ -513,9 +513,9 @@ RString RString::Number(const float nb,const char* format)
 //-----------------------------------------------------------------------------
 RString RString::Number(const double nb,const char* format)
 {
-	char Tmp[20];
+	char Tmp[30];
 
-	sprintf(Tmp,format,nb);
+	snprintf(Tmp,30,format,nb);
 	return(RString(Tmp));
 }
 
@@ -523,9 +523,9 @@ RString RString::Number(const double nb,const char* format)
 //-----------------------------------------------------------------------------
 RString RString::Number(const long double nb,const char* format)
 {
-	char Tmp[20];
+	char Tmp[30];
 
-	sprintf(Tmp,format,nb);
+	snprintf(Tmp,30,format,nb);
 	return(RString(Tmp));
 }
 

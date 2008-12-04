@@ -63,7 +63,7 @@ public:
 		size_t nb;
 	};
 
-private:
+protected:
 
 	/**
 	* Identifier of the vertex.

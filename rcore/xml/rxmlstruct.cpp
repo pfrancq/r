@@ -185,7 +185,7 @@ bool RXMLStruct::Compare(const RXMLTag* tag1,const RXMLTag* tag2)
 	if(tag1->GetName()!=tag2->GetName())
 		return(false);
 
-	// Go trought the attributes of tag1 and verify if a same attributes exist
+	// Go trough the attributes of tag1 and verify if a same attributes exist
 	// in tag2
 	RCursor<RXMLAttr> Cur(tag1->GetAttrs());
 	for(Cur.Start();!Cur.End();Cur.Next())

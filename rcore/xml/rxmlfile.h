@@ -171,6 +171,13 @@ protected:
 	virtual void BeginTag(const RString& namespaceURI, const RString& lName, const RString& name);
 
 	/**
+	* Method called each time a tag defines a unknown namespace which is
+	* resolved by one of its attributes.
+	* @param namespaceURI    Namespace to assign to the current tag.
+	*/
+	virtual void ResolveNamespace(const RString& namespaceURI);
+
+	/**
 	* Method called each time an attribute will be treated when reading a XML
 	* file. Actually, the attribute is added to the current tag if one is
 	* defined or to an internal container.
