@@ -331,74 +331,83 @@ void RXMLParser::LoadHeader(void)
 		SetDocType(XMLToString(Content));
 		SkipSpaces();
 
-		for(bool Cont=true;Cont;Cont=false)
+		if(Content=="HTML")
 		{
-			if(GetNextChar()=='[')
+			// Skip Everything until end of the header
+			while((!End())&&(GetNextChar()!='>'))
+				GetChar();
+		}
+		else
+		{
+			for(bool Cont=true;Cont;Cont=false)
 			{
-				GetChar(); // Skip [
-				SkipSpaces();
-
-				// Read Entities
-				while((!End())&&(GetNextChar()!=']'))
+				if(GetNextChar()=='[')
 				{
-					// Get next name
-					RString cmd=GetWord();
-					if(cmd!="<!ENTITY")
-						throw RIOException(this,"Wrong entities formating");
-
-					RString ns(GetWord());
-					Cur=GetChar();
-					if(Cur!='"')
-						throw RIOException(this,"Wrong entities formating");
-					RString uri(GetToken(RChar('"')));
-					Cur=GetChar();
-					if(Cur!='"')
-						throw RIOException(this,"Wrong entities formating");
-
-					// Add the entity
-					AddEntity(ns,uri);
-
-					// Verify if the attribute is a namespace
-					int i=ns.Find(':');
-					if(i!=-1)
-					{
-						Namespace* ptr=Namespaces.GetInsertPtr(ns.Mid(i+1,ns.GetLen()-i));
-						ptr->URI.Push(new RString(uri));
-					}
-					else
-					{
-						// If not : -> default namespace
-						DefaultNamespace.Push(new RString(uri));
-					}
-
-					// Skip >
+					GetChar(); // Skip [
 					SkipSpaces();
+
+					// Read Entities
+					while((!End())&&(GetNextChar()!=']'))
+					{
+						// Get next name
+						RString cmd=GetWord();
+						if(cmd!="<!ENTITY")
+							throw RIOException(this,"Wrong entities formating");
+
+						RString ns(GetWord());
+						Cur=GetChar();
+						if(Cur!='"')
+							throw RIOException(this,"Wrong entities formating");
+						RString uri(GetToken(RChar('"')));
+						Cur=GetChar();
+						if(Cur!='"')
+							throw RIOException(this,"Wrong entities formating");
+
+						// Add the entity
+						AddEntity(ns,uri);
+
+						// Verify if the attribute is a namespace
+						int i=ns.Find(':');
+						if(i!=-1)
+						{
+							Namespace* ptr=Namespaces.GetInsertPtr(ns.Mid(i+1,ns.GetLen()-i));
+							ptr->URI.Push(new RString(uri));
+						}
+						else
+						{
+							// If not : -> default namespace
+							DefaultNamespace.Push(new RString(uri));
+						}
+
+						// Skip >
+						SkipSpaces();
+						Next();
+						SkipSpaces();
+					}
+
+					if(End())
+						throw RIOException(this,"Wrong entities formating");
+
+					// Skip ] and spaces
 					Next();
 					SkipSpaces();
+					Cont=true;
 				}
 
-				if(End())
-					throw RIOException(this,"Wrong entities formating");
-
-				// Skip ] and spaces
-				Next();
-				SkipSpaces();
-				Cont=true;
-			}
-
-			if(CurString("SYSTEM"))
-			{
-				SkipSpaces();
-				RChar What=GetChar();
-				bool Quotes=((What==RChar('\''))||(What==RChar('"')));
-				if(!Quotes)
-					throw RIOException(this,"Bad XML file");
-				SetDTD(GetToken(What));
-				SkipSpaces();
-				if(GetChar()!=What)
-					throw RIOException(this,"Bad XML file");
-				SkipSpaces();
-				Cont=true;
+				if(CurString("SYSTEM"))
+				{
+					SkipSpaces();
+					RChar What=GetChar();
+					bool Quotes=((What==RChar('\''))||(What==RChar('"')));
+					if(!Quotes)
+						throw RIOException(this,"Bad XML file");
+					SetDTD(GetToken(What));
+					SkipSpaces();
+					if(GetChar()!=What)
+						throw RIOException(this,"Bad XML file");
+					SkipSpaces();
+					Cont=true;
+				}
 			}
 		}
 		Next(); // Skip >
@@ -426,7 +435,9 @@ void RXMLParser::LoadNextTag(void)
 
 	// Read name of the tag
 	LastTokenPos=GetPos();
+	size_t OpenTagLine(GetLineNb());
 	TagName=GetToken(">/");
+	CurTagClosing=false;  // Suppose it is not a closing tag
 
 	// Treat the tag
 	// Search if it has a namespace
@@ -473,16 +484,20 @@ void RXMLParser::LoadNextTag(void)
 		}
 	}
 
-	// It is a closing tag? -> Skip / and > -> else Skip >
-	CurTagClosing=(Cur==RChar('/'));
-	if(CurTagClosing)
-		Next();
+	// If the parser does not now if it is a closing tag -> test it.
+	if(!CurTagClosing)
+	{
+		// It is a closing tag? -> Skip / and >
+		CurTagClosing=(Cur==RChar('/'));
+		if(CurTagClosing)
+			Next();  // Skip / from "/>"
+	}
 	SkipSpaces();
 
 	// Verify if it has sub-tags
 	if(CurTagClosing)
 	{
-		EndTag("","",TagName);
+		EndTag(uri,lname,TagName);
 		return;
 	}
 
@@ -579,7 +594,9 @@ void RXMLParser::LoadNextTag(void)
 	CurTagClosing=true;
 	SkipSpaces();
 	LastTokenPos=GetPos();
-	TagName=GetToken(RChar('>'));
+	RString EndTagName(GetToken(RChar('>')));
+	if(EndTagName!=TagName)
+		throw RIOException(this,"Found closing tag '"+EndTagName+"' while closing tag '"+TagName+"' ("+RString::Number(OpenTagLine)+") was expected.");
 	SkipSpaces();
 	Next(); // Skip >
 	EndTag(uri,lname,TagName);
@@ -692,21 +709,8 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 				// If Quote must be used -> generate an exception
 				if(OnlyQuote())
 					throw RIOException(this,"Quote must be used to delimit the parameter value in a tag.");
-				SetParseSpace(RTextFile::LeaveSpaces);
-				while((!End())&&(GetNextChar()!=What))
-				{
-					// Get the next word
-					LastTokenPos=GetPos();
-					RString tmp(GetToken(RString(EndTag1)+EndTag2));
-					if(tmp.GetLen())
-						Value(tmp);
-
-					// Add all spaces
-					while(GetNextChar().IsSpace())
-						Value(GetChar());
-				}
-				SetParseSpace(RTextFile::SkipAllSpaces);
-				Next();
+				RString tmp(What+GetToken(">"));
+				Value(tmp);
 			}
 
 			// Verify if the attribute is a namespace
@@ -755,7 +759,7 @@ void RXMLParser::BeginTag(const RString&,const RString&,const RString&)
 
 
 //------------------------------------------------------------------------------
-void RXMLParser::ResolveNamespace(const RString& namespaceURI)
+void RXMLParser::ResolveNamespace(const RString&)
 {
 }
 

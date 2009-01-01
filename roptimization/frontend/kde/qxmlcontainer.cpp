@@ -72,7 +72,7 @@ void QXMLContainer::clear(void)
 
 
 //------------------------------------------------------------------------------
-void QXMLContainer::WriteBeginTag(RString tag,RString options)
+void QXMLContainer::WriteBeginTag(const RString& tag,const RString& attrs)
 {
 	QTreeWidgetItem *ptr;
 
@@ -87,23 +87,23 @@ void QXMLContainer::WriteBeginTag(RString tag,RString options)
 	else
 		Items[Deep]=new QTreeWidgetItem(this);
 	Items[Deep]->setText(0,ToQString(tag));
-	if(!options.IsEmpty())
+	if(!attrs.IsEmpty())
 	{
-		Items[Deep]->setText(1,ToQString(options));
+		Items[Deep]->setText(1,ToQString(attrs));
 	}
 	Items[Deep+1]=0;
 }
 
 
 //------------------------------------------------------------------------------
-void QXMLContainer::WriteEndTag(RString /*tag*/)
+void QXMLContainer::WriteEndTag(const RString& /*tag*/)
 {
 	Items[Deep+1]=0;
 }
 
 
 //------------------------------------------------------------------------------
-void QXMLContainer::WriteText(RString text)
+void QXMLContainer::WriteText(const RString& text)
 {
 	Items[Deep]->setText(2,ToQString(text));
 }

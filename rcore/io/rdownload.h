@@ -100,13 +100,13 @@ public:
 private:
 
 	/**
-	* Parameter function gived to CURLOPT_WRITEFUNCTION and called by CURL when
+	* Parameter function given to CURLOPT_WRITEFUNCTION and called by CURL when
 	* data are downloaded.
 	*/
 	static int WriteTmpFile(void* buffer, size_t size, size_t nmemb,void* param);
 
 	/**
-	* Parameter function gived to CURLOPT_HEADERFUNCTION and called by CURL when
+	* Parameter function given to CURLOPT_HEADERFUNCTION and called by CURL when
 	* a part of the header is downloaded.
 	 */
 	static int TreatHeader(void* buffer, size_t size, size_t nmemb,void* param);
@@ -118,14 +118,14 @@ public:
 	* @param uri            URI of the document.
 	* @param local          Local file where to store.
 	*/
-	virtual void DownloadFile(const RURI& uri,const R::RString& local);
+	virtual void DownloadFile(const RURI& uri,const R::RURI& local);
 
 	/**
 	* Delete a temporary copy of a file created by the manager. This method is
 	* only called if a temporary file was really created.
 	* @param tmpFile        Temporary file to delete.
 	*/
-	virtual void DeleteFile(R::RString& tmpFile);
+	virtual void DeleteFile(const R::RURI& tmpFile);
 
 protected:
 

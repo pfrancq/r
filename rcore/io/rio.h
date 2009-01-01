@@ -39,6 +39,7 @@
 // include files for R Project
 #include <rstd.h>
 #include <rstring.h>
+#include <ruri.h>
 
 
 //------------------------------------------------------------------------------
@@ -94,7 +95,7 @@ public:
 		/**
 		 * Name of the temporary file.
 		 */
-		R::RString Name;
+		RURI Name;
 
 		/**
 		 * Name requested?
@@ -117,7 +118,7 @@ public:
 		 * Get the name of the temporary file.
 		 * @param remove     File must be removed?
 		 */
-		RString GetName(bool remove=true);
+		RURI GetName(bool remove=true);
 
 		/**
 		 * Destruct. If the name was requested, the temporary file is

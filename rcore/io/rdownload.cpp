@@ -129,18 +129,18 @@ RDownload::RDownload(void)
 
 
 //------------------------------------------------------------------------------
-void RDownload::DownloadFile(const RURI& uri,const RString& local)
+void RDownload::DownloadFile(const RURI& uri,const RURI& local)
 {
 	// Init Part
 	ValidContent=true;  // Suppose the content is OK
 	MIME="";            // No MIME type.
 	First=true;
-	Stream=fopen(local, "wb");
+	Stream=fopen(local(), "wb");
 	if(!Stream)
-		throw RException("Cannot create file '"+local+"'");
+		throw RException("Cannot create file '"+local()+"'");
 
 	// Download the file
-	curl_easy_setopt(Lib, CURLOPT_URL, uri.Latin1());
+	curl_easy_setopt(Lib, CURLOPT_URL, uri().Latin1());
 	CURLcode err=curl_easy_perform(Lib);
 
 	// Done Part
@@ -150,15 +150,15 @@ void RDownload::DownloadFile(const RURI& uri,const RString& local)
 	{
 		if(!ValidContent)
 			throw RException("Cannot treat the MIME type '"+MIME+"'");
-		throw RException(curl_easy_strerror(err)+RString(" : ")+uri);
+		throw RException(curl_easy_strerror(err)+RString(" : ")+uri());
 	}
 }
 
 
 //------------------------------------------------------------------------------
-void RDownload::DeleteFile(RString& tmpFile)
+void RDownload::DeleteFile(const RURI& tmpFile)
 {
-	remove(tmpFile);
+	remove(tmpFile());
 }
 
 

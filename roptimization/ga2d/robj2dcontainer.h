@@ -65,7 +65,7 @@ public:
 
 	/**
 	* Construct a geometric information.
-	* @param id             The identificator of the object.
+	* @param id             The identifier of the object.
 	* @param name           Name of the object.
 	* @param nb             Number of geometric information that can be
 	*                       contained.
@@ -85,14 +85,14 @@ public:
 	void Add(RGeoInfos* infos,RGeoInfo *info);
 
 	/**
-	* Does some calculation after each geometric informartion were added to the
+	* Does some calculation after each geometric information were added to the
 	* container.
 	*/
 	void Complete(void);
 
 	/**
 	* Assign the geometric information to the position and update the grids with the
-	* identicator of the object.
+	* identifier of the object.
 	* @param infos          Geometric Informations.
 	* @param pos            Position to place.
 	* @param grid           Grid.
@@ -102,7 +102,7 @@ public:
 
 	/**
 	* Verify if a given object is in the container or not.
-	* @param id             Identificator of the object.
+	* @param id             Identifier of the object.
 	* @return true if the object is in, else false.
 	*/
 	virtual bool IsIn(size_t id);

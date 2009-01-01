@@ -133,7 +133,7 @@ void RConfig::Load(bool global)
 		}
 		catch(...)
 		{
-			std::cout<<"Warning: Global config file '"<<Where<<"' not found."<<std::endl;
+			std::cout<<"Warning: Global config file '"<<Where()<<"' not found."<<std::endl;
 		}
 	}
 

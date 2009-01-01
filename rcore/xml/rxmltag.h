@@ -39,6 +39,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstring.h>
+#include <ruri.h>
 #include <rnode.h>
 #include <rxmlattr.h>
 #include <rcursor.h>
@@ -96,8 +97,8 @@ class RXMLTag : public RNode<RXMLTag,true,false>
 	/**
 	 * Namespace.
 	 */
-	RString* Namespace;
-	
+	RURI* Namespace;
+
 public:
 
 	/**
@@ -112,18 +113,18 @@ public:
 	* @param name            Name of the tag.
 	* @param xmlns           Namespace of the tag.
 	*/
-	RXMLTag(const RString& name,RString* xmlns=0);
+	RXMLTag(const RString& name,RURI* xmlns=0);
 
 	/**
 	* Compare a tag with a given name.
-	* @param name           Name used for the comparaison.
+	* @param name           Name used for the comparison.
 	* @returns 0 if the same, -1 or +1 if different.
 	*/
 	int Compare(const RString& name) const;
 
 	/**
 	* Compare two tags.
-	* @param tag            Tag used for the comparaison.
+	* @param tag            Tag used for the comparison.
 	* @returns 0 if the same, -1 or +1 if different.
 	*/
 	int Compare(const RXMLTag& tag) const;
@@ -145,19 +146,19 @@ public:
 	* @param name           Name of the tag.
 	*/
 	void SetName(const RString& name);
-	
+
 	/**
 	* Return the namespace of the tag.
 	* @returns a string containing the namespace.
 	*/
-	RString* GetNamespace(void) const {return(Namespace);}
+	RURI* GetNamespace(void) const {return(Namespace);}
 
 	/**
 	* Set the namespace of the tag.
 	* @param xmlns           Namespace of the tag.
 	*/
-	void SetNamespace(RString* xmlns);
-	
+	void SetNamespace(RURI* xmlns);
+
 	/**
 	* Return the value of an attribute.
 	* param name            Name of the attribute.

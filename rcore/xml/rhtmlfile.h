@@ -58,7 +58,7 @@ class RHTMLFile : public RXMLFile
 	/**
 	* HTML Tags.
 	*/
-	R::RContainer<Tag,true,true> Tags;
+	static R::RContainer<Tag,true,true> Tags;
 
 	/**
 	* Is the </html> found?
@@ -88,6 +88,12 @@ public:
 	* @param encoding       The encoding scheme of the file.
 	*/
 	RHTMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding="Latin1");
+
+	/**
+	 * Open the file
+	 * @param mode           The open mode for the file.
+	 */
+	void Open(RIO::ModeType mode);
 
 	/**
 	 * Open the file
@@ -145,12 +151,6 @@ public:
 	* @param text          Text processed.
 	*/
 	virtual void Text(const RString& text);
-
-	/**
-	* Function to find the end of the tag and to skip all the content
-	* @param tag           The name of the tag to close
-	*/
-	virtual void SkipTagContent(const RString& tag);
 
 	/**
 	* Function that specify if only quotes are allowed to delimit a parameter in

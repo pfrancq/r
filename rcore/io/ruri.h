@@ -60,7 +60,7 @@ namespace R{
  * @endcode
  * @remarks The whole specification is not supported.
  */
-class RURI : public RString
+class RURI
 {
 	/**
 	 * This structure represent a part of a string.
@@ -74,6 +74,11 @@ class RURI : public RString
 		inline PartString(const PartString& part) : Pos(part.Pos), Size(part.Size) {}
 		inline void Clear(void) {Pos=0; Size=0;}
 	};
+
+	/**
+	 * The URI.
+	 */
+	RString URI;
 
 	/**
 	 * Structure identifying the schema of the URI.
@@ -143,7 +148,7 @@ private:
 	inline RString Extract(const PartString& part) const
 	{
 		if(part.Size)
-			return(Mid(part.Pos,static_cast<int>(part.Size)));
+			return(URI.Mid(part.Pos,static_cast<int>(part.Size)));
 		return(RString::Null);
 	}
 
@@ -153,19 +158,19 @@ public:
 	 * Compare method used by R::RContainer.
 	 * @param uri            URI used for the comparisons.
 	 */
-	int Compare(const RURI& uri) const {return(RString::Compare(uri));}
+	int Compare(const RURI& uri) const {return(URI.Compare(uri.URI));}
 
 	/**
 	 * Compare method used by R::RContainer.
 	 * @param uri            URI used for the comparisons.
 	 */
-	int Compare(const RString& uri) const {return(RString::Compare(uri));}
+	int Compare(const RString& uri) const {return(URI.Compare(uri));}
 
 	/**
 	 * Compare method used by R::RContainer.
 	 * @param uri            URI used for the comparisons.
 	 */
-	int Compare(const char* uri) const {return(RString::Compare(uri));}
+	int Compare(const char* uri) const {return(URI.Compare(uri));}
 
 	/**
 	 * Get the Scheme part of the uniform resource identifier.
@@ -196,6 +201,11 @@ public:
 	 * Get the fragment part of the uniform resource identifier.
 	 */
 	inline RString GetFragment(void) const {return(Extract(Fragment));}
+
+	/**
+	* @return String representing the URI.
+	*/
+	inline RString operator()(void) const {return(URI);}
 
 	/**
 	* Assignment operator using another URI.

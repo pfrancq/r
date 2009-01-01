@@ -120,7 +120,7 @@ protected:
 	/**
 	 * Name of the file.
 	 */
-	RString File;
+	RURI File;
 
 public:
 

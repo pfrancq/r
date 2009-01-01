@@ -55,7 +55,7 @@ RIO::RSmartTempFile::RSmartTempFile(void)
 
 
 //------------------------------------------------------------------------------
-RString RIO::RSmartTempFile::GetName(bool remove)
+RURI RIO::RSmartTempFile::GetName(bool remove)
 {
 	Remove=remove;
 	if(!Requested)
@@ -94,7 +94,7 @@ RIOException::RIOException(const RFile* file,const char* str)
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetURI()+": "+str);
+		strcpy(Msg,file->GetURI()()+": "+str);
 	else
 		strcpy(Msg,str);
 }
@@ -105,7 +105,7 @@ RIOException::RIOException(const RIOFile* file,const char* str)
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetURI()+" ("+RString::Number(file->GetPos())+"): "+str);
+		strcpy(Msg,file->GetURI()()+" ("+RString::Number(file->GetPos())+"): "+str);
 	else
 		strcpy(Msg,str);
 }
@@ -116,7 +116,7 @@ RIOException::RIOException(const RTextFile* file,const char* str)
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetURI()+" ("+RString::Number(file->GetLineNb())+"): "+str);
+		strcpy(Msg,file->GetURI()()+" ("+RString::Number(file->GetLineNb())+"): "+str);
 	else
 		strcpy(Msg,str);
 }

@@ -48,7 +48,7 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RBinaryFile class implements some basic functions needed when working with
-* binariy files.
+* binary files.
 *
 * Here is an example:
 * @code
@@ -99,7 +99,7 @@ public:
 	* Construct a binary file.
 	* @param name           The name of the file.
 	*/
-	RBinaryFile(const RString &name);
+	RBinaryFile(const RURI &name);
 
 	/**
 	* Construct a binary file.

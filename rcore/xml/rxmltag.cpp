@@ -59,7 +59,7 @@ RXMLTag::RXMLTag(const RXMLTag& tag)
 
 
 //-----------------------------------------------------------------------------
-RXMLTag::RXMLTag(const RString& name,RString* xmlns)
+RXMLTag::RXMLTag(const RString& name,RURI* xmlns)
 	: RNode<RXMLTag,true,false>(), Name(name), Contains(), Attrs(20,10),
 	  Namespace(xmlns)
 {
@@ -84,7 +84,7 @@ int RXMLTag::Compare(const RXMLTag& tag) const
 RString RXMLTag::GetFullName(void) const
 {
 	if(Namespace)
-		return((*Namespace)+":"+Name);
+		return((*Namespace)()+":"+Name);
 	return(Name);
 }
 
@@ -97,7 +97,7 @@ void RXMLTag::SetName(const RString& name)
 
 
 //-----------------------------------------------------------------------------
-void RXMLTag::SetNamespace(RString* xmlns)
+void RXMLTag::SetNamespace(RURI* xmlns)
 {
 	Namespace=xmlns;
 }

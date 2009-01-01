@@ -36,8 +36,8 @@
 
 
 //------------------------------------------------------------------------------
-// incluce files for R Project
-#include <rstring.h>
+// include files for R Project
+#include <ruri.h>
 
 
 //------------------------------------------------------------------------------
@@ -67,8 +67,8 @@ class RXMLAttr
 	/**
 	 * Namespace.
 	 */
-	RString* Namespace;
-	
+	RURI* Namespace;
+
 public:
 
 	/**
@@ -82,7 +82,7 @@ public:
 	* @param value          The value of the attribute.
 	* @param xmlns          Namespace.
 	*/
-	RXMLAttr(const RString& name,const RString& value,RString* xmlns=0);
+	RXMLAttr(const RString& name,const RString& value,RURI* xmlns=0);
 
 	/**
 	* Construct a XML Attribute.
@@ -90,27 +90,27 @@ public:
 	* @param value          The value of the attribute.
 	* @param xmlns          Namespace.
 	*/
-	RXMLAttr(const RString& name,const double value,RString* xmlns=0);
+	RXMLAttr(const RString& name,const double value,RURI* xmlns=0);
 
 	/**
 	* Return the namespace of the tag.
 	* @returns a string containing the namespace.
 	*/
-	RString* GetNamespace(void) const {return(Namespace);}
-	
+	RURI* GetNamespace(void) const {return(Namespace);}
+
 	/**
 	* Compare the name of the attribute with a given string. This function is
 	* used by RContainer.
-	* @param name           The string used for the comparaison.
-	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
+	* @param name           The string used for the comparison.
+	* @returns -1,0 or 1 if the attribute is greater, the same or lesser than
 	* parameter.
 	*/
 	int Compare(const RString& name) const {return(Name.Compare(name));}
 
 	/**
 	* Compare the names of two attributes. This function is used by RContainer.
-	* @param attr           The attribute used for the comparaison.
-	* @returns -1,0 or 1 if the attribute is greather, the same or lesser than
+	* @param attr           The attribute used for the comparison.
+	* @returns -1,0 or 1 if the attribute is greater, the same or lesser than
 	* parameter.
 	*/
 	int Compare(const RXMLAttr& attr) const {return(Name.Compare(attr.Name)); }
@@ -120,7 +120,7 @@ public:
 	* @returns a string containing the name.
 	*/
 	RString GetFullName(void) const;
-	
+
 	/**
 	* Return the name of the attribute.
 	* @returns a string containing the name.
@@ -138,7 +138,7 @@ public:
 	* @param value           Value to assign.
 	*/
 	void SetValue(const RString& value);
-	
+
 	/**
 	* Add something to the current value of the attribute.
 	*/

@@ -51,14 +51,14 @@ RXMLAttr::RXMLAttr(const RXMLAttr& attr)
 
 
 //------------------------------------------------------------------------------
-RXMLAttr::RXMLAttr(const RString& name,const RString& value,RString* xmlns)
+RXMLAttr::RXMLAttr(const RString& name,const RString& value,RURI* xmlns)
 	: Name(name), Value(value), Namespace(xmlns)
 {
 }
 
 
 //-------------------------------------------------------------------------------
-RXMLAttr::RXMLAttr(const RString& name,const double value,RString* xmlns)
+RXMLAttr::RXMLAttr(const RString& name,const double value,RURI* xmlns)
 	: Name(name), Value(RString::Number(value)), Namespace(xmlns)
 {
 }
@@ -68,7 +68,7 @@ RXMLAttr::RXMLAttr(const RString& name,const double value,RString* xmlns)
 RString RXMLAttr::GetFullName(void) const
 {
 	if(Namespace)
-		return((*Namespace)+":"+Name);
+		return((*Namespace)()+":"+Name);
 	return(Name);
 }
 

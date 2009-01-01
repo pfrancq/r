@@ -56,11 +56,6 @@ namespace R{
 class RDebug
 {
 	/**
-	* Temporay Data for internal use.
-	*/
-	RString tmpOpt;
-
-	/**
 	* String containing the current tag.
 	*/
 	RString CurTag;
@@ -85,84 +80,87 @@ public:
 	RDebug(void);
 
 	/**
-	* Begin a Tag with attributes. The attributes are added after.
-	* @param Text           The name of the Tag.
-	* @param NbAttr         The number of attributes.
-	*/
-	void BeginTag(RString Text,unsigned NbAttr=0,...);
+	 * Begin a Tag with attributes.
+	 * @param tag           Name of the Tag.
+	 * @param attrs         Attributes.
+	 */
+	void BeginTag(const RString& tag,const RString& attrs=RString::Null);
 
 	/**
-	* Print some Text in the current tag.
+	 * Print some Text in the current tag.
+	 * @param text           Text to add.
 	*/
-	void PrintComment(RString Text);
+	void PrintComment(const RString& text);
 
 	/**
-	* End a Tag.
-	*/
-	void EndTag(RString Text);
+	 * End a Tag.
+	 * @param tag           Name of the Tag.
+	 */
+	void EndTag(const RString& Text);
 
 	/**
-	* Get the name of the current tag.
-	* @return const char*
-	*/
-	RString GetCurrentTag(void) const { return(CurTag);}
+	 * Get the name of the current tag.
+	 */
+	const RString& GetCurrentTag(void) const {return(CurTag);}
 
 	/**
-	* Print an Info Tag.
-	*/
-	void PrintInfo(RString Text);
+	 * Print an Info Tag.
+	 * @param text           Text to add.
+	 */
+	void PrintInfo(const RString& text);
 
 	/**
-	* Begin a member function tag.
-	* @param Name           The name of the member function.
-	* @param Object         The name of the object.
-	*/
-	void BeginFunc(RString Name,RString Object);
+	 * Begin a member function tag.
+	 * @param name           Name of the member function.
+	 * @param object         Name of the object.
+	 */
+	void BeginFunc(const RString& name,const RString& object);
 
 	/**
-	* End a member function tag.
-	* @param Name           The name of the member function.
-	* @param Object         The name of the object.
-	*/
-	void EndFunc(RString Name,RString Object);
+	 * End a member function tag.
+	 * @param name           Name of the member function.
+	 * @param object         Name of the object.
+	 */
+	void EndFunc(const RString& name,const RString& object);
 
 	/**
-	* Begin an application tag.
-	*/
+	 * Begin an application tag.
+	 * @param app             Name of the application.
+	 */
 	void BeginApp(const RString& app);
 
 	/**
-	* End an application tag.
-	*/
+	 * End an application tag.
+	 * @param app             Name of the application.
+	 */
 	void EndApp(const RString& app);
 
 protected:
 
 	/**
-	* Add an attribute to buf.
-	*/
-	void AddAttribute(size_t& nboptions,RString* Value,RString* Att);
+	 * Begin to write a Tag. This function must be implement.
+	 * @param tag            Name of the tag.
+	 * @param attrs          Attributes.
+	 */
+	virtual void WriteBeginTag(const RString& tag,const RString& attrs)=0;
 
 	/**
-	* Begin to write a Tag. This function must be implement.
-	*/
-	virtual void WriteBeginTag(RString tag,RString options=RString::Null)=0;
+	 * Write Text associate with current tag. This function must be implement.
+	 * @param text           Text to add.
+	 */
+	virtual void WriteText(const RString& text)=0;
 
 	/**
-	* Write Text associate with current tag. This function must be implement.
-	*/
-	virtual void WriteText(RString text)=0;
-
-	/**
-	* End to write a Tag. This function must be implement.
-	*/
-	virtual void WriteEndTag(RString tag)=0;
+	 * End to write a Tag. This function must be implement.
+	 * @param tag            Name of the tag.
+	 */
+	virtual void WriteEndTag(const RString& tag)=0;
 
 public:
 
 	/**
-	* Destruct the debugger output.
-	*/
+	 * Destruct the debugger output.
+	 */
 	virtual ~RDebug(void);
 };
 
@@ -179,7 +177,7 @@ class RDebugXML : public RDebug
 	/**
 	* The name of the file.
 	*/
-	RString Name;
+	RURI Name;
 
 	/**
 	* The handle of the file.
@@ -194,38 +192,41 @@ class RDebugXML : public RDebug
 public:
 
 	/**
-	* Construct the debug file.
-	* @param name           The name of the file.
-	*/
-	RDebugXML(const RString& name);
+	 * Construct the debug file.
+	 * @param name           The name of the file.
+	 */
+	RDebugXML(const RURI& name);
 
 	/**
-	* Get the name of the file.
-	*/
-	RString GetName(void) const;
+	 * Get the name of the file.
+	 */
+	RURI GetName(void) const;
 
 protected:
 
 	/**
-	* Begin to write a Tag.
-	*/
-	virtual void WriteBeginTag(RString tag,RString options=RString::Null);
+	 * @param tag            Name of the tag.
+	 * @param attrs          Attributes.
+	 */
+	virtual void WriteBeginTag(const RString& tag,const RString& attrs);
 
 	/**
-	* Write Text associate with current tag.
-	*/
-	virtual void WriteText(RString text);
+	 * Write Text associate with current tag.
+	 * @param text           Text to add.
+	 */
+	virtual void WriteText(const RString& text);
 
 	/**
-	* End to write a Tag.
-	*/
-	virtual void WriteEndTag(RString tag);
+	 * End to write a Tag.
+	 * @param tag            Name of the tag.
+	 */
+	virtual void WriteEndTag(const RString& tag);
 
 public:
 
 	/**
-	* Destruct the debug file.
-	*/
+	 * Destruct the debug file.
+	 */
 	virtual ~RDebugXML(void);
 };
 

@@ -91,7 +91,7 @@ class RIOFile : public RFile
 	/**
 	 * File which is really treated.
 	 */
-	RString File;
+	RURI File;
 
 	/**
 	 * Internal Buffer.

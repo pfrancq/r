@@ -541,11 +541,12 @@ RString RTextFile::GetWord(void)
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
 	RString res(RString::Null);
+	bool FindComment(false);
 	SkipSpaces();
 	RChar* ptr=TmpBuffer;
 	size_t i(0);
 
-	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment()))
+	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!(FindComment=BeginComment())))
 	{
 		(*(ptr++))=GetChar();
 		i++;
@@ -558,9 +559,14 @@ RString RTextFile::GetWord(void)
 		}
 	}
 
-	// Skip spaces if necessary
-	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();
+	// Skip spaces and comments if necessary
+	if(!End())
+	{
+		if(ParseSpace==SkipAllSpaces)
+			SkipSpaces();
+		else if(FindComment)
+			SkipComments();
+	}
 
 	if(i)
 	{
@@ -577,11 +583,12 @@ RString RTextFile::GetToken(const RString& endingchar)
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
 	RString res(RString::Null);
+	bool FindComment(false);
 	SkipSpaces();
 	RChar* ptr=TmpBuffer;
 	size_t i(0);
 
-	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(endingchar.Find(GetNextChar())==-1))
+	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!(FindComment=BeginComment()))&&(endingchar.Find(GetNextChar())==-1))
 	{
 		(*(ptr++))=GetChar();
 		i++;
@@ -594,9 +601,14 @@ RString RTextFile::GetToken(const RString& endingchar)
 		}
 	}
 
-	// Skip spaces if necessary
-	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();
+	// Skip spaces and comments if necessary
+	if(!End())
+	{
+		if(ParseSpace==SkipAllSpaces)
+			SkipSpaces();
+		else if(FindComment)
+			SkipComments();
+	}
 
 	if(i)
 	{
@@ -613,11 +625,12 @@ RString RTextFile::GetTokenString(const RString& endingstr)
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
 	RString res(RString::Null);
+	bool FindComment(false);
 	SkipSpaces();
 	RChar* ptr=TmpBuffer;
 	size_t i(0);
 
-	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!BeginComment())&&(!CurString(endingstr,true,false)))
+	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!(FindComment=BeginComment()))&&(!CurString(endingstr,true,false)))
 	{
 		(*(ptr++))=GetChar();
 		i++;
@@ -630,9 +643,14 @@ RString RTextFile::GetTokenString(const RString& endingstr)
 		}
 	}
 
-	// Skip spaces if necessary
-	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();
+	// Skip spaces and comments if necessary
+	if(!End())
+	{
+		if(ParseSpace==SkipAllSpaces)
+			SkipSpaces();
+		else if(FindComment)
+			SkipComments();
+	}
 
 	if(i)
 	{
@@ -674,9 +692,12 @@ RString RTextFile::GetLine(bool SkipEmpty)
 	{
 		SkipEol();
 
-		// Skip spaces if necessary
-		if((!End())&&(ParseSpace==SkipAllSpaces))
-			SkipSpaces();
+		// Skip spaces and comments if necessary
+		if(!End())
+		{
+			if(ParseSpace==SkipAllSpaces)
+				SkipSpaces();
+		}
 	}
 
 	if(i)
@@ -717,9 +738,14 @@ long RTextFile::GetInt(void)
 		str+=Cur;
 	}
 
-	// Skip spaces if necessary
-	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();
+	// Skip spaces and comments if necessary
+	if(!End())
+	{
+		if(ParseSpace==SkipAllSpaces)
+			SkipSpaces();
+		else if(BeginComment())
+			SkipComments();
+	}
 
 	nb=strtol(str,&ptr,10);
 	if(ptr==str)
@@ -751,9 +777,14 @@ unsigned long RTextFile::GetUInt(void)
 		str+=Cur;
 	}
 
-	// Skip spaces if necessary
-	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();
+	// Skip spaces and comments if necessary
+	if(!End())
+	{
+		if(ParseSpace==SkipAllSpaces)
+			SkipSpaces();
+		else if(BeginComment())
+			SkipComments();
+	}
 
 	nb=strtoul(str,&ptr,10);
 	if(ptr==str)
@@ -882,9 +913,14 @@ RString RTextFile::GetRealNb(void)
 		}
 	}
 
-	// Skip spaces if necessary
-	if((!End())&&(ParseSpace==SkipAllSpaces))
-		SkipSpaces();
+	// Skip spaces and comments if necessary
+	if(!End())
+	{
+		if(ParseSpace==SkipAllSpaces)
+			SkipSpaces();
+		else if(BeginComment())
+			SkipComments();
+	}
 
 	return(str);
 }

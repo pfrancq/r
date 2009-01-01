@@ -208,9 +208,9 @@ void RInterpreter::TreatLine(size_t depth,RString line)
 //-----------------------------------------------------------------------------
 RString RInterpreter::WhatTreated(void) const
 {
-	if(File.IsEmpty())
+	if(File().IsEmpty())
 		return(RString::Null);
-	return(File+"("+RString::Number(Line)+"): ");
+	return(File()+"("+RString::Number(Line)+"): ");
 }
 
 

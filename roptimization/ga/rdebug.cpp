@@ -31,11 +31,6 @@
 
 
 //------------------------------------------------------------------------------
-// include files for C/C++ ANSI
-#include <stdarg.h>
-
-
-//------------------------------------------------------------------------------
 // include files for R Project
 #include <rdebug.h>
 using namespace R;
@@ -57,72 +52,53 @@ RDebug::RDebug(void)
 
 
 //------------------------------------------------------------------------------
-void RDebug::BeginTag(RString Text,unsigned NbAttr,...)
+void RDebug::BeginTag(const RString& tag,const RString& attrs)
 {
-	va_list ap;
-
 	LevelOutput[++Deep]=false;      // For the moment nothing as child
-	size_t NbOptions=0;
-	tmpOpt.Clear();
-	va_start(ap, NbAttr);
-	while(NbAttr--)
-		AddAttribute(NbOptions,va_arg(ap,RString*),va_arg(ap,RString*));
-	va_end(ap);
-	WriteBeginTag(Text,tmpOpt);
-	CurTag=Text;
+	WriteBeginTag(tag,attrs);
+	CurTag=tag;
 }
 
 
 //------------------------------------------------------------------------------
-void RDebug::AddAttribute(size_t& nboptions,RString* Value,RString* Attr)
-{
-	if(nboptions++)
-		tmpOpt+=" ";
-	tmpOpt+=(*Attr)+"=\""+(*Value)+"\"";
-}
-
-
-//------------------------------------------------------------------------------
-void RDebug::PrintComment(RString Text)
+void RDebug::PrintComment(const RString& text)
 {
 	LevelOutput[Deep]=true;
-	WriteText(Text);
+	WriteText(text);
 }
 
 
 //------------------------------------------------------------------------------
-void RDebug::EndTag(RString Text)
+void RDebug::EndTag(const RString& tag)
 {
 	if(!LevelOutput[Deep])
 		WriteText("No Special Information");
 	if(Deep) LevelOutput[Deep-1]=true;
-	WriteEndTag(Text);
+	WriteEndTag(tag);
 	Deep--;
 }
 
 
 //------------------------------------------------------------------------------
-void RDebug::PrintInfo(RString Text)
+void RDebug::PrintInfo(const RString& text)
 {
-	BeginTag("Info");
-	PrintComment(Text);
-	EndTag("Info");
+	BeginTag("info");
+	PrintComment(text);
+	EndTag("info");
 }
 
 
 //------------------------------------------------------------------------------
-void RDebug::BeginFunc(RString Name,RString Object)
+void RDebug::BeginFunc(const RString& name,const RString& object)
 {
-	RString what("Object");
-	RString obj(Object);
-	BeginTag(Name,1,&what,&obj);
+	BeginTag(name,"object=\""+object+"\"");
 }
 
 
 //------------------------------------------------------------------------------
-void RDebug::EndFunc(RString Name,RString)
+void RDebug::EndFunc(const RString& name,const RString&)
 {
-	EndTag(Name);
+	EndTag(name);
 }
 
 
@@ -131,13 +107,10 @@ void RDebug::BeginApp(const RString& app)
 {
 	time_t t;
 	char TempString[40];
-	RString what("Date");
-	
 	time(&t);
 	strcpy(TempString,ctime(&t));
 	TempString[strlen(TempString)-1]=0;
-	RString Time(TempString);
-	BeginTag(app,1,&what,&Time);
+	BeginTag(app,"date=\""+RString(TempString)+"\"");
 }
 
 
@@ -162,8 +135,8 @@ RDebug::~RDebug(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDebugXML::RDebugXML(const RString& name)
-	: RDebug(), Name(name), File(name)
+RDebugXML::RDebugXML(const RURI& name)
+	: RDebug(), Name(name), File(name,"utf-8")
 {
 	LevelOutput[++Deep]=false;      // For the moment nothing as child
 	File.SetSeparator("");
@@ -180,14 +153,14 @@ RDebugXML::RDebugXML(const RString& name)
 
 
 //------------------------------------------------------------------------------
-RString RDebugXML::GetName(void) const
+RURI RDebugXML::GetName(void) const
 {
 	return(Name);
 }
 
 
 //------------------------------------------------------------------------------
-void RDebugXML::WriteBeginTag(RString tag,RString options)
+void RDebugXML::WriteBeginTag(const RString& tag,const RString& attrs)
 {
 	if(Deep)
 	{
@@ -196,17 +169,17 @@ void RDebugXML::WriteBeginTag(RString tag,RString options)
 	}
 	File.WriteStr("<",1);
 	File.WriteStr(tag,tag.GetLen());
-	if(options.GetLen())
+	if(attrs.GetLen())
 	{
 		File.WriteStr(" ",1);
-		File.WriteStr(options);
+		File.WriteStr(attrs);
 	}
 	File.WriteStr(">",1);
 }
 
 
 //------------------------------------------------------------------------------
-void RDebugXML::WriteEndTag(RString tag)
+void RDebugXML::WriteEndTag(const RString& tag)
 {
 	if(Deep&&LevelOutput[Deep-1])
 	{
@@ -220,7 +193,7 @@ void RDebugXML::WriteEndTag(RString tag)
 
 
 //------------------------------------------------------------------------------
-void RDebugXML::WriteText(RString text)
+void RDebugXML::WriteText(const RString& text)
 {
 	File.WriteLine();
 	File.WriteStr(tmpTab,Deep+1);

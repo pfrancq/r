@@ -62,7 +62,7 @@ public:
 	* Constructor of a program.
 	* @param f              Name of the file.
 	*/
-	RPrg(const R::RString& f);
+	RPrg(const RURI& f);
 
 	/**
 	* Destruct of the program.

@@ -51,9 +51,10 @@ public:
 	RString Name;      // Name of the HTML Tag
 	int Level;         // Integer representing the depth of the tag in HTML structure.
 	bool Single;       // A single Tag (ex: br)?
+	bool SelfContained;  // The tag may contain itself as child (false by default)
 
-	Tag(const char* n,int l,bool s)
-		: Name(n), Level(l), Single(s) {}
+	Tag(const char* n,int l,bool s,bool self=false)
+		: Name(n), Level(l), Single(s), SelfContained(self) {}
 	int Compare(const Tag* t) const {return(Name.Compare(t->Name));}
 	int Compare(const Tag& t) const {return(Name.Compare(t.Name));}
 	int Compare(const char* t) const {return(Name.Compare(t));}
@@ -634,6 +635,8 @@ struct RCharCode
 };
 */
 
+
+
 //------------------------------------------------------------------------------
 //
 // class RHTMLFile
@@ -641,34 +644,50 @@ struct RCharCode
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+RContainer<RHTMLFile::Tag,true,true> RHTMLFile::Tags(200,10);
+
+//------------------------------------------------------------------------------
 RHTMLFile::RHTMLFile(void)
- : RXMLFile(), Tags(200,10), FoundClosingHTML(false)
+ : RXMLFile(), FoundClosingHTML(false)
 {
-	InitValidTags();
+	SetInvalidXMLCodes(true);
+	if(!Tags.GetNb())
+		InitValidTags();
 }
 
 
 //------------------------------------------------------------------------------
 RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding)
- : RXMLFile(uri,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
+ : RXMLFile(uri,xmlstruct,encoding), FoundClosingHTML(false)
 {
 	SetInvalidXMLCodes(true);
-	InitValidTags();
+	if(!Tags.GetNb())
+		InitValidTags();
 }
 
 
 //------------------------------------------------------------------------------
 RHTMLFile::RHTMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
- : RXMLFile(file,xmlstruct,encoding), Tags(200,10), FoundClosingHTML(false)
+ : RXMLFile(file,xmlstruct,encoding), FoundClosingHTML(false)
 {
 	SetInvalidXMLCodes(true);
-	InitValidTags();
+	if(!Tags.GetNb())
+		InitValidTags();
+}
+
+
+//------------------------------------------------------------------------------
+void RHTMLFile::Open(RIO::ModeType mode)
+{
+	FoundClosingHTML=false;
+	RXMLFile::Open(mode);
 }
 
 
 //------------------------------------------------------------------------------
 void RHTMLFile::Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode,const RString& encoding)
 {
+	FoundClosingHTML=false;
 	RXMLFile::Open(uri,xmlstruct,mode,encoding);
 }
 
@@ -700,8 +719,8 @@ void RHTMLFile::InitValidTags(void)
 	Tags.InsertPtr(new Tag("style",500,false));
 
 	// Division Tags
-	Tags.InsertPtr(new Tag("div",150,false));
-	Tags.InsertPtr(new Tag("span",160,false));
+	Tags.InsertPtr(new Tag("div",150,false,true));
+	Tags.InsertPtr(new Tag("span",160,false,true));
 
 	// Frame
 	Tags.InsertPtr(new Tag("frameset",100,false));
@@ -762,7 +781,7 @@ void RHTMLFile::InitValidTags(void)
 	Tags.InsertPtr(new Tag("hr",500,true));
 	Tags.InsertPtr(new Tag("font",500,false));
 	Tags.InsertPtr(new Tag("pre",500,false));
-	Tags.InsertPtr(new Tag("img",500,true)); //? deprecated
+	Tags.InsertPtr(new Tag("img",500,true)); //? Depreciated
 	Tags.InsertPtr(new Tag("object",500,false));
 	Tags.InsertPtr(new Tag("param",500,false));
 	Tags.InsertPtr(new Tag("embed",500,false));
@@ -786,9 +805,9 @@ void RHTMLFile::InitValidTags(void)
 	Tags.InsertPtr(new Tag("small",500,false));
 	Tags.InsertPtr(new Tag("strike",500,false));
 	Tags.InsertPtr(new Tag("b",500,false));
-	Tags.InsertPtr(new Tag("u",500,false));  //deprecated
-	Tags.InsertPtr(new Tag("s",500,false));  //deprecated
-	Tags.InsertPtr(new Tag("applet",500,false));  //deprecated
+	Tags.InsertPtr(new Tag("u",500,false));  //Depreciated
+	Tags.InsertPtr(new Tag("s",500,false));  //Depreciated
+	Tags.InsertPtr(new Tag("applet",500,false));  //Depreciated
 	Tags.InsertPtr(new Tag("a",500,false));
 	Tags.InsertPtr(new Tag("blockquote",500,false));
 	Tags.InsertPtr(new Tag("q",500,false));
@@ -800,7 +819,6 @@ void RHTMLFile::InitValidTags(void)
 //------------------------------------------------------------------------------
 void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, const RString& name)
 {
-	RString htmlName=name;
 	Tag* tag;
 	Tag* tag2;
 	RXMLTag* Search;
@@ -810,18 +828,20 @@ void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, cons
 		return;
 
 	// HTML is not case sensitive
-	htmlName=htmlName.ToLower();
+	RString htmlName(name.ToLower());
 
 	// Valid HTML Tag?
-	tag=Tags.GetPtr<const RString>(htmlName);
+	tag=Tags.GetPtr(htmlName);
 	if(!tag)
 		throw RIOException(this,"Unknown opening HTML Tag '"+htmlName+"'.");
 
 	// If the current tag is deeper than this one -> close it
 	if(CurTag)
 	{
-		tag2=Tags.GetPtr<const RString>(CurTag->GetName());
-		if((tag->Level<tag2->Level)||((tag==tag2)&&(tag->Level!=500)))
+		tag2=Tags.GetPtr(CurTag->GetName());
+		if(!tag2)
+			throw RIOException(this,"Unknown opening HTML Tag '"+CurTag->GetName()+"'.");
+		if((tag->Level<tag2->Level)||((tag==tag2)&&(!tag->SelfContained)&&(tag->Level!=500)))
 		{
 			// Find the first parent with a higher Level
 			Search=CurTag;
@@ -840,13 +860,6 @@ void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, cons
 	// Treat the beginning tag
 	RXMLFile::BeginTag(namespaceURI,lName,htmlName);
 
-	//Skip content if cur tag == 'SCRIPT'
-	if(!htmlName.Compare("script"))
-	{
-		SkipTagContent(htmlName);
-		CurTagClosing=true;
-	}
-
 	// Verify that is not a single tag in HTML
 	if(tag->Single)
 		CurTagClosing=true;
@@ -856,7 +869,6 @@ void RHTMLFile::BeginTag(const RString& namespaceURI, const RString& lName, cons
 //------------------------------------------------------------------------------
 void RHTMLFile::EndTag(const RString& namespaceURI, const RString& lName, const RString& name)
 {
-	RString htmlName=name;
 	Tag* tag;
 	Tag* tag2;
 	RXMLTag* Search;
@@ -870,13 +882,13 @@ void RHTMLFile::EndTag(const RString& namespaceURI, const RString& lName, const 
 		throw RIOException(this,"No current tag");
 
 	// HTML is not case sensitive
-	htmlName=htmlName.ToLower();
+	RString htmlName(name.ToLower());
 
 	// Valid HTML Tag?
-	tag2=Tags.GetPtr<const RString>(CurTag->GetName());
-	tag=Tags.GetPtr<const RString>(htmlName);
+	tag=Tags.GetPtr(htmlName);
 	if(!tag)
 		throw RIOException(this,"Unknown closing HTML Tag '"+htmlName+"'.");
+	tag2=Tags.GetPtr(CurTag->GetName());
 
 	// If the closing tag is the not same as the current open one
 	// -> find the right tag to close
@@ -901,7 +913,7 @@ void RHTMLFile::EndTag(const RString& namespaceURI, const RString& lName, const 
 		{
 			// The name of the tag to close is the current one.
 			htmlName=CurTag->GetName();
-			Search=0;
+			Search=CurTag;
 		}
 	}
 	else
@@ -929,27 +941,6 @@ void RHTMLFile::Text(const RString& text)
 		throw RIOException(this,"No current tag");
 
 	RXMLFile::Text(text);
-}
-
-
-//------------------------------------------------------------------------------
-void RHTMLFile::SkipTagContent(const RString& tag)
-{
-	RString tagToFind("</");
-
-	tagToFind+=tag;
-	tagToFind+=">";
-	while((!Cur.IsNull()&&(!CurString(tagToFind,false))))
-	{
-		Next();
-	}
-
-	//The End Tag is found ->skip it ( /tag> )
-	size_t skiplen=tag.GetLen()+2;
-	while((!Cur.IsNull())&&(skiplen--))
-	{
-		Next();
-	}
 }
 
 

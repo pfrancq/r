@@ -310,10 +310,8 @@ void RXMLFile::Value(const RString& value)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::EndTag(const RString&, const RString&, const RString& name)
+void RXMLFile::EndTag(const RString&, const RString&, const RString&)
 {
-	if(CurTag->GetName()!=name)
-		throw RIOException(this,"Found closing tag '"+name+"' while closing tag '"+CurTag->GetName()+"' was expected.");
 	CurTag=CurTag->GetParent();
 }
 

@@ -81,22 +81,22 @@ protected:
 
 	/**
 	* Begin a Tag.
-	* @param tag            Name of the tag.
-	* @param options        Options of the tag.
+	* @param tag             Name of the tag.
+	* @param attrs           Attributes.
 	*/
-	virtual void WriteBeginTag(RString tag,RString options=RString::Null);
+	virtual void WriteBeginTag(const RString& tag,const RString& attrs);
 
 	/**
 	* Write Text associate with current tag.
-	* @param text           Text to write.
+	* @param text            Text to write.
 	*/
-	virtual void WriteText(RString text);
+	virtual void WriteText(const RString& text);
 
 	/**
 	* End a Tag.
 	* @param tag            Name of the tag.
 	*/
-	virtual void WriteEndTag(RString tag);
+	virtual void WriteEndTag(const RString& tag);
 
 signals:
 

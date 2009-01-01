@@ -202,10 +202,10 @@ void RIOFile::Open(RIO::ModeType mode)
 	// Open the file
 	if(Mode==RIO::Read)
 	{
-		Handle=open(File.Latin1(),localmode);
+		Handle=open(File.GetPath().Latin1(),localmode);
 	}
 	else
-		Handle=open(File.Latin1(),localmode,S_IREAD|S_IWRITE);
+		Handle=open(File.GetPath().Latin1(),localmode,S_IREAD|S_IWRITE);
 	if(Handle==-1)
 	{
 		switch(errno)
