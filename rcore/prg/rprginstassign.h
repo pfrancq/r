@@ -83,8 +83,9 @@ public:
 	* @param prg            Program.
 	* @param var            Name of the variable.
 	* @param c              Class of the variable.
+	* @param init           Initialization parameters.
 	*/
-	RPrgInstNew(RInterpreter* prg,const RString& name,RPrgClass* c);
+	RPrgInstNew(RInterpreter* prg,const RString& name,RPrgClass* c,RContainer<RPrgVar,false,false>& init);
 
 	/**
 	* Run the instructions in the for for the different values of its variable.

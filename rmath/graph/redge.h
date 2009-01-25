@@ -6,7 +6,7 @@
 
 	Edge of a graph - Header.
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -34,6 +34,10 @@
 #define REdge_H
 
 
+//------------------------------------------------------------------------------
+// include files for R
+#include <rstd.h>
+
 
 //------------------------------------------------------------------------------
 namespace R{
@@ -47,21 +51,23 @@ class RVertex;
 
 //------------------------------------------------------------------------------
 /**
-* The RVertex class provides a representation for an edge for a given graph.
+* The RVertex class provides a representation for an edge from one vertex to
+* another one in a given graph. The edge is directed but may be considered as
+* undirected in some situations.
 * @author Pascal Francq
 * @short Edge.
 */
 class REdge
 {
 	/**
-	* First vertex that the edge connect.
+	* Origin of the edge.
 	*/
-	RVertex* Vertex1;
+	RVertex* From;
 
 	/**
-	* Second vertex that the edge connect.
+	* Destination of the edge.
 	*/
-	RVertex* Vertex2;
+	RVertex* To;
 
 	/**
 	* Weight of the vertex.
@@ -72,26 +78,53 @@ public:
 
 	/**
 	* Constructor of the edge.
+	* @deprecated This constructor will disappear in a near future.
 	*/
 	REdge(void);
 
 	/**
 	* Constructor of the edge.
-	* @param v1              First Vertex.
-	* @param v2              First Vertex.
+	* @param f               Vertex starting the edge.
+	* @param t               Vertex ending the edge.
 	* @param w               Weight
 	*/
-	REdge(RVertex* v1,RVertex* v2,double w);
+	REdge(RVertex* f,RVertex* t,double w);
 
 	/**
-	* Get a pointer over the first vertex of the edge.
+	* The methods used to compare two edges. The function returns the same type
+	* of information than the strcmp function from the standard C library.
+	* @see R::RContainer.
+	* @param e               Edge used for the comparison.
 	*/
-	RVertex* GetVertex1(void) const {return(Vertex1);}
+	int Compare(const REdge& e) const {return(this!=&e);}
 
 	/**
-	* Get a pointer over the second vertex of the edge.
+	* @return a pointer over the starting vertex of the edge.
 	*/
-	RVertex* GetVertex2(void) const {return(Vertex2);}
+	RVertex* GetFrom(void) const {return(From);}
+
+	/**
+	* @return pointer over the ending vertex of the edge.
+	*/
+	RVertex* GetTo(void) const {return(To);}
+
+	/**
+	* @return a pointer over the starting vertex of the edge.
+	* \deprecated Use GetFrom() instead.
+	*/
+	RVertex* GetVertex1(void) const {return(From);}
+
+	/**
+	* @return pointer over the ending vertex of the edge.
+	* \deprecated Use GetTo() instead.
+	*/
+	RVertex* GetVertex2(void) const {return(To);}
+
+	/**
+	 * @return true if the edge connects the node given by the identifier.
+	 * @param id             Identifier.
+	 */
+	bool Connects(size_t id) const;
 
 	/**
 	* Get the weight of the edge.
@@ -99,16 +132,9 @@ public:
 	double GetWeight(void) const {return(Weight);}
 
 	/**
-	* Is used to compare two edges. The function returns the same type of
-	* information than the strcmp function from the standard C library.
-	* @param e               Edge used for the comparaison.
+	* Destruct the edge.
 	*/
-	int Compare(const REdge& e) const {return(this!=&e);}
-
-	/**
-	* Destructor of the edge.
-	*/
-	~REdge(void);
+	virtual ~REdge(void);
 
 	// friend classes
 	friend class RGraph;

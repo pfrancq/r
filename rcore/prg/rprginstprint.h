@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgInstFor.h
+	RPrgInstPrint.h
 
-	"for" Instruction - Header.
+	Print instruction - Header.
 
-	Copyright 2002-2008 by the Université Libre de Bruxelles.
+	Copyright 2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -31,13 +31,16 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPrgInstForH
-#define RPrgInstForH
+#ifndef RPrgInstPrintH
+#define RPrgInstPrintH
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprginstblock.h>
+#include <rstd.h>
+#include <rstring.h>
+#include <rprginst.h>
+#include <rprgvar.h>
 
 
 //------------------------------------------------------------------------------
@@ -46,52 +49,38 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// forward class declaration
-class RPrgVar;
-class RInterpreter;
-class RPrgOutput;
-
-
-//------------------------------------------------------------------------------
 /**
-* The RPrgInstFor provides a class for a "for" instruction.
+* The RPrgInstPrint provides a class for a delete instruction.
 * @author Pascal Francq
-* @short "for" Instruction.
+* @short Delete Instruction.
 */
-class RPrgInstFor : public RPrgInstBlock
+class RPrgInstPrint : public RPrgInst
 {
 	/**
-	* Variable defined in the for.
+	* What to print.
 	*/
-	RString Var;
-
-	/**
-	* Values of the variable.
-	*/
-	RContainer<RPrgVar,true,false> Values;
+	RPrgVar* What;
 
 public:
 
 	/**
-	* Construct a "for" instruction.
+	* Construct a generic instruction.
 	* @param prg            Program.
-	* @param t              Indentation.
-	* @param var            Name of the variable.
-	* @param val            Values for the variable.
+	* @param what           What to print.
 	*/
-	RPrgInstFor(RInterpreter* prg,size_t t,const RString& var,RContainer<RPrgVar,false,false>& val);
+	RPrgInstPrint(RInterpreter* prg,RPrgVar* what);
 
 	/**
-	* Run the instructions in the for for the different values of its variable.
+	* Run the instruction.
 	* @param prg            Program.
 	* @param o              Output.
 	*/
-	virtual void RunBlock(RInterpreter* prg,RPrgOutput* o);
+	virtual void Run(RInterpreter* prg,RPrgOutput* o);
 
 	/**
-	* Destruct the "for" instruction.
+	* Destruct the generic instruction.
 	*/
-	virtual ~RPrgInstFor(void);
+	virtual ~RPrgInstPrint(void);
 };
 
 

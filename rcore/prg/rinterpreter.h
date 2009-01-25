@@ -6,7 +6,7 @@
 
 	Interpreter - Header.
 
-	Copyright 2008 by the Université Libre de Bruxelles.
+	Copyright 2008-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -53,7 +53,8 @@ namespace R{
 // forward class declaration
 class RPrgInst;
 class RPrgInstBlock;
-class RPrgVar;
+class RPrgInstSub;
+class RPrgFunc;
 class RPrgClass;
 class RPrg;
 class RInterpreter;
@@ -95,17 +96,27 @@ protected:
 	/**
 	* List of all "Classes" defined in the program.
 	*/
-	R::RContainer<RPrgClass,true,false> Classes;
+	RContainer<RPrgClass,true,false> Classes;
+
+	/**
+	 * Subroutines defined in the program.
+	 */
+	RContainer<RPrgInstSub,false,true> Subroutines;
 
 	/**
 	 * Temporary LIFO Stack of instructions blocks (used for analyze).
 	 */
-	R::RStack<RPrgInstBlock,false,true,true> tmpBlocks;
+	RStack<RPrgInstBlock,false,true,true> tmpBlocks;
 
 	/**
 	 * LIFO Stack of scopes.
 	 */
-	R::RStack<RPrgScope,true,true,true> Scopes;
+	RStack<RPrgScope,true,true,true> Scopes;
+
+	/**
+	 * Parameters actually treated.
+	 */
+	RContainer<RPrgVar,false,false> Parameters;
 
 	/**
 	 * Next character to treat.
@@ -156,28 +167,6 @@ protected:
 	RString WhatTreated(void) const;
 
 	/**
-	* Analyze the parameters.
-	* @param values         Values of the parameter.
-	*/
-	void AnalyseParam(RContainer<RPrgVar,true,false>& values);
-
-	/**
-	 * Read a literal value.
-	 */
-	RString ReadLiteral(void);
-
-	/**
-	 * Treat end of line
-	 * @param dbl            Must the line contains a double point.
-	 */
-	void Eol(bool dbl);
-
-	/**
-	* Load the script file.
-	*/
-	void TreatLine(size_t depth,RString line);
-
-	/**
 	* Add a variable.
 	* @param var             Pointer to the variable.
 	*/
@@ -209,9 +198,47 @@ protected:
 	virtual RString GetValue(const RString& var);
 
 	/**
-	 *
+	 * Add a class to the interpreter.
+	 * @param c              Class to add.
 	 */
 	void AddClass(RPrgClass* c);
+
+public:
+
+	/**
+	* Get a cursor over the classes.
+	*/
+	RCursor<RPrgClass> GetClasses(void) const;
+
+protected:
+
+	/**
+	* Load the script file.
+	*/
+	void TreatLine(size_t depth,RString line);
+
+	/**
+	 * Treat instructions
+	 * @param inst
+	 * @param depth
+	 * @param param
+	 */
+	void TreatInst(const RString& inst,size_t depth,RChar param);
+
+	/**
+	* Analyze the parameters. Put the results in Parameters.
+	*/
+	void AnalyseParams(void);
+
+	/**
+	 * Cleanup the parameters if necessary.
+	 */
+	void CleanupParams(void);
+
+	/**
+	 * Read a literal value.
+	 */
+	RString ReadLiteral(void);
 
 	/**
 	 * Get the next word at the line containing the instruction.
@@ -224,22 +251,22 @@ protected:
 	RString GetToken(const RString chars);
 
 	/**
+	 * Treat end of line.
+	 * @param dbl            Must the line contains a double point.
+	 */
+	void Eol(bool dbl);
+
+	/**
 	 * Line number of the current instruction.
 	 */
 	size_t GetLine(void) const {return(Line);}
 
 	/**
-	 *
-	 * @return
+	 * Skip the spaces.
 	 */
 	void SkipSpaces(void);
 
 public:
-
-	/**
-	* Get a cursor over the classes.
-	*/
-	RCursor<RPrgClass> GetClasses(void) const;
 
 	/**
 	* Destruct of the program.
@@ -250,10 +277,12 @@ public:
 	friend class RPrg;
 	friend class RPrgVarRef;
 	friend class RPrgInstFor;
+	friend class RPrgInstSub;
 	friend class RPrgInstBlock;
 	friend class RPrgInstMethod;
 	friend class RPrgInstNew;
 	friend class RPrgInstDelete;
+	friend class RPrgInstPrint;
 	friend class RPrgInstAssignVar;
 	friend class RPrgException;
 };

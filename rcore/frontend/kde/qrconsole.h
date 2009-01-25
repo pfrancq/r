@@ -43,6 +43,7 @@
 //------------------------------------------------------------------------------
 // include files for Qt
 #include <QtGui/QTextEdit>
+#include <QtCore/QList>
 
 
 //------------------------------------------------------------------------------
@@ -52,9 +53,13 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
- * The RQConsole class provides a Qt widget that simulates a console. In
- * particular, this widget can be used in interaction with a RInterpreter
+ * The RQConsole class provides a Qt widget that simulates a console. It
+ * maintains a list of the last 100 different commands entered. The up and down
+ * keys are used to navigate through the history.
+ *
+ * In particular, this widget can be used in interaction with a RInterpreter
  * instance.
+ *
  * @author Pascal Francq.
  * @short Console Widget.
  */
@@ -66,6 +71,16 @@ class QRConsole : public QTextEdit, public RPrgOutput
 	 * Current cursor.
 	 */
 	QTextCursor Cursor;
+
+	/**
+	 * Previous commands.
+	 */
+	QList<QString> Cmds;
+
+	/**
+	 * Position in the list.
+	 */
+	int Pos;
 
 public:
 
@@ -82,11 +97,16 @@ public:
 	virtual void keyPressEvent(QKeyEvent* e);
 
 	/**
-	 * Write some messages, for example if a RInterpreter generates an
-	 * exception.
+	 * Write some messages.
 	 * @param str            Message to print.
 	 */
 	virtual void WriteStr(const RString& str);
+
+	/**
+	 * Write some error messages. The message is displayed in red.
+	 * @param str            Message to print.
+	 */
+	virtual void WriteError(const RString& str);
 
 signals:
 

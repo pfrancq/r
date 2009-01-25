@@ -6,9 +6,11 @@ SET(rcore_prg_INST_INCLUDES rprgfunc.h
 		               rprg.h 
 		               rprgclass.h 
 		               rprginstfor.h
+		               rprginstsub.h
 		               rprginstassign.h
 		               rprginstblock.h
-		               rprginstdelete.h  
+		               rprginstdelete.h
+		               rprginstprint.h  
 		               rprgoutput.h
 		               rprginstmethod.h 
 		               rprgvar.h 
@@ -19,6 +21,7 @@ SET(rcore_prg_INST_INCLUDES rprgfunc.h
 		               
 SET(rcore_prg_TARGET_SOURCES rprgfunc.cpp 
                           rprginstfor.cpp
+                          rprginstsub.cpp
                           rprginstassign.cpp
                           rprginstblock.cpp
 		                  rprgvarliteral.cpp 
@@ -28,7 +31,8 @@ SET(rcore_prg_TARGET_SOURCES rprgfunc.cpp
 		                  rprgoutput.cpp
 		                  rprgclass.cpp 
 		                  rprginst.cpp
-		                  rprginstdelete.cpp 
+		                  rprginstdelete.cpp
+		                  rprginstprint.cpp 
 		                  rprginstmethod.cpp 
 		                  rprgvar.cpp 
 		                  rprgvarstring.cpp

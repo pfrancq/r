@@ -46,11 +46,9 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstDelete::RPrgInstDelete(RInterpreter* prg)
-	: RPrgInst(prg->GetLine())
+RPrgInstDelete::RPrgInstDelete(RInterpreter* prg,const RString& var)
+	: RPrgInst(prg->GetLine()), Var(var)
 {
-	// Read name of variable
-	Var=prg->GetToken(')');
 }
 
 

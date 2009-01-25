@@ -303,7 +303,9 @@ size_t BasicContainer::GetTab(void** tab,size_t min, size_t max)
 //-----------------------------------------------------------------------------
 void BasicContainer::InsertPtr(bool bAlloc,bool bOrder,const void* ins,bool del,size_t min, size_t max,int compare(const void*,const void*))
 {
-	RReturnIfFail(ins);
+	if(!ins)
+		throw std::invalid_argument("BasicContainer::InsertPtr : Cannot insert a null pointer");
+
 	if(bOrder)
 	{
 		bool Find;
@@ -324,7 +326,8 @@ void BasicContainer::InsertPtrAt(bool bAlloc,const void* ins,size_t pos,bool del
 {
 	void** ptr;
 
-	RReturnIfFail(ins);
+	if(!ins)
+		throw std::invalid_argument("BasicContainer::InsertPtr : Cannot insert a null pointer");
 	if(pos+1>MaxPtr)
 	{
 		VerifyTab(pos+1+IncPtr);
@@ -365,8 +368,8 @@ void BasicContainer::InsertPtrAt(bool bAlloc,const void* ins,size_t pos,bool del
 //-----------------------------------------------------------------------------
 void BasicContainer::DeletePtr(bool bOrder,bool bAlloc,const void* tag,bool sortkey,size_t min, size_t max,int compare(const void*,const void*))
 {
-	RReturnIfFail(tag);
-	if(!tag) return;
+	if(!tag)
+		throw std::invalid_argument("BasicContainer::DeletePtr : Cannot delete a null pointer");
 
 	bool Find;
 	size_t Index=GetIndex(bOrder&&sortkey,tag,Find,min,max,compare);

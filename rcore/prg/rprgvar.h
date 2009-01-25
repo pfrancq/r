@@ -80,6 +80,12 @@ public:
 	RPrgVar(const RString& name,const RString& type);
 
 	/**
+	* Constructor of a variable.
+	* @param var             Variable.
+	*/
+	RPrgVar(const RPrgVar& var);
+
+	/**
 	* This methods compares two variables using their names and works like the
 	* "strcpy" function of the ANSI C/C++ library.
 	* @see R::RContainer.

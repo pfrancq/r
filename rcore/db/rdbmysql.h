@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RDb.h
+	RDbMySQL.h
 
-	Generic Database - Header.
+	MySQL Database - Header.
 
 	Copyright 2000-2009 by the Université Libre de Bruxelles.
 
@@ -30,16 +30,19 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RDb_H
-#define RDb_H
+#ifndef RDbMySQL_H
+#define RDbMySQL_H
 
+
+//------------------------------------------------------------------------------
+// include files for MySQL
+#include <mysql/mysql.h>
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd.h>
-#include <rstring.h>
-#include <rdate.h>
+#include <rtextencoding.h>
+#include <rquery.h>
 
 
 //------------------------------------------------------------------------------
@@ -48,93 +51,57 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// Forward class declaration
-class RQuery;
-
-
-//------------------------------------------------------------------------------
 /**
-* Type representing an identifier in a database row.
-*/
-typedef unsigned long long size_raw;
-
-
-//------------------------------------------------------------------------------
-/**
-* The RDbExcetion class provides a representation of an error that occurs while
-* working with a database.
+* The RDbMySQL class provides a representation of connection to a MySQL
+* database.
+* @see RQuery
 * @author Pascal Francq
-* @short Database Error.
+* @short MySQL Database.
 */
-class RDbException : public R::RException
+class RDbMySQL : public RDb
 {
-public:
-
-	/**
-	* Constructor.
-	*/
-	RDbException(void) throw() : RException() {}
-
-	/**
-	* Constructor.
-	* @param str                      Message of the error.
-	*/
-	RDbException(const char* str) throw() : RException(str) {}
-};
-
-
-
-//------------------------------------------------------------------------------
-/**
-* The RDb pure class provides a representation of connection to a database.
-* Actually, MySQL and SQLite child classes are supported.
-*
-* @author Pascal Francq
-* @short Generic Database.
-*/
-class RDb
-{
-public:
-
-	enum Db
-	{
-		MySQL,
-		SQLite
-	};
-
 protected:
 
 	/**
-	 * Type of the database.
+	 * Connection.
 	 */
-	Db Type;
+	MYSQL* Connection;
+
+	/**
+	 * Database information.
+	 */
+	MYSQL MySQL;
+
+	/**
+	 * Coding used to read/write to MySQL.
+	 */
+	RTextEncoding* Coding;
 
 public:
 
 	/**
-	* Construct a connection to the database.
-	* @param type            Type of the database.
-	*/
-	RDb(Db type);
-
-	/**
-	 * Get the type of the database.
+	 * Construct a connection to the MySQL database.
+	 * @param db             Name of the database.
+	 * @param host           Host.
+	 * @param user           User.
+	 * @param pwd            Password.
+	 * @param coding         Name of the coding used.
 	 */
-	Db GetType(void) const {return(Type);}
+	RDbMySQL(const RString& db,const RString& host,const RString& user,const RString& pwd,const RString& coding="latin1");
 
 	/**
-	* Create a table that will be used to simulate transactions.
-	* @param name           Name of the transaction.
-	* @param nb             Number of parameters.
-	* @param ...            Name of the parameters of the transaction (transid
-	                        is reserved).
-	*/
-	virtual void CreateTransactionTable(const RString& name,size_t nb,...);
+	 * Create an empty MySQL database.
+	 * @param db             Name of the database.
+	 * @param host           Host.
+	 * @param user           User.
+	 * @param pwd            Password.
+	 */
+	static void Create(const RString& db,const RString& host,const RString& user,const RString& pwd);
 
 	/**
 	 * Get the last auto-increment identifier inserted.
 	 */
-	virtual size_t GetLastInsertId(void)=0;
+	virtual size_t GetLastInsertId(void);
 
 	/**
 	 * Initialize a query.
@@ -143,44 +110,45 @@ public:
 	 *                       method).
 	 * @return Pointer to a structure allocated by the database.
 	 */
-	virtual void* InitQuery(const RString& sql,size_raw& nbcols)=0;
+	virtual void* InitQuery(const RString& sql,size_raw& nbcols);
 
 	/**
 	 * Release a query.
-	 * @param data           Data to release (must be cast).
+	 * @param data            Data to release (must be cast).
 	 */
-	virtual void ReleaseQuery(void* data)=0;
+	virtual void ReleaseQuery(void* data);
 
 	/**
 	 * @param data            Database-dependent data.
 	 * @return true if all the rows of a query are treated.
 	 */
-	virtual bool EndQuery(const void* data)=0;
+	virtual bool EndQuery(const void* data);
 
 	/**
 	 * Start a query.
 	 * @param data            Database-dependent data.
 	 */
-	virtual void StartQuery(void* data)=0;
+	virtual void StartQuery(void* data);
 
 	/**
 	 * Read the next row of the query.
 	 * @param data            Database-dependent data.
 	 */
-	virtual void NextQuery(void* data)=0;
+	virtual void NextQuery(void* data);
 
 	/**
 	* Return a specific field of the current row.
 	* @param data            Database-dependent data.
 	* @param index           Index of the field in the query.
 	*/
-	virtual RString GetField(const void* data,size_t index)=0;
+	virtual RString GetField(const void* data,size_t index);
 
 	/**
 	* Destruct the connection to the database.
 	*/
-	virtual ~RDb(void);
+	virtual ~RDbMySQL(void);
 };
+
 
 }  //-------- End of namespace R -----------------------------------------------
 

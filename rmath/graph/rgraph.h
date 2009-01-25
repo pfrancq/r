@@ -6,7 +6,7 @@
 
 	A Graph - Header.
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -91,25 +91,37 @@ public:
 	RCursor<REdge> GetEdges(void) const;
 
 	/**
+	 * Insert a vertex. It cannot have edges.
+	 * @param v              Vertex to insert.
+	 */
+	void Insert(RVertex* v);
+
+	/**
 	* Create a vertex.
 	* @returns Pointer to the new created vertex.
 	*/
 	RVertex* CreateVertex(void);
 
 	/**
-	* Create a vertex with a given identificator.
-	* @param id              Identficator.
+	* Create a vertex with a given identifier.
+	* @param id              Identifier.
 	* @returns Pointer to the new created vertex.
 	*/
 	RVertex* CreateVertex(const size_t id);
 
 	/**
-	* Get the vertex with a given identificator. If the vertex doesn't exist,
+	* Get the vertex with a given identifier. If the vertex doesn't exist,
 	* it's created.
-	* @param id              Identficator.
+	* @param id              Identifier.
 	* @returns Pointer to the vertex.
 	*/
 	RVertex* GetVertex(const size_t id);
+
+	/**
+	 * Insert an edge.
+	 * @param e              Edge to insert.
+	 */
+	void Insert(REdge* e);
 
 	/**
 	* Create an edge.
@@ -126,7 +138,7 @@ public:
 	void MinSpanningTree(RGraph* g);
 
 	/**
-	* Destructor of the graph.
+	* Destruct the graph.
 	*/
 	~RGraph(void);
 };

@@ -6,7 +6,7 @@
 
 	Method of a class - Implementation.
 
-	Copyright 2002-2008 by the Université Libre de Bruxelles.
+	Copyright 2002-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -34,6 +34,7 @@
 // include files for R Project
 #include <rprginstmethod.h>
 #include <rprgvarinst.h>
+#include <rprginstsub.h>
 #include <rprg.h>
 #include <rinterpreter.h>
 #include <rprgclass.h>
@@ -50,25 +51,45 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstMethod::RPrgInstMethod(RInterpreter* prg,const RString& name,const RString& method)
-	: RPrgInst(prg->GetLine()), Inst(name), Method(method), Params(10,5)
+RPrgInstMethod::RPrgInstMethod(RInterpreter* prg,const RString& method,RContainer<RPrgVar,false,false>& params)
+	: RPrgInst(prg->GetLine()), Inst(RString::Null), Method(method), Params(params)
 {
-	// Read Values
-	prg->AnalyseParam(Params);
+	params.Clear();
+}
+
+
+//------------------------------------------------------------------------------
+RPrgInstMethod::RPrgInstMethod(RInterpreter* prg,const RString& name,const RString& method,RContainer<RPrgVar,false,false>& params)
+	: RPrgInst(prg->GetLine()), Inst(name), Method(method), Params(params)
+{
+	if(Inst.IsEmpty())
+		throw RPrgException(prg,"Instance name cannot be empty");
+	params.Clear();
 }
 
 
 //------------------------------------------------------------------------------
 void RPrgInstMethod::Run(RInterpreter* prg,RPrgOutput* r)
 {
-	RPrgVar* Var=prg->Find(Inst);
-	RPrgVarInst* Instance=dynamic_cast<RPrgVarInst*>(Var);
-	if(!Instance)
-		throw RPrgException(prg,"Variable '"+Inst+"' is not an object instance.");
-	RPrgFunc* MethodPtr(Instance->GetClass()->GetMethod(Method));
-	if(!MethodPtr)
-		throw RPrgException(prg,"Unknown method '"+Method+"' for object '"+Inst+"'");
-	MethodPtr->Run(prg,r,Instance,Params);
+	if(Inst.IsEmpty())
+	{
+		RPrgInstSub* Sub(prg->Subroutines.GetPtr(Method));
+		if(!Sub)
+			throw RPrgException(prg,"Unknown function '"+Method+"'");
+		Sub->Execute(prg,r,Params);
+	}
+	else
+	{
+		RPrgVar* Var(prg->Find(Inst));
+		RPrgVarInst* Instance(dynamic_cast<RPrgVarInst*>(Var));
+		if(!Instance)
+			throw RPrgException(prg,"Variable '"+Inst+"' is not an object instance.");
+		RPrgFunc* Func(Instance->GetClass()->GetMethod(Method));
+		if(!Func)
+			throw RPrgException(prg,"Unknown method '"+Method+"' for object '"+Inst+"'");
+		Func->Run(prg,r,Instance,Params);
+	}
+
 }
 
 

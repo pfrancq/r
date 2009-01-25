@@ -2,12 +2,14 @@ SET(rcore_frontend_kde_INST_INCLUDES
 rqt.h
 qrconsole.h
 qrxmlstruct.h
+qrpainter.h
 )
 
 SET(rcore_frontend_kde_TARGET_SOURCES
 rqt.cpp
 qrconsole.cpp
 qrxmlstruct.cpp
+qrpainter.cpp
 )
 
 SET(rcore_frontend_kde_UI_INCLUDES qrxmlstruct.ui)

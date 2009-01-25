@@ -26,6 +26,7 @@ SET(rcore_tools_INST_INCLUDES rstd.h
     					 rlocale.h
     					 rtextencoding.h
     					 rcstring.h
+    					 rvectorbool.h
 )
 
 SET(rcore_tools_TARGET_SOURCES random.cpp
@@ -40,4 +41,5 @@ SET(rcore_tools_TARGET_SOURCES random.cpp
                                basiccontainer.cpp
                                basiccursor.cpp
                                rstd.cpp
+                               rvectorbool.cpp
 )

@@ -51,6 +51,13 @@ RPrgVar::RPrgVar(const RString& name,const RString& type)
 
 
 //------------------------------------------------------------------------------
+RPrgVar::RPrgVar(const RPrgVar& var)
+	: Name(var.Name), Type(var.Type)
+{
+}
+
+
+//------------------------------------------------------------------------------
 int RPrgVar::Compare(const RPrgVar& v) const
 {
 	return(Name.Compare(v.Name));

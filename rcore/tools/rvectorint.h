@@ -4,9 +4,9 @@
 
 	RVectorInt.h
 
-	Class representing a list of Integer values - Header
+	Class representing a list of integer values - Header
 
-	Copyright 1998-2007 by the Université Libre de Bruxelles.
+	Copyright 1998-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -56,11 +56,11 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RVectorInt class provides a representation of a vector of integers.
-* @param I                   Type of intergers.
+* @param I                   Type of integers.
 * @param bOrder              Is the vector of integer ordered?
 *
-* @author Pascal and Vandaele Valery.
-* @short Vector of integers.
+* @author Pascal Francq and Vandaele Valery.
+* @short Vector of Integers.
 */
 template<class I,bool bOrder=true>
 	class RVectorInt
@@ -83,7 +83,7 @@ template<class I,bool bOrder=true>
 private:
 
 	/**
-	* Pointer used to parse a list.
+	* Pointer used to parse the list.
 	*/
 	I* Parse;
 
@@ -95,21 +95,21 @@ private:
 public:
 
 	/**
-	* Construct the list of Integer value.
+	* Construct the list of integer values.
 	* @param max             Maximum number of values.
 	*/
 	RVectorInt(size_t max);
 
 	/**
 	* Copy constructor.
-	* @param vec             Vector to copy.
+	* @param vector          Vector to copy.
 	*/
-	RVectorInt(const RVectorInt& vec);
+	RVectorInt(const RVectorInt& vector);
 
 private:
 
 	/**
-	* Verify if the container can hold a certain nujmber of elements. If not,
+	* Verify if the container can hold a certain number of elements. If not,
 	* the container is extended.
     * @param max             Number of elements that must be contained.
 	*/
@@ -175,14 +175,14 @@ public:
 	void Clear(void);
 
 private:
-	
+
 	/**
 	 * Static function needed to order a list.
 	 */
 	static int ReOrderFunction(const void* num1, const void* num2);
-	
+
 public:
-	
+
 	/**
 	* Reorder the current list of size_tegers in ascending order.
 	*/
@@ -195,7 +195,7 @@ public:
 	*                        all integers are randomized.
 	*/
 	void Randomize(RRandom* rand,size_t nb=0);
-	
+
 	/**
 	* Assignation operator.
 	* @param src             List used for the assignation.
@@ -207,12 +207,12 @@ public:
 	* @param i               Index.
 	*/
 	I operator[](size_t i) const {return(List[i]);}
-	
+
 	/**
 	 * Get the list of the integers contained in the vector.
 	 */
 	const I* GetList(void) const {return(List);}
-	
+
 	/**
 	* Get the number of Integer value in the list.
 	* @return size_t

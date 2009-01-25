@@ -6,7 +6,7 @@
 
 	Vertex of a graph - Implementation.
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -67,6 +67,39 @@ RVertex::RVertex(const VertexStruct& s)
 RCursor<REdge> RVertex::GetEdges(void) const
 {
 	return(RCursor<REdge>(Edges));
+}
+
+
+//------------------------------------------------------------------------------
+REdge* RVertex::GetEdge(size_t id) const
+{
+	RCursor<REdge> Cur(Edges);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		if(Cur()->Connects(id))
+			return(Cur());
+	return(0);
+}
+
+
+//------------------------------------------------------------------------------
+REdge* RVertex::GetEdgeTo(size_t id) const
+{
+	RCursor<REdge> Cur(Edges);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		if(Cur()->GetVertex1()->GetId()==id)
+			return(Cur());
+	return(0);
+}
+
+
+//------------------------------------------------------------------------------
+REdge* RVertex::GetEdgeFrom(size_t id) const
+{
+	RCursor<REdge> Cur(Edges);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		if(Cur()->GetVertex2()->GetId()==id)
+			return(Cur());
+	return(0);
 }
 
 

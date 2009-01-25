@@ -65,8 +65,9 @@ public:
 	/**
 	* Construct a generic instruction.
 	* @param prg            Program.
+	* @param var            Variable.
 	*/
-	RPrgInstDelete(RInterpreter* prg);
+	RPrgInstDelete(RInterpreter* prg,const RString& var);
 
 	/**
 	* Run the instruction.

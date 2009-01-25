@@ -173,6 +173,42 @@ public:
 	int Compare(const char* uri) const {return(URI.Compare(uri));}
 
 	/**
+	* Equal operator.
+	* @param src             URI to compare with.
+	*/
+	inline bool operator==(const RURI& src) const {return(URI.Compare(src.URI)==0);}
+
+	/**
+	* Equal operator.
+	* @param src             String to compare with.
+	*/
+	inline bool operator==(const char* src) const {return(URI.Compare(src)==0);}
+
+	/**
+	* Equal operator.
+	* @param src             String to compare with.
+	*/
+	inline bool operator==(const RString& src) const {return(URI.Compare(src)==0);}
+
+	/**
+	* Non-equal operator.
+	* @param src             URI to compare with.
+	*/
+	inline bool operator!=(const RURI& src) const {return(URI.Compare(src.URI));}
+
+	/**
+	* Non-equal operator.
+	* @param src             String to compare with.
+	*/
+	inline bool operator!=(const char* src) const {return(URI.Compare(src));}
+
+	/**
+	* Non-equal operator.
+	* @param src             String to compare with.
+	*/
+	inline bool operator!=(const RString& src) const {return(URI.Compare(src));}
+
+	/**
 	 * Get the Scheme part of the uniform resource identifier.
 	 */
 	inline RString GetScheme(void) const {return(Extract(Scheme));}

@@ -6,7 +6,7 @@
 
 	Edge of a graph  - Implementation.
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -45,19 +45,39 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 REdge::REdge(void)
-	: Vertex1(0), Vertex2(0)
+	: From(0), To(0)
 {
 }
 
 
 //------------------------------------------------------------------------------
-REdge::REdge(RVertex* v1,RVertex* v2,const double w)
-	: Vertex1(v1), Vertex2(v2), Weight(w)
+REdge::REdge(RVertex* f,RVertex* t,const double w)
+	: From(f), To(t), Weight(w)
 {
+	if((!From)||(!To))
+		throw RException("REdge::REdge(RVertex*,RVertex*,const double) : Null vertices");
+
+	// Insert the edge in the corresponding vertices
+	From->Edges.InsertPtr(this);
+	To->Edges.InsertPtr(this);
+}
+
+
+//------------------------------------------------------------------------------
+bool REdge::Connects(size_t id) const
+{
+	if((!From)||(!To))
+		return(false);
+	if((From->GetId()==id)||(From->GetId()))
+		return(true);
+	return(false);
 }
 
 
 //------------------------------------------------------------------------------
 REdge::~REdge(void)
 {
+	// Delete the edge in the corresponding vertices
+	//From->Edges.DeletePtr(*this);
+	//To->Edges.DeletePtr(*this);
 }

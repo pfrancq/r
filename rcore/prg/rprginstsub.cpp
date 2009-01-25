@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgInstAssign.h
+	RPrgInstSub.cpp
 
-	Assignment Instructions - Implementation.
+	Definition of a subroutine - Implementation.
 
-	Copyright 2002-2008 by the Université Libre de Bruxelles.
+	Copyright 2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -32,9 +32,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprginstassign.h>
+#include <rprginstsub.h>
 #include <rprgvarstring.h>
-#include <rprgclass.h>
+#include <rprgvarref.h>
 #include <rprg.h>
 #include <rinterpreter.h>
 #include <rcursor.h>
@@ -45,59 +45,56 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 //
-// RPrgInstNew
+// RPrgInstSub
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstNew::RPrgInstNew(RInterpreter* prg,const RString& name,RPrgClass* c,RContainer<RPrgVar,false,false>& init)
-	: RPrgInst(prg->GetLine()), Var(name), Class(c), Params(init)
+RPrgInstSub::RPrgInstSub(RInterpreter* prg,size_t t,const RString& sub,RContainer<RPrgVar,false,false>& params)
+	: RPrgInstBlock(prg,t), Name(sub), Params(20,10)
 {
-	// Read Values
-	init.Clear();
+	RCursor<RPrgVar> Cur(params);
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		if(!dynamic_cast<RPrgVarRef*>(Cur()))
+			throw RPrgException(prg,"Definition of a subroutine '"+Name+"' allows only parameters names and not '"+Cur()->GetName()+"'");
+		Params.InsertPtr(new RString(Cur()->GetName()));
+	}
+	params.Clear();
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgInstNew::Run(RInterpreter* prg,RPrgOutput* o)
-{
-	RPrgVar* Ptr=Class->NewVar(prg,o,Var,Params);
-	prg->AddVar(Ptr);
-}
-
-
-//------------------------------------------------------------------------------
-RPrgInstNew::~RPrgInstNew(void)
-{
-}
-
-
-
-//------------------------------------------------------------------------------
-//
-// RPrgInstAssignVar
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-RPrgInstAssignVar::RPrgInstAssignVar(RInterpreter* prg,const RString& name,RPrgVar* assign)
-	: RPrgInst(prg->GetLine()), Var(name), Assign(assign)
+void RPrgInstSub::RunBlock(RInterpreter*,RPrgOutput*)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RPrgInstAssignVar::Run(RInterpreter* prg,RPrgOutput*)
+void RPrgInstSub::Execute(RInterpreter* prg,RPrgOutput* o,RContainer<RPrgVar,true,false>& args)
 {
-	RPrgVar* Ptr=prg->Find(Var);
-	if(!Ptr)
-		throw RPrgException(prg,"Unknown Variable '"+Var+"'");
-	Ptr->Assign(Assign->GetValue(prg));
+	if(Params.GetNb()!=args.GetNb())
+		throw RPrgException(prg,"Subroutine '"+Name+"' needs "+Params.GetNb()+" parameters and "+args.GetNb()+" are provided");
+	prg->Scopes.Push(Vars=new RPrgScope());
+	RContainer<RPrgVarString,false,false> LocalVars(Params.GetNb());
+	RCursor<RPrgVar> Value(args);
+	RCursor<RString> Name(Params);
+	for(Name.Start(),Value.Start();!Name.End();Name.Next(),Value.Next())
+	{
+		RPrgVarString* ptr=new RPrgVarString(*Name(),Value()->GetValue(prg));
+		AddVar(ptr);
+		LocalVars.InsertPtr(ptr);
+	}
+	RPrgInstBlock::RunBlock(prg,o);
+	RCursor<RPrgVarString> Var(LocalVars);
+	for(Var.Start();!Var.End();Var.Next())
+		DelVar(Var());
+	prg->Scopes.Pop();
+	Vars=0;
 }
 
 
 //------------------------------------------------------------------------------
-RPrgInstAssignVar::~RPrgInstAssignVar(void)
+RPrgInstSub::~RPrgInstSub(void)
 {
-	delete Assign;
 }

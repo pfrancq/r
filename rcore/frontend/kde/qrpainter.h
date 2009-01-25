@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgInstFor.h
+	QRPainter.h
 
-	"for" Instruction - Header.
+	Qt Painter - Header.
 
-	Copyright 2002-2008 by the Université Libre de Bruxelles.
+	Copyright 2009 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -31,13 +31,13 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPrgInstForH
-#define RPrgInstForH
+#ifndef QRPainterH
+#define QRPainterH
 
 
 //------------------------------------------------------------------------------
-// include files for R Project
-#include <rprginstblock.h>
+// include files for Qt/KDE
+#include <QtGui/QPainter>
 
 
 //------------------------------------------------------------------------------
@@ -46,52 +46,44 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// forward class declaration
-class RPrgVar;
-class RInterpreter;
-class RPrgOutput;
-
-
-//------------------------------------------------------------------------------
 /**
-* The RPrgInstFor provides a class for a "for" instruction.
-* @author Pascal Francq
-* @short "for" Instruction.
-*/
-class RPrgInstFor : public RPrgInstBlock
+ * The QRPainter provides a class to paint for Qt. In fact, it proposes a set
+ * convenient methods to mix R and Qt.
+ * @author Pascal Francq
+ * @short Qt Painter
+ */
+class QRPainter : public QPainter
 {
-	/**
-	* Variable defined in the for.
-	*/
-	RString Var;
-
-	/**
-	* Values of the variable.
-	*/
-	RContainer<RPrgVar,true,false> Values;
-
 public:
 
 	/**
-	* Construct a "for" instruction.
-	* @param prg            Program.
-	* @param t              Indentation.
-	* @param var            Name of the variable.
-	* @param val            Values for the variable.
-	*/
-	RPrgInstFor(RInterpreter* prg,size_t t,const RString& var,RContainer<RPrgVar,false,false>& val);
+	 * Constructor.
+	 */
+	QRPainter(void);
 
 	/**
-	* Run the instructions in the for for the different values of its variable.
-	* @param prg            Program.
-	* @param o              Output.
-	*/
-	virtual void RunBlock(RInterpreter* prg,RPrgOutput* o);
+	 * Constructor
+	 * @param device         Device where the paint must be done.
+	 */
+	QRPainter(QPaintDevice* device);
 
 	/**
-	* Destruct the "for" instruction.
-	*/
-	virtual ~RPrgInstFor(void);
+	 * Draw the "Manhattan distance" between two points. Basically, the middle
+	 * point is computed and acts as intermediate point.
+	 * @param x1             First X coordinate.
+	 * @param y1             First Y coordinate.
+	 * @param x2             Second X coordinate.
+	 * @param y2             Second Y coordinate.
+	 */
+	void drawManhattan(int x1,int y1,int x2,int y2);
+
+	/**
+	 * Draw the "Manhattan distance" between two points. Basically, the middle
+	 * point is computed and acts as intermediate point.
+	 * @param pt1            First point.
+	 * @param pt2            Second point.
+	 */
+	void drawManhattan(const QPoint& pt1,const QPoint& pt2);
 };
 
 

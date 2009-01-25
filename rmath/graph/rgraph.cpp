@@ -6,7 +6,7 @@
 
 	A Graph - Implementation.
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -78,11 +78,19 @@ RCursor<REdge> RGraph::GetEdges(void) const
 
 
 //------------------------------------------------------------------------------
+void RGraph::Insert(RVertex* v)
+{
+	if(v->Edges.GetNb())
+		throw RException("Graph::InsertVertex(RVertex*) : Cannot insert a vertex with edges");
+	Vertices.InsertPtr(v);
+}
+
+
+//------------------------------------------------------------------------------
 RVertex* RGraph::CreateVertex(void)
 {
-	RVertex *ptr;
-
-	Vertices.InsertPtr(ptr=new RVertex(Vertices.GetNb(),Vertices.GetMaxNb()));
+	RVertex* ptr(new RVertex(Vertices.GetNb(),Vertices.GetMaxNb()));
+	Insert(ptr);
 	return(ptr);
 }
 
@@ -90,9 +98,8 @@ RVertex* RGraph::CreateVertex(void)
 //------------------------------------------------------------------------------
 RVertex* RGraph::CreateVertex(const size_t id)
 {
-	RVertex *ptr;
-
-	Vertices.InsertPtr(ptr=new RVertex(id,Vertices.GetMaxNb()));
+	RVertex* ptr(new RVertex(id,Vertices.GetMaxNb()));
+	Insert(ptr);
 	return(ptr);
 }
 
@@ -112,13 +119,17 @@ RVertex* RGraph::GetVertex(const size_t id)
 
 
 //------------------------------------------------------------------------------
+void RGraph::Insert(REdge* e)
+{
+	Edges.InsertPtr(e);
+}
+
+
+//------------------------------------------------------------------------------
 REdge* RGraph::CreateEdge(RVertex* v1,RVertex* v2,double w)
 {
-	REdge *ptr;
-
-	Edges.InsertPtr(ptr=new REdge(v1,v2,w));
-	v1->Edges.InsertPtr(ptr);
-	v2->Edges.InsertPtr(ptr);
+	REdge* ptr(new REdge(v1,v2,w));
+	Insert(ptr);
 	return(ptr);
 }
 

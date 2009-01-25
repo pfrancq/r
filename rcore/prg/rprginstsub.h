@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgInstFor.h
+	RPrgInstSub.h
 
-	"for" Instruction - Header.
+	Definition of a subroutine - Header.
 
-	Copyright 2002-2008 by the Université Libre de Bruxelles.
+	Copyright 2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -31,13 +31,14 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPrgInstForH
-#define RPrgInstForH
+#ifndef RPrgInstSubH
+#define RPrgInstSubH
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rprginstblock.h>
+#include <rprgfunc.h>
 
 
 //------------------------------------------------------------------------------
@@ -54,21 +55,21 @@ class RPrgOutput;
 
 //------------------------------------------------------------------------------
 /**
-* The RPrgInstFor provides a class for a "for" instruction.
+* The RPrgInstSub provides a class to define a subroutine.
 * @author Pascal Francq
-* @short "for" Instruction.
+* @short Subroutine.
 */
-class RPrgInstFor : public RPrgInstBlock
+class RPrgInstSub : public RPrgInstBlock
 {
 	/**
-	* Variable defined in the for.
-	*/
-	RString Var;
+	 * Name of the subroutine.
+	 */
+	RString Name;
 
 	/**
-	* Values of the variable.
+	* Parameter.
 	*/
-	RContainer<RPrgVar,true,false> Values;
+	RContainer<RString,true,false> Params;
 
 public:
 
@@ -76,10 +77,22 @@ public:
 	* Construct a "for" instruction.
 	* @param prg            Program.
 	* @param t              Indentation.
-	* @param var            Name of the variable.
-	* @param val            Values for the variable.
+	* @param sub            Name of the subroutine
+	* @param params         Parameters
 	*/
-	RPrgInstFor(RInterpreter* prg,size_t t,const RString& var,RContainer<RPrgVar,false,false>& val);
+	RPrgInstSub(RInterpreter* prg,size_t t,const RString& sub,RContainer<RPrgVar,false,false>& params);
+
+	/**
+	* This method compares two functions.
+	* @see R::RContainer.
+	*/
+	int Compare(const RPrgInstSub& t) const {return(Name.Compare(t.Name));}
+
+	/**
+	* This method compares two functions.
+	* @see R::RContainer.
+	*/
+	int Compare(const RString& t) const {return(Name.Compare(t));}
 
 	/**
 	* Run the instructions in the for for the different values of its variable.
@@ -89,9 +102,17 @@ public:
 	virtual void RunBlock(RInterpreter* prg,RPrgOutput* o);
 
 	/**
+	* Execute the function.
+	* @param prg            Program.
+	* @param o              Output.
+	* @param args           Parameters of the function.
+	*/
+	virtual void Execute(RInterpreter* prg,RPrgOutput* o,RContainer<RPrgVar,true,false>& args);
+
+	/**
 	* Destruct the "for" instruction.
 	*/
-	virtual ~RPrgInstFor(void);
+	virtual ~RPrgInstSub(void);
 };
 
 

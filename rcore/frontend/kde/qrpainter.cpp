@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RPrgInstFor.h
+	QRPainter.cpp
 
-	"for" Instruction - Header.
+	Qt Painter - Implementation.
 
-	Copyright 2002-2008 by the Université Libre de Bruxelles.
+	Copyright 2009 by the Université libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -31,72 +31,50 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RPrgInstForH
-#define RPrgInstForH
+// include files for ANSI C/C++
+#include <iostream>
+using namespace std;
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rprginstblock.h>
+#include <qrpainter.h>
+using namespace R;
 
-
-//------------------------------------------------------------------------------
-namespace R{
-//------------------------------------------------------------------------------
 
 
 //------------------------------------------------------------------------------
-// forward class declaration
-class RPrgVar;
-class RInterpreter;
-class RPrgOutput;
-
+//
+// class QRPainter
+//
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-/**
-* The RPrgInstFor provides a class for a "for" instruction.
-* @author Pascal Francq
-* @short "for" Instruction.
-*/
-class RPrgInstFor : public RPrgInstBlock
+QRPainter::QRPainter(void)
+	: QPainter()
 {
-	/**
-	* Variable defined in the for.
-	*/
-	RString Var;
-
-	/**
-	* Values of the variable.
-	*/
-	RContainer<RPrgVar,true,false> Values;
-
-public:
-
-	/**
-	* Construct a "for" instruction.
-	* @param prg            Program.
-	* @param t              Indentation.
-	* @param var            Name of the variable.
-	* @param val            Values for the variable.
-	*/
-	RPrgInstFor(RInterpreter* prg,size_t t,const RString& var,RContainer<RPrgVar,false,false>& val);
-
-	/**
-	* Run the instructions in the for for the different values of its variable.
-	* @param prg            Program.
-	* @param o              Output.
-	*/
-	virtual void RunBlock(RInterpreter* prg,RPrgOutput* o);
-
-	/**
-	* Destruct the "for" instruction.
-	*/
-	virtual ~RPrgInstFor(void);
-};
-
-
-}  //-------- End of namespace R -----------------------------------------------
+}
 
 
 //------------------------------------------------------------------------------
-#endif
+QRPainter::QRPainter(QPaintDevice* device)
+	: QPainter(device)
+{
+}
+
+
+//------------------------------------------------------------------------------
+void QRPainter::drawManhattan(int x1,int y1,int x2,int y2)
+{
+	int ix=x1+((x2-x1)/2);
+	drawLine(x1,y1,ix,y1);
+	drawLine(ix,y1,ix,y2);
+	drawLine(ix,y2,x2,y2);
+}
+
+
+//------------------------------------------------------------------------------
+void QRPainter::drawManhattan(const QPoint& pt1,const QPoint& pt2)
+{
+	drawManhattan(pt1.x(),pt1.y(),pt2.x(),pt2.y());
+}

@@ -50,49 +50,10 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPrgInstFor::RPrgInstFor(RInterpreter* prg,size_t t)
-	: RPrgInstBlock(prg,t), Values(20,10)
+RPrgInstFor::RPrgInstFor(RInterpreter* prg,size_t t,const RString& var,RContainer<RPrgVar,false,false>& val)
+	: RPrgInstBlock(prg,t), Var(var), Values(val)
 {
-	// Read name of variable
-	Var=prg->GetWord();
-
-	// Read next word -> must be "in"
-	RString Cmd(prg->GetWord());
-	if(Cmd=="in")
-	{
-		// The variable takes values from a list given as parameter
-		prg->AnalyseParam(Values); // Read Values
-	}
-	else if(Cmd=="from")
-	{
-		bool ok;
-
-		// The variable takes a list of numbers given by a range and a step
-		RString Next(prg->GetWord());
-		long start=Next.ToLong(ok);
-		if(!ok)
-			throw RPrgException(prg,"'"+Next+"' is not valid parameter of 'from'");
-		Next=prg->GetWord();
-		if(Next!="to")
-			throw RPrgException(prg,"'to' is excepted and not '"+Next+"'");
-		Next=prg->GetWord();
-		long end=Next.ToLong(ok);
-		if(!ok)
-			throw RPrgException(prg,"'"+Next+"' is not valid parameter of 'to'");
-		Next=prg->GetWord();
-		if(Next!="step")
-			throw RPrgException(prg,"'step' is excepted and not '"+Next+"'");
-		Next=prg->GetWord();
-		long step=Next.ToLong(ok);
-		if(!ok)
-			throw RPrgException(prg,"'"+Next+"' is not valid parameter of 'step'");
-		for(long i=start;i<=end;i+=step)
-		{
-			Values.InsertPtr(new RPrgVarLiteral(RString::Number(i)));
-		}
-	}
-	else
-		throw RPrgException(prg,"'"+Cmd+"' is not valid for a 'for' instruction");
+	val.Clear();
 }
 
 

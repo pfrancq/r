@@ -34,6 +34,7 @@
 // include files for R Project
 #include <rprgvarliteral.h>
 using namespace R;
+using namespace std;
 
 
 

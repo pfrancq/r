@@ -6,7 +6,7 @@
 
 	Method of a class - Header.
 
-	Copyright 2002-2008 by the Université Libre de Bruxelles.
+	Copyright 2002-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -55,9 +55,9 @@ class RPrgVar;
 
 //------------------------------------------------------------------------------
 /**
-* The RPrgInstMethod provides a class for a class method.
+* The RPrgInstMethod provides a class to call a method or a function.
 * @author Pascal Francq
-* @short Class Method.
+* @short Method or Function Runner.
 */
 class RPrgInstMethod : public RPrgInst
 {
@@ -83,10 +83,19 @@ public:
 	/**
 	* Constructor of a class method.
 	* @param prg            Program.
+	* @param method         Name of the method.
+	* @param params         Parameters.
+	*/
+	RPrgInstMethod(RInterpreter* prg,const RString& method,RContainer<RPrgVar,false,false>& params);
+
+	/**
+	* Constructor of a class method.
+	* @param prg            Program.
 	* @param name           Name of the instance.
 	* @param method         Name of the method.
+	* @param params         Parameters.
 	*/
-	RPrgInstMethod(RInterpreter* prg,const RString& name,const RString& method);
+	RPrgInstMethod(RInterpreter* prg,const RString& name,const RString& method,RContainer<RPrgVar,false,false>& params);
 
 	/**
 	* Add a parameter to the method.

@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RDb.cpp
+	RQuery.cpp
 
-	Generic Database - Implementation.
+	Generic Query - Implementation.
 
 	Copyright 2000-2009 by the Université Libre de Bruxelles.
 
@@ -30,73 +30,55 @@
 
 
 //------------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <stdarg.h>
-
-
-//------------------------------------------------------------------------------
 // include files for R Library
-#include <rdb.h>
 #include <rquery.h>
 using namespace R;
 using namespace std;
 
 
-
 //------------------------------------------------------------------------------
 //
-// RDb
+// RQuery
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDb::RDb(Db type)
-	: Type(type)
+RQuery::RQuery(RDb* db,const RString& sql)
+	: Db(db), SQL(sql), Data(db->InitQuery(sql,NbCols))
 {
+	if(!Db)
+		throw RDbException("RQuery::RQuery(RDb*,const RString&) : Null database");
 }
 
 
 //------------------------------------------------------------------------------
-/*void RDb::CreateMySQLDatabase(const RString& host,const RString& user,const RString& pwd,const RString& name)
+RString RQuery::SQLValue(const RString val)
 {
-	MYSQL ms;
-	MYSQL* ret(mysql_init(&ms));
-	if((!ret)||(mysql_errno(&ms)))
-		throw RDbException(mysql_error(&ms));
+	RString ret("'");
+	const RChar* ptr;
 
-	ret=mysql_real_connect(&ms,host,user,pwd,0,0,0,0);
-	if((!ret)||(mysql_errno(&ms)))
-		throw RDbException(mysql_error(&ms));
-
-	RString sql="CREATE DATABASE IF NOT EXISTS ";
-	sql+=name;
-	if(mysql_query(&ms,sql.Latin1()))
-		throw RDbException(mysql_error(&ms));
-}*/
-
-
-//------------------------------------------------------------------------------
-void RDb::CreateTransactionTable(const RString& name,size_t nb,...)
-{
-	va_list ap;
-	RString sSql;
-
-	// Create table if it doesn't already exist
-	sSql="CREATE TABLE IF NOT EXISTS "+name+" (transid INT(11) PRIMARY KEY AUTO_INCREMENT,";
-	va_start(ap,nb);
-	while(nb--)
+	for(ptr=val();!ptr->IsNull();ptr++)
 	{
-		sSql+=RString(va_arg(ap,char*))+" TEXT";
-		if(nb)
-			sSql+=",";
+		if((*ptr)==RChar('\''))
+			ret+='\'';
+		if((*ptr)==RChar('\\'))
+			ret+='\\';
+		ret+=(*ptr);
 	}
-	va_end(ap);
-	sSql+=")";
-	RQuery Create(this,sSql);
+	ret+=RChar('\'');
+	return(ret);
 }
 
 
 //------------------------------------------------------------------------------
-RDb::~RDb(void)
+RString RQuery::SQLValue(const RDate& d)
 {
+	return("'"+d+"'");
+}
+
+
+//------------------------------------------------------------------------------
+RQuery::~RQuery(void)
+{
+	Db->ReleaseQuery(Data);
 }

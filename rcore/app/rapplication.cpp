@@ -56,8 +56,9 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
 	App=this;
 
 	// Set locale information specified by the user.
-	setlocale (LC_ALL, "");
-	
+	setlocale(LC_ALL, "");
+	setlocale(LC_NUMERIC, "POSIX");
+
 	// Verify parameters
 	RAssert(argc);
 	RAssert(argv);

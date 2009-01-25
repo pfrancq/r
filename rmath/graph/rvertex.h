@@ -6,7 +6,7 @@
 
 	Vertex of a graph - Header.
 
-	Copyright 2001-2005 by the Université Libre de Bruxelles.
+	Copyright 2001-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -97,6 +97,32 @@ public:
 	RVertex(const VertexStruct& s);
 
 	/**
+	* Is used to compare two vertices. The function returns the same type of
+	* information than the strcmp function from the standard C library.
+	* @param e               Edge used for the comparison.
+	* @param v               Vertex used for the comparison.
+	*/
+	int Compare(const RVertex& v) const {return(Id-v.Id);}
+
+	/**
+	* Is used to compare a vertex and an identifier. The function returns
+	* the same type of information than the strcmp function from the standard
+	* C library.
+	* @param e               Edge used for the comparison.
+	* @param i               Identifier used for the comparison.
+	*/
+	int Compare(const size_t i) const {return(Id-i);}
+
+	/**
+	* Is used to compare a vertex and a structure. The function returns
+	* the same type of information than the strcmp function from the standard
+	* C library.
+	* @param e               Edge used for the comparison.
+	* @param s               Structure used for the comparison.
+	*/
+	int Compare(const VertexStruct& s) const {return(Id-s.id);}
+
+	/**
 	* Get the identifier of the vertex.
 	*/
 	size_t GetId(void) const {return(Id);}
@@ -107,35 +133,37 @@ public:
 	RCursor<REdge> GetEdges(void) const;
 
 	/**
-	* Is used to compare two vertices. The function returns the same type of
-	* information than the strcmp function from the standard C library.
-	* @param v               Vertex used for the comparison.
-	*/
-	int Compare(const RVertex& v) const {return(this!=&v);}
+	 * @return Pointer to the edge that connects the current node with a node
+	 * given by the identifier. If no edge is found, the method returns 0.
+	 * @note This methods supposes an undirected graph.
+	 * @param id             Identifier of the node.
+	 */
+	REdge* GetEdge(size_t id) const;
 
 	/**
-	* Is used to compare a vertex and an identifier. The function returns
-	* the same type of information than the strcmp function from the standard
-	* C library.
-	* @param i               Identifier used for the comparison.
-	*/
-	int Compare(const size_t i) const {return(CompareIds(Id,i));}
+	 * @return Pointer to the edge that connects the current node to a node
+	 * given by the identifier. If no edge is found, the method returns 0.
+	 * @note This methods supposes an directed graph.
+	 * @param id             Identifier of the node.
+	 */
+	REdge* GetEdgeTo(size_t id) const;
 
 	/**
-	* Is used to compare a vertex and a structure. The function returns
-	* the same type of information than the strcmp function from the standard
-	* C library.
-	* @param s               Structure used for the comparison.
-	*/
-	int Compare(const VertexStruct& s) const {return(CompareIds(Id,s.id));}
+	 * @return Pointer to the edge that connects a node given by the identifier
+	 * to the current node. If no edge is found, the method returns 0.
+	 * @note This methods supposes an directed graph.
+	 * @param id             Identifier of the node.
+	 */
+	REdge* GetEdgeFrom(size_t id) const;
 
 	/**
 	* Destruct the vertex.
 	*/
-	~RVertex(void);
+	virtual ~RVertex(void);
 
 	// friend classes
 	friend class RGraph;
+	friend class REdge;
 };
 
 

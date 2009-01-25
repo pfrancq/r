@@ -53,7 +53,7 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 QRConsole::QRConsole(QWidget* parent)
-	: QTextEdit(parent)
+	: QTextEdit(parent), Pos(-1)
 {
     Cursor=textCursor();
     Cursor.insertText(">");
@@ -66,12 +66,49 @@ void QRConsole::keyPressEvent(QKeyEvent * e )
 	switch(e->key())
 	{
 		case Qt::Key_Up:
+		{
+			if((Pos<100)&&(Pos<Cmds.size()-1))
+			{
+				Pos++;
+				Cursor=textCursor();
+				Cursor.select(QTextCursor::BlockUnderCursor);
+				Cursor.removeSelectedText();
+				Cursor.insertText("\n>"+Cmds.at(Pos));
+				setTextCursor(Cursor);
+			}
 			break;
+		}
+		case Qt::Key_Down:
+		{
+			if((Cmds.size()>0)&&(Pos>=0))
+			{
+				Cursor=textCursor();
+				Cursor.select(QTextCursor::BlockUnderCursor);
+				Cursor.removeSelectedText();
+				if(Pos)
+				{
+					Pos--;
+					Cursor.insertText("\n>"+Cmds.at(Pos));
+				}
+				else
+					Cursor.insertText("\n>");
+				setTextCursor(Cursor);
+			}
+			break;
+		}
+		case Qt::Key_Home:
+		{
+			Cursor=textCursor();
+			Cursor.movePosition(QTextCursor::StartOfBlock);
+			Cursor.movePosition(QTextCursor::Right,QTextCursor::MoveAnchor,1);
+			setTextCursor(Cursor);
+			break;
+		}
 		case Qt::Key_Backspace:
 		case Qt::Key_Left:
 		{
 			Cursor=textCursor();
-			if(Cursor.position()>1)
+			if(Cursor.position()>Cursor.block().position()+1)
 				QTextEdit::keyPressEvent(e);
 			break;
 		}
@@ -80,8 +117,21 @@ void QRConsole::keyPressEvent(QKeyEvent * e )
 		{
 			Cursor=textCursor();
 			QString line(Cursor.block().text());
+			QString Cmd(line.right(line.length()-1));
+			if(Cmds.size()==100)
+				Cmds.removeLast();
+			if(Cmds.size()>0)
+			{
+				if(Cmds.at(0)!=Cmd)
+					Cmds.prepend(Cmd);
+			}
+			else
+				Cmds.prepend(Cmd);
+			Cursor.movePosition(QTextCursor::EndOfBlock);
+			setTextCursor(Cursor);
 			QTextEdit::keyPressEvent(e);
-			emit EnterCmd(line.right(line.length()-1));
+			emit EnterCmd(Cmd);
+			Pos=-1;
 			Cursor=textCursor();
 			Cursor.insertText(">");
 			setTextCursor(Cursor);
@@ -98,6 +148,18 @@ void QRConsole::WriteStr(const RString& str)
 {
 	Cursor=textCursor();
 	Cursor.insertText(ToQString(str+"\n"));
+}
+
+
+//------------------------------------------------------------------------------
+void QRConsole::WriteError(const RString& str)
+{
+	Cursor=textCursor();
+	QTextCharFormat FormatRed;
+	QTextCharFormat FormatBlack;
+	FormatRed.setTextOutline(QColor(255,0,0));
+	Cursor.insertText(ToQString(str),FormatRed);
+	Cursor.insertText("\n",FormatBlack);
 }
 
 
