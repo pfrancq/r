@@ -286,11 +286,11 @@ RString RTextFile::GetUntilEnd(void)
 
 
 //------------------------------------------------------------------------------
-inline void RTextFile::SkipEol(void)
+/*inline void RTextFile::SkipEol(void)
 {
 	if(((*NextRead)==10)||((*NextRead)==13))
 		Next();
-}
+}*/
 
 
 //------------------------------------------------------------------------------

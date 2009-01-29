@@ -9,6 +9,7 @@ SET(rcore_io_INST_INCLUDES
     					 riofile.h
     					 rbinaryfile.h
 						 ruri.h
+						 rcsvfile.h
 )
 
 SET(rcore_io_TARGET_SOURCES 
@@ -19,5 +20,6 @@ SET(rcore_io_TARGET_SOURCES
                                rdir.cpp
                                riofile.cpp
                                rbinaryfile.cpp
-                				 ruri.cpp
+               				   ruri.cpp
+               				   rcsvfile.cpp 
 )

@@ -323,10 +323,19 @@ private:
 	*/
 	void ReadChars(void);
 
+public:
+
 	/**
 	* This function skip a end of line.
+	* @internal This function is for internal uses only
 	*/
-	inline void SkipEol(void);
+	inline void SkipEol(void)
+	{
+		if(((*NextRead)==10)||((*NextRead)==13))
+			Next();
+	}
+
+private:
 
 	/**
 	* This function returns true if the current position is the beginning of a
