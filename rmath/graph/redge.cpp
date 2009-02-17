@@ -68,7 +68,7 @@ bool REdge::Connects(size_t id) const
 {
 	if((!From)||(!To))
 		return(false);
-	if((From->GetId()==id)||(From->GetId()))
+	if((From->GetId()==id)||(From->GetId()==id))
 		return(true);
 	return(false);
 }

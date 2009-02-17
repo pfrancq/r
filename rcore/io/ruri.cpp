@@ -95,7 +95,7 @@ void RURI::AnalyzeString(void)
 	if(!URI.GetLen()) return;
 
 	// Test if it is a local file
-	if(URI[0]=='/')
+	if( URI()[0] =='/')
 	{
 		// No, it is a path -> add file:
 		Scheme.Size=4;

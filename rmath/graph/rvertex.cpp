@@ -33,6 +33,7 @@
 // include files for R Project
 #include <rvertex.h>
 using namespace R;
+using namespace std;
 
 
 
@@ -86,8 +87,12 @@ REdge* RVertex::GetEdgeTo(size_t id) const
 {
 	RCursor<REdge> Cur(Edges);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		if(Cur()->GetVertex1()->GetId()==id)
+	{
+		cout<<"  Search "<<id<<"=?="<<Cur()->GetTo()->GetId()<<endl;
+		if(Cur()->GetTo()->GetId()==id)
 			return(Cur());
+	}
+	cout<<"   Not Found"<<endl;
 	return(0);
 }
 
@@ -97,7 +102,7 @@ REdge* RVertex::GetEdgeFrom(size_t id) const
 {
 	RCursor<REdge> Cur(Edges);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		if(Cur()->GetVertex2()->GetId()==id)
+		if(Cur()->GetFrom()->GetId()==id)
 			return(Cur());
 	return(0);
 }

@@ -162,7 +162,7 @@ void RCSVFile::Read(void)
 RString RCSVFile::Get(size_t idx) const
 {
 	RString Field(*Values[idx]);
-	if(Field[0]=='\"') // Verify
+	if(Field()[0]=='\"') // Verify
 		Field=Field.Mid(1,Field.GetLen()-2);
 	return(Field);
 }
@@ -172,7 +172,7 @@ RString RCSVFile::Get(size_t idx) const
 size_t RCSVFile::GetSizeT(size_t idx) const
 {
 	RString Field(*Values[idx]);
-	if(Field[0]=='\"') // Verify
+	if(Field()[0]=='\"') // Verify
 		Field=Field.Mid(1,Field.GetLen()-2);
 	bool Ok;
 	size_t res(Field.ToSizeT(Ok));
