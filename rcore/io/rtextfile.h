@@ -58,7 +58,7 @@ class RTextEncoding;
 * The file can contain some comments. These comments can be either on a
 * single line, beginning with a given set of characters ('%', by default) and
 * ending at the end of the line, or be multi-line, beginning and ending with
-* corresponding set of characters (C comments delimeters by default).
+* corresponding set of characters (C comments delimiters by default).
 *
 * When multiple elements are inserted on the same text line, before each
 * insertion, and except for the first one, a set of characters representing
@@ -108,7 +108,7 @@ class RTextFile : public RIOFile
 {
 public:
 	/**
-	* The RemType enum represents the different style of comments used wich text
+	* The RemType enum represents the different style of comments used which text
 	* files. The comments are skipped when the file is read.
 	*/
 	enum RemType
@@ -143,7 +143,7 @@ protected:
 	RChar Chars[40];
 
 	/**
-	 * Size of unicode characters already read.
+	 * Size of Unicode characters already read.
 	 */
 	size_t SizeChars[40];
 
@@ -178,7 +178,7 @@ protected:
 	size_t* SizeNextWrite;
 
 	/**
-	 * Number of bytes to skip the next time unicode characters must be extracted.
+	 * Number of bytes to skip the next time Unicode characters must be extracted.
 	 */
 	size_t SkipBytes;
 

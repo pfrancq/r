@@ -117,6 +117,7 @@ void RXMLParser::Open(RIO::ModeType mode)
 	RTextFile::Open(mode);
 
 	// Create default namespaces
+	TreatEncoding=false;
 	Namespaces.Clear();
 	DefaultNamespace.Clear();
 	Namespace* ptr=Namespaces.GetInsertPtr("xmlns");
@@ -128,6 +129,7 @@ void RXMLParser::Open(RIO::ModeType mode)
 		case RIO::Read:
 			CurDepth=0;
 			LoadHeader();
+			TreatEncoding=false;
 			Section=Body;
 			LoadNextTag();
 			CurDepth=0;
@@ -670,7 +672,10 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 		}
 
 		// Add the attribute
-		AddAttribute(uri,lname,attrn);
+		if(Section==Header)
+			HeaderAttribute(uri,lname,attrn);
+		else
+			AddAttribute(uri,lname,attrn);
 
 		// Determine if a value is assign
 		Next();
@@ -693,13 +698,23 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 					LastTokenPos=GetPos();
 					RString tmp(GetToken(What));
 					if(tmp.GetLen())
-						Value(tmp);
+					{
+						if(Section==Header)
+							HeaderValue(tmp);
+						else
+							Value(tmp);
+					}
 					if(GetNs)
 						ns+=tmp;
 
 					// Add all spaces
 					while(GetNextChar().IsSpace())
-						Value(GetChar());
+					{
+						if(Section==Header)
+							HeaderValue(tmp);
+						else
+							Value(GetChar());
+					}
 				}
 				SetParseSpace(RTextFile::SkipAllSpaces);
 				Next();
@@ -710,7 +725,10 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 				if(OnlyQuote())
 					throw RIOException(this,"Quote must be used to delimit the parameter value in a tag.");
 				RString tmp(What+GetToken(">"));
-				Value(tmp);
+				if(Section==Header)
+					HeaderValue(tmp);
+				else
+					Value(tmp);
 			}
 
 			// Verify if the attribute is a namespace
@@ -736,6 +754,24 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 	}
 
 	Next(); // Put the internal pointer to the first ending character found
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::HeaderAttribute(const RString&,const RString& lName,const RString&)
+{
+	if(lName=="encoding")
+		TreatEncoding=true;
+	else
+		TreatEncoding=false;
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::HeaderValue(const RString& value)
+{
+	if(TreatEncoding)
+		SetEncoding(value);
 }
 
 

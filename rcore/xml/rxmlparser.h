@@ -124,6 +124,11 @@ protected:
 	 */
 	bool InvalidXMLCodes;
 
+	/**
+	 * Specify if the encoding is currently treated.
+	 */
+	bool TreatEncoding;
+
 public:
 
 	/**
@@ -245,6 +250,25 @@ private:
 	* @param EndTag2        Another character than can delimited the tag.
 	*/
 	void LoadAttributes(bool& popdefault,RContainer<Namespace,false,false>& popuri,RChar EndTag1='/',RChar EndTag2='>');
+
+	/**
+	* Method called each time an attribute will be treated when reading the XML
+	* header. Actually, it just catches the "encoding" attribute.
+	* @param namespaceURI    Namespace (if any).
+	* @param lName           Local name of the attribute.
+	* @param name            Complete name of the attribute.
+	* @param value           Value of the attribute (if any).
+	 */
+	void HeaderAttribute(const RString& namespaceURI,const RString& lName,const RString& name);
+
+	/**
+	* Method called each time some attribute value elements (words or spaces)
+	* are parsed when reading the XML header. Actually, it only set the
+	* encoding of the file using the value associated to the "encoding"
+	* attribute.
+	* @param value           Value processed.
+	 */
+	void HeaderValue(const RString& value);
 
 protected:
 
