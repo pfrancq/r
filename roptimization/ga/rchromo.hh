@@ -61,10 +61,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
-  R::RChromo<cInst,cChromo,cFit,cThreadData>& R::RChromo<cInst,cChromo,cFit,cThreadData>::operator=(const RChromo &chromo)
+  void R::RChromo<cInst,cChromo,cFit,cThreadData>::Copy(const cChromo &chromo)
 {
 	(*Fitness)=(*(chromo.Fitness));
-	return(*this);
 }
 
 

@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RObjG.h
+	RSGObj.cpp
 
-	Objects to Group - Header.
+	Similarity-based Clustering Object - Implementation.
 
-	Copyright 2001-2009 by the Université Libre de Bruxelles.
+	Copyright 2002-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -30,83 +30,55 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RObjG_H
-#define RObjG_H
-
-
-//------------------------------------------------------------------------------
 // include files for R Project
-#include <rstring.h>
+#include <robjsc.h>
+using namespace R;
 
-
-//------------------------------------------------------------------------------
-namespace R{
-//------------------------------------------------------------------------------
 
 
 //------------------------------------------------------------------------------
-/**
-* The RObjg class provides a representation of an object to place in a group.
-* @author Pascal Francq
-* @short Object.
-*/
-class RObjG
+//
+// class RObjSC::CloseObj
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+int RObjSC::CloseObj::sortOrder(const void* a,const void* b)
 {
-protected:
+	double af=(*((CloseObj**)(a)))->Ratio;
+	double bf=(*((CloseObj**)(b)))->Ratio;
 
-	/**
-	* The identifier of the object.
-	*/
-	size_t Id;
+	if(af==bf) return(0);
+	if(af>bf)
+		return(-1);
+	else
+		return(1);
+}
 
-	/**
-	* Name of the object.
-	*/
-	RString Name;
-
-public:
-
-	/**
-	* Construct the object.
-	* @param id             Identifier.
-	* @param name           Name of the object.
-	*/
-	RObjG(const size_t id,const RString& name);
-
-	/**
-	* Comparison function
-	*/
-	int Compare(const size_t id) const;
-
-	/**
-	* Comparison function
-	*/
-	int Compare(const RObjG& obj) const;
-
-	/**
-	* Comparison function
-	*/
-	int Compare(const RObjG* obj) const;
-
-	/**
-	* Return the identifier of the object.
-	*/
-	size_t GetId(void) const {return(Id);}
-
-	/**
-	* Return the Name of the object.
-	*/
-	RString GetName(void) const;
-
-	/**
-	* Destruct the object.
-	*/
-	virtual ~RObjG(void);
-};
-
-
-}  //------- End of namespace R ------------------------------------------------
 
 
 //------------------------------------------------------------------------------
-#endif
+//
+// class RObjSC
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+RObjSC::RObjSC(const size_t id,const RString& name,bool social,size_t parentid)
+	: RObjG(id,name), CloseObjs(10), Social(social), ParentId(parentid), MustReOrder(false)
+{
+}
+
+
+//------------------------------------------------------------------------------
+void RObjSC::AddCloseObject(size_t id,double ratio)
+{
+	CloseObjs.InsertPtr(new CloseObj(id,ratio));
+	MustReOrder=true;
+}
+
+
+//------------------------------------------------------------------------------
+RObjSC::~RObjSC(void)
+{
+}

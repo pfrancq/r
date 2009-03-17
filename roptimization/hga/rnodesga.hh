@@ -51,7 +51,7 @@ template<class cNode,class cObj,class cNodes>
 {
 	// Init Nodes
 	Top=new cNode(static_cast<cNodes*>(this),NoNode,MaxAttr);
-	for(size_t i=0;i<this->MaxPtr;i++)
+	for(size_t i=0;i<MaxPtr;i++)
 		InsertPtr(new cNode(static_cast<cNodes*>(this),i,MaxAttr));
 }
 
@@ -80,12 +80,12 @@ template<class cNode,class cObj,class cNodes>
 {
 	size_t i,NewSize;
 
-	if(Used.GetNb()+1>this->GetMaxNb())
+	if(Used.GetNb()+1>GetMaxNb())
 	{
-		NewSize=this->GetMaxNb()+this->GetIncNb();
+		NewSize=GetMaxNb()+GetIncNb();
 
 		// Create New nodes
-		for(i=this->GetMaxNb();i<NewSize;i++)
+		for(i=GetMaxNb();i<NewSize;i++)
 			InsertPtr(new cNode(static_cast<cNodes*>(this),i,MaxAttr));
 	}
 	RCursor<cNode> ptr(*this);
@@ -103,7 +103,7 @@ template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::ReleaseNode(cNode* node)
 {
 	if(!node->Reserved)
-		return;		
+		return;
 	DeleteNodes(node);
 	DeleteObjs(node);
 	if(node->Parent)
@@ -328,17 +328,17 @@ template<class cNode,class cObj,class cNodes>
 	}
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	RCursor<cNode> RNodesGA<cNode,cObj,cNodes>::GetNodes(const cNode& node) const
 {
 	if(!node.NbSubNodes)
-		return(RCursor<cNode>(NodesAss,0,0));	
+		return(RCursor<cNode>(NodesAss,0,0));
 	return(RCursor<cNode>(NodesAss,node.SubNodes,node.SubNodes+node.NbSubNodes));
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	size_t RNodesGA<cNode,cObj,cNodes>::GetNodes(cNode** nodes,const cNode& node)
@@ -346,25 +346,25 @@ template<class cNode,class cObj,class cNodes>
 	NodesAss.GetTab(nodes,node.SubNodes,node.SubNodes+node.NbSubNodes);
 	return(node.NbSubNodes);
 }
-	
-	
-	
+
+
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	RCursor<cObj> RNodesGA<cNode,cObj,cNodes>::GetObjs(const cNode& node) const
 {
 	if(!node.NbSubObjects)
-		return(RCursor<cObj>(ObjsAss,0,0));			
+		return(RCursor<cObj>(ObjsAss,0,0));
 	return(RCursor<cObj>(ObjsAss,node.SubObjects,node.SubObjects+node.NbSubObjects));
 }
 
-		
+
 //---------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	bool RNodesGA<cNode,cObj,cNodes>::VerifyNodes(void)
 {
 	size_t nbobjs=0;
-	RCursor<cNode> Cur(this->GetNodes(Top));
+	RCursor<cNode> Cur(GetNodes(Top));
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if(!Cur()->Verify(nbobjs))
 			return(false);

@@ -47,7 +47,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	void R::RThreadDataG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Init(void)
 {
 	R::RThreadData<cInst,cChromo>::Init();
-	Heuristic=this->Owner->CreateHeuristic();
+	Heuristic=Owner->CreateHeuristic();
 }
 
 
@@ -88,9 +88,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	size_t i;
 
 	R::RInst<cInst,cChromo,cFit,cThreadData>::Init();
-	for(i=this->GetPopSize()+1,C=this->Chromosomes;--i;C++)
+	for(i=GetPopSize()+1,C=Chromosomes;--i;C++)
 		(static_cast<R::RGroups<cGroup,cObj,cChromo>*>(*C))->Init();
-	(static_cast<R::RGroups<cGroup,cObj,cChromo>*>(this->BestChromosome))->Init();
+	(static_cast<R::RGroups<cGroup,cObj,cChromo>*>(BestChromosome))->Init();
 }
 
 
@@ -109,7 +109,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	R::RGroupingHeuristic<cGroup,cObj,cChromo>* h(0);
 
 	if(Heuristic=="FirstFit")
-		h = new R::RFirstFitHeuristic<cGroup,cObj,cChromo>(this->Random,Objs,this->Debug);
+		h = new R::RFirstFitHeuristic<cGroup,cObj,cChromo>(Random,Objs,Debug);
 	return(h);
 }
 
@@ -121,16 +121,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	cChromo **C,**C1,*p;
 	size_t i,j;
 
-	if(this->Debug)
-		this->Debug->BeginFunc("AnalysePop","RInstG");
+	if(Debug)
+		Debug->BeginFunc("AnalysePop","RInstG");
 
 	// Call the default AnalysePop
 	R::RInst<cInst,cChromo,cFit,cThreadData>::AnalysePop();
 
 	// Look if same chromosomes and modify population to have only one copy of each
-	for(i=0,C=this->Chromosomes;i<this->GetPopSize()-1;C++,i++)
+	for(i=0,C=Chromosomes;i<GetPopSize()-1;C++,i++)
 	{
-		for(j=i+1,C1=C+1;j<this->GetPopSize();C1++,j++)
+		for(j=i+1,C1=C+1;j<GetPopSize();C1++,j++)
 		{
 			if((*C)->SameGroupment(*C1))
 			{
@@ -138,20 +138,20 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 					p=(*C1);
 				else
 					p=(*C);
-				if(this->RRand(100)<90)
+				if(RRand(100)<90)
 				{
 					p->Modify();
-					this->PostNotification("RInst::Interact");
+					PostNotification("RInst::Interact");
 					p->Evaluate();
-					this->PostNotification("RInst::Interact");
+					PostNotification("RInst::Interact");
 					p->ToEval=false;
 				}
 			}
 		}
 	}
 
-	if(this->Debug)
-		this->Debug->EndFunc("AnalysePop","RInstG");
+	if(Debug)
+		Debug->EndFunc("AnalysePop","RInstG");
 }
 
 
@@ -159,13 +159,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RandomConstruct(void)
 {
-	if(this->Debug)
-		this->Debug->BeginFunc("RandomConstruct","RInstG");
+	if(Debug)
+		Debug->BeginFunc("RandomConstruct","RInstG");
 
 	R::RInst<cInst,cChromo,cFit,cThreadData>::RandomConstruct();
 
-	if(this->Debug)
-		this->Debug->EndFunc("RandomConstruct","RInstG");
+	if(Debug)
+		Debug->EndFunc("RandomConstruct","RInstG");
 }
 
 
@@ -173,13 +173,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(void)
 {
-	if(this->Debug)
-		this->Debug->BeginFunc("Crossover","RInstG");
+	if(Debug)
+		Debug->BeginFunc("Crossover","RInstG");
 
 	R::RInst<cInst,cChromo,cFit,cThreadData>::Crossover();
 
-	if(this->Debug)
-		this->Debug->EndFunc("Crossover","RInstG");
+	if(Debug)
+		Debug->EndFunc("Crossover","RInstG");
 }
 
 
@@ -187,13 +187,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Mutation(void)
 {
-	if(this->Debug)
-		this->Debug->BeginFunc("Mutation","RInstG");
+	if(Debug)
+		Debug->BeginFunc("Mutation","RInstG");
 
 	R::RInst<cInst,cChromo,cFit,cThreadData>::Mutation();
 
-	if(this->Debug)
-		this->Debug->EndFunc("Mutation","RInstG");
+	if(Debug)
+		Debug->EndFunc("Mutation","RInstG");
 }
 
 
@@ -201,13 +201,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Inversion(void)
 {
-	if(this->Debug)
-		this->Debug->BeginFunc("Inversion","RInstG");
+	if(Debug)
+		Debug->BeginFunc("Inversion","RInstG");
 
 	R::RInst<cInst,cChromo,cFit,cThreadData>::Inversion();
 
-	if(this->Debug)
-		this->Debug->EndFunc("Inversion","RInstG");
+	if(Debug)
+		Debug->EndFunc("Inversion","RInstG");
 }
 
 

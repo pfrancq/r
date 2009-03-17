@@ -49,7 +49,7 @@ template<class cGroup,class cObj,class cGroups>
 
 	// Init of the arrays needed.
 	OrdObjectsAss=new size_t[Objs.GetNb()];
-	NewUsedId=new size_t[this->GetMaxNb()];
+	NewUsedId=new size_t[GetMaxNb()];
 
 	// Suppose no object is assigned
 	for(Objs.Start();!Objs.End();Objs.Next())
@@ -64,7 +64,7 @@ template<class cGroup,class cObj,class cGroups>
 	size_t i;
 
 	// Create the groups
-	for(i=0;i<this->GetMaxNb();i++)
+	for(i=0;i<GetMaxNb();i++)
 		InsertPtr(new cGroup(static_cast<cGroups*>(this),i));
 }
 
@@ -92,18 +92,18 @@ template<class cGroup,class cObj,class cGroups>
 	size_t i,NewSize;
 	size_t* n;
 
-	if(Used.GetNb()+1>this->GetMaxNb())
+	if(Used.GetNb()+1>GetMaxNb())
 	{
-		NewSize=this->GetMaxNb()+this->GetIncNb();
+		NewSize=GetMaxNb()+GetIncNb();
 
 		// Recreate a new NewUsedId array with the new size
 		n=new size_t[NewSize];
-		memcpy(n,NewUsedId,sizeof(size_t)*this->GetMaxNb());
+		memcpy(n,NewUsedId,sizeof(size_t)*GetMaxNb());
 		delete[] NewUsedId;
 		NewUsedId=n;
 
 		// Create New groups
-		for(i=this->GetMaxNb();i<NewSize;i++)
+		for(i=GetMaxNb();i<NewSize;i++)
 			InsertPtr(new cGroup(static_cast<cGroups*>(this),i));
 	}
 	R::RCursor<cGroup> ptr(*this);
@@ -246,7 +246,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	R::RCursor<cObj> R::RGroups<cGroup,cObj,cGroups>::GetObjs(const cGroup& grp) const
+	R::RCursor<cObj> R::RGroups<cGroup,cObj,cGroups>::GetObjs(const RGroup<cGroup,cObj,cGroups>& grp) const
 {
 	return(R::RCursor<cObj>(ObjsAss,grp.SubObjects,grp.SubObjects+grp.NbSubObjects));
 }
@@ -329,7 +329,7 @@ template<class cGroup,class cObj,class cGroups>
 	NbObjs=0;
 
 	// Go through the languages to define the maximal sizes and allocate the matrix
-	NbRows=this->Used.GetNb();
+	NbRows=Used.GetNb();
 	NbCols=groups.Used.GetNb();
 	if((!NbRows)||(!NbCols))
 		return(-1.0);
@@ -355,7 +355,7 @@ template<class cGroup,class cObj,class cGroups>
 	int row,position;
 	row=0;
 
-	R::RCursor<cGroup> Cur1(this->Used);
+	R::RCursor<cGroup> Cur1(Used);
 	for(Cur1.Start();!Cur1.End();Cur1.Next())
 	{
 		memset(VectorColsTemp,0,NbCols*sizeof(double));

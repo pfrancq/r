@@ -50,7 +50,7 @@ template<class cInst,class cChromo>
 	void RThreadData2D<cInst,cChromo>::Init(void)
 {
 	RThreadData<cInst,cChromo>::Init();
-	NbObjs=this->Owner->NbObjs;
+	NbObjs=Owner->NbObjs;
 	if(NbObjs)
 	{
 		Order=new size_t[NbObjs];
@@ -58,15 +58,15 @@ template<class cInst,class cChromo>
 		tmpObjs=new RObj2D*[NbObjs];
 		tmpObj1=new RObj2DContainer(NbObjs+1,"Temporary Object 1",NbObjs);
 		tmpObj2=new RObj2DContainer(NbObjs+2,"Temporary Object 2",NbObjs);
-		tmpInfos=new RGeoInfos(this->Owner->Problem,true);
+		tmpInfos=new RGeoInfos(Owner->Problem,true);
 	}
-	RString Heur(this->Owner->GetHeuristic());
+	RString Heur(Owner->GetHeuristic());
 	if(Heur=="BottomLeft")
-		Heuristic=new RPlacementBottomLeft(NbObjs+2,true,true,this->Owner->Random,true);
+		Heuristic=new RPlacementBottomLeft(NbObjs+2,true,true,Owner->Random,true);
 	if(Heur=="Edge")
-		Heuristic=new RPlacementEdge(NbObjs+2,true,true,this->Owner->Random,true);
+		Heuristic=new RPlacementEdge(NbObjs+2,true,true,Owner->Random,true);
 	if(Heur=="Center")
-		Heuristic=new RPlacementCenter(NbObjs+2,true,true,this->Owner->Random,true);
+		Heuristic=new RPlacementCenter(NbObjs+2,true,true,Owner->Random,true);
 }
 
 
@@ -105,8 +105,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::Init(void)
 {
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
-	this->BestChromosome->Objs=Objs;
-	this->BestChromosome->NbObjs=NbObjs;
+	BestChromosome->Objs=Objs;
+	BestChromosome->NbObjs=NbObjs;
 }
 
 
@@ -122,7 +122,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetAreaParams(const RParam& params)
 {
-	this->thDatas[0]->Heuristic->SetAreaParams(params);
+	thDatas[0]->Heuristic->SetAreaParams(params);
 }
 
 
@@ -130,5 +130,5 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetDistParams(const RParam& params)
 {
-	this->thDatas[0]->Heuristic->SetDistParams(params);
+	thDatas[0]->Heuristic->SetDistParams(params);
 }

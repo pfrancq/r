@@ -187,7 +187,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	{
 		if(Debug)
 			Debug->PrintInfo("Chromosome "+RString::Number(BestInPop->Id)+" best ever");
-		(*BestChromosome)=(*BestInPop);
+		BestChromosome->Copy(*BestInPop);
 		AgeBest=0;
 		AgeNextBestMutation=FreqBestMutation;
 		PostNotification("RInst::Best",(size_t)Gen);

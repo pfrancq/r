@@ -64,12 +64,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RandomConstruct(void)
 {
-	if(this->Instance->Debug)
-		this->Instance->Debug->BeginFunc("RamdomConstruct","RChromoG");
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("RamdomConstruct","RChromoG");
 	Heuristic->Run(static_cast<cChromo*>(this));
-	this->ComputeOrd();
-	if(this->Instance->Debug)
-		this->Instance->Debug->EndFunc("RamdomConstruct","RChromoG");
+	ComputeOrd();
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("RamdomConstruct","RChromoG");
 }
 
 
@@ -91,19 +91,19 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 		// Verify if the 'begin' first groups of parent1
 		for(j=begin+1,Cur1.Start();(--j)&&bInsertIt;Cur1.Next())
-			if((this->Instance->EmptyModifiedGroups&&(Cur1()->CommonObjs(Cur2())))||(!Cur1()->IsCompatible(Cur2())))
+			if((Instance->EmptyModifiedGroups&&(Cur1()->CommonObjs(Cur2())))||(!Cur1()->IsCompatible(Cur2())))
 				bInsertIt=false;
 
 		// Verify if the 'end' groups of parent1 after pos1
 		for(j=end+1,Cur1.GoTo(pos1);(--j)&&bInsertIt;Cur1.Next())
-			if((this->Instance->EmptyModifiedGroups&&(Cur1()->CommonObjs(Cur2())))||(!Cur1()->IsCompatible(Cur2())))
+			if((Instance->EmptyModifiedGroups&&(Cur1()->CommonObjs(Cur2())))||(!Cur1()->IsCompatible(Cur2())))
 				bInsertIt=false;
 
 		// If group can be inserted -> do it
 		if(bInsertIt)
 		{
-			grp=this->ReserveGroup();
-			if(this->Instance->EmptyModifiedGroups)
+			grp=ReserveGroup();
+			if(Instance->EmptyModifiedGroups)
 			{
 				// Only groups with no common objects are inserted -> all objects can be inserted
 				grp->Copy(Cur2());
@@ -143,7 +143,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 				}
 				if(!grp->GetNbObjs())
 				{
-					this->ReleaseGroup(grp);
+					ReleaseGroup(grp);
 				}
 			}
 		}
@@ -162,16 +162,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	size_t i;
 	cGroup* grp;
 
-	if(this->Instance->Debug)
-		this->Instance->Debug->BeginFunc("Crossover","RChromoG");
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("Crossover","RChromoG");
 
 	// Clear the chromosome
 	Clear();
 
 	// Select two crossing sites
-	pos1=this->Instance->RRand(parent1->Used.GetNb());
-	//len1=this->Instance->RRand(parent1->Used.GetNb()-pos1-1)+1;
-	end=this->Instance->RRand(parent1->Used.GetNb()-1)+1;
+	pos1=Instance->RRand(parent1->Used.GetNb());
+	//len1=Instance->RRand(parent1->Used.GetNb()-pos1-1)+1;
+	end=Instance->RRand(parent1->Used.GetNb()-1)+1;
 	if(end>parent1->Used.GetNb()-pos1)
 	{
 		i=parent1->Used.GetNb()-pos1;
@@ -180,7 +180,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	}
 	else
 		begin=0;
-	pos2=this->Instance->RRand(parent2->Used.GetNb());
+	pos2=Instance->RRand(parent2->Used.GetNb());
 
 	// Insert groups from parent2<pos2 and verify that they dont contains "new"
 	// objects insert from parent1.
@@ -190,13 +190,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	RCursor<cGroup> Cur(parent1->Used);
 	for(i=begin+1,Cur.Start();--i;Cur.Next())   // Copy 'begin' first groups
 	{
-			grp=this->ReserveGroup();
+			grp=ReserveGroup();
 			grp->Copy(Cur());
 			(*grp)=(*Cur());
 	}
 	for(i=end+1,Cur.GoTo(pos1);--i;Cur.Next())  // Copy 'end' groups from pos1
 	{
-			grp=this->ReserveGroup();
+			grp=ReserveGroup();
 			grp->Copy(Cur());
 			(*grp)=(*Cur());
 	}
@@ -206,15 +206,15 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	CopyGroups(parent1,parent2,pos1,begin,end,pos2,parent2->Used.GetNb()-pos2);
 
 	// Insert missing objects after a local optimization
-	if(this->Instance->DoLocalOptimisation)
+	if(Instance->DoLocalOptimisation)
 		LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
-	if(this->Instance->DoOptimisation)
+	if(Instance->DoOptimisation)
 		Optimisation();
-	this->ComputeOrd();
+	ComputeOrd();
 
-	if(this->Instance->Debug)
-		this->Instance->Debug->EndFunc("Crossover","RChromoG");
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("Crossover","RChromoG");
 }
 
 
@@ -224,27 +224,27 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 {
 	size_t nb;
 
-	if(this->Instance->Debug)
-		this->Instance->Debug->BeginFunc("Mutation","RChromoG");
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("Mutation","RChromoG");
 
 	// Compute number of groups to eliminate
-	if(this->Used.GetNb()>10)
-		nb=this->Used.GetNb()/5;
+	if(Used.GetNb()>10)
+		nb=Used.GetNb()/5;
 	else
 		nb=2;
 	while(--nb)
-		ReleaseGroup(this->Used[this->Instance->RRand(this->Used.GetNb())]);
+		ReleaseGroup(Used[Instance->RRand(Used.GetNb())]);
 
 	// Insert missing objects after a local optimization
-	if(this->Instance->DoLocalOptimisation)
+	if(Instance->DoLocalOptimisation)
 		LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
-	if(this->Instance->DoOptimisation)
+	if(Instance->DoOptimisation)
 		Optimisation();
-	this->ComputeOrd();
+	ComputeOrd();
 
-	if(this->Instance->Debug)
-		this->Instance->Debug->EndFunc("Mutation","RChromoG");
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("Mutation","RChromoG");
 }
 
 
@@ -254,23 +254,23 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 {
 	size_t g1,g2,hold;
 
-	if(this->Used.GetNb()<3)
+	if(Used.GetNb()<3)
 		return;
 
-	if(this->Instance->Debug)
-		this->Instance->Debug->BeginFunc("Inversion","RChromoG");
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("Inversion","RChromoG");
 
-	g1=this->Instance->RRand(this->Used.GetNb());
-	hold=g2=g1+this->Instance->RRand(this->Used.GetNb()-2)+1;
-	if(g2>this->Used.GetNb()-1)
-		g2-=this->Used.GetNb()-1;
+	g1=Instance->RRand(Used.GetNb());
+	hold=g2=g1+Instance->RRand(Used.GetNb()-2)+1;
+	if(g2>Used.GetNb()-1)
+		g2-=Used.GetNb()-1;
 	RReturnIfFail(g2!=g1);
 
 	// Exchange them in Used
-	this->Used.Exchange(g1,g2);
+	Used.Exchange(g1,g2);
 
-	if(this->Instance->Debug)
-		this->Instance->Debug->EndFunc("Inversion","RChromoG");
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("Inversion","RChromoG");
 }
 
 
@@ -278,13 +278,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Modify(void)
 {
-	if(this->Instance->Debug)
-		this->Instance->Debug->BeginFunc("Modify","RChromoG");
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("Modify","RChromoG");
 
 	Mutation();
 
-	if(this->Instance->Debug)
-		this->Instance->Debug->EndFunc("Modify","RChromoG");
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("Modify","RChromoG");
 }
 
 
@@ -293,19 +293,17 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Verify(void)
 {
 	R::RGroups<cGroup,cObj,cChromo>::Verify();
-	if(!this->Used.GetNb())
+	if(!Used.GetNb())
 		throw RGAException("No Group used.",RGAException::eGAVerify);
 }
 
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>&
-		R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::operator=(const RChromoG& chromo)
+	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Copy(const cChromo& chromo)
 {
-	R::RChromo<cInst,cChromo,cFit,cThreadData>::operator=(chromo);
+	R::RChromo<cInst,cChromo,cFit,cThreadData>::Copy(chromo);
 	R::RGroups<cGroup,cObj,cChromo>::operator=(chromo);
-	return(*this);
 }
 
 

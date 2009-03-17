@@ -136,7 +136,7 @@ public:
 	/**
 	* The assignment operator.
 	*/
-	virtual RChromo& operator=(const RChromo &chromo);
+	virtual void Copy(const cChromo &chromo);
 
 	/**
 	* Destruct the chromosome.

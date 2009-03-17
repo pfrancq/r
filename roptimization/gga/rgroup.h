@@ -39,6 +39,7 @@
 // include files for R Project
 #include <rcursor.h>
 #include <robjs.h>
+#include <rga.h>
 #include <robjg.h>
 
 
@@ -54,7 +55,7 @@ template<class cGroup,class cObj,class cGroups> class RGroups;
 
 //------------------------------------------------------------------------------
 /**
-* Constance representing a non-assignation of an object.
+* Indicate that an object is not assigned.
 */
 const size_t NoGroup=size_t(-1);
 
@@ -157,21 +158,21 @@ public:
 	* returns always true.
 	* @param obj            Pointer to the object to insert.
 	*/
-	virtual bool CanInsert(const cObj* obj) const;
+	virtual bool CanInsert(const cObj* obj);
 
 	/**
 	* Look if an object is "compatible" with a specific group. By default, the
 	* method returns always true.
 	* @param obj            Pointer to the object to verify.
 	*/
-	virtual bool IsCompatible(const cObj* obj) const;
+	virtual bool IsCompatible(const cObj* obj);
 
 	/**
 	* Look if an object can be delete from the group. By default, the method
 	* returns always true.
 	* @param obj            Pointer to the object to delete.
 	*/
-	virtual bool CanDelete(const cObj* obj) const;
+	virtual bool CanDelete(const cObj* obj);
 
 	/**
 	* Assignment operator.

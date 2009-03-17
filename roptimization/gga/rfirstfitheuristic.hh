@@ -50,11 +50,11 @@ template<class cGroup,class cObj,class cGroups>
 {
 	cGroup* grp;
 
-	RCursor<cGroup> G(this->Groups->Used);
+	RCursor<cGroup> G(Groups->Used);
 	for(G.Start();!G.End();G.Next())
 		if(G()->CanInsert(obj))
 			return(G());
-	grp=this->Groups->ReserveGroup();
+	grp=Groups->ReserveGroup();
 	return(grp);
 }
 

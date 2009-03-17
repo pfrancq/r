@@ -6,7 +6,7 @@
 
 	Objects to Group - Implementation.
 
-	Copyright 2001-2008 by the Université Libre de Bruxelles.
+	Copyright 2001-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -30,7 +30,7 @@
 
 
 //------------------------------------------------------------------------------
-// include files for RProject
+// include files for R Project
 #include <robjg.h>
 using namespace R;
 
@@ -45,13 +45,6 @@ using namespace R;
 //------------------------------------------------------------------------------
 RObjG::RObjG(const size_t id,const RString& name)
 	: Id(id), Name(name)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RObjG::RObjG(const RObjG* obj)
-	: Id(obj->Id), Name(obj->Name)
 {
 }
 

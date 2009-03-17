@@ -267,6 +267,9 @@ public:
 	*/
 	class Hash : public RContainer<Hash2,true,true>
 	{
+		using RContainer<Hash2,true,true>::Tab;
+		using RContainer<Hash2,true,true>::MaxPtr;
+
 		/*
 		* Constructor.
 		* @param s               Size of the initial hash table.
@@ -313,7 +316,7 @@ public:
 		const Hash2* GetHash(size_t hash) const
 		{
 			const Hash2* ptr;
-			if((hash>this->MaxPtr)||(!(ptr=static_cast<Hash2*>(this->Tab[hash]))))
+			if((hash>MaxPtr)||(!(ptr=static_cast<Hash2*>(Tab[hash]))))
 				return(0);
 			return(ptr);
 		}
@@ -327,8 +330,8 @@ public:
 		Hash2* GetHash(size_t hash,size_t m,size_t i)
 		{
 			Hash2* ptr;
-			if((hash>this->MaxPtr)||(!(ptr=static_cast<Hash2*>(this->Tab[hash]))))
-				this->InsertPtrAt(ptr=new Hash2(m,i),hash);
+			if((hash>MaxPtr)||(!(ptr=static_cast<Hash2*>(Tab[hash]))))
+				InsertPtrAt(ptr=new Hash2(m,i),hash);
 			return(ptr);
 		}
 

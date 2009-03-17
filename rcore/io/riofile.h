@@ -228,7 +228,7 @@ public:
 	inline off_t GetPos(void) const {return(Pos);}
 
 	/**
-	* Destructs the file.
+	* Destruct the file.
 	*/
 	virtual ~RIOFile(void);
 };

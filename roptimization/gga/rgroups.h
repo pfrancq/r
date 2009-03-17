@@ -58,6 +58,9 @@ namespace R{
 template<class cGroup,class cObj,class cGroups>
 	class RGroups : public RContainer<cGroup,true,false>
 {
+	using RContainer<cGroup,true,false>::GetMaxNb;
+	using RContainer<cGroup,true,false>::GetIncNb;
+
 	// Internal class used to compute the adjusted Rand Index
 	class GroupId
 	{
@@ -196,7 +199,7 @@ public:
 	* after the last object.
 	* @param grp            Group.
 	*/
-	RCursor<cObj> GetObjs(const cGroup& grp) const;
+	RCursor<cObj> GetObjs(const RGroup<cGroup,cObj,cGroups>& grp) const;
 
 	/**
 	* The assignment operator.

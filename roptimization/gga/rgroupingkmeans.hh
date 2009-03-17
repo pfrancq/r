@@ -132,7 +132,7 @@ template<class cGroup,class cObj,class cGroups>
 {
 	Group* g;
 	double cost,bestcost(-2.0);
-	Group* Final;
+	Group* Final(0);
 	size_t NbObjsSub(static_cast<size_t>(NbObjs*level/100));
 
 	while(NbObjsSub*nbsub>NbObjs)

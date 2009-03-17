@@ -91,7 +91,7 @@ template<class cGroup,class cObj,class cGroups>
 	}
 
 	// Verify coherence with the objects.
-	RCursor<cObj> ptr(this->Owner->GetObjs(*static_cast<cGroup*>(this)));
+	RCursor<cObj> ptr(Owner->GetObjs(*static_cast<cGroup*>(this)));
 	for(ptr.Start();!ptr.End();ptr.Next())
 	{
 		if(!ptr())
@@ -139,7 +139,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	bool RGroup<cGroup,cObj,cGroups>::CanInsert(const cObj*) const
+	bool RGroup<cGroup,cObj,cGroups>::CanInsert(const cObj*)
 {
 	return(true);
 }
@@ -147,7 +147,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	bool RGroup<cGroup,cObj,cGroups>::IsCompatible(const cObj*) const
+	bool RGroup<cGroup,cObj,cGroups>::IsCompatible(const cObj*)
 {
 	return(true);
 }
@@ -155,7 +155,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	bool RGroup<cGroup,cObj,cGroups>::CanDelete(const cObj*) const
+	bool RGroup<cGroup,cObj,cGroups>::CanDelete(const cObj*)
 {
 	return(true);
 }

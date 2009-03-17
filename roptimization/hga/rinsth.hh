@@ -52,7 +52,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	void RThreadDataH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::Init(void)
 {
 	RThreadData<cInst,cChromo>::Init();
-	Heuristic=this->Owner->CreateHeuristic();
+	Heuristic=Owner->CreateHeuristic();
 }
 
 
@@ -99,9 +99,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	size_t i;
 
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
-	for(i=this->GetPopSize()+1,C=this->Chromosomes;--i;C++)
+	for(i=GetPopSize()+1,C=Chromosomes;--i;C++)
 		(static_cast<RNodesGA<cNode,cObj,cChromo>*>(*C))->Init();
-	(static_cast<RNodesGA<cNode,cObj,cChromo>*>(this->BestChromosome))->Init();
+	(static_cast<RNodesGA<cNode,cObj,cChromo>*>(BestChromosome))->Init();
 }
 
 
@@ -112,7 +112,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	RTreeHeuristic<cNode,cObj,cChromo>* h(0);
 
 	if(Heuristic=="FirstFit")
-		h=new RFirstNodeHeuristic<cNode,cObj,cChromo>(this->Random,Objs,this->Debug);
+		h=new RFirstNodeHeuristic<cNode,cObj,cChromo>(Random,Objs,Debug);
 	return(h);
 }
 
@@ -121,7 +121,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	void RInstH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::PostRun(void)
 {
-	this->BestChromosome->Verify();
+	BestChromosome->Verify();
 //  ptr->CompactNodes();
 //  ptr->MoveUpNodes();
 }

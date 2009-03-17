@@ -58,6 +58,12 @@ namespace R{
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	class RChromoG : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cChromo>
 {
+	using RChromo<cInst,cChromo,cFit,cThreadData>::Instance;
+	using RGroups<cGroup,cObj,cChromo>::ComputeOrd;
+	using RGroups<cGroup,cObj,cChromo>::ReserveGroup;
+	using RGroups<cGroup,cObj,cChromo>::ReleaseGroup;
+	using RGroups<cGroup,cObj,cChromo>::Used;
+
 protected:
 
 	/**
@@ -84,7 +90,7 @@ public:
 	/**
 	* Clear all the information of the chromosome.
 	*/
-	void Clear(void);
+	virtual void Clear(void);
 
 	/**
 	* Construct a valid solution.
@@ -165,7 +171,7 @@ public:
 	* The assignment operator.
 	* @param chromo         The chromosome used as source.
 	*/
-	RChromoG& operator=(const RChromoG& chromo);
+	virtual void Copy(const cChromo& chromo);
 
 	/**
 	* Destruct the chromosome.

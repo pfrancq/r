@@ -63,12 +63,12 @@ template<class cNode,class cObj,class cNodes>
 	 * Current Node treated.
 	 */
 	cNode* CurNode;
-	
+
 	/**
 	 * Current attributes for which a new node must be found.
 	 */
 	const RAttrList* CurAttr;
-	
+
 public:
 
 	/**
@@ -92,14 +92,14 @@ public:
 	* @param size           The size of the vector.
 	*/
 	template<class T> inline void RandOrder(T* arr,size_t size)
-		{this->Random->RandOrder<T>(arr,size);}
+		{Random->RandOrder<T>(arr,size);}
 
 	/**
 	 * Create a new child node to the current node with the set of attributes
 	 * to place.
 	 */
 	cNode* NewNode(void);
-	
+
 	/**
 	* Find a node where to attach the next object to treat.
 	* @return Pointer to the node.

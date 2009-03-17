@@ -68,7 +68,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	RContainer<cNode,false,false> ToDel(20);
 
 	// Search for all nodes to remove
-	RCursor<cNode> Cur(this->Used);
+	RCursor<cNode> Cur(Used);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		if((Cur()->GetNbObjs())||(Cur()->GetNbNodes()))
@@ -87,11 +87,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	void RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::RandomConstruct(void)
 {
-	if(this->Instance->Debug)
-		this->Instance->Debug->BeginFunc("RamdomConstruct","RChromoH");
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("RamdomConstruct","RChromoH");
 	Heuristic->Run(static_cast<cChromo*>(this));
-	if(this->Instance->Debug)
-		this->Instance->Debug->EndFunc("RamdomConstruct","RChromoH");
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("RamdomConstruct","RChromoH");
 }
 
 
@@ -99,8 +99,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	void RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::Crossover(cChromo* parent1,cChromo* parent2)
 {
-	if(this->Instance->Debug)
-		this->Instance->Debug->BeginFunc("Crossover","RChromoH");
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("Crossover","RChromoH");
 
 	size_t i,j;
 	cNode** Ref1;
@@ -115,8 +115,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	// Node2 from parent2.
 	size_t Nb1=parent1->Used.GetTab(thNodes1);
 	size_t Nb2=parent2->Used.GetTab(thNodes2);
-	this->Instance->RandOrder(thNodes1,Nb1);
-	this->Instance->RandOrder(thNodes2,Nb2);
+	Instance->RandOrder(thNodes1,Nb1);
+	Instance->RandOrder(thNodes2,Nb2);
 	for(i=Nb1+1,Ref1=thNodes1,Node1=Node2=0;(--i)&&(!Node1);Ref1++)
 	{
 		for(j=Nb2+1,Ref2=thNodes2;(--j)&&(!Node1);Ref2++)
@@ -135,7 +135,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 		Clear();
 
 		// Put information related to the crossover
-		if(this->Instance->Debug)
+		if(Instance->Debug)
 		{
 			static char tmp[500];
 			static char tmp2[50];
@@ -148,7 +148,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 			}
 			sprintf(tmp2,") from Chromosome %u used.",parent1->Id);
 			strcat(tmp,tmp2);
-			this->Instance->Debug->PrintInfo(tmp);
+			Instance->Debug->PrintInfo(tmp);
 			sprintf(tmp,"Node %u (",Node2->GetId());
 			for(i=0;i<Node2->GetAttr().GetNbAttr();i++)
 			{
@@ -158,18 +158,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 			}
 			sprintf(tmp2,") from Chromosome %u used.",parent2->Id);
 			strcat(tmp,tmp2);
-				this->Instance->Debug->PrintInfo(tmp);
+				Instance->Debug->PrintInfo(tmp);
 		}
 
 		// 2. parent1 is copied except its nodes having objects attached to Node2 and Node1.
 		thObjects->Clear();
 		Node2->GetAllObjects(*thObjects); // Put all objects of Node2 in ObjectsNode2
-		Node=this->Top->Copy(parent1->Top,Node1,thObjects);
+		Node=Top->Copy(parent1->Top,Node1,thObjects);
 
 		if(Node)
 		{
 			// 3. Node2 is copied at the place of Node1.
-			NewNode=this->ReserveNode();
+			NewNode=ReserveNode();
 			Node->Insert(NewNode);
 			NewNode->Copy(Node2);
 		}
@@ -182,8 +182,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	else
 		RAssertMsg("No crossing nodes where found")
 
-	if(this->Instance->Debug)
-		this->Instance->Debug->EndFunc("Crossover","RChromoH");
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("Crossover","RChromoH");
 }
 
 
@@ -191,24 +191,24 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	void RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::Mutation(void)
 {
-	if(this->Instance->Debug)
-		this->Instance->Debug->BeginFunc("Mutation","RChromoH");
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("Mutation","RChromoH");
 
 	// Choose Ramdomly a node and delete it.
-	cNode* Node=this->NodesAss[this->Instance->RRand(this->NodesAss.GetNb())];
-	if(this->Instance->Debug)
+	cNode* Node=NodesAss[Instance->RRand(NodesAss.GetNb())];
+	if(Instance->Debug)
 	{
 		static char tmp[50];
 		sprintf(tmp,"Node %u use for Mutation",Node->GetId());
-		this->Instance->Debug->PrintInfo(tmp);
+		Instance->Debug->PrintInfo(tmp);
 	}
 	ReleaseNode(Node);
 
 	// Used the heuristic to attach the objects attached to the node
 	Heuristic->Run(static_cast<cChromo*>(this));
 
-	if(this->Instance->Debug)
-		this->Instance->Debug->EndFunc("Mutation","RChromoH");
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("Mutation","RChromoH");
 }
 
 
@@ -233,11 +233,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
-	RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>& RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::operator=(const RChromoH& chromo)
+	void RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::Copy(const cChromo& chromo)
 {
-	RChromo<cInst,cChromo,cFit,cThreadData>::operator=(chromo);
+	RChromo<cInst,cChromo,cFit,cThreadData>::Copy(chromo);
 	RNodesGA<cNode,cObj,cChromo>::operator=(chromo);
-	return(*this);
 }
 
 

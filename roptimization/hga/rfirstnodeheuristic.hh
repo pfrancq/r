@@ -53,18 +53,18 @@ template<class cNode,class cObj,class cNodes>
 		tmpNodes=new cNode*[nodes->MaxPtr];
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	cNode* RFirstNodeHeuristic<cNode,cObj,cNodes>::NewNode(void)
 {
-	cNode* Node=this->Nodes->ReserveNode();
+	cNode* Node=Nodes->ReserveNode();
 	Node->Attr=(*CurAttr);
-	this->Nodes->InsertNode(CurNode,Node);
+	Nodes->InsertNode(CurNode,Node);
 	return(Node);
 }
 
-	
+
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	cNode* RFirstNodeHeuristic<cNode,cObj,cNodes>::FindNode(void)
@@ -73,11 +73,11 @@ template<class cNode,class cObj,class cNodes>
 	size_t NbMax;    // Maximum number of common attributes find so far
 	cNode* Node;     // Pointer to the node than can hold an object
 	cNode **N;       // Pointer to go through the existing nodes
-	
+
 	// Init Part
-	CurNode=this->Nodes->Top;              // Start a the top node
-	CurAttr=&this->CurObj->GetAttr();      // Attributes of the object to attach
-	
+	CurNode=Nodes->Top;              // Start a the top node
+	CurAttr=&CurObj->GetAttr();      // Attributes of the object to attach
+
 	while(true)
 	{
 		// Has the current node subnodes where to attach the object?
@@ -86,15 +86,15 @@ template<class cNode,class cObj,class cNodes>
 			// No -> If the current node has the same attributes as the object to attach, it is the searched node
 			if(CurNode->IsSame(*CurAttr))
 				return(CurNode);
-			
+
 			// Else a new subnode must be created
 			return(NewNode());
 		}
-		
+
 		// Get the subnodes of the current node and randomize them
-		i=this->Nodes->GetNodes(tmpNodes,*CurNode);
+		i=Nodes->GetNodes(tmpNodes,*CurNode);
 		RandOrder<cNode*>(tmpNodes,i);
-		
+
 		// Go trough the subnodes
 		for(N=tmpNodes,NbMax=0,Node=0,i++;--i;N++)
 		{
@@ -104,19 +104,19 @@ template<class cNode,class cObj,class cNodes>
 			// If no common attributes -> go no the next node
 			if(!NbCommon)
 				continue;
-			
+
 			// If all the attributes of the node are in list of attributes of the object to attach -> Found a good branch
 			if(NbCommon==(*N)->GetAttr().GetNb())
 			{
 				// If exactly the same number of attributes -> right node
 				if((*N)->GetAttr().GetNb()==CurAttr->GetNb())
 					return(*N);
-				
+
 				// Else we must go further in the hierarchy
 				Node=CurNode=(*N);
 				break;
 			}
-			
+
 			// Remember the node having the maximum number of common attributes with the object to attach
 			if(NbCommon>NbMax)
 			{
@@ -124,31 +124,31 @@ template<class cNode,class cObj,class cNodes>
 				Node=(*N);
 			}
 		}
-		
+
 		// Verify if we must go to next level
 		if(CurNode==Node)
 			continue;
-		
+
 		// If no node was found -> Create new one
 		if(!Node)
 			return(NewNode());
-		
+
 		// A new node must be created with the common attributes (new level in the hierarchy):
 		// The current subnode must be move to it.
-		// Another node must be created to hold the object to attach		
+		// Another node must be created to hold the object to attach
 		CurNode=NewNode();
 		CurNode->Attr.Inter(*CurAttr,Node->GetAttr());
 		if(CurNode->Parent->IsSame(CurNode->GetAttr()))
-		{			
+		{
 			cNode* parent=CurNode->Parent;
-			this->Nodes->ReleaseNode(CurNode);
-			this->Nodes->MoveNode(parent,Node);
+			Nodes->ReleaseNode(CurNode);
+			Nodes->MoveNode(parent,Node);
 			CurNode=parent;
 		}
 		else
 		{
 			// Verify if the new node is not identical to another node of the parent
-			RCursor<cNode> ParentSub(this->Nodes->GetNodes(CurNode->Parent));
+			RCursor<cNode> ParentSub(Nodes->GetNodes(CurNode->Parent));
 			for(ParentSub.Start();!ParentSub.End();ParentSub.Next())
 				if((ParentSub()!=CurNode)&&(ParentSub()->IsSame(CurNode->GetAttr())))
 					break;
@@ -156,14 +156,14 @@ template<class cNode,class cObj,class cNodes>
 			{
 				// A compatible node exist at the upper level
 				cNode* parent=ParentSub();
-				this->Nodes->ReleaseNode(CurNode);
-				CurNode=parent;				
+				Nodes->ReleaseNode(CurNode);
+				CurNode=parent;
 			}
 			else
-				this->Nodes->MoveNode(CurNode,Node);
+				Nodes->MoveNode(CurNode,Node);
 		}
 		return(NewNode());
-	};	
+	};
 }
 
 

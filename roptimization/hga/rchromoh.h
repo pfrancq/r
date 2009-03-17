@@ -77,7 +77,7 @@ protected:
 	 * Use for objects manipulation functions. Thread-depend data.
 	 */
 	RVectorInt<size_t,true>* thObjects;
-	
+
 public:
 
 	/**
@@ -141,10 +141,10 @@ public:
 	virtual void Verify(void);
 
 	/**
-	* The assigment operator.
+	* The assignment operator.
 	* @param chromo         The chromosome used as source.
 	*/
-	RChromoH& operator=(const RChromoH& chromo);
+	virtual void Copy(const cChromo& chromo);
 
 	/**
 	* Destruct the chromosome.

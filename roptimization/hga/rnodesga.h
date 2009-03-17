@@ -60,7 +60,7 @@ template<class cNode,class cObj,class cNodes>
 	class RNodesGA : public RContainer<cNode,true,false>
 {
 protected:
-	
+
 	/**
 	* Container of all used nodes.
 	*/
@@ -75,7 +75,7 @@ protected:
 	* The Objects to put in a tree.
 	*/
 	RCursor<cObj> Objs;
-	
+
 	/**
 	* Assignment of the objects.
 	*/
@@ -105,7 +105,7 @@ protected:
 	 * Maximum number of attributes for an object.
 	 */
 	size_t MaxAttr;
-	
+
 public:
 
 	/**
@@ -125,12 +125,12 @@ public:
 	 * Get the top node.
 	 */
 	cNode* GetTop(void) const {return(Top);}
-	
+
 	/**
 	 * Get a cursor over all the nodes used.
 	 */
-	RCursor<cNode> GetNodes(void) const {return(RCursor<cNode>(this->Used));}
-	
+	RCursor<cNode> GetNodes(void) const {return(RCursor<cNode>(Used));}
+
 	/**
 	* Clear all the information of the chromosome.
 	*/
@@ -223,7 +223,7 @@ public:
 	* @return Cursor.
 	*/
 	RCursor<cNode> GetNodes(const cNode& node) const;
-	
+
 	/**
 	 * Copy the subnodes of a node into a temporary array. This array must have
 	 * the right size.
@@ -232,14 +232,14 @@ public:
 	 * @return Number of the subnodes copied in the array
 	 */
 	size_t GetNodes(cNode** nodes,const cNode& node);
-	
+
 	/**
 	* Return a cursor over the objects of a node. The cursor cannot iterate
 	* after the last object.
 	* @param node            Node.
 	*/
 	RCursor<cObj> GetObjs(const cNode& node) const;
-	
+
 	/**
 	* Verify the validity of the chromosome.
 	* @return True if the chromosome is a valid one, false else.

@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RGroupingHeuristic.h
+	RSHeuristicSC.h
 
-	Generic Heuristic for Grouping - Header
+	Similarity-based Clustering Heuristic - Header
 
-	Copyright 1998-2007 by the Université Libre de Bruxelles.
+	Copyright 2002-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -30,15 +30,15 @@
 
 
 
-//------------------------------------------------------------------------------
-#ifndef RFirstFitHeuristic_H
-#define RFirstFitHeuristic_H
+//-----------------------------------------------------------------------------
+#ifndef RHeuristicSC_H
+#define RHeuristicSC_H
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // include files for R Project
 #include <rgroupingheuristic.h>
-#include <rdebug.h>
+#include <scga.h>
 
 
 //------------------------------------------------------------------------------
@@ -46,26 +46,39 @@ namespace R{
 //------------------------------------------------------------------------------
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
-* The RFitstFitHeuristic class provides a first fit heuristic.
+* The RHeuristicSC class provides a specific heuristic for the similarity-based
+* clustering algorithm.
 * @author Pascal Francq
-* @short Generic Grouping Heuristic class.
+* @short Similarity-bases Clustering Heuristic.
 */
 template<class cGroup,class cObj,class cGroups>
-	class RFirstFitHeuristic : public RGroupingHeuristic<cGroup,cObj,cGroups>
+	class RHeuristicSC : public RGroupingHeuristic<cGroup,cObj,cGroups>
 {
+	using RGroupingHeuristic<cGroup,cObj,cGroups>::Objs;
 	using RGroupingHeuristic<cGroup,cObj,cGroups>::Groups;
+
+	/**
+	 * Groups to delete because they contain only one "social" object.
+	 */
+	RContainer<cGroup,false,false> ToDel;
 
 public:
 
 	/**
-	* Construct the grouping heuristic.
-	* @param r              The random genrator to use.
-	* @param objs           Pointer to the objects.
-	* @param debug          Debugger.
+	* Construct the heuristic.
+	* @param r               The random generator to use.
+	* @param objs            Pointer to the objects.
+	* @param debug           Debugger.
 	*/
-	RFirstFitHeuristic(RRandom* r,RCursor<cObj> objs,RDebug* debug=0);
+	 RHeuristicSC(R::RRandom* r,R::RCursor<cObj> objs,R::RDebug* debug=0);
+
+	/**
+	* Initialize the heuristic.
+	* @param groups          Pointer to the groups.
+	*/
+	virtual void Init(cGroups* groups);
 
 	/**
 	* Find a group for the next object.
@@ -74,19 +87,24 @@ public:
 	virtual cGroup* FindGroup(cObj* obj);
 
 	/**
+	* Verify that no social profile is alone.
+	*/
+	virtual void PostRun(void);
+
+	/**
 	* Destruct the grouping heuristic.
 	*/
-	virtual ~RFirstFitHeuristic(void);
+	virtual ~RHeuristicSC(void);
 };
 
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rfirstfitheuristic.hh>
+#include <rheuristicsc.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif

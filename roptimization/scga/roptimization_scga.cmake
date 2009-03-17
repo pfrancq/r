@@ -1,0 +1,19 @@
+SET(roptimization_scga_INST_INCLUDES
+    robjsc.h
+    rgroupsc.h
+    rgroupsc.hh
+    rchromosc.h
+    rchromosc.hh
+    rinstsc.h
+    rinstsc.hh
+    rpromkernelsc.h
+    rpromkernelsc.hh
+    rheuristicsc.h
+    rheuristicsc.hh
+    scga.h
+)
+
+SET(roptimization_scga_TARGET_SOURCES
+    robjsc.cpp
+    scga.cpp
+)

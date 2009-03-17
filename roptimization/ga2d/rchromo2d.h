@@ -180,7 +180,7 @@ public:
 	/**
 	* The assignment operator.
 	*/
-	virtual RChromo2D& operator=(const RChromo2D& chromo);
+	virtual void Copy(const cChromo& chromo);
 
 	/**
 	* Gives the object at position (X,Y).
@@ -206,7 +206,7 @@ public:
 	/**
 	* Return the number of levels.
 	*/
-	inline size_t GetNbLevels(void) { return(this->NbLevels); }
+	inline size_t GetNbLevels(void) { return(NbLevels); }
 
 	/**
 	* Return the ith level of the chromosome.

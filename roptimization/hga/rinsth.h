@@ -174,7 +174,7 @@ public:
 	 * Get the heuristic of a given thread.
 	 * @param thread         Number of the thread.
 	 */
-	inline RTreeHeuristic<cNode,cObj,cChromo>* GetHeuristic(size_t thread) {return(this->thDatas[thread]->Heuristic);}
+	inline RTreeHeuristic<cNode,cObj,cChromo>* GetHeuristic(size_t thread) {return(thDatas[thread]->Heuristic);}
 
 	/**
 	* Create a heuristic object.
