@@ -30,15 +30,6 @@
 
 
 //------------------------------------------------------------------------------
-// include files for ANSI C/C++
-/*#include <string.h>
-#include <stdarg.h>
-#include <memory>*/
-
-
-
-
-//------------------------------------------------------------------------------
 // include files for R Library
 #include <rdbsqlite.h>
 using namespace R;

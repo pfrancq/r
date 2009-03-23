@@ -133,7 +133,7 @@ public:
 	* different owner.
 	* @param grp            Group to copy from.
 	*/
-	void Copy(const cGroup* grp);
+	void CopyObjs(const cGroup* grp);
 
 	/**
 	* Delete an object in the group.
@@ -175,10 +175,11 @@ public:
 	virtual bool CanDelete(const cObj* obj);
 
 	/**
-	* Assignment operator.
+	* Copy internal information from a given group, in particular information
+	* that are computer (such as an average similarity inside the group).
 	* @param grp            The group used as source.
 	*/
-	RGroup& operator=(const RGroup& grp);
+	virtual void CopyInfos(const cGroup* grp);
 
 	/**
 	* Return the identifier of the group.

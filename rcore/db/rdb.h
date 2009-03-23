@@ -147,7 +147,7 @@ public:
 
 	/**
 	 * Release a query.
-	 * @param data           Data to release (must be cast).
+	 * @param data            Database-dependent data.
 	 */
 	virtual void ReleaseQuery(void* data)=0;
 
@@ -181,6 +181,7 @@ public:
 	*/
 	virtual ~RDb(void);
 };
+
 
 }  //-------- End of namespace R -----------------------------------------------
 

@@ -327,7 +327,7 @@ void BasicContainer::InsertPtrAt(bool bAlloc,const void* ins,size_t pos,bool del
 	void** ptr;
 
 	if(!ins)
-		throw std::invalid_argument("BasicContainer::InsertPtr : Cannot insert a null pointer");
+		throw std::invalid_argument("BasicContainer::InsertPtrAt : Cannot insert a null pointer");
 	if(pos+1>MaxPtr)
 	{
 		VerifyTab(pos+1+IncPtr);
@@ -393,7 +393,10 @@ void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos,bool del)
 	if(pos==LastPtr-1)
 	{
 		(*ptr)=0;
-		for(;(!(*ptr))&&LastPtr;ptr--,LastPtr--) ;
+		if(NbPtr>1)
+			for(;(!(*ptr))&&LastPtr;ptr--,LastPtr--) ;
+		else
+			LastPtr=0;
 	}
 	else
 	{

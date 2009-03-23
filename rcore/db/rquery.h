@@ -44,6 +44,7 @@
 namespace R{
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
 /**
 * The RQuery class provides a representation of a query for a given database.
@@ -97,7 +98,6 @@ namespace R{
 class RQuery
 {
 protected:
-
 	/**
 	 * Database on which the query is done.
 	 */
@@ -114,7 +114,8 @@ protected:
 	size_raw NbCols;
 
 	/**
-	 * Data depending of the database.
+	 * Data depending of the database. This data is allocated by the
+	 * corresponding RDb::InitQuery.
 	 */
 	void* Data;
 

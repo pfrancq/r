@@ -106,7 +106,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 			if(Instance->EmptyModifiedGroups)
 			{
 				// Only groups with no common objects are inserted -> all objects can be inserted
-				grp->Copy(Cur2());
+				grp->CopyObjs(Cur2());
 				(*grp)=(*Cur2());
 			}
 			else
@@ -191,14 +191,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	for(i=begin+1,Cur.Start();--i;Cur.Next())   // Copy 'begin' first groups
 	{
 			grp=ReserveGroup();
-			grp->Copy(Cur());
-			(*grp)=(*Cur());
+			grp->CopyObjs(Cur());
+			grp->CopyInfos(Cur());
 	}
 	for(i=end+1,Cur.GoTo(pos1);--i;Cur.Next())  // Copy 'end' groups from pos1
 	{
 			grp=ReserveGroup();
-			grp->Copy(Cur());
-			(*grp)=(*Cur());
+			grp->CopyObjs(Cur());
+			grp->CopyInfos(Cur());
 	}
 
 	// Insert groups from parent2<pos2 and verify that they don't contains "new"
@@ -303,7 +303,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Copy(const cChromo& chromo)
 {
 	R::RChromo<cInst,cChromo,cFit,cThreadData>::Copy(chromo);
-	R::RGroups<cGroup,cObj,cChromo>::operator=(chromo);
+	R::RGroups<cGroup,cObj,cChromo>::CopyGrouping(chromo);
 }
 
 

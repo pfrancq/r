@@ -6,7 +6,7 @@
 
 	Groups - Implementation.
 
-	Copyright 2001-2008 by the Université Libre de Bruxelles.
+	Copyright 2001-2009 by the Université Libre de Bruxelles.
 
 	Authors:
 		Pascal Francq (pfrancq@ulb.ac.be).
@@ -254,7 +254,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	R::RGroups<cGroup,cObj,cGroups>& R::RGroups<cGroup,cObj,cGroups>::operator=(const RGroups& grps)
+	void R::RGroups<cGroup,cObj,cGroups>::CopyGrouping(const RGroups& grps)
 {
 	cGroup* ptr;
 
@@ -263,10 +263,9 @@ template<class cGroup,class cObj,class cGroups>
 	for(G.Start();!G.End();G.Next())
 	{
 		ptr=ReserveGroup();           // Reserve a new group
-		ptr->Copy(G());               // Copy the necessary objects
-		(*ptr)=(*G());                // Update internal information.
+		ptr->CopyObjs(G());           // Copy the necessary objects
+		ptr->CopyInfos(G());          // Update internal information.
 	}
-	return(*this);
 }
 
 
@@ -275,11 +274,16 @@ template<class cGroup,class cObj,class cGroups>
 	void R::RGroups<cGroup,cObj,cGroups>::ComputeOrd(void)
 {
 	size_t *oldo,*newo;
-	size_t i,id,nbgrp;
+	size_t i,id,nbgrp,j;
 
-	memset(NewUsedId,0xFF,sizeof(size_t)*this->GetMaxNb());
-	for(i=ObjsAss.GetNb()+1,oldo=ObjectsAss,newo=OrdObjectsAss,nbgrp=0;--i;oldo++,newo++)
+	memset(NewUsedId,0xFF,sizeof(size_t)*GetMaxNb());
+	for(i=ObjsAss.GetNb()+1,oldo=ObjectsAss,newo=OrdObjectsAss,nbgrp=0,j=0;--i;oldo++,newo++,j++)
 	{
+		if(*oldo>=GetMaxNb())
+		{
+			std::cerr<<*oldo<<"<"<<GetMaxNb()<<" ("<<j<<")"<<std::endl;
+			continue;
+		}
 		id=NewUsedId[*oldo];
 		if(id==NoGroup)
 			id=NewUsedId[*oldo]=(nbgrp++);

@@ -51,7 +51,7 @@ public:
 	MYSQL_ROW Row;   // Actual Row
 
 	RQueryMySQL(void) : Result(0) {}
-	~RQueryMySQL(void) {delete Result;}
+	~RQueryMySQL(void) {mysql_free_result(Result);}
 };
 
 
@@ -99,6 +99,8 @@ void RDbMySQL::Create(const RString& db,const RString& host,const RString& user,
 	if(mysql_query(&ms,sql.Latin1()))
 		throw RDbException(mysql_error(&ms));
 }
+
+
 //------------------------------------------------------------------------------
 size_t RDbMySQL::GetLastInsertId(void)
 {

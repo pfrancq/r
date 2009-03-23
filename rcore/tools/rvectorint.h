@@ -46,6 +46,7 @@
 // include files for R Project
 #include <rstd.h>
 #include <random.h>
+#include <rstring.h>
 
 
 //------------------------------------------------------------------------------
@@ -197,8 +198,8 @@ public:
 	void Randomize(RRandom* rand,size_t nb=0);
 
 	/**
-	* Assignation operator.
-	* @param src             List used for the assignation.
+	* Assignment operator.
+	* @param src             List used for the assignment.
 	*/
 	RVectorInt& operator=(const RVectorInt& src);
 
@@ -206,7 +207,13 @@ public:
 	* Return the Integer value at position i. The first Integer value is at position 0.
 	* @param i               Index.
 	*/
-	I operator[](size_t i) const {return(List[i]);}
+	const I& operator[](size_t i) const;
+
+	/**
+	* Return the Integer value at position i. The first Integer value is at position 0.
+	* @param i               Index.
+	*/
+	I& operator[](size_t i);
 
 	/**
 	 * Get the list of the integers contained in the vector.

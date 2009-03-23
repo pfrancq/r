@@ -235,15 +235,14 @@ template<class cGroup,class cObj,class cGroups>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroupSC<cGroup,cObj,cGroups>& RGroupSC<cGroup,cObj,cGroups>::operator=(const RGroupSC& grp)
+	void RGroupSC<cGroup,cObj,cGroups>::CopyInfos(const cGroup* grp)
 {
-	RGroup<cGroup,cObj,cGroups>::operator=(grp);
-	AvgIntraSim=grp.AvgIntraSim;
-	AvgAgreement=grp.AvgAgreement;
-	AvgDisagreement=grp.AvgDisagreement;
-	Centroid=grp.Centroid;
-	ToEval=grp.ToEval;
-	return(*this);
+	RGroup<cGroup,cObj,cGroups>::CopyInfos(grp);
+	AvgIntraSim=grp->AvgIntraSim;
+	AvgAgreement=grp->AvgAgreement;
+	AvgDisagreement=grp->AvgDisagreement;
+	Centroid=grp->Centroid;
+	ToEval=grp->ToEval;
 }
 
 

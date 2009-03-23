@@ -44,10 +44,11 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 RQuery::RQuery(RDb* db,const RString& sql)
-	: Db(db), SQL(sql), Data(db->InitQuery(sql,NbCols))
+	: Db(db), SQL(sql), Data(0)
 {
 	if(!Db)
 		throw RDbException("RQuery::RQuery(RDb*,const RString&) : Null database");
+	Data=Db->InitQuery(sql,NbCols);
 }
 
 

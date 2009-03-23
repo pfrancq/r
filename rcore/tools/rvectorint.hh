@@ -177,12 +177,9 @@ template<class I,bool bOrder>
 template<class I,bool bOrder>
 	bool RVectorInt<I,bOrder>::IsIn(I value) const
 {
-	size_t i;
-	I *ptr;
-
-	for(i=NbInt+1,ptr=List;--i;ptr++)
-		if((*ptr)==value) return(true);
-	return(false);
+	bool find;
+	GetId(value,find);
+	return(find);
 }
 
 
@@ -257,6 +254,7 @@ template<class I,bool bOrder>
 	memset(List,0,MaxInt*sizeof(I));
 }
 
+
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
 	int RVectorInt<I,bOrder>::ReOrderFunction(const void* num1, const void* num2)
@@ -293,6 +291,34 @@ template<class I,bool bOrder>
 	NbInt = src.NbInt;
 	memcpy(List,src.List,sizeof(I)*NbInt);
 	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+template<class I,bool bOrder>
+	const I& RVectorInt<I,bOrder>::operator[](size_t i) const
+{
+	if(i>=NbInt)
+	{
+		if(NbInt)
+			throw std::range_error("RVectorInt<I,bOrder>::operator[] const : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbInt-1)+"]");
+		else
+			throw std::range_error("RVectorInt<I,bOrder>::operator[] const : no elements");
+	}
+	return(List[i]);
+}
+
+
+//------------------------------------------------------------------------------
+template<class I,bool bOrder>
+	I& RVectorInt<I,bOrder>::operator[](size_t i)
+{
+	Verify(i);
+	if(i>=NbInt)
+	{
+		NbInt=i;
+	}
+	return(List[i]);
 }
 
 

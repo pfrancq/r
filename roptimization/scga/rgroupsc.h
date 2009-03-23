@@ -199,10 +199,11 @@ public:
 	inline double ComputeRelSim(const cObj* obj) {return(Owner->Instance->GetSim(GetCentroid()->GetElementId(),obj->GetElementId()));}
 
 	/**
-	* Assignment operator.
+	* Copy internal information from a given group, in particular information
+	* that are computer (such as an average similarity inside the group).
 	* @param grp            The group used as source.
 	*/
-	RGroupSC& operator=(const RGroupSC& grp);
+	virtual void CopyInfos(const cGroup* grp);
 
 	/**
 	* Get the maximal value of the ratio of same feedbacks of an object and

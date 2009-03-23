@@ -114,7 +114,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroup<cGroup,cObj,cGroups>::Copy(const cGroup* grp)
+	void RGroup<cGroup,cObj,cGroups>::CopyObjs(const cGroup* grp)
 {
 	RReturnIfFail(Owner!=grp->Owner);
 	RCursor<cObj> ptr(grp->Owner->GetObjs(*grp));
@@ -163,9 +163,8 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroup<cGroup,cObj,cGroups>& RGroup<cGroup,cObj,cGroups>::operator=(const RGroup<cGroup,cObj,cGroups>&)
+	void RGroup<cGroup,cObj,cGroups>::CopyInfos(const cGroup*)
 {
-	return(*this);
 }
 
 

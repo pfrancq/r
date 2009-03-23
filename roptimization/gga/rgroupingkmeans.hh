@@ -448,6 +448,8 @@ template<class cGroup,class cObj,class cGroups>
 			InitkMeansPlusPlus(nb);
 			break;
 		case Incremental:
+			if(Groups->Used.GetNb()!=nb)
+				throw RException("R::RGroupingKMeans<cGroup,cObj,cGroups>::Run : Incremental k-Means cannot be done due to an incorrect number of clusters");
 			R::RCursor<cGroup> Grp(Groups->Used);
 			for(Grp.Start();!Grp.End();Grp.Next())
 				ComputePrototype(Grp());

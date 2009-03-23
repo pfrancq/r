@@ -471,7 +471,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 {
 	if(Instance->Debug)
 		Instance->Debug->BeginFunc("Optimisation","GChomoIR");
-	std::cout<<"kMeansOptimisation();"<<std::endl;
+//	std::cout<<"kMeansOptimisation();"<<std::endl;
 	if(Instance->Debug)
 		Instance->Debug->EndFunc("Optimisation","GChomoIR");
 }
