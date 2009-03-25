@@ -57,20 +57,9 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::BuildOrder(void)
 {
-	size_t* ass;
-	cObj** tab;
-
-	// Calculate an order
-	for(Objs.Start(),ass=Groups->ObjectsAss,tab=Order,NbObjs=0;!Objs.End();ass++,Objs.Next())
-	{
-		if((*ass)==NoGroup)
-		{
-			(*(tab++))=Objs();
-			NbObjs++;
-		}
-	}
-	if(NbObjs)
-		RandOrder<cObj*>(Order,NbObjs);
+	NbObjsOk=0;
+	NbObjs=Groups->ObjsNoAss.GetTab(Order);
+	RandOrder<cObj*>(Order,NbObjs);
 }
 
 
@@ -83,8 +72,7 @@ template<class cGroup,class cObj,class cGroups>
 	BuildOrder();
 
 	// Group resting objects
-	cObj** CurObj;
-	for(NbObjsOk=0,CurObj=Order;NbObjsOk<NbObjs;CurObj++,NbObjsOk++)
+	for(cObj** CurObj=Order;NbObjsOk<NbObjs;CurObj++,NbObjsOk++)
 	{
 		cGroup* CurGroup=FindGroup(*CurObj);
 		if(!CurGroup)

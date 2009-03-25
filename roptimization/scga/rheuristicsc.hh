@@ -57,27 +57,25 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	cGroup* RHeuristicSC<cGroup,cObj,cGroups>::FindGroup(cObj* obj)
 {
-
-	double maxsim;
-	double sim;
+	double maxsim(-2.0);
 
 	// Look first if one of the object with a ratio is already grouped
 	// -> If yes, return the group
-	cGroup* grp;
+	cGroup* grp(0);
 	obj->FindBestGroup(Groups,grp);
 	if(grp)
 		return(grp);
 
 	// Go through each groups
 	R::RCursor<cGroup> Cur(Groups->Used);
-	for(Cur.Start(),maxsim=-1.0;!Cur.End();Cur.Next())
+	for(Cur.Start(),maxsim=-2.0;!Cur.End();Cur.Next())
 	{
 		// If all the hard constraints are not respected -> skip the group.
 		if(!Cur()->CanInsert(obj))
 			continue;
 
 		// Compute average similarity with the profiles already in the group.
-		sim=Cur()->GetLastMaxSim();
+		double sim(Cur()->GetLastMaxSim());
 		if(sim>maxsim)
 		{
 			maxsim=sim;

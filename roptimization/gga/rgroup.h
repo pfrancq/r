@@ -55,13 +55,6 @@ template<class cGroup,class cObj,class cGroups> class RGroups;
 
 //------------------------------------------------------------------------------
 /**
-* Indicate that an object is not assigned.
-*/
-const size_t NoGroup=size_t(-1);
-
-
-//------------------------------------------------------------------------------
-/**
 * The RGroup class provides a representation for a group that will contain
 * objects.
 * @author Pascal Francq.

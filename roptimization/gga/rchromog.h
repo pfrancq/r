@@ -63,6 +63,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	using RGroups<cGroup,cObj,cChromo>::ReserveGroup;
 	using RGroups<cGroup,cObj,cChromo>::ReleaseGroup;
 	using RGroups<cGroup,cObj,cChromo>::Used;
+	using RGroups<cGroup,cObj,cChromo>::ObjsNoAss;
+	using RGroups<cGroup,cObj,cChromo>::ObjsAss;
 
 protected:
 

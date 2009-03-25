@@ -324,7 +324,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			if(p->Id!=BestInPop->Id)
 			{
 				size_t id=p->Id;
-				(*p)=(*BestInPop);
+				p->Copy(*BestInPop);
 				p->Id=id;
 			}
 			if(Debug)
@@ -347,7 +347,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		{
 			cChromo* p=(*Mut);
 			size_t id=p->Id;
-			(*p)=(*BestChromosome);
+			p->Copy(*BestChromosome);
 			p->Id=id;
 			if(Debug)
 				Debug->PrintInfo("Strong Mutation (BestInPop) -> Chromosome "+RString::Number(p->Id));

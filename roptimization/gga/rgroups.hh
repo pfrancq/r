@@ -163,7 +163,7 @@ template<class cGroup,class cObj,class cGroups>
 	size_t j;
 
 	j=from->SubObjects;
-	ObjectsAss[obj->GetId()]=NoGroup;
+	ObjectsAss[obj->GetId()]=cNoRef;
 	ObjsNoAss.InsertPtr(obj);
 	ObjsAss.DeletePtr(obj);
 	if(!(--from->NbSubObjects))
@@ -191,7 +191,7 @@ template<class cGroup,class cObj,class cGroups>
 	{
 		 // No need to increment obj, because delete moves everything
 		tmpObj=obj();
-		ObjectsAss[tmpObj->GetId()]=NoGroup;
+		ObjectsAss[tmpObj->GetId()]=cNoRef;
 		ObjsNoAss.InsertPtr(tmpObj);
 		ObjsAss.DeletePtr(tmpObj);
 		if(!(--from->NbSubObjects))
@@ -215,7 +215,7 @@ template<class cGroup,class cObj,class cGroups>
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->Verify();
 	for(i=Objs.GetNb()+1,list=ObjectsAss,nbobjs=0;--i;list++)
-		if((*list)!=NoGroup)
+		if((*list)!=cNoRef)
 			nbobjs++;
 	if(ObjsAss.GetNb()+ObjsNoAss.GetNb()!=Objs.GetNb())
 		throw RGAException("Problem with the number of objects: ObjsAss="+RString::Number(ObjsAss.GetNb())+" and ObjsNoAss="+RString::Number(ObjsNoAss.GetNb()),RGAException::eGAVerify);
@@ -279,13 +279,8 @@ template<class cGroup,class cObj,class cGroups>
 	memset(NewUsedId,0xFF,sizeof(size_t)*GetMaxNb());
 	for(i=ObjsAss.GetNb()+1,oldo=ObjectsAss,newo=OrdObjectsAss,nbgrp=0,j=0;--i;oldo++,newo++,j++)
 	{
-		if(*oldo>=GetMaxNb())
-		{
-			std::cerr<<*oldo<<"<"<<GetMaxNb()<<" ("<<j<<")"<<std::endl;
-			continue;
-		}
 		id=NewUsedId[*oldo];
-		if(id==NoGroup)
+		if(id==cNoRef)
 			id=NewUsedId[*oldo]=(nbgrp++);
 		(*newo)=id;
 	}
@@ -328,7 +323,7 @@ template<class cGroup,class cObj,class cGroups>
 	double* ptr;
 	double Total;
 
-	// Init part
+	// Initialize
 	Total=0.0;
 	NbObjs=0;
 
@@ -347,15 +342,15 @@ template<class cGroup,class cObj,class cGroups>
 	for(Cur2.Start(),col=0;!Cur2.End();Cur2.Next())
 		GroupsId.InsertPtr(new GroupId(Cur2()->GetId(),col++));
 
-	// Initialisation of the variable used for computing the subtotal
+	// Initialization of the variable used for computing the sub-totals.
 	a=b=c=d=0.0;
 
-	// Initalisation of the vectors
+	// Initialization of the vectors
 	memset(VectorRows,0,NbRows*sizeof(double));
 	memset(VectorCols,0,NbCols*sizeof(double));
 
 	// For each group of the current chromosome and for each object in this group
-	// -> Compute the differents terms of the total
+	// -> Compute the different terms of the total
 	int row,position;
 	row=0;
 

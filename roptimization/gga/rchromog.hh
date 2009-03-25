@@ -107,7 +107,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 			{
 				// Only groups with no common objects are inserted -> all objects can be inserted
 				grp->CopyObjs(Cur2());
-				(*grp)=(*Cur2());
+				grp->CopyInfos(Cur2());
 			}
 			else
 			{
@@ -209,8 +209,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	if(Instance->DoLocalOptimisation)
 		LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
+	if(ObjsNoAss.GetNb())
+		throw RGAException(RString::Number(ObjsNoAss.GetNb())+" objects are not assigned",RGAException::eGACrossover);
 	if(Instance->DoOptimisation)
+	{
 		Optimisation();
+		if(ObjsNoAss.GetNb())
+			throw RGAException(RString::Number(ObjsNoAss.GetNb())+" objects are not assigned",RGAException::eGACrossover);
+	}
 	ComputeOrd();
 
 	if(Instance->Debug)

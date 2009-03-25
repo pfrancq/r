@@ -122,6 +122,7 @@ public:
 	*/
     template<class T> inline void RandOrder(T *arr,size_t size)
     {
+    	if(!size) return;
 		register size_t i,jump;
 		T aux;
 		register T* p1;
