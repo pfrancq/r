@@ -6,10 +6,8 @@
 
 	Grid for the 2D placement - Header
 
-	Copyright 1998-2005 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 1998-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1998-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -110,15 +108,15 @@ public:
 	/**
 	 * Get the maximal X size allocated.
 	 * @return size_t
-	 */	
+	 */
 	inline size_t GetMaxX(void) const {return(static_cast<size_t>(InternalLimits.X)+1);}
-	
+
 	/**
 	 * Get the maximal Y size allocated.
 	 * @return size_t
-	 */		
+	 */
 	inline size_t GetMaxY(void) const {return(static_cast<size_t>(InternalLimits.Y)+1);}
-	
+
 	/**
 	* This function returns the identificator of the object placed at position
 	* (x,y) or cNoRef if no object is placed there.

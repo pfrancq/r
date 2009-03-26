@@ -4,13 +4,11 @@
 
 	RPromCritValue.h
 
-	Promethee Criterion Value - Header.
+	PROMETHEE Criterion Value - Header.
 
-	Copyright 2000-2007 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
-		Thomas L'Eglise.
+	Copyright 2000-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2000 by Thomas L'Eglise.
+	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -50,23 +48,23 @@ namespace R{
 /**
 * The RPromCritValue class provides a representation for a value of a solution
 * for a given criterion.
-* @short Promethee Solution value.
+* @short PROMETHEE Solution value.
 * @author Pascal Francq & Thomas L'Eglise.
 */
 class RPromCritValue
 {
 	/**
-	* The Fi crit used by Promethee.
+	* The Fi crit used by PROMETHEE.
 	*/
 	double FiCrit;
 
 	/**
-	* The Fi+ crit used by Promethee.
+	* The Fi+ crit used by PROMETHEE.
 	*/
 	double FiCritPlus;
 
 	/**
-	* The Fi- crit used by Promethee.
+	* The Fi- crit used by PROMETHEE.
 	*/
 	double FiCritMinus;
 

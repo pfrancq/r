@@ -6,10 +6,8 @@
 
 	HTML file - Implementation.
 
-	Copyright 2004-2005 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 2004-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2004-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by

@@ -6,10 +6,8 @@
 
 	A Graph - Implementation.
 
-	Copyright 2001-2009 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 2001-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2001-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -141,7 +139,7 @@ void RGraph::MinSpanningTree(RGraph* g)
 	REdge *best=0;
 	double bestw;
 	size_t nb=Vertices.GetNb();
-	bool b1,b2,b;
+	bool b1,b2,b(false);
 
 	g->Clear();
 	if(!nb) return;

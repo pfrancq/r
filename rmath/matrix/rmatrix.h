@@ -6,10 +6,8 @@
 
 	Matrix class - Header.
 
-	Copyright 1999-2008 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 1999-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1999-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -176,13 +174,13 @@ public:
  	 * @param i               Line number of the element.
  	 */
  	const double* operator[](size_t i) const;
- 	
+
  	/**
  	 * Return a given lines from the matrix.
  	 * @param i               Line number of the element.
  	 */
  	double* operator[](size_t i);
- 	 	
+
 	/**
 	* Assign operator.
 	* @param matrix          Matrix.

@@ -6,10 +6,8 @@
 
 	Container Cursor - Header.
 
-	Copyright 1999-2005 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 1999-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1999-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -145,7 +143,7 @@ public:
 *                            inherit from the class declared in the container.
 * \attention When an element is added or removed from the container parsed by
 * the cursor, the cursor is not valid anymore.
-* 
+*
 * Here is an example of a cursor used:
 * @code
 * #include <rcontainer.h>
@@ -159,14 +157,14 @@ public:
 *    O(const RString& name) : Name(name) {}
 *    int Compare(const O& o) const {return(Name.Compare(o.Name));}
 * };
-* 
+*
 * class O2 : public O
 * {
 * public:
 *    int Id;
 *    O2(const RString& name,int id) : O(name), Id(id) {}
 * };
-* 
+*
 * void Test(void)
 * {
 *    RContainer<O,true,true> Cont(20);
@@ -197,13 +195,13 @@ public:
 	* @param src             Source container.
 	*/
 	RCastCursor(const BasicCursor& src) : BasicCursor(src) {}
-	
+
 	/**
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
 	RCastCursor(const RCastCursor<C>& src) : BasicCursor(src) {}
-	
+
 	/**
 	* Construct the cursor.
 	* @param src             Source container.

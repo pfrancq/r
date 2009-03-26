@@ -6,7 +6,8 @@
 
 	Free Polygons are hole in a construction - Implementation.
 
-	(c) 2000-2003 by P. Francq.
+	Copyright 1998-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1998-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -89,7 +90,7 @@ int RFreePolygon::CanContain(const RGeoInfo* info,RPoint& pos) const
 				return(static_cast<int>((100*info->GetArea())/Area));
 			}
 		}
-		
+
 		nbpts--;
 		act=GetConX(&act);
 		nbpts--;

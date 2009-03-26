@@ -6,10 +6,8 @@
 
 	Generic Object that can receive and send messages - Header.
 
-	Copyright 2006 by Pascal Francq.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 2006-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2006-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by

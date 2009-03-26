@@ -3,13 +3,11 @@
 
 	RGenericVectorCursor.h
 
-	Cursor for RGenericSparseMatrix  - Header.
+	Cursor for RGenericSparseMatrix - Header.
 
-	Copyright 2003-2005 by the Université Libre de Bruxelles.
-
-	Authors
-		Pascal Francq (pfrancq@ulb.ac.be)
-		Vandaele Valery(vavdaele@ulb.ac.be)
+	Copyright 2005-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2003-2005 by Vandaele Valery.
+	Copyright 2003-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public

@@ -6,10 +6,8 @@
 
 	Rectangle - Header
 
-	Copyright 1999-2007 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 1999-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1999-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -53,12 +51,12 @@ namespace R{
 class RRect
 {
 public:
-	
+
 	/**
 	* Left limit.
 	*/
 	tCoord X1;
-	
+
 	/**
 	* Bottom limit.
 	*/
@@ -68,7 +66,7 @@ public:
 	* Right limit.
 	*/
 	tCoord X2;
-	
+
 	/**
 	* Upper limit.
 	*/
@@ -108,7 +106,7 @@ public:
 	tCoord GetWidth(void) const {return(Abs(X2-X1+1));}
 
 	/**
-	* Return the height of the rectangle. The height includes the border, i.e. 
+	* Return the height of the rectangle. The height includes the border, i.e.
 	* a rectangle where Y1=Y2 has a height of 1.
 	*/
 	tCoord GetHeight(void) const {return(Abs(Y2-Y1+1));}
@@ -126,7 +124,7 @@ public:
 	* @param height          New height.
 	*/
 	inline void SetHeight(tCoord height) {Y2=height+Y1-1;}
-	
+
 	/**
 	* Set the coordinates of the rectangle.
 	* @param x1              The most left position.
@@ -135,14 +133,14 @@ public:
 	* @param y2              The most up position.
 	*/
 	inline void Set(tCoord x1,tCoord y1,tCoord x2,tCoord y2) {X1=x1; Y1=y1; X2=x2; Y2=y2;}
-	
+
 	/**
 	* Set the coordinates of the rectangle based on a shape.
 	* @param x               The most left position.
 	* @param y               The most bottom position
 	* @param w               Width.
 	* @param h               Height.
-	*/ 
+	*/
 	inline void SetShape(tCoord x,tCoord y,tCoord w,tCoord h) {X1=x; Y1=y; X2=x+w-1; Y2=y+h-1;}
 
 	/**
@@ -166,7 +164,7 @@ public:
 	* @param y              The y to add.
 	*/
 	void Translation(tCoord x,tCoord y);
-	
+
 	/**
 	* Put a rectangle at a given position.
 	* @param x              X position.
@@ -212,7 +210,7 @@ public:
 	* @param rect            Reference rectangle.
 	*/
 	bool Overlap(const RRect& rect) const;
-	
+
 	/**
 	* This function returns true if the two rectangles overlapped.
 	* @param rect            Reference rectangle.
@@ -235,13 +233,13 @@ public:
 	* The assign Operator.
 	*/
 	inline RRect& operator=(const RRect& rect) {X1=rect.X1;Y1=rect.Y1;X2=rect.X2;Y2=rect.Y2;return(*this);}
-	
+
 	/**
 	 * Get the (bottom,left) point.
 	 * @return RPoint
 	 */
 	RPoint inline GetPt1(void) const {return(RPoint(X1,Y1));}
-	
+
 	/**
 	 * Get the (upper,right) point.
 	 * @return RPoint

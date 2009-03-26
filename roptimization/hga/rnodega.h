@@ -6,10 +6,8 @@
 
 	GA Node - Header.
 
-	Copyright 1998-2008 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 1998-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1998-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -141,18 +139,18 @@ public:
 	 * Get the parent of the node.
 	 */
 	cNode* GetParent(void) const {return(Parent);}
-	
+
 	/**
 	* Return a reference of the attributes.
 	*/
 	const RAttrList& GetAttr(void) const {return(Attr);}
-	
+
 	/**
 	 * Assign a given list of attributes to the current node.
 	 * @param attr           List of attributes.
 	 */
 	void SetAttr(const RAttrList& attr);
-	
+
 	/**
 	* Verify if a given set of attributes can be attached.
 	* @param attr           List of attributes.
@@ -184,13 +182,13 @@ public:
 	* @param node           Node to insert.
 	*/
 	void Insert(cNode* node) {Owner->InsertNode(static_cast<cNode*>(this),node);}
-	
+
 	/**
 	* Method call to delete a node.
 	* @param node            Node to delete.
 	*/
 	void Delete(cNode* node) {Owner->DeleteNode(node);}
-	
+
 	/**
 	* Copy all the objects and the nodes of a node except one node if it exists.
 	* The two nodes have to be of two different owners.
@@ -198,7 +196,7 @@ public:
 	* @param copyobjs       Must the objects of from be copied?
 	* @param objs           Objects which nodes must not be copied.
 	* @param excluded       Node that must (eventually) not be copied.
-	* 
+	*
 	* This method can be used to copy a whole tree "from" into another "to":
 	* @code
 	* to->GetTop()->Copy(from->GetTop);
@@ -264,7 +262,7 @@ public:
 	 * @param objs           Vector that will hold the objects' identifiers.
 	 */
 	void GetAllObjects(RVectorInt<size_t,true>& objs) const;
-	
+
 	/**
 	* Assignment operator.
 	* @param node           The node used as source.
@@ -303,7 +301,7 @@ public:
 	 * @param objs           Objects to verify.
 	 */
 	bool HasSomeObjects(RVectorInt<size_t,true>* objs) const;
-	
+
 	/**
 	* Destruct the node.
 	*/

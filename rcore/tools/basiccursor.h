@@ -6,10 +6,8 @@
 
 	Basic Container Cursor - Header.
 
-	Copyright 2005 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 2005-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2005-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -58,7 +56,7 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
  * This class represent a basic cursor for a basic container. This class cannot
- * be instantiated, use R::RCursor or R::RCastCursor instead. 
+ * be instantiated, use R::RCursor or R::RCastCursor instead.
  * @author Pascal Francq
  * @short Basic Container Cursor.
  */

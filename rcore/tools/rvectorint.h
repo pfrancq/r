@@ -6,11 +6,9 @@
 
 	Class representing a list of integer values - Header
 
-	Copyright 1998-2009 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
-		Vandaele Valery(vvandaele@ulb.ac.be).
+	Copyright 2001-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2000-2001 by Vandaele Valery.
+	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public

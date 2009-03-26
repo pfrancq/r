@@ -6,10 +6,8 @@
 
 	Connections for the 2D Placement (Geometric Information Part) - Implementation.
 
-	Copyright 2000-2005 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 1998-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1998-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -96,7 +94,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 	// Init Part
 	i1=i2=0;
 	Prom.AddCriterion(weight=new RPromLinearCriterion(RPromCriterion::Maximize,Cons->WeightParams,"Weight"));
-	Prom.AddCriterion(dist=new RPromLinearCriterion(RPromCriterion::Minimize,Cons->DistParams,"Distance"));	
+	Prom.AddCriterion(dist=new RPromLinearCriterion(RPromCriterion::Minimize,Cons->DistParams,"Distance"));
 	treat=new RGeoInfo*[Infos->GetMaxPos()+1];
 
 	// Go through each info
@@ -138,7 +136,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 		while((--Nb)&&(!bFound))
 		{
 			(*info)->Boundary(r2);
-			if(r1.X1<r2.X1) r2.X1=r1.X1; 
+			if(r1.X1<r2.X1) r2.X1=r1.X1;
 			if(r1.Y1<r2.Y1) r2.Y1=r1.Y1;
 			if(r1.X2>r2.X2) r2.X2=r1.X2;
 			if(r1.Y2>r2.Y2) r2.Y2=r1.Y2;
@@ -162,7 +160,7 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 		while((--Nb)&&(!bFound))
 		{
 			treat[(*best)->GetId()]->Boundary(r2);      // Get The boundary rectangle
-			if(r1.X1<r2.X1) r2.X1=r1.X1; 
+			if(r1.X1<r2.X1) r2.X1=r1.X1;
 			if(r1.Y1<r2.Y1) r2.Y1=r1.Y1;
 			if(r1.X2>r2.X2) r2.X2=r1.X2;
 			if(r1.Y2>r2.Y2) r2.Y2=r1.Y2;

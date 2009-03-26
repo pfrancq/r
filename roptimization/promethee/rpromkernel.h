@@ -4,13 +4,11 @@
 
 	RPromKernel.h
 
-	Promethee Kernel - Header.
+	PROMETHEE Kernel - Header.
 
-	Copyright 2000-2008 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
-		Thomas L'Eglise.
+	Copyright 2000-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2000 by Thomas L'Eglise.
+	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -49,7 +47,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RPromKernel provides a kernel to manage Promethee session.
+* The RPromKernel provides a kernel to manage PROMETHEE session.
 * @short PPromethee Kernel.
 * @author Pascal Francq & Thomas L'Eglise.
 */
@@ -88,7 +86,7 @@ public:
 	RPromKernel(const char* name,size_t sol,size_t crit);
 
 	/**
-	* Applicates the evaluation functions for the solution.
+	* Compute the evaluation functions for the solutions.
 	*/
 	void ComputeEvalFunc(void);
 
@@ -98,11 +96,11 @@ public:
 	virtual void ComputePrometheeII(void);
 
 	/**
-	 * Add a new critetion.
+	 * Add a new criterion.
 	 * @param crit           Pointer to the new criterion.
 	 */
 	void AddCriterion(RPromCriterion* crit);
-	
+
 	/**
 	* Create a new solution.
 	*/
@@ -152,7 +150,7 @@ public:
 	RPromSol* GetBestSol(void);
 
 	/**
-	* Return the solutions order by fit increase. The resulting arry must be
+	* Return the solutions order by fit increase. The resulting array must be
 	* deleted by the caller.
 	*/
 	RPromSol** GetSols(void);

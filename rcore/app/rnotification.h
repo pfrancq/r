@@ -6,10 +6,8 @@
 
 	Generic notification - Header.
 
-	Copyright 2006 by Pascal Francq.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 2006-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2006-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -89,7 +87,7 @@ class RNotification
 	 * Object which is currently receiving the notification.
 	 */
 	RObject* Receiver;
-	
+
 public:
 
 	/**
@@ -120,7 +118,7 @@ public:
 	* Get the sender of the notification.
 	*/
 	RObject* GetSender(void) const {return(Sender);}
-	
+
 	/**
 	* Get the receiver of the notification.
 	*/
@@ -150,7 +148,7 @@ public:
 *    MyObject(const RString& name) : RObject(name)
 *    {
 *       InsertObserver(HANDLER(MyObject::Handle),"Example");
-*    } 
+*    }
 *    virtual RCString GetClassName(void) const {return("MyObject");}
 *    void Handle(const RNotification& notification)
 *    {
@@ -163,10 +161,10 @@ public:
 *    MyObject Obj1("Object 1");
 *    MyObject Obj2("Object 2");
 *    NotificationCenter.PostNotification("Message",(long)3);
-* } 
+* }
 * @endcode
 * To be sure that PostNotification calls the right handlers, it is always
-* better to explicity cast the parameter when sending. 
+* better to explicity cast the parameter when sending.
 * @short Notification with Data.
 * @author Pascal Francq
 */
@@ -230,7 +228,7 @@ template<class T> T GetData(const RNotification& notification)
 *    MyObject(const RString& name) : RObject(name)
 *    {
 *       InsertObserver(HANDLER(MyObject::Handle),"Example");
-*    } 
+*    }
 *    virtual RCString GetClassName(void) const {return("MyObject");}
 *    void Handle(const RNotification& notification)
 *    {

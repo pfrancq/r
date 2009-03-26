@@ -4,13 +4,11 @@
 
 	RPromCriterion.h
 
-	Promethee Criterion - Header.
+	PROMETHEE Criterion - Header.
 
-	Copyright 2000-2008 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
-		Thomas L'Eglise.
+	Copyright 2000-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2000 by Thomas L'Eglise.
+	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -52,7 +50,7 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RPromCriterion class provides a representation for a Promethee Criterion.
-* @short Promethee Criterion.
+* @short PROMETHEE Criterion.
 * @author Pascal Francq & Thomas L'Eglise.
 */
 class RPromCriterion : protected RContainer<RPromCritValue,false,false>
@@ -65,8 +63,8 @@ public:
 	*/
 	enum tCriteriaType
 	{
-		Minimize                 /** The criteria must be maximalized.*/,
-		Maximize                 /** The criteria must be minimalized.*/
+		Minimize                 /** The criteria must be maximized.*/,
+		Maximize                 /** The criteria must be minimized.*/
 	};
 
 protected:
@@ -201,8 +199,8 @@ public:
 
 //------------------------------------------------------------------------------
 /**
-* The RPromLinearCriterion class provides a representation for a Promethee Criterion.
-* @short Linear Promethee Criterion.
+* The RPromLinearCriterion class provides a representation for a PROMETHEE Criterion.
+* @short Linear PROMETHEE Criterion.
 * @author Pascal Francq.
 */
 class RPromLinearCriterion : public RPromCriterion
@@ -210,12 +208,12 @@ class RPromLinearCriterion : public RPromCriterion
 protected:
 
 	/**
-	* Value for the preference threshold of the Promethee method.
+	* Value for the preference threshold of the PROMETHEE method.
 	*/
 	double P;
 
 	/**
-	* Value for the indifference threshold of the Promethee method.
+	* Value for the indifference threshold of the PROMETHEE method.
 	*/
 	double Q;
 
@@ -269,11 +267,11 @@ public:
 	* the value v. This preference must be in [0,1].
 	*
 	* This method compares the normalized difference of values, d:
-	* -# If d<Q=: No solutions must be prefered to the other one. The method
+	* -# If d<Q=: No solutions must be preferred to the other one. The method
 	*            returns 0.
 	* -# If Q<d<P: One of the solution has a degree of preference computed as
 	*              (d-Q)/(P-Q).
-	* -# If d>=P: One of the solution must always be prefered. The method
+	* -# If d>=P: One of the solution must always be preferred. The method
 	*            returns 1.
 	* @param u              Value of the first solution.
 	* @param v              Value of the second solution.
@@ -282,7 +280,7 @@ public:
 	virtual double ComputePref(double u,double v);
 
 	/**
-	* Create a parameter corresponding to a promethee criteria.
+	* Create a parameter corresponding to a PROMETHEE criteria.
 	* @param name            Name of the criteria.
 	*/
 	static RParam* CreateParam(const R::RString& name);

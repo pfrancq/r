@@ -4,12 +4,10 @@
 
 	RPromKernel.cpp
 
-	Promethee Kernel - Implementation.
+	PROMETHEE Kernel - Implementation.
 
-	Copyright 2000-2008 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 2000-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -69,7 +67,7 @@ void RPromKernel::ComputePrometheeII(void)
 {
 	double SumWTot = 0.0;
 
-	// Calculation of Fit Crit fot the criteria.
+	// Calculation of Fit Crit for the criteria.
 	RCursor<RPromCriterion> crit(Criteria);
 	for(crit.Start();!crit.End();crit.Next())
 	{
@@ -78,11 +76,11 @@ void RPromKernel::ComputePrometheeII(void)
 		crit()->ComputeFiCrit(this);
 	}
 
-	// Calculation of the flux.
+	// Calculation of the flow.
 	RCursor<RPromSol> sol(Solutions);
 	for(sol.Start();!sol.End();sol.Next())
 	{
-		sol()->FiPlus=sol()->FiMinus=0.0;		
+		sol()->FiPlus=sol()->FiMinus=0.0;
 		RCursor<RPromCritValue> value(*sol());
 		for(crit.Start(),value.Start();!value.End();crit.Next(),value.Next())
 		{

@@ -6,10 +6,8 @@
 
 	Parameter - Implementation.
 
-	Copyright 2003-2008 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 2003-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 2003-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by

@@ -6,10 +6,8 @@
 
 	Connections for the 2D Placement - Implementation.
 
-	Copyright 2000-2008 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 1998-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1998-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -86,7 +84,7 @@ double RConnections::GetCon(RGeoInfos* infos,RGeoInfo* cur)
 	double sum(0.0);
 	RCursor<RObj2DConnector> con2;
 	RCursor<RConnection> tab;
-	bool cont;
+	bool cont(false);
 	RGeoInfo *tmp;
 
 	// Go through all connectors

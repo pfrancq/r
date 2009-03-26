@@ -6,10 +6,8 @@
 
 	Object for 2D placement GA - Header
 
-	Copyright 1999-2008 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 1998-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1998-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -325,14 +323,14 @@ public:
 
 	/**
 	* Construct an 2D object.
-	* @param id             The identificator of the object.
+	* @param id             The identifier of the object.
 	* @param deformable     Specify if the object is deformable.
 	*/
 	RObj2D(size_t id,bool deformable);
 
 	/**
 	* Construct an 2D object.
-	* @param id             Identificator of the object.
+	* @param id             Identifier of the object.
 	* @param name           Name of the object.
 	* @param deformable     Specify if the object is deformable.
 	*/
@@ -340,7 +338,7 @@ public:
 
 	/**
 	* Construct an 2D object.
-	* @param id             Identificator of the object.
+	* @param id             Identifier of the object.
 	* @param name           Name of the object.
 	* @param deformable     Specify if the object is deformable.
 	*/
@@ -361,10 +359,10 @@ public:
 	int Compare(const RObj2D& o) const {if(IsIn(o.Id)) return(0); else return(CompareIds(Id,o.Id));}
 
 	/**
-	* This function compares an object and an identificator and returns 0 if
+	* This function compares an object and an identifier and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param id             Identificator used for the comparison.
+	* @param id             Identifier used for the comparison.
 	*/
 	int Compare(const size_t id) const {if(IsIn(id)) return(0); else return(CompareIds(Id,id));}
 
@@ -372,7 +370,7 @@ public:
 	* This function compares an object and a name and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param name           Name used for the comparaison.
+	* @param name           Name used for the comparison.
 	*/
 	int Compare(const RString& name) const {return(Name.Compare(name));}
 
@@ -380,7 +378,7 @@ public:
 	* This function compares an object and a name and returns 0 if
 	* there are the same.
 	* This function is used for the class RContainer.
-	* @param name           Name used for the comparaison.
+	* @param name           Name used for the comparison.
 	*/
 	int Compare(const char* name) const {return(Name.Compare(name));}
 
@@ -410,7 +408,7 @@ public:
 	bool IsOriSet(ROrientation o);
 
 	/**
-	* Return the identificator of the object.
+	* Return the identifier of the object.
 	*/
 	inline size_t GetId(void) const {return(Id);}
 
@@ -441,15 +439,15 @@ public:
 
 	/**
 	* Add a connector to this object
-	* @param id             Identificator of the connector.
+	* @param id             Identifier of the connector.
 	* @param x              X-Coordinate of the connection point.
 	* @param y              Y-Coordinate of the connection point.
 	*/
 	void AddConnector(size_t id,unsigned x,unsigned y);
 
 	/**
-	* Return the connector corresponding to a given identificator.
-	* @param id             Identificator used for the search.
+	* Return the connector corresponding to a given identifier.
+	* @param id             Identifier used for the search.
 	*/
 	RObj2DConnector* GetConnector(size_t id) {return(Connectors.GetPtr<size_t>(id));}
 
@@ -461,7 +459,7 @@ public:
 
 	/**
 	* Verify if a given object is in the container or not.
-	* @param id             Identificator of the object.
+	* @param id             Identifier of the object.
 	* @return true if the object is in, else false.
 	*/
 	virtual bool IsIn(size_t id) const {return(Id==id);}

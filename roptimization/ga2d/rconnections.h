@@ -6,10 +6,8 @@
 
 	Connections for the 2D Placement - Header.
 
-	Copyright 2000-2008 by the Université Libre de Bruxelles.
-
-	Authors:
-		Pascal Francq (pfrancq@ulb.ac.be).
+	Copyright 1998-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1998-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -71,7 +69,7 @@ class RConnections : public RContainer<RConnection,true,false>
 	* PROMETHEE Parameters for the distance.
 	*/
 	RParam* DistParams;
-	
+
 	/**
 	* PROMETHEE Parameters for the weight.
 	*/
@@ -88,7 +86,7 @@ public:
 	* Initialize all the necessary structures when all connections are inserted.
 	*/
 	void Init(void);
-	
+
 	/**
 	* Set the parameters for PROMETHEE.
 	* @param dist           PROMETHEE Parameters for the distance.
