@@ -227,7 +227,7 @@ void RTextFile::Next(void)
 		Line++;
 
 		// DOS only
-		if((*NextRead)==10) ReadTwice=true;
+		if((!End())&&(*NextRead)==10) ReadTwice=true;
 	}
 
 	if(End())
