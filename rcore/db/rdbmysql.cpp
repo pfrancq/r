@@ -62,7 +62,7 @@ public:
 
 //------------------------------------------------------------------------------
 RDbMySQL::RDbMySQL(const RString& db,const RString& host,const RString& user,const RString& pwd,const RString& coding)
-	: RDb(RDb::MySQL), Coding(0)
+	: RDb(RDb::MySQL), Db(0), Coding(0)
 {
 	try
 	{
@@ -72,13 +72,13 @@ RDbMySQL::RDbMySQL(const RString& db,const RString& host,const RString& user,con
 	{
 		throw RDbException(RString(e.GetMsg())+" for database "+db);
 	}
-	MYSQL* ret=mysql_init(&MySQL);
-	if((!ret)||(mysql_errno(&MySQL)))
-		throw RDbException(mysql_error(&MySQL));
-	Connection=mysql_real_connect(&MySQL,host,user,pwd,db,0,"",0);
-	if((!Connection)||(mysql_errno(&MySQL)))
-		throw RDbException(mysql_error(&MySQL));
+	Db=mysql_init(NULL);
+	if((!Db)||(mysql_errno(Db)))
+		throw RDbException(mysql_error(Db));
+	if((!mysql_real_connect(Db,host,user,pwd,db,0,"",0))||(mysql_errno(Db)))
+		throw RDbException(mysql_error(Db));
 }
+
 
 //------------------------------------------------------------------------------
 void RDbMySQL::Create(const RString& db,const RString& host,const RString& user,const RString& pwd)
@@ -112,7 +112,7 @@ size_t RDbMySQL::GetLastInsertId(void)
 void* RDbMySQL::InitQuery(const RString& sql,size_raw& nbcols)
 {
 	RQueryMySQL* Data(new RQueryMySQL());
-	if(!Connection)
+	if(!Db)
 		throw RDbException("Database not initialize");
 	if(sql.IsEmpty())
 		throw RDbException("Empty SQL");
@@ -131,8 +131,8 @@ void* RDbMySQL::InitQuery(const RString& sql,size_raw& nbcols)
 		throw RDbException("Error in encoded data: "+sql);
 	}
 
-	if(mysql_real_query(Connection,SQL_utf8,SQL_utf8.GetLen()))
-		throw RDbException("Error in query "+sql+": "+mysql_error(&MySQL));
+	if(mysql_real_query(Db,SQL_utf8,SQL_utf8.GetLen()))
+		throw RDbException("Error in query "+sql+": "+mysql_error(Db));
 
 	// Find the SQL cmd
 	ptr=sql();
@@ -153,9 +153,9 @@ void* RDbMySQL::InitQuery(const RString& sql,size_raw& nbcols)
 	// It is a SELECT, a DESC or a SHOW command -> retrieve results
 	if((size<7)&&((cmd=="SELECT")||(cmd=="SHOW")||(cmd=="DESC")))
 	{
-		Data->Result=mysql_store_result(Connection);
+		Data->Result=mysql_store_result(Db);
 		if(!Data->Result)
-			throw RDbException(mysql_error(&MySQL));
+			throw RDbException(mysql_error(Db));
 		nbcols=mysql_num_fields(Data->Result);
 	}
 	else
@@ -216,6 +216,6 @@ RString RDbMySQL::GetField(const void* data,size_t index)
 //------------------------------------------------------------------------------
 RDbMySQL::~RDbMySQL(void)
 {
-	if(Connection)
-		mysql_close(Connection);
+	if(Db)
+		mysql_close(Db);
 }

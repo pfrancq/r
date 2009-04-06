@@ -87,7 +87,7 @@ template<class cGroup,class cObj,class cGroups>
 	// Verify that no object of the group has the same parent of a disagreement ratios greater than the
 	// maximum allowed.
 	double tmp;
-	size_t prof1(obj->GetElementId());
+	const cObj* prof1(obj);
 	size_t usr1(obj->GetParentId());
 	RCursor<cObj> ptr(Owner->GetObjs(*this));
 	for(ptr.Start(),LastMaxSim=-2.0;!ptr.End();ptr.Next())
@@ -97,11 +97,11 @@ template<class cGroup,class cObj,class cGroups>
 			return(false);
 
 		// Maximum disagreement must be respected
-		if(Owner->Instance->GetDisagreementRatio(prof1,ptr()->GetElementId())>=Owner->Instance->Params->MinDisagreement)
+		if(Owner->Instance->GetDisagreementRatio(prof1,ptr())>=Owner->Instance->Params->MinDisagreement)
 		  	return(false);
 
 		// Verify the minimum similarity and remember the best similarity
-		tmp=Owner->Instance->GetSim(prof1,ptr()->GetElementId());
+		tmp=Owner->Instance->GetSim(prof1,ptr());
 		if(tmp<=0)
 			return(false);
 
@@ -144,13 +144,12 @@ template<class cGroup,class cObj,class cGroups>
 {
 	if(!NbSubObjects)
 		return(0.0);
-	size_t prof(obj->GetElementId());
 	double Sum(0.0);
 	RCursor<cObj> ptr(Owner->GetObjs(*this));
 	for(ptr.Start();!ptr.End();ptr.Next())
 	{
 		if(ptr()==obj) continue;
-		Sum+=Owner->Instance->GetSim(prof,ptr()->GetElementId());
+		Sum+=Owner->Instance->GetSim(obj,ptr());
 	}
 	return(Sum);
 }
@@ -208,8 +207,8 @@ template<class cGroup,class cObj,class cGroups>
 		{
 			for(CurObj2.GoTo(i+1);!CurObj2.End();CurObj2.Next())
 			{
-				AvgAgreement+=Owner->Instance->GetAgreementRatio(CurObj()->GetElementId(),CurObj2()->GetElementId());
-				AvgDisagreement+=Owner->Instance->GetDisagreementRatio(CurObj()->GetElementId(),CurObj2()->GetElementId());
+				AvgAgreement+=Owner->Instance->GetAgreementRatio(CurObj(),CurObj2());
+				AvgDisagreement+=Owner->Instance->GetDisagreementRatio(CurObj(),CurObj2());
 			}
 		}
 		AvgAgreement/=static_cast<double>(NbSubObjects);
@@ -244,25 +243,355 @@ template<class cGroup,class cObj,class cGroups>
 }
 
 
-//---------------------------------------------------------------------------
-/*
+//------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	double RGroupSC::GetMaxRatioSame(GCAObj* obj)
+	size_t RGroupSC<cGroup,cObj,cGroups>::Partition(size_t left,size_t  right,size_t  pivotIndex)
 {
-	double max,tmp;
-	size_t prof=obj->GetElementId();
-
-	// Look if in the other objects, there is a better one
-	RCursor<GCAObj> ptr=Owner->GetObjs(*this);
-	for(ptr.Start(),max=0.0;!ptr.End();ptr.Next())
-	{
-		tmp=Owner->Instance->GetAgreementRatio(prof,ptr()->GetElementId());
-		if(tmp>max)
-			max=tmp;
-	}
-	return(max);
+	 cObj* pivotPtr(Owner->thObjs2[pivotIndex]);
+	 double pivotValue(Owner->Instance->GetSim(pivotPtr,GetCentroid()));
+	 Owner->thObjs2[pivotIndex]=Owner->thObjs2[right];
+	 Owner->thObjs2[right]=pivotPtr;
+	 size_t storeIndex(left);
+	 cObj** iPtr(&Owner->thObjs2[left]);
+	 for(size_t i=left;i<right;i++,iPtr++)
+	 {
+		 double iValue(Owner->Instance->GetSim(*iPtr,GetCentroid()));
+		 if(iValue<=pivotValue)
+		 {
+			 cObj* tmp(*iPtr);
+			 (*iPtr)=Owner->thObjs2[storeIndex];
+			 Owner->thObjs2[storeIndex]=tmp;
+			 storeIndex++;
+		 }
+	 }
+	 cObj* tmp(Owner->thObjs2[right]);
+	 Owner->thObjs2[right]=Owner->thObjs2[storeIndex];
+	 Owner->thObjs2[storeIndex]=tmp;
+	 return(storeIndex);
 }
-*/
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
+	void RGroupSC<cGroup,cObj,cGroups>::Quicksort(size_t left, size_t right)
+{
+	 if(right>left)
+	 {
+		size_t pivotIndex(left);
+		 size_t pivotNewIndex(Partition(left,right,pivotIndex));
+		 if(pivotNewIndex)
+			 Quicksort(left, pivotNewIndex - 1);
+		 Quicksort(pivotNewIndex + 1, right);
+	 }
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
+	bool RGroupSC<cGroup,cObj,cGroups>::Test(cObj** del,size_t& nbdel,cObj* obj1,cObj* obj2)
+{
+	cObj **cur1,**cur2,**cur3;
+	size_t size1,size2,size3;
+
+	// Fill thObjs2 with the objects of the group and order them by descending order of similarity
+	cObj** thObjs2(Owner->thObjs2);
+	RCursor<cObj> obj(GetObjs());
+	for(obj.Start(),cur1=thObjs2;!obj.End();obj.Next())
+	{
+		if(obj()==GetCentroid())
+			continue;
+		(*(cur1++))=obj();
+	}
+	Quicksort(0,NbSubObjects-2);
+/*	size_t i;
+	for(cur1=thObjs2,i=0;i<NbSubObjects;i++,cur1++)
+		std::cout<<Owner->Instance->GetSim(*cur1,GetCentroid())<<std::endl;
+	std::cout<<std::endl<<std::endl;
+	return(false);*/
+
+	// Compute the new average similarity with objects
+	double NewAvgIntraSim(AvgIntraSim*(NbSubObjects-1));
+	size_t NewNbObjs(NbSubObjects);
+	NewAvgIntraSim+=Owner->Instance->GetSim(obj1,GetCentroid());
+	if(obj2)
+	{
+		NewAvgIntraSim+=Owner->Instance->GetSim(obj2,GetCentroid());
+		NewNbObjs++;
+	}
+	double NewBase(NewAvgIntraSim);
+	NewAvgIntraSim/=static_cast<double>(NewNbObjs);
+
+	// If the new average similarity is better than the old one -> Make the changes
+	if(NewAvgIntraSim>AvgIntraSim)
+		return(true);
+
+	// Look if removing the most dissimilar objects (maximum 3) increases NewAvgIntraSim
+/*	int nb;
+	if(NbSubObjects==2)
+		nb=1;    // If two objects -> Only one can be removed.
+	else if(NbSubObjects==3)
+		nb=2;    // If three objects -> Only two can be removed.
+	else
+		nb=3;    // Maximum three objects to removed.*/
+/*	for(int i=0;i<nb;i++)
+	{
+		for(int j=0;j<i+1;j++)
+		{
+			int size(NbSubjects);
+			for(cur1=thObjs2;--size;cur1++)
+			{
+				// Remove cur1?
+				NewAvgIntraSim=(NewBase-Owner->Instance->GetSim(*cur1,GetCentroid()))/static_cast<double>(NewNbObjs-1);
+				if(NewAvgIntraSim>AvgIntraSim)
+				{
+					// OK remove all
+					return(true);
+				}
+			}
+		}
+	}*/
+
+	// Remove one ?
+	for(size1=NbSubObjects,cur1=thObjs2;--size1;cur1++)
+	{
+		// Remove cur1?
+		NewAvgIntraSim=(NewBase-Owner->Instance->GetSim(*cur1,GetCentroid()))/static_cast<double>(NewNbObjs-1);
+		if(NewAvgIntraSim>AvgIntraSim)
+		{
+			// OK remove cur1
+			del[nbdel++]=(*cur1);
+			return(true);
+		}
+	}
+
+	// Remove two ?
+	if(NbSubObjects==2)
+		return(false);
+	for(size1=NbSubObjects,cur1=thObjs2;--size1;cur1++)
+	{
+		// Remove cur1?
+		double tmpBase(NewBase-Owner->Instance->GetSim(*cur1,GetCentroid()));
+		for(size2=NbSubObjects,cur2=thObjs2;--size2;cur2++)
+		{
+			if((*cur1)==(*cur2))
+				continue;
+			NewAvgIntraSim=(tmpBase-Owner->Instance->GetSim(*cur2,GetCentroid()))/static_cast<double>(NewNbObjs-2);
+			if(NewAvgIntraSim>AvgIntraSim)
+			{
+				// OK remove cur1
+				del[nbdel++]=(*cur1);
+				del[nbdel++]=(*cur2);
+				return(true);
+			}
+		}
+	}
+
+	// Remove three ?
+	if(NbSubObjects==3)
+		return(false);
+	for(size1=NbSubObjects,cur1=thObjs2;--size1;cur1++)
+	{
+		// Remove cur1?
+		double tmpBase(NewBase-Owner->Instance->GetSim(*cur1,GetCentroid()));
+		for(size2=NbSubObjects,cur2=thObjs2;--size2;cur2++)
+		{
+			if((*cur1)==(*cur2))
+				continue;
+			double tmpBase2(tmpBase-Owner->Instance->GetSim(*cur2,GetCentroid()));
+			for(size3=NbSubObjects,cur3=thObjs2;--size3;cur3++)
+			{
+				if(((*cur3)==(*cur1))||((*cur3)==(*cur2)))
+					continue;
+				NewAvgIntraSim=(tmpBase2-Owner->Instance->GetSim(*cur3,GetCentroid()))/static_cast<double>(NewNbObjs-3);
+				if(NewAvgIntraSim>AvgIntraSim)
+				{
+					// OK remove cur1
+					del[nbdel++]=(*cur1);
+					del[nbdel++]=(*cur2);
+					del[nbdel++]=(*cur3);
+					return(true);
+				}
+			}
+		}
+	}
+
+//	unsigned int newsize,maxsize;
+//	unsigned int s1,s2,s3;
+//	cObj** cur1;
+//	cObj** cur2;
+//	cObj** cur3;
+//	unsigned int i,j,k;
+//	cObj** thObjs2=this->Owner->thObjs2;
+//
+//	// fill thObjs2 with the objects of the group and order it by ascending order
+//	RCursor<cObj> obj=this->Owner->GetObjs(*static_cast<cGroup*>(this));
+//	for(obj.Start(),cur1=thObjs2;!obj.End();obj.Next(),cur1++)
+//		(*cur1)=obj();
+//	qsort(static_cast<void*>(thObjs2),this->NbSubObjects,sizeof(cObj*),RFirstFitDesHeuristic<cGroup,cObj,cGroupData,cChromo>::sort_function_cObjs);
+//
+//	// New Size if addsize is added.
+//	newsize=Size+size+addsize;
+//	if(addsize>size) maxsize=addsize; else maxsize=size;
+////	if(size==0.0)
+////		size=addsize;
+////	for(i=0;i<nbdel;i++)
+////		if(del[i])
+////			newsize-=del[i]->GetSize();
+//
+//	// If MaxSize is not reach, look if the new size is greather or lesser than
+//	// the old ize.
+//	if(newsize<=MaxSize)
+//	{
+//		if(newsize>=Size)
+//			return(true);
+//		else
+//			return(false);
+//	}
+//
+//	// Try to del 1 object with Max 3 Objects deleted.
+//	if((nbdel>=3)||(!this->NbSubObjects)) return(false);
+//	for(i=this->NbSubObjects+1,cur1=thObjs2;--i;cur1++)
+//	{
+////		cur1=Owner->GetObj(SubObjects+i);
+////		if((cur1==del[0])||(cur1==del[1])||(cur1->GetSize()>=addsize)||(cur1->GetSize()>=size)) continue;
+//		s1=newsize-(*cur1)->GetSize();
+//		if((s1<=MaxSize)&&(s1>Size))
+//		{
+//			del[nbdel++]=(*cur1);
+//			return(true);
+//		}
+//	}
+//
+//	// Try to del 2 object with Max 3 Objects deleted.
+//	if((nbdel>=2)||(this->NbSubObjects<2)) return(false);
+//	for(i=this->NbSubObjects,cur1=thObjs2;--i;cur1++)
+//	{
+////		cur1=Owner->GetObj(SubObjects+i);
+////		if((cur1==del[0])||(cur1->GetSize()>=addsize)||(cur1->GetSize()>=size)) continue;
+//		s1=newsize-(*cur1)->GetSize();
+//		for(j=i+1,cur2=cur1+1;--j;cur2++)
+//		{
+////			cur2=Owner->GetObj(SubObjects+j);
+////			if((cur2==del[0])||(cur2->GetSize()>=addsize)||(cur2->GetSize()>=size)) continue;
+//			s2=s1-(*cur2)->GetSize();
+//			if((s2<=MaxSize)&&(s2>Size))
+//			{
+//				del[nbdel++]=(*cur1);
+//				del[nbdel++]=(*cur2);
+//				return(true);
+//			}
+//		}
+//	}
+//
+//	// Try to del 3 object with Max 3 Objects deleted.
+//	if((nbdel)||(this->NbSubObjects<3)) return(false);
+//	for(i=this->NbSubObjects-1,cur1=thObjs2;--i;cur1++)
+//	{
+////		cur1=Owner->GetObj(SubObjects+i);
+////		if((cur1->GetSize()>=addsize)||(cur1->GetSize()>=size)) continue;
+//		s1=newsize-(*cur1)->GetSize();
+//		for(j=i+1,cur2=cur1+1;--j;cur2++)
+//		{
+////			cur2=Owner->GetObj(SubObjects+j);
+////			if((cur2->GetSize()>=addsize)||(cur2->GetSize()>=size)) continue;
+//			s2=s1-(*cur2)->GetSize();
+//			for(k=j+1,cur3=cur2+1;--k;cur3++)
+//			{
+////				cur3=Owner->GetObj(SubObjects+k);
+////				if((cur3->GetSize()>=addsize)||(cur3->GetSize()>=size)) continue;
+//				s3=s2-(*cur3)->GetSize();
+//				if((s3<=MaxSize)&&(s3>Size))
+//				{
+//					del[nbdel++]=(*cur1);
+//					del[nbdel++]=(*cur2);
+//					del[nbdel++]=(*cur3);
+//					return(true);
+//				}
+//			}
+//		}
+//	}
+
+	// Nothing can be done
+	return(false);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
+	bool RGroupSC<cGroup,cObj,cGroups>::DoOptimisation(cObj** objs,size_t& nbobjs)
+{
+	// The group must have more than one object
+	if(NbSubObjects<2)
+		return(false);
+
+	size_t idx[2];           // Indexed of the objects to add in objs.
+	cObj* del[3];            // Pointers to the objects to delete.
+	cObj* add[2];            // Pointers to the objects to add.
+	size_t nbdel;            // Number of objects to delete.
+	size_t nbadd;            // Number of objects to add.
+	cObj** obj;              // Current object eventually to add.
+	cObj** obj2;             // Current object eventually to add.
+	size_t i,j;
+
+	// Init Part
+	add[0]=add[1]=del[0]=del[1]=del[2]=0;   // No objects added or deleted
+	idx[0]=idx[1]=cNoRef;
+	nbdel=nbadd=0;
+
+	// Try to add two objects
+	for(i=0,obj=objs;i<nbobjs-1;obj++,i++)
+	{
+		for(j=i+1,obj2=obj+1;j<nbobjs;obj2++,j++)
+		{
+			if(Test(del,nbdel,(*obj),(*obj2)))
+			{
+				idx[nbadd]=i;
+				add[nbadd++]=(*obj);
+				idx[nbadd]=j;
+				add[nbadd++]=(*obj2);
+//				std::cout<<"         Insert "<<(*obj)->GetId()<<" and "<<(*obj2)->GetId()<<std::endl;
+				break;
+			}
+		}
+		if(nbadd) break;
+	}
+
+	// Try to add a first object
+	if(!nbadd)
+	{
+		for(i=0,obj=objs;i<nbobjs;obj++,i++)
+		{
+			if(Test(del,nbdel,(*obj),0))
+			{
+				idx[nbadd]=i;
+				add[nbadd++]=(*obj);
+//				std::cout<<"         Insert "<<(*obj)->GetId()<<std::endl;
+				break;
+			}
+		}
+	}
+
+	// If nothing to add -> return
+	if(!nbadd) return(false);
+
+	// Delete the objects from the group and insert them in objs.
+	for(i=0;i<nbdel;i++)
+	{
+		Delete(del[i]);
+		objs[nbobjs++]=del[i];
+//		std::cout<<"         Delete "<<del[i]->GetId()<<std::endl;
+	}
+
+	// Insert the objects in the group and delete them from objs.
+	// If idx[1] > idx[0] -> idx[1]-- because idx[0] will be deleted first.
+	if(idx[1]>idx[0]) idx[1]--;
+	for(i=0;i<nbadd;i++)
+	{
+		Insert(add[i]);
+		memcpy(&objs[idx[i]],&objs[idx[i]+1],((--nbobjs)-idx[i])*sizeof(cObj*));
+	}
+	return(true);
+}
 
 
 //---------------------------------------------------------------------------

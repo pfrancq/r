@@ -58,6 +58,13 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Instance;
 	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Used;
 	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ObjectsAss;
+	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Clear;
+	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ReserveGroup;
+	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ReleaseGroup;
+	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::GetObjs;
+	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Objs;
+	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Id;
+	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ObjsNoAss;
 
 protected:
 
@@ -120,6 +127,11 @@ protected:
 	R::RContainer<cObj,false,false> Protos;
 
 	/**
+	* Old prototypes used for the KMeans.
+	*/
+	R::RContainer<cObj,false,false> OldProtos;
+
+	/**
 	* Test Chromosome (Thread dependent data).
 	*/
 	cChromo** thTests;
@@ -168,27 +180,27 @@ public:
 	/**
 	*  Reallocate the objects to the groups based on the different prototypes.
 	*/
-//	void ReAllocate(void);
+	void ReAllocate(void);
 
 	/**
 	* Compute the number of new prototypes until the last K-Means iteration.
 	*/
-//	size_t CalcNewProtosNb(void);
+	size_t CalcNewProtosNb(void);
 
 	/**
 	* Perform a K-Means on the chromosome.
 	*/
-//	void DoKMeans(void);
+	void DoKMeans(void);
 
 	/**
 	* Divide the group containing the two most dissimilar objects.
 	*/
-//	void DivideWorstObjects(void);
+	void DivideWorstObjects(void);
 
 	/**
 	* Merge the two groups containing the two most similar centroids.
 	*/
-//	void MergeBestGroups(void);
+	void MergeBestGroups(void);
 
 	/**
 	* Treat the social objects, i.e. if these objects are alone in a group, put
@@ -199,12 +211,17 @@ public:
 	/**
 	 * kMeans-based Optimization.
 	 */
-	//void kMeansOptimisation(void);
+	void kMeansOptimisation(void);
 
 	/**
 	* Perform an optimization.
 	*/
 	virtual void Optimisation(void);
+
+	/**
+	* Perform a local optimization.
+	*/
+	virtual void LocalOptimisation(void);
 
 	/**
 	* Do a mutation of the chromosome. Since the GCA seems to over-group, the
@@ -266,6 +283,7 @@ public:
 
 	// friend classes
 	friend class RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>;
+	friend class RGroupSC<cGroup,cObj,cChromo>;
 	friend class RPromKernelSC<cChromo>;
 };
 

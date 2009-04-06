@@ -254,13 +254,11 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroups<cGroup,cObj,cGroups>::CopyGrouping(const RGroups& grps)
 {
-	cGroup* ptr;
-
 	ClearGroups();
 	R::RCursor<cGroup> G(grps.Used);
 	for(G.Start();!G.End();G.Next())
 	{
-		ptr=ReserveGroup();           // Reserve a new group
+		cGroup* ptr(ReserveGroup());  // Reserve a new group
 		ptr->CopyObjs(G());           // Copy the necessary objects
 		ptr->CopyInfos(G());          // Update internal information.
 	}

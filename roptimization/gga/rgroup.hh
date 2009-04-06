@@ -115,7 +115,7 @@ template<class cGroup,class cObj,class cGroups>
 	void RGroup<cGroup,cObj,cGroups>::CopyObjs(const cGroup* grp)
 {
 	RReturnIfFail(Owner!=grp->Owner);
-	RCursor<cObj> ptr(grp->Owner->GetObjs(*grp));
+	RCursor<cObj> ptr(grp->GetObjs());
 	for(ptr.Start();!ptr.End();ptr.Next())
 		Insert(ptr());
 }

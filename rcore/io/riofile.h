@@ -186,7 +186,7 @@ public:
 	* @param buffer         Buffer (must be allocated).
 	* @param nb             Number of bytes to read.
 	* @param move           The file position is moved (default).
-	* @return Number of bytes readed.
+	* @return Number of bytes read.
 	*/
 	size_t Read(char* buffer,size_t nb,bool move=true);
 

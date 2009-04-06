@@ -61,14 +61,9 @@ class RDbMySQL : public RDb
 protected:
 
 	/**
-	 * Connection.
+	 * Database.
 	 */
-	MYSQL* Connection;
-
-	/**
-	 * Database information.
-	 */
-	MYSQL MySQL;
+	MYSQL* Db;
 
 	/**
 	 * Coding used to read/write to MySQL.

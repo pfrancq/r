@@ -36,7 +36,8 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rgroup.h>
-
+class GCAInst;
+class GCAObj;
 
 //------------------------------------------------------------------------------
 namespace R{
@@ -55,6 +56,7 @@ template<class cGroup,class cObj,class cGroups>
 {
 	using RGroup<cGroup,cObj,cGroups>::Owner;
 	using RGroup<cGroup,cObj,cGroups>::NbSubObjects;
+	using RGroup<cGroup,cObj,cGroups>::GetObjs;
 
 protected:
 
@@ -194,7 +196,7 @@ public:
 	* Compute the similarities of a given object to the centroid of the group.
 	* @param obj             Object.
 	*/
-	inline double ComputeRelSim(const cObj* obj) {return(Owner->Instance->GetSim(GetCentroid()->GetElementId(),obj->GetElementId()));}
+	inline double ComputeRelSim(const cObj* obj) {return(Owner->Instance->GetSim(GetCentroid(),obj));}
 
 	/**
 	* Copy internal information from a given group, in particular information
@@ -203,23 +205,28 @@ public:
 	*/
 	virtual void CopyInfos(const cGroup* grp);
 
+private:
+
+	size_t Partition(size_t  left, size_t  right, size_t pivotIndex);
+	void Quicksort(size_t left, size_t right);
+
+	bool Test(cObj** del,size_t& nbdel,cObj* obj1,cObj* obj2);
+
+public:
+
 	/**
-	* Get the maximal value of the ratio of same feedbacks of an object and
-	* the ones of the group.
-	* @param obj            Object to test.
-	* @return double
-	*/
-//	double GetMaxRatioSame(GCAObj* obj);
+	 * Try to optimize the group by exchanging a given number of objects no
+	 * assigned with some of the group.
+	 * @param objs           Objects no assigned.
+	 * @param nbobjs         Number of objects (can be modified).
+	 * @return true if the group could be optimized.
+	 */
+	bool DoOptimisation(cObj** objs,size_t& nbobjs);
 
 	/**
 	* Destruct the group.
 	*/
 	virtual ~RGroupSC(void);
-
-	// friend classes
-	// friend classes
-	//friend class RGroups<cGroup,cObj,cGroups>;
-// 	friend class GCAInst;*/
 };
 
 

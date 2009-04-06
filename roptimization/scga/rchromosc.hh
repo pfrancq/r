@@ -39,6 +39,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::RChromoSC(cInst* inst,size_t id)
 		: RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(inst,id),
 	  ToDel(0), CritSimJ(0.0), CritAgreement(0.0), CritDisagreement(1.0), Protos(Used.GetMaxNb()),
+	  OldProtos(Used.GetMaxNb()),
 	  thProm(0), thSols(0)
 {
 }
@@ -82,7 +83,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		for(Cur2.Start();!Cur2.End();Cur2.Next())
 		{
 			if(Cur()==Cur2()) continue;
-			tmp=Instance->GetSim(Cur()->GetCentroid()->GetElementId(),Cur2()->GetCentroid()->GetElementId());
+			tmp=Instance->GetSim(Cur()->GetCentroid(),Cur2()->GetCentroid());
 			avg+=tmp;
 			if(tmp>super)
 			{
@@ -103,17 +104,17 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 
 //-----------------------------------------------------------------------------
-/*
-void RChromoSC::ReAllocate(void)
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
+	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::ReAllocate(void)
 {
 	size_t nb;
 	double sim,maxsim;
-	GCAGroup* grp;
-	GCAObj** Cur;
+	cGroup* grp;
+	cObj** Cur;
 
 	// Put the prototypes in Protos
 	Protos.Clear();
-	R::RCursor<GCAGroup> Grp(Used);
+	R::RCursor<cGroup> Grp(Used);
 	for(Grp.Start();!Grp.End();Grp.Next())
 		Protos.InsertPtr(Grp()->GetCentroid());
 
@@ -121,7 +122,7 @@ void RChromoSC::ReAllocate(void)
 	Clear();
 
 	// Insert the Prototypes in a group
-	RCursor<GCAObj> CurP(Protos);
+	RCursor<cObj> CurP(Protos);
 	for(CurP.Start();!CurP.End();CurP.Next())
 	{
 		grp=ReserveGroup();
@@ -140,14 +141,12 @@ void RChromoSC::ReAllocate(void)
 		if(GetGroup(*Cur)) continue;
 
 		// Look first if one of the object with a ratio are already grouped
-		RCursor<GCAMaxRatio> Best(*Instance->Ratios[(*Cur)->GetId()]);
-		for(Best.Start(),grp=0;(!Best.End())&&(!grp);Best.Next())
-			grp=GetGroup(Best()->ObjId);
+		(*Cur)->FindBestGroup(this,grp);
 
 		// If no group find, -> Go through each groups
 		if(!grp)
 		{
-			R::RCursor<GCAGroup> Grp(Used);
+			R::RCursor<cGroup> Grp(Used);
 			for(Grp.Start(),maxsim=-1.0;!Grp.End();Grp.Next())
 			{
 				// If all the hard constraints are not respected -> skip the group.
@@ -179,19 +178,18 @@ void RChromoSC::ReAllocate(void)
 
 
 //-----------------------------------------------------------------------------
-size_t RChromoSC::CalcNewProtosNb(void)
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
+	size_t RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::CalcNewProtosNb(void)
 {
 	size_t count;
-	R::RCursor<GCAGroup> Grp;
-	GCAObj* OldProto;
 
 	// Computed the prototypes for each groups and count the number in Protos
-	Grp.Set(Used);
-	for(Grp.Start(),count=0;!Grp.End();Grp.Next())
+	R::RCursor<cGroup> Grp(Used);
+	R::RCursor<cObj> OldProto(OldProtos);
+	for(Grp.Start(),OldProto.Start(),count=0;!Grp.End();Grp.Next(),OldProto.Next())
 	{
-		OldProto=Grp()->Centroid;
 //		Grp()->ComputeRelevant();
-		if(OldProto!=Grp()->GetCentroid())
+		if(OldProto()!=Grp()->GetCentroid())
 			count++;
 	}
 	return(count);
@@ -199,33 +197,30 @@ size_t RChromoSC::CalcNewProtosNb(void)
 
 
 //-----------------------------------------------------------------------------
-void RChromoSC::DoKMeans(void)
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
+	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::DoKMeans(void)
 {
 	size_t itermax;
 	double error,minerror;
-	GCAObj** obj;
+	cObj** obj;
 
 	if(Instance->Debug)
-		Instance->Debug->BeginFunc("DoKMeans","GChomoIR");
+		Instance->Debug->BeginFunc("DoKMeans","RChromoSC");
 
-	// Copy the objects into thObjs1
-	R::RCursor<GCAGroup> Grp(Used);
-	for(Grp.Start(),obj=thObjs1;!Grp.End();Grp.Next())
-	{
-		RCursor<GCAObj> ptr=GetObjs(Grp());
-		for(ptr.Start();!ptr.End();ptr.Next(),obj++)
-		{
-			(*obj)=ptr();
-		}
-	}
-
-	// Mix randomly thObjs1
-	Instance->RandOrder<GCAObj*>(thObjs1,Objs.GetNb());
+	// Copy and mix the objects into thObjs1
+	for(Objs.Start(),obj=thObjs1;!Objs.End();Objs.Next(),obj++)
+		(*obj)=Objs();
+	Instance->RandOrder(thObjs1,Objs.GetNb());
 
 	// Max Iterations
 	minerror=Instance->Params->Convergence/100.0;
-	for(itermax=Instance->Params->MaxKMeans+1,error=1.0;(--itermax)&&(error>minerror);)
+	for(itermax=0,error=1.0;(itermax<Instance->Params->MaxKMeans)&&(error>minerror);itermax++)
 	{
+		// Get the old prototypes
+		OldProtos.Clear();
+		R::RCursor<cGroup> Grp(Used);
+		for(Grp.Start();!Grp.End();Grp.Next())
+			OldProtos.InsertPtr(Grp()->GetCentroid());
 		ReAllocate();
 		error=static_cast<double>(CalcNewProtosNb())/static_cast<double>(Used.GetNb());
 	}
@@ -233,39 +228,37 @@ void RChromoSC::DoKMeans(void)
 	if(Instance->Debug)
 	{
 		Instance->Debug->PrintInfo("Number of k-Means runs: "+RString::Number(itermax));
-		Instance->Debug->EndFunc("DoKMeans","GChomoIR");
+		Instance->Debug->EndFunc("DoKMeans","RChromoSC");
 	}
 }
 
 
 //-----------------------------------------------------------------------------
-void RChromoSC::DivideWorstObjects(void)
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
+	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::DivideWorstObjects(void)
 {
-	R::RCursor<GCAGroup> Grp;
+	R::RCursor<cGroup> Grp;
 	size_t i;
-	GCAObj** ptr;
-	GCAObj** ptr2;
-	GCAObj** ptr3;
+	cObj** ptr;
+	cObj** ptr2;
+	cObj** ptr3;
 	double sim,minsim;
-	size_t prof;
-	size_t prof1;
-	size_t prof2;
-	GCAGroup* grp;
-	GCAObj* worst1=0;
-	GCAObj* worst2=0;
+	cGroup* grp;
+	cObj* worst1(0);
+	cObj* worst2(0);
 
 	// Find the group containing the two most dissimilar objects
 	Grp.Set(Used);
 	for(Grp.Start(),minsim=1.0,grp=0;!Grp.End();Grp.Next())
 	{
 		if(Grp()->GetNbObjs()<3) continue;
-		RCursor<GCAObj> CurObj(GetObjs(*Grp()));
-		RCursor<GCAObj> CurObj2(GetObjs(*Grp()));
+		RCursor<cObj> CurObj(GetObjs(*Grp()));
+		RCursor<cObj> CurObj2(GetObjs(*Grp()));
 		for(CurObj.Start(),i=0;i<Grp()->GetNbObjs()-1;CurObj.Next(),i++)
 		{
 			for(CurObj2.GoTo(i+1);!CurObj2.End();CurObj2.Next())
 			{
-				sim=Instance->GetSim(CurObj()->GetElementId(),CurObj2()->GetElementId());
+				sim=Instance->GetSim(CurObj(),CurObj2());
 				if(sim<minsim)
 				{
 					minsim=sim;
@@ -287,15 +280,12 @@ void RChromoSC::DivideWorstObjects(void)
 
 	// Copy in thObjs1 the objects most similar to worst1 and in thObjs2
 	// the objects most similar to worst2
-	prof1=worst1->GetElementId();
-	prof2=worst2->GetElementId();
-	RCursor<GCAObj> CurObj(GetObjs(*grp));
+	RCursor<cObj> CurObj(GetObjs(*grp));
 	for(CurObj.Start();!CurObj.End();CurObj.Next())
 	{
 		if((CurObj()==worst1)||(CurObj()==worst2)) continue;
-		prof=CurObj()->GetElementId();
-		sim=Instance->GetSim(prof1,prof);
-		minsim=Instance->GetSim(prof2,prof);
+		sim=Instance->GetSim(worst1,CurObj());
+		minsim=Instance->GetSim(worst2,CurObj());
 		if(sim>minsim)
 		{
 			NbObjs1++;
@@ -324,15 +314,16 @@ void RChromoSC::DivideWorstObjects(void)
 
 
 //-----------------------------------------------------------------------------
-void RChromoSC::MergeBestGroups(void)
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
+	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::MergeBestGroups(void)
 {
 	size_t i;
-	GCAGroup* bestgrp1((*this)[MostSimilarGroup1]);
-	GCAGroup* bestgrp2((*this)[MostSimilarGroup2]);
-	GCAObj** ptr;
+	cGroup* bestgrp1((*this)[MostSimilarGroup1]);
+	cGroup* bestgrp2((*this)[MostSimilarGroup2]);
+	cObj** ptr;
 
 	// Put the objects of bestgrp1 in bestgrp2 only if there are not already have the same user
-	RCursor<GCAObj> CurObj(GetObjs(*bestgrp1));
+	RCursor<cObj> CurObj(GetObjs(*bestgrp1));
 	for(CurObj.Start(),ptr=thObjs1,NbObjs1=0;!CurObj.End();CurObj.Next(),ptr++,NbObjs1++)
 		(*ptr)=CurObj();
 	for(ptr=thObjs1,i=NbObjs1+1;--i;ptr++)
@@ -347,7 +338,7 @@ void RChromoSC::MergeBestGroups(void)
 	if(!bestgrp1->GetNbObjs())
 		ReleaseGroup(bestgrp1);
 }
-*/
+
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
@@ -379,7 +370,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 				continue;
 			if(Cur2()->HasSameUser(obj))
 				continue;
-			tmp=Instance->GetSim(obj->GetElementId(),Cur2()->GetCentroid()->GetElementId());
+			tmp=Instance->GetSim(obj,Cur2()->GetCentroid());
 			if(tmp>max)
 			{
 				max=tmp;
@@ -402,29 +393,33 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 
 //-----------------------------------------------------------------------------
-/*void RChromoSC::kMeansOptimisation(void)
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
+	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::kMeansOptimisation(void)
 {
 	size_t i;
 	size_t nb;
 	RPromSol** s;
 	RPromSol** tab;
-	RChromoGC* LastDiv;
-	RChromoGC* LastMerge;
+	cChromo* LastDiv;
+	cChromo* LastMerge;
 
 	// Do not optimize
 	if(!Instance->Params->NbDivChromo)
 		return;
 
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("kMeansOptimisation","RChromoSC");
+
 	// Copy the current chromosome in thTests
 	Evaluate();
-	(*thTests[0])=(*this);
-	LastDiv=LastMerge=this;
+	thTests[0]->Copy(*static_cast<cChromo*>(this));
+	LastDiv=LastMerge=static_cast<cChromo*>(this);
 	for(i=Instance->Params->NbDivChromo+1;--i;)
 	{
-		(*thTests[i*2-1])=(*LastDiv);
+		thTests[i*2-1]->Copy(*LastDiv);
 		LastDiv=thTests[i*2-1];
 		LastDiv->DivideWorstObjects();
-		(*thTests[i*2])=(*LastMerge);
+		thTests[i*2]->Copy(*LastMerge);
 		LastMerge=thTests[i*2];
 		LastMerge->MergeBestGroups();
 	}
@@ -440,14 +435,14 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 	// Use PROMETHEE to determine the best solution.
 	s=thSols;
-	thProm->AssignChromo(*s,this);
+	thProm->AssignChromo(*s,static_cast<cChromo*>(this));
 	for(i=0,s++;i<nb;i++,s++)
 	{
 		thProm->AssignChromo(*s,thTests[i]);
 	}
 	thProm->ComputePrometheeII();
 	if(thProm->GetBestSol()->GetId())
-		(*this)=(*thTests[thProm->GetBestSol()->GetId()-1]);
+		Copy(*thTests[thProm->GetBestSol()->GetId()-1]);
 
 	if(Instance->Debug)
 	{
@@ -456,22 +451,73 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 			if((*s)->GetId())
 				Instance->WriteChromoInfo(thTests[(*s)->GetId()-1]);
 			else
-				Instance->WriteChromoInfo(this);
+				Instance->WriteChromoInfo(static_cast<cChromo*>(this));
 		}
 		delete[] tab;
+		Instance->Debug->EndFunc("kMeansOptimisation","RChromoSC");
 	}
 }
-*/
+
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::Optimisation(void)
 {
 	if(Instance->Debug)
-		Instance->Debug->BeginFunc("Optimisation","GChomoIR");
-	std::cout<<"kMeansOptimisation();"<<std::endl;
+		Instance->Debug->BeginFunc("Optimisation","RChromoSC");
+	kMeansOptimisation();
 	if(Instance->Debug)
-		Instance->Debug->EndFunc("Optimisation","GChomoIR");
+		Instance->Debug->EndFunc("Optimisation","RChromoSC");
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
+	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::LocalOptimisation(void)
+{
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("LocalOptimisation","RChromoSC");
+
+	// If no non-assigned objects -> return
+	if(!ObjsNoAss.GetNb())
+		return;
+
+	// Determine all non assigned objects
+	size_t nbobjs(ObjsNoAss.GetTab(thObjs1));
+	Instance->RandOrder(thObjs1,nbobjs);
+
+	//std::cout<<"Test "<<Id<<std::endl;
+	bool bOpti;
+	size_t max(5);
+	for(bOpti=true;(--max)&&bOpti&&nbobjs;)
+	{
+		bOpti=false;
+//		std::cout<<"   bOpti: "<<bOpti<<" - "<<Used.GetNb()<<std::endl;
+
+		// Go trough existing groups
+		RCursor<cGroup> Cur(Used);
+		for(Cur.Start();!Cur.End();Cur.Next())
+		{
+//			std::cout<<"      Optimize "<<Cur()->GetId()<<std::endl;
+			if(Cur()->DoOptimisation(thObjs1,nbobjs))
+			{
+				bOpti=true;
+//				std::cout<<"         Opti: bOpti: "<<bOpti<<std::endl;
+				break;
+			}
+			if(!nbobjs)
+			{
+				bOpti=false;
+//				std::cout<<"         No Objs: bOpti: "<<bOpti<<std::endl;
+				break;
+			}
+		}
+
+//		std::cout<<"   End - bOpti: "<<bOpti<<std::endl;
+	}
+
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("LocalOptimisation","RChromoSC");
 }
 
 

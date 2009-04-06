@@ -218,21 +218,21 @@ public:
 	* @param element1        First element.
 	* @param element2        Second element.
 	*/
-	virtual double GetDisagreementRatio(size_t element1,size_t element2) const=0;
+	virtual double GetDisagreementRatio(const cObj* obj1,const cObj* obj2) const=0;
 
 	/**
 	* Get the disagreement ratio between two elements.
 	* @param element1        First element.
 	* @param element2        Second element.
 	*/
-	virtual double GetAgreementRatio(size_t element1,size_t element2) const=0;
+	virtual double GetAgreementRatio(const cObj* obj1,const cObj* obj2) const=0;
 
 	/**
 	* Compute the similarity between two elements.
 	* @param element1        First element.
 	* @param element2        Second element.
 	*/
-	virtual double GetSim(size_t element1,size_t element2) const=0;
+	virtual double GetSim(const cObj* obj1,const cObj* obj2) const=0;
 
 	/**
 	* This function can be used to do a treatment after the GA stops.
@@ -252,6 +252,7 @@ public:
 	// friend classes
 	friend class RGroupSC<cGroup,cObj,cChromo>;
 	friend class RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>;
+	friend class RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>;
 };
 
 

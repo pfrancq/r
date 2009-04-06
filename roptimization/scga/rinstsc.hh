@@ -39,14 +39,14 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>::RThreadDataSC(cInst* owner)
 		: RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(owner),
 	  ToDel(owner->Objs.GetNb()<4?4:owner->Objs.GetNb()/4), tmpObjs1(0),tmpObjs2(0), Tests(0),
-	  Prom(Owner->Params), Sols(0), NbSols((Owner->Params->NbDivChromo*2)+2)
+	  Prom(Owner->Params), Sols(0), NbSols((Owner->Params->NbDivChromo*2)+1)
 {
 	RPromSol** s;
 	size_t i;
 
 	Tests=new cChromo*[NbSols];
-	Sols=new RPromSol*[NbSols];
-	for(i=NbSols+1,s=Sols;--i;s++)
+	Sols=new RPromSol*[NbSols+1];
+	for(i=NbSols+2,s=Sols;--i;s++)
 		(*s)=Prom.NewSol();
 }
 
@@ -58,13 +58,14 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	size_t i;
 
 	RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Init();
+
 	tmpObjs1=new cObj*[Owner->Objs.GetNb()];
 	tmpObjs2=new cObj*[Owner->Objs.GetNb()];
 	for(i=0;i<NbSols;i++)
 	{
 		Tests[i]=new cChromo(Owner,Owner->GetPopSize()+1+i);
-		Tests[i]->Init(static_cast<cThreadData*>(this));
 		(static_cast<RGroups<cGroup,cObj,cChromo>*>(Tests[i]))->Init();
+		Tests[i]->Init(static_cast<cThreadData*>(this));
 	}
 }
 
@@ -141,7 +142,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		// Add all the object with a greater agreement ratio than the minimum
 		for(Cur2.Start(),j=i;--j;Cur2.Next())
 		{
-			ratio=GetAgreementRatio(Cur1()->GetElementId(),Cur2()->GetElementId());
+			ratio=GetAgreementRatio(Cur1(),Cur2());
 			if(ratio>=Params->MinAgreement)
 			{
 				Cur1()->AddCloseObject(Cur2()->GetId(),ratio);

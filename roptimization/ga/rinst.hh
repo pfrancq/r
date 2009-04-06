@@ -394,7 +394,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	AgeBest++;
 	AgeBestPop++;
 	if(Debug)
-		Debug->PrintComment("Gen="+RString::Number(Gen)+"  ;  AgeBest="+RString::Number(AgeBest)+"  -  AgeBestPop="+AgeBestPop);
+		Debug->PrintComment("Gen="+RString::Number(Gen)+"  ;  AgeBest="+RString::Number(AgeBest)+"  -  AgeBestPop="+RString::Number(AgeBestPop));
 	Crossover();
 	PostNotification("RInst::Interact");
 	if(!((AgeNextMutation--)&&(AgeNextBestMutation--)))  // Decrease the number of generations between mutations and verify if a mutation must be done

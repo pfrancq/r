@@ -36,8 +36,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rcursor.h>
-#include <robjs.h>
-#include <rga.h>
+#include <rgga.h>
 #include <robjg.h>
 
 
