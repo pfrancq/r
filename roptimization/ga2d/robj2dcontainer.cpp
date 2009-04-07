@@ -150,7 +150,7 @@ void RObj2DContainer::Assign(RGeoInfos* infos,const RPoint& pos,RGrid* grid,cons
 
 
 //------------------------------------------------------------------------------
-bool RObj2DContainer::IsIn(size_t id)
+bool RObj2DContainer::IsIn(size_t id) const
 {
 	RCursor<RGeoInfo> info(*this);
 	for(info.Start();!info.End();info.Next())

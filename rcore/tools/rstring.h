@@ -170,6 +170,14 @@ private:
 	*/
 	static char* UnicodeToLatin1(const RChar* src,size_t len);
 
+	/**
+	 * Generate an exception related to this string. Its contains:
+	 *
+	 * "'string': msg".
+	 * @param msg            Message to add.
+	 */
+	void GenerateException(const RString& msg);
+
 public:
 
 	inline void SetLen(size_t len) {BasicString<RChar,RString>::SetLen(len);}
@@ -265,8 +273,17 @@ public:
 	*/
 	operator std::string () const;
 
+	/**
+	* This function returns the character at a given position in the string.
+	* (Read only).
+	* @param idx             Position of the character.
+	*/
 	inline const RChar& operator[](size_t idx) const {return(BasicString<RChar,RString>::operator[](idx));}
 
+	/**
+	* This function returns the character at a given position in the string.
+	* @param idx             Position of the character.
+	*/
 	inline RChar& operator[](size_t idx) {return(BasicString<RChar,RString>::operator[](idx));}
 
 	/**
@@ -417,10 +434,36 @@ public:
 	char ToChar(bool& valid);
 
 	/**
+	* Try to transform a string into a char (as a number). This version generates an
+	* exception if the string does not contain a valid number.
+	*/
+	char ToChar(void)
+	{
+		bool Valid;
+		char Val(ToChar(Valid));
+		if(!Valid)
+			GenerateException("is not a char");
+		return(Val);
+	}
+
+	/**
 	* Try to transform a string into an integer.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
 	int ToInt(bool& valid);
+
+	/**
+	* Try to transform a string into an integer. This version generates an
+	* exception if the string does not contain a valid number.
+	*/
+	int ToInt(void)
+	{
+		bool Valid;
+		int Val(ToInt(Valid));
+		if(!Valid)
+			GenerateException("is not an int");
+		return(Val);
+	}
 
 	/**
 	* Try to transform a string into an unsigned integer.
@@ -429,10 +472,36 @@ public:
 	unsigned int ToUInt(bool& valid);
 
 	/**
+	* Try to transform a string into an unsigned integer. This version generates an
+	* exception if the string does not contain a valid number.
+	*/
+	unsigned int ToUInt(void)
+	{
+		bool Valid;
+		unsigned int Val(ToUInt(Valid));
+		if(!Valid)
+			GenerateException("is not an unsigned int");
+		return(Val);
+	}
+
+	/**
 	* Try to transform a string into a long.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
 	long ToLong(bool& valid);
+
+	/**
+	* Try to transform a string into a long. This version generates an
+	* exception if the string does not contain a valid number.
+	*/
+	long ToLong(void)
+	{
+		bool Valid;
+		long Val(ToLong(Valid));
+		if(!Valid)
+			GenerateException("is not a long");
+		return(Val);
+	}
 
 	/**
 	* Try to transform a string into an unsigned long.
@@ -441,10 +510,55 @@ public:
 	unsigned long ToULong(bool& valid);
 
 	/**
+	* Try to transform a string into an unsigned long. This version generates an
+	* exception if the string does not contain a valid number.
+	*/
+	unsigned long ToULong(void)
+	{
+		bool Valid;
+		unsigned long Val(ToULong(Valid));
+		if(!Valid)
+			GenerateException("is not an unsigned long");
+		return(Val);
+	}
+
+	/**
 	* Try to transform a string into a size_t.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
 	size_t ToSizeT(bool& valid);
+
+	/**
+	* Try to transform a string into a size_t. This version generates an
+	* exception if the string does not contain a valid number.
+	*/
+	size_t ToSizeT(void)
+	{
+		bool Valid;
+		size_t Val(ToSizeT(Valid));
+		if(!Valid)
+			GenerateException("is not a size_t");
+		return(Val);
+	}
+
+	/**
+	* Try to transform a string into a off_t.
+	* @param valid           Variable becomes true if the conversion was done.
+	*/
+	off_t ToOffT(bool& valid);
+
+	/**
+	* Try to transform a string into a off_t. This version generates an
+	* exception if the string does not contain a valid number.
+	*/
+	inline off_t ToOffT(void)
+	{
+		bool Valid;
+		off_t Val(ToOffT(Valid));
+		if(!Valid)
+			GenerateException("is not an off_t");
+		return(Val);
+	}
 
 	/**
 	* * Try to transform a string into a float.
@@ -453,19 +567,63 @@ public:
 	float ToFloat(bool& valid);
 
 	/**
+	* * Try to transform a string into a float. This version generates an
+	* exception if the string does not contain a valid number.
+	*/
+	float ToFloat(void)
+	{
+		bool Valid;
+		float Val(ToFloat(Valid));
+		if(!Valid)
+			GenerateException("is not a float");
+		return(Val);
+	}
+
+	/**
 	* * Try to transform a string into a double.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
 	double ToDouble(bool& valid);
 
 	/**
+	* * Try to transform a string into a double. This version generates an
+	* exception if the string does not contain a valid number.
+	*/
+	double ToDouble(void)
+	{
+		bool Valid;
+		double Val(ToDouble(Valid));
+		if(!Valid)
+			GenerateException("is not a double");
+		return(Val);
+	}
+
+	/**
 	* Try to transform a string into a boolean value. It recognizes the strings
 	* "0", "1", "true" and "false".
 	* @param valid           Variable becomes true if the conversion was done.
 	* @param strict          Define if the string recognition is strict ("true"
-	*                        and "false") or if uppercaser letters are allowed.
+	*                        and "false") or if upper case letters are allowed.
 	*/
-	bool ToBool(bool& valid,bool strict=false);
+	bool ToBool(bool& valid,bool strict);
+
+	/**
+	* Try to transform a string into a boolean value. It recognizes the strings
+	* "0", "1", "true" and "false".
+	* @param strict          Define if the string recognition is strict ("true"
+	*                        and "false") or if upper case letters are allowed.
+	*
+	* This version generates an exception if the string does not contain a
+	* valid boolean value.
+	*/
+	bool ToBool(bool strict)
+	{
+		bool Valid;
+		bool Val(ToBool(Valid,strict));
+		if(!Valid)
+			GenerateException("is not a valid bool");
+		return(Val);
+	}
 	//@} String to number methods
 
 	// friend classes

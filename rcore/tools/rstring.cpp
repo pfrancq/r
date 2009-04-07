@@ -335,6 +335,13 @@ char* RString::UnicodeToLatin1(const RChar* src,size_t len)
 
 
 //------------------------------------------------------------------------------
+void RString::GenerateException(const RString& msg)
+{
+	throw RException("'"+(*this)+"': "+msg);
+}
+
+
+//------------------------------------------------------------------------------
 char RString::ToChar(bool& valid)
 {
 	int v;
@@ -387,6 +394,23 @@ size_t RString::ToSizeT(bool& valid)
 		valid=(sscanf(Latin1(),"%u",&v)>0);
 	#elif __WORDSIZE == 64
 		valid=(sscanf(Latin1(),"%lu",&v)>0);
+	#endif
+	return(v);
+}
+
+
+//------------------------------------------------------------------------------
+off_t RString::ToOffT(bool& valid)
+{
+	off_t v;
+	#ifdef _FILE_OFFSET_BITS
+		#if _FILE_OFFSET_BITS == 64
+			valid=(sscanf(Latin1(),"%ld",&v)==1);
+		#else
+			valid=(sscanf(Latin1(),"%d",&v)==1);
+		#endif
+	#else
+		valid=(sscanf(Latin1(),"%ld",&v)==1);
 	#endif
 	return(v);
 }

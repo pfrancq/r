@@ -406,7 +406,15 @@ void RIOFile::Write(const char* buffer,size_t nb)
 
 	// Write into the file
 	off_t after=Pos+nb;
-	write(Handle,buffer,nb);
+	const char* ptr=buffer;
+	for(ssize_t towrite=nb;towrite;)
+	{
+		ssize_t written(write(Handle,ptr,towrite));
+		towrite-=written;
+		if(towrite)
+			ptr=&buffer[written];
+	}
+
 	#ifdef windows
 		flushall();
 	#endif

@@ -103,7 +103,7 @@ public:
 	* @param id             Identifier of the object.
 	* @return true if the object is in, else false.
 	*/
-	virtual bool IsIn(size_t id);
+	virtual bool IsIn(size_t id) const;
 
 	/**
 	* Destruct the container.

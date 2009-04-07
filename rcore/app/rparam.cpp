@@ -205,9 +205,7 @@ RString RParamValue::Get(void)
 //------------------------------------------------------------------------------
 bool RParamValue::GetBool(void)
 {
-	bool b;
-	bool Val=Value.ToBool(b);
-	return(Val);
+	return(Value.ToBool(false));
 }
 
 
