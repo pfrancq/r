@@ -46,6 +46,21 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
+ * Constant representing the maximum size of off_t variable.
+ */
+#ifdef _FILE_OFFSET_BITS
+	#if _FILE_OFFSET_BITS == 64
+		const off_t MaxOffT=9223372036854775807;
+	#else
+		const off_t MaxOffT=2147483647;
+	#endif
+#else
+	const off_t MaxOffT=9223372036854775807;
+#endif
+
+
+//------------------------------------------------------------------------------
+/**
 * The RIOFile class represents a file that can do some input and/or output
 * tasks. To read, the class works with an internal buffer of 10 Kb.
 *
