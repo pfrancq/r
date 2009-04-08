@@ -108,7 +108,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	cNode* Node;
 	cNode* NewNode;
 
-	// 1. Two nodes having the same attributes are choosen in each parent:
+	// 1. Two nodes having the same attributes are chosen in each parent:
 	// Node1 from parent1.
 	// Node2 from parent2.
 	size_t Nb1=parent1->Used.GetTab(thNodes1);
@@ -135,28 +135,24 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 		// Put information related to the crossover
 		if(Instance->Debug)
 		{
-			static char tmp[500];
-			static char tmp2[50];
-			sprintf(tmp,"Node %u (",Node1->GetId());
+			RString tmp("Node "+RString::Number(Node1->GetId())+" (");
 			for(i=0;i<Node1->GetAttr().GetNbAttr();i++)
 			{
-				if(i>0) strcat(tmp,",");
-				sprintf(tmp2,"%u",Node1->GetAttr()[i]);
-				strcat(tmp,tmp2);
+				if(i>0)
+					tmp+=",";
+				tmp+=RString::Number(Node1->GetAttr()[i]);
 			}
-			sprintf(tmp2,") from Chromosome %u used.",parent1->Id);
-			strcat(tmp,tmp2);
+			tmp+=") from Chromosome "+RString::Number(parent1->Id)+" used.";
 			Instance->Debug->PrintInfo(tmp);
-			sprintf(tmp,"Node %u (",Node2->GetId());
+			tmp="Node "+RString::Number(Node2->GetId())+" (";
 			for(i=0;i<Node2->GetAttr().GetNbAttr();i++)
 			{
-				if(i>0) strcat(tmp,",");
-				sprintf(tmp2,"%u",Node2->GetAttr()[i]);
-				strcat(tmp,tmp2);
+				if(i>0)
+					tmp+=",";
+				tmp+=RString::Number(Node2->GetAttr()[i]);
 			}
-			sprintf(tmp2,") from Chromosome %u used.",parent2->Id);
-			strcat(tmp,tmp2);
-				Instance->Debug->PrintInfo(tmp);
+			tmp+=") from Chromosome "+RString::Number(parent2->Id)+" used.";
+			Instance->Debug->PrintInfo(tmp);
 		}
 
 		// 2. parent1 is copied except its nodes having objects attached to Node2 and Node1.
@@ -172,13 +168,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 			NewNode->Copy(Node2);
 		}
 		else
-			RAssertMsg("Crossing node cannot be attached");
+			std::cerr<<"Crossing node cannot be attached"<<std::endl;
 
 		// 4. The objects which are not attached are placed using the heuristic.
 		Heuristic->Run(static_cast<cChromo*>(this));
 	}
 	else
-		RAssertMsg("No crossing nodes where found")
+		std::cerr<<"No crossing nodes where found"<<std::endl;
 
 	if(Instance->Debug)
 		Instance->Debug->EndFunc("Crossover","RChromoH");
@@ -195,11 +191,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	// Choose Ramdomly a node and delete it.
 	cNode* Node=NodesAss[Instance->RRand(NodesAss.GetNb())];
 	if(Instance->Debug)
-	{
-		static char tmp[50];
-		sprintf(tmp,"Node %u use for Mutation",Node->GetId());
-		Instance->Debug->PrintInfo(tmp);
-	}
+		Instance->Debug->PrintInfo("Node "+RString::Number(Node->GetId())+" use for Mutation");
 	ReleaseNode(Node);
 
 	// Used the heuristic to attach the objects attached to the node

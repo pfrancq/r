@@ -54,6 +54,8 @@ namespace R{
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	class RThreadDataH : public RThreadData<cInst,cChromo>
 {
+	using RThreadData<cInst,cChromo>::Owner;
+
 protected:
 
 	/**
@@ -109,6 +111,13 @@ public:
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	class RInstH : public RInst<cInst,cChromo,cFit,cThreadData>
 {
+	using RInst<cInst,cChromo,cFit,cThreadData>::GetPopSize;
+	using RInst<cInst,cChromo,cFit,cThreadData>::Chromosomes;
+	using RInst<cInst,cChromo,cFit,cThreadData>::BestChromosome;
+	using RInst<cInst,cChromo,cFit,cThreadData>::Random;
+	using RInst<cInst,cChromo,cFit,cThreadData>::Debug;
+	using RInst<cInst,cChromo,cFit,cThreadData>::thDatas;
+
 protected:
 
 	/**

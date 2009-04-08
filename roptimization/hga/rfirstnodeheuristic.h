@@ -52,6 +52,10 @@ namespace R{
 template<class cNode,class cObj,class cNodes>
 	class RFirstNodeHeuristic : public RTreeHeuristic<cNode,cObj,cNodes>
 {
+	using RTreeHeuristic<cNode,cObj,cNodes>::Nodes;
+	using RTreeHeuristic<cNode,cObj,cNodes>::CurObj;
+	using RTreeHeuristic<cNode,cObj,cNodes>::Random;
+
 	/**
 	* Temporary array of nodes.
 	*/
@@ -82,15 +86,6 @@ public:
 	* @param nodes          Pointer to the nodes.
 	*/
 	virtual void Init(cNodes* nodes);
-
-	/**
-	* Random the position of elements of a vector using the current random
-	* generator.
-	* @param arr            A pointer to the array representing the vector.
-	* @param size           The size of the vector.
-	*/
-	template<class T> inline void RandOrder(T* arr,size_t size)
-		{Random->RandOrder<T>(arr,size);}
 
 	/**
 	 * Create a new child node to the current node with the set of attributes

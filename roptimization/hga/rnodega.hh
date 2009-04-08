@@ -356,7 +356,7 @@ template<class cNode,class cObj,class cNodes>
 
 		// Find where this object must goes -> eventually create a empty place
 		// in objs
-		for(i=nbobjs+1,tmpObjs=objs;(--i)&&((*tmpObjs)->GetId()<id);tmpObjs++);
+		for(i=nbobjs+1,tmpObjs=objs;(--i)&&((*tmpObjs)->GetId()<id);tmpObjs++) ;
 		if(i) memmove(tmpObjs+1,tmpObjs,sizeof(size_t)*i);
 
 		// Put the object in objs

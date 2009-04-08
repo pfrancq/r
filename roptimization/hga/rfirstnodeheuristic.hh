@@ -91,7 +91,7 @@ template<class cNode,class cObj,class cNodes>
 
 		// Get the subnodes of the current node and randomize them
 		i=Nodes->GetNodes(tmpNodes,*CurNode);
-		RandOrder<cNode*>(tmpNodes,i);
+		Random->RandOrder(tmpNodes,i);
 
 		// Go trough the subnodes
 		for(N=tmpNodes,NbMax=0,Node=0,i++;--i;N++)

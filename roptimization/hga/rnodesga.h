@@ -57,6 +57,10 @@ namespace R{
 template<class cNode,class cObj,class cNodes>
 	class RNodesGA : public RContainer<cNode,true,false>
 {
+	using RContainer<cNode,true,false>::MaxPtr;
+	using RContainer<cNode,true,false>::GetMaxNb;
+	using RContainer<cNode,true,false>::GetIncNb;
+
 protected:
 
 	/**

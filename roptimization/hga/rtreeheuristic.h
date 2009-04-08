@@ -183,7 +183,7 @@ public:
 	* Return a number in the interval [0,max[ using the current random generator.
 	* @param max            Variable used to calculate the number.
 	*/
-	long RRand(long max) {return(Random->Value(max));}
+	long RRand(long max) {return(Random->GetValue(max));}
 
 	/**
 	* Random the position of elements of a vector using the current random generator.
