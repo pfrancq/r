@@ -163,7 +163,17 @@ void RTextFile::ReadChars(void)
 					end=true;
 					continue;
 				}
-				NextCar=Codec->NextUnicode(ptr,s);
+
+				// Try to read an unicode character with accepting invalid characters
+				NextCar=Codec->NextUnicode(ptr,s,true);
+				if(!NextCar.Valid)
+				{
+					ptr++;
+					treat++;
+					continue;
+				}
+
+				// Valid Unicode character
 				(*NextWrite)=NextCar.Codes[0];
 				ptr+=s;
 				len-=treat+s;
@@ -175,11 +185,6 @@ void RTextFile::ReadChars(void)
 					Resting=0;
 				(*SizeNextWrite)=treat+s;
 				end=true;
-			}
-			catch(InvalidByteSequence)
-			{
-				ptr++;
-				treat++;
 			}
 			catch(RException e)
 			{

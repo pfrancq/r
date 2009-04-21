@@ -58,18 +58,6 @@ using namespace std;
 const size_t InternalBufferSize=10240;
 
 
-//------------------------------------------------------------------------------
-// Macros proposed by Christian Biere:
-// http://osdir.com/ml/os.netbsd.devel.general/2007-02/msg00000.html
-#define MAX_INT_VAL_STEP(t) \
-        ((t) 1 << (CHAR_BIT * sizeof(t) - 1 - ((t) -1 < 1)))
-#define MAX_INT_VAL(t) \
-        ((MAX_INT_VAL_STEP(t) - 1) + MAX_INT_VAL_STEP(t))
-
-#define MIN_INT_VAL(t) \
-        ((t) -MAX_INT_VAL(t) - 1)
-
-
 
 //------------------------------------------------------------------------------
 //
@@ -78,7 +66,6 @@ const size_t InternalBufferSize=10240;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-const off_t RIOFile::MaxSize=MAX_INT_VAL(off_t);
 RDownload RIOFile::Get;
 
 
@@ -242,7 +229,7 @@ void RIOFile::Open(RIO::ModeType mode)
 		Pos=Size;
 
 	// Suppose nothing is in the buffer
-	RealInternalPos=MaxSize;
+	RealInternalPos=MaxOffT;
 }
 
 
@@ -322,7 +309,7 @@ size_t RIOFile::Read(char* buffer,size_t nb,bool move)
 			{
 				Pos+=InternalToRead;
 				InternalToRead=0;
-				RealInternalPos=MaxSize;
+				RealInternalPos=MaxOffT;
 			}
 		}
 		else
@@ -453,7 +440,7 @@ void RIOFile::Write(const char* buffer,size_t nb)
 		}
 		else
 		{
-			RealInternalPos=MaxSize;
+			RealInternalPos=MaxOffT;
 			InternalToRead=0;
 		}
 	}
@@ -487,7 +474,7 @@ void RIOFile::Seek(off_t pos)
 
 		// Dirty the internal buffer
 		InternalToRead=0;
-		RealInternalPos=MaxSize;
+		RealInternalPos=MaxOffT;
 	}
 	else
 	{
@@ -518,7 +505,7 @@ void RIOFile::SeekRel(off_t rel)
 
 		// Dirty the internal buffer
 		InternalToRead=0;
-		RealInternalPos=MaxSize;
+		RealInternalPos=MaxOffT;
 	}
 	else
 	{

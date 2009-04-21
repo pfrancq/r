@@ -57,7 +57,7 @@ template<class cNode,class cObj,class cNodes>
 	// Calculate an order
 	for(Objs.Start(),Cur=Nodes->ObjectsAss;!Objs.End();Cur++,Objs.Next())
 	{
-		if((*Cur)==NoNode)
+		if((*Cur)==cNoRef)
 			Order[NbObjs++]=Objs();
 	}
 	RandOrder<cObj*>(Order,NbObjs);

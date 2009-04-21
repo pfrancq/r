@@ -185,7 +185,7 @@ protected:
 	/**
 	* Delete an element at a given position.
 	*/
-	void DeletePtrAt(bool bAlloc,size_t pos,bool del);
+	void DeletePtrAt(bool bAlloc,size_t pos,bool shift);
 
 	/**
 	* Destruct the container.

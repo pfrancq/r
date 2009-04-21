@@ -108,7 +108,7 @@ public:
 	* Construct a string from a character.
 	* @param car             Character.
 	*/
-	RCString(char car);
+	explicit RCString(char car);
 
 	/**
 	* Construct a string from another string.

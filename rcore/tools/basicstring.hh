@@ -214,6 +214,7 @@ template<class C,class S>
 template<class C,class S>
 	void R::BasicString<C,S>::SetLen(size_t len)
 {
+	Copy();
 	if(len<=Data->MaxLen)
 	{
 		Data->Len=len;
@@ -240,7 +241,6 @@ template<class C,class S>
 {
 	size_t oldsize=Data->Len;
 	SetLen(len);
-	Copy();
 	Data->Len=len;
 	if(oldsize<len)
 	{

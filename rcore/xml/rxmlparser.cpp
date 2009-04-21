@@ -358,7 +358,7 @@ void RXMLParser::LoadHeader(void)
 						Cur=GetChar();
 						if(Cur!='"')
 							throw RIOException(this,"Wrong entities formating");
-						RString uri(GetToken(RChar('"')));
+						RString uri(GetToken(RString('"')));
 						Cur=GetChar();
 						if(Cur!='"')
 							throw RIOException(this,"Wrong entities formating");
@@ -401,7 +401,7 @@ void RXMLParser::LoadHeader(void)
 					bool Quotes=((What==RChar('\''))||(What==RChar('"')));
 					if(!Quotes)
 						throw RIOException(this,"Bad XML file");
-					SetDTD(GetToken(What));
+					SetDTD(GetToken(RString(What)));
 					SkipSpaces();
 					if(GetChar()!=What)
 						throw RIOException(this,"Bad XML file");
@@ -527,7 +527,7 @@ void RXMLParser::LoadNextTag(void)
 
 					// Add all spaces
 					while(GetNextChar().IsSpace())
-						Text(GetChar());
+						Text(RString(GetChar()));
 				}
 				Text("]]>");
 				SetParseSpace(RTextFile::SkipAllSpaces);
@@ -556,7 +556,7 @@ void RXMLParser::LoadNextTag(void)
 
 				// Add all spaces
 				while(GetNextChar().IsSpace())
-					Text(GetChar());
+					Text(RString(GetChar()));
 
 				// Look if the next '<' is the beginning of "<![CDATA["
 				CDATA=CurString("<![CDATA[",true);
@@ -578,7 +578,7 @@ void RXMLParser::LoadNextTag(void)
 
 						// Add all spaces
 						while(GetNextChar().IsSpace())
-							Text(GetChar());
+							Text(RString(GetChar()));
 					}
 					Text("]]>");
 					SetParseSpace(RTextFile::SkipAllSpaces);
@@ -594,7 +594,7 @@ void RXMLParser::LoadNextTag(void)
 	CurTagClosing=true;
 	SkipSpaces();
 	LastTokenPos=GetPos();
-	RString EndTagName(GetToken(RChar('>')));
+	RString EndTagName(GetToken(RString('>')));
 	if(EndTagName!=TagName)
 		throw RIOException(this,"Found closing tag '"+EndTagName+"' while closing tag '"+TagName+"' ("+RString::Number(OpenTagLine)+") was expected.");
 	SkipSpaces();
@@ -694,7 +694,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 				{
 					// Get the next word
 					LastTokenPos=GetPos();
-					RString tmp(GetToken(What));
+					RString tmp(GetToken(RString(What)));
 					if(tmp.GetLen())
 					{
 						if(Section==Header)
@@ -711,7 +711,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 						if(Section==Header)
 							HeaderValue(tmp);
 						else
-							Value(GetChar());
+							Value(RString(GetChar()));
 					}
 				}
 				SetParseSpace(RTextFile::SkipAllSpaces);

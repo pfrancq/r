@@ -47,15 +47,15 @@ namespace R{
 /**
 * This class represent a container of elements (class C). This elements are
 * stored in an array of pointers which will be increase when necessary. The
-* container can be responsible for the desallocation of the elements
+* container can be responsible for the deallocation of the elements
 * (bAlloc), and the elements can be ordered (bOrder).
 * @param C                   The class of the elements to be contained.
-* @param bAlloc              Specify if the elements are desallocated by the
+* @param bAlloc              Specify if the elements are deallocated by the
 *                            container.
 * @param bOrder              Specify if the elements are ordered in the
 *                            container.
 *
-* To make the necessary comparaisons, the container uses member functions of
+* To make the necessary comparisons, the container uses member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
 * @code
@@ -63,11 +63,11 @@ namespace R{
 * int Compare(const TUse* tag) const;
 * @endcode
 *
-* The TUse represent a class or a structure used for the comparaisons. These
+* The TUse represent a class or a structure used for the comparisons. These
 * functions are working like the strcmp function from the standard C/C++
-* library. The result returned specifies if the tag preceeds (>0), is the
+* library. The result returned specifies if the tag precedes (>0), is the
 * same (0) or is after (<0) the element used. The structure used for the
-* comparaisons can represent or not the sort key used when the container must
+* Comparisons can represent or not the sort key used when the container must
 * be ordered. The user must specify if the key used for a search is the
 * sorting one or not.
 *
@@ -237,7 +237,7 @@ public:
 
 	/**
 	* Clear the container and destruct the elements if it is responsible for
-	* the desallocation.The container can also be extended.
+	* the deallocation.The container can also be extended.
 	* @param m              New maximal size of the array. If null, the old
 	*                       size remains.
 	* @param i              New increasing value. If null, the old value
@@ -251,7 +251,7 @@ public:
 	* -# The container contains null pointers.
 	* -# The container is ordered and the method does not use the same criterion
 	*    for the ordering.
-	* @param sortOrder       Pointer to a (static) funtion used for the ordering.
+	* @param sortOrder       Pointer to a (static) function used for the ordering.
 	*/
 	inline void ReOrder(int sortOrder(const void*,const void*)) {BasicContainer::ReOrder(sortOrder);}
 
@@ -465,7 +465,8 @@ public:
 	* -#    By using this function, the user can leave "blanks" in the container,
 	*       in other words, some "valid" pointers could be null. This situation is
 	*       not handle by the other functions of the container.
-	*  This method can be limited to a part of the container.
+	*
+	* This method can be limited to a part of the container.
 	* @param ins             A pointer to the element to insert.
 	* @param pos             The position where to insert it.
 	* @param del             Specify if the object that was previously at the
@@ -484,7 +485,7 @@ public:
 	*                        (false).
 	* @param del             Specify if the object must deleted or not. By
 	*                        default, the element is destruct if the container
-	*                        is responsible of the desallocation.
+	*                        is responsible of the deallocation.
 	* @param min             Starting index of the container's part concerned.
 	* @param max             Ending index of the container's part concerned.
 	*/
@@ -497,7 +498,7 @@ public:
 	*                        if the position should be left empty.
 	* @param del             Specify if the object must deleted or not. By
 	*                        default, the element is destruct if the container
-	*                        is responsible of the desallocation.
+	*                        is responsible of the deallocation.
 	*/
 	inline void DeletePtrAt(size_t pos,bool shift=true,bool del=bAlloc) {BasicContainer::DeletePtrAt(del,pos,shift);}
 

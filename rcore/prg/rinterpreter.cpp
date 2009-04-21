@@ -255,7 +255,7 @@ void RInterpreter::TreatLine(size_t depth,RString line)
 		case '.':   // Call to the method of an object
 		{
 			// Read the methods name
-			RString Method(GetToken('('));
+			RString Method(GetToken(RString('(')));
 			if((*Char)!='(')
 				throw RPrgException(this,"Wrong call to the method '"+Method+"' for object '"+Inst+"'");
 			Char++;
@@ -270,12 +270,12 @@ void RInterpreter::TreatLine(size_t depth,RString line)
 		case '=':     // Must be an assignment
 		{
 			// Get the next token after the = and the first "
-			RString Cmd(GetToken('\"'));
+			RString Cmd(GetToken(RString('\"')));
 
 			if(Cmd=="new")
 			{
 				// Read the class name
-				RString ClassName(GetToken('('));
+				RString ClassName(GetToken(RString('(')));
 				RPrgClass* Class=Classes.GetPtr(ClassName);
 				if(!Class)
 					throw RPrgException(this,"Unknown class '"+ClassName+"'");
@@ -423,7 +423,7 @@ void RInterpreter::TreatInst(const RString& inst,size_t depth,RChar param)
 			throw RPrgException(this,"'sub' needs first the name of a subroutine");
 
 		// Read name of subroutine
-		RString Sub(param+GetToken('('));
+		RString Sub(param+GetToken(RString('(')));
 		Char++; // Skip (
 		AnalyseParams();
 		RPrgInstSub* f=new RPrgInstSub(this,depth+1,Sub,Parameters);
@@ -535,7 +535,7 @@ RString RInterpreter::ReadLiteral(void)
 	RString Val;
 	while(Cont)
 	{
-		RString Part(GetToken('\"'));
+		RString Part(GetToken(RString('\"')));
 		Val+=Part;
 		RChar end=(*Char);
 		Char++;

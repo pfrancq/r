@@ -94,13 +94,18 @@ public:
 		 * Maximum two RChar are necessary to store a Unicode character.
 		 */
 		RChar Codes[2];
+
+		/**
+		 * Valid Unicode character ?
+		 */
+		bool Valid;
 	};
 
 
 private:
 
 	/**
-	* The name of the encoding (always in uppercase).
+	* The name of the encoding (always in upper case).
 	*/
 	RString Name;
 
@@ -170,8 +175,10 @@ public:
 	* @param text           Text in the given encoding.
 	* @param len            Number of character to analyzed. After the call,
 	*                       this parameters contains the number of bytes read.
+	* @param invalid        If true, invalid characters are allowed. If false,
+	*                       an exception is generated.
 	*/
-	virtual UnicodeCharacter NextUnicode(const char* text,size_t& len) const;
+	virtual UnicodeCharacter NextUnicode(const char* text,size_t& len,bool invalid=false) const;
 
 	/**
 	* Transform a string in Unicode to a string of the given encoding.

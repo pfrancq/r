@@ -92,9 +92,9 @@ public:
 
 	/**
 	 * End a Tag.
-	 * @param tag           Name of the Tag.
+	 * @param text           Name of the Tag.
 	 */
-	void EndTag(const RString& Text);
+	void EndTag(const RString& text);
 
 	/**
 	 * Get the name of the current tag.

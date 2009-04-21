@@ -133,7 +133,7 @@ void RDownload::DownloadFile(const RURI& uri,const RURI& local)
 	ValidContent=true;  // Suppose the content is OK
 	MIME="";            // No MIME type.
 	First=true;
-	Stream=fopen(local(), "wb");
+	Stream=fopen(local.GetPath(), "wb");
 	if(!Stream)
 		throw RException("Cannot create file '"+local()+"'");
 
@@ -156,7 +156,7 @@ void RDownload::DownloadFile(const RURI& uri,const RURI& local)
 //------------------------------------------------------------------------------
 void RDownload::DeleteFile(const RURI& tmpFile)
 {
-	remove(tmpFile());
+	remove(tmpFile.GetPath());
 }
 
 

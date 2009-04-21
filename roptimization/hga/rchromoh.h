@@ -87,12 +87,12 @@ public:
 	/**
 	* Construct the chromosome.
 	* @param inst           The instance.
-	* @param id             Identificator of the chromosome.
+	* @param id             Identifier of the chromosome.
 	*/
 	RChromoH(cInst* inst,size_t id);
 
 	/**
-	* Initialisation of the chromosome.
+	* Initialization of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the
 	*                       chromosome.
 	*/
@@ -115,7 +115,7 @@ public:
 
 	/**
 	* Do a crossover by using the chromosome as child:
-	* 1. Two nodes having the same attributes are choosen in each parent
+	* 1. Two nodes having the same attributes are chosen in each parent
 	*    (crossing nodes).
 	* 2. The first parent is copied except its nodes having objects attached to
 	*    the node of the second parent and its crossing node.

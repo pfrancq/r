@@ -174,6 +174,8 @@ size_t BasicContainer::GetIndex(bool bOrder,const void* tag,bool& find,size_t mi
 			{
 				i=(NbMax+NbMin)/2;
 				ptr=Tab[i];
+				if(!ptr)
+					throw RException("BasicContainer::GetIndex : Problem!");
 				Comp=compare(ptr,tag);
 				if(!Comp)
 				{
@@ -378,7 +380,7 @@ void BasicContainer::DeletePtr(bool bOrder,bool bAlloc,const void* tag,bool sort
 
 
 //-----------------------------------------------------------------------------
-void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos,bool del)
+void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos,bool shift)
 {
 	void** ptr;
 
@@ -399,7 +401,7 @@ void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos,bool del)
 	else
 	{
 		// Not the last element -> Verify if the elements must be moved
-		if(del)
+		if(shift)
 		{
 			memmove(ptr,ptr+1,((--LastPtr)-pos)*sizeof(void*));
 			Tab[LastPtr]=0;

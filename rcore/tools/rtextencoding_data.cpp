@@ -1086,6 +1086,7 @@ const EncodingAlias EncodingAliases[]={
 	{"utf-32le","utf-32le"},
 	{"utf-7","utf-7"},
 	{"utf-8","utf-8"},
+	{"utf8","utf-8"},
 	{"ventura-international","ventura-international"},
 	{"ventura-math","ventura-math"},
 	{"ventura-us","ventura-us"},

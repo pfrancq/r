@@ -226,7 +226,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	void RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::Copy(const cChromo& chromo)
 {
 	RChromo<cInst,cChromo,cFit,cThreadData>::Copy(chromo);
-	RNodesGA<cNode,cObj,cChromo>::operator=(chromo);
+	RNodesGA<cNode,cObj,cChromo>::CopyTree(chromo);
 }
 
 

@@ -48,7 +48,7 @@ template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::Init(void)
 {
 	// Init Nodes
-	Top=new cNode(static_cast<cNodes*>(this),NoNode,MaxAttr);
+	Top=new cNode(static_cast<cNodes*>(this),cNoRef,MaxAttr);
 	for(size_t i=0;i<MaxPtr;i++)
 		InsertPtr(new cNode(static_cast<cNodes*>(this),i,MaxAttr));
 }
@@ -125,9 +125,9 @@ template<class cNode,class cObj,class cNodes>
 		NodesAss.InsertPtrAt(node,tmp,false);
 		RCursor<cNode> Cur(*this);
 		for(Cur.Start();!Cur.End();Cur.Next())
-			if((Cur()->SubNodes>to->SubNodes)&&(Cur()->SubNodes!=NoNode))
+			if((Cur()->SubNodes>to->SubNodes)&&(Cur()->SubNodes!=cNoRef))
 				Cur()->SubNodes++;
-		if((Top->SubNodes>to->SubNodes)&&(Top->SubNodes!=NoNode))
+		if((Top->SubNodes>to->SubNodes)&&(Top->SubNodes!=cNoRef))
 			Top->SubNodes++;
 	}
 	else
@@ -151,14 +151,14 @@ template<class cNode,class cObj,class cNodes>
 	NodesAss.DeletePtr(node);
 	from=node->Parent;
 	if(!(--from->NbSubNodes))
-		from->SubNodes=NoNode;
+		from->SubNodes=cNoRef;
 	node->Parent=0;
 	from->PostDelete(node);
-	if((Top->SubNodes>from->SubNodes)&&(Top->SubNodes!=NoNode))
+	if((Top->SubNodes>from->SubNodes)&&(Top->SubNodes!=cNoRef))
 		Top->SubNodes--;
 	RCursor<cNode> Cur(Used);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		if((Cur()->SubNodes>from->SubNodes)&&(Cur()->SubNodes!=NoNode))
+		if((Cur()->SubNodes>from->SubNodes)&&(Cur()->SubNodes!=cNoRef))
 			Cur()->SubNodes--;
 }
 
@@ -181,9 +181,9 @@ template<class cNode,class cObj,class cNodes>
 	j=from->SubNodes;
 	RCursor<cNode> Cur(Used);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		if((Cur()->SubNodes>j)&&(Cur()->SubNodes!=NoNode))
+		if((Cur()->SubNodes>j)&&(Cur()->SubNodes!=cNoRef))
 			Cur()->SubNodes-=from->NbSubNodes;
-	if((Top->SubNodes>j)&&(Top->SubNodes!=NoNode))
+	if((Top->SubNodes>j)&&(Top->SubNodes!=cNoRef))
 		Top->SubNodes-=from->NbSubNodes;
 }
 
@@ -249,7 +249,7 @@ template<class cNode,class cObj,class cNodes>
 
 	if(from==Top) return;
 	j=from->SubObjects;
-	ObjectsAss[obj->GetId()]=NoNode;
+	ObjectsAss[obj->GetId()]=cNoRef;
 	ObjsAss.DeletePtr(obj);
 	ObjsNoAss.InsertPtr(obj);
 	if(!(--(from->NbSubObjects)))
@@ -270,10 +270,10 @@ template<class cNode,class cObj,class cNodes>
 	cNode* from;
 
 	i=ObjectsAss[obj->GetId()];
-	if(i==NoNode) return;
+	if(i==cNoRef) return;
 	from=(*this)[i];
 	j=from->SubObjects;
-	ObjectsAss[obj->GetId()]=NoNode;
+	ObjectsAss[obj->GetId()]=cNoRef;
 	ObjsAss.DeletePtr(obj);
 	ObjsNoAss.InsertPtr(obj);
 	if(!(--(from->NbSubObjects)))
@@ -298,7 +298,7 @@ template<class cNode,class cObj,class cNodes>
 	for(o.Start();!o.End();o.Next())
 	{
 		// No need to increment o, because delete moves the everything
-		ObjectsAss[o()->GetId()]=NoNode;
+		ObjectsAss[o()->GetId()]=cNoRef;
 		ObjsNoAss.InsertPtr(o());
 		ObjsAss.DeletePtr(o());
 		if(!(--from->NbSubObjects))
@@ -382,11 +382,10 @@ template<class cNode,class cObj,class cNodes>
 
 //---------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	RNodesGA<cNode,cObj,cNodes>& RNodesGA<cNode,cObj,cNodes>::operator=(const RNodesGA& nodes)
+	void RNodesGA<cNode,cObj,cNodes>::CopyTree(const RNodesGA& nodes)
 {
 	ClearNodes();
 	Top->Copy(nodes.Top);
-	return(*this);
 }
 
 

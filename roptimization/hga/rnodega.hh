@@ -55,7 +55,7 @@ template<class cNode,class cObj,class cNodes>
 {
 	NbSubNodes=NbSubObjects= 0;
 	Parent=0;
-	SubNodes = NoNode;
+	SubNodes = cNoRef;
 	SubObjects = cNoRef;
 	Reserved=false;
 }
@@ -99,7 +99,7 @@ template<class cNode,class cObj,class cNodes>
 	if(NbSubNodes)
 	{
 		// There number of subnodes can't be null.
-		if(SubNodes==NoNode)
+		if(SubNodes==cNoRef)
 		{
 			cerr<<"Node n"<<Id<<": SubNodes==NoNode"<<endl;
 			return(false);
@@ -122,7 +122,7 @@ template<class cNode,class cObj,class cNodes>
 	else
 	{
 		// The number of subnodes must be null.
-		if(SubNodes!=NoNode)
+		if(SubNodes!=cNoRef)
 		{
 			cerr<<"Node n"<<Id<<": SubNodes!=NoNode"<<endl;
 			return(false);
@@ -205,7 +205,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	bool RNodeGA<cNode,cObj,cNodes>::CanAttach(const RAttrList& attr) const
 {
-	if(Id==NoNode)
+	if(Id==cNoRef)
 		return(false);
 	return(Attr.IsParent(attr));
 }
@@ -215,7 +215,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	bool RNodeGA<cNode,cObj,cNodes>::IsSame(const RAttrList& attr) const
 {
-	if(Id==NoNode)
+	if(Id==cNoRef)
 		return(false);
 	return(Attr.IsSame(attr));
 }
@@ -328,7 +328,7 @@ template<class cNode,class cObj,class cNodes>
 	Parent=0;
 	SubObjects=cNoRef;
 	NbSubObjects=0;
-	SubNodes=NoNode;
+	SubNodes=cNoRef;
 	NbSubNodes=0;
 	Attr.Clear();
 }
@@ -403,7 +403,7 @@ template<class cNode,class cObj,class cNodes>
 	RCursor<cNode> Cur(Owner->GetNodes(this));
 	for(Cur.Start();!Cur.End();Cur.Next(),tmp2++)
 		(*tmp2)=Cur()->GetId();
-	(*tmp2)=NoNode;
+	(*tmp2)=cNoRef;
 	return(tmp);
 }
 

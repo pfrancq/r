@@ -45,18 +45,19 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
+// Macros proposed by Christian Biere:
+// http://osdir.com/ml/os.netbsd.devel.general/2007-02/msg00000.html
+#define MAX_INT_VAL_STEP(t) \
+        ((t) 1 << (CHAR_BIT * sizeof(t) - 1 - ((t) -1 < 1)))
+#define MAX_INT_VAL(t) \
+        ((MAX_INT_VAL_STEP(t) - 1) + MAX_INT_VAL_STEP(t))
+
+
+//------------------------------------------------------------------------------
 /**
  * Constant representing the maximum size of off_t variable.
  */
-#ifdef _FILE_OFFSET_BITS
-	#if _FILE_OFFSET_BITS == 64
-		const off_t MaxOffT=9223372036854775807;
-	#else
-		const off_t MaxOffT=2147483647;
-	#endif
-#else
-	const off_t MaxOffT=9223372036854775807;
-#endif
+const off_t MaxOffT=MAX_INT_VAL(off_t);
 
 
 //------------------------------------------------------------------------------
@@ -149,11 +150,6 @@ protected:
 	bool CanRead;
 
 public:
-
-	/**
-	 * Maximal size for a file or position.
-	 */
-	static const off_t MaxSize;
 
 	/**
 	* Default constructor for a file.

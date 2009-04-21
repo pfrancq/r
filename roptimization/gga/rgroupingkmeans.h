@@ -196,7 +196,7 @@ protected:
 	 * kMeans. The best centroids of the sample are used.
 	 * @param nb              Number of groups to create.
 	 * @param max             Maximal number of iterations.
-	 * @param sub             Number of samples to use.
+	 * @param nbsub           Number of samples to use.
 	 * @param level           Percentage of objects to group for each sample.
 	 */
 	void InitRefine(size_t nb,size_t max,size_t nbsub=5,int level=5);

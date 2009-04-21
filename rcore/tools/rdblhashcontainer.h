@@ -47,11 +47,13 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * This class represent a container of elements (class C) with a double hash
-* table.
+* table. The container can be responsible for the deallocation of the elements
+* (bAlloc).
 * @param C                  The class of the element to be contained.
-* @param bAlloc             Specify if the elements are desallocated by the
+* @param bAlloc             Specify if the elements are deallocated by the
 *                           container.
-* To make the necessary comparaisons, the container uses member functions of
+*
+* To make the necessary comparisons, the container uses member functions of
 * the class representing the elements (class C). These functions have the
 * signature:
 * @code
@@ -60,9 +62,9 @@ namespace R{
 * size_t HashIndex(size_t idx) const;
 * @endcode
 *
-* The TUse represent a class or a structure used for the comparaisons. The
+* The TUse represent a class or a structure used for the comparisons. The
 * Compare methods are working like the strcmp function from the standard C/C++
-* library. The result returned specifies if the tag preceeds (>0), is the
+* library. The result returned specifies if the tag precedes (>0), is the
 * same (0) or is after (<0) the element used. The HashIndex methods return the
 * hash index of the given argument for the first hash table (idx=1) or for the
 * second hash table (idx=2).
@@ -485,10 +487,12 @@ public:
 	*/
 	template<class TUse> inline C* GetPtr(const TUse tag,bool sortkey=true) const
 	{
-		const Hash* ptr=GetHash(tag.HashIndex(1));
+		size_t hash1(tag.HashIndex(1));
+		const Hash* ptr=GetHash(hash1);
 		if(!ptr)
 			return(0);
-		const Hash2* ptr2=ptr->GetHash(tag.HashIndex(2));
+		size_t hash2(tag.HashIndex(2));
+		const Hash2* ptr2=ptr->GetHash(hash2);
 		if(!ptr2)
 			return(0);
 		return(ptr2->GetPtr<TUse>(tag,sortkey));
@@ -539,7 +543,7 @@ public:
 	*                       not (false).
 	* @param del             Specify if the object must deleted or not. By
 	*                        default, the element is destruct if the container
-	*                        is responsible of the desallocation.
+	*                        is responsible of the deallocation.
 	*/
 	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=true,bool del=bAlloc)
 	{

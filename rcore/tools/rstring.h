@@ -106,13 +106,13 @@ public:
 	* Construct a string from a character.
 	* @param car             Character.
 	*/
-	RString(char car);
+	explicit RString(char car);
 
 	/**
 	* Construct a string from a character.
 	* @param car             Character.
 	*/
-	RString(RChar car);
+	explicit RString(RChar car);
 
 	/**
 	* Construct a string from another string.

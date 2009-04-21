@@ -121,7 +121,7 @@ void BasicCursor::Start(void)
 		return;
 	}
 	Current=&Tab[FirstPtr];
-	while(!(*Current))
+	while((!(*Current))&&(ActPtr<LastPtr))
 		Next();
 }
 

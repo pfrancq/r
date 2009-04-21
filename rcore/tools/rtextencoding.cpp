@@ -296,7 +296,7 @@ RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 
 
 //------------------------------------------------------------------------------
-RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size_t& len) const
+RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size_t& len,bool invalid) const
 {
 	UnicodeCharacter Code;
 	char* ptr2;
@@ -304,6 +304,8 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 	size_t s1,s2,err;
 	bool ToFill=true;
 
+	// Suppose Unicode character is valid.
+	Code.Valid=true;
 	ptr1=(char*)text;
 	s1=len;
 	ptr2=(char*)Code.Codes;
@@ -322,7 +324,13 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 			switch(errno)
 			{
 			case EILSEQ:
-				throw InvalidByteSequence("Invalid byte sequence for encoding "+Name);
+				if(invalid)
+				{
+					Code.Valid=false;
+					return(Code);
+				}
+				else
+					throw InvalidByteSequence("Invalid byte sequence for encoding "+Name);
 				break;
 			case E2BIG:
 				if(!s2)

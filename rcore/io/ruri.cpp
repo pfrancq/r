@@ -93,13 +93,13 @@ void RURI::AnalyzeString(void)
 	if(!URI.GetLen()) return;
 
 	// Test if it is a local file
-	if( URI()[0] =='/')
+	if(URI()[0]=='/')
 	{
 		// No, it is a path -> add file:
 		Scheme.Size=4;
-		Path.Pos=5;
+		Path.Pos=7;
 		Path.Size=URI.GetLen();
-		URI="file:"+URI;
+		URI="file://"+URI;
 		return;
 	}
 
@@ -111,9 +111,18 @@ void RURI::AnalyzeString(void)
 	// Test if it is a local file
 	if(GetScheme()=="file")
 	{
+		// Search if multiple '/' after file:
+		if((URI.GetLen()>7)&&(URI[5]=='/')&&(URI[6]=='/'))
+		{
+			Path.Pos=7;
+			Path.Size=URI.GetLen()-7;
+		}
+		else
+		{
+			Path.Pos=5;
+			Path.Size=URI.GetLen()-5;
+		}
 		Scheme.Size=4;
-		Path.Pos=5;
-		Path.Size=URI.GetLen()-5;
 		return;
 	}
 

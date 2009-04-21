@@ -67,12 +67,12 @@ void RDebug::PrintComment(const RString& text)
 
 
 //------------------------------------------------------------------------------
-void RDebug::EndTag(const RString& tag)
+void RDebug::EndTag(const RString& text)
 {
 	if(!LevelOutput[Deep])
 		WriteText("No Special Information");
 	if(Deep) LevelOutput[Deep-1]=true;
-	WriteEndTag(tag);
+	WriteEndTag(text);
 	Deep--;
 }
 

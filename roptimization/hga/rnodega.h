@@ -47,12 +47,7 @@ namespace R{
 
 //------------------------------------------------------------------------------
 // forward class declaration
-template<class cNode,class cObj,class cNodes> class RNodedGA;
-
-
-//------------------------------------------------------------------------------
-// Constance
-const size_t NoNode=0xFFFFFFFF;
+template<class cNode,class cObj,class cNodes> class RNodesGA;
 
 
 //------------------------------------------------------------------------------
@@ -68,8 +63,8 @@ template<class cNode,class cObj,class cNodes>
 protected:
 
 	/**
-	* Identificator of the Node
-	*/
+	 * Identifier of the Node
+	 */
 	size_t Id;
 
 	/**
@@ -83,12 +78,12 @@ protected:
 	RAttrList Attr;
 
 	/**
-	* Index of the first subnode in Nodes.
+	* Index of the first child node.
 	*/
 	size_t SubNodes;
 
 	/**
-	* Number of subnodes
+	* Number of child nodes
 	*/
 	size_t NbSubNodes;
 
@@ -122,15 +117,15 @@ public:
 
 	/**
 	* Construct the node.
-	* @param owner          Owner of the node.
-	* @param id             Identificator of the node.
-	* @param max            Maximum number of attributes.
+	* @param owner           Owner of the node.
+	* @param id              Identifier of the node.
+	* @param max             Maximum number of attributes.
 	*/
 	RNodeGA(cNodes* owner,size_t id,size_t max);
 
 	/**
 	* Verify if the node is not violating the integrity of the system.
-	* @param nbobjs          Increase the number of objects attached.
+	* @param nbobjs           Increase the number of objects attached.
 	* @return true if the node is correct, false else.
 	*/
 	bool Verify(size_t &nbobjs);
@@ -173,7 +168,7 @@ public:
 	/**
 	* test if two nodes have the same objects attached.
 	* @param node            Node to compare with.
-	* @returns always true.
+	* @return always true.
 	*/
 	bool IsSameObjs(const cNode* node) const;
 
@@ -190,6 +185,11 @@ public:
 	void Delete(cNode* node) {Owner->DeleteNode(node);}
 
 	/**
+	* Return a cursor over the subnodes of the node.
+	*/
+	RCursor<cNode> GetNodes(void) const {return(Owner->GetNodes(*static_cast<const cNode*>(this)));}
+
+	/**
 	* Copy all the objects and the nodes of a node except one node if it exists.
 	* The two nodes have to be of two different owners.
 	* @param from           Node to copy from.
@@ -200,7 +200,7 @@ public:
 	* This method can be used to copy a whole tree "from" into another "to":
 	* @code
 	* to->GetTop()->Copy(from->GetTop);
-	* @encode
+	* @endcode
 	* @return Pointer to the node that was supposed to have the node excluded
 	* (or 0 if not found).
 	*/
@@ -219,6 +219,11 @@ public:
 	void Delete(cObj* obj) {Owner->DeleteObj(obj);}
 
 	/**
+	* Return a cursor over the subobjects of the node.
+	*/
+	RCursor<cObj> GetObjs(void) const {return(Owner->GetObjs(*static_cast<const cNode*>(this)));}
+
+	/**
 	* Method called after a node is attach.
 	* @param node           Node attached.
 	*/
@@ -232,13 +237,13 @@ public:
 
 	/**
 	* Method called after an object is attach.
-	* @param node           Object attached.
+	* @param obj             Object attached.
 	*/
 	virtual void PostInsert(const cObj* obj);
 
 	/**
 	* Method called after an object is detach.
-	* @param node           Object detached.
+	* @param obj             Object attached.
 	*/
 	virtual void PostDelete(const cObj* obj);
 
@@ -270,7 +275,7 @@ public:
 	RNodeGA<cNode,cObj,cNodes>& operator=(const RNodeGA<cNode,cObj,cNodes>& node);
 
 	/**
-	* Return the identificator of the node.
+	* Return the identifier of the node.
 	*/
 	size_t GetId(void) const {return(Id);}
 
@@ -297,7 +302,7 @@ public:
 	size_t* GetObjectsId(void) const;
 
 	/**
-	 * Look if the current node has some objects atatched to it.
+	 * Look if the current node has some objects attached to it.
 	 * @param objs           Objects to verify.
 	 */
 	bool HasSomeObjects(RVectorInt<size_t,true>* objs) const;

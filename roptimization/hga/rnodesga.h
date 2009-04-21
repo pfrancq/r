@@ -220,7 +220,7 @@ public:
 
 	/**
 	* Return a cursor over the subnodes of a node. The cursor cannot iterate
-	* after the last bnode.
+	* after the last node.
 	* @param node            Node.
 	* @return Cursor.
 	*/
@@ -249,10 +249,10 @@ public:
 	bool VerifyNodes(void);
 
 	/**
-	* The assigment operator.
-	* @param chromo         The chromosome used as source.
+	* The assignment operator.
+	* @param nodes           Nodes used as source.
 	*/
-	RNodesGA& operator=(const RNodesGA& nodes);
+	void CopyTree(const RNodesGA& nodes);
 
 	/**
 	* Destruct the chromosome.

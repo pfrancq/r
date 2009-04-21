@@ -68,6 +68,9 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 protected:
 
+	/**
+	 * Pointer to a container used to store the objects to delete.
+	 */
 	R::RContainer<cGroup,false,false>* ToDel;
 
 	/**
