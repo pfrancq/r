@@ -37,6 +37,7 @@
 // include files for R Project
 #include <rstring.h>
 #include <rtextfile.h>
+#include <rvectorbool.h>
 
 
 //------------------------------------------------------------------------------
@@ -61,14 +62,14 @@ class RDebug
 protected:
 
 	/**
-	* Deep Level (if -1 -> Nothing).
+	* Depth (if -1 -> Nothing).
 	*/
-	int Deep;
+	int Depth;
 
 	/**
-	* If LevelOutput[i]=true -> i+1 not null.
+	* If Depths[i]=true -> i+1 not null.
 	*/
-	bool LevelOutput[50];
+	RVectorBool Depths;
 
 public:
 
@@ -185,7 +186,12 @@ class RDebugXML : public RDebug
 	/**
 	* Temporary Variables for Internal use.
 	*/
-	RString tmpTab;
+	char* tmpTab;
+
+	/**
+	 * Size of the array.
+	 */
+	size_t tmpSizeTab;
 
 public:
 
@@ -219,6 +225,12 @@ protected:
 	 * @param tag            Name of the tag.
 	 */
 	virtual void WriteEndTag(const RString& tag);
+
+	/**
+	 * Go to the next line in the file and write a given number of tabs.
+	 * @param nb             Number of tabs.
+	 */
+	void WriteTabs(size_t nb);
 
 public:
 

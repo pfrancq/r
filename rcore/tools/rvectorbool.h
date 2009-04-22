@@ -117,8 +117,8 @@ public:
 	bool IsSame(const RVectorBool& vi) const;
 
 	/**
-	* Set the bool value at a given position.
-	* @param value          Value to insert.
+	* Set the boolean value at a given position.
+	* @param value           Value to insert.
 	* @param pos             The position where to insert.
 	*/
 	void Set(bool value,size_t pos);
@@ -157,6 +157,12 @@ public:
 	* @return size_t
 	*/
 	size_t GetNb(void) const {return(NbBool);}
+
+	/**
+	* Get the actual maximal number of values in the list.
+	* @return size_t
+	*/
+	size_t GetMax(void) const {return(MaxBool);}
 
 	/**
 	* Start the iterator to go trough the list.

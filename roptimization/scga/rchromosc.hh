@@ -480,7 +480,11 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 	// If no non-assigned objects -> return
 	if(!ObjsNoAss.GetNb())
+	{
+		if(Instance->Debug)
+			Instance->Debug->EndFunc("LocalOptimisation","RChromoSC");
 		return;
+	}
 
 	// Determine all non assigned objects
 	size_t nbobjs(ObjsNoAss.GetTab(thObjs1));

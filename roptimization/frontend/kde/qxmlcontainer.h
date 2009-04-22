@@ -56,11 +56,12 @@ namespace R{
 class QXMLContainer : public QTreeWidget, public RDebug
 {
 	Q_OBJECT
+	class Item;
 
 	/**
 	* The array is used to manage the deepest of the XML structure.
 	*/
-	QTreeWidgetItem* Items[50];
+	RContainer<Item,false,false> Items;
 
 public:
 

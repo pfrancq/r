@@ -39,6 +39,23 @@
 using namespace R;
 
 
+//------------------------------------------------------------------------------
+//
+// QXMLContainer::Item
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+class QXMLContainer::Item : public QTreeWidgetItem
+{
+public:
+	Item(QXMLContainer* parent) : QTreeWidgetItem(parent) {}
+	Item(Item* item) : QTreeWidgetItem(item) {}
+	Item(Item* item,Item* ptr) : QTreeWidgetItem(item,ptr) {}
+	int Compare(const Item&) const {return(-1);}
+};
+
+
 
 //------------------------------------------------------------------------------
 //
@@ -48,9 +65,8 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 QXMLContainer::QXMLContainer(QWidget* parent)
-	: QTreeWidget(parent), RDebug()
+	: QTreeWidget(parent), RDebug(), Items(50)
 {
-	memset(Items,0,50*sizeof(QTreeWidgetItem *));
 	setColumnCount(3);
 	setHeaderLabels(QStringList() << "Steps" << "Params" << "Infos");
 	setRootIsDecorated(true);
@@ -64,46 +80,46 @@ QXMLContainer::QXMLContainer(QWidget* parent)
 void QXMLContainer::clear(void)
 {
 	QTreeWidget::clear();
-	memset(Items,0,50*sizeof(QTreeWidgetItem *));
-	Deep=-1;
+	Items.Clear();
+	Depth=-1;
 }
 
 
 //------------------------------------------------------------------------------
 void QXMLContainer::WriteBeginTag(const RString& tag,const RString& attrs)
 {
-	QTreeWidgetItem *ptr;
+	Item *ptr;
 
-	if(Deep)
+	if(Depth)
 	{
-		ptr=Items[Deep];
+		ptr=Items[Depth];
 		if(ptr)
-			Items[Deep]=new QTreeWidgetItem(Items[Deep-1],ptr);
+			Items.InsertPtrAt(new Item(Items[Depth-1],ptr),Depth,true);
 		else
-			Items[Deep]=new QTreeWidgetItem(Items[Deep-1]);
+			Items.InsertPtrAt(new Item(Items[Depth-1]),Depth,true);
 	}
 	else
-		Items[Deep]=new QTreeWidgetItem(this);
-	Items[Deep]->setText(0,ToQString(tag));
+		Items.InsertPtrAt(new Item(this),Depth,true);
+	Items[Depth]->setText(0,ToQString(tag));
 	if(!attrs.IsEmpty())
 	{
-		Items[Deep]->setText(1,ToQString(attrs));
+		Items[Depth]->setText(1,ToQString(attrs));
 	}
-	Items[Deep+1]=0;
+	Items.DeletePtrAt(Depth+1,false);
 }
 
 
 //------------------------------------------------------------------------------
 void QXMLContainer::WriteEndTag(const RString& /*tag*/)
 {
-	Items[Deep+1]=0;
+	Items.DeletePtrAt(Depth+1,false);
 }
 
 
 //------------------------------------------------------------------------------
 void QXMLContainer::WriteText(const RString& text)
 {
-	Items[Deep]->setText(2,ToQString(text));
+	Items[Depth]->setText(2,ToQString(text));
 }
 
 
