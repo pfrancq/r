@@ -205,6 +205,7 @@ RCString RNotificationCenter::GetNotificationName(hNotification handle) const
 	return(reinterpret_cast<INotifications*>(handle)->Name);
 }
 
+
 //-----------------------------------------------------------------------------
 void RNotificationCenter::InsertObserver(tNotificationHandler handler,RObject* observer,hNotification handle,RObject* object)
 {
@@ -268,9 +269,9 @@ void RNotificationCenter::PostNotification(const RNotification& notification)
 		RCursor<IListener> Object(*reinterpret_cast<IObjects*>(notification.Sender->Handlers));
 		for(Object.Start();!Object.End();Object.Next())
 		{
-			const_cast<RNotification&>(notification).Receiver=Object()->Observer;
 			if((Object()->Handle)&&(Object()->Handle!=notification.Handle))
 				continue;
+			const_cast<RNotification&>(notification).Receiver=Object()->Observer;
 			(Object()->Observer->*(Object()->Handler))(notification);
 			Call=true;
 		}

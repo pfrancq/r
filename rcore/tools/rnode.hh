@@ -35,40 +35,40 @@
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	RNode<N,bAlloc,bOrder>::RNode(void)
+template<class N,bool bAlloc>
+	RNode<N,bAlloc>::RNode(void)
 		: Tree(0), Parent(0), SubNodes(cNoRef), NbSubNodes(0), Index(cNoRef)
 {
 }
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	N* RNode<N,bAlloc,bOrder>::GetParent(void) const
+template<class N,bool bAlloc>
+	N* RNode<N,bAlloc>::GetParent(void) const
 {
 	return(Parent);
 }
 
 
 //-----------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	size_t RNode<N,bAlloc,bOrder>::GetNbNodes(void) const
+template<class N,bool bAlloc>
+	size_t RNode<N,bAlloc>::GetNbNodes(void) const
 {
 	return(NbSubNodes);
 }
 
 
 //-----------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	size_t RNode<N,bAlloc,bOrder>::GetIndex(void) const
+template<class N,bool bAlloc>
+	size_t RNode<N,bAlloc>::GetIndex(void) const
 {
 	return(Index);
 }
 
 
 //-----------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	RCursor<N> RNode<N,bAlloc,bOrder>::GetNodes(void) const
+template<class N,bool bAlloc>
+	RCursor<N> RNode<N,bAlloc>::GetNodes(void) const
 {
 	if(!Tree)
 		throw RException("Node not assign to a tree");
@@ -79,18 +79,18 @@ template<class N,bool bAlloc,bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	template<class TUse> N* RNode<N,bAlloc,bOrder>::GetNode(const TUse& tag,bool sortkey) const
+template<class N,bool bAlloc>
+	template<class TUse> N* RNode<N,bAlloc>::GetNode(const TUse& tag) const
 {
 	if(!Tree)
 		throw RException("Node not assign to a tree");
-	return(Tree->GetPtr(tag,sortkey,SubNodes,SubNodes+NbSubNodes));
+	return(Tree->GetPtr(tag,false,SubNodes,SubNodes+NbSubNodes));
 }
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	void RNode<N,bAlloc,bOrder>::InsertNode(N* node)
+template<class N,bool bAlloc>
+	void RNode<N,bAlloc>::InsertNode(N* node)
 {
 	if(!Tree)
 		throw RException("Node not assign to a tree");
@@ -98,46 +98,17 @@ template<class N,bool bAlloc,bool bOrder>
 }
 
 
-//------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	void RNode<N,bAlloc,bOrder>::DeleteEmptySubNodes(void)
-{
-/*	if(!NbSubNodes) return;
-	RContainer<N,false,false> ToTreat(20,10);
-	RContainer<N,false,false> ToDel(20,10);
-
-	// Go through the subnodes.
-	RCursor<N> Cur(GetNodes());
-	for(Cur.Start();!Cur.End();Cur.Next())
-		ToTreat.InsertPtr(Cur());
-
-	// Treat all subnodes
-	Cur.Set(ToTreat);
-	for(Cur.Start();!Cur.End();Cur.Next())
-	{
-		Cur()->DeleteEmptySubNodes();
-		if(Cur()->IsEmpty())
-			ToDel.InsertPtr(Cur());
-	}
-
-	// Delete those needed
-	Cur.Set(ToDel);
- 	for(Cur.Start();!Cur.End();Cur.Next())
-		Tree->DeleteNode(Cur());*/
-}
-
-
 //-----------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	bool RNode<N,bAlloc,bOrder>::IsEmpty(void)
+template<class N,bool bAlloc>
+	bool RNode<N,bAlloc>::IsEmpty(void)
 {
 	return(!NbSubNodes);
 }
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	const N* RNode<N,bAlloc,bOrder>::operator[](size_t idx) const
+template<class N,bool bAlloc>
+	const N* RNode<N,bAlloc>::operator[](size_t idx) const
 {
 	if(!Tree)
 		throw RException("Node not assign to a tree");
@@ -152,8 +123,8 @@ template<class N,bool bAlloc,bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	N* RNode<N,bAlloc,bOrder>::operator[](size_t idx)
+template<class N,bool bAlloc>
+	N* RNode<N,bAlloc>::operator[](size_t idx)
 {
 	if(!Tree)
 		throw RException("Node not assign to a tree");
@@ -168,7 +139,7 @@ template<class N,bool bAlloc,bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	RNode<N,bAlloc,bOrder>::~RNode(void)
+template<class N,bool bAlloc>
+	RNode<N,bAlloc>::~RNode(void)
 {
 }

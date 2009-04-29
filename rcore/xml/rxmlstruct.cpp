@@ -44,7 +44,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RXMLStruct::RXMLStruct(void)
-	: RTree<RXMLTag,true,false>(100,50), Entities(20,10), Version("1.0"),
+	: RTree<RXMLTag,true>(100,50), Entities(20,10), Version("1.0"),
 	  Encoding("UTF-8"), Namespaces(10)
 {
 }
@@ -60,14 +60,14 @@ RURI* RXMLStruct::GetNamespace(const RString& xmlns)
 //------------------------------------------------------------------------------
 RXMLTag* RXMLStruct::GetTag(const RString& name) const
 {
-	return(GetNode(name,false));
+	return(GetNode(name));
 }
 
 
 //-----------------------------------------------------------------------------
 RString RXMLStruct::GetTagAttrValue(const RString& tag,const RString& attr) const
 {
-	RXMLTag* find=GetNode(tag,false);
+	RXMLTag* find=GetNode(tag);
 	if(!find)
 		return(RString::Null);
 	return(find->GetAttrValue(attr));
@@ -78,8 +78,8 @@ RString RXMLStruct::GetTagAttrValue(const RString& tag,const RString& attr) cons
 RXMLTag* RXMLStruct::GetTag(const RString& name,const RXMLTag* parent) const
 {
 	if(!parent)
-		return(GetNode(name,false));
-	return(parent->GetNode(name,false));
+		return(GetNode(name));
+	return(parent->GetNode(name));
 }
 
 
@@ -88,7 +88,7 @@ RString RXMLStruct::GetTagAttrValue(const RString& tag,const RString& attr,const
 {
 	if(!parent)
 		GetTagAttrValue(tag,attr);
-	RXMLTag* find=parent->GetNode(tag,false);
+	RXMLTag* find=parent->GetNode(tag);
 	if(!find)
 		return(RString::Null);
 	return(find->GetAttrValue(attr));
@@ -98,14 +98,14 @@ RString RXMLStruct::GetTagAttrValue(const RString& tag,const RString& attr,const
 //-------------------------------------------------------------------------------
 void RXMLStruct::AddTag(RXMLTag* parent,RXMLTag* tag)
 {
-	RTree<RXMLTag,true,false>::InsertNode(parent,tag);
+	RTree<RXMLTag,true>::InsertNode(parent,tag);
 }
 
 
 //-------------------------------------------------------------------------------
 void RXMLStruct::DeleteTag(RXMLTag* tag)
 {
-	RTree<RXMLTag,true,false>::DeleteNode(tag);
+	RTree<RXMLTag,true>::DeleteNode(tag);
 }
 
 
@@ -168,7 +168,7 @@ RString RXMLStruct::GetDTD(void) const
 //------------------------------------------------------------------------------
 void RXMLStruct::Clear(void)
 {
-	RTree<RXMLTag,true,false>::Clear();
+	RTree<RXMLTag,true>::Clear();
 	Entities.Clear();
 	Version.Clear();
 	Encoding.Clear();
@@ -200,7 +200,7 @@ bool RXMLStruct::Compare(const RXMLTag* tag1,const RXMLTag* tag2)
 //------------------------------------------------------------------------------
 bool RXMLStruct::Merge(const RXMLStruct& xml)
 {
-	return(Top->Merge(xml.Top));
+	return(GetTop()->Merge(xml.GetTop()));
 }
 
 

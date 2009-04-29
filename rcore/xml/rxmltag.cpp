@@ -50,7 +50,7 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 RXMLTag::RXMLTag(const RXMLTag& tag)
-	: RNode<RXMLTag,true,false>(), Name(tag.Name), Contains(tag.Contains),
+	: RNode<RXMLTag,true>(), Name(tag.Name), Contains(tag.Contains),
 	  Attrs(tag.Attrs), Namespace(tag.Namespace)
 {
 }
@@ -58,7 +58,7 @@ RXMLTag::RXMLTag(const RXMLTag& tag)
 
 //-----------------------------------------------------------------------------
 RXMLTag::RXMLTag(const RString& name,RURI* xmlns)
-	: RNode<RXMLTag,true,false>(), Name(name), Contains(), Attrs(20,10),
+	: RNode<RXMLTag,true>(), Name(name), Contains(), Attrs(20,10),
 	  Namespace(xmlns)
 {
 }
@@ -130,7 +130,7 @@ bool RXMLTag::IsAttrDefined(const RString& name) const
 //-----------------------------------------------------------------------------
 RXMLTag* RXMLTag::GetTag(const RString& name) const
 {
-	return(GetNode(name,false));
+	return(GetNode(name));
 }
 
 
@@ -147,7 +147,7 @@ void RXMLTag::GetTags(const RString& name,RContainer<RXMLTag,false,false>& find)
 //-----------------------------------------------------------------------------
 RString RXMLTag::GetTagAttrValue(const RString& tag,const RString& attr) const
 {
-	RXMLTag* find=GetNode(tag,false);
+	RXMLTag* find=GetNode(tag);
 	if(!find)
 		return(RString::Null);
 	return(find->GetAttrValue(attr));

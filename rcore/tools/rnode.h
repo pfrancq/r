@@ -44,15 +44,14 @@ namespace R{
 
 
 // forward declaration
-template<class N,bool bAlloc,bool bOrder> class RTree;
+template<class N,bool bAlloc> class RTree;
 
 
 //-----------------------------------------------------------------------------
 /**
 * @param N                   The class of the elements of the tree.
-* @param bAlloc              Specify if the elements are desallocated by the
+* @param bAlloc              Specify if the elements are deallocated by the
 *                            tree.
-* @param bOrder              Specify if the elements are ordered in the tree.
 * This class represent a generic node. The user has to derived from this class
 * to create elements that can be handle by a RTree.
 *
@@ -66,7 +65,7 @@ template<class N,bool bAlloc,bool bOrder> class RTree;
 *
 * At least, a compare function must be implemented in the class N:
 * @code
-* int Compare(const N&) const;
+* int Compare(const N&) const;bOrde
 * @endcode
 *
 * Here is an example:
@@ -76,44 +75,43 @@ template<class N,bool bAlloc,bool bOrder> class RTree;
 * #include <rcursor.h>
 * using namespace R;
 *
-* class MyTree;   // Forward declaration
-*
-* class MyNode : public RNode<MyNode,true,true>
+* class MyNode : public RNode<MyNode,true>
 * {
 *    RString Name;
 * public:
-*    MyNode(const RString& name) : RNode<MyNode,true,true>(), Name(name) {}
+*    MyNode(const RString& name) : RNode<MyNode,true>(), Name(name) {}
 *    int Compare(const MyNode& node) const {return(Name.Compare(node.Name));}
 *    void DoSomething(void) {cout<<Name<<endl;}
 * };
 *
-* class MyTree : public RTree<MyNode,true,true>
+* class MyTree : public RTree<MyNode,true>
 * {
 * public:
-*    MyTree(size_t max,size_t inc) : RTree<MyNode,true,true>(max,inc) {}
+*    MyTree(size_t max,size_t inc) : RTree<MyNode,true>(max,inc) {}
 * };
 *
 * int main()
 * {
 *    MyTree Tree(20,10);
 *
-*    // Insert the top node
-*    Tree.InsertNode(0,new MyNode("Root")); // First node inserted in the tree with no parent, is always the top
+*    // Insert a top node
+*    cNode* Top(new MyNode("First Level"));bOrde
+*    Tree.InsertNode(0,Top);
 *
 *    // Insert two sub nodes
-*    Tree.InsertNode(0,new MyNode("First Level (1)"));  // First Level since there is already a top node
-*    Tree.InsertNode(0,new MyNode("First Level (2)"));  // First Level since there is already a top node
+*    Tree.InsertNode(Top,new MyNode("Second Level (1)"));
+*    Tree.InsertNode(Top,new MyNode("Second Level (2)"));
 *
 *    // Parse the nodes
 *    R::RCursor<MyNode> Cur(Tree.GetNodes());
-*    for(Cur.Start();!Cur.End();Cur.Next())
+*    for(Cur.Start();!Cur.End();Cur.Next())Type
 *       Cur()->DoSomething();
 * }
 * @endcode
 * @author Pascal Francq
 * @short Generic Node.
 */
-template<class N,bool bAlloc,bool bOrder>
+template<class N,bool bAlloc>
 	class RNode
 {
 protected:
@@ -121,7 +119,7 @@ protected:
 	/**
 	* Tree holding the node.
 	*/
-	RTree<N,bAlloc,bOrder>* Tree;
+	RTree<N,bAlloc>* Tree;
 
 	/**
 	* Parent Node.
@@ -129,12 +127,12 @@ protected:
 	N* Parent;
 
 	/**
-	* Index of the first subnode in Nodes.
+	* Index of the first child node in Nodes.
 	*/
 	size_t SubNodes;
 
 	/**
-	* Number of subnodes
+	* Number of child nodes
 	*/
 	size_t NbSubNodes;
 
@@ -177,12 +175,9 @@ public:
 	* Get a pointer to a certain child node.
 	* @param TUse            The type of the tag used for the search.
 	* @param tag             The tag used.
-	* @param sortkey         The tag represents the sorting key. The default value
-	*                        depends if the container is ordered (true) or not
-	*                        (false).
 	* @return Return the pointer or 0 if the element is not a child node.
 	*/
-	template<class TUse> N* GetNode(const TUse& tag,bool sortkey=bOrder) const;
+	template<class TUse> N* GetNode(const TUse& tag) const;
 
 	/**
 	* Method call to insert a node.
@@ -191,24 +186,19 @@ public:
 	void InsertNode(N* node);
 
 	/**
-	* Delete all empty subnodes.
-	*/
-	void DeleteEmptySubNodes(void);
-
-	/**
-	* Test if the tag is empty, i.e. it has no subnodes.
+	* Test if the tag is empty, i.e. it has no child nodes.
 	*/
 	virtual bool IsEmpty(void);
 
 	/**
-	* Get a pointer to the ith subnode in the node (Only read).
+	* Get a pointer to the ith child node in the node (Only read).
 	* @param idx             Index of the node to get.
 	* @return Return the pointer.
 	*/
 	const N* operator[](size_t idx) const;
 
 	/**
-	* Get a pointer to the ith subnode in the node (Read/Write).
+	* Get a pointer to the ith child node in the node (Read/Write).
 	* @param idx             Index of the node to get.
 	* @return Return the pointer.
 	*/
@@ -220,7 +210,7 @@ public:
 	virtual ~RNode(void);
 
 	// The RTree is a  friend class
-	friend class RTree<N,bAlloc,bOrder>;
+	friend class RTree<N,bAlloc>;
 };
 
 

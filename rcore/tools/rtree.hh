@@ -35,16 +35,50 @@
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	RTree<N,bAlloc,bOrder>::RTree(size_t max,size_t inc)
-		: RContainer<N,bAlloc,bOrder>(max,inc), Top(0)
+template<class N,bool bAlloc>
+	RTree<N,bAlloc>::RTree(size_t max,size_t inc)
+		: RContainer<N,bAlloc,false>(max,inc), NbTopNodes(0)
 {
 }
 
 
 //---------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	void RTree<N,bAlloc,bOrder>::InsertNode(N* to,N* node)
+template<class N,bool bAlloc>
+	N* RTree<N,bAlloc>::GetTop(void)
+{
+	if(!NbTopNodes)
+		return(0);
+	if(NbTopNodes>1)
+		throw RException("RTree<N,bAlloc>::GetTop(void): More than one node");
+	return((*this)[0]);
+}
+
+
+//---------------------------------------------------------------------------
+template<class N,bool bAlloc>
+	const N* RTree<N,bAlloc>::GetTop(void) const
+{
+	if(!NbTopNodes)
+		return(0);
+	if(NbTopNodes>1)
+		throw RException("RTree<N,bAlloc>::GetTop(void) const: More than one node");
+	return((*this)[0]);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class N,bool bAlloc>
+	RCursor<N> RTree<N,bAlloc>::GetTopNodes(void) const
+{
+	if(!NbTopNodes)
+		return(R::RCursor<N>());
+	return(R::RCursor<N>(*this,0,NbTopNodes));
+}
+
+
+//---------------------------------------------------------------------------
+template<class N,bool bAlloc>
+	void RTree<N,bAlloc>::InsertNode(N* to,N* node)
 {
 	size_t tmp;
 
@@ -53,17 +87,15 @@ template<class N,bool bAlloc,bool bOrder>
 	node->Tree=this;
 	if(!to)
 	{
-		// Must be the top node
-		if(!Top)
-		{
-			Top=node;
-			InsertPtrAt(Top,0);
-			Top->Index=0;
-			return;
-		}
-		to=Top;
+		tmp=NbTopNodes++;
+		InsertPtrAt(node,tmp,false);
+		node->Index=tmp;
+		RCursor<N> Nodes(*this);
+		for(Nodes.Start();!Nodes.End();Nodes.Next())
+			if(Nodes()->SubNodes!=cNoRef)
+				Nodes()->SubNodes++;
 	}
-	if(to->NbSubNodes)
+	else if(to->NbSubNodes)
 	{
 		tmp=to->SubNodes+to->NbSubNodes;
 		InsertPtrAt(node,tmp,false);
@@ -72,23 +104,23 @@ template<class N,bool bAlloc,bool bOrder>
 		for(Nodes.Start();!Nodes.End();Nodes.Next())
 			if((Nodes()->SubNodes>to->SubNodes)&&(Nodes()->SubNodes!=cNoRef))
 				Nodes()->SubNodes++;
-		if((Top->SubNodes>to->SubNodes)&&(Top->SubNodes!=cNoRef))
-			Top->SubNodes++;
+		node->Parent = to;
+		to->NbSubNodes++;
 	}
 	else
 	{
-		to->SubNodes=RContainer<N,bAlloc,bOrder>::GetNb();
+		to->SubNodes=RContainer<N,bAlloc,false>::GetNb();
 		InsertPtrAt(node,to->SubNodes,false);
 		node->Index=to->SubNodes;
+		node->Parent = to;
+		to->NbSubNodes++;
 	}
-	node->Parent = to;
-	to->NbSubNodes++;
 }
 
 
 //---------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	void RTree<N,bAlloc,bOrder>::DeleteNode(N* node)
+template<class N,bool bAlloc>
+	void RTree<N,bAlloc>::DeleteNode(N* node)
 {
 	N* from;
 
@@ -120,17 +152,8 @@ template<class N,bool bAlloc,bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	void RTree<N,bAlloc,bOrder>::DeleteEmptyNodes(void)
-{
-//	if(Top)
-//		Top->DeleteEmptySubNodes();
-}
-
-
-//------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder> template<bool a, bool o>
-	void RTree<N,bAlloc,bOrder>::Copy(const RTree<N,a,o>& src)
+template<class N,bool bAlloc> template<bool a>
+	void RTree<N,bAlloc>::Copy(const RTree<N,a>& src)
 {
 	RCursor<N> Nodes(src.Top->GetNodes());
 	for(Nodes.Start();!Nodes.End();Nodes.Next())
@@ -139,8 +162,8 @@ template<class N,bool bAlloc,bool bOrder> template<bool a, bool o>
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	void RTree<N,bAlloc,bOrder>::DeepCopy(N* src,N* parent)
+template<class N,bool bAlloc>
+	void RTree<N,bAlloc>::DeepCopy(N* src,N* parent)
 {
 	N* NewNode=new N(*src);
 	InsertNode(parent,NewNode);
@@ -151,16 +174,16 @@ template<class N,bool bAlloc,bool bOrder>
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
+template<class N,bool bAlloc>
 	template<class TUse>
-		N* RTree<N,bAlloc,bOrder>::GetNode(const TUse& tag,bool sortkey) const
+		N* RTree<N,bAlloc>::GetNode(const TUse& tag) const
 {
-	return(RContainer<N,bAlloc,bOrder>::GetPtr(tag,sortkey));
+	return(RContainer<N,bAlloc,false>::GetPtr(tag,false));
 }
 
 
 //------------------------------------------------------------------------------
-template<class N,bool bAlloc,bool bOrder>
-	RTree<N,bAlloc,bOrder>::~RTree(void)
+template<class N,bool bAlloc>
+	RTree<N,bAlloc>::~RTree(void)
 {
 }

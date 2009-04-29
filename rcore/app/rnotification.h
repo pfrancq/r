@@ -51,7 +51,7 @@ namespace R{
 
 
 //-----------------------------------------------------------------------------
-// foward class declaration
+// forward class declaration
 class RObject;
 
 
@@ -125,7 +125,7 @@ public:
 	RObject* GetReceiver(void) const {return(Receiver);}
 
 	/**
-	* Desturctor. This is only used OO purposes.
+	* Destruct. This is only used for OO purposes.
 	*/
 	virtual ~RNotification(void);
 
@@ -140,7 +140,7 @@ public:
 * @param T                   Type of the parameter.
 *
 * The type used for template is very important. For example, the following code
-* generates an exception:
+* generates an exception since the default type of 3 is int:
 * @code
 * class MyObject : public RObject
 * {
@@ -160,11 +160,11 @@ public:
 * {
 *    MyObject Obj1("Object 1");
 *    MyObject Obj2("Object 2");
-*    NotificationCenter.PostNotification("Message",(long)3);
+*    NotificationCenter.PostNotification("Message",3);
 * }
 * @endcode
 * To be sure that PostNotification calls the right handlers, it is always
-* better to explicity cast the parameter when sending.
+* better to explicitly cast the parameter when sending.
 * @short Notification with Data.
 * @author Pascal Francq
 */
