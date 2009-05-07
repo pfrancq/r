@@ -31,8 +31,8 @@
 //---------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	RNodesGA<cNode,cObj,cNodes>::RNodesGA(RCursor<cObj> objs,size_t maxnodes,size_t maxattr)
-		: RContainer<cNode,true,false>(maxnodes), Used(maxnodes), Top(0),
-		   Objs(objs), NodesAss(maxnodes), ObjsAss(objs.GetNb()), ObjsNoAss(objs.GetNb()), MaxAttr(maxattr)
+		: RTree<cNodes,cNode,false>(maxnodes,maxnodes/2), Reserved(maxnodes),
+		   Objs(objs), ObjsAss(objs.GetNb()), ObjsNoAss(objs.GetNb()), MaxAttr(maxattr)
 {
 	ObjectsAss = new size_t[Objs.GetNb()];
 	memset(ObjectsAss,0xFF,Objs.GetNb()*sizeof(size_t));
@@ -47,10 +47,9 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::Init(void)
 {
-	// Init Nodes
-	Top=new cNode(static_cast<cNodes*>(this),cNoRef,MaxAttr);
-	for(size_t i=0;i<MaxPtr;i++)
-		InsertPtr(new cNode(static_cast<cNodes*>(this),i,MaxAttr));
+	// Initialize Nodes
+	for(size_t i=0;i<Reserved.GetMaxNb();i++)
+		Reserved.InsertPtr(new cNode(static_cast<cNodes*>(this),i,MaxAttr));
 }
 
 
@@ -58,12 +57,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::ClearNodes(void)
 {
-	RCursor<cNode> Cur(*this);
-	for(Cur.Start();!Cur.End();Cur.Next())
-		Cur()->Clear();
-	Top->Clear();
-	Used.Clear();
-	NodesAss.Clear();
+	RTree<cNodes,cNode,false>::ClearNodes();
 	ObjsAss.Clear();
 	ObjsNoAss.Clear();
 	for(Objs.Start();!Objs.End();Objs.Next())
@@ -78,20 +72,19 @@ template<class cNode,class cObj,class cNodes>
 {
 	size_t i,NewSize;
 
-	if(Used.GetNb()+1>GetMaxNb())
+	if(GetNbNodes()+1>Reserved.GetMaxNb())
 	{
-		NewSize=GetMaxNb()+GetIncNb();
+		NewSize=Reserved.GetMaxNb()+Reserved.GetIncNb();
 
 		// Create New nodes
-		for(i=GetMaxNb();i<NewSize;i++)
-			InsertPtr(new cNode(static_cast<cNodes*>(this),i,MaxAttr));
+		for(i=Reserved.GetMaxNb();i<NewSize;i++)
+			Reserved.InsertPtr(new cNode(static_cast<cNodes*>(this),i,MaxAttr));
 	}
-	RCursor<cNode> ptr(*this);
+	RCursor<cNode> ptr(Reserved);
 	ptr.Start();
 	while(ptr()->Reserved)
 		ptr.Next();
 	ptr()->Reserved=true;
-	Used.InsertPtr(ptr());
 	return(ptr());
 }
 
@@ -106,8 +99,6 @@ template<class cNode,class cObj,class cNodes>
 	DeleteObjs(node);
 	if(node->Parent)
 		DeleteNode(node);
-	if(node!=Top)
-		Used.DeletePtr(node);
 	node->Clear();
 }
 
@@ -116,28 +107,9 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::InsertNode(cNode* to,cNode* node)
 {
-	if(node==Top) return;
-	if(!to)
-		to=Top;
-	if(to->NbSubNodes)
-	{
-		size_t tmp=to->SubNodes+to->NbSubNodes;
-		NodesAss.InsertPtrAt(node,tmp,false);
-		RCursor<cNode> Cur(*this);
-		for(Cur.Start();!Cur.End();Cur.Next())
-			if((Cur()->SubNodes>to->SubNodes)&&(Cur()->SubNodes!=cNoRef))
-				Cur()->SubNodes++;
-		if((Top->SubNodes>to->SubNodes)&&(Top->SubNodes!=cNoRef))
-			Top->SubNodes++;
-	}
-	else
-	{
-		to->SubNodes=NodesAss.GetNb();
-		NodesAss.InsertPtrAt(node,to->SubNodes,false);
-	}
-	node->Parent = to;
-	to->NbSubNodes++;
-	to->PostInsert(node);
+	RTree<cNodes,cNode,false>::InsertNode(to,node);
+	if(to)
+		to->PostInsert(node);
 }
 
 
@@ -145,21 +117,11 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::DeleteNode(cNode* node)
 {
-	cNode* from;
-
-	if(node==Top) return;
-	NodesAss.DeletePtr(node);
-	from=node->Parent;
-	if(!(--from->NbSubNodes))
-		from->SubNodes=cNoRef;
-	node->Parent=0;
-	from->PostDelete(node);
-	if((Top->SubNodes>from->SubNodes)&&(Top->SubNodes!=cNoRef))
-		Top->SubNodes--;
-	RCursor<cNode> Cur(Used);
-	for(Cur.Start();!Cur.End();Cur.Next())
-		if((Cur()->SubNodes>from->SubNodes)&&(Cur()->SubNodes!=cNoRef))
-			Cur()->SubNodes--;
+	cNode* from(node->Parent);
+	RTree<cNodes,cNode,false>::DeleteNode(node,true);
+	if(from)
+		from->PostDelete(node);
+	ReleaseNode(node);
 }
 
 
@@ -167,24 +129,22 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::DeleteNodes(cNode* from)
 {
-	size_t i,j;
-	cNode* Node;
+	if(!from->NbSubNodes)
+		return;
 
-	if(!(from->NbSubNodes)) return;
-	for(i=0;i<from->NbSubNodes;i++)
-	{
-		Node=NodesAss[from->SubNodes];
-		NodesAss.DeletePtr(Node);
-		from->PostDelete(Node);
-		ReleaseNode(Node);
-	}
-	j=from->SubNodes;
-	RCursor<cNode> Cur(Used);
+	RContainer<cNode,false,false> Del(from->NbSubNodes);
+	RCursor<cNode> Cur(from->GetNodes());
 	for(Cur.Start();!Cur.End();Cur.Next())
-		if((Cur()->SubNodes>j)&&(Cur()->SubNodes!=cNoRef))
-			Cur()->SubNodes-=from->NbSubNodes;
-	if((Top->SubNodes>j)&&(Top->SubNodes!=cNoRef))
-		Top->SubNodes-=from->NbSubNodes;
+		Del.InsertPtr(Cur());
+	Cur.Set(Del);
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		cNode* from(Cur()->GetParent());
+		DeleteNode(Cur());
+		if(from)
+			from->PostDelete(Cur());
+		ReleaseNode(Cur());
+	}
 }
 
 
@@ -194,22 +154,52 @@ template<class cNode,class cObj,class cNodes>
 {
 	if(to==node->Parent)
 		return;
-	DeleteNode(node);
-	InsertNode(to,node);
+	cNode* from(node->Parent);
+	RTree<cNodes,cNode,false>::MoveNode(to,node);
+	if(to)
+		to->PostInsert(node);
+	if(from)
+		from->PostDelete(node);
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	void RNodesGA<cNode,cObj,cNodes>::MoveNodes(cNode* to,cNode* from)
+	cNode* RNodesGA<cNode,cObj,cNodes>::CopyExceptBranch(const cNodes* from,const cNode* excluded,RVectorInt<size_t,true>* objs,bool copyobjs)
 {
-	size_t j,i,*ptr;
-	cNode **N,Node;
+	cNode* Ret(0);
+	cNode* CurNode;
 
-	if(!from->NbSubNodes)
-		return;
-		for(i=0;i<from->NbSubNodes;i++)
-			MoveNode(to,&Used.Tab[from->SubNodes+i]);
+	// Copy first the top nodes
+	RCursor<cNode> Cur(from->GetTopNodes());
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		CurNode=Cur();
+		if(CurNode==excluded)
+			Ret=static_cast<cNode*>(0);
+		else
+		{
+			// Insert a new top node
+			cNode* New=ReserveNode();
+			InsertNode(0,New);
+
+			// Copy the attributes, the child nodes and the objects from CurNode
+			cNode* Find=New->CopyExceptBranch(CurNode,excluded,objs,copyobjs);
+			if(Find)
+				Ret=Find;
+
+			// If the node 'Node' has no child nodes and no objects attached -> Remove it.
+			if((!New->GetNbObjs())&&(!New->GetNbNodes()))
+			{
+				// If the node to remove is the crossing node -> The current node becomes the crossing node
+				if(Ret==New)
+					Ret=static_cast<cNode*>(0);
+				DeleteNode(New);   // Remove it from the tree
+				ReleaseNode(New);  // Release it.
+			}
+		}
+	}
+	return(Ret);
 }
 
 
@@ -219,11 +209,10 @@ template<class cNode,class cObj,class cNodes>
 {
 	size_t j;
 
-	if(to==Top) return;
 	if(to->NbSubObjects)
 	{
 		j=to->SubObjects;
-		RCursor<cNode> Cur(Used);
+		RCursor<cNode> Cur(GetNodes());
 		for(Cur.Start();!Cur.End();Cur.Next())
 			if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 				Cur()->SubObjects++;
@@ -247,7 +236,6 @@ template<class cNode,class cObj,class cNodes>
 {
 	size_t j;
 
-	if(from==Top) return;
 	j=from->SubObjects;
 	ObjectsAss[obj->GetId()]=cNoRef;
 	ObjsAss.DeletePtr(obj);
@@ -255,7 +243,7 @@ template<class cNode,class cObj,class cNodes>
 	if(!(--(from->NbSubObjects)))
 		from->SubObjects=cNoRef;
 	from->PostDelete(obj);
-	RCursor<cNode> Cur(Used);
+	RCursor<cNode> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 			Cur()->SubObjects--;
@@ -279,7 +267,7 @@ template<class cNode,class cObj,class cNodes>
 	if(!(--(from->NbSubObjects)))
 		from->SubObjects=cNoRef;
 	from->PostDelete(obj);
-	RCursor<cNode> Cur(Used);
+	RCursor<cNode> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 			Cur()->SubObjects--;
@@ -292,7 +280,6 @@ template<class cNode,class cObj,class cNodes>
 {
 	size_t j;
 
-	if(from==Top) return;
 	if(!(from->NbSubObjects)) return;
 	RCursor<cObj> o(GetObjs(*from));
 	for(o.Start();!o.End();o.Next())
@@ -306,7 +293,7 @@ template<class cNode,class cObj,class cNodes>
 		from->PostDelete(o());
 	}
 	j=from->SubObjects;
-	RCursor<cNode> Cur(Used);
+	RCursor<cNode> Cur(GetNodes());
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 			Cur()->SubObjects-=from->NbSubObjects;
@@ -329,26 +316,6 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	RCursor<cNode> RNodesGA<cNode,cObj,cNodes>::GetNodes(const cNode& node) const
-{
-	if(!node.NbSubNodes)
-		return(RCursor<cNode>(NodesAss,0,0));
-	return(RCursor<cNode>(NodesAss,node.SubNodes,node.SubNodes+node.NbSubNodes));
-}
-
-
-//------------------------------------------------------------------------------
-template<class cNode,class cObj,class cNodes>
-	size_t RNodesGA<cNode,cObj,cNodes>::GetNodes(cNode** nodes,const cNode& node)
-{
-	NodesAss.GetTab(nodes,node.SubNodes,node.SubNodes+node.NbSubNodes);
-	return(node.NbSubNodes);
-}
-
-
-
-//------------------------------------------------------------------------------
-template<class cNode,class cObj,class cNodes>
 	RCursor<cObj> RNodesGA<cNode,cObj,cNodes>::GetObjs(const cNode& node) const
 {
 	if(!node.NbSubObjects)
@@ -359,14 +326,21 @@ template<class cNode,class cObj,class cNodes>
 
 //---------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	bool RNodesGA<cNode,cObj,cNodes>::VerifyNodes(void)
+	bool RNodesGA<cNode,cObj,cNodes>::VerifyNodes(bool complete)
 {
 	size_t nbobjs=0;
-	RCursor<cNode> Cur(GetNodes(Top));
+	RCursor<cNode> Cur(GetTopNodes());
 	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		if(Cur()->Parent)
+		{
+			std::cerr<<"Top nodes cannot have a parent"<<std::endl;
+			return(false);
+		}
 		if(!Cur()->Verify(nbobjs))
 			return(false);
-	if(nbobjs!=Objs.GetNb())
+	}
+	if(complete&&(nbobjs!=Objs.GetNb()))
 	{
 		std::cerr<<"All objects are not attached"<<std::endl;
 		return(false);
@@ -382,18 +356,36 @@ template<class cNode,class cObj,class cNodes>
 
 //---------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	void RNodesGA<cNode,cObj,cNodes>::CopyTree(const RNodesGA& nodes)
+	void RNodesGA<cNode,cObj,cNodes>::CopyTree(const cNodes& nodes)
 {
 	ClearNodes();
-	Top->Copy(nodes.Top);
+	RCursor<cNode> Cur(nodes.GetTopNodes());
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		// Create a top node
+		cNode* New(ReserveNode());
+		InsertNode(0,New);
+
+		// Copy the attributes, all the child nodes and objects of Cur() in Top.
+		New->CopyExceptBranch(Cur());
+	}
 }
 
+
+//------------------------------------------------------------------------------
+template<class cNode,class cObj,class cNodes>
+	void RNodesGA<cNode,cObj,cNodes>::BuildFile(const RString& name)
+{
+	RTextFile File(name);
+	File.Open(RIO::Create);
+	RCursor<cNode> Cur(GetTopNodes());
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Cur()->PrintNode(File,0);
+}
 
 //---------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	RNodesGA<cNode,cObj,cNodes>::~RNodesGA(void)
 {
-	if(Top)
-		delete Top;
 	delete[] ObjectsAss;
 }

@@ -50,7 +50,7 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 RXMLTag::RXMLTag(const RXMLTag& tag)
-	: RNode<RXMLTag,true>(), Name(tag.Name), Contains(tag.Contains),
+	: RNode<RXMLStruct,RXMLTag,true>(), Name(tag.Name), Contains(tag.Contains),
 	  Attrs(tag.Attrs), Namespace(tag.Namespace)
 {
 }
@@ -58,7 +58,7 @@ RXMLTag::RXMLTag(const RXMLTag& tag)
 
 //-----------------------------------------------------------------------------
 RXMLTag::RXMLTag(const RString& name,RURI* xmlns)
-	: RNode<RXMLTag,true>(), Name(name), Contains(), Attrs(20,10),
+	: RNode<RXMLStruct,RXMLTag,true>(), Name(name), Contains(), Attrs(20,10),
 	  Namespace(xmlns)
 {
 }

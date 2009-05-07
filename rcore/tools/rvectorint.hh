@@ -123,11 +123,15 @@ template<class I,bool bOrder>
 				}
 				if(ptr>nb)
 				{
+					CompNeg=false;
 					NbMax = i;
 					if(i) NbMax--;
 				}
 				else
+				{
 					NbMin = i+1;
+					CompNeg=true;
+				}
 				Cont = NotLast;
 				if(NbMin>=NbMax) NotLast=false;
 			}

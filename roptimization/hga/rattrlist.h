@@ -49,12 +49,6 @@ using namespace std;
 namespace R{
 //------------------------------------------------------------------------------
 
-
-//------------------------------------------------------------------------------
-// Constance
-const size_t NoAttr=UINT_MAX;
-
-
 //------------------------------------------------------------------------------
 /**
 * The RAttrList class provides a representation of a list of attributes, each
@@ -90,20 +84,20 @@ public:
 
 	/**
 	* Verify if there is an intersection between two list of attributes.
-	* @param PosAttr        The list of attribute to used for the comparaison.
+	* @param PosAttr        The list of attribute to used for the comparison.
 	* return True if there is an intersection, false else.
 	*/
 	bool IsInter(const RAttrList& PosAttr) const;
 
 	/**
 	* Count the number of attributes in common in the two list.
-	* @param PosAttr        The list of attribute to used for the comparaison.
+	* @param PosAttr        The list of attribute to used for the comparison.
 	*/
 	size_t GetNbCommon(const RAttrList& PosAttr) const;
 
 	/**
 	* Compute the difference between two lists in the current one. This means
-	* all the atributes that are in the second list and not in the first one.
+	* all the attributes that are in the second list and not in the first one.
 	* @param Top            The top list used.
 	* @param Child          The child list used.
 	*/
@@ -125,8 +119,8 @@ public:
 	size_t FindFirstDiff(const RAttrList& PosAttr) const;
 
 	/**
-	* Assignation operator.
-	* @param src            List used for the assignation.
+	* Assignment operator.
+	* @param src            List used for the assignment.
 	*/
 	RAttrList& operator=(const RAttrList& src);
 
@@ -135,6 +129,11 @@ public:
 	* @return size_t
 	*/
 	size_t GetNbAttr(void) const {return(GetNb());}
+
+	/**
+	 * Print the contains to the screen (separated by tabs).
+	 */
+	void Print(void) const;
 
 	/**
 	* Destructor of the list.

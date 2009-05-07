@@ -53,7 +53,7 @@ class RObjH
 {
 public:
 	/**
-	* The identificator of the object.
+	* The identifier of the object.
 	*/
 	size_t Id;
 
@@ -71,7 +71,7 @@ public:
 
 	/**
 	* Construct the object.
-	* @param id             Identificator.
+	* @param id             Identifier.
 	* @param name           Name of the object.
 	* @param nb             Number of attributes representing the object.
 	*/
@@ -89,17 +89,17 @@ public:
 	int Compare(const RObjH& obj) const {return(CompareIds(Id,obj.Id));}
 
 	/**
-	* Return the object identifier.
+	* @return the object identifier.
 	*/
 	size_t GetId(void) const {return(Id);}
 
 	/**
-	* Return the Name of the object.
+	* @return the Name of the object.
 	*/
 	RString GetName(void) const;
 
 	/**
-	* Return a reference of the attributes.
+	* @return a reference of the attributes.
 	*/
 	const RAttrList& GetAttr(void) const {return(Attr);}
 

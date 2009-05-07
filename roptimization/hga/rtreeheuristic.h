@@ -114,7 +114,7 @@ public:
 	/**
 	* Construct the tree heuristic.
 	* @param n              Name of the heuristic.
-	* @param r              The random genrator to use.
+	* @param r              The random generator to use.
 	* @param objs           Pointer to the objects.
 	* @param debug          Debugger.
 	*/
@@ -131,6 +131,14 @@ public:
 	* @param nodes          Pointer to the nodes.
 	*/
 	virtual void Init(cNodes* nodes);
+
+	/**
+	 * Build a file with a tree.
+	 * @param name           Name of the file.
+	 * @param obj            Eventually, the attributes of an object are
+	 *                       printed too.
+	 */
+	void BuildFile(const RString& name,cObj* obj);
 
 	/**
 	* Select the next object to place.

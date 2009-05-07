@@ -55,10 +55,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	class RChromoH : public RChromo<cInst,cChromo,cFit,cThreadData>, public RNodesGA<cNode,cObj,cChromo>
 {
 	using RChromo<cInst,cChromo,cFit,cThreadData>::Instance;
-	using RNodesGA<cNode,cObj,cChromo>::Used;
+	using RChromo<cInst,cChromo,cFit,cThreadData>::Id;
 	using RNodesGA<cNode,cObj,cChromo>::ReserveNode;
-	using RNodesGA<cNode,cObj,cChromo>::NodesAss;
-	using RNodesGA<cNode,cObj,cChromo>::Top;
+	using RNodesGA<cNode,cObj,cChromo>::GetNodes;
+	using RNodesGA<cNode,cObj,cChromo>::GetNbNodes;
+	using RNodesGA<cNode,cObj,cChromo>::BuildFile;
 
 protected:
 

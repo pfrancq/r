@@ -44,11 +44,12 @@ namespace R{
 
 
 // forward declaration
-template<class N,bool bAlloc> class RTree;
+template<class T,class N,bool bAlloc> class RTree;
 
 
 //-----------------------------------------------------------------------------
 /**
+* @param T                   The class of the tree.
 * @param N                   The class of the elements of the tree.
 * @param bAlloc              Specify if the elements are deallocated by the
 *                            tree.
@@ -75,19 +76,21 @@ template<class N,bool bAlloc> class RTree;
 * #include <rcursor.h>
 * using namespace R;
 *
-* class MyNode : public RNode<MyNode,true>
+* class MyTree;         // Forward declaration
+*
+* class MyNode : public RNode<MyTree,MyNode,true>
 * {
 *    RString Name;
 * public:
-*    MyNode(const RString& name) : RNode<MyNode,true>(), Name(name) {}
+*    MyNode(const RString& name) : RNode<MyTree,MyNode,true>(), Name(name) {}
 *    int Compare(const MyNode& node) const {return(Name.Compare(node.Name));}
 *    void DoSomething(void) {cout<<Name<<endl;}
 * };
 *
-* class MyTree : public RTree<MyNode,true>
+* class MyTree : public RTree<MyTree,MyNode,true>
 * {
 * public:
-*    MyTree(size_t max,size_t inc) : RTree<MyNode,true>(max,inc) {}
+*    MyTree(size_t max,size_t inc) : RTree<MyTree,MyNode,true>(max,inc) {}
 * };
 *
 * int main()
@@ -111,7 +114,7 @@ template<class N,bool bAlloc> class RTree;
 * @author Pascal Francq
 * @short Generic Node.
 */
-template<class N,bool bAlloc>
+template<class T,class N,bool bAlloc>
 	class RNode
 {
 protected:
@@ -119,7 +122,7 @@ protected:
 	/**
 	* Tree holding the node.
 	*/
-	RTree<N,bAlloc>* Tree;
+	T* Tree;
 
 	/**
 	* Parent Node.
@@ -147,6 +150,17 @@ public:
 	* Default constructor.
 	*/
 	RNode(void);
+
+	/**
+	* Default constructor.
+	* @param tree            The tree.
+	*/
+	RNode(T* tree);
+
+	/**
+	 * Clear the node.
+	 */
+	virtual void Clear(void);
 
 	/**
 	* Return the parent of the node.
@@ -205,12 +219,27 @@ public:
 	N* operator[](size_t idx);
 
 	/**
+	 * Copy the nodes into a temporary array. This array must have the right
+	 * size.
+	 * @param nodes           Temporary array.
+	 * @return Number of the nodes copied in the array
+	 */
+	size_t GetTab(N** nodes);
+
+	/**
+	 * Verify the integrity of the node.
+	 * @param id             Identifier identifying the node for the caller.
+	 * @return true if the node seems coherent.
+	 */
+	bool VerifyNode(size_t id);
+
+	/**
 	* Destruct the node.
 	*/
 	virtual ~RNode(void);
 
 	// The RTree is a  friend class
-	friend class RTree<N,bAlloc>;
+	friend class RTree<T,N,bAlloc>;
 };
 
 

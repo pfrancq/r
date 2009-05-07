@@ -67,7 +67,7 @@ namespace R{
 * @short XML Structure.
 * @author Pascal Francq and Thomas L'Eglise.
 */
-class RXMLStruct : public RTree<RXMLTag,true>
+class RXMLStruct : public RTree<RXMLStruct,RXMLTag,true>
 {
 	/**
 	* The entities of the structure.

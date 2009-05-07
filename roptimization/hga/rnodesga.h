@@ -39,6 +39,7 @@
 #include <rvectorint.h>
 #include <rcursor.h>
 #include <robjs.h>
+#include <rtree.h>
 #include <rnodega.h>
 
 
@@ -55,23 +56,18 @@ namespace R{
  * @short HGA Tree.
  */
 template<class cNode,class cObj,class cNodes>
-	class RNodesGA : public RContainer<cNode,true,false>
+	class RNodesGA : public RTree<cNodes,cNode,false>
 {
-	using RContainer<cNode,true,false>::MaxPtr;
-	using RContainer<cNode,true,false>::GetMaxNb;
-	using RContainer<cNode,true,false>::GetIncNb;
+	using RTree<cNodes,cNode,false>::GetNbNodes;
+	using RTree<cNodes,cNode,false>::GetTopNodes;
+	using RTree<cNodes,cNode,false>::GetNodes;
 
 protected:
 
 	/**
-	* Container of all used nodes.
-	*/
-	RContainer<cNode,false,false> Used;
-
-	/**
-	* Top Node. No object can be assign to it.
-	*/
-	cNode* Top;
+	 * Nodes reserved.
+	 */
+	RContainer<cNode,true,false> Reserved;
 
 	/**
 	* The Objects to put in a tree.
@@ -86,7 +82,7 @@ protected:
 	/**
 	* Array of nodes attached.
 	*/
-	RContainer<cNode,false,false> NodesAss;
+//	RContainer<cNode,false,false> NodesAss;
 
 	/**
 	* Array of objects attached.
@@ -124,16 +120,6 @@ public:
 	void Init(void);
 
 	/**
-	 * Get the top node.
-	 */
-	cNode* GetTop(void) const {return(Top);}
-
-	/**
-	 * Get a cursor over all the nodes used.
-	 */
-	RCursor<cNode> GetNodes(void) const {return(RCursor<cNode>(Used));}
-
-	/**
 	* Clear all the information of the chromosome.
 	*/
 	void ClearNodes(void);
@@ -166,24 +152,28 @@ public:
 	void DeleteNode(cNode* node);
 
 	/**
-	* Delete and Releases all the subnodes of a given node.
+	* Delete and Releases all the child nodes of a given node.
 	* @param node           Pointer to the node.
 	*/
 	void DeleteNodes(cNode* node);
 
 	/**
-	* Move a node to the list of subnodes of a given node.
+	* Move a node to the list of child nodes of a given node.
 	* @param to             Pointer to the destination node.
 	* @param node           Pointer to the node to move.
 	*/
 	void MoveNode(cNode* to,cNode* node);
 
 	/**
-	* Move all the subnodes of a node to another.
-	* @param to             Pointer of the destination node.
-	* @param from           Pointer of the origin node.
+	* Copy a tree except one branch.
+	* @param from           Tree to copy from.
+	* @param copyobjs       Must the objects of from be copied?
+	* @param objs           Objects which nodes must not be copied.
+	* @param excluded       Node that must (eventually) not be copied.
+	* @return Pointer to the node that was supposed to have the node excluded
+	* (or 0 if not found).
 	*/
-	void MoveNodes(cNode* to,cNode* from);
+	cNode* CopyExceptBranch(const cNodes* from,const cNode* excluded=0,RVectorInt<size_t,true>* objs=0,bool copyobjs=true);
 
 	/**
 	* Insert an object to a node.
@@ -219,23 +209,6 @@ public:
 	void MoveObjs(cNode* to,cNode* from);
 
 	/**
-	* Return a cursor over the subnodes of a node. The cursor cannot iterate
-	* after the last node.
-	* @param node            Node.
-	* @return Cursor.
-	*/
-	RCursor<cNode> GetNodes(const cNode& node) const;
-
-	/**
-	 * Copy the subnodes of a node into a temporary array. This array must have
-	 * the right size.
-	 * @param nodes           Temporary array.
-	 * @param node            Node.
-	 * @return Number of the subnodes copied in the array
-	 */
-	size_t GetNodes(cNode** nodes,const cNode& node);
-
-	/**
 	* Return a cursor over the objects of a node. The cursor cannot iterate
 	* after the last object.
 	* @param node            Node.
@@ -243,16 +216,23 @@ public:
 	RCursor<cObj> GetObjs(const cNode& node) const;
 
 	/**
-	* Verify the validity of the chromosome.
+	* Verify the validity of the tree.
+	* @param complete        Is the tree supposed to be complete.
 	* @return True if the chromosome is a valid one, false else.
 	*/
-	bool VerifyNodes(void);
+	bool VerifyNodes(bool complete);
 
 	/**
 	* The assignment operator.
 	* @param nodes           Nodes used as source.
 	*/
-	void CopyTree(const RNodesGA& nodes);
+	void CopyTree(const cNodes& nodes);
+
+	/**
+	 * Build a file with a tree.
+	 * @param name           Name of the file.
+	 */
+	void BuildFile(const RString& name);
 
 	/**
 	* Destruct the chromosome.

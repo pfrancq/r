@@ -36,6 +36,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rcursor.h>
+#include <rnode.h>
 #include <rhga.h>
 #include <rattrlist.h>
 
@@ -58,8 +59,13 @@ template<class cNode,class cObj,class cNodes> class RNodesGA;
  * @short HGA Node.
  */
 template<class cNode,class cObj,class cNodes>
-	class RNodeGA
+	class RNodeGA : public RNode<cNodes,cNode,false>
 {
+	using RNode<cNodes,cNode,false>::Tree;
+	using RNode<cNodes,cNode,false>::GetNbNodes;
+	using RNode<cNodes,cNode,false>::GetNodes;
+	using RNode<cNodes,cNode,false>::Clear;
+
 protected:
 
 	/**
@@ -68,29 +74,9 @@ protected:
 	size_t Id;
 
 	/**
-	* Owner of the node.
-	*/
-	cNodes* Owner;
-
-	/**
 	* The list of attributes for the node.
 	*/
 	RAttrList Attr;
-
-	/**
-	* Index of the first child node.
-	*/
-	size_t SubNodes;
-
-	/**
-	* Number of child nodes
-	*/
-	size_t NbSubNodes;
-
-	/**
-	* Pointer to the parent node.
-	*/
-	cNode* Parent;
 
 	/**
 	* Index of the first object attached to the node.
@@ -110,12 +96,6 @@ protected:
 public:
 
 	/**
-	* Copy constructor.
-	* @param node           Node to copy.
-	*/
-	RNodeGA(const cNode* node);
-
-	/**
 	* Construct the node.
 	* @param owner           Owner of the node.
 	* @param id              Identifier of the node.
@@ -129,11 +109,6 @@ public:
 	* @return true if the node is correct, false else.
 	*/
 	bool Verify(size_t &nbobjs);
-
-	/**
-	 * Get the parent of the node.
-	 */
-	cNode* GetParent(void) const {return(Parent);}
 
 	/**
 	* Return a reference of the attributes.
@@ -173,23 +148,6 @@ public:
 	bool IsSameObjs(const cNode* node) const;
 
 	/**
-	* Method call to insert a node.
-	* @param node           Node to insert.
-	*/
-	void Insert(cNode* node) {Owner->InsertNode(static_cast<cNode*>(this),node);}
-
-	/**
-	* Method call to delete a node.
-	* @param node            Node to delete.
-	*/
-	void Delete(cNode* node) {Owner->DeleteNode(node);}
-
-	/**
-	* Return a cursor over the subnodes of the node.
-	*/
-	RCursor<cNode> GetNodes(void) const {return(Owner->GetNodes(*static_cast<const cNode*>(this)));}
-
-	/**
 	* Copy all the objects and the nodes of a node except one node if it exists.
 	* The two nodes have to be of two different owners.
 	* @param from           Node to copy from.
@@ -204,24 +162,24 @@ public:
 	* @return Pointer to the node that was supposed to have the node excluded
 	* (or 0 if not found).
 	*/
-	cNode* Copy(const cNode* from,const cNode* excluded=0,RVectorInt<size_t,true>* objs=0,bool copyobjs=true);
+	cNode* CopyExceptBranch(const cNode* from,const cNode* excluded=0,RVectorInt<size_t,true>* objs=0,bool copyobjs=true);
 
 	/**
 	* Method call to insert an object.
 	* @param obj            Object to insert.
 	*/
-	void Insert(const cObj* obj) {Owner->InsertObj(static_cast<cNode*>(this),obj);}
+	void Insert(const cObj* obj) {Tree->InsertObj(static_cast<cNode*>(this),obj);}
 
 	/**
 	* Method call to delete an object.
 	* @param obj             Object to delete.
 	*/
-	void Delete(cObj* obj) {Owner->DeleteObj(obj);}
+	void Delete(cObj* obj) {Tree->DeleteObj(obj);}
 
 	/**
-	* Return a cursor over the subobjects of the node.
+	* Return a cursor over the objects attached to the node.
 	*/
-	RCursor<cObj> GetObjs(void) const {return(Owner->GetObjs(*static_cast<const cNode*>(this)));}
+	RCursor<cObj> GetObjs(void) const {return(Tree->GetObjs(*static_cast<const cNode*>(this)));}
 
 	/**
 	* Method called after a node is attach.
@@ -253,7 +211,7 @@ public:
 	virtual void Clear(void);
 
 	/**
-	* Construct a list of all objects contained in the node or its subnodes.
+	* Construct a list of all objects contained in the node or its child nodes.
 	* This list is ordered by object id.
 	* @param objs           The list that will hold the objects. Must be created
 	*                       by the caller.
@@ -263,26 +221,21 @@ public:
 
 	/**
 	 * Put the identifiers of all objects contained in the node or its
-	 * subnodes).
+	 * child nodes).
 	 * @param objs           Vector that will hold the objects' identifiers.
 	 */
 	void GetAllObjects(RVectorInt<size_t,true>& objs) const;
 
 	/**
-	* Assignment operator.
+	* Copy the information related to a node.
 	* @param node           The node used as source.
 	*/
-	RNodeGA<cNode,cObj,cNodes>& operator=(const RNodeGA<cNode,cObj,cNodes>& node);
+	virtual void CopyInfos(const cNode& node);
 
 	/**
 	* Return the identifier of the node.
 	*/
 	size_t GetId(void) const {return(Id);}
-
-	/**
-	* Return the number of the subnodes.
-	*/
-	size_t GetNbNodes(void) const {return(NbSubNodes);}
 
 	/**
 	* Return the list of the nodes. The list is created by RNode, but must
@@ -291,7 +244,7 @@ public:
 	size_t* GetNodesId(void) const;
 
 	/**
-	* Return the number of the subobjects.
+	* Return the number of the objects attached.
 	*/
 	size_t GetNbObjs(void) const {return(NbSubObjects);}
 
@@ -308,14 +261,19 @@ public:
 	bool HasSomeObjects(RVectorInt<size_t,true>* objs) const;
 
 	/**
+	 * Print the current node in a file.
+	 * @param file           File.
+	 * @param depth          Depth.
+	 */
+	void PrintNode(RTextFile& file,int depth);
+
+	/**
 	* Destruct the node.
 	*/
 	virtual ~RNodeGA(void);
 
 	// friend classes
 	friend class RNodesGA<cNode,cObj,cNodes>;
-	friend class RTreeHeuristic<cNode,cObj,cNodes>;
-	friend class RFirstNodeHeuristic<cNode,cObj,cNodes>;
 };
 
 

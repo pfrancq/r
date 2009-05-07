@@ -66,6 +66,28 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
+	void RTreeHeuristic<cNode,cObj,cNodes>::BuildFile(const RString& name,cObj* obj)
+{
+	RTextFile File(name);
+	File.Open(RIO::Create);
+	if(obj)
+	{
+		File<<"Obj"<<obj->GetId()<<"[";
+		RAttrList List(obj->GetAttr());
+		for(List.Start();!List.End();List.Next())
+		{
+			File<<List();
+		}
+		File<<"]"<<endl<<endl<<endl;
+	}
+	RCursor<cNode> Cur(Nodes->GetTopNodes());
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Cur()->PrintNode(File,0);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cNode,class cObj,class cNodes>
 	void RTreeHeuristic<cNode,cObj,cNodes>::SelectNextObject(void)
 {
 	CurObj=Order[NbObjsOk];
@@ -100,8 +122,6 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RTreeHeuristic<cNode,cObj,cNodes>::PostRun(void)
 {
-	if(!Nodes->VerifyNodes())
-		std::cout<<"Problem"<<std::endl;
 }
 
 

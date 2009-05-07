@@ -44,7 +44,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RXMLStruct::RXMLStruct(void)
-	: RTree<RXMLTag,true>(100,50), Entities(20,10), Version("1.0"),
+	: RTree<RXMLStruct,RXMLTag,true>(100,50), Entities(20,10), Version("1.0"),
 	  Encoding("UTF-8"), Namespaces(10)
 {
 }
@@ -98,14 +98,14 @@ RString RXMLStruct::GetTagAttrValue(const RString& tag,const RString& attr,const
 //-------------------------------------------------------------------------------
 void RXMLStruct::AddTag(RXMLTag* parent,RXMLTag* tag)
 {
-	RTree<RXMLTag,true>::InsertNode(parent,tag);
+	RTree<RXMLStruct,RXMLTag,true>::InsertNode(parent,tag);
 }
 
 
 //-------------------------------------------------------------------------------
 void RXMLStruct::DeleteTag(RXMLTag* tag)
 {
-	RTree<RXMLTag,true>::DeleteNode(tag);
+	RTree<RXMLStruct,RXMLTag,true>::DeleteNode(tag,true);
 }
 
 
@@ -168,7 +168,7 @@ RString RXMLStruct::GetDTD(void) const
 //------------------------------------------------------------------------------
 void RXMLStruct::Clear(void)
 {
-	RTree<RXMLTag,true>::Clear();
+	RTree<RXMLStruct,RXMLTag,true>::Clear();
 	Entities.Clear();
 	Version.Clear();
 	Encoding.Clear();

@@ -37,8 +37,9 @@
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	RFirstNodeHeuristic<cNode,cObj,cNodes>::RFirstNodeHeuristic(RRandom* r,RCursor<cObj> objs,RDebug* debug)
-	: RTreeHeuristic<cNode,cObj,cNodes>("FistNode",r,objs,debug), tmpNodes(0), CurNode(0), CurAttr(0)
+	: RTreeHeuristic<cNode,cObj,cNodes>("FistNode",r,objs,debug), tmpNodes(0), tmpAttrs(100), Test("/home/pfrancq/super.txt")
 {
+	Test.Open(R::RIO::Create);
 }
 
 
@@ -48,17 +49,17 @@ template<class cNode,class cObj,class cNodes>
 {
 	RTreeHeuristic<cNode,cObj,cNodes>::Init(nodes);
 	if(!tmpNodes)
-		tmpNodes=new cNode*[nodes->MaxPtr];
+		tmpNodes=new cNode*[nodes->Reserved.GetMaxNb()];
 }
 
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	cNode* RFirstNodeHeuristic<cNode,cObj,cNodes>::NewNode(void)
+	cNode* RFirstNodeHeuristic<cNode,cObj,cNodes>::NewNode(const RAttrList& attr,cNode* parent)
 {
 	cNode* Node=Nodes->ReserveNode();
-	Node->Attr=(*CurAttr);
-	Nodes->InsertNode(CurNode,Node);
+	Node->SetAttr(attr);
+	Nodes->InsertNode(parent,Node);
 	return(Node);
 }
 
@@ -67,101 +68,76 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	cNode* RFirstNodeHeuristic<cNode,cObj,cNodes>::FindNode(void)
 {
-	size_t i;
-	size_t NbMax;    // Maximum number of common attributes find so far
-	cNode* Node;     // Pointer to the node than can hold an object
-	cNode **N;       // Pointer to go through the existing nodes
+	// Initialization Part
+	cNode* Node;                                       // Pointer to the node sharing the maximal attributes with the object
+	const RAttrList& CurAttr(CurObj->GetAttr());	   // CurAttr are the attributes to search for
+	cNode* ParentNode(0);                              // Start a the top node
+	bool GoDeeper;                                     // Must go deeper in the hierarchy ?
+	size_t NbMax;                                      // Maximal number of attributes found at the current level
+	size_t NbNodes;                                    // Number of nodes to treat at the current branch
+	cNode** CurNode;                                   // Nodes to treat at the current branch
+	size_t Depth(0);                                   // Depth
 
-	// Init Part
-	CurNode=Nodes->Top;              // Start a the top node
-	CurAttr=&CurObj->GetAttr();      // Attributes of the object to attach
-
+	// Each loop manages one level of one branch in the hierarchy
 	while(true)
 	{
-		// Has the current node subnodes where to attach the object?
-		if(!CurNode->GetNbNodes())
+		Depth++;
+
+		// Parse randomly all the nodes of that level
+		NbNodes=Nodes->GetTab(tmpNodes,ParentNode);
+		RandOrder(tmpNodes,NbNodes);
+		for(CurNode=tmpNodes,Node=0,GoDeeper=false,NbMax=0,NbNodes++;--NbNodes;CurNode++)
 		{
-			// No -> If the current node has the same attributes as the object to attach, it is the searched node
-			if(CurNode->IsSame(*CurAttr))
-				return(CurNode);
-
-			// Else a new subnode must be created
-			return(NewNode());
-		}
-
-		// Get the subnodes of the current node and randomize them
-		i=Nodes->GetNodes(tmpNodes,*CurNode);
-		Random->RandOrder(tmpNodes,i);
-
-		// Go trough the subnodes
-		for(N=tmpNodes,NbMax=0,Node=0,i++;--i;N++)
-		{
-			// Look the number of common attributes between the current subnode and the object to attach
-			size_t NbCommon=(*N)->GetNbCommon(*CurAttr);
+			// Look the number of common attributes between the current child node and the object to attach
+			size_t NbCommon=(*CurNode)->GetNbCommon(CurAttr);
 
 			// If no common attributes -> go no the next node
 			if(!NbCommon)
 				continue;
 
 			// If all the attributes of the node are in list of attributes of the object to attach -> Found a good branch
-			if(NbCommon==(*N)->GetAttr().GetNb())
+			if(NbCommon==(*CurNode)->GetAttr().GetNb())
 			{
 				// If exactly the same number of attributes -> right node
-				if((*N)->GetAttr().GetNb()==CurAttr->GetNb())
-					return(*N);
+				if((*CurNode)->GetAttr().GetNb()==CurAttr.GetNb())
+					return((*CurNode));
 
 				// Else we must go further in the hierarchy
-				Node=CurNode=(*N);
+				ParentNode=(*CurNode);
+				GoDeeper=true;
 				break;
 			}
 
-			// Remember the node having the maximum number of common attributes with the object to attach
+			// Remember the node (in Node) having the maximum number of common attributes with the object to attach
 			if(NbCommon>NbMax)
 			{
 				NbCommon=NbMax;
-				Node=(*N);
+				Node=(*CurNode);
 			}
 		}
 
-		// Verify if we must go to next level
-		if(CurNode==Node)
+		// Verify if we must go to next level (CurNode contains the branch to follow)
+		if(GoDeeper)
 			continue;
 
 		// If no node was found -> Create new one
 		if(!Node)
-			return(NewNode());
+			return(NewNode(CurAttr,ParentNode));
 
-		// A new node must be created with the common attributes (new level in the hierarchy):
-		// The current subnode must be move to it.
-		// Another node must be created to hold the object to attach
-		CurNode=NewNode();
-		CurNode->Attr.Inter(*CurAttr,Node->GetAttr());
-		if(CurNode->Parent->IsSame(CurNode->GetAttr()))
-		{
-			cNode* parent=CurNode->Parent;
-			Nodes->ReleaseNode(CurNode);
-			Nodes->MoveNode(parent,Node);
-			CurNode=parent;
-		}
-		else
-		{
-			// Verify if the new node is not identical to another node of the parent
-			RCursor<cNode> ParentSub(Nodes->GetNodes(CurNode->Parent));
-			for(ParentSub.Start();!ParentSub.End();ParentSub.Next())
-				if((ParentSub()!=CurNode)&&(ParentSub()->IsSame(CurNode->GetAttr())))
-					break;
-			if(!ParentSub.End())
-			{
-				// A compatible node exist at the upper level
-				cNode* parent=ParentSub();
-				Nodes->ReleaseNode(CurNode);
-				CurNode=parent;
-			}
-			else
-				Nodes->MoveNode(CurNode,Node);
-		}
-		return(NewNode());
-	};
+		// A node was found but contains some attributes not representing the objects.
+		tmpAttrs.Inter(CurAttr,Node->GetAttr());     // Find the common attributes in tmpAttrs.
+
+		// Verify if the common attributes are not those of the parent
+		// -> If yes, take ParentNode as parent of a new node
+		if(ParentNode&&(ParentNode->GetAttr().GetNb()==tmpAttrs.GetNb()))
+			return(NewNode(CurAttr,ParentNode));
+
+		// A new node containing tmpAttrs must be created and attached to ParentNode
+		// It has two child nodes : Node and a new node containing the object
+		ParentNode=NewNode(tmpAttrs,ParentNode);
+		Nodes->MoveNode(ParentNode,Node);
+		return(NewNode(CurAttr,ParentNode));    // The object will be attached to a new node.
+	}
 }
 
 

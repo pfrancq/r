@@ -134,7 +134,7 @@ size_t RAttrList::GetNbCommon(const RAttrList& PosAttr) const
 			ptr2++;
 		}
 		if(j&&((*ptr1)==(*ptr2)))
-			return(true);
+			count++;
 		i--;
 		ptr1++;
 	}
@@ -195,7 +195,7 @@ size_t RAttrList::FindFirstDiff(const RAttrList& PosAttr) const
 	for(i=GetNb(),ptr1=GetList(),ptr2=PosAttr.GetList();i--;ptr1++,ptr2++)
 		if(*ptr1!=*ptr2)
 			return(*ptr1);
-	return(NoAttr);
+	return(-1);
 }
 
 
@@ -204,6 +204,23 @@ RAttrList& RAttrList::operator=(const RAttrList& src)
 {
 	RVectorInt<size_t,true>::operator=(src);
 	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+void RAttrList::Print(void) const
+{
+	bool Tabs(false);
+	const size_t *ptr1;
+	size_t i;
+	for(i=GetNb()+1,ptr1=GetList();--i;ptr1++)
+	{
+		if(Tabs)
+			cout<<"\t";
+		else
+			Tabs=true;
+		cout<<(*ptr1);
+	}
 }
 
 

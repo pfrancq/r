@@ -46,8 +46,12 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RFitstNodeHeuristic class provides a first fit heuristic for trees.
+*
+* Starting from the root node, the heuristic tries to find a branch where an
+* object can be attached. It tries to find the highest node in the tree. If
+* necessary, an intermediate node is created.
 * @author Pascal Francq
-* @short First Node Heuristic class.
+* @short First Node Heuristic.
 */
 template<class cNode,class cObj,class cNodes>
 	class RFirstNodeHeuristic : public RTreeHeuristic<cNode,cObj,cNodes>
@@ -62,20 +66,17 @@ template<class cNode,class cObj,class cNodes>
 	cNode** tmpNodes;
 
 	/**
-	 * Current Node treated.
+	 * Temporary list of attributes.
 	 */
-	cNode* CurNode;
+	RAttrList tmpAttrs;
 
-	/**
-	 * Current attributes for which a new node must be found.
-	 */
-	const RAttrList* CurAttr;
+	R::RTextFile Test;
 
 public:
 
 	/**
 	* Construct the grouping heuristic.
-	* @param r              The random genrator to use.
+	* @param r              The random generator to use.
 	* @param objs           Pointer to the objects.
 	* @param debug          Debugger.
 	*/
@@ -90,8 +91,10 @@ public:
 	/**
 	 * Create a new child node to the current node with the set of attributes
 	 * to place.
+	 * @param attr           Attributes for the node.
+	 * @param parent         Parent node.
 	 */
-	cNode* NewNode(void);
+	cNode* NewNode(const RAttrList& attr,cNode* parent);
 
 	/**
 	* Find a node where to attach the next object to treat.

@@ -36,26 +36,10 @@
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	RNodeGA<cNode,cObj,cNodes>::RNodeGA(const cNode* node)
-		: Id(node->Id), Owner(node->Owner), Attr(node->Attr)
-{
-	NbSubNodes=node->NbSubNodes;
-	NbSubObjects=node->NbSubObjects;
-	Parent=node->Parent;
-	SubNodes = node->SubNodes;
-	SubObjects = node->SubObjects;
-	Reserved=node->Reserved;
-}
-
-
-//------------------------------------------------------------------------------
-template<class cNode,class cObj,class cNodes>
 	RNodeGA<cNode,cObj,cNodes>::RNodeGA(cNodes* owner,size_t id,size_t max)
-		: Id(id), Owner(owner), Attr(max)
+		: RNode<cNodes,cNode,false>(owner), Id(id), Attr(max)
 {
-	NbSubNodes=NbSubObjects= 0;
-	Parent=0;
-	SubNodes = cNoRef;
+	NbSubObjects= 0;
 	SubObjects = cNoRef;
 	Reserved=false;
 }
@@ -73,60 +57,17 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	bool RNodeGA<cNode,cObj,cNodes>::Verify(size_t &nbobjs)
 {
-// 	cNode *ptr;
-// 	size_t i,k,*Sub,*Sub2;
-// 	size_t j,*obj;
-// 	bool Ok;
+	if(!RNodeGA<cNode,cObj,cNodes>::VerifyNode(Id))
+		return(false);
 
 	// Increase the number of attached objects.
 	nbobjs+=NbSubObjects;
 
-	// Each node must have a parent.
-	if(!Owner)
+	// Each node must have at least one object or one child node
+	if((!GetNbNodes())&&(!NbSubObjects))
 	{
-		cerr<<"Node n"<<Id<<": No Owner for this node."<<endl;
+		cerr<<"Node "<<Id<<": No child node and no objects attached."<<endl;
 		return(false);
-	}
-
-	// Each node must have at least one object or one subnode
-	if((!NbSubNodes)&&(!NbSubObjects))
-	{
-		cerr<<"Node n"<<Id<<": No subnode and no objects attched."<<endl;
-		return(false);
-	}
-
-	// Verify information about subnodes
-	if(NbSubNodes)
-	{
-		// There number of subnodes can't be null.
-		if(SubNodes==cNoRef)
-		{
-			cerr<<"Node n"<<Id<<": SubNodes==NoNode"<<endl;
-			return(false);
-		}
-
-		// The index of the first subnode can not exceed the total number of nodes allocated in the parent.
-		if(SubNodes>Owner->Used.GetNb())
-		{
-			cerr<<"Node n"<<Id<<": SubNodes>Owner->Used.NbPtr"<<endl;
-			return(false);
-		}
-
-		// The index of the lasst subnode can not exceed the total number of nodes allocated in the parent.
-		if(SubNodes+NbSubNodes>Owner->Used.GetNb())
-		{
-			cerr<<"Node n"<<Id<<": SubNodes+NbSubNodes>Owner->Used.NbPtr"<<endl;
-			return(false);
-		}
-	}
-	else
-	{
-		// The number of subnodes must be null.
-		if(SubNodes!=cNoRef)
-		{
-			cerr<<"Node n"<<Id<<": SubNodes!=NoNode"<<endl;
-			return(false);
-		}
 	}
 
 	// Verify objects attached.
@@ -179,7 +120,7 @@ template<class cNode,class cObj,class cNodes>
 // 		if(Owner->ObjectsAss[*obj]!=Id)
 // 			Ok=false;
 //
-// 	// If a parent node, the identificator of node myust be in the list.
+// 	// If a parent node, the identifier of node must be in the list.
 // 	if(ParentNode!=NoNode)
 // 	{
 // 		ptr = Nodes[ParentNode];
@@ -190,8 +131,8 @@ template<class cNode,class cObj,class cNodes>
 // 			Ok=false;
 // 	}
 
-	// Verify subnodes
-	RCursor<cNode> Sub(Owner->GetNodes(static_cast<const cNode*>(this)));
+	// Verify child nodes
+	RCursor<cNode> Sub(GetNodes());
 	for(Sub.Start();!Sub.End();Sub.Next())
 		if(!Sub()->Verify(nbobjs))
 			return(false);
@@ -239,41 +180,52 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	cNode* RNodeGA<cNode,cObj,cNodes>::Copy(const cNode* from,const cNode* excluded,RVectorInt<size_t,true>* objs,bool copyobjs)
+	cNode* RNodeGA<cNode,cObj,cNodes>::CopyExceptBranch(const cNode* from,const cNode* excluded,RVectorInt<size_t,true>* objs,bool copyobjs)
 {
 	cNode* Ret;
+	cNode* CurNode;
 
 	// Verify that the nodes are from different owners
-	RReturnValIfFail(Owner!=from->Owner,0);
+	RReturnValIfFail(Tree!=from->Tree,0);
 
-	// Copy first the subnodes of from
-	RCursor<cNode> Cur(from->Owner->GetNodes(*from));
+	// Update other information
+	CopyInfos(*from);
+
+	// Copy first the child nodes of from
+	RCursor<cNode> Cur(from->GetNodes());
 	for(Cur.Start(),Ret=0;!Cur.End();Cur.Next())
 	{
+		CurNode=Cur();
+
 		// Verify if the node to copy is not the one to exclude
 		// -> Remember it and pass to the next node
-		if(Cur()==excluded)
+		if(CurNode==excluded)
 			Ret=static_cast<cNode*>(this);
 		else
 		{
-			// If the current node has at least one object attached and no subnodes
+			// If the current node has at least one object attached and no child nodes
 			// -> do not copied it
-			bool CopyObjs=(!Cur()->HasSomeObjects(objs));
-			if((!CopyObjs)&&(!Cur()->NbSubNodes))
+			bool CopyObjs=(!CurNode->HasSomeObjects(objs));
+			if((!CopyObjs)&&(!CurNode->NbSubNodes))
 				continue;
 
-			// Reserve a node
-			cNode* New=Owner->ReserveNode();
-			cNode* Find=New->Copy(Cur(),excluded,objs,CopyObjs);
+			// Insert a new child node
+			cNode* New=Tree->ReserveNode();
+			InsertNode(New);
+
+			// Copy the attributes, the child nodes and the objects from CurNode
+			cNode* Find=New->CopyExceptBranch(CurNode,excluded,objs,CopyObjs);
 			if(Find)
 				Ret=Find;
-			if(New->GetNbObjs()||New->GetNbNodes())
-				Insert(New);
-			else
+
+			// If the node 'Node' has no child nodes and no objects attached -> Remove it.
+			if((!New->GetNbObjs())&&(!New->GetNbNodes()))
 			{
+				// If the node to remove is the crossing node -> The current node becomes the crossing node
 				if(Ret==New)
 					Ret=static_cast<cNode*>(this);
-				Owner->ReleaseNode(New);
+				Tree->DeleteNode(New);   // Remove it from the tree
+				Tree->ReleaseNode(New);  // Release it.
 			}
 		}
 	}
@@ -281,13 +233,11 @@ template<class cNode,class cObj,class cNodes>
 	// Copy the objects of from
 	if(copyobjs)
 	{
-		RCursor<cObj> Objs(from->Owner->GetObjs(*from));
+		RCursor<cObj> Objs(from->GetObjs());
 		for(Objs.Start();!Objs.End();Objs.Next())
 			Insert(Objs());
 	}
 
-	// Update other information
-	(*this)=(*from);
 	return(Ret);
 }
 
@@ -324,12 +274,10 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodeGA<cNode,cObj,cNodes>::Clear(void)
 {
+	RNode<cNodes,cNode,false>::Clear();
 	Reserved=false;
-	Parent=0;
 	SubObjects=cNoRef;
 	NbSubObjects=0;
-	SubNodes=cNoRef;
-	NbSubNodes=0;
 	Attr.Clear();
 }
 
@@ -342,13 +290,13 @@ template<class cNode,class cObj,class cNodes>
 	cObj** tmpObjs;
 	size_t id;
 
-	// Goes in each subnodes to find their subobjects
-	RCursor<cNode> Cur(Owner->GetNodes(*static_cast<cNode*>(this)));
+	// Goes in each child nodes to find their objects
+	RCursor<cNode> Cur(GetNodes());
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->ConstructAllObjects(objs,nbobjs);
 
-	// Add the subobjects of the current node
-	RCursor<cObj> Objs(Owner->GetObjs(*static_cast<cNode*>(this)));
+	// Add the objects of the current node
+	RCursor<cObj> Objs(GetObjs());
 	for(Objs.Start();!Objs.End();Objs.Next())
 	{
 		// Id of the current object
@@ -371,13 +319,13 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodeGA<cNode,cObj,cNodes>::GetAllObjects(RVectorInt<size_t,true>& objs) const
 {
-	// Goes in each subnodes to find their objects
-	RCursor<cNode> Cur(Owner->GetNodes(*static_cast<const cNode*>(this)));
+	// Goes in each child nodes to find their objects
+	RCursor<cNode> Cur(GetNodes());
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->GetAllObjects(objs);
 
 	// Add the objects of the current node
-	RCursor<cObj> Objs(Owner->GetObjs(*static_cast<const cNode*>(this)));
+	RCursor<cObj> Objs(GetObjs());
 	for(Objs.Start();!Objs.End();Objs.Next())
 		objs.Insert(Objs()->GetId());
 }
@@ -385,10 +333,9 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	RNodeGA<cNode,cObj,cNodes>& RNodeGA<cNode,cObj,cNodes>::operator=(const RNodeGA<cNode,cObj,cNodes>& node)
+	void RNodeGA<cNode,cObj,cNodes>::CopyInfos(const cNode& node)
 {
 	Attr=node.Attr;
-	return(*this);
 }
 
 
@@ -399,8 +346,8 @@ template<class cNode,class cObj,class cNodes>
 	size_t* tmp;
 	size_t* tmp2;
 
-	tmp2=tmp=new size_t[NbSubNodes+1];
-	RCursor<cNode> Cur(Owner->GetNodes(this));
+	tmp2=tmp=new size_t[GetNbNodes()+1];
+	RCursor<cNode> Cur(GetNodes());
 	for(Cur.Start();!Cur.End();Cur.Next(),tmp2++)
 		(*tmp2)=Cur()->GetId();
 	(*tmp2)=cNoRef;
@@ -416,7 +363,7 @@ template<class cNode,class cObj,class cNodes>
 	size_t* tmp2;
 
 	tmp2=tmp=new size_t[NbSubObjects+1];
-	RCursor<cObj> Objs(Owner->GetObjs(this));
+	RCursor<cObj> Objs(GetObjs());
 	for(Objs.Start();!Objs.End();Objs.Next(),tmp2++)
 		(*tmp2)=Objs()->GetId();
 	(*tmp2)=cNoRef;
@@ -430,11 +377,30 @@ template<class cNode,class cObj,class cNodes>
 {
 	if(!objs)
 		return(false);
-	RCursor<cObj> Objs(Owner->GetObjs(static_cast<const cNode*>(this)));
+	RCursor<cObj> Objs(GetObjs());
 	for(Objs.Start();!Objs.End();Objs.Next())
 		if(objs->IsIn(Objs()->GetId()))
 			return(true);
 	return(false);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cNode,class cObj,class cNodes>
+	void RNodeGA<cNode,cObj,cNodes>::PrintNode(RTextFile& file,int depth)
+{
+	for(int i=0;i<depth;i++)
+		file<<"\t";
+	file<<"Node"<<GetId()<<"[";
+	RAttrList List(GetAttr());
+	for(List.Start();!List.End();List.Next())
+	{
+		file<<List();
+	}
+	file<<"]"<<endl;
+	RCursor<cNode> Cur(GetNodes());
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Cur()->PrintNode(file,depth+1);
 }
 
 
