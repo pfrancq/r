@@ -180,6 +180,7 @@ bool RFile::Exists(const RURI& uri)
     return(false);
 }
 
+
 //------------------------------------------------------------------------------
 RFile::~RFile(void)
 {

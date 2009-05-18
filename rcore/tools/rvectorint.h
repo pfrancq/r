@@ -105,14 +105,14 @@ public:
 	*/
 	RVectorInt(const RVectorInt& vector);
 
-private:
-
 	/**
 	* Verify if the container can hold a certain number of elements. If not,
 	* the container is extended.
     * @param max             Number of elements that must be contained.
 	*/
 	void Verify(size_t max);
+
+private:
 
 	/**
 	* This function returns the index of an element represented by tag, and it
@@ -129,7 +129,7 @@ public:
 
 	/**
 	* Test if two lists have exactly the same integers.
-	* @param vi              The list used for the comparaison.
+	* @param vi              The list used for the comparison.
 	* @return True if the lists are the same.
 	*/
 	bool IsSame(const RVectorInt& vi) const;
@@ -142,7 +142,9 @@ public:
 	bool IsIn(I value) const;
 
 	/**
-	* Insert an integer value in the list.
+	* Insert an integer value in the list. If the vector is ordered, the method
+	* verifies that the integer is not in before insertion. If the vector is
+	* unordered, the integer is simply inserted at the end.
 	* @param ins             The integer value to insert.
 	*/
 	void Insert(I ins);
@@ -159,8 +161,11 @@ public:
 	* Insert an integer value in the list at a given position.
 	* @param ins             The integer value to insert.
 	* @param pos             The position where to insert.
+	* @param del             Specify if the object that was previously at the
+	*                        position should be deleted or shifted.
+	*
 	*/
-	void InsertAt(I ins,size_t pos);
+	void InsertAt(I ins,size_t pos,bool del=false);
 
 	/**
 	* Delete an integer value in the list.

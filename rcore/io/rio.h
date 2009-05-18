@@ -61,6 +61,7 @@ class RTextFile;
 class RIO
 {
 public:
+
 	/**
 	* The ModeType enum represents the different mode that can be used to open a
 	* file.

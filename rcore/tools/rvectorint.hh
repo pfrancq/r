@@ -194,7 +194,8 @@ template<class I,bool bOrder>
 	{
 		bool Find;
 		size_t Index=GetId(ins,Find);
-		InsertAt(ins,Index);
+		if(!Find)
+			InsertAt(ins,Index);
 	}
 	else
 		List[NbInt++]=ins;
@@ -216,17 +217,21 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RVectorInt<I,bOrder>::InsertAt(I ins,size_t pos)
+	void RVectorInt<I,bOrder>::InsertAt(I ins,size_t pos,bool del)
 {
 	I* ptr;
 
 	if(pos+1>MaxInt)
 		Verify(pos+1);
 	ptr=&List[pos];
-	if(pos<NbInt)
+	if((!del)&&(pos<NbInt))
+	{
 		memmove(ptr+1,ptr,(NbInt-pos)*sizeof(I));
+		NbInt++;
+	}
+	else if(pos>=NbInt)
+		NbInt=pos+1;
 	(*ptr)=ins;
-	NbInt++;
 }
 
 
