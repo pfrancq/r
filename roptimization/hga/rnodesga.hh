@@ -165,7 +165,7 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	cNode* RNodesGA<cNode,cObj,cNodes>::CopyExceptBranch(const cNodes* from,const cNode* excluded,RVectorInt<size_t,true>* objs,bool copyobjs)
+	cNode* RNodesGA<cNode,cObj,cNodes>::CopyExceptBranch(const cNodes* from,const cNode* excluded,RNumContainer<size_t,true>* objs,bool copyobjs)
 {
 	cNode* Ret(0);
 	cNode* CurNode;

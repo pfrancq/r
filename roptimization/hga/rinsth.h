@@ -71,7 +71,7 @@ protected:
 	/**
 	* Use for objects manipulation functions.
 	*/
-	RVectorInt<size_t,true> tmpObjects;
+	RNumContainer<size_t,true> tmpObjects;
 
 	/**
 	* Heuristic Used.

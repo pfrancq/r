@@ -15,18 +15,19 @@ SET(rcore_tools_INST_INCLUDES rstd.h
                        basicstring.h
                        basicstring.hh
                        rportsmacro.h
-                       rvectorint.h
-                       rvectorint.hh 
-                         rtrace.h
-                         rstring.h
-                         rchar.h
-    					 random.h
-                         rdate.h
-    					 rlang.h
+                       rnumcontainer.h
+                       rnumcontainer.hh 
+	                   rtrace.h
+                       rstring.h
+                       rchar.h
+    				   rrandom.h
+                        rdate.h
+    					rlang.h
     					 rlocale.h
     					 rtextencoding.h
     					 rcstring.h
     					 rvectorbool.h
+    					 rvalue.h
 )
 
 SET(rcore_tools_TARGET_SOURCES random.cpp
@@ -42,4 +43,5 @@ SET(rcore_tools_TARGET_SOURCES random.cpp
                                basiccursor.cpp
                                rstd.cpp
                                rvectorbool.cpp
+                               rvalue.cpp
 )

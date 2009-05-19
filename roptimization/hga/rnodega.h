@@ -162,7 +162,7 @@ public:
 	* @return Pointer to the node that was supposed to have the node excluded
 	* (or 0 if not found).
 	*/
-	cNode* CopyExceptBranch(const cNode* from,const cNode* excluded=0,RVectorInt<size_t,true>* objs=0,bool copyobjs=true);
+	cNode* CopyExceptBranch(const cNode* from,const cNode* excluded=0,RNumContainer<size_t,true>* objs=0,bool copyobjs=true);
 
 	/**
 	* Method call to insert an object.
@@ -224,7 +224,7 @@ public:
 	 * child nodes).
 	 * @param objs           Vector that will hold the objects' identifiers.
 	 */
-	void GetAllObjects(RVectorInt<size_t,true>& objs) const;
+	void GetAllObjects(RNumContainer<size_t,true>& objs) const;
 
 	/**
 	* Copy the information related to a node.
@@ -258,7 +258,7 @@ public:
 	 * Look if the current node has some objects attached to it.
 	 * @param objs           Objects to verify.
 	 */
-	bool HasSomeObjects(RVectorInt<size_t,true>* objs) const;
+	bool HasSomeObjects(RNumContainer<size_t,true>* objs) const;
 
 	/**
 	 * Print the current node in a file.

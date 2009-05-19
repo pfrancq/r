@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RVectorInt.cpp
+	RNumContainer.cpp
 
-	Class representing a list of integer values - Inline implementation
+	Class representing a vector - Inline implementation
 
 	Copyright 2001-2009 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2001 by Vandaele Valery.
@@ -30,27 +30,14 @@
 
 
 //------------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <stdlib.h>
-#include <string.h>
-
-
-//------------------------------------------------------------------------------
-// include files for R Project
-#include <rvectorint.h>
-using namespace R;
-
-
-
-//------------------------------------------------------------------------------
 //
-// class RVectorInt
+// class RNumContainer
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	RVectorInt<I,bOrder>::RVectorInt(size_t max)
+	RNumContainer<I,bOrder>::RNumContainer(size_t max)
 	: MaxInt(max)
 {
 	NbInt = 0;
@@ -63,7 +50,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	RVectorInt<I,bOrder>::RVectorInt(const RVectorInt& vec)
+	RNumContainer<I,bOrder>::RNumContainer(const RNumContainer& vec)
 	: MaxInt(vec.MaxInt)
 {
 	NbInt = vec.NbInt;
@@ -74,7 +61,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RVectorInt<I,bOrder>::Verify(size_t max)
+	void RNumContainer<I,bOrder>::Verify(size_t max)
 {
 	if(max>MaxInt)
 	{
@@ -96,20 +83,21 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	size_t RVectorInt<I,bOrder>::GetId(I nb,bool& find) const
+	size_t RNumContainer<I,bOrder>::GetId(I nb,bool& find) const
 {
-	size_t NbMin,NbMax,i=0;
-	bool CompNeg(true);
-	bool Cont=true,NotLast=true;
-	I ptr,*ptr2;
-
 	if(bOrder)
 	{
+		size_t NbMin,NbMax,i;
+		I ptr;
+		bool CompNeg(true);
+		bool Cont=true,NotLast=true;
+
 		find=false;
 		if(!NbInt)
 			return(0);
 		NbMax=NbInt-1;
 		NbMin=0;
+		i=0;
 		if(NbMax)
 		{
 			while(Cont)
@@ -153,8 +141,10 @@ template<class I,bool bOrder>
 	else
 	{
 		find=true;
-		for(i=0,ptr2=List;i<MaxInt;ptr2++,i++)
-			if((*ptr2)&&(((*ptr2)!=nb))) return(i);
+		I* ptr(List);
+		size_t i(0);
+		for(;i<MaxInt;ptr++,i++)
+			if((*ptr)&&(((*ptr)==nb))) return(i);
 		find=false;
 		return(i);
 	}
@@ -163,7 +153,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	bool RVectorInt<I,bOrder>::IsSame(const RVectorInt& vi) const
+	bool RNumContainer<I,bOrder>::IsSame(const RNumContainer& vi) const
 {
 	size_t i;
 	I *ptr1,*ptr2;
@@ -177,7 +167,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	bool RVectorInt<I,bOrder>::IsIn(I value) const
+	bool RNumContainer<I,bOrder>::IsIn(I value) const
 {
 	bool find;
 	GetId(value,find);
@@ -187,7 +177,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RVectorInt<I,bOrder>::Insert(I ins)
+	void RNumContainer<I,bOrder>::Insert(I ins)
 {
 	Verify(NbInt+1);
 	if(bOrder)
@@ -204,20 +194,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RVectorInt<I,bOrder>::Insert(const RVectorInt& ins)
-{
-	I* ptr;
-	size_t i;
-
-	Verify(NbInt+ins.NbInt);
-	for(i=ins.NbInt+1,ptr=ins.List;--i;ptr++)
-		Insert(*ptr);
-}
-
-
-//------------------------------------------------------------------------------
-template<class I,bool bOrder>
-	void RVectorInt<I,bOrder>::InsertAt(I ins,size_t pos,bool del)
+	void RNumContainer<I,bOrder>::InsertAt(I ins,size_t pos,bool del)
 {
 	I* ptr;
 
@@ -237,25 +214,41 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RVectorInt<I,bOrder>::Delete(I del)
+	void RNumContainer<I,bOrder>::Delete(I del)
 {
-	I *ptr=List;
-	size_t i=0;
-
-	while((*ptr)!=del)
-	{
-		i++;
-		ptr++;
-	}
-	NbInt--;
-	memmove(ptr,ptr+1,sizeof(I)*(NbInt-i));
-	List[NbInt]=0;
+	bool Find;
+	size_t Index=GetId(del,Find);
+	if(Find)
+		DeleteAt(Index,true);
 }
 
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RVectorInt<I,bOrder>::Clear(void)
+	void RNumContainer<I,bOrder>::DeleteAt(size_t pos,bool shift)
+{
+	I* ptr;
+
+	RReturnIfFail(pos<NbInt);
+	ptr=&List[pos];
+
+	// Decrease number of elements
+	NbInt--;
+
+	// If the position is the not last one and the element must be shifted
+	if((pos<NbInt)&&shift)
+	{
+		memmove(ptr,ptr+1,sizeof(I)*(NbInt-pos));
+		List[NbInt]=0;
+	}
+	else
+		(*ptr)=0;
+}
+
+
+//------------------------------------------------------------------------------
+template<class I,bool bOrder>
+	void RNumContainer<I,bOrder>::Clear(void)
 {
 	NbInt=0;
 	memset(List,0,MaxInt*sizeof(I));
@@ -264,7 +257,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	int RVectorInt<I,bOrder>::ReOrderFunction(const void* num1, const void* num2)
+	int RNumContainer<I,bOrder>::ReOrderFunction(const void* num1, const void* num2)
 {
 	const I *a=static_cast<const I*>(num1);
 	const I *b=static_cast<const I*>(num2);
@@ -274,7 +267,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RVectorInt<I,bOrder>::ReOrder(void)
+	void RNumContainer<I,bOrder>::ReOrder(void)
 {
 	qsort(static_cast<void*>(List),NbInt,sizeof(I),ReOrderFunction);
 }
@@ -282,7 +275,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RVectorInt<I,bOrder>::Randomize(RRandom* rand,size_t nb)
+	void RNumContainer<I,bOrder>::Randomize(RRandom* rand,size_t nb)
 {
 	if((!nb)||(nb>NbInt))
 		nb=NbInt;
@@ -292,7 +285,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	RVectorInt<I,bOrder>& RVectorInt<I,bOrder>::operator=(const RVectorInt& src)
+	RNumContainer<I,bOrder>& RNumContainer<I,bOrder>::operator=(const RNumContainer& src)
 {
 	Verify(src.NbInt);
 	NbInt = src.NbInt;
@@ -303,14 +296,27 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	const I& RVectorInt<I,bOrder>::operator[](size_t i) const
+	void RNumContainer<I,bOrder>::Add(const RNumContainer& ins)
+{
+	I* ptr;
+	size_t i;
+
+	Verify(NbInt+ins.NbInt);
+	for(i=ins.NbInt+1,ptr=ins.List;--i;ptr++)
+		Insert(*ptr);
+}
+
+
+//------------------------------------------------------------------------------
+template<class I,bool bOrder>
+	I RNumContainer<I,bOrder>::operator[](size_t i) const
 {
 	if(i>=NbInt)
 	{
 		if(NbInt)
-			throw std::range_error("RVectorInt<I,bOrder>::operator[] const : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbInt-1)+"]");
+			throw std::range_error("RNumContainer<I,bOrder>::operator[] const : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbInt-1)+"]");
 		else
-			throw std::range_error("RVectorInt<I,bOrder>::operator[] const : no elements");
+			throw std::range_error("RNumContainer<I,bOrder>::operator[] const : no elements");
 	}
 	return(List[i]);
 }
@@ -318,7 +324,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	I& RVectorInt<I,bOrder>::operator[](size_t i)
+	I& RNumContainer<I,bOrder>::operator[](size_t i)
 {
 	Verify(i);
 	if(i>=NbInt)
@@ -331,7 +337,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	RVectorInt<I,bOrder>::~RVectorInt(void)
+	RNumContainer<I,bOrder>::~RNumContainer(void)
 {
 	delete[] List;
 }

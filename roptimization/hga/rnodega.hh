@@ -180,7 +180,7 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	cNode* RNodeGA<cNode,cObj,cNodes>::CopyExceptBranch(const cNode* from,const cNode* excluded,RVectorInt<size_t,true>* objs,bool copyobjs)
+	cNode* RNodeGA<cNode,cObj,cNodes>::CopyExceptBranch(const cNode* from,const cNode* excluded,RNumContainer<size_t,true>* objs,bool copyobjs)
 {
 	cNode* Ret;
 	cNode* CurNode;
@@ -317,7 +317,7 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	void RNodeGA<cNode,cObj,cNodes>::GetAllObjects(RVectorInt<size_t,true>& objs) const
+	void RNodeGA<cNode,cObj,cNodes>::GetAllObjects(RNumContainer<size_t,true>& objs) const
 {
 	// Goes in each child nodes to find their objects
 	RCursor<cNode> Cur(GetNodes());
@@ -373,7 +373,7 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	bool RNodeGA<cNode,cObj,cNodes>::HasSomeObjects(RVectorInt<size_t,true>* objs) const
+	bool RNodeGA<cNode,cObj,cNodes>::HasSomeObjects(RNumContainer<size_t,true>* objs) const
 {
 	if(!objs)
 		return(false);

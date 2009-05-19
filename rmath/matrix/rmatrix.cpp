@@ -31,8 +31,10 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rmatrix.h>
+#include <rcursor.h>
 #include <rstring.h>
 using namespace R;
+using namespace std;
 
 
 
@@ -43,134 +45,157 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RMatrix::RMatrix(void)
-	: Lines(0), MaxLines(0), Cols(0), MaxCols(0), M(0)
-{
-}
-
-
-//------------------------------------------------------------------------------
 RMatrix::RMatrix(size_t size)
-	: Lines(size), MaxLines(size), Cols(size), MaxCols(size), M(0)
+	: RContainer<RVector,true,false>(size), NbCols(size)
 {
-	Init();
+		Create(size,size);
 }
 
 
 //------------------------------------------------------------------------------
 RMatrix::RMatrix(size_t lines,size_t cols)
-	: Lines(lines), MaxLines(lines), Cols(cols), MaxCols(cols), M(0)
+	: RContainer<RVector,true,false>(lines), NbCols(cols)
 {
-	Init();
+	Create(lines,cols);
 }
 
 
 //------------------------------------------------------------------------------
 RMatrix::RMatrix(const RMatrix& matrix)
-: Lines(matrix.Lines), MaxLines(matrix.Lines), Cols(matrix.Cols), MaxCols(matrix.Cols), M(0)
+	: RContainer<RVector,true,false>(matrix), NbCols(matrix.NbCols)
 {
-	Init();
-	double **ptrL,*ptrC,**ptrLM,*ptrCM;
-	size_t i,j;
-	for(i=Lines+1,ptrL=M,ptrLM=matrix.M;--i;ptrL++,ptrLM++)
-		for(j=Cols+1,ptrC=*ptrL,ptrCM=*ptrLM;--j;ptrC++,ptrCM++)
-			(*ptrC)=(*ptrCM);
 }
 
 
 //------------------------------------------------------------------------------
-void RMatrix::Init(void)
+void RMatrix::Create(size_t lines,size_t cols)
 {
-	double** ptr;
-	size_t i;
-
-	M=new double*[MaxLines];
-	for(i=MaxLines+1,ptr=M;--i;ptr++)
-		(*ptr) = new double[MaxCols];
+	RVector* ptr;
+	for(size_t i=0;i<lines;i++)
+	{
+		InsertPtrAt(ptr=new RVector(cols),i,true);
+		ptr->InsertAt(NAN,cols-1,true);
+	}
 }
 
 
 //------------------------------------------------------------------------------
 void RMatrix::VerifySize(size_t newlines,size_t newcols)
 {
-	double** ptr;
-	size_t i;
+	size_t nblines(GetNb());
 
-	if(MaxLines<newlines)
+	// Verify the lines
+	if(newlines>GetNb())
 	{
-		MaxCols = newcols;
-		for(i=MaxLines+1,ptr=M;--i;ptr++) delete[](*ptr);
-		delete[] M;
-		MaxLines=newlines;
-		M = new double*[MaxLines];
-		for(i=MaxLines+1,ptr=M;--i;ptr++)
-			(*ptr)= new double[MaxCols];
-	}
-	else
-		if(MaxCols<newcols)
+		RVector* ptr;
+
+		// New lines must be added.
+		VerifyTab(newlines);
+		for(size_t i=GetNb();i<newlines;i++)
 		{
-			MaxCols=newcols;
-			for(i=MaxLines+1,ptr=M;--i;ptr++)
-			{
-				delete[] (*ptr);
-				(*ptr)= new double[MaxCols];
-			}
+			InsertPtrAt(ptr=new RVector(newcols),i,true);
+			ptr->InsertAt(NAN,newcols-1,true);
 		}
-	Lines=newlines;
-	Cols=newcols;
+	}
+	else if(newlines<GetNb())
+	{
+		// A number of lines must be deleted
+		for(size_t i=GetNb()-newlines+1;--i;)
+			DeletePtrAt(GetNb()-1);
+	}
+
+	// Verify the columns
+	if(newcols>NbCols)
+	{
+		// Each vector must be expanded
+		RCursor<RVector> Cur(*this,0,nblines);
+		for(Cur.Start();!Cur.End();Cur.Next())
+			Cur()->InsertAt(NAN,newcols-1,true);
+		NbCols=newcols;
+	}
+	else if(newcols<NbCols)
+	{
+		// Each vector must be resized
+		RCursor<RVector> Cur(*this,0,nblines);
+		for(Cur.Start();!Cur.End();Cur.Next())
+		{
+			for(size_t i=NbCols-newcols+1;--i;)
+				Cur()->DeleteAt(GetNb()-1,false);
+		}
+		NbCols=newcols;
+	}
+}
+
+
+//------------------------------------------------------------------------------
+void RMatrix::Init(double val)
+{
+	RCursor<RVector> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		for(Cur()->Start();!Cur()->End();Cur()->Next())
+			((*Cur())())=val;
+	}
 }
 
 
 //------------------------------------------------------------------------------
 void RMatrix::Symetrize(void)
 {
-	double **ptrL,**ptrLA,*ptrC,*ptrCA;
-	size_t i,j;
+	if(NbCols!=GetNb())
+		throw std::range_error("RMatrix::Symetrize() : Not a symmetric matrix");
 
-	for(i=Lines+1,ptrL=M,ptrLA=M+(Lines-1);--i;ptrL++,ptrLA--)
-		for(j=Cols+1,ptrC=(*ptrL),ptrCA=(*ptrLA)+Cols-1;--j;ptrC++,ptrCA--)
-			if(!(*ptrC)) (*ptrC)=(*ptrCA);
+	RCursor<RVector> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		const double* ptr(Cur()->GetList());
+		for(size_t j=0;j<Cur.GetPos();j++)
+			(*this)[j][Cur.GetPos()]=ptr[j];
+	}
 }
 
 
 //------------------------------------------------------------------------------
-double& RMatrix::operator()(size_t i,size_t j) const
+double RMatrix::operator()(size_t i,size_t j) const
 {
-	if((i>Lines)||(j>Cols))
-		throw std::range_error("RMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(Lines)+","+RString::Number(Cols)+")");
-	return(M[i][j]);
+	if((i>GetNb())||(j>NbCols))
+		throw std::range_error("RMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(GetNb())+","+RString::Number(NbCols)+")");
+	return((*static_cast<RVector*>(Tab[i]))[j]);
 }
 
 
 //------------------------------------------------------------------------------
-const double* RMatrix::operator[](size_t i) const
+double& RMatrix::operator()(size_t i,size_t j)
 {
-	if(i>Lines)
-		throw std::range_error("RMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(Lines)+")");
-	return(M[i]);
+	if((i>GetNb())||(j>NbCols))
+		throw std::range_error("RMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(GetNb())+","+RString::Number(NbCols)+")");
+	return((*static_cast<RVector*>(Tab[i]))[j]);
 }
 
 
 //------------------------------------------------------------------------------
-double* RMatrix::operator[](size_t i)
+const RVector* RMatrix::operator[](size_t i) const
 {
-	if(i>Lines)
-		throw std::range_error("RMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(Lines)+")");
-	return(M[i]);
+	if(i>GetNb())
+		throw std::range_error("RMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(GetNb())+")");
+	return(static_cast<RVector*>(Tab[i]));
+}
+
+
+//------------------------------------------------------------------------------
+RVector* RMatrix::operator[](size_t i)
+{
+	if(i>GetNb())
+		throw std::range_error("RMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(GetNb())+")");
+	return(static_cast<RVector*>(Tab[i]));
 }
 
 
 //------------------------------------------------------------------------------
 RMatrix& RMatrix::operator=(const RMatrix& matrix)
 {
-	double **ptrL,*ptrC,**ptrLM,*ptrCM;
-	size_t i,j;
-
-	if(this==&matrix) return(*this);
-	VerifySize(matrix.Lines,matrix.Cols);
-	for(i=Lines+1,ptrL=M,ptrLM=matrix.M;--i;ptrL++,ptrLM++)
-		for(j=Cols+1,ptrC=*ptrL,ptrCM=*ptrLM;--j;ptrC++,ptrCM++)
-			(*ptrC)=(*ptrCM);
+	NbCols=matrix.NbCols;
+	RContainer<RVector,true,false>::operator=(matrix);
 	return(*this);
 }
 
@@ -178,14 +203,13 @@ RMatrix& RMatrix::operator=(const RMatrix& matrix)
 //------------------------------------------------------------------------------
 RMatrix& RMatrix::operator+=(const RMatrix& matrix)
 {
-	double **ptrL,*ptrC,**ptrLM,*ptrCM;
-	size_t i,j;
-
-	if((Lines!=matrix.Lines)||(Cols!=matrix.Cols))
+	if((GetNb()!=matrix.GetNb())||(NbCols!=matrix.NbCols))
 		throw std::range_error("RMatrix::operator+= : Not Compatible Sizes");
-	for(i=Lines+1,ptrL=M,ptrLM=matrix.M;--i;ptrL++,ptrLM++)
-		for(j=Cols+1,ptrC=*ptrL,ptrCM=*ptrLM;--j;ptrC++,ptrCM++)
-			(*ptrC)+=(*ptrCM);
+	RCursor<RVector> Cur(*this);
+	RCursor<RVector> Cur2(matrix);
+	for(Cur.Start(),Cur2.Start();!Cur.End();Cur.Next(),Cur2.Next())
+		for(Cur()->Start(),Cur2()->Start();!Cur()->End();Cur()->Next(),Cur2()->Next())
+			((*Cur())())+=((*Cur2())());
 	return(*this);
 }
 
@@ -193,14 +217,13 @@ RMatrix& RMatrix::operator+=(const RMatrix& matrix)
 //------------------------------------------------------------------------------
 RMatrix& RMatrix::operator-=(const RMatrix& matrix)
 {
-	double **ptrL,*ptrC,**ptrLM,*ptrCM;
-	size_t i,j;
-
-	if((Lines!=matrix.Lines)||(Cols!=matrix.Cols))
+	if((GetNb()!=matrix.GetNb())||(NbCols!=matrix.NbCols))
 		throw std::range_error("RMatrix::operator-= : Not Compatible Sizes");
-	for(i=Lines+1,ptrL=M,ptrLM=matrix.M;--i;ptrL++,ptrLM++)
-		for(j=Cols+1,ptrC=*ptrL,ptrCM=*ptrLM;--j;ptrC++,ptrCM++)
-			(*ptrC)-=(*ptrCM);
+	RCursor<RVector> Cur(*this);
+	RCursor<RVector> Cur2(matrix);
+	for(Cur.Start(),Cur2.Start();!Cur.End();Cur.Next(),Cur2.Next())
+		for(Cur()->Start(),Cur2()->Start();!Cur()->End();Cur()->Next(),Cur2()->Next())
+			((*Cur())())-=((*Cur2())());
 	return(*this);
 }
 
@@ -208,12 +231,10 @@ RMatrix& RMatrix::operator-=(const RMatrix& matrix)
 //------------------------------------------------------------------------------
 RMatrix& RMatrix::operator*=(const double arg)
 {
-	double **ptrL,*ptrC;
-	size_t i,j;
-
-	for(i=Lines+1,ptrL=M;--i;ptrL++)
-		for(j=Cols+1,ptrC=*ptrL;--j;ptrC++)
-			(*ptrC)*=arg;
+	RCursor<RVector> Cur(*this);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		for(Cur()->Start();!Cur()->End();Cur()->Next())
+			((*Cur())())*=arg;
 	return(*this);
 }
 
@@ -221,26 +242,27 @@ RMatrix& RMatrix::operator*=(const double arg)
 //------------------------------------------------------------------------------
 RMatrix& RMatrix::operator*=(const RMatrix& matrix)
 {
-	double **ptrL,*ptrC,**ptrLM,*ptrCM,**ptrLR,*ptrCR,Sum;
-	size_t i,j,k;
-	RMatrix res;
-
-	if(Lines!=matrix.Cols)
+	if(NbCols!=matrix.GetNb())
 		throw std::range_error("RMatrix::operator*= : Not Compatible Sizes");
-	res.VerifySize(Lines,matrix.Cols);
-	for(i=Lines+1,ptrL=M,ptrLR=res.M;--i;ptrL++,ptrLR++)
+
+	// Copy in res the results of the product
+	RMatrix res(GetNb(),matrix.NbCols);
+	RCursor<RVector> Cur(*this);
+	RCursor<RVector> Cur2(matrix);
+	RCursor<RVector> Cur3(res);
+	for(Cur.Start(),Cur3.Start();!Cur3.End();Cur.Next(),Cur3.Next())
 	{
-		for(j=0,ptrCR=(*ptrLR),ptrCM=(*matrix.M);j<matrix.Cols+1;j++,ptrCR++,ptrCM++)
+		for(Cur3()->Start();!Cur3()->End();Cur3()->Next())
 		{
-			Sum=0;
-			for(k=Cols+1,ptrC=(*ptrL),ptrLM=matrix.M;--k;ptrC++,ptrLM++)
-					Sum += (*ptrC)*((*ptrLM)[j]);
-			(*ptrCR)=Sum;
+			double Sum(0);
+			for(Cur()->Start(),Cur2.Start();!Cur()->End();Cur()->Next(),Cur2.Next())
+				Sum+=((*Cur())())*(*Cur2())[Cur3()->GetPos()];
+			((*Cur3())())=Sum;
 		}
 	}
-	for(i=Lines+1,ptrL=M,ptrLM=res.M;--i;ptrL++,ptrLM++)
-		for(j=Cols+1,ptrC=*ptrL,ptrCM=*ptrLM;--j;ptrC++,ptrCM++)
-			(*ptrC)=(*ptrCM);
+
+	// Copy res in this
+	(*this)=res;
 	return(*this);
 }
 
@@ -248,14 +270,6 @@ RMatrix& RMatrix::operator*=(const RMatrix& matrix)
 //------------------------------------------------------------------------------
 RMatrix::~RMatrix(void)
 {
-	double **ptr;
-	size_t i;
-
-	if(M)
-	{
-		for(i=MaxLines,ptr=M;--i;ptr++) delete[] (*ptr);
-		delete[] M;
-	}
 }
 
 
@@ -267,7 +281,7 @@ RMatrix::~RMatrix(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RMatrix operator+(const RMatrix &arg1,const RMatrix &arg2)
+RMatrix R::operator+(const RMatrix &arg1,const RMatrix &arg2)
 {
 	RMatrix res(arg1);
 
@@ -277,7 +291,7 @@ RMatrix operator+(const RMatrix &arg1,const RMatrix &arg2)
 
 
 //------------------------------------------------------------------------------
-RMatrix operator-(const RMatrix &arg1,const RMatrix &arg2)
+RMatrix R::operator-(const RMatrix &arg1,const RMatrix &arg2)
 {
 	RMatrix res(arg1);
 
@@ -287,7 +301,7 @@ RMatrix operator-(const RMatrix &arg1,const RMatrix &arg2)
 
 
 //------------------------------------------------------------------------------
-RMatrix operator*(const RMatrix& arg1,const RMatrix& arg2)
+RMatrix R::operator*(const RMatrix& arg1,const RMatrix& arg2)
 {
 	RMatrix res(arg1);
 
@@ -297,7 +311,7 @@ RMatrix operator*(const RMatrix& arg1,const RMatrix& arg2)
 
 
 //------------------------------------------------------------------------------
-RMatrix operator*(const double arg1,const RMatrix& arg2)
+RMatrix R::operator*(const double arg1,const RMatrix& arg2)
 {
 	RMatrix res(arg2);
 
@@ -307,7 +321,7 @@ RMatrix operator*(const double arg1,const RMatrix& arg2)
 
 
 //------------------------------------------------------------------------------
-RMatrix operator*(const RMatrix& arg1,const double arg2)
+RMatrix R::operator*(const RMatrix& arg1,const double arg2)
 {
 	RMatrix res(arg1);
 

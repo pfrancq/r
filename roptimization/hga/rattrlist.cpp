@@ -49,14 +49,14 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RAttrList::RAttrList(const size_t MaxSize)
-	: RVectorInt<size_t,true>(MaxSize)
+	: RNumContainer<size_t,true>(MaxSize)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RAttrList::RAttrList(const RAttrList& lst)
-	: RVectorInt<size_t,true>(lst)
+	: RNumContainer<size_t,true>(lst)
 {
 }
 
@@ -202,7 +202,7 @@ size_t RAttrList::FindFirstDiff(const RAttrList& PosAttr) const
 //------------------------------------------------------------------------------
 RAttrList& RAttrList::operator=(const RAttrList& src)
 {
-	RVectorInt<size_t,true>::operator=(src);
+	RNumContainer<size_t,true>::operator=(src);
 	return(*this);
 }
 

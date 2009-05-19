@@ -35,7 +35,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rblockfile.h>
-#include <rvectorint.h>
+#include <rnumcontainer.h>
 #include <rcursor.h>
 
 
@@ -143,7 +143,7 @@ class RIndexFile : protected RBlockFile
 	/**
 	 * Free spaces in each block.
 	 */
-	RVectorInt<size_t,false> FreeSpaces;
+	RNumContainer<size_t,false> FreeSpaces;
 
 	/**
 	 * Tolerance.
@@ -269,7 +269,7 @@ public:
 	 * @param indexid        Identifier of the index.
 	 * @param vec            Vector to write.
 	 */
-	template<class I,bool bOrder> void Write(size_t& blockid,size_t indexid,const RVectorInt<I,bOrder>& vec)
+	template<class I,bool bOrder> void Write(size_t& blockid,size_t indexid,const RNumContainer<I,bOrder>& vec)
 	{
 		Seek(blockid,indexid,sizeof(size_t)+(vec.GetNb()*sizeof(I)));
 		size_t size(vec.GetNb());
@@ -310,7 +310,7 @@ public:
 	 * @param indexid        Identifier of the index.
 	 * @param vec            Read to write.
 	 */
-	template<class I,bool bOrder> void Read(size_t blockid,size_t indexid,RVectorInt<I,bOrder>& vec)
+	template<class I,bool bOrder> void Read(size_t blockid,size_t indexid,RNumContainer<I,bOrder>& vec)
 	{
 		size_t nb,size;
 		vec.Clear();

@@ -36,7 +36,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rcontainer.h>
-#include <rvectorint.h>
+#include <rnumcontainer.h>
 #include <rcursor.h>
 #include <robjs.h>
 #include <rtree.h>
@@ -80,11 +80,6 @@ protected:
 	size_t* ObjectsAss;
 
 	/**
-	* Array of nodes attached.
-	*/
-//	RContainer<cNode,false,false> NodesAss;
-
-	/**
 	* Array of objects attached.
 	*/
 	RContainer<cObj,false,false> ObjsAss;
@@ -106,7 +101,7 @@ protected:
 
 public:
 
-	/**
+	/**RVector
 	* Construct the nodes.
 	* @param objs           Objects to attach.
 	* @param maxnodes       Maximum number of nodes.
@@ -173,7 +168,7 @@ public:
 	* @return Pointer to the node that was supposed to have the node excluded
 	* (or 0 if not found).
 	*/
-	cNode* CopyExceptBranch(const cNodes* from,const cNode* excluded=0,RVectorInt<size_t,true>* objs=0,bool copyobjs=true);
+	cNode* CopyExceptBranch(const cNodes* from,const cNode* excluded=0,RNumContainer<size_t,true>* objs=0,bool copyobjs=true);
 
 	/**
 	* Insert an object to a node.

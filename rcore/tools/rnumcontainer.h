@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RVectorInt.h
+	RNumContainer.h
 
-	Class representing a list of integer values - Header
+	Class representing vector - Header
 
 	Copyright 2001-2009 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2001 by Vandaele Valery.
@@ -30,8 +30,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RVectorIntH
-#define RVectorIntH
+#ifndef RNumContainerH
+#define RNumContainerH
 
 
 //------------------------------------------------------------------------------
@@ -54,15 +54,15 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RVectorInt class provides a representation of a vector of integers.
-* @param I                   Type of integers.
-* @param bOrder              Is the vector of integer ordered?
+* The RNumContainer class provides a representation of a container of numbers.
+* @param I                   Type (int, double, etc.).
+* @param bOrder              Is the container ordered?
 *
 * @author Pascal Francq and Vandaele Valery.
-* @short Vector of Integers.
+* @short Container of Numbers.
 */
 template<class I,bool bOrder=true>
-	class RVectorInt
+	class RNumContainer
 {
 	/**
 	* Number of values in the list.
@@ -75,7 +75,7 @@ template<class I,bool bOrder=true>
 	size_t MaxInt;
 
 	/**
-	* The array representing the integer values.
+	* The array representing the values.
 	*/
 	I* List;
 
@@ -94,16 +94,16 @@ private:
 public:
 
 	/**
-	* Construct the list of integer values.
+	* Construct the list of values.
 	* @param max             Maximum number of values.
 	*/
-	RVectorInt(size_t max);
+	RNumContainer(size_t max);
 
 	/**
 	* Copy constructor.
 	* @param vector          Vector to copy.
 	*/
-	RVectorInt(const RVectorInt& vector);
+	RNumContainer(const RNumContainer& vector);
 
 	/**
 	* Verify if the container can hold a certain number of elements. If not,
@@ -128,38 +128,30 @@ private:
 public:
 
 	/**
-	* Test if two lists have exactly the same integers.
+	* Test if two lists have exactly the same values.
 	* @param vi              The list used for the comparison.
 	* @return True if the lists are the same.
 	*/
-	bool IsSame(const RVectorInt& vi) const;
+	bool IsSame(const RNumContainer& vi) const;
 
 	/**
-	* Verify if a integer value is in the list.
-	* @param value           The integer value to test.
-	* @return True if the integer is in the list, false else.
+	* Verify if a value is in the list.
+	* @param value           The value to test.
+	* @return True if the value is in the list, false else.
 	*/
 	bool IsIn(I value) const;
 
 	/**
-	* Insert an integer value in the list. If the vector is ordered, the method
-	* verifies that the integer is not in before insertion. If the vector is
-	* unordered, the integer is simply inserted at the end.
-	* @param ins             The integer value to insert.
+	* Insert an value in the list. If the vector is ordered, the method
+	* verifies that the value is not in before insertion. If the vector is
+	* unordered, the value is simply inserted at the end.
+	* @param ins             The value to insert.
 	*/
 	void Insert(I ins);
 
 	/**
-	* Insert all the integer of a list in the current one. This function
-	* supposes that the list to insert don't contain any Integers already
-	* in the current list.
-	* @param ins             The list to insert.
-	*/
-	void Insert(const RVectorInt& ins);
-
-	/**
-	* Insert an integer value in the list at a given position.
-	* @param ins             The integer value to insert.
+	* Insert a value in the list at a given position.
+	* @param ins             The value to insert.
 	* @param pos             The position where to insert.
 	* @param del             Specify if the object that was previously at the
 	*                        position should be deleted or shifted.
@@ -168,10 +160,17 @@ public:
 	void InsertAt(I ins,size_t pos,bool del=false);
 
 	/**
-	* Delete an integer value in the list.
-	* @param del             The integer value to delete.
+	* Delete a value in the list.
+	* @param del             The value to delete.
 	*/
 	void Delete(I del);
+
+	/**
+	* Delete an element at a given position.
+	* @param pos             Position of the element to remove.
+	* @param shift           Must the elements be shifted.
+	*/
+	void DeleteAt(size_t pos,bool shift=true);
 
 	/**
 	* Clear the list.
@@ -188,7 +187,7 @@ private:
 public:
 
 	/**
-	* Reorder the current list of size_tegers in ascending order.
+	* Reorder the current list of values in ascending order.
 	*/
 	void ReOrder(void);
 
@@ -196,7 +195,7 @@ public:
 	* Randomize the list.
 	* @param rand            Random number generator to use.
 	* @param nb              Number of first element to randomize. If null,
-	*                        all integers are randomized.
+	*                        all values are randomized.
 	*/
 	void Randomize(RRandom* rand,size_t nb=0);
 
@@ -204,27 +203,35 @@ public:
 	* Assignment operator.
 	* @param src             List used for the assignment.
 	*/
-	RVectorInt& operator=(const RVectorInt& src);
+	RNumContainer& operator=(const RNumContainer& src);
 
 	/**
-	* Return the Integer value at position i. The first Integer value is at position 0.
+	* Insert all the values of a list in the current one. This function
+	* supposes that the list to insert don't contain any value already
+	* in the current list.
+	* @param ins             The list to insert.
+	*/
+	void Add(const RNumContainer& ins);
+
+	/**
+	* Return the value at position i. The first value is at position 0.
 	* @param i               Index.
 	*/
-	const I& operator[](size_t i) const;
+	I operator[](size_t i) const;
 
 	/**
-	* Return the Integer value at position i. The first Integer value is at position 0.
+	* Return the value at position i. The first value is at position 0.
 	* @param i               Index.
 	*/
 	I& operator[](size_t i);
 
 	/**
-	 * Get the list of the integers contained in the vector.
+	 * Get the list of the values contained in the vector.
 	 */
 	const I* GetList(void) const {return(List);}
 
 	/**
-	* Get the number of Integer value in the list.
+	* Get the number of values in the list.
 	* @return size_t
 	*/
 	size_t GetNb(void) const {return(NbInt);}
@@ -245,20 +252,54 @@ public:
 	void Next(void) {Pos++; Parse++;}
 
 	/**
-	* Return the current element.
+	* Return the current element (const version).
 	*/
 	I operator()(void) const {return(*Parse);}
 
 	/**
+	* Return the current element.
+	*/
+	I& operator()(void) {return(*Parse);}
+
+	/**
+	* Get the current position parsed.
+	* @return size_t
+	*/
+	size_t GetPos(void) const {return(Pos);}
+
+	/**
 	* Destructor of the list.
 	*/
-	virtual ~RVectorInt(void);
+	virtual ~RNumContainer(void);
 };
 
 
 //------------------------------------------------------------------------------
 // Template implementation
-#include <rvectorint.hh>
+#include <rnumcontainer.hh>
+
+
+//------------------------------------------------------------------------------
+/**
+ *
+ */
+class RVector : public RNumContainer<double,false>
+{
+public:
+
+	/**
+	* Construct the list of values.
+	* @param max             Maximum number of values.
+	*/
+	RVector(size_t max) : RNumContainer<double,false>(max) {}
+
+	/**
+	* Copy constructor.
+	* @param vector          Vector to copy.
+	*/
+	RVector(const RVector& vector) : RNumContainer<double,false>(vector) {}
+
+};
 
 
 }  //------- End of namespace R ------------------------------------------------

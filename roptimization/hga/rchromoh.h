@@ -81,7 +81,7 @@ protected:
 	/**
 	 * Use for objects manipulation functions. Thread-depend data.
 	 */
-	RVectorInt<size_t,true>* thObjects;
+	RNumContainer<size_t,true>* thObjects;
 
 public:
 

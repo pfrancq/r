@@ -42,7 +42,7 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rvectorint.h>
+#include <rnumcontainer.h>
 
 
 //------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ namespace R{
 * @author Pascal Francq
 * @short List of Attributes.
 */
-class RAttrList : public RVectorInt<size_t,true>
+class RAttrList : public RNumContainer<size_t,true>
 {
 public:
 
@@ -103,7 +103,7 @@ public:
 	*/
 	void Diff(const RAttrList& Top,const RAttrList& Child);
 
-	/**
+	/**n
 	* Compute the intersection between two lists in the current one. This means
 	* all the attributes that are in the two lists.
 	* @param Fst            The first list.

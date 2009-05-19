@@ -1,9 +1,9 @@
 /*
 	R Project Library
 
-	RGenericSparseMatrix.cpp
+	RSparseVector.cpp
 
-	Generic Sparse Matrix containing generic Sparse vector - Implementation.
+	Sparse Vector - Implementation.
 
 	Copyright 2005-2009 by Pascal Francq (pascal@francq.info).
 	Copyright 2003-2005 by Vandaele Valery.
@@ -28,51 +28,57 @@
 
 
 
+//---------------------------------------------------------------------------
+// include files for R Project
+#include <rsparsevector.h>
+using namespace R;
+using namespace std;
+
+
+
 //-----------------------------------------------------------------------------
 //
-// RGenericSparseMatrix
+// RSparseVector
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(void)
-		: RContainer<RGenericSparseVector<C,bAlloc>, bAlloc,true>(3,2)
-{}
-
-
-//-----------------------------------------------------------------------------
-template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(size_t nbElem, size_t increase)
-		: RContainer<RGenericSparseVector<C,bAlloc>, bAlloc,true>(nbElem,increase)
-{}
-
-
-//-----------------------------------------------------------------------------
-template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>* src)
-		: RContainer<RGenericSparseVector<C,bAlloc>, bAlloc,true>::RContainer(src)
-{}
-
-
-//-----------------------------------------------------------------------------
-template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>::RGenericSparseMatrix(const RGenericSparseMatrix<C,bAlloc>& src)
-		: RContainer<RGenericSparseVector<C,bAlloc>, bAlloc,true>::RContainer(src)
-{}
-
-
-//-----------------------------------------------------------------------------
-template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>& RGenericSparseMatrix<C,bAlloc>::operator=(const RGenericSparseMatrix<C,bAlloc>& src)
+RSparseVector::RSparseVector(size_t size,size_t id)
+	: RContainer<RValue,true,true>(size), Id(id)
 {
-	RContainer<RGenericSparseVector<C,bAlloc>,bAlloc,true>::operator=(src);
+}
+
+
+//-----------------------------------------------------------------------------
+RSparseVector::RSparseVector(const RSparseVector& src)
+		: RContainer<RValue,true,true>::RContainer(src), Id(src.Id)
+{}
+
+
+//-----------------------------------------------------------------------------
+RSparseVector& RSparseVector::operator=(const RSparseVector& vec)
+{
+	RContainer<RValue,true,true>::operator=(vec);
+	Id=vec.Id;
 	return(*this);
 }
 
 
 //-----------------------------------------------------------------------------
-template<class C,bool bAlloc>
-	RGenericSparseMatrix<C,bAlloc>::~RGenericSparseMatrix(void)
+int RSparseVector::Compare(const RSparseVector& vec) const
+{
+	return(CompareIds(Id,vec.Id));
+}
+
+
+//-----------------------------------------------------------------------------
+int RSparseVector::Compare(const size_t id) const
+{
+	return(CompareIds(Id,id));
+}
+
+
+//-----------------------------------------------------------------------------
+ RSparseVector::~RSparseVector(void)
 {
 }

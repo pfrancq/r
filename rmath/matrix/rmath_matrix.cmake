@@ -1,13 +1,11 @@
-SET(rmath_matrix_INST_INCLUDES rmatrix.h 
-                            rgenericcell.h 
-                            rgenericcell.hh 
-                            rgenericcellcursor.h
-			                rgenericcellcursor.hh 
-			                rgenericsparsevector.h 
-			                rgenericsparsevector.hh
-			                rgenericvectorcursor.h
-			                rgenericvectorcursor.hh
-                            rgenericsparsematrix.h
-			                rgenericsparsematrix.hh)
+SET(rmath_matrix_INST_INCLUDES
+	rmatrix.h
+	rsparsevector.h
+	rsparsematrix.h 
+)
                               
-SET(rmath_matrix_TARGET_SOURCES rmatrix.cpp)
+SET(rmath_matrix_TARGET_SOURCES
+	rmatrix.cpp
+	rsparsevector.cpp
+	rsparsematrix.cpp 
+)
