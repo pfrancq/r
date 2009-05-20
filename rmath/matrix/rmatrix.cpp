@@ -31,7 +31,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rmatrix.h>
-#include <rcursor.h>
+#include <rnumcursor.h>
 #include <rstring.h>
 using namespace R;
 using namespace std;
@@ -133,8 +133,9 @@ void RMatrix::Init(double val)
 	RCursor<RVector> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		for(Cur()->Start();!Cur()->End();Cur()->Next())
-			((*Cur())())=val;
+		RNumCursor<double> Cur2(*Cur());
+		for(Cur2.Start();!Cur2.End();Cur2.Next())
+			Cur2()=val;
 	}
 }
 
@@ -208,8 +209,12 @@ RMatrix& RMatrix::operator+=(const RMatrix& matrix)
 	RCursor<RVector> Cur(*this);
 	RCursor<RVector> Cur2(matrix);
 	for(Cur.Start(),Cur2.Start();!Cur.End();Cur.Next(),Cur2.Next())
-		for(Cur()->Start(),Cur2()->Start();!Cur()->End();Cur()->Next(),Cur2()->Next())
-			((*Cur())())+=((*Cur2())());
+	{
+		RNumCursor<double> Vec1(*Cur());
+		RNumCursor<double> Vec2(*Cur2());
+		for(Vec1.Start(),Vec2.Start();!Vec1.End();Vec1.Next(),Vec2.Next())
+			Vec1()+=Vec2();
+	}
 	return(*this);
 }
 
@@ -222,8 +227,12 @@ RMatrix& RMatrix::operator-=(const RMatrix& matrix)
 	RCursor<RVector> Cur(*this);
 	RCursor<RVector> Cur2(matrix);
 	for(Cur.Start(),Cur2.Start();!Cur.End();Cur.Next(),Cur2.Next())
-		for(Cur()->Start(),Cur2()->Start();!Cur()->End();Cur()->Next(),Cur2()->Next())
-			((*Cur())())-=((*Cur2())());
+	{
+		RNumCursor<double> Vec1(*Cur());
+		RNumCursor<double> Vec2(*Cur2());
+		for(Vec1.Start(),Vec2.Start();!Vec1.End();Vec1.Next(),Vec2.Next())
+			Vec1()-=Vec2();
+	}
 	return(*this);
 }
 
@@ -233,8 +242,11 @@ RMatrix& RMatrix::operator*=(const double arg)
 {
 	RCursor<RVector> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		for(Cur()->Start();!Cur()->End();Cur()->Next())
-			((*Cur())())*=arg;
+	{
+		RNumCursor<double> Cur2(*Cur());
+		for(Cur2.Start();!Cur2.End();Cur2.Next())
+			Cur2()*=arg;
+	}
 	return(*this);
 }
 
@@ -252,12 +264,14 @@ RMatrix& RMatrix::operator*=(const RMatrix& matrix)
 	RCursor<RVector> Cur3(res);
 	for(Cur.Start(),Cur3.Start();!Cur3.End();Cur.Next(),Cur3.Next())
 	{
-		for(Cur3()->Start();!Cur3()->End();Cur3()->Next())
+		RNumCursor<double> LineRes(*Cur3());
+		for(LineRes.Start();!LineRes.End();LineRes.Next())
 		{
 			double Sum(0);
-			for(Cur()->Start(),Cur2.Start();!Cur()->End();Cur()->Next(),Cur2.Next())
-				Sum+=((*Cur())())*(*Cur2())[Cur3()->GetPos()];
-			((*Cur3())())=Sum;
+			RNumCursor<double> Line(*Cur());
+			for(Line.Start(),Cur2.Start();!Line.End();Line.Next(),Cur2.Next())
+				Sum+=Line()*(*Cur2())[LineRes.GetPos()];
+			LineRes()=Sum;
 		}
 	}
 

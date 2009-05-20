@@ -49,6 +49,24 @@ namespace R{
 * The RSparseMatrix provides a representation for a sparse matrix. The matrix
 * is coded as a container of RSparseVector. The matrix can be created so that
 * to each line a vector is always build to speed up the access.
+*
+* Here is an example of code:
+* @code
+* RSparseMatrix a(6,3); // Matrix initially contains 6 lines and 3 values per line (<>3 columns).
+* a(0,2)=0.2;
+* a(1,5)=1.5;
+* a(2,0)=1.0;
+* a(5,1)=5.1;
+* for(size_t i=0;i<6;i++)
+* {
+* 	for(size_t j=0;j<6;j++)
+* 		cout<<static_cast<const RSparseMatrix&>(a)(i,j)<<"\t";
+* 	cout<<endl;
+* }
+* @endcode
+* An important aspect is the use of static_cast<const RSparseMatrix&> to ensure
+* the call of the const version of the operator(). If static_cast<const RSparseMatrix&>
+* is not used, the different elements are created without any uninitialized values.
 * @author Pascal Francq (initial coding from Valery Vandaele).
 * @short Sparse Matrix.
 */
@@ -97,7 +115,7 @@ public:
 	/**
 	 * Get a cursor over the vectors of the matrix.
 	 */
-	RCursor<RSparseVector> GetVectors(void) const {return(RCursor<RSparseVector>(*this));}
+	RCursor<RSparseVector> GetLines(void) const {return(RCursor<RSparseVector>(*this));}
 
 	/**
 	* The assignment operator.
@@ -110,14 +128,14 @@ public:
 	* @param i               Line number of the element.
 	* @param j               Column number of the element.
 	*/
- 	const RValue& operator()(size_t i,size_t j) const;
+ 	double operator()(size_t i,size_t j) const;
 
 	/**
 	* Return a specific element of the matrix.
 	* @param i               Line number of the element.
 	* @param j               Column number of the element.
 	*/
- 	RValue& operator()(size_t i,size_t j);
+ 	double& operator()(size_t i,size_t j);
 
  	/**
  	 * Return the vector at a given line from the matrix (const version).
@@ -130,6 +148,20 @@ public:
  	 * @param i               Line number of the vector.
  	 */
  	RSparseVector* operator[](size_t i);
+
+	/**
+	 * Verify if a given index has a vector defined in the matrix.
+	 * @param i              Index.
+	 * @return true or false.
+	 */
+	bool IsIn(size_t i) const {return(RContainer<RSparseVector,true,true>::IsIn(i));}
+
+	/**
+	 * Get a pointer over the vector at a given index.
+	 * @param i              Index.
+	 * @return Pointer or null if the index hasn't no vector.
+	 */
+	RSparseVector* GetValue(size_t i) const {return(RContainer<RSparseVector,true,true>::GetPtr(i));}
 
 	/**
 	* Destruct the sparse matrix.

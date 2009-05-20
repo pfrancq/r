@@ -6,7 +6,7 @@
 	Sparse Matrix - Implementation.
 
 	Copyright 2005-2009 by Pascal Francq (pascal@francq.info).
-	Copyright 2003-2005 by Vandaele Valery.
+	Copyright 2003-2005 by Valery Vandaele.
 	Copyright 2003-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -84,7 +84,7 @@ RSparseMatrix& RSparseMatrix::operator=(const RSparseMatrix& src)
 
 
 //------------------------------------------------------------------------------
-const RValue& RSparseMatrix::operator()(size_t i,size_t j) const
+double RSparseMatrix::operator()(size_t i,size_t j) const
 {
 	RSparseVector* Line;
 
@@ -93,21 +93,21 @@ const RValue& RSparseMatrix::operator()(size_t i,size_t j) const
 		if(i<GetNb())
 			Line=static_cast<RSparseVector*>(Tab[i]);
 		else
-			return(RValue::Null);
+			return(0);
 	}
 	else
 		Line=GetPtr(i);
 	if(!Line)
-		return(RValue::Null);
+		return(0);
 	RValue* Value(Line->GetPtr(j));
 	if(!Value)
-		return(RValue::Null);
-	return(*Value);
+		return(0);
+	return(Value->Value);
 }
 
 
 //------------------------------------------------------------------------------
-RValue& RSparseMatrix::operator()(size_t i,size_t j)
+double& RSparseMatrix::operator()(size_t i,size_t j)
 {
 	RSparseVector* Line;
 
@@ -128,7 +128,7 @@ RValue& RSparseMatrix::operator()(size_t i,size_t j)
 			InsertPtr(Line=new RSparseVector(NbCols,i));
 	}
 	RValue* Value(Line->GetInsertPtr(j));
-	return(*Value);
+	return(Value->Value);
 }
 
 

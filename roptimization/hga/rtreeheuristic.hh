@@ -73,7 +73,7 @@ template<class cNode,class cObj,class cNodes>
 	if(obj)
 	{
 		File<<"Obj"<<obj->GetId()<<"[";
-		RAttrList List(obj->GetAttr());
+		RNumCursor<size_t> List(obj->GetAttr());
 		for(List.Start();!List.End();List.Next())
 		{
 			File<<List();

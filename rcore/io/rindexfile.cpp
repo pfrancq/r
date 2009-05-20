@@ -31,6 +31,7 @@
 // include files for R Project
 #include <rindexfile.h>
 #include <rcursor.h>
+#include <rnumcursor.h>
 using namespace R;
 using namespace std;
 
@@ -407,13 +408,14 @@ void RIndexFile::Seek(size_t& blockid,size_t indexid,size_t size)
 	// A block must be search
 	// Look if an existing block can hold the size asked
 	blockid=0;
-	for(FreeSpaces.Start();!FreeSpaces.End();FreeSpaces.Next())
+	RNumCursor<size_t> Cur(FreeSpaces);
+	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		blockid++;
-		if((FreeSpaces()>Tolerance)&&(FreeSpaces()>=size+SizeT2))
+		if((Cur()>Tolerance)&&(Cur()>=size+SizeT2))
 			break;
 	}
-	if(FreeSpaces.End())
+	if(Cur.End())
 	{
 		// New block to create :
 		// Position it to the beginning and specify that they are one record.

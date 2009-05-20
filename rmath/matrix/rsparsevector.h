@@ -37,6 +37,7 @@
 // include file for R Project
 #include <rvalue.h>
 #include <rcontainer.h>
+#include <rcursor.h>
 
 
 //-----------------------------------------------------------------------------
@@ -49,10 +50,23 @@ namespace R{
 * The RSparseVector provides a representation for a sparse vector. The vector
 * is coded as a container of RValue. An identifier can be associate to the
 * vector (this feature is used by RSparseMatrix).
+*
+* Here is an example of code:
+* @code
+* RSparseVector a(3);
+* a[0]=1.0;
+* a[5]=2.0;
+* a[15]=3.0;
+* for(size_t i=0;i<16;i++)
+* 	cout<<static_cast<const RSparseVector&>(b)[i]<<endl;
+* @endcode
+* An important aspect is the use of static_cast<const RSparseVector&> to ensure
+* the call of the const version of the operator(). If static_cast<const RSparseVector&>
+* is not used, the different elements are created without any uninitialized values.
 * @author Pascal Francq (initial coding from Valery Vandaele).
 * @short Sparse Vector.
 */
-class RSparseVector : public R::RContainer<RValue,true,true>
+class RSparseVector : public RContainer<RValue,true,true>
 {
 private:
 
@@ -93,6 +107,32 @@ public:
 	* param id               Identifier to compare with.
 	*/
 	int Compare(size_t id) const;
+
+	/**
+	* Return the value at position i. The first value is at position 0.
+	* @param i               Index.
+	*/
+	double operator[](size_t i) const;
+
+	/**
+	* Return the value at position i. The first value is at position 0.
+	* @param i               Index.
+	*/
+	double& operator[](size_t i);
+
+	/**
+	 * Verify if a given index has a value defined in the vector.
+	 * @param i              Index.
+	 * @return true or false.
+	 */
+	bool IsIn(size_t i) const {return(RContainer<RValue,true,true>::IsIn(i));}
+
+	/**
+	 * Get a pointer over the value at a given index.
+	 * @param i              Index.
+	 * @return Pointer or null if the index hasn't no value.
+	 */
+	RValue* GetValue(size_t i) const {return(RContainer<RValue,true,true>::GetPtr(i));}
 
 	/**
 	* Get the identifier of the cell.

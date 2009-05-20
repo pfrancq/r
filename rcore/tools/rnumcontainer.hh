@@ -2,12 +2,12 @@
 
 	R Project Library
 
-	RNumContainer.cpp
+	RNumContainer.hh
 
-	Class representing a vector - Inline implementation
+	Class representing a container of numbers - Inline implementation
 
 	Copyright 2001-2009 by Pascal Francq (pascal@francq.info).
-	Copyright 2000-2001 by Vandaele Valery.
+	Copyright 2000-2001 by Valery Vandaele.
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -63,7 +63,7 @@ template<class I,bool bOrder>
 template<class I,bool bOrder>
 	void RNumContainer<I,bOrder>::Verify(size_t max)
 {
-	if(max>MaxInt)
+	if(max>=MaxInt)
 	{
 		I* ptr;
 		size_t OldSize;
@@ -329,7 +329,7 @@ template<class I,bool bOrder>
 	Verify(i);
 	if(i>=NbInt)
 	{
-		NbInt=i;
+		NbInt=i+1;
 	}
 	return(List[i]);
 }

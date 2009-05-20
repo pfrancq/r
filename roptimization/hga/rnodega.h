@@ -39,6 +39,7 @@
 #include <rnode.h>
 #include <rhga.h>
 #include <rattrlist.h>
+#include <rnumcursor.h>
 
 
 //------------------------------------------------------------------------------

@@ -16,7 +16,9 @@ SET(rcore_tools_INST_INCLUDES rstd.h
                        basicstring.hh
                        rportsmacro.h
                        rnumcontainer.h
-                       rnumcontainer.hh 
+                       rnumcontainer.hh
+                       rnumcursor.h 
+                       rnumcursor.hh
 	                   rtrace.h
                        rstring.h
                        rchar.h

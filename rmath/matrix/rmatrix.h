@@ -42,7 +42,8 @@
 // include files for R Project
 #include <rstd.h>
 #include <rcontainer.h>
-#include <rnumcontainer.h>
+#include <rvector.h>
+#include <rcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -57,20 +58,26 @@ namespace R{
 *
 * Here are some examples:
 * @code
-* int main()
-* {
-* 	RMatrix a(2,2);
-* 	RMatrix b(2,2);
-* 	RMatrix c;
+* RMatrix a(2,2);
+* RMatrix b(2,2);
+* RMatrix c;
 *
-* 	a(0,0)=1; a(0,1)=2;
-* 	a(1,0)=2; a(0,1)=2;
-* 	b(0,0)=3; b(0,1)=2;
-* 	b(1,1)=1; b(1,1)=4;
-* 	c=a+b;
-* 	c=a-b;
-*	c=a*b;
-*	c=(2*a)+(b*a);
+* a(0,0)=1; a(0,1)=2;
+* a(1,0)=2; a(0,1)=2;
+* b(0,0)=3; b(0,1)=2;
+* b(1,1)=1; b(1,1)=4;
+* c=a+b;
+* c=a-b;
+* c=a*b;
+* c=(2*a)+(b*a);
+*
+* RCursor<RVector> Lines(c.GetLines());
+* for(Lines.Start();!Lines.End();Lines.Next())
+* {
+* 	RNumCursor<double> Cols(*Lines());
+* 	for(Cols.Start();!Cols.End();Cols.Next())
+* 		cout<<Cols()<<"\t";
+* 	cout<<endl;
 * }
 * @endcode
 * @warning RMatrix supposes that the size of the RVector are not modified
@@ -80,7 +87,7 @@ namespace R{
 * ...
 * RVector* ptr=a[4];            // Get a pointer on the last line
 * ptr->InsertAt(3.0,25);        // Wrong : The vector is extended outside the matrix.
-* @encode
+* @endcode
 * @short Matrix.
 * @author Pascal Francq
 */
@@ -104,7 +111,7 @@ public:
 	* @param lines           Initial number of lines.
 	* @param cols            Initial number of columns.
 	*/
-	RMatrix(size_t lines,size_t col);
+	RMatrix(size_t lines,size_t cols);
 
 	/**
 	* Construct a matrix from another one.
@@ -135,13 +142,18 @@ public:
 	size_t GetNbLines(void) const {return(GetNb());}
 
 	/**
+	* Get the number of lines in the matrix.
+	*/
+	RCursor<RVector> GetLines(void) const {return(RCursor<RVector>(*this));}
+
+	/**
 	* Get the number of columns in the matrix.
 	*/
 	size_t GetNbCols(void) const {return(NbCols);}
 
 	/**
 	* Verify if the matrix has a given size, and increase them if necessary.
-	* @param nwlines         New line number.
+	* @param newlines        New line number.
 	* @param newcols         New column number.
 	*/
 	void VerifySize(size_t newlines,size_t newcols);
@@ -257,7 +269,7 @@ RMatrix operator+(const RMatrix& arg1,const RMatrix& arg2);
 
 //------------------------------------------------------------------------------
 /**
-* Substraction of two matrixes.
+* Subtraction of two matrixes.
 * @param arg1                Matrix.
 * @param arg2                Matrix.
 */

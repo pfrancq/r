@@ -4,10 +4,10 @@
 
 	RNumContainer.h
 
-	Class representing vector - Header
+	Class representing a container of numbers - Header
 
 	Copyright 2001-2009 by Pascal Francq (pascal@francq.info).
-	Copyright 2000-2001 by Vandaele Valery.
+	Copyright 2000-2001 by Valery Vandaele.
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -35,12 +35,6 @@
 
 
 //------------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <limits.h>
-#include <new>
-
-
-//------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
 #include <random.h>
@@ -53,17 +47,24 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
+// forward declaration
+template<class I> class RNumCursor;
+
+
+//------------------------------------------------------------------------------
 /**
 * The RNumContainer class provides a representation of a container of numbers.
 * @param I                   Type (int, double, etc.).
 * @param bOrder              Is the container ordered?
 *
-* @author Pascal Francq and Vandaele Valery.
+* @author Pascal Francq (initial coding from Valery Vandaele).
 * @short Container of Numbers.
 */
 template<class I,bool bOrder=true>
 	class RNumContainer
 {
+protected:
+
 	/**
 	* Number of values in the list.
 	*/
@@ -78,18 +79,6 @@ template<class I,bool bOrder=true>
 	* The array representing the values.
 	*/
 	I* List;
-
-private:
-
-	/**
-	* Pointer used to parse the list.
-	*/
-	I* Parse;
-
-	/**
-	* Current position parsed.
-	*/
-	size_t Pos;
 
 public:
 
@@ -237,69 +226,17 @@ public:
 	size_t GetNb(void) const {return(NbInt);}
 
 	/**
-	* Start the iterator to go trough the list.
-	*/
-	void Start(void) {Pos=0; Parse=List;}
-
-	/**
-	* Test if the end of the list is reached.
-	*/
-	bool End(void) const {return(Pos==NbInt);}
-
-	/**
-	* Goto the next element of the list.
-	*/
-	void Next(void) {Pos++; Parse++;}
-
-	/**
-	* Return the current element (const version).
-	*/
-	I operator()(void) const {return(*Parse);}
-
-	/**
-	* Return the current element.
-	*/
-	I& operator()(void) {return(*Parse);}
-
-	/**
-	* Get the current position parsed.
-	* @return size_t
-	*/
-	size_t GetPos(void) const {return(Pos);}
-
-	/**
 	* Destructor of the list.
 	*/
-	virtual ~RNumContainer(void);
+	~RNumContainer(void);
+
+	friend class RNumCursor<I>;
 };
 
 
 //------------------------------------------------------------------------------
 // Template implementation
 #include <rnumcontainer.hh>
-
-
-//------------------------------------------------------------------------------
-/**
- *
- */
-class RVector : public RNumContainer<double,false>
-{
-public:
-
-	/**
-	* Construct the list of values.
-	* @param max             Maximum number of values.
-	*/
-	RVector(size_t max) : RNumContainer<double,false>(max) {}
-
-	/**
-	* Copy constructor.
-	* @param vector          Vector to copy.
-	*/
-	RVector(const RVector& vector) : RNumContainer<double,false>(vector) {}
-
-};
 
 
 }  //------- End of namespace R ------------------------------------------------

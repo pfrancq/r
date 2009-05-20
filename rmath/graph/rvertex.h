@@ -52,15 +52,6 @@ namespace R{
 */
 class RVertex
 {
-public:
-
-	struct VertexStruct
-	{
-		size_t id;
-		size_t idx;
-		size_t nb;
-	};
-
 protected:
 
 	/**
@@ -89,15 +80,8 @@ public:
 	RVertex(const RVertex& v);
 
 	/**
-	* Construct a vertex from a structure.
-	* @param s               Structure.
-	*/
-	RVertex(const VertexStruct& s);
-
-	/**
 	* Is used to compare two vertices. The function returns the same type of
 	* information than the strcmp function from the standard C library.
-	* @param e               Edge used for the comparison.
 	* @param v               Vertex used for the comparison.
 	*/
 	int Compare(const RVertex& v) const {return(Id-v.Id);}
@@ -106,19 +90,9 @@ public:
 	* Is used to compare a vertex and an identifier. The function returns
 	* the same type of information than the strcmp function from the standard
 	* C library.
-	* @param e               Edge used for the comparison.
 	* @param i               Identifier used for the comparison.
 	*/
 	int Compare(const size_t i) const {return(Id-i);}
-
-	/**
-	* Is used to compare a vertex and a structure. The function returns
-	* the same type of information than the strcmp function from the standard
-	* C library.
-	* @param e               Edge used for the comparison.
-	* @param s               Structure used for the comparison.
-	*/
-	int Compare(const VertexStruct& s) const {return(Id-s.id);}
 
 	/**
 	* Get the identifier of the vertex.

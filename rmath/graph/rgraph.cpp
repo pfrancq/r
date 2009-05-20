@@ -105,13 +105,9 @@ RVertex* RGraph::CreateVertex(const size_t id)
 //------------------------------------------------------------------------------
 RVertex* RGraph::GetVertex(const size_t id)
 {
-	RVertex *ptr;
-	RVertex::VertexStruct s;
-
-	s.id=id;
-	s.idx=Vertices.GetNb();
-	s.nb=Vertices.GetMaxNb();
-	ptr=Vertices.GetInsertPtr<RVertex::VertexStruct>(s);
+	RVertex* ptr(Vertices.GetPtr(id));
+	if(!ptr)
+		Vertices.InsertPtr(ptr=new RVertex(id,Vertices.GetMaxNb()));
 	return(ptr);
 }
 

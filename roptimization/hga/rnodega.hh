@@ -392,7 +392,7 @@ template<class cNode,class cObj,class cNodes>
 	for(int i=0;i<depth;i++)
 		file<<"\t";
 	file<<"Node"<<GetId()<<"[";
-	RAttrList List(GetAttr());
+	RNumCursor<size_t> List(GetAttr());
 	for(List.Start();!List.End();List.Next())
 	{
 		file<<List();

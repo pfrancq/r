@@ -56,13 +56,6 @@ RVertex::RVertex(const RVertex& v)
 
 
 //------------------------------------------------------------------------------
-RVertex::RVertex(const VertexStruct& s)
-	: Id(s.id), Edges(s.nb,s.nb/2)
-{
-}
-
-
-//------------------------------------------------------------------------------
 RCursor<REdge> RVertex::GetEdges(void) const
 {
 	return(RCursor<REdge>(Edges));
