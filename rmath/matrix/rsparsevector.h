@@ -62,7 +62,7 @@ namespace R{
 * @endcode
 * An important aspect is the use of static_cast<const RSparseVector&> to ensure
 * the call of the const version of the operator(). If static_cast<const RSparseVector&>
-* is not used, the different elements are created without any uninitialized values.
+* is not used, the different elements are created with uninitialized values.
 * @author Pascal Francq (initial coding from Valery Vandaele).
 * @short Sparse Vector.
 */
@@ -144,6 +144,8 @@ public:
 	* Destruct the sparse vector.
 	*/
 	~RSparseVector(void);
+
+	friend class RSparseMatrix;
 };
 
 

@@ -34,16 +34,6 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <stdint.h>
-#if __WORDSIZE == 64
-#define SIZE_MAX		(18446744073709551615UL)
-#else
-#define SIZE_MAX		(4294967295U)
-#endif
-
-
-//-----------------------------------------------------------------------------
 // include files for R Project
 #include <basiccontainer.h>
 
@@ -64,17 +54,17 @@ class BasicCursor
 {
 protected:
 
-	/*
+	/**
 	* This variable is used to go through the container.
 	*/
 	void** Current;
 
-	/*
+	/**
 	* This variable is used to see if the end of the container is reached.
 	*/
 	size_t ActPtr;
 
-	/*
+	/**
 	* The array of pointers for the elements.
 	*/
 	void** Tab;
@@ -84,39 +74,39 @@ protected:
 	*/
 	size_t NbPtr;
 
-	/*
+	/**
 	* The first position in the array handled by the cursor.
 	*/
 	size_t FirstPtr;
 
-	/*
+	/**
 	* The last position in the array handled by the cursor.
 	*/
 	size_t LastPtr;
 
 protected:
 
-	/*
+	/**
 	* Construct the cursor.
 	*/
 	BasicCursor(void);
 
-	/*
+	/**
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
 	BasicCursor(const BasicCursor& src);
 
-	/*
+	/**
 	* Construct the cursor.
-	* param c                Container to iterate.
+	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
-	* @param max             Maximum position of the elements to iterate. If
-	*                        SIZE_MAX, iterate until the end of the container.
+	* @param max             Maximum position of the elements to iterate (included max).
+	*                        If SZE_MAX, iterate until the end of the container.
 	*/
 	BasicCursor(const BasicContainer& c,size_t min=0,size_t max=SIZE_MAX);
 
-	/*
+	/**
 	* Assignment operator using a "Cursor".
 	* @param src             Source container.
 	*/
@@ -126,10 +116,10 @@ public:
 
 	/**
 	* Set the container.
-	* param c                Container to iterate.
+	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
-	* @param max             Maximum position of the elements to iterate. If
-	*                        SIZE_MAX, iterate until the end of the container.
+	* @param max             Maximum position of the elements to iterate (included max).
+	*                        If SZE_MAX, iterate until the end of the container.
 	*/
 	void Set(const BasicContainer& c,size_t min=0,size_t max=SIZE_MAX);
 

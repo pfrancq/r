@@ -35,6 +35,7 @@
 #include <rconfig.h>
 #include <rdir.h>
 using namespace R;
+using namespace std;
 
 
 
@@ -174,7 +175,7 @@ void RConfig::Load(bool global)
 	RCursor<RXMLTag> Level(Root->GetNodes());
 	for(Level.Start();!Level.End();Level.Next())
 	{
-		// Is the current tag a category
+			// Is the current tag a category
 		if(Level()->GetName()=="category")
 		{
 			lParams* cat=Params.GetInsertPtr(Level()->GetAttrValue("name"));

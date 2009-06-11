@@ -163,6 +163,13 @@ public:
 	static void RemoveFile(const RURI& uri);
 
 	/**
+	* Rename a file from the disk.
+	* @param olduri          Old URI of the file.
+	* @param newuri          New URI of the file.
+	*/
+	static void RenameFile(const RURI& olduri,const RURI& newuri);
+
+	/**
 	* Get a name for temporary file.
 	* @return Name of the file.
 	*/

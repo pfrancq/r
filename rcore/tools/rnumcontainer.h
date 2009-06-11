@@ -54,8 +54,8 @@ template<class I> class RNumCursor;
 //------------------------------------------------------------------------------
 /**
 * The RNumContainer class provides a representation of a container of numbers.
-* @param I                   Type (int, double, etc.).
-* @param bOrder              Is the container ordered?
+* @tparam I                  Type (int, double, etc.).
+* @tparam bOrder             Is the container ordered?
 *
 * @author Pascal Francq (initial coding from Valery Vandaele).
 * @short Container of Numbers.

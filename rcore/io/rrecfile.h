@@ -45,8 +45,8 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* @param C                   The class of the elements to be read/write.
-* @param bOrder              Specify if the elements are ordered in the file.
+* @tparam C                  The class of the elements to be read/write.
+* @tparam bOrder             Specify if the elements are ordered in the file.
 *
 * The RRecFile class implements some basic functions needed when working with
 * files for records. This files can be accessed as ordered or not. Opening a
@@ -217,7 +217,7 @@ public:
 	* This function returns the number of a record represented by tag, and it
 	* is used when the file is ordered. If the record was found, it becomes the
 	* current one accessible through the operator().
-	* @param TUse           The type of tag, the file uses the Compare(TUse &)
+	* @tparam TUse          The type of tag, the file uses the Compare(TUse &)
 	*                       member function of the records.
 	* @param tag            The tag used.
 	* @return Returns the number of the record if it exists or the index where
@@ -273,7 +273,7 @@ public:
 	C* operator()(void);
 
 	/**
-	* Destructs the file.
+	* Destruct the file.
 	*/
 	virtual ~RRecFile(void);
 };

@@ -93,7 +93,7 @@ template<class T,class N,bool bAlloc>
 		throw RException("RNode::GetNodes(void) const : Node not assign to a tree");
 	if(!NbSubNodes)
 		return(R::RCursor<N>());
-	return(R::RCursor<N>(*Tree,SubNodes,SubNodes+NbSubNodes));
+	return(R::RCursor<N>(*Tree,SubNodes,SubNodes+NbSubNodes-1));
 }
 
 
@@ -103,7 +103,7 @@ template<class T,class N,bool bAlloc>
 {
 	if(!Tree)
 		throw RException("RNode::GetNode(const TUse&) const : Node not assign to a tree");
-	return(Tree->GetPtr(tag,false,SubNodes,SubNodes+NbSubNodes));
+	return(Tree->GetPtr(tag,false,SubNodes,SubNodes+NbSubNodes-1));
 }
 
 
@@ -163,7 +163,7 @@ template<class T,class N,bool bAlloc>
 {
 	if(!Tree)
 		throw RException("RNode::GetNodes(N**) : Node not assign to a tree");
-	Tree->GetTab(nodes,SubNodes,SubNodes+NbSubNodes);
+	Tree->GetTab(nodes,SubNodes,SubNodes+NbSubNodes-1);
 	return(NbSubNodes);
 }
 

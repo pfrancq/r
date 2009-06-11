@@ -137,7 +137,7 @@ public:
 /**
 * The RNotificationData provides a representation for a notification that can
 * be send by an object with a specific data.
-* @param T                   Type of the parameter.
+* @tparam T                  Type of the parameter.
 *
 * The type used for template is very important. For example, the following code
 * generates an exception since the default type of 3 is int:
@@ -206,7 +206,7 @@ public:
 //-----------------------------------------------------------------------------
 /**
 * Get the data associated with a given notification.
-* @param T                   Type of the parameter.
+* @tparam T                  Type of the parameter.
 * @param notification        Notification.
 * @short Data extracted of notification.
 * @author Pascal Francq

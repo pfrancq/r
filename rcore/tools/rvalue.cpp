@@ -50,6 +50,13 @@ const RValue RValue::Null(cNoRef,0.0);
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+RValue::RValue(void)
+	: Id(cNoRef), Value(NAN)
+{
+}
+
+
+//------------------------------------------------------------------------------
 RValue::RValue(size_t id)
 	: Id(id), Value(NAN)
 {
@@ -74,6 +81,15 @@ int RValue::Compare(const size_t id) const
 int RValue::Compare(const RValue& obj) const
 {
   return(CompareIds(Id,obj.Id));
+}
+
+
+//------------------------------------------------------------------------------
+RValue& RValue::operator=(const RValue& val)
+{
+	Id=val.Id;
+	Value=val.Value;
+	return(*this);
 }
 
 

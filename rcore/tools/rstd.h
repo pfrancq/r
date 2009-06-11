@@ -208,6 +208,14 @@
 
 #endif 		// !__RDISABLECHECKS__
 
+//-----------------------------------------------------------------------------
+// MAX SIZE of size_t
+#if __WORDSIZE == 64
+#define SIZE_MAX		(18446744073709551615UL)
+#else
+#define SIZE_MAX		(4294967295U)
+#endif
+
 
 /**
 * \namespace R
@@ -261,6 +269,7 @@ inline int CompareIds(size_t id1,size_t id2)
 //------------------------------------------------------------------------------
 /**
  * Inline function to compare two pointers. Useful for R::RContainer.
+ * @tparam C                 Class to compare.
  * @param ptr1               First pointer.
  * @param ptr2               Second pointer.
  * @return

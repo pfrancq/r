@@ -122,7 +122,7 @@ public:
 
 	/** @name Internal methods	*/ // @{
 
-	/** @copydoc BasicString(const C*,size_t)*/
+	/** @copydoc BasicString::Copy(const C*,size_t)*/
 	inline void Copy(const RChar* text,size_t nb) {BasicString<RChar,RString>::Copy(text,nb);}
 
 	/**

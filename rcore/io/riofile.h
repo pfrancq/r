@@ -222,6 +222,12 @@ public:
 	void SeekRel(off_t pos);
 
 	/**
+	 * Truncate the file.
+	 * @param newsize        New size.
+	 */
+	void Truncate(off_t newsize);
+
+	/**
 	* Return true if the file is at the end.
 	*/
 	inline bool End(void) const {return(Pos>=Size);}

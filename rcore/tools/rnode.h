@@ -49,9 +49,9 @@ template<class T,class N,bool bAlloc> class RTree;
 
 //-----------------------------------------------------------------------------
 /**
-* @param T                   The class of the tree.
-* @param N                   The class of the elements of the tree.
-* @param bAlloc              Specify if the elements are deallocated by the
+* @tparam T                  The class of the tree.
+* @tparam N                  The class of the elements of the tree.
+* @tparam bAlloc             Specify if the elements are deallocated by the
 *                            tree.
 * This class represent a generic node. The user has to derived from this class
 * to create elements that can be handle by a RTree.
@@ -187,7 +187,7 @@ public:
 
 	/**
 	* Get a pointer to a certain child node.
-	* @param TUse            The type of the tag used for the search.
+	* @tparam TUse           The type of the tag used for the search.
 	* @param tag             The tag used.
 	* @return Return the pointer or 0 if the element is not a child node.
 	*/

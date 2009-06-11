@@ -45,7 +45,7 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RNumCursor class provides a cursor over a container of number.
-* @param I                   Type (int, double, etc.).
+* @tparam I                  Type (int, double, etc.).
 *
 * @code
 * RVector a(3);
@@ -83,6 +83,16 @@ template<class I>
 	*/
 	size_t Pos;
 
+	/**
+	* The first position in the array handled by the cursor.
+	*/
+	size_t First;
+
+	/**
+	* The last position in the array handled by the cursor.
+	*/
+	size_t Last;
+
 public:
 
 	/**
@@ -98,36 +108,56 @@ public:
 
 	/**
 	 * Construct a cursor over a given container.
+	 * @tparam o             Determine if the container is ordered.
 	 * @param cont           Container of numbers.
+	 * @param min            Minimum position of the elements to iterate.
+ 	 * @param max            Maximum position of the elements to iterate (included max).
+ 	 *                       If SZE_MAX, iterate until the end of the container.
 	 */
-	template<bool a> RNumCursor(const RNumContainer<I,a>& cont);
+	template<bool o> RNumCursor(const RNumContainer<I,o>& cont,size_t min=0,size_t max=SIZE_MAX);
 
 	/**
 	 * Set a cursor to a given container.
+	 * @tparam o             Determine if the container is ordered.
 	 * @param cont           Container of numbers.
+	 * @param min            Minimum position of the elements to iterate.
+	 * @param max            Maximum position of the elements to iterate (included max).
+	 *                       If SZE_MAX, iterate until the end of the container.
 	 */
-	template<bool a> void Set(const RNumContainer<I,a>& cont);
+	template<bool o> void Set(const RNumContainer<I,o>& cont,size_t min=0,size_t max=SIZE_MAX);
 
 	/**
 	* Get the number of values in the list.
 	* @return size_t
 	*/
-	size_t GetNb(void) const {return(NbInt);}
+	size_t GetNb(void) const  {return(Last-First);}
 
 	/**
 	* Start the iterator to go trough the list.
 	*/
-	void Start(void) {Pos=0; Parse=List;}
+	void Start(void);// {Pos=0; Parse=List;}
 
 	/**
 	* Test if the end of the list is reached.
 	*/
-	bool End(void) const {return(Pos==NbInt);}
+	bool End(void) const {return(Pos==Last);}
+
+	/**
+	* Go to the i-th element of the cursor.
+	* @param idx             Index of the element to get.
+	*/
+	void GoTo(size_t idx);
 
 	/**
 	* Goto the next element of the list.
 	*/
-	void Next(void) {Pos++; Parse++;}
+	//void Next(void);// {Pos++; Parse++;}
+	/**
+	* Go to a given number of next elements. If the end is reached, go to the
+	* beginning.
+	* @param inc             Number of elements to go to.
+	*/
+	void Next(size_t inc=1);
 
 	/**
 	* Return the current element (const version).
@@ -140,10 +170,9 @@ public:
 	I& operator()(void) {return(*Parse);}
 
 	/**
-	* Get the current position parsed.
-	* @return size_t
+	* Return the actual position in the cursor.
 	*/
-	size_t GetPos(void) const {return(Pos);}
+	inline size_t GetPos(void) const {return(Pos-First);}
 };
 
 

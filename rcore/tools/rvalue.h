@@ -67,6 +67,11 @@ public:
 	double Value;
 
 	/**
+	 * Default constructor. The identifier is set to cNoRef and the value to NAN.
+	 */
+	RValue(void);
+
+	/**
 	* Construct a default value.
 	* @param id             Identifier.
 	*/
@@ -88,6 +93,12 @@ public:
 	* Comparison function
 	*/
 	int Compare(const RValue& obj) const;
+
+	/**
+	 * Assignment operator.
+	 * @param val            Value to assign.
+	 */
+	RValue& operator=(const RValue& val);
 
 	/**
 	 * Assignment operator.

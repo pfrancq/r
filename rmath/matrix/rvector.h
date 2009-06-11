@@ -35,6 +35,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rnumcontainer.h>
+#include <rnumcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -44,7 +45,8 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
- * The RVector class provides a representation for a vector.
+ * The RVector class provides a representation for a vector. It is a
+ * specialized class inheriting from RNumContainer.
  * @author Pascal Francq
  * @short RVector
  */
@@ -53,7 +55,7 @@ class RVector : public RNumContainer<double,false>
 public:
 
 	/**
-	* Construct a vector.
+	* Construct a vector.Cols
 	* @param max             Maximum number of values.
 	*/
 	RVector(size_t max);
@@ -69,6 +71,68 @@ public:
 	 * @return
 	 */
 	~RVector(void);
+};
+
+
+//------------------------------------------------------------------------------
+/**
+ * The RMatrixLine represents a vector corresponding to a line of a matrix. It
+ * is a specialized class inheriting from RVector. The methods to insert and
+ * delete numbers are hidden.
+ * @short Vector representing a matrix line.
+ * @author Pascal Francq.
+ */
+class RMatrixLine : private RVector
+{
+public:
+
+	/**
+	* Construct a vector.
+	* @param max             Maximum number of values.
+	*/
+	RMatrixLine(size_t max);
+
+	/**
+	* Copy constructor.
+	* @param vector          Vector to copy.
+	*/
+	RMatrixLine(const RMatrixLine& vector);
+
+	/**
+	* Get the number of values in the list.
+	* @return size_t
+	*/
+	inline size_t GetNb(void) const {return(RVector::GetNb());}
+
+	/**
+	 * Get the columns corresponding to this line.
+	 * @param min            Minimum position of the elements to iterate.
+	 * @param max            Maximum position of the elements to iterate (max included).
+	 *                       If SIZE_MAX, iterate until the end of the container.
+	 * @return Cursor over the numbers.
+	 */
+	inline RNumCursor<double> GetCols(size_t min=0,size_t max=SIZE_MAX) const {return(RNumCursor<double>(*this,min,max));}
+
+	/**
+	* Return the value at position i. The first value is at position 0.
+	* @param i               Index.
+	*/
+	inline double operator[](size_t i) const {return(RVector::operator[](i));}
+
+	/**
+	* Return the value at position i. The first value is at position 0.
+	* @param i               Index.
+	*/
+	inline double& operator[](size_t i) {return(RVector::operator[](i));}
+
+	/**
+	 * Destruct the vector.
+	 * @return
+	 */
+	~RMatrixLine(void);
+
+	friend class RMatrix;
+	friend class RLowerTriangularMatrix;
 };
 
 

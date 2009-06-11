@@ -49,8 +49,8 @@ namespace R{
 * This class represent a container of elements (class C) with a double hash
 * table. The container can be responsible for the deallocation of the elements
 * (bAlloc).
-* @param C                  The class of the element to be contained.
-* @param bAlloc             Specify if the elements are deallocated by the
+* @tparam C                 The class of the element to be contained.
+* @tparam bAlloc            Specify if the elements are deallocated by the
 *                           container.
 *
 * To make the necessary comparisons, the container uses member functions of
@@ -455,7 +455,7 @@ public:
 
 	/**
 	* Verify if an element is in the hash container.
-	* @param TUse           The type of tag, the hash container uses the
+	* @tparam TUse          The type of tag, the hash container uses the
 	*                       Compare(TUse &) member function of the elements.
 	* @param tag            The tag used.
 	* @param sortkey        The tag represents the sorting key. The default value
@@ -477,7 +477,7 @@ public:
 
 	/**
 	* Get a pointer to a certain element in the hash container.
-	* @param TUse           The type of tag, the hash container uses the
+	* @tparam TUse          The type of tag, the hash container uses the
 	*                       Compare(TUse &) member function of the elements.
 	* @param tag            The tag used.
 	* @param sortkey        The tag represents the sorting key. The default value
@@ -502,7 +502,7 @@ public:
 	* Get a pointer to a certain element in the container. If the element is
 	* not existing, the container creates it by using the constructor with TUse
 	* as parameter.
-	* @param TUse           The type of tag, the container uses the
+	* @tparam TUse          The type of tag, the container uses the
 	*                       Compare(TUse &) member function of the elements.
 	* @param tag            The tag used.
 	* @param sortkey        The tag represents the sorting key. The default
@@ -535,7 +535,7 @@ public:
 
 	/**
 	* Delete an element of the hash container.
-	* @param TUse           The type of tag, the container uses the
+	* @tparam TUse          The type of tag, the container uses the
 	*                       Compare(TUse &) member function of the elements.
 	* @param tag            The tag used.
 	* @param sortkey        The tag represents the sorting key. The default

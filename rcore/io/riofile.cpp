@@ -1,4 +1,4 @@
-/*
+	/*
 
 	R Project Library
 
@@ -284,7 +284,7 @@ size_t RIOFile::Read(char* buffer,size_t nb,bool move)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		throw RIOException(this,"Can't read in the file");
+		throw RIOException(this,"RIOFile::Read(char*,size_t,bool) : Can't read in the file");
 	if(!CanRead)
 		throw RIOException(this,"No Read access");
 	if(End())
@@ -380,7 +380,7 @@ void RIOFile::Write(const char* buffer,size_t nb)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		throw RIOException(this,"Can't write into the file");
+		throw RIOException(this,"RIOFile::Write(const char*,size_t) : Can't write into the file");
 	if(!CanWrite)
 		throw RIOException(this,"No write access");
 
@@ -459,6 +459,8 @@ void RIOFile::Write(const char* buffer,size_t nb)
 void RIOFile::Seek(off_t pos)
 {
 	// Verify all internal conditions
+	if(Handle==-1)
+		throw RIOException(this,"RIOFile::Seek(off_t) : Can't seek the file");
 	if((pos>=Size)&&(!CanWrite))
 		throw RIOException(this,"Position outside of the file");
 
@@ -488,10 +490,12 @@ void RIOFile::Seek(off_t pos)
 void RIOFile::SeekRel(off_t rel)
 {
 	// Verify all internal conditions
+	if(Handle==-1)
+		throw RIOException(this,"RIOFile::SeekRel(off_t) : Can't seek the file");
 	if(static_cast<ssize_t>(Pos)+rel<0)//<static_cast<size_t>(labs(rel)))
-		throw RIOException(this,"Position before beginning of the file");
+		throw RIOException(this,"RIOFile::SeekRel(off_t) : Position before beginning of the file");
 	if((Pos+rel>Size)&&(!CanWrite))
-		throw RIOException(this,"Position outside of the file");
+		throw RIOException(this,"RIOFile::SeekRel(off_t) : Position outside of the file");
 
 	// Update current position
 	Pos+=rel;
@@ -511,6 +515,42 @@ void RIOFile::SeekRel(off_t rel)
 	{
 		CurByte+=rel;
 		InternalToRead-=rel;
+	}
+}
+
+
+//------------------------------------------------------------------------------
+void RIOFile::Truncate(off_t newsize)
+{
+	// Verify all internal conditions
+	if(Handle==-1)
+		throw RIOException(this,"Can't truncate the file");
+	if(!CanWrite)
+		throw RIOException(this,"No write access");
+
+	if(ftruncate(Handle,newsize)==-1)
+	{
+		switch(errno)
+		{
+			case EACCES:
+				throw RIOException(this,"File is a directory");
+			case EINVAL:
+				throw RIOException(this,"New length is negative");
+			case EFBIG:
+				throw RIOException(this,"New size beyond the limits of the operating system");
+			case EIO:
+				throw RIOException(this,"A hardware I/O error occurred");
+			case EPERM:
+				throw RIOException(this,"File is \"append-only\" or \"immutable\"");
+			case EINTR:
+				throw RIOException(this,"Operation was interrupted by a signal");
+		}
+	}
+
+	Size=newsize;
+	if(RealPos>=Size)
+	{
+		Seek(newsize);
 	}
 }
 

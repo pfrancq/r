@@ -145,6 +145,7 @@ public:
 
 	/**
 	* Post a notification.
+	* @tparam T              Class of the data to the send with the notification.
 	* @param name            Name of the notification.
 	* @param data            Data associated to the notification.
 	*/

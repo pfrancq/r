@@ -198,7 +198,7 @@ public:
 	* param tag             Name of the tag.
 	* param attr            Name of the attribute.
 	* @returns a string containing the value of the attribute or a null string
-	* if either the tag wasn't foud or the attribute was not found.
+	* if either the tag wasn't found or the attribute was not found.
 	*/
 	RString GetTagAttrValue(const RString& tag,const RString& attr) const;
 
@@ -206,9 +206,9 @@ public:
 	* Insert an attribute. If the attribute already exist, the value can be
 	* overwritten depending of the second parameter.
 	* @param attr           Attribute to insert
-	* @param overwritte     Overwritte existing parameter.
+	* @param overwrite      Overwrite existing parameter.
 	*/
-	void InsertAttr(RXMLAttr* attr,bool overwritte=true);
+	void InsertAttr(RXMLAttr* attr,bool overwrite=true);
 
 	/**
 	* Insert an attribute. If the attribute already exist, the value can be
@@ -218,9 +218,9 @@ public:
 	* @param name           Name of the attribute.
 	* @param value          Value of the attribute.
 	* @param xmlns          XML Namespace.
-	* @param overwritte     Overwritte existing parameter.
+	* @param overwrite      Overwrite existing parameter.
 	*/
-	void InsertAttr(const RString& name,const RString& value,const RString& xmlns=RString::Null,bool overwritte=true);
+	void InsertAttr(const RString& name,const RString& value,const RString& xmlns=RString::Null,bool overwrite=true);
 
 	/**
 	* Add a string to the content of the tag.
@@ -229,18 +229,17 @@ public:
 	void AddContent(const RString& text);
 
 	/**
-	* @returns the text containning in the tag.
+	* @returns the text containing in the tag.
 	*/
 	RString GetContent(void) const {return(Contains);}
 
 	/**
 	* See if the tag has a content.
-	* @returns bool.
 	*/
 	bool HasContent(void) const {return(Contains.GetLen());}
 
 	/**
-	* Test if the tag is empty, i.e. it has no subnodes, no parameters and no
+	* Test if the tag is empty, i.e. it has no sub-nodes, no parameters and no
 	* content.
 	*/
 	virtual bool IsEmpty(void);
@@ -252,10 +251,15 @@ public:
 	R::RCursor<RXMLAttr> GetAttrs(void) const;
 
 	/**
+	 * Get the number of attributes.
+	 */
+	size_t GetNbAttrs(void) const {return(Attrs.GetNb());}
+
+	/**
 	* Merge two tag if they are identical (based on the Compare method of
 	* RXMLStruct). The attributes of merge replace (when necessary) the
-	* attirbutes. Each subtag of merge is merged if it correspond to one of the
-	* subtags,else merge it is added.
+	* attributes. Each sub-tag of merge is merged if it correspond to one of
+	* the sub-tags,else merge it is added.
 	* @param merge           Tag to merge.
 	* @return true if the merge could be done.
 	*/

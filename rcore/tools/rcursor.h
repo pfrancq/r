@@ -53,33 +53,15 @@ namespace R{
 *
 * Here is an example of a cursor used:
 * @code
-* #include <rcontainer.h>
-* #include <rcursor.h>
-* using namespace R;
-*
-* class MyElement
+* int example(RContainer<RString,true,true>& c)
 * {
-*    size_t Id;
-* public:
-*    MyElement(size_t id) : Id(id) {}
-*    MyElement(const MyElement& e) : Id(e.Id) {}
-*    void DoSomething(double d) {cout<<d<<endl;}
-*    int Compare(const MyElement& e) const {return(Id-e.Id);}
-*    int Compare(const size_t id) const {return(Id-id);}
-*    int Compare(const char* text) const
-*    {
-*       size_t id=atoi(text);
-*       return(Compare(id));
-*    }
-* };
-*
-* int example(RContainer<MyElement,true,true> *c)
-* {
-*    RCursor<MyElement> Cur;
-*
-*    Cur.Set(c);
+*    RCursor<MyElement> Cur(c);
 *    for(Cur.Start();!Cur.End();Cur.Next())
 *       Cur()->DoSomething(2.3);
+*
+*    RCursor<MyElement> Cur2(0,1);  // Treat the first two elements
+*    for(Cur2.Start();!Cur2.End();Cur2.Next())
+*       Cur2()->DoSomething(2.3);
 * }
 * @endcode
 *
@@ -106,8 +88,8 @@ public:
 	* Construct the cursor.
 	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
-	* @param max             Maximum position of the elements to iterate. If
-	*                        SIZE_MAX, iterate until the end of the container.
+	* @param max             Maximum position of the elements to iterate (included max).
+	*                        If SZE_MAX, iterate until the end of the container.
 	*/
 	template<bool a,bool o> RCursor(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX) : BasicCursor(c,min,max) {}
 
@@ -121,8 +103,8 @@ public:
 	* Set the container.
 	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
-	* @param max             Maximum position of the elements to iterate. If
-	*                        SIZE_MAX, iterate until the end of the container.
+	* @param max             Maximum position of the elements to iterate (included max).
+	*                        If SZE_MAX, iterate until the end of the container.
 	*/
 	template<bool a,bool o> void Set(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX) {BasicCursor::Set(c,min,max);}
 

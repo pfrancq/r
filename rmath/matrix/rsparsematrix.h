@@ -37,6 +37,7 @@
 // include file for R Project
 #include <rcursor.h>
 #include <rsparsevector.h>
+#include <rgenericmatrix.h>
 
 
 //-----------------------------------------------------------------------------
@@ -66,44 +67,68 @@ namespace R{
 * @endcode
 * An important aspect is the use of static_cast<const RSparseMatrix&> to ensure
 * the call of the const version of the operator(). If static_cast<const RSparseMatrix&>
-* is not used, the different elements are created without any uninitialized values.
+* is not used, the different elements are created with uninitialized values.
 * @author Pascal Francq (initial coding from Valery Vandaele).
 * @short Sparse Matrix.
 */
-class RSparseMatrix : private RContainer<RSparseVector,true,true>
+class RSparseMatrix : public RGenericMatrix, protected RContainer<RSparseVector,true,true>
 {
+protected:
+
 	/**
 	 * All lines have an entry.
 	 */
 	bool AllLines;
 
 	/**
-	 * Initial maximum number of columns.
+	 * Initial number of values to reserve for each line.
 	 */
-	size_t NbCols;
+	size_t InitNbCols;
 
 public:
 
 	/**
 	* Construct a sparse matrix.
-	* @param nblines           Initial maximum number of lines.
-	* @param nbcols            Initial maximum number of columns.
-	* @param alllines          All lines have a vector.
+	* @param nblines         Number of lines (not the number of vectors).
+	* @param nbcols          Number of columns (not the number of elements in each vector).
+	* @param alllines        All lines have a vector.
+	* @param init            Initial number of elements to reserve for each line.
 	*/
-	RSparseMatrix(size_t nblines,size_t nbcols,bool alllines=true);
+	RSparseMatrix(size_t nblines,size_t nbcols,bool alllines=true,size_t init=20);
 
 	/**
-	* Construct the generic cell from another one.
-	* @param src            Generic Sparse Matrix used as source.
+	* Copy constructor of a sparse matrix.
+	* @param src             Sparse matrix used as source.
 	*/
 	RSparseMatrix(const RSparseMatrix& src);
 
 	/**
-	 * Clear the matrix. In practice, each line is emptied. By default, the
-	 * lines are not removed from the matrix.
-	 * @param dellines       Delete the lines.
+	 * Clear the matrix. All the elements are removed.
+	 * @param val            Value eventually used to assign to the elements (not used for sparse matrix).
+	 * @param clean          Clean eventually the memory.
 	 */
-	void Clear(bool dellines=false);
+	virtual void Clear(double val=NAN,bool clean=false);
+
+	/**
+	 * Initialize the matrix with a given value. It uses the operator(i,j) to
+	 * initialize the different elements.
+	 * @param val            Value to assign.
+	 */
+	virtual void Init(double val);
+
+	/**
+	* Verify if the matrix has a given size, and increase them if necessary.
+	* @param newlines        New line number.
+	* @param newcols         New column number.
+	* @param fill            Elements must be filled with a value (Not used for sparse matrix).
+	* @param val             Value used eventually to fill the elements created  (Not used for sparse matrix).
+	*/
+	virtual void VerifySize(size_t newlines,size_t newcols,bool fill=false,double val=NAN);
+
+	/**
+	 * Get the type of the matrix.
+	 */
+	virtual tType GetType(void) const {return(tSparse);}
 
 	/**
 	 * Get the number of vectors contained in the matrix. If the matrix does not
@@ -119,23 +144,23 @@ public:
 
 	/**
 	* The assignment operator.
-	* @param src            Generic Sparse Matrix used as source.
+	* @param matrix          Sparse Matrix used as source.
 	*/
-	RSparseMatrix& operator=(const RSparseMatrix& src);
+	RSparseMatrix& operator=(const RSparseMatrix& matrix);
 
 	/**
 	* Return a specific element of the matrix (const version).
 	* @param i               Line number of the element.
 	* @param j               Column number of the element.
 	*/
- 	double operator()(size_t i,size_t j) const;
+ 	virtual double operator()(size_t i,size_t j) const;
 
 	/**
 	* Return a specific element of the matrix.
 	* @param i               Line number of the element.
 	* @param j               Column number of the element.
 	*/
- 	double& operator()(size_t i,size_t j);
+ 	virtual double& operator()(size_t i,size_t j);
 
  	/**
  	 * Return the vector at a given line from the matrix (const version).

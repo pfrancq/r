@@ -169,46 +169,35 @@ void RXMLFile::Close(void)
 //------------------------------------------------------------------------------
 void RXMLFile::SaveNextTag(int depth)
 {
-	size_t i;
-	RString text;
-	RCursor<RXMLAttr> Cur;
-	RCursor<RXMLTag> Tags;
 	RString line;
+	RXMLTag* Current(CurTag);
 
 	if(!AvoidSpaces)
 		for(int i=0;i<depth;i++) line+="\t";
-	Cur=CurTag->GetAttrs();
-	Tags=CurTag->GetNodes();
-	if(Cur.GetNb())
+
+	// Write the first line : <tag attrs> or <tag attrs/>
+	line+="<"+CurTag->GetName();
+	if(CurTag->GetNbAttrs())
 	{
-		line+="<"+CurTag->GetName();
-		for(Cur.Start(),i=Cur.GetNb();--i;Cur.Next())
+		// Add attributes
+		RCursor<RXMLAttr> Cur(CurTag->GetAttrs());
+		for(Cur.Start();!Cur.End();Cur.Next())
 		{
-			line+=" "+Cur()->GetName()+"=\""+StringToXML(Cur()->GetValue())+"\"";
-		}
-		if(Tags.GetNb()||CurTag->GetContent().GetLen())
-		{
-			line+=" "+Cur()->GetName()+"=\""+StringToXML(Cur()->GetValue())+"\">";
-			(*this)<<line<<endl;
-			line.Clear();
-		}
-		else
-		{
-			line+=" "+Cur()->GetName()+"=\""+StringToXML(Cur()->GetValue())+"\"/>";
-			(*this)<<line<<endl;
-			line.Clear();
+			line+=" "+Cur()->GetName();
+			RString Value(Cur()->GetValue());
+			if(!Value.IsEmpty())
+				line+="=\""+StringToXML(Value)+"\"";
 		}
 	}
+	if(CurTag->GetNbNodes()||CurTag->HasContent())
+		line+=">"; // There is some content -> add '>'
 	else
-	{
-		if(Tags.GetNb()||CurTag->GetContent().GetLen())
-			line+="<"+CurTag->GetName()+">";
-		else
-			line+="<"+CurTag->GetName()+"/>";
-		(*this)<<line<<endl;
-		line.Clear();
-	}
-	if(CurTag->GetContent().GetLen())
+		line+="/>"; // No content -> add '/>'
+	(*this)<<line<<endl; // Write the line
+	line.Clear();        // Start a new line
+
+	// Wrote the content (if any)
+	if(CurTag->HasContent())
 	{
 		if(!AvoidSpaces)
 			for(int i=0;i<depth+1;i++) line+="\t";
@@ -216,19 +205,35 @@ void RXMLFile::SaveNextTag(int depth)
 		(*this)<<line<<endl;
 		line.Clear();
 	}
-	for(Tags.Start();!Tags.End();Tags.Next())
+
+	// Write the tags (if any)
+	if(CurTag->GetNbNodes())
 	{
-		CurTag=Tags();
-		SaveNextTag(depth+1);
-		CurTag=CurTag->GetParent();
+		RCursor<RXMLTag> Tags(CurTag->GetNodes());
+		for(Tags.Start();!Tags.End();Tags.Next())
+		{
+			CurTag=Tags();
+			if(CurTag->GetParent()!=Current)
+				cerr<<"RXMLFile::SaveNextTag(int) : Big Problem, parent '"<<
+						                Current->GetName()+"' expected and '"<<CurTag->GetParent()->GetName()<<
+						                "' found for tag '"+CurTag->GetName()<<"'"<<endl;
+			SaveNextTag(depth+1);
+			if(CurTag->GetParent()!=Current)
+				cerr<<"RXMLFile::SaveNextTag(int) : Big Problem, parent '"<<
+						                Current->GetName()+"' expected and '"<<CurTag->GetParent()->GetName()<<
+						                "' found for tag '"+CurTag->GetName()<<"'"<<endl;
+		}
 	}
-	if(Tags.GetNb()||CurTag->GetContent().GetLen())
+
+	if(Current->GetNbNodes()||Current->HasContent())
 	{
 		if(!AvoidSpaces)
 			for(int i=0;i<depth;i++) line+="\t";
-		line+="</"+CurTag->GetName()+">";
+		line+="</"+Current->GetName()+">";
 		(*this)<<line<<endl;
 	}
+
+	CurTag=Current;
 }
 
 

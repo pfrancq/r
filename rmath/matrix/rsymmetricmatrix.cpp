@@ -1,12 +1,13 @@
-/*
+	/*
 
 	R Project Library
 
-	RVector.cpp
+	RSymmetricMatrix.cpp
 
-	Class representing a vector - Implementation
+	Matrix class - Implementation.
 
-	Copyright 2008-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1999-2009 by Pascal Francq (pascal@francq.info).
+	Copyright 1999-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -29,7 +30,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rvector.h>
+#include <rsymmetricmatrix.h>
+#include <rnumcursor.h>
+#include <rstring.h>
 using namespace R;
 using namespace std;
 
@@ -37,52 +40,59 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 //
-// class RVector
+//    Class RSymmetricMatrix
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RVector::RVector(size_t max)
-	: RNumContainer<double,false>(max)
+RSymmetricMatrix::RSymmetricMatrix(size_t size)
+	: RLowerTriangularMatrix(size)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RVector::RVector(const RVector& vec)
-	: RNumContainer<double,false>(vec)
+RSymmetricMatrix::RSymmetricMatrix(const RSymmetricMatrix& matrix)
+	: RLowerTriangularMatrix(matrix)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RVector::~RVector(void)
+double RSymmetricMatrix::operator()(size_t i,size_t j) const
 {
-}
-
-
-
-//------------------------------------------------------------------------------
-//
-// class RMatrixLine
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-RMatrixLine::RMatrixLine(size_t max)
-	: RVector(max)
-{
+	if(j>i)
+	{
+		size_t tmp(i);
+		i=j;
+		j=tmp;
+	}
+	return(RLowerTriangularMatrix::operator()(i,j));
 }
 
 
 //------------------------------------------------------------------------------
-RMatrixLine::RMatrixLine(const RMatrixLine& vec)
-	: RVector(vec)
+double& RSymmetricMatrix::operator()(size_t i,size_t j)
 {
+	if(j>i)
+	{
+		size_t tmp(i);
+		i=j;
+		j=tmp;
+	}
+	return(RLowerTriangularMatrix::operator()(i,j));
 }
 
 
 //------------------------------------------------------------------------------
-RMatrixLine::~RMatrixLine(void)
+RSymmetricMatrix& RSymmetricMatrix::operator=(const RSymmetricMatrix& matrix)
+{
+	RLowerTriangularMatrix::operator=(matrix);
+	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+RSymmetricMatrix::~RSymmetricMatrix(void)
 {
 }

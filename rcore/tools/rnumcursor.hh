@@ -36,34 +36,84 @@
 //------------------------------------------------------------------------------
 template<class I>
 	RNumCursor<I>::RNumCursor(void)
-		: NbInt(0), List(0), Parse(0), Pos(0)
+		: NbInt(0), List(0), Parse(0), Pos(0), First(0), Last(0)
 {
 }
 
 //------------------------------------------------------------------------------
 template<class I>
 	RNumCursor<I>::RNumCursor(const RNumCursor& cur)
-		: NbInt(cur.NbInt), List(cur.List), Parse(cur.Parse), Pos(cur.Pos)
+		: NbInt(cur.NbInt), List(cur.List), Parse(cur.Parse), Pos(cur.Pos), First(cur.First), Last(cur.Last)
 {
 }
 
 
 //------------------------------------------------------------------------------
 template<class I>
-	template<bool a>
-		RNumCursor<I>::RNumCursor(const RNumContainer<I,a>& cont)
-			: NbInt(cont.NbInt), List(cont.List), Parse(cont.List), Pos(0)
+	template<bool o>
+		RNumCursor<I>::RNumCursor(const RNumContainer<I,o>& cont,size_t min,size_t max)
+			: NbInt(0), List(0), Parse(0), Pos(0), First(0), Last(0)
 {
+	Set(cont,min,max);
 }
 
 
 //------------------------------------------------------------------------------
 template<class I>
-	template<bool a>
-		void RNumCursor<I>::Set(const RNumContainer<I,a>& cont)
+	template<bool o>
+		void RNumCursor<I>::Set(const RNumContainer<I,o>& cont,size_t min,size_t max)
 {
 	NbInt=cont.NbInt;
 	List=cont.List;
 	Parse=cont.List;
 	Pos=0;
+	if((max!=SIZE_MAX)&&(max<cont.GetNb()))
+		Last=max+1;
+	else
+		Last=cont.GetNb();
+	if((min<=max)&&(min<cont.GetNb()))
+		First=min;
+	else
+		First=0;
+}
+
+
+//-----------------------------------------------------------------------------
+template<class I>
+	void RNumCursor<I>::Start(void)
+{
+	Pos=First;
+	if(!NbInt)
+	{
+		Parse=0;
+		return;
+	}
+	Parse=&List[First];
+}
+
+
+//-----------------------------------------------------------------------------
+template<class I>
+	void RNumCursor<I>::GoTo(size_t idx)
+{
+	idx+=First;
+	if(idx>=Last)
+		throw std::range_error("void RNumCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(First)+","+RString::Number(Last-1)+"]");
+	Parse=&List[idx];
+	Pos=idx;
+}
+
+
+//-----------------------------------------------------------------------------
+template<class I>
+	void RNumCursor<I>::Next(size_t inc)
+{
+	if(!NbInt) return;
+	if(Pos==Last)
+		Start();
+	else
+	{
+		Pos+=inc;
+		Parse+=inc;
+	}
 }

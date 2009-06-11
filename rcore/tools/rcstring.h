@@ -119,7 +119,7 @@ public:
 public:
 
 	/** @name Internal methods	*/ // @{
-	/** @copydoc BasicString(const C*,size_t)*/
+	/** @copydoc BasicString::Copy(const C*,size_t)*/
 	inline void Copy(const char* text,size_t nb) {BasicString<char,RCString>::Copy(text,nb);}
 
 	inline void SetLen(size_t len) {BasicString<char,RCString>::SetLen(len);}

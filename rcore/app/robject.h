@@ -154,6 +154,7 @@ public:
 
 	/**
 	* Post a notification to the notification center.
+	* @tparam T              TYpe of the data to post with the notification.
 	* @param handle          Handle of the notification.
 	* @param data            Data associated to the notification.
 	*/
@@ -164,6 +165,7 @@ public:
 
 	/**
 	* Post a notification to the notification center.
+	* @tparam T              TYpe of the data to post with the notification.
 	* @param name            Name of the notification.
 	* @param data            Data associated to the notification.
 	*/
@@ -235,7 +237,6 @@ public:
 
 	/**
 	 * Delete the object as observer.
-	 * @param
 	 */
 	inline void DeleteObserver(void)
 	{

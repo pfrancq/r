@@ -47,7 +47,7 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
 * The RMutex class provides a representation for a mutex used for thread
-* synchronisation.
+* synchronization.
 *
 * Lets suppose that two functions, func1 and func2, used by two different
 * threads access the same variable (an account for example). A mutex can be

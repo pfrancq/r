@@ -70,6 +70,7 @@ public:
 
 	/**
 	* Construct an exception.
+	* @param kernel          Interpreter generating the exception.
 	* @param str             Message of the error.
 	*/
 	RPrgException(const RInterpreter* kernel,const char* str) throw();

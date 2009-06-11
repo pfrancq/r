@@ -84,7 +84,7 @@ template<class T,class N,bool bAlloc>
 {
 	if(!NbTopNodes)
 		return(R::RCursor<N>());
-	return(R::RCursor<N>(*this,0,NbTopNodes));
+	return(R::RCursor<N>(*this,0,NbTopNodes-1));
 }
 
 
@@ -96,11 +96,11 @@ template<class T,class N,bool bAlloc>
 	{
 		if(!node->NbSubNodes)
 			return(R::RCursor<N>());
-		return(R::RCursor<N>(*this,node->SubNodes,node->SubNodes+node->NbSubNodes));
+		return(R::RCursor<N>(*this,node->SubNodes,node->SubNodes+node->NbSubNodes-1));
 	}
 	if(!NbTopNodes)
 		return(R::RCursor<N>());
-	return(R::RCursor<N>(*this,0,NbTopNodes));
+	return(R::RCursor<N>(*this,0,NbTopNodes-1));
 }
 
 
@@ -110,10 +110,10 @@ template<class T,class N,bool bAlloc>
 {
 	if(node)
 	{
-		GetTab(nodes,node->SubNodes,node->SubNodes+node->NbSubNodes);
+		GetTab(nodes,node->SubNodes,node->SubNodes+node->NbSubNodes-1);
 		return(node->NbSubNodes);
 	}
-	GetTab(nodes,0,NbTopNodes);
+	GetTab(nodes,0,NbTopNodes-1);
 	return(NbTopNodes);
 }
 

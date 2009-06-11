@@ -49,7 +49,7 @@ namespace R{
 * The RConfig class provides a representation for a XML structure representing
 * a set of parameters.
 * @author Pascal Francq
-* @short XML Config Structure.
+* @short XML Configuration Structure.
 */
 class RConfig
 {
@@ -63,12 +63,12 @@ class RConfig
 	};
 
 	/**
-	* Category of the config.
+	* Category of the configuration.
 	*/
 	RString Category;
 
 	/**
-	* Name of the config.
+	* Name of the configuration.
 	*/
 	RString Name;
 
@@ -93,7 +93,7 @@ public:
 private:
 
 	/**
-	* Analyse a tag that is supposed to represent a parameter if a given
+	* Analyze a tag that is supposed to represent a parameter if a given
 	* category.
 	* @param tag             Tag.
 	* @param cat             Category.
@@ -121,12 +121,12 @@ public:
 	void Save(void);
 
 	/**
-	* Get the name of the config.
+	* Get the name of the configuration.
 	*/
 	RString GetName(void) const {return(Name);}
 
 	/**
-	* Get the category of the config.
+	* Get the category of the configuration.
 	*/
 	RString GetCategory(void) const {return(Category);}
 

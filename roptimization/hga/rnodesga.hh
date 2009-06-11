@@ -320,7 +320,7 @@ template<class cNode,class cObj,class cNodes>
 {
 	if(!node.NbSubObjects)
 		return(RCursor<cObj>(ObjsAss,0,0));
-	return(RCursor<cObj>(ObjsAss,node.SubObjects,node.SubObjects+node.NbSubObjects));
+	return(RCursor<cObj>(ObjsAss,node.SubObjects,node.SubObjects+node.NbSubObjects-1));
 }
 
 

@@ -242,7 +242,7 @@ public:
 
 
 //------------------------------------------------------------------------------
-// Inline implemantion
+// Inline implementation
 #include <rnodesga.hh>
 
 

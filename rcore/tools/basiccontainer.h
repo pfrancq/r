@@ -92,7 +92,6 @@ protected:
 
 	/**
 	* Copy constructor of a container.
-	* @param src             Container used as source.
 	*/
 	BasicContainer(void);
 
@@ -130,7 +129,7 @@ protected:
 	 */
 	void Transfer(bool bAlloc,BasicContainer& src);
 
-	/*
+	/**
 	* This function returns the index of an given element.
 	*/
 	size_t GetIndex(bool bOrder,const void* tag,bool& find,size_t min, size_t max,int compare(const void*,const void*)) const;

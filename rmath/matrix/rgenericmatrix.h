@@ -2,12 +2,11 @@
 
 	R Project Library
 
-	RMatrix.h
+	RGenericMatrix.h
 
-	Matrix class - Header.
+	Generic Matrix class - Header.
 
-	Copyright 1999-2009 by Pascal Francq (pascal@francq.info).
-	Copyright 1999-2008 by the Université Libre de Bruxelles (ULB).
+	Copyright 2008-2009 by Pascal Francq (pascal@francq.info).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -29,8 +28,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RMatrix_H
-#define RMatrix_H
+#ifndef RGenericMatrix_H
+#define RGenericMatrix_H
 
 
 //------------------------------------------------------------------------------
@@ -44,55 +43,53 @@
 #include <rcontainer.h>
 #include <rvector.h>
 #include <rcursor.h>
-#include <rgenericmatrix.h>
 
 
 //------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------
+class RMatrix;
 
 //------------------------------------------------------------------------------
 /**
-* The RMatrix class provides a representation of a matrix as a given number of
-* vector, each vector representing a line
-*
-* Here are some examples:
-* @code
-* RMatrix a(2,2);
-* RMatrix b(2,2);
-* RMatrix c;
-*
-* a(0,0)=1; a(0,1)=2;
-* a(1,0)=2; a(0,1)=2;
-* b(0,0)=3; b(0,1)=2;
-* b(1,1)=1; b(1,1)=4;
-* c=a+b;
-* c=a-b;
-* c=a*b;
-* c=(2*a)+(b*a);
-*
-* RCursor<RMatrixLine> Lines(c.GetLines());
-* for(Lines.Start();!Lines.End();Lines.Next())
-* {
-* 	RNumCursor<double> Cols(Lines()->GetCols());
-* 	for(Cols.Start();!Cols.End();Cols.Next())
-* 		cout<<Cols()<<"\t";
-* 	cout<<endl;
-* }
-* @endcode
-* @short Matrix.
+* The RGenericMatrix class provides a representation for a generic matrix. It
+* provides several operator acting on generic matrices. The operators are based
+* on the operator(i,j) and are not optimized. If possible, these operators
+* should be specialized in inheriting classes for performance purposes.
+* @short Generic Matrix.
 * @author Pascal Francq
 */
-class RMatrix : public RGenericMatrix, protected RContainer<RMatrixLine,true,false>
+class RGenericMatrix
 {
+public:
+
+	/**
+	 * Type of a matrix.
+	 */
+	enum tType
+	{
+		tNormal              /** Normal matrix.*/,
+		tDiagonal            /** Diagonal matrix.*/,
+		tLowerTriangular     /** Lower triangular matrix.*/,
+		tUpperTriangular     /** Upper triangular matrix.*/,
+		tSymmetric           /** Symmetric matrix.*/,
+		tSparse              /** Sparse matrix.*/,
+		tSparseSymmetric     /** Sparse symmetric matrix.*/
+	};
+
 protected:
 
 	/**
-	 * Matrix must be initialized. If MustCreate is false, Create() must be
-	 * called. It must be verify in each method.
+	 * Number of lines.
 	 */
-	bool MustCreate;
+	size_t NbLines;
+
+	/**
+	 * Number of columns.
+	 */
+	size_t NbCols;
 
 public:
 
@@ -100,37 +97,33 @@ public:
 	* Construct a square matrix of a given size.
 	* @param size            Size of the matrix.
 	*/
-	RMatrix(size_t size);
+	RGenericMatrix(size_t size);
 
 	/**
 	* Construct a matrix (L,C).
-	* @param lines           Initial number of lines.
-	* @param cols            Initial number of columns.
+	* @param lines           Number of lines.
+	* @param cols            Number of columns.
 	*/
-	RMatrix(size_t lines,size_t cols);
+	RGenericMatrix(size_t lines,size_t cols);
 
 	/**
 	* Construct a matrix from another one.
 	* @param matrix          Matrix.
 	*/
-	RMatrix(const RMatrix& matrix);
-
-protected:
-
-	/**
-	* Create the matrix. The method should always put MustCreate to false.
-	*/
-	virtual void Create(void);
-
-	/**
-	 * Test if the matrix must be created.
-	 */
-	inline void TestThis(void) const {if(MustCreate) const_cast<RMatrix*>(this)->Create();}
+	RGenericMatrix(const RGenericMatrix& matrix);
 
 public:
 
 	/**
-	 * Initialize the matrix with a given value.
+	 * Clear the matrix. By default, it initialize the elements with Init.
+	 * @param val            Value eventually used to assign to the elements.
+	 * @param clean          Clean eventually the memory.
+	 */
+	virtual void Clear(double val=NAN,bool clean=false);
+
+	/**
+	 * Initialize the matrix with a given value. It uses the operator(i,j) to
+	 * initialize the different elements.
 	 * @param val            Value to assign.
 	 */
 	virtual void Init(double val);
@@ -142,96 +135,47 @@ public:
 	* @param fill            Elements must be filled with a value.
 	* @param val             Value used eventually to fill the elements created.
 	*/
-	virtual void VerifySize(size_t newlines,size_t newcols,bool fill=false,double val=NAN);
+	virtual void VerifySize(size_t newlines,size_t newcols,bool fill=false,double val=NAN)=0;
 
 	/**
 	 * Get the type of the matrix.
 	 */
-	virtual tType GetType(void) const {return(tNormal);}
+	virtual tType GetType(void) const=0;
 
 	/**
 	* Get the number of lines in the matrix.
 	*/
-	RCursor<RMatrixLine> GetLines(void) const {return(RCursor<RMatrixLine>(*this));}
+	size_t GetNbLines(void) const {return(NbLines);}
 
 	/**
-	* Make the matrix symmetric by copying the "left-upper" part in the
-	* "right-bottom" part.
+	* Get the number of columns in the matrix.
 	*/
-	void Symetrize(void);
-
-	/**
-	* Return a specific element of the matrix (const version).
-	* @param i               Line number of the element.
-	* @param j               Column number of the element.
-	*/
- 	virtual double operator()(size_t i,size_t j) const;
+	size_t GetNbCols(void) const {return(NbCols);}
 
 	/**
 	* Return a specific element of the matrix (const version).
 	* @param i               Line number of the element.
 	* @param j               Column number of the element.
 	*/
- 	virtual double& operator()(size_t i,size_t j);
+ 	virtual double operator()(size_t i,size_t j) const=0;
 
- 	/**
- 	 * Return the vector at a given line from the matrix (const version).
- 	 * @param i               Line number of the vector.
- 	 */
- 	const RMatrixLine* operator[](size_t i) const;
-
- 	/**
- 	 * Return the vector at a given line from the matrix.
- 	 * @param i               Line number of the vector.
- 	 */
- 	RMatrixLine* operator[](size_t i);
+	/**
+	* Return a specific element of the matrix (const version).
+	* @param i               Line number of the element.
+	* @param j               Column number of the element.
+	*/
+ 	virtual double& operator()(size_t i,size_t j)=0;
 
 	/**
 	* Assign operator.
 	* @param matrix          Matrix.
 	*/
-	RMatrix& operator=(const RMatrix& matrix);
-
-	/**
-	* Add a matrix to the current one.
-	* @param matrix          Matrix to add.
-	*/
-	RMatrix& operator+=(const RMatrix& matrix);
-
-	/**
-	* Subtract a matrix from the current one.
-	* @param matrix          Matrix to subtract.
-	*/
-  	RMatrix& operator-=(const RMatrix& matrix);
-
-	/**
-	* Multiply a matrix with a given number.
-	* @param arg             Number.
-	*/
-	RMatrix& operator*=(const double arg);
-
-	/**
-	* Multiply a matrix with the current one. It is important to remember that
-	* the matrix multiplication is not communitative. So the next code defines
-	* two different matrixes TempA and TempB.
-	* @code
-	* void Test(RMatrix &A,RMatrix &B)
-	* {
-	* 	RMatrix TempA(A);
-	* 	RMatrix TempB(B);
-	*
-	* 	TempA*=B;
-	* 	TempB*=A;
-	* }
-	* @endcode
-	* @param matrix          Matrix to multiply.
-	*/
-	RMatrix& operator*=(const RMatrix& matrix);
+	RGenericMatrix& operator=(const RGenericMatrix& matrix);
 
 	/**
 	* Destruct the matrix.
 	*/
-	virtual ~RMatrix(void);
+	virtual ~RGenericMatrix(void);
 };
 
 
@@ -241,7 +185,7 @@ public:
 * @param arg1                Matrix.
 * @param arg2                Matrix.
 */
-RMatrix operator+(const RMatrix& arg1,const RMatrix& arg2);
+RMatrix operator+(const RGenericMatrix& arg1,const RGenericMatrix& arg2);
 
 
 //------------------------------------------------------------------------------
@@ -250,7 +194,7 @@ RMatrix operator+(const RMatrix& arg1,const RMatrix& arg2);
 * @param arg1                Matrix.
 * @param arg2                Matrix.
 */
-RMatrix operator-(const RMatrix& arg1,const RMatrix& arg2);
+RMatrix operator-(const RGenericMatrix& arg1,const RGenericMatrix& arg2);
 
 
 //------------------------------------------------------------------------------
@@ -259,7 +203,7 @@ RMatrix operator-(const RMatrix& arg1,const RMatrix& arg2);
 * @param arg1                Matrix.
 * @param arg2                Number.
 */
-RMatrix operator*(const RMatrix& arg1,const double arg2);
+RMatrix operator*(const RGenericMatrix& arg1,const double arg2);
 
 
 //------------------------------------------------------------------------------
@@ -268,7 +212,7 @@ RMatrix operator*(const RMatrix& arg1,const double arg2);
 * @param arg1                Number.
 * @param arg2                Matrix.
 */
-RMatrix operator*(const double arg1,const RMatrix& arg2);
+RMatrix operator*(const double arg1,const RGenericMatrix& arg2);
 
 
 //------------------------------------------------------------------------------
@@ -277,7 +221,7 @@ RMatrix operator*(const double arg1,const RMatrix& arg2);
 * @param arg1                Matrix.
 * @param arg2                Matrix.
 */
-RMatrix operator*(const RMatrix& arg1,const RMatrix& arg2);
+RMatrix operator*(const RGenericMatrix& arg1,const RGenericMatrix& arg2);
 
 
 }  //-------- End of namespace R -----------------------------------------------

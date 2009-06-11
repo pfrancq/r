@@ -79,7 +79,7 @@ public:
 	/**
 	* Construct a "new" instruction.
 	* @param prg            Program.
-	* @param var            Name of the variable.
+	* @param name           Name of the variable.
 	* @param c              Class of the variable.
 	* @param init           Initialization parameters.
 	*/
@@ -122,7 +122,7 @@ public:
 	/**
 	* Construct a assignment instruction.
 	* @param prg            Program.
-	* @param var            Name of the variable.
+	* @param name           Name of the variable.
 	* @param assign         What to assign. It is destroy by the instruction.
 	*/
 	RPrgInstAssignVar(RInterpreter* prg,const RString& name,RPrgVar* assign);

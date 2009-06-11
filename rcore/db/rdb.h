@@ -94,10 +94,13 @@ class RDb
 {
 public:
 
+	/**
+	 * Type of the databases supported.
+	 */
 	enum Db
 	{
-		MySQL,
-		SQLite
+		MySQL,     /** MySQL database. */
+		SQLite     /** SQLite database. */
 	};
 
 protected:

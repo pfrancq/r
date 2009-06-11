@@ -49,10 +49,10 @@ namespace R{
 * stored in an array of pointers which will be increase when necessary. The
 * container can be responsible for the deallocation of the elements
 * (bAlloc), and the elements can be ordered (bOrder).
-* @param C                   The class of the elements to be contained.
-* @param bAlloc              Specify if the elements are deallocated by the
+* @tparam C                  The class of the elements to be contained.
+* @tparam bAlloc             Specify if the elements are deallocated by the
 *                            container.
-* @param bOrder              Specify if the elements are ordered in the
+* @tparam bOrder             Specify if the elements are ordered in the
 *                            container.
 *
 * To make the necessary comparisons, the container uses member functions of
@@ -121,6 +121,7 @@ template<class C,bool bAlloc,bool bOrder=false>
 {
 	/**
 	* Generate static template function to make comparisons.
+	* @tparam TUse           Class used for the comparison.
 	* @param ptr             Element used as reference.
 	* @param tag             Element to compare.
 	*/
@@ -149,6 +150,7 @@ template<class C,bool bAlloc,bool bOrder=false>
 	/**
 	* Create a container from another one. If the pointer to the container is
 	* null, an empty container is created.
+	* @tparam b              Determine if the source container is responsible for the allocation.
 	* @param src             Pointer to the source container.
 	*/
 	template<bool b> void Create(const RContainer<C,b,bOrder>& src);
@@ -156,6 +158,7 @@ template<class C,bool bAlloc,bool bOrder=false>
 	/**
 	* Copy a container from another one. If the pointer to the container is
 	* null, the container is just emptied.
+	* @tparam b              Determine if the source container is responsible for the allocation.
 	* @param src             Pointer to the source container.
 	*/
 	template<bool b> RContainer& NormalCopy(const RContainer<C,b,bOrder>& src);
@@ -163,12 +166,15 @@ template<class C,bool bAlloc,bool bOrder=false>
 	/**
 	* Deep copy of a container in another one. If the pointer to the container is
 	* null, the container is just emptied.
+	* @tparam b              Determine if the source container is responsible for the allocation.
 	* @param src             Pointer to the source container.
 	*/
 	template<bool b> void DeepCopy(const RContainer<C,b,bOrder>& src);
 
 	/**
 	* Add a container (if the pointer is not null) from another one.
+	* @tparam b              Determine if the source container is responsible for the allocation.
+	* @tparam o              Determine if the source container is ordered.
 	* @param src             Pointer to the source container.
 	*/
 	template<bool b,bool o> RContainer& Add(const RContainer<C,b,o>& src);
@@ -247,10 +253,11 @@ public:
 
 	/**
 	* ReOrder the container. This method must be used with caution, because it
-	* can crash the container:
+	* can crash the container if:
 	* -# The container contains null pointers.
 	* -# The container is ordered and the method does not use the same criterion
 	*    for the ordering.
+	*
 	* @param sortOrder       Pointer to a (static) function used for the ordering.
 	*/
 	inline void ReOrder(int sortOrder(const void*,const void*)) {BasicContainer::ReOrder(sortOrder);}
@@ -258,10 +265,7 @@ public:
 	/**
 	* ReOrder the container based on the 'Compare' method of the objects
 	* contained. This method must be used with caution, because it can crash
-	* the container:
-	* -# The container contains null pointers.
-	* -# The container is ordered and the method does not use the same criterion
-	*    for the ordering.
+	* the container if the container contains null pointers.
 	*/
 	inline void ReOrder(void) {BasicContainer::ReOrder(SortOrder);}
 
@@ -276,6 +280,8 @@ public:
 	/**
 	 * Transfer a container into another one. The destination container is
 	 * cleared before.
+	 * @tparam b             Determine if the source container is responsible for the allocation.
+	 * @tparam o             Determine if the source container is ordered.
 	 * @param src            Source container.
 	 */
 	template<bool a,bool o> inline void Transfer(RContainer<C,a,o>& src) {BasicContainer::Transfer(bAlloc,src);}
@@ -300,6 +306,7 @@ public:
 
 	/**
 	* Deep copy of a container.
+	* @tparam a              Determine if the source container is responsible for the allocation.
 	* @param src             Container used as source.
 	*/
 	template<bool a> inline void Copy(const RContainer<C,a,bOrder>& src) {DeepCopy<a>(src);}
@@ -336,7 +343,7 @@ public:
 	* This function returns the index of an element represented by tag, and it
 	* is used when the elements are to be ordered. The search can be limited to
 	* a part of the container.
-	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param find            If the element represented by tag exist, find is set to
@@ -351,7 +358,7 @@ public:
 	/**
 	* Look if a certain element is in the container. The search can be limited
 	* to a part of the container.
-	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param sortkey         The tag represents the sorting key. The default value
@@ -379,7 +386,7 @@ public:
 
 	/**
 	* Get a pointer to a certain element in the container.
-	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param sortkey         The tag represents the sorting key. The default value
@@ -395,7 +402,7 @@ public:
 	* Get a pointer to a certain element in the container. If the element is
 	* not existing, the container creates it by using the constructor with TUse
 	* as parameter.
-	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param sortkey         The tag represents the sorting key. The default value
@@ -435,7 +442,7 @@ public:
 	* This method returns a container of all the elements that are responding
 	* to the given criteria. This method can be limited to a part of the
 	* container.
-	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param min             Starting index of the container's part concerned.
@@ -477,7 +484,7 @@ public:
 	/**
 	* Delete an element from the container. This method can be limited to a
 	* part of the container.
-	* @param TUse            The type of tag, the container uses the Compare(TUse &)
+	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param sortkey         The tag represents the sorting key. The default value

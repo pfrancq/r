@@ -37,12 +37,6 @@
 // include files for R Project
 #include <rstring.h>
 
-class Coucou
-{
-public:
-Coucou(void) {}
-void Test(void);
-};
 
 //-----------------------------------------------------------------------------
 namespace R{

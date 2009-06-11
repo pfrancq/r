@@ -91,23 +91,23 @@ public:
 
 	/**
 	* The equal operator.
-	* @param f              The fitness used for the compraraison.
-	* @return The function returns true if the value of the two fitnesses are
+	* @param f              The fitness used for the comparison.
+	* @return The function returns true if the value of the two fitness are
 	* equal.
 	*/
 	inline bool operator==(const RFitness &f) const;
 
 	/**
 	* The different operator.
-	* @param f              The fitness used for the compraraison.
-	* @return The function returns true if the value of the two fitnesses are
+	* @param f              The fitness used for the comparison.
+	* @return The function returns true if the value of the two fitness are
 	* different.
 	*/
 	inline bool operator!=(const RFitness &f) const;
 
 	/**
 	* The greater operator.
-	* @param f              The fitness used for the compraraison.
+	* @param f              The fitness used for the comparison.
 	* @return The function returns true if the value of the fitness is
 	* greater than the value of f.
 	*/
@@ -115,7 +115,7 @@ public:
 
 	/**
 	* The less-than operator.
-	* @param f              The fitness used for the compraraison.
+	* @param f              The fitness used for the comparison.
 	* @return The function returns true if the value of the fitness is less
 	* than the value of f.
 	*/

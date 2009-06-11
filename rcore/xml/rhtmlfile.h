@@ -126,7 +126,6 @@ public:
 	* @param namespaceURI  Name of the namespace (if any).
 	* @param lName         Local name of the tag.
 	* @param name          Complete name of the tag.
-	* @param attrs         Attributes associated to the tag.
 	* @remarks The namespace are not treated for the moment, so the namespaceURI
 	*          and lname parameters are always empty.
 	*/

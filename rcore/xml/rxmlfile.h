@@ -182,7 +182,6 @@ protected:
 	* @param namespaceURI    Name of the namespace (if any).
 	* @param lName           Local name of the attribute.
 	* @param name            Complete name of the attribute.
-	* @param value           Value of the attribute (if any).
 	 */
 	virtual void AddAttribute(const RString& namespaceURI, const RString& lName, const RString& name);
 

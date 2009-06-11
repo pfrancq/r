@@ -35,6 +35,7 @@ using namespace R;
 using namespace std;
 
 
+
 //-----------------------------------------------------------------------------
 //
 // RSparseMatrix
@@ -42,28 +43,29 @@ using namespace std;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RSparseMatrix::RSparseMatrix(size_t nblines,size_t nbcols,bool alllines)
-	: RContainer<RSparseVector,true,true>(nblines), AllLines(alllines), NbCols(nbcols)
+RSparseMatrix::RSparseMatrix(size_t nblines,size_t nbcols,bool alllines,size_t init)
+	: RGenericMatrix(nblines,nbcols), RContainer<RSparseVector,true,true>(nblines),
+	  AllLines(alllines), InitNbCols(init)
 {
 	if(AllLines)
 	{
-		for(size_t i=0;i<nblines;i++)
-			InsertPtrAt(new RSparseVector(NbCols,i),i,true);
+		for(size_t i=0;i<NbLines;i++)
+			InsertPtrAt(new RSparseVector(InitNbCols,i),i,true);
 	}
 }
 
 
 //-----------------------------------------------------------------------------
 RSparseMatrix::RSparseMatrix(const RSparseMatrix& src)
-	: RContainer<RSparseVector,true,true>::RContainer(src), AllLines(src.AllLines)
+	: RGenericMatrix(src), RContainer<RSparseVector,true,true>::RContainer(src), AllLines(src.AllLines)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-void RSparseMatrix::Clear(bool dellines)
+void RSparseMatrix::Clear(double,bool clean)
 {
-	if(dellines)
+	if(clean)
 		RContainer<RSparseVector,true,true>::Clear();
 	else
 	{
@@ -74,11 +76,73 @@ void RSparseMatrix::Clear(bool dellines)
 }
 
 
-//-----------------------------------------------------------------------------
-RSparseMatrix& RSparseMatrix::operator=(const RSparseMatrix& src)
+//------------------------------------------------------------------------------
+void RSparseMatrix::Init(double val)
 {
-	AllLines=src.AllLines;
-	RContainer<RSparseVector,true,true>::operator=(src);
+	std::cerr<<"All elements of a RSparseMatrix are allocated. Use RMatrix instead"<<std::endl;
+	RGenericMatrix::Init(val);
+}
+
+
+//------------------------------------------------------------------------------
+void RSparseMatrix::VerifySize(size_t newlines,size_t newcols,bool,double)
+{
+	// Verify the lines
+	if(newlines>NbLines)
+	{
+		// New lines must be added.
+		VerifyTab(newlines);
+		if(AllLines)
+		{
+			for(size_t i=NbLines;i<newlines;i++)
+				InsertPtrAt(new RSparseVector(InitNbCols,i),i,true);
+		}
+	}
+	else if(newlines<NbLines)
+	{
+		// A number of lines must be deleted
+		for(size_t i=NbLines+1;--i;)
+		{
+			// If the line correspond to a identifier smaller than the number of lines
+			// -> All necessary lines are removed.
+			if(RContainer<RSparseVector,true,true>::operator[](GetNb()-1)->Id<newlines)
+				break;
+
+			DeletePtrAt(GetNb()-1);
+		}
+	}
+
+	// Verify the columns
+	if(newcols<NbCols)
+	{
+		// In each vector, the non-null elements between newcols and NbCols must be removed.
+		RCursor<RSparseVector> Cur(*this,0,NbLines);
+		for(Cur.Start();!Cur.End();Cur.Next())
+		{
+			// Treat the elements in reverse order since the the columns to remove
+			// are stored at the end of the vector
+			for(size_t i=NbCols+1;--i;)
+			{
+				// If the last element is inside the new number of columns -> vector is treated.
+				if(Cur()->RContainer<RValue,true,true>::operator[](GetNb()-1)->Id<newcols)
+					break;
+
+				Cur()->DeletePtrAt(GetNb()-1,false);
+			}
+		}
+	}
+
+	NbLines=newlines;
+	NbCols=newcols;
+}
+
+
+//-----------------------------------------------------------------------------
+RSparseMatrix& RSparseMatrix::operator=(const RSparseMatrix& matrix)
+{
+	RGenericMatrix::operator=(matrix);
+	RContainer<RSparseVector,true,true>::operator=(matrix);
+	AllLines=matrix.AllLines;
 	return(*this);
 }
 
@@ -86,6 +150,9 @@ RSparseMatrix& RSparseMatrix::operator=(const RSparseMatrix& src)
 //------------------------------------------------------------------------------
 double RSparseMatrix::operator()(size_t i,size_t j) const
 {
+	if((i>NbLines)||(j>NbCols))
+		throw std::range_error("RSparseMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+
 	RSparseVector* Line;
 
 	if(AllLines)
@@ -109,6 +176,9 @@ double RSparseMatrix::operator()(size_t i,size_t j) const
 //------------------------------------------------------------------------------
 double& RSparseMatrix::operator()(size_t i,size_t j)
 {
+	if((i>NbLines)||(j>NbCols))
+		throw std::range_error("RSparseMatrix::operator() : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+
 	RSparseVector* Line;
 
 	if(AllLines)
@@ -118,14 +188,14 @@ double& RSparseMatrix::operator()(size_t i,size_t j)
 		else
 		{
 			for(size_t add=GetNb();add<=i;add++)
-				InsertPtrAt(Line=new RSparseVector(NbCols,add),add,true);
+				InsertPtrAt(Line=new RSparseVector(InitNbCols,add),add,true);
 		}
 	}
 	else
 	{
 		Line=GetPtr(i);
 		if(!Line)
-			InsertPtr(Line=new RSparseVector(NbCols,i));
+			InsertPtr(Line=new RSparseVector(InitNbCols,i));
 	}
 	RValue* Value(Line->GetInsertPtr(j));
 	return(Value->Value);
@@ -135,6 +205,9 @@ double& RSparseMatrix::operator()(size_t i,size_t j)
 //------------------------------------------------------------------------------
 const RSparseVector* RSparseMatrix::operator[](size_t i) const
 {
+	if(i>NbLines)
+		throw std::range_error("RSparseMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
+
 	if(AllLines)
 	{
 		if(i<GetNb())
@@ -149,6 +222,9 @@ const RSparseVector* RSparseMatrix::operator[](size_t i) const
 //------------------------------------------------------------------------------
 RSparseVector* RSparseMatrix::operator[](size_t i)
 {
+	if(i>NbLines)
+		throw std::range_error("RSparseMatrix::operator[] : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
+
 	RSparseVector* Line;
 
 	if(AllLines)
@@ -158,14 +234,14 @@ RSparseVector* RSparseMatrix::operator[](size_t i)
 		else
 		{
 			for(size_t add=GetNb();add<=i;add++)
-				InsertPtrAt(Line=new RSparseVector(NbCols,add),add,true);
+				InsertPtrAt(Line=new RSparseVector(InitNbCols,add),add,true);
 		}
 	}
 	else
 	{
 		Line=GetPtr(i);
 		if(!Line)
-			InsertPtr(Line=new RSparseVector(NbCols,i));
+			InsertPtr(Line=new RSparseVector(InitNbCols,i));
 	}
 	return(Line);
 }

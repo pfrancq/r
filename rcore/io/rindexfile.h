@@ -265,6 +265,8 @@ public:
 
 	/**
 	 * Write a vector of integers associated to a given index in a given block.
+	 * @tparam I             Type of the numbers contained.
+	 * @tparam bOrder        Determine is the container to write is ordered.
 	 * @param blockid        Identifier of the block.
 	 * @param indexid        Identifier of the index.
 	 * @param vec            Vector to write.
@@ -283,6 +285,9 @@ public:
 
 	/**
 	 * Write a RContainer of associated to a given index in a given block.
+	 * @tparam C             Class of the object contained in the container.
+	 * @tparam bAlloc        The container to write is responsible of the deallocation.
+	 * @tparam bOrder        The container to write is ordered.
 	 * @param blockid        Identifier of the block.
 	 * @param indexid        Identifier of the index.
 	 * @param cont           Container to write.
@@ -306,6 +311,8 @@ public:
 
 	/**
 	 * Read a vector of integers associated to a given index in a given block.
+	 * @tparam I             Type of the numbers contained.
+	 * @tparam bOrder        Determine is the container to read is ordered.
 	 * @param blockid        Identifier of the block.
 	 * @param indexid        Identifier of the index.
 	 * @param vec            Read to write.
@@ -326,6 +333,9 @@ public:
 
 	/**
 	 * Read a RContainer of associated to a given index in a given block.
+	 * @tparam C             Class of the object contained in the container.
+	 * @tparam bAlloc        The container to read is responsible of the deallocation.
+	 * @tparam bOrder        The container to read is ordered.
 	 * @param blockid        Identifier of the block.
 	 * @param indexid        Identifier of the index.
 	 * @param cont           Container to Read.
@@ -343,7 +353,7 @@ public:
 	/**
 	 * Erase a given record from the block file.
 	 * @param blockid        Block number.
-	 * @param entry
+	 * @param indexid        Identifier of the index.
 	 */
 	void EraseRecord(size_t blockid,size_t indexid);
 

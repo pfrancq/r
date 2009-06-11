@@ -42,7 +42,7 @@ using namespace std;
 
 
 
-//-----------------------------------------------------------------------------
+//------------------------------write-----------------------------------------------
 //
 // class RXMLTag
 //
@@ -155,13 +155,13 @@ RString RXMLTag::GetTagAttrValue(const RString& tag,const RString& attr) const
 
 
 //-----------------------------------------------------------------------------
-void RXMLTag::InsertAttr(RXMLAttr* attr,bool overwritte)
+void RXMLTag::InsertAttr(RXMLAttr* attr,bool overwrite)
 {
 	// Check if the attribute exist
 	RXMLAttr* exist=GetAttr(attr->GetName());
 	if(exist)
 	{
-		if(!overwritte)
+		if(!overwrite)
 			throw RException("Attribute "+attr->GetName()+" already exists for tag "+Name);
 		if(exist!=attr)
 			Attrs.DeletePtr(exist->GetName());
@@ -173,12 +173,12 @@ void RXMLTag::InsertAttr(RXMLAttr* attr,bool overwritte)
 
 
 //-----------------------------------------------------------------------------
-void RXMLTag::InsertAttr(const RString& name,const RString& value,const RString& xmlns,bool overwritte)
+void RXMLTag::InsertAttr(const RString& name,const RString& value,const RString& xmlns,bool overwrite)
 {
 	if(Tree)
-		InsertAttr(static_cast<RXMLStruct*>(Tree)->NewAttr(name,value,xmlns),overwritte);
+		InsertAttr(static_cast<RXMLStruct*>(Tree)->NewAttr(name,value,xmlns),overwrite);
 	else
-		InsertAttr(new RXMLAttr(name,value,0),overwritte);
+		InsertAttr(new RXMLAttr(name,value,0),overwrite);
 }
 
 

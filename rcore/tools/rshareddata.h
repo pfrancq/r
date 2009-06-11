@@ -103,7 +103,7 @@ inline RSharedData& RSharedData::operator=(const RSharedData&) {return(*this);}
 //------------------------------------------------------------------------------
 /**
 * Function the increase the number of references of a RSharedData object.
-* @param D                  Type of the shared data.
+* @tparam D                 Type of the shared data.
 * @param data               Pointer to the data.
 */
 template <class D>
@@ -120,7 +120,7 @@ template <class D>
 * Function the decrease the number of references of a RSharedData object. If
 * there are no more references, the data is destroy and the pointer is set to
 * 0.
-* @param D                  Type of the shared data.
+* @tparam D                 Type of the shared data.
 * @param data               Reference to a pointer to the data.
 */
 template<class D>
@@ -138,7 +138,7 @@ template<class D>
 /**
  * The RSmartPtr represent a smart pointer of a given type which must inherits
  * from RSharedData.
- * @param C                  Class pointed.
+ * @tparam C                 Class pointed.
  * It is an implementation of Scott Meyers proposition in "MORE EFFECTIVE C++".
  */
 template<class C>

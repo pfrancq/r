@@ -112,7 +112,7 @@ void RURI::AnalyzeString(void)
 	if(GetScheme()=="file")
 	{
 		// Search if multiple '/' after file:
-		if((URI.GetLen()>7)&&(URI[5]=='/')&&(URI[6]=='/'))
+		if((URI.GetLen()>7)&&(URI()[5]=='/')&&(URI()[6]=='/'))
 		{
 			Path.Pos=7;
 			Path.Size=URI.GetLen()-7;

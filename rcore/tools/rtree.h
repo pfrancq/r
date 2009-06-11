@@ -53,9 +53,9 @@ template<class T,class N,bool bAlloc> class RNode;
 
 //------------------------------------------------------------------------------
 /**
-* @param T                   The class of the tree.
-* @param N                   The class of the elements of the tree.
-* @param bAlloc              Specify if the elements are deallocated by the
+* @tparam T                  The class of the tree.
+* @tparam N                  The class of the elements of the tree.
+* @tparam bAlloc             Specify if the elements are deallocated by the
 *                            tree.
 * This class implement a generic tree of node of a given class N. The class N
 * must derived from the RNode class.
@@ -194,7 +194,7 @@ public:
 	/**
 	 * Copy the nodes of a node into a temporary array. This array must have
 	 * the right size.
-	 * @param nodes           Temporary array.
+	 * @param tab             Temporary array.
 	 * @param node            Parent node. If null, the array contains the top
 	 *                        nodes.
 	 * @return Number of the nodes copied in the array
@@ -238,6 +238,7 @@ public:
 
 	/**
 	* Deep copy of a the tree.
+	* @tparam a              Determine if the source container is responsible for the deallocation.
 	* @param src             Source tree.
 	*/
 	template<bool a> void Copy(const RTree<T,N,a>& src);
@@ -251,7 +252,7 @@ public:
 
 	/**
 	* Get a pointer to a certain node of the tree.
-	* @param TUse            The type of the tag used for the search.
+	* @tparam TUse           The type of the tag used for the search.
 	* @param tag             The tag used.
 	* @return Return the pointer or 0 if the element is not in the tree.
 	*/

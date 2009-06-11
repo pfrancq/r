@@ -65,7 +65,14 @@ class RURI
 	 */
 	struct PartString
 	{
+		/**
+		 * Position in the string.
+		 */
 		size_t Pos;
+
+		/**
+		 * Size of the substring.
+		 */
 		size_t Size;
 
 		inline PartString(void) : Pos(0), Size(0) {}
@@ -142,6 +149,7 @@ private:
 
 	/**
 	 * Extract a given part of the URI based on a structure.
+	 * @param part           Part of the string to extract.
 	 */
 	inline RString Extract(const PartString& part) const
 	{
@@ -243,7 +251,7 @@ public:
 
 	/**
 	* Assignment operator using another URI.
-	* @param src             Source URI.
+	* @param uri             Source URI.
 	*/
 	RURI& operator=(const RURI& uri);
 };

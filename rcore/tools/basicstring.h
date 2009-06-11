@@ -50,6 +50,8 @@ namespace R{
 /**
 * This class implements a generic string. It is used to instantiate RString and
 * RCString. Its role is to centralize as much code as possible.
+* @tparam C                  Class representing a character.
+* @tparam S                  Final class representing the string.
 * @author Pascal Francq
 * @short Generic String
 */
@@ -58,11 +60,26 @@ template<class C,class S>
 {
 public:
 
+	/**
+	 * The BasicStrinf::Ref class provides a reference to a sub-string.
+	 */
 	class Ref
 	{
 	public:
+
+		/**
+		 * Position where the sub-string begins.
+		 */
 		size_t Pos;
+
+		/**
+		 * Length of the sub-string.
+		 */
 		size_t Len;
+
+		/**
+		 * Pointer to the original string.
+		 */
 		S* Str;
 	};
 
@@ -74,17 +91,44 @@ protected:
 	class CharBuffer : public RSharedData
 	{
 	public:
-		C* Text;       // Text
-		size_t Len;    // Actual length
-		size_t MaxLen; // Maximum length
-		char* Latin1;  // Latin1 version of the string.
 
+		/** Text. */
+		C* Text;
+		/** Actual length.*/
+		size_t Len;
+		/** Maximum Length.*/
+		size_t MaxLen;
+		/**Latin1 version of the string. */
+		char* Latin1;
+
+		/**
+		 * Constructor.
+		 */
 		CharBuffer(void)
 			: RSharedData(), Text(0), Len(0), MaxLen(0), Latin1(0) {}
+		/**
+		 * Constructor.
+		 * @param tab        Array corresponding to a string.
+		 * @param len        Length of the string.
+		 * @param maxlen     Length of the array.
+		 */
 		CharBuffer(C* tab,size_t len,size_t maxlen)
 			: RSharedData(), Text(tab), Len(len), MaxLen(maxlen),Latin1(0) {}
+
+		/**
+		 * Verify if the buffer can contained a given number of parameters.
+		 * @param maxlen     Maximum size of the array.
+		 */
 		void Verify(size_t maxlen);
+
+		/**
+		 * Invalid the Latin1 representation.
+		 */
 		void InvalidLatin1(void) {delete[] Latin1; Latin1=0;}
+
+		/**
+		 * Destruct the buffer.
+		 */
 		~CharBuffer(void){delete[] Text; delete[] Latin1;}
 	};
 

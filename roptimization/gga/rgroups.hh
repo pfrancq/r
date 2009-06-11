@@ -246,7 +246,7 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	R::RCursor<cObj> R::RGroups<cGroup,cObj,cGroups>::GetObjs(const RGroup<cGroup,cObj,cGroups>& grp) const
 {
-	return(R::RCursor<cObj>(ObjsAss,grp.SubObjects,grp.SubObjects+grp.NbSubObjects));
+	return(R::RCursor<cObj>(ObjsAss,grp.SubObjects,grp.SubObjects+grp.NbSubObjects-1));
 }
 
 
