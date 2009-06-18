@@ -116,7 +116,7 @@ void RSparseMatrix::VerifySize(size_t newlines,size_t newcols,bool,double)
 	if(newcols<NbCols)
 	{
 		// In each vector, the non-null elements between newcols and NbCols must be removed.
-		RCursor<RSparseVector> Cur(*this,0,NbLines);
+		RCursor<RSparseVector> Cur(*this,0,NbLines-1);
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
 			// Treat the elements in reverse order since the the columns to remove

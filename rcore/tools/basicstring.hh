@@ -613,6 +613,56 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
+	int R::BasicString<C,S>::FindAnyStr(const S& str,int pos,bool CaseSensitive) const
+{
+	C* start;
+	bool left;
+	size_t max;        // Maximal number of character to search.
+
+	// Initialize the search
+	if(pos<0)
+	{
+		// From right
+		left=false;
+
+		// Start from Length-(-pos) with maximal pos+1 character to test.
+		pos=static_cast<int>(Data->Len)+pos;
+		if(pos<=0) return(-1);
+		start=&Data->Text[pos];
+		max=pos+1;
+	}
+	else
+	{
+		// From left
+		left=true;
+
+		// Start from 0 with maximal Len-pos+1 character to test.
+		start=&Data->Text[pos];
+		max=Data->Len-pos+1;
+	}
+
+	// Search for the maximal number of character
+	for(max++;--max;)
+	{
+		if(str.Find(*start,0,CaseSensitive))
+			return(pos);
+		if(left)
+		{
+			start++;
+			pos++;
+		}
+		else
+		{
+			pos--;
+			start--;
+		}
+	}
+	return(-1);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
 	void R::BasicString<C,S>::Replace(const C search,const C rep,bool first,int pos)
 {
 	C* start;
@@ -734,7 +784,7 @@ template<class C,class S>
 	#ifdef __GNUC__
 		throw std::range_error(__PRETTY_FUNCTION__);
 	#else
-		throw std::range_error("BasicString::operator[] const : index outside string");
+		throw std::range_error("BasicString::operator[] const : index outside the string");
 	#endif
 	return(Data->Text[idx]);
 }
@@ -748,7 +798,7 @@ template<class C,class S>
 	#ifdef __GNUC__
 		throw std::range_error(__PRETTY_FUNCTION__);
 	#else
-		throw std::range_error("BasicString::operator[] : index outside string");
+		throw std::range_error("BasicString::operator[] : index outside the string");
 	#endif
 	return(Data->Text[idx]);
 }
@@ -780,36 +830,73 @@ template<class C,class S>
 	return(res);
 }
 
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	bool R::BasicString<C,S>::IsAt(const S& sub,int pos) const
+{
+	// Verify first if the length are compatible
+	size_t Pos;
+	if(pos<0)
+	{
+		Pos=abs(pos);
+		if(Pos>=Data->Len)
+			return(false);
+		Pos=Data->Len-Pos;
+	}
+	else
+		Pos=pos;
+	if(Pos+sub.Data->Len>Data->Len)
+		return(false);
+
+	const C* ptr(&Data->Text[Pos]);
+	const C* ptr2(sub.Data->Text);
+	for(size_t len(sub.Data->Len+1);--len;ptr++,ptr2++)
+		if((*ptr)!=(*ptr2))
+			return(false);
+	return(true);
+}
+
 
 //-----------------------------------------------------------------------------
-/*template<class C,class S>
-	inline R::BasicString<C,S>::Ref R::BasicString<C,S>::MidRef(size_t idx,int len) const
+template<class C,class S>
+	void R::BasicString<C,S>::Insert(const S& sub,int pos,size_t del)
 {
-	Ref res;
-	size_t Len;
+	if((!del)&&(!sub.Data->Len))
+		return;
 
-	// If the index is greater than the length -> return a null string.
-	if(Data->Len<=idx) return(res);
-
-	// Computed the number of characters to copied
-	if(len<0)
-		Len=Data->Len-idx;
+	// Verify first if the length are compatible
+	size_t Pos;
+	if(pos<0)
+	{
+		Pos=abs(pos);
+		if(Pos>=Data->Len)
+			throw std::range_error("BasicString::Insert(const S&,int,size_t) : position outside the string");
+		Pos=Data->Len-Pos;
+	}
 	else
-		Len=len;
-	if(Data->Len-idx+1<Len)
-		Len=Data->Len-idx+1;*/
+	{
+		Pos=pos;
+		if(Pos>=Data->Len)
+			throw std::range_error("BasicString::Insert(const S&,int,size_t) : position outside the string");
+	}
 
-	// Verify the the string can hold the number to copied
-/*	C* ptr=new C[Len+1];
-	memcpy(ptr,&Data->Text[idx],sizeof(C)*Len);
-	ptr[Len]=0;
-	res.Data=new B(ptr,Len,Len);*/
-/*	Ref.Pos=idx;
-	Ref.Len=Len;
-	Ref.Str=this;
-	return(res);
-}*/
+	// Compute the number of characters to delete
+	if(del>Data->Len-Pos)
+		del=Data->Len-Pos;
 
+	Copy();  // make a deep copy
+
+	// Verify the size
+	Data->Verify(Data->Len-del+sub.Data->Len);
+
+	// Move the string to leave
+	if(del<=Data->Len-Pos)
+		memmove(&Data->Text[Pos+sub.Data->Len],&Data->Text[Pos+del],sizeof(C)*(Data->Len-Pos-del+1));
+
+	// Copy the sub-string in the current one at position Pos
+	memcpy(&Data->Text[Pos],sub.Data->Text,sizeof(C)*sub.Data->Len);
+	Data->Len=Data->Len-del+sub.Data->Len;
+}
 
 
 //-----------------------------------------------------------------------------

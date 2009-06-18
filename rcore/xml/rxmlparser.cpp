@@ -74,7 +74,7 @@ RXMLParser::RXMLParser(void)
 
 
 //------------------------------------------------------------------------------
-RXMLParser::RXMLParser(const RURI& uri,const RString& encoding)
+RXMLParser::RXMLParser(const RURI& uri,const RCString& encoding)
  : RTextFile(uri,encoding), Namespaces(20), DefaultNamespace(5), AvoidSpaces(false), InvalidXMLCodes(false)
 {
 	SetRemStyle(MultiLineComment);
@@ -83,7 +83,7 @@ RXMLParser::RXMLParser(const RURI& uri,const RString& encoding)
 
 
 //------------------------------------------------------------------------------
-RXMLParser::RXMLParser(RIOFile& file,const RString& encoding)
+RXMLParser::RXMLParser(RIOFile& file,const RCString& encoding)
  : RTextFile(file,encoding), Namespaces(20), DefaultNamespace(5), AvoidSpaces(false), /*Attrs(10),*/ InvalidXMLCodes(false)
 {
 	SetRemStyle(MultiLineComment);
@@ -145,7 +145,7 @@ void RXMLParser::Open(RIO::ModeType mode)
 
 
 //------------------------------------------------------------------------------
-void RXMLParser::Open(const RURI& uri,RIO::ModeType mode,const RString& encoding)
+void RXMLParser::Open(const RURI& uri,RIO::ModeType mode,const RCString& encoding)
 {
 	RTextFile::Open(uri,mode,encoding);
 }
@@ -393,8 +393,7 @@ void RXMLParser::LoadHeader(void)
 					SkipSpaces();
 					Cont=true;
 				}
-
-				if(CurString("SYSTEM"))
+				else if(CurString("SYSTEM"))
 				{
 					SkipSpaces();
 					RChar What=GetChar();
@@ -408,9 +407,26 @@ void RXMLParser::LoadHeader(void)
 					SkipSpaces();
 					Cont=true;
 				}
+				else
+				{
+					// Perhaps a string defining directly the DTD
+					RChar What=GetNextChar();
+					bool Quotes=((What==RChar('\''))||(What==RChar('"')));
+					if(Quotes)
+					{
+						Next();  // Skip the quote
+						SetDTD(GetToken(RString(What)));
+						SkipSpaces();
+						if(GetChar()!=What)
+							throw RIOException(this,"Bad XML file");
+						SkipSpaces();
+						Cont=true;
+					}
+				}
 			}
 		}
-		Next(); // Skip >
+		if(GetChar()!='>') // Skip >
+			throw RIOException(this,"Bad XML file");
 		SkipSpaces();
 	}
 }
@@ -769,7 +785,7 @@ void RXMLParser::HeaderAttribute(const RString&,const RString& lName,const RStri
 void RXMLParser::HeaderValue(const RString& value)
 {
 	if(TreatEncoding)
-		SetEncoding(value);
+		SetEncoding(value.Latin1());
 }
 
 

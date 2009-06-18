@@ -140,7 +140,7 @@ public:
 	* @param uri            URI of the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RXMLParser(const RURI& uri,const RString& encoding="UTF-8");
+	RXMLParser(const RURI& uri,const RCString& encoding="UTF-8");
 
 	/**
 	* Construct a XML file.
@@ -148,7 +148,7 @@ public:
 	*                       as XML file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RXMLParser(RIOFile& file,const RString& encoding="UTF-8");
+	RXMLParser(RIOFile& file,const RCString& encoding="UTF-8");
 
 	/**
 	 * Avoid spaces when a XML file is created.
@@ -177,7 +177,7 @@ public:
 	 * @param mode           The open mode for the file.
 	 * @param encoding       The encoding scheme of the file.
 	 */
-	void Open(const RURI& uri,RIO::ModeType mode=RIO::Read,const RString& encoding="UTF-8");
+	void Open(const RURI& uri,RIO::ModeType mode=RIO::Read,const RCString& encoding="UTF-8");
 
 	/**
 	 * Get the current section treated.

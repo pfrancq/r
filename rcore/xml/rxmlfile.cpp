@@ -50,21 +50,23 @@ RXMLFile::RXMLFile(void)
 
 
 //------------------------------------------------------------------------------
-RXMLFile::RXMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding)
+RXMLFile::RXMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RCString& encoding)
  : RXMLParser(uri,encoding), XMLStruct(xmlstruct), NewStruct(false), CurTag(0)
 {
+	XMLStruct->SetEncoding(encoding);
 }
 
 
 //------------------------------------------------------------------------------
-RXMLFile::RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
+RXMLFile::RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RCString& encoding)
  : RXMLParser(file,encoding), XMLStruct(xmlstruct), NewStruct(false),CurTag(0)
 {
+	XMLStruct->SetEncoding(encoding);
 }
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::SetEncoding(const RString& name)
+void RXMLFile::SetEncoding(const RCString& name)
 {
 	XMLStruct->SetEncoding(name);
 	RXMLParser::SetEncoding(name);
@@ -147,7 +149,7 @@ void RXMLFile::Open(RIO::ModeType mode)
 
 
 //------------------------------------------------------------------------------
-void RXMLFile::Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode,const RString& encoding)
+void RXMLFile::Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode,const RCString& encoding)
 {
 	XMLStruct=xmlstruct;
 	RXMLParser::Open(uri,mode,encoding);
@@ -307,7 +309,7 @@ void RXMLFile::Value(const RString& value)
 		if(AttrName=="version")
 			XMLStruct->SetVersion(value);
 		if(AttrName=="encoding")
-			SetEncoding(value);
+			SetEncoding(value.Latin1());
 	}
 }
 

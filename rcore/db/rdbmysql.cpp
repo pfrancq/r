@@ -61,7 +61,7 @@ public:
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDbMySQL::RDbMySQL(const RString& db,const RString& host,const RString& user,const RString& pwd,const RString& coding)
+RDbMySQL::RDbMySQL(const RString& db,const RString& host,const RString& user,const RString& pwd,const RCString& coding)
 	: RDb(RDb::MySQL), Db(0), Coding(0)
 {
 	try
@@ -75,8 +75,8 @@ RDbMySQL::RDbMySQL(const RString& db,const RString& host,const RString& user,con
 	Db=mysql_init(NULL);
 	if((!Db)||(mysql_errno(Db)))
 		throw RDbException(mysql_error(Db));
-	if(mysql_options(Db,MYSQL_SET_CHARSET_NAME,coding.Latin1()))
-		throw RDbException("Coding '"+coding+"' is not supported for database "+db);
+	if(mysql_options(Db,MYSQL_SET_CHARSET_NAME,coding))
+		throw RDbException("Coding '"+RString(coding())+"' is not supported for database "+db);
 	if((!mysql_real_connect(Db,host,user,pwd,db,0,"",0))||(mysql_errno(Db)))
 		throw RDbException(mysql_error(Db));
 }

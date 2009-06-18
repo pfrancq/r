@@ -147,6 +147,9 @@ public:
 	/** @copydoc BasicString::FindStr(const S&,int,bool) const */
 	inline int FindStr(const RCString& str,int pos=0,bool CaseSensitive=true) const {return(BasicString<char,RCString>::FindStr(str,pos,CaseSensitive));}
 
+	/** @copydoc BasicString::FindAnyStr(const S&,int,bool) const */
+	inline int FindAnyStr(const RCString& str,int pos=0,bool CaseSensitive=true) const {return(BasicString<char,RCString>::FindAnyStr(str,pos,CaseSensitive));}
+
 	/** @copydoc BasicString::Replace(const C,const C,bool,int) */
 	inline void Replace(const char search,const char rep,bool first=false,int pos=0) {BasicString<char,RCString>::Replace(search,rep,first,pos);}
 
@@ -154,6 +157,10 @@ public:
 	inline void ReplaceStr(const RCString& search,const RCString& rep,bool first=false,int pos=0) {BasicString<char,RCString>::ReplaceStr(search,rep,first,pos);}
 
 	inline RCString Mid(size_t idx,size_t len=(size_t)-1) const {return(BasicString<char,RCString>::Mid(idx,len));}
+
+	inline bool IsAt(const RCString& sub,int pos) const  {return(BasicString<char,RCString>::IsAt(sub,pos));}
+
+	void Insert(const RCString& sub,int pos,size_t del=0)  {BasicString<char,RCString>::Insert(sub,pos,del);}
 
 	/** @copydoc BasicString::Split(RContainer<S,true,false>&,const C) const */
 	inline void Split(RContainer<RCString,true,false>& elements,const char car) const {BasicString<char,RCString>::Split(elements,car);}

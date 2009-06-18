@@ -163,12 +163,10 @@ private:
 	static RChar* Latin1ToUnicode(const char* src,size_t& len,size_t& maxlen);
 
 	/**
-	* Transform an array of RChar into C string. The resulting C string should
-	* be destroyed by the caller of the function.
-	* @param src             Source array of RChar.
-	* @param len             Number of characters in the array.
+	* Transform the RString into C string. The resulting C string should be
+	* destroyed by the caller of the function.
 	*/
-	static char* UnicodeToLatin1(const RChar* src,size_t len);
+	char* UnicodeToLatin1(void) const;
 
 	/**
 	 * Generate an exception related to this string. Its contains:
@@ -204,6 +202,9 @@ public:
 	/** @copydoc BasicString::FindStr(const S&,int,bool) const */
 	inline int FindStr(const RString& str,int pos=0,bool CaseSensitive=true) const {return(BasicString<RChar,RString>::FindStr(str,pos,CaseSensitive));}
 
+	/** @copydoc BasicString::FindAnyStr(const S&,int,bool) const */
+	inline int FindAnyStr(const RString& str,int pos=0,bool CaseSensitive=true) const {return(BasicString<RChar,RString>::FindAnyStr(str,pos,CaseSensitive));}
+
 	/** @copydoc BasicString::Replace(const C,const C,bool,int) */
 	inline void Replace(const RChar search,const RChar rep,bool first=false,int pos=0) {BasicString<RChar,RString>::Replace(search,rep,first,pos);}
 
@@ -211,6 +212,10 @@ public:
 	inline void ReplaceStr(const RString& search,const RString& rep,bool first=false,int pos=0) {BasicString<RChar,RString>::ReplaceStr(search,rep,first,pos);}
 
 	inline RString Mid(size_t idx,size_t len=(size_t)-1) const {return(BasicString<RChar,RString>::Mid(idx,len));}
+
+	inline bool IsAt(const RString& sub,int pos) const  {return(BasicString<RChar,RString>::IsAt(sub,pos));}
+
+	inline void Insert(const RString& sub,int pos,size_t del=0)  {BasicString<RChar,RString>::Insert(sub,pos,del);}
 
 	/** @copydoc BasicString::Split(RContainer<S,true,false>&,const C) const */
 	inline void Split(RContainer<RString,true,false>& elements,const RChar car) const {BasicString<RChar,RString>::Split(elements,car);}

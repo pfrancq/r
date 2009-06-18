@@ -38,6 +38,7 @@
 #include <rtree.h>
 #include <rxmltag.h>
 #include <ruri.h>
+#include <rcstring.h>
 
 
 //------------------------------------------------------------------------------
@@ -82,7 +83,7 @@ class RXMLStruct : public RTree<RXMLStruct,RXMLTag,true>
 	/**
 	* Encoding of the corresponding XML file.
 	*/
-	RString Encoding;
+	RCString Encoding;
 
 	/**
 	 * URI of the DTD.
@@ -187,15 +188,15 @@ public:
 
 	/**
 	* Set the encoding corresponding to the XML structure.
-	* @param encoding        Enconding to assign.
+	* @param encoding        Encoding to assign.
 	*/
-	void SetEncoding(const RString& encoding);
+	void SetEncoding(const RCString& encoding);
 
 	/**
 	* Get the encoding corresponding to the XML structure.
 	* @return RString.
 	*/
-	RString GetEncoding(void) const;
+	RCString GetEncoding(void) const;
 
 	/**
 	 * Set the DTD of the XML structure.

@@ -655,7 +655,7 @@ RHTMLFile::RHTMLFile(void)
 
 
 //------------------------------------------------------------------------------
-RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding)
+RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RCString& encoding)
  : RXMLFile(uri,xmlstruct,encoding), FoundClosingHTML(false)
 {
 	SetInvalidXMLCodes(true);
@@ -665,7 +665,7 @@ RHTMLFile::RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encodi
 
 
 //------------------------------------------------------------------------------
-RHTMLFile::RHTMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding)
+RHTMLFile::RHTMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RCString& encoding)
  : RXMLFile(file,xmlstruct,encoding), FoundClosingHTML(false)
 {
 	SetInvalidXMLCodes(true);
@@ -683,7 +683,7 @@ void RHTMLFile::Open(RIO::ModeType mode)
 
 
 //------------------------------------------------------------------------------
-void RHTMLFile::Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode,const RString& encoding)
+void RHTMLFile::Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode,const RCString& encoding)
 {
 	FoundClosingHTML=false;
 	RXMLFile::Open(uri,xmlstruct,mode,encoding);

@@ -31,6 +31,8 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstring.h>
+#include <rtextencoding.h>
+#include <langinfo.h>
 using namespace std;
 using namespace R;
 
@@ -41,8 +43,8 @@ using namespace R;
 // Static data
 //
 //-----------------------------------------------------------------------------
-//RString::CharBuffer* RString::DataNull=0;
 const RString RString::Null;
+static RTextEncoding* StdCodec(0);
 
 
 
@@ -166,7 +168,7 @@ const char* RString::Latin1(void) const
 		return("");
 	if(!static_cast<CharBuffer*>(Data)->Latin1)
 	{
-		static_cast<CharBuffer*>(Data)->Latin1=UnicodeToLatin1(Data->Text,Data->Len);
+		static_cast<CharBuffer*>(Data)->Latin1=UnicodeToLatin1();
 	}
 	return(static_cast<CharBuffer*>(Data)->Latin1);
 }
@@ -296,40 +298,31 @@ RChar* RString::Latin1ToUnicode(const char* src,size_t& len,size_t& maxlen)
 		return(0);
 	}
 
-	RChar* res=0;
-	size_t i;
-	RChar* ptr;
-
+	if(!StdCodec)
+		StdCodec=RTextEncoding::GetTextEncoding(nl_langinfo(CODESET));
 	if(!maxlen)
 		maxlen=strlen(src);
-	res=ptr=new RChar[maxlen+1];
-	i = maxlen+1;
-	len=0;
-	while((--i)&&(*src))
-	{
-	   	(*(ptr++)) = (*(src++));
-	   	len++;
-	}
-	(*ptr)=0;
+	RString Str(StdCodec->ToUnicode(src,maxlen));
+	size_t lenutf16(Str.Data->Len+1);
+	RChar* res=new RChar[lenutf16];
+	memcpy(res,Str.Data->Text,lenutf16*sizeof(RChar));
+	len=maxlen=Str.Data->Len;
 	return(res);
 }
 
 
 //-----------------------------------------------------------------------------
-char* RString::UnicodeToLatin1(const RChar* src,size_t len)
+char* RString::UnicodeToLatin1(void) const
 {
-	if(!src)
+	if(!Data)
 		return(0);
 
-	char* res=new char[len+1];
-	char* ptr=res;
-
-	while(len--)
-	{
-		(*(ptr++))=(src->Unicode() > 0xff) ? '?' : (char)src->Unicode();
-		src++;
-	}
-	(*ptr)=0;
+	if(!StdCodec)
+		StdCodec=RTextEncoding::GetTextEncoding(nl_langinfo(CODESET));
+	RCString Str(StdCodec->FromUnicode(*this));
+	size_t lenlatin1(Str.GetLen()+1);
+	char* res=new char[lenlatin1];
+	memcpy(res,Str(),lenlatin1*sizeof(char));
 	return(res);
 }
 

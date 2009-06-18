@@ -52,13 +52,13 @@ RContainer<RTextEncoding,true,true> Encodings(20,10);
 // All encoding names and aliases
 struct EncodingName // Structure representing an official encoding
 {
-	RString Name;
+	RCString Name;
 	size_t MIBenum;
 };
 struct EncodingAlias // Structure representing an alias
 {
-	RString Name;
-	RString Alias;
+	RCString Name;
+	RCString Alias;
 };
 #include "rtextencoding_data.cpp"   // Include all possibilities
 
@@ -71,7 +71,7 @@ struct EncodingAlias // Structure representing an alias
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RString GetOfficialName(const RString& alias)
+RCString GetOfficialName(const RCString& alias)
 {
 	size_t NbMin,NbMax,i=0;
 	int Comp=0;
@@ -107,90 +107,19 @@ RString GetOfficialName(const RString& alias)
 
 //------------------------------------------------------------------------------
 //
-// class RTextUTF16Encoding
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-class RTextUTF16Encoding : public RTextEncoding
-{
-public:
-	RTextUTF16Encoding(void)
-		: RTextEncoding("utf-16")
-	{}
-
-	RString ToUnicode(const char* text,size_t len) const
-	{
-		const char* ptr=text;
-
-		RString res;
-		if((text[0]==char(0xfe))&&(text[1]==char(0xff)))
-		{
-			ptr+=2;
-			len-=2;
-		}
-		else if((text[0]==char(0xff))&&(text[1]==char(0xfe)))
-		{
-			ptr+=2;
-			len-=2;
-		}
-		res.Copy((RChar*)(text),len/2);
-		return(res);
-	}
-
-	RCString FromUnicode(const RString& text) const
-	{
-		const RChar* ptr=text.UTF16();
-		RCString res;
-		res.Copy((char*)(ptr),text.GetLen()*2);
-		return(res);
-	}
-};
-
-
-
-//------------------------------------------------------------------------------
-//
-// class RTextLatin1Encoding
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-class RTextLatin1Encoding : public RTextEncoding
-{
-public:
-	RTextLatin1Encoding(void)
-		: RTextEncoding("latin1")
-		{}
-
-	RString ToUnicode(const char* text,size_t) const
-	{
-		return(RString(text));
-	}
-
-	RCString FromUnicode(const RString& text) const
-	{
-		return(RCString(text.Latin1()));
-	}
-};
-
-
-
-//------------------------------------------------------------------------------
-//
 // class RTextEncoding
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RTextEncoding::RTextEncoding(const RString& name)
+RTextEncoding::RTextEncoding(const RCString& name)
 	: Name(name.ToLower())
 {
 	ToUTF16=iconv_open("utf-16",Name);
-	if(ToUTF16==(iconv_t)-1)
+	if((ToUTF16==(iconv_t)-1)&&(errno==EINVAL))
 		throw EncodingNotSupported(Name+" encoding not supported");
 	FromUTF16=iconv_open(Name,"utf-16");
-	if(FromUTF16==(iconv_t)-1)
+	if((FromUTF16==(iconv_t)-1)&&(errno==EINVAL))
 		throw EncodingNotSupported(Name+" encoding not supported");
 
 	// Test the order
@@ -237,7 +166,7 @@ int RTextEncoding::Compare(const RTextEncoding& enc) const
 
 
 //------------------------------------------------------------------------------
-int RTextEncoding::Compare(const RString& name) const
+int RTextEncoding::Compare(const RCString& name) const
 {
 	return(Name.Compare(name));
 }
@@ -286,9 +215,6 @@ RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 			ToFill=false;
 		s2=BufSize-s2;
 		(*((UChar*)(ptr2)))=0; // Terminate by a null string
-		#ifndef WIN32
-			#warning Does iconv correctly handle encoding with different bytes order?
-		#endif
 		out+=(RChar*)(Tab);
 	}
 	return(out);
@@ -402,21 +328,10 @@ RCString RTextEncoding::FromUnicode(const RString& text) const
 
 
 //------------------------------------------------------------------------------
-RTextEncoding* RTextEncoding::GetTextEncoding(const RString& name)
+RTextEncoding* RTextEncoding::GetTextEncoding(const RCString& name)
 {
 	RTextEncoding* ptr;
-	RString search(name.ToLower());
-
-	// Insert UTF16 and latin1 if necessary
-	if(Encodings.GetNb()==0)
-	{
-		ptr=new RTextUTF16Encoding();
-		Encodings.InsertPtr(ptr);
-		ptr->Init();
-		ptr=new RTextLatin1Encoding();
-		Encodings.InsertPtr(ptr);
-		ptr->Init();
-	}
+	RCString search(name.ToLower());
 
 	// Find the official name
 	search=GetOfficialName(search);
@@ -424,7 +339,7 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RString& name)
 		throw EncodingNotSupported("Encoding "+name+" is not supported");
 
 	// Search it
-	ptr=Encodings.GetPtr<const RString>(search);
+	ptr=Encodings.GetPtr(search);
 	if(ptr)
 		return(ptr);
 	ptr=new RTextEncoding(search);

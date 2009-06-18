@@ -127,7 +127,7 @@ void RMatrix::VerifySize(size_t newlines,size_t newcols,bool fill,double val)
 	if(newcols>NbCols)
 	{
 		// Each vector must be expanded
-		RCursor<RMatrixLine> Cur(*this,0,NbLines);
+		RCursor<RMatrixLine> Cur(*this,0,NbLines-1);
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
 			if(fill)
@@ -142,7 +142,7 @@ void RMatrix::VerifySize(size_t newlines,size_t newcols,bool fill,double val)
 	else if(newcols<NbCols)
 	{
 		// Each vector must be resized
-		RCursor<RMatrixLine> Cur(*this,0,NbLines);
+		RCursor<RMatrixLine> Cur(*this,0,NbLines-1);
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
 			for(size_t i=NbCols-newcols+1;--i;)

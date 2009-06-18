@@ -103,7 +103,7 @@ public:
 	* @param xmlstruct      The XML tree associated with the file
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RXMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding="UTF-8");
+	RXMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RCString& encoding="UTF-8");
 
 	/**
 	* Construct a XML file.
@@ -112,13 +112,13 @@ public:
 	* @param xmlstruct      The XML tree associated with the file
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding="UTF-8");
+	RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RCString& encoding="UTF-8");
 
 	/**
 	* Set the encoding of the XML document.
 	* @param name           Name of the encoding.
 	*/
-	void SetEncoding(const RString& name);
+	void SetEncoding(const RCString& name);
 
 	/**
 	* Open the file.
@@ -133,7 +133,7 @@ public:
 	 * @param mode           The open mode for the file.
 	 * @param encoding       The encoding scheme of the file.
 	 */
-	void Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode=RIO::Read,const RString& encoding="UTF-8");
+	void Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode=RIO::Read,const RCString& encoding="UTF-8");
 
 	/**
 	 * Close the file. If the XML structure was created by the file, it is

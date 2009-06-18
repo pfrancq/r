@@ -80,7 +80,7 @@ public:
 	 * @param pwd            Password.
 	 * @param coding         Name of the coding used.
 	 */
-	RDbMySQL(const RString& db,const RString& host,const RString& user,const RString& pwd,const RString& coding="latin1");
+	RDbMySQL(const RString& db,const RString& host,const RString& user,const RString& pwd,const RCString& coding="latin1");
 
 	/**
 	 * Create an empty MySQL database.

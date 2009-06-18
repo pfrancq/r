@@ -59,7 +59,7 @@ RTextFile::RTextFile(void)
 }
 
 //------------------------------------------------------------------------------
-RTextFile::RTextFile(const RURI& uri,const RString& encoding)
+RTextFile::RTextFile(const RURI& uri,const RCString& encoding)
   : RIOFile(uri), NewLine(true),
     Rem("%"), BeginRem("/*"), EndRem("*/"),
     CommentType(NoComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
@@ -69,7 +69,7 @@ RTextFile::RTextFile(const RURI& uri,const RString& encoding)
 
 
 //------------------------------------------------------------------------------
-RTextFile::RTextFile(RIOFile& file,const RString& encoding)
+RTextFile::RTextFile(RIOFile& file,const RCString& encoding)
 	: RIOFile(file), NewLine(true),
 	Rem("%"), BeginRem("/*"), EndRem("*/"),
 	CommentType(NoComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
@@ -91,7 +91,7 @@ void RTextFile::Open(RIO::ModeType mode)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::Open(const RURI& uri,RIO::ModeType mode,const RString& encoding)
+void RTextFile::Open(const RURI& uri,RIO::ModeType mode,const RCString& encoding)
 {
 	SetEncoding(encoding);
 	RIOFile::Open(uri,mode);
@@ -286,14 +286,6 @@ RString RTextFile::GetUntilEnd(void)
 	}
 	return(res);
 }
-
-
-//------------------------------------------------------------------------------
-/*inline void RTextFile::SkipEol(void)
-{
-	if(((*NextRead)==10)||((*NextRead)==13))
-		Next();
-}*/
 
 
 //------------------------------------------------------------------------------
@@ -498,7 +490,7 @@ size_t RTextFile::SkipCountSpaces(RChar car)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::SetEncoding(const RString& name)
+void RTextFile::SetEncoding(const RCString& name)
 {
 	try
 	{
@@ -512,7 +504,7 @@ void RTextFile::SetEncoding(const RString& name)
 
 
 //------------------------------------------------------------------------------
-RString RTextFile::GetEncoding(void) const
+RCString RTextFile::GetEncoding(void) const
 {
 	if(!Codec)
 		return("utf-16");

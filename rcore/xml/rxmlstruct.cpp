@@ -138,14 +138,14 @@ RString RXMLStruct::GetVersion(void) const
 
 
 //------------------------------------------------------------------------------
-void RXMLStruct::SetEncoding(const RString& encoding)
+void RXMLStruct::SetEncoding(const RCString& encoding)
 {
 	Encoding=encoding;
 }
 
 
 //------------------------------------------------------------------------------
-RString RXMLStruct::GetEncoding(void) const
+RCString RXMLStruct::GetEncoding(void) const
 {
 	return(Encoding);
 }

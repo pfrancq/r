@@ -76,7 +76,7 @@ public:
 	* @param xmlstruct      The XML tree associated with the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RString& encoding="Latin1");
+	RHTMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RCString& encoding="Latin1");
 
 	/**
 	* Construct a HTML file to read.
@@ -85,7 +85,7 @@ public:
 	* @param xmlstruct      The XML tree associated with the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RHTMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RString& encoding="Latin1");
+	RHTMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RCString& encoding="Latin1");
 
 	/**
 	 * Open the file
@@ -100,7 +100,7 @@ public:
 	 * @param mode           The open mode for the file.
 	 * @param encoding       The encoding scheme of the file.
 	 */
-	void Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode=RIO::Read,const RString& encoding="UTF-8");
+	void Open(const RURI& uri,RXMLStruct* xmlstruct,RIO::ModeType mode=RIO::Read,const RCString& encoding="UTF-8");
 
 	/**
 	* Set the doctype of the XML document. The doctype is transform in lowercase

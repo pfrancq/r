@@ -43,15 +43,15 @@ using namespace R;
 //------------------------------------------------------------------------------
 QString R::ToQString(const RString& str)
 {
-
-	const RChar* ptr;
+/*	const RChar* ptr;
 	size_t i;
 	uint len(static_cast<uint>(str.GetLen()));
 	QString ret;
 
 	for(i=0,ptr=str();i<len;ptr++,i++)
 		ret+=ptr->Unicode();
-	return(ret);
+	return(ret);*/
+	return(QString::fromUtf8(str));
 }
 
 

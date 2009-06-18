@@ -36,6 +36,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <riofile.h>
+#include <rcstring.h>
 
 
 //------------------------------------------------------------------------------
@@ -257,7 +258,7 @@ public:
 	* @param uri            URI of the file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RTextFile(const RURI& uri,const RString& encoding="Latin1");
+	RTextFile(const RURI& uri,const RCString& encoding="Latin1");
 
 	/**
 	* Construct a text file.
@@ -265,7 +266,7 @@ public:
 	*                       as text file.
 	* @param encoding       The encoding scheme of the file.
 	*/
-	RTextFile(RIOFile& file,const RString& encoding="Latin1");
+	RTextFile(RIOFile& file,const RCString& encoding="Latin1");
 
 	/**
 	* Open the file
@@ -279,7 +280,7 @@ public:
 	 * @param mode           The open mode for the file.
 	 * @param encoding       The encoding scheme of the file.
 	 */
-	void Open(const RURI& uri,RIO::ModeType mode=RIO::Read,const RString& encoding="Latin1");
+	void Open(const RURI& uri,RIO::ModeType mode=RIO::Read,const RCString& encoding="Latin1");
 
 	/**
 	* Close the file.
@@ -395,13 +396,13 @@ public:
 	* Set the encoding of the file.
 	* @param name           Name of the encoding.
 	*/
-	virtual void SetEncoding(const RString& name);
+	virtual void SetEncoding(const RCString& name);
 
 	/**
 	* Get the encoding of the file.
 	* @return RString.
 	*/
-	RString GetEncoding(void) const;
+	RCString GetEncoding(void) const;
 
 	/**
 	* Set the style of comments.

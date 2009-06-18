@@ -60,9 +60,24 @@ class RCSVFile : private RTextFile
 	RChar Sep;
 
 	/**
+	 * Escape character
+	 */
+	RChar Escape;
+
+	/**
 	 * Current values.
 	 */
 	RContainer<RString,true,false> Values;
+
+	/**
+	 * Size of the temporary array (Initially of size 5000).
+	 */
+	size_t SizeTmpChar;
+
+	/**
+	 * Temporary character to store the fields.
+	 */
+	RChar* TmpChar;
 
 public:
 
@@ -73,22 +88,22 @@ public:
 	 * @param encoding       The encoding scheme of the file.
 	 * @return
 	 */
-	RCSVFile(const RURI& uri,RChar sep=',',const RString& encoding="Latin1");
+	RCSVFile(const RURI& uri,RChar sep=',',const RCString& encoding="Latin1");
 
 	/**
-	 * Open the file and read the first line.
+	 * Open the file.
 	 * @param mode           The open mode for the file.
 	 */
 	virtual void Open(RIO::ModeType mode=RIO::Read);
 
 	/**
-	 * Open the file and read the first line.
+	 * Open the file.
 	 * @param uri            URI of the file.
 	 * @param sep            Separator (comma by default).
 	 * @param mode           The open mode for the file.
 	 * @param encoding       The encoding scheme of the file.
 	 */
-	void Open(const RURI& uri,RChar sep,RIO::ModeType mode=RIO::Read,const RString& encoding="Latin1");
+	void Open(const RURI& uri,RChar sep,RIO::ModeType mode=RIO::Read,const RCString& encoding="Latin1");
 
 	/**
 	 * @return true if the end of the file is reached.
@@ -112,6 +127,11 @@ public:
 	 * @param idx            Index of the value.
 	 */
 	size_t GetSizeT(size_t idx) const;
+
+	/**
+	 * Destruct the file.
+	 */
+	virtual ~RCSVFile(void);
 };
 
 

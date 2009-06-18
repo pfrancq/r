@@ -107,7 +107,7 @@ private:
 	/**
 	* The name of the encoding (always in upper case).
 	*/
-	RString Name;
+	RCString Name;
 
 	/**
 	* Descriptor used to make the conversion to Unicode UTF-16.
@@ -130,7 +130,7 @@ public:
 	* Construct a particular encoding.
 	* @param name           Name of the encoding.
 	*/
-	RTextEncoding(const RString& name);
+	RTextEncoding(const RCString& name);
 
 	/**
 	* Initialize the text encoding.
@@ -141,7 +141,7 @@ public:
 	* Return the name of the file.
 	* @returns a string containing the name.
 	*/
-	const RString& GetName(void) const {return(Name);}
+	const RCString& GetName(void) const {return(Name);}
 
 	/**
 	* Lexically compares two strings and returns an integer less than, equal
@@ -159,7 +159,7 @@ public:
 	* @param name           Name of encoding.
 	* @see R::RContainer.
 	*/
-	int Compare(const RString& name) const;
+	int Compare(const RCString& name) const;
 
 	/**
 	* Transform a string of the given encoding to a string in Unicode.
@@ -195,7 +195,7 @@ public:
 	* @param name           Name of encoding.
 	* @return Pointer to a RTextEncoding.
 	*/
-	static RTextEncoding* GetTextEncoding(const RString& name);
+	static RTextEncoding* GetTextEncoding(const RCString& name);
 
 	/**
 	* Destruct the encoding.

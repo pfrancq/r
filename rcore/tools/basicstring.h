@@ -313,6 +313,17 @@ public:
 	int FindStr(const S& str,int pos=0,bool CaseSensitive=true) const;
 
 	/**
+	* Find the position of a character of a given set in the string.
+	* @param str             String to find.
+	* @param pos             Position to start the search. Negative values
+	*                        start the search from the end.
+	* @param CaseSensitive   Is the search case sensitive.
+	* @return The position of the first occurrence or -1 if the character was not
+	*         found.
+	*/
+	int FindAnyStr(const S& str,int pos=0,bool CaseSensitive=true) const;
+
+	/**
 	 * Replace a given character in the string.
 	 * @param search         Character to search.
 	 * @param rep            Character that will put in.
@@ -353,6 +364,26 @@ public:
 	* @returns A string containing the substring.
 	*/
 	S Mid(size_t idx,size_t len=(size_t)-1) const;
+
+	/**
+	 * Verify if a given sub-string is at a given position.
+	 * @param sub            Sub-string.
+	 * @param pos            Position. If negative, the sub-string is searched
+	 *                       at a given position of the end.
+	 * @return true if the string at a given position.
+	 */
+	bool IsAt(const S& sub,int pos) const;
+
+	/**
+	 * Insert a sub-string at a given position of the string.
+	 * @param sub            Sub-string to insert.
+	 * @param pos            Position. If negative, the sub-string is searched
+	 *                       at a given position of the end.
+	 * @param del            Number of characters that will be replaced by the
+	 *                       sub-string. If del=(size_t)-1, all the characters
+	 *                       after pos are deleted.
+	 */
+	void Insert(const S& sub,int pos,size_t del=0);
 
 	/**
 	* Split the string to find all the elements separated by a given character.
