@@ -366,27 +366,33 @@ void RInterpreter::TreatInst(const RString& inst,size_t depth,RChar param)
 
 			// The variable takes a list of numbers given by a range and a step
 			RString Next(GetWord());
-			long start=Next.ToLong(ok);
+			double start=Next.ToDouble(ok);
 			if(!ok)
 				throw RPrgException(this,"'"+Next+"' is not valid parameter of 'from'");
 			Next=GetWord();
 			if(Next!="to")
 				throw RPrgException(this,"'to' is excepted and not '"+Next+"'");
 			Next=GetWord();
-			long end=Next.ToLong(ok);
+			double end=Next.ToDouble(ok);
 			if(!ok)
 				throw RPrgException(this,"'"+Next+"' is not valid parameter of 'to'");
 			Next=GetWord();
 			if(Next!="step")
 				throw RPrgException(this,"'step' is excepted and not '"+Next+"'");
 			Next=GetWord();
-			long step=Next.ToLong(ok);
+			double step=Next.ToDouble(ok);
 			if(!ok)
 				throw RPrgException(this,"'"+Next+"' is not valid parameter of 'step'");
-			for(long i=start;i<=end;i+=step)
+			if(step==0.0)
+				throw RPrgException(this,"'step' cannot be null");
+			double last;
+			for(double i=start;i<=end;i+=step)
 			{
+				last=i;
 				Parameters.InsertPtr(new RPrgVarLiteral(RString::Number(i)));
 			}
+			if(last<end)
+				Parameters.InsertPtr(new RPrgVarLiteral(RString::Number(end)));
 		}
 		else
 			throw RPrgException(this,"'"+Cmd+"' is not valid for a 'for' instruction");
@@ -467,31 +473,39 @@ void RInterpreter::AnalyseParams(void)
 		{
 			RString Var(What+GetToken("),"));
 			bool ok;
-			Var.ToULong(ok);
+			Var.ToDouble(ok);
 			if(ok)
 			{
 				Parameters.InsertPtr(new RPrgVarLiteral(Var));
 			}
 			else
 			{
-				Var.ToLong(ok);
+				Var.ToULong(ok);
 				if(ok)
 				{
 					Parameters.InsertPtr(new RPrgVarLiteral(Var));
 				}
 				else
 				{
-					bool b=Var.ToBool(ok,true);
+					Var.ToLong(ok);
 					if(ok)
 					{
-						if(b)
-							Parameters.InsertPtr(new RPrgVarLiteral("1"));
-						else
-							Parameters.InsertPtr(new RPrgVarLiteral("0"));
+						Parameters.InsertPtr(new RPrgVarLiteral(Var));
 					}
 					else
 					{
-						Parameters.InsertPtr(new RPrgVarRef(Var));
+						bool b=Var.ToBool(ok,true);
+						if(ok)
+						{
+							if(b)
+								Parameters.InsertPtr(new RPrgVarLiteral("1"));
+							else
+								Parameters.InsertPtr(new RPrgVarLiteral("0"));
+						}
+						else
+						{
+							Parameters.InsertPtr(new RPrgVarRef(Var));
+						}
 					}
 				}
 			}
