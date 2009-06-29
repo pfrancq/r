@@ -70,9 +70,8 @@ public:
 //------------------------------------------------------------------------------
 RBlockFile::RBlockFile(const RURI& uri,size_t blocksize,size_t nbcaches)
   : RIOFile(uri), Type(WriteBack), BlockSize(blocksize*1024), Cache(nbcaches),
-    Blocks(0), Current(0), NbBlocks(0)
+    Current(0), NbBlocks(0)
 {
-	Blocks=new Block*[nbcaches];
 }
 
 
@@ -134,7 +133,7 @@ void RBlockFile::Flush(void)
 
 
 //------------------------------------------------------------------------------
-int RBlockFile::sortOrder(const void* a,const void* b)
+int RBlockFile::sortOrderAccess(const void* a,const void* b)
 {
 	size_t af((*((RBlockFile::Block**)(a)))->NbAccess);
 	size_t bf((*((RBlockFile::Block**)(b)))->NbAccess);
@@ -172,9 +171,8 @@ RBlockFile::Block* RBlockFile::LoadBlock(size_t id)
 	{
 		// Cache is full -> The block must replace another one
 		// Select the less used block in cache
-		size_t nb(Cache.GetTab(Blocks));
-		qsort(static_cast<void*>(Blocks),nb,sizeof(void*),sortOrder);
-		ptr=Blocks[0];     // First element has the lowest number of accesses
+		Cache.ReOrder(sortOrderAccess);
+		ptr=Cache[0];
 		if(ptr->Dirty)
 		{
 			// If necessary save the old block
@@ -193,6 +191,9 @@ RBlockFile::Block* RBlockFile::LoadBlock(size_t id)
 		else
 			NbBlocks=id;
 		ptr->NbAccess=0;
+
+		// Since a identifier was replaced, Cache must be re-ordered by identifiers
+		Cache.ReOrder();
 	}
 	return(ptr);
 }
@@ -306,5 +307,4 @@ void RBlockFile::SeekRel(long pos)
 RBlockFile::~RBlockFile(void)
 {
 	Close();
-	delete[] Blocks;
 }

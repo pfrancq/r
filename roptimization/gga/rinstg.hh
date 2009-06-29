@@ -73,6 +73,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		: R::RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
 		  Heuristic(h), EmptyModifiedGroups(true), Objs(objs), DoLocalOptimisation(true)
 {
+	// Verify that the identifiers are continuous starting from 0
+	size_t id(0);
+	for(Objs.Start();!Objs.End();Objs.Next(),id++)
+		if(Objs()->GetId()!=id)
+			throw RGAException("RInstG::RInstG(size_t,R::RCursor<cObj>,const RString&,const R::RString&,R::RDebug*) : Identifiers must be continuous and starting from zero");
+
 	if(Objs.GetNb()<11)
 		MaxGroups=10;
 	else

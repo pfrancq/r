@@ -45,8 +45,9 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RIndexFile class represents a generic file for managing an index (such as
-* a inverted file used by search engines).
+* The RIndexFile class represents a generic file for managing an index of
+* records (such as a inverted file used by search engines). The size of the
+* records cannot exceed the size of a single block.
 *
 * The approach is based on Zobel, Moddat, and Sack-Davis (1993):
 * - Each index is composed from several blocks.
@@ -259,7 +260,7 @@ public:
 	* the file. The Seek(size_t&,size_t,size_t) must be called before to ensure
 	* the internal integrity of the file.
 	* @param buffer         Buffer.
-	* @param nb             Number of bytes to read.
+	* @param nb             Number of bytes to write.
 	*/
 	void Write(const char* buffer,size_t nb);
 

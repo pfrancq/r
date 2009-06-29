@@ -49,6 +49,9 @@ namespace R{
 * class supposes that the first block has an identifier of 1 (0 points to a
 * null block).
 *
+* Each block have a fixed size and defines an upper limit of the amount of data
+* continuously stored.
+*
 * @code
 *	char Buffer[80];
 *
@@ -108,12 +111,6 @@ protected:
 	 * Cache managed.
 	 */
 	RContainer<Block,true,true> Cache;
-
-	/**
-	 * An array of pointers of blocks needed to choose the block to remove from
-	 * memory.
-	 */
-	Block** Blocks;
 
 	/**
 	 * Current block.
@@ -200,7 +197,7 @@ private:
 	 * @param a              Pointer to a block.
 	 * @param b              Pointer to the second block.
 	 */
-	static int sortOrder(const void* a,const void* b);
+	static int sortOrderAccess(const void* a,const void* b);
 
 	/**
 	 * Load a given block in to memory.

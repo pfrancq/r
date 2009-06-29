@@ -76,11 +76,20 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	RInstH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::RInstH(size_t popsize,RCursor<cObj> objs,const RString& h,const RString& name,RDebug* debug)
 		: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug), Heuristic(h), Objs(objs)
 {
+
 	ControlAttr=MaxAttr=MaxNodes=0;
-	for(Objs.Start();!Objs.End();Objs.Next())
+
+	size_t id(0);
+	for(Objs.Start();!Objs.End();Objs.Next(),id++)
 	{
+		// Verify that the identifiers are continuous starting from 0
+		if(Objs()->GetId()!=id)
+			throw RGAException("RInstH::RInstH(size_t,R::RCursor<cObj>,const RString&,const R::RString&,R::RDebug*) : Identifiers must be continuous and starting from zero");
+
 		size_t tmp=Objs()->Attr.GetNbAttr();
-		size_t tmp2=Objs()->Attr[tmp-1];
+		if(!tmp)
+			throw RGAException("RInstH::RInstH(size_t,RCursor<cObj>,const RString&,const RString&,RDebug*) : Object "+RString::Number(Objs()->GetId())+" has no attributes");
+		size_t tmp2=static_cast<const RAttrList&>(Objs()->Attr)[tmp-1];
 		if(tmp>MaxAttr) MaxAttr=tmp;
 		if(tmp2>ControlAttr) ControlAttr=tmp2;
 		for(tmp++;--tmp;)

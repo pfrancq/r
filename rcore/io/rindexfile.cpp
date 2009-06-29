@@ -340,6 +340,9 @@ void RIndexFile::Seek(size_t blockid,size_t indexid)
 //------------------------------------------------------------------------------
 void RIndexFile::Seek(size_t& blockid,size_t indexid,size_t size)
 {
+	if(size>BlockSize)
+		throw RIOException(this,"RIndexFile::Seek(size_t,size_t,size_t) : The size of a record ("+RString::Number(size)+") exceeds the block size ("+RString::Number(BlockSize)+")");
+
 	size_t Entry,Pos;
 
 	if(blockid)
@@ -429,7 +432,9 @@ void RIndexFile::Seek(size_t& blockid,size_t indexid,size_t size)
 	bool Find;
 	size_t NewEntry(GetIndex(blockid,indexid,Find));
 	if(Find)
-		throw RIOException(this,"RIndexFile::Seek(size_t&,size_t,size_t) : Big internal problem");
+		cout<<"RIndexFile::Seek(size_t&,size_t,size_t) : Existing entry will be overwritten"<<endl;
+/*	if(Find)
+		throw RIOException(this,"RIndexFile::Seek(size_t&,size_t,size_t) : Big internal problem");*/
 
 	NewRecord(blockid,indexid,NewEntry,size);
 }
