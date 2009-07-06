@@ -150,6 +150,20 @@ protected:
 	void* operator[](size_t idx);
 
 	/**
+	 * Get a pointer of the ith element in the container (Only read).
+	 * @param idx            Index of the element to get.
+	 * @return the pointer of null if the index is out of range.
+	 */
+	const void* GetPtrAt(size_t idx) const;
+
+	/**
+	 * Get a pointer of the ith element in the container (Read/Write).
+	 * @param idx            Index of the element to get.
+	 * @return the pointer of null if the index is out of range.
+	 */
+	void* GetPtrAt(size_t idx);
+
+	/**
 	* Get a given element of the container.
 	*/
 	void* GetPtr(bool bOrder,const void* tag,bool sortkey,size_t min, size_t max,int compare(const void*,const void*)) const;

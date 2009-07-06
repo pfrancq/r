@@ -371,18 +371,34 @@ public:
 	template<class TUse> inline bool IsIn(const TUse& tag,bool sortkey=bOrder,size_t min=0, size_t max=0) const {return(BasicContainer::IsIn(bOrder,static_cast<const void*>(&tag),sortkey,min,max,Compare<TUse>));}
 
 	/**
-	* Get a pointer to the ith element in the container (Only read).
+	* Get a pointer to the ith element in the container (Only read). The
+	* operator generates an exception is the index is out of range.
 	* @param idx             Index of the element to get.
 	* @return Return the pointer.
 	*/
 	inline const C* operator[](size_t idx) const {return(static_cast<const C*>(BasicContainer::operator[](idx)));}
 
 	/**
-	* Get a pointer to the ith element in the container (Read/Write).
+	* Get a pointer to the ith element in the container (Read/Write). The
+	* operator generates an exception is the index is out of range.
 	* @param idx             Index of the element to get.
-	* @return Return the pointer.
+	* @return the pointer.
 	*/
 	inline C* operator[](size_t idx) {return(static_cast<C*>(BasicContainer::operator[](idx)));}
+
+	/**
+	 * Get a pointer of the ith element in the container (Only read).
+	 * @param idx            Index of the element to get.
+	 * @return the pointer of null if the index is out of range.
+	 */
+	inline const C* GetPtrAt(size_t idx) const {return(static_cast<const C*>(BasicContainer::GetPtrAt(idx)));}
+
+	/**
+	 * Get a pointer of the ith element in the container (Read/Write).
+	 * @param idx            Index of the element to get.
+	 * @return the pointer of null if the index is out of range.
+	 */
+	inline C* GetPtrAt(size_t idx) {return(static_cast<C*>(BasicContainer::GetPtrAt(idx)));}
 
 	/**
 	* Get a pointer to a certain element in the container.

@@ -57,7 +57,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::ClearNodes(void)
 {
-	RTree<cNodes,cNode,false>::ClearNodes();
+	RTree<cNodes,cNode,false>::Clear();
 	ObjsAss.Clear();
 	ObjsNoAss.Clear();
 	for(Objs.Start();!Objs.End();Objs.Next())

@@ -106,7 +106,7 @@ template<class T,class N,bool bAlloc> class RNode;
 * @short Generic Tree.
 */
 template<class T,class N,bool bAlloc>
-	class RTree : private RContainer<N,bAlloc>
+	class RTree : protected RContainer<N,bAlloc>
 {
 	using RContainer<N,bAlloc>::DeletePtrAt;
 
@@ -122,14 +122,18 @@ public:
 	/**
 	* Construct the tree.
 	* @param max             Initial size of the array of top nodes.
-	* @param inc             Increment size of the array.
+	* @param inc             Increment size of the array. If null, it is set to
+	*                        the half of initial size.
 	*/
-	RTree(size_t max,size_t inc);
+	RTree(size_t max,size_t inc=0);
 
 	/**
-	 * Clear the nodes of the tree.
+	 * Clear the nodes of the tree. If the tree is not responsible for the
+	 * deallocation, the method calls RNode::Clear() for each node.
+	 * @param max             Initial size of the array of top nodes.
+	 * @param inc             Increment size of the array.
 	 */
-	void ClearNodes(void);
+	void Clear(size_t max=0,size_t inc=0);
 
 	/**
 	 * This method should be used with caution, since it works only if there is
@@ -167,7 +171,7 @@ public:
 	* Get a cursor over the child nodes of a given node.
 	* @param node            Parent node. If null, the top nodes are returned.
 	*/
-	inline RCursor<N> GetNodes(N* node) const;
+	inline RCursor<N> GetNodes(const N* node) const;
 
 	/**
 	* Copy the array of nodes into a temporary array. This array must have
@@ -202,18 +206,8 @@ public:
 	size_t GetTab(N** tab,N* node);
 
 	/**
-	* Clear the tree and destruct the nodes if it is responsible for
-	* the deallocation.
-	* @param m               New maximal size of the array. If null, the old
-	*                        size remains.
-	* @param i               New increasing value. If null, the old value
-	*                        remains.
-	*/
-	inline void Clear(size_t m=0,size_t i=0) {RContainer<N,bAlloc,false>::Clear(m,i); NbTopNodes=0;}
-
-	/**
 	* Insert a node and attached it to a parent. If the parent is null,
-	* the node is considered as the top node of the tree.
+	* the node is considered as one of the top node of the tree.
 	* @param to              Parent where the node is to attached.
 	* @param node            Node to insert.
 	*/

@@ -578,7 +578,6 @@ void RXMLParser::LoadNextTag(void)
 				CDATA=CurString("<![CDATA[",true);
 				if(CDATA)
 				{
-					cout<<"<![CDATA[ found"<<endl;
 					Text("<![CDATA[");
 					SkipSpaces();
 					SetParseSpace(RTextFile::LeaveSpaces);

@@ -44,13 +44,16 @@ template<class T,class N,bool bAlloc>
 
 //---------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
-	void RTree<T,N,bAlloc>::ClearNodes(void)
+	void RTree<T,N,bAlloc>::Clear(size_t max,size_t inc)
 {
+	if(!bAlloc)
+	{
+		RCursor<N> Cur(*this);
+		for(Cur.Start();!Cur.End();Cur.Next())
+			Cur()->Clear();
+	}
 	NbTopNodes=0;
-	RCursor<N> Cur(*this);
-	for(Cur.Start();!Cur.End();Cur.Next())
-		Cur()->Clear();
-	RContainer<N,bAlloc,false>::Clear();
+	RContainer<N,bAlloc,false>::Clear(max,inc);
 }
 
 
@@ -90,7 +93,7 @@ template<class T,class N,bool bAlloc>
 
 //-----------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
-	RCursor<N> RTree<T,N,bAlloc>::GetNodes(N* node) const
+	RCursor<N> RTree<T,N,bAlloc>::GetNodes(const N* node) const
 {
 	if(node)
 	{

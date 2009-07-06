@@ -91,9 +91,7 @@ template<class T,class N,bool bAlloc>
 {
 	if(!Tree)
 		throw RException("RNode::GetNodes(void) const : Node not assign to a tree");
-	if(!NbSubNodes)
-		return(R::RCursor<N>());
-	return(R::RCursor<N>(*Tree,SubNodes,SubNodes+NbSubNodes-1));
+	return(Tree->GetNodes(static_cast<const N*>(this)));
 }
 
 

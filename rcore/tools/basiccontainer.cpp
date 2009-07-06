@@ -44,7 +44,7 @@ using namespace R;
 
 //-----------------------------------------------------------------------------
 BasicContainer::BasicContainer(void)
-	: Tab(0), NbPtr(0), MaxPtr(0), LastPtr(0), IncPtr(0)
+	: Tab(0), NbPtr(0), MaxPtr(0), LastPtr(0), IncPtr(10)
 {
 }
 
@@ -53,17 +53,13 @@ BasicContainer::BasicContainer(void)
 BasicContainer::BasicContainer(size_t m,size_t i)
 	: Tab(0), NbPtr(0), MaxPtr(m), LastPtr(0), IncPtr(i)
 {
-	if(MaxPtr)
+	if(!IncPtr)
 	{
-		if(!IncPtr) IncPtr=MaxPtr/2;
-		if(!IncPtr) IncPtr=10;
-		Tab = new void*[MaxPtr];
-		memset(Tab,0x0,MaxPtr*sizeof(void*));
+		if(MaxPtr) IncPtr=MaxPtr/2;
+		if(IncPtr<10) IncPtr=10;
 	}
-	else
-	{
-		if(!IncPtr) IncPtr=10;
-	}
+	Tab = new void*[MaxPtr];
+	memset(Tab,0x0,MaxPtr*sizeof(void*));
 }
 
 
@@ -100,8 +96,8 @@ void BasicContainer::Clear(bool bAlloc,size_t m,size_t i)
 			if(*ptr)
 				Delete(*ptr);
 		}
-		memset(Tab,0x0,MaxPtr*sizeof(void*));
 	}
+	memset(Tab,0x0,MaxPtr*sizeof(void*));
 	LastPtr=NbPtr=0;
 	if(i)
 		IncPtr=i;
@@ -255,6 +251,24 @@ void* BasicContainer::operator[](size_t idx)
 
 
 //-----------------------------------------------------------------------------
+const void* BasicContainer::GetPtrAt(size_t idx) const
+{
+	if(idx>=LastPtr)
+		return(0);
+	return(Tab[idx]);
+}
+
+
+//-----------------------------------------------------------------------------
+void* BasicContainer::GetPtrAt(size_t idx)
+{
+	if(idx>=LastPtr)
+		return(0);
+	return(Tab[idx]);
+}
+
+
+//-----------------------------------------------------------------------------
 void* BasicContainer::GetPtr(bool bOrder,const void* tag,bool sortkey,size_t min, size_t max,int compare(const void*,const void*)) const
 {
 	bool Find;
@@ -286,6 +300,9 @@ size_t BasicContainer::GetTab(const void** tab,size_t min, size_t max) const
 //-----------------------------------------------------------------------------
 size_t BasicContainer::GetTab(void** tab,size_t min, size_t max)
 {
+	if(!LastPtr)
+		return(0);
+
 	size_t NbMin,NbMax;
 	if(min<LastPtr-1)
 		NbMin=min;
@@ -295,8 +312,10 @@ size_t BasicContainer::GetTab(void** tab,size_t min, size_t max)
 		NbMax=LastPtr-1;
 	else
 		NbMax=max;
-	memcpy(tab,&Tab[NbMin],(NbMax-NbMin+1)*sizeof(void*));
-	return(NbMax-NbMin+1);
+	size_t ToCopy(NbMax-NbMin+1);
+	if(ToCopy)
+		memcpy(tab,&Tab[NbMin],ToCopy*sizeof(void*));
+	return(ToCopy);
 }
 
 
