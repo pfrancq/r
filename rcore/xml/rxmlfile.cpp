@@ -165,6 +165,7 @@ void RXMLFile::Close(void)
 		XMLStruct=0;
 		NewStruct=false;
 	}
+	RXMLParser::Close();
 }
 
 
