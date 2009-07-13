@@ -57,13 +57,15 @@ RException::RException(void) throw()
 //------------------------------------------------------------------------------
 RException::RException(const char* str) throw()
 {
-	if(str)
-	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
-	}
-	else
-		Msg[0]='\0';
+	SetMsg(str);
+	cerr<<Msg<<endl;
+}
+
+
+//------------------------------------------------------------------------------
+RException::RException(const char* func,long where,const char* str) throw()
+{
+	SetMsg(func,where,str);
 	cerr<<Msg<<endl;
 }
 
@@ -71,14 +73,38 @@ RException::RException(const char* str) throw()
 //------------------------------------------------------------------------------
 void RException::SetMsg(const char* str)
 {
+	size_t len(0);
+	char* msg(Msg);
 	if(str)
 	{
-	    strncpy(Msg,str,1024);
-	    Msg[1023] = '\0';
+		for(const char* ptr(str);(len<1024)&&(*ptr);ptr++,len++,msg++)
+			(*msg)=(*ptr);
 	}
-	else
-		Msg[0]='\0';
-	cerr<<Msg<<endl;
+	(*msg)='\0';
+}
+
+
+//------------------------------------------------------------------------------
+void RException::SetMsg(const char* func,long where,const char* str)
+{
+	size_t len(0);
+	const char* ptr;
+	char* msg(Msg);
+	if(func)
+	{
+		for(ptr=func;(len<1024)&&(*ptr);ptr++,len++,msg++)
+			(*msg)=(*ptr);
+		char add[30];
+		sprintf(add," [%li]: ",where);
+		for(ptr=add;(len<1024)&&(*ptr);ptr++,len++,msg++)
+			(*msg)=(*ptr);
+	}
+	if(str)
+	{
+		for(ptr=str;(len<1024)&&(*ptr);ptr++,len++,msg++)
+			(*msg)=(*ptr);
+	}
+	(*msg)='\0';
 }
 
 

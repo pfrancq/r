@@ -81,40 +81,47 @@ RIO::RSmartTempFile::~RSmartTempFile(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const char* str)
+RIOException::RIOException(const char* str) throw()
 	: RException(str)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RFile* file,const char* str)
-	: RException()
+RIOException::RIOException(const char* func,long where,const char* str) throw()
+	: RException(func,where,str)
 {
-	if(file)
-		strcpy(Msg,file->GetURI()()+": "+str);
-	else
-		strcpy(Msg,str);
 }
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RIOFile* file,const char* str)
+RIOException::RIOException(const RFile* file,const char* str) throw()
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetURI()()+" ("+RString::Number(file->GetPos())+"): "+str);
+		SetMsg(file->GetURI()()+": "+str);
 	else
-		strcpy(Msg,str);
+		SetMsg(str);
 }
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RTextFile* file,const char* str)
+RIOException::RIOException(const RIOFile* file,const char* str) throw()
 	: RException()
 {
 	if(file)
-		strcpy(Msg,file->GetURI()()+" ("+RString::Number(file->GetLineNb())+"): "+str);
+		SetMsg(file->GetURI()()+" ("+RString::Number(file->GetPos())+"): "+str);
 	else
-		strcpy(Msg,str);
+		SetMsg(str);
+}
+
+
+//------------------------------------------------------------------------------
+RIOException::RIOException(const RTextFile* file,const char* str) throw()
+	: RException()
+{
+	if(file)
+		SetMsg(file->GetURI()()+" ("+RString::Number(file->GetLineNb())+"): "+str);
+	else
+		SetMsg(str);
 }

@@ -47,6 +47,14 @@
 #include <limits.h>
 
 
+
+//------------------------------------------------------------------------------
+// Define __PRETTY_FUNCTION__ if necessary
+#ifndef __GNUC__
+	#define __PRETTY_FUNCTION__ __FUNCTION__
+#endif
+
+
 //------------------------------------------------------------------------------
 // Assertion macros
 #ifdef __RDISABLEASSERT__
@@ -363,16 +371,39 @@ public:
 	RException(const char* str) throw();
 
 	/**
+	* Construct an exception with the message "func [where]: str". A typical use is:
+	* @code
+	* if(!ptr)
+	* 	throw RException(__PRETTY_FUNCTION__,__LINE__,"ptr cannot be a null pointer");
+	* @endcode
+	* @see The ThrowRException marco.
+	* @param func                     Function producing the error.
+	* @param where                    Line position of the error.
+	* @param str                      Message of the error.
+	*/
+	RException(const char* func,long where,const char* str) throw();
+
+	/**
 	* Get the content of the exception.
 	* @returns Pointer to a C String.
 	*/
 	const char* GetMsg(void) const {return(Msg);}
+
+protected:
 
 	/**
 	* Set the error message.
 	* @param str                      Message of the error.
 	*/
 	void SetMsg(const char* str);
+
+	/**
+	* Set the error message.
+	* @param str                      Message of the error.
+	*/
+	void SetMsg(const char* func,long where,const char* str);
+
+public:
 
 	/**
 	* Destructor.
@@ -382,6 +413,11 @@ public:
 
 
 }  //-------- End of namespace R -----------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// Macro to generate a RException
+#define ThrowRException(msg) throw RException(__PRETTY_FUNCTION__,__LINE__,msg)
 
 
 //------------------------------------------------------------------------------
