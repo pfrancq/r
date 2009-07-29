@@ -37,7 +37,7 @@
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
 	RTree<T,N,bAlloc>::RTree(size_t max,size_t inc)
-		: RContainer<N,bAlloc,false>(max,inc), NbTopNodes(0)
+		: RContainer<N,bAlloc,false>(max,inc), NbTopNodes(0), MaxDepth(0)
 {
 }
 
@@ -54,6 +54,24 @@ template<class T,class N,bool bAlloc>
 	}
 	NbTopNodes=0;
 	RContainer<N,bAlloc,false>::Clear(max,inc);
+	MaxDepth=0;
+}
+
+
+//---------------------------------------------------------------------------
+template<class T,class N,bool bAlloc>
+	size_t RTree<T,N,bAlloc>::GetMaxDepth(void) const
+{
+	if(MaxDepth==cNoRef)
+	{
+		// Depth must be recomputed
+		const_cast<RTree<T,N,bAlloc>*>(this)->MaxDepth=0;
+		RCursor<N> Nodes(*this);
+		for(Nodes.Start();!Nodes.End();Nodes.Next())
+			if(Nodes()->Depth>MaxDepth)
+				const_cast<RTree<T,N,bAlloc>*>(this)->MaxDepth=Nodes()->Depth;
+	}
+	return(MaxDepth);
 }
 
 
@@ -159,6 +177,12 @@ template<class T,class N,bool bAlloc>
 		if((Nodes()!=to)&&(Nodes()->SubNodes!=cNoRef)&&(Nodes()->SubNodes>=Index))
 			Nodes()->SubNodes++;
 	}
+	if(to)
+		node->Depth=to->Depth+1;
+	else
+		node->Depth=1;
+	if(node->Depth>MaxDepth)
+		MaxDepth=node->Depth;
 }
 
 
@@ -166,6 +190,10 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	void RTree<T,N,bAlloc>::DeleteNode(N* node,bool childs,bool del)
 {
+	// If the depth of the node to delete correspond to the maximal depth -> it must be recomputed.
+	if(node->Depth==MaxDepth)
+		MaxDepth=cNoRef;
+
 	// Delete child nodes
 	if(childs&&node->NbSubNodes)
 	{
@@ -261,6 +289,41 @@ template<class T,class N,bool bAlloc>
 		N* RTree<T,N,bAlloc>::GetNode(const TUse& tag) const
 {
 	return(RContainer<N,bAlloc,false>::GetPtr(tag,false));
+}
+
+
+//------------------------------------------------------------------------------
+template<class T,class N,bool bAlloc>
+	double RTree<T,N,bAlloc>::GetUpOperationsCost(const N* u,const N* v) const
+{
+	if(!u)
+		ThrowRException("Node u cannot be null");
+	if(!v)
+		ThrowRException("Node v cannot be null");
+
+	double Cost(0.0);
+
+	// Verify if u must be moved up to have the same depth as v
+	while(u->Depth>v->Depth)
+	{
+		Cost+=u->GetUpOperationCost();
+		u=u->Parent;
+	}
+
+	// Verify if v must be moved up to have the same depth as u
+	while(v->Depth>u->Depth)
+		v=v->Parent;
+
+	// Now that u and v are as the same depth -> count the number of up operations to find the same parent
+	while(v!=u)
+	{
+		Cost+=u->GetUpOperationCost();
+		u=u->Parent;
+		v=v->Parent;
+	}
+
+	// Return the cost
+	return(Cost);
 }
 
 

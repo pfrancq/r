@@ -218,6 +218,14 @@ template<class T,class N,bool bAlloc>
 
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
+	double RNode<T,N,bAlloc>::GetUpOperationCost(void) const
+{
+	return(1.0);
+}
+
+
+//------------------------------------------------------------------------------
+template<class T,class N,bool bAlloc>
 	RNode<T,N,bAlloc>::~RNode(void)
 {
 }

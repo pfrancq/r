@@ -117,6 +117,12 @@ protected:
 	*/
 	size_t NbTopNodes;
 
+	/**
+	 * Depth of the tree. The depth can be undefined, the value is then set to
+	 * 'cNoRef'.
+	 */
+	size_t MaxDepth;
+
 public:
 
 	/**
@@ -134,6 +140,11 @@ public:
 	 * @param inc             Increment size of the array.
 	 */
 	void Clear(size_t max=0,size_t inc=0);
+
+	/**
+	 * Get the depth of the tree. If necessary, the depth is recomputed.
+	 */
+	size_t GetMaxDepth(void) const;
 
 	/**
 	 * This method should be used with caution, since it works only if there is
@@ -266,6 +277,20 @@ public:
 	 * @return Pointer to the node.
 	 */
 	N* GetNodeAt(size_t idx) {return((*this)[idx]);}
+
+	/**
+	 * Get the cost of the Up operations to move a token from a node to another
+	 * one.
+	 *
+	 * In their paper <em>TreeRank: A Similarity Measure for Nearest Neighbor
+	 * Searching in Phylogenetic Databases</em>, Wang, Shan, Shasha and Piel
+	 * define a similarity measure between two trees based on the different
+	 * costs of up operations of the nodes of each tree.
+	 * @param u              First node.
+	 * @param v              Second node.
+	 * @return Cost of the up operations.
+	 */
+	double GetUpOperationsCost(const N* u,const N* v) const;
 
 	/**
 	* Destruct the tree.

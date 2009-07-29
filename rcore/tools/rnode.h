@@ -144,6 +144,12 @@ protected:
 	*/
 	size_t Index;
 
+	/**
+	 * Depth of the node.
+	 */
+	size_t Depth;
+
+
 public:
 
 	/**
@@ -178,6 +184,11 @@ public:
 	* Return the index of a given node in the tree.
 	*/
 	size_t GetIndex(void) const;
+
+	/**
+	 * Get the depth of the node.
+	 */
+	size_t GetDepth(void) const {return(Depth);}
 
 	/**
 	* Get a cursor over the child nodes.
@@ -232,6 +243,18 @@ public:
 	 * @return true if the node seems coherent.
 	 */
 	bool VerifyNode(size_t id);
+
+	/**
+	 * Get the cost of an Up operation of the current node. By default, the
+	 * cost equals to 1.
+	 *
+	 * In their paper <em>TreeRank: A Similarity Measure for Nearest Neighbor
+	 * Searching in Phylogenetic Databases</em>, Wang, Shan, Shasha and Piel
+	 * define the up operation as the operation that moves a token from one
+	 * node to its parent.
+	 * @return Cost of the up operation.
+	 */
+	virtual double GetUpOperationCost(void) const;
 
 	/**
 	* Destruct the node.
