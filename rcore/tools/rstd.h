@@ -276,11 +276,10 @@ inline int CompareIds(size_t id1,size_t id2)
 
 //------------------------------------------------------------------------------
 /**
- * Inline function to compare two pointers. Useful for R::RContainer.
+ * Function to compare two pointers. Useful for R::RContainer.
  * @tparam C                 Class to compare.
  * @param ptr1               First pointer.
  * @param ptr2               Second pointer.
- * @return
  */
 template<class C>
 	inline int ComparePtrs(C* ptr1,C* ptr2)
@@ -399,6 +398,8 @@ protected:
 
 	/**
 	* Set the error message.
+	* @param func                     Function producing the error.
+	* @param where                    Line position of the error.
 	* @param str                      Message of the error.
 	*/
 	void SetMsg(const char* func,long where,const char* str);
