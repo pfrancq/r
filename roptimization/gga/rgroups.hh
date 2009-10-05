@@ -85,9 +85,33 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	cGroup* R::RGroups<cGroup,cObj,cGroups>::ReserveGroup(void)
+	void R::RGroups<cGroup,cObj,cGroups>::VerifyGroups(size_t id)
 {
-	size_t i,NewSize;
+	if(id+1>GetMaxNb())
+	{
+		// Compute the new size of the groups
+		size_t NewSize(GetMaxNb()+GetIncNb());
+		if(NewSize<id+1)
+			NewSize=id+1;
+
+		// Recreate a new NewUsedId array with the new size
+		size_t *n(new size_t[NewSize]);
+		memcpy(n,NewUsedId,sizeof(size_t)*GetMaxNb());
+		delete[] NewUsedId;
+		NewUsedId=n;
+
+		// Create New groups
+		for(size_t i=GetMaxNb();i<NewSize;i++)
+			InsertPtr(new cGroup(static_cast<cGroups*>(this),i));
+	}
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
+	cGroup* R::RGroups<cGroup,cObj,cGroups>::ReserveGroup(size_t id)
+{
+/*	size_t i,NewSize;
 	size_t* n;
 
 	if(Used.GetNb()+1>GetMaxNb())
@@ -103,14 +127,27 @@ template<class cGroup,class cObj,class cGroups>
 		// Create New groups
 		for(i=GetMaxNb();i<NewSize;i++)
 			InsertPtr(new cGroup(static_cast<cGroups*>(this),i));
+	}*/
+	cGroup* Grp(0);
+	if(id==cNoRef)
+	{
+		VerifyGroups(Used.GetNb());
+		R::RCursor<cGroup> ptr(*this);
+		ptr.Start();
+		while(ptr()->Reserved)
+			ptr.Next();
+		Grp=ptr();
 	}
-	R::RCursor<cGroup> ptr(*this);
-	ptr.Start();
-	while(ptr()->Reserved)
-		ptr.Next();
-	ptr()->Reserved=true;
-	Used.InsertPtr(ptr());
-	return(ptr());
+	else
+	{
+		VerifyGroups(id);
+		Grp=(*this)[id];
+		if(Grp->Reserved)
+			ThrowRException("Group '"+RString(id)+"' is already used.");
+	}
+	Grp->Reserved=true;
+	Used.InsertPtr(Grp);
+	return(Grp);
 }
 
 
@@ -246,6 +283,8 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	R::RCursor<cObj> R::RGroups<cGroup,cObj,cGroups>::GetObjs(const RGroup<cGroup,cObj,cGroups>& grp) const
 {
+	if(!grp.NbSubObjects)
+		return(R::RCursor<cObj>());
 	return(R::RCursor<cObj>(ObjsAss,grp.SubObjects,grp.SubObjects+grp.NbSubObjects-1));
 }
 
@@ -258,9 +297,9 @@ template<class cGroup,class cObj,class cGroups>
 	R::RCursor<cGroup> G(grps.Used);
 	for(G.Start();!G.End();G.Next())
 	{
-		cGroup* ptr(ReserveGroup());  // Reserve a new group
-		ptr->CopyObjs(G());           // Copy the necessary objects
-		ptr->CopyInfos(G());          // Update internal information.
+		cGroup* ptr(ReserveGroup(G()->Id));  // Reserve a new group
+		ptr->CopyObjs(G());                  // Copy the necessary objects
+		ptr->CopyInfos(G());                 // Update internal information.
 	}
 }
 

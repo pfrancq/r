@@ -74,17 +74,13 @@ template<class cNode,class cObj,class cNodes>
 	cNode* ParentNode(0);                              // Start a the top node
 	bool GoDeeper;                                     // Must go deeper in the hierarchy ?
 	size_t NbMax;                                      // Maximal number of attributes found at the current level
-	size_t NbNodes;                                    // Number of nodes to treat at the current branch
 	cNode** CurNode;                                   // Nodes to treat at the current branch
-	size_t Depth(0);                                   // Depth
 
 	// Each loop manages one level of one branch in the hierarchy
 	while(true)
 	{
-		Depth++;
-
 		// Parse randomly all the nodes of that level
-		NbNodes=Nodes->GetTab(tmpNodes,ParentNode);
+		size_t NbNodes(Nodes->GetTab(tmpNodes,ParentNode));
 		RandOrder(tmpNodes,NbNodes);
 		for(CurNode=tmpNodes,Node=0,GoDeeper=false,NbMax=0,NbNodes++;--NbNodes;CurNode++)
 		{
@@ -111,7 +107,7 @@ template<class cNode,class cObj,class cNodes>
 			// Remember the node (in Node) having the maximum number of common attributes with the object to attach
 			if(NbCommon>NbMax)
 			{
-				NbCommon=NbMax;
+				NbMax=NbCommon;
 				Node=(*CurNode);
 			}
 		}

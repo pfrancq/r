@@ -40,7 +40,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		: RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(inst,id),
 	  ToDel(0), CritSimJ(0.0), CritAgreement(0.0), CritDisagreement(1.0), Protos(Used.GetMaxNb()),
 	  OldProtos(Used.GetMaxNb()),
-	  thProm(0), thSols(0)
+	  thProm(0), thSols(0), MostSimilarGroup1(cNoRef), MostSimilarGroup2(cNoRef)
 {
 }
 
@@ -69,6 +69,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	double super(-2.0), max(-2.0),tmp;
 
 	CritAgreement=CritDisagreement=CritSimJ=0.0;
+	MostSimilarGroup1=MostSimilarGroup2=cNoRef;
 	if(!Used.GetNb())
 		return;
 
@@ -317,7 +318,14 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::MergeBestGroups(void)
 {
+	// There must be at least 2 groups
+	if(Used.GetNb()<2)
+		return;
+
 	size_t i;
+	if((MostSimilarGroup1==cNoRef)||(MostSimilarGroup2==cNoRef))
+		ThrowRException("'MostSimilarGroup1' and/or 'MostSimilarGroup2' not correctly assigned");
+
 	cGroup* bestgrp1((*this)[MostSimilarGroup1]);
 	cGroup* bestgrp2((*this)[MostSimilarGroup2]);
 	cObj** ptr;
@@ -413,6 +421,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	// Copy the current chromosome in thTests
 	Evaluate();
 	thTests[0]->Copy(*static_cast<cChromo*>(this));
+	thTests[0]->Evaluate();
 	LastDiv=LastMerge=static_cast<cChromo*>(this);
 	for(i=Instance->Params->NbDivChromo+1;--i;)
 	{
@@ -421,6 +430,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		LastDiv->DivideWorstObjects();
 		thTests[i*2]->Copy(*LastMerge);
 		LastMerge=thTests[i*2];
+		//LastMerge->Evaluate();
 		LastMerge->MergeBestGroups();
 	}
 

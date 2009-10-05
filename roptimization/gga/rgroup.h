@@ -235,7 +235,7 @@ public:
 	* @param pos            Position.
 	* @returns cObj*
 	*/
-	cObj* GetObjPos(const size_t pos) {return(Owner->GetObj(SubObjects+pos));}
+	cObj* GetObjPos(const size_t pos);
 
 	/**
 	* Destruct the group.

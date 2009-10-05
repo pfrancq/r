@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	SGGA.h
+	SCGA.h
 
-	Similarity-bases Clustering Genetic Algorithm - Header.
+	Similarity-based Clustering Genetic Algorithm - Header.
 
 	Copyright 2002-2009 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).

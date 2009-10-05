@@ -58,6 +58,7 @@ template<class cGroup,class cObj,class cGroups>
 {
 	using RContainer<cGroup,true,false>::GetMaxNb;
 	using RContainer<cGroup,true,false>::GetIncNb;
+	using RContainer<cGroup,true,false>::VerifyTab;
 
 	// Internal class used to compute the adjusted Rand Index
 	class GroupId
@@ -133,11 +134,19 @@ public:
 	*/
 	void ClearGroups(void);
 
+private:
+
+	void VerifyGroups(size_t id);
+
+public:
+
 	/**
 	* Reserve a group.
+	* @param id              Identifier of the group to create. If cNoRef is
+	*                        passed, the first free group is chosen.
 	* @returns A pointer to the node reserved.
 	*/
-	cGroup* ReserveGroup(void);
+	cGroup* ReserveGroup(size_t id=cNoRef);
 
 	/**
 	* Release a group.
