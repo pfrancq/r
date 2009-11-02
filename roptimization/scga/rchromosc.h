@@ -55,6 +55,8 @@ namespace R{
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	class RChromoSC : public RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>
 {
+public:
+
 	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Instance;
 	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Used;
 	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ObjectsAss;

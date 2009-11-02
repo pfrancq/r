@@ -61,9 +61,9 @@ namespace R{
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	class RThreadDataSC : public RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>
 {
-	using RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Owner;
-
 public:
+
+	using RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Owner;
 
 	/**
 	 * Groups to delete because they contain only one "social" object.
@@ -127,6 +127,8 @@ public:
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	class RInstSC : public RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>, public RPromKernelSC<cChromo>
 {
+public:
+
 	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::SetMutationParams;
 	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::GetPopSize;
 	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Objs;

@@ -54,6 +54,8 @@ namespace R{
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	class RChromoH : public RChromo<cInst,cChromo,cFit,cThreadData>, public RNodesGA<cNode,cObj,cChromo>
 {
+public:
+
 	using RChromo<cInst,cChromo,cFit,cThreadData>::Instance;
 	using RChromo<cInst,cChromo,cFit,cThreadData>::Id;
 	using RNodesGA<cNode,cObj,cChromo>::ReserveNode;

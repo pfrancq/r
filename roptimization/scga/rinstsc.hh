@@ -39,7 +39,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>::RThreadDataSC(cInst* owner)
 		: RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(owner),
 	  ToDel(owner->Objs.GetNb()<4?4:owner->Objs.GetNb()/4), tmpObjs1(0),tmpObjs2(0), Tests(0),
-	  Prom(Owner->Params), Sols(0), NbSols((Owner->Params->NbDivChromo*2)+1)
+	  Prom(owner->Params), Sols(0), NbSols((owner->Params->NbDivChromo*2)+1)
 {
 	RPromSol** s;
 	size_t i;

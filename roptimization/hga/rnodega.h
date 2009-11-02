@@ -62,6 +62,8 @@ template<class cNode,class cObj,class cNodes> class RNodesGA;
 template<class cNode,class cObj,class cNodes>
 	class RNodeGA : public RNode<cNodes,cNode,false>
 {
+public:
+
 	using RNode<cNodes,cNode,false>::Tree;
 	using RNode<cNodes,cNode,false>::GetNbNodes;
 	using RNode<cNodes,cNode,false>::GetNodes;

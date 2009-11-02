@@ -58,6 +58,8 @@ namespace R{
 template<class cNode,class cObj,class cNodes>
 	class RNodesGA : public RTree<cNodes,cNode,false>
 {
+public:
+
 	using RTree<cNodes,cNode,false>::GetNbNodes;
 	using RTree<cNodes,cNode,false>::GetTopNodes;
 	using RTree<cNodes,cNode,false>::GetNodes;

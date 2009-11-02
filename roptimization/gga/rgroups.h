@@ -56,9 +56,13 @@ namespace R{
 template<class cGroup,class cObj,class cGroups>
 	class RGroups : public RContainer<cGroup,true,false>
 {
+public:
+
 	using RContainer<cGroup,true,false>::GetMaxNb;
 	using RContainer<cGroup,true,false>::GetIncNb;
 	using RContainer<cGroup,true,false>::VerifyTab;
+
+private:
 
 	// Internal class used to compute the adjusted Rand Index
 	class GroupId

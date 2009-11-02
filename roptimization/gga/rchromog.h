@@ -56,6 +56,8 @@ namespace R{
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	class RChromoG : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGroups<cGroup,cObj,cChromo>
 {
+public:
+
 	using RChromo<cInst,cChromo,cFit,cThreadData>::Instance;
 	using RGroups<cGroup,cObj,cChromo>::ComputeOrd;
 	using RGroups<cGroup,cObj,cChromo>::ReserveGroup;
