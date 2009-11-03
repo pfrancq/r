@@ -299,7 +299,7 @@ RChar* RString::Latin1ToUnicode(const char* src,size_t& len,size_t& maxlen)
 	}
 
 	if(!StdCodec)
-		StdCodec=RTextEncoding::GetTextEncoding(nl_langinfo(CODESET));
+		StdCodec=RTextEncoding::GetTextEncoding("utf8");
 	if(!maxlen)
 		maxlen=strlen(src);
 	RString Str(StdCodec->ToUnicode(src,maxlen));
@@ -318,7 +318,7 @@ char* RString::UnicodeToLatin1(void) const
 		return(0);
 
 	if(!StdCodec)
-		StdCodec=RTextEncoding::GetTextEncoding(nl_langinfo(CODESET));
+		StdCodec=RTextEncoding::GetTextEncoding("utf8");
 	RCString Str(StdCodec->FromUnicode(*this));
 	size_t lenlatin1(Str.GetLen()+1);
 	char* res=new char[lenlatin1];

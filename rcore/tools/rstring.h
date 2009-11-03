@@ -213,12 +213,14 @@ public:
 
 	inline RString Mid(size_t idx,size_t len=(size_t)-1) const {return(BasicString<RChar,RString>::Mid(idx,len));}
 
+	/** @copydoc BasicString::IsAt(const S&,int) */
 	inline bool IsAt(const RString& sub,int pos) const  {return(BasicString<RChar,RString>::IsAt(sub,pos));}
 
+	/** @copydoc BasicString::Insert(const S&,int,size_t) */
 	inline void Insert(const RString& sub,int pos,size_t del=0)  {BasicString<RChar,RString>::Insert(sub,pos,del);}
 
-	/** @copydoc BasicString::Split(RContainer<S,true,false>&,const C) const */
-	inline void Split(RContainer<RString,true,false>& elements,const RChar car) const {BasicString<RChar,RString>::Split(elements,car);}
+	/** @copydoc BasicString::Split(RContainer<S,true,false>&,const C,const C) const */
+	inline void Split(RContainer<RString,true,false>& elements,const RChar car,const RChar del=0) const {BasicString<RChar,RString>::Split(elements,car,del);}
 	//@} Manipulation methods
 
 	/** @name Methods related to R::RContainer	*/ // @{

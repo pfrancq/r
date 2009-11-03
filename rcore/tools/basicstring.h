@@ -219,7 +219,8 @@ public:
 	inline size_t GetMaxLen(void) const {return(Data->MaxLen);}
 
 	/**
-	* Set the length of the string. If the length is greater than the current
+	* Set the length of the string. If the length is shorter that the current
+	* one, the string is truncated. If the length is greater than the current
 	* one, the internal buffer is updated. Any new space allocated contains
 	* arbitrary data.
 	* @param len             Length of the string.
@@ -227,7 +228,8 @@ public:
 	void SetLen(size_t len);
 
 	/**
-	* Set the length of the string. If the length is greater than the current
+	* Set the length of the string. If the length is shorter that the current
+	* one, the string is truncated. If the length is greater than the current
 	* one, the second string is used to fill the first string (eventually it is
 	* copied several times).
 	* @param len             Length of the string.
@@ -390,8 +392,9 @@ public:
 	* @param elements        Container that will hold the results. It is not
 	*                        emptied by the method.
 	* @param car             Character used as separator.
+	* @param del             Delimiter of an element.
 	*/
-	void Split(RContainer<S,true,false>& elements,const C car) const;
+	void Split(RContainer<S,true,false>& elements,const C car,const C del) const;
 
 	/**
 	* Return a number between 0 and 26 according to the character at position

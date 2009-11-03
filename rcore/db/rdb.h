@@ -37,6 +37,7 @@
 // include files for R Project
 #include <rstd.h>
 #include <rstring.h>
+#include <ruri.h>
 #include <rdate.h>
 
 
@@ -176,6 +177,14 @@ public:
 	* @param index           Index of the field in the query.
 	*/
 	virtual RString GetField(const void* data,size_t index)=0;
+
+	/**
+	 * Run file containing SQL commands. The file is supposed to be encoded in
+	 * utf-8. Lines starting with C comment with "!", "--" or "#" are considered as comments
+	 * and not send to the database.
+	 * @param file           File to execute.
+	 */
+	void RunSQLFile(const RURI& file);
 
 	/**
 	* Destruct the connection to the database.

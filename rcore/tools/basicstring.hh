@@ -901,16 +901,20 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	void R::BasicString<C,S>::Split(R::RContainer<S,true,false>& elements,const C car) const
+	void R::BasicString<C,S>::Split(R::RContainer<S,true,false>& elements,const C car,const C del) const
 {
 	S element;
 	size_t len;
 	C* ptr;
+	bool Skip(false);
 
 	// Skip ending spaces
 	for(len=Data->Len+1,ptr=Data->Text;--len;ptr++)
 	{
-		if((*ptr)==car)
+		// Delimiters
+		if((*ptr)==del)
+			Skip=!Skip; // First call, skip=true
+		else if(((*ptr)==car)&&(!Skip))
 		{
 			// Insert element
 			elements.InsertPtr(new S(element));

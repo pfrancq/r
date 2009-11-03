@@ -128,11 +128,11 @@ void RConfig::Load(bool global)
 		}
 		catch(RException& e)
 		{
-			std::cout<<"Error "<<e.GetMsg()<<std::endl;
+			//std::cout<<"Error "<<e.GetMsg()<<std::endl;
 		}
 		catch(...)
 		{
-			std::cout<<"Warning: Global config file '"<<Where()<<"' not found."<<std::endl;
+			//std::cout<<"Warning: Global config file '"<<Where()<<"' not found."<<std::endl;
 		}
 	}
 
@@ -158,11 +158,11 @@ void RConfig::Load(bool global)
 	}
 	catch(RException& e)
 	{
-		std::cout<<"Error "<<e.GetMsg()<<std::endl;
+		//std::cout<<"Error "<<e.GetMsg()<<std::endl;
 	}
 	catch(...)
 	{
-		std::cout<<"Warning: Local config file '"<<Home+"/.r/config/"+Category+"/"+Name+".config"<<"' not found."<<std::endl;
+		//std::cout<<"Warning: Local config file '"<<Home+"/.r/config/"+Category+"/"+Name+".config"<<"' not found."<<std::endl;
 	}
 
 	// Create the parameters based on the xml structure

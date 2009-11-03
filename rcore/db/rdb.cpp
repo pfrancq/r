@@ -36,6 +36,7 @@
 // include files for R Library
 #include <rdb.h>
 #include <rquery.h>
+#include <rtextfile.h>
 using namespace R;
 using namespace std;
 
@@ -52,25 +53,6 @@ RDb::RDb(Db type)
 	: Type(type)
 {
 }
-
-
-//------------------------------------------------------------------------------
-/*void RDb::CreateMySQLDatabase(const RString& host,const RString& user,const RString& pwd,const RString& name)
-{
-	MYSQL ms;
-	MYSQL* ret(mysql_init(&ms));
-	if((!ret)||(mysql_errno(&ms)))
-		throw RDbException(mysql_error(&ms));
-
-	ret=mysql_real_connect(&ms,host,user,pwd,0,0,0,0);
-	if((!ret)||(mysql_errno(&ms)))
-		throw RDbException(mysql_error(&ms));
-
-	RString sql="CREATE DATABASE IF NOT EXISTS ";
-	sql+=name;
-	if(mysql_query(&ms,sql.Latin1()))
-		throw RDbException(mysql_error(&ms));
-}*/
 
 
 //------------------------------------------------------------------------------
@@ -91,6 +73,47 @@ void RDb::CreateTransactionTable(const RString& name,size_t nb,...)
 	va_end(ap);
 	sSql+=")";
 	RQuery Create(this,sSql);
+}
+
+
+//-----------------------------------------------------------------------------
+void RDb::RunSQLFile(const RURI& file)
+{
+	RString sql("");
+	RString line("");
+	bool endFound=false;
+
+ 	RTextFile File(file,"utf-8");
+	File.Open(RIO::Read);
+
+	while(!File.End())
+	{
+		line=File.GetLine();
+		if(line.IsEmpty() || line.FindStr("/*!")>=0 || line.FindStr("--")>=0 || line.Find('#')>=0)
+			continue;
+
+		endFound=false;
+		while(!File.End() && !endFound)
+		{
+			if(line.IsEmpty() || line.FindStr("--")>=0 || line.FindStr("--")>=0 || line.Find('#')>=0)
+			{
+				sql="";
+				endFound=true;
+				continue;
+			}
+			sql+=line;
+			if(line.Find(';')>=0)
+				endFound=true;
+			else
+				line=File.GetLine();
+		}
+		if(!sql.IsEmpty())
+		{
+			RQuery Sendquery(this,sql);
+		}
+
+		sql="";
+	}
 }
 
 
