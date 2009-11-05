@@ -255,7 +255,7 @@ void RDate::SetDate(char day,char month,int year,char hour,char minute,char seco
 {
 	// Verify the values
 	if((month<1)||(month>12)||(day<1)||(day>31)||(hour<0)||(hour>23)||(minute<0)||(minute>59)||(second<0)||(second>59))
-		throw RException("'"+RString::Number(day)+"-"+RString::Number(month)+"-"+RString::Number(year)+" "+RString::Number(hour)+":"+RString::Number(minute)+":"+RString::Number(second)+"' is not a valid date");
+		ThrowRException("'"+RString::Number(day)+"-"+RString::Number(month)+"-"+RString::Number(year)+" "+RString::Number(hour)+":"+RString::Number(minute)+":"+RString::Number(second)+"' is not a valid date");
 	Year=year;
 	Month=month;
 	Day=day;

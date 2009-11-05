@@ -121,8 +121,11 @@ public:
 * the pointers stored. It is used when the container to iterate is supposed to
 * handle objects from a given class but the objects allocated are of a child
 * class.
-* @param C                   Class of the elements of the container. It must
-*                            inherit from the class declared in the container.
+* @tparam C                  Class of the elements of the container. It must
+*                            inherit from the class B.
+* @tparam B                  Base class of the elements of the container. The
+*                            class must declare at least one virtual method
+*                            (for example the destructor).
 * \attention When an element is added or removed from the container parsed by
 * the cursor, the cursor is not valid anymore.
 *
@@ -153,7 +156,7 @@ public:
 *    Cont.InsertPtr(new O2("Obj1",1));
 *    Cont.InsertPtr(new O2("Obj2",2));
 *    Cont.InsertPtr(new O2("Obj3",3));
-*    RCastCursor<O2> Cur(Cont);
+*    RCastCursor<O,O2> Cur(Cont);
 *    for(Cur.Start();!Cur.End();Cur.Next())
 *       cout<<Cur()->Name<<" - "<<Cur()->Id<<endl;
 * }
@@ -162,7 +165,7 @@ public:
 * @author Pascal Francq
 * @short Container Child Cursor.
 */
-template<class C>
+template<class B,class C>
 	class RCastCursor : public BasicCursor
 {
 public:
@@ -182,7 +185,7 @@ public:
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
-	RCastCursor(const RCastCursor<C>& src) : BasicCursor(src) {}
+	RCastCursor(const RCastCursor<B,C>& src) : BasicCursor(src) {}
 
 	/**
 	* Construct the cursor.
@@ -203,7 +206,7 @@ public:
 	* Assignment operator using a "Cursor".
 	* @param src             Source container.
 	*/
-	RCastCursor<C>& operator=(const RCastCursor<C>& src) { return(static_cast<RCastCursor<C>&>(BasicCursor::operator=(src)));}
+	RCastCursor<B,C>& operator=(const RCastCursor<B,C>& src) { return(static_cast<RCastCursor<B,C>&>(BasicCursor::operator=(src)));}
 
 	/**
 	* Set the container.
@@ -217,7 +220,7 @@ public:
 	/**
 	* Return the current element.
 	*/
-	inline C* operator()(void) const {return(static_cast<C*>(*Current));}
+	inline C* operator()(void) const {return(dynamic_cast<C*>(static_cast<B*>(*Current)));	}
 };
 
 
