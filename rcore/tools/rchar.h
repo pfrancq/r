@@ -303,14 +303,14 @@ public:
 	bool IsGraph(void) const                      { return(iswgraph(Unicode())); }
 
 	/**
-	* Transform an Unicode character in lowercase.
+	* Transform an Unicode character in lower case.
 	* @param c               Character.
 	* return RChar.
 	*/
 	static RChar ToLower(const RChar c)                 { return(RChar(towlower(c.Unicode()))); }
 
 	/**
-	* Transform an Unicode character in upperrcase.
+	* Transform an Unicode character in upper case.
 	* @param c               Character.
 	* return RChar.
 	*/

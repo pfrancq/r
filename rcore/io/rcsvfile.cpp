@@ -43,9 +43,8 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 RCSVFile::RCSVFile(const RURI& uri,RChar sep,const RCString& encoding)
-	: RTextFile(uri,encoding), Sep(sep), Escape('\\'), Values(20), SizeTmpChar(5000), TmpChar(0)
+	: RTextFile(uri,encoding), Sep(sep), Escape('\\'), Values(20), MaxValues(0)
 {
-	TmpChar=new RChar[SizeTmpChar];
 }
 
 
@@ -55,6 +54,7 @@ void RCSVFile::Open(RIO::ModeType mode)
 	if(mode!=RIO::Read)
 		throw RIOException("RCSVFile can only be read");
 	RTextFile::Open(mode);
+	NbValues=0;
 }
 
 
@@ -65,11 +65,124 @@ void RCSVFile::Open(const RURI& uri,RChar sep,RIO::ModeType mode,const RCString&
 		throw RIOException("RCSVFile can only be read");
 	Sep=sep;
 	RTextFile::Open(uri,mode,encoding);
+	NbValues=0;
+}
+
+
+//------------------------------------------------------------------------------
+inline RString* RCSVFile::NewValue(void)
+{
+	RString* Cur;
+
+	// Insert a null string
+	// First character of the value
+	if(NbValues>=MaxValues)
+	{
+		Values.InsertPtr(Cur=new RString());
+		MaxValues++;
+	}
+	else
+	{
+		Cur=Values[NbValues];
+		Cur->SetLen(0);
+	}
+
+	return(Cur);
 }
 
 
 //------------------------------------------------------------------------------
 void RCSVFile::Read(void)
+{
+	bool ReadField(false); // Suppose a value to read
+	RString* Cur;
+	RChar Search;
+
+	NbValues=0;  // No values read
+	while(!End())
+	{
+		RChar Car(GetChar());
+//		cout<<Car.Latin1()<<endl;
+
+		// If no value are read -> make some test
+		if(!ReadField)
+		{
+			if(Eol(Car))
+			{
+				// Skip the new line
+				SkipEol();
+				break;
+			}
+			else if(Car==Sep)
+			{
+				// Empty field
+				NewValue();
+				NbValues++;
+				continue;
+			}
+			else if(Car.IsSpace())
+				continue;    // Skip spaces
+
+			Cur=NewValue();
+			ReadField=true;
+
+			// Value with " ?
+			if(Car=='"')
+			{
+				Search='"';
+				continue;
+			}
+			else
+			{
+				Search=Sep;
+			}
+		}
+
+		// Look if the end of field is reached ?
+		if(Search==Sep)
+		{
+			if(Eol(Car))
+			break;
+		}
+		else if (Car==Search)
+		{
+			NbValues++;
+			ReadField=false;
+
+			// Read the next character
+			Car=GetChar();
+
+			// Skip "normal spaces"
+			while(Car.IsSpace()&&(!Eol(Car)))
+				Car=GetChar();
+
+			// Treat next non-normal space character
+			if(Car==Sep)
+			{
+				// Skip "normal spaces"
+				while(Car.IsSpace()&&(!Eol(Car)))
+					Car=GetChar();
+			}
+			else if(!Eol(Car))
+				ThrowRIOException("Separator character '"+Sep+"' expected");
+
+			continue;
+		}
+
+		if(Car==Escape)
+		{
+			// The next character must be added
+			Car=GetChar();
+		}
+
+		// Add the character
+		(*Cur)+=Car;
+	}
+}
+
+
+//------------------------------------------------------------------------------
+/*void RCSVFile::Read(void)
 {
 	Values.Clear();
 	RString Line(GetLine());
@@ -170,13 +283,13 @@ void RCSVFile::Read(void)
 	// One value left ?
 	if(ReadField)
 		Values.InsertPtr(new RString(TmpChar,nb));
-}
+}*/
 
 
 //------------------------------------------------------------------------------
 RString RCSVFile::Get(size_t idx) const
 {
-	if(idx>Values.GetMaxPos())
+	if(idx>NbValues)
 		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
 	RString Field(*Values[idx]);
 	if(Field()[0]=='\"') // Verify
@@ -188,6 +301,8 @@ RString RCSVFile::Get(size_t idx) const
 //------------------------------------------------------------------------------
 size_t RCSVFile::GetSizeT(size_t idx) const
 {
+	if(idx>NbValues)
+		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
 	RString Field(*Values[idx]);
 	if(Field()[0]=='\"') // Verify
 		Field=Field.Mid(1,Field.GetLen()-2);
@@ -202,5 +317,4 @@ size_t RCSVFile::GetSizeT(size_t idx) const
 //------------------------------------------------------------------------------
 RCSVFile::~RCSVFile(void)
 {
-	delete[] TmpChar;
 }

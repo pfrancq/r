@@ -46,9 +46,23 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
  * The RCSVFile provides a class for manipulating CSV text files. Currently,
- * these files can only be opened. When the file is opened, the fist line is
- * read. If this first line contains the headers, the programmer should called
- * the method 'Read' before reading the first values.
+ * these files can only be opened. When the file is opened, the fist "CSV line"
+ * is read. An end of line character inside a field delimited by quotes are
+ * part of the value and not the end of a "CSV line"
+ *
+ * Here is an example of use:
+ * @code
+ * RCSVFile File("test.csv",';',"utf8");
+ * File.Open();
+ * cout<<"Field1"<<"\t"<<"Field2"<<endl;  // Print the header
+ * while(!File.End())
+ * {
+ *    File.Read();
+ *    cout<<File.Get(0)<<"\t"<<File.Get(1)<<endl;
+ * }
+ * @endcode
+ * @remark If this first line contains the headers, the programmer should
+ * called the method 'Read' before reading the first values.
  * @author Pascal Francq.
  * @short CVS File.
  */
@@ -70,14 +84,14 @@ class RCSVFile : private RTextFile
 	RContainer<RString,true,false> Values;
 
 	/**
-	 * Size of the temporary array (Initially of size 5000).
+	 * Maximum number of values on a line.
 	 */
-	size_t SizeTmpChar;
+	size_t MaxValues;
 
 	/**
-	 * Temporary character to store the fields.
+	 * Number of values on a line.
 	 */
-	RChar* TmpChar;
+	size_t NbValues;
 
 public:
 
@@ -109,6 +123,15 @@ public:
 	 * @return true if the end of the file is reached.
 	 */
 	inline bool End(void) const {return(RTextFile::End());}
+
+private:
+
+	/**
+	 * @return a pointer to the next value.
+	 */
+	inline RString* NewValue(void);
+
+public:
 
 	/**
 	 * Read and analyze a line.
