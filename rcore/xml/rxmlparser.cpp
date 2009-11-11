@@ -713,9 +713,9 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 					if(tmp.GetLen())
 					{
 						if(Section==Header)
-							HeaderValue(tmp);
+							HeaderValue(XMLToString(tmp));
 						else
-							Value(tmp);
+							Value(XMLToString(tmp));
 					}
 					if(GetNs)
 						ns+=tmp;
