@@ -68,8 +68,14 @@ RURI RIO::RSmartTempFile::GetName(bool remove)
 //------------------------------------------------------------------------------
 RIO::RSmartTempFile::~RSmartTempFile(void)
 {
-	if(Remove)
-		RFile::RemoveFile(Name);
+	try
+	{
+		if(Remove)
+			RFile::RemoveFile(Name);
+	}
+	catch(...)
+	{
+	}
 }
 
 
@@ -106,6 +112,17 @@ RIOException::RIOException(const RFile* file,const char* str) throw()
 
 
 //------------------------------------------------------------------------------
+RIOException::RIOException(const RFile* file,const char* func,long where,const char* str) throw()
+	: RException()
+{
+	if(file)
+		SetMsg(func,where,file->GetURI()()+": "+str);
+	else
+		SetMsg(func,where,str);
+}
+
+
+//------------------------------------------------------------------------------
 RIOException::RIOException(const RIOFile* file,const char* str) throw()
 	: RException()
 {
@@ -117,6 +134,17 @@ RIOException::RIOException(const RIOFile* file,const char* str) throw()
 
 
 //------------------------------------------------------------------------------
+RIOException::RIOException(const RIOFile* file,const char* func,long where,const char* str) throw()
+	: RException()
+{
+	if(file)
+		SetMsg(func,where,file->GetURI()()+" ("+RString::Number(file->GetPos())+"): "+str);
+	else
+		SetMsg(func,where,str);
+}
+
+
+//------------------------------------------------------------------------------
 RIOException::RIOException(const RTextFile* file,const char* str) throw()
 	: RException()
 {
@@ -124,4 +152,15 @@ RIOException::RIOException(const RTextFile* file,const char* str) throw()
 		SetMsg(file->GetURI()()+" ("+RString::Number(file->GetLineNb())+"): "+str);
 	else
 		SetMsg(str);
+}
+
+
+//------------------------------------------------------------------------------
+RIOException::RIOException(const RTextFile* file,const char* func,long where,const char* str) throw()
+	: RException()
+{
+	if(file)
+		SetMsg(func,where,file->GetURI()()+" ("+RString::Number(file->GetLineNb())+"): "+str);
+	else
+		SetMsg(func,where,str);
 }

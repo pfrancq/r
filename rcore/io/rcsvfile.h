@@ -84,14 +84,24 @@ class RCSVFile : private RTextFile
 	RContainer<RString,true,false> Values;
 
 	/**
-	 * Maximum number of values on a line.
-	 */
-	size_t MaxValues;
-
-	/**
 	 * Number of values on a line.
 	 */
 	size_t NbValues;
+
+	/**
+	 * Internal Buffer.
+	 */
+	RChar* Internal;
+
+	/**
+	 * Number of characters in the buffer.
+	 */
+	size_t SizeBuffer;
+
+	/**
+	 * Current position in the buffer.
+	 */
+	RChar* Buffer;
 
 public:
 
@@ -117,7 +127,12 @@ public:
 	 * @param mode           The open mode for the file.
 	 * @param encoding       The encoding scheme of the file.
 	 */
-	void Open(const RURI& uri,RChar sep,RIO::ModeType mode=RIO::Read,const RCString& encoding="Latin1");
+	virtual void Open(const RURI& uri,RChar sep,RIO::ModeType mode=RIO::Read,const RCString& encoding="Latin1");
+
+	/**
+	 * Close the file.
+	 */
+	virtual void Close(void);
 
 	/**
 	 * @return true if the end of the file is reached.

@@ -112,7 +112,7 @@ void RIOFile::Open(RIO::ModeType mode)
 
 	// Verify that it is not a urn
 	if(URI.GetScheme()=="urn")
-		throw RIOException(this,"URI does not represent a file");
+		ThrowRIOException(this,"URI does not represent a file");
 
 	// look if it is a local file
 	if(URI.GetScheme()=="file")
@@ -135,7 +135,7 @@ void RIOFile::Open(RIO::ModeType mode)
 
 		case RIO::Write:
 			if(!local)
-				throw RIOException(this,"Cannot write with an URL");
+				ThrowRIOException(this,"Cannot write with an URL");
 			localmode=O_WRONLY | O_CREAT;
 			CanWrite=true;
 			CanRead=false;
@@ -143,7 +143,7 @@ void RIOFile::Open(RIO::ModeType mode)
 
 		case RIO::ReadWrite:
 			if(!local)
-				throw RIOException(this,"Cannot write with an URL");
+				ThrowRIOException(this,"Cannot write with an URL");
 			localmode=O_RDWR | O_CREAT;
 			CanWrite=true;
 			CanRead=true;
@@ -151,7 +151,7 @@ void RIOFile::Open(RIO::ModeType mode)
 
 		case RIO::Append:
 			if(!local)
-				throw RIOException(this,"Cannot append to an URL");
+				ThrowRIOException(this,"Cannot append to an URL");
 			localmode=O_WRONLY | O_CREAT | O_APPEND;
 			CanWrite=true;
 			CanRead=true;
@@ -159,14 +159,14 @@ void RIOFile::Open(RIO::ModeType mode)
 
 		case RIO::Create:
 			if(!local)
-				throw RIOException(this,"Cannot create with an URL");
+				ThrowRIOException(this,"Cannot create with an URL");
 			localmode=O_WRONLY | O_CREAT | O_TRUNC;
 			CanWrite=true;
 			CanRead=false;
 			break;
 
 		default:
-			throw RIOException(this,"No valid mode");
+			ThrowRIOException(this,"No valid mode");
 	};
 
 	// If reading is possible -> create an internal buffer
@@ -196,27 +196,27 @@ void RIOFile::Open(RIO::ModeType mode)
 		switch(errno)
 		{
 			case EACCES:
-				throw RIOException(this,"The file exists but it cannot be access at the requested mode");
+				ThrowRIOException(this,"The file exists but it cannot be access at the requested mode");
 			case EEXIST:
-				throw RIOException(this,"Both O_CREAT and O_EXCL are set, and the named file already exists");
+				ThrowRIOException(this,"Both O_CREAT and O_EXCL are set, and the named file already exists");
 			case EINTR:
-				throw RIOException(this,"The open operation was interrupted by a signal");
+				ThrowRIOException(this,"The open operation was interrupted by a signal");
 			case EISDIR:
-				throw RIOException(this,"The mode specified is write access, but the file is a directory");
+				ThrowRIOException(this,"The mode specified is write access, but the file is a directory");
 			case EMFILE:
-				throw RIOException(this,"The process has too many files open");
+				ThrowRIOException(this,"The process has too many files open");
 			case ENFILE:
-				throw RIOException(this,"The system has too many files open");
+				ThrowRIOException(this,"The system has too many files open");
 			case ENOENT:
-				throw RIOException(this,"The named file does not exist, and Create is not specified");
+				ThrowRIOException(this,"The named file does not exist, and Create is not specified");
 			case ENOSPC:
-				throw RIOException(this,"No disk space left");
+				ThrowRIOException(this,"No disk space left");
 			case ENXIO:
-				throw RIOException(this,"O_NONBLOCK and O_WRONLY are both set in the arguments, and the file is a FIFO");
+				ThrowRIOException(this,"O_NONBLOCK and O_WRONLY are both set in the arguments, and the file is a FIFO");
 			case EROFS:
-				throw RIOException(this,"The file resides on a read-only file system or the file does not exist");
+				ThrowRIOException(this,"The file resides on a read-only file system or the file does not exist");
 			default:
-				throw RIOException(this,"Cannot open the file");
+				ThrowRIOException(this,"Cannot open the file");
 		}
 	}
 
@@ -257,14 +257,14 @@ void RIOFile::Close(void)
 			switch(errno)
 			{
 				case EBADF:
-					throw RIOException(this,"Not a valid descriptor");
+					ThrowRIOException(this,"Not a valid descriptor");
 				case EINTR:
-					throw RIOException(this,"The close call was interrupted by a signal");
+					ThrowRIOException(this,"The close call was interrupted by a signal");
 				case EIO:
 				case EDQUOT:
-					throw RIOException(this,"When the file is accessed by NFS, these errors from write can sometimes not be detected until close");
+					ThrowRIOException(this,"When the file is accessed by NFS, these errors from write can sometimes not be detected until close");
 				default:
-					throw RIOException(this,"Cannot close the file");
+					ThrowRIOException(this,"Cannot close the file");
 			}
 		}
 		Handle=-1;
@@ -284,11 +284,11 @@ size_t RIOFile::Read(char* buffer,size_t nb,bool move)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		throw RIOException(this,"RIOFile::Read(char*,size_t,bool) : Can't read in the file");
+		ThrowRIOException(this,"RIOFile::Read(char*,size_t,bool) : Can't read in the file");
 	if(!CanRead)
-		throw RIOException(this,"No Read access");
+		ThrowRIOException(this,"No Read access");
 	if(End())
-		throw RIOException(this,"End of the file reached");
+		ThrowRIOException(this,"End of the file reached");
 
 	// Verify if the number of bytes to read must be adapted
 	if(static_cast<off_t>(nb)>Size-Pos)
@@ -380,9 +380,9 @@ void RIOFile::Write(const char* buffer,size_t nb)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		throw RIOException(this,"RIOFile::Write(const char*,size_t) : Can't write into the file");
+		ThrowRIOException(this,"RIOFile::Write(const char*,size_t) : Can't write into the file");
 	if(!CanWrite)
-		throw RIOException(this,"No write access");
+		ThrowRIOException(this,"No write access");
 
 	// Verify that the internal positions are OK
 	if(Pos!=RealPos)
@@ -460,9 +460,9 @@ void RIOFile::Seek(off_t pos)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		throw RIOException(this,"RIOFile::Seek(off_t) : Can't seek the file");
+		ThrowRIOException(this,"RIOFile::Seek(off_t) : Can't seek the file");
 	if((pos>=Size)&&(!CanWrite))
-		throw RIOException(this,"Position outside of the file");
+		ThrowRIOException(this,"Position outside of the file");
 
 	// Update current position
 	Pos=pos;
@@ -491,11 +491,11 @@ void RIOFile::SeekRel(off_t rel)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		throw RIOException(this,"RIOFile::SeekRel(off_t) : Can't seek the file");
+		ThrowRIOException(this,"RIOFile::SeekRel(off_t) : Can't seek the file");
 	if(static_cast<ssize_t>(Pos)+rel<0)//<static_cast<size_t>(labs(rel)))
-		throw RIOException(this,"RIOFile::SeekRel(off_t) : Position before beginning of the file");
+		ThrowRIOException(this,"RIOFile::SeekRel(off_t) : Position before beginning of the file");
 	if((Pos+rel>Size)&&(!CanWrite))
-		throw RIOException(this,"RIOFile::SeekRel(off_t) : Position outside of the file");
+		ThrowRIOException(this,"RIOFile::SeekRel(off_t) : Position outside of the file");
 
 	// Update current position
 	Pos+=rel;
@@ -524,26 +524,26 @@ void RIOFile::Truncate(off_t newsize)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		throw RIOException(this,"Can't truncate the file");
+		ThrowRIOException(this,"Can't truncate the file");
 	if(!CanWrite)
-		throw RIOException(this,"No write access");
+		ThrowRIOException(this,"No write access");
 
 	if(ftruncate(Handle,newsize)==-1)
 	{
 		switch(errno)
 		{
 			case EACCES:
-				throw RIOException(this,"File is a directory");
+				ThrowRIOException(this,"File is a directory");
 			case EINVAL:
-				throw RIOException(this,"New length is negative");
+				ThrowRIOException(this,"New length is negative");
 			case EFBIG:
-				throw RIOException(this,"New size beyond the limits of the operating system");
+				ThrowRIOException(this,"New size beyond the limits of the operating system");
 			case EIO:
-				throw RIOException(this,"A hardware I/O error occurred");
+				ThrowRIOException(this,"A hardware I/O error occurred");
 			case EPERM:
-				throw RIOException(this,"File is \"append-only\" or \"immutable\"");
+				ThrowRIOException(this,"File is \"append-only\" or \"immutable\"");
 			case EINTR:
-				throw RIOException(this,"Operation was interrupted by a signal");
+				ThrowRIOException(this,"Operation was interrupted by a signal");
 		}
 	}
 

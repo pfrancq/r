@@ -135,7 +135,7 @@ void RDownload::DownloadFile(const RURI& uri,const RURI& local)
 	First=true;
 	Stream=fopen(local.GetPath(), "wb");
 	if(!Stream)
-		throw RException("Cannot create file '"+local()+"'");
+		throw RException(__PRETTY_FUNCTION__,__LINE__,"Cannot create file '"+local()+"'");
 
 	// Download the file
 	curl_easy_setopt(Lib, CURLOPT_URL, uri().Latin1());
@@ -147,7 +147,7 @@ void RDownload::DownloadFile(const RURI& uri,const RURI& local)
 	if(err)
 	{
 		if(!ValidContent)
-			throw RException("Cannot treat the MIME type '"+MIME+"'");
+			throw RException(__PRETTY_FUNCTION__,__LINE__,"Cannot treat the MIME type '"+MIME+"'");
 		throw RException(curl_easy_strerror(err)+RString(" : ")+uri());
 	}
 }

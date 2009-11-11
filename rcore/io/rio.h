@@ -148,7 +148,7 @@ public:
 	* Construct an exception with the message "func [where]: str". A typical use is:
 	* @code
 	* if(!ptr)
-	* 	throw RException(__PRETTY_FUNCTION__,__LINE__,"ptr cannot be a null pointer");
+	* 	throw RIOException(__PRETTY_FUNCTION__,__LINE__,"ptr cannot be a null pointer");
 	* @endcode
 	* @see The ThrowRIOException marco.
 	* @param func                     Function producing the error.
@@ -167,6 +167,15 @@ public:
 	/**
 	* Construct an IO exception.
 	* @param file                     File process when the error occurs.
+	* @param func                     Function producing the error.
+	* @param where                    Line position of the error.
+	* @param str                      Message of the error.
+	*/
+	RIOException(const RFile* file,const char* func,long where,const char* str) throw();
+
+	/**
+	* Construct an IO exception.
+	* @param file                     File process when the error occurs.
 	* @param str                      Message of the error.
 	*/
 	RIOException(const RIOFile* file,const char* str) throw();
@@ -174,9 +183,27 @@ public:
 	/**
 	* Construct an IO exception.
 	* @param file                     File process when the error occurs.
+	* @param func                     Function producing the error.
+	* @param where                    Line position of the error.
+	* @param str                      Message of the error.
+	*/
+	RIOException(const RIOFile* file,const char* func,long where,const char* str) throw();
+
+	/**
+	* Construct an IO exception.
+	* @param file                     File process when the error occurs.
 	* @param str                      Message of the error.
 	*/
 	RIOException(const RTextFile* file,const char* str) throw();
+
+	/**
+	* Construct an IO exception.
+	* @param file                     File process when the error occurs.
+	* @param func                     Function producing the error.
+	* @param where                    Line position of the error.
+	* @param str                      Message of the error.
+	*/
+	RIOException(const RTextFile* file,const char* func,long where,const char* str) throw();
 };
 
 
@@ -185,7 +212,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Macro to generate a RIOException
-#define ThrowRIOException(msg) throw RIOException(__PRETTY_FUNCTION__,__LINE__,msg)
+#define ThrowRIOException(file,msg) throw RIOException(file,__PRETTY_FUNCTION__,__LINE__,msg)
 
 
 //------------------------------------------------------------------------------

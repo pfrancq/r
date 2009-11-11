@@ -34,6 +34,11 @@ using namespace R;
 using namespace std;
 
 
+//------------------------------------------------------------------------------
+ // Maximal size of a Buffer.
+const size_t MaxBuffer=1024;
+
+
 
 //------------------------------------------------------------------------------
 //
@@ -43,8 +48,10 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 RCSVFile::RCSVFile(const RURI& uri,RChar sep,const RCString& encoding)
-	: RTextFile(uri,encoding), Sep(sep), Escape('\\'), Values(20), MaxValues(0)
+	: RTextFile(uri,encoding), Sep(sep), Escape('\\'), Values(20),
+	  Internal(0), SizeBuffer(0), Buffer(0)
 {
+	Internal=new RChar[MaxBuffer+1];
 }
 
 
@@ -62,10 +69,19 @@ void RCSVFile::Open(RIO::ModeType mode)
 void RCSVFile::Open(const RURI& uri,RChar sep,RIO::ModeType mode,const RCString& encoding)
 {
 	if(mode!=RIO::Read)
-		throw RIOException("RCSVFile can only be read");
+		ThrowRIOException(this,"RCSVFile can only be read");
 	Sep=sep;
 	RTextFile::Open(uri,mode,encoding);
 	NbValues=0;
+}
+
+
+//------------------------------------------------------------------------------
+void RCSVFile::Close(void)
+{
+	RTextFile::Close();
+	NbValues=0;
+	Values.Clear();
 }
 
 
@@ -76,16 +92,14 @@ inline RString* RCSVFile::NewValue(void)
 
 	// Insert a null string
 	// First character of the value
-	if(NbValues>=MaxValues)
-	{
-		Values.InsertPtr(Cur=new RString());
-		MaxValues++;
-	}
-	else
-	{
-		Cur=Values[NbValues];
-		Cur->SetLen(0);
-	}
+	if(NbValues<Values.GetNb())
+		ThrowRIOException(this,"Internal Problem");
+	Values.InsertPtr(Cur=new RString());
+	Cur->SetLen(0);
+	if(SizeBuffer)
+		ThrowRIOException(this,"Non null buffer size");
+	SizeBuffer=0;
+	Buffer=Internal;
 
 	return(Cur);
 }
@@ -98,6 +112,7 @@ void RCSVFile::Read(void)
 	RString* Cur;
 	RChar Search;
 
+	Values.Clear();
 	NbValues=0;  // No values read
 	while(!End())
 	{
@@ -149,6 +164,14 @@ void RCSVFile::Read(void)
 			NbValues++;
 			ReadField=false;
 
+			if(SizeBuffer)
+			{
+				(*Buffer)=0;
+				(*Cur)+=Internal;
+				SizeBuffer=0;
+				Buffer=Internal;
+			}
+
 			// Read the next character
 			Car=GetChar();
 
@@ -164,7 +187,7 @@ void RCSVFile::Read(void)
 					Car=GetChar();
 			}
 			else if(!Eol(Car))
-				ThrowRIOException("Separator character '"+Sep+"' expected");
+				ThrowRIOException(this,"Separator character '"+Sep+"' expected");
 
 			continue;
 		}
@@ -175,115 +198,27 @@ void RCSVFile::Read(void)
 			Car=GetChar();
 		}
 
+		if(SizeBuffer==MaxBuffer)
+		{
+			// Verify if the buffer is filled.
+			(*Buffer)=0;
+			(*Cur)+=Internal;
+			SizeBuffer=0;
+			Buffer=Internal;
+		}
+
 		// Add the character
-		(*Cur)+=Car;
+		SizeBuffer++;
+		(*(Buffer++))=Car;
+	}
+	if(SizeBuffer)
+	{
+		(*Cur)+=Internal;
+		Buffer=Internal;
+		SizeBuffer=0;
 	}
 }
 
-
-//------------------------------------------------------------------------------
-/*void RCSVFile::Read(void)
-{
-	Values.Clear();
-	RString Line(GetLine());
-	const RChar* ptr(Line());
-	RChar* Tmp(TmpChar);
-	size_t pos(0),nb(0);
-	RChar Search;
-	bool ReadField(true);   // A field is currently read
-
-	// Skip Spaces
-	if((!ptr->IsNull())&&(ptr->IsSpace()))
-	{
-		ptr++;
-		pos++;
-	}
-
-	// Look if the first character is a "
-	if((!ptr->IsNull())&&((*ptr)=='"'))
-	{
-		Search='"';
-		ptr++;
-		pos++;
-	}
-	else
-	{
-		Search=Sep;
-	}
-
-	while(!ptr->IsNull())
-	{
-		if((*ptr)==Escape)
-		{
-			// Skip the Escape character and add the following one
-			ptr++;
-			nb++;
-			if(nb>SizeTmpChar)
-				throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): 'Internal buffer overflow");
-			(*(Tmp++))=(*(ptr++));
-		}
-		else if((*ptr)==Search)
-		{
-			// New field
-			Values.InsertPtr(new RString(TmpChar,nb));
-			pos+=nb;
-			if(Search=='"')
-			{
-				ptr++;	// Skip "
-				pos++;
-
-				// Skip Spaces
-				if((!ptr->IsNull())&&(ptr->IsSpace()))
-				{
-					ptr++;
-					pos++;
-				}
-			};
-			ReadField=false;
-
-			// End of line ?
-			if(ptr->IsNull())
-				break;
-
-			if((*ptr)!=Sep)
-				throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): '"+Sep+"' separation character is excepted and '"+(*ptr)+"' was found");
-
-			// Prepare reading next field
-			nb=0;
-			Tmp=TmpChar;
-			ReadField=true;
-			ptr++; // Skip Sep
-			pos++;
-
-			// Skip Spaces
-			if((!ptr->IsNull())&&(ptr->IsSpace()))
-			{
-				ptr++;
-				pos++;
-			}
-
-			if((!ptr->IsNull())&&((*ptr)=='"'))
-			{
-				Search='"';
-				ptr++;
-				pos++;
-			}
-			else
-				Search=Sep;
-		}
-		else
-		{
-			nb++;
-			if(nb>SizeTmpChar)
-				throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): 'Internal buffer overflow");
-			(*(Tmp++))=(*(ptr++));
-		}
-	}
-
-	// One value left ?
-	if(ReadField)
-		Values.InsertPtr(new RString(TmpChar,nb));
-}*/
 
 
 //------------------------------------------------------------------------------
@@ -317,4 +252,5 @@ size_t RCSVFile::GetSizeT(size_t idx) const
 //------------------------------------------------------------------------------
 RCSVFile::~RCSVFile(void)
 {
+	delete Internal;
 }

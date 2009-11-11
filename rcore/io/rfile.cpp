@@ -164,15 +164,15 @@ void RFile::RemoveFile(const RURI& uri)
 	switch(errno)
 	{
 		case EACCES:
-			throw RIOException("The permissions of "+uri()+" deny to remove it");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,"The permissions of "+uri()+" deny to remove it");
 		case EBUSY:
-			throw RIOException(uri()+" is used by the system");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,uri()+" is used by the system");
 		case ENOENT:
-			throw RIOException(uri()+" doesn't exist");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,uri()+" doesn't exist");
 		case EPERM:
-			throw RIOException(uri()+" is a directory");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,uri()+" is a directory");
 		case EROFS:
-			throw RIOException("Directory containing "+uri()+"is on a read-only");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,"Directory containing "+uri()+"is on a read-only");
 	}
 }
 
@@ -185,25 +185,25 @@ void RFile::RenameFile(const RURI& olduri,const RURI& newuri)
 	switch(errno)
 	{
 		case EACCES:
-			throw RIOException("Invalid permission on "+newuri()+" or "+olduri());
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,"Invalid permission on "+newuri()+" or "+olduri());
 		case EBUSY:
-			throw RIOException("Directory named "+newuri()+" or "+olduri()+" is used by the system");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,"Directory named "+newuri()+" or "+olduri()+" is used by the system");
 		case EEXIST:
-			throw RIOException("The directory "+newuri()+" isn't empty");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,"The directory "+newuri()+" isn't empty");
 		case EINVAL:
-			throw RIOException(olduri()+" is a directory that contains "+newuri());
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,olduri()+" is a directory that contains "+newuri());
 		case EISDIR:
-			throw RIOException(newuri()+" is a directory but the "+olduri()+" isn't");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,newuri()+" is a directory but the "+olduri()+" isn't");
 		case EMLINK:
-			throw RIOException("Parent directory of "+newuri()+" would have too entries");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,"Parent directory of "+newuri()+" would have too entries");
 		case ENOENT:
-			throw RIOException(olduri()+" doesn't exist");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,olduri()+" doesn't exist");
 		case ENOSPC:
-			throw RIOException("No room to rename the file");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,"No room to rename the file");
 		case EROFS:
-			throw RIOException("The operation would involve writing to a directory on a read-only system");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,"The operation would involve writing to a directory on a read-only system");
 		case EXDEV:
-			throw RIOException("The two file names "+newuri()+" and "+olduri()+" are on different file systems");
+			throw RIOException(__PRETTY_FUNCTION__,__LINE__,"The two file names "+newuri()+" and "+olduri()+" are on different file systems");
 	}
 }
 

@@ -35,6 +35,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
+#include <rio.h>
 #include <rfile.h>
 #include <rdownload.h>
 
