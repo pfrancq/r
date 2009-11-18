@@ -122,13 +122,24 @@ public:
 	/** @copydoc BasicString::Copy(const C*,size_t)*/
 	inline void Copy(const char* text,size_t nb) {BasicString<char,RCString>::Copy(text,nb);}
 
+	inline size_t GetLen(void) const {return(BasicString<char,RCString>::GetLen());}
+
+	inline size_t GetMaxLen(void) const {return(BasicString<char,RCString>::GetMaxLen());}
+
+	/** @copydoc BasicString::SetLen(size_t) */
 	inline void SetLen(size_t len) {BasicString<char,RCString>::SetLen(len);}
 
 	/** @copydoc BasicString::SetLen(size_t,const S&) */
 	inline void SetLen(size_t len,const RCString& str) {BasicString<char,RCString>::SetLen(len,str);}
+
+	inline bool IsEmpty(void) const {return(BasicString<char,RCString>::IsEmpty());}
+
+	inline bool ContainOnlySpaces(void) const {return(BasicString<char,RCString>::ContainOnlySpaces());}
 	//@} Internal methods
 
 	/** @name Manipulation methods	*/ // @{
+	inline void Clear(void) {BasicString<char,RCString>::Clear();}
+
 	inline RCString ToUpper(void) const {return(BasicString<char,RCString>::ToUpper());}
 
 
@@ -138,8 +149,6 @@ public:
 
 	/** @copydoc BasicString::Trim(const S&) const */
 	inline RCString Trim(const RCString& str) const {return(BasicString<char,RCString>::Trim(str));}
-
-	inline bool ContainOnlySpaces(void) const {return(BasicString<char,RCString>::ContainOnlySpaces());}
 
 	/** @copydoc BasicString::Find(const C,int,bool) const */
 	inline int Find(const char car,int pos=0,bool CaseSensitive=true) const {return(BasicString<char,RCString>::Find(car,pos,CaseSensitive));}

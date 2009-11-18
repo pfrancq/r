@@ -30,6 +30,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
+#include <rapplication.h>
 #include <rio.h>
 #include <rxmlfile.h>
 #include <rconfig.h>
@@ -138,10 +139,9 @@ void RConfig::Load(bool global)
 
 	// Load user specific config
 	RXMLTag* Root=Config.GetTop();
-	RString Home=getenv("HOME");
 	try
 	{
-		RURI Where(Home+"/.r/config/"+Category+"/"+Name+".config");
+		RURI Where(App->GetHomeConfig()+"/config/"+Category+"/"+Name+".config");
 		if(Root)
 		{
 			RXMLStruct Local;
@@ -220,12 +220,12 @@ void RConfig::Save(void)
 			Param()->AddTag(&Config,ins);
 	}
 
-	RString Home=getenv("HOME");
-	RString Where=Home+"/.r/config/"+Category+"/"+Name+".config";
+	RString Home(App->GetHomeConfig());
+	RString Where=Home+"/config/"+Category+"/"+Name+".config";
 	try
 	{
 		// Always save localy
-		RDir::CreateDirIfNecessary(Home+"/.r/config/"+Category,true);
+		RDir::CreateDirIfNecessary(Home+"/config/"+Category,true);
 		RXMLFile File(Where,&Config);
 		File.Open(R::RIO::Create);
 	}

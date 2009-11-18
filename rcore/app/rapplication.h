@@ -37,6 +37,7 @@
 #include <rstring.h>
 #include <rcontainer.h>
 #include <rconfig.h>
+#include <rparam.h>
 
 
 //-----------------------------------------------------------------------------
@@ -68,6 +69,16 @@ protected:
 	* Arguments of the application.
 	*/
 	RContainer<RString,true,false> Args;
+
+	/**
+	* Parameters of the application.
+	*/
+	RContainer<RParamValue,true,false> Params;
+
+	/**
+	 * Home directory of the configuration files.
+	 */
+	RString HomeConfig;
 
 	/**
 	* Configuration
@@ -106,9 +117,31 @@ public:
 	bool IsInit(void) const {return(HasInitApp);}
 
 	/**
+	 * @return the directory where the configuration files are stored.
+	 */
+	RString GetHomeConfig(void) const {return(HomeConfig);}
+
+	/**
 	* Get a pointer over the configuration.
 	*/
 	RConfig* GetConfig(void) {return(&Config);}
+
+	/**
+	 * @return a cursor on the arguments.
+	 */
+	RCursor<RString> GetArgs(void) const;
+
+	/**
+	 * @param name           Name of the parameter.
+	 * @return the value of the parameter with a given name, or RString::Null
+	 * if the parameter is not defined.
+	 */
+	RString GetParamValue(const RString& name) const;
+
+	/**
+	 * @return a cursor on the parameters.
+	 */
+	RCursor<RParamValue> GetParams(void) const;
 
 	/**
 	* Create the configuration structure. New parameters can be added by

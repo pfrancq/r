@@ -82,18 +82,18 @@ public:
 	RString GetDescription(void) const {return(Description);}
 
 	/**
-	* Compare the name of the paramter with a given string. This function is
+	* Compare the name of the parameter with a given string. This function is
 	* used by RContainer.
-	* @param name           The string used for the comparaison.
-	* @returns -1,0 or 1 if the parameter is greather, the same or lesser than
+	* @param name           The string used for the comparison.
+	* @returns -1,0 or 1 if the parameter is greater, the same or lesser than
 	* the parameter.
 	*/
 	int Compare(const RString& name) const;
 
 	/**
-	* Compare the names of two paramters. This function is used by RContainer.
-	* @param param          The parameter used for the comparaison.
-	* @returns -1,0 or 1 if the parameter is greather, the same or lesser than
+	* Compare the names of two parameters. This function is used by RContainer.
+	* @param param          The parameter used for the comparison.
+	* @returns -1,0 or 1 if the parameter is greater, the same or lesser than
 	* the parameter.
 	*/
 	int Compare(const RParam& param) const;

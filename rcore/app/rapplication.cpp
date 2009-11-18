@@ -47,7 +47,7 @@ RApplication* R::App=0;
 
 //-----------------------------------------------------------------------------
 RApplication::RApplication(const RString& name,int argc, char** argv)
-	: Name(name), Args(argc), Config("app",name), HasInitApp(false)
+	: Name(name), Args(argc), Params(argc/2), HomeConfig(RString::Null), Config("app",name), HasInitApp(false)
 {
 	if(App)
 		throw RException("Already one application running");
@@ -62,10 +62,39 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
 	RAssert(argv);
 	RAssert(name.GetLen());
 
-	// Initialise information
+	// Initialize information
 	File=argv[0];
-    for(int i=0;i<argc;i++)
-		Args.InsertPtr(new RString(argv[i]));
+	RString Param(RString::Null);
+    for(int i=1;i<argc;i++)
+    {
+    	RString* Arg=new RString(argv[i]);
+    	if(Arg->Mid(0,2)=="--")
+    	{
+    		// A parameter is found
+    		if(!Param.IsEmpty())       // If a param is already defined -> insert it
+    			Params.InsertPtr(new RParamValue(Param,RString::Null));
+    		Param=Arg->Mid(2);
+    	}
+    	else
+    	{
+    		if(!Param.IsEmpty())
+    		{
+    			// Value of a parameter
+    			Params.InsertPtr(new RParamValue(Param,*Arg));
+    			Param=RString::Null;
+    		}
+    	}
+		Args.InsertPtr(Arg);
+    }
+	if(!Param.IsEmpty())       // If a param is already defined -> insert it
+		Params.InsertPtr(new RParamValue(Param,RString::Null));
+
+	// Configuration directory specified
+	RParamValue* ptr(Params.GetPtr("config"));
+	if(ptr)
+		HomeConfig=ptr->Get();
+	if(HomeConfig.IsEmpty())
+		HomeConfig=RString(getenv("HOME"))+"/.r";
 }
 
 
@@ -80,6 +109,30 @@ RString RApplication::GetName(void) const
 RString RApplication::GetApplicationFile(void) const
 {
 	return(File);
+}
+
+
+//-----------------------------------------------------------------------------
+RCursor<RString> RApplication::GetArgs(void) const
+{
+	return(RCursor<RString>(Args));
+}
+
+
+//-----------------------------------------------------------------------------
+RString RApplication::GetParamValue(const RString& name) const
+{
+	RParamValue* ptr(Params.GetPtr(name));
+	if(!ptr)
+		return(RString::Null);
+	return(ptr->Get());
+}
+
+
+//-----------------------------------------------------------------------------
+RCursor<RParamValue> RApplication::GetParams(void) const
+{
+	return(RCursor<RParamValue>(Params));
 }
 
 
