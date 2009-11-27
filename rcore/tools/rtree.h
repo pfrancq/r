@@ -235,6 +235,12 @@ public:
 	void DeleteNode(N* node,bool childs,bool del=bAlloc);
 
 	/**
+	* Delete all the child nodes of a given node.
+	* @param node           Pointer to the node.
+	*/
+	virtual void DeleteNodes(N* node);
+
+	/**
 	 * Move a node from one parent to another inside the same tree.
 	 * @param to             Parent where the node is to attached.
 	 * @param node           Node to insert.

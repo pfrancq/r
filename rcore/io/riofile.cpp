@@ -284,7 +284,7 @@ size_t RIOFile::Read(char* buffer,size_t nb,bool move)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		ThrowRIOException(this,"RIOFile::Read(char*,size_t,bool) : Can't read in the file");
+		ThrowRIOException(this,"Can't read in the file");
 	if(!CanRead)
 		ThrowRIOException(this,"No Read access");
 	if(End())
@@ -380,7 +380,7 @@ void RIOFile::Write(const char* buffer,size_t nb)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		ThrowRIOException(this,"RIOFile::Write(const char*,size_t) : Can't write into the file");
+		ThrowRIOException(this,"Can't write into the file");
 	if(!CanWrite)
 		ThrowRIOException(this,"No write access");
 
@@ -460,7 +460,7 @@ void RIOFile::Seek(off_t pos)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		ThrowRIOException(this,"RIOFile::Seek(off_t) : Can't seek the file");
+		ThrowRIOException(this,"Can't seek the file");
 	if((pos>=Size)&&(!CanWrite))
 		ThrowRIOException(this,"Position outside of the file");
 
@@ -491,11 +491,11 @@ void RIOFile::SeekRel(off_t rel)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		ThrowRIOException(this,"RIOFile::SeekRel(off_t) : Can't seek the file");
+		ThrowRIOException(this,"Can't seek the file");
 	if(static_cast<ssize_t>(Pos)+rel<0)//<static_cast<size_t>(labs(rel)))
-		ThrowRIOException(this,"RIOFile::SeekRel(off_t) : Position before beginning of the file");
+		ThrowRIOException(this,"Position before beginning of the file");
 	if((Pos+rel>Size)&&(!CanWrite))
-		ThrowRIOException(this,"RIOFile::SeekRel(off_t) : Position outside of the file");
+		ThrowRIOException(this,"Position outside of the file");
 
 	// Update current position
 	Pos+=rel;

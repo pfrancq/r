@@ -457,8 +457,9 @@ public:
 
 	/**
 	* Return the next entire line in the file.
+	* @param skipempty       Skip empty lines.
 	*/
-	RString GetLine(bool SkipEmpty=true);
+	RString GetLine(bool skipempty=true);
 
 	/**
 	* Return the next integer contained in the file.

@@ -105,7 +105,7 @@ void RXMLFile::Open(RIO::ModeType mode)
 				Header+=" encoding=\""+XMLStruct->GetEncoding()+"\"";
 			Header+="?>";
 			(*this)<<Header;
-			if(!AvoidSpaces)
+			if(!MustAvoidSpaces())
 				(*this)<<endl;
 			Header="<!DOCTYPE "+top->GetName();
 			if(XMLStruct)
@@ -118,16 +118,16 @@ void RXMLFile::Open(RIO::ModeType mode)
 			if(Cur.GetNb())
 			{
 				Header+="[";
-				if(!AvoidSpaces)
+				if(!MustAvoidSpaces())
 					Header+="\n";
 				for(Cur.Start();!Cur.End();Cur.Next())
 				{
-					if(!AvoidSpaces)
+					if(!MustAvoidSpaces())
 						Header+="\t";
 					else
 						Header+=" ";
 					Header+="<!ENTITY "+Cur()->GetName()+" \""+Cur()->GetValue()+"\">";
-					if(!AvoidSpaces)
+					if(!MustAvoidSpaces())
 						Header+="\n";
 				}
 				Header+=" ]>";
@@ -135,7 +135,7 @@ void RXMLFile::Open(RIO::ModeType mode)
 			else
 				Header+=">";
 			(*this)<<Header;
-			if(!AvoidSpaces)
+			if(!MustAvoidSpaces())
 				(*this)<<endl;
 			CurTag=top;
 			SaveNextTag(0);
@@ -175,7 +175,7 @@ void RXMLFile::SaveNextTag(int depth)
 	RString line;
 	RXMLTag* Current(CurTag);
 
-	if(!AvoidSpaces)
+	if(!MustAvoidSpaces())
 		for(int i=0;i<depth;i++) line+="\t";
 
 	// Write the first line : <tag attrs> or <tag attrs/>
@@ -202,7 +202,7 @@ void RXMLFile::SaveNextTag(int depth)
 	// Wrote the content (if any)
 	if(CurTag->HasContent())
 	{
-		if(!AvoidSpaces)
+		if(!MustAvoidSpaces())
 			for(int i=0;i<depth+1;i++) line+="\t";
 		line+=StringToXML(CurTag->GetContent().Trim(),false);
 		(*this)<<line<<endl;
@@ -230,7 +230,7 @@ void RXMLFile::SaveNextTag(int depth)
 
 	if(Current->GetNbNodes()||Current->HasContent())
 	{
-		if(!AvoidSpaces)
+		if(!MustAvoidSpaces())
 			for(int i=0;i<depth;i++) line+="\t";
 		line+="</"+Current->GetName()+">";
 		(*this)<<line<<endl;
@@ -260,10 +260,10 @@ void RXMLFile::BeginTag(const RString& namespaceURI, const RString&, const RStri
 	if(!XMLStruct->GetTop())
 	{
 		// Test if is a XML document (DocType=true) or a HTML document (DocType=false)
-		if(!DocType.IsEmpty())
+		if(!GetDocType().IsEmpty())
 		{
 			// Name of the Tag must be name of the DocType
-			if(tag->GetName()!=DocType)
+			if(tag->GetName()!=GetDocType())
 				throw RIOException(this,"Not a valid XML file");
 		}
 		else
@@ -273,7 +273,7 @@ void RXMLFile::BeginTag(const RString& namespaceURI, const RString&, const RStri
 			// Is it a HTML file?
 			// -> If Not, consider the first tag is the DOCTYPE
 			if(TopName!="html")
-				DocType=TopName;
+				SetDocType(TopName);
 				//throw RIOException(this,"Not a valid HTML file");
 		}
 	}

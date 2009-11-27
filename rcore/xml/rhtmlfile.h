@@ -51,18 +51,6 @@ namespace R{
 */
 class RHTMLFile : public RXMLFile
 {
-	class Tag;
-
-	/**
-	* HTML Tags.
-	*/
-	static R::RContainer<Tag,true,true> Tags;
-
-	/**
-	* Is the </html> found?
-	*/
-	bool FoundClosingHTML;
-
 public:
 
 	/**
@@ -109,13 +97,6 @@ public:
 	* @param docType        Name of the encoding.
 	*/
 	virtual void SetDocType(const RString& docType);
-
-private:
-
-	/**
-	* This method creates all the tags valid for the HTML version supported.
-	*/
-	void InitValidTags(void);
 
 public:
 

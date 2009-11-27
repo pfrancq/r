@@ -36,6 +36,24 @@ using namespace R;
 using namespace std;
 
 
+//------------------------------------------------------------------------------
+//
+// class RXMLParser::Attribute
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+class RXMLParser::Attribute
+{
+public:
+	RString Name;
+	RContainer<RString,true,false> Values;
+	size_t NbValues;
+
+	Attribute(void) : Values(20) {}
+	int Compare(const Attribute&) const {return(-1);}
+};
+
 
 //------------------------------------------------------------------------------
 //
@@ -57,6 +75,40 @@ public:
 };
 
 
+//------------------------------------------------------------------------------
+//
+// class RXMLParser::Tag
+//
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+RXMLParser::HTMLTag::HTMLTag(const RString& name,int level,bool single,bool self)
+		: Name(name), Level(level), Single(single), SelfContained(self)
+{
+}
+
+
+//------------------------------------------------------------------------------
+int RXMLParser::HTMLTag::Compare(const RXMLParser::HTMLTag& t) const
+{
+	return(Name.Compare(t.Name));
+}
+
+
+//------------------------------------------------------------------------------
+int RXMLParser::HTMLTag::Compare(const RString& t) const
+{
+	return(Name.Compare(t));
+}
+
+
+
+//------------------------------------------------------------------------------
+// Global variables
+RContainer<RXMLParser::HTMLTag,true,true> RXMLParser::Tags(200,10);
+
+
 
 //------------------------------------------------------------------------------
 //
@@ -66,28 +118,150 @@ public:
 
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(void)
-	: RTextFile(), Namespaces(20),DefaultNamespace(5), AvoidSpaces(false), InvalidXMLCodes(false)
+	: RTextFile(), Namespaces(20), DefaultNamespace(5), Attributes(20),
+	  AvoidSpaces(false), InvalidXMLCodes(false), HTMLMode(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
+	if(!Tags.GetNb())
+		InitValidTags();
 }
 
 
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(const RURI& uri,const RCString& encoding)
- : RTextFile(uri,encoding), Namespaces(20), DefaultNamespace(5), AvoidSpaces(false), InvalidXMLCodes(false)
+ : RTextFile(uri,encoding), Namespaces(20), DefaultNamespace(5), Attributes(20),
+   AvoidSpaces(false), InvalidXMLCodes(false), HTMLMode(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
+	if(!Tags.GetNb())
+		InitValidTags();
 }
 
 
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(RIOFile& file,const RCString& encoding)
- : RTextFile(file,encoding), Namespaces(20), DefaultNamespace(5), AvoidSpaces(false), /*Attrs(10),*/ InvalidXMLCodes(false)
+ : RTextFile(file,encoding), Namespaces(20), DefaultNamespace(5), Attributes(20),
+   AvoidSpaces(false), /*Attrs(10),*/ InvalidXMLCodes(false), HTMLMode(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
+	if(!Tags.GetNb())
+		InitValidTags();
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::InitValidTags(void)
+{
+	// Global Tags
+	Tags.InsertPtr(new HTMLTag("html",0,false));
+	Tags.InsertPtr(new HTMLTag("body",10,false));
+	Tags.InsertPtr(new HTMLTag("head",10,false));
+
+	// Heading Tags
+	Tags.InsertPtr(new HTMLTag("meta",500,true));
+	Tags.InsertPtr(new HTMLTag("title",500,false));
+	Tags.InsertPtr(new HTMLTag("base",500,false));
+	Tags.InsertPtr(new HTMLTag("link",500,true));
+	Tags.InsertPtr(new HTMLTag("style",500,false));
+
+	// Division Tags
+	Tags.InsertPtr(new HTMLTag("div",150,false,true));
+	Tags.InsertPtr(new HTMLTag("span",160,false,true));
+
+	// Frame
+	Tags.InsertPtr(new HTMLTag("frameset",100,false));
+	Tags.InsertPtr(new HTMLTag("frame",360,false));
+	Tags.InsertPtr(new HTMLTag("noframe",360,false));
+	Tags.InsertPtr(new HTMLTag("iframe",360,false));
+
+	//info to contact author
+	Tags.InsertPtr(new HTMLTag("address",360,false));
+
+	// Forms
+	Tags.InsertPtr(new HTMLTag("form",360,false));
+	Tags.InsertPtr(new HTMLTag("input",500,false));
+	Tags.InsertPtr(new HTMLTag("button",500,false));
+	Tags.InsertPtr(new HTMLTag("label",500,false));
+	Tags.InsertPtr(new HTMLTag("select",500,false));
+	Tags.InsertPtr(new HTMLTag("option",500,false));
+	Tags.InsertPtr(new HTMLTag("optgroup",500,false));
+	Tags.InsertPtr(new HTMLTag("textarea",500,false));
+	Tags.InsertPtr(new HTMLTag("isindex",500,false));
+	Tags.InsertPtr(new HTMLTag("fieldset",500,false));
+	Tags.InsertPtr(new HTMLTag("legend",500,false));
+
+	// Structure Tags
+	Tags.InsertPtr(new HTMLTag("table",200,false));
+	Tags.InsertPtr(new HTMLTag("caption",210,false));
+	Tags.InsertPtr(new HTMLTag("thead",210,false));
+	Tags.InsertPtr(new HTMLTag("tfoot",210,false));
+	Tags.InsertPtr(new HTMLTag("tbody",210,false));
+	Tags.InsertPtr(new HTMLTag("tr",220,false));
+	Tags.InsertPtr(new HTMLTag("th",220,false));
+	Tags.InsertPtr(new HTMLTag("td",230,false));
+	Tags.InsertPtr(new HTMLTag("ul",240,false));
+	Tags.InsertPtr(new HTMLTag("ol",240,false));
+	Tags.InsertPtr(new HTMLTag("dl",240,false));
+	Tags.InsertPtr(new HTMLTag("li",250,false));
+	Tags.InsertPtr(new HTMLTag("dt",250,false));
+	Tags.InsertPtr(new HTMLTag("dd",250,false));
+	Tags.InsertPtr(new HTMLTag("colgroup",500,false));
+	Tags.InsertPtr(new HTMLTag("col",500,false));
+
+
+	// Paragraph Tag
+	Tags.InsertPtr(new HTMLTag("h1",300,false));
+	Tags.InsertPtr(new HTMLTag("h2",310,false));
+	Tags.InsertPtr(new HTMLTag("h3",320,false));
+	Tags.InsertPtr(new HTMLTag("h4",330,false));
+	Tags.InsertPtr(new HTMLTag("h5",340,false));
+	Tags.InsertPtr(new HTMLTag("h6",350,false));
+	Tags.InsertPtr(new HTMLTag("p",360,false));
+
+
+	// Low level tags
+	Tags.InsertPtr(new HTMLTag("sup",500,false));
+	Tags.InsertPtr(new HTMLTag("sub",500,false));
+	Tags.InsertPtr(new HTMLTag("br",500,true));
+	Tags.InsertPtr(new HTMLTag("nobr",500,false));
+	Tags.InsertPtr(new HTMLTag("hr",500,true));
+	Tags.InsertPtr(new HTMLTag("font",500,false));
+	Tags.InsertPtr(new HTMLTag("pre",500,false));
+	Tags.InsertPtr(new HTMLTag("img",500,true)); //? Depreciated
+	Tags.InsertPtr(new HTMLTag("object",500,false));
+	Tags.InsertPtr(new HTMLTag("param",500,false));
+	Tags.InsertPtr(new HTMLTag("embed",500,false));
+	Tags.InsertPtr(new HTMLTag("noembed",500,false));
+	Tags.InsertPtr(new HTMLTag("map",500,false));
+	Tags.InsertPtr(new HTMLTag("area",500,false));
+	Tags.InsertPtr(new HTMLTag("center",500,false));
+	Tags.InsertPtr(new HTMLTag("em",500,false));
+	Tags.InsertPtr(new HTMLTag("strong",500,false));
+	Tags.InsertPtr(new HTMLTag("dfn",500,false));
+	Tags.InsertPtr(new HTMLTag("code",500,false));
+	Tags.InsertPtr(new HTMLTag("samp",500,false));
+	Tags.InsertPtr(new HTMLTag("kbd",500,false));
+	Tags.InsertPtr(new HTMLTag("var",500,false));
+	Tags.InsertPtr(new HTMLTag("cite",500,false));
+	Tags.InsertPtr(new HTMLTag("abbr",500,false));
+	Tags.InsertPtr(new HTMLTag("acronym",500,false));
+	Tags.InsertPtr(new HTMLTag("i",500,false));
+	Tags.InsertPtr(new HTMLTag("tt",500,false));
+	Tags.InsertPtr(new HTMLTag("big",500,false));
+	Tags.InsertPtr(new HTMLTag("small",500,false));
+	Tags.InsertPtr(new HTMLTag("strike",500,false));
+	Tags.InsertPtr(new HTMLTag("b",500,false));
+	Tags.InsertPtr(new HTMLTag("u",500,false));  //Depreciated
+	Tags.InsertPtr(new HTMLTag("s",500,false));  //Depreciated
+	Tags.InsertPtr(new HTMLTag("applet",500,false));  //Depreciated
+	Tags.InsertPtr(new HTMLTag("a",500,false));
+	Tags.InsertPtr(new HTMLTag("blockquote",500,false));
+	Tags.InsertPtr(new HTMLTag("q",500,false));
+	Tags.InsertPtr(new HTMLTag("script",500,false));
+	Tags.InsertPtr(new HTMLTag("noscript",500,false));
 }
 
 
@@ -95,7 +269,7 @@ RXMLParser::RXMLParser(RIOFile& file,const RCString& encoding)
 char RXMLParser::GetCurrentDepth(void) const
 {
 	if(Mode!=RIO::Read)
-		throw RIOException("File not in read mode");
+		ThrowRIOException(this,"File not in read mode");
 	return(CurDepth);
 }
 
@@ -104,8 +278,34 @@ char RXMLParser::GetCurrentDepth(void) const
 size_t RXMLParser::GetLastTokenPos(void) const
 {
 	if(Mode!=RIO::Read)
-		throw RIOException("File not in read mode");
+		ThrowRIOException(this,"File not in read mode");
 	return(LastTokenPos);
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::InitParser(void)
+{
+	TreatEncoding=false;
+	CurHTMLTag=0;
+	Namespaces.Clear();
+	DefaultNamespace.Clear();
+	Namespace* ptr=Namespaces.GetInsertPtr("xmlns");
+	ptr->URI.Push(new RString("http://www.w3.org/2000/xmlns"));
+	FoundClosingHTML=false;
+	if(HTMLMode)
+	{
+		Namespace* ptr=Namespaces.GetInsertPtr("xml");
+		ptr->URI.Push(new RString("http://www.w3.org/1999/xhtml"));
+	}
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::SetHTMLMode(bool html)
+{
+	HTMLMode=html;
+	SetInvalidXMLCodes(html);
 }
 
 
@@ -115,11 +315,7 @@ void RXMLParser::Open(RIO::ModeType mode)
 	RTextFile::Open(mode);
 
 	// Create default namespaces
-	TreatEncoding=false;
-	Namespaces.Clear();
-	DefaultNamespace.Clear();
-	Namespace* ptr=Namespaces.GetInsertPtr("xmlns");
-	ptr->URI.Push(new RString("http://www.w3.org/2000/xmlns"));
+	InitParser();
 
 	// Treat the different modes
 	switch(Mode)
@@ -135,11 +331,11 @@ void RXMLParser::Open(RIO::ModeType mode)
 
 		case RIO::Append:
 		case RIO::Create:
-			throw RIOException("A XML Parser is read-only");
+			ThrowRIOException(this,"A XML Parser is read-only");
 			break;
 
 		default:
-			throw RIOException("No Valid Mode");
+			ThrowRIOException(this,"No Valid Mode");
 	};
 }
 
@@ -239,7 +435,7 @@ RString RXMLParser::XMLToString(const RString& str)
 				{
 					if(InvalidXMLCodes)
 						return(Code);
-					throw RIOException(this,"Invalid XML/HTML code \""+Code+"\"");
+					ThrowRIOException(this,"Invalid XML/HTML code \""+Code+"\"");
 				}
 				else
 					res+=What;
@@ -252,7 +448,7 @@ RString RXMLParser::XMLToString(const RString& str)
 			{
 				if(InvalidXMLCodes)
 					return(Code);
-				throw RIOException(this,"Invalid XML/HTML code \""+Code+"\"");
+				ThrowRIOException(this,"Invalid XML/HTML code \""+Code+"\"");
 			}
 		}
 		else
@@ -283,6 +479,16 @@ RString RXMLParser::StringToXML(const RString& str,bool strict)
 
 
 //------------------------------------------------------------------------------
+const RXMLParser::HTMLTag* RXMLParser::GetHTMLTag(const RString& name) const
+{
+	HTMLTag* tag(Tags.GetPtr(name));
+	if(!tag)
+		ThrowRIOException(this,"Unknown HTML Tag '"+name+"'.");
+	return(tag);
+}
+
+
+//------------------------------------------------------------------------------
 void RXMLParser::LoadHeader(void)
 {
 	// Search after "<? xml"
@@ -291,7 +497,7 @@ void RXMLParser::LoadHeader(void)
 		Section=Header;
 		SkipSpaces();
 		if(!CurString("xml",false))
-			throw RIOException(this,"Wrong XML header");
+			ThrowRIOException(this,"Wrong XML header");
 		SkipSpaces();
 
 		// Search for parameters until ?> is found
@@ -325,7 +531,7 @@ void RXMLParser::LoadHeader(void)
 	{
 		Section=DOCTYPE;
 		if(!CurString("DOCTYPE",false))
-			throw RIOException(this,"Wrong DOCTYPE command");
+			ThrowRIOException(this,"Wrong DOCTYPE command");
 
 		RString Content(GetToken(">["));
 		SetDocType(XMLToString(Content));
@@ -352,16 +558,16 @@ void RXMLParser::LoadHeader(void)
 						// Get next name
 						RString cmd=GetWord();
 						if(cmd!="<!ENTITY")
-							throw RIOException(this,"Wrong entities formating");
+							ThrowRIOException(this,"Wrong entities formating");
 
 						RString ns(GetWord());
 						Cur=GetChar();
 						if(Cur!='"')
-							throw RIOException(this,"Wrong entities formating");
+							ThrowRIOException(this,"Wrong entities formating");
 						RString uri(GetToken(RString('"')));
 						Cur=GetChar();
 						if(Cur!='"')
-							throw RIOException(this,"Wrong entities formating");
+							ThrowRIOException(this,"Wrong entities formating");
 
 						// Add the entity
 						AddEntity(ns,uri);
@@ -386,7 +592,7 @@ void RXMLParser::LoadHeader(void)
 					}
 
 					if(End())
-						throw RIOException(this,"Wrong entities formating");
+						ThrowRIOException(this,"Wrong entities formating");
 
 					// Skip ] and spaces
 					Next();
@@ -399,11 +605,11 @@ void RXMLParser::LoadHeader(void)
 					RChar What=GetChar();
 					bool Quotes=((What==RChar('\''))||(What==RChar('"')));
 					if(!Quotes)
-						throw RIOException(this,"Bad XML file");
+						ThrowRIOException(this,"Bad XML file");
 					SetDTD(GetToken(RString(What)));
 					SkipSpaces();
 					if(GetChar()!=What)
-						throw RIOException(this,"Bad XML file");
+						ThrowRIOException(this,"Bad XML file");
 					SkipSpaces();
 					Cont=true;
 				}
@@ -418,7 +624,7 @@ void RXMLParser::LoadHeader(void)
 						SetDTD(GetToken(RString(What)));
 						SkipSpaces();
 						if(GetChar()!=What)
-							throw RIOException(this,"Bad XML file");
+							ThrowRIOException(this,"Bad XML file");
 						SkipSpaces();
 						Cont=true;
 					}
@@ -426,7 +632,7 @@ void RXMLParser::LoadHeader(void)
 			}
 		}
 		if(GetChar()!='>') // Skip >
-			throw RIOException(this,"Bad XML file");
+			ThrowRIOException(this,"Bad XML file");
 		SkipSpaces();
 	}
 }
@@ -447,7 +653,7 @@ void RXMLParser::LoadNextTag(void)
 
 	// If not a tag -> Error
 	if(GetChar()!='<')
-		throw RIOException(this,"Not a tag");
+		ThrowRIOException(this,"Not a tag");
 
 	// Read name of the tag
 	LastTokenPos=GetPos();
@@ -479,7 +685,24 @@ void RXMLParser::LoadNextTag(void)
 		lname=TagName;
 	}
 
+	if(HTMLMode)
+	{
+		lname=lname.ToLower();
+		TagName=TagName.ToLower();
+
+		// Valid HTML Tag?
+		CurHTMLTag=Tags.GetPtr(lname);
+		if(!CurHTMLTag)
+			ThrowRIOException(this,"Unknown opening HTML Tag '"+lname+"'.");
+	}
 	BeginTag(uri,lname,TagName);
+	if(HTMLMode)
+	{
+		// Verify that is not a single tag in HTML
+		if(CurHTMLTag->Single)
+			CurTagClosing=true;
+		CurHTMLTag=0;
+	}
 
 	// Read Attributes
 	LoadAttributes(PopDefault,PopURI);
@@ -489,7 +712,7 @@ void RXMLParser::LoadNextTag(void)
 		{
 			Namespace* ptr=Namespaces.GetPtr(prefix);
 			if(!ptr)
-				throw RIOException(this,"Namespace with prefix '"+prefix+"' no defined");
+				ThrowRIOException(this,"Namespace with prefix '"+prefix+"' no defined");
 			uri=(*ptr->URI());
 			ResolveNamespace(uri);
 		}
@@ -513,7 +736,23 @@ void RXMLParser::LoadNextTag(void)
 	// Verify if it has sub-tags
 	if(CurTagClosing)
 	{
+		if(HTMLMode)
+		{
+			lname=lname.ToLower();
+			TagName=TagName.ToLower();
+
+			// Valid HTML Tag?
+			CurHTMLTag=Tags.GetPtr(lname);
+			if(!CurHTMLTag)
+				ThrowRIOException(this,"Unknown closing HTML Tag '"+lname+"'.");
+		}
 		EndTag(uri,lname,TagName);
+		if(HTMLMode)
+		{
+			CurHTMLTag=0;
+			if(lname=="html")
+				FoundClosingHTML=true;
+		}
 		return;
 	}
 
@@ -535,7 +774,7 @@ void RXMLParser::LoadNextTag(void)
 				while(!CurString("]]>",false))
 				{
 					if(End())
-						throw RIOException(this,"Invalid '[CDATA[]]>'.");
+						ThrowRIOException(this,"Invalid '[CDATA[]]>'.");
 					LastTokenPos=GetPos();
 					RString tmp(GetTokenString("]]>"));
 					if(tmp.GetLen())
@@ -585,7 +824,7 @@ void RXMLParser::LoadNextTag(void)
 					while(!CurString("]]>"))
 					{
 						if(End())
-							throw RIOException(this,"Invalid '[CDATA[]]>'.");
+							ThrowRIOException(this,"Invalid '[CDATA[]]>'.");
 						LastTokenPos=GetPos();
 						RString tmp(GetTokenString("]]>"));
 						if(tmp.GetLen())
@@ -610,11 +849,26 @@ void RXMLParser::LoadNextTag(void)
 	SkipSpaces();
 	LastTokenPos=GetPos();
 	RString EndTagName(GetToken(RString('>')));
-	if(EndTagName!=TagName)
-		throw RIOException(this,"Found closing tag '"+EndTagName+"' while closing tag '"+TagName+"' ("+RString::Number(OpenTagLine)+") was expected.");
+	if((EndTagName!=TagName))
+		ThrowRIOException(this,"Found closing tag '"+EndTagName+"' while closing tag '"+TagName+"' ("+RString::Number(OpenTagLine)+") was expected.");
 	SkipSpaces();
-	Next(); // Skip >
+	if(HTMLMode&&(lname=="html"))
+			FoundClosingHTML=true;
+	else
+		Next(); // Skip >
+	if(HTMLMode)
+	{
+		lname=lname.ToLower();
+		TagName=TagName.ToLower();
+
+		// Valid HTML Tag?
+		CurHTMLTag=Tags.GetPtr(lname);
+		if(!CurHTMLTag)
+			ThrowRIOException(this,"Unknown closing HTML Tag '"+lname+"'.");
+	}
 	EndTag(uri,lname,TagName);
+	if(HTMLMode)
+		CurHTMLTag=0;
 	if(PopDefault)
 		DefaultNamespace.Pop();
 	while(PopURI.GetNb())
@@ -633,6 +887,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 {
 	RChar What;
 	bool Quotes;
+//	size_t NbAttrs(0);
 
 	// No namespace
 	popdefault=false;
@@ -665,7 +920,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 			{
 				Namespace* ptr=Namespaces.GetPtr(prefix);
 				if(!ptr)
-					throw RIOException(this,"Namespace with prefix '"+prefix+"' no defined");
+					ThrowRIOException(this,"Namespace with prefix '"+prefix+"' no defined");
 				uri=(*ptr->URI());
 			}
 		}
@@ -736,7 +991,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 			{
 				// If Quote must be used -> generate an exception
 				if(OnlyQuote())
-					throw RIOException(this,"Quote must be used to delimit the parameter value in a tag.");
+					ThrowRIOException(this,"Quote must be used to delimit the parameter value in a tag.");
 				RString tmp(What+GetToken(">"));
 				if(Section==Header)
 					HeaderValue(tmp);

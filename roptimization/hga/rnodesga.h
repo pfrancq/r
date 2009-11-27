@@ -152,7 +152,7 @@ public:
 	* Delete and Releases all the child nodes of a given node.
 	* @param node           Pointer to the node.
 	*/
-	void DeleteNodes(cNode* node);
+	virtual void DeleteNodes(cNode* node);
 
 	/**
 	* Move a node to the list of child nodes of a given node.

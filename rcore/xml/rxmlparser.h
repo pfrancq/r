@@ -49,7 +49,8 @@ class RXMLAttr;
 
 //------------------------------------------------------------------------------
 /**
-* This class represents a XML parser. By default, it does nothing.
+* This class represents a parser for a XML stream. The stream can be read from
+* a file. By default, it does nothing.
 * @code
 * #include <rxmlparser.h>
 * using namespace R;
@@ -57,14 +58,12 @@ class RXMLAttr;
 * RXMLParser In("/home/user/data.xml",&XML);
 * In.Open(RIO::Read);
 * @endcode
-* @short XML Parser.
+* @short XML Stream Parser.
 * @author Pascal Francq.
 */
 class RXMLParser : public RTextFile
 {
-protected:
-	class Namespace;
-
+public:
 	/**
 	 * Define the section of the XML actually treated.
 	 */
@@ -75,6 +74,69 @@ protected:
 		DOCTYPE                      /** The Tag "<!DOCTYPE >.*/,
 		Body                         /** The body of the XML file.*/
 	};
+
+protected:
+
+	/*
+	 * The HTMLTag provides a representation for a HTML Tag.
+	 */
+	class HTMLTag
+	{
+	public:
+		/**
+		 *  Name of the HTML Tag.
+		 */
+		RString Name;
+
+		/**
+		 * Integer representing the depth of the tag in HTML structure.
+		 */
+		int Level;
+
+	    /**
+	     * A single Tag (ex: br)?.
+	     */
+		bool Single;
+
+		/**
+		 * The tag may contain itself as child (false by default).
+		 */
+		bool SelfContained;
+
+		/**
+		 * Construct a HTML tag.
+		 * @param name       Name of the tag.
+		 * @param level      Level of the tag.
+		 * @param single     Single tag.
+		 * @param self       Self contained.
+		 * @return
+		 */
+		HTMLTag(const RString& name,int level,bool single,bool self=false);
+
+		/**
+		 * Compare two tags.
+		 * @param t          Tag to compare with.
+		 * @return the "difference" between the names.
+		 */
+		int Compare(const HTMLTag& t) const;
+
+		/**
+		 * Compare a tag with a name of a tag.
+		 * @param t          Tag name.
+		 * @return the "difference" between the names.
+		 */
+		int Compare(const RString& t) const;
+	};
+
+private:
+
+	class Namespace;
+	class Attribute;
+
+	/**
+	* HTML Tags.
+	*/
+	static R::RContainer<HTMLTag,true,true> Tags;
 
 	/**
 	* Type of the document as defined in the XML file <!DOCTYPE >. If the tag
@@ -96,6 +158,11 @@ protected:
 	 * Default namespace (if any).
 	 */
 	RStack<RString,true,true,true> DefaultNamespace;
+
+	/**
+	 * Current attributes treated.
+	 */
+	RContainer<Attribute,true,false> Attributes;
 
 	/**
 	 * Avoid spaces in the XML file when creating it.
@@ -127,6 +194,21 @@ protected:
 	 */
 	bool TreatEncoding;
 
+	/**
+	 * HTMLMode active.
+	 */
+	bool HTMLMode;
+
+	/**
+	* Is the </html> found?
+	*/
+	bool FoundClosingHTML;
+
+	/**
+	 * Pointer to the current HTML tag.
+	 */
+	HTMLTag* CurHTMLTag;
+
 public:
 
 	/**
@@ -150,6 +232,15 @@ public:
 	*/
 	RXMLParser(RIOFile& file,const RCString& encoding="UTF-8");
 
+private:
+
+	/**
+	* This method creates all the tags valid for the HTML version supported.
+	*/
+	void InitValidTags(void);
+
+public:
+
 	/**
 	 * Avoid spaces when a XML file is created.
 	 */
@@ -164,6 +255,12 @@ public:
 	 * Get the position of the last token extracted
 	 */
 	size_t GetLastTokenPos(void) const;
+
+	/**
+	 * Set the HTML mode.
+	 * @param html           HTML mode active ?
+	 */
+	void SetHTMLMode(bool html);
 
 	/**
 	* Open the file.
@@ -226,6 +323,22 @@ protected:
 	*/
 	RString StringToXML(const RString& str,bool strict=true);
 
+	/**
+	 * @return the current HTML Tag (if any).
+	 */
+	inline const HTMLTag* GetCurHTMLTag(void) const {return(CurHTMLTag);}
+
+	/**
+	 * @return a pointer to a given tag.
+	 * @param name           Name of the tag.
+	 */
+	const HTMLTag* GetHTMLTag(const RString& name) const;
+
+	/**
+	 * @return true if the current tag is a closing one.
+	 */
+	inline bool IsCurTagClosing(void) const {return(CurTagClosing);}
+
 private:
 
 	/**
@@ -268,11 +381,51 @@ private:
 	 */
 	void HeaderValue(const RString& value);
 
-protected:
+public:
+
+	//-----------------------------------------------------
+	/** @name Stream Input Methods
+	 * These methods are automatically called when a stream is read from a
+	 * file.
+	 */
+	// @{
 
 	/**
-	* Set the doctype of the XML document.
-	* @param docType        Name of the encoding.
+	 * Initialize the parser.
+	 */
+	void InitParser(void);
+
+	/**
+	 * Set the section type. It is necessary to specify where the XML stream
+	 * is.
+	 * @param section        Type of the section.
+	 */
+	inline void SetSection(SectionType section) {Section=section;}
+
+	/**
+	 * Reset the depth. Each time, the XML stream is on the top of the XML
+	 * structure, this method must be called
+	 */
+	inline void ResetDepth(void) {CurDepth=0;}
+
+	/**
+	 * @return true of the spaces must be avoided.
+	 */
+	inline bool MustAvoidSpaces(void) const {return(AvoidSpaces);}
+
+	/**
+	 * @return true if the closing </html> tag was found.
+	 */
+	inline bool HasFoundClosingHTML(void) const {return(FoundClosingHTML);}
+
+	/**
+	 * @return the document type of the XML document.
+	 */
+	inline RString GetDocType(void) const {return(DocType);}
+
+	/**
+	* Set the document type of the XML document.
+	* @param docType        Name of the type.
 	*/
 	virtual void SetDocType(const RString& docType);
 
@@ -346,8 +499,7 @@ protected:
 	* a tag. By default, this function return true which is the syntax of XML.
 	*/
 	virtual bool OnlyQuote(void);
-
-public:
+	//@} Stream Input Methods
 
 	/**
 	* Method that specify if invalid XML codes (sequences beginning with a '&'

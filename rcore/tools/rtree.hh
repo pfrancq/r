@@ -249,6 +249,23 @@ template<class T,class N,bool bAlloc>
 
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
+	void RTree<T,N,bAlloc>::DeleteNodes(N* from)
+{
+	if(!from->NbSubNodes)
+		return;
+
+	RContainer<N,false,false> Del(from->NbSubNodes);
+	RCursor<N> Cur(from->GetNodes());
+	for(Cur.Start();!Cur.End();Cur.Next())
+		Del.InsertPtr(Cur());
+	Cur.Set(Del);
+	for(Cur.Start();!Cur.End();Cur.Next())
+		DeleteNode(Cur(),true);
+}
+
+
+//------------------------------------------------------------------------------
+template<class T,class N,bool bAlloc>
 	void RTree<T,N,bAlloc>::MoveNode(N* to,N* node)
 {
 	if(to->Tree!=node->Tree)

@@ -657,7 +657,7 @@ RString RTextFile::GetTokenString(const RString& endingstr)
 
 
 //------------------------------------------------------------------------------
-RString RTextFile::GetLine(bool SkipEmpty)
+RString RTextFile::GetLine(bool skipempty)
 {
 	if(!CanRead)
 		throw(RIOException(this,"File Mode is not Read"));
@@ -671,6 +671,7 @@ RString RTextFile::GetLine(bool SkipEmpty)
 	{
 		if(BeginComment())
 			SkipComments();
+
 		(*(ptr++))=GetChar();
 		i++;
 		if(i==255)
@@ -690,7 +691,7 @@ RString RTextFile::GetLine(bool SkipEmpty)
 		// Skip spaces and comments if necessary
 		if(!End())
 		{
-			if(ParseSpace==SkipAllSpaces)
+			if((ParseSpace==SkipAllSpaces)&&skipempty)
 				SkipSpaces();
 		}
 	}
@@ -702,8 +703,8 @@ RString RTextFile::GetLine(bool SkipEmpty)
 	}
 
 	// If the line is empty or contains only spaces -> read next line
-	if((res.IsEmpty())&&(SkipEmpty))
-		return(GetLine());
+	if((res.IsEmpty())&&skipempty)
+		return(GetLine(true));
 
 	// Return read line
 	return(res);

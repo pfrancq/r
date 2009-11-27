@@ -48,7 +48,41 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RPromKernel provides a kernel to manage PROMETHEE session.
-* @short PPromethee Kernel.
+* @code
+* // Create kernel, solutions and criteria
+* RPromKernel Prom("Test",4,4);
+* RPromSol* Car1=Prom.NewSol("Car1");
+* RPromSol* Car2=Prom.NewSol("Car2");
+* RPromSol* Car3=Prom.NewSol("Car3");
+* RPromSol* Car4=Prom.NewSol("Car4");
+*
+* RPromCriterion* Price;
+* RPromCriterion* Cons;
+* RPromCriterion* Comfort;
+* RPromCriterion* Power;
+*
+* Prom.AddCriterion(Price=new RPromLinearCriterion(RPromCriterion::Minimize,0.2,0.05,1.0,"Price"));
+* Prom.AddCriterion(Cons=new RPromLinearCriterion(RPromCriterion::Minimize,0.2,0.05,1.0,"Cons"));
+* Prom.AddCriterion(Comfort=new RPromLinearCriterion(RPromCriterion::Maximize,0.2,0.05,1.0,"Comfort"));
+* Prom.AddCriterion(Power=new RPromLinearCriterion(RPromCriterion::Maximize,0.2,0.05,1.0,"Power"));
+*
+* // Assign Values
+* Prom.Assign(Car1,Price,8.75);  Prom.Assign(Car1,Cons,6.2); Prom.Assign(Car1,Comfort,1.0);	Prom.Assign(Car1,Power,30);
+* Prom.Assign(Car2,Price,13.75); Prom.Assign(Car2,Cons,7.5); Prom.Assign(Car2,Comfort,1.0);	Prom.Assign(Car2,Power,50);
+* Prom.Assign(Car3,Price,25);    Prom.Assign(Car3,Cons,8);   Prom.Assign(Car3,Comfort,3.0);	Prom.Assign(Car3,Power,80);
+* Prom.Assign(Car4,Price,62.5);  Prom.Assign(Car4,Cons,20);  Prom.Assign(Car4,Comfort,2.0);	Prom.Assign(Car4,Power,120);
+*
+* // Compute Prom
+* Prom.ComputePrometheeII();
+*
+* // Print Fi
+* RPromSol** Res=Prom.GetSols();
+* cout<<"Sol\tFiPlus\t\tFiMinus\t\tFi"<<endl;
+* cout.precision(3);
+* for(int i=0;i<4;i++,Res++)
+*    cout<<"Car"<<(*Res)->GetId()+1<<"\t"<<(*Res)->GetFiPlus()<<"\t\t"<<(*Res)->GetFiMinus()<<"\t\t"<<(*Res)->GetFi()<<endl;
+* @endcode
+* @short PROMETHEE Kernel.
 * @author Pascal Francq & Thomas L'Eglise.
 */
 class RPromKernel

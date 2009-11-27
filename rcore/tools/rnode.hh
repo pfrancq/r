@@ -115,6 +115,7 @@ template<class T,class N,bool bAlloc>
 }
 
 
+
 //-----------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
 	bool RNode<T,N,bAlloc>::IsEmpty(void)

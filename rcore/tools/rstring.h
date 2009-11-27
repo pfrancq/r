@@ -276,6 +276,12 @@ public:
 	* Return the string.  The resulting array should be copied (and not
 	* destroyed) since it is an internal structure.
 	*/
+	inline RChar* operator()(void) {return(Data->Text);}
+
+	/**
+	* Return the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
+	*/
 	inline const RChar* operator()(void) const {return(Data->Text);}
 
 	/**
