@@ -227,7 +227,7 @@ protected:
 	/**
 	* Analyze the parameters. Put the results in Parameters.
 	*/
-	void AnalyseParams(void);
+	void AnalyzeParams(void);
 
 	/**
 	 * Cleanup the parameters if necessary.

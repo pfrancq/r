@@ -98,7 +98,7 @@ private:
 	* @param tag             Tag.
 	* @param cat             Category.
 	*/
-	void Analyse(RXMLTag* tag,lParams* cat);
+	void Analyze(RXMLTag* tag,lParams* cat);
 
 public:
 

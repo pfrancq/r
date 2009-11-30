@@ -83,7 +83,7 @@ RConfig::RConfig(const RString& cat,const RString& name)
 
 
 //------------------------------------------------------------------------------
-void RConfig::Analyse(RXMLTag* tag,lParams* cat)
+void RConfig::Analyze(RXMLTag* tag,lParams* cat)
 {
 	// Go through all existing parameters
 	RCursor<RParam> Cur(*cat);
@@ -181,12 +181,12 @@ void RConfig::Load(bool global)
 			lParams* cat=Params.GetInsertPtr(Level()->GetAttrValue("name"));
 			RCursor<RXMLTag> SubLevel(Level()->GetNodes());
 			for(SubLevel.Start();!SubLevel.End();SubLevel.Next())
-				Analyse(SubLevel(),cat);
+				Analyze(SubLevel(),cat);
 		}
 		else
 		{
 			lParams* cat=Params.GetInsertPtr(RString::Null);
-			Analyse(Level(),cat);
+			Analyze(Level(),cat);
 		}
 	}
 }

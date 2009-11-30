@@ -122,16 +122,16 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
-	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::AnalysePop(void)
+	void R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::AnalyzePop(void)
 {
 	cChromo **C,**C1,*p;
 	size_t i,j;
 
 	if(Debug)
-		Debug->BeginFunc("AnalysePop","RInstG");
+		Debug->BeginFunc("AnalyzePop","RInstG");
 
-	// Call the default AnalysePop
-	R::RInst<cInst,cChromo,cFit,cThreadData>::AnalysePop();
+	// Call the default AnalyzePop
+	R::RInst<cInst,cChromo,cFit,cThreadData>::AnalyzePop();
 
 	// Look if same chromosomes and modify population to have only one copy of each
 	for(i=0,C=Chromosomes;i<GetPopSize()-1;C++,i++)
@@ -157,7 +157,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	}
 
 	if(Debug)
-		Debug->EndFunc("AnalysePop","RInstG");
+		Debug->EndFunc("AnalyzePop","RInstG");
 }
 
 

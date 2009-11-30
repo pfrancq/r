@@ -111,7 +111,7 @@ public:
 	* @param nb             Number of objects.
 	* @param selected       Array to hold which objects are selected.
 	* @param bound          Boundary rectangle representing the objects to
-	*                       analyse.
+	*                       analyze.
 	* @return               The geometric information of the object to place.
 	*/
 	RGeoInfo* GetBestConnected(RGeoInfos* infos,size_t nb,bool* selected,RRect& bound);

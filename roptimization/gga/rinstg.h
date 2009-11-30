@@ -207,7 +207,7 @@ public:
 	* same chromosomes are detect, one of them is replace a random based one
 	* with a probability of 90%.
 	*/
-	virtual void AnalysePop(void);
+	virtual void AnalyzePop(void);
 
 	/**
 	* Random construction of the chromosomes. Call the method of RInst and

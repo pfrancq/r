@@ -139,13 +139,13 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreaData>
-	void R::RInst<cInst,cChromo,cFit,cThreaData>::AnalysePop(void)
+	void R::RInst<cInst,cChromo,cFit,cThreaData>::AnalyzePop(void)
 {
 	size_t i;
 	cChromo **C;
 
 	if(Debug)
-		Debug->BeginFunc("AnalysePop","RInst");
+		Debug->BeginFunc("AnalyzePop","RInst");
 
 	// Evaluate all the chromosomes if necessary
 	PostNotification("RInst::Interact");
@@ -191,7 +191,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 		PostNotification("RInst::Best",(size_t)Gen);
 	}
 	if(Debug)
-		Debug->EndFunc("AnalysePop","RInst");
+		Debug->EndFunc("AnalyzePop","RInst");
 }
 
 
@@ -400,7 +400,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(!((AgeNextMutation--)&&(AgeNextBestMutation--)))  // Decrease the number of generations between mutations and verify if a mutation must be done
 	{
 		// Evaluation is necessary since the crossover has been done
-		AnalysePop();
+		AnalyzePop();
 		PostNotification("RInst::Interact");
 		Mutation();
 	}
@@ -408,12 +408,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(!(AgeNextInversion--)) // Decrease the number of generations between inversions and verify if a mutation must be done
 	{
 		// Evaluation is necessary since the crossover has been done (and perhaps Mutation)
-		AnalysePop();
+		AnalyzePop();
 		PostNotification("RInst::Interact");
 		Inversion();
 	}
 	PostNotification("RInst::Interact");
-	AnalysePop();
+	AnalyzePop();
 	PostNotification("RInst::Generation",(size_t)Gen);
 	PostNotification("RInst::Interact");
 	if(Debug)
@@ -431,7 +431,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	{
 		RandomConstruct();
 		PostNotification("RInst::Interact");
-		AnalysePop();
+		AnalyzePop();
 		PostNotification("RInst::Generation",(size_t)Gen);
 		DisplayInfos();
 	}

@@ -337,7 +337,7 @@ public:
 	* to verify if the best chromosome ever calculated has to replaced. When
 	* needed, the chromosomes are evaluated.
 	*/
-	virtual void AnalysePop(void);
+	virtual void AnalyzePop(void);
 
 	/**
 	* Do some post evaluation treatment. It can be used to implement a

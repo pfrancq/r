@@ -261,7 +261,7 @@ void RInterpreter::TreatLine(size_t depth,RString line)
 			Char++;
 
 			// Create the instruction
-			AnalyseParams();
+			AnalyzeParams();
 			AddInst(new RPrgInstMethod(this,Inst,Method,Parameters));
 			CleanupParams();
 			Eol(false);
@@ -282,7 +282,7 @@ void RInterpreter::TreatLine(size_t depth,RString line)
 				Char++; // Skip (
 
 				// Create the instruction
-				AnalyseParams();
+				AnalyzeParams();
 				AddInst(new RPrgInstNew(this,Inst,Class,Parameters));
 				CleanupParams();
 			}
@@ -358,7 +358,7 @@ void RInterpreter::TreatInst(const RString& inst,size_t depth,RChar param)
 			if((*Char)!='(')
 				throw RPrgException(this,"'for' with 'in' needs a list of parameters between parenthesis");
 			Char++; // Skip (
-			AnalyseParams();
+			AnalyzeParams();
 		}
 		else if(Cmd=="from")
 		{
@@ -404,7 +404,7 @@ void RInterpreter::TreatInst(const RString& inst,size_t depth,RChar param)
 	}
 	else if(inst=="delete")
 	{
-		AnalyseParams();
+		AnalyzeParams();
 		if(Parameters.GetNb()!=1)
 			throw RPrgException(this,"'delete' takes one parameter only");
 		if(!dynamic_cast<RPrgVarRef*>(Parameters[0]))
@@ -415,7 +415,7 @@ void RInterpreter::TreatInst(const RString& inst,size_t depth,RChar param)
 	}
 	else if(inst=="print")
 	{
-		AnalyseParams();
+		AnalyzeParams();
 		if(Parameters.GetNb()!=1)
 			throw RPrgException(this,"'print' takes one parameter only");
 		AddInst(new RPrgInstPrint(this,Parameters[0]));
@@ -431,7 +431,7 @@ void RInterpreter::TreatInst(const RString& inst,size_t depth,RChar param)
 		// Read name of subroutine
 		RString Sub(param+GetToken(RString('(')));
 		Char++; // Skip (
-		AnalyseParams();
+		AnalyzeParams();
 		RPrgInstSub* f=new RPrgInstSub(this,depth+1,Sub,Parameters);
 		CleanupParams();
 		AddInst(f);
@@ -441,7 +441,7 @@ void RInterpreter::TreatInst(const RString& inst,size_t depth,RChar param)
 	}
 	else
 	{
-		AnalyseParams();
+		AnalyzeParams();
 		AddInst(new RPrgInstMethod(this,inst,Parameters));
 		Parameters.Clear();
 		Eol(false);
@@ -450,7 +450,7 @@ void RInterpreter::TreatInst(const RString& inst,size_t depth,RChar param)
 
 
 //-----------------------------------------------------------------------------
-void RInterpreter::AnalyseParams(void)
+void RInterpreter::AnalyzeParams(void)
 {
 	bool SomethingToRead=false;
 
