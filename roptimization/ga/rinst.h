@@ -381,6 +381,11 @@ public:
 	virtual void Mutation(void);
 
 	/**
+	* This function does the necessary mutation of the best solution ever computed.
+	*/
+	virtual void StrongMutation(void);
+
+	/**
 	* This function does the necessary inversions for a generation.
 	*/
 	virtual void Inversion(void);

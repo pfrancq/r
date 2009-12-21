@@ -278,12 +278,32 @@ int RConfig::GetInt(const RString& name,const RString& cat)
 
 
 //-----------------------------------------------------------------------------
-size_t RConfig::GetUInt(const RString& name,const RString& cat)
+unsigned int RConfig::GetUInt(const RString& name,const RString& cat)
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat);
 	if(!param)
 		return(0);
 	return(param->GetUInt());
+}
+
+
+//-----------------------------------------------------------------------------
+long RConfig::GetLong(const RString& name,const RString& cat)
+{
+	RParamValue* param=FindParam<RParamValue>(name,cat);
+	if(!param)
+		return(0);
+	return(param->GetLong());
+}
+
+
+//-----------------------------------------------------------------------------
+unsigned long RConfig::GetULong(const RString& name,const RString& cat)
+{
+	RParamValue* param=FindParam<RParamValue>(name,cat);
+	if(!param)
+		return(0);
+	return(param->GetULong());
 }
 
 

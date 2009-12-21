@@ -83,6 +83,15 @@ void RVectorBool::Verify(size_t max)
 	}
 }
 
+//------------------------------------------------------------------------------
+void RVectorBool::Init(size_t nb,bool val)
+{
+	Verify(nb);
+	NbBool = nb;
+	char* ptr(List);
+	for(++nb;--nb;ptr++)
+		(*ptr)=val;
+}
 
 //------------------------------------------------------------------------------
 bool RVectorBool::IsSame(const RVectorBool& vi) const
@@ -130,10 +139,31 @@ RVectorBool& RVectorBool::operator=(const RVectorBool& src)
 //------------------------------------------------------------------------------
 bool RVectorBool::operator[](size_t i) const
 {
-	char* ptr(&List[i]);
-	if((*ptr)==-1)
+	if(i>=NbBool)
+	{
+		if(NbBool)
+			throw std::range_error("RVectorBool::operator[] const : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbBool-1)+"]");
+		else
+			throw std::range_error("RVectorBool::operator[] const : no elements");
+	}
+	char ptr(List[i]);
+	if(ptr==-1)
 		throw RException("RVectorBool::operator[](size_t) : Undefined value at position '"+RString::Number(i)+"'");
-	return(*ptr);
+	return(ptr);
+}
+
+
+//------------------------------------------------------------------------------
+char& RVectorBool::operator[](size_t i)
+{
+	if(i>=NbBool)
+	{
+		if(NbBool)
+			throw std::range_error("RVectorBool::operator[] : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbBool-1)+"]");
+		else
+			throw std::range_error("RVectorBool::operator[] : no elements");
+	}
+	return(List[i]);
 }
 
 

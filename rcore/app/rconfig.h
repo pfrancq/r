@@ -155,33 +155,43 @@ public:
 	* Reset a parameter with a given name and from a given category.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
-	* @return Pointer or null if not found.
 	*/
  	void Reset(const RString& name,const RString& cat=RString::Null);
 
 	/**
-	* Get the content of the parameter.
+	* @return the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
-	* @return C string.
 	*/
 	RString Get(const RString& name,const RString& cat=RString::Null);
 
 	/**
-	* Get the content of the parameter.
+	* @return the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
-	* @return int.
 	*/
 	int GetInt(const RString& name,const RString& cat=RString::Null);
 
 	/**
-	* Get the content of the parameter.
+	* @return the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
-	* @return size_t.
 	*/
-	size_t GetUInt(const RString& name,const RString& cat=RString::Null);
+	unsigned int GetUInt(const RString& name,const RString& cat=RString::Null);
+
+	/**
+	* @return the content of the parameter.
+	* @param name            Name of the parameter.
+	* @param cat             Category of the parameter.
+	*/
+	long GetLong(const RString& name,const RString& cat=RString::Null);
+
+	/**
+	* @return the content of the parameter.
+	* @param name            Name of the parameter.
+	* @param cat             Category of the parameter.
+	*/
+	unsigned long GetULong(const RString& name,const RString& cat=RString::Null);
 
 	/**
 	* Get the content of the parameter.
@@ -192,10 +202,9 @@ public:
 	double GetDouble(const RString& name,const RString& cat=RString::Null);
 
 	/**
-	* Get the content of the parameter.
+	* @return the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
-	* @return bool.
 	*/
 	bool GetBool(const RString& name,const RString& cat=RString::Null);
 

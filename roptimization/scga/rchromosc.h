@@ -170,7 +170,6 @@ public:
 	*/
 	RChromoSC(cInst* inst,size_t id);
 
-
 	/**
 	* Initialization of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data.

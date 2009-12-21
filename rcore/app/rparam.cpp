@@ -137,6 +137,22 @@ RParamValue::RParamValue(const RString& n,const char* v,const RString& desc)
 
 
 //------------------------------------------------------------------------------
+RParamValue::RParamValue(const RString& n,long v,const RString& desc)
+		: RParam(n,desc)
+{
+	SetInt(v);
+}
+
+
+//------------------------------------------------------------------------------
+RParamValue::RParamValue(const RString& n,unsigned long v,const RString& desc)
+		: RParam(n,desc)
+{
+	SetUInt(v);
+}
+
+
+//------------------------------------------------------------------------------
 RParamValue::RParamValue(const RString& n,int v,const RString& desc)
 		: RParam(n,desc)
 {
@@ -182,6 +198,24 @@ unsigned int RParamValue::GetUInt(void)
 {
 	bool b;
 	unsigned int v=Value.ToUInt(b);
+	return(v);
+}
+
+
+//------------------------------------------------------------------------------
+long RParamValue::GetLong(void)
+{
+	bool b;
+	long v=Value.ToLong(b);
+	return(v);
+}
+
+
+//------------------------------------------------------------------------------
+unsigned long RParamValue::GetULong(void)
+{
+	bool b;
+	unsigned long v=Value.ToULong(b);
 	return(v);
 }
 

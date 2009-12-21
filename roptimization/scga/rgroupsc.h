@@ -32,17 +32,22 @@
 #ifndef RGroupSC_H
 #define RGroupSC_H
 
+//-----------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <math.h>
+
 
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rgroup.h>
+#include <rquicksort.h>
 class GCAInst;
 class GCAObj;
+
 
 //------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
-
 
 //-----------------------------------------------------------------------------
 /**
@@ -56,6 +61,40 @@ template<class cGroup,class cObj,class cGroups>
 {
 	using RGroup<cGroup,cObj,cGroups>::Owner;
 	using RGroup<cGroup,cObj,cGroups>::NbSubObjects;
+
+	/**
+	 * Implementation of a specific quicksort algorithm to sort an array of
+	 * objects by similarity with the centroid of the group.
+	 */
+	class OrderBySim : public RQuickSort<cObj>
+	{
+		/**
+		 * Group corresponding to the elements to sort.
+		 */
+		cGroup* Group;
+
+	public:
+
+		/**
+		 * Constructor.
+		 * @param group      Corresponding group.
+		 * @param objs       Array of objects.
+		 * @param nb         Number of objects.
+		 */
+		OrderBySim(cGroup* group,cObj** objs,size_t nb);
+
+		/**
+		 * Compare two objects.
+		 * @param obj1       First object.
+		 * @param obj2       Second object.
+		 * @return the value to sort the objects by descending similarities
+		 * with the centroid.
+		 */
+		virtual int Compare(cObj* obj1,cObj* obj2);
+	};
+
+public:
+
 	using RGroup<cGroup,cObj,cGroups>::GetObjs;
 
 protected:
@@ -207,9 +246,6 @@ public:
 
 private:
 
-	size_t Partition(size_t  left, size_t  right, size_t pivotIndex);
-	void Quicksort(size_t left, size_t right);
-
 	bool Test(cObj** del,size_t& nbdel,cObj* obj1,cObj* obj2);
 
 public:
@@ -227,6 +263,8 @@ public:
 	* Destruct the group.
 	*/
 	virtual ~RGroupSC(void);
+
+	friend class OrderBySim;
 };
 
 

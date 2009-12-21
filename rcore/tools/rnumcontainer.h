@@ -101,6 +101,13 @@ public:
 	*/
 	void Verify(size_t max);
 
+	/**
+	 * Initialize the container with a given values.
+	 * @param nb             Number of elements.
+	 * @param val            Value used to initialize.
+	 */
+	void Init(size_t nb,I val);
+
 private:
 
 	/**

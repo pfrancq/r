@@ -111,7 +111,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 			{
 				// Must only insert the objects that are not in parent1
 				src=Cur2();
-				RCursor<cObj> obj=GetObjs(*src);
+				RCursor<cObj> obj=parent2->GetObjs(*src);
 				for(obj.Start();!obj.End();obj.Next())
 				{
 					// By default, insert the object.

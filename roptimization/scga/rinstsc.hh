@@ -98,10 +98,9 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::RInstSC(RCursor<cObj> objs,RParamsSC* p,RDebug *debug,bool inc)
+	RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::RInstSC(RCursor<cObj> objs,RParamsSC* p,RDebug *debug)
 		: RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(p->PopSize,objs,"SCFirstFit","SCGA",debug),
-		RPromKernelSC<cChromo>(p), Params(p), Sols(0), NoSocialObjs(objs.GetNb()),
-		Incremental(inc)
+		RPromKernelSC<cChromo>(p), Params(p), Sols(0), NoSocialObjs(objs.GetNb())
 #if BESTSOLSVERIFICATION
 	  , BestSols(p->MaxGen,p->MaxGen/2)
 #endif
@@ -157,7 +156,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	RGroupingHeuristic<cGroup,cObj,cChromo>* RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::CreateHeuristic(void)
 {
-	return(new RHeuristicSC<cGroup,cObj,cChromo>(Random,Objs,Debug));
+	return(new RHeuristicSC<cGroup,cObj,cChromo>(Random,Objs,Params,Debug));
 }
 
 

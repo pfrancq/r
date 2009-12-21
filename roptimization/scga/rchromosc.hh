@@ -506,28 +506,17 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	for(bOpti=true;(--max)&&bOpti&&nbobjs;)
 	{
 		bOpti=false;
-//		std::cout<<"   bOpti: "<<bOpti<<" - "<<Used.GetNb()<<std::endl;
 
 		// Go trough existing groups
 		RCursor<cGroup> Cur(Used);
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
-//			std::cout<<"      Optimize "<<Cur()->GetId()<<std::endl;
 			if(Cur()->DoOptimisation(thObjs1,nbobjs))
 			{
 				bOpti=true;
-//				std::cout<<"         Opti: bOpti: "<<bOpti<<std::endl;
-				break;
-			}
-			if(!nbobjs)
-			{
-				bOpti=false;
-//				std::cout<<"         No Objs: bOpti: "<<bOpti<<std::endl;
 				break;
 			}
 		}
-
-//		std::cout<<"   End - bOpti: "<<bOpti<<std::endl;
 	}
 
 	if(Instance->Debug)

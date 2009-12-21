@@ -169,6 +169,22 @@ public:
 	* @param v               Value.
 	* @param desc            Description of the parameter.
 	*/
+	RParamValue(const RString& n,long v,const RString& desc=RString::Null);
+
+	/**
+	* Constructor of the parameter with a 'value' attribute.
+	* @param n               Name of the parameter.
+	* @param v               Value.
+	* @param desc            Description of the parameter.
+	*/
+	RParamValue(const RString& n,unsigned long v,const RString& desc=RString::Null);
+
+	/**
+	* Constructor of the parameter with a 'value' attribute.
+	* @param n               Name of the parameter.
+	* @param v               Value.
+	* @param desc            Description of the parameter.
+	*/
 	RParamValue(const RString& n,int v,const RString& desc=RString::Null);
 
 	/**
@@ -205,6 +221,17 @@ public:
 	* Get the content of the parameter.
 	*/
 	unsigned int GetUInt(void);
+
+	/**
+	* Get the content of the parameter.
+	* @return int.
+	*/
+	long GetLong(void);
+
+	/**
+	* Get the content of the parameter.
+	*/
+	unsigned long GetULong(void);
 
 	/**
 	* Get the content of the parameter.

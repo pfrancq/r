@@ -171,7 +171,7 @@ size_t BasicContainer::GetIndex(bool bOrder,const void* tag,bool& find,size_t mi
 				i=(NbMax+NbMin)/2;
 				ptr=Tab[i];
 				if(!ptr)
-					throw RException("BasicContainer::GetIndex : Problem!");
+					ThrowRException("Problem!");
 				Comp=compare(ptr,tag);
 				if(!Comp)
 				{

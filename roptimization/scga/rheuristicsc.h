@@ -62,15 +62,26 @@ template<class cGroup,class cObj,class cGroups>
 	 */
 	RContainer<cGroup,false,false> ToDel;
 
+	/**
+	 * Objects to reassigned.
+	 */
+	RContainer<cObj,false,false> ToReAssign;
+
+	/**
+	 * Parameters of the SCGA.
+	 */
+	RParamsSC* Params;
+
 public:
 
 	/**
 	* Construct the heuristic.
 	* @param r               The random generator to use.
 	* @param objs            Pointer to the objects.
+	* @param params          Parameters.
 	* @param debug           Debugger.
 	*/
-	 RHeuristicSC(R::RRandom* r,R::RCursor<cObj> objs,R::RDebug* debug=0);
+	 RHeuristicSC(R::RRandom* r,R::RCursor<cObj> objs,RParamsSC* params,R::RDebug* debug=0);
 
 	/**
 	* Initialize the heuristic.
@@ -85,7 +96,8 @@ public:
 	virtual cGroup* FindGroup(cObj* obj);
 
 	/**
-	* Verify that no social profile is alone.
+	* Verify that no social object is alone and that all the groups has to
+	* minimum number of objects.
 	*/
 	virtual void PostRun(void);
 

@@ -312,53 +312,57 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		Debug->BeginFunc("Mutation","RInst");
 
 	// Normal mutation?
-	if(!AgeNextMutation)
+	cChromo** Mut=&Ranked[PopSize-1];
+	for(size_t i=NbMutations+1;--i;Mut--)
 	{
-		AgeNextMutation=FreqMutation;
-		cChromo** Mut=&Ranked[PopSize-1];
-		for(size_t i=NbMutations+1;--i;Mut--)
+		cChromo* p=(*Mut);
+		if(p->Id!=BestInPop->Id)
 		{
-			cChromo* p=(*Mut);
-			if(p->Id!=BestInPop->Id)
-			{
-				size_t id=p->Id;
-				p->Copy(*BestInPop);
-				p->Id=id;
-			}
-			if(Debug)
-				Debug->PrintInfo("Normal Mutation (BestInPop) -> Chromosome "+RString::Number(p->Id));
-			PostNotification("RInst::Interact");
-			p->Mutation();
-			p->ToEval=true;
-			if(VerifyGA)
-				p->Verify();
-			PostNotification("RInst::Interact");
+			size_t id=p->Id;
+			p->Copy(*BestInPop);
+			p->Id=id;
 		}
+		if(Debug)
+			Debug->PrintInfo("Normal Mutation (BestInPop) -> Chromosome "+RString::Number(p->Id));
+		PostNotification("RInst::Interact");
+		p->Mutation();
+		p->ToEval=true;
+		if(VerifyGA)
+			p->Verify();
+		PostNotification("RInst::Interact");
 	}
 
-	// Best mutation?
-	if(!AgeNextBestMutation)
-	{
-		AgeNextBestMutation=FreqBestMutation;
-		cChromo** Mut=&Ranked[PopSize-1];
-		for(size_t i=NbMutations+1;--i;Mut--)
-		{
-			cChromo* p=(*Mut);
-			size_t id=p->Id;
-			p->Copy(*BestChromosome);
-			p->Id=id;
-			if(Debug)
-				Debug->PrintInfo("Strong Mutation (BestInPop) -> Chromosome "+RString::Number(p->Id));
-			PostNotification("RInst::Interact");
-			p->Mutation();
-			p->ToEval=true;
-			if(VerifyGA)
-				p->Verify();
-			PostNotification("RInst::Interact");
-		}
-	}
 	if(Debug)
 		Debug->EndFunc("Mutation","RInst");
+}
+
+
+//------------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
+	void R::RInst<cInst,cChromo,cFit,cThreadData>::StrongMutation(void)
+{
+	if(Debug)
+		Debug->BeginFunc("StrongMutation","RInst");
+
+	cChromo** Mut=&Ranked[PopSize-1];
+	for(size_t i=NbMutations+1;--i;Mut--)
+	{
+		cChromo* p=(*Mut);
+		size_t id=p->Id;
+		p->Copy(*BestChromosome);
+		p->Id=id;
+		if(Debug)
+			Debug->PrintInfo("Strong Mutation (BestInPop) -> Chromosome "+RString::Number(p->Id));
+		PostNotification("RInst::Interact");
+		p->StrongMutation();
+		p->ToEval=true;
+		if(VerifyGA)
+			p->Verify();
+		PostNotification("RInst::Interact");
+	}
+
+	if(Debug)
+		Debug->EndFunc("StrongMutation","RInst");
 }
 
 
@@ -370,7 +374,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		Debug->BeginFunc("Inversion","RInst");
 
 	// Do the inversion
-	AgeNextInversion=FreqInversion;
 	cChromo* p=Chromosomes[RRand(PopSize)];
 	if(Debug)
 		Debug->PrintInfo("Inversion of Chromosome "+RString::Number(p->Id));
@@ -397,20 +400,31 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		Debug->PrintComment("Gen="+RString::Number(Gen)+"  ;  AgeBest="+RString::Number(AgeBest)+"  -  AgeBestPop="+RString::Number(AgeBestPop));
 	Crossover();
 	PostNotification("RInst::Interact");
-	if(!((AgeNextMutation--)&&(AgeNextBestMutation--)))  // Decrease the number of generations between mutations and verify if a mutation must be done
+	if(!(--AgeNextMutation))  // Decrease the number of generations between mutations and verify if a mutation must be done
 	{
 		// Evaluation is necessary since the crossover has been done
 		AnalyzePop();
 		PostNotification("RInst::Interact");
 		Mutation();
+		AgeNextMutation=FreqMutation;
 	}
 	PostNotification("RInst::Interact");
-	if(!(AgeNextInversion--)) // Decrease the number of generations between inversions and verify if a mutation must be done
+	if(!(--AgeNextBestMutation))  // Decrease the number of generations between mutations and verify if a mutation must be done
+	{
+		// Evaluation is necessary since the crossover has been done
+		AnalyzePop();
+		PostNotification("RInst::Interact");
+		StrongMutation();
+		AgeNextBestMutation=FreqBestMutation;
+	}
+	PostNotification("RInst::Interact");
+	if(!(--AgeNextInversion)) // Decrease the number of generations between inversions and verify if a mutation must be done
 	{
 		// Evaluation is necessary since the crossover has been done (and perhaps Mutation)
 		AnalyzePop();
 		PostNotification("RInst::Interact");
 		Inversion();
+		AgeNextInversion=FreqInversion;
 	}
 	PostNotification("RInst::Interact");
 	AnalyzePop();

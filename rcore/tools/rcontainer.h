@@ -42,6 +42,10 @@
 namespace R{
 //-----------------------------------------------------------------------------
 
+//-----------------------------------------------------------------------------
+// forward declaration
+template<class C> class RQuickSort;
+
 
 //-----------------------------------------------------------------------------
 /**
@@ -534,6 +538,7 @@ public:
 	friend class RContainer<C,true,false>;
 	friend class RContainer<C,false,true>;
 	friend class RContainer<C,false,false>;
+	friend class RQuickSort<C>;
 };
 
 

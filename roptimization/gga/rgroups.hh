@@ -34,7 +34,6 @@
 //
 //------------------------------------------------------------------------------
 
-
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
 	R::RGroups<cGroup,cObj,cGroups>::RGroups(R::RCursor<cObj> objs,size_t max)
@@ -312,8 +311,11 @@ template<class cGroup,class cObj,class cGroups>
 	size_t i,id,nbgrp,j;
 
 	memset(NewUsedId,0xFF,sizeof(size_t)*GetMaxNb());
-	for(i=ObjsAss.GetNb()+1,oldo=ObjectsAss,newo=OrdObjectsAss,nbgrp=0,j=0;--i;oldo++,newo++,j++)
+	memset(OrdObjectsAss,0xFF,sizeof(size_t)*(Objs.GetNb()));
+	for(i=Objs.GetNb()+1,oldo=ObjectsAss,newo=OrdObjectsAss,nbgrp=0,j=0;--i;oldo++,newo++,j++)
 	{
+		if((*oldo)==R::cNoRef)
+			continue;
 		id=NewUsedId[*oldo];
 		if(id==cNoRef)
 			id=NewUsedId[*oldo]=(nbgrp++);

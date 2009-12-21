@@ -52,6 +52,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
+	void R::RChromo<cInst,cChromo,cFit,cThreadData>::StrongMutation(void)
+{
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("StrongMutation","RChromo");
+	Mutation();
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("StrongMutation","RChromo");
+}
+
+
+//------------------------------------------------------------------------------
+template<class cInst,class cChromo,class cFit,class cThreadData>
 	void R::RChromo<cInst,cChromo,cFit,cThreadData>::Crossover(cChromo*,cChromo*)
 {
 }

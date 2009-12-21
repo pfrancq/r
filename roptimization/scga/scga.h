@@ -120,7 +120,7 @@ public:
 	size_t StepGen;
 
 	/**
-	* Minimum similarity level between the profiles of a group.
+	* Minimum threshold for similarity between the objects.
 	*/
 	double MinSimLevel;
 
@@ -175,9 +175,20 @@ public:
 	bool Optimisation;
 
 	/**
-	 * Perform an incremental clustering.
-	 */
+	* Incremental mode. The GCA constructs the chromosomes from existing
+	* solutions.
+	*/
 	bool Incremental;
+
+	/**
+	 * Minimum number of objects per groups.
+	 */
+	size_t NbMinObjs;
+
+	/**
+	 * Maximum number of objects per group.
+	 */
+	size_t NbMaxObjs;
 
 	/**
 	* Constructor.

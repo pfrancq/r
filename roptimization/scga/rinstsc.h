@@ -158,11 +158,6 @@ protected:
 	*/
 	RContainer<cObj,false,true> NoSocialObjs;
 
-	/**
-	 * Incremental mode.
-	 */
-	bool Incremental;
-
 #if BESTSOLSVERIFICATION
 	/**
 	* Container holding the best chromosomes.
@@ -177,10 +172,8 @@ public:
 	* @param objs           The objects to group.
 	* @param p              Parameters.
 	* @param debug          Debugger.
-	* @param inc            Incremental mode (The GCA constructs the
-	*                       chromosomes from existing solutions).
 	*/
-	RInstSC(RCursor<cObj> objs,RParamsSC* p,RDebug* debug,bool inc);
+	RInstSC(RCursor<cObj> objs,RParamsSC* p,RDebug* debug);
 
 	/**
 	* Initialization of the instance.

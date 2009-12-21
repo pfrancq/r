@@ -36,9 +36,9 @@
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RHeuristicSC<cGroup,cObj,cGroups>::RHeuristicSC(RRandom* r,RCursor<cObj> objs,RDebug* debug)
+	RHeuristicSC<cGroup,cObj,cGroups>::RHeuristicSC(RRandom* r,RCursor<cObj> objs,RParamsSC* params,RDebug* debug)
 	: RGroupingHeuristic<cGroup,cObj,cGroups>("SCGA Heuristic",r,objs,debug),
-	  ToDel(Objs.GetNb()<11?10:Objs.GetNb()/4)
+	  ToDel(Objs.GetNb()<11?10:Objs.GetNb()/4), ToReAssign(100), Params(params)
 {
 }
 
@@ -94,45 +94,61 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void RHeuristicSC<cGroup,cObj,cGroups>::PostRun(void)
 {
-	cObj* obj;
 	R::RCursor<cGroup> Cur1(Groups->Used),Cur2(Groups->Used);
-	cGroup* grp=0;
-	double tmp,max;
 
 	// Look for the groups to delete
 	ToDel.Clear();
 	for(Cur1.Start();!Cur1.End();Cur1.Next())
 	{
-		// Look if this group contains only 1 social profile
-		if(Cur1()->GetNbObjs()!=1)
-			continue;
-		obj=Cur1()->GetObjPos(0);
-		if(!obj->IsSocial())
-			continue;
-
-		// Find a new group
-		for(Cur2.Start(),max=-1.0,grp=0;!Cur2.End();Cur2.Next())
+		// Verify if the number of objects is greater than the minimum
+		if(Cur1()->GetNbObjs()>=Params->NbMinObjs)
 		{
-			if((Cur1()==Cur2())||(!Cur2()->GetNbObjs()))
+			// Look if this group contains only 1 social profile
+			if(Cur1()->GetNbObjs()!=1)
 				continue;
-			if(Cur2()->HasSameUser(obj))
+			if(!Cur1()->GetObjPos(0)->IsSocial())
 				continue;
-			tmp=Cur2()->ComputeRelSim(obj);
-			if(tmp>max)
+		}
+
+		// The current group must be emptied
+		RCursor<cObj> Objs(Cur1()->GetObjs());
+		ToReAssign.Clear();
+		for(Objs.Start();!Objs.End();Objs.Next())
+			ToReAssign.InsertPtr(Objs());
+		Objs.Set(ToReAssign);
+		for(Objs.Start();!Objs.End();Objs.Next())
+		{
+			// Try to find a new group for obj
+			cGroup* grp(0);
+			double max(-1.0);
+			for(Cur2.Start();!Cur2.End();Cur2.Next())
 			{
-				max=tmp;
-				grp=Cur2();
+				if((Cur1()==Cur2())||(!Cur2()->GetNbObjs()))
+					continue;
+				if(Cur2()->HasSameUser(Objs()))
+					continue;
+				double tmp(Cur2()->ComputeRelSim(Objs()));
+				if(tmp>max)
+				{
+					max=tmp;
+					grp=Cur2();
+				}
+			}
+
+			// If a group was found -> put the object in it
+			if(grp)
+			{
+				Cur1()->Delete(Objs());
+				grp->Insert(Objs());
 			}
 		}
-		if(grp)
-		{
-			Cur1()->Delete(obj);
-			grp->Insert(obj);
+
+		// If Cur1() has no objects anymore -> delete it
+		if(!Cur1()->GetNbObjs())
 			ToDel.InsertPtr(Cur1());
-		}
 	}
 
-	// Delete
+	// Delete the groups
 	Cur1.Set(ToDel);
 	for(Cur1.Start();!Cur1.End();Cur1.Next())
 		Groups->ReleaseGroup(Cur1());

@@ -110,6 +110,13 @@ private:
 public:
 
 	/**
+	 * Initialize the vector with a given values.
+	 * @param nb             Number of elements.
+	 * @param val            Value used to initialize.
+	 */
+	void Init(size_t nb,bool val);
+
+	/**
 	* Test if two lists have exactly the same values.
 	* @param vi              The list used for the comparison.
 	* @return True if the lists are the same.
@@ -139,6 +146,12 @@ public:
 	* @param i               Index.
 	*/
 	bool operator[](size_t i) const;
+
+	/**
+	* Return the Integer value at position i. The first Integer value is at position 0.
+	* @param i               Index.
+	*/
+	char& operator[](size_t i);
 
 	/**
 	 * @return true if the element is defined (true or false) at a given

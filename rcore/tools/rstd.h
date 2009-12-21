@@ -45,7 +45,7 @@
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
 #include <limits.h>
-
+#include <limits>
 
 
 //------------------------------------------------------------------------------
@@ -224,13 +224,6 @@
 #define SIZE_MAX		(4294967295U)
 #endif
 
-
-/**
-* \namespace R
-* \brief Standard Classes.
-*
-* This namespace declares some generic classes.
-*/
 
 
 //------------------------------------------------------------------------------

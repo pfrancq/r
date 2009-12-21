@@ -83,6 +83,18 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
+	void RNumContainer<I,bOrder>::Init(size_t nb,I val)
+{
+	Verify(nb);
+	NbInt = nb;
+	I* ptr(List);
+	for(++nb;--nb;ptr++)
+		(*ptr)=val;
+}
+
+
+//------------------------------------------------------------------------------
+template<class I,bool bOrder>
 	size_t RNumContainer<I,bOrder>::GetId(I nb,bool& find) const
 {
 	if(bOrder)

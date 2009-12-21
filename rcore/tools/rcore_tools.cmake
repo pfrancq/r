@@ -30,6 +30,8 @@ SET(rcore_tools_INST_INCLUDES rstd.h
     					 rcstring.h
     					 rvectorbool.h
     					 rvalue.h
+    					 rquicksort.h
+    					 rquicksort.hh
 )
 
 SET(rcore_tools_TARGET_SOURCES random.cpp

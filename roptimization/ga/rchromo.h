@@ -111,6 +111,12 @@ public:
 	virtual void Mutation(void) {}
 
 	/**
+	* Do a strong mutation with the chromosome (by default, it called the
+	* normal muation.
+	*/
+	virtual void StrongMutation(void);
+
+	/**
 	* Do an inversion with the chromosome.
 	*/
 	virtual void Inversion(void) {}
