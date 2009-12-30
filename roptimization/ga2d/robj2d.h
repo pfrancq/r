@@ -211,7 +211,7 @@ public:
 	RObj2D* GetObj(void) {return(Owner);}
 
 	/**
-	* Return the identificator of the connector.
+	* Return the identifier of the connector.
 	*/
 	size_t GetId(void) {return(Id);}
 

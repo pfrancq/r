@@ -221,9 +221,9 @@ void RGeoInfo::Boundary(RRect& rect)
 void RGeoInfo::Assign(const RPoint& pos,RGrid* grid)
 {
 	Pos=pos;
-	RCursor<RRect> rect(*Rects);
-	for(rect.Start();rect.End();rect.End())
-		grid->Assign(*rect(),Pos,Obj->GetId());
+	RCursor<RRect> Rect(*Rects);
+	for(Rect.Start();!Rect.End();Rect.Next())
+		grid->Assign(*Rect(),Pos,Obj->GetId());
 }
 
 

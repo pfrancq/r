@@ -184,7 +184,7 @@ RObj2DConnector::~RObj2DConnector(void)
 {
 	delete[] Pos;
 	for(size_t i=0;i<NbPos;i++)
-		delete Poss[i];
+		delete[] Poss[i];
 	delete[] Poss;
 }
 

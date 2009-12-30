@@ -114,8 +114,8 @@ public:
 	/**
 	* Construct the kernel.
 	* @param name           The name of the kernel.
-	* @param sol            Number of solutions.
-	* @param crit           Number of criteria.
+	* @param sol            Initial maximal number of solutions.
+	* @param crit           Initial maximal number of criteria.
 	*/
 	RPromKernel(const char* name,size_t sol,size_t crit);
 
@@ -145,6 +145,11 @@ public:
 	* @param name           Name of the solution.
 	*/
 	virtual RPromSol* NewSol(const char* name);
+
+	/**
+	 * @return the number of solutions managed by the kernel.
+	 */
+	size_t GetNbSols(void) const {return(Solutions.GetNb());}
 
 	/**
 	* Assign a value to a criterion.

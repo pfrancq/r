@@ -54,6 +54,8 @@ namespace R{
 */
 class RProblem2D
 {
+	class Parser;
+
 public:
 
 	/**
@@ -77,6 +79,11 @@ public:
 	RPoint Translation;
 
 	/**
+	 * Template objects.
+	 */
+	RContainer<RObj2D,true,true> Templates;
+
+	/**
 	* Objects.
 	*/
 	RContainer<RObj2D,true,true> Objs;
@@ -87,15 +94,29 @@ public:
 	RConnections Cons;
 
 	/**
+	 * URI of the file containing the problem.
+	 */
+	RURI URI;
+
+	/**
 	* Constructor of the problem.
+	* @param uri             URI of the XML file.
 	*/
-	RProblem2D(void);
+	RProblem2D(const RURI& uri);
+
+	/**
+	 * @return the URI of the problem.
+	 */
+	RURI GetURI(void) const {return(RURI(URI));}
+
+private:
 
 	/**
 	* Load a problem from a XML file.
-	* @param uri             URI of the XML file.
 	*/
-	void Load(const RURI& uri);
+	void Load(void);
+
+public:
 
 	/**
 	* Clears the problem.
@@ -107,35 +128,17 @@ public:
 	*/
 	void DetermineLimit(void);
 
-protected:
-
 	/**
-	* Create an object from a definition tag.
-	* @param o              Tag representing an object.
-	* @param ts             Container holding the templates.
-	*/
-	void CreateObj(RXMLTag* o,RContainer<RObj2D,true,true>& ts);
-
-	/**
-	* Create a connector from a tag.
-	* @param c              Tag representing the connector.
-	* @param obj            Object holding a connector (if 0, connector of problem).
-	* @param t              Transalation to do for the place.
-	*/
-	void CreateConnector(RXMLTag* c,RObj2D* obj,const RPoint& t);
-
-	/**
-	* Create a net from a tag.
-	* @param n              Tag representing the net.
-	*/
-	void CreateNet(RXMLTag* n);
-
-public:
+	 * @return the number of objects.
+	 */
+	size_t GetNbObjs(void) const {return(Objs.GetNb());}
 
 	/**
 	* Destructor of the problem.
 	*/
 	~RProblem2D(void);
+
+	friend class Parser;
 };
 
 

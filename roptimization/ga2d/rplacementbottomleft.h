@@ -60,12 +60,12 @@ class RPlacementBottomLeft : public RPlacementHeuristic
 	/**
 	* Position where to place the next object.
 	*/
-	RPoint Actual;
+	RPoint NextObj;
 
 	/**
 	* Where the next line begin.
 	*/
-	RPoint Last;
+	RPoint NextLine;
 
 public:
 
@@ -74,7 +74,7 @@ public:
 	* @param maxobjs        Maximal number of objects to place.
 	* @param calc           Must free polygons be calculated.
 	* @param use            Must free polygons be used.
-	* @param r              The random genrator to use.
+	* @param r              The random generator to use.
 	* @param ori            Must all orientation be tested.
 	*/
 	RPlacementBottomLeft(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
@@ -88,19 +88,23 @@ public:
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
 
 	/**
-	* Calculate the position to place the next object for a specific geometric
-	* information. The function have to register the valid positions with the
-	* 'AddValidPosition' method.
+	* Calculate all the possible positions to place a given object. The method
+	* must register these valid positions with the 'AddValidPosition' method.
+	* @param info           Geometric information representing the object placed.
 	*/
-	virtual void NextObjectOri(void);
+	virtual void SearchValidPositions(RGeoInfo* info);
 
 	/**
-	* Place the current object to a specific position. This function is called
-	* by the NextObject method.<BR>
-	* This function is responsible to update Result.
-	* @param pos            The position where to place it.
+	* This method is called each time a given object is placed at a given
+	* position. It can be used	to make some specific computational updates.
+	*
+	* This method must update Result, the rectangle bounding all placed
+	* objects.
+	*
+	* @param info           Geometric information representing the object placed.
+	* @param pos            The position where it is placed.
 	*/
-	virtual void Place(RPoint& pos);
+	virtual void PostPlace(RGeoInfo* info,const RPoint& pos);
 };
 
 

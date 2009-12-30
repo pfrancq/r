@@ -438,13 +438,20 @@ public:
 
 	/**
 	* Method called each time a tag will be treated when reading a XML file.
-	* Actually, a XMLTag is created and inserted as child of the current tag. At
-	* the end, the current tag is set to the new created one.
 	* @param namespaceURI    Namespace (if any).
 	* @param lName           Local name of the tag.
 	* @param name            Complete name of the tag.
 	*/
 	virtual void BeginTag(const RString& namespaceURI,const RString& lName,const RString& name);
+
+	/**
+	* Method called each time a beginning tag is parsed (after the parsing of
+	* the attributes).
+	* @param namespaceURI    Namespace (if any).
+	* @param lName           Local name of the tag.
+	* @param name            Complete name of the tag.
+	*/
+	virtual void BeginTagParsed(const RString& namespaceURI,const RString& lName,const RString& name);
 
 	/**
 	* Method called each time a tag defines a unknown namespace which is
@@ -455,8 +462,7 @@ public:
 
 	/**
 	* Method called each time an attribute will be treated when reading a XML
-	* file. Actually, the attribute is added to the current tag if one is
-	* defined or to an internal container.
+	* file.
 	* @param namespaceURI    Namespace (if any).
 	* @param lName           Local name of the attribute.
 	* @param name            Complete name of the attribute.
@@ -465,15 +471,13 @@ public:
 
 	/**
 	* Method called each time some attribute value elements (words or spaces)
-	* are parsed when reading a XML file. Actually, the text is added as
-	* content to value of the current attribute.
+	* are parsed when reading a XML file.
 	* @param value           Value processed.
 	 */
 	virtual void Value(const RString& value);
 
 	/**
 	* Method called each time a tag was treated when reading a XML file.
-	* Actually, the current tag is set its parent.
 	* @param namespaceURI  Namespace (if any).
 	* @param lName         Local name of the tag.
 	* @param name          Complete name of the tag.

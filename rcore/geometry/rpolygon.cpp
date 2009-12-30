@@ -615,6 +615,9 @@ tCoord RPolygon::Area(void) const
 //------------------------------------------------------------------------------
 void RPolygon::Boundary(RRect& rect) const
 {
+	if(!GetNb())
+		ThrowRException("No points defined");
+
 	tCoord MinX=MaxCoord,MinY=MaxCoord,MaxX=0,MaxY=0,X,Y;
 
 	RCursor<RPoint> ptr(*this);

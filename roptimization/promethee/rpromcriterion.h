@@ -159,7 +159,7 @@ public:
 	* Set the parameter of the parameter.
 	* @param param           Pointer to a structure parameter.
 	*/
-	virtual void Set(R::RParam* param);
+	virtual void Set(const RParam* param);
 
 private:
 
@@ -236,7 +236,7 @@ public:
 	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromLinearCriterion(tCriteriaType type,RParam* params,const char* name=0,size_t nb=30);
+	RPromLinearCriterion(tCriteriaType type,const RParam* params,const char* name=0,size_t nb=30);
 
  	/**
  	* Set the parameters.
@@ -250,7 +250,7 @@ public:
 	* Set the parameter of the parameter.
 	* @param param           Pointer to a structure parameter.
 	*/
-	virtual void Set(R::RParam* param);
+	virtual void Set(const RParam* param);
 
 	/**
 	* Get the preference's threshold.

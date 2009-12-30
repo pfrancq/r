@@ -1,17 +1,23 @@
 SET(roptimization_frontend_kde_INST_INCLUDES
-qpromcriteria.h 
-qxmlcontainer.h 
-qgamonitor.h
-qdrawpolygons.h
+	qrgamonitor.h
+	qrdebug.h 
+	qrdrawgeoinfos.h
 )
                                      
 SET(roptimization_frontend_kde_TARGET_SOURCES
-qgamonitor.cpp 
-qpromcriteria.cpp 
-qxmlcontainer.cpp 
-qdrawpolygons.cpp
+	qrgamonitor.cpp 
+	qrdebug.cpp 
+	qrdrawgeoinfos.cpp
 )
 
-#KDE4_ADD_UI_FILES(roptimization_frontend_kde_TARGET_SOURCES )
+SET(roptimization_frontend_kde_UI_INCLUDES
+	qrdrawgeoinfos.ui
+	qrdebug.ui
+	qrgamonitor.ui
+)
 
-#KDE4_ADD_KCFG_FILES(roptimization_frontend_kde_TARGET_SOURCES )
+
+FOREACH(file ${roptimization_frontend_kde_UI_INCLUDES})
+   SET(REALFILE frontend/kde/${file})
+   KDE4_ADD_UI_FILES(roptimization_frontend_kde_UIFILE ${REALFILE})
+ENDFOREACH(file ${roptimization_frontend_kde_UI_INCLUDES})

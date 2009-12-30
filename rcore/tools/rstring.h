@@ -174,7 +174,7 @@ private:
 	 * "'string': msg".
 	 * @param msg            Message to add.
 	 */
-	void GenerateException(const RString& msg);
+	void GenerateException(const RString& msg) const;
 
 public:
 
@@ -454,13 +454,13 @@ public:
 	* Try to transform a string into a char (as a number).
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
-	char ToChar(bool& valid);
+	char ToChar(bool& valid) const;
 
 	/**
 	* Try to transform a string into a char (as a number). This version generates an
 	* exception if the string does not contain a valid number.
 	*/
-	char ToChar(void)
+	char ToChar(void) const
 	{
 		bool Valid;
 		char Val(ToChar(Valid));
@@ -473,13 +473,13 @@ public:
 	* Try to transform a string into an integer.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
-	int ToInt(bool& valid);
+	int ToInt(bool& valid) const;
 
 	/**
 	* Try to transform a string into an integer. This version generates an
 	* exception if the string does not contain a valid number.
 	*/
-	int ToInt(void)
+	int ToInt(void) const
 	{
 		bool Valid;
 		int Val(ToInt(Valid));
@@ -492,13 +492,13 @@ public:
 	* Try to transform a string into an unsigned integer.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
-	unsigned int ToUInt(bool& valid);
+	unsigned int ToUInt(bool& valid) const;
 
 	/**
 	* Try to transform a string into an unsigned integer. This version generates an
 	* exception if the string does not contain a valid number.
 	*/
-	unsigned int ToUInt(void)
+	unsigned int ToUInt(void) const
 	{
 		bool Valid;
 		unsigned int Val(ToUInt(Valid));
@@ -511,13 +511,13 @@ public:
 	* Try to transform a string into a long.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
-	long ToLong(bool& valid);
+	long ToLong(bool& valid) const;
 
 	/**
 	* Try to transform a string into a long. This version generates an
 	* exception if the string does not contain a valid number.
 	*/
-	long ToLong(void)
+	long ToLong(void) const
 	{
 		bool Valid;
 		long Val(ToLong(Valid));
@@ -530,13 +530,13 @@ public:
 	* Try to transform a string into an unsigned long.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
-	unsigned long ToULong(bool& valid);
+	unsigned long ToULong(bool& valid) const;
 
 	/**
 	* Try to transform a string into an unsigned long. This version generates an
 	* exception if the string does not contain a valid number.
 	*/
-	unsigned long ToULong(void)
+	unsigned long ToULong(void) const
 	{
 		bool Valid;
 		unsigned long Val(ToULong(Valid));
@@ -549,13 +549,13 @@ public:
 	* Try to transform a string into a size_t.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
-	size_t ToSizeT(bool& valid);
+	size_t ToSizeT(bool& valid) const;
 
 	/**
 	* Try to transform a string into a size_t. This version generates an
 	* exception if the string does not contain a valid number.
 	*/
-	size_t ToSizeT(void)
+	size_t ToSizeT(void) const
 	{
 		bool Valid;
 		size_t Val(ToSizeT(Valid));
@@ -568,13 +568,13 @@ public:
 	* Try to transform a string into a off_t.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
-	off_t ToOffT(bool& valid);
+	off_t ToOffT(bool& valid) const;
 
 	/**
 	* Try to transform a string into a off_t. This version generates an
 	* exception if the string does not contain a valid number.
 	*/
-	inline off_t ToOffT(void)
+	inline off_t ToOffT(void) const
 	{
 		bool Valid;
 		off_t Val(ToOffT(Valid));
@@ -587,13 +587,13 @@ public:
 	* * Try to transform a string into a float.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
-	float ToFloat(bool& valid);
+	float ToFloat(bool& valid) const;
 
 	/**
 	* * Try to transform a string into a float. This version generates an
 	* exception if the string does not contain a valid number.
 	*/
-	float ToFloat(void)
+	float ToFloat(void) const
 	{
 		bool Valid;
 		float Val(ToFloat(Valid));
@@ -606,13 +606,13 @@ public:
 	* * Try to transform a string into a double.
 	* @param valid           Variable becomes true if the conversion was done.
 	*/
-	double ToDouble(bool& valid);
+	double ToDouble(bool& valid) const;
 
 	/**
 	* * Try to transform a string into a double. This version generates an
 	* exception if the string does not contain a valid number.
 	*/
-	double ToDouble(void)
+	double ToDouble(void) const
 	{
 		bool Valid;
 		double Val(ToDouble(Valid));
@@ -628,7 +628,7 @@ public:
 	* @param strict          Define if the string recognition is strict ("true"
 	*                        and "false") or if upper case letters are allowed.
 	*/
-	bool ToBool(bool& valid,bool strict);
+	bool ToBool(bool& valid,bool strict) const;
 
 	/**
 	* Try to transform a string into a boolean value. It recognizes the strings
@@ -639,7 +639,7 @@ public:
 	* This version generates an exception if the string does not contain a
 	* valid boolean value.
 	*/
-	bool ToBool(bool strict)
+	bool ToBool(bool strict) const
 	{
 		bool Valid;
 		bool Val(ToBool(Valid,strict));

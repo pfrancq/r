@@ -65,7 +65,7 @@ public:
 	RPolygon(void);
 
 	/**
-	* Construct a polygon with an initial maxiam size.
+	* Construct a polygon with an initial maximum size.
 	* @param Max            Initial maximal size.
 	*/
 	RPolygon(const int Max);

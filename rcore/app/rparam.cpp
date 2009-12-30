@@ -185,7 +185,7 @@ RParamValue::RParamValue(const RString& n,bool v,const RString& desc)
 
 
 //------------------------------------------------------------------------------
-int RParamValue::GetInt(void)
+int RParamValue::GetInt(void) const
 {
 	bool b;
 	int v=Value.ToInt(b);
@@ -194,7 +194,7 @@ int RParamValue::GetInt(void)
 
 
 //------------------------------------------------------------------------------
-unsigned int RParamValue::GetUInt(void)
+unsigned int RParamValue::GetUInt(void) const
 {
 	bool b;
 	unsigned int v=Value.ToUInt(b);
@@ -203,7 +203,7 @@ unsigned int RParamValue::GetUInt(void)
 
 
 //------------------------------------------------------------------------------
-long RParamValue::GetLong(void)
+long RParamValue::GetLong(void) const
 {
 	bool b;
 	long v=Value.ToLong(b);
@@ -212,7 +212,7 @@ long RParamValue::GetLong(void)
 
 
 //------------------------------------------------------------------------------
-unsigned long RParamValue::GetULong(void)
+unsigned long RParamValue::GetULong(void) const
 {
 	bool b;
 	unsigned long v=Value.ToULong(b);
@@ -221,7 +221,7 @@ unsigned long RParamValue::GetULong(void)
 
 
 //------------------------------------------------------------------------------
-double RParamValue::GetDouble(void)
+double RParamValue::GetDouble(void) const
 {
 	bool b;
 	double v=Value.ToDouble(b);
@@ -230,14 +230,14 @@ double RParamValue::GetDouble(void)
 
 
 //------------------------------------------------------------------------------
-RString RParamValue::Get(void)
+RString RParamValue::Get(void) const
 {
 	return(Value);
 }
 
 
 //------------------------------------------------------------------------------
-bool RParamValue::GetBool(void)
+bool RParamValue::GetBool(void) const
 {
 	return(Value.ToBool(false));
 }

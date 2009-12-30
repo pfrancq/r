@@ -4,7 +4,7 @@
 
 	RPlacementHeuristic.h
 
-	Generic Heuristic for Placement - Implemenation
+	Generic Heuristic for Placement - Implementation
 
 	Copyright 1998-2009 by Pascal Francq (pascal@francq.info).
 	Copyright 1998-2008 by the Université Libre de Bruxelles (ULB).
@@ -30,11 +30,31 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromkernel.h>
 #include <rplacementheuristic.h>
 #include <random.h>
 #include <rxmlstruct.h>
 using namespace R;
+
+
+//------------------------------------------------------------------------------
+//
+// class RPlacementHeuristic::ObjecPos
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+class RPlacementHeuristic::ObjectPos
+{
+public:
+	/** Position of an object.*/
+	RPoint Pos;
+
+	/**Orientation */
+	char Ori;
+
+	ObjectPos(void) {}
+	int Compare(const ObjectPos&) const {return(-1);}
+};
 
 
 
@@ -46,19 +66,40 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RPlacementHeuristic::RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori)
-	: Random(r), Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori)
+	: Random(r), Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori), ValidPos(500), Prom("Orientations",100,2),
+	  DistParams(0), AreaParams(0)
 {
 	Order=new RGeoInfo*[maxobjs];
-	MaxPromSol=500;
-	Sols=new ObjectPos[MaxPromSol];
-	AreaParams=RPromLinearCriterion::CreateParam("Area");
-	DistParams=RPromLinearCriterion::CreateParam("Dist");
+	for(size_t i=101;--i;)
+		ValidPos.InsertPtr(new ObjectPos());
+}
+
+
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::SetDistParams(const RParam* params)
+{
+	DistParams=params;
+}
+
+
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::SetAreaParams(const RParam* params)
+{
+	AreaParams=params;
 }
 
 
 //------------------------------------------------------------------------------
 void RPlacementHeuristic::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 {
+	// Initialize PROMTEHEE Criteria
+	if(!AreaParams)
+		ThrowRException("PROMETHEE parameters for the area criterion not specified");
+	if(!DistParams)
+		ThrowRException("PROMETHEE parameters for the distance criterion not specified");
+	Prom.AddCriterion(Area=new RPromLinearCriterion(RPromCriterion::Maximize,AreaParams,"Weight"));
+	Prom.AddCriterion(Dist=new RPromLinearCriterion(RPromCriterion::Minimize,DistParams,"Distance"));
+
 	// Assign
 	Limits=prob->Limits;
 	Grid=grid;
@@ -81,118 +122,76 @@ void RPlacementHeuristic::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 
 
 //------------------------------------------------------------------------------
-void RPlacementHeuristic::SetDistParams(double p,double q,double w)
-{
-	dynamic_cast<RParamStruct*>(DistParams)->Get<RParamValue>("P")->SetDouble(p);
-	dynamic_cast<RParamStruct*>(DistParams)->Get<RParamValue>("Q")->SetDouble(q);
-	dynamic_cast<RParamStruct*>(DistParams)->Get<RParamValue>("Weight")->SetDouble(w);
-}
-
-
-//------------------------------------------------------------------------------
-void RPlacementHeuristic::SetDistParams(RParam* params)
-{
-	DistParams=params;
-}
-
-
-//------------------------------------------------------------------------------
-void RPlacementHeuristic::SetAreaParams(RParam* params)
-{
-	AreaParams=params;
-}
-
-
-//------------------------------------------------------------------------------
-void RPlacementHeuristic::SetAreaParams(double p,double q,double w)
-{
-	dynamic_cast<RParamStruct*>(AreaParams)->Get<RParamValue>("P")->SetDouble(p);
-	dynamic_cast<RParamStruct*>(AreaParams)->Get<RParamValue>("Q")->SetDouble(q);
-	dynamic_cast<RParamStruct*>(AreaParams)->Get<RParamValue>("Weight")->SetDouble(w);
-}
-
-
-//------------------------------------------------------------------------------
-void RPlacementHeuristic::SelectNextObject(void)
+RGeoInfo* RPlacementHeuristic::SelectNextObject(void)
 {
 	if(!NbObjsOk)
-	{
-		CurInfo=Order[0];
-		return;
-	}
+		return(Order[0]);
 
 	// Find the most connected object
-	CurInfo=Connections->GetMostConnected(Infos,NbObjs,Order,NbObjsOk);
+	return(Connections->GetMostConnected(Infos,NbObjs,Order,NbObjsOk));
 }
 
 
 //------------------------------------------------------------------------------
 void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 {
-	RRect CurRect(Result);
-	ObjectPos *p;
-	RPromSol* sol;
-	size_t i;
-
-	// Verify if solution not already exists
-	for(i=NbPromSol+1,p=Sols;--i;p++)
-		if((p->Pos==pos)&&(p->Ori==CurInfo->GetOri()))
-			return;
-
-	// Verify CalcPos
-	if(NbPromSol==MaxPromSol)
+	// Verify if the solution is not already existing
+	if(Prom.GetNbSols())
 	{
-		// Allocate new Sols
+		RCursor<ObjectPos> Cur(ValidPos,0,Prom.GetNbSols()-1);
+		for(Cur.Start();!Cur.End();Cur.Next())
+			if((Cur()->Pos==pos)&&(Cur()->Ori==CurInfo->GetOri()))
+				return;
 	}
 
 	// Compute the bounding rectangle of all placed objects and the current
 	// one at the given position
+	RRect CurRect(Result);
 	if(pos.X<CurRect.X1) CurRect.X1=pos.X;
 	if(pos.Y<CurRect.Y1) CurRect.Y1=pos.Y;
 	if(pos.X+CurInfo->Width()>CurRect.X2) CurRect.X2=pos.X+CurInfo->Width();
 	if(pos.Y+CurInfo->Height()>CurRect.Y2) CurRect.Y2=pos.Y+CurInfo->Height();
 	if((CurRect.X1<0)||(CurRect.Y1<0)||(CurRect.X2>=Limits.X)||(CurRect.Y2>=Limits.Y))
-	{
 		return;
+
+	// Verify if the container contains enough elements
+	if(Prom.GetNbSols()==ValidPos.GetNb())
+	{
+		for(size_t i=101;--i;)
+			ValidPos.InsertPtr(new ObjectPos());
 	}
 
-	// Add new solution for Proméhée
-	p=&Sols[NbPromSol];
-	p->Ori=CurInfo->GetOri();
-	p->Pos=pos;
-	sol=Prom->NewSol();
-	Prom->Assign(sol,area,CurRect.GetWidth()*CurRect.GetHeight());
-	Prom->Assign(sol,dist,Infos->Cons.GetDistances(CurInfo,pos));
-//	cout<<NbPromSol<<": Pos=("<<pos.X<<","<<pos.Y<<") ; Area="<<CurRect.Width()*CurRect.Height();
-//	cout<<" ; Dist="<<Connections->GetDistances(Infos)<<endl;
-	NbPromSol++;
+	// Add a new valid position and a new PROMETHEE solution
+	ObjectPos* ptr(ValidPos[Prom.GetNbSols()]);
+	ptr->Ori=CurInfo->GetOri();
+	ptr->Pos=pos;
+	RPromSol* Sol(Prom.NewSol());
+	Prom.Assign(Sol,Area,CurRect.GetWidth()*CurRect.GetHeight());
+	Prom.Assign(Sol,Dist,Infos->Cons.GetDistances(CurInfo,pos));
 }
 
 
 //------------------------------------------------------------------------------
 RGeoInfo* RPlacementHeuristic::NextObject(void)
 {
-	RPoint pos;
-	RObj2D* obj;
-	size_t best;
+	if(NbObjsOk>=NbObjs)
+		ThrowRException("All objects placed");
 
-	SelectNextObject();
+	// Init
+	RPoint pos(MaxCoord,MaxCoord);
+	CurInfo=SelectNextObject();
 	CurInfo->SetOrder(NbObjsOk);
-	obj=CurInfo->GetObj();
-	NbPromSol=0;
+	RObj2D* obj(CurInfo->GetObj());
 
 	// Choose best free polygon (if any).
-	pos.Set(MaxCoord,MaxCoord);
 	if(UseFree)
 		pos=Free.CanPlace(CurInfo);
 
 	// Find the best position for current orientation if not already found.
 	if(!pos.IsValid())
 	{
-		// Init Part
-		Prom=new RPromKernel("Orientations",200,2);
-		Prom->AddCriterion(area=new RPromLinearCriterion(RPromCriterion::Maximize,AreaParams,"Weight"));
-		Prom->AddCriterion(dist=new RPromLinearCriterion(RPromCriterion::Minimize,DistParams,"Distance"));
+		// Suppose no position
+		Prom.ClearSols();
 
 		if(AllOri&&(obj->NbPossOri>1))
 		{
@@ -201,56 +200,45 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 			{
 				// Set an orientation & Find a position
 				CurInfo->SetOri(o);
-				NextObjectOri();
+				SearchValidPositions(CurInfo);
 			}
 		}
 		else
 		{
-			// Set an orientation & Find a position
+			// Set an orientation & find a position
 			CurInfo->SetOri(0);
-			NextObjectOri();
+			SearchValidPositions(CurInfo);
 		}
 
-		// Run Proméhéé
-		if(NbPromSol)
+		// Is there at least one valid position
+		if(Prom.GetNbSols())
 		{
-			if(NbPromSol>1)
+			ObjectPos* Best;
+
+			// If multiple positions -> Run PROMETHEE
+			if(Prom.GetNbSols()>1)
 			{
-				Prom->ComputePrometheeII();
-				best=Prom->GetBestSolId();
-				pos=Sols[best].Pos;
-				CurInfo->SetOri(Sols[best].Ori);
+				Prom.ComputePrometheeII();
+				Best=ValidPos[Prom.GetBestSolId()];
 			}
 			else
-			{
-				pos=Sols[0].Pos;
-				CurInfo->SetOri(Sols[0].Ori);
-			}
+				Best=ValidPos[0];
+			pos=Best->Pos;
+			CurInfo->SetOri(Best->Ori);
 		}
-		delete Prom;
 	}
 
 	// Place it
 	if(!pos.IsValid())
-	{
-		throw RGA2DException("Can't place an object!");
-	}
-	Place(pos);
+		ThrowRException("Can't place an object!");
+
+	// Assign the object to the current position
+	CurInfo->Assign(pos,Grid);
+	PostPlace(CurInfo,pos);
 
 	// Look for free polygons
 	if(CalcFree)
-	{
-		if(NbObjsOk==26)
-		{
-			RTrace* m=RTrace::LookMsg("Random");
-			if(m)
-			{
-				RTrace::DeleteMsg(m);
-				RTrace::InsertMsg("Debug");
-			}
-		}
 		Grid->AddFreePolygons(CurInfo,&Free,Result);
-	}
 
 	// Next Object
 	NbObjsOk++;
@@ -293,16 +281,7 @@ RRect RPlacementHeuristic::GetResult(void)
 
 
 //------------------------------------------------------------------------------
-void RPlacementHeuristic::CreateProblem(void)
-{
-
-}
-
-
-//------------------------------------------------------------------------------
 RPlacementHeuristic::~RPlacementHeuristic(void)
 {
 	delete[] Order;
-	delete DistParams;
-	delete AreaParams;
 }

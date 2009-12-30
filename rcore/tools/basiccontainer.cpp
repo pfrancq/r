@@ -403,7 +403,8 @@ void BasicContainer::DeletePtrAt(bool bAlloc,size_t pos,bool shift)
 {
 	void** ptr;
 
-	RReturnIfFail(pos<LastPtr);
+	if(pos>=LastPtr)
+		throw std::range_error("BasicContainer:::DeletePtrAt : idx "+RString::Number(pos)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 	ptr=&Tab[pos];
 	if(bAlloc)
 		Delete(*ptr);

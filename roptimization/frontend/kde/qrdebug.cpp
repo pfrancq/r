@@ -1,9 +1,9 @@
 /*
  	R Project Library
 
-	QXMLContainer.cpp
+	QRDebug.cpp
 
-	Qt XML Debugger - Implementation.
+	Widget Debugger - Implementation.
 
 	Copyright 2000-2009 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
@@ -27,29 +27,32 @@
 
 
 
-//------------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <stdio.h>
+//-----------------------------------------------------------------------------
+// include files for Qt/KDE
+#include <QtGui/QTreeWidgetItem>
+#include <QtGui/QTreeWidget>
 
 
 //------------------------------------------------------------------------------
 // include files for R Library
-#include <qxmlcontainer.h>
+#include <ui_qrdebug.h>
+#include <qrdebug.h>
 #include <rqt.h>
 using namespace R;
 
 
+
 //------------------------------------------------------------------------------
 //
-// QXMLContainer::Item
+// QRDebug::Item
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-class QXMLContainer::Item : public QTreeWidgetItem
+class QRDebug::Item : public QTreeWidgetItem
 {
 public:
-	Item(QXMLContainer* parent) : QTreeWidgetItem(parent) {}
+	Item(QTreeWidget* parent) : QTreeWidgetItem(parent) {}
 	Item(Item* item) : QTreeWidgetItem(item) {}
 	Item(Item* item,Item* ptr) : QTreeWidgetItem(item,ptr) {}
 	int Compare(const Item&) const {return(-1);}
@@ -59,72 +62,67 @@ public:
 
 //------------------------------------------------------------------------------
 //
-// QXMLContainer
+// QRDebug
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QXMLContainer::QXMLContainer(QWidget* parent)
-	: QTreeWidget(parent), RDebug(), Items(50)
+QRDebug::QRDebug(QWidget* parent)
+	: QWidget(parent), RDebug(), Ui(new Ui_QRDebug()), Items(50)
 {
-	setColumnCount(3);
-	setHeaderLabels(QStringList() << "Steps" << "Params" << "Infos");
-	setRootIsDecorated(true);
-//	setSorting(-1,true);
-	setAllColumnsShowFocus(true);
+	static_cast<Ui_QRDebug*>(Ui)->setupUi(this);
 	BeginTag("RDebug");
 }
 
 
 //------------------------------------------------------------------------------
-void QXMLContainer::clear(void)
+void QRDebug::clear(void)
 {
-	QTreeWidget::clear();
+	static_cast<Ui_QRDebug*>(Ui)->Infos->clear();
 	Items.Clear();
 	Depth=-1;
 }
 
 
 //------------------------------------------------------------------------------
-void QXMLContainer::WriteBeginTag(const RString& tag,const RString& attrs)
+void QRDebug::WriteBeginTag(const RString& tag,const RString& attrs)
 {
-	Item *ptr;
-
 	if(Depth)
 	{
-		ptr=Items[Depth];
-		if(ptr)
-			Items.InsertPtrAt(new Item(Items[Depth-1],ptr),Depth,true);
+		if(static_cast<size_t>(Depth)<=Items.GetMaxPos())
+			Items.InsertPtrAt(new Item(Items[Depth-1],Items[Depth]),Depth,true);
 		else
 			Items.InsertPtrAt(new Item(Items[Depth-1]),Depth,true);
 	}
 	else
-		Items.InsertPtrAt(new Item(this),Depth,true);
+		Items.InsertPtrAt(new Item(static_cast<Ui_QRDebug*>(Ui)->Infos),Depth,true);
 	Items[Depth]->setText(0,ToQString(tag));
 	if(!attrs.IsEmpty())
 	{
 		Items[Depth]->setText(1,ToQString(attrs));
 	}
-	Items.DeletePtrAt(Depth+1,false);
+	if(static_cast<size_t>(Depth)<Items.GetMaxPos())
+		Items.DeletePtrAt(Depth+1,false);
 }
 
 
 //------------------------------------------------------------------------------
-void QXMLContainer::WriteEndTag(const RString& /*tag*/)
+void QRDebug::WriteEndTag(const RString& /*tag*/)
 {
-	Items.DeletePtrAt(Depth+1,false);
+	if(static_cast<size_t>(Depth)<Items.GetMaxPos())
+		Items.DeletePtrAt(Depth+1,false);
 }
 
 
 //------------------------------------------------------------------------------
-void QXMLContainer::WriteText(const RString& text)
+void QRDebug::WriteText(const RString& text)
 {
 	Items[Depth]->setText(2,ToQString(text));
 }
 
 
 //------------------------------------------------------------------------------
-QXMLContainer::~QXMLContainer(void)
+QRDebug::~QRDebug(void)
 {
 	emit signalXMLClose();
 }

@@ -59,6 +59,8 @@ namespace R{
 template<class cInst,class cChromo>
 	class RThreadData2D : public RThreadData<cInst,cChromo>
 {
+	using RThreadData<cInst,cChromo>::Owner;
+
 public:
 
 	/**
@@ -128,7 +130,11 @@ public:
 template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo>
 	class RInst2D : public RInst<cInst,cChromo,cFit,cThreaData>
 {
+	using RInst<cInst,cChromo,cFit,cThreaData>::thDatas;
+
 public:
+
+	using RInst<cInst,cChromo,cFit,cThreaData>::BestChromosome;
 
 	/**
 	* The problem.
@@ -162,6 +168,21 @@ protected:
 	*/
 	RString Heuristic;
 
+	/**
+	* Calculate free polygons.
+	*/
+	bool ComputeFreePolygons;
+
+	/**
+	* Use free polygons.
+	*/
+	bool UseFreePolygons;
+
+	/**
+	* Test all possible orientation.
+	*/
+	bool AllOrientations;
+
 public:
 
 	/**
@@ -170,7 +191,7 @@ public:
 	RPoint Limits;
 
 	/**
-	* Construct the instance. The instance is not responsible for the desallocation
+	* Construct the instance. The instance is not responsible for the deallocation
 	* of the objects to place.
 	* @param popsize        The size of the population.
 	* @param prob           Pointer to the problem.
@@ -199,18 +220,20 @@ public:
 	* Set the parameters for the "area" criterion.
 	* @param params         The parameters.
 	*/
-	void SetAreaParams(const RParam& params);
+	void SetAreaParams(const RParam* params);
 
 	/**
 	* Set the parameters for the "area" criterion.
 	* @param params         The parameters.
 	*/
-	void SetDistParams(const RParam& params);
+	void SetDistParams(const RParam* params);
 
 	/**
 	* Return true if a local optimization is needed.
 	*/
 	inline bool LocalOpti(void) { return(bLocalOpti); }
+
+	friend class RThreadData2D<cInst,cChromo>;
 };
 
 

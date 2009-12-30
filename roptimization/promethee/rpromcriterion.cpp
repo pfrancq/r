@@ -60,7 +60,7 @@ RPromCriterion::RPromCriterion(tCriteriaType type,double w,const char* name,size
 
 
 //------------------------------------------------------------------------------
-void RPromCriterion::Set(R::RParam*)
+void RPromCriterion::Set(const RParam*)
 {
 }
 
@@ -142,7 +142,7 @@ RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,double p,double q,
 
 
 //------------------------------------------------------------------------------
-RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,RParam* params,const char* name,size_t nb)
+RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,const RParam* params,const char* name,size_t nb)
 	: RPromCriterion(type,0.0,name,nb)
 {
 	Set(params);
@@ -150,12 +150,24 @@ RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,RParam* params,con
 
 
 //-----------------------------------------------------------------------------
-void RPromLinearCriterion::Set(RParam* param)
+void RPromLinearCriterion::Set(const RParam* param)
 {
 	double p,q,w;
-	p=dynamic_cast<RParamStruct*>(param)->Get<RParamValue>("P")->GetDouble();
-	q=dynamic_cast<RParamStruct*>(param)->Get<RParamValue>("Q")->GetDouble();
-	w=dynamic_cast<RParamStruct*>(param)->Get<RParamValue>("Weight")->GetDouble();
+	const RParamStruct* Param(dynamic_cast<const RParamStruct*>(param));
+	if(!Param)
+		ThrowRException("Parameter '"+param->GetName()+"' is not of type 'RParamStuct'");
+	RParamValue* Val(Param->Get<RParamValue>("P"));
+	if(!Val)
+		ThrowRException("Parameter '"+param->GetName()+"' has no member 'P'");
+	p=Val->GetDouble();
+	Val=Param->Get<RParamValue>("Q");
+	if(!Val)
+		ThrowRException("Parameter '"+param->GetName()+"' has no member 'Q'");
+	q=Val->GetDouble();
+	Val=Param->Get<RParamValue>("Weight");
+	if(!Val)
+		ThrowRException("Parameter '"+param->GetName()+"' has no member 'Weight'");
+	w=Val->GetDouble();
 	Set(p,q,w);
 }
 

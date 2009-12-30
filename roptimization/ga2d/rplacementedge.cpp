@@ -63,7 +63,7 @@ void RPlacementEdge::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 
 
 //------------------------------------------------------------------------------
-void RPlacementEdge::NextObjectOri(void)
+void RPlacementEdge::SearchValidPositions(RGeoInfo* info)
 {
 	double FactorX,FactorY;
 	RPoint Pos;
@@ -79,24 +79,24 @@ void RPlacementEdge::NextObjectOri(void)
 			if(CurLevel>=NbLevels)
 				NbLevels=CurLevel;
 			Actual.Set(Result.X2,0);
-			Max.X=Result.X2+CurInfo->Width()+1;
+			Max.X=Result.X2+info->Width()+1;
 			if(Max.X>Limits.X)
 			Max.X=Limits.X;
 			CurLevel=0;
 		}
 	}
 
-	// Do a local optimisationn at actual position
+	// Do a local optimization at actual position
 	Pos=Last;
-	CurInfo->PushBottomLeft(Pos,Limits,Grid);
-	if((Pos.Y+CurInfo->Height()>Levels[CurLevel].Y)||(Pos.X+CurInfo->Width()>Actual.X))
+	info->PushBottomLeft(Pos,Limits,Grid);
+	if((Pos.Y+info->Height()>Levels[CurLevel].Y)||(Pos.X+info->Width()>Actual.X))
 	{
 		Pos=Actual;
-		CurInfo->PushBottomLeft(Pos,Limits,Grid);
+		info->PushBottomLeft(Pos,Limits,Grid);
 	}
 
 	// If to long than begin from left again
-	while((Pos.X>0)&&(Pos.X+CurInfo->Width()>Max.X))
+	while((Pos.X>0)&&(Pos.X+info->Width()>Max.X))
 	{
 		Levels[CurLevel++]=Actual;
 		if(CurLevel>=NbLevels)
@@ -107,11 +107,11 @@ void RPlacementEdge::NextObjectOri(void)
 		else
 			Actual=Levels[CurLevel];
 		Pos=Actual;
-		CurInfo->PushBottomLeft(Pos,Limits,Grid);
+		info->PushBottomLeft(Pos,Limits,Grid);
 	}
 
 	// If to high than try to switch objects and place another one
-	if(Pos.Y+CurInfo->Height()>Limits.Y)
+	if(Pos.Y+info->Height()>Limits.Y)
 	{
 		Pos.Set(MaxCoord,MaxCoord);
 		return;
@@ -122,32 +122,27 @@ void RPlacementEdge::NextObjectOri(void)
 
 
 //------------------------------------------------------------------------------
-void RPlacementEdge::Place(RPoint& pos)
+void RPlacementEdge::PostPlace(RGeoInfo* info,const RPoint& pos)
 {
 	size_t i,l;
 
-	// Assign the object to the current position
-	CurInfo->Assign(pos,Grid);
-
 	// Calculate Next position
 	Last=Actual;
-	if(pos.X+CurInfo->Width()>Actual.X)
-		Actual.X=pos.X+CurInfo->Width();
-	if((pos.X==0)&&(pos.X+CurInfo->Width())>Max.X)
-		Max.X=pos.X+CurInfo->Width();
-	if(pos.Y+CurInfo->Height()>Max.Y)
-		Max.Y=pos.Y+CurInfo->Height();
-	Last.Y+=CurInfo->Height();
-
+	if(pos.X+info->Width()>Actual.X)
+		Actual.X=pos.X+info->Width();
+	if((pos.X==0)&&(pos.X+info->Width())>Max.X)
+		Max.X=pos.X+info->Width();
+	if(pos.Y+info->Height()>Max.Y)
+		Max.Y=pos.Y+info->Height();
+	Last.Y+=info->Height();
 
 	// Verify if down level needed update
 	for(i=0;i<CurLevel;i++)
 		if(Levels[i].X<Max.X) Levels[i].X=Max.X;
 
-
 	// Verify if some levels must be skipped
 	i=CurLevel+1;
-	while((i<NbLevels)&&(Levels[i].Y<pos.Y+CurInfo->Height()))
+	while((i<NbLevels)&&(Levels[i].Y<pos.Y+info->Height()))
 	{
 		NbLevels--;
 		for(l=i;l<NbLevels;l++)
@@ -155,11 +150,11 @@ void RPlacementEdge::Place(RPoint& pos)
 	}
 
 	// Verify ActLimits
-	if(pos.X+CurInfo->Width()>Result.X2)
+	if(pos.X+info->Width()>Result.X2)
 	{
-		Result.X2=pos.X+CurInfo->Width();
+		Result.X2=pos.X+info->Width();
 		if(Max.X==0) Max.X=Result.X2;
 	}
-	if(pos.Y+CurInfo->Height()>Result.Y2)
-		Result.Y2=pos.Y+CurInfo->Height();
+	if(pos.Y+info->Height()>Result.Y2)
+		Result.Y2=pos.Y+info->Height();
 }

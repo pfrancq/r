@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	QGAMonitor.cpp
+	QRGAMonitor.cpp
 
 	Widget to represents statistics about a running GA - Implementation.
 
@@ -41,8 +41,9 @@
 
 
 //------------------------------------------------------------------------------
-// include files for Qt Widgets
-#include <qgamonitor.h>
+// include files for R Project
+#include <qrgamonitor.h>
+#include <ui_qrgamonitor.h>
 using namespace R;
 
 
@@ -126,37 +127,12 @@ void QInfoBox::mouseReleaseEvent(QMouseEvent*)
 
 //------------------------------------------------------------------------------
 //
-// QGAMonitorGroupBox
+// QRGAMonitorGraph
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QGAMonitorStats::QGAMonitorStats(QWidget* parent)
-	: QGroupBox(parent)
-{
-	QLabel *l;
-
-	l=new QLabel("Generations:",this);
-	l->setGeometry(10,15,80,20);
-	Gen = new QLabel("0",this);
-	Gen->setGeometry(90,15,100,20);
-	l=new QLabel("Best Age:",this);
-	l->setGeometry(10,35,80,20);
-	Best = new QLabel("0",this);
-	Best->setGeometry(90,35,100,20);
-	setTitle("Statistics");
-}
-
-
-
-//------------------------------------------------------------------------------
-//
-// QGAMonitorGraph
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-QGAMonitorGraph::QGAMonitorGraph(QWidget* parent)
+QRGAMonitorGraph::QRGAMonitorGraph(QWidget* parent)
 	: QWidget(parent),values(),LastValue(0),pixmap(0)
 {
 	QRect r;
@@ -173,14 +149,14 @@ QGAMonitorGraph::QGAMonitorGraph(QWidget* parent)
 }
 
 //------------------------------------------------------------------------------
-QSize QGAMonitorGraph::sizeHint() const
+QSize QRGAMonitorGraph::sizeHint() const
 {
 	return(minimumSize());
 }
 
 
 //------------------------------------------------------------------------------
-void QGAMonitorGraph::clear()
+void QRGAMonitorGraph::clear()
 {
 //	erase();
 	values.clear();
@@ -192,7 +168,7 @@ void QGAMonitorGraph::clear()
 
 
 //------------------------------------------------------------------------------
-void QGAMonitorGraph::setVScale(const double v)
+void QRGAMonitorGraph::setVScale(const double v)
 {
 	QRect r=rect();
 	double i=r.height();
@@ -207,7 +183,7 @@ void QGAMonitorGraph::setVScale(const double v)
 
 
 //------------------------------------------------------------------------------
-void QGAMonitorGraph::setHScale(const size_t h)
+void QRGAMonitorGraph::setHScale(const size_t h)
 {
 	QRect r=rect();
 	hScale=h;
@@ -218,7 +194,7 @@ void QGAMonitorGraph::setHScale(const size_t h)
 
 
 //------------------------------------------------------------------------------
-void QGAMonitorGraph::AddValue(const double value)
+void QRGAMonitorGraph::AddValue(const double value)
 {
 	int NewX,NewY;
 	QRect r=rect();
@@ -240,7 +216,7 @@ void QGAMonitorGraph::AddValue(const double value)
 
 
 //------------------------------------------------------------------------------
-void QGAMonitorGraph::paintEvent(QPaintEvent*)
+void QRGAMonitorGraph::paintEvent(QPaintEvent*)
 {
 	double tmp;
 	QRect r;
@@ -275,7 +251,7 @@ void QGAMonitorGraph::paintEvent(QPaintEvent*)
 
 
 //------------------------------------------------------------------------------
-void QGAMonitorGraph::resizeEvent(QResizeEvent*)
+void QRGAMonitorGraph::resizeEvent(QResizeEvent*)
 {
 	QRect r=rect();
 	double i=r.height();
@@ -292,7 +268,7 @@ void QGAMonitorGraph::resizeEvent(QResizeEvent*)
 
 
 //------------------------------------------------------------------------------
-void QGAMonitorGraph::mousePressEvent(QMouseEvent* e)
+void QRGAMonitorGraph::mousePressEvent(QMouseEvent* e)
 {
 	QInfoBox* InfoBox;
 
@@ -311,7 +287,7 @@ void QGAMonitorGraph::mousePressEvent(QMouseEvent* e)
 
 
 //------------------------------------------------------------------------------
-QGAMonitorGraph::~QGAMonitorGraph(void)
+QRGAMonitorGraph::~QRGAMonitorGraph(void)
 {
 	values.clear();
 	if(pixmap) delete pixmap;
@@ -321,35 +297,72 @@ QGAMonitorGraph::~QGAMonitorGraph(void)
 
 //------------------------------------------------------------------------------
 //
-// QGAMonitor
+// QRGAMonitor
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QGAMonitor::QGAMonitor(QWidget* parent)
-	: QSplitter(parent)
+QRGAMonitor::QRGAMonitor(QWidget* parent)
+	: QWidget(parent), Ui(new Ui_QRGAMonitor())
 {
-//	setBackgroundMode(Qt::PaletteBase);
-	Stats = new QGAMonitorStats(this);
-	Graph = new QGAMonitorGraph(this);
-	Graph->setMinimumSize(Graph->sizeHint());
+	static_cast<Ui_QRGAMonitor*>(Ui)->setupUi(this);
+	static_cast<Ui_QRGAMonitor*>(Ui)->Graph->setScene(&Scene);
+	Scene.setBackgroundBrush(Qt::black);
+	clear();
 }
 
 
 //------------------------------------------------------------------------------
-void QGAMonitor::slotSetGen(const size_t gen,const size_t best,const double value)
+void QRGAMonitor::setParams(size_t maxgen,double minfit,double maxfit)
 {
-	Stats->setGen(QString::number(gen));
-	Stats->setBest(QString::number(best));
-	Graph->AddValue(value);
+	MaxGen=maxgen;
+	MinFit=minfit;
+	MaxFit=maxfit;
+}
+
+
+//------------------------------------------------------------------------------
+void QRGAMonitor::setGenInfo(const size_t gen,const size_t best,const double value)
+{
+	static_cast<Ui_QRGAMonitor*>(Ui)->Gen->setText("Generation: "+QString::number(gen));
+	static_cast<Ui_QRGAMonitor*>(Ui)->Best->setText("Best age: "+QString::number(best));
+	Values.insert(gen,value);
+	if(gen)
+		Scene.addLine(x(gen-1),y(Values.at(gen-1)),x(gen),y(Values.at(gen)),QPen(Qt::red));
+}
+
+
+//------------------------------------------------------------------------------
+void QRGAMonitor::clear(void)
+{
+	static_cast<Ui_QRGAMonitor*>(Ui)->Gen->setText("No generation");
+	static_cast<Ui_QRGAMonitor*>(Ui)->Best->setText("No best solution computed");
+	Scene.clear();
+}
+
+
+//------------------------------------------------------------------------------
+void QRGAMonitor::repaint(void)
+{
+	QGraphicsView* Graph(static_cast<Ui_QRGAMonitor*>(Ui)->Graph);
+	XScale=static_cast<double>(Graph->width())/static_cast<double>(MaxGen);
+	YScale=static_cast<double>(Graph->height())/(MaxFit-MinFit);
+	Scene.clear();
+	for(int i=1;i<Values.size();++i)
+		Scene.addLine(x(i-1),y(Values.at(i-1)),x(i),y(Values.at(i)),QPen(Qt::red));
+}
+
+
+//------------------------------------------------------------------------------
+void QRGAMonitor::resizeEvent(QResizeEvent* event)
+{
+	QWidget::resizeEvent(event);
 	repaint();
 }
 
 
 //------------------------------------------------------------------------------
-void QGAMonitor::Clear(void)
+QRGAMonitor::~QRGAMonitor(void)
 {
-	Stats->setGen("0");
-	Stats->setBest("0");
-	Graph->clear();
+	delete static_cast<Ui_QRGAMonitor*>(Ui);
 }

@@ -71,7 +71,7 @@ void RPlacementCenter::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 
 
 //------------------------------------------------------------------------------
-void RPlacementCenter::NextObjectOri(void)
+void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 {
 	RPoint Pos;                     // Position to test (X,Y).
 	size_t NbPos;
@@ -83,7 +83,7 @@ void RPlacementCenter::NextObjectOri(void)
 	// If first object -> place it in the middle
 	if(!NbObjsOk)
 	{
-		RPoint Best((Max.X-CurInfo->Width())/2,(Max.Y-CurInfo->Height())/2);
+		RPoint Best((Max.X-info->Width())/2,(Max.Y-info->Height())/2);
 		AddValidPosition(Best);
 		return;
 	}
@@ -106,10 +106,10 @@ void RPlacementCenter::NextObjectOri(void)
 			// Look to the Left -> Test (X-1,Y)
 			if(Grid->IsFree(Actual.X-1,Actual.Y))
 			{
-				Pos.Set(Actual.X-CurInfo->Width(),Actual.Y);
-				if(CurInfo->Test(Pos,Grid))
+				Pos.Set(Actual.X-info->Width(),Actual.Y);
+				if(info->Test(Pos,Grid))
 				{
-					CurInfo->PushCenter(Pos,Limits,Grid);
+					info->PushCenter(Pos,Limits,Grid);
 					AddValidPosition(Pos);
 				}
 			}
@@ -118,20 +118,20 @@ void RPlacementCenter::NextObjectOri(void)
 				// If look to bottom -> Test (X,Y-1)
 				if(Grid->IsFree(Actual.X,Actual.Y-1))
 				{
-					Pos.Set(Actual.X,Actual.Y-CurInfo->Height());
-					if(CurInfo->Test(Pos,Grid))
+					Pos.Set(Actual.X,Actual.Y-info->Height());
+					if(info->Test(Pos,Grid))
 					{
-						CurInfo->PushCenter(Pos,Limits,Grid);
+						info->PushCenter(Pos,Limits,Grid);
 						AddValidPosition(Pos);
 					}
 				}
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos.Set(Actual.X-CurInfo->Width(),Actual.Y-CurInfo->Height());
-					if(CurInfo->Test(Pos,Grid))
+					Pos.Set(Actual.X-info->Width(),Actual.Y-info->Height());
+					if(info->Test(Pos,Grid))
 					{
-						CurInfo->PushCenter(Pos,Limits,Grid);
+						info->PushCenter(Pos,Limits,Grid);
 						AddValidPosition(Pos);
 					}
 				}
@@ -142,17 +142,17 @@ void RPlacementCenter::NextObjectOri(void)
 				if(Grid->IsFree(Actual.X,Actual.Y+1))
 				{
 					Pos.Set(Actual.X,Actual.Y+1);
-					if(CurInfo->Test(Pos,Grid))
+					if(info->Test(Pos,Grid))
 						AddValidPosition(Pos);
 				}
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos.Set(Actual.X-CurInfo->Width(),Actual.Y+1);
-					Pos.Set(Actual.X-CurInfo->Width(),Actual.Y-CurInfo->Height());
-					if(CurInfo->Test(Pos,Grid))
+					Pos.Set(Actual.X-info->Width(),Actual.Y+1);
+					Pos.Set(Actual.X-info->Width(),Actual.Y-info->Height());
+					if(info->Test(Pos,Grid))
 					{
-						CurInfo->PushCenter(Pos,Limits,Grid);
+						info->PushCenter(Pos,Limits,Grid);
 						AddValidPosition(Pos);
 					}
 				}
@@ -165,9 +165,9 @@ void RPlacementCenter::NextObjectOri(void)
 			if(Grid->IsFree(Actual.X+1,Actual.Y))
 			{
 				Pos.Set(Actual.X+1,Actual.Y);
-				if(CurInfo->Test(Pos,Grid))
+				if(info->Test(Pos,Grid))
 				{
-					CurInfo->PushCenter(Pos,Limits,Grid);
+					info->PushCenter(Pos,Limits,Grid);
 					AddValidPosition(Pos);
 				}
 			}
@@ -176,20 +176,20 @@ void RPlacementCenter::NextObjectOri(void)
 				// If look to bottom -> Test (X,Y-1)
 				if(Grid->IsFree(Actual.X,Actual.Y-1))
 				{
-					Pos.Set(Actual.X,Actual.Y-CurInfo->Height());
-					if(CurInfo->Test(Pos,Grid))
+					Pos.Set(Actual.X,Actual.Y-info->Height());
+					if(info->Test(Pos,Grid))
 					{
-						CurInfo->PushCenter(Pos,Limits,Grid);
+						info->PushCenter(Pos,Limits,Grid);
 						AddValidPosition(Pos);
 					}
 				}
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos.Set(Actual.X+1,Actual.Y-CurInfo->Height());
-					if(CurInfo->Test(Pos,Grid))
+					Pos.Set(Actual.X+1,Actual.Y-info->Height());
+					if(info->Test(Pos,Grid))
 					{
-						CurInfo->PushCenter(Pos,Limits,Grid);
+						info->PushCenter(Pos,Limits,Grid);
 						AddValidPosition(Pos);
 					}
 				}
@@ -200,9 +200,9 @@ void RPlacementCenter::NextObjectOri(void)
 				if(Grid->IsFree(Actual.X,Actual.Y+1))
 				{
 					Pos.Set(Actual.X,Actual.Y+1);
-					if(CurInfo->Test(Pos,Grid))
+					if(info->Test(Pos,Grid))
 					{
-						CurInfo->PushCenter(Pos,Limits,Grid);
+						info->PushCenter(Pos,Limits,Grid);
 						AddValidPosition(Pos);
 					}
 				}
@@ -210,16 +210,16 @@ void RPlacementCenter::NextObjectOri(void)
 				if(NbPos==0)
 				{
 					Pos.Set(Actual.X+1,Actual.Y+1);
-					if(CurInfo->Test(Pos,Grid))
+					if(info->Test(Pos,Grid))
 					{
-						CurInfo->PushCenter(Pos,Limits,Grid);
+						info->PushCenter(Pos,Limits,Grid);
 						AddValidPosition(Pos);
 					}
 				}
 			}
 		}
 
-		// Choose next vertice
+		// Choose next vertex
 		Last=Actual;
 		if(LookX)
 		{
@@ -255,13 +255,11 @@ void RPlacementCenter::NextObjectOri(void)
 
 
 //------------------------------------------------------------------------------
-void RPlacementCenter::Place(RPoint& pos)
+void RPlacementCenter::PostPlace(RGeoInfo* info,const RPoint&)
 {
-	// Assign it
-	CurInfo->Assign(pos,Grid);
 	Sol.Clear();
 	Sol.InsertPtr(new RPolygon(Union));
-	CurInfo->Add(Sol);
+	info->Add(Sol);
 	Sol.Union(&Union);
 	Union.Boundary(Result);
 }

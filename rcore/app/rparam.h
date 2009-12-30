@@ -215,41 +215,41 @@ public:
 	* Get the content of the parameter.
 	* @return int.
 	*/
-	int GetInt(void);
+	int GetInt(void) const;
 
 	/**
 	* Get the content of the parameter.
 	*/
-	unsigned int GetUInt(void);
+	unsigned int GetUInt(void) const;
 
 	/**
 	* Get the content of the parameter.
 	* @return int.
 	*/
-	long GetLong(void);
+	long GetLong(void) const;
 
 	/**
 	* Get the content of the parameter.
 	*/
-	unsigned long GetULong(void);
+	unsigned long GetULong(void) const;
 
 	/**
 	* Get the content of the parameter.
 	* @return double.
 	*/
-	double GetDouble(void);
+	double GetDouble(void) const;
 
 	/**
 	* Get the content of the parameter.
 	* @return string.
 	*/
-	RString Get(void);
+	RString Get(void) const;
 
 	/**
 	* Get the content of the parameter.
 	* @return bool.
 	*/
-	bool GetBool(void);
+	bool GetBool(void) const;
 
 	/**
 	* Set the parameter based on a tag.
@@ -424,7 +424,7 @@ public:
 	* Get a parameter with a given name.
 	* @param name            Name of the parameter.
 	*/
-	template<class T> T* Get(const RString& name)
+	template<class T> T* Get(const RString& name) const
 	{
 		return(dynamic_cast<T*>(Parameters.GetPtr(name)));
 	}

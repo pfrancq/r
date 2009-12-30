@@ -111,19 +111,24 @@ public:
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
 
 	/**
-	* Calculate the position to place the next object for a specific geometric
-	* information. The function have to register the valid positions with the
-	* 'AddValidPosition' method.
+	* Calculate all the possible positions to place a given object. The method
+	* must register these valid positions with the 'AddValidPosition' method.
+	* @param info           Geometric information representing the object placed.
 	*/
-	virtual void NextObjectOri(void);
+	virtual void SearchValidPositions(RGeoInfo* info);
 
 	/**
-	* Place the current object to a specific position. This function is called
-	* by the NextObject method.<BR>
-	* This function is responsible to update Result.
-	* @param pos            The position where to place it.
+	* This method is called each time a given object is placed at a given
+	* position. It can be used	to make some specific computational updates.
+	*
+	* This method must update Result, the rectangle bounding all placed
+	* objects.
+	*
+	* @param info           Geometric information representing the object placed.
+	* @param pos            The position where it is placed.
 	*/
-	virtual void Place(RPoint& pos);
+	virtual void PostPlace(RGeoInfo* info,const RPoint& pos);
+
 };
 
 

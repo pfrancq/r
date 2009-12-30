@@ -104,11 +104,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	double Distances;
 	RPoint T(-Problem->Translation.X,-Problem->Translation.Y);
 
-	#ifdef RGADEBUG
-		char tmpmsg[100];
-		if(Instance->Debug)
-			Instance->Debug->BeginFunc("Crossover","RChromo2D");
-	#endif
+	if(Instance->Debug)
+		Instance->Debug->BeginFunc("Crossover","RChromo2D");
 
 	// Init
 	NbRealInfos=0;
@@ -118,21 +115,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 	// Select the objects from the parents
 	parent1->GetSetInfos(thObj1,Grid,Selected);
-	#ifdef RGADEBUG
-		if(Instance->Debug)
-		{
-			sprintf(tmpmsg,"%u objects selected from %u",thObj1->GetNb(),parent1->Id);
-			Instance->Debug->PrintInfo(tmpmsg);
-		}
-	#endif
+	if(Instance->Debug)
+		Instance->Debug->PrintInfo(RString::Number(thObj1->GetNb())+" objects selected from "+RString::Number(parent1->Id));
 	parent2->GetSetInfos(thObj2,Grid,Selected);
-	#ifdef RGADEBUG
-		if(Instance->Debug)
-		{
-			sprintf(tmpmsg,"%u objects selected from %u",thObj2->GetNb(),parent2->Id);
-			Instance->Debug->PrintInfo(tmpmsg);
-		}
-	#endif
+	if(Instance->Debug)
+		Instance->Debug->PrintInfo(RString::Number(thObj2->GetNb())+" objects selected from "+RString::Number(parent2->Id));
 
 	// Add the geometric informations
 	for(i=0;i<RealNb;i++)
@@ -187,10 +174,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 		Distances+=Cur()->Dist;
 	}
 
-	#ifdef RGADEBUG
-		if(Instance->Debug)
-			Instance->Debug->EndFunc("Crossover","RChromo2D");
-	#endif
+	if(Instance->Debug)
+		Instance->Debug->EndFunc("Crossover","RChromo2D");
 }
 
 
@@ -210,7 +195,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::Verify(void)
 {
 	size_t i;
-	char Tmp[200];
 
 	RCursor<RGeoInfo> infoi(*this);
 	RCursor<RGeoInfo> infoj(*this);
@@ -222,11 +206,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 			{
 				if(infoi()->Overlap(infoj()))
 				{
-					sprintf(Tmp,"Overlapping Problem (Id==%u) between %s and %s",Id,infoi()->GetObj()->Name.Latin1(),infoj()->GetObj()->Name.Latin1());
-					#ifdef RGADEBUG
-						if(Instance->Debug)
-							Instance->Debug->PrintInfo(Tmp);
-					#endif
+					RString Tmp("Overlapping Problem (Id=="+RString::Number(Id)+") between "+infoi()->GetObj()->Name+" and "+infoj()->GetObj()->Name);
+					if(Instance->Debug)
+						Instance->Debug->PrintInfo(Tmp);
 					throw RGAException(Tmp,RGAException::eGAVerify);
 				}
 			}
@@ -272,7 +254,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	if((X>Limits.X)||(Y>Limits.Y)) return(0);
 	obj=Grid->GetObjId(X,Y);
 	if(obj!=cNoRef)
-		return(Infos[obj]);
+		//return(Infos[obj]);
+		return((*this)[obj]);
 	else
 		return(0);
 }
@@ -290,7 +273,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 
 //------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
+/*template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RPoint& RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLevel(size_t i)
 {
 	RPoint pt;
@@ -298,7 +281,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	pt=Levels[i];
 	return(pt);
 }
-
+*/
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>

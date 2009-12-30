@@ -56,6 +56,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	class RChromo2D : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGeoInfos
 {
 protected:
+	using RChromo<cInst,cChromo,cFit,cThreadData>::Id;
+	using RChromo<cInst,cChromo,cFit,cThreadData>::Instance;
 
 	/**
 	* The actual limits of the solution represented by the chromosome.
@@ -204,12 +206,12 @@ public:
 	/**
 	* Return the number of levels.
 	*/
-	inline size_t GetNbLevels(void) { return(NbLevels); }
+//	inline size_t GetNbLevels(void) { return(NbLevels); }
 
 	/**
 	* Return the ith level of the chromosome.
 	*/
-	RPoint& GetLevel(size_t i);
+//	RPoint& GetLevel(size_t i);
 
 	/**
 	* Destruct the chromosome.

@@ -722,6 +722,7 @@ void RXMLParser::LoadNextTag(void)
 			ResolveNamespace(uri);
 		}
 	}
+	BeginTagParsed(uri,lname,TagName);
 
 	// If the parser does not now if it is a closing tag -> test it.
 	if(!CurTagClosing)
@@ -1058,6 +1059,12 @@ void RXMLParser::AddEntity(const RString&,const RString&)
 
 //------------------------------------------------------------------------------
 void RXMLParser::BeginTag(const RString&,const RString&,const RString&)
+{
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::BeginTagParsed(const RString&,const RString&,const RString&)
 {
 }
 

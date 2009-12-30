@@ -80,7 +80,7 @@ public:
 	/**
 	* Construct the container.
 	* @param prob           The instance of the problem.
-	* @param create         If true, nb geometric information are created.
+	* @param create         If true, geometric information are created.
 	*/
 	RGeoInfos(RProblem2D* prob,bool create);
 

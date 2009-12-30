@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	QGAMonitor.h
+	QRGAMonitor.h
 
 	Widget to represents statistics about a running GA - Header.
 
@@ -28,8 +28,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef QGAMonitorH
-#define QGAMonitorH
+#ifndef QRGAMonitorH
+#define QRGAMonitorH
 
 
 //------------------------------------------------------------------------------
@@ -38,7 +38,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QSplitter>
 #include <QtGui/QPixmap>
-
+#include <QtGui/QGraphicsScene>
 
 
 //------------------------------------------------------------------------------
@@ -48,53 +48,12 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The QGAMonitorStats provides the widget that will display statistics about
-* the running GA.
-* @author Pascal Francq
-* @short GA statistics viewer for Qt.
-*/
-class QGAMonitorStats : public QGroupBox
-{
-	/**
-	* Label to display the number of generations calculated.
-	*/
-	QLabel* Gen;
-
-	/**
-	* Label to display the age of the best chromosome.
-	*/
-	QLabel* Best;
-
-public:
-
-	/**
-	* Constructor for the statistics viewer.
-	* @param parent         Parent of the widget.
-	*/
-	QGAMonitorStats(QWidget* parent=0);
-
-	/**
-	* Set the Gen label.
-	* @param text          Text.
-	*/
-	void setGen(const QString& text) {Gen->setText(text);}
-
-	/**
-	* Set the Best label.
-	* @param text          Text.
-	*/
-	void setBest(const QString& text) {Best->setText(text);}
-};
-
-
-//------------------------------------------------------------------------------
-/**
-* The QGAMonitorGraph provides the widget to display a graph with the evolution
+* The QRGAMonitorGraph provides the widget to display a graph with the evolution
 * of the fitness function represent by double.
 * @author Pascal Francq
 * @short GA graph display for Qt.
 */
-class QGAMonitorGraph : public QWidget
+class QRGAMonitorGraph : public QWidget
 {
 	Q_OBJECT
 
@@ -149,7 +108,7 @@ public:
 	* Constructor of the graph display.
 	* @param parent         Parent of the widget.
 	*/
-	QGAMonitorGraph(QWidget* parent=0);
+	QRGAMonitorGraph(QWidget* parent=0);
 
 	/**
 	* Returns a recommended size for the graph.
@@ -189,7 +148,7 @@ protected:
 	/**
 	* Resize event method.
 	*/
-	virtual void resizeEvent(QResizeEvent*);
+	virtual void resizeEvent(QResizeEvent* event);
 
 	/**
 	* Mouse button press event method.
@@ -202,31 +161,60 @@ public:
 	/**
 	* Destructor of the graph display.
 	*/
-	virtual ~QGAMonitorGraph(void);
+	virtual ~QRGAMonitorGraph(void);
 };
 
 
 //------------------------------------------------------------------------------
 /**
-* The QGAMonitor class provides a widget to display information about the GA
+* The QRGAMonitor class provides a widget to display information about the GA
 * who is working, like the number of generation or a graph with the evolution
 * of the fitnesses.
 * @author Pascal Francq
 * @short GA Information display.
 */
-class QGAMonitor : public QSplitter
+class QRGAMonitor : public QWidget
 {
 	Q_OBJECT
 
-	/**
-	* Pointer to the GA graph display.
-	*/
-	QGAMonitorGraph* Graph;
+	void* Ui;
 
 	/**
-	* Pointer to the GA statistics display.
+	 * The scene.
+	 */
+	QGraphicsScene Scene;
+
+	/**
+	 * Maximal number of generations.
+	 */
+	size_t MaxGen;
+
+	/**
+	 * Maximal fitness.
+	 */
+	double MinFit;
+
+	/**
+	 * Maximal fitness.
+	 */
+	double MaxFit;
+
+	/**
+	 * Ratio to adapt the widths of the objects of the scene to the actual
+	 * width of the widget.
+	 */
+	double XScale;
+
+	/**
+	 * Ratio to adapt the heights of the objects of the scene to the actual
+	 * height of the widget.
+	 */
+	double YScale;
+
+	/**
+	* The list of values received.
 	*/
-	QGAMonitorStats* Stats;
+	QList<double> Values;
 
 public:
 
@@ -234,34 +222,66 @@ public:
 	* Construct the information display.
 	* @param parent         Parent of the widget.
 	*/
-	QGAMonitor(QWidget* parent=0);
+	QRGAMonitor(QWidget* parent=0);
 
 	/**
-	* Set the maximal number of generations.
-	* @param m              Maximum number of generation.
-	*/
-	void setMaxGen(const size_t m) { Graph->setHScale(m); }
-
-	/**
-	* Set the maximal value of the fitness function.
-	* @param m              Maximum number of generation.
-	*/
-	void setMaxFitness(const double m) {Graph->setVScale(m);}
-
-	/**
-	* Clear all the information displayed.
-	*/
-	void Clear(void);
-
-public slots:
+	 * Set the parameters.
+	 * @param maxgen         Maximum number of generations.
+	 * @param minfit         Minimum value of the fitness.
+	 * @param maxfit         Maximum value of the fitness.
+	 */
+	void setParams(size_t maxgen,double minfit,double maxfit);
 
 	/**
 	* Receive generation information.
 	* @param gen            Actual Generation.
 	* @param best           Age of the best chromosome.
-	* @param value          Value of the best chromosmome.
+	* @param value          Value of the best chromosome.
 	*/
-	void slotSetGen(const size_t gen,const size_t best,const double value);
+	void setGenInfo(const size_t gen,const size_t best,const double value);
+
+	/**
+	* Clear all the information displayed.
+	*/
+	void clear(void);
+
+protected:
+
+	/**
+	 * @return the X-coordinate in the scene.
+	 * @param x              X-coordinate in the problem.
+	 */
+	inline double x(size_t x)
+	{
+		return(static_cast<double>(x)*XScale);
+	}
+
+	/**
+	 * @return the Y-coordinate in the scene.
+	 * @param y              Y-coordinate in the problem.
+	 */
+	inline double y(double y)
+	{
+		return((MaxFit-MinFit-y)*YScale);
+	}
+
+	/**
+	* The widget has changed and has to be repainted.
+	*/
+	void repaint(void);
+
+	/**
+	* Resize event method.
+	* @param event           Event.
+	*/
+	virtual void resizeEvent(QResizeEvent* event);
+
+public:
+
+	/**
+	 * Destructor.
+	 */
+	virtual ~QRGAMonitor(void);
 };
 
 

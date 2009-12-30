@@ -36,6 +36,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
+#include <rpromkernel.h>
 #include <rpoint.h>
 #include <rrect.h>
 #include <rga2d.h>
@@ -63,23 +64,14 @@ namespace R{
 */
 class RPlacementHeuristic
 {
-	struct ObjectPos
-	{
-		RPoint Pos;
-		char Ori;
-	};
+	class ObjectPos;
 
 protected:
 
 	/**
-	* The random number genrator to use
+	* The random number generator to use
 	*/
 	RRandom* Random;
-
-	/**
-	* The limits for the placement.
-	*/
-	RPoint Limits;
 
 	/**
 	* The grid used for the placement.
@@ -97,6 +89,11 @@ protected:
 	RConnections* Connections;
 
 	/**
+	* The limits for the placement.
+	*/
+	RPoint Limits;
+
+	/**
 	* Total number of objects to place.
 	*/
 	size_t NbObjs;
@@ -107,7 +104,8 @@ protected:
 	size_t NbObjsOk;
 
 	/**
-	* The bound rectangle of the resulting placement.
+	* The bounding rectangle of the resulting placement. It must be updated
+	* by the inheriting classes.
 	*/
 	RRect Result;
 
@@ -147,44 +145,34 @@ protected:
 	bool AllOri;
 
 	/**
-	* Maximal number of solutions that can be evaluated.
+	* Valid positions.
 	*/
-	size_t MaxPromSol;
+	RContainer<ObjectPos,true,false> ValidPos;
 
 	/**
-	* Number of solutions to be evaluated.
-	*/
-	size_t NbPromSol;
+	 * PROMERHEE kernel.
+	 */
+	RPromKernel Prom;
 
 	/**
-	* Array representing different solutions.
-	*/
-	ObjectPos* Sols;
-
-	/**
-	* PROMETHEE Kernel.
-	*/
-	RPromKernel* Prom;
-
-	/**
-	* Pointer to the area criteria.
-	*/
-	RPromCriterion* area;
-
-	/**
-	* Pointer to the distance criteria.
-	*/
-	RPromCriterion* dist;
+	 * PROMETHEE distance criterion.
+	 */
+	RPromCriterion* Dist;
 
 	/**
 	* PROMETHEE Parameters for the distance.
 	*/
-	RParam* DistParams;
+	const RParam* DistParams;
+
+	/**
+	 * PROMETHEE area criterion.
+	 */
+	RPromCriterion* Area;
 
 	/**
 	* PROMETHEE Parameters for the area.
 	*/
-	RParam* AreaParams;
+	const RParam* AreaParams;
 
 public:
 
@@ -193,10 +181,22 @@ public:
 	* @param maxobjs        The maximum objects to placed fore this object.
 	* @param calc           Must free polygons be calculated.
 	* @param use            Must free polygons be used.
-	* @param r              The random genrator to use.
+	* @param r              The random generator to use.
 	* @param ori            Must all orientation be tested.
 	*/
 	RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
+
+	/**
+	* Set the parameters for the "area" criterion.
+	* @param params         The parameters.
+	*/
+	void SetAreaParams(const RParam* params);
+
+	/**
+	* Set the parameters for the "area" criterion.
+	* @param params         The parameters.
+	*/
+	void SetDistParams(const RParam* params);
 
 	/**
 	* Initialize the heuristic.
@@ -206,60 +206,53 @@ public:
 	*/
 	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
 
-	/**
-	* Set the parameters for the "area" criterion.
-	* @param p              The indifference's threshold.
-	* @param q              The preference's threshold.
-	* @param w              The weight.
-	*/
-	void SetAreaParams(double p,double q,double w);
+protected:
 
 	/**
-	* Set the parameters for the "area" criterion.
-	* @param params         The parameters.
+	* Select the next object to place. By default, the method chooses the first
+	* object randomly. Then, the next objects are chosen according to their
+	* connections (the most connection) with those already placed.
+	* @return the geometric information of the object to place.
 	*/
-	void SetAreaParams(RParam* params);
+	virtual RGeoInfo* SelectNextObject(void);
 
 	/**
-	* Set the parameters for the "dist" criterion.
-	* @param p              The indifference's threshold.
-	* @param q              The preference's threshold.
-	* @param w              The weight.
+	* Calculate all the possible positions to place a given object. The method
+	* must register these valid positions with the 'AddValidPosition' method.
+	* @param info           Geometric information representing the object placed.
 	*/
-	void SetDistParams(double p,double q,double w);
+	virtual void SearchValidPositions(RGeoInfo* info)=0;
 
 	/**
-	* Set the parameters for the "area" criterion.
-	* @param params         The parameters.
+	* This method is called each time a given object is placed at a given
+	* position. It can be used	to make some specific computational updates. By
+	* default, the method does nothing.
+	*
+	* This method must update Result, the rectangle bounding all placed
+	* objects.
+	*
+	* @param info           Geometric information representing the object placed.
+	* @param pos            The position where it is placed.
 	*/
-	void SetDistParams(RParam* params);
+	virtual void PostPlace(RGeoInfo* info,const RPoint& pos)=0;
+
+public:
 
 	/**
-	* Select the next object to place.
-	* The CurInfo must pointed to the geometric information representing the
-	* object to place.
-	*/
-	virtual void SelectNextObject(void);
-
-	/**
-	* Place the next object.
-	*/
+	 * Select and place an unassigned object. The steps followed by this method
+	 * are:
+	 * -# Select an object with the 'SelectNextObject' method.
+	 * -# Look if a free polygon can hold the object (if managed).
+	 * -# If not, for every possible orientation of the object, the method
+	 *    'SearchValidPositions' is called to find all valid positions.
+	 * -# If multiple positions are possible, PROMETHEE is used to select the
+	 *    best one : the position minimizing the total area occupied and the
+	 *    total distance of the connections.
+	 * -# The object is placed and 'PostPlace' is called.
+	 * -# If free polygons are managed, update them.
+	 * @return the geometric information of the object placed.
+	 */
 	RGeoInfo* NextObject(void);
-
-	/**
-	* Calculate the position to place the next object for a specific geometric
-	* information. The function have to register the valid positions with the
-	* 'AddValidPosition' method.
-	*/
-	virtual void NextObjectOri(void)=0;
-
-	/**
-	* Place the current object to a specific position. This function is called
-	* by the NextObject method.<BR>
-	* This function is responsible to update Result.
-	* @param pos            The position where to place it.
-	*/
-	virtual void Place(RPoint& pos)=0;
 
 	/**
 	* Run the heuristic.
@@ -305,11 +298,6 @@ public:
 	* Return a pointer to all the free polygons.
 	*/
 	inline RFreePolygons* GetFreePolygons(void) {return(&Free);}
-
-	/**
-	* Create a problem file for a specific configuration.
-	*/
-	void CreateProblem(void);
 
 	/**
 	* Destruct the placement heuristic.

@@ -59,12 +59,13 @@ template<class cInst,class cChromo>
 		tmpInfos=new RGeoInfos(Owner->Problem,true);
 	}
 	RString Heur(Owner->GetHeuristic());
-	if(Heur=="BottomLeft")
-		Heuristic=new RPlacementBottomLeft(NbObjs+2,true,true,Owner->Random,true);
+
+	if(Heur=="Bottom-Left")
+		Heuristic=new RPlacementBottomLeft(NbObjs+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->AllOrientations);
 	if(Heur=="Edge")
-		Heuristic=new RPlacementEdge(NbObjs+2,true,true,Owner->Random,true);
+		Heuristic=new RPlacementEdge(NbObjs+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->AllOrientations);
 	if(Heur=="Center")
-		Heuristic=new RPlacementCenter(NbObjs+2,true,true,Owner->Random,true);
+		Heuristic=new RPlacementCenter(NbObjs+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->AllOrientations);
 }
 
 
@@ -93,7 +94,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
 		RInst2D(size_t popsize,RProblem2D* prob,const RString& h,const RString& name,RDebug *debug)
 			: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug), Problem(prob), Objs(prob->Objs),
-			 NbObjs(prob->Objs.GetNb()), bLocalOpti(true), Heuristic(h), Limits(prob->Limits)
+			 NbObjs(prob->Objs.GetNb()), bLocalOpti(true), Heuristic(h),
+			 ComputeFreePolygons(false), UseFreePolygons(false), AllOrientations(false),
+			 Limits(prob->Limits)
 {
 	// Verify that the identifiers are continuous starting from 0
 	size_t id(0);
@@ -123,7 +126,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetAreaParams(const RParam& params)
+	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetAreaParams(const RParam* params)
 {
 	thDatas[0]->Heuristic->SetAreaParams(params);
 }
@@ -131,7 +134,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetDistParams(const RParam& params)
+	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetDistParams(const RParam* params)
 {
 	thDatas[0]->Heuristic->SetDistParams(params);
 }

@@ -93,6 +93,10 @@ void RGeoInfoConnections::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),cons
 
 	// Init Part
 	i1=i2=0;
+	if(!Cons->WeightParams)
+		ThrowRException("The PROMETHEE parameter for the weight criterion is not set to select objects");
+	if(!Cons->DistParams)
+		ThrowRException("The PROMETHEE parameter for the distance criterion is not set to select objects");
 	Prom.AddCriterion(weight=new RPromLinearCriterion(RPromCriterion::Maximize,Cons->WeightParams,"Weight"));
 	Prom.AddCriterion(dist=new RPromLinearCriterion(RPromCriterion::Minimize,Cons->DistParams,"Distance"));
 	treat=new RGeoInfo*[Infos->GetMaxPos()+1];

@@ -146,6 +146,8 @@ public:
 	* Destruct the chromosome.
 	*/
 	virtual ~RChromo(void);
+
+	friend class RInst<cInst,cChromo,cFit,cThreadData>;
 };
 
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QRDebug</class>
+ <widget class="QWidget" name="QRDebug">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTreeWidget" name="Infos">
+     <column>
+      <property name="text">
+       <string>Steps</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Params</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Infos</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

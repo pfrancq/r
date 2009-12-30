@@ -328,14 +328,14 @@ char* RString::UnicodeToLatin1(void) const
 
 
 //------------------------------------------------------------------------------
-void RString::GenerateException(const RString& msg)
+void RString::GenerateException(const RString& msg) const
 {
 	throw RException("'"+(*this)+"': "+msg);
 }
 
 
 //------------------------------------------------------------------------------
-char RString::ToChar(bool& valid)
+char RString::ToChar(bool& valid) const
 {
 	int v;
 	valid=(sscanf(Latin1(),"%d",&v)>0);
@@ -344,7 +344,7 @@ char RString::ToChar(bool& valid)
 
 
 //------------------------------------------------------------------------------
-int RString::ToInt(bool& valid)
+int RString::ToInt(bool& valid) const
 {
 	int v;
 	valid=(sscanf(Latin1(),"%d",&v)>0);
@@ -353,7 +353,7 @@ int RString::ToInt(bool& valid)
 
 
 //------------------------------------------------------------------------------
-unsigned int RString::ToUInt(bool& valid)
+unsigned int RString::ToUInt(bool& valid) const
 {
 	unsigned int v;
 	valid=(sscanf(Latin1(),"%u",&v)>0);
@@ -362,7 +362,7 @@ unsigned int RString::ToUInt(bool& valid)
 
 
 //------------------------------------------------------------------------------
-long RString::ToLong(bool& valid)
+long RString::ToLong(bool& valid) const
 {
 	long v;
 	valid=(sscanf(Latin1(),"%ld",&v)>0);
@@ -371,7 +371,7 @@ long RString::ToLong(bool& valid)
 
 
 //------------------------------------------------------------------------------
-unsigned long RString::ToULong(bool& valid)
+unsigned long RString::ToULong(bool& valid) const
 {
 	unsigned long v;
 	valid=(sscanf(Latin1(),"%lu",&v)>0);
@@ -380,7 +380,7 @@ unsigned long RString::ToULong(bool& valid)
 
 
 //------------------------------------------------------------------------------
-size_t RString::ToSizeT(bool& valid)
+size_t RString::ToSizeT(bool& valid) const
 {
 	size_t v;
 	#if __WORDSIZE == 32
@@ -393,7 +393,7 @@ size_t RString::ToSizeT(bool& valid)
 
 
 //------------------------------------------------------------------------------
-off_t RString::ToOffT(bool& valid)
+off_t RString::ToOffT(bool& valid) const
 {
 	off_t v;
 	#ifdef _FILE_OFFSET_BITS
@@ -410,7 +410,7 @@ off_t RString::ToOffT(bool& valid)
 
 
 //------------------------------------------------------------------------------
-float RString::ToFloat(bool& valid)
+float RString::ToFloat(bool& valid) const
 {
 	float v;
 	valid=(sscanf(Latin1(),"%f",&v)>0);
@@ -419,7 +419,7 @@ float RString::ToFloat(bool& valid)
 
 
 //------------------------------------------------------------------------------
-double RString::ToDouble(bool& valid)
+double RString::ToDouble(bool& valid) const
 {
 	double v;
 	valid=(sscanf(Latin1(),"%lf",&v)>0);
@@ -428,7 +428,7 @@ double RString::ToDouble(bool& valid)
 
 
 //------------------------------------------------------------------------------
-bool RString::ToBool(bool& valid,bool strict)
+bool RString::ToBool(bool& valid,bool strict) const
 {
 	RString tmp;
 	if(!strict)
