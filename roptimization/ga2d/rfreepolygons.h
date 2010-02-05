@@ -77,7 +77,7 @@ public:
 	RPoint CanPlace(RGeoInfo* info);
 
 	/**
-	* Derstruct the container.
+	* Destruct the container.
 	*/
 	virtual ~RFreePolygons(void);
 };

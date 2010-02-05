@@ -283,24 +283,29 @@ public:
 	void SetOptimisation(bool opti);
 
 	/**
-	 * Get the size of the population.
+	 * @return the size of the population.
 	 */
 	inline size_t GetPopSize(void) const {return(PopSize);}
 
 	/**
-	 * Get the number of generations run.
+	 * @return the number of generations run.
 	 */
 	inline size_t GetGen(void) const {return(Gen);}
 
 	/**
-	* Get the age of the best chromosome.
+	* @return the age of the best chromosome.
 	*/
 	inline size_t GetAgeBest(void) const {return(AgeBest);}
 
 	/**
-	* Get the age of the best chromosome ever calculate.
+	* @return the age of the best chromosome ever calculate.
 	*/
 	inline size_t GetAgeBestPop(void) const {return(AgeBestPop);}
+
+	/**
+	 * @return the best chromosome.
+	 */
+	inline cChromo* GetBestChromosome(void) const {return(BestChromosome);}
 
 	/**
 	 * Set the seed value of the internal random number generator.

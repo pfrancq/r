@@ -45,6 +45,10 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+RPoint RPoint::Null(cNoCoord,cNoCoord);
+
+
+//------------------------------------------------------------------------------
 RPoint::RPoint(void)
 {
 	X=Y=0;
@@ -93,34 +97,34 @@ double RPoint::EuclideanDist(const RPoint& pt) const
 
 
 //------------------------------------------------------------------------------
-RDirection RPoint::Classify(const RPoint& p0,const RPoint& p1) const
+tDirection RPoint::Classify(const RPoint& p0,const RPoint& p1) const
 {
 	RPoint a=p1-p0;
 	RPoint b=(*this)-p0;
 	double sa=a.X*b.Y-b.X*a.Y;
 
-	if(sa>Epsi) return(Left);
-	if(sa<-Epsi) return(Right);
-	if(((a.X*b.X)<Epsi)||((a.Y*b.Y)<Epsi)) return(Behind);
-	if(a.Length()<b.Length()) return(Beyond);
-	if((*this)==p0) return(Origin);
-	if((*this)==p1) return(Destination);
-	return(Between);
+	if(sa>cEpsi) return(dLeft);
+	if(sa<-cEpsi) return(dRight);
+	if(((a.X*b.X)<cEpsi)||((a.Y*b.Y)<cEpsi)) return(dBehind);
+	if(a.Length()<b.Length()) return(dBeyond);
+	if((*this)==p0) return(dOrigin);
+	if((*this)==p1) return(dDestination);
+	return(dBetween);
 }
 
 
 //------------------------------------------------------------------------------
-void RPoint::ChangeOrientation(const ROrientation o)
+void RPoint::ChangeOrientation(const tOrientation o)
 {
 	tCoord factx=1,facty=1,oldx,oldy;
 	double co=1,si=0;
 
 	// Determine scale and rotation
-	if((o==NormalX)||(o==NormalYX)||(o==Rota90X)||(o==Rota90YX))
+	if((o==oNormalX)||(o==oNormalYX)||(o==oRota90X)||(o==oRota90YX))
 		facty=-1;
-	if((o==NormalY)||(o==Normal)||(o==Rota90Y)||(o==Rota90YX))
+	if((o==oNormalY)||(o==oNormal)||(o==oRota90Y)||(o==oRota90YX))
 		factx=-1;
-	if((o==Rota90)||(o==Rota90X)||(o==Rota90Y)||(o==Rota90YX))
+	if((o==oRota90)||(o==oRota90X)||(o==oRota90Y)||(o==oRota90YX))
 	{
 		co=0;
 		si=1;

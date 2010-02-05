@@ -69,20 +69,9 @@ class RPlacementCenter : public RPlacementHeuristic
 	RPolygon Union;
 
 	/**
-	* Size of the resulting rectangle.
-	*/
-	RPoint Max;
-
-	/**
 	* The attraction point, the middle of the limits rectangle.
 	*/
 	RPoint Attraction;
-
-	/**
-	* Holds the limits of the problem, because the heuristic double them for the
-	* placement.
-	*/
-	RPoint HoldLimits;
 
 public:
 
@@ -91,18 +80,20 @@ public:
 	* @param maxobjs        The maximal number of objects to place.
 	* @param calc           Must free polygons be calculated.
 	* @param use            Must free polygons be used.
-	* @param r              The random genrator to use.
+	* @param r              The random generator to use.
+	* @param dist           Distance criteria parameters.
+	* @param area           Area criteria parameters.
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementCenter(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
+	RPlacementCenter(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori=false);
 
 	/**
 	* Initialize the heuristic.
-	* @param prob           The problem.
-	* @param infos          Pointer to the geometric information.
-	* @param grid           Pointer to the grid.
+	* @param prob            The problem.
+	* @param layout          Layout.
+	* @param grid            Grid.
 	*/
-	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
+	virtual void Init(RProblem2D* prob,RLayout* layout,RGrid* grid);
 
 	/**
 	* Calculate all the possible positions to place a given object. The method
@@ -127,7 +118,7 @@ public:
 	* Do some operations after the run.
 	* @param limits         Limits of the area.
 	*/
-	virtual void PostRun(RPoint& limits);
+	virtual void PostRun(void);
 
 	/**
 	* Destruct the heuristic.

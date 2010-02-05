@@ -43,7 +43,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RFreePolygon::RFreePolygon(const RPolygon& poly)
-	: RPolygon(poly), Pos(MaxCoord,MaxCoord)
+	: RPolygon(poly), Pos(cNoCoord,cNoCoord)
 {
 	// Find the translation
 	RCursor<RPoint> Cur(*this);
@@ -78,11 +78,11 @@ int RFreePolygon::CanContain(const RGeoInfo* info,RPoint& pos) const
 	while(nbpts>0)
 	{
 		// Look for act
-		e1=GetConX(&act);
-		e2=GetConY(&act);
+		e1=GetConX(act);
+		e2=GetConY(act);
 //		if((act->X<e1->X)&&(act->Y<e2->Y))
 		{
-			Test=(*info->GetBound());
+			Test=info->GetConfig()->GetPolygon();
 			Test+=act;
 			if(IsIn(Test))
 			{
@@ -92,9 +92,9 @@ int RFreePolygon::CanContain(const RGeoInfo* info,RPoint& pos) const
 		}
 
 		nbpts--;
-		act=GetConX(&act);
+		act=GetConX(act);
 		nbpts--;
-		act=GetConY(&act);
+		act=GetConY(act);
 	}
 	return(0);
 }

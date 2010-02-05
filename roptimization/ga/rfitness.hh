@@ -38,7 +38,10 @@
 template<class cVal,bool Max>
 	RFitness<cVal,Max>::RFitness(void)
 {
-	Value=0;
+	if(Max)
+		Value=0;
+	else
+		Value=std::numeric_limits<cVal>::max();
 }
 
 

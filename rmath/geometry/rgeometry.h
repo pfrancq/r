@@ -70,7 +70,7 @@ class RPolygons;
 * @param y                  Y Coordinate.
 * @param from               The direction from where "it" is coming.
 */
-void AdaptXY(tCoord& x,tCoord& y,const RDirection from);
+void AdaptXY(tCoord& x,tCoord& y,const tDirection from);
 
 
 //------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ void AdaptXY(tCoord& x,tCoord& y,const RDirection from);
 * @param y                  Y Coordinate.
 * @param from               The direction from where "it" is coming.
 */
-void AdaptTestXY(tCoord& x,tCoord& y,const RDirection from);
+void AdaptTestXY(tCoord& x,tCoord& y,const tDirection from);
 
 
 }  //-------- End of namespace R -----------------------------------------------

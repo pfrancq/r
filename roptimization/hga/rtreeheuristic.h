@@ -37,7 +37,6 @@
 // include files for R Project
 #include <rstring.h>
 #include <random.h>
-#include <robjs.h>
 #include <rdebug.h>
 #include <rnodesga.h>
 

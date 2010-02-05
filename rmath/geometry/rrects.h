@@ -35,6 +35,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rcontainer.h>
+#include <rcursor.h>
 #include <rrect.h>
 
 
@@ -59,8 +60,8 @@ public:
 	RRects(void);
 
 	/**
-	* Construct a container of rectangles with a intial maximal size.
-	* @param max            Initial maxiaml size.
+	* Construct a container of rectangles with a initial maximal size.
+	* @param max            Initial maximal size.
 	*/
 	RRects(size_t max);
 
@@ -74,6 +75,11 @@ public:
 	* Return the area of all the rectangles.
 	*/
 	tCoord Area(void) const;
+
+	/**
+	 * @return cursor over the rectangle.
+	 */
+	RCursor<RRect> GetRects(void) const {return(RCursor<RRect>(*this));}
 };
 
 

@@ -119,7 +119,7 @@ RPolygon& RPolygon::operator-=(const RPoint& pt)
 
 
 //------------------------------------------------------------------------------
-RPoint RPolygon::GetConX(const RPoint* pt) const
+RPoint RPolygon::GetConX(const RPoint& pt) const
 {
 	const RPoint* next;
 	size_t i;
@@ -127,26 +127,26 @@ RPoint RPolygon::GetConX(const RPoint* pt) const
 	RCursor<RPoint> point(*this);
 	point.Start();
 	i=0;
-	while((*point())!=(*pt))
+	while((*point())!=pt)
 	{
 		point.Next();
 		i++;
 	}
 
-	// Look previous vertice
+	// Look previous vertex
 	if(i)
 		next=(*this)[i-1];
 	else
 		next=(*this)[GetNb()-1];
-	if(next->Y==pt->Y)
+	if(next->Y==pt.Y)
 		return(RPoint(*next));
 
-	// Look next vertice
+	// Look next vertex
 	if(i<GetNb()-1)
 		next=(*this)[i+1];
 	else
 		next=(*this)[0];
-	if(next->Y==pt->Y)
+	if(next->Y==pt.Y)
 		return(RPoint(*next));
 
 	// Problems when arriving here
@@ -155,7 +155,7 @@ RPoint RPolygon::GetConX(const RPoint* pt) const
 
 
 //------------------------------------------------------------------------------
-RPoint RPolygon::GetConY(const RPoint* pt) const
+RPoint RPolygon::GetConY(const RPoint& pt) const
 {
 	const RPoint* next;
 	size_t i;
@@ -163,18 +163,18 @@ RPoint RPolygon::GetConY(const RPoint* pt) const
 	RCursor<RPoint> point(*this);
 	point.Start();
 	i=0;
-	while((*point())!=(*pt))
+	while((*point())!=pt)
 	{
 		point.Next();
 		i++;
 	}
 
-	// Look previous vertice
+	// Look previous vertex
 	if(i)
 		next=(*this)[i-1];
 	else
 		next=(*this)[GetNb()-1];
-	if(next->X==pt->X)
+	if(next->X==pt.X)
 		return(RPoint(*next));
 
 	// Look next vertice
@@ -182,7 +182,7 @@ RPoint RPolygon::GetConY(const RPoint* pt) const
 		next=(*this)[i+1];
 	else
 		next=(*this)[0];
-	if(next->X==pt->X)
+	if(next->X==pt.X)
 		return(RPoint(*next));
 
 	// Problems when arriving here
@@ -346,14 +346,13 @@ bool RPolygon::Edge(const tCoord X,const tCoord Y) const
 
 
 //------------------------------------------------------------------------------
-bool RPolygon::Edge(const RPoint* pt1,const RPoint* pt2) const
+bool RPolygon::Edge(const RPoint& pt1,const RPoint& pt2) const
 {
 	RPoint *deb;
 	size_t i;
 	tCoord X,Y;
 
-	RReturnValIfFail(pt1&&pt2,false);
-	if((pt1->X!=pt2->X)&&(pt1->Y!=pt2->Y)) return(false);
+	if((pt1.X!=pt2.X)&&(pt1.Y!=pt2.Y)) return(false);
 	RCursor<RPoint> point(*this);
 	point.Start();
 	i=GetNb()+1;
@@ -370,12 +369,12 @@ bool RPolygon::Edge(const RPoint* pt1,const RPoint* pt2) const
 		if(!Y)
 		{
 			// Horizontal edge
-			if((pt1->Y!=deb->Y)||(pt2->Y!=deb->Y)) continue;
+			if((pt1.Y!=deb->Y)||(pt2.Y!=deb->Y)) continue;
 			if(X<0)
 			{
-				if((pt1->X>=deb->X)&&(pt1->X<=point()->X))
+				if((pt1.X>=deb->X)&&(pt1.X<=point()->X))
 				{
-					if((pt2->X>=deb->X)&&(pt2->X<=point()->X))
+					if((pt2.X>=deb->X)&&(pt2.X<=point()->X))
 						return(true);
 					else
 						return(false);
@@ -383,9 +382,9 @@ bool RPolygon::Edge(const RPoint* pt1,const RPoint* pt2) const
 			}
 			else
 			{
-				if((pt1->X<=deb->X)&&(pt1->X>=point()->X))
+				if((pt1.X<=deb->X)&&(pt1.X>=point()->X))
 				{
-					if((pt2->X<=deb->X)&&(pt2->X>=point()->X))
+					if((pt2.X<=deb->X)&&(pt2.X>=point()->X))
 						return(true);
 					else
 						return(false);
@@ -395,12 +394,12 @@ bool RPolygon::Edge(const RPoint* pt1,const RPoint* pt2) const
 		else
 		{
 			// Vertical edge
-			if((pt1->X!=deb->X)||(pt2->X!=deb->X)) continue;
+			if((pt1.X!=deb->X)||(pt2.X!=deb->X)) continue;
 			if(Y<0)
 			{
-				if((pt1->Y>=deb->Y)&&(pt1->Y<=point()->Y))
+				if((pt1.Y>=deb->Y)&&(pt1.Y<=point()->Y))
 				{
-					if((pt2->Y>=deb->Y)&&(pt2->Y<=point()->Y))
+					if((pt2.Y>=deb->Y)&&(pt2.Y<=point()->Y))
 						return(true);
 					else
 						return(false);
@@ -408,9 +407,9 @@ bool RPolygon::Edge(const RPoint* pt1,const RPoint* pt2) const
 			}
 			else
 			{
-				if((pt1->Y<=deb->Y)&&(pt1->Y>=point()->Y))
+				if((pt1.Y<=deb->Y)&&(pt1.Y>=point()->Y))
 				{
-					if((pt2->Y<=deb->Y)&&(pt2->Y>=point()->Y))
+					if((pt2.Y<=deb->Y)&&(pt2.Y>=point()->Y))
 						return(true);
 					else
 						return(false);
@@ -444,8 +443,8 @@ bool RPolygon::IsIn(const tCoord X,const tCoord Y) const
 		return(p==(*((*this)[0])));
 	if(GetNb()==2)
 	{
-		RDirection c=p.Classify((*this)[0],(*this)[1]);
-		return((c==Between)||(c==Origin)||(c==Destination));
+		tDirection c=p.Classify((*this)[0],(*this)[1]);
+		return((c==dBetween)||(c==dOrigin)||(c==dDestination));
 	}
 	if(GetNb())
 	{
@@ -454,7 +453,7 @@ bool RPolygon::IsIn(const tCoord X,const tCoord Y) const
 		return(false);
 	}
 
-	// Verify if not a vertice
+	// Verify if not a vertex
 	RCursor<RPoint> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if((Cur()->X==X)&&(Cur()->Y==Y))
@@ -471,7 +470,7 @@ bool RPolygon::IsIn(const tCoord X,const tCoord Y) const
 	while(i>0)
 	{
 		// Look for act
-		next=GetConY(&act);
+		next=GetConY(act);
 		if(act.Y>next.Y)
 		{
 			y1=next.Y;
@@ -487,9 +486,9 @@ bool RPolygon::IsIn(const tCoord X,const tCoord Y) const
 		if((act.X>=X)&&(Y>=y1)&&(Y<=y2))
 			count++;
 		i--;
-		act=GetConX(&act);
+		act=GetConX(act);
 		i--;
-		act=GetConY(&act);
+		act=GetConY(act);
 	}
 
 	// if count%2==0 -> Not in
@@ -498,10 +497,10 @@ bool RPolygon::IsIn(const tCoord X,const tCoord Y) const
 
 
 //------------------------------------------------------------------------------
-bool RPolygon::IsIn(const RPolygon* poly) const
+bool RPolygon::IsIn(const RPolygon& poly) const
 {
 	RRect r1,r2;
-	RDirection FromDir;
+	tDirection FromDir;
 	RPoint start,end;
 	tCoord X,Y;
 	size_t nbpts;
@@ -510,10 +509,10 @@ bool RPolygon::IsIn(const RPolygon* poly) const
 	if(GetNb()==4)
 	{
 		// Each vertex of poly have to be in it.
-		RCursor<RPoint> pt(*poly);
+		RCursor<RPoint> pt(poly);
 		for(pt.Start();!pt.End();pt.Next())
 		{
-			if(!IsIn(pt()))
+			if(!IsIn(*pt()))
 				return(false);
 		}
 		return(true);
@@ -521,17 +520,17 @@ bool RPolygon::IsIn(const RPolygon* poly) const
 
 	// Verify first if the boundary rectangles overlap
 	Boundary(r1);
-	poly->Boundary(r2);
+	poly.Boundary(r2);
 	if(!r1.Overlap(&r2))
 		return(false);
 
 	// Test it and go through the other
-	start=poly->GetBottomLeft();
-	end=poly->GetConX(&start);
-	FromDir=Left;
+	start=poly.GetBottomLeft();
+	end=poly.GetConX(start);
+	FromDir=dLeft;
 	X=start.X;
 	Y=start.Y;
-	nbpts=poly->GetNb();
+	nbpts=poly.GetNb();
 	while(nbpts)
 	{
 		if(!IsIn(X,Y))
@@ -544,34 +543,34 @@ bool RPolygon::IsIn(const RPolygon* poly) const
 			nbpts--;        // Next point
 			X=start.X;
 			Y=start.Y;
-			if((FromDir==Left)||(FromDir==Right))
+			if((FromDir==dLeft)||(FromDir==dRight))
 			{
-				end=poly->GetConY(&start);
-				if(start.Y<end.Y) FromDir=Down; else FromDir=Up;
+				end=poly.GetConY(start);
+				if(start.Y<end.Y) FromDir=dDown; else FromDir=dUp;
 			}
 			else           // Go to left/right
 			{
-				end=poly->GetConX(&start);
-				if(start.X<end.X) FromDir=Left; else FromDir=Right;
+				end=poly.GetConX(start);
+				if(start.X<end.X) FromDir=dLeft; else FromDir=dRight;
 			}
 		}
 		else
 		{
 			switch(FromDir)
 			{
-				case Left:
+				case dLeft:
 					X++;
 					break;
 
-				case Right:
+				case dRight:
 					X--;
 					break;
 
-				case Down:
+				case dDown:
 					Y++;
 					break;
 
-				case Up:
+				case dUp:
 					Y--;
 					break;
 
@@ -586,12 +585,12 @@ bool RPolygon::IsIn(const RPolygon* poly) const
 
 
 //------------------------------------------------------------------------------
-bool RPolygon::Contained(const RRect* rect) const
+bool RPolygon::Contained(const RRect& rect) const
 {
 	RCursor<RPoint> tab(*this);
 	for(tab.Start();!tab.End();tab.Next())
 	{
-		if(!rect->IsIn(*tab()))
+		if(!rect.IsIn(*tab()))
 			return(false);
 	}
 	return(true);
@@ -618,7 +617,7 @@ void RPolygon::Boundary(RRect& rect) const
 	if(!GetNb())
 		ThrowRException("No points defined");
 
-	tCoord MinX=MaxCoord,MinY=MaxCoord,MaxX=0,MaxY=0,X,Y;
+	tCoord MinX=cMaxCoord,MinY=cMaxCoord,MaxX=0,MaxY=0,X,Y;
 
 	RCursor<RPoint> ptr(*this);
 	for(ptr.Start();!ptr.End();ptr.Next())
@@ -635,24 +634,24 @@ void RPolygon::Boundary(RRect& rect) const
 
 
 //------------------------------------------------------------------------------
-void RPolygon::ChangeOrientation(const ROrientation o,RPoint& min)
+void RPolygon::ChangeOrientation(const tOrientation o,RPoint& min)
 {
 	tCoord factx=1,facty=1,oldx,oldy;
 	double co=1,si=0;
 
 	// Determine scale and rotation
-	if((o==NormalX)||(o==NormalYX)||(o==Rota90X)||(o==Rota90YX))
+	if((o==oNormalX)||(o==oNormalYX)||(o==oRota90X)||(o==oRota90YX))
 		facty=-1;
-	if((o==NormalY)||(o==Normal)||(o==Rota90Y)||(o==Rota90YX))
+	if((o==oNormalY)||(o==oNormal)||(o==oRota90Y)||(o==oRota90YX))
 		factx=-1;
-	if((o==Rota90)||(o==Rota90X)||(o==Rota90Y)||(o==Rota90YX))
+	if((o==oRota90)||(o==oRota90X)||(o==oRota90Y)||(o==oRota90YX))
 	{
 		co=0;
 		si=1;
 	}
-	min.X=min.Y=MaxCoord;
+	min.X=min.Y=cMaxCoord;
 
-	// Make the transformation for each vertice
+	// Make the transformation for each vertex
 	RCursor<RPoint> ptr(*this);
 	for(ptr.Start();!ptr.End();ptr.Next())
 	{
@@ -697,8 +696,8 @@ void RPolygon::RectDecomposition(RContainer<RRect,true,false>& rects) const
 	{
 		// Search the points (X1,Y1),(X1,Y2) and (?,Y2) -> Fix X1,Y1,Y2.
 		Pt11=(*work.GetLeftBottom());
-		Pt12=work.GetConY(&Pt11);
-		PtX2=work.GetConX(&Pt12);
+		Pt12=work.GetConY(Pt11);
+		PtX2=work.GetConX(Pt12);
 		X1=Pt11.X;
 		Y1=Pt11.Y;
 		Y2=Pt12.Y;
@@ -754,7 +753,7 @@ void RPolygon::RectDecomposition(RContainer<RRect,true,false>& rects) const
 		for(Cur.Start();!Cur.End();Cur.Next())
 			if((Cur()->X==X2)&&(Cur()->Y<=Y2)&&(Cur()->Y>=Y1))
 			{
-				tmp=work.GetConX(Cur());
+				tmp=work.GetConX(*Cur());
 				if(tmp.X>X2) Count++;
 			}
 		if(Count%2) continue;
@@ -851,22 +850,22 @@ void RPolygon::ReOrder(void)
 {
 	RPoint *tmp,*point,next;
 	size_t i;
-	bool bX;            // Next Vertice is horizontal
+	bool bX;            // Next Vertex is horizontal
 
-	if(!GetNb()) return;
+	if(GetNb()<2) return;
 	point=tmp=new RPoint[GetMaxNb()];
 	next=GetBottomLeft();
 	(*(point++))=next;
-	next=GetConX(&next);
+	next=GetConX(next);
 	(*(point++))=next;
 	bX=false;
 	i=GetNb()-1;
 	while(--i)
 	{
 		if(bX)
-			next=GetConX(&next);
+			next=GetConX(next);
 		else
-			next=GetConY(&next);
+			next=GetConY(next);
 		(*(point++))=next;
 		bX=(!bX);
 	}
@@ -888,19 +887,19 @@ void RPolygon::ReValid(void)
 	for(i=0;i<GetNb();i++)
 	{
 		pt1=(*this)[i];
-		nextx=GetConX(pt1);
+		nextx=GetConX(*pt1);
 		if(pt1->X==nextx.X-1)
 		{
-			pt2=GetConY(&nextx);
+			pt2=GetConY(nextx);
 			pt1->Y=pt2.Y;
 			DeletePtr(nextx);
 			DeletePtr(pt2);
 			c=true;
 		}
-		nexty=GetConY(pt1);
+		nexty=GetConY(*pt1);
 		if(pt1->Y==nexty.Y-1)
 		{
-			pt2=GetConX(&nexty);
+			pt2=GetConX(nexty);
 			pt1->X=pt2.X;
 			DeletePtr(nexty);
 			DeletePtr(pt2);
@@ -946,8 +945,8 @@ RPoint RPolygon::GetCentralPoint(void)
 	if(IsIn(Middle))
 		return(Middle);
 
-	// Find the Vertice the most closed to Middle
-	min=MaxCoord;
+	// Find the Vertex the most closed to Middle
+	min=cMaxCoord;
 	RCursor<RPoint> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
@@ -977,7 +976,7 @@ RPoint RPolygon::Calibrate(void)
 {
 	RPoint pt;
 
-	pt.Set(MaxCoord,MaxCoord);
+	pt.Set(cMaxCoord,cMaxCoord);
 	RCursor<RPoint> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
@@ -987,6 +986,15 @@ RPoint RPolygon::Calibrate(void)
 	for(Cur.Start();!Cur.End();Cur.Next())
 		(*Cur())-=pt;
 	return(pt);
+}
+
+
+//------------------------------------------------------------------------------
+bool RPolygon::IsRect(void) const
+{
+	if(GetNb()!=4)
+		return(false);
+	return(true);
 }
 
 

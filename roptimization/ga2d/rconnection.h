@@ -45,42 +45,64 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RConnection class provides a representation for a connection between two
+* The RConnection class provides a representation for a connection between
 * objects.
 * @author Pascal Francq
 * @short Connection.
 */
-class RConnection
+class RConnection : private RContainer<RObj2DConnector,false,false>
 {
-public:
+	/**
+	 * Name of the connection.
+	 */
+	RString Name;
+
 	/**
 	* Weight of the connection.
 	*/
 	double Weight;
 
-	/**
-	* The connectors involved in the connections.
-	*/
-	RContainer<RObj2DConnector,false,false> Connect;
+public:
 
 	/**
 	* Construct a connection.
-	* @param nb             Max number of connectors involved.
+	* @param name           Name of the connection.
 	* @param weight         Weight of the connection (Default is 1).
 	*/
-	RConnection(size_t nb,double weight=1.0);
+	RConnection(const RString& name,double weight=1.0);
 
 	/**
 	* This function compares two connections returns 0 if
 	* there are the same.
-	* @param c              Connection used for the comparaison.
+	* @param c              Connection used for the comparison.
 	*/
 	int Compare(const RConnection& c) const;
 
 	/**
-	* Return the weight.
+	 * Add a connector to the connection.
+	 * @param con            Connector.
+	 */
+	void Insert(RObj2DConnector* con);
+
+	/**
+	 * @return the number of connectors.
+	 */
+	inline size_t GetNb(void) const {return(RContainer<RObj2DConnector,false,false>::GetNb());}
+
+	/**
+	 * @return a cursor over the connectors.
+	 */
+	RCursor<RObj2DConnector> GetConnectors(void) const;
+
+	/**
+	* @return the weight.
 	*/
-	double GetWeight(void) {return(Weight);}
+	double GetWeight(void) const {return(Weight);}
+
+	/**
+	 * @return the name.
+	 */
+	RString GetName(void) const {return(Name);}
 
 	// friend classes
 	friend class RConnections;

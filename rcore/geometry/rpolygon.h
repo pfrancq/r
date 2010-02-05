@@ -107,15 +107,7 @@ public:
 	* This function compares two polygons and returns 0 if there have the same
 	* number of points and at the same positions. This function is used for the
 	* class RContainer.
-	* @param poly           Polygon used for the comparaison.
-	*/
-	int Compare(const RPolygon* poly) const {return((*this)!=(*poly));}
-
-	/**
-	* This function compares two polygons and returns 0 if there have the same
-	* number of points and at the same positions. This function is used for the
-	* class RContainer.
-	* @param poly           Polygon used for the comparaison.
+	* @param poly           Polygon used for the comparison.
 	*/
 	int Compare(const RPolygon& poly) const {return((*this)!=poly);}
 
@@ -123,12 +115,12 @@ public:
 	* This function returns a pointer to the point on the same horizontal vertex.
 	* @param pt             Point used as reference.
 	*/
-	RPoint GetConX(const RPoint* pt) const;
+	RPoint GetConX(const RPoint& pt) const;
 
-	/** This function returns a pointer to the point on the same vertital vertex.
+	/** This function returns a pointer to the point on the same vertical vertex.
 	* @param pt             Point used as reference.
 	*/
-	RPoint GetConY(const RPoint* pt) const;
+	RPoint GetConY(const RPoint& pt) const;
 
 	/**
 	* Return a pointer to the most bottom-left point of the polygon.
@@ -169,12 +161,6 @@ public:
 	* Return true if the point is on an edge.
 	* @param pt             The point used.
 	*/
-	bool Edge(const RPoint* pt) const {return(Edge(pt->X,pt->Y));}
-
-	/**
-	* Return true if the point is on an edge.
-	* @param pt             The point used.
-	*/
 	bool Edge(const RPoint& pt) const {return(Edge(pt.X,pt.Y));}
 
 	/**
@@ -182,10 +168,10 @@ public:
 	* @param pt1            The first point used.
 	* @param pt2            The second point used.
 	*/
-	bool Edge(const RPoint* pt1,const RPoint* pt2) const;
+	bool Edge(const RPoint& pt1,const RPoint& pt2) const;
 
 	/**
-	* Return true if the point is a vertice.
+	* Return true if the point is a vertex.
 	*/
 	bool IsVertice(const RPoint& pt) const;
 
@@ -201,33 +187,18 @@ public:
 		{return(IsIn(pt.X,pt.Y));}
 
 	/**
-	* Return true if the point is inside the polygon.
-	*/
-	bool IsIn(const RPoint* pt) const
-		{return(IsIn(pt->X,pt->Y));}
-
-	/**
 	* Return true if the polygon poly is inside the polygon. The two polygons are
 	* supposed to be "rectangular". This function determines if all the points
 	* of poly are inside the polygon.
 	* @param poly           The polygon to known if is in.
 	*/
-	bool IsIn(const RPolygon& poly) const
-		{return(IsIn(&poly));}
-
-	/**
-	* Return true if the polygon poly is inside the polygon. The two polygons
-	* are supposed to be "rectangular". This function determines if all the
-	* points of the bound of the polygon poly are inside the current one.
-	* @param poly           The polygon to known if is in.
-	*/
-	bool IsIn(const RPolygon* poly) const;
+	bool IsIn(const RPolygon& poly) const;
 
 	/**
 	* Return true if the polygon is inside the rectangle.
 	* @param rect            Rectangle to known if contains.
 	*/
-	bool Contained(const RRect* rect) const;
+	bool Contained(const RRect& rect) const;
 
 	/**
 	* Return the area of the polygon.
@@ -243,10 +214,10 @@ public:
 	/**
 	* Modify the polygon to a certain orientation.
 	* @param o              The orientation.
-	* @param min            The vector that has been substracted to have the
+	* @param min            The vector that has been subtracted to have the
 	*                       bottom-left point at (0,0).
 	*/
-	void ChangeOrientation(const ROrientation o,RPoint& min);
+	void ChangeOrientation(const tOrientation o,RPoint& min);
 
 	/**
 	* Decompose the polygon in a container of rectangles.
@@ -267,7 +238,7 @@ public:
 	void ReOrder(void);
 
 	/**
-	* Delete all necessary points to not have two adjance vertexes.
+	* Delete all necessary points to not have two adjacent vertexes.
 	*/
 	void ReValid(void);
 
@@ -292,6 +263,16 @@ public:
 	* @return The translation that has be done.
 	*/
 	RPoint Calibrate(void);
+
+	/**
+	 * @return true if the polygon is a rectangle.
+	 */
+	bool IsRect(void) const;
+
+	/**
+	 * @return true if the polygon is a square.
+	 */
+	inline bool IsSquare(void) const {return(IsRect()&&(((*this)[2])->X==((*this)[2])->Y));}
 
 	/**
 	* Get a cursor on the points of the polygon.

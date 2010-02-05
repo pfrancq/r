@@ -36,27 +36,27 @@ using namespace R;
 
 
 //------------------------------------------------------------------------------
-void R::AdaptXY(tCoord& x,tCoord& y,const RDirection from)
+void R::AdaptXY(tCoord& x,tCoord& y,const tDirection from)
 {
 	switch(from)
 	{
-		case Left:
+		case dLeft:
 			x++;
 			break;
 
-		case Right:
+		case dRight:
 			x--;
 			break;
 
-		case Down:
+		case dDown:
 			y++;
 			break;
 
-		case Up:
+		case dUp:
 			y--;
 			break;
 
-		case NoDirection:
+		case dNoDirection:
 			RAssertMsg("Direction can't be undefined");
 			break;
 
@@ -68,27 +68,27 @@ void R::AdaptXY(tCoord& x,tCoord& y,const RDirection from)
 
 
 //------------------------------------------------------------------------------
-void R::AdaptTestXY(tCoord& x,tCoord& y,const RDirection from)
+void R::AdaptTestXY(tCoord& x,tCoord& y,const tDirection from)
 {
 	switch(from)
 	{
-		case Left:
+		case dLeft:
 			y--;
 			break;
 
-		case Right:
+		case dRight:
 			y++;
 			break;
 
-		case Down:
+		case dDown:
 			x++;
 			break;
 
-		case Up:
+		case dUp:
 			x--;
 			break;
 
-		case NoDirection:
+		case dNoDirection:
 			RAssertMsg("Direction can't be undefined");
 			break;
 

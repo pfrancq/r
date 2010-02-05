@@ -36,6 +36,12 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rga.h>
+#include <rstring.h>
+#include <rpoint.h>
+#include <rsize.h>
+#include <rrects.h>
+#include <rpolygons.h>
+#include <rpromkernel.h>
 
 
 //------------------------------------------------------------------------------
@@ -46,8 +52,14 @@ namespace R{
 //------------------------------------------------------------------------------
 // Forward class declaration
 class RGeoInfo;
+class RLayout;
 class RObj2D;
 class RObj2DContainer;
+class RObj2DConnector;
+class RObj2DPin;
+class RConnection;
+class RObj2DConfig;
+class RObj2DConfigPin;
 template<class cInst,class cChromo>	class RThreadData2D;
 template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RInst2D;
 template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo> class RChromo2D;

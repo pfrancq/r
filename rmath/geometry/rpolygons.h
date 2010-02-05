@@ -56,40 +56,42 @@ public:
 
 	/**
 	* Construct a container of polygons.
+	* @param nb              Initial maximum number of polygons.
 	*/
-	RPolygons(void);
+	RPolygons(size_t nb=20);
 
 	/**
 	* Return true if the point is on an edge of one of the polygon contained.
 	* @param pt             The point used.
 	*/
-	bool Edge(const RPoint* pt) const;
+	bool Edge(const RPoint& pt) const;
 
 	/**
 	* Return true if the point is on an edge of a certain polygon.
 	* @param pt             The point used.
 	* @param poly           The polygon to look in.
 	*/
-	bool Edge(const RPoint* pt,const RPolygon* poly) const;
+	bool Edge(const RPoint& pt,const RPolygon& poly) const;
 
 	/**
 	* Return true if two points are on the same edge of one of the polygon contained.
 	* @param pt1            The first point used.
 	* @param pt2            The second point used.
 	*/
-	bool Edge(const RPoint* pt1,const RPoint* pt2) const;
+	bool Edge(const RPoint& pt1,const RPoint& pt2) const;
 
 	/**
 	* Add the points of the polygons contained to a container of points.
 	* @param points         A pointer to the container of points.
 	*/
-	void PutPoints(RPoints* points) const;
+	void PutPoints(RPoints& points) const;
 
 	/**
 	* This function calculate the union of the polygons contained.
 	* @param upoly          A pointer to the polygon representing the union.
+	* @warning All the polygons must be glued.
 	*/
-	void Union(RPolygon* upoly) const;
+	void Union(RPolygon& upoly) const;
 
 	/**
 	* This function returns true when there are duplicate points.

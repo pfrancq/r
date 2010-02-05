@@ -204,7 +204,8 @@ void QRGAMonitorGraph::AddValue(const double value)
 	NewX=static_cast<int>(static_cast<double>(receivedValues)*FactorX);
 	NewY=r.height()-static_cast<int>(value*FactorY);
 	if(LastValue)
-		painter->drawLine(static_cast<int>((static_cast<double>(receivedValues)-1)*FactorX),r.height()-static_cast<int>(LastValue*FactorY),
+		painter->drawLine(static_cast<int>((static_cast<double>(receivedValues)-1)*FactorX),
+				          r.height()-static_cast<int>(LastValue*FactorY),
 		                  NewX,NewY);
 	else
 		painter->drawPoint(NewX,NewY);
@@ -326,6 +327,7 @@ void QRGAMonitor::setGenInfo(const size_t gen,const size_t best,const double val
 {
 	static_cast<Ui_QRGAMonitor*>(Ui)->Gen->setText("Generation: "+QString::number(gen));
 	static_cast<Ui_QRGAMonitor*>(Ui)->Best->setText("Best age: "+QString::number(best));
+	static_cast<Ui_QRGAMonitor*>(Ui)->BestFit->setText("Best fitness: "+QString::number(value));
 	Values.insert(gen,value);
 	if(gen)
 		Scene.addLine(x(gen-1),y(Values.at(gen-1)),x(gen),y(Values.at(gen)),QPen(Qt::red));

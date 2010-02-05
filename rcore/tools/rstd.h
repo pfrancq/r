@@ -235,7 +235,7 @@ namespace R{
 /**
 * The cNoRef constant represented an undefined identifier reference.
 */
-const size_t cNoRef=(size_t)(-1);
+const size_t cNoRef=std::numeric_limits<size_t>::max();
 
 
 //------------------------------------------------------------------------------
@@ -247,14 +247,14 @@ typedef double tCoord;
 
 //------------------------------------------------------------------------------
 /**
- * Inline function that returns the absolute value of a coordinate.
+ * The function returns the absolute value of a coordinate.
  */
 inline tCoord Abs(tCoord x) {return(x<0.0?-x:x);}
 
 
 //------------------------------------------------------------------------------
 /**
- * Inline function to compare two identifiers. Useful for R::RContainer.
+ * The function compares two identifiers. Useful for R::RContainer.
  * @param id1                First identifier.
  * @param id2                Second identifier.
  * @return
@@ -269,7 +269,7 @@ inline int CompareIds(size_t id1,size_t id2)
 
 //------------------------------------------------------------------------------
 /**
- * Function to compare two pointers. Useful for R::RContainer.
+ * The function compares two pointers. Useful for R::RContainer.
  * @tparam C                 Class to compare.
  * @param ptr1               First pointer.
  * @param ptr2               Second pointer.
@@ -285,26 +285,41 @@ template<class C>
 
 //------------------------------------------------------------------------------
 /**
-* The MaxCoord constant represent the maximal positive value that a
-* coordinate can have. It is used to indicate an invalid coordinate.
+* The cNoCoord constant represent an invalid coordinate. It practice, it is the
+* maximal positive value that a coordinate can have.
 */
-const tCoord MaxCoord=3.40282347e+38;
+const tCoord cNoCoord=std::numeric_limits<tCoord>::max();
+
+
+//------------------------------------------------------------------------------
+/**
+ * The cMaxCoord represent the maximal acceptable value for a coordinate.
+ */
+const tCoord cMaxCoord=std::numeric_limits<tCoord>::max();
+
+
+//------------------------------------------------------------------------------
+/**
+ * The cMinCoord represent the minimal acceptable value for a coordinate.
+ */
+const tCoord cMinCoord=std::numeric_limits<tCoord>::min();
 
 
 //------------------------------------------------------------------------------
 /**
 * Represent the different orientation of a given polygon.
 */
-enum ROrientation
+enum tOrientation
 {
-	Normal,
-	NormalX,
-	NormalY,
-	NormalYX,
-	Rota90,
-	Rota90X,
-	Rota90Y,
-	Rota90YX
+	oNormal,                 /** Normal. */
+	oNormalX,                /** Horizontal mirror. */
+	oNormalY,                /** Vertical mirror. */
+	oNormalYX,               /** Horizontal and vertical mirrors. */
+	oRota90,                 /** 90° rotation. */
+	oRota90X,                /** 90° rotation with a horizontal mirror. */
+	oRota90Y,                /** 90° rotation with a vertical mirror. */
+	oRota90YX                /** 90° rotation with a horizontal and vertical
+	                             mirror. */
 };
 
 
@@ -312,18 +327,18 @@ enum ROrientation
 /**
 * Represent different directions.
 */
-enum RDirection
+enum tDirection
 {
-	NoDirection,
-	Left,
-	Right,
-	Down,
-	Up,
-	Behind,
-	Beyond,
-	Origin,
-	Destination,
-	Between
+	dNoDirection,            /** No direction. */
+	dLeft,                   /** Left. */
+	dRight,                  /** Right. */
+	dDown,                   /** Down. */
+	dUp,                     /** Up. */
+	dBehind,                 /** Behind. */
+	dBeyond,                 /** Beyond.*/
+	dOrigin,                 /** Origin.*/
+	dDestination,            /** Specific destination.*/
+	dBetween                 /** Between two positions.*/
 };
 
 
@@ -331,7 +346,7 @@ enum RDirection
 /**
 * This variable represents a tolerance for calculations.
 */
-extern double Epsi;
+const double cEpsi=0.000001;
 
 
 //------------------------------------------------------------------------------

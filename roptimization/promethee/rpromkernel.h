@@ -136,6 +136,18 @@ public:
 	void AddCriterion(RPromCriterion* crit);
 
 	/**
+	 * @return a pointer to a given criterion.
+	 * @param name           Name of the criterion.
+	 */
+	RPromCriterion* GetCriterion(const RString& name) const {return(Criteria.GetPtr(name,false));}
+
+	/**
+	 * @return a pointer to a given criterion.
+	 * @param id             Identifier of the criterion.
+	 */
+	RPromCriterion* GetCriterion(const size_t id) const {return(Criteria.GetPtr(id));}
+
+	/**
 	* Create a new solution.
 	*/
 	virtual RPromSol* NewSol(void);

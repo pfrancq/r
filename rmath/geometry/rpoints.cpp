@@ -69,17 +69,16 @@ RPoints::RPoints(const RPoints& points)
 
 
 //------------------------------------------------------------------------------
-RPoint* RPoints::FindBottom(const RPoint* pt,const RPolygons* polys) const
+RPoint RPoints::FindBottom(const RPoint& pt,const RPolygons& polys) const
 {
 	RPoint *Activ;
 	size_t i;
 	tCoord X,Y;
 	tCoord AY;
 
-	RReturnValIfFail(pt&&polys,0);
-	if(!GetNb()) return(0);
-	X=pt->X;
-	Y=pt->Y;
+	if(!GetNb()) return(RPoint::Null);
+	X=pt.X;
+	Y=pt.Y;
 	Activ=0;
 	RCursor<RPoint> point(*this);
 	point.Start();
@@ -87,39 +86,38 @@ RPoint* RPoints::FindBottom(const RPoint* pt,const RPolygons* polys) const
 	// Find first point on bottom
 	while((!Activ)&&(--i))
 	{
-		if((point()->X==X)&&(point()->Y==Y-1)) return(point());
-		if((point()->X==X)&&(polys->Edge(point(),pt))&&(point()->Y<Y))
+		if((point()->X==X)&&(point()->Y==Y-1)) return(*point());
+		if((point()->X==X)&&(polys.Edge(*point(),pt))&&(point()->Y<Y))
 			Activ=point();
 		point.Next();
 	}
-	if(!Activ) return(0);
+	if(!Activ) return(RPoint::Null);
 	// Find up most point on bottom
 	AY=Activ->Y;
 	for(;--i;point.Next())
 	{
-		if((point()->X==X)&&(point()->Y==Y-1)) return(point());
-		if((point()->X==X)&&(polys->Edge(point(),pt))&&(point()->Y>AY)&&(point()->Y<Y))
+		if((point()->X==X)&&(point()->Y==Y-1)) return(*point());
+		if((point()->X==X)&&(polys.Edge(*point(),pt))&&(point()->Y>AY)&&(point()->Y<Y))
 		{
 			Activ=point();
 			AY=Activ->Y;
     }
 	}
-	return(Activ);
+	return(*Activ);
 }
 
 
 //------------------------------------------------------------------------------
-RPoint* RPoints::FindLeft(const RPoint* pt,const RPolygons* polys) const
+RPoint RPoints::FindLeft(const RPoint& pt,const RPolygons& polys) const
 {
 	RPoint *Activ;
 	size_t i;
 	tCoord X,Y;
 	tCoord AX;
 
-	RReturnValIfFail(pt&&polys,0);
-	if(!GetNb()) return(0);
-	X=pt->X;
-	Y=pt->Y;
+	if(!GetNb()) return(RPoint::Null);
+	X=pt.X;
+	Y=pt.Y;
 	Activ=0;
 	RCursor<RPoint> point(*this);
 	point.Start();
@@ -127,115 +125,107 @@ RPoint* RPoints::FindLeft(const RPoint* pt,const RPolygons* polys) const
 	// Find first point on left
 	while((!Activ)&&(--i))
 	{
-		if((point()->Y==Y)&&(point()->X==X-1)) return(point());
-		if((point()->Y==Y)&&(polys->Edge(point(),pt))&&(point()->X<X))
+		if((point()->Y==Y)&&(point()->X==X-1)) return(*point());
+		if((point()->Y==Y)&&(polys.Edge(*point(),pt))&&(point()->X<X))
 			Activ=point();
 		point.Next();
 	}
-	if(!Activ) return(0);
+	if(!Activ) return(RPoint::Null);
 	// Find right most point on left
 	AX=Activ->X;
 	for(;--i;point.Next())
 	{
-		if((point()->Y==Y)&&(point()->X==X-1)) return(point());
-		if((point()->Y==Y)&&(polys->Edge(point(),pt))&&(point()->X>AX)&&(point()->X<X))
+		if((point()->Y==Y)&&(point()->X==X-1)) return(*point());
+		if((point()->Y==Y)&&(polys.Edge(*point(),pt))&&(point()->X>AX)&&(point()->X<X))
 		{
 			Activ=point();
 			AX=Activ->X;
 		}
 	}
-	return(Activ);
+	return(*Activ);
 }
 
 
 //------------------------------------------------------------------------------
-RPoint* RPoints::FindRight(const RPoint* pt,const RPolygons* polys) const
+RPoint RPoints::FindRight(const RPoint& pt,const RPolygons& polys) const
 {
-	RPoint *Activ;
-	size_t i;
-	tCoord X,Y;
-	tCoord AX;
+	if(!GetNb()) return(RPoint::Null);
 
-	RReturnValIfFail(pt&&polys,0);
-	if(!GetNb()) return(0);
-	X=pt->X;
-	Y=pt->Y;
-	Activ=0;
+	RPoint* Activ(0);
+	size_t i;
+	tCoord X(pt.X), Y(pt.Y);
 	RCursor<RPoint> point(*this);
 	point.Start();
 	i=GetNb()+1;
 	// Find first point on right
 	while((!Activ)&&(--i))
 	{
-		if((point()->Y==Y)&&(point()->X==X+1)) return(point());
-		if((point()->Y==Y)&&(polys->Edge(point(),pt))&&(point()->X>X))
+		if((point()->Y==Y)&&(point()->X==X+1)) return(*point());
+		if((point()->Y==Y)&&(polys.Edge(*point(),pt))&&(point()->X>X))
 			Activ=point();
 		point.Next();
 	}
-	if(!Activ) return(0);
+	if(!Activ) return(RPoint::Null);
+
 	// Find left most point on right
-	AX=Activ->X;
+	tCoord AX(Activ->X);
 	for(;--i;point.Next())
 	{
-		if((point()->Y==Y)&&(point()->X==X+1)) return(point());
-		if((point()->Y==Y)&&(polys->Edge(point(),pt))&&(point()->X<AX)&&(point()->X>X))
+		if((point()->Y==Y)&&(point()->X==X+1)) return(*point());
+		if((point()->Y==Y)&&(polys.Edge(*point(),pt))&&(point()->X<AX)&&(point()->X>X))
 		{
 			Activ=point();
 			AX=Activ->X;
-    }
+		}
 	}
-	return(Activ);
+	return(*Activ);
 }
 
 
 //------------------------------------------------------------------------------
-RPoint* RPoints::FindUp(const RPoint* pt,const RPolygons* polys) const
+RPoint RPoints::FindUp(const RPoint& pt,const RPolygons& polys) const
 {
-	RPoint *Activ;
-	size_t i;
-	tCoord X,Y;
-	tCoord AY;
+	if(!GetNb()) return(RPoint::Null);
 
-	RReturnValIfFail(pt&&polys,0);
-	if(!GetNb()) return(0);
-	X=pt->X;
-	Y=pt->Y;
-	Activ=0;
+	RPoint* Activ(0);
+	size_t i;
+	tCoord X(pt.X),Y(pt.Y);
 	RCursor<RPoint> point(*this);
 	point.Start();
 	i=GetNb()+1;
 	// Find first point on up
 	while((!Activ)&&(--i))
 	{
-		if((point()->X==X)&&(point()->Y==Y+1)) return(point());
-		if((point()->X==X)&&(polys->Edge(point(),pt))&&(point()->Y>Y))
+		if((point()->X==X)&&(point()->Y==Y+1)) return(*point());
+		if((point()->X==X)&&(polys.Edge(*point(),pt))&&(point()->Y>Y))
 			Activ=point();
 		point.Next();
 	}
-	if(!Activ) return(0);
+	if(!Activ) return(RPoint::Null);
+
 	// Find bottom most point on up
-	AY=Activ->Y;
+	tCoord AY(Activ->Y);
 	for(;--i;point.Next())
 	{
-		if((point()->X==X)&&(point()->Y==Y+1)) return(point());
-		if((point()->X==X)&&(polys->Edge(point(),pt))&&(point()->Y<AY)&&(point()->Y>Y))
+		if((point()->X==X)&&(point()->Y==Y+1)) return(*point());
+		if((point()->X==X)&&(polys.Edge(*point(),pt))&&(point()->Y<AY)&&(point()->Y>Y))
 		{
 			Activ=point();
 			AY=Activ->Y;
-    }
+		}
 	}
-	return(Activ);
+	return(*Activ);
 }
 
 
 //------------------------------------------------------------------------------
-RPoint* RPoints::FindBottomLeft(void) const
+RPoint RPoints::FindBottomLeft(void) const
 {
 	RPoint *Activ;
 	size_t i;
 	tCoord X,Y;
 
-	if(!GetNb()) return(0);
+	if(!GetNb()) return(RPoint::Null);
 	RCursor<RPoint> point(*this);
 	point.Start();
 	Activ=point();
@@ -248,7 +238,7 @@ RPoint* RPoints::FindBottomLeft(void) const
 			X=Activ->X;
 			Y=Activ->Y;
 		}
-	return(Activ);
+	return(*Activ);
 }
 
 

@@ -37,10 +37,12 @@
 // include files for R Project
 #include <rstd.h>
 #include <rpoint.h>
+#include <rsize.h>
 #include <rrect.h>
 #include <rpolygon.h>
 #include <rstd.h>
 #include <robj2d.h>
+#include <robj2dconfig.h>
 #include <rgrid.h>
 #include <rstd.h>
 
@@ -59,97 +61,68 @@ class RGeoInfo;
 
 //------------------------------------------------------------------------------
 /**
-* The RGeoInfoConnector class provides a connector of a geometric information
-* concerning the placement of an object.
-* @author Pascal Francq
-* @short Connector of a Geometric Information.
-*/
-class RGeoInfoConnector
+ * The RGeoInfoPin provides a representation for a particular pin of a specific
+ * geometric information. It represents a connection point used by a "real"
+ * connection.
+ * @author Pascal Francq
+ * @short Connection Point of a Geometric Information.
+ */
+class RGeoInfoPin
 {
+	/**
+	 * The pin.
+	 */
+	RObj2DConfigPin* Pin;
+
+	/**
+	 * The geometric information.
+	 */
+	RGeoInfo* Info;
+
 public:
-	/**
-	* Pointer to the real connector.
-	*/
-	RObj2DConnector* Con;
 
 	/**
-	* Owner of the connector.
-	*/
-	RGeoInfo* Owner;
+	 * Constructor of a particular position of a pin.
+	 * @param pin            Pin.
+	 * @param info           Geometric information.
+	 */
+	RGeoInfoPin(RObj2DConfigPin* pin,RGeoInfo* info);
 
 	/**
-	* Number of position for the connector.
-	*/
-	size_t NbPos;
+	 * Compare two pin instances. The pin are sorted in order to represent
+	 * the path of a connection : The first pin is always the most left one and
+	 * the most at the top. The last pin is always the most right one and the
+	 * most at the bottom.
+	 * @param pin            Pin used for the comparison.
+	 * @return a value usable by RContainer.
+	 */
+	int Compare(const RGeoInfoPin& pin) const;
 
 	/**
-	* Positions of the connector in the geometric information.
-	*/
-	RPoint* Pos;
-
-	/**
-	* Constructor of the connector.
-	* @param con            "Real" Connector of this one.
-	* @param owner          Geometric Information of the connector.
-	*/
-	RGeoInfoConnector(RObj2DConnector* con,RGeoInfo* owner);
-
-	/**
-	* Constructor of the connector.
-	* @param con            "Real" Connector of this one.
-	* @param owner          Geometric Information of the connector.
-	*/
-	RGeoInfoConnector(RGeoInfoConnector* con,RGeoInfo* owner);
-
-	/**
-	* Constructor of the connector.
-	* @param con            "Real" Connector of this one.
-	* @param owner          Geometric Information of the connector.
-	* @param pos            The position of the connector
-	*/
-	RGeoInfoConnector(RObj2DConnector* con,RGeoInfo* owner,const RPoint& pos);
-
-	/**
-	* This function compares two connectors and returns 0 if there are the same.
-	* This function is used for the class RContainer.
-	* @param c              Connector used for the comparison.
-	*/
-	int Compare(const RGeoInfoConnector* c) const {return(CompareIds(Con->Id,c->Con->Id));}
-
-	/**
-	* This function compares two connectors and returns 0 if there are the same.
-	* This function is used for the class RContainer.
-	* @param c              Connector used for the comparison.
-	*/
-	int Compare(const RGeoInfoConnector& c) const {return(CompareIds(Con->Id,c.Con->Id));}
-
-	/**
-	* This function compares a connector and an identificator and returns 0 if
-	* there are the same.
-	* This function is used for the class RContainer.
-	* @param id             Identificator used for the comparison.
-	*/
-	int Compare(const size_t id) const {return(CompareIds(Con->Id,id));}
-
-	/**
-	* Return the position of the connector in absolute (not relative to the
-	* object).
-	*/
+	 * @return the position of the pin.
+	 */
 	RPoint GetPos(void) const;
 
-	// friend classes
-	friend class RGeoInfo;
-	friend class RConnections;
+	/**
+	 * @return return the pin.
+	 */
+	inline RObj2DConfigPin* GetPin(void) const {return(Pin);}
+
+	/**
+	 * @return return the geometric information.
+	 */
+	inline RGeoInfo* GetInfo(void) const {return(Info);}
+
 };
 
 
 //------------------------------------------------------------------------------
 /**
-* The RBoundCursor class provides a way to go trough a set of points
-* representing a boundary of a RGeoInfo.
+* The RGeoInfoCursor class provides a way to go trough a set of points with a
+* base point. In particular, it is adapted to parse a geometric information.
 * @short Relative Points Cursor
 */
-class RRelPointCursor : public R::RCursor<RPoint>
+class RGeoInfoCursor : private RCursor<RPoint>
 {
 	/**
 	* Base point.
@@ -161,24 +134,39 @@ public:
 	/**
 	* Construct the cursor.
 	*/
-	RRelPointCursor(void);
+	RGeoInfoCursor(void);
 
 	/**
 	* Construct the cursor.
-	* param c               Container to iterate.
+	* param info             Geometric information to parser.
 	*/
-	RRelPointCursor(RGeoInfo& info);
+	RGeoInfoCursor(RGeoInfo& info);
 
 	/**
 	* Assignment operator using a "Cursor".
 	*/
-	RRelPointCursor& operator=(const RRelPointCursor& c);
+	RGeoInfoCursor& operator=(const RGeoInfoCursor& c);
 
 	/**
-	* Set the container.
-	* param c               Container to iterate.
+	* Set the geometric information.
+	* param info             Geometric information to parser.
 	*/
 	void Set(RGeoInfo& info);
+
+	/**
+	 * Start the cursor.
+	 */
+	inline void Start(void) {RCursor<RPoint>::Start();}
+
+	/**
+	 * Go to the next element of the cursor.
+	 */
+	inline void Next(void) {RCursor<RPoint>::Next();}
+
+	/**
+	 * @return true if the cursor has reached the end.
+	 */
+	inline bool End(void) const {return(RCursor<RPoint>::End());}
 
 	/**
 	* Return the current element.
@@ -196,17 +184,17 @@ public:
 */
 class RGeoInfo
 {
+protected:
+
 	/**
 	* Pointer to the the object.
-	* A geometric information with no corresponding object is considered not to
-	* be treated.
 	*/
 	RObj2D* Obj;
 
 	/**
-	* Indicate if the object was selected for the crossover.
-	*/
-	bool Selected;
+	 * The particular configuration of the object used.
+	 */
+	RObj2DConfig* Config;
 
 	/**
 	* Position of the object.
@@ -214,49 +202,26 @@ class RGeoInfo
 	RPoint Pos;
 
 	/**
-	* Index of the orientation used for this info.
+	* Indicate the container of the object (if any). This is used to aggregate
+	* a set of objects.
 	*/
-	char Ori;
-
-	/**
-	* Polygon representing the object.
-	*/
-	RPolygon* Bound;
-
-	/**
-	* Rectangles Decomposition of the polygon.
-	*/
-	RRects* Rects;
-
-	/**
-	* Rectangle holding the polygon.
-	*/
-	RRect Rect;
+	RObj2DContainer* Container;
 
 	/**
 	* Order of the geometric information.
 	*/
 	size_t Order;
 
-public:
-
-	/**
-	* The connectors of this object
-	*/
-	RContainer<RGeoInfoConnector,true,true> Connectors;
-
 	/**
 	* Construct a geometric information.
 	*/
 	RGeoInfo(void);
 
-	/**
-	* Construct a geometric information.
-	*/
-	RGeoInfo(RPolygon* poly);
+public:
 
 	/**
 	* Construct a geometric information.
+	* @param obj             Object represented.
 	*/
 	RGeoInfo(RObj2D* obj);
 
@@ -266,19 +231,23 @@ public:
 	RGeoInfo(const RGeoInfo& info);
 
 	/**
+	* Compare function use for the RContainer class. Compare only the addresses of the
+	* pointers.
+	* @param info           Pointer used for the comparison.
+	*/
+	int Compare(const RGeoInfo& info) const;
+
+	/**
+	* Compare function use for the RContainer class. Compare the identifier
+	* with the one of the corresponding object.
+	* @param id             Identifier used for the comparison.
+	*/
+	int Compare(const size_t id) const { return(Obj->Compare(id)); }
+
+	/**
 	* Clears the geometric information.
 	*/
 	virtual void ClearInfo(void);
-
-	/**
-	* Return the index of the orientation.
-	*/
-	inline char GetOri(void) const {return(Ori);}
-
-	/**
-	* Set to ith Orienation of the object.
-	*/
-	void SetOri(char i);
 
 	/**
 	* Area used by the polygon.
@@ -292,27 +261,21 @@ public:
 	void Boundary(RRect& rect);
 
 	/**
+	* @return a pointer to the container or null if the object is not
+	* aggregated.
+	*/
+	inline RObj2DContainer* GetContainer(void) const {return(Container);}
+
+	/**
+	* Set the container that hold the object.
+	* @param container       Container.
+	*/
+	void SetContainer(RObj2DContainer* container);
+
+	/**
 	* Return true if the geometric information is a valid one.
 	*/
-	bool IsValid(void) const;
-
-	/**
-	* Return true if the geometric information is a valid one in given limits.
-	* @param pos            Position to verify.
-	* @param limits         Limits.
-	*/
-	bool IsValid(const RPoint& pos,const RPoint& limits) const;
-
-	/**
-	* Return true if the object represented by the geometric information is
-	* selected.
-	*/
-	bool IsSelect(void) const {return(Selected);}
-
-	/**
-	* Set that the object represented by the geometric information is selected.
-	*/
-	void SetSelect(void) {Selected=true;}
+	inline bool IsValid(void) const {return(Pos.IsValid());}
 
 	/**
 	* Return the object.
@@ -320,36 +283,35 @@ public:
 	RObj2D* GetObj(void) const {return(Obj);}
 
 	/**
+	 * Set the configuration used.
+	 * @param ori            Orientation.
+	 */
+	void SetConfig(tOrientation ori);
+
+	/**
+	* Return the configuration used.
+	*/
+	RObj2DConfig* GetConfig(void) const {return(Config);}
+
+	/**
 	* Assign the geometric information to the position and update the grids with the
-	* identicator of the object.
+	* identifier of the object.
 	* @param pos            Position to place.
 	* @param grid           Grid.
+	* @param order          Order of the corresponding geometric information.
 	*/
-	void Assign(const RPoint& pos,RGrid* grid);
+	virtual void Assign(const RPoint& pos,RGrid* grid,size_t order);
 
 	/**
-	* Assign the geometric information to the position.
-	* @param pos            Position to place.
+	* Return true if the geometric information is a valid one in given limits.
+	* @param pos            Position to verify.
+	* @param limits         Limits.
 	*/
-	void Assign(const RPoint& pos) {Pos=pos;}
+	bool IsValid(const RPoint& pos,const RSize& limits) const;
 
 	/**
-	* Compare function use for the RContainer class. Compare only the adress of the
-	* pointers.
-	* @param info           Pointer used for the comparaison.
-	*/
-	int Compare(const RGeoInfo& info) const;
-
-	/**
-	* Compare function use for the RContainer class. Compare the identificator
-	* with the one of the corresponding object.
-	* @param id             Idenfificator used for the comparaison.
-	*/
-	int Compare(const size_t id) const { return(Obj->Compare(id)); }
-
-	/**
-	* Test if the object can be placed at a specific position in regards of the
-	* occupation.
+	* Test if the shape of the object can be placed at a specific position
+	* based on a given grid.
 	* @param pos            Position to test.
 	* @param grid           Grid.
 	*/
@@ -362,7 +324,7 @@ public:
 	* @param limits         Limits for the placement.
 	* @param grid           Grid.
 	*/
-	void PushBottomLeft(RPoint& pos,RPoint& limits,RGrid* grid);
+	void PushBottomLeft(RPoint& pos,const RSize& limits,RGrid* grid);
 
 	/**
 	* Calculate the position where the object represented can be placed, if it
@@ -371,31 +333,21 @@ public:
 	* @param limits         Limits for the placement.
 	* @param grid           Grid.
 	*/
-	void PushCenter(RPoint& pos,RPoint& limits,RGrid* grid);
+	void PushCenter(RPoint& pos,const RSize& limits,RGrid* grid);
 
 	/**
 	* This function returns true if the two objects represented by this geometric information
 	* overlap (Rects have to be calculated.
 	*/
-	bool Overlap(RGeoInfo* info);
-
-	/**
-	* Return the Width of the object represented.
-	*/
-	inline tCoord Width(void) const {return(Rect.GetWidth());}
-
-	/**
-	* Return the Height of the object represented.
-	*/
-	inline tCoord Height(void) const {return(Rect.GetHeight());}
+	bool Overlap(RGeoInfo* info) const;
 
 	/**
 	* Return the number of points contained in the polygon.
 	*/
-	inline size_t NbPoints(void) const {return(Bound->GetNb());}
+	inline size_t GetNbPoints(void) const {return(Config->GetPolygon().GetNb());}
 
 	/**
-	* Return the position of the geometric information.
+	* @return the position of the geometric information.
 	*/
 	RPoint GetPos(void) const;
 
@@ -426,13 +378,6 @@ public:
 	bool IsIn(RPoint pos) const;
 
 	/**
-	* See if a connector is at a specific position.
-	* @param pos            Position to test.
-	* @return Pointer to the connector or 0 if no connector.
-	*/
-	RGeoInfoConnector* GetConnector(const RPoint& pos);
-
-	/**
 	* Add the polygon representing the object in the container of polygons.
 	*/
 	void Add(RPolygons& polys);
@@ -440,47 +385,12 @@ public:
 	/**
 	* Return the polygon representing the object placed.
 	*/
-	RPolygon GetPolygon(void);
-
-	/**
-	* Return the polygon representing the object to place.
-	*/
-	RPolygon* GetBound(void) const {return(Bound);}
-
-	/**
-	* Get a cursor over the connections of the object.
-	*/
-	RCursor<RObj2DConnector> GetObjConnectors(void) const;
-
-	/**
-	* Start the iterator to go through the connections.
-	*/
-//	void StartCon(void);
-
-	/**
-	* Test if the end of the connections are reached.
-	*/
-//	bool EndCon(void);
-
-	/**
-	* Go to the next connections, if the end is reached, go to the beginning.
-	*/
-//	void NextCon(void);
-
-	/**
-	* Return the current connection.
-	*/
-//	RConnection* GetCurrentCon(void);
-
-	/**
-	* Set the order.
-	*/
-	void SetOrder(size_t o) {Order=o;}
+	RPolygon GetPlacedPolygon(void) const;
 
 	/**
 	* Get the order.
 	*/
-	size_t GetOrder(void) {return(Order);}
+	size_t GetOrder(void) const {return(Order);}
 
 	/**
 	* Destruct the geometric information.
@@ -488,9 +398,6 @@ public:
 	virtual ~RGeoInfo(void);
 
 	// friend classes
-	friend class RGeoInfos;
-	friend class RGeoInfoConnection;
-	friend class RObj2DContainer;
 	friend class RRelPointCursor;
 };
 

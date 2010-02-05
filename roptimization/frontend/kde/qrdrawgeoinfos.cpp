@@ -32,6 +32,7 @@
 #include <rproblem2d.h>
 #include <qrdrawgeoinfos.h>
 #include <ui_qrdrawgeoinfos.h>
+#include <robj2dconfig.h>
 #include <rqt.h>
 using namespace R;
 using namespace std;
@@ -54,55 +55,60 @@ using namespace std;
 class QRDrawGeoInfos::MyItem : public QGraphicsPolygonItem
 {
 	QRDrawGeoInfos* Widget;
-	RGeoInfo* Info;
-	RGeoInfoConnector* Con;
-	size_t Pos;
+	const RGeoInfo* Info;
+	RObj2DConfigPin* Pin;
 
 public:
-	MyItem(RGeoInfo* info,QRDrawGeoInfos* widget,const QBrush& brush);
-	MyItem(RGeoInfo* info,RGeoInfoConnector* con,size_t pos,QRDrawGeoInfos* widget,const QBrush& brush);
+	MyItem(const RGeoInfo* info,QRDrawGeoInfos* widget,const QBrush& brush);
+	MyItem(const RGeoInfo* info,RObj2DConfigPin* pin,QRDrawGeoInfos* widget,const QBrush& brush);
 	virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
 	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 };
 
 
 //------------------------------------------------------------------------------
-QRDrawGeoInfos::MyItem::MyItem(RGeoInfo* info,QRDrawGeoInfos* widget,const QBrush& brush)
-	: QGraphicsPolygonItem(), Widget(widget), Info(info), Con(0), Pos(cNoRef)
+QRDrawGeoInfos::MyItem::MyItem(const RGeoInfo* info,QRDrawGeoInfos* widget,const QBrush& brush)
+	: QGraphicsPolygonItem(), Widget(widget), Info(info), Pin(0)
 {
 	Widget->paintConnectors(info);
 
-	// Set the polygon
-	QPolygonF Polygon;
-	RPoint Pos(info->GetPos());
-	RCursor<RPoint> Cur(*info->GetBound());
-	for(Cur.Start();!Cur.End();Cur.Next())
-		Polygon<<QPointF(Widget->x(Cur()->X+Pos.X),Widget->y(Cur()->Y+Pos.Y));
-	setPolygon(Polygon);
-
 	QString Tmp;
-	if(Info->GetObj()->GetId()!=Widget->Infos->RealNb)
+	if(Info!=widget->Layout->GetBoard())
 	{
+		// Set the polygon
+		RPolygon Obj(info->GetPlacedPolygon());
+		QPolygonF Polygon;
+		RCursor<RPoint> Cur(Obj);
+		for(Cur.Start();!Cur.End();Cur.Next())
+			Polygon<<QPointF(Widget->x(Cur()->X),Widget->y(Cur()->Y));
+		setPolygon(Polygon);
+
 		setZValue(3.0);
 		setBrush(brush);
-		Tmp="Object '"+ToQString(info->GetObj()->Name)+"'<br>";
+		Tmp="Object '"+ToQString(info->GetObj()->GetName())+"'<br>";
 		if(info->GetOrder()!=cNoRef)
 			Tmp+="Order: "+QString::number(info->GetOrder())+"<br>";
 		Tmp+="Points:<br>";
 
-		RRelPointCursor Cur2(*info);
 		bool AddBr(false);
-		for(Cur2.Start();!Cur2.End();Cur2.Next())
+		for(Cur.Start();!Cur.End();Cur.Next())
 		{
 			if(AddBr)
 				Tmp+="<br>";
 			else
 				AddBr=true;
-			Tmp+="&nbsp;&nbsp;&nbsp;("+QString::number(Cur2().X)+","+QString::number(Cur2().Y)+")";
+			Tmp+="&nbsp;&nbsp;&nbsp;("+QString::number(Cur()->X)+","+QString::number(Cur()->Y)+")";
 		}
 	}
 	else
 	{
+		// Set the polygon
+		QPolygonF Polygon;
+		Polygon<<QPointF(Widget->x(0),Widget->y(0))
+			   <<QPointF(Widget->x(Widget->Layout->GetProblem()->GetLimits().GetWidth()),Widget->y(0))
+		       <<QPointF(Widget->x(Widget->Layout->GetProblem()->GetLimits().GetWidth()),Widget->y(Widget->Layout->GetProblem()->GetLimits().GetHeight()))
+		       <<QPointF(Widget->x(0),Widget->y(Widget->Layout->GetProblem()->GetLimits().GetHeight()));
+		setPolygon(Polygon);
 		setZValue(2.0);
 		Tmp="Circuit";
 	}
@@ -113,19 +119,24 @@ QRDrawGeoInfos::MyItem::MyItem(RGeoInfo* info,QRDrawGeoInfos* widget,const QBrus
 
 
 //------------------------------------------------------------------------------
-QRDrawGeoInfos::MyItem::MyItem(RGeoInfo* info,RGeoInfoConnector* con,size_t pos,QRDrawGeoInfos* widget,const QBrush& brush)
-	: QGraphicsPolygonItem(), Widget(widget), Info(info), Con(con), Pos(pos)
+QRDrawGeoInfos::MyItem::MyItem(const RGeoInfo* info,RObj2DConfigPin* pin,QRDrawGeoInfos* widget,const QBrush& brush)
+	: QGraphicsPolygonItem(), Widget(widget), Info(info), Pin(pin)
 {
-	tCoord X(Con->Pos[Pos].X+Info->GetPos().X-1),Y(Con->Pos[Pos].Y+Info->GetPos().Y-1);
+	RRect Rect(Pin->GetRect());
+	if(Info!=widget->Layout->GetBoard())
+		Rect+=Info->GetPos();
 	QPolygonF Polygon;
-	Polygon<<QPointF(Widget->x(X),Widget->y(Y))<<QPointF(Widget->x(X+3),Widget->y(Y))<<QPointF(Widget->x(X+3),Widget->y(Y+3))<<QPointF(Widget->x(X),Widget->y(Y+3));
+	Polygon<<QPointF(Widget->x(Rect.GetX1()),Widget->y(Rect.GetY1()))
+		   <<QPointF(Widget->x(Rect.GetX2()),Widget->y(Rect.GetY1()))
+		   <<QPointF(Widget->x(Rect.GetX2()),Widget->y(Rect.GetY2()))
+		   <<QPointF(Widget->x(Rect.GetX1()),Widget->y(Rect.GetY2()));
 	setPolygon(Polygon);
 	setBrush(brush);
 	setPen(QPen(Qt::black));
 	setZValue(4.0);
 
-	QString Tmp("Connector '"+ToQString(con->Con->Name)+"'<br>");
-	Tmp+="Pin "+QString::number(pos);
+	QString Tmp("Connector '"+ToQString(Pin->GetPin()->GetConnector()->GetName())+"'<br>");
+	Tmp+="Pin '"+Pin->GetPin()->GetName()+"'";
 	setToolTip(Tmp);
 }
 
@@ -135,22 +146,22 @@ void QRDrawGeoInfos::MyItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
 	if(event->button()!=Qt::LeftButton)
 		return;
-	if(Con)
+	if(Pin)
 	{
-		RCursor<RGeoInfoConnection> Cur(Widget->Infos->Cons);
+		RCursor<RGeoInfoConnection> Cur(Widget->Layout->GetConnections());
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
-			if(!Cur()->IsIn(Con))
+			if(!Cur()->IsIn(Pin))
 				continue;
 			Widget->paintConnection(Cur());
 		}
 	}
 	else
 	{
-		RCursor<RGeoInfoConnection> Cur(Widget->Infos->Cons);
+		RCursor<RGeoInfoConnection> Cur(Widget->Layout->GetConnections());
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
-			if((Info->GetObj()->GetId()!=Widget->Infos->RealNb)&&(!Cur()->IsIn(Info)))
+			if((Info!=Widget->Layout->GetBoard())&&(!Cur()->IsIn(Info)))
 				continue;
 			Widget->paintConnection(Cur());
 		}
@@ -176,7 +187,7 @@ void QRDrawGeoInfos::MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 //------------------------------------------------------------------------------
 QRDrawGeoInfos::QRDrawGeoInfos(QWidget* parent)
-	: QWidget(parent), Ui(new Ui_QRDrawGeoInfos()), FreePolygons(0), Infos(0),
+	: QWidget(parent), Ui(new Ui_QRDrawGeoInfos()), FreePolygons(0), Layout(0),
 	  BlueBrush(Qt::blue,Qt::BDiagPattern), RedBrush(Qt::red,Qt::SolidPattern),
 	  BlackBrush(Qt::black,Qt::SolidPattern), YellowBrush(Qt::yellow,Qt::BDiagPattern),
 	  GreenBrush(Qt::green,Qt::BDiagPattern), CyanBrush(Qt::cyan,Qt::BDiagPattern),
@@ -188,13 +199,11 @@ QRDrawGeoInfos::QRDrawGeoInfos(QWidget* parent)
 
 
 //------------------------------------------------------------------------------
-void QRDrawGeoInfos::setInfos(RGeoInfos* infos,const RPoint& limits,const RPoint& translation)
+void QRDrawGeoInfos::setLayout(RLayout* layout)
 {
-	if(infos==Infos)
+	if(layout==Layout)
 		return;
-	Infos=infos;
-	Limits=limits;
-	Translation=translation;
+	Layout=layout;
 	repaint();
 }
 
@@ -217,21 +226,26 @@ void QRDrawGeoInfos::setStepMode(bool step)
 //------------------------------------------------------------------------------
 void QRDrawGeoInfos::repaint(void)
 {
-	if(!Infos)
+	if(!Layout)
 		return;
 	QGraphicsView* Draw(static_cast<Ui_QRDrawGeoInfos*>(Ui)->Draw);
-	XScale=((static_cast<double>(Draw->width()-10)/static_cast<double>(Limits.X)));
-	YScale=((static_cast<double>(Draw->height()-10)/static_cast<double>(Limits.Y)));
+	RRect Board(Layout->GetProblem()->GetBoard());
+	RSize Limits(Board.GetSize());
+	XScale=((static_cast<double>(Draw->width()-10)/static_cast<double>(Limits.GetWidth())));
+	YScale=((static_cast<double>(Draw->height()-10)/static_cast<double>(Limits.GetHeight())));
 	Scene.clear();
 
 	// The board
-	QPointF Pt1(x(0),y(0));
-	QPointF Pt2(x(Infos->Problem->Limits.X),y(Infos->Problem->Limits.Y));
+	QPointF Pt1(x(Board.GetX1()),y(Board.GetY1()));
+	QPointF Pt2(x(Board.GetX2()),y(Board.GetY2()));
 	QRectF Rect(Pt1,Pt2);
 	Scene.addRect(Rect,QPen(Qt::black))->setZValue(1.0);
 
-	// The object already place
-	RCursor<RGeoInfo> Cur(*Infos);
+	// The object representing the limits
+	paintInfo(Layout->GetBoard(),false);
+
+	// The object already placed
+	RCursor<RGeoInfo> Cur(Layout->GetInfos());
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if(Cur()->IsValid())
 			paintInfo(Cur(),false);
@@ -247,11 +261,14 @@ void QRDrawGeoInfos::repaint(void)
 
 
 //------------------------------------------------------------------------------
-void QRDrawGeoInfos::paintInfo(RGeoInfo* info,bool fly)
+void QRDrawGeoInfos::paintInfo(const RGeoInfo* info,bool fly)
 {
-	if(!info)
+	if(info==Layout->GetBoard())
+	{
+		Scene.addItem(new MyItem(info,this,BlueBrush));
 		return;
-	if(info->IsSelect())
+	}
+	if(info->GetContainer())
 		Scene.addItem(new MyItem(info,this,GreenBrush));
 	else
 	{
@@ -278,7 +295,7 @@ void QRDrawGeoInfos::paintInfo(RGeoInfo* info,bool fly)
 
 
 //------------------------------------------------------------------------------
-void QRDrawGeoInfos::paintFree(RFreePolygon* poly,bool)
+void QRDrawGeoInfos::paintFree(const RFreePolygon* poly,bool)
 {
 	if(!poly)
 		return;
@@ -286,22 +303,28 @@ void QRDrawGeoInfos::paintFree(RFreePolygon* poly,bool)
 	RCursor<RPoint> Pt(*poly);
 	for(Pt.Start();!Pt.End();Pt.Next())
 		Polygon<<QPointF(x(Pt()->X),y(Pt()->Y));
-	Scene.addPolygon(Polygon,QPen(Qt::black),YellowBrush);
+	QGraphicsPolygonItem* ptr=Scene.addPolygon(Polygon,QPen(Qt::black),YellowBrush);
+	ptr->setZValue(3.0);
 }
 
 
 //------------------------------------------------------------------------------
-void QRDrawGeoInfos::paintConnection(RGeoInfoConnection* connect)
+void QRDrawGeoInfos::paintConnection(const RGeoInfoConnection* connect)
 {
-	RCursor<RGeoInfoConnectionPart> p(*connect);
+	RCursor<RGeoInfoPin> p(connect->GetPins());
+	if(!p.GetNb())
+		return;
 	p.Start();
-	for(p.Start();!p.End();p.Next())
+	RPoint Pt1(p()->GetPos());
+	for(p.Next();!p.End();p.Next())
 	{
 		QGraphicsLineItem* ptr;
-		Nets.append(ptr=Scene.addLine(x(p()->PosCon1.X),y(p()->PosCon1.Y),x(p()->PosCon2.X),y(p()->PosCon1.Y),QPen(Qt::red)));
-		ptr->setZValue(4.0);
-		Nets.append(ptr=Scene.addLine(x(p()->PosCon2.X),y(p()->PosCon1.Y),x(p()->PosCon2.X),y(p()->PosCon2.Y),QPen(Qt::red)));
-		ptr->setZValue(4.0);
+		RPoint Pt2(p()->GetPos());
+		Nets.append(ptr=Scene.addLine(x(Pt1.X),y(Pt1.Y),x(Pt2.X),y(Pt1.Y),QPen(Qt::red)));
+		ptr->setZValue(5.0);
+		Nets.append(ptr=Scene.addLine(x(Pt2.X),y(Pt1.Y),x(Pt2.X),y(Pt2.Y),QPen(Qt::red)));
+		ptr->setZValue(5.0);
+		Pt1=Pt2;
 	}
 }
 
@@ -318,15 +341,15 @@ void QRDrawGeoInfos::removeConnections(void)
 
 
 //------------------------------------------------------------------------------
-void QRDrawGeoInfos::paintConnectors(RGeoInfo* info)
+void QRDrawGeoInfos::paintConnectors(const RGeoInfo* info)
 {
-	if(!info)
-		return;
-
-	RCursor<RGeoInfoConnector> Cur(info->Connectors);
+	RCursor<RObj2DConfigConnector> Cur(info->GetConfig()->GetConnectors());
 	for(Cur.Start();!Cur.End();Cur.Next())
-		for(size_t j=0;j<Cur()->NbPos;j++)
-			Scene.addItem(new MyItem(info,Cur(),j,this,BlackBrush));
+	{
+		RCursor<RObj2DConfigPin> Cur2(*Cur());
+		for(Cur2.Start();!Cur2.End();Cur2.Next())
+			Scene.addItem(new MyItem(info,Cur2(),this,BlackBrush));
+	}
 }
 
 

@@ -36,11 +36,39 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <robj2d.h>
-#include <rstring.h>
+#include <robj2dconfig.h>
 #include <rgeoinfo.h>
-#include <rgeoinfos.h>
 #include <rconnection.h>
 using namespace R;
+
+
+
+//------------------------------------------------------------------------------
+//
+// class RObj2DPin
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+RObj2DPin::RObj2DPin(RObj2DConnector* con,size_t id,const RString& name)
+	: Connector(con), Id(id), Name(name)
+{
+	Connector->InsertPtr(this);
+}
+
+
+//------------------------------------------------------------------------------
+int RObj2DPin::Compare(const RObj2DPin& pin) const
+{
+	return(CompareIds(Id,pin.Id));
+}
+
+
+//------------------------------------------------------------------------------
+int RObj2DPin::Compare(const size_t pin) const
+{
+	return(CompareIds(Id,pin));
+}
 
 
 
@@ -51,141 +79,17 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const RPoint pos)
-	: Owner(owner), Id(id), Name(RString::Number(id)), NbPos(1), Connections(10,5)
+RObj2DConnector::RObj2DConnector(RObj2D* obj,size_t id,const RString& name)
+	:  RContainer<RObj2DPin,true,true>(4), Obj(obj), Id(id), Name(name), Connections(10,5)
 {
-	Pos=new RPoint[NbPos];
-	Poss=new RPoint*[NbPos];
-	Pos[0]=pos;
-}
-
-
-//------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const RString& name,const RPoint pos)
-	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
-{
-	Pos=new RPoint[NbPos];
-	Poss=new RPoint*[NbPos];
-	Poss[0]=new RPoint[8];
-	Pos[0]=pos;
-}
-
-
-//------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const char* name,const RPoint pos)
-	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
-{
-	Pos=new RPoint[NbPos];
-	Poss=new RPoint*[NbPos];
-	Poss[0]=new RPoint[8];
-	Pos[0]=pos;
-}
-
-
-//------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,tCoord x,tCoord y)
-	: Owner(owner), Id(id), Name(RString::Number(id)), NbPos(1), Connections(10,5)
-{
-	Pos=new RPoint[NbPos];
-	Poss=new RPoint*[NbPos];
-	Poss[0]=new RPoint[8];
-	Pos[0].Set(x,y);
-}
-
-
-//------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner,size_t id,const RString& name,tCoord x,tCoord y)
-	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
-{
-	Pos=new RPoint[NbPos];
-	Poss=new RPoint*[NbPos];
-	Poss[0]=new RPoint[8];
-	Pos[0].Set(x,y);
-}
-
-
-//------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner, size_t id,const char* name,tCoord x,tCoord y)
-	: Owner(owner), Id(id), Name(name), NbPos(1), Connections(10,5)
-{
-	Pos=new RPoint[NbPos];
-	Poss=new RPoint*[NbPos];
-	Poss[0]=new RPoint[8];
-	Pos[0].Set(x,y);
-}
-
-
-//------------------------------------------------------------------------------
-RObj2DConnector::RObj2DConnector(RObj2D* owner, size_t id,const char* name,const size_t nb)
-	: Owner(owner), Id(id), Name(name), NbPos(nb), Connections(10,5)
-{
-	Pos=new RPoint[NbPos];
-	Poss=new RPoint*[NbPos];
-	for(size_t i=0;i<NbPos;i++)
-		Poss[i]=new RPoint[8];
-}
-
-
-//------------------------------------------------------------------------------
-RPoint RObj2DConnector::GetPos(void)
-{
-	return(Pos[0]);
-}
-
-
-//------------------------------------------------------------------------------
-RPoint RObj2DConnector::GetPos(size_t i,char o)
-{
-	return(Poss[i][static_cast<size_t>(o)]);
-}
-
-
-//------------------------------------------------------------------------------
-void RObj2DConnector::AddConnection(RConnection* con)
-{
-	Connections.InsertPtr(con);
-}
-
-
-//------------------------------------------------------------------------------
-double RObj2DConnector::GetMinDist(RObj2DConnector* c,RGeoInfos* infos,RPoint& pt1,RPoint& pt2)
-{
-	double min=HUGE_VAL,d;
-	RGeoInfo *g1,*g2;
-	RGeoInfoConnector *c1,*c2;
-	size_t i,j;
-	RPoint p1,p2;
-
-	g1=infos->GetPtr<size_t>(Owner->GetId());
-	c1=g1->Connectors.GetPtr<size_t>(Id);
-	g2=infos->GetPtr<size_t>(c->Owner->GetId());
-	c2=g2->Connectors.GetPtr<size_t>(c->Id);
-	for(i=0;i<c1->NbPos;i++)
-	{
-		p1=c1->Pos[i]+g1->GetPos();
-		for(j=0;j<c2->NbPos;j++)
-		{
-			p2=c2->Pos[j]+g2->GetPos();
-			d=p1.ManhattanDist(p2);
-			if(d<min)
-			{
-				min=d;
-				pt1=p1;
-				pt2=p2;
-			}
-		}
-	}
-	return(min);
+	if(Obj)
+		Obj->Connectors.InsertPtr(this);
 }
 
 
 //------------------------------------------------------------------------------
 RObj2DConnector::~RObj2DConnector(void)
 {
-	delete[] Pos;
-	for(size_t i=0;i<NbPos;i++)
-		delete[] Poss[i];
-	delete[] Poss;
 }
 
 
@@ -197,209 +101,140 @@ RObj2DConnector::~RObj2DConnector(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RObj2D::RObj2D(size_t id,bool deformable)
-	: Id(id), Name(RString::Number(id)), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
+RObj2D::RObj2D(size_t id,const RString& name)
+	: RContainer<RObj2DConfig,true,true>(8), Id(id), Name(name), Connectors(5,5)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RObj2D::RObj2D(size_t id,const RString& name,bool deformable)
-	: Id(id), Name(name), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
+void RObj2D::CreateOri(tOrientation ori)
 {
-}
+	RObj2DConfig* Normal(GetPtr(oNormal));
 
+	if(!Normal)
+		ThrowRException("No normal configuration is created");
 
-//------------------------------------------------------------------------------
-RObj2D::RObj2D(size_t id,const char* name,bool deformable)
-	: Id(id), Name(name), Area(0), NbPossOri(0), Deformable(deformable), Connectors(5,5)
-{
-}
+	if(ori==oNormal)
+		return;
 
-
-//------------------------------------------------------------------------------
-void RObj2D::Init(void)
-{
-	int i,j;
-	RPolygon *p;
-	RRects *r;
-
-	CalcPolygons();
-	for(i=NbPossOri+1,p=Polygons,r=Rects,j=0;--i;p++,r++,j++)
-		p->RectDecomposition(*r);
-	Area=Rects[0].Area();
-}
-
-
-//------------------------------------------------------------------------------
-void RObj2D::CalcPolygons(void)
-{
-	int i,idx;
-	ROrientation *o;
-	RPolygon *ptr;
-	bool bNormal,bRota90;
 	RPoint Min;
-
-	if(!NbPossOri) return;
+	RObj2DConfig* New;
 
 	// If Polygon is a rectangle
-	if(Polygon.GetNb()==4)
+	if(Normal->GetPolygon().IsRect())
 	{
-		// Test if a square -> 1 orientation only
-		if(Polygon[2]->X==Polygon[2]->Y)
-		{
-			NbPossOri=1;
-			Polygons[0]=Polygon;
-			RCursor<RObj2DConnector> Cur(Connectors);
-			for(Cur.Start();!Cur.End();Cur.Next())
-			{
-				for(size_t j=0;j<Cur()->NbPos;j++)
-				{
-					Cur()->Poss[j][0]=Cur()->Pos[j]-Min;
-				}
-			}
+		// Test if a square -> 1 configuration only
+		if(Normal->GetPolygon().IsSquare())
 			return;
-		}
 
-		// It is Rectangle -> Max 2 orientation only
-		bNormal=bRota90=false;
-		for(i=NbPossOri+1,o=PossOri;--i;o++)
-		{
-			if((!bNormal)&&(((*o)==Normal)||((*o)==NormalX)||((*o)==NormalY)||((*o)==NormalYX)))
-			{
-				bNormal=true;
-				if(bRota90) idx=1; else idx=0;
-				Polygons[idx]=Polygon;
-				RCursor<RObj2DConnector> Cur(Connectors);
-				for(Cur.Start();!Cur.End();Cur.Next())
-				{
-					for(size_t j=0;j<Cur()->NbPos;j++)
-					{
-						Cur()->Poss[j][idx]=Cur()->Pos[j];
-						Cur()->Poss[j][idx]-=Min;
-					}
-				}
-			}
-			if((!bRota90)&&(((*o)==Rota90)||((*o)==Rota90X)||((*o)==Rota90Y)||((*o)==Rota90YX)))
-			{
-				bRota90=true;
-				if(bNormal) idx=1; else idx=0;
-				Polygons[idx]=Polygon;
-				Polygons[idx].ChangeOrientation(Rota90,Min);
-				RCursor<RObj2DConnector> Cur(Connectors);
-				for(Cur.Start();!Cur.End();Cur.Next())
-				{
-					for(size_t j=0;j<Cur()->NbPos;j++)
-					{
-						Cur()->Poss[j][idx]=Cur()->Pos[j];
-						Cur()->Poss[j][idx].ChangeOrientation(Rota90);
-						Cur()->Poss[j][idx]-=Min;
-					}
-				}
-			}
-		}
-		if(bRota90||bNormal) NbPossOri=1;
-		if(bRota90&&bNormal) NbPossOri=2;
-		return;
-	}
+		// It is Rectangle -> Max 2 configuration only
+		if(GetNb()==2)
+			return;  // Already two
 
-	// Other Polygon
-	for(i=0,ptr=Polygons,o=PossOri;i<NbPossOri;ptr++,o++,i++)
-	{
-		(*ptr)=Polygon;
-		ptr->ChangeOrientation(*o,Min);
-		RCursor<RObj2DConnector> Cur(Connectors);
+		// Create the configuration
+		New=new RObj2DConfig(this,ori);
+		RPolygon Polygon(Normal->GetPolygon());
+		Polygon.ChangeOrientation(oRota90,Min);
+		New->Set(Polygon);
+		RCursor<RObj2DConfigConnector> Cur(Normal->GetConnectors());
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
-			for(size_t j=0;j<Cur()->NbPos;j++)
+			// Create a connector
+			RObj2DConfigConnector* Con(new RObj2DConfigConnector(Cur()->GetConnector()));
+			New->Add(Con);
+			RCursor<RObj2DConfigPin> Cur2(*Cur());
+			for(Cur2.Start();!Cur2.End();Cur2.Next())
 			{
-				Cur()->Poss[j][i]=Cur()->Pos[j];
-				Cur()->Poss[j][i].ChangeOrientation(*o);
-				Cur()->Poss[j][i]-=Min;
+				// Create a pin
+				RRect Rect(Cur2()->GetRect());
+				Rect.ChangeOrientation(oRota90,Min);
+				RObj2DConfigPin* Pin(new RObj2DConfigPin(Cur2()->GetPin(),Rect));
+				Con->InsertPtr(Pin);
 			}
 		}
 	}
-}
-
-
-//------------------------------------------------------------------------------
-void RObj2D::SetOri(ROrientation o)
-{
-	int i;
-	ROrientation *ptr;
-
-	for(i=NbPossOri+1,ptr=PossOri;--i;ptr++)
-		if((*ptr)==o) return;
-	PossOri[NbPossOri++]=o;
-}
-
-
-//------------------------------------------------------------------------------
-bool RObj2D::IsOriSet(ROrientation o)
-{
-	int i;
-	ROrientation *ptr;
-
-	for(i=NbPossOri+1,ptr=PossOri;--i;ptr++)
-		if((*ptr)==o) return(true);
-	return(false);
-}
-
-
-//------------------------------------------------------------------------------
-RPolygon* RObj2D::GetPolygon(int i)
-{
-	if(i<NbPossOri) return(&Polygons[i]);
-	return(0);
-}
-
-
-//------------------------------------------------------------------------------
-RRects* RObj2D::GetRects(int i)
-{
-	if(i<NbPossOri) return(&Rects[i]);
-	return(0);
-}
-
-
-//------------------------------------------------------------------------------
-RObj2D& RObj2D::operator=(const RObj2D &obj)
-{
-	int i;
-	RPolygon *ptr;
-	const RPolygon *ptr2;
-
-	Id=obj.Id;
-	NbPossOri=obj.NbPossOri;
-	Deformable=obj.Deformable;
-	memcpy(PossOri,obj.PossOri,sizeof(ROrientation)*8);
-	Polygon=obj.Polygon;
-	for(i=NbPossOri+1,ptr=Polygons,ptr2=obj.Polygons;--i;ptr++,ptr2++)
-		(*ptr)=(*ptr2);
-	return(*this);
-}
-
-
-//------------------------------------------------------------------------------
-void RObj2D::AddConnector(size_t id,unsigned x,unsigned y)
-{
-	Connectors.InsertPtr(new RObj2DConnector(this,id,x,y));
-}
-
-
-//------------------------------------------------------------------------------
-void RObj2D::CopyConnectors(RObj2D* o)
-{
-	RObj2DConnector* d;
-
-	Connectors.Clear(o->Connectors.GetMaxNb(),o->Connectors.GetIncNb());
-	RCursor<RObj2DConnector> Cur(o->Connectors);
-	for(Cur.Start();!Cur.End();Cur.Next())
+	else
 	{
-		d=new RObj2DConnector(this,Connectors.GetNb(),Cur()->Name,Cur()->NbPos);
-		for(size_t i=0;i<Cur()->NbPos;i++)
-			d->Pos[i]=Cur()->Pos[i];
-		Connectors.InsertPtr(d);
+		// All configurations are allowed.
+		New=new RObj2DConfig(this,ori);
+		RPolygon Polygon(Normal->GetPolygon());
+		Polygon.ChangeOrientation(ori,Min);
+		New->Set(Polygon);
+		RCursor<RObj2DConfigConnector> Cur(Normal->GetConnectors());
+		for(Cur.Start();!Cur.End();Cur.Next())
+		{
+			// Create a connector
+			RObj2DConfigConnector* Con(new RObj2DConfigConnector(Cur()->GetConnector()));
+			New->Add(Con);
+			RCursor<RObj2DConfigPin> Cur2(*Cur());
+			for(Cur2.Start();!Cur2.End();Cur2.Next())
+			{
+				// Create a pin
+				RRect Rect(Cur2()->GetRect());
+				Rect.ChangeOrientation(oRota90,Min);
+				RObj2DConfigPin* Pin(new RObj2DConfigPin(Cur2()->GetPin(),Rect));
+				Con->InsertPtr(Pin);
+			}
+		}
+	}
+
+	// Initialize the configuration
+	InsertPtr(New);
+}
+
+
+//------------------------------------------------------------------------------
+void RObj2D::SetId(size_t id)
+{
+	if(Id==cNoRef)
+		Id=id;
+}
+
+
+//------------------------------------------------------------------------------
+RObj2DConfig* RObj2D::GetDefaultConfig(void)
+{
+	if(!GetNb())
+	{
+		RObj2DConfig* ptr(new RObj2DConfig(this,oNormal));
+		InsertPtrAt(ptr,oNormal);
+		return(ptr);
+	}
+	return((*this)[oNormal]);
+}
+
+
+//------------------------------------------------------------------------------
+void RObj2D::Copy(const RObj2D& obj)
+{
+	// Copy the internal data
+	RCursor<RObj2DConnector> Con(obj.Connectors);
+	for(Con.Start();!Con.End();Con.Next())
+	{
+		RObj2DConnector* ptr(new RObj2DConnector(this,Con()->GetId(),Con()->GetName()));
+		RCursor<RObj2DPin> Pins(*Con());
+		for(Pins.Start();!Pins.End();Pins.Next())
+			new RObj2DPin(ptr,Pins()->GetId(),Pins()->GetName());
+	}
+
+	// Copy the possibles configurations
+	RCursor<RObj2DConfig> Config(obj);
+	for(Config.Start();!Config.End();Config.Next())
+	{
+		RObj2DConfig* cfg(new RObj2DConfig(this,Config()->GetOrientation()));
+		InsertPtr(cfg);
+		cfg->Set(Config()->GetPolygon());
+		RCursor<RObj2DConfigConnector> Con(Config()->GetConnectors());
+		for(Con.Start();!Con.End();Con.Next())
+		{
+			RObj2DConnector* con(Connectors.GetPtr(Con()->GetConnector()->GetId()));
+			RObj2DConfigConnector* ptr(new RObj2DConfigConnector(con));
+			cfg->Add(ptr);
+			RCursor<RObj2DConfigPin> Pins(*Con());
+			for(Pins.Start();!Pins.End();Pins.Next())
+				ptr->InsertPtr(new RObj2DConfigPin(con->GetPtr(Pins()->GetPin()->GetId()),Pins()->GetRect()));
+		}
 	}
 }
 

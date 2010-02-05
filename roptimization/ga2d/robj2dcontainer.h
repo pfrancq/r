@@ -36,7 +36,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rcontainer.h>
-#include <robj2d.h>
+#include <rgeoinfo.h>
 #include <rgrid.h>
 
 
@@ -47,28 +47,37 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RGeoInfoContainer class provides a set of geometric information to be
-* considered like one entity.
+* The RGeoInfoContainer class provides an aggregator of geometric information
+* to be considered like one entity.
 * @author Pascal Francq
-* @short Geometric Information Container.
+* @short Geometric Information Aggregator.
 */
-class RObj2DContainer : public RObj2D, public RContainer<RGeoInfo,false,false>
+class RObj2DContainer : public RGeoInfo, private RContainer<RGeoInfo,false,false>
 {
 	/**
-	* Translation of the geometric information contained.
+	* Origin of the aggregator (Left-bottom).
 	*/
-	RPoint Translation;
+	RPoint Origin;
+
+	/**
+	 * Layout associated to the container.
+	 */
+	RLayout* Layout;
 
 public:
 
 	/**
-	* Construct a geometric information.
+	* Construct an aggregator of geometric information relative to a given
+	* layout.
 	* @param id             The identifier of the object.
-	* @param name           Name of the object.
-	* @param nb             Number of geometric information that can be
-	*                       contained.
+	* @param layout          Layout.
 	*/
-	RObj2DContainer(const size_t id,const char* name,const size_t nb);
+	RObj2DContainer(const size_t id,RLayout* layout);
+
+	/**
+	 * @return the number of objects contained.
+	 */
+	inline size_t GetNbObjs(void) const {return(RContainer<RGeoInfo,false,false>::GetNb());}
 
 	/**
 	* Clear the geometric information.
@@ -77,10 +86,9 @@ public:
 
 	/**
 	* Add a geometric information information to the container.
-	* @param infos          Geometric Informations.
-	* @param info           The geometric information of the object.
+	* @param info           The geometric information.
 	*/
-	void Add(RGeoInfos* infos,RGeoInfo *info);
+	void Add(RGeoInfo *info);
 
 	/**
 	* Does some calculation after each geometric information were added to the
@@ -89,14 +97,13 @@ public:
 	void Complete(void);
 
 	/**
-	* Assign the geometric information to the position and update the grids with the
-	* identifier of the object.
-	* @param infos          Geometric Informations.
+	* Assign the geometric information to the position and update the grid with the
+	* identifiers of the objects.
 	* @param pos            Position to place.
 	* @param grid           Grid.
 	* @param order          Order of the corresponding geometric information.
 	*/
-	virtual void Assign(RGeoInfos* infos,const RPoint &pos,RGrid *grid,const size_t order);
+	virtual void Assign(const RPoint& pos,RGrid* grid,size_t order);
 
 	/**
 	* Verify if a given object is in the container or not.

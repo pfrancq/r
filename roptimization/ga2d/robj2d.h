@@ -35,12 +35,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstring.h>
-#include <rpoint.h>
-#include <rrect.h>
-#include <rrects.h>
-#include <rpolygon.h>
-#include <rpolygons.h>
+#include <rga2d.h>
 
 
 //------------------------------------------------------------------------------
@@ -49,11 +44,67 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// Forward class declaration
-class RGeoInfo;
-class RGeoInfos;
-class RObj2D;
-class RConnection;
+/**
+ * The RObj2DPin represents a pin for a particular connector.
+ * @author Pascal Francq.
+ * @short Pin of a connector.
+ */
+class RObj2DPin
+{
+	/**
+	 * Connector of the pin.
+	 */
+	RObj2DConnector* Connector;
+
+	/**
+	* Identifier of the pin.
+	*/
+	size_t Id;
+
+	/**
+	* Name of the pin.
+	*/
+	RString Name;
+
+public:
+
+	/**
+	 * Constructor of a pin.
+	 * @param con            Corresponding connector.
+	 * @param id             Identifier of the pin.
+	 * @param name           Name of the pin.
+	 */
+	RObj2DPin(RObj2DConnector* con,size_t id,const RString& name);
+
+	/**
+	 * Compare two pin.
+	 * @param pin            Pin to compare with.
+	 * @return a value used by RContainer.
+	 */
+	int Compare(const RObj2DPin& pin) const;
+
+	/**
+	 * Compare a pin with an identifier.
+	 * @param pin            Identifier of the pin.
+	 * @return a value used by RContainer.
+	 */
+	int Compare(const size_t pin) const;
+
+	/**
+	 * @return the connector.
+	 */
+	inline RObj2DConnector* GetConnector(void) const {return(Connector);}
+
+	/**
+	* @return the identifier of the pin.
+	*/
+	inline size_t GetId(void) {return(Id);}
+
+	/**
+	 * @return the name of the pin.
+	 */
+	inline RString GetName(void) const {return(Name);}
+};
 
 
 //------------------------------------------------------------------------------
@@ -63,14 +114,12 @@ class RConnection;
 * @author Pascal Francq
 * @short Connector of a 2D Object.
 */
-class RObj2DConnector
+class RObj2DConnector : public RContainer<RObj2DPin,true,true>
 {
-public:
-
 	/**
 	* Owner of the connector.
 	*/
-	RObj2D* Owner;
+	RObj2D* Obj;
 
 	/**
 	* Identifier of the connector.
@@ -83,110 +132,32 @@ public:
 	RString Name;
 
 	/**
-	* Number of position for the connector.
-	*/
-	size_t NbPos;
-
-	/**
-	* Point representing the positions of the connector.
-	*/
-	RPoint* Pos;
-
-	/**
-	* Position of the connector for the possible orientations.
-	*/
-	RPoint** Poss;
-
-	/**
 	* Connections of which the connector is involved.
 	*/
 	RContainer<RConnection,false,false> Connections;
 
-	/**
-	* Construct a connector.
-	* @param owner          Owner of the connector.
-	* @param id             Id of the connector.
-	* @param pos            Position of the connector.
-	*/
-	RObj2DConnector(RObj2D* owner, size_t id,const RPoint pos);
+public:
 
 	/**
 	* Construct a connector.
-	* @param owner          Owner of the connector.
-	* @param id             Id of the connector.
-	* @param name           Name of the connector.
-	* @param pos            Position of the connector.
+	* @param obj             Object of the connector.
+	* @param id              Id of the connector.
+	* @param name            Name of the connector.
 	*/
-	RObj2DConnector(RObj2D* owner, size_t id,const RString& name,const RPoint pos);
+	RObj2DConnector(RObj2D* obj, size_t id,const RString& name);
 
 	/**
-	* Construct a connector.
-	* @param owner          Owner of the connector.
-	* @param id             Id of the connector.
-	* @param name           Name of the connector.
-	* @param pos            Position of the connector.
-	*/
-	RObj2DConnector(RObj2D* owner, size_t id,const char* name,const RPoint pos);
-
-	/**
-	* Construct a connector.
-	* @param owner          Owner of the connector.
-	* @param id             Id of the connector.
-	* @param x              X Coordinate of the position of the connector.
-	* @param y              Y Coordinate of the position of the connector.
-	*/
-	RObj2DConnector(RObj2D* owner, size_t id,tCoord x,tCoord y);
-
-	/**
-	* Construct a connector.
-	* @param owner          Owner of the connector.
-	* @param id             Id of the connector.
-	* @param name           Name of the connector.
-	* @param x              X Coordinate of the position of the connector.
-	* @param y              Y Coordinate of the position of the connector.
-	*/
-	RObj2DConnector(RObj2D* owner, size_t id,const RString& name,tCoord x,tCoord y);
-
-
-	/**
-	* Construct a connector.
-	* @param owner          Owner of the connector.
-	* @param id             Id of the connector.
-	* @param name           Name of the connector.
-	* @param x              X Coordinate of the position of the connector.
-	* @param y              Y Coordinate of the position of the connector.
-	*/
-	RObj2DConnector(RObj2D* owner, size_t id,const char* name,tCoord x,tCoord y);
-
-	/**
-	* Construct a connector.
-	* @param owner          Owner of the connector.
-	* @param id             Id of the connector.
-	* @param name           Name of the connector.
-	* @param nb             Number of the connector.
-	*/
-	RObj2DConnector(RObj2D* owner, size_t id,const char* name,const size_t nb);
-
-	/**
-	* This function compares two connectors and returns 0 if there are the same.
-	* This function is used for the class RContainer.
-	* @param c              Connector used for the comparison.
-	*/
-	int Compare(const RObj2DConnector* c) const {return(CompareIds(Id,c->Id));}
-
-	/**
-	* This function compares two connectors and returns 0 if there are the same.
-	* This function is used for the class RContainer.
-	* @param c              Connector used for the comparison.
-	*/
+	 * Compare two connector.
+	 * @param con            Connector.
+	 * @return a value used by RContainer.
+	 */
 	int Compare(const RObj2DConnector& c) const {return(CompareIds(Id,c.Id));}
 
 	/**
-	* This function compares a connector and an identifier and returns 0 if
-	* there are the same.
-	* This function is used for the class RContainer.
-	* @param id             Identifier used for the comparison.
-	*/
+	 * Compare a connector with an identifier.
+	 * @param con            Identifier of the connector.
+	 * @return a value used by RContainer.
+	 */
 	int Compare(const size_t id) const {return(CompareIds(Id,id));}
 
 	/**
@@ -198,79 +169,44 @@ public:
 	int Compare(const RString& name) const {return(Name.Compare(name));}
 
 	/**
-	* This function compares a connector and a name and returns 0 if
-	* there are the same.
-	* This function is used for the class RContainer.
-	* @param name           Name used for the comparison.
+	* Return the object that's own the connector. A null object signifies that
+	* it is an external connector.
 	*/
-	int Compare(const char* name) const {return(Name.Compare(name));}
+	RObj2D* GetObj(void) const {return(Obj);}
 
 	/**
-	* Return the object that's own the connector.
+	* @return the identifier of the connector.
 	*/
-	RObj2D* GetObj(void) {return(Owner);}
+	inline size_t GetId(void) const {return(Id);}
 
 	/**
-	* Return the identifier of the connector.
-	*/
-	size_t GetId(void) {return(Id);}
+	 * @return the name of the connector.
+	 */
+	inline RString GetName(void) const {return(Name);}
 
 	/**
-	* Return the position of the connector relative to the object.
-	*/
-	RPoint GetPos(void);
-
-	/**
-	* Return the position of the connector of the oth orientation.
-	* @param i             The number.
-	* @param o             The orientation.
-	*/
-	RPoint GetPos(size_t i,char o);
-
-	/**
-	* Add a connection to this connector.
-	* @param con            Connection.
-	*/
-	void AddConnection(RConnection* con);
-
-	/**
-	* Return the name of the connector.
-	*/
-	RString GetName(void) {return(Name);}
-
-	/**
-	* Return the minimum distance between two connectors.
-	* @param c              The second connector.
-	* @param infos          The geometric information representing the placed objects.
-	* @param pt1            The first connector point used.
-	* @param pt2            The second connector point used.
-	*/
-	double GetMinDist(RObj2DConnector* c,RGeoInfos* infos,RPoint& pt1,RPoint& pt2);
+	 * @return a cursor over the connections.
+	 */
+	inline RCursor<RConnection> GetConnections(void) const {return(RCursor<RConnection>(Connections));}
 
 	/**
 	* Destruct the connectors
 	*/
 	virtual ~RObj2DConnector(void);
 
-	// friend classes
-	friend class RObj2D;
-	friend class RGeoInfoConnector;
-	friend class RConnections;
-	friend class RProblem2D;
+	friend class RConnection;
 };
-
 
 
 //------------------------------------------------------------------------------
 /**
-* This basic class represent an object to place by using the 2D placement GA.
+* The RObj2D class represent an object to place.
 * @author Pascal Francq
 * @short 2D Object.
 */
-class RObj2D
+class RObj2D : public RContainer<RObj2DConfig,true,true>
 {
-public:
-
+protected:
 	/**
 	* Identifier of the object.
 	*/
@@ -282,67 +218,18 @@ public:
 	RString Name;
 
 	/**
-	* Polygon that define the object.
-	*/
-	RPolygon Polygon;
-
-	/**
-	* Represent the area of the object.
-	*/
-	tCoord Area;
-
-	/**
-	* Number of possible Orientations.
-	*/
-	int NbPossOri;
-
-	/**
-	* Different Orientations accepted.
-	*/
-	ROrientation PossOri[8];
-
-	/**
-	* Polygons for the possible orientations.
-	*/
-	RPolygon Polygons[8];
-
-	/**
-	* Rectangular decompositions for the possible orientations.
-	*/
-	RRects Rects[8];
-
-	/**
-	* Specify if the object is deformable or rigid.
-	*/
-	bool Deformable;
-
-	/**
 	* The connectors of this object
 	*/
 	RContainer<RObj2DConnector,true,true> Connectors;
 
-	/**
-	* Construct an 2D object.
-	* @param id             The identifier of the object.
-	* @param deformable     Specify if the object is deformable.
-	*/
-	RObj2D(size_t id,bool deformable);
+public:
 
 	/**
 	* Construct an 2D object.
 	* @param id             Identifier of the object.
 	* @param name           Name of the object.
-	* @param deformable     Specify if the object is deformable.
 	*/
-	RObj2D(size_t id,const RString& name,bool deformable);
-
-	/**
-	* Construct an 2D object.
-	* @param id             Identifier of the object.
-	* @param name           Name of the object.
-	* @param deformable     Specify if the object is deformable.
-	*/
-	RObj2D(size_t id,const char* name,bool deformable);
+	RObj2D(size_t id,const RString& name);
 
 	/**
 	* This function compares two objects and returns 0 if there are the same.
@@ -375,37 +262,12 @@ public:
 	int Compare(const RString& name) const {return(Name.Compare(name));}
 
 	/**
-	* This function compares an object and a name and returns 0 if
-	* there are the same.
-	* This function is used for the class RContainer.
-	* @param name           Name used for the comparison.
+	* Create a specific orientation if possible. The method creates the correct
+	* configuration and compute the rectangular decompositions and the
+	* area of the object.
+	* @param ori             Orientation.
 	*/
-	int Compare(const char* name) const {return(Name.Compare(name));}
-
-	/**
-	* Initialize the object when all information are entered. In particular,
-	* it calculates the different polygon based on the possible orientations,
-	* the rectangular decompositions and the area of the object.
-	*/
-	void Init(void);
-
-	/**
-	* Calculate all the polygons based on the possible orientations of the object.
-	* @return The function returns true if the calculation has be done without errors.
-	*/
-	void CalcPolygons(void);
-
-	/**
-	* Set a specific orientation as possible.
-	* @param o              Orientation.
-	*/
-	void SetOri(ROrientation o);
-
-	/**
-	* Return true if the orientation is possible.
-	* @param o              Orientation.
-	*/
-	bool IsOriSet(ROrientation o);
+	void CreateOri(tOrientation ori);
 
 	/**
 	* Return the identifier of the object.
@@ -413,49 +275,15 @@ public:
 	inline size_t GetId(void) const {return(Id);}
 
 	/**
-	* Return the area of the object.
-	*/
-	inline tCoord GetArea(void) {return(Area);}
+	 * Set the identifier of the object if the current one is invalid.
+	 * @param id             Identifier.
+	 */
+	void SetId(size_t id);
 
 	/**
-	* Return a pointer to the polygon representing the ith orientation.
-	* @param i              Index of the orientation.
-	* @return Pointer to a RPolygon.
-	*/
-	RPolygon* GetPolygon(int i);
-
-	/**
-	* Return a pointer to the rectangular decomposition of the ith orientation.
-	* @param i              Index of the orientation.
-	* @return pointer to a RRects.
-	*/
-	RRects* GetRects(int i);
-
-	/**
-	* The assignment operator.
-	* @param obj            Source object.
-	*/
-	RObj2D& operator=(const RObj2D &obj);
-
-	/**
-	* Add a connector to this object
-	* @param id             Identifier of the connector.
-	* @param x              X-Coordinate of the connection point.
-	* @param y              Y-Coordinate of the connection point.
-	*/
-	void AddConnector(size_t id,unsigned x,unsigned y);
-
-	/**
-	* Return the connector corresponding to a given identifier.
-	* @param id             Identifier used for the search.
-	*/
-	RObj2DConnector* GetConnector(size_t id) {return(Connectors.GetPtr<size_t>(id));}
-
-	/**
-	* Copy the connectors from a given object.
-	* @param obj            Source object.
-	*/
-	void CopyConnectors(RObj2D* obj);
+	 * @return the name of the connector.
+	 */
+	inline RString GetName(void) const {return(Name);}
 
 	/**
 	* Verify if a given object is in the container or not.
@@ -465,9 +293,40 @@ public:
 	virtual bool IsIn(size_t id) const {return(Id==id);}
 
 	/**
+	 * The method is used to manage the configuration (the one corresponding to
+	 * the oNormal orientation). It is created if necessary.
+	 * @return the default configuration.
+	 */
+	RObj2DConfig* GetDefaultConfig(void);
+
+	/**
+	 * @return the number of connectors.
+	 */
+	inline size_t GetNbConnectors(void) const {return(Connectors.GetNb());}
+
+	/**
+	 * @return a cursor over the connectors.
+	 */
+	inline RCursor<RObj2DConnector> GetConnectors(void) const {return(RCursor<RObj2DConnector>(Connectors));}
+
+	/**
+	 * @return a pointer to a particular connector.
+	 * @param use            Search criteria.
+	 */
+	template<class TUse> inline RObj2DConnector* GetConnector(const TUse& use,bool order=true) const {return(Connectors.GetPtr(use,order));}
+
+	/**
+	 * Copy an object.
+	 * @param obj            Object to copy.
+	 */
+	void Copy(const RObj2D& obj);
+
+	/**
 	* Destruct the object.
 	*/
 	virtual ~RObj2D(void);
+
+	friend class RObj2DConnector;
 };
 
 

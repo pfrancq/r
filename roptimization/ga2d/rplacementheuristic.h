@@ -42,10 +42,9 @@
 #include <rga2d.h>
 #include <robj2d.h>
 #include <rgeoinfo.h>
-#include <rgeoinfos.h>
+#include <rlayout.h>
 #include <rgrid.h>
 #include <rfreepolygons.h>
-#include <rconnections.h>
 #include <rproblem2d.h>
 #include <rpromcriterion.h>
 
@@ -79,19 +78,14 @@ protected:
 	RGrid* Grid;
 
 	/**
-	* The geometric information of the objects.
+	* The layout.
 	*/
-	RGeoInfos* Infos;
-
-	/**
-	* The connections of the objects.
-	*/
-	RConnections* Connections;
+	RLayout* Layout;
 
 	/**
 	* The limits for the placement.
 	*/
-	RPoint Limits;
+	RSize Limits;
 
 	/**
 	* Total number of objects to place.
@@ -182,29 +176,21 @@ public:
 	* @param calc           Must free polygons be calculated.
 	* @param use            Must free polygons be used.
 	* @param r              The random generator to use.
+	* @param dist           Distance criteria parameters.
+	* @param area           Area criteria parameters.
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
+	RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori=false);
 
 	/**
-	* Set the parameters for the "area" criterion.
-	* @param params         The parameters.
+	* Initialize the heuristic. The method chooses all the objects to place. In
+	* particular, if an object is associated to an aggregator, it is not placed
+	* and the method supposes that the aggregator itself is to placed.
+	* @param prob            The problem.
+	* @param layout          Layout.
+	* @param grid            Pointer to the grid.
 	*/
-	void SetAreaParams(const RParam* params);
-
-	/**
-	* Set the parameters for the "area" criterion.
-	* @param params         The parameters.
-	*/
-	void SetDistParams(const RParam* params);
-
-	/**
-	* Initialize the heuristic.
-	* @param prob           The problem.
-	* @param infos          Pointer to the geometric information.
-	* @param grid           Pointer to the grid.
-	*/
-	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
+	virtual void Init(RProblem2D* prob,RLayout* layout,RGrid* grid);
 
 protected:
 
@@ -256,11 +242,11 @@ public:
 
 	/**
 	* Run the heuristic.
-	* @param prob           The problem.
-	* @param infos          Pointer to the geometric information.
-	* @param grid           Pointer to the grid.
+	* @param prob            The problem.
+	* @param layout          Layout.
+	* @param grid            Grid.
 	*/
-	void Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
+	void Run(RProblem2D* prob,RLayout* layout,RGrid* grid);
 
 	/**
 	* Add a valid position fot the current geometric information to place.
@@ -272,7 +258,7 @@ public:
 	* Do some operations after the run.
 	* @param limits         Limits of the area.
 	*/
-	virtual void PostRun(RPoint& limits);
+	virtual void PostRun(void);
 
 	/**
 	* Return the bound rectangle containing all the objects.

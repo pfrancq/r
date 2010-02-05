@@ -42,8 +42,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RConnection::RConnection(size_t nb,double weight)
-	: Weight(weight), Connect(nb,nb/2)
+RConnection::RConnection(const RString& name,double weight)
+	: RContainer<RObj2DConnector,false,false>(10), Name(name), Weight(weight)
 {
 }
 
@@ -52,4 +52,19 @@ RConnection::RConnection(size_t nb,double weight)
 int RConnection::Compare(const RConnection&) const
 {
 	return(-1);
+}
+
+
+//------------------------------------------------------------------------------
+void RConnection::Insert(RObj2DConnector* con)
+{
+	InsertPtr(con);
+	con->Connections.InsertPtr(this);
+}
+
+
+//------------------------------------------------------------------------------
+RCursor<RObj2DConnector> RConnection::GetConnectors(void) const
+{
+	return(RCursor<RObj2DConnector>(*this));
 }

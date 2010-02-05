@@ -50,7 +50,7 @@ public:
 	RPoint Pos;
 
 	/**Orientation */
-	char Ori;
+	tOrientation Ori;
 
 	ObjectPos(void) {}
 	int Compare(const ObjectPos&) const {return(-1);}
@@ -65,47 +65,31 @@ public:
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementHeuristic::RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori)
+RPlacementHeuristic::RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori)
 	: Random(r), Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori), ValidPos(500), Prom("Orientations",100,2),
-	  DistParams(0), AreaParams(0)
+	  Dist(0), DistParams(dist), Area(0), AreaParams(area)
 {
 	Order=new RGeoInfo*[maxobjs];
 	for(size_t i=101;--i;)
 		ValidPos.InsertPtr(new ObjectPos());
-}
 
-
-//------------------------------------------------------------------------------
-void RPlacementHeuristic::SetDistParams(const RParam* params)
-{
-	DistParams=params;
-}
-
-
-//------------------------------------------------------------------------------
-void RPlacementHeuristic::SetAreaParams(const RParam* params)
-{
-	AreaParams=params;
-}
-
-
-//------------------------------------------------------------------------------
-void RPlacementHeuristic::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
-{
 	// Initialize PROMTEHEE Criteria
 	if(!AreaParams)
 		ThrowRException("PROMETHEE parameters for the area criterion not specified");
+	Prom.AddCriterion(Area=new RPromLinearCriterion(RPromCriterion::Maximize,AreaParams,"Weight"));
 	if(!DistParams)
 		ThrowRException("PROMETHEE parameters for the distance criterion not specified");
-	Prom.AddCriterion(Area=new RPromLinearCriterion(RPromCriterion::Maximize,AreaParams,"Weight"));
 	Prom.AddCriterion(Dist=new RPromLinearCriterion(RPromCriterion::Minimize,DistParams,"Distance"));
+}
 
+
+//------------------------------------------------------------------------------
+void RPlacementHeuristic::Init(RProblem2D* prob,RLayout* layout,RGrid* grid)
+{
 	// Assign
-	Limits=prob->Limits;
+	Limits=prob->GetLimits();
 	Grid=grid;
-	Infos=infos;
-	NbObjs=Infos->RealNb;
-	Connections=&prob->Cons;
+	Layout=layout;
 
 	// Init the data for a placement
 	NbObjsOk=0;
@@ -115,8 +99,15 @@ void RPlacementHeuristic::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
 	Distances=0.0;
 
 	// Calculate an order
-	for(size_t i=0;i<NbObjs;i++)
-		Order[i]=((*Infos)[i]);
+	RCursor<RGeoInfo> Objs(Layout->GetInfos());
+	RGeoInfo** ptr(Order);
+	for(Objs.Start(),NbObjs=0;!Objs.End();Objs.Next())
+		if(!Objs()->GetContainer())
+		{
+			(*ptr)=Objs();
+			ptr++;
+			NbObjs++;
+		}
 	Random->RandOrder<RGeoInfo*>(Order,NbObjs);
 }
 
@@ -128,7 +119,7 @@ RGeoInfo* RPlacementHeuristic::SelectNextObject(void)
 		return(Order[0]);
 
 	// Find the most connected object
-	return(Connections->GetMostConnected(Infos,NbObjs,Order,NbObjsOk));
+	return(Layout->GetMostConnected(Order,NbObjs,NbObjsOk));
 }
 
 
@@ -140,18 +131,20 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 	{
 		RCursor<ObjectPos> Cur(ValidPos,0,Prom.GetNbSols()-1);
 		for(Cur.Start();!Cur.End();Cur.Next())
-			if((Cur()->Pos==pos)&&(Cur()->Ori==CurInfo->GetOri()))
+			if((Cur()->Pos==pos)&&(Cur()->Ori==CurInfo->GetConfig()->GetOrientation()))
 				return;
 	}
 
 	// Compute the bounding rectangle of all placed objects and the current
 	// one at the given position
 	RRect CurRect(Result);
-	if(pos.X<CurRect.X1) CurRect.X1=pos.X;
-	if(pos.Y<CurRect.Y1) CurRect.Y1=pos.Y;
-	if(pos.X+CurInfo->Width()>CurRect.X2) CurRect.X2=pos.X+CurInfo->Width();
-	if(pos.Y+CurInfo->Height()>CurRect.Y2) CurRect.Y2=pos.Y+CurInfo->Height();
-	if((CurRect.X1<0)||(CurRect.Y1<0)||(CurRect.X2>=Limits.X)||(CurRect.Y2>=Limits.Y))
+	tCoord X1(CurRect.GetX1()), Y1(CurRect.GetY1()), X2(CurRect.GetX2()), Y2(CurRect.GetY2());
+	if(pos.X<X1) X1=pos.X;
+	if(pos.Y<Y1) Y1=pos.Y;
+	if(pos.X+CurInfo->GetConfig()->GetWidth()>X2) X2=pos.X+CurInfo->GetConfig()->GetWidth();
+	if(pos.Y+CurInfo->GetConfig()->GetHeight()>Y2) Y2=pos.Y+CurInfo->GetConfig()->GetHeight();
+	CurRect.Set(X1,Y1,X2,Y2);
+	if((CurRect.GetX1()<0)||(CurRect.GetY1()<0)||(CurRect.GetX2()>=Limits.GetWidth())||(CurRect.GetY2()>=Limits.GetHeight()))
 		return;
 
 	// Verify if the container contains enough elements
@@ -163,11 +156,11 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 
 	// Add a new valid position and a new PROMETHEE solution
 	ObjectPos* ptr(ValidPos[Prom.GetNbSols()]);
-	ptr->Ori=CurInfo->GetOri();
+	ptr->Ori=CurInfo->GetConfig()->GetOrientation();
 	ptr->Pos=pos;
 	RPromSol* Sol(Prom.NewSol());
 	Prom.Assign(Sol,Area,CurRect.GetWidth()*CurRect.GetHeight());
-	Prom.Assign(Sol,Dist,Infos->Cons.GetDistances(CurInfo,pos));
+	Prom.Assign(Sol,Dist,Layout->ComputeDist(CurInfo,pos));
 }
 
 
@@ -178,9 +171,8 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 		ThrowRException("All objects placed");
 
 	// Init
-	RPoint pos(MaxCoord,MaxCoord);
+	RPoint pos(RPoint::Null);
 	CurInfo=SelectNextObject();
-	CurInfo->SetOrder(NbObjsOk);
 	RObj2D* obj(CurInfo->GetObj());
 
 	// Choose best free polygon (if any).
@@ -193,20 +185,21 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 		// Suppose no position
 		Prom.ClearSols();
 
-		if(AllOri&&(obj->NbPossOri>1))
+		if(AllOri&&(obj->GetNb()>1))
 		{
 			// Compute all orientations
-			for(char o=0;o<obj->NbPossOri;o++)
+			RCursor<RObj2DConfig> Cur(*obj);
+			for(Cur.Start();!Cur.End();Cur.Next())
 			{
 				// Set an orientation & Find a position
-				CurInfo->SetOri(o);
+				CurInfo->SetConfig(Cur()->GetOrientation());
 				SearchValidPositions(CurInfo);
 			}
 		}
 		else
 		{
 			// Set an orientation & find a position
-			CurInfo->SetOri(0);
+			CurInfo->SetConfig(oNormal);
 			SearchValidPositions(CurInfo);
 		}
 
@@ -224,7 +217,7 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 			else
 				Best=ValidPos[0];
 			pos=Best->Pos;
-			CurInfo->SetOri(Best->Ori);
+			CurInfo->SetConfig(Best->Ori);
 		}
 	}
 
@@ -233,7 +226,7 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 		ThrowRException("Can't place an object!");
 
 	// Assign the object to the current position
-	CurInfo->Assign(pos,Grid);
+	CurInfo->Assign(pos,Grid,NbObjsOk);
 	PostPlace(CurInfo,pos);
 
 	// Look for free polygons
@@ -247,29 +240,22 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 
 
 //------------------------------------------------------------------------------
-void RPlacementHeuristic::Run(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+void RPlacementHeuristic::Run(RProblem2D* prob,RLayout* layout,RGrid* grid)
 {
-	Init(prob,infos,grid);
+	Init(prob,layout,grid);
 	while(NbObjsOk<NbObjs)
 	{
 		NextObject();
 	}
-	PostRun(Limits);
+	PostRun();
 }
 
 
 //------------------------------------------------------------------------------
-void RPlacementHeuristic::PostRun(RPoint&)
+void RPlacementHeuristic::PostRun(void)
 {
 	// Compute all connections part again
-	Distances=0.0;
-	Infos->Cons.UnComplete();
-	RCursor<RGeoInfoConnection> Cons(Infos->Cons);
-	for(Cons.Start();!Cons.End();Cons.Next())
-	{
-		Cons()->ComputeMinDist(Infos);
-		Distances+=Cons()->Dist;
-	}
+	Distances=Layout->ComputeConnections();
 }
 
 

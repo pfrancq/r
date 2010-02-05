@@ -32,7 +32,8 @@
 // include files for R Project
 #include <robj2dcontainer.h>
 #include <rgeoinfo.h>
-#include <rgeoinfos.h>
+#include <rlayout.h>
+#include <robj2dconfig.h>
 using namespace R;
 
 
@@ -44,107 +45,98 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RObj2DContainer::RObj2DContainer(const size_t id,const char* name,const size_t nb)
-	: RObj2D(id,name,false), RContainer<RGeoInfo,false,false>(nb,nb/2)
+RObj2DContainer::RObj2DContainer(const size_t id,RLayout* layout)
+	: RGeoInfo(), RContainer<RGeoInfo,false,false>(layout->GetProblem()->GetNbObjs()),
+	  Origin(RPoint::Null), Layout(layout)
 {
+	Obj=new RObj2D(id,"Container "+RString::Number(id));
 }
 
 
 //------------------------------------------------------------------------------
 void RObj2DContainer::ClearInfo(void)
 {
-	size_t i;
-
-	Clear();
-	Connectors.Clear();
-	NbPossOri=0;
-	for(i=0;i<8;i++)
-	{
-		Polygons[i].Clear();
-		Rects[i].Clear();
-	}
-	Translation.Set(MaxCoord,MaxCoord);
+	RGeoInfo::ClearInfo();
+	RContainer<RGeoInfo,false,false>::Clear();
+	Origin=RPoint::Null;
 }
 
 
 //------------------------------------------------------------------------------
-void RObj2DContainer::Add(RGeoInfos* infos,RGeoInfo* info)
+void RObj2DContainer::Add(RGeoInfo* info)
 {
-	RGeoInfo* ptr;
+	// Get element in the current layout corresponding to the one added.
+	RGeoInfo* ptr((*Layout)[info->GetObj()->GetId()]);
 
-	ptr=infos->GetPtr<size_t>(info->GetObj()->GetId());
-	InsertPtr(ptr);
-	if(ptr->Pos.X<Translation.X)
-		Translation.X=ptr->Pos.X;
-	if(ptr->Pos.Y<Translation.Y)
-		Translation.Y=ptr->Pos.Y;
+	// Copy the geometric information
+	RObj2DConfig* Config(info->GetConfig());
+	if(!Config)
+		ThrowRException("Geometric information of object '"+RString::Number(info->GetObj()->GetId())+"' has no configuration selected");
+	ptr->SetConfig(info->GetConfig()->GetOrientation());
+	ptr->Assign(RPoint::Null,0,cNoRef);
+
+	// Compute the left-bottom point of the aggregator
+	RPoint Pos(info->GetPos());
+	if(Pos.X<Origin.X)
+		Origin.X=Pos.X;
+	if(Pos.Y<Origin.Y)
+		Origin.Y=Pos.Y;
+
+	// Add it to the aggregator
+	ptr->SetContainer(this);
+	RContainer<RGeoInfo,false,false>::InsertPtr(info);
 }
 
 
 //------------------------------------------------------------------------------
 void RObj2DContainer::Complete(void)
 {
-	RPolygons Polys;
-	RPolygon* p;
-	RObj2DConnector* con;
-	size_t k;
+	RContainer<RRect,false,false> rects(RContainer<RGeoInfo,false,false>::GetNb()*2);
 
-	// Go through all geometric information to make the translation
-	// Add it to the polygons
+	// Go through all elements to make the translation, and recreate also its connector
 	RCursor<RGeoInfo> info(*this);
 	for(info.Start();!info.End();info.Next())
 	{
-		p=new RPolygon(*info()->Bound);
-		(*p)+=info()->Pos-Translation;
-		Polys.InsertPtr(p);
-		RCursor<RGeoInfoConnector> tab(info()->Connectors);
-		for(tab.Start();!tab.End();tab.Next())
+		// Add the rectangles of each element
+		RCursor<RRect> Rect(info()->GetConfig()->GetRects());
+		for(Rect.Start();!Rect.End();Rect.Next())
 		{
-			con=new RObj2DConnector(this,tab()->Con->Id,tab()->Con->Name,tab()->Con->NbPos);
-			for(k=0;k<con->NbPos;k++)
-			{
-				con->Pos[k]=con->Pos[k]+info()->Pos-Translation;
-			}
-			Connectors.InsertPtr(con);
+			RRect* rect=new RRect(*Rect());
+			(*rect)+=info()->GetPos()-Origin;
+			rects.InsertPtr(rect);
+		}
+
+		// Re-create the connectors
+		RCursor<RObj2DConfigConnector> Cur(info()->GetConfig()->GetConnectors());
+		for(Cur.Start();!Cur.End();Cur.Next())
+		{
+			RObj2DConfigConnector* Con(new RObj2DConfigConnector(Cur()->GetConnector()));
+			Obj->GetDefaultConfig()->Add(Con);
+			RCursor<RObj2DConfigPin> Cur2(*Cur());
+			for(Cur2.Start();!Cur2.End();Cur2.Next())
+				Con->InsertPtr(new RObj2DConfigPin(Cur2()->GetPin(),Cur2()->GetRect()));
 		}
 	}
 
 	// Calculate the union
-	Polys.Union(&Polygon);
-	SetOri(Normal);
-	Init();
+	Obj->GetDefaultConfig()->Set(rects);
+	Obj->CreateOri(oNormal);
 }
 
 
 //------------------------------------------------------------------------------
-void RObj2DContainer::Assign(RGeoInfos* infos,const RPoint& pos,RGrid* grid,const size_t order)
+void RObj2DContainer::Assign(const RPoint& pos,RGrid* grid,size_t order)
 {
-	RGeoInfo *ptr;
-	size_t k;
-	RGeoInfoConnector *con;
-
 	RCursor<RGeoInfo> info(*this);
 	for(info.Start();!info.End();info.Next())
 	{
-		ptr=infos->GetPtr<size_t>(info()->GetObj()->GetId());
-		ptr->Bound=info()->Bound;
-		ptr->Selected=true;
-		ptr->Obj=info()->Obj;
-		ptr->Rects=info()->Rects;
-		ptr->Rect=info()->Rect;
-		ptr->Order=order;
-		ptr->Connectors.Clear();
-		RCursor<RGeoInfoConnector> tab(info()->Connectors);
-		for(tab.Start();!tab.End();tab.Next())
-		{
-			con=new RGeoInfoConnector(tab(),ptr);
-			for(k=0;k<con->NbPos;k++)
-			{
-				con->Pos[k]=con->Pos[k]+info()->Pos-Translation;
-			}
-			ptr->Connectors.InsertPtr(con);
-		}
-		ptr->Assign(info()->Pos-Translation+pos,grid);
+		// Get element in the current layout corresponding to the one added.
+		RGeoInfo* ptr((*Layout)[info()->GetObj()->GetId()]);
+
+		if(pos==RPoint::Null)
+			ptr->Assign(RPoint::Null,grid,order);
+		else
+			ptr->Assign(info()->GetPos()+pos-Origin,grid,order);
 	}
 }
 
@@ -165,4 +157,8 @@ bool RObj2DContainer::IsIn(size_t id) const
 //------------------------------------------------------------------------------
 RObj2DContainer::~RObj2DContainer(void)
 {
+	RCursor<RGeoInfo> Info(*this);
+	for(Info.Start();!Info.End();Info.Next())
+		Info()->SetContainer(0);
+	delete Obj;
 }

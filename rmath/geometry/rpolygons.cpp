@@ -51,16 +51,15 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPolygons::RPolygons(void)
-	: RContainer<RPolygon,true,false>(20,10)
+RPolygons::RPolygons(size_t nb)
+	: RContainer<RPolygon,true,false>(nb)
 {
 }
 
 
 //------------------------------------------------------------------------------
-bool RPolygons::Edge(const RPoint* pt) const
+bool RPolygons::Edge(const RPoint& pt) const
 {
-	RReturnValIfFail(pt,false);
 	RCursor<RPolygon> poly(*this);
 	for(poly.Start();!poly.End();poly.Next())
 		if(poly()->Edge(pt))
@@ -70,21 +69,19 @@ bool RPolygons::Edge(const RPoint* pt) const
 
 
 //------------------------------------------------------------------------------
-bool RPolygons::Edge(const RPoint* pt,const RPolygon* poly) const
+bool RPolygons::Edge(const RPoint& pt,const RPolygon& poly) const
 {
-	RReturnValIfFail(pt&&poly,false);
 	RCursor<RPolygon> polys(*this);
 	for(polys.Start();!polys.End();polys.Next())
-		if((polys()!=poly)&&(polys()->Edge(pt)))
+		if((polys()!=&poly)&&(polys()->Edge(pt)))
 			return(true);
 	return(false);
 }
 
 
 //------------------------------------------------------------------------------
-bool RPolygons::Edge(const RPoint* pt1,const RPoint* pt2) const
+bool RPolygons::Edge(const RPoint& pt1,const RPoint& pt2) const
 {
-	RReturnValIfFail(pt1&&pt2,false);
 	RCursor<RPolygon> poly(*this);
 	for(poly.Start();!poly.End();poly.Next())
 		if(poly()->Edge(pt1,pt2))
@@ -94,15 +91,14 @@ bool RPolygons::Edge(const RPoint* pt1,const RPoint* pt2) const
 
 
 //------------------------------------------------------------------------------
-void RPolygons::PutPoints(RPoints* points) const
+void RPolygons::PutPoints(RPoints& points) const
 {
 	RPoint tmp;
 
-	RReturnIfFail(points);
-	points->Clear();
+	points.Clear();
 	RCursor<RPolygon> poly(*this);
 	for(poly.Start();!poly.End();poly.Next())
-		poly()->AddPoints(*points);
+		poly()->AddPoints(points);
 	for(poly.Start();!poly.End();poly.Next())
 	{
 		RCursor<RPoint> point(*poly());
@@ -110,135 +106,144 @@ void RPolygons::PutPoints(RPoints* points) const
 		{
 			tmp.X=point()->X;
 			tmp.Y=point()->Y-1;
-			if(!points->IsIn<RPoint>(tmp))
-				if(Edge(&tmp,poly()))
-					points->InsertPtr(new RPoint(tmp));
+			if(!points.IsIn(tmp))
+				if(Edge(tmp,*poly()))
+					points.InsertPtr(new RPoint(tmp));
 			tmp.Y=point()->Y+1;
-			if(!points->IsIn<RPoint>(tmp))
-				if(Edge(&tmp,poly()))
-					points->InsertPtr(new RPoint(tmp));
+			if(!points.IsIn(tmp))
+				if(Edge(tmp,*poly()))
+					points.InsertPtr(new RPoint(tmp));
 			tmp.X=point()->X+1;
 			tmp.Y=point()->Y;
-			if(!points->IsIn<RPoint>(tmp))
-				if(Edge(&tmp,poly()))
-					points->InsertPtr(new RPoint(tmp));
+			if(!points.IsIn(tmp))
+				if(Edge(tmp,*poly()))
+					points.InsertPtr(new RPoint(tmp));
 				tmp.X=point()->X-1;
-			if(!points->IsIn<RPoint>(tmp))
-				if(Edge(&tmp,poly()))
-					points->InsertPtr(new RPoint(tmp));
+			if(!points.IsIn(tmp))
+				if(Edge(tmp,*poly()))
+					points.InsertPtr(new RPoint(tmp));
 		}
 	}
 }
 
 
 //------------------------------------------------------------------------------
-void RPolygons::Union(RPolygon* upoly) const
+void RPolygons::Union(RPolygon& upoly) const
 {
-	RPoint *next,*first,*ins,*last;
-	RDirection FromDir;
+	RPoint next,first,*ins,last;
+	tDirection FromDir;
 	RPoints pts(100);
 
 	// Init Part
-	RReturnIfFail(upoly);
-	upoly->Clear();
-	PutPoints(&pts);
+	upoly.Clear();
+	PutPoints(pts);
 
 	// Find the most (left,bottom) point -> curpt,curpoly -> next pt on the right
 	last=first=next=pts.FindBottomLeft();
-	RAssert(last);
-	ins=new RPoint(*next);
-	upoly->InsertPtr(ins);
-	next=pts.FindRight(next,this);
-	RAssert(next);
-	FromDir=Left;
+	ins=new RPoint(next);
+	upoly.InsertPtr(ins);
+	next=pts.FindRight(next,*this);
+	FromDir=dLeft;
 
 	// While nextpt!=firspt
-	while((*next)!=(*first))
+	while(next!=first)
 	{
-		ins=new RPoint(*next);
-		upoly->InsertPtr(ins);
+		ins=new RPoint(next);
+		upoly.InsertPtr(ins);
 		last=next;
 
 		switch(FromDir)
 		{
 
-			case Left :
-				if((next=pts.FindBottom(last,this)))
+			case dLeft :
+				next=pts.FindBottom(last,*this);
+				if(next.IsValid())
 				{
-					FromDir=Up;
+					FromDir=dUp;
 					break;
 				}
-				if((next=pts.FindRight(last,this)))
+				next=pts.FindRight(last,*this);
+				if(next.IsValid())
 				{
-					upoly->DeletePtr(ins);
+					upoly.DeletePtr(ins);
 					break;
 				}
-				if((next=pts.FindUp(last,this)))
+				next=pts.FindUp(last,*this);
+				if(next.IsValid())
 				{
-					FromDir=Down;
+					FromDir=dDown;
 					break;
 				}
-				FromDir=NoDirection;
+				FromDir=dNoDirection;
 				break;
 
-			case Right :
-				if((next=pts.FindUp(last,this)))
+			case dRight :
+				next=pts.FindUp(last,*this);
+				if(next.IsValid())
 				{
-					FromDir=Down;
+					FromDir=dDown;
 					break;
 				}
-				if((next=pts.FindLeft(last,this)))
+				next=pts.FindLeft(last,*this);
+				if(next.IsValid())
 				{
-					upoly->DeletePtr(ins);
+					upoly.DeletePtr(ins);
 					break;
 				}
-				if((next=pts.FindBottom(last,this)))
+				next=pts.FindBottom(last,*this);
+				if(next.IsValid())
 				{
-					FromDir=Up;
+					FromDir=dUp;
 					break;
 				}
-				FromDir=NoDirection;
+				FromDir=dNoDirection;
 				break;
 
-			case Up :
-				if((next=pts.FindLeft(last,this)))
+			case dUp :
+				next=pts.FindLeft(last,*this);
+				if(next.IsValid())
 				{
-					FromDir=Right;
+					FromDir=dRight;
 					break;
 				}
-				if((next=pts.FindBottom(last,this)))
+				next=pts.FindBottom(last,*this);
+				if(next.IsValid())
 				{
-					upoly->DeletePtr(ins);
+					upoly.DeletePtr(ins);
 					break;
 				}
-				if((next=pts.FindRight(last,this)))
+				next=pts.FindRight(last,*this);
+				if(next.IsValid())
 				{
-					FromDir=Left;
+					FromDir=dLeft;
 					break;
 				}
-				FromDir=NoDirection;
+				FromDir=dNoDirection;
 				break;
 
-			case Down :
-				if((next=pts.FindRight(last,this)))
+			case dDown :
+				next=pts.FindRight(last,*this);
+				if(next.IsValid())
 				{
-					FromDir=Left;
+					FromDir=dLeft;
 					break;
 				}
-				if((next=pts.FindUp(last,this)))
+				next=pts.FindUp(last,*this);
+				if(next.IsValid())
 				{
-					upoly->DeletePtr(ins);
+					upoly.DeletePtr(ins);
 					break;
 				}
-				if((next=pts.FindLeft(last,this)))
+				next=pts.FindLeft(last,*this);
+				if(next.IsValid())
 				{
-					FromDir=Right;
+					FromDir=dRight;
 					break;
 				}
-				FromDir=NoDirection;
+				FromDir=dNoDirection;
 				break;
 
-			case NoDirection:
+			case dNoDirection:
 				RAssertMsg("Direction can't be undefined");
 				break;
 
@@ -246,7 +251,7 @@ void RPolygons::Union(RPolygon* upoly) const
 				RAssertMsg("Not a valid Direction in this context");
 				break;
 		}
-		RAssert(next);
+		RAssert(next.IsValid());
 	}
 }
 
@@ -256,7 +261,7 @@ bool RPolygons::DuplicatePoints(void) const
 {
 	RPoints tmp(500);
 
-	PutPoints(&tmp);
+	PutPoints(tmp);
 	return(tmp.DuplicatePoints());
 }
 

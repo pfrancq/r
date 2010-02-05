@@ -34,11 +34,10 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rcontainer.h>
-#include <rxmltag.h>
-#include <rpoint.h>
+#include <rga2d.h>
 #include <robj2d.h>
-#include <rconnections.h>
+#include <robj2dconfig.h>
+#include <rconnection.h>
 
 
 //------------------------------------------------------------------------------
@@ -47,41 +46,27 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
+// Variables
+const size_t ProblemId=cNoRef-1;
+
+
+//------------------------------------------------------------------------------
 /**
 * The RProblem2D class provides a representation for a 2D placement problem.
 * @author Pascal Francq
 * @short 2D Placement Problem
 */
-class RProblem2D
+class RProblem2D : public RObj2D
 {
-	class Parser;
-
-public:
-
 	/**
 	* Limits for the construction.
 	*/
-	RPoint Limits;
+	RSize Limits;
 
 	/**
-	* Global limits for the construction.
+	* Board (including the connectors).
 	*/
-	RPoint GlobalLimits;
-
-	/**
-	* Object representing the "Problem".
-	*/
-	RObj2D Problem;
-
-	/**
-	* Translation to be done to adapt the placement on the global objects.
-	*/
-	RPoint Translation;
-
-	/**
-	 * Template objects.
-	 */
-	RContainer<RObj2D,true,true> Templates;
+	RRect Board;
 
 	/**
 	* Objects.
@@ -91,42 +76,42 @@ public:
 	/**
 	* Connections.
 	*/
-	RConnections Cons;
-
-	/**
-	 * URI of the file containing the problem.
-	 */
-	RURI URI;
-
-	/**
-	* Constructor of the problem.
-	* @param uri             URI of the XML file.
-	*/
-	RProblem2D(const RURI& uri);
-
-	/**
-	 * @return the URI of the problem.
-	 */
-	RURI GetURI(void) const {return(RURI(URI));}
-
-private:
-
-	/**
-	* Load a problem from a XML file.
-	*/
-	void Load(void);
+	RContainer<RConnection,true,false> Connections;
 
 public:
 
 	/**
-	* Clears the problem.
+	* Constructor of the problem.
+	* @param name            Name of the problem.
 	*/
-	void Clear(void);
+	RProblem2D(const RString& name);
 
 	/**
 	* Determine the limits of the problem based of the shape.
 	*/
-	void DetermineLimit(void);
+	void DetermineBoard(void);
+
+	/**
+	 * Set the limits of the placement.
+	 * @param limits         Limits.
+	 */
+	void SetLimits(const RSize& limits);
+
+	/**
+	 * @return the limits for the construction.
+	 */
+	RSize GetLimits(void) const {return(Limits);}
+
+	/**
+	 * @return the board for the construction.
+	 */
+	RRect GetBoard(void) const {return(Board);}
+
+	/**
+	 * Insert an object to the problem.
+	 * @param obj            Object to add.
+	 */
+	void Insert(RObj2D* obj);
 
 	/**
 	 * @return the number of objects.
@@ -134,11 +119,56 @@ public:
 	size_t GetNbObjs(void) const {return(Objs.GetNb());}
 
 	/**
+	 * @return a pointer to a given object.
+	 * @param id             Identifier of the object.
+	 */
+	RObj2D* GetObj(size_t id) const {return(Objs.GetPtr(id));}
+
+	/**
+	 * @return a pointer to a given object.
+	 * @param name           Name of the object.
+	 */
+	RObj2D* GetObj(const RString& name) const {return(Objs.GetPtr(name,false));}
+
+	/**
+	 * @return a cursor over the objects.
+	 */
+	RCursor<RObj2D> GetObjs(void) const {return(RCursor<RObj2D>(Objs));}
+
+	/**
+	 * Insert a connection.
+	 * @param con            Connection to insert.
+	 */
+	void Insert(RConnection* con);
+
+	/**
+	* @return the number of connections.
+	*/
+	size_t GetNbConnections(void) const {return(Connections.GetNb());}
+
+	/**
+	 * @return a pointer to a given connection.
+	 * @param name           Name of the connection.
+	 */
+	RConnection* GetConnection(const RString& name) const {return(Connections.GetPtr(name,false));}
+
+	/**
+	 * @return the connections.
+	 */
+	const RCursor<RConnection> GetConnections(void) const {return(RCursor<RConnection>(Connections));}
+
+	/**
+	 * Insert a connector to the board.
+	 * @param id             Identifier of the connector.
+	 * @param name           Name of the connector.
+	 * @return a pointer to connector created.
+	 */
+	RObj2DConnector* InsertConnector(size_t id,const RString& name);
+
+	/**
 	* Destructor of the problem.
 	*/
 	~RProblem2D(void);
-
-	friend class Parser;
 };
 
 

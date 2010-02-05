@@ -82,6 +82,29 @@ namespace R{
  * specific structures of data. By using the mechanism of RThreadData, these
  * structures will be duplicated of the GA uses multiple threads (which is
  * currently not implemented).
+ *
+ * \section roptimization_2dga 2D-Placement Genetic Algorithms (GA2D)
+ * A set of classes provides a implementation of a generic 2D-placement genetic
+ * algorithm. Its aim is to place a set of objects on an area in order to
+ * minimize the total area occupied and the total distances of the
+ * corresponding connections.
+ *
+ * Each object is represented as an instance of the RObj2D class. Its defines
+ * several connectors (RObj2DConnector), each one having multiple pins
+ * (RObj2DPin). Moreover, each object may have several configurations
+ * (RObj2DConfig), each one defining the possible pins (RObj2DConfigPin) of
+ * each connector (RObj2DConfigConnector). Finally, a RGeoInfo class represent
+ * a particular configuration (RObj2DConfig) of an object (RObj2D) placed at a
+ * given position.
+ *
+ * A connection is represented by an instance of the RConnection class. It is
+ * represented by a container of RObj2DConnector. The RGeoInfoConnection class
+ * represents the instance of that connection. It is a container of RGeoInfoPin
+ * representing association of a pin and a geometric information.
+ *
+ * Each chromosome (RChromo2D) implements a particular layout (RLayout) of the
+ * objects. All heuristics inherit from RPlacementHeuristic which place a list
+ * of unplaced object on a given layout.
  */
 
 

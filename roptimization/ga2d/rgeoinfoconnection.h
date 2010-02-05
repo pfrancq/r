@@ -47,90 +47,24 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RGeoInfoConnection class provides a representation for an edge of a
-* connection.
-* @author Pascal Francq
-* @short Connection Part for Geometric Information
-*/
-class RGeoInfoConnectionPart
-{
-	struct sSearch
-	{
-		size_t id1;
-		size_t id2;
-	};
-
-public:
-
-	/**
-	* Identificator of the first object.
-	*/
-	size_t Id1;
-
-	/**
-	* Position of the first connector.
-	*/
-	RPoint PosCon1;
-
-	/**
-	* Identificator of the second object.
-	*/
-	size_t Id2;
-
-	/**
-	* Position of the second connector.
-	*/
-	RPoint PosCon2;
-
-	/**
-	* Constructor of the connection part.
-	* @param pt1            Position of the first connector.
-	* @param id1            Identifier of the first connector.
-	* @param pt2            Position of the second connector.
-	* @param id2            Identifier of the second connector.
-	*/
-	RGeoInfoConnectionPart(const RPoint& pt1,size_t id1,const RPoint& pt2,size_t id2);
-
-	/**
-	* Copy contructor.
-	* @param p              Source object.
-	*/
-	RGeoInfoConnectionPart(const RGeoInfoConnectionPart* p);
-
-	/**
-	* Compare function.
-	* @param p              Object used for the search.
-	*/
-	int Compare(const RGeoInfoConnectionPart& p) const
-		{return(!(((p.Id1==Id1)&&(p.Id2==Id2))||((p.Id1==Id2)&&(p.Id2==Id1))));}
-
-	/**
-	* Compare function.
-	* @param s              Search criteria.
-	*/
-	int Compare(const sSearch& s) const
-			{return(!(((s.id1==Id1)&&(s.id2==Id2))||((s.id1==Id2)&&(s.id2==Id1))));}
-
-	// friend classes
-	friend class RGeoInfoConnection;
-};
-
-
-//------------------------------------------------------------------------------
-/**
 * The RGeoInfoConnection class provides a representation for a connection
-* between two geometric information.
+* placed.
 * @author Pascal Francq
-* @short Connection for Geometric Information.
+* @short Placed Connection.
 */
-class RGeoInfoConnection : public RContainer<RGeoInfoConnectionPart,true,false>
+class RGeoInfoConnection : private RContainer<RGeoInfoPin,true,true>
 {
-public:
+	class Part;
 
 	/**
-	* The connection.
+	* The connection involved.
 	*/
 	RConnection* Con;
+
+	/**
+	 * Corresponding placement.
+	 */
+	RLayout* Layout;
 
 	/**
 	* Complete connection.
@@ -140,19 +74,16 @@ public:
 	/**
 	* Actual total distance.
 	*/
-	double Dist;
+	tCoord Dist;
+
+public:
 
 	/**
 	* Construct a connection.
+	* @param layout         Layout.
 	* @param con            Original connection.
 	*/
-	RGeoInfoConnection(RConnection* con);
-
-	/**
-	* Copy constructor.
-	* @param con            Source object.
-	*/
-	RGeoInfoConnection(const RGeoInfoConnection& con);
+	RGeoInfoConnection(RLayout* layout,RConnection* con);
 
 	/**
 	* Make this connection uncompleted.
@@ -161,39 +92,45 @@ public:
 
 	/**
 	* This function compares two connections returns 0 if there are the same.
-	* @param c              Connection used for the comparaison.
+	* @param c              Connection used for the comparison.
 	*/
 	int Compare(const RGeoInfoConnection& c) const;
 
 	/**
+	 * @return the corresponding connection.
+	 */
+	inline RConnection* GetConnection(void) const {return(Con);}
+
+private:
+
+	/**
 	* Verify that at least two objects of the connection are placed.
-	* @param infos           List of geometric information.
+	* @param layout          Layout.
 	*/
-	bool MinObjPlaced(RGeoInfos* infos);
+	bool MinObjPlaced(RLayout* layout);
+
+public:
 
 	/**
-	* Compute the distance of the net for a given set of geometric information.
-	* The "Prim's Algorithm for Minimum Spanning Trees" is used.
-	* @param infos          List of geometric information.
-	* @returns The "minimal" distance of the net.
+	* Compute the distance of the connection for a given set of geometric
+	* information. In practice, a graph is build and the minimum spanning tree
+	* is computed. The method manages uncompleted connections (for which all
+	* involved connectors are not placed).
+	* @param layout          Layout.
+	* @return The "minimal" distance of the connection.
 	*/
-	void ComputeMinDist(RGeoInfos* infos);
+	tCoord ComputeMinDist(RLayout* layout);
 
 	/**
-	* Return the distance of the nets. The geometric information cur must be
-	* considered as placed at a gicen position.
-	* @param infos          List of geometric information.
-	* @param cur            The geometric information to place.
-	* @param pos            Position where to placed the geometric information.
+	* Compute the distance of the connection involving a given object.
+	* Eventually, the object is considered to be placed at a given position.
+	* @param layout          Layout.
+	* @param info            The geometric information to place.
+	* @param pos             Position where to placed the geometric information
+	*                        (if RPoint::Null, considered it as already placed).
+	* @return the computed distance.
 	*/
-	double GetDist(RGeoInfos* infos,RGeoInfo* cur,const RPoint& pos);
-
-	/**
-	* Return the distance of the nets involving a given geometric information.
-	* @param infos          Geometric informations.
-	* @param cur            The geometric information to be involved.
-	*/
-	double GetDist(RGeoInfos* infos,RGeoInfo* cur);
+	tCoord GetDist(RLayout* layout,RGeoInfo* info,const RPoint& pos=RPoint::Null);
 
 	/**
 	* Test if a a geometric information is in the connection.
@@ -207,7 +144,19 @@ public:
 	* @param con            Connector.
 	* @return bool.
 	*/
-	bool IsIn(const RGeoInfoConnector* con);
+	bool IsIn(const RObj2DConfigConnector* con);
+
+	/**
+	* Test if a pin is in the connection.
+	* @param pin             Pin.
+	* @return bool.
+	*/
+	bool IsIn(const RObj2DConfigPin* pin);
+
+	/**
+	 * @return a cursor over the pins.
+	 */
+	RCursor<RGeoInfoPin> GetPins(void) const;
 };
 
 

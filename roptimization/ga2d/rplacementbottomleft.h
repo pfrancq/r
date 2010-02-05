@@ -75,17 +75,19 @@ public:
 	* @param calc           Must free polygons be calculated.
 	* @param use            Must free polygons be used.
 	* @param r              The random generator to use.
+	* @param dist           Distance criteria parameters.
+	* @param area           Area criteria parameters.
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementBottomLeft(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori=false);
+	RPlacementBottomLeft(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori=false);
 
 	/**
 	* Initialize the heuristic.
 	* @param prob           The problem.
-	* @param infos          Pointer to the geometric information.
-	* @param grid           Pointer to the grid.
+	* @param layout         Layout.
+	* @param grid           Grid.
 	*/
-	virtual void Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid);
+	virtual void Init(RProblem2D* prob,RLayout* layout,RGrid* grid);
 
 	/**
 	* Calculate all the possible positions to place a given object. The method

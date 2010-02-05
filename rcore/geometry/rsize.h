@@ -108,7 +108,7 @@ public:
 	/**
 	* Compare two points and return 0 if there are at the same position. This function
 	* is used with the class RContainer.
-	* @param size             Point used for the comparaison.
+	* @param size             Point used for the comparison.
 	*/
 	inline int Compare(const RSize& size) const { return((*this)!=size); }
 
@@ -123,9 +123,14 @@ public:
 	tCoord GetWidth(void) const {return(Width);}
 
 	/**
-	* Get the heigth.
+	* Get the height.
 	*/
 	tCoord GetHeight(void) const {return(Height);}
+
+	/**
+	* Test if the point is a valid one.
+	*/
+	bool IsValid(void) const { return((Width!=cNoCoord)&&(Height!=cNoCoord));}
 
 	/**
 	* Set the size.
@@ -133,6 +138,11 @@ public:
 	* @param h              Height.
 	*/
 	void Set(const tCoord w,const tCoord h) {Width=w; Height=h;}
+
+	/**
+	 * Represent an invalid point.
+	 */
+	static RSize Null;
 };
 
 

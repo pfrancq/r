@@ -42,16 +42,16 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementEdge::RPlacementEdge(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori)
-	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
+RPlacementEdge::RPlacementEdge(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori)
+	: RPlacementHeuristic(maxobjs,calc,use,r,dist,area,ori)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RPlacementEdge::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+void RPlacementEdge::Init(RProblem2D* prob,RLayout* layout,RGrid* grid)
 {
-	RPlacementHeuristic::Init(prob,infos,grid);
+	RPlacementHeuristic::Init(prob,layout,grid);
 	for(unsigned i=0;i<40;i++)
 		Levels[i].Set(0,0);
 	NbLevels=0;
@@ -69,19 +69,19 @@ void RPlacementEdge::SearchValidPositions(RGeoInfo* info)
 	RPoint Pos;
 
 	// Verify if add normally or on bottom
-	if(((Result.X2+1)<Limits.X)&&(CurLevel==NbLevels))
+	if(((Result.GetX2()+1)<Limits.GetWidth())&&(CurLevel==NbLevels))
 	{
-		FactorX=(static_cast<double>(Result.X2))/(static_cast<double>(Limits.X));
-		FactorY=(static_cast<double>(Result.Y2))/(static_cast<double>(Limits.Y));
+		FactorX=(static_cast<double>(Result.GetX2()))/(static_cast<double>(Limits.GetWidth()));
+		FactorY=(static_cast<double>(Result.GetY2()))/(static_cast<double>(Limits.GetHeight()));
 		if(FactorX<FactorY)
 		{
 			Levels[CurLevel++]=Actual;
 			if(CurLevel>=NbLevels)
 				NbLevels=CurLevel;
-			Actual.Set(Result.X2,0);
-			Max.X=Result.X2+info->Width()+1;
-			if(Max.X>Limits.X)
-			Max.X=Limits.X;
+			Actual.Set(Result.GetX2(),0);
+			Max.X=Result.GetX2()+info->GetConfig()->GetWidth()+1;
+			if(Max.X>Limits.GetWidth())
+				Max.X=Limits.GetWidth();
 			CurLevel=0;
 		}
 	}
@@ -89,14 +89,14 @@ void RPlacementEdge::SearchValidPositions(RGeoInfo* info)
 	// Do a local optimization at actual position
 	Pos=Last;
 	info->PushBottomLeft(Pos,Limits,Grid);
-	if((Pos.Y+info->Height()>Levels[CurLevel].Y)||(Pos.X+info->Width()>Actual.X))
+	if((Pos.Y+info->GetConfig()->GetHeight()>Levels[CurLevel].Y)||(Pos.X+info->GetConfig()->GetWidth()>Actual.X))
 	{
 		Pos=Actual;
 		info->PushBottomLeft(Pos,Limits,Grid);
 	}
 
 	// If to long than begin from left again
-	while((Pos.X>0)&&(Pos.X+info->Width()>Max.X))
+	while((Pos.X>0)&&(Pos.X+info->GetConfig()->GetWidth()>Max.X))
 	{
 		Levels[CurLevel++]=Actual;
 		if(CurLevel>=NbLevels)
@@ -111,9 +111,9 @@ void RPlacementEdge::SearchValidPositions(RGeoInfo* info)
 	}
 
 	// If to high than try to switch objects and place another one
-	if(Pos.Y+info->Height()>Limits.Y)
+	if(Pos.Y+info->GetConfig()->GetHeight()>Limits.GetHeight())
 	{
-		Pos.Set(MaxCoord,MaxCoord);
+		Pos=RPoint::Null;
 		return;
 	}
 
@@ -128,13 +128,13 @@ void RPlacementEdge::PostPlace(RGeoInfo* info,const RPoint& pos)
 
 	// Calculate Next position
 	Last=Actual;
-	if(pos.X+info->Width()>Actual.X)
-		Actual.X=pos.X+info->Width();
-	if((pos.X==0)&&(pos.X+info->Width())>Max.X)
-		Max.X=pos.X+info->Width();
-	if(pos.Y+info->Height()>Max.Y)
-		Max.Y=pos.Y+info->Height();
-	Last.Y+=info->Height();
+	if(pos.X+info->GetConfig()->GetWidth()>Actual.X)
+		Actual.X=pos.X+info->GetConfig()->GetWidth();
+	if((pos.X==0)&&(pos.X+info->GetConfig()->GetWidth())>Max.X)
+		Max.X=pos.X+info->GetConfig()->GetWidth();
+	if(pos.Y+info->GetConfig()->GetHeight()>Max.Y)
+		Max.Y=pos.Y+info->GetConfig()->GetHeight();
+	Last.Y+=info->GetConfig()->GetHeight();
 
 	// Verify if down level needed update
 	for(i=0;i<CurLevel;i++)
@@ -142,7 +142,7 @@ void RPlacementEdge::PostPlace(RGeoInfo* info,const RPoint& pos)
 
 	// Verify if some levels must be skipped
 	i=CurLevel+1;
-	while((i<NbLevels)&&(Levels[i].Y<pos.Y+info->Height()))
+	while((i<NbLevels)&&(Levels[i].Y<pos.Y+info->GetConfig()->GetHeight()))
 	{
 		NbLevels--;
 		for(l=i;l<NbLevels;l++)
@@ -150,11 +150,13 @@ void RPlacementEdge::PostPlace(RGeoInfo* info,const RPoint& pos)
 	}
 
 	// Verify ActLimits
-	if(pos.X+info->Width()>Result.X2)
+	tCoord X2(Result.GetX2()),Y2(Result.GetY2());
+	if(pos.X+info->GetConfig()->GetWidth()>X2)
 	{
-		Result.X2=pos.X+info->Width();
-		if(Max.X==0) Max.X=Result.X2;
+		X2=pos.X+info->GetConfig()->GetWidth();
+		if(Max.X==0) Max.X=X2;
 	}
-	if(pos.Y+info->Height()>Result.Y2)
-		Result.Y2=pos.Y+info->Height();
+	if(pos.Y+info->GetConfig()->GetHeight()>Y2)
+		Y2=pos.Y+info->GetConfig()->GetHeight();
+	Result.Set(Result.GetX1(),Result.GetY1(),X2,Y2);
 }

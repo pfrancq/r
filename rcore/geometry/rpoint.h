@@ -166,34 +166,41 @@ public:
 	/**
 	* Test if the point is a valid one.
 	*/
-	bool IsValid(void) const { return((X!=MaxCoord)&&(Y!=MaxCoord));}
+	bool IsValid(void) const { return((X!=cNoCoord)&&(Y!=cNoCoord));}
 
 	/**
-	* Return the classification of the current point relative to the segment
+	* @return the classification of the current point relative to the segment
 	* formed by two points.
 	* @param p0              First point.
 	* @param p1              Second point.
 	*/
-	RDirection Classify(const RPoint& p0,const RPoint& p1) const;
+	tDirection Classify(const RPoint& p0,const RPoint& p1) const;
 
 	/**
-	* Return the classification of the current point relative to the segment
+	* @return the classification of the current point relative to the segment
 	* formed by two points.
 	* @param p0              First point.
 	* @param p1              Second point.
 	*/
-	inline RDirection Classify(const RPoint* p0,const RPoint* p1) const
+	inline tDirection Classify(const RPoint* p0,const RPoint* p1) const
 		{ return(Classify(*p0,*p1)); }
 
 	/**
 	* Change the "orientation" of the point.
+	* @param o               Orientation.
 	*/
-	void ChangeOrientation(const ROrientation o);
+	void ChangeOrientation(const tOrientation o);
 
 	/**
 	* Save the point in a file.
+	* @param f               File where to save.
 	*/
 	void Save(RTextFile& f) const;
+
+	/**
+	 * Represent an invalid point.
+	 */
+	static RPoint Null;
 };
 
 

@@ -35,6 +35,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rpoint.h>
+#include <rsize.h>
 
 
 //------------------------------------------------------------------------------
@@ -50,8 +51,6 @@ namespace R{
 */
 class RRect
 {
-public:
-
 	/**
 	* Left limit.
 	*/
@@ -71,6 +70,8 @@ public:
 	* Upper limit.
 	*/
 	tCoord Y2;
+
+public:
 
 	/**
 	* Construct a rectangle with two points at (0,0).
@@ -100,6 +101,35 @@ public:
 	RRect(tCoord x1,tCoord y1,tCoord x2,tCoord y2);
 
 	/**
+	* Set the coordinates of the rectangle.
+	* @param x1              The most left position.
+	* @param y1              The most bottom position
+	* @param x2              The most right position.
+	* @param y2              The most up position.
+	*/
+	void Set(tCoord x1,tCoord y1,tCoord x2,tCoord y2);
+
+	/**
+	* @return the left limit.
+	*/
+	tCoord GetX1(void) const {return(X1);}
+
+	/**
+	* @return the bottom limit.
+	*/
+	tCoord GetY1(void) const {return(Y1);}
+
+	/**
+	* @return the right limit.
+	*/
+	tCoord GetX2(void) const {return(X2);}
+
+	/**
+	* @return the upper limit.
+	*/
+	tCoord GetY2(void) const {return(Y2);}
+
+	/**
 	* Return the width of the rectangle. The width includes the border, i.e. a
 	* rectangle where X1=X2 has a width of 1.
 	*/
@@ -110,6 +140,11 @@ public:
 	* a rectangle where Y1=Y2 has a height of 1.
 	*/
 	tCoord GetHeight(void) const {return(Abs(Y2-Y1+1));}
+
+	/**
+	 * @return the size of the rectangle.
+	 */
+	RSize GetSize(void) const {return(RSize(Abs(X2-X1+1),Abs(Y2-Y1+1)));}
 
 	/**
 	* Set the width of the rectangle. The method adapts the X-coordinate of
@@ -124,15 +159,6 @@ public:
 	* @param height          New height.
 	*/
 	inline void SetHeight(tCoord height) {Y2=height+Y1-1;}
-
-	/**
-	* Set the coordinates of the rectangle.
-	* @param x1              The most left position.
-	* @param y1              The most bottom position
-	* @param x2              The most right position.
-	* @param y2              The most up position.
-	*/
-	inline void Set(tCoord x1,tCoord y1,tCoord x2,tCoord y2) {X1=x1; Y1=y1; X2=x2; Y2=y2;}
 
 	/**
 	* Set the coordinates of the rectangle based on a shape.
@@ -187,7 +213,7 @@ public:
 	/**
 	* Compare two rectangles and return 0 if there are at the same. This function
 	* is used with the class RContainer.
-	* @param rect           Rectangle used for the comparaison.
+	* @param rect           Rectangle used for the comparison.
 	*/
 	int Compare(const RRect& rect) const;
 
@@ -226,8 +252,15 @@ public:
 
 	/**
 	* This function returns true if a given point is in the rectangle.
+	* @param pos             Position.
 	*/
 	inline bool IsIn(const RPoint& pos) const {return(IsIn(pos.X,pos.Y));}
+
+	/**
+	* This function returns true if a given rect is in the rectangle.
+	* @param rect            Rectangle.
+	*/
+	inline bool IsIn(const RRect& rect) const {return(IsIn(rect.X1,rect.Y1)||IsIn(rect.X2,rect.Y2));}
 
 	/**
 	* The assign Operator.
@@ -245,6 +278,14 @@ public:
 	 * @return RPoint
 	 */
 	RPoint inline GetPt2(void) const {return(RPoint(X2,Y2));}
+
+	/**
+	* Modify the rectangle to a certain orientation.
+	* @param o              The orientation.
+	* @param min            The vector that has been subtracted to have the
+	*                       bottom-left point at (0,0).
+	*/
+	void ChangeOrientation(const tOrientation o,RPoint& min);
 };
 
 

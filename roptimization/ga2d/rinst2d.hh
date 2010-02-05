@@ -37,8 +37,8 @@
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo>
 	RThreadData2D<cInst,cChromo>::RThreadData2D(cInst *owner)
-		: RThreadData<cInst,cChromo>(owner),NbObjs(0),Order(0),tmpObj1(0),
-			tmpObj2(0), tmpInfos(0), Heuristic(0)
+		: RThreadData<cInst,cChromo>(owner), Heuristic(0), Selected(0),
+		  Kernel("PlacementCenter",Owner->Problem->GetNbObjs(),2)
 {
 }
 
@@ -48,24 +48,25 @@ template<class cInst,class cChromo>
 	void RThreadData2D<cInst,cChromo>::Init(void)
 {
 	RThreadData<cInst,cChromo>::Init();
-	NbObjs=Owner->NbObjs;
-	if(NbObjs)
-	{
-		Order=new size_t[NbObjs];
-		Order2=new size_t[NbObjs];
-		tmpObjs=new RObj2D*[NbObjs];
-		tmpObj1=new RObj2DContainer(NbObjs+1,"Temporary Object 1",NbObjs);
-		tmpObj2=new RObj2DContainer(NbObjs+2,"Temporary Object 2",NbObjs);
-		tmpInfos=new RGeoInfos(Owner->Problem,true);
-	}
-	RString Heur(Owner->GetHeuristic());
 
+	// Initialize the arrays
+	if(Owner->Problem->GetNbObjs())
+	{
+		Selected=new bool[Owner->Problem->GetNbObjs()];
+	}
+
+	// Initialize the heuristic
+	RString Heur(Owner->GetHeuristic());
 	if(Heur=="Bottom-Left")
-		Heuristic=new RPlacementBottomLeft(NbObjs+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->AllOrientations);
+		Heuristic=new RPlacementBottomLeft(Owner->Problem->GetNbObjs()+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->HeurDist,Owner->HeurArea,Owner->AllOrientations);
 	if(Heur=="Edge")
-		Heuristic=new RPlacementEdge(NbObjs+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->AllOrientations);
+		Heuristic=new RPlacementEdge(Owner->Problem->GetNbObjs()+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->HeurDist,Owner->HeurArea,Owner->AllOrientations);
 	if(Heur=="Center")
-		Heuristic=new RPlacementCenter(NbObjs+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->AllOrientations);
+		Heuristic=new RPlacementCenter(Owner->Problem->GetNbObjs()+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->HeurDist,Owner->HeurArea,Owner->AllOrientations);
+
+	// Initialize the PROMETHEE Kernel
+	Kernel.AddCriterion(new RPromLinearCriterion(RPromCriterion::Maximize,Owner->SelectWeight,"Weight"));
+	Kernel.AddCriterion(new RPromLinearCriterion(RPromCriterion::Minimize,Owner->SelectDist,"Distance"));
 }
 
 
@@ -73,12 +74,8 @@ template<class cInst,class cChromo>
 template<class cInst,class cChromo>
 	RThreadData2D<cInst,cChromo>::~RThreadData2D(void)
 {
-	if(Order) delete[] Order;
-	if(tmpObjs)	delete[] tmpObjs;
-	if(tmpObj1) delete tmpObj1;
-	if(tmpObj2) delete tmpObj2;
-	if(tmpInfos) delete tmpInfos;
 	if(Heuristic) delete Heuristic;
+	if(Selected) delete[] Selected;
 }
 
 
@@ -92,14 +89,17 @@ template<class cInst,class cChromo>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::
-		RInst2D(size_t popsize,RProblem2D* prob,const RString& h,const RString& name,RDebug *debug)
-			: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug), Problem(prob), Objs(prob->Objs),
-			 NbObjs(prob->Objs.GetNb()), bLocalOpti(true), Heuristic(h),
-			 ComputeFreePolygons(false), UseFreePolygons(false), AllOrientations(false),
-			 Limits(prob->Limits)
+		RInst2D(size_t popsize,RProblem2D* prob,const RString& h,const RString& name,
+				RParamStruct* heurdist,RParamStruct* heurarea,RParamStruct* selectdist,RParamStruct* selectweight,
+				RDebug *debug)
+			: RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug), Problem(prob),
+			  bLocalOpti(true), Heuristic(h),
+			  ComputeFreePolygons(false), UseFreePolygons(false), AllOrientations(false),
+			  HeurDist(heurdist), HeurArea(heurarea), SelectDist(selectdist), SelectWeight(selectweight)
 {
 	// Verify that the identifiers are continuous starting from 0
 	size_t id(0);
+	RCursor<RObj2D> Objs(Problem->GetObjs());
 	for(Objs.Start();!Objs.End();Objs.Next(),id++)
 		if(Objs()->GetId()!=id)
 			throw RGAException("RInst2D::RInst2D(size_t,RProblem2D*,const RString&,const R::RString&,R::RDebug*) : Identifiers must be continuous and starting from zero");
@@ -111,30 +111,4 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::Init(void)
 {
 	RInst<cInst,cChromo,cFit,cThreadData>::Init();
-	BestChromosome->Objs=Objs;
-	BestChromosome->NbObjs=NbObjs;
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	RPoint RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::GetLimits(void)
-{
-	return(Limits);
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetAreaParams(const RParam* params)
-{
-	thDatas[0]->Heuristic->SetAreaParams(params);
-}
-
-
-//------------------------------------------------------------------------------
-template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	void RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>::SetDistParams(const RParam* params)
-{
-	thDatas[0]->Heuristic->SetDistParams(params);
 }

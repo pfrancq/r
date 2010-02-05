@@ -41,7 +41,6 @@
 #include <rplacementbottomleft.h>
 #include <rplacementedge.h>
 #include <rplacementcenter.h>
-#include <rconnections.h>
 #include <rproblem2d.h>
 
 
@@ -64,44 +63,19 @@ template<class cInst,class cChromo>
 public:
 
 	/**
-	* Number of objects to place.
-	*/
-	size_t NbObjs;
-
-	/**
-	* Array of identifiers for objects.
-	*/
-	size_t* Order;
-
-	/**
-	* Array of identifiers for objects.
-	*/
-	size_t* Order2;
-
-	/**
-	* Temporary array of pointers to Objects (Crossover & Mutation).
-	*/
-	RObj2D** tmpObjs;
-
-	/**
-	* Temporary objects container.
-	*/
-	RObj2DContainer* tmpObj1;
-
-	/**
-	* Temporary objects container.
-	*/
-	RObj2DContainer* tmpObj2;
-
-	/**
-	* Temporary geometric informations.
-	*/
-	RGeoInfos* tmpInfos;
-
-	/**
 	* Heuristic Used.
 	*/
 	RPlacementHeuristic* Heuristic;
+
+	/**
+	* Temporary array to remember which objects are selected.
+	*/
+	bool* Selected;
+
+	/**
+	 * PROMETHEE Kernel.
+	 */
+	RPromKernel Kernel;
 
 	/**
 	* Construct the data.
@@ -127,14 +101,13 @@ public:
 * @author Pascal Francq
 * @short 2D GA Instance.
 */
-template<class cInst,class cChromo,class cFit,class cThreaData,class cInfo>
-	class RInst2D : public RInst<cInst,cChromo,cFit,cThreaData>
+template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
+	class RInst2D : public RInst<cInst,cChromo,cFit,cThreadData>
 {
-	using RInst<cInst,cChromo,cFit,cThreaData>::thDatas;
+protected:
 
-public:
-
-	using RInst<cInst,cChromo,cFit,cThreaData>::BestChromosome;
+	using RInst<cInst,cChromo,cFit,cThreadData>::thDatas;
+	using RInst<cInst,cChromo,cFit,cThreadData>::BestChromosome;
 
 	/**
 	* The problem.
@@ -142,26 +115,9 @@ public:
 	RProblem2D* Problem;
 
 	/**
-	* Objects to place.
-	*/
-	RCursor<RObj2D> Objs;
-
-	/**
-	* Number of objects.
-	*/
-	size_t NbObjs;
-
-	/**
 	* Local Optimization.
 	*/
 	bool bLocalOpti;
-
-	/**
-	* Connections for the objects.
-	*/
-	RConnections* Cons;
-
-protected:
 
 	/**
 	* Name of the heuristic that used.
@@ -183,12 +139,27 @@ protected:
 	*/
 	bool AllOrientations;
 
-public:
+	/**
+	* PROMETHEE Parameters for Heuristic Distance.
+	*/
+	RParamStruct* HeurDist;
 
 	/**
-	* Point representing the limits for the placement.
+	* PROMETHEE Parameters for Heuristic Area.
 	*/
-	RPoint Limits;
+	RParamStruct* HeurArea;
+
+	/**
+	* PROMETHEE Parameters for Selection Distance.
+	*/
+	RParamStruct* SelectDist;
+
+	/**
+	* PROMETHEE Parameters for Selection Weight.
+	*/
+	RParamStruct* SelectWeight;
+
+public:
 
 	/**
 	* Construct the instance. The instance is not responsible for the deallocation
@@ -197,9 +168,17 @@ public:
 	* @param prob           Pointer to the problem.
 	* @param h              Name of the heuristic that has to be used.
 	* @param name           Name of the genetic algorithm.
+	* @param heurdist       Distance criteria parameters for the heuristic.
+	* @param heurarea       Area criteria parameters for the heuristic.
+	* @param selectdist     Distance criteria parameters for the objects
+	*                       selection.
+	* @param selectweight   Weight criteria parameters for the objects
+	*                       selection.
 	* @param debug          Debugger.
 	*/
-	RInst2D(size_t popsize,RProblem2D* prob,const RString& h,const RString& name,RDebug* debug=0);
+	RInst2D(size_t popsize,RProblem2D* prob,const RString& h,const RString& name,
+			RParamStruct* heurdist,RParamStruct* heurarea,RParamStruct* selectdist,RParamStruct* selectweight,
+			RDebug* debug=0);
 
 	/**
 	* Initialization of the instance.
@@ -207,26 +186,9 @@ public:
 	virtual void Init(void);
 
 	/**
-	* Return the limits for the placement.
-	*/
-	inline RPoint GetLimits(void);
-
-	/**
 	* Return the heuristic type.
 	*/
 	RString GetHeuristic(void) const {return(Heuristic);}
-
-	/**
-	* Set the parameters for the "area" criterion.
-	* @param params         The parameters.
-	*/
-	void SetAreaParams(const RParam* params);
-
-	/**
-	* Set the parameters for the "area" criterion.
-	* @param params         The parameters.
-	*/
-	void SetDistParams(const RParam* params);
 
 	/**
 	* Return true if a local optimization is needed.
@@ -234,6 +196,7 @@ public:
 	inline bool LocalOpti(void) { return(bLocalOpti); }
 
 	friend class RThreadData2D<cInst,cChromo>;
+	friend class RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>;
 };
 
 

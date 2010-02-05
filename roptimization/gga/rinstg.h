@@ -37,7 +37,6 @@
 // include files for R Project
 #include <rcontainer.h>
 #include <rcursor.h>
-#include <robjs.h>
 #include <rinst.h>
 #include <robjg.h>
 #include <rfirstfitheuristic.h>

@@ -4,7 +4,7 @@
 
 	RPlacementCenter.cpp
 
-	Center Heuristic for Placement - Implemenation
+	Center Heuristic for Placement - Implementation
 
 	Copyright 1998-2009 by Pascal Francq (pascal@francq.info).
 	Copyright 1998-2008 by the Université Libre de Bruxelles (ULB).
@@ -35,11 +35,6 @@
 using namespace R;
 
 
-//------------------------------------------------------------------------------
-// defines
-//#define DOUBLESPACE
-
-
 
 //------------------------------------------------------------------------------
 //
@@ -48,23 +43,17 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementCenter::RPlacementCenter(size_t maxobjs,bool calc,bool use,RRandom* r,bool ori)
-	: RPlacementHeuristic(maxobjs,calc,use,r,ori)
+RPlacementCenter::RPlacementCenter(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori)
+	: RPlacementHeuristic(maxobjs,calc,use,r,dist,area,ori)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RPlacementCenter::Init(RProblem2D* prob,RGeoInfos* infos,RGrid* grid)
+void RPlacementCenter::Init(RProblem2D* prob,RLayout* layout,RGrid* grid)
 {
-	RPlacementHeuristic::Init(prob,infos,grid);
-	HoldLimits=Limits;
-	#ifdef DOUBLESPACE
-		Max=Limits+Limits;
-	#else
-		Max=Limits;
-	#endif
-	Attraction.Set(Max.X/2,Max.Y/2);
+	RPlacementHeuristic::Init(prob,layout,grid);
+	Attraction.Set(Limits.GetWidth()/2,Limits.GetHeight()/2);
 	Union.Clear();
 	Sol.Clear();
 }
@@ -83,7 +72,7 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 	// If first object -> place it in the middle
 	if(!NbObjsOk)
 	{
-		RPoint Best((Max.X-info->Width())/2,(Max.Y-info->Height())/2);
+		RPoint Best((Limits.GetWidth()-info->GetConfig()->GetWidth())/2,(Limits.GetHeight()-info->GetConfig()->GetHeight())/2);
 		AddValidPosition(Best);
 		return;
 	}
@@ -106,7 +95,7 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 			// Look to the Left -> Test (X-1,Y)
 			if(Grid->IsFree(Actual.X-1,Actual.Y))
 			{
-				Pos.Set(Actual.X-info->Width(),Actual.Y);
+				Pos.Set(Actual.X-info->GetConfig()->GetWidth(),Actual.Y);
 				if(info->Test(Pos,Grid))
 				{
 					info->PushCenter(Pos,Limits,Grid);
@@ -118,7 +107,7 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 				// If look to bottom -> Test (X,Y-1)
 				if(Grid->IsFree(Actual.X,Actual.Y-1))
 				{
-					Pos.Set(Actual.X,Actual.Y-info->Height());
+					Pos.Set(Actual.X,Actual.Y-info->GetConfig()->GetHeight());
 					if(info->Test(Pos,Grid))
 					{
 						info->PushCenter(Pos,Limits,Grid);
@@ -128,7 +117,7 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos.Set(Actual.X-info->Width(),Actual.Y-info->Height());
+					Pos.Set(Actual.X-info->GetConfig()->GetWidth(),Actual.Y-info->GetConfig()->GetHeight());
 					if(info->Test(Pos,Grid))
 					{
 						info->PushCenter(Pos,Limits,Grid);
@@ -148,8 +137,8 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos.Set(Actual.X-info->Width(),Actual.Y+1);
-					Pos.Set(Actual.X-info->Width(),Actual.Y-info->Height());
+					Pos.Set(Actual.X-info->GetConfig()->GetWidth(),Actual.Y+1);
+					Pos.Set(Actual.X-info->GetConfig()->GetWidth(),Actual.Y-info->GetConfig()->GetHeight());
 					if(info->Test(Pos,Grid))
 					{
 						info->PushCenter(Pos,Limits,Grid);
@@ -176,7 +165,7 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 				// If look to bottom -> Test (X,Y-1)
 				if(Grid->IsFree(Actual.X,Actual.Y-1))
 				{
-					Pos.Set(Actual.X,Actual.Y-info->Height());
+					Pos.Set(Actual.X,Actual.Y-info->GetConfig()->GetHeight());
 					if(info->Test(Pos,Grid))
 					{
 						info->PushCenter(Pos,Limits,Grid);
@@ -186,7 +175,7 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 				// If no positions -> Test(X,Y)
 				if(NbPos==0)
 				{
-					Pos.Set(Actual.X+1,Actual.Y-info->Height());
+					Pos.Set(Actual.X+1,Actual.Y-info->GetConfig()->GetHeight());
 					if(info->Test(Pos,Grid))
 					{
 						info->PushCenter(Pos,Limits,Grid);
@@ -223,7 +212,7 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 		Last=Actual;
 		if(LookX)
 		{
-			Actual=Union.GetConX(&Last);
+			Actual=Union.GetConX(Last);
 			if(Actual.X<Last.X)
 			{
 				LookBottom=false;
@@ -237,7 +226,7 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 		}
 		else
 		{
-			Actual=Union.GetConY(&Last);
+			Actual=Union.GetConY(Last);
 			if(Actual.Y<Last.Y)
 			{
 				LookLeft=true;
@@ -260,22 +249,21 @@ void RPlacementCenter::PostPlace(RGeoInfo* info,const RPoint&)
 	Sol.Clear();
 	Sol.InsertPtr(new RPolygon(Union));
 	info->Add(Sol);
-	Sol.Union(&Union);
+	Sol.Union(Union);
 	Union.Boundary(Result);
 }
 
 
 //------------------------------------------------------------------------------
-void RPlacementCenter::PostRun(RPoint& limits)
+void RPlacementCenter::PostRun(void)
 {
-	RPlacementHeuristic::PostRun(limits);
+	RPlacementHeuristic::PostRun();
 	Sol.Clear();
-	RCursor<RGeoInfo> info(*Infos);
+	RCursor<RGeoInfo> info(Layout->GetInfos());
 	for(info.Start();!info.End();info.Next())
-		Sol.InsertPtr(new RPolygon(info()->GetPolygon()));
-	Sol.Union(&Union);
+		Sol.InsertPtr(new RPolygon(info()->GetPlacedPolygon()));
+	Sol.Union(Union);
 	Union.Boundary(Result);
-	limits=HoldLimits;
 }
 
 

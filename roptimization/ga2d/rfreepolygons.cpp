@@ -31,6 +31,7 @@
 // include files for R Project
 #include <rfreepolygons.h>
 #include <rgeoinfo.h>
+#include <robj2dconfig.h>
 using namespace R;
 
 
@@ -58,24 +59,23 @@ RFreePolygons::RFreePolygons(const RFreePolygons& cont)
 //------------------------------------------------------------------------------
 RPoint RFreePolygons::CanPlace(RGeoInfo* info)
 {
-	char o;
 	RPoint pt;
-	RObj2D* obj=info->GetObj();
 
 	RCursor<RFreePolygon> Cur(*this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		for(o=0;o<obj->NbPossOri;o++)
+		RCursor<RObj2DConfig> Cur2(*info->GetObj());
+		for(Cur2.Start();!Cur2.End();Cur2.Next())
 		{
-			info->SetOri(o);
+			info->SetConfig(Cur2()->GetOrientation());
 			if(Cur()->CanContain(info,pt))
 			{
-				DeletePtr(Cur());
+				DeletePtr(*Cur());
 				return(pt);
 			}
 		}
 	}
-	pt.Set(MaxCoord,MaxCoord);
+	pt.Set(cNoCoord,cNoCoord);
 	return(pt);
 }
 

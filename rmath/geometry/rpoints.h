@@ -66,7 +66,7 @@ public:
 
 	/**
 	* Construct a container of points from another one.
-	* @param points         The container used as reeference.
+	* @param points         The container used as reference.
 	*/
 	RPoints(const RPoints& points);
 
@@ -76,7 +76,7 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindLeft(const RPoint* pt,const RPolygons* polys) const;
+	RPoint FindLeft(const RPoint& pt,const RPolygons& polys) const;
 
 	/**
 	* Find the next point to the right and that is on a vertex of a polygon from
@@ -84,7 +84,7 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindRight(const RPoint* pt,const RPolygons* polys) const;
+	RPoint FindRight(const RPoint& pt,const RPolygons& polys) const;
 
 	/**
 	* Find the next point to the bottom and that is on a vertex of a polygon from
@@ -92,7 +92,7 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindBottom(const RPoint* pt,const RPolygons* polys) const;
+	RPoint FindBottom(const RPoint& pt,const RPolygons& polys) const;
 
 	/**
 	* Find the next point to the up and that is on a vertex of a polygon from
@@ -100,12 +100,12 @@ public:
 	* @param pt             Point used as reference.
 	* @param polys          The polygons used as reference.
 	*/
-	RPoint* FindUp(const RPoint* pt,const RPolygons* polys) const;
+	RPoint FindUp(const RPoint& pt,const RPolygons& polys) const;
 
 	/**
 	* Find the most bottom-left point of the container.
 	*/
-	RPoint* FindBottomLeft(void) const;
+	RPoint FindBottomLeft(void) const;
 
 	/**
 	* This function returns true when there are duplicate points.

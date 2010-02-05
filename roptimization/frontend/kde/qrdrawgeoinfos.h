@@ -34,8 +34,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rpoint.h>
-#include <rgeoinfos.h>
-#include <rconnections.h>
+#include <rlayout.h>
 
 
 //------------------------------------------------------------------------------
@@ -52,6 +51,11 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
+/**
+ * The QRDrawGeoInfos provides a widget that paints a layout.
+ * @author Pascal Francq
+ * @short Layout Widget.
+ */
 class QRDrawGeoInfos : public QWidget
 {
 	class MyItem;
@@ -66,19 +70,9 @@ class QRDrawGeoInfos : public QWidget
 	RFreePolygons* FreePolygons;
 
 	/**
-	* Pointer to all geometric information.
+	* Layout.
 	*/
-	RGeoInfos* Infos;
-
-	/**
-	* Limits.
-	*/
-	RPoint Limits;
-
-	/**
-	 * Translation for the objects.
-	 */
-	RPoint Translation;
+	RLayout* Layout;
 
 	/**
 	 * The scene.
@@ -151,12 +145,10 @@ public:
 	QRDrawGeoInfos(QWidget* parent=0);
 
 	/**
-	* Set the Geometric Information.
-	* @param infos           Geometric information.
-	* @param limits          Limitations.
-	* @param translation     Translation to do to place globally the objects.
+	* Set the layout.
+	* @param layout          Layout.
 	*/
-	void setInfos(RGeoInfos* infos,const RPoint& limits,const RPoint& translation);
+	void setLayout(RLayout* layout);
 
 	/**
 	* Set the free polygons.
@@ -180,14 +172,14 @@ public:
 	* @param info           Geometric Info to add.
 	* @param fly            Is it added on the fly ?
 	*/
-	void paintInfo(RGeoInfo* info,bool fly);
+	void paintInfo(const RGeoInfo* info,bool fly);
 
 	/**
 	* Add a free polygon.
 	* @param poly           Free Polygon to add.
 	* @param fly            Is it added on the fly ?
 	*/
-	void paintFree(RFreePolygon* poly,bool fly);
+	void paintFree(const RFreePolygon* poly,bool fly);
 
 protected:
 
@@ -197,7 +189,7 @@ protected:
 	 */
 	inline double x(tCoord x)
 	{
-		return((static_cast<double>(x+Translation.X)*XScale)+5.0);
+		return(static_cast<double>((x*XScale)+5.0));
 	}
 
 	/**
@@ -206,14 +198,14 @@ protected:
 	 */
 	inline double y(tCoord y)
 	{
-		return((static_cast<double>(Limits.Y-y-Translation.Y)*YScale)+5.0);
+		return(static_cast<double>(((Layout->GetProblem()->GetLimits().GetWidth()-y)*YScale)+5.0));
 	}
 
 	/**
 	 * Paint a given connection.
 	 * @param connect        Connection to paint.
 	 */
-	void paintConnection(RGeoInfoConnection* connect);
+	void paintConnection(const RGeoInfoConnection* connect);
 
 	/**
 	 * Remove the connections from the board.
@@ -224,7 +216,7 @@ protected:
 	* Paint the connectors of a geometric information.
 	* @param info           Geometric information to use.
 	*/
-	void paintConnectors(RGeoInfo* info);
+	void paintConnectors(const RGeoInfo* info);
 
 	/**
 	 * Repaint the widget with the new sizes.

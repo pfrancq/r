@@ -30,30 +30,35 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rgeoinfoconnection.h>
-#include <rgeoinfos.h>
+#include <rlayout.h>
+#include <robj2dconfig.h>
 using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RGeoInfoConnectionPart
+// class RGeoInfoConnection::Part
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGeoInfoConnectionPart::RGeoInfoConnectionPart(const RPoint& pt1,size_t id1,const RPoint& pt2,size_t id2)
-	: Id1(id1), PosCon1(pt1), Id2(id2), PosCon2(pt2)
+class RGeoInfoConnection::Part
 {
-}
+public:
+	size_t Obj1;
+	RObj2DConfigPin* Pin1;
+	size_t Obj2;
+	RObj2DConfigPin* Pin2;
 
-
-//------------------------------------------------------------------------------
-RGeoInfoConnectionPart::RGeoInfoConnectionPart(const RGeoInfoConnectionPart* p)
-	: Id1(p->Id1), PosCon1(p->PosCon1), Id2(p->Id2), PosCon2(p->PosCon2)
-{
-}
-
+	Part(size_t obj1,size_t obj2) : Obj1(obj1), Pin1(0), Obj2(obj2), Pin2(0) {}
+	int Compare(const Part& tmp) const
+	{
+		if(Obj1==tmp.Obj1)
+			return(Obj2-tmp.Obj2);
+		return(Obj1-tmp.Obj2);
+	}
+};
 
 
 //------------------------------------------------------------------------------
@@ -63,17 +68,9 @@ RGeoInfoConnectionPart::RGeoInfoConnectionPart(const RGeoInfoConnectionPart* p)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGeoInfoConnection::RGeoInfoConnection(RConnection* con)
-	: RContainer<RGeoInfoConnectionPart,true,false>(con->Connect.GetNb()),
-		Con(con), Complete(false), Dist(0)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RGeoInfoConnection::RGeoInfoConnection(const RGeoInfoConnection& con)
-	: RContainer<RGeoInfoConnectionPart,true,false>(con),
-	  Con(con.Con), Complete(con.Complete), Dist(con.Dist)
+RGeoInfoConnection::RGeoInfoConnection(RLayout* layout,RConnection* con)
+	: RContainer<RGeoInfoPin,true,true>(con->GetNb()),
+		Con(con), Layout(layout), Complete(false), Dist(0)
 {
 }
 
@@ -94,18 +91,17 @@ int RGeoInfoConnection::Compare(const RGeoInfoConnection&) const
 
 
 //------------------------------------------------------------------------------
-bool RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
+bool RGeoInfoConnection::MinObjPlaced(RLayout* layout)
 {
 	size_t count(0);
 
 	// Go through each connectors
-	RCursor<RObj2DConnector> con(Con->Connect);
+	RCursor<RObj2DConnector> con(Con->GetConnectors());
 	for(con.Start();!con.End();con.Next())
 	{
-		if(infos->GetPtr<size_t>(con()->Owner->GetId())->IsValid())
-		{
+		RObj2D* Obj(con()->GetObj());
+		if((!Obj)||((Obj)&&((*layout)[Obj->GetId()]->IsValid())))
 			count++;
-		}
 		if(count==2)
 			return(true);
 	}
@@ -114,40 +110,57 @@ bool RGeoInfoConnection::MinObjPlaced(RGeoInfos* infos)
 
 
 //------------------------------------------------------------------------------
-void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
+tCoord RGeoInfoConnection::ComputeMinDist(RLayout* layout)
 {
+	Dist=0.0;
+
+	if(Con->GetNb()<2)
+		return(Dist);
+
 	RGeoInfo *g1,*g2;
+	RObj2DConfigConnector *Con1,*Con2;
 	size_t id1,id2,i;
 	RVertex *v1,*v2;
 	RPoint pt1,pt2;
-	RGraph T(Con->Connect.GetNb()),S(Con->Connect.GetNb());
-	RContainer<RGeoInfoConnectionPart,true,false> Local(Con->Connect.GetNb());
-	RGeoInfoConnectionPart::sSearch s;
+	RGraph Graph(Con->GetNb());  // The complete graph of all placed pins
+	RGraph Tree(Con->GetNb());   // The minimum spanning tree
+	RContainer<Part,true,false> Local(Con->GetNb());
 
-	// Init
+	// Initialize
 	Clear();
-	Complete=true;
+	Complete=true;  // Suppose it is completed
 
-	// Go through each connectors but the last one
-	RAssert(Con->Connect.GetNb());
-	RCursor<RObj2DConnector> con(Con->Connect);
-	RCursor<RObj2DConnector> con2(Con->Connect);
+	// Construct the graph between all pairs of pins
+	RAssert(Con->GetNb());
+	RCursor<RObj2DConnector> con(Con->GetConnectors());
+	RCursor<RObj2DConnector> con2(Con->GetConnectors());
 	for(con.Start(),i=con.GetNb();--i;con.Next())
 	{
-		id1=con()->Owner->GetId();
-		g1=infos->GetPtr<size_t>(id1);
+		id1=con()->GetObj()->GetId();
+		g1=(*layout)[id1];
 		if(g1->IsValid())
+			Con1=g1->GetConfig()->GetConnector(con());
+		else
+			Con1=0;
+		if(Con1)
 		{
-			v1=T.GetVertex(id1);
+			v1=Graph.GetVertex(id1);
 			for(con2.GoTo(con.GetPos()+1);!con2.End();con2.Next())
 			{
-				id2=con2()->Owner->GetId();
-				g2=infos->GetPtr<size_t>(id2);
+				id2=con2()->GetObj()->GetId();
+				g2=(*layout)[id2];
 				if(g2->IsValid())
+					Con2=g2->GetConfig()->GetConnector(con2());
+				else
+					Con2=0;
+				if(Con2)
 				{
-					v2=T.GetVertex(id2);
-					T.CreateEdge(v1,v2,con()->GetMinDist(con2(),infos,pt1,pt2));
-					Local.InsertPtr(new RGeoInfoConnectionPart(pt1,id1,pt2,id2));
+					v2=Graph.GetVertex(id2);
+					Part* Net(new Part(id1,id2));
+					Graph.CreateEdge(v1,v2,Con1->GetMinDist(Con2,layout,Net->Pin1,Net->Pin2));
+					if((!Net->Pin1)||(!Net->Pin2))
+						std::cout<<"Problem"<<std::endl;
+					Local.InsertPtr(Net);
 				}
 				else
 					Complete=false;
@@ -158,55 +171,48 @@ void RGeoInfoConnection::ComputeMinDist(RGeoInfos* infos)
 	}
 
 	// Compute Minimum Spanning tree
-	Dist=0.0;
-	T.MinSpanningTree(&S);
-	RCursor<REdge> e(S.GetEdges());
+	Graph.MinSpanningTree(&Tree);
+	RCursor<REdge> e(Tree.GetEdges());
 	for(e.Start();!e.End();e.Next())
 	{
 		Dist+=e()->GetWeight();
-		s.id1=e()->GetVertex1()->GetId();
-		s.id2=e()->GetVertex2()->GetId();
-		InsertPtr(new RGeoInfoConnectionPart(Local.GetPtr<RGeoInfoConnectionPart::sSearch>(s)));
+		Part Search(e()->GetVertex1()->GetId(),e()->GetVertex2()->GetId());
+		Part* Net(Local.GetPtr(Search));
+		g1=(*layout)[Net->Obj1];
+		g2=(*layout)[Net->Obj2];
+		InsertPtr(new RGeoInfoPin(Net->Pin1,g1));
+		InsertPtr(new RGeoInfoPin(Net->Pin2,g2));
 	}
-}
-
-
-//------------------------------------------------------------------------------
-double RGeoInfoConnection::GetDist(RGeoInfos* infos,RGeoInfo* cur,const RPoint& pos)
-{
-	// Make the current geometric information temporary valid
-	cur->Pos=pos;
-
-	// Verify if this connection is affected.
-	// if yes -> Compute the distances again.
-	if((!Complete)&&IsIn(cur)&&MinObjPlaced(infos))
-	{
-		ComputeMinDist(infos);
-	}
-
-	// Make it invalid again
-	cur->Pos.Set(MaxCoord,MaxCoord);
-
-	// Return the distance
 	return(Dist);
 }
 
 
 //------------------------------------------------------------------------------
-double RGeoInfoConnection::GetDist(RGeoInfos* infos,RGeoInfo* cur)
+tCoord RGeoInfoConnection::GetDist(RLayout* layout,RGeoInfo* info,const RPoint& pos)
 {
-	if(IsIn(cur))
+	// Is the geometric information concerned ?
+	bool InfoIsIn=IsIn(info);
+
+	// Make the current geometric information temporary valid
+	if(pos!=RPoint::Null)
+		info->Assign(pos,0,cNoRef);
+	else
+		if(!InfoIsIn)
+			return(0.0);
+
+	// Verify if this connection is affected.
+	// if yes -> Compute the distances again.
+	if((!Complete)&&InfoIsIn&&MinObjPlaced(layout))
 	{
-		// Verify if this connection is affected.
-		// if yes -> Compute the distances again.
-		if((!Complete)&&MinObjPlaced(infos))
-		{
-			ComputeMinDist(infos);
-		}
-		// Return the distance
-		return(Dist);
+		ComputeMinDist(layout);
 	}
-	return(0.0);
+
+	// Make it invalid again
+	if(pos!=RPoint::Null)
+		info->Assign(RPoint::Null,0,cNoRef);
+
+	// Return the distance
+	return(Dist);
 }
 
 
@@ -216,11 +222,11 @@ bool RGeoInfoConnection::IsIn(const RGeoInfo* info)
 	RObj2D* owner;
 
 	if(!info) return(false);
-	owner=info->Obj;
-	RCursor<RObj2DConnector> con(Con->Connect);
+	owner=info->GetObj();
+	RCursor<RObj2DConnector> con(Con->GetConnectors());
 	for(con.Start();!con.End();con.Next())
 	{
-		if(con()->Owner==owner)
+		if(con()->GetObj()==owner)
 			return(true);
 	}
 	return(false);
@@ -228,19 +234,39 @@ bool RGeoInfoConnection::IsIn(const RGeoInfo* info)
 
 
 //------------------------------------------------------------------------------
-bool RGeoInfoConnection::IsIn(const RGeoInfoConnector* con)
+bool RGeoInfoConnection::IsIn(const RObj2DConfigConnector* con)
 {
-	size_t id;
-	RObj2D* owner;
-
 	if(!con) return(false);
-	id=con->Con->Id;
-	owner=con->Owner->Obj;
-	RCursor<RObj2DConnector> cons(Con->Connect);
+	size_t id(con->GetConnector()->GetId());
+	RObj2D* owner(con->GetConnector()->GetObj());
+	RCursor<RObj2DConnector> cons(Con->GetConnectors());
 	for(cons.Start();!cons.End();cons.Next())
 	{
-		if((cons()->Id==id)&&(cons()->Owner==owner))
+		if((cons()->GetId()==id)&&(cons()->GetObj()==owner))
 			return(true);
 	}
 	return(false);
+}
+
+
+//------------------------------------------------------------------------------
+bool RGeoInfoConnection::IsIn(const RObj2DConfigPin* pin)
+{
+	if(!pin) return(false);
+	size_t id(pin->GetPin()->GetConnector()->GetId());
+	RObj2D* owner(pin->GetPin()->GetConnector()->GetObj());
+	RCursor<RObj2DConnector> cons(Con->GetConnectors());
+	for(cons.Start();!cons.End();cons.Next())
+	{
+		if((cons()->GetId()==id)&&(cons()->GetObj()==owner))
+			return(true);
+	}
+	return(false);
+}
+
+
+//------------------------------------------------------------------------------
+RCursor<RGeoInfoPin> RGeoInfoConnection::GetPins(void) const
+{
+	return(RCursor<RGeoInfoPin>(*this));
 }

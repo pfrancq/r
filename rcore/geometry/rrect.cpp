@@ -59,6 +59,19 @@ RRect::RRect(const RRect& rect)
 RRect::RRect(const RPoint& pt1,const RPoint& pt2)
 	: X1(pt1.X),Y1(pt1.Y),X2(pt2.X),Y2(pt2.Y)
 {
+	// Make the bottom-left point be X1,Y1
+	if(X1>X2)
+	{
+		tCoord tmp(X1);
+		X1=X2;
+		X2=tmp;
+	}
+	if(Y1>Y2)
+	{
+		tCoord tmp(Y1);
+		Y1=Y2;
+		Y2=tmp;
+	}
 }
 
 
@@ -66,6 +79,19 @@ RRect::RRect(const RPoint& pt1,const RPoint& pt2)
 RRect::RRect(tCoord x1,tCoord y1,tCoord x2,tCoord y2)
 	: X1(x1),Y1(y1),X2(x2),Y2(y2)
 {
+	// Make the bottom-left point be X1,Y1
+	if(X1>X2)
+	{
+		tCoord tmp(X1);
+		X1=X2;
+		X2=tmp;
+	}
+	if(Y1>Y2)
+	{
+		tCoord tmp(Y1);
+		Y1=Y2;
+		Y2=tmp;
+	}
 }
 
 
@@ -80,6 +106,30 @@ void RRect::Translation(const tCoord x,const tCoord y)
 
 
 //------------------------------------------------------------------------------
+void RRect::Set(tCoord x1,tCoord y1,tCoord x2,tCoord y2)
+{
+	X1=x1;
+	Y1=y1;
+	X2=x2;
+	Y2=y2;
+
+	// Make the bottom-left point be X1,Y1
+	if(X1>X2)
+	{
+		tCoord tmp(X1);
+		X1=X2;
+		X2=tmp;
+	}
+	if(Y1>Y2)
+	{
+		tCoord tmp(Y1);
+		Y1=Y2;
+		Y2=tmp;
+	}
+}
+
+
+//------------------------------------------------------------------------------
 void RRect::SetPos(tCoord x,tCoord y)
 {
 	X2=x+GetWidth();
@@ -87,7 +137,6 @@ void RRect::SetPos(tCoord x,tCoord y)
 	X1=x;
 	Y1=y;
 }
-
 
 
 //------------------------------------------------------------------------------
@@ -216,4 +265,60 @@ bool RRect::IsIn(const tCoord X,const tCoord Y) const
 	if((X>X2)||(X<X1)) return(false);
 
 	return(true);
+}
+
+
+//------------------------------------------------------------------------------
+void RRect::ChangeOrientation(const tOrientation o,RPoint& min)
+{
+	tCoord factx=1,facty=1,oldx,oldy;
+	double co=1,si=0;
+
+	// Determine scale and rotation
+	if((o==oNormalX)||(o==oNormalYX)||(o==oRota90X)||(o==oRota90YX))
+		facty=-1;
+	if((o==oNormalY)||(o==oNormal)||(o==oRota90Y)||(o==oRota90YX))
+		factx=-1;
+	if((o==oRota90)||(o==oRota90X)||(o==oRota90Y)||(o==oRota90YX))
+	{
+		co=0;
+		si=1;
+	}
+	min.X=min.Y=cMaxCoord;
+
+	// Make the transformation for Pt1
+	oldx = factx*X1;
+	oldy = facty*Y1;
+	X1 = tCoord(co*oldx - si*oldy);
+	Y1 = tCoord(si*oldx + co*oldy);
+	if(X1<min.X) min.X=X1;
+	if(Y1<min.Y) min.Y=Y1;
+
+	// Make the transformation for Pt2
+	oldx = factx*X2;
+	oldy = facty*Y2;
+	X2 = tCoord(co*oldx - si*oldy);
+	Y2 = tCoord(si*oldx + co*oldy);
+	if(X2<min.X) min.X=X2;
+	if(Y2<min.Y) min.Y=Y2;
+
+	// Replace (0,0) as the left-top point of the embedded rectangle
+	X1-=min.X;
+	Y1-=min.Y;
+	X2-=min.X;
+	Y2-=min.Y;
+
+	// Make the bottom-left point be X1,Y1
+	if(X1>X2)
+	{
+		tCoord tmp(X1);
+		X1=X2;
+		X2=tmp;
+	}
+	if(Y1>Y2)
+	{
+		tCoord tmp(Y1);
+		Y1=Y2;
+		Y2=tmp;
+	}
 }

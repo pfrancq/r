@@ -37,7 +37,7 @@
 // include files for R Project
 #include <rchromo.h>
 #include <rga2d.h>
-#include <rgeoinfos.h>
+#include <rlayout.h>
 #include <rplacementheuristic.h>
 
 
@@ -53,7 +53,7 @@ namespace R{
 * @short 2D GA chromosome.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
-	class RChromo2D : public RChromo<cInst,cChromo,cFit,cThreadData>, public RGeoInfos
+	class RChromo2D : public RChromo<cInst,cChromo,cFit,cThreadData>, public RLayout
 {
 protected:
 	using RChromo<cInst,cChromo,cFit,cThreadData>::Id;
@@ -62,7 +62,7 @@ protected:
 	/**
 	* The actual limits of the solution represented by the chromosome.
 	*/
-	RPoint ActLimits;
+	RSize ActLimits;
 
 	/**
 	* Heuristic used for the placement.
@@ -74,79 +74,29 @@ protected:
 	*/
 	RGrid* Grid;
 
-public:
-
-	/**
-	* Objects to place.
-	*/
-	RCursor<RObj2D> Objs;
-
-	/**
-	* Number of objects to place.
-	*/
-	size_t NbObjs;
-
 protected:
 
 	/**
-	* Array representing the area that can be occupied.
+	* Temporary array to remember which objects are selected.
 	*/
-	size_t** OccupiedY;
+	bool* Selected;
 
 	/**
-	* Array to hold objects id. This is a "thread-dependent" data.
-	*/
-	size_t* thOrder;
-
-	/**
-	* Array to hold objects id. This is a "thread-dependent" data.
-	*/
-	size_t* thOrder2;
-
-	/**
-	* Temporary objects used in crossover and mutation. This is a
-	* "thread-dependent" data.
-	*/
-	RObj2D** thObjs;
-
-	/**
-	* Number of temporary objects.
-	*/
-	size_t thNbObjs;
-
-	/**
-	* Temporary object container used for the crossover. This is a
-	* "thread-dependent" data.
-	*/
-	RObj2DContainer* thObj1;
-
-	/**
-	* Temporary object container used for the crossover. This is a
-	* "thread-dependent" data.
-	*/
-	RObj2DContainer* thObj2;
-
-	/**
-	* Temporary geometric informations. This is a "thread-dependent" data.
-	*/
-	RGeoInfos* thInfos;
+	 * PROMETHEE kernel.
+	 */
+	RPromKernel* Kernel;
 
 public:
-
-	/**
-	* Point representing the limits for the placement.
-	*/
-	RPoint Limits;
 
 	/**
 	* Construct the chromosome.
 	* @param inst           Pointer to the instance.
-	* @param id             Identificator of the chromosome.
+	* @param id             Identifier of the chromosome.
 	*/
 	RChromo2D(cInst* inst,size_t id);
 
 	/**
-	* This function initialises some important data, in particular Infos and
+	* This function initializes some important data, in particular Infos and
 	* Selected.
 	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
 	*/
@@ -173,12 +123,13 @@ public:
 
 	/**
 	* This function verify the validity of the chromosome, in particular that
-	* no polygons are overlaped.
+	* no polygons are overlapped.
 	*/
 	virtual void Verify(void);
 
 	/**
-	* The assignment operator.
+	* The method copies a chromosome into another.
+	* @param chromo          Chromosome.
 	*/
 	virtual void Copy(const cChromo& chromo);
 
@@ -202,16 +153,6 @@ public:
 	* Return the actual limits of the chromosome.
 	*/
 	RPoint& GetActLimits(void);
-
-	/**
-	* Return the number of levels.
-	*/
-//	inline size_t GetNbLevels(void) { return(NbLevels); }
-
-	/**
-	* Return the ith level of the chromosome.
-	*/
-//	RPoint& GetLevel(size_t i);
 
 	/**
 	* Destruct the chromosome.
