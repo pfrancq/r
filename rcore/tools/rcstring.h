@@ -85,22 +85,22 @@ public:
 	RCString(void);
 
 	/**
-	* Construct a string from a "C string".
-	* @param src             C string used as reference.
+	* Construct a string from a C-style string.
+	* @param src             C-style string used as reference.
 	*/
 	RCString(const char* src);
 
 	/**
-	* Construct a string by doing a deep copy of the first characters of a "C"
-	* string.
+	* Construct a string by doing a deep copy of the first characters of a
+	* C-style string.
 	* @param src             C string used as reference.
 	* @param len             Length.
 	*/
 	RCString(const char* src,size_t len);
 
 	/**
-	* Construct a string from a "C string".
-	* @param src             String" used as reference.
+	* Construct a string from a C-style string.
+	* @param src             C-style string used as reference.
 	*/
 	RCString(const std::string& src);
 
@@ -167,7 +167,7 @@ public:
 
 	inline RCString Mid(size_t idx,size_t len=(size_t)-1) const {return(BasicString<char,RCString>::Mid(idx,len));}
 
-	/** @copydoc BasicString::IsAt(const S&,int) */
+	/** @copydoc BasicString::IsAt(const S&,int) const */
 	inline bool IsAt(const RCString& sub,int pos) const  {return(BasicString<char,RCString>::IsAt(sub,pos));}
 
 	/** @copydoc BasicString::Insert(const S&,int,size_t) */

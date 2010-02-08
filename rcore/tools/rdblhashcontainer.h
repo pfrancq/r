@@ -270,7 +270,7 @@ public:
 		using RContainer<Hash2,true,true>::Tab;
 		using RContainer<Hash2,true,true>::MaxPtr;
 
-		/*
+		/**
 		* Constructor.
 		* @param s               Size of the initial hash table.
 		* @param m               The initial maximal size of the array for a
@@ -285,7 +285,7 @@ public:
 				InsertPtrAt(new Hash2(m,i),pos);
 		}
 
-		/*
+		/**
 		* Get the number of elements in the container.
 		*/
 		size_t GetNb(void) const
@@ -297,7 +297,7 @@ public:
 			return(nb);
 		}
 
-		/*
+		/**
 		* Clear the container.
 		*/
 		void Clear(void)
@@ -310,8 +310,6 @@ public:
 		/**
 		 * Get a pointer to the hash table.
 		 * @param hash           Hash index 1.
-		 * @param m              Maximum.
-		 * @param i              Increase.
 		 */
 		const Hash2* GetHash(size_t hash) const
 		{

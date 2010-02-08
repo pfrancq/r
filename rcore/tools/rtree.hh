@@ -82,7 +82,7 @@ template<class T,class N,bool bAlloc>
 	if(!NbTopNodes)
 		return(0);
 	if(NbTopNodes>1)
-		throw RException("RTree::GetTop(void) : More than one node");
+		ThrowRException("More than one top node");
 	return((*this)[0]);
 }
 
@@ -94,7 +94,7 @@ template<class T,class N,bool bAlloc>
 	if(!NbTopNodes)
 		return(0);
 	if(NbTopNodes>1)
-		throw RException("RTree::GetTop(void) const : More than one node");
+		ThrowRException("More than one top node");
 	return((*this)[0]);
 }
 
@@ -146,7 +146,9 @@ template<class T,class N,bool bAlloc>
 	size_t Index;        // Index where the node will be inserted (All references after must be increased by one).
 
 	if((node->Tree)&&(node->Tree!=static_cast<T*>(this)))
-		throw RException("RTree::InsertNode(N*,N*) : Node is already inserted in another tree");
+		ThrowRException("Node is already inserted in another tree");
+	if(to&&((to->Tree!=static_cast<T*>(this))||(to->Index==cNoRef)))
+		ThrowRException("Node where to attach is not inserted in the same tree");
 	node->Tree=static_cast<T*>(this);
 	if(to)
 	{
@@ -269,7 +271,7 @@ template<class T,class N,bool bAlloc>
 	void RTree<T,N,bAlloc>::MoveNode(N* to,N* node)
 {
 	if(to->Tree!=node->Tree)
-		throw RException("RTree::MoveNode(N*,To*) : Cannot move between different trees");
+		ThrowRException("Cannot move between different trees");
 	if(to==node->Parent)
 		return;
 

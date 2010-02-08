@@ -153,10 +153,10 @@ public:
 
 	/**
 	* Return the minimum distance between two connectors.
-	* @param c              The second connector.
-	* @param infos          The geometric information representing the placed objects.
-	* @param pin1           The first pin used (set by the method).
-	* @param pin2           The second lin used (set by the method).
+	* @param c               The second connector.
+	* @param layout          Layout.
+	* @param pin1            The first pin used (set by the method).
+	* @param pin2            The second lin used (set by the method).
 	*/
 	double GetMinDist(RObj2DConfigConnector* c,RLayout* layout,RObj2DConfigPin* &pin1,RObj2DConfigPin* &pin2);
 

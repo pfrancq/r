@@ -151,11 +151,11 @@ public:
 	 * @param con            Connector.
 	 * @return a value used by RContainer.
 	 */
-	int Compare(const RObj2DConnector& c) const {return(CompareIds(Id,c.Id));}
+	int Compare(const RObj2DConnector& con) const {return(CompareIds(Id,con.Id));}
 
 	/**
 	 * Compare a connector with an identifier.
-	 * @param con            Identifier of the connector.
+	 * @param id             Identifier of the connector.
 	 * @return a value used by RContainer.
 	 */
 	int Compare(const size_t id) const {return(CompareIds(Id,id));}
@@ -312,6 +312,8 @@ public:
 	/**
 	 * @return a pointer to a particular connector.
 	 * @param use            Search criteria.
+	 * @param order          Specify if the search criteria is the one ordering
+	 *                       the container.
 	 */
 	template<class TUse> inline RObj2DConnector* GetConnector(const TUse& use,bool order=true) const {return(Connectors.GetPtr(use,order));}
 

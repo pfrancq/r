@@ -166,9 +166,9 @@ protected:
 	BasicString(const C* src);
 
 	/**
-	* Construct a string by doing a deep copy of the first characters of a "C"
-	* string.
-	* @param src             C string used as reference.
+	* Construct a string by doing a deep copy of the first characters of a
+	* C-style string.
+	* @param src             C-style string used as reference.
 	* @param len             Length.
 	*/
 	BasicString(const C* src,size_t len);

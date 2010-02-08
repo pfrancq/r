@@ -256,7 +256,6 @@ public:
 
 	/**
 	* Do some operations after the run.
-	* @param limits         Limits of the area.
 	*/
 	virtual void PostRun(void);
 

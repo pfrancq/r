@@ -166,6 +166,9 @@ public:
 	 * @return the distances of the connections for a given object. Eventually,
 	 * the object is considered to be placed at a given position.
 	 * @param info           Object.
+	 * @param pos            Position where the object may be placed. If
+	 *                       RPoint::Null, the method uses the current
+	 *                       position.
 	 */
 	tCoord ComputeDist(RGeoInfo* info,const RPoint& pos=RPoint::Null);
 

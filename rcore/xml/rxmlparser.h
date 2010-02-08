@@ -71,13 +71,13 @@ public:
 	{
 		Header                       /** The Tag "<!xml >".*/,
 		StyleSheet                   /** The Tag "<?xml-stylesheet >".*/,
-		DOCTYPE                      /** The Tag "<!DOCTYPE >.*/,
+		DOCTYPE                      /** The Tag "<!DOCTYPE >".*/,
 		Body                         /** The body of the XML file.*/
 	};
 
 protected:
 
-	/*
+	/**
 	 * The HTMLTag provides a representation for a HTML Tag.
 	 */
 	class HTMLTag
@@ -200,7 +200,7 @@ private:
 	bool HTMLMode;
 
 	/**
-	* Is the </html> found?
+	* Is the "</html>" found?
 	*/
 	bool FoundClosingHTML;
 
@@ -368,7 +368,6 @@ private:
 	* @param namespaceURI    Namespace (if any).
 	* @param lName           Local name of the attribute.
 	* @param name            Complete name of the attribute.
-	* @param value           Value of the attribute (if any).
 	 */
 	void HeaderAttribute(const RString& namespaceURI,const RString& lName,const RString& name);
 
@@ -414,7 +413,7 @@ public:
 	inline bool MustAvoidSpaces(void) const {return(AvoidSpaces);}
 
 	/**
-	 * @return true if the closing </html> tag was found.
+	 * @return true if the closing "</html>" tag was found.
 	 */
 	inline bool HasFoundClosingHTML(void) const {return(FoundClosingHTML);}
 

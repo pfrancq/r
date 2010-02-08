@@ -77,8 +77,8 @@ public:
 	RString(void);
 
 	/**
-	* Construct a string from a "C string".
-	* @param src             C string" used as reference.
+	* Construct a string from a C-style string.
+	* @param src             C-style string used as reference.
 	*/
 	RString(const char* src);
 
@@ -89,9 +89,9 @@ public:
 	RString(const RChar* src);
 
 	/**
-	* Construct a string by doing a deep copy of the first characters of a "C"
-	* string.
-	* @param src             C string used as reference.
+	* Construct a string by doing a deep copy of the first characters of a
+	* C-style string.
+	* @param src             C-style string used as reference.
 	* @param len             Length.
 	*/
 	RString(const RChar* src,size_t len);
@@ -156,7 +156,7 @@ private:
 	/**
 	* Transform a C string into an array of RChar. The resulting array should be
 	* destroyed by the caller of the function.
-	* @param src             Source "C String".
+	* @param src             C-style string.
 	* @param len             Length of the string (computed by the function).
 	* @param maxlen          Maximum length (may be updated by the function).
 	*/
@@ -178,12 +178,11 @@ private:
 
 public:
 
-	/** @copydoc BasicString::SetLen(size_t) */
-
-	inline size_t GetLen(void) const {return(BasicString<RChar,RString>::GetLen());}
+		inline size_t GetLen(void) const {return(BasicString<RChar,RString>::GetLen());}
 
 	inline size_t GetMaxLen(void) const {return(BasicString<RChar,RString>::GetMaxLen());}
 
+	/** @copydoc BasicString::SetLen(size_t) */
 	inline void SetLen(size_t len) {BasicString<RChar,RString>::SetLen(len);}
 
 	/** @copydoc BasicString::SetLen(size_t,const S&) */
@@ -223,7 +222,7 @@ public:
 
 	inline RString Mid(size_t idx,size_t len=(size_t)-1) const {return(BasicString<RChar,RString>::Mid(idx,len));}
 
-	/** @copydoc BasicString::IsAt(const S&,int) */
+	/** @copydoc BasicString::IsAt(const S&,int) const */
 	inline bool IsAt(const RString& sub,int pos) const  {return(BasicString<RChar,RString>::IsAt(sub,pos));}
 
 	/** @copydoc BasicString::Insert(const S&,int,size_t) */

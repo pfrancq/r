@@ -111,7 +111,7 @@ private:
 	* containing objects of parent1 are copied (and the common objects not) or
 	* not.
 	* @param parent1         Parent 1.
-	* @param parent1         Parent 2.
+	* @param parent2         Parent 2.
 	* @param pos1            Position in parent 1.
 	* @param begin           Number of "first" groups of parent 1 to verify.
 	* @param end             Number of groups after pos1 of parent 1 to verify.

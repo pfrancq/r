@@ -89,8 +89,8 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	RCursor<N> RNode<T,N,bAlloc>::GetNodes(void) const
 {
-	if(!Tree)
-		throw RException("RNode::GetNodes(void) const : Node not assign to a tree");
+	if((!Tree)||(Index==cNoRef))
+		ThrowRException("Node not assign to a tree");
 	return(Tree->GetNodes(static_cast<const N*>(this)));
 }
 
@@ -99,8 +99,8 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	template<class TUse> N* RNode<T,N,bAlloc>::GetNode(const TUse& tag) const
 {
-	if(!Tree)
-		throw RException("RNode::GetNode(const TUse&) const : Node not assign to a tree");
+	if((!Tree)||(Index==cNoRef))
+		ThrowRException("Node not assign to a tree");
 	return(Tree->GetPtr(tag,false,SubNodes,SubNodes+NbSubNodes-1));
 }
 
@@ -109,8 +109,8 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	void RNode<T,N,bAlloc>::InsertNode(N* node)
 {
-	if(!Tree)
-		throw RException("RNode::InsertNode(N*) : Node not assign to a tree");
+	if((!Tree)||(Index==cNoRef))
+		ThrowRException("Node not assign to a tree");
 	Tree->InsertNode(static_cast<N*>(this),node);
 }
 
@@ -128,8 +128,8 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	const N* RNode<T,N,bAlloc>::operator[](size_t idx) const
 {
-	if(!Tree)
-		throw RException("Node::operator[] const :Node not assign to a tree");
+	if((!Tree)||(Index==cNoRef))
+		ThrowRException("Node not assign to a tree");
 	if(idx>=NbSubNodes)
 	{
 		char tmp[80];
@@ -144,8 +144,8 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	N* RNode<T,N,bAlloc>::operator[](size_t idx)
 {
-	if(!Tree)
-		throw RException("RNode::operator[] : Node not assign to a tree");
+	if((!Tree)||(Index==cNoRef))
+		ThrowRException("Node not assign to a tree");
 	if(idx>=NbSubNodes)
 	{
 		char tmp[80];
@@ -160,8 +160,8 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	size_t RNode<T,N,bAlloc>::GetTab(N** nodes)
 {
-	if(!Tree)
-		throw RException("RNode::GetNodes(N**) : Node not assign to a tree");
+	if((!Tree)||(Index==cNoRef))
+		ThrowRException("Node not assign to a tree");
 	Tree->GetTab(nodes,SubNodes,SubNodes+NbSubNodes-1);
 	return(NbSubNodes);
 }
@@ -172,7 +172,7 @@ template<class T,class N,bool bAlloc>
 	bool RNode<T,N,bAlloc>::VerifyNode(size_t id)
 {
 	// Each node must have a parent.
-	if(!Tree)
+	if((!Tree)||(Index==cNoRef))
 	{
 		std::cerr<<"Node "<<id<<": No Owner for this node."<<std::endl;
 		return(false);

@@ -219,7 +219,8 @@ public:
 	/**
 	* Insert a node and attached it to a parent. If the parent is null,
 	* the node is considered as one of the top node of the tree.
-	* @param to              Parent where the node is to attached.
+	* @param to              Parent where the node is to attached. This node
+	*                        must already been attached to the tree.
 	* @param node            Node to insert.
 	*/
 	void InsertNode(N* to,N* node);
