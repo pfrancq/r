@@ -86,13 +86,17 @@ void RBlockFile::Open(RIO::ModeType mode)
 //------------------------------------------------------------------------------
 void RBlockFile::Close(void)
 {
-	Flush();
+	if(IsOpen())
+		Flush();
 }
 
 
 //------------------------------------------------------------------------------
 void RBlockFile::Clear(void)
 {
+	if(!IsOpen())
+		ThrowRIOException(this,"File not opened");
+
 	// Close the file, erase it, initialize the parameter
 	RIOFile::Close();
 	RFile::RemoveFile(GetURI());
@@ -108,6 +112,9 @@ void RBlockFile::Clear(void)
 //------------------------------------------------------------------------------
 void RBlockFile::SetCacheType(CacheType type)
 {
+	if(!IsOpen())
+		ThrowRIOException(this,"File not opened");
+
 	CacheType Old(Type);
 	Type=type;
 	if((Old==WriteBack)&&(Type==WriteThrough))
@@ -118,6 +125,9 @@ void RBlockFile::SetCacheType(CacheType type)
 //------------------------------------------------------------------------------
 void RBlockFile::Flush(void)
 {
+	if(!IsOpen())
+		ThrowRIOException(this,"File not opened");
+
 	// Go trough all the blocks in memory and save those who are dirty
 	RCursor<Block> Cur(Cache);
 	for(Cur.Start();!Cur.End();Cur.Next())
@@ -149,6 +159,9 @@ int RBlockFile::sortOrderAccess(const void* a,const void* b)
 //------------------------------------------------------------------------------
 RBlockFile::Block* RBlockFile::LoadBlock(size_t id)
 {
+	if(!IsOpen())
+		ThrowRIOException(this,"File not opened");
+
 	// Search for the block in memory
 	Block* ptr(Cache.GetPtr(id));
 	if(ptr) return(ptr);
@@ -202,10 +215,12 @@ RBlockFile::Block* RBlockFile::LoadBlock(size_t id)
 //------------------------------------------------------------------------------
 void RBlockFile::Read(char* buffer,size_t nb)
 {
+	if(!IsOpen())
+		ThrowRIOException(this,"File not opened");
 	if(!Current)
-		throw RIOException(this,"RBlockFile::Read(char*,size_t) : No current block");
+		ThrowRIOException(this,"No current block");
 	if(CurrentPos+nb>BlockSize)
-		throw RIOException(this,"RBlockFile::Read(char*,size_t) : Size of a block is limited to "+RString::Number(BlockSize));
+		ThrowRIOException(this,"Size of a block is limited to "+RString::Number(BlockSize));
 	memcpy(buffer,CurrentData,nb*sizeof(char));
 	CurrentPos+=nb;
 	CurrentData+=nb;
@@ -217,10 +232,12 @@ void RBlockFile::Read(char* buffer,size_t nb)
 //------------------------------------------------------------------------------
 void RBlockFile::Write(const char* buffer,size_t nb)
 {
+	if(!IsOpen())
+		ThrowRIOException(this,"File not opened");
 	if(!Current)
-		throw RIOException(this,"RBlockFile::Write(char*,size_t) : No current block");
+		ThrowRIOException(this,"No current block");
 	if(CurrentPos+nb>BlockSize)
-		throw RIOException(this,"RBlockFile::Write(char*,size_t) : Size of a block is limited to "+RString::Number(BlockSize));
+		ThrowRIOException(this,"Size of a block is limited to "+RString::Number(BlockSize));
 	memcpy(CurrentData,buffer,nb*sizeof(char));
 	if(Type==WriteThrough)
 	{
@@ -239,6 +256,8 @@ void RBlockFile::Write(const char* buffer,size_t nb)
 //------------------------------------------------------------------------------
 void RBlockFile::MoveBlock(size_t blockid,size_t start,size_t end,size_t size)
 {
+	if(!IsOpen())
+		ThrowRIOException(this,"File not opened");
 	Seek(blockid,end+size);
 	memmove(&Current->Data[end],&Current->Data[start],size);
 	if(Type==WriteThrough)
@@ -255,10 +274,12 @@ void RBlockFile::MoveBlock(size_t blockid,size_t start,size_t end,size_t size)
 //------------------------------------------------------------------------------
 const char* RBlockFile::GetPtr(size_t size)
 {
+	if(!IsOpen())
+		ThrowRIOException(this,"File not opened");
 	if(!Current)
-		throw RIOException(this,"RBlockFile::Get(size_t) const : No current block");
+		ThrowRIOException(this,"No current block");
 	if(CurrentPos+size>BlockSize)
-		throw RIOException(this,"RBlockFile::Get(size_t) const : Size of a block is limited to "+RString::Number(BlockSize));
+		ThrowRIOException(this,"Size of a block is limited to "+RString::Number(BlockSize));
 	Current->NbAccess++;
 	const char* ptr(CurrentData);
 	CurrentPos+=size;
@@ -270,8 +291,10 @@ const char* RBlockFile::GetPtr(size_t size)
 //------------------------------------------------------------------------------
 void RBlockFile::Seek(size_t blockid,size_t pos)
 {
+	if(!IsOpen())
+		ThrowRIOException(this,"File not opened");
 	if(pos>BlockSize)
-		throw RIOException(this,"RBlockFile::Seek(size_t,size_t) : Size of a block is limited to "+RString::Number(BlockSize));
+		ThrowRIOException(this,"Size of a block is limited to "+RString::Number(BlockSize));
 
 	// Select the current block
 	if((!Current)||(Current->Id!=blockid))
@@ -291,12 +314,14 @@ void RBlockFile::Seek(size_t blockid,size_t pos)
 //------------------------------------------------------------------------------
 void RBlockFile::SeekRel(long pos)
 {
+	if(!IsOpen())
+		ThrowRIOException(this,"File not opened");
 	if(!Current)
-		throw RIOException(this,"RBlockFile::SeekRel(long) : No current block");
+		ThrowRIOException(this,"No current block");
 	if(pos+CurrentPos>BlockSize)
-		throw RIOException(this,"RBlockFile::Seek(long) : Size of a block is limited to "+RString::Number(BlockSize));
+		ThrowRIOException(this,"Size of a block is limited to "+RString::Number(BlockSize));
 	if(static_cast<ssize_t>(CurrentPos)+pos<0)
-		throw RIOException(this,"RBlockFile::Seek(long) : Relative position outside the block");
+		ThrowRIOException(this,"Relative position outside the block");
 
 	CurrentPos+=pos;
 	CurrentData+=pos;
