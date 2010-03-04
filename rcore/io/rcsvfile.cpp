@@ -157,7 +157,7 @@ void RCSVFile::Read(void)
 		if(Search==Sep)
 		{
 			if(Eol(Car))
-			break;
+				break;
 		}
 		else if (Car==Search)
 		{
@@ -188,6 +188,9 @@ void RCSVFile::Read(void)
 			}
 			else if(!Eol(Car))
 				ThrowRIOException(this,"Separator character '"+Sep+"' expected");
+
+			if(Eol(Car))
+				break;
 
 			continue;
 		}

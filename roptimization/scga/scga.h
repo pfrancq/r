@@ -191,6 +191,11 @@ public:
 	size_t NbMaxObjs;
 
 	/**
+	 * All the pairs of objects of a group must respect the minimum of similarity constraint.
+	 */
+	bool AllMinSim;
+
+	/**
 	* Constructor.
 	*/
 	RParamsSC(void);

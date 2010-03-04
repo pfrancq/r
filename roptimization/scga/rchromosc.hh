@@ -40,7 +40,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		: RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(inst,id),
 	  ToDel(0), CritSimJ(0.0), CritAgreement(0.0), CritDisagreement(1.0), Protos(Used.GetMaxNb()),
 	  OldProtos(Used.GetMaxNb()),
-	  thProm(0), thSols(0), MostSimilarGroup1(cNoRef), MostSimilarGroup2(cNoRef)
+	  thProm(0), thSols(0), MostSimilarGroup1(cNoRef), MostSimilarGroup2(cNoRef), VerifyCentroids(true)
 {
 }
 
@@ -106,7 +106,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::ReAllocate(void)
+	double RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::ReAllocate(void)
 {
 	size_t nb;
 	double sim,maxsim;
@@ -131,8 +131,8 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		grp->SetCentroid(CurP());
 	}
 
-	// Mix randomly thObjs1
-//	Instance->RandOrder<GCAObj*>(thObjs1,Objs->GetNb());
+	// Suspend the auto-computation of the centroids
+	VerifyCentroids=false;
 
 	// Go through the randomly ordered objects and put them in the group of the
 	// most similar prototype.
@@ -144,10 +144,10 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		// Look first if one of the object with a ratio are already grouped
 		(*Cur)->FindBestGroup(this,grp);
 
-		// If no group find, -> Go through each groups
+		// If no group find, -> Go through each group
 		if(!grp)
 		{
-			R::RCursor<cGroup> Grp(Used);
+			Grp.Set(Used);
 			for(Grp.Start(),maxsim=-1.0;!Grp.End();Grp.Next())
 			{
 				// If all the hard constraints are not respected -> skip the group.
@@ -163,18 +163,33 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 				}
 			}
 		}
-
-		// If no group find -> Create a new group and make the current object the
-		// prototype of it.
-		if(!grp)
-		{
-			grp=ReserveGroup();
-			grp->SetCentroid(*Cur);
-		}
+/*		else
+			std::cout<<"Automatic existing group"<<std::endl;*/
 
 		// Insert the object in the current group.
-		grp->Insert(*Cur);
+		if(grp)
+			grp->Insert(*Cur);
+		else
+		{
+			// If no group find -> Create a new group and make the current object the
+			// prototype of it.
+			grp=ReserveGroup();
+			grp->Insert(*Cur);
+			grp->SetCentroid(*Cur);
+//			std::cout<<"New Group"<<std::endl;
+		}
+
 	}
+
+	// Compute the average similarity of the groups
+	VerifyCentroids=true;
+	Grp.Set(Used);
+	for(Grp.Start(),maxsim=0.0;!Grp.End();Grp.Next())
+	{
+		Grp()->SetCentroid(0); // Force to recompute the new centroids
+		maxsim+=Grp()->GetAvgIntraSim();
+	}
+	return(maxsim/Used.GetNb());
 }
 
 
@@ -222,9 +237,10 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		R::RCursor<cGroup> Grp(Used);
 		for(Grp.Start();!Grp.End();Grp.Next())
 			OldProtos.InsertPtr(Grp()->GetCentroid());
-		ReAllocate();
+		std::cout<<itermax<<" : "<<ReAllocate()<<std::endl;
 		error=static_cast<double>(CalcNewProtosNb())/static_cast<double>(Used.GetNb());
 	}
+	std::cout<<std::endl;
 
 	if(Instance->Debug)
 	{

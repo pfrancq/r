@@ -72,6 +72,8 @@ RBlockFile::RBlockFile(const RURI& uri,size_t blocksize,size_t nbcaches)
   : RIOFile(uri), Type(WriteBack), BlockSize(blocksize*1024), Cache(nbcaches),
     Current(0), NbBlocks(0)
 {
+	if(!blocksize)
+		ThrowRIOException(this,"Block size cannot be null");
 }
 
 

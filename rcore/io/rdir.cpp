@@ -191,6 +191,8 @@ void RDir::Clear(void)
 //-----------------------------------------------------------------------------
 RCursor<RFile> RDir::GetEntries(void) const
 {
+	if(!Data->Handle)
+		ThrowRIOException(this,"directory not opened");
 	return(RCursor<RFile>(Entries));
 }
 

@@ -161,6 +161,11 @@ protected:
 	 */
 	size_t MostSimilarGroup2;
 
+	/**
+	 * Verify that the centroids are updated.
+	 */
+	bool VerifyCentroids;
+
 public:
 
 	/**
@@ -183,8 +188,9 @@ public:
 
 	/**
 	*  Reallocate the objects to the groups based on the different prototypes.
+	*  @return the average similarity between the objects and their prototype.
 	*/
-	void ReAllocate(void);
+	double ReAllocate(void);
 
 	/**
 	* Compute the number of new prototypes until the last K-Means iteration.

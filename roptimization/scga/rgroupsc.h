@@ -59,6 +59,7 @@ namespace R{
 template<class cGroup,class cObj,class cGroups>
 	class RGroupSC : public RGroup<cGroup,cObj,cGroups>
 {
+	using RGroup<cGroup,cObj,cGroups>::Id;
 	using RGroup<cGroup,cObj,cGroups>::Owner;
 	using RGroup<cGroup,cObj,cGroups>::NbSubObjects;
 
@@ -200,8 +201,7 @@ private:
 public:
 
 	/**
-	* Get the centroid of the group.
-	* @return Pointer to GCAObj
+	* @return the centroid of the group.
 	*/
 	inline cObj* GetCentroid(void)
 	{
@@ -227,12 +227,17 @@ public:
 	void SetCentroid(cObj* obj);
 
 	/**
-	* Get the average intra-similarity of the group.
+	* @return the average intra-similarity of the group.
 	*/
-	inline double GetAvgIntraSim(void) {return(AvgIntraSim);}
+	inline double GetAvgIntraSim(void)
+	{
+		if(!Centroid)
+			ComputeCentroid();
+		return(AvgIntraSim);
+	}
 
 	/**
-	* Compute the similarities of a given object to the centroid of the group.
+	* Compute the similarity of a given object to the centroid of the group.
 	* @param obj             Object.
 	*/
 	inline double ComputeRelSim(const cObj* obj) {return(Owner->Instance->GetSim(GetCentroid(),obj));}

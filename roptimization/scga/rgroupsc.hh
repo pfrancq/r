@@ -88,8 +88,9 @@ template<class cGroup,class cObj,class cGroups>
 	if(RGroup<cGroup,cObj,cGroups>::NbSubObjects>Owner->Instance->Params->NbMaxObjs)
 		return(false);
 
-	// Verify that no object of the group has the same parent of a disagreement ratios greater than the
+	// Verify that no object of the group has the same parent or a disagreement ratio greater than the
 	// maximum allowed.
+	bool OneMinSim(false); // Suppose no object in the group as the minimum of similarity
 	double tmp;
 	const cObj* prof1(obj);
 	size_t usr1(obj->GetParentId());
@@ -106,18 +107,20 @@ template<class cGroup,class cObj,class cGroups>
 
 		// Verify the minimum similarity and remember the best similarity
 		tmp=Owner->Instance->GetSim(prof1,ptr());
-		if(tmp<=0)
-			return(false);
-
-		// Min similairty
-		if(tmp<=Owner->Instance->Params->MinSimLevel)
-			return(false);
+		if(tmp<Owner->Instance->Params->MinSimLevel)
+		{
+			if(Owner->Instance->Params->AllMinSim)
+				return(false);
+		}
+		else
+			OneMinSim=true;
 		if(tmp>LastMaxSim)
 			LastMaxSim=tmp;
 	}
 
-/*	if(LastMaxSim<=Owner->Instance->Params->MinSimLevel)
-		return(false);*/
+	// Verify that at least one object has the minimum of similarity
+	if(!OneMinSim)
+		return(false);
 
 	// OK, it can be grouped.
 	return(true);
@@ -129,7 +132,8 @@ template<class cGroup,class cObj,class cGroups>
 	void RGroupSC<cGroup,cObj,cGroups>::PostInsert(const cObj* /*obj*/)
 {
 	ToEval=true;
-	Centroid=0;
+	if(Owner->VerifyCentroids)
+		Centroid=0;
 }
 
 
@@ -138,7 +142,8 @@ template<class cGroup,class cObj,class cGroups>
 	void RGroupSC<cGroup,cObj,cGroups>::PostDelete(const cObj* /*obj*/)
 {
 	ToEval=true;
-	Centroid=0;
+	if(Owner->VerifyCentroids)
+		Centroid=0;
 }
 
 
@@ -442,6 +447,13 @@ template<class cGroup,class cObj,class cGroups>
 
 	// If nothing to add -> return
 	if(!nbadd) return(false);
+
+	if((Owner->Instance->Debug)&&(nbdel||nbadd))
+	{
+		Owner->Instance->Debug->BeginFunc("DoOptimisation","RGroupSC");
+		Owner->Instance->Debug->PrintInfo("Group "+RString::Number(Id)+": "+RString::Number(nbdel)+" objects replaced by "+RString::Number(nbadd));
+		Owner->Instance->Debug->EndFunc("DoOptimisation","RGroupSC");
+	}
 
 	// Delete the objects from the group and insert them in objs.
 	for(i=0;i<nbdel;i++)

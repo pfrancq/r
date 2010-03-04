@@ -47,6 +47,6 @@ RParamsSC::RParamsSC(void)
 	  MinAgreement(1.0), MinDisagreement(1.0), MaxKMeans(10), Convergence(0.0001),
 	  NbDivChromo(2), ParamsSim(0), ParamsAgreement(0), ParamsDisagreement(0),
 	  LocalOptimisation(false), Optimisation(false), Incremental(false),
-	  NbMinObjs(0), NbMaxObjs(cNoRef)
+	  NbMinObjs(0), NbMaxObjs(cNoRef), AllMinSim(false)
 {
 }
