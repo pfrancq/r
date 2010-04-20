@@ -65,14 +65,11 @@ template<class I,bool bOrder>
 {
 	if(max>=MaxInt)
 	{
-		I* ptr;
-		size_t OldSize;
-
-		OldSize=MaxInt;
+		size_t OldSize(MaxInt);
 		MaxInt+=(MaxInt/2);
 		if(max>MaxInt)
 			MaxInt=max;
-		ptr=new I[MaxInt];
+		I* ptr(new I[MaxInt]);
 		memcpy(ptr,List,OldSize*sizeof(I));
 		delete[] List;
 		List=ptr;

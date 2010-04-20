@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RValue.h
+	RMaxValue.h
 
-	Value associate to an identifier - Header.
+	Ascending Ordered value associate to an identifier - Header.
 
-	Copyright 2008-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2009-2010 by Pascal Francq (pascal@francq.info).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RValue_H
-#define RValue_H
+#ifndef RMaxValue_H
+#define RMaxValue_H
 
 
 //------------------------------------------------------------------------------
@@ -43,18 +43,19 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RValue class provides an association of an identifier and a value.
+* The RMaxValue class provides an association of an identifier and a value
+* order by ascending or descending order of values.
 * @author Pascal Francq
-* @short Value Associated to a Identifier.
+* @short Ordered Value Associated to a Identifier.
 */
-class RValue
+class RMaxValue
 {
 public:
 
 	/**
 	 * Represent a null value and an undefined identifier.
 	 */
-	static const RValue Null;
+	static const RMaxValue Null;
 
 	/**
 	* The identifier of the value.
@@ -67,46 +68,59 @@ public:
 	double Value;
 
 	/**
-	 * Default constructor. The identifier is set to cNoRef and the value to NAN.
+	 * Default constructor. The identifier is set to cNoRef and the value to
+	 * NAN.
 	 */
-	RValue(void);
+	RMaxValue(void);
+
+	/**
+	 * Copy constructor.
+	 * @param val            Original value.
+	 */
+	RMaxValue(const RMaxValue& val);
 
 	/**
 	* Construct a default value.
 	* @param id             Identifier.
 	*/
-	explicit RValue(size_t id);
+	explicit RMaxValue(size_t id);
 
 	/**
 	* Construct a value.
 	* @param id             Identifier.
 	* @param val            Value.
 	*/
-	RValue(size_t id,double val);
+	RMaxValue(size_t id,double val);
 
 	/**
 	* Comparison function.
-	* @param id              Identifier to compare with.
+	* @param obj             Value to compare with.
+	*/
+	int Compare(const RMaxValue& obj) const;
+
+	/**
+	* Comparison function.
+	* @param val             Value to compare with.
+	*/
+	int Compare(double val) const;
+
+	/**
+	* Compare the identifier of the sparse ordered vector with a given identifier.
+	* param id               Identifier to compare with.
 	*/
 	int Compare(size_t id) const;
 
 	/**
-	* Comparison function
-	* @param obj             Value to compare with.
-	*/
-	int Compare(const RValue& obj) const;
+	 * Assignment operator.
+	 * @param val            Value to assign.
+	 */
+	RMaxValue& operator=(const RMaxValue& val);
 
 	/**
 	 * Assignment operator.
 	 * @param val            Value to assign.
 	 */
-	RValue& operator=(const RValue& val);
-
-	/**
-	 * Assignment operator.
-	 * @param val            Value to assign.
-	 */
-	RValue& operator=(const double val);
+	RMaxValue& operator=(const double val);
 
 	/**
 	 * Automatic conversion to a double (const version).
@@ -116,7 +130,7 @@ public:
 	/**
 	* Destruct the object.
 	*/
-	virtual ~RValue(void);
+	virtual ~RMaxValue(void);
 };
 
 

@@ -49,13 +49,15 @@ namespace R{
 * The RHeuristicSC class provides a specific heuristic for the similarity-based
 * clustering algorithm.
 * @author Pascal Francq
-* @short Similarity-bases Clustering Heuristic.
+* @short Similarity-based Clustering Heuristic.
 */
 template<class cGroup,class cObj,class cGroups>
 	class RHeuristicSC : public RGroupingHeuristic<cGroup,cObj,cGroups>
 {
 	using RGroupingHeuristic<cGroup,cObj,cGroups>::Objs;
+	using RGroupingHeuristic<cGroup,cObj,cGroups>::NbObjs;
 	using RGroupingHeuristic<cGroup,cObj,cGroups>::Groups;
+	class Local;
 
 	/**
 	 * Groups to delete because they contain only one "social" object.
@@ -71,6 +73,16 @@ template<class cGroup,class cObj,class cGroups>
 	 * Parameters of the SCGA.
 	 */
 	RParamsSC* Params;
+
+	/**
+	 * Container that count the number of nearest neighbors
+	 */
+	RContainer<Local,true,false> NbNearestNeighbors;
+
+	/**
+	 * Hold the number of possible groups for all objects to group.
+	 */
+	size_t NbPossibleGrps;
 
 public:
 
@@ -100,11 +112,6 @@ public:
 	* minimum number of objects.
 	*/
 	virtual void PostRun(void);
-
-	/**
-	* Destruct the grouping heuristic.
-	*/
-	virtual ~RHeuristicSC(void);
 };
 
 

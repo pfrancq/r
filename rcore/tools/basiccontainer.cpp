@@ -283,6 +283,9 @@ void* BasicContainer::GetPtr(bool bOrder,const void* tag,bool sortkey,size_t min
 //-----------------------------------------------------------------------------
 size_t BasicContainer::GetTab(const void** tab,size_t min, size_t max) const
 {
+	if(!LastPtr)
+		return(0);
+
 	size_t NbMin,NbMax;
 	if(min<LastPtr-1)
 		NbMin=min;
@@ -292,8 +295,10 @@ size_t BasicContainer::GetTab(const void** tab,size_t min, size_t max) const
 		NbMax=LastPtr-1;
 	else
 		NbMax=max;
-	memcpy(tab,&Tab[NbMin],(NbMax-NbMin+1)*sizeof(void*));
-	return(NbMax-NbMin+1);
+	size_t ToCopy(NbMax-NbMin+1);
+	if(ToCopy)
+		memcpy(tab,&Tab[NbMin],ToCopy*sizeof(void*));
+	return(ToCopy);
 }
 
 

@@ -178,7 +178,7 @@ double RMatrix::operator()(size_t i,size_t j) const
 	if((i>NbLines)||(j>NbCols))
 		throw std::range_error("RMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
 	TestThis();
-	return((*static_cast<RMatrixLine*>(Tab[i]))[j]);
+	return((*static_cast<const RMatrixLine*>(Tab[i]))[j]);
 }
 
 
@@ -198,7 +198,7 @@ const RMatrixLine* RMatrix::operator[](size_t i) const
 	if(i>NbLines)
 		throw std::range_error("RMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
 	TestThis();
-	return(static_cast<RMatrixLine*>(Tab[i]));
+	return(static_cast<const RMatrixLine*>(Tab[i]));
 }
 
 

@@ -148,7 +148,7 @@ bool RVectorBool::operator[](size_t i) const
 	}
 	char ptr(List[i]);
 	if(ptr==-1)
-		throw RException("RVectorBool::operator[](size_t) : Undefined value at position '"+RString::Number(i)+"'");
+		throw RException("RVectorBool::operator[](size_t) const : Undefined value at position '"+RString::Number(i)+"'");
 	return(ptr);
 }
 

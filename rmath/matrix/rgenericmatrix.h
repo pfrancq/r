@@ -76,7 +76,8 @@ public:
 		tUpperTriangular     /** Upper triangular matrix.*/,
 		tSymmetric           /** Symmetric matrix.*/,
 		tSparse              /** Sparse matrix.*/,
-		tSparseSymmetric     /** Sparse symmetric matrix.*/
+		tSparseSymmetric     /** Sparse symmetric matrix.*/,
+		tMax                 /** Sparse ordered matrix.*/
 	};
 
 protected:
@@ -165,6 +166,15 @@ public:
 	* @param j               Column number of the element.
 	*/
  	virtual double& operator()(size_t i,size_t j)=0;
+
+	/**
+	 * Add a value associated to a given index into the matrix. By default, it
+	 * calles the operator(size_t,size_t) method
+	 * @param i              Line number of the element.
+	 * @param j              Column number of the element.
+	 * @param val            Value to add.
+	 */
+	virtual void Add(size_t i,size_t j,double val);
 
 	/**
 	* Assign operator.

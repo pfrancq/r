@@ -1,5 +1,4 @@
 SET(roptimization_scga_INST_INCLUDES
-    robjsc.h
     rgroupsc.h
     rgroupsc.hh
     rchromosc.h
@@ -14,6 +13,5 @@ SET(roptimization_scga_INST_INCLUDES
 )
 
 SET(roptimization_scga_TARGET_SOURCES
-    robjsc.cpp
     scga.cpp
 )

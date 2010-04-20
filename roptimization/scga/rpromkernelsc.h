@@ -82,8 +82,9 @@ public:
 	/**
 	* Constructor.
 	* @param p              Parameters.
+	* @param nbsols         Number of solutions.
 	*/
-	RPromKernelSC(RParamsSC* p);
+	RPromKernelSC(RParamsSC* p,size_t nbsols);
 
 	/**
 	* Assign chromosome as a solution.
@@ -91,6 +92,15 @@ public:
 	* @param c              Chromosome.
 	*/
 	void AssignChromo(RPromSol* s,cChromo* c);
+
+	/**
+	* Assign values to a solution.
+	* @param s              Solution.
+	* @param sim            Similarity criterion.
+	* @param agree          Agreement criterion.
+	* @param disagree       Disagreement criterion.
+	*/
+	void AssignSol(RPromSol* s,double sim,double agree,double disagree);
 };
 
 

@@ -80,6 +80,13 @@ void RGenericMatrix::Init(double val)
 
 
 //------------------------------------------------------------------------------
+void RGenericMatrix::Add(size_t i,size_t j,double val)
+{
+	(*this)(i,j)=val;
+}
+
+
+//------------------------------------------------------------------------------
 RGenericMatrix& RGenericMatrix::operator=(const RGenericMatrix& matrix)
 {
 	NbCols=matrix.NbLines;

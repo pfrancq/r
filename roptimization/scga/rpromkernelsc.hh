@@ -36,8 +36,8 @@
 
 //-----------------------------------------------------------------------------
 template<class cChromo>
-	RPromKernelSC<cChromo>::RPromKernelSC(RParamsSC* p)
-	: RPromKernel("GALILEI",20,10), Params(p),CritSimJ(0), CritAgreement(0),
+	RPromKernelSC<cChromo>::RPromKernelSC(RParamsSC* p,size_t nbsols)
+	: RPromKernel("RPromKernelSC",nbsols,3), Params(p),CritSimJ(0), CritAgreement(0),
 	  CritDisagreement(0)
 {
 	// Init Criterion and Solutions of the PROMETHEE part
@@ -54,4 +54,14 @@ template<class cChromo>
 	Assign(s,CritSimJ,c->CritSimJ);
 	Assign(s,CritAgreement,c->CritAgreement);
 	Assign(s,CritDisagreement,c->CritDisagreement);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cChromo>
+	void RPromKernelSC<cChromo>::AssignSol(RPromSol* s,double sim,double agree,double disagree)
+{
+	Assign(s,CritSimJ,sim);
+	Assign(s,CritAgreement,agree);
+	Assign(s,CritDisagreement,disagree);
 }

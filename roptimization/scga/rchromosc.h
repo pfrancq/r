@@ -38,6 +38,7 @@
 #include <scga.h>
 #include <rchromog.h>
 #include <rpromkernelsc.h>
+#include <rvector.h>
 
 
 //------------------------------------------------------------------------------
@@ -67,6 +68,8 @@ public:
 	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Objs;
 	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Id;
 	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ObjsNoAss;
+	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ToEval;
+	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ComputeOrd;
 
 protected:
 
@@ -77,7 +80,7 @@ protected:
 
 	/**
 	* Value of the Similarity criterion "J" :
-	* (Average Similarity inside each group)/(Maximal similarity between centroids+2) .
+	* (Average Similarity between an object and its prototype each group)/(Average similarity between the prototypes).
 	*/
 	double CritSimJ;
 
@@ -185,59 +188,6 @@ public:
 	* Evaluation of the chromosome.
 	*/
 	virtual void Evaluate(void);
-
-	/**
-	*  Reallocate the objects to the groups based on the different prototypes.
-	*  @return the average similarity between the objects and their prototype.
-	*/
-	double ReAllocate(void);
-
-	/**
-	* Compute the number of new prototypes until the last K-Means iteration.
-	*/
-	size_t CalcNewProtosNb(void);
-
-	/**
-	* Perform a K-Means on the chromosome.
-	*/
-	void DoKMeans(void);
-
-	/**
-	* Divide the group containing the two most dissimilar objects.
-	*/
-	void DivideWorstObjects(void);
-
-	/**
-	* Merge the two groups containing the two most similar centroids.
-	*/
-	void MergeBestGroups(void);
-
-	/**
-	* Treat the social objects, i.e. if these objects are alone in a group, put
-	* them in another group.
-	*/
-	void TreatSocialObjects(void);
-
-	/**
-	 * kMeans-based Optimization.
-	 */
-	void kMeansOptimisation(void);
-
-	/**
-	* Perform an optimization.
-	*/
-	virtual void Optimisation(void);
-
-	/**
-	* Perform a local optimization.
-	*/
-	virtual void LocalOptimisation(void);
-
-	/**
-	* Do a mutation of the chromosome. Since the GCA seems to over-group, the
-	* mutation merge the two groups containing the most similar centroids.
-	*/
-//	virtual void Mutation(void);
 
 	/**
 	* Look if two objects are in the same group or not.

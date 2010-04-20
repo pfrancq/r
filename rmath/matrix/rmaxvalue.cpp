@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RValue.cpp
+	RMaxValue.cpp
 
-	Value associate to an identifier - Implementation.
+	Ascending Ordered value associate to an identifier - Implementation.
 
-	Copyright 2008-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2009-2010 by Pascal Francq (pascal@francq.info).
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -29,63 +29,89 @@
 //------------------------------------------------------------------------------
 // include files ANSI C/C++
 #include <math.h>
+#include <limits>
+using namespace std;
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rvalue.h>
+#include <rmaxvalue.h>
 using namespace R;
 
 
 //------------------------------------------------------------------------------
 // Define static variables
-const RValue RValue::Null(cNoRef,0.0);
+const RMaxValue RMaxValue::Null(cNoRef,0.0);
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RValue
+// class RMaxValue
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RValue::RValue(void)
-	: Id(cNoRef), Value(NAN)
+RMaxValue::RMaxValue(void)
+	: Id(cNoRef), Value(-numeric_limits<double>::min())
+{
+}
+
+//------------------------------------------------------------------------------
+RMaxValue::RMaxValue(const RMaxValue& val)
+	: Id(val.Id), Value(val.Value)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RValue::RValue(size_t id)
-	: Id(id), Value(NAN)
+RMaxValue::RMaxValue(size_t id)
+	: Id(id), Value(-numeric_limits<double>::min())
 {
 }
 
 
 //------------------------------------------------------------------------------
-RValue::RValue(size_t id,double val)
+RMaxValue::RMaxValue(size_t id,double val)
 	: Id(id), Value(val)
 {
 }
 
 
+
 //------------------------------------------------------------------------------
-int RValue::Compare(size_t id) const
+int RMaxValue::Compare(const RMaxValue& obj) const
+{
+	double Comp(Value-obj.Value);
+	if(Comp>0.0)
+		return(-1);
+	else if(Comp<0.0)
+		return(1);
+	return(CompareIds(Id,obj.Id));
+}
+
+
+//------------------------------------------------------------------------------
+int RMaxValue::Compare(double val) const
+{
+	double Comp(Value-val);
+	if(Comp>0.0)
+		return(-1);
+	else if(Comp<0.0)
+		return(1);
+	return(0);
+}
+
+
+//-----------------------------------------------------------------------------
+int RMaxValue::Compare(size_t id) const
 {
 	return(CompareIds(Id,id));
 }
 
 
 //------------------------------------------------------------------------------
-int RValue::Compare(const RValue& obj) const
-{
-  return(CompareIds(Id,obj.Id));
-}
-
-
-//------------------------------------------------------------------------------
-RValue& RValue::operator=(const RValue& val)
+RMaxValue& RMaxValue::operator=(const RMaxValue& val)
 {
 	Id=val.Id;
 	Value=val.Value;
@@ -94,7 +120,7 @@ RValue& RValue::operator=(const RValue& val)
 
 
 //------------------------------------------------------------------------------
-RValue& RValue::operator=(const double val)
+RMaxValue& RMaxValue::operator=(const double val)
 {
 	Value=val;
 	return(*this);
@@ -102,6 +128,6 @@ RValue& RValue::operator=(const double val)
 
 
 //------------------------------------------------------------------------------
-RValue::~RValue(void)
+RMaxValue::~RMaxValue(void)
 {
 }

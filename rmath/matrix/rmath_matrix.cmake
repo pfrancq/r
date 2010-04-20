@@ -7,7 +7,10 @@ SET(rmath_matrix_INST_INCLUDES
 	rlowertriangularmatrix.h 
 	rsymmetricmatrix.h
 	rsparsesymmetricmatrix.h
-	rmatrixstorage.h
+	rmaxvalue.h
+	rmaxvector.h
+	rmaxmatrix.h
+	rmatrixstorage.h	
 )
                               
 SET(rmath_matrix_TARGET_SOURCES
@@ -19,5 +22,8 @@ SET(rmath_matrix_TARGET_SOURCES
 	rlowertriangularmatrix.cpp
 	rsymmetricmatrix.cpp
 	rsparsesymmetricmatrix.cpp
+	rmaxvalue.cpp
+	rmaxvector.cpp
+	rmaxmatrix.cpp	
 	rmatrixstorage.cpp 
 )

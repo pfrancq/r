@@ -30,6 +30,46 @@
 
 //-----------------------------------------------------------------------------
 //
+// class RHeuristicSC<cGroup,cObj,cGroups>::Local
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
+	class RHeuristicSC<cGroup,cObj,cGroups>::Local
+{
+public:
+	size_t Id;        // Identifier of the group
+	size_t Nb;        // Number of elements in the group
+
+	Local(size_t id) : Id(id), Nb(1) {}
+	int Compare(const Local& el) const {return(-1);}
+	static int SortOrder(const void* a,const void* b)
+	{
+		Local* ptrA(*((Local**)a));
+		Local* ptrB(*((Local**)b));
+
+		if(ptrA)
+		{
+			if(ptrB)
+				return(-CompareIds(ptrA->Nb,ptrB->Nb));
+			else
+				return(-1);
+		}
+		else
+		{
+			if(ptrB)
+				return(1);
+			else
+				return(0);
+		}
+	}
+};
+
+
+
+//-----------------------------------------------------------------------------
+//
 // class RHeuristicSC<cGroup,cObj,cGroups>
 //
 //-----------------------------------------------------------------------------
@@ -38,7 +78,7 @@
 template<class cGroup,class cObj,class cGroups>
 	RHeuristicSC<cGroup,cObj,cGroups>::RHeuristicSC(RRandom* r,RCursor<cObj> objs,RParamsSC* params,RDebug* debug)
 	: RGroupingHeuristic<cGroup,cObj,cGroups>("SCGA Heuristic",r,objs,debug),
-	  ToDel(Objs.GetNb()<11?10:Objs.GetNb()/4), ToReAssign(100), Params(params)
+	  ToDel(Objs.GetNb()<11?10:Objs.GetNb()/4), ToReAssign(100), Params(params), NbNearestNeighbors(100)
 {
 }
 
@@ -48,6 +88,7 @@ template<class cGroup,class cObj,class cGroups>
 	void RHeuristicSC<cGroup,cObj,cGroups>::Init(cGroups* groups)
 {
 	RGroupingHeuristic<cGroup,cObj,cGroups>::Init(groups);
+	NbPossibleGrps=0;
 }
 
 
@@ -55,38 +96,87 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	cGroup* RHeuristicSC<cGroup,cObj,cGroups>::FindGroup(cObj* obj)
 {
-	double maxsim(-2.0);
-
-	// Look first if one of the object with a ratio is already grouped
-	// -> If yes, return the group
-	cGroup* grp(0);
-	obj->FindBestGroup(Groups,grp);
-	if(grp)
-		return(grp);
-
-	// Go through each groups
-	R::RCursor<cGroup> Cur(Groups->Used);
-	for(Cur.Start(),maxsim=-2.0;!Cur.End();Cur.Next())
+	// Look first if an object with a high agreement ratio with the current object
+	// is already grouped
+	RCursor<RMaxValue> Agree(*Groups->Instance->GetAgreementRatios(obj));
+	for(Agree.Start();(!Agree.End())&&(Agree()->Value>=Params->MinAgreement);Agree.Next())
 	{
-		// If all the hard constraints are not respected -> skip the group.
-		if(!Cur()->CanInsert(obj))
-			continue;
+		size_t GroupId(Groups->ObjectsAss[Agree()->Id]);
+		if(GroupId!=cNoRef)
+			return((*Groups)[GroupId]);
+	}
 
-		// Compute average similarity with the profiles already in the group.
-		double sim(Cur()->GetLastMaxSim());
-		if(sim>maxsim)
+	// Count for each existing group the one containing the maximum number of nearest neighbors
+	NbNearestNeighbors.Clear();
+	RCursor<RMaxValue> Sim(*Groups->Instance->GetSims(obj));
+	for(Sim.Start();!Sim.End();Sim.Next())
+	{
+		size_t GroupId(Groups->ObjectsAss[Sim()->Id]);
+		if(GroupId!=cNoRef)
 		{
-			maxsim=sim;
-			grp=Cur();
+			if((!NbNearestNeighbors.GetNb())||(GroupId>=NbNearestNeighbors.GetMaxPos()))
+			{
+				NbNearestNeighbors.InsertPtrAt(new Local(GroupId),GroupId);
+			}
+			else
+			{
+				Local* ptr(NbNearestNeighbors[GroupId]);
+				if(ptr)
+					ptr->Nb++;
+				else
+					NbNearestNeighbors.InsertPtrAt(new Local(GroupId),GroupId);
+			}
 		}
 	}
 
-	// If no group find -> Reserve another one.
-	if(!grp)
-		grp=Groups->ReserveGroup();
+	// Order the groups in descending order of number of elements
+	NbNearestNeighbors.ReOrder(Local::SortOrder);
 
-	// Return the group.
-	return(grp);
+	// Find the first compatible group
+	NbPossibleGrps+=NbNearestNeighbors.GetNb();
+	RCursor<Local> Grps(NbNearestNeighbors);
+	for(Grps.Start();!Grps.End();Grps.Next())
+	{
+		cGroup* grp((*Groups)[Grps()->Id]);
+		if(grp->CanInsert(obj))
+			return(grp);
+	}
+
+	// No group was found -> create a new one
+	return(Groups->ReserveGroup());
+
+//	double maxsim(-2.0);
+//
+//	// Look first if one of the object with a ratio is already grouped
+//	// -> If yes, return the group
+//	cGroup* grp;
+//	obj->FindBestGroup(Groups,grp);
+//	if(grp)
+//		return(grp);
+//
+//	// Go through each groups
+//	R::RCursor<cGroup> Cur(Groups->Used);
+//	for(Cur.Start(),maxsim=-2.0;!Cur.End();Cur.Next())
+//	{
+//		// If all the hard constraints are not respected -> skip the group.
+//		if(!Cur()->CanInsert(obj))
+//			continue;
+//
+//		// Compute average similarity with the profiles already in the group.
+//		double sim(Cur()->GetLastMaxSim());
+//		if(sim>maxsim)
+//		{
+//			maxsim=sim;
+//			grp=Cur();
+//		}
+//	}
+//
+//	// If no group find -> Reserve another one.
+//	if(!grp)
+//		grp=Groups->ReserveGroup();
+//
+//	// Return the group.
+//	return(grp);
 }
 
 
@@ -94,23 +184,26 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void RHeuristicSC<cGroup,cObj,cGroups>::PostRun(void)
 {
-	R::RCursor<cGroup> Cur1(Groups->Used),Cur2(Groups->Used);
+	std::cout<<"Average number of possible groups "<<static_cast<double>(NbPossibleGrps)/static_cast<double>(NbObjs)<<std::endl;
+	R::RCursor<cGroup> Cur1(Groups->Used);//,Cur2(Groups->Used);
 
 	// Look for the groups to delete
 	ToDel.Clear();
 	for(Cur1.Start();!Cur1.End();Cur1.Next())
 	{
+		size_t CurGroupId(Cur1()->GetId());
+
 		// Verify if the number of objects is greater than the minimum
 		if(Cur1()->GetNbObjs()>=Params->NbMinObjs)
 		{
 			// Look if this group contains only 1 social profile
 			if(Cur1()->GetNbObjs()!=1)
 				continue;
-			if(!Cur1()->GetObjPos(0)->IsSocial())
+			if(!Groups->Instance->IsSocial(Cur1()->GetObjPos(0)))
 				continue;
 		}
 
-		// The current group must be emptied
+		// The current group must be emptied and the objects reassigned
 		RCursor<cObj> Objs(Cur1()->GetObjs());
 		ToReAssign.Clear();
 		for(Objs.Start();!Objs.End();Objs.Next())
@@ -118,22 +211,46 @@ template<class cGroup,class cObj,class cGroups>
 		Objs.Set(ToReAssign);
 		for(Objs.Start();!Objs.End();Objs.Next())
 		{
-			// Try to find a new group for obj
-			cGroup* grp(0);
-			double max(-1.0);
-			for(Cur2.Start();!Cur2.End();Cur2.Next())
+			cGroup* grp(0); // Group to find
+
+			// Find the first object with a high agreement ratio not in the same group
+			RCursor<RMaxValue> Agree(*Groups->Instance->GetAgreementRatios(Objs()));
+			for(Agree.Start();(!Agree.End())&&(!grp);Agree.Next())
 			{
-				if((Cur1()==Cur2())||(!Cur2()->GetNbObjs()))
-					continue;
-				if(Cur2()->HasSameUser(Objs()))
-					continue;
-				double tmp(Cur2()->ComputeRelSim(Objs()));
-				if(tmp>max)
+				size_t GroupId(Groups->ObjectsAss[Agree()->Id]);
+				if(GroupId!=CurGroupId)
+					grp=(*Groups)[GroupId];
+			}
+
+			if(!grp)
+			{
+				// Find the first object with a high similarity not in the same group
+				RCursor<RMaxValue> Sim(*Groups->Instance->GetSims(Objs()));
+				for(Sim.Start();(!Sim.End())&&(!grp);Sim.Next())
 				{
-					max=tmp;
-					grp=Cur2();
+					size_t GroupId(Groups->ObjectsAss[Sim()->Id]);
+					if(GroupId!=CurGroupId)
+						grp=(*Groups)[GroupId];
 				}
 			}
+
+
+			// Try to find a new group for obj
+//			cGroup* grp(0);
+//			double max(-1.0);
+//			for(Cur2.Start();!Cur2.End();Cur2.Next())
+//			{
+//				if((Cur1()==Cur2())||(!Cur2()->GetNbObjs()))
+//					continue;
+//				if(Cur2()->HasSameUser(Objs()))
+//					continue;
+//				double tmp(Cur2()->ComputeRelSim(Objs()));
+//				if(tmp>max)
+//				{
+//					max=tmp;
+//					grp=Cur2();
+//				}
+//			}
 
 			// If a group was found -> put the object in it
 			if(grp)
@@ -152,11 +269,4 @@ template<class cGroup,class cObj,class cGroups>
 	Cur1.Set(ToDel);
 	for(Cur1.Start();!Cur1.End();Cur1.Next())
 		Groups->ReleaseGroup(Cur1());
-}
-
-
-//-----------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
-	RHeuristicSC<cGroup,cObj,cGroups>::~RHeuristicSC(void)
-{
 }

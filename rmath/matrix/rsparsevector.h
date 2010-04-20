@@ -132,7 +132,7 @@ public:
 	 * @param i              Index.
 	 * @return Pointer or null if the index hasn't no value.
 	 */
-	RValue* GetValue(size_t i) const {return(RContainer<RValue,true,true>::GetPtr(i));}
+	const RValue* GetValue(size_t i) const {return(RContainer<RValue,true,true>::GetPtr(i));}
 
 	/**
 	* Get the identifier of the cell.

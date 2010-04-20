@@ -37,7 +37,7 @@ using namespace R;
 
 //-----------------------------------------------------------------------------
 //
-// GCAParams
+// class GCAParams
 //
 //-----------------------------------------------------------------------------
 
@@ -48,5 +48,19 @@ RParamsSC::RParamsSC(void)
 	  NbDivChromo(2), ParamsSim(0), ParamsAgreement(0), ParamsDisagreement(0),
 	  LocalOptimisation(false), Optimisation(false), Incremental(false),
 	  NbMinObjs(0), NbMaxObjs(cNoRef), AllMinSim(false)
+{
+}
+
+
+
+//-----------------------------------------------------------------------------
+//
+// class RObjSC
+//
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+RObjSC::RObjSC(const size_t id,const RString& name,bool social,size_t parentid)
+	: RObjG(id,name), Social(social), ParentId(parentid)
 {
 }

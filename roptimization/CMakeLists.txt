@@ -9,6 +9,7 @@ INCLUDE_DIRECTORIES(../rcore/geometry)
 INCLUDE_DIRECTORIES(../rcore/frontend/kde)
 INCLUDE_DIRECTORIES(../rmath/geometry)
 INCLUDE_DIRECTORIES(../rmath/graph)
+INCLUDE_DIRECTORIES(../rmath/matrix)
 
 IF(WIN32)
     INCLUDE_DIRECTORIES(../rcore/win32support)

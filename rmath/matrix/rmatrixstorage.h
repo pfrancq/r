@@ -61,7 +61,7 @@ namespace R{
  * If the matrix is sparse, the storage adapts a method proposed by Knuth. Two
  * files are needed:
  * -# File ".rec" contains the non-null elements. In fact, it stores a series
- *    records composed from (value,line,column,next line,next column).
+ *    of records composed from (value,line,column,next line,next column).
  * -# File ".info" contains the size of the matrix, the positions of the
  *    first and the last elements of each line and column and other information
  *    that the developer may add.
@@ -119,6 +119,11 @@ class RMatrixStorage
 	 * Sparse version of the storage.
 	 */
 	bool Sparse;
+
+	/**
+	 * Max version of the storage.
+	 */
+	bool Max;
 
 	/**
 	 * Position of the (0,1) element in the upper part of the matrix (0 or 1).
@@ -242,11 +247,33 @@ public:
 	 */
 	void Load(RGenericMatrix& matrix);
 
+private:
+
+	/**
+	 * Save a full matrix.
+	 * @param matrix         matrix.
+	 */
+	void SaveFull(const RGenericMatrix& matrix);
+
+	/**
+	 * Save a sparse matrix.
+	 * @param matrix         matrix.
+	 */
+	void SaveSparse(const RGenericMatrix& matrix);
+
+	/**
+	 * Save a matrix storing maximal values.
+	 * @param matrix         matrix.
+	 */
+	void SaveMax(const RGenericMatrix& matrix);
+
+public:
+
 	/**
 	 * Save a matrix.
 	 * @param matrix         matrix.
 	 */
-	void Save(RGenericMatrix& matrix);
+	void Save(const RGenericMatrix& matrix);
 
 	/**
 	 * Read a value of a given element.

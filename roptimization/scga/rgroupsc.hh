@@ -32,12 +32,12 @@
 //
 // class RGroupSC<cGroup,cObj,cGroups>
 //
-//-----------------------------------------------------------------------------
+
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
 	RGroupSC<cGroup,cObj,cGroups>::RGroupSC(RGroupSC* grp)
-	: RGroup<cGroup,cObj,cGroups>(grp), AvgIntraSim(0.0), AvgAgreement(0.0), AvgDisagreement(0.0), Centroid(0), ToEval(true)
+	: RGroup<cGroup,cObj,cGroups>(grp), /*AvgIntraSim(0.0), AvgAgreement(0.0), AvgDisagreement(0.0),*/ Centroid(0), ToEval(true)
 {
 }
 
@@ -45,7 +45,7 @@ template<class cGroup,class cObj,class cGroups>
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
 	RGroupSC<cGroup,cObj,cGroups>::RGroupSC(cGroups* owner,const size_t id)
-	: RGroup<cGroup,cObj,cGroups>(owner,id), AvgIntraSim(0.0), AvgAgreement(0.0), AvgDisagreement(0.0), Centroid(0), ToEval(true)
+	: RGroup<cGroup,cObj,cGroups>(owner,id), /*AvgIntraSim(0.0), AvgAgreement(0.0), AvgDisagreement(0.0),*/ Centroid(0), ToEval(true)
 {
 }
 
@@ -55,7 +55,7 @@ template<class cGroup,class cObj,class cGroups>
 	void RGroupSC<cGroup,cObj,cGroups>::Clear(void)
 {
 	RGroup<cGroup,cObj,cGroups>::Clear();
-	AvgIntraSim=AvgAgreement=AvgDisagreement=0.0;
+//	AvgIntraSim=AvgAgreement=AvgDisagreement=0.0;
 	Centroid=0;
 	ToEval=true;
 }
@@ -88,42 +88,63 @@ template<class cGroup,class cObj,class cGroups>
 	if(RGroup<cGroup,cObj,cGroups>::NbSubObjects>Owner->Instance->Params->NbMaxObjs)
 		return(false);
 
-	// Verify that no object of the group has the same parent or a disagreement ratio greater than the
-	// maximum allowed.
-	bool OneMinSim(false); // Suppose no object in the group as the minimum of similarity
-	double tmp;
-	const cObj* prof1(obj);
-	size_t usr1(obj->GetParentId());
-	RCursor<cObj> ptr(Owner->GetObjs(*this));
-	for(ptr.Start(),LastMaxSim=-2.0;!ptr.End();ptr.Next())
+	// Verify that the maximal disagreement ratio is respected
+	RCursor<RMaxValue> Disagree(*Owner->Instance->GetDisagreementRatios(obj));
+	for(Disagree.Start();(!Disagree.End())&&(Disagree()->Value>=Owner->Instance->Params->MinDisagreement);Disagree.Next())
 	{
-		// Do not put two objects with the same parent in the same group
-		if(usr1&&(usr1==ptr()->GetParentId()))
+		if(Owner->ObjectsAss[Disagree()->Id]==Id)
 			return(false);
-
-		// Maximum disagreement must be respected
-		if(Owner->Instance->GetDisagreementRatio(prof1,ptr())>=Owner->Instance->Params->MinDisagreement)
-		  	return(false);
-
-		// Verify the minimum similarity and remember the best similarity
-		tmp=Owner->Instance->GetSim(prof1,ptr());
-		if(tmp<Owner->Instance->Params->MinSimLevel)
-		{
-			if(Owner->Instance->Params->AllMinSim)
-				return(false);
-		}
-		else
-			OneMinSim=true;
-		if(tmp>LastMaxSim)
-			LastMaxSim=tmp;
 	}
 
-	// Verify that at least one object has the minimum of similarity
-	if(!OneMinSim)
-		return(false);
+	// Verify that the minimum similarity is respected
+	RCursor<RMaxValue> Sim(*Owner->Instance->GetSims(obj));
+	for(Sim.StartAtEnd();(!Sim.Begin())&&(Sim()->Value<=Owner->Instance->Params->MinSimLevel);Sim.Prev())
+	{
+		if(Owner->ObjectsAss[Sim()->Id]==Id)
+			return(false);
+	}
 
-	// OK, it can be grouped.
+	// Ok the group is a valid one.
 	return(true);
+
+	// Verify Disagreement and minimum similarity with the centroid
+//	double tmp(Owner->Instance->GetSim(obj,GetCentroid()));
+//	if(tmp<Owner->Instance->Params->MinSimLevel)
+//		return(false);
+//	LastMaxSim=tmp;
+//	return(true);
+//	// Verify that no object of the group has the same parent or a disagreement ratio greater than the
+//	// maximum allowed.
+///*	bool OneMinSim(false); // Suppose no object in the group as the minimum of similarity
+//	double tmp;
+//	const cObj* prof1(obj);
+//	size_t usr1(obj->GetParentId());
+//	RCursor<cObj> ptr(Owner->GetObjs(*this));
+//	for(ptr.Start(),LastMaxSim=-2.0;!ptr.End();ptr.Next())
+//	{
+//		// Do not put two objects with the same parent in the same group
+//		if(usr1&&(usr1==ptr()->GetParentId()))
+//			return(false);
+//
+//		// Verify the minimum similarity and remember the best similarity
+//		tmp=Owner->Instance->GetSim(prof1,ptr());
+//		if(tmp<Owner->Instance->Params->MinSimLevel)
+//		{
+//			if(Owner->Instance->Params->AllMinSim)
+//				return(false);
+//		}
+//		else
+//			OneMinSim=true;
+//		if(tmp>LastMaxSim)
+//			LastMaxSim=tmp;
+//	}
+//
+//	// Verify that at least one object has the minimum of similarity
+//	if(!OneMinSim)
+//		return(false);
+//
+//	// OK, it can be grouped.
+//	return(true);*/
 }
 
 
@@ -131,9 +152,57 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void RGroupSC<cGroup,cObj,cGroups>::PostInsert(const cObj* /*obj*/)
 {
-	ToEval=true;
+/*	ToEval=true;
+
+	// Update the SumSims and (if necessary) the centroid
+	Centroid=0;
+	double max(-2.0);
+	RCursor<cObj> Objs(GetObjs());
+	for(Objs.Start();!Objs.End();Objs.Next())
+	{
+		if(Objs()==obj)
+			continue;
+		double tmp(Owner->Instance->GetSim(Objs(),obj));
+		Owner->SumSims[Objs()->GetId()]+=tmp;
+		double tmp2(Owner->SumSims[Objs()->GetId()]);
+		if(Owner->VerifyCentroids&&(tmp2>max))
+		{
+			Centroid=Objs();
+			max=tmp2;
+		}
+		Owner->SumSims[obj->GetId()]+=tmp;
+	}
 	if(Owner->VerifyCentroids)
-		Centroid=0;
+	{
+		if(Owner->SumSims[obj->GetId()]>max)
+			Centroid=obj;
+		if(NbSubObjects>1)
+			AvgIntraSim=Owner->SumSims[Centroid->GetId()]/static_cast<double>(NbSubObjects-1);
+		else
+			AvgIntraSim=1.0;
+	}
+	else
+		AvgIntraSim=0.0;*/
+}
+
+
+//---------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
+	bool RGroupSC<cGroup,cObj,cGroups>::PreInsertAll(const cGroup* /*from*/)
+{
+/*	// Copy the SumsSims of each object
+	RCursor<cObj> Objs(from->GetObjs());
+	for(Objs.Start();!Objs.End();Objs.Next())
+		Owner->SumSims[Objs()->GetId()]=from->Owner->SumSims[Objs()->GetId()];
+
+	// Copy the internal measures
+	AvgIntraSim=from->AvgIntraSim;
+	AvgAgreement=from->AvgAgreement;
+	AvgDisagreement=from->AvgDisagreement;
+	Centroid=from->Centroid;
+	ToEval=from->ToEval;
+*/
+	return(false);
 }
 
 
@@ -141,14 +210,59 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void RGroupSC<cGroup,cObj,cGroups>::PostDelete(const cObj* /*obj*/)
 {
-	ToEval=true;
+/*	ToEval=true;
+
+	// Update the SumSims and (if necessary) the centroid
+	Centroid=0;
+	double max(-2.0);
+	RCursor<cObj> Objs(GetObjs());
+	for(Objs.Start();!Objs.End();Objs.Next())
+	{
+		if(Objs()==obj)
+			continue;
+		Owner->SumSims[Objs()->GetId()]-=Owner->Instance->GetSim(Objs(),obj);
+		double tmp2(Owner->SumSims[Objs()->GetId()]);
+		if(Owner->VerifyCentroids&&(tmp2>max))
+		{
+			Centroid=Objs();
+			max=tmp2;
+		}
+	}
+	Owner->SumSims[obj->GetId()]=0;
 	if(Owner->VerifyCentroids)
+	{
+		if(NbSubObjects>1)
+			AvgIntraSim=Owner->SumSims[Centroid->GetId()]/static_cast<double>(NbSubObjects-1);
+		else
+			AvgIntraSim=1.0;
+	}
+	else
+		AvgIntraSim=0.0;*/
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
+	bool RGroupSC<cGroup,cObj,cGroups>::PreDeleteAll(void)
+{
+	ToEval=true;
+
+	// Re-Initialize the SumsSims of each object
+/*	RCursor<cObj> Objs(GetObjs());
+	for(Objs.Start();!Objs.End();Objs.Next())
+		Owner->SumSims[Objs()->GetId()]=0.0;
+
+	if(Owner->VerifyCentroids)
+	{
 		Centroid=0;
+		AvgIntraSim=0.0;
+	}*/
+	return(false);
 }
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
+/*template<class cGroup,class cObj,class cGroups>
 	double RGroupSC<cGroup,cObj,cGroups>::ComputeSumSim(cObj* obj)
 {
 	if(!NbSubObjects)
@@ -161,11 +275,11 @@ template<class cGroup,class cObj,class cGroups>
 		Sum+=Owner->Instance->GetSim(obj,ptr());
 	}
 	return(Sum);
-}
+}*/
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
+/*template<class cGroup,class cObj,class cGroups>
 	void RGroupSC<cGroup,cObj,cGroups>::ComputeCentroid(void)
 {
 	// If no objects -> No relevant one.
@@ -176,81 +290,94 @@ template<class cGroup,class cObj,class cGroups>
 		return;
 	}
 
-	// Suppose the first element is the most relevant.
-	RCursor<cObj> ptr(Owner->GetObjs(*this));
-	ptr.Start();
-	Centroid=(ptr());
-	if(NbSubObjects==1)
+	// Re-Compute the centroid
+	double max(-2.0);
+	RCursor<cObj> Objs(GetObjs());
+	for(Objs.Start();!Objs.End();Objs.Next())
 	{
-		AvgIntraSim=1.0;
-		return;
-	}
-	AvgIntraSim=ComputeSumSim(ptr());
-
-	// Look if in the other objects, there is a better one
-	for(ptr.Next();!ptr.End();ptr.Next())
-	{
-		double SumSim(ComputeSumSim(ptr()));
-		if(SumSim<AvgIntraSim)
+		double tmp(Owner->SumSims[Objs()->GetId()]);
+		if(tmp>max)
 		{
-			Centroid=(ptr());
-			AvgIntraSim=SumSim;
+			max=tmp;
+			Centroid=Objs();
 		}
 	}
-	AvgIntraSim/=static_cast<double>(NbSubObjects-1);
-}
+	if(NbSubObjects>1)
+		AvgIntraSim=Owner->SumSims[Centroid->GetId()]/static_cast<double>(NbSubObjects-1);
+	else
+		AvgIntraSim=1.0;
+
+	// Suppose the first element is the most relevant.
+//	RCursor<cObj> ptr(Owner->GetObjs(*this));
+//	ptr.Start();
+//	Centroid=(ptr());
+//	if(NbSubObjects==1)
+//	{
+//		AvgIntraSim=1.0;
+//		return;
+//	}
+//	AvgIntraSim=ComputeSumSim(ptr());
+
+//	// Look if in the other objects, there is a better one
+//	for(ptr.Next();!ptr.End();ptr.Next())
+//	{
+//		double SumSim(ComputeSumSim(ptr()));
+//		if(SumSim>AvgIntraSim)
+//		{
+//			Centroid=(ptr());
+//			AvgIntraSim=SumSim;
+//		}
+//	}
+//	AvgIntraSim/=static_cast<double>(NbSubObjects-1);
+}*/
 
 
 //---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
+/*template<class cGroup,class cObj,class cGroups>
 	void RGroupSC<cGroup,cObj,cGroups>::Evaluate(double& dist,double& agree,double& disagree)
 {
 	if(ToEval)
 	{
 		if(!Centroid)
 			ComputeCentroid();
-		RCursor<cObj> CurObj(Owner->GetObjs(*this));
-		RCursor<cObj> CurObj2(Owner->GetObjs(*this));
-		size_t i;
-		for(CurObj.Start(),i=0,AvgAgreement=AvgDisagreement=0.0;i<NbSubObjects-1;CurObj.Next(),i++)
+		if(NbSubObjects>1)
 		{
-			for(CurObj2.GoTo(i+1);!CurObj2.End();CurObj2.Next())
+			RCursor<cObj> CurObj(Owner->GetObjs(*this));
+			RCursor<cObj> CurObj2(Owner->GetObjs(*this));
+			size_t i;
+			for(CurObj.Start(),i=0,AvgAgreement=AvgDisagreement=0.0;i<NbSubObjects-1;CurObj.Next(),i++)
 			{
-				AvgAgreement+=Owner->Instance->GetAgreementRatio(CurObj(),CurObj2());
-				AvgDisagreement+=Owner->Instance->GetDisagreementRatio(CurObj(),CurObj2());
+				for(CurObj2.GoTo(i+1);!CurObj2.End();CurObj2.Next())
+				{
+					AvgAgreement+=Owner->Instance->GetAgreementRatio(CurObj(),CurObj2());
+					AvgDisagreement+=Owner->Instance->GetDisagreementRatio(CurObj(),CurObj2());
+				}
 			}
+			AvgAgreement/=static_cast<double>(NbSubObjects);
+			AvgDisagreement/=static_cast<double>(NbSubObjects);
 		}
-		AvgAgreement/=static_cast<double>(NbSubObjects);
-		AvgDisagreement/=static_cast<double>(NbSubObjects);
+		else
+		{
+			AvgAgreement=1.0;
+			AvgDisagreement=0.0;
+		}
 		ToEval=false;
 	}
+
 	dist+=AvgIntraSim;
 	agree+=AvgAgreement;
 	disagree+=AvgDisagreement;
-}
+}*/
 
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
 	void RGroupSC<cGroup,cObj,cGroups>::SetCentroid(cObj* obj)
 {
+	std::cerr<<"SumsSims not updated"<<std::endl;
 	Centroid=obj;
 	ToEval=true;
 }
-
-
-//---------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
-	void RGroupSC<cGroup,cObj,cGroups>::CopyInfos(const cGroup* grp)
-{
-	RGroup<cGroup,cObj,cGroups>::CopyInfos(grp);
-	AvgIntraSim=grp->AvgIntraSim;
-	AvgAgreement=grp->AvgAgreement;
-	AvgDisagreement=grp->AvgDisagreement;
-	Centroid=grp->Centroid;
-	ToEval=grp->ToEval;
-}
-
 
 
 //------------------------------------------------------------------------------
@@ -275,7 +402,7 @@ template<class cGroup,class cObj,class cGroups>
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
+/*template<class cGroup,class cObj,class cGroups>
 	bool RGroupSC<cGroup,cObj,cGroups>::Test(cObj** del,size_t& nbdel,cObj* obj1,cObj* obj2)
 {
 	cObj **cur1,**cur2,**cur3;
@@ -295,11 +422,11 @@ template<class cGroup,class cObj,class cGroups>
 	QSort.Order();
 
 
-/*	size_t i;
-	for(cur1=thObjs2,i=0;i<NbSubObjects;i++,cur1++)
-		std::cout<<Owner->Instance->GetSim(*cur1,GetCentroid())<<std::endl;
-	std::cout<<std::endl<<std::endl;
-	return(false);*/
+//	size_t i;
+//	for(cur1=thObjs2,i=0;i<NbSubObjects;i++,cur1++)
+//		std::cout<<Owner->Instance->GetSim(*cur1,GetCentroid())<<std::endl;
+//	std::cout<<std::endl<<std::endl;
+//	return(false);
 
 	// Compute the new average similarity with objects
 	double NewAvgIntraSim(AvgIntraSim*(NbSubObjects-1));
@@ -385,94 +512,134 @@ template<class cGroup,class cObj,class cGroups>
 
 	// Nothing can be done
 	return(false);
-}
+}*/
 
 
 //------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
-	bool RGroupSC<cGroup,cObj,cGroups>::DoOptimisation(cObj** objs,size_t& nbobjs)
-{
-	// The group must have more than one object
-	if(NbSubObjects<2)
-		return(false);
+//template<class cGroup,class cObj,class cGroups>
+//	bool RGroupSC<cGroup,cObj,cGroups>::DoOptimisation(cObj** objs,size_t& nbobjs)
+//{
+//	// The group must have more than one object
+//	if(NbSubObjects<2)
+//		return(false);
+//
+//	size_t idx[2];           // Indexed of the objects to add in objs.
+//	cObj* del[3];            // Pointers to the objects to delete.
+//	cObj* add[2];            // Pointers to the objects to add.
+//	size_t nbdel;            // Number of objects to delete.
+//	size_t nbadd;            // Number of objects to add.
+//	cObj** obj;              // Current object eventually to add.
+//	cObj** obj2;             // Current object eventually to add.
+//	size_t i,j;
+//
+//	// Init Part
+//	add[0]=add[1]=del[0]=del[1]=del[2]=0;   // No objects added or deleted
+//	idx[0]=idx[1]=cNoRef;
+//	nbdel=nbadd=0;
+//
+//	// Try to add two objects
+//	for(i=0,obj=objs;i<nbobjs-1;obj++,i++)
+//	{
+////		std::cout<<"   (1) "<<i<<" iterations"<<std::endl;
+//		for(j=i+1,obj2=obj+1;j<nbobjs;obj2++,j++)
+//		{
+//			if(Test(del,nbdel,(*obj),(*obj2)))
+//			{
+//				idx[nbadd]=i;
+//				add[nbadd++]=(*obj);
+//				idx[nbadd]=j;
+//				add[nbadd++]=(*obj2);
+////				std::cout<<"         Insert "<<(*obj)->GetId()<<" and "<<(*obj2)->GetId()<<std::endl;
+//				break;
+//			}
+//		}
+//		if(nbadd) break;
+//	}
+//
+//	// Try to add a first object
+//	if(!nbadd)
+//	{
+//		for(i=0,obj=objs;i<nbobjs;obj++,i++)
+//		{
+////			std::cout<<"   (2) "<<i<<" iterations"<<std::endl;
+//			if(Test(del,nbdel,(*obj),0))
+//			{
+//				idx[nbadd]=i;
+//				add[nbadd++]=(*obj);
+////				std::cout<<"         Insert "<<(*obj)->GetId()<<std::endl;
+//				break;
+//			}
+//		}
+//	}
+//
+//	// If nothing to add -> return
+//	if(!nbadd) return(false);
+//
+//	if((Owner->Instance->Debug)&&(nbdel||nbadd))
+//	{
+//		Owner->Instance->Debug->BeginFunc("DoOptimisation","RGroupSC");
+//		Owner->Instance->Debug->PrintInfo("Group "+RString::Number(Id)+": "+RString::Number(nbdel)+" objects replaced by "+RString::Number(nbadd));
+//		Owner->Instance->Debug->EndFunc("DoOptimisation","RGroupSC");
+//	}
+//
+//	// Delete the objects from the group and insert them in objs.
+//	for(i=0;i<nbdel;i++)
+//	{
+//		Delete(del[i]);
+//		objs[nbobjs++]=del[i];
+////		std::cout<<"         Delete "<<del[i]->GetId()<<std::endl;
+//	}
+//
+//	// Insert the objects in the group and delete them from objs.
+//	// If idx[1] > idx[0] -> idx[1]-- because idx[0] will be deleted first.
+//	if(idx[1]>idx[0]) idx[1]--;
+//	for(i=0;i<nbadd;i++)
+//	{
+//		Insert(add[i]);
+//		memcpy(&objs[idx[i]],&objs[idx[i]+1],((--nbobjs)-idx[i])*sizeof(cObj*));
+//	}
+//	return(true);
+//}
 
-	size_t idx[2];           // Indexed of the objects to add in objs.
-	cObj* del[3];            // Pointers to the objects to delete.
-	cObj* add[2];            // Pointers to the objects to add.
-	size_t nbdel;            // Number of objects to delete.
-	size_t nbadd;            // Number of objects to add.
-	cObj** obj;              // Current object eventually to add.
-	cObj** obj2;             // Current object eventually to add.
-	size_t i,j;
 
-	// Init Part
-	add[0]=add[1]=del[0]=del[1]=del[2]=0;   // No objects added or deleted
-	idx[0]=idx[1]=cNoRef;
-	nbdel=nbadd=0;
+//---------------------------------------------------------------------------
+//template<class cGroup,class cObj,class cGroups>
+//	cObj* RGroupSC<cGroup,cObj,cGroups>::GetMostDissimilarObject(void)
+//{
+//	if(NbSubObjects<2)
+//		return(0);
+//
+//	cObj **cur1;
+//
+//	// Fill thObjs2 with the objects of the group and order them by ascending order of similarity with the centroid
+//	cObj** thObjs2(Owner->thObjs2);
+//	RCursor<cObj> obj(GetObjs());
+//	for(obj.Start(),cur1=thObjs2;!obj.End();obj.Next())
+//	{
+//		if(obj()==GetCentroid())
+//			continue;
+//		(*(cur1++))=obj();
+//	}
+//	OrderBySim QSort(static_cast<cGroup*>(this),thObjs2,NbSubObjects-1);
+//	QSort.Order();
+//	return(thObjs2[0]);
+//}
 
-	// Try to add two objects
-	for(i=0,obj=objs;i<nbobjs-1;obj++,i++)
-	{
-//		std::cout<<"   (1) "<<i<<" iterations"<<std::endl;
-		for(j=i+1,obj2=obj+1;j<nbobjs;obj2++,j++)
-		{
-			if(Test(del,nbdel,(*obj),(*obj2)))
-			{
-				idx[nbadd]=i;
-				add[nbadd++]=(*obj);
-				idx[nbadd]=j;
-				add[nbadd++]=(*obj2);
-//				std::cout<<"         Insert "<<(*obj)->GetId()<<" and "<<(*obj2)->GetId()<<std::endl;
-				break;
-			}
-		}
-		if(nbadd) break;
-	}
 
-	// Try to add a first object
-	if(!nbadd)
-	{
-		for(i=0,obj=objs;i<nbobjs;obj++,i++)
-		{
-//			std::cout<<"   (2) "<<i<<" iterations"<<std::endl;
-			if(Test(del,nbdel,(*obj),0))
-			{
-				idx[nbadd]=i;
-				add[nbadd++]=(*obj);
-//				std::cout<<"         Insert "<<(*obj)->GetId()<<std::endl;
-				break;
-			}
-		}
-	}
-
-	// If nothing to add -> return
-	if(!nbadd) return(false);
-
-	if((Owner->Instance->Debug)&&(nbdel||nbadd))
-	{
-		Owner->Instance->Debug->BeginFunc("DoOptimisation","RGroupSC");
-		Owner->Instance->Debug->PrintInfo("Group "+RString::Number(Id)+": "+RString::Number(nbdel)+" objects replaced by "+RString::Number(nbadd));
-		Owner->Instance->Debug->EndFunc("DoOptimisation","RGroupSC");
-	}
-
-	// Delete the objects from the group and insert them in objs.
-	for(i=0;i<nbdel;i++)
-	{
-		Delete(del[i]);
-		objs[nbobjs++]=del[i];
-//		std::cout<<"         Delete "<<del[i]->GetId()<<std::endl;
-	}
-
-	// Insert the objects in the group and delete them from objs.
-	// If idx[1] > idx[0] -> idx[1]-- because idx[0] will be deleted first.
-	if(idx[1]>idx[0]) idx[1]--;
-	for(i=0;i<nbadd;i++)
-	{
-		Insert(add[i]);
-		memcpy(&objs[idx[i]],&objs[idx[i]+1],((--nbobjs)-idx[i])*sizeof(cObj*));
-	}
-	return(true);
-}
+//---------------------------------------------------------------------------
+//template<class cGroup,class cObj,class cGroups>
+//	void RGroupSC<cGroup,cObj,cGroups>::AddPromSol(cObj* obj,double& simintra,double& agreement,double& disagreement)
+//{
+//	RCursor<cObj> Cur(Owner->GetObjs(*this));
+//	for(Cur.Start();!Cur.End();Cur.Next())
+//	{
+//		if(Cur()==obj)
+//			continue;
+//		agreement+=Owner->Instance->GetAgreementRatio(obj,Cur());
+//		disagreement+=Owner->Instance->GetDisagreementRatio(obj,Cur());
+//	}
+//	simintra+=Owner->Instance->GetSim(obj,GetCentroid());
+//}
 
 
 //---------------------------------------------------------------------------

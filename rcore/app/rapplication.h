@@ -48,6 +48,40 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
 * The RApplication class provides a representation for a generic application.
+* It defines a configuration file (stored in "~/.r/config") that can eventually
+* have a template (stored in "/usr/r/config"). It manages also arguments on the
+* form: "--argwithoutvalue" or "--argwithvalue value".
+*
+* In practice, the important methods are CreateConfig(void) to create some
+* configuration parameters, Init(void) to initialize the application (for
+* example to allocate some structures) and Run(void) that contains the code
+* to execute. Here is an example:
+* @code
+* class MyApplication : public RApplication
+* {
+* public:
+*   MyApplication(int argc, char** argv)
+*   	: RApplication("Test",argc,argv)
+*   {
+*   }
+*   virtual void CreateConfig(void)
+*   {
+*   	Config.InsertParam(new RParamValue("Message","Hello world !"));
+*   }
+*   virtual void Run(void)
+*   {
+*   	cout<<Config.FindParam<RParamValue>("Message")->Get()<<endl;
+*   }
+* };
+*
+* //------------------------------------------------------------------------------
+* int main(int argc, char *argv[])
+* {
+*	MyApplication App(argc,argv);
+*	App.Execute();
+*	return(EXIT_SUCCESS);
+* }
+* @endcode
 * @author Pascal Francq
 * @short Generic Application.
 */
@@ -143,6 +177,8 @@ public:
 	 */
 	RCursor<RParamValue> GetParams(void) const;
 
+protected:
+
 	/**
 	* Create the configuration structure. New parameters can be added by
 	* defining a new method.
@@ -155,10 +191,20 @@ public:
 	*/
 	virtual void Init(void);
 
+private:
+
 	/**
 	* Run the application.
 	*/
 	virtual void Run(void);
+
+public:
+
+	/**
+	 * Execute the application. In practice, it initializes the application if
+	 * necessary, and then calls the Run() method.
+	 */
+	void Execute(void);
 
 	/**
 	* Destructor of the application. By default, the configuration is saved.

@@ -127,6 +127,21 @@ void BasicCursor::Start(void)
 
 
 //-----------------------------------------------------------------------------
+void BasicCursor::StartAtEnd(void)
+{
+	ActPtr=LastPtr-1;
+	if(!NbPtr)
+	{
+		Current=0;
+		return;
+	}
+	Current=&Tab[LastPtr-1];
+	while((!(*Current))&&(ActPtr))
+		Prev();
+}
+
+
+//-----------------------------------------------------------------------------
 void BasicCursor::GoTo(size_t idx)
 {
 	idx+=FirstPtr;
@@ -151,6 +166,25 @@ void BasicCursor::Next(size_t inc)
 		{
 			ActPtr++;
 			Current++;
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+void BasicCursor::Prev(size_t inc)
+{
+	if(!NbPtr) return;
+	if(ActPtr==cNoRef)
+		StartAtEnd();
+	else
+	{
+		ActPtr-=inc;
+		Current-=inc;
+		while((ActPtr)&&(!(*Current)))     // Go to previous non-null pointer
+		{
+			ActPtr--;
+			Current--;
 		}
 	}
 }

@@ -178,7 +178,7 @@ private:
 
 public:
 
-		inline size_t GetLen(void) const {return(BasicString<RChar,RString>::GetLen());}
+	inline size_t GetLen(void) const {return(BasicString<RChar,RString>::GetLen());}
 
 	inline size_t GetMaxLen(void) const {return(BasicString<RChar,RString>::GetMaxLen());}
 

@@ -50,7 +50,7 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
 	: Name(name), Args(argc), Params(argc/2), HomeConfig(RString::Null), Config("app",name), HasInitApp(false)
 {
 	if(App)
-		throw RException("Already one application running");
+		ThrowRException("Already one application running");
 	App=this;
 
 	// Set locale information specified by the user.
@@ -71,7 +71,7 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
     	if(Arg->Mid(0,2)=="--")
     	{
     		// A parameter is found
-    		if(!Param.IsEmpty())       // If a param is already defined -> insert it
+    		if(!Param.IsEmpty())       // If a parameter is already defined -> insert it
     			Params.InsertPtr(new RParamValue(Param,RString::Null));
     		Param=Arg->Mid(2);
     	}
@@ -86,7 +86,7 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
     	}
 		Args.InsertPtr(Arg);
     }
-	if(!Param.IsEmpty())       // If a param is already defined -> insert it
+	if(!Param.IsEmpty())       // If a parameter is already defined -> insert it
 		Params.InsertPtr(new RParamValue(Param,RString::Null));
 
 	// Configuration directory specified
@@ -154,8 +154,15 @@ void RApplication::Init(void)
 //-----------------------------------------------------------------------------
 void RApplication::Run(void)
 {
+}
+
+
+//-----------------------------------------------------------------------------
+void RApplication::Execute(void)
+{
 	if(!HasInitApp)
-		throw RException("Application not initialized");
+		Init();
+	Run();
 }
 
 

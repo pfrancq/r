@@ -119,13 +119,6 @@ public:
 	void Insert(const cObj* obj) {Owner->InsertObj(static_cast<cGroup*>(this),obj);}
 
 	/**
-	* Copy all the objects of a group. The two groups have to be of two
-	* different owner.
-	* @param grp            Group to copy from.
-	*/
-	void CopyObjs(const cGroup* grp);
-
-	/**
 	* Delete an object in the group.
 	* @param obj            Pointer to the object to delete.
 	*/
@@ -138,10 +131,27 @@ public:
 	virtual void PostInsert(const cObj* obj);
 
 	/**
-	* Method call after an object was deleted from the group.
+	 * Method call before all the objects of a given group are inserted into
+	 * the current one. This method can be used to copy internal information
+	 * from one group to the other.
+	 * @param from           The group used as source.
+	 * @return true if the PostInsert method should be called after each object
+	 * is inserted from the group (true if the default value).
+	 */
+	virtual bool PreInsertAll(const cGroup* from);
+
+	/**
+	* Method call after one object was deleted from the group.
 	* @param obj            Pointer to the object to delete.
 	*/
 	virtual void PostDelete(const cObj* obj);
+
+	/**
+	 * Method call each time all the objects are deleted from the group.
+	 * @return true if the PostDelete method should be called after each object
+	 * was deleted from the group (true if the default value).
+	 */
+	virtual bool PreDeleteAll(void);
 
 	/**
 	* Look if an object can be insert in the group. By default, the method
@@ -163,13 +173,6 @@ public:
 	* @param obj            Pointer to the object to delete.
 	*/
 	virtual bool CanDelete(const cObj* obj);
-
-	/**
-	* Copy internal information from a given group, in particular information
-	* that are computer (such as an average similarity inside the group).
-	* @param grp            The group used as source.
-	*/
-	virtual void CopyInfos(const cGroup* grp);
 
 	/**
 	* Return the identifier of the group.

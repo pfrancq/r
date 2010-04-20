@@ -104,8 +104,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 			if(Instance->EmptyModifiedGroups)
 			{
 				// Only groups with no common objects are inserted -> all objects can be inserted
-				grp->CopyObjs(Cur2());
-				grp->CopyInfos(Cur2());
+				InsertObjs(Cur2(),grp);
 			}
 			else
 			{
@@ -189,14 +188,12 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	for(i=begin+1,Cur.Start();--i;Cur.Next())   // Copy 'begin' first groups
 	{
 			grp=ReserveGroup();
-			grp->CopyObjs(Cur());
-			grp->CopyInfos(Cur());
+			InsertObjs(Cur(),grp);
 	}
 	for(i=end+1,Cur.GoTo(pos1);--i;Cur.Next())  // Copy 'end' groups from pos1
 	{
 			grp=ReserveGroup();
-			grp->CopyObjs(Cur());
-			grp->CopyInfos(Cur());
+			InsertObjs(Cur(),grp);
 	}
 
 	// Insert groups from parent2<pos2 and verify that they don't contains "new"

@@ -1,9 +1,9 @@
 /*
 	R Project Library
 
-	RSparseMatrix.cpp
+	RMaxMatrix.cpp
 
-	Sparse Matrix - Implementation.
+	Ascending Ordered Sparse Matrix - Implementation.
 
 	Copyright 2005-2010 by Pascal Francq (pascal@francq.info).
 	Copyright 2003-2005 by Valery Vandaele.
@@ -30,7 +30,7 @@
 
 //---------------------------------------------------------------------------
 // include files for R Project
-#include <rsparsematrix.h>
+#include <rmaxmatrix.h>
 using namespace R;
 using namespace std;
 
@@ -38,38 +38,38 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 //
-// RSparseMatrix
+// RMaxMatrix
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RSparseMatrix::RSparseMatrix(size_t nblines,size_t nbcols,bool alllines,size_t init)
-	: RGenericMatrix(nblines,nbcols), RContainer<RSparseVector,true,true>(nblines),
+RMaxMatrix::RMaxMatrix(size_t nblines,size_t nbcols,bool alllines,size_t init)
+	: RGenericMatrix(nblines,nbcols), RContainer<RMaxVector,true,true>(nblines),
 	  AllLines(alllines), InitNbCols(init)
 {
 	if(AllLines)
 	{
 		for(size_t i=0;i<NbLines;i++)
-			InsertPtrAt(new RSparseVector(InitNbCols,i),i,true);
+			InsertPtrAt(new RMaxVector(InitNbCols,i),i,true);
 	}
 }
 
 
 //-----------------------------------------------------------------------------
-RSparseMatrix::RSparseMatrix(const RSparseMatrix& src)
-	: RGenericMatrix(src), RContainer<RSparseVector,true,true>::RContainer(src), AllLines(src.AllLines)
+RMaxMatrix::RMaxMatrix(const RMaxMatrix& src)
+	: RGenericMatrix(src), RContainer<RMaxVector,true,true>::RContainer(src), AllLines(src.AllLines)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-void RSparseMatrix::Clear(double,bool clean)
+void RMaxMatrix::Clear(double,bool clean)
 {
 	if(clean)
-		RContainer<RSparseVector,true,true>::Clear();
+		RContainer<RMaxVector,true,true>::Clear();
 	else
 	{
-		RCursor<RSparseVector> Cur(*this);
+		RCursor<RMaxVector> Cur(*this);
 		for(Cur.Start();!Cur.End();Cur.Next())
 			Cur()->Clear();
 	}
@@ -77,15 +77,14 @@ void RSparseMatrix::Clear(double,bool clean)
 
 
 //------------------------------------------------------------------------------
-void RSparseMatrix::Init(double val)
+void RMaxMatrix::Init(double)
 {
-	std::cerr<<"All elements of a RSparseMatrix are allocated. Use RMatrix instead"<<std::endl;
-	RGenericMatrix::Init(val);
+	ThrowRException("Not valid operator for RMaxMatrix.");
 }
 
 
 //------------------------------------------------------------------------------
-void RSparseMatrix::VerifySize(size_t newlines,size_t newcols,bool,double)
+void RMaxMatrix::VerifySize(size_t newlines,size_t newcols,bool,double)
 {
 	// Verify the lines
 	if(newlines>NbLines)
@@ -95,7 +94,7 @@ void RSparseMatrix::VerifySize(size_t newlines,size_t newcols,bool,double)
 		if(AllLines)
 		{
 			for(size_t i=NbLines;i<newlines;i++)
-				InsertPtrAt(new RSparseVector(InitNbCols,i),i,true);
+				InsertPtrAt(new RMaxVector(InitNbCols,i),i,true);
 		}
 	}
 	else if(newlines<NbLines)
@@ -105,7 +104,7 @@ void RSparseMatrix::VerifySize(size_t newlines,size_t newcols,bool,double)
 		{
 			// If the line correspond to a identifier smaller than the number of lines
 			// -> All necessary lines are removed.
-			if(RContainer<RSparseVector,true,true>::operator[](GetNb()-1)->Id<newlines)
+			if(RContainer<RMaxVector,true,true>::operator[](GetNb()-1)->Id<newlines)
 				break;
 
 			DeletePtrAt(GetNb()-1);
@@ -116,7 +115,7 @@ void RSparseMatrix::VerifySize(size_t newlines,size_t newcols,bool,double)
 	if(newcols<NbCols)
 	{
 		// In each vector, the non-null elements between newcols and NbCols must be removed.
-		RCursor<RSparseVector> Cur(*this,0,NbLines-1);
+		RCursor<RMaxVector> Cur(*this,0,NbLines-1);
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
 			// Treat the elements in reverse order since the the columns to remove
@@ -124,7 +123,7 @@ void RSparseMatrix::VerifySize(size_t newlines,size_t newcols,bool,double)
 			for(size_t i=NbCols+1;--i;)
 			{
 				// If the last element is inside the new number of columns -> vector is treated.
-				if(Cur()->RContainer<RValue,true,true>::operator[](GetNb()-1)->Id<newcols)
+				if(Cur()->RContainer<RMaxValue,true,true>::operator[](GetNb()-1)->Id<newcols)
 					break;
 
 				Cur()->DeletePtrAt(GetNb()-1,false);
@@ -138,80 +137,83 @@ void RSparseMatrix::VerifySize(size_t newlines,size_t newcols,bool,double)
 
 
 //-----------------------------------------------------------------------------
-RSparseMatrix& RSparseMatrix::operator=(const RSparseMatrix& matrix)
+RMaxMatrix& RMaxMatrix::operator=(const RMaxMatrix& matrix)
 {
 	RGenericMatrix::operator=(matrix);
-	RContainer<RSparseVector,true,true>::operator=(matrix);
+	RContainer<RMaxVector,true,true>::operator=(matrix);
 	AllLines=matrix.AllLines;
 	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
-double RSparseMatrix::operator()(size_t i,size_t j) const
+double RMaxMatrix::operator()(size_t i,size_t j) const
 {
 	if((i>NbLines)||(j>NbCols))
-		throw std::range_error("RSparseMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+		throw std::range_error("RMaxMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
 
-	const RSparseVector* Line;
+	const RMaxVector* Line;
 
 	if(AllLines)
 	{
 		if(i<GetNb())
-			Line=static_cast<const RSparseVector*>(Tab[i]);
+			Line=static_cast<const RMaxVector*>(Tab[i]);
 		else
 			return(0);
 	}
 	else
-		Line=GetPtr(i);
-	if(!Line)
-		return(0);
-	RValue* Value(Line->GetPtr(j));
-	if(!Value)
-		return(0);
-	return(Value->Value);
+		Line=(*this)[i];
+	return((*Line)[j]);
 }
 
 
 //------------------------------------------------------------------------------
-double& RSparseMatrix::operator()(size_t i,size_t j)
+double& RMaxMatrix::operator()(size_t,size_t)
 {
-	if((i>NbLines)||(j>NbCols))
-		throw std::range_error("RSparseMatrix::operator() : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+	ThrowRException("Not valid operator for RMaxMatrix : use Add");
+}
 
-	RSparseVector* Line;
+
+//------------------------------------------------------------------------------
+void RMaxMatrix::Add(size_t i,size_t j,double val)
+{
+	if(i>NbLines)
+		throw std::range_error("RMaxMatrix::Add(size_t,size_t,double) : index "+RString::Number(i)+" outside range ("+RString::Number(NbLines)+")");
+
+	RMaxVector* Line;
 
 	if(AllLines)
 	{
 		if(i<GetNb())
-			Line=static_cast<RSparseVector*>(Tab[i]);
+			Line=static_cast<RMaxVector*>(Tab[i]);
 		else
 		{
 			for(size_t add=GetNb();add<=i;add++)
-				InsertPtrAt(Line=new RSparseVector(InitNbCols,add),add,true);
+				InsertPtrAt(Line=new RMaxVector(InitNbCols,add),add,true);
 		}
 	}
 	else
 	{
 		Line=GetPtr(i);
 		if(!Line)
-			InsertPtr(Line=new RSparseVector(InitNbCols,i));
+			InsertPtr(Line=new RMaxVector(InitNbCols,i));
 	}
-	RValue* Value(Line->GetInsertPtr(j));
-	return(Value->Value);
+	if(Line->GetNb()+1>=NbLines)
+		throw std::range_error("RMaxMatrix::Add(size_t,size_t,double) : Maximal number of elements for index "+RString::Number(i));
+	Line->Add(j,val);
 }
 
 
 //------------------------------------------------------------------------------
-const RSparseVector* RSparseMatrix::operator[](size_t i) const
+const RMaxVector* RMaxMatrix::operator[](size_t i) const
 {
 	if(i>NbLines)
-		throw std::range_error("RSparseMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
+		throw std::range_error("RMaxMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
 
 	if(AllLines)
 	{
 		if(i<GetNb())
-			return(RContainer<RSparseVector,true,true>::operator[](i));
+			return(RContainer<RMaxVector,true,true>::operator[](i));
 		else
 			return(0);
 	}
@@ -220,34 +222,34 @@ const RSparseVector* RSparseMatrix::operator[](size_t i) const
 
 
 //------------------------------------------------------------------------------
-RSparseVector* RSparseMatrix::operator[](size_t i)
+RMaxVector* RMaxMatrix::operator[](size_t i)
 {
 	if(i>NbLines)
-		throw std::range_error("RSparseMatrix::operator[] : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
+		throw std::range_error("RMaxMatrix::operator[] : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
 
-	RSparseVector* Line;
+	RMaxVector* Line;
 
 	if(AllLines)
 	{
 		if(i<GetNb())
-			Line=static_cast<RSparseVector*>(Tab[i]);
+			Line=static_cast<RMaxVector*>(Tab[i]);
 		else
 		{
 			for(size_t add=GetNb();add<=i;add++)
-				InsertPtrAt(Line=new RSparseVector(InitNbCols,add),add,true);
+				InsertPtrAt(Line=new RMaxVector(InitNbCols,add),add,true);
 		}
 	}
 	else
 	{
 		Line=GetPtr(i);
 		if(!Line)
-			InsertPtr(Line=new RSparseVector(InitNbCols,i));
+			InsertPtr(Line=new RMaxVector(InitNbCols,i));
 	}
 	return(Line);
 }
 
 
 //-----------------------------------------------------------------------------
-RSparseMatrix::~RSparseMatrix(void)
+RMaxMatrix::~RMaxMatrix(void)
 {
 }

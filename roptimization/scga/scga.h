@@ -36,7 +36,9 @@
 // includes files for R Project
 #include <rparam.h>
 #include <rgga.h>
+#include <robjg.h>
 #include <rfitness.h>
+#include <rmaxmatrix.h>
 
 
 //------------------------------------------------------------------------------
@@ -199,6 +201,51 @@ public:
 	* Constructor.
 	*/
 	RParamsSC(void);
+};
+
+
+//------------------------------------------------------------------------------
+/**
+* The RObjSC class provides a representation of an object to group by the
+* similarity-based clustering algorithm.
+* @author Pascal Francq
+* @short Similarity-based Clustering Object.
+*/
+class RObjSC : public RObjG
+{
+protected:
+
+	/**
+	 * Can the element be grouped in a group alone?
+	 */
+	bool Social;
+
+	/**
+	 * Identifier of a common parent between elements that could prevent to
+	 * group them together.
+	 */
+	size_t ParentId;
+
+public:
+
+	/**
+	* Construct the object.
+	* @param id             Identifier.
+	* @param name           Name of the object.
+	* @param social         Is the object social.
+	* @param parentid       Identifier of the parent (if any).
+	*/
+	RObjSC(const size_t id,const RString& name,bool social=true,size_t parentid=0);
+
+	/**
+	 * See if the element is social or not.
+	 */
+	inline bool IsSocial(void) const {return(Social);}
+
+	/**
+	 * Get the identifier of the parent or 0 if there is no parent.
+	 */
+	inline size_t GetParentId(void) const {return(ParentId);}
 };
 
 

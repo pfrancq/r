@@ -1,9 +1,9 @@
 /*
 	R Project Library
 
-	RSparseMatrix.h
+	RMaxMatrix.h
 
-	Sparse Matrix - Header.
+	Ascending Ordered Sparse Matrix - Header.
 
 	Copyright 2005-2010 by Pascal Francq (pascal@francq.info).
 	Copyright 2003-2005 by Vandaele Valery.
@@ -29,14 +29,14 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RSparseMatrix_H
-#define RSparseMatrix_H
+#ifndef RMaxMatrix_H
+#define RMaxMatrix_H
 
 
 //-----------------------------------------------------------------------------
 // include file for R Project
 #include <rcursor.h>
-#include <rsparsevector.h>
+#include <rmaxvector.h>
 #include <rgenericmatrix.h>
 
 
@@ -47,31 +47,31 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 /**
-* The RSparseMatrix provides a representation for a sparse matrix. The matrix
-* is coded as a container of RSparseVector. The matrix can be created so that
-* to each line a vector is always build to speed up the access.
+* The RMaxMatrix provides a representation for a sparse ordered matrix. The
+* matrix is coded as a container of RMaxVector. The matrix can be created so
+* that to each line a vector is always build to speed up the access.
 *
 * Here is an example of code:
 * @code
-* RSparseMatrix a(6,3); // Matrix initially contains 6 lines and 3 values per line (<>3 columns).
-* a(0,2)=0.2;
-* a(1,5)=1.5;
-* a(2,0)=1.0;
-* a(5,1)=5.1;
-* for(size_t i=0;i<6;i++)
+* RMaxMatrix a(2,2); // Matrix initially contains 2 lines and 2 values per line.
+* a.Add(0,1,0.2);
+* a.Add(0,2,1.5);
+* a.Add(1,2,1.0);
+* a.Add(1,3,5.1);
+* for(size_t i=0;i<2;i++)
 * {
-* 	for(size_t j=0;j<6;j++)
-* 		cout<<static_cast<const RSparseMatrix&>(a)(i,j)<<"\t";
+* 	for(size_t j=0;j<a[i]->GetNb();j++)
+* 		cout<<static_cast<const RMaxMatrix&>(a)(i,j)<<"\t";
 * 	cout<<endl;
 * }
 * @endcode
-* An important aspect is the use of static_cast<const RSparseMatrix&> to ensure
-* the call of the const version of the operator(). If static_cast<const RSparseMatrix&>
+* An important aspect is the use of static_cast<const RMaxMatrix&> to ensure
+* the call of the const version of the operator(). If static_cast<const RMaxMatrix&>
 * is not used, the different elements are created with uninitialized values.
-* @author Pascal Francq (initial coding from Valery Vandaele).
-* @short Sparse Matrix.
+* @author Pascal Francq.
+* @short Ascending Ordered Sparse Matrix.
 */
-class RSparseMatrix : public RGenericMatrix, protected RContainer<RSparseVector,true,true>
+class RMaxMatrix : public RGenericMatrix, protected RContainer<RMaxVector,true,true>
 {
 protected:
 
@@ -90,18 +90,17 @@ public:
 	/**
 	* Construct a sparse matrix.
 	* @param nblines         Number of lines (not the number of vectors).
-	* @param nbcols          Number of columns (not the number of elements in
-	*                        each vector).
+	* @param nbcols          Maximal number of values for each line.
 	* @param alllines        All lines have a vector.
 	* @param init            Initial number of elements to reserve for each line.
 	*/
-	RSparseMatrix(size_t nblines,size_t nbcols,bool alllines=true,size_t init=20);
+	RMaxMatrix(size_t nblines,size_t nbcols,bool alllines=true,size_t init=20);
 
 	/**
 	* Copy constructor of a sparse matrix.
 	* @param src             Sparse matrix used as source.
 	*/
-	RSparseMatrix(const RSparseMatrix& src);
+	RMaxMatrix(const RMaxMatrix& src);
 
 	/**
 	 * Clear the matrix. All the elements are removed.
@@ -122,17 +121,15 @@ public:
 	* Verify if the matrix has a given size, and increase them if necessary.
 	* @param newlines        New line number.
 	* @param newcols         New column number.
-	* @param fill            Elements must be filled with a value (Not used for
-	*                        sparse matrix).
-	* @param val             Value used eventually to fill the elements created
-	*                        (Not used for sparse matrix).
+	* @param fill            Elements must be filled with a value (Not used for sparse matrix).
+	* @param val             Value used eventually to fill the elements created  (Not used for sparse matrix).
 	*/
 	virtual void VerifySize(size_t newlines,size_t newcols,bool fill=false,double val=NAN);
 
 	/**
 	 * Get the type of the matrix.
 	 */
-	virtual tType GetType(void) const {return(tSparse);}
+	virtual tType GetType(void) const {return(tMax);}
 
 	/**
 	 * Get the number of vectors contained in the matrix. If the matrix does not
@@ -144,13 +141,13 @@ public:
 	/**
 	 * Get a cursor over the vectors of the matrix.
 	 */
-	RCursor<RSparseVector> GetLines(void) const {return(RCursor<RSparseVector>(*this));}
+	RCursor<RMaxVector> GetLines(void) const {return(RCursor<RMaxVector>(*this));}
 
 	/**
 	* The assignment operator.
 	* @param matrix          Sparse Matrix used as source.
 	*/
-	RSparseMatrix& operator=(const RSparseMatrix& matrix);
+	RMaxMatrix& operator=(const RMaxMatrix& matrix);
 
 	/**
 	* Return a specific element of the matrix (const version).
@@ -160,42 +157,51 @@ public:
  	virtual double operator()(size_t i,size_t j) const;
 
 	/**
-	* Return a specific element of the matrix.
+	* Return a specific element of the matrix. This function cannot be used
+	* with RMaxMatrix.
 	* @param i               Line number of the element.
 	* @param j               Column number of the element.
 	*/
  	virtual double& operator()(size_t i,size_t j);
 
+	/**
+	 * Add a value associated to a given index into the matrix.
+	* @param i               Line number of the element.
+	* @param j               Column number of the element.
+	 * @param val            Value to add.
+	 */
+	virtual void Add(size_t i,size_t j,double val);
+
  	/**
  	 * Return the vector at a given line from the matrix (const version).
  	 * @param i               Line number of the vector.
  	 */
- 	const RSparseVector* operator[](size_t i) const;
+ 	const RMaxVector* operator[](size_t i) const;
 
  	/**
  	 * Return the vector at a given line from the matrix.
  	 * @param i               Line number of the vector.
  	 */
- 	RSparseVector* operator[](size_t i);
+ 	RMaxVector* operator[](size_t i);
 
 	/**
 	 * Verify if a given index has a vector defined in the matrix.
 	 * @param i              Index.
 	 * @return true or false.
 	 */
-	bool IsIn(size_t i) const {return(RContainer<RSparseVector,true,true>::IsIn(i));}
+	bool IsIn(size_t i) const {return(RContainer<RMaxVector,true,true>::IsIn(i));}
 
 	/**
 	 * Get a pointer over the vector at a given index.
 	 * @param i              Index.
 	 * @return Pointer or null if the index hasn't no vector.
 	 */
-	RSparseVector* GetValue(size_t i) const {return(RContainer<RSparseVector,true,true>::GetPtr(i));}
+	RMaxVector* GetValue(size_t i) const {return(RContainer<RMaxVector,true,true>::GetPtr(i));}
 
 	/**
 	* Destruct the sparse matrix.
 	*/
-	virtual ~RSparseMatrix(void);
+	virtual ~RMaxMatrix(void);
 };
 
 

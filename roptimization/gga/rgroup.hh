@@ -112,17 +112,6 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroup<cGroup,cObj,cGroups>::CopyObjs(const cGroup* grp)
-{
-	RReturnIfFail(Owner!=grp->Owner);
-	RCursor<cObj> ptr(grp->GetObjs());
-	for(ptr.Start();!ptr.End();ptr.Next())
-		Insert(ptr());
-}
-
-
-//------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
 	void RGroup<cGroup,cObj,cGroups>::PostInsert(const cObj*)
 {
 }
@@ -130,8 +119,24 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
+	bool RGroup<cGroup,cObj,cGroups>::PreInsertAll(const cGroup*)
+{
+	return(true);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
 	void RGroup<cGroup,cObj,cGroups>::PostDelete(const cObj*)
 {
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
+	bool RGroup<cGroup,cObj,cGroups>::PreDeleteAll(void)
+{
+	return(true);
 }
 
 
@@ -156,13 +161,6 @@ template<class cGroup,class cObj,class cGroups>
 	bool RGroup<cGroup,cObj,cGroups>::CanDelete(const cObj*)
 {
 	return(true);
-}
-
-
-//------------------------------------------------------------------------------
-template<class cGroup,class cObj,class cGroups>
-	void RGroup<cGroup,cObj,cGroups>::CopyInfos(const cGroup*)
-{
 }
 
 

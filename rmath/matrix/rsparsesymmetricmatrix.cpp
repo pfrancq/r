@@ -82,12 +82,12 @@ double RSparseSymmetricMatrix::operator()(size_t i,size_t j) const
 		j=tmp;
 	}
 
-	RSparseVector* Line;
+	const RSparseVector* Line;
 
 	if(AllLines)
 	{
 		if(i<GetNb())
-			Line=static_cast<RSparseVector*>(Tab[i]);
+			Line=static_cast<const RSparseVector*>(Tab[i]);
 		else
 			return(0);
 	}

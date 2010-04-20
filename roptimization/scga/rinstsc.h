@@ -44,6 +44,7 @@
 #include <scga.h>
 #include <rpromkernelsc.h>
 #include <rheuristicsc.h>
+#include <rmaxvector.h>
 
 
 //------------------------------------------------------------------------------
@@ -176,20 +177,9 @@ public:
 	RInstSC(RCursor<cObj> objs,RParamsSC* p,RDebug* debug);
 
 	/**
-	* Initialization of the instance.
-	*/
-	virtual void Init(void);
-
-	/**
 	* Create a specific heuristic for the algorithm.
 	*/
 	virtual R::RGroupingHeuristic<cGroup,cObj,cChromo>* CreateHeuristic(void);
-
-	/**
-	* @returns The object corresponding to an element.
-	* @param id              Identifier of the element.
-	*/
-	cObj* GetObj(size_t id) const;
 
 	/**
 	* This function determines if the GA must be stopped. Actually, it is the case
@@ -210,25 +200,29 @@ public:
 	virtual void PostEvaluate(void);
 
 	/**
-	* Get the disagreement ratio between two elements.
-	* @param obj1            First element.
-	* @param obj2            Second element.
+	* Get the maximum disagreement ratios of an element.
+	* @param obj             Element.
 	*/
-	virtual double GetDisagreementRatio(const cObj* obj1,const cObj* obj2) const=0;
+	virtual const RMaxVector* GetDisagreementRatios(const cObj* obj) const=0;
 
 	/**
 	* Get the disagreement ratio between two elements.
-	* @param obj1            First element.
-	* @param obj2            Second element.
+	* @param obj             Element.
 	*/
-	virtual double GetAgreementRatio(const cObj* obj1,const cObj* obj2) const=0;
+	virtual const RMaxVector* GetAgreementRatios(const cObj* obj) const=0;
 
 	/**
 	* Compute the similarity between two elements.
-	* @param obj1            First element.
-	* @param obj2            Second element.
+	* @param obj             Element.
 	*/
-	virtual double GetSim(const cObj* obj1,const cObj* obj2) const=0;
+	virtual const RMaxVector* GetSims(const cObj* obj) const=0;
+
+	/**
+	 * Verify if the object is a social one.
+	 * @param obj            Object.
+	 * @return false by default.
+	 */
+	virtual bool IsSocial(const cObj* obj);
 
 	/**
 	* This function can be used to do a treatment after the GA stops.

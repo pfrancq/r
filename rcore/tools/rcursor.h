@@ -89,7 +89,7 @@ public:
 	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
 	* @param max             Maximum position of the elements to iterate (included max).
-	*                        If SZE_MAX, iterate until the end of the container.
+	*                        If SIZE_MAX, iterate until the end of the container.
 	*/
 	template<bool a,bool o> RCursor(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX) : BasicCursor(c,min,max) {}
 
@@ -108,8 +108,41 @@ public:
 	*/
 	template<bool a,bool o> void Set(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX) {BasicCursor::Set(c,min,max);}
 
+	/** @copydoc BasicCursor::Clear(void)*/
+	inline void Clear(void) {BasicCursor::Clear();}
+
+	/** @copydoc BasicCursor::Start(void)*/
+	inline void Start(void) {BasicCursor::Start();}
+
+	/** @copydoc BasicCursor::StartAtEnd(void)*/
+	inline void StartAtEnd(void) {BasicCursor::StartAtEnd();}
+
+	/** @copydoc BasicCursor::GoTo(size_t)*/
+	inline void GoTo(size_t idx) {BasicCursor::GoTo(idx);}
+
+	inline size_t GetPos(void) const {return(BasicCursor::GetPos());}
+
+	inline size_t GetNb(void) const {return(BasicCursor::GetNb());}
+
 	/**
-	* Return the current element.
+	* @return the maximal position occupied by an elements in the container.
+	*/
+	inline size_t GetMaxPos(void) const {if(NbPtr) return(LastPtr-1); else return(0);}
+
+	inline bool Begin(void) const {return(BasicCursor::Begin());}
+
+	inline bool End(void) const {return(BasicCursor::End());}
+
+	inline bool IsAt(size_t idx) const {return(BasicCursor::IsAt(idx));}
+
+	/** @copydoc BasicCursor::Next(size_t)*/
+	inline void Next(size_t inc=1) {BasicCursor::Next(inc);}
+
+	/** @copydoc BasicCursor::Prev(size_t)*/
+	inline void Prev(size_t inc=1) {BasicCursor::Prev(inc);}
+
+	/**
+	* @return the current element.
 	*/
 	inline C* operator()(void) const {return(static_cast<C*>(*Current));}
 };

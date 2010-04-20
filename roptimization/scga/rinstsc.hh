@@ -39,7 +39,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>::RThreadDataSC(cInst* owner)
 		: RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(owner),
 	  ToDel(owner->Objs.GetNb()<4?4:owner->Objs.GetNb()/4), tmpObjs1(0),tmpObjs2(0), Tests(0),
-	  Prom(owner->Params), Sols(0), NbSols((owner->Params->NbDivChromo*2)+1)
+	  Prom(owner->Params,(owner->Params->NbDivChromo*2)+1), Sols(0), NbSols((owner->Params->NbDivChromo*2)+1)
 {
 	RPromSol** s;
 	size_t i;
@@ -100,7 +100,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::RInstSC(RCursor<cObj> objs,RParamsSC* p,RDebug *debug)
 		: RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(p->PopSize,objs,"SCFirstFit","SCGA",debug),
-		RPromKernelSC<cChromo>(p), Params(p), Sols(0), NoSocialObjs(objs.GetNb())
+		RPromKernelSC<cChromo>(p,p->PopSize+1), Params(p), Sols(0), NoSocialObjs(objs.GetNb())
 #if BESTSOLSVERIFICATION
 	  , BestSols(p->MaxGen,p->MaxGen/2)
 #endif
@@ -125,50 +125,9 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	void RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::Init(void)
-{
-	// Init the GGA
-	RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Init();
-
-	// Init the Ratios
-	double ratio;
-	size_t i,j;
-
-	RCursor<cObj> Cur1(Objs);
-	RCursor<cObj> Cur2(Objs);
-	for(Cur1.Start(),i=1;!Cur1.End();Cur1.Next(),i++)
-	{
-		// Add all the object with a greater agreement ratio than the minimum
-		for(Cur2.Start(),j=i;--j;Cur2.Next())
-		{
-			ratio=GetAgreementRatio(Cur1(),Cur2());
-			if(ratio>=Params->MinAgreement)
-			{
-				Cur1()->AddCloseObject(Cur2()->GetId(),ratio);
-				Cur2()->AddCloseObject(Cur1()->GetId(),ratio);
-			}
-		}
-	}
-}
-
-
-//-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	RGroupingHeuristic<cGroup,cObj,cChromo>* RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::CreateHeuristic(void)
 {
 	return(new RHeuristicSC<cGroup,cObj,cChromo>(Random,Objs,Params,Debug));
-}
-
-
-//-----------------------------------------------------------------------------
-template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	cObj* RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::GetObj(size_t id) const
-{
-	R::RCursor<cObj> Cur(Objs);
-	for(Cur.Start();!Cur.End();Cur.Next())
-		if(Cur()->GetElementId()==id)
-			return(Cur());
-	return(0);
 }
 
 
@@ -185,8 +144,10 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	void RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::WriteChromoInfo(cChromo* c)
 {
 	if(!Debug) return;
-	Debug->PrintInfo("Id "+RString::Number(c->Id)+" (Fi="+RString::Number(c->Fi,"%1.5f")+",Fi+="+RString::Number(c->FiPlus,"%1.5f")+",Fi-="+RString::Number(c->FiMinus,"%1.5f")+
-			" - J="+RString::Number(c->CritSimJ)+" - Agr.="+RString::Number(c->CritAgreement,"%1.5f")+" - Disagr.="+RString::Number(c->CritDisagreement,"%1.5f"));
+	RString Msg("Id "+RString::Number(c->Id)+" - Nb Groups="+RString::Number(c->Used.GetNb()));
+	Msg+=" - Fi="+RString::Number(c->Fi,"%1.5f")+" - Fi+="+RString::Number(c->FiPlus,"%1.5f")+" - Fi-="+RString::Number(c->FiMinus,"%1.5f");
+	Msg+=" - J="+RString::Number(c->CritSimJ)+" - Agr.="+RString::Number(c->CritAgreement,"%1.5f")+" - Disagr.="+RString::Number(c->CritDisagreement,"%1.5f");
+	Debug->PrintInfo(Msg);
 }
 
 
@@ -287,6 +248,14 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 	if(Debug)
 		Debug->EndFunc("PostEvaluate","RInstSC");
+}
+
+
+//-----------------------------------------------------------------------------
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
+	bool RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::IsSocial(const cObj*)
+{
+	return(false);
 }
 
 

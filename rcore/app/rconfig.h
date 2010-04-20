@@ -53,14 +53,7 @@ namespace R{
 */
 class RConfig
 {
-	class lParams : public RContainer<RParam,true,true>
-	{
-	public:
-		RString Cat;
-		lParams(const RString& cat);
-		int Compare(const lParams& params) const;
-		int Compare(const RString& params) const;
-	};
+	class lParams;
 
 	/**
 	* Category of the configuration.
@@ -73,9 +66,9 @@ class RConfig
 	RString Name;
 
 	/**
-	* Parameters.
+	* Root of all parameters.
 	*/
-	RContainer<lParams,true,true> Params;
+	lParams* Root;
 
 public:
 
@@ -110,6 +103,23 @@ public:
 	void SetConfigInfos(const RString& cat,const RString& name);
 
 	/**
+	 * Load a given category (and its parameters and sub-categories).
+	 * @param cat            Category to load.
+	 * @param tag            Tag coming from the XML file.
+	 */
+	void Load(lParams* cat,RXMLTag* tag);
+
+	/**
+	 * Save a given category (and its parameters and sub-categories).
+	 * @param cat            Category to save.
+	 * @param config         XML configuration file.
+	 * @param parent         Parent tag in the configuration.
+	 */
+	void Save(lParams* cat,RXMLStruct& config,RXMLTag* parent);
+
+public:
+
+	/**
 	* Load a file in the structure.
 	* @param global          Global configuration file must be searched?
 	*/
@@ -130,155 +140,223 @@ public:
 	*/
 	RString GetCategory(void) const {return(Category);}
 
-	/**
-	* Insert a new parameter in the configuration.
-	* @param param           Parameter.
-	* @param cat             Category of the parameter.
-	*/
-	void InsertParam(RParam* param,const RString& cat=RString::Null);
+private:
 
 	/**
-	* Find a given parameter of a given category.
+	* Find a given parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	* @return Pointer or null if not found.
 	*/
-	template<class T> T* FindParam(const RString& name,const RString& cat=RString::Null)
+	RParam* GetParam(const RString& name,const RString& cat,const RString& subcat,const RString& subsubcat);
+
+public:
+
+	/**
+	* @return a cursor over the parameters.
+	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
+	*/
+	RCursor<RParam> GetParams(const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
+
+	/**
+	* Fill a container with the categories name.
+	* @param cats            Container that will be filled (it is emptied by
+	*                        the method).
+	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	*/
+	void GetCategories(RContainer<RString,true,false>& cats,const RString& cat=RString::Null,const RString& subcat=RString::Null);
+
+	/**
+	* Find a given parameter (template version).
+	* @tparam T              Type of the parameter.
+	* @param name            Name of the parameter.
+	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
+	* @return Pointer or null if not found.
+	*/
+	template<class T> T* FindParam(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null)
 	{
-		lParams* c=Params.GetPtr(cat);
-		if(!c)
-			return(0);
-		return(dynamic_cast<T*>(c->GetPtr(name)));
+		return(dynamic_cast<T*>(GetParam(name,cat,subcat,subsubcat)));
 	}
+
+	/**
+	* Declare a new parameter. If it exist, the parameter passed as argument is
+	* deleted.
+	* @param param           Parameter.
+	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
+	*/
+	void InsertParam(RParam* param,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Reset a parameter with a given name and from a given category.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
- 	void Reset(const RString& name,const RString& cat=RString::Null);
+ 	void Reset(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* @return the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	RString Get(const RString& name,const RString& cat=RString::Null);
+	RString Get(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* @return the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	int GetInt(const RString& name,const RString& cat=RString::Null);
+	int GetInt(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* @return the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	unsigned int GetUInt(const RString& name,const RString& cat=RString::Null);
+	unsigned int GetUInt(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* @return the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	long GetLong(const RString& name,const RString& cat=RString::Null);
+	long GetLong(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* @return the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	unsigned long GetULong(const RString& name,const RString& cat=RString::Null);
+	unsigned long GetULong(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Get the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	* @return double.
 	*/
-	double GetDouble(const RString& name,const RString& cat=RString::Null);
+	double GetDouble(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* @return the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	bool GetBool(const RString& name,const RString& cat=RString::Null);
+	bool GetBool(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Get the content of a list.
 	* @param name            Name of the list.
 	* @param cat             Category of the list.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	* @return Cursor of string.
 	*/
-	RCursor<RString> GetList(const RString& name,const RString& cat=RString::Null);
+	RCursor<RString> GetList(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Get the content of a structure.
 	* @param name            Name of the structure.
 	* @param cat             Category of the structure.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	* @return Cursor of parameters.
 	*/
-	RCursor<RParam> GetStruct(const RString& name,const RString& cat=RString::Null);
+	RCursor<RParam> GetStruct(const RString& name,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Set the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param v               Value of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	void Set(const RString& name,const RString& v,const RString& cat=RString::Null);
+	void Set(const RString& name,const RString& v,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Set the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param v               Value of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	void SetInt(const RString& name,int v,const RString& cat=RString::Null);
+	void SetInt(const RString& name,int v,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Set the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param v               Value of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	void SetUInt(const RString& name,size_t v,const RString& cat=RString::Null);
+	void SetUInt(const RString& name,size_t v,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Set the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param v               Value of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	void SetDouble(const RString& name,double v,const RString& cat=RString::Null);
+	void SetDouble(const RString& name,double v,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Set the content of the parameter.
 	* @param name            Name of the parameter.
 	* @param v               Value of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	void SetBool(const RString& name,bool v,const RString& cat=RString::Null);
+	void SetBool(const RString& name,bool v,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Add a value to a list.
 	* @param name            Name of the parameter.
 	* @param v               Value of the parameter.
 	* @param cat             Category of the parameter.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	void AddToList(const RString& name,const RString& v,const RString& cat=RString::Null);
+	void AddToList(const RString& name,const RString& v,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Add a parameter to a structure.
 	* @param name            Name of the structure.
 	* @param param           Parameter.
 	* @param cat             Category of the structure.
+	* @param subcat          Sub-category of the parameter.
+	* @param subsubcat       Sub-Sub-category of the parameter.
 	*/
-	void AddToStruct(const RString& name,RParam* param,const RString& cat=RString::Null);
+	void AddToStruct(const RString& name,RParam* param,const RString& cat=RString::Null,const RString& subcat=RString::Null,const RString& subsubcat=RString::Null);
 
 	/**
 	* Destructor.

@@ -129,9 +129,14 @@ public:
 	void Clear(void);
 
 	/**
-	* Start the iterator to go trough the container.
+	* Start the iterator at the beginning of the container.
 	*/
 	void Start(void);
+
+	/**
+	 * Start the iterator at the end of the container.
+	 */
+	void StartAtEnd(void);
 
 	/**
 	* Go to the i-th element of the cursor.
@@ -150,6 +155,11 @@ public:
 	inline size_t GetNb(void) const {return(LastPtr-FirstPtr);}
 
 	/**
+	* Test if the begin of the cursor is reached.
+	*/
+	inline bool Begin(void) const {return(ActPtr==cNoRef);}
+
+	/**
 	* Test if the end of the cursor is reached.
 	*/
 	inline bool End(void) const {return(ActPtr==LastPtr);}
@@ -166,6 +176,13 @@ public:
 	* @param inc             Number of elements to go to.
 	*/
 	void Next(size_t inc=1);
+
+	/**
+	* Go to a given number of previous elements. If the begin is reached, go to the
+	* end.
+	* @param inc             Number of elements to go to.
+	*/
+	void Prev(size_t inc=1);
 };
 
 

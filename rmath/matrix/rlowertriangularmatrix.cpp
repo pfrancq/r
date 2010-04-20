@@ -118,7 +118,7 @@ double RLowerTriangularMatrix::operator()(size_t i,size_t j) const
 	if(j>i)
 		return(0.0);
 	TestThis();
-	return((*static_cast<RVector*>(Tab[i]))[j]);
+	return((*static_cast<const RVector*>(Tab[i]))[j]);
 }
 
 

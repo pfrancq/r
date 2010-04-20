@@ -139,6 +139,10 @@ public:
 
 private:
 
+	/**
+	 * Verify a given group.
+	 * @param id             Identifier of a group.
+	 */
 	void VerifyGroups(size_t id);
 
 public:
@@ -163,6 +167,14 @@ public:
 	* @param obj            Pointer of the object to insert.
 	*/
 	void InsertObj(cGroup* to,const cObj* obj);
+
+	/**
+	* Insert all the objects of a group into another one. PostInsert() is not
+	* called, but CopyInfos() is called at the end.
+	* @param from            Pointer of the original group.
+	* @param to              Pointer of the destination group.
+	*/
+	void InsertObjs(const cGroup* from,cGroup* to);
 
 	/**
 	* Delete an object from a node.

@@ -444,6 +444,30 @@ public:
 	* @return number of elements in the array (including eventually null
 	* pointers).
 	*/
+	inline size_t GetTab(const void** tab,size_t min=0, size_t max=0) const {return(BasicContainer::GetTab(tab,min,max));}
+
+	/**
+	* Copy the array of pointers into a temporary array. This array must have
+	* the right size (Read/Write). This method can be limited to a part of the
+	* container.
+	* @param tab             Array of pointers.
+	* @param min             Starting index of the container's part concerned.
+	* @param max             Ending index of the container's part concerned.
+	* @return number of elements in the array (including eventually null
+	* pointers).
+	*/
+	inline size_t GetTab(void** tab,size_t min=0, size_t max=0) {return(BasicContainer::GetTab(tab,min,max));}
+
+	/**
+	* Copy the array of pointers into a temporary array. This array must have
+	* the right size (Read only). This method can be limited to a part of the
+	* container.
+	* @param tab             Array of pointers.
+	* @param min             Starting index of the container's part concerned.
+	* @param max             Ending index of the container's part concerned.
+	* @return number of elements in the array (including eventually null
+	* pointers).
+	*/
 	inline size_t GetTab(const C** tab,size_t min=0, size_t max=0) const {return(BasicContainer::GetTab(reinterpret_cast<const void**>(tab),min,max));}
 
 	/**
