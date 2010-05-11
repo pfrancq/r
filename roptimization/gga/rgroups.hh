@@ -41,11 +41,14 @@ template<class cGroup,class cObj,class cGroups>
 		  Objs(objs), ObjsAss(objs.GetNb()), ObjsNoAss(objs.GetNb()),
 		  OrdObjectsAss(0), NewUsedId(0)
 {
-	ObjectsAss = new size_t[Objs.GetMaxPos()+1];
-	memset(ObjectsAss,0xFF,(Objs.GetMaxPos()+1)*sizeof(size_t));
+	// Look for the maximum identifier of the objects
+	Objs.StartAtEnd();
+	size_t MaxId(Objs()->GetId()+1);
 
-	// Init of the arrays needed.
-	OrdObjectsAss=new size_t[Objs.GetMaxPos()+1];
+	// Initialized of the arrays needed.
+	ObjectsAss = new size_t[MaxId];
+	memset(ObjectsAss,0xFF,(MaxId)*sizeof(size_t));
+	OrdObjectsAss=new size_t[MaxId];
 	NewUsedId=new size_t[GetMaxNb()];
 
 	// Suppose no object is assigned
@@ -140,7 +143,7 @@ template<class cGroup,class cObj,class cGroups>
 	if(!grp->Reserved)
 		return;
 	DeleteObjs(grp);
-	Used.DeletePtr(grp);
+	Used.DeletePtr(*grp);
 	grp->Clear();
 }
 

@@ -129,46 +129,6 @@ protected:
 	*/
 	size_t NbObjs2;
 
-	/**
-	* Prototypes used for the KMeans.
-	*/
-	R::RContainer<cObj,false,false> Protos;
-
-	/**
-	* Old prototypes used for the KMeans.
-	*/
-	R::RContainer<cObj,false,false> OldProtos;
-
-	/**
-	* Test Chromosome (Thread dependent data).
-	*/
-	cChromo** thTests;
-
-	/**
-	* PROMETHE  Kernel used by the chromosome.
-	*/
-	RPromKernelSC<cChromo>* thProm;
-
-	/**
-	* Array of solutions to create in PROMETHEE Kernel.
-	*/
-	RPromSol** thSols;
-
-	/**
-	 * Identifier of the first of the two most similar centroid.
-	 */
-	size_t MostSimilarGroup1;
-
-	/**
-	 * Identifier of the second of the two most similar centroid.
-	 */
-	size_t MostSimilarGroup2;
-
-	/**
-	 * Verify that the centroids are updated.
-	 */
-	bool VerifyCentroids;
-
 public:
 
 	/**

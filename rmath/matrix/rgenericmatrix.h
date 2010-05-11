@@ -40,6 +40,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
+#include <rtextencoding.h>
 #include <rcontainer.h>
 #include <rvector.h>
 #include <rcursor.h>
@@ -181,6 +182,51 @@ public:
 	* @param matrix          Matrix.
 	*/
 	RGenericMatrix& operator=(const RGenericMatrix& matrix);
+
+	/**
+	 * Print the content of the matrix.
+	 * @tparam S             Stream class that implements the << operator.
+	 * @param stream         Stream.
+	 * @param name           Name of the matrix.
+	 */
+	template<class S> void Print(S& stream,const RString& name)
+	{
+	 	RTextEncoding* Trans(RTextEncoding::GetTextEncoding("UTF-8"));
+		RString Spaces;
+		for(size_t i=0;i<name.GetLen()+1;i++)
+			Spaces+=" ";
+		size_t NamePos(NbLines/2);
+
+		for(size_t i=0;i<NbLines;i++)
+		{
+			if(NamePos==i)
+				stream<<name<<Trans->ToUnicode("=│",strlen("=│"));
+			else
+			{
+				stream<<Spaces;
+				if(!i)
+					stream<<Trans->ToUnicode("┌",strlen("┌"));
+				else if(i==NbLines-1)
+					stream<<Trans->ToUnicode("└",strlen("└"));
+				else
+					stream<<Trans->ToUnicode("│",strlen("│"));
+			}
+			for(size_t j=0;j<NbCols;j++)
+			{
+				RString Str(RString::Number((*this)(i,j)));
+				Str.SetLen(14," ");
+				stream<<Str;
+			}
+			if(!i)
+				stream<<Trans->ToUnicode("┐",strlen("┐"));
+			else if(i==NbLines-1)
+				stream<<Trans->ToUnicode("┘",strlen("┘"));
+			else
+				stream<<Trans->ToUnicode("│",strlen("│"));
+			stream<<std::endl;
+		}
+	}
+
 
 	/**
 	* Destruct the matrix.

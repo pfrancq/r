@@ -173,12 +173,12 @@ void RPromLinearCriterion::Set(const RParam* param)
 
 
 //-----------------------------------------------------------------------------
-RParam* RPromLinearCriterion::CreateParam(const R::RString& name)
+RParam* RPromLinearCriterion::CreateParam(const R::RString& name,const RString& desc)
 {
-	RParamStruct* param=new RParamStruct(name);
-	param->Insert(new RParamValue("P",0.2));
-	param->Insert(new RParamValue("Q",0.05));
-	param->Insert(new RParamValue("Weight",1.0));
+	RParamStruct* param=new RParamStruct(name,desc);
+	param->Insert(new RParamValue("P",0.2,"Preference threshold"));
+	param->Insert(new RParamValue("Q",0.05,"Indifference threshold"));
+	param->Insert(new RParamValue("Weight",1.0,"Weight"));
 	return(param);
 }
 

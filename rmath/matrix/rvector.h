@@ -67,6 +67,24 @@ public:
 	RVector(const RVector& vector);
 
 	/**
+	 * Print the content of the vector.
+	 * @tparam S             Stream class that implements the << operator.
+	 * @param stream         Stream.
+	 * @param name           Name of the vector.
+	 */
+	template<class S> void Print(S& stream,const RString& name)
+	{
+		stream<<name<<"=[";
+		for(size_t i=0;i<NbInt;i++)
+		{
+			if(i)
+				stream<<" ";
+			stream<<(*this)[i];
+		}
+		stream<<"]"<<std::endl;
+	}
+
+	/**
 	 * Destruct the vector.
 	 * @return
 	 */

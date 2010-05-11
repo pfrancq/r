@@ -82,26 +82,6 @@ public:
 	cObj** tmpObjs2;
 
 	/**
-	* Test Chromosomes.
-	*/
-	cChromo** Tests;
-
-	/**
-	* PROMETHE  Kernel used by the chromosome.
-	*/
-	RPromKernelSC<cChromo> Prom;
-
-	/**
-	* Array of solutions to create in PROMETHEE Kernel.
-	*/
-	RPromSol** Sols;
-
-	/**
-	 * Number of derived solutions for the k-Means.
-	 */
-	size_t NbSols;
-
-	/**
 	* Construct the data.
 	* @param owner           Instance of the problem.
 	*/

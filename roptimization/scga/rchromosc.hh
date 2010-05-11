@@ -38,9 +38,7 @@
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::RChromoSC(cInst* inst,size_t id)
 		: RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(inst,id),
-	  ToDel(0), CritSimJ(0.0), CritAgreement(0.0), CritDisagreement(1.0), Protos(Used.GetMaxNb()),
-	  OldProtos(Used.GetMaxNb()),
-	  thProm(0), thSols(0), MostSimilarGroup1(cNoRef), MostSimilarGroup2(cNoRef), VerifyCentroids(true)
+	  ToDel(0), CritSimJ(0.0), CritAgreement(0.0), CritDisagreement(1.0)
 {
 }
 
@@ -55,9 +53,6 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	// Current
 	thObjs1=thData->tmpObjs1;
 	thObjs2=thData->tmpObjs2;
-	thTests=thData->Tests;
-	thProm=&thData->Prom;
-	thSols=thData->Sols;
 	ToDel=&thData->ToDel;
 }
 
@@ -66,10 +61,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::Evaluate(void)
 {
-//	double super(-2.0);
-
-	/*AvgInterSim=*/CritAgreement=CritDisagreement=CritSimJ=0.0;
-	MostSimilarGroup1=MostSimilarGroup2=cNoRef;
+	CritAgreement=CritDisagreement=CritSimJ=0.0;
 	if(!Used.GetNb())
 		return;
 
@@ -211,8 +203,6 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	Fi=chromo.Fi;
 	FiPlus=chromo.FiPlus;
 	FiMinus=chromo.FiMinus;
-	MostSimilarGroup1=chromo.MostSimilarGroup1;
-	MostSimilarGroup2=chromo.MostSimilarGroup2;
 }
 
 

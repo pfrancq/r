@@ -119,6 +119,8 @@ protected:
 	*/
 	RConfig Config;
 
+private:
+
 	/**
 	* Application initialized?
 	*/

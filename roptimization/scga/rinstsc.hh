@@ -38,16 +38,8 @@
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>::RThreadDataSC(cInst* owner)
 		: RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(owner),
-	  ToDel(owner->Objs.GetNb()<4?4:owner->Objs.GetNb()/4), tmpObjs1(0),tmpObjs2(0), Tests(0),
-	  Prom(owner->Params,(owner->Params->NbDivChromo*2)+1), Sols(0), NbSols((owner->Params->NbDivChromo*2)+1)
+	  ToDel(owner->Objs.GetNb()<4?4:owner->Objs.GetNb()/4), tmpObjs1(0), tmpObjs2(0)
 {
-	RPromSol** s;
-	size_t i;
-
-	Tests=new cChromo*[NbSols];
-	Sols=new RPromSol*[NbSols+1];
-	for(i=NbSols+2,s=Sols;--i;s++)
-		(*s)=Prom.NewSol();
 }
 
 
@@ -55,18 +47,9 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	void RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>::Init(void)
 {
-	size_t i;
-
 	RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Init();
-
 	tmpObjs1=new cObj*[Owner->Objs.GetNb()];
 	tmpObjs2=new cObj*[Owner->Objs.GetNb()];
-	for(i=0;i<NbSols;i++)
-	{
-		Tests[i]=new cChromo(Owner,Owner->GetPopSize()+1+i);
-		(static_cast<RGroups<cGroup,cObj,cChromo>*>(Tests[i]))->Init();
-		Tests[i]->Init(static_cast<cThreadData*>(this));
-	}
 }
 
 
@@ -74,16 +57,6 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>::~RThreadDataSC(void)
 {
-	cChromo** C;
-	size_t i;
-
-	if(Tests)
-	{
-		for(i=NbSols+1,C=Tests;--i;C++)
-			delete (*C);
-		delete[] Tests;
-	}
-	delete[] Sols;
 	delete[] tmpObjs1;
 	delete[] tmpObjs2;
 }

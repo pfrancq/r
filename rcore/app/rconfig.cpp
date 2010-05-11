@@ -104,17 +104,6 @@ void RConfig::Analyze(RXMLTag* tag,lParams* cat)
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if(Cur()->Set(tag))
 			return;
-
-	// Tag does not exist -> create it
-	RParam* ptr(0);
-	if(tag->GetName()=="param")
-		ptr=new RParamValue(tag);
-	else if(tag->GetName()=="list")
-		ptr=new RParamList(tag);
-	else if(tag->GetName()=="struct")
-		ptr=new RParamStruct(tag);
-	if(ptr)
-		cat->Params.InsertPtr(ptr);
 }
 
 

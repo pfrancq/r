@@ -52,7 +52,8 @@ RMaxVector::RMaxVector(size_t size,size_t id)
 //-----------------------------------------------------------------------------
 RMaxVector::RMaxVector(const RMaxVector& src)
 		: RContainer<RMaxValue,true,true>::RContainer(src), Id(src.Id)
-{}
+{
+}
 
 
 //-----------------------------------------------------------------------------

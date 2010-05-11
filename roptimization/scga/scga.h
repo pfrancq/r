@@ -137,21 +137,6 @@ public:
 	double MinDisagreement;
 
 	/**
-	* Maximal Number of k-Means.
-	*/
-	size_t MaxKMeans;
-
-	/**
-	* Convergence ratio between two k-Means iterations.
-	*/
-	double Convergence;
-
-	/**
-	* Number of derived chromosomes must be constructed for the optimization.
-	*/
-	size_t NbDivChromo;
-
-	/**
 	* Parameter for the criterion "Similarity".
 	*/
 	RParam* ParamsSim;
@@ -165,16 +150,6 @@ public:
 	* Parameter for the criterion "Disagreement".
 	*/
 	RParam* ParamsDisagreement;
-
-	/**
-	 * Perform a local optimization.
-	 */
-	bool LocalOptimisation;
-
-	/**
-	 * Perform an optimization.
-	 */
-	bool Optimisation;
 
 	/**
 	* Incremental mode. The GCA constructs the chromosomes from existing
@@ -191,11 +166,6 @@ public:
 	 * Maximum number of objects per group.
 	 */
 	size_t NbMaxObjs;
-
-	/**
-	 * All the pairs of objects of a group must respect the minimum of similarity constraint.
-	 */
-	bool AllMinSim;
 
 	/**
 	* Constructor.

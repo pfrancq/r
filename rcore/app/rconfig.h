@@ -47,7 +47,11 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
 * The RConfig class provides a representation for a XML structure representing
-* a set of parameters.
+* a set of parameters that can load from and store to a file.
+*
+* The parameters should be declare (with the InsertParam method) before the
+* structure is loaded. Parameters that are in the file but not declared are
+* lost.
 * @author Pascal Francq
 * @short XML Configuration Structure.
 */
@@ -77,7 +81,7 @@ public:
 	* - "app", for an application.
 	* - "lib/galilei" for a library.
 	* - "lib/galilei/plugins/profiles" for a specific type of plug-in of a
-	*  specific library 'galilei'.
+	*   specific library 'galilei'.
 	* @param cat             Category of the config.
 	* @param name            Name of the config ('/' are replaced by '-').
 	*/

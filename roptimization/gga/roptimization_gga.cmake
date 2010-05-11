@@ -8,7 +8,9 @@ SET(roptimization_gga_INST_INCLUDES rchromog.h
 			                        rgroupingheuristic.h 
 			                        rgroupingheuristic.hh
 					                rgroupingkmeans.h 
-					                rgroupingkmeans.hh 
+					                rgroupingkmeans.hh
+					                rkernelkmeans.h 
+					                rkernelkmeans.hh 					                 
 					                rgroups.h 
 					                rgroups.hh 
 					                rinstg.h

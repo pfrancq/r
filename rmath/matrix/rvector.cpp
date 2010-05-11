@@ -45,6 +45,7 @@ using namespace std;
 RVector::RVector(size_t max)
 	: RNumContainer<double,false>(max)
 {
+	NbInt=max; // Suppose the vector has the correct size.
 }
 
 

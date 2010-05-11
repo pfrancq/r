@@ -44,10 +44,8 @@ using namespace R;
 //-----------------------------------------------------------------------------
 RParamsSC::RParamsSC(void)
 	: PopSize(16), MaxGen(50), Step(false), StepGen(1),MinSimLevel(0.0),
-	  MinAgreement(1.0), MinDisagreement(1.0), MaxKMeans(10), Convergence(0.0001),
-	  NbDivChromo(2), ParamsSim(0), ParamsAgreement(0), ParamsDisagreement(0),
-	  LocalOptimisation(false), Optimisation(false), Incremental(false),
-	  NbMinObjs(0), NbMaxObjs(cNoRef), AllMinSim(false)
+	  MinAgreement(1.0), MinDisagreement(1.0), ParamsSim(0), ParamsAgreement(0),
+	  ParamsDisagreement(0), Incremental(false), NbMinObjs(0), NbMaxObjs(cNoRef)
 {
 }
 

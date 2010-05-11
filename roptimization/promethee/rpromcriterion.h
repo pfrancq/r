@@ -282,8 +282,9 @@ public:
 	/**
 	* Create a parameter corresponding to a PROMETHEE criteria.
 	* @param name            Name of the criteria.
+	* @param desc            Description of the criteria.
 	*/
-	static RParam* CreateParam(const R::RString& name);
+	static RParam* CreateParam(const RString& name,const RString& desc=RString::Null);
 };
 
 

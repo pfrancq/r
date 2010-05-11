@@ -64,37 +64,6 @@ template<class cGroup,class cObj,class cGroups>
 	using RGroup<cGroup,cObj,cGroups>::Owner;
 	using RGroup<cGroup,cObj,cGroups>::NbSubObjects;
 
-	/**
-	 * Implementation of a specific quicksort algorithm to sort an array of
-	 * objects by similarity with the centroid of the group.
-	 */
-	class OrderBySim : public RQuickSort<cObj>
-	{
-		/**
-		 * Group corresponding to the elements to sort.
-		 */
-		cGroup* Group;
-
-	public:
-
-		/**
-		 * Constructor.
-		 * @param group      Corresponding group.
-		 * @param objs       Array of objects.
-		 * @param nb         Number of objects.
-		 */
-		OrderBySim(cGroup* group,cObj** objs,size_t nb);
-
-		/**
-		 * Compare two objects.
-		 * @param obj1       First object.
-		 * @param obj2       Second object.
-		 * @return the value to sort the objects by descending similarities
-		 * with the centroid.
-		 */
-		virtual int Compare(cObj* obj1,cObj* obj2);
-	};
-
 public:
 
 	using RGroup<cGroup,cObj,cGroups>::GetObjs;
@@ -102,34 +71,9 @@ public:
 protected:
 
 	/**
-	* Average similarity between each object and the centroid.
-	*/
-	//double AvgIntraSim;
-
-	/**
-	 * Average agreement ratio between the objects of the group.
-	 */
-	//double AvgAgreement;
-
-	/**
-	 * Average disagreement ratio between the object of the group.
-	 */
-	//double AvgDisagreement;
-
-	/**
-	* Centroid of the group.
-	*/
-	const cObj* Centroid;
-
-	/**
 	 * Must the group be re-evaluated?
 	 */
 	bool ToEval;
-
-	/**
-	 * Maximum similarity with the last object called by CanInsert.
-	 */
-	//double LastMaxSim;
 
 public:
 
@@ -193,100 +137,6 @@ public:
 	 * @return false (the values are update in the method).
 	 */
 	virtual bool PreDeleteAll(void);
-
-	/**
-	 * Get the maximum similarity with the last object called with CanInsert.
-	 */
-//	inline double GetLastMaxSim(void) const {return(LastMaxSim);}
-
-private:
-
-	/**
-	* Compute the sum of the similarities of a given object to all the others.
-	* If the object is itself in the group, '1.0' is added to the sum.
-	* @param obj             Object.
-	*/
-//	double ComputeSumSim(cObj* obj);
-
-	/**
-	* Compute the centroid of the group, i.a. the object which is the most
-	* similar to all the other objects.
-	*/
-//	void ComputeCentroid(void);
-
-public:
-
-	/**
-	* @return the centroid of the group.
-	*/
-/*	inline const cObj* GetCentroid(void)
-	{
-		if(!Centroid)
-			ComputeCentroid();
-		return(Centroid);
-	}*/
-
-	/**
-	 * Compute the sum of the average intra-similarity of the objects and the
-	 * average of the agreement and disagreement.
-	 * objects.
-	 * @param dist           Sum of the average intra-similarity.
-	 * @param agree          Sum of the average agreement ratios.
-	 * @param disagree       Sum of the average disagreement ratios.
-	 */
-//	void Evaluate(double& dist,double& agree,double& disagree);
-
-	/**
-	 * Set the centroid of the group. This method must be used with caution.
-	 * @param obj            Object becoming the centroid.
-	 */
-	void SetCentroid(cObj* obj);
-
-	/**
-	* @return the average intra-similarity of the group.
-	*/
-/*	inline double GetAvgIntraSim(void)
-	{
-		if(!Centroid)
-			ComputeCentroid();
-		return(AvgIntraSim);
-	}*/
-
-	/**
-	* Compute the similarity of a given object to the centroid of the group.
-	* @param obj             Object.
-	*/
-//	inline double ComputeRelSim(const cObj* obj) {return(Owner->Instance->GetSim(GetCentroid(),obj));}
-
-private:
-
-//	bool Test(cObj** del,size_t& nbdel,cObj* obj1,cObj* obj2);
-
-public:
-
-	/**
-	 * Try to optimize the group by exchanging a given number of objects no
-	 * assigned with some of the group.
-	 * @param objs           Objects no assigned.
-	 * @param nbobjs         Number of objects (can be modified).
-	 * @return true if the group could be optimized.
-	 */
-//	bool DoOptimisation(cObj** objs,size_t& nbobjs);
-
-	/**
-	 * Compute the object that is the most dissimilar to the centroid.
-	 * @return the most dissimilar object.
-	 */
-//	cObj* GetMostDissimilarObject(void);
-
-	/**
-	 * Evaluate the criteria of a PROMETHEE solution as a given object is added to this group.
-	 * @param obj            Object to add.
-	 * @param simintra       Intra similarity without the object.
-	 * @param agreement      Agreement without the object.
-	 * @param disagreement   Disagreement without the object.
-	 */
-//	void AddPromSol(cObj* obj,double& simintra,double& agreement,double& disagreement);
 
 	/**
 	* Destruct the group.
