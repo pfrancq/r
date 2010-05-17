@@ -103,7 +103,7 @@ public:
 	/**
 	* Construct the grouping heuristic.
 	* @param n              Name of the heuristic.
-	* @param r              The random genrator to use.
+	* @param r              The random generator to use.
 	* @param objs           Pointer to the objects.
 	* @param debug          Debugger.
 	*/

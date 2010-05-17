@@ -198,6 +198,11 @@ protected:
 	 */
 	size_t NbIterations;
 
+	/**
+	 * Convergence ratio used.
+	 */
+	double Convergence;
+
 public:
 
 	/**
@@ -205,9 +210,10 @@ public:
 	* @param n               Name of the k-Means.
 	* @param r               Random number generator to use.
 	* @param objs            Cursor over the objects to group.
+	* @param convergence     Convergence.
 	* @param debug           Debugger.
 	*/
-	RGroupingKMeans(const RString& n,RRandom* r,RCursor<cObj> objs,RDebug* debug=0);
+	RGroupingKMeans(const RString& n,RRandom* r,RCursor<cObj> objs,double convergence=0.0,RDebug* debug=0);
 
 	/**
 	* Get the name of the heuristic.
@@ -300,7 +306,7 @@ public:
 	* @param groups          Group to initialize.
 	* @param max             Maximal number of iterations.
 	* @param nb              Number of groups to create.
-	* @param start           How to the start the clustering.
+	* @param start           How to the start the clustering.* @param convergence     Convergence.
 	*/
 	void Run(cGroups* groups,size_t max,size_t nb,tInitial start=Random);
 

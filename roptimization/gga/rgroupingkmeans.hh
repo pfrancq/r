@@ -37,8 +37,9 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	R::RGroupingKMeans<cGroup,cObj,cGroups>::RGroupingKMeans(const R::RString& n,R::RRandom* r,R::RCursor<cObj> objs,R::RDebug* debug)
-	: Name(n), Debug(debug), Rand(r), Objs(0), NbObjs(objs.GetNb()), ObjsUsed(0), NbObjsUsed(objs.GetNb()), Protos(40)
+	R::RGroupingKMeans<cGroup,cObj,cGroups>::RGroupingKMeans(const R::RString& n,R::RRandom* r,R::RCursor<cObj> objs,double convergence,R::RDebug* debug)
+	: Name(n), Debug(debug), Rand(r), Objs(0), NbObjs(objs.GetNb()), ObjsUsed(0),
+	  NbObjsUsed(objs.GetNb()), Protos(40), Convergence(convergence)
 {
 	cObj** ptr;
 	ptr=Objs=ObjsUsed=new cObj*[NbObjs];
@@ -404,9 +405,8 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroupingKMeans<cGroup,cObj,cGroups>::DokMeans(size_t max)
 {
-	double minerror(0.0);
 	double error(1.0);
-	for(NbIterations=0,error=1.0;((!max)||(max&&(NbIterations<max)))&&(error>minerror);NbIterations++)
+	for(NbIterations=0,error=1.0;((!max)||(max&&(NbIterations<max)))&&(error>Convergence);NbIterations++)
 	{
 		ReAllocate();
 		error=static_cast<double>(CalcNewProtosNb())/static_cast<double>(Protos.GetNb());
