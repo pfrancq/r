@@ -36,7 +36,7 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	R::RGroupingHeuristic<cGroup,cObj,cGroups>::RGroupingHeuristic(const R::RString& n,R::RRandom* r,R::RCursor<cObj> objs,R::RDebug* debug)
+	R::RGroupingHeuristic<cGroup,cObj,cGroups>::RGroupingHeuristic(const R::RString& n,R::RRandom& r,R::RCursor<cObj> objs,R::RDebug* debug)
 		: Name(n), Random(r), Objs(objs), Groups(0), Debug(debug)
 {
 	Order=new cObj*[Objs.GetNb()];

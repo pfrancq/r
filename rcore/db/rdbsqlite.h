@@ -41,6 +41,7 @@
 // include files for R Project
 #include <rquery.h>
 #include <ruri.h>
+#include <rcontainer.h>
 
 
 //------------------------------------------------------------------------------

@@ -133,7 +133,7 @@ void RConfig::Load(lParams* cat,RXMLTag* tag)
 
 
 //------------------------------------------------------------------------------
-void RConfig::Load(bool global)
+void RConfig::Load(bool global,bool exist)
 {
 	RXMLStruct Config;
 
@@ -175,13 +175,10 @@ void RConfig::Load(bool global)
 			RootTag=Config.GetTop();
 		}
 	}
-	catch(RException& e)
-	{
-		//std::cout<<"Error "<<e.GetMsg()<<std::endl;
-	}
 	catch(...)
 	{
-		//std::cout<<"Warning: Local config file '"<<Home+"/.r/config/"+Category+"/"+Name+".config"<<"' not found."<<std::endl;
+		if(exist)
+			ThrowRException("Invalid configuration file '"+App->GetHomeConfig()+"/config/"+Category+"/"+Name+".config"+"'");
 	}
 
 	// Create the parameters based on the xml structure

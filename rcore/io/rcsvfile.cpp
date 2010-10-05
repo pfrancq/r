@@ -117,7 +117,6 @@ void RCSVFile::Read(void)
 	while(!End())
 	{
 		RChar Car(GetChar());
-//		cout<<Car.Latin1()<<endl;
 
 		// If no value are read -> make some test
 		if(!ReadField)
@@ -153,13 +152,8 @@ void RCSVFile::Read(void)
 			}
 		}
 
-		// Look if the end of field is reached ?
-		if(Search==Sep)
-		{
-			if(Eol(Car))
-				break;
-		}
-		else if (Car==Search)
+		// If end of a field or of the line -> prepare next value
+		if(((Search==Sep)&&(Eol(Car)))||(Car==Search))
 		{
 			NbValues++;
 			ReadField=false;
@@ -172,25 +166,18 @@ void RCSVFile::Read(void)
 				Buffer=Internal;
 			}
 
-			// Read the next character
-			Car=GetChar();
-
-			// Skip "normal spaces"
-			while(Car.IsSpace()&&(!Eol(Car)))
-				Car=GetChar();
-
-			// Treat next non-normal space character
-			if(Car==Sep)
+			// If the current character is a quote -> Skip all characters until the separation
+			if(Car=='\"')
 			{
-				// Skip "normal spaces"
-				while(Car.IsSpace()&&(!Eol(Car)))
+				// Skip spaces
+				RChar Next(GetNextChar());
+				while((Next==' ')||(Next=='\t'))
+					Car=GetChar();
+
+				// Skip the separation if any
+				if(GetNextChar()==Sep)
 					Car=GetChar();
 			}
-			else if(!Eol(Car))
-				ThrowRIOException(this,"Separator character '"+Sep+"' expected");
-
-			if(Eol(Car))
-				break;
 
 			continue;
 		}
@@ -255,5 +242,5 @@ size_t RCSVFile::GetSizeT(size_t idx) const
 //------------------------------------------------------------------------------
 RCSVFile::~RCSVFile(void)
 {
-	delete Internal;
+	delete[] Internal;
 }

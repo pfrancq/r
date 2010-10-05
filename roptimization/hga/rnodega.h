@@ -171,7 +171,7 @@ public:
 	* Method call to insert an object.
 	* @param obj            Object to insert.
 	*/
-	void Insert(const cObj* obj) {Tree->InsertObj(static_cast<cNode*>(this),obj);}
+	void Insert(cObj* obj) {Tree->InsertObj(static_cast<cNode*>(this),obj);}
 
 	/**
 	* Method call to delete an object.

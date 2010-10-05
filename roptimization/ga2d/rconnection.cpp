@@ -29,7 +29,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <random.h>
+#include <rrandom.h>
 #include <rconnection.h>
 using namespace R;
 

@@ -76,7 +76,7 @@ public:
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RHeuristicSC<cGroup,cObj,cGroups>::RHeuristicSC(RRandom* r,RCursor<cObj> objs,RParamsSC* params,RDebug* debug)
+	RHeuristicSC<cGroup,cObj,cGroups>::RHeuristicSC(RRandom& r,RCursor<cObj> objs,RParamsSC* params,RDebug* debug)
 	: RGroupingHeuristic<cGroup,cObj,cGroups>("SCGA Heuristic",r,objs,debug),
 	  ToDel(Objs.GetNb()<11?10:Objs.GetNb()/4), ToReAssign(100), Params(params), NbNearestNeighbors(100)
 {

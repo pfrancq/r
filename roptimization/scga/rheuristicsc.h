@@ -93,7 +93,7 @@ public:
 	* @param params          Parameters.
 	* @param debug           Debugger.
 	*/
-	 RHeuristicSC(R::RRandom* r,R::RCursor<cObj> objs,RParamsSC* params,R::RDebug* debug=0);
+	 RHeuristicSC(R::RRandom& r,R::RCursor<cObj> objs,RParamsSC* params,R::RDebug* debug=0);
 
 	/**
 	* Initialize the heuristic.

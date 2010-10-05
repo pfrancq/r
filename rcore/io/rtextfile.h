@@ -318,7 +318,7 @@ private:
 
 	/**
 	* Read a series of 10 characters of variable size and store the result in
-	* an internal buffer.
+	* an internal buffer. If the file is at the end, nothing is done.
 	*/
 	void ReadChars(void);
 

@@ -116,13 +116,13 @@ public:
 	* Put an object in the group.
 	* @param obj            Pointer to the object to insert.
 	*/
-	void Insert(const cObj* obj) {Owner->InsertObj(static_cast<cGroup*>(this),obj);}
+	void Insert(cObj* obj) {Owner->InsertObj(static_cast<cGroup*>(this),obj);}
 
 	/**
 	* Delete an object in the group.
 	* @param obj            Pointer to the object to delete.
 	*/
-	void Delete(const cObj* obj) {Owner->DeleteObj(static_cast<cGroup*>(this),obj);}
+	void Delete(cObj* obj) {Owner->DeleteObj(static_cast<cGroup*>(this),obj);}
 
 	/**
 	* Method call after an object was inserted in the group.

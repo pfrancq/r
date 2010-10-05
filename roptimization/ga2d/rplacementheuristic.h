@@ -70,7 +70,7 @@ protected:
 	/**
 	* The random number generator to use
 	*/
-	RRandom* Random;
+	RRandom& Random;
 
 	/**
 	* The grid used for the placement.
@@ -180,7 +180,7 @@ public:
 	* @param area           Area criteria parameters.
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori=false);
+	RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool ori=false);
 
 	/**
 	* Initialize the heuristic. The method chooses all the objects to place. In

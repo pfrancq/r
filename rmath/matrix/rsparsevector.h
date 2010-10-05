@@ -109,6 +109,12 @@ public:
 	int Compare(size_t id) const;
 
 	/**
+	 * Set a given value to all the existing elements.
+	 * @param val            Value to set.
+	 */
+	void SetExistingElements(double val);
+
+	/**
 	* Return the value at position i. The first value is at position 0.
 	* @param i               Index.
 	*/

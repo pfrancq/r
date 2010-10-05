@@ -4,7 +4,7 @@
 
 	RKernelkMeans.hh
 
-	Kernnel k-Means Algorithm - Inline Implemenation
+	Kernel k-Means Algorithm - Inline Implemenation
 
 	Copyright 2010 by Pascal Francq (pascal@francq.info).
 
@@ -35,9 +35,10 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	R::RKernelkMeans<cGroup,cObj,cGroups>::RKernelkMeans(const R::RString& n,R::RRandom* r,R::RCursor<cObj> objs,size_t maxid,double alpha,double convergence,R::RDebug* debug)
+	RKernelkMeans<cGroup,cObj,cGroups>::RKernelkMeans(const RString& n,RRandom& r,RCursor<cObj> objs,size_t maxid,double alpha,double convergence,RDebug* debug)
 	: Name(n), Debug(debug), Rand(r), MaxId(maxid), Objs(objs), CopyObjs(objs), ObjsUsed(0), Alpha(alpha), Convergence(convergence),
-	  P(maxid+1,maxid+1), InvD(maxid+1), H(10,maxid+1), Y(10,maxid+1), Temp(maxid+1), WasInit(false)
+	  P(maxid+1,maxid+1), InvD(maxid+1), H(10,maxid+1), Y(10,maxid+1), Assignments(maxid+1), Temp(maxid+1), WasInit(false),
+	  PrintOut(false), OutName("/home/pfrancq/kmeans.txt")
 {
 	// Fill the structures with the objects
 	cObj** ptr;
@@ -64,7 +65,7 @@ template<class cGroup,class cObj,class cGroups>
 	// Compute the P matrix and the D vector.
 	FillSimilarities(P);  // Compute the similarities -> P;
 
-//	P.Print("P");
+//	P.Print(OutName,"P");
 	for(Objs.Start();!Objs.End();Objs.Next())
 	{
 		// Compute D.
@@ -80,7 +81,7 @@ template<class cGroup,class cObj,class cGroups>
 		}
 		InvD[Objs()->GetId()]=1/sum;
 
-		// Compute P : Dividing each element by sum
+		// Compute P : Dividing each element by the sum
 		for(Val.Start();!Val.End();Val.Next())
 		{
 			Val()->Value/=sum;
@@ -96,10 +97,12 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RKernelkMeans<cGroup,cObj,cGroups>::InitRandom(size_t nb)
 {
-	Out<<"  Init Random"<<std::endl;
+	if(PrintOut)
+		Out<<"  Init Random"<<std::endl;
+
 	// Look first if they are not too much group ?
 	while(Groups->Used.GetNb()>nb)
-		Groups->ReleaseGroup(Groups->Used[Rand->GetValue(Groups->Used.GetNb())]);  // Remove randomly one group
+		Groups->ReleaseGroup(Groups->Used[Rand.GetValue(Groups->Used.GetNb())]);  // Remove randomly one group
 
 	// Treat each object to fill the H matrix
 	size_t i;
@@ -123,6 +126,7 @@ template<class cGroup,class cObj,class cGroups>
 		Grp->Delete(*ptr);
 		Groups->ReserveGroup()->Insert(*ptr);
 	}
+
 	if(Groups->Used.GetNb()!=nb)
 		ThrowRException("Cannot initialize the Kernel k-Means");
 
@@ -136,18 +140,22 @@ template<class cGroup,class cObj,class cGroups>
 		Groups->Used[Rand->GetValue(Groups->Used.GetNb())]->Insert(*ptr);
 	}*/
 
-	Out<<"  Number of groups created="+RString::Number(Groups->Used.GetNb())<<std::endl;
+	if(PrintOut)
+		Out<<"  Number of groups created="+RString::Number(Groups->Used.GetNb())<<std::endl;
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void R::RKernelkMeans<cGroup,cObj,cGroups>::CopyEinH(void)
+	void R::RKernelkMeans<cGroup,cObj,cGroups>::UpdateBinaryH(bool center)
 {
 	// Recompute H
 	RCursor<cGroup> Group(Groups->Used);
 	for(Group.Start();!Group.End();Group.Next())
 	{
+		double Avg(0.0);  // Average value
+		size_t Nb(0);     // Number of elements
+
 		// Compute hk
 		RNumCursor<double> hk(H[Group()->GetId()]->GetCols());
 		for(hk.Start(),Objs.Start();(!hk.End())&&(!Objs.End());hk.Next())  // Objs()->GetId must always be equal to hk.GetPos()
@@ -159,26 +167,49 @@ template<class cGroup,class cObj,class cGroups>
 			// Find the group of the current object and look if it is the current group
 			cGroup* Grp(Groups->GetGroup(Objs()));
 			if(Grp==Group())
+			{
 				hk()=1.0;
+				Avg+=1.0;
+			}
 			else
 				hk()=0.0;
 
+			Nb++;
+			Objs.Next(); // Treat next object
+		}
+
+		// If not the matrix must be centered goes to the group
+		if(!center)
+			continue;
+
+		// Center hk
+		Avg/=static_cast<double>(Nb);
+		for(hk.Start(),Objs.Start();(!hk.End())&&(!Objs.End());hk.Next())  // Objs()->GetId must always be equal to hk.GetPos()
+		{
+			// Not a valid column ?
+			if(Objs()->GetId()!=hk.GetPos())
+				continue;  // -> treat next line
+			hk()-=Avg;
 			Objs.Next(); // Treat next object
 		}
 	}
 
-	H.Print(Out,"H");
+	if(PrintOut)
+		H.Print(Out,"H");
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void R::RKernelkMeans<cGroup,cObj,cGroups>::UpdateH(void)
+	void R::RKernelkMeans<cGroup,cObj,cGroups>::UpdateH(bool center)
 {
 	// Recompute H
 	RCursor<cGroup> Group(Groups->Used);
 	for(Group.Start();!Group.End();Group.Next())
 	{
+		double Avg(0.0);  // Average value
+		size_t Nb(0);     // Number of elements
+
 		// Compute hk
 		RNumCursor<double> hk(H[Group()->GetId()]->GetCols());
 		for(hk.Start(),Objs.Start();(!hk.End())&&(!Objs.End());hk.Next())  // Objs()->GetId must always be equal to hk.GetPos()
@@ -190,22 +221,45 @@ template<class cGroup,class cObj,class cGroups>
 			// Find the group of the current object and look if it is the current group
 			cGroup* Grp(Groups->GetGroup(Objs()));
 			if(Grp==Group())
+			{
 				hk()=1.0/static_cast<double>(Grp->GetNbObjs());
+				Avg+=hk();
+			}
 			else
 				hk()=0.0;
 
+			Nb++;
+			Objs.Next(); // Treat next object
+		}
+
+		// If not the matrix must be centered goes to the group
+		if(!center)
+			continue;
+
+		// Center hk
+		Avg/=static_cast<double>(Nb);
+		for(hk.Start(),Objs.Start();(!hk.End())&&(!Objs.End());hk.Next())  // Objs()->GetId must always be equal to hk.GetPos()
+		{
+			// Not a valid column ?
+			if(Objs()->GetId()!=hk.GetPos())
+				continue;  // -> treat next line
+			hk()-=Avg;
 			Objs.Next(); // Treat next object
 		}
 	}
 
-	H.Print(Out,"H");
+	if(PrintOut)
+		H.Print(Out,"H");
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void R::RKernelkMeans<cGroup,cObj,cGroups>::NormalizeH(void)
+	void R::RKernelkMeans<cGroup,cObj,cGroups>::NormalizeH(bool center)
 {
+	if(PrintOut)
+		Out<<"   Normalize H"<<std::endl;
+
 	RCursor<cGroup> Group(Groups->Used);
 	for(Group.Start();!Group.End();Group.Next())
 	{
@@ -217,10 +271,17 @@ template<class cGroup,class cObj,class cGroups>
 			// Not a valid column ?
 			if(Objs()->GetId()!=yk.GetPos())
 				continue;  // -> treat next line
-			Sum+=yk();
+
+			// Sum only the elements that are part of group k
+			if(Group()->IsIn(Objs()->GetId()))
+				Sum+=yk();
+
 			Objs.Next(); // Treat next object
 		}
 		Sum=sqrt(Sum);
+
+		double Avg(0.0);  // Average value
+		size_t Nb(0);     // Number of elements
 
 		// Compute hk by dividing it by
 		RNumCursor<double> hk(H[Group()->GetId()]->GetCols());
@@ -231,36 +292,52 @@ template<class cGroup,class cObj,class cGroups>
 				continue;  // -> treat next line
 
 			hk()=yk()/Sum;
+			Avg+=hk();
+			Nb++;
+			Objs.Next(); // Treat next object
+		}
+
+		// If not the matrix must be centered goes to the group
+		if(!center)
+			continue;
+
+		// Center hk
+		Avg/=static_cast<double>(Nb);
+		for(hk.Start(),Objs.Start();(!hk.End())&&(!Objs.End());hk.Next())  // Objs()->GetId must always be equal to hk.GetPos()
+		{
+			// Not a valid column ?
+			if(Objs()->GetId()!=hk.GetPos())
+				continue;  // -> treat next line
+			hk()-=Avg;
 			Objs.Next(); // Treat next object
 		}
 	}
 
-	H.Print(Out,"H");
+	if(PrintOut)
+		H.Print(Out,"H");
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void R::RKernelkMeans<cGroup,cObj,cGroups>::ComputeY(void)
+	void R::RKernelkMeans<cGroup,cObj,cGroups>::ComputeY(bool center)
 {
 	// Treat each group (line)
 	RCursor<cGroup> Group(Groups->Used);
 	for(Group.Start();!Group.End();Group.Next())
 	{
-		Out<<"    Compute y("+RString::Number(Group()->GetId())+")...";
-
 		// Init yk(t) to zero
 		RMatrixLine* hk(H[Group()->GetId()]);
 		RMatrixLine* ykt(Y[Group()->GetId()]);
-		RNumCursor<double> Cols(ykt->GetCols());
+		RNumCursor<double> ykt_i(ykt->GetCols());
 
-		// Compute first iteration
-		for(Cols.Start(),Objs.Start();!Cols.End();Cols.Next())
+		// Compute first iteration : yk(t)=(1/D)*hk
+		for(ykt_i.Start(),Objs.Start();(!ykt_i.End())&&(!Objs.End());ykt_i.Next())
 		{
 			// Not a valid column ?
-			if(Objs()->GetId()!=Cols.GetPos())
+			if(Objs()->GetId()!=ykt_i.GetPos())
 				continue;  // -> treat next line
-			Cols()=InvD[Objs()->GetId()]*(*hk)[Objs()->GetId()];
+			ykt_i()=InvD[Objs()->GetId()]*(*hk)[Objs()->GetId()];
 			Objs.Next(); // Treat next object
 		}
 //		Y.Print("Y"+RString::Number(Group()->GetId())+"(0)");
@@ -272,61 +349,100 @@ template<class cGroup,class cObj,class cGroups>
 		{
 			avg=0;
 
-			// Compute yk(t+1)
-			RNumCursor<double> Cols2(Temp);
-			for(Cols2.Start(),Objs.Start();(!Cols2.End())&&(!Objs.End());Cols2.Next())  // Objs()->GetId must always be equal to Cols2.GetPos()
+			// Compute yk(t')
+			RNumCursor<double> yktprim_i(Temp);
+			for(yktprim_i.Start(),Objs.Start();(!yktprim_i.End())&&(!Objs.End());yktprim_i.Next())  // Objs()->GetId must always be equal to yktprim_i.GetPos()
 			{
 				// Not a valid column ?
-				if(Objs()->GetId()!=Cols2.GetPos())
+				if(Objs()->GetId()!=yktprim_i.GetPos())
 					continue;  // -> treat next line
 
-				Cols2()=0;
+				yktprim_i()=0;
 
-				RCursor<RValue> Line1(*P[Objs()->GetId()]);
-				for(Line1.Start(),Cols.Start(),CopyObjs.Start();(!Line1.End())&&(!CopyObjs.End());Line1.Next()) // Line1()->Id==Cols()->Id==CopyObjs()->GetId()
+				// Compute yk(t')=P*yk(t)
+				RCursor<RValue> P_i(*P[Objs()->GetId()]);
+				for(P_i.Start(),ykt_i.Start(),CopyObjs.Start();(!P_i.End())&&(!CopyObjs.End());P_i.Next()) // Line1()->Id==Cols()->Id==CopyObjs()->GetId()
 				{
 					// If Line1()->Id<CopyObjs()->GetId() -> Next Line
-					if(Line1()->Id<CopyObjs()->GetId())
+					if(P_i()->Id<CopyObjs()->GetId())
 						continue;
 
-					// Line1 can be sparse -> Put CopyObjs and Cols to the same id
-					while(Line1()->Id!=CopyObjs()->GetId())
+					// P_i can be sparse -> Put CopyObjs and yk(t) to the same id
+					while(P_i()->Id!=CopyObjs()->GetId())
 						CopyObjs.Next();
-					while(Line1()->Id!=Cols.GetPos())
-						Cols.Next();
-					Cols2()+=Line1()->Value*Cols();
+					while(P_i()->Id!=ykt_i.GetPos())
+						ykt_i.Next();
+
+					yktprim_i()+=P_i()->Value*ykt_i();
 
 					CopyObjs.Next(); // Treat next object
 				}
-				Cols2()=Alpha*Cols2()+InvD[Objs()->GetId()]*(*hk)[Objs()->GetId()];
+				yktprim_i()=Alpha*yktprim_i()+InvD[Objs()->GetId()]*(*hk)[Objs()->GetId()];
 
 				Objs.Next(); // Treat next object
 			}
 
-			// Copy yk(t+1) in yk(t) and looks if the relative error is greater than the convergence
-			for(Cols.Start(),Cols2.Start(),Objs.Start();(!Cols.End())&&(!Objs.End());Cols.Next(),Cols2.Next()) // Objs()->GetId must always be equal to Cols2.GetPos()
+			// Copy yk(t') in yk(t) and looks if the relative error is greater than the convergence
+			size_t Nb(0);
+			for(ykt_i.Start(),yktprim_i.Start(),Objs.Start();(!ykt_i.End())&&(!Objs.End());ykt_i.Next(),yktprim_i.Next()) // Objs()->GetId must always be equal to yktprim_i.GetPos()
 			{
 				// Not a valid column ?
-				if(Objs()->GetId()!=Cols2.GetPos())
+				if(Objs()->GetId()!=yktprim_i.GetPos())
 					continue;  // -> treat next line
 
-				if(Cols()!=0.0)
-					avg+=(fabs(Cols()-Cols2())/Cols());
+				if(ykt_i()!=0.0)
+					avg+=(fabs(ykt_i()-yktprim_i())/ykt_i());
 				else
 				{
-					if(Cols2()!=0.0)
+					if(yktprim_i()!=0.0)
 						avg=std::numeric_limits<double>::max();
 				}
-				Cols()=Cols2();
+				ykt_i()=yktprim_i();
+				Nb++;
 				Objs.Next(); // Treat next object
 			}
 //			Y.Print("Y"+RString::Number(Group()->GetId())+"("+RString::Number(nb)+")");
 //			std::cout<<std::endl;
-			avg/=Objs.GetNb();
+			avg/=static_cast<double>(Nb);
 //			std::cout<<nb<<": "<<avg<<std::endl;
 		}
-		Out<<"Iterations needed="+RString::Number(nb)<<std::endl;
+
+		// If not the matrix must be centered goes to the group
+		if(!center)
+		{
+			if(PrintOut)
+				Out<<"Iterations needed="+RString::Number(nb)<<std::endl;
+			continue;
+		}
+
+		// Center yk
+		double Avg(0.0);  // Average value
+		size_t Nb(0);     // Number of elements
+		for(ykt_i.Start(),Objs.Start();(!ykt_i.End())&&(!Objs.End());ykt_i.Next())
+		{
+			// Not a valid column ?
+			if(Objs()->GetId()!=ykt_i.GetPos())
+				continue;  // -> treat next line
+			Avg+=ykt_i();
+			Nb++;
+			Objs.Next(); // Treat next object
+		}
+		Avg/=static_cast<double>(Nb);
+		for(ykt_i.Start(),Objs.Start();(!ykt_i.End())&&(!Objs.End());ykt_i.Next())
+		{
+			// Not a valid column ?
+			if(Objs()->GetId()!=ykt_i.GetPos())
+				continue;  // -> treat next line
+			ykt_i()-=Avg;
+			Objs.Next(); // Treat next object
+		}
+
+		if(PrintOut)
+			Out<<"Iterations needed="+RString::Number(nb)<<std::endl;
 	}
+
+	if(PrintOut)
+		Y.Print(Out,"Y");
 }
 
 
@@ -334,7 +450,8 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	size_t R::RKernelkMeans<cGroup,cObj,cGroups>::ReAllocate(void)
 {
-	Out<<"   ReAllocate"<<std::endl;
+	if(PrintOut)
+		Out<<"   ReAllocate"<<std::endl;
 	RCursor<cGroup> Group(Groups->Used);
 
 	if(!Spherical)
@@ -344,25 +461,27 @@ template<class cGroup,class cObj,class cGroups>
 		{
 			double Sum(0.0);
 
-			RNumCursor<double> Cols(Y[Group()->GetId()]->GetCols()); // Goes through Y
-			RNumCursor<double> Cols2(H[Group()->GetId()]->GetCols()); // Goes through H
-			for(Cols.Start(),Cols2.Start(),Objs.Start();(!Cols.End())&&(!Objs.End());Cols.Next(),Cols2.Next()) // Objs()->GetId must always be equal to Cols2.GetPos()
+			RNumCursor<double> yi(Y[Group()->GetId()]->GetCols()); // Goes through Y
+			RNumCursor<double> hi(H[Group()->GetId()]->GetCols()); // Goes through H
+			for(yi.Start(),hi.Start(),Objs.Start();(!yi.End())&&(!Objs.End());yi.Next(),hi.Next()) // Objs()->GetId must always be equal to hi.GetPos()
 			{
 				// Not a valid column ?
-				if(Objs()->GetId()!=Cols2.GetPos())
+				if(Objs()->GetId()!=hi.GetPos())
 					continue;  // -> treat next line
-				if(Cols.GetPos()!=Cols2.GetPos())
+				if(yi.GetPos()!=hi.GetPos())
 					std::cerr<<"Big Problem"<<std::endl;
 
-				Sum+=Cols()*Cols2();
+				Sum+=yi()*hi();
 				Objs.Next(); // Treat next object
 			}
 			Temp[Group()->GetId()]=Sum;
 		}
-//		Temp.Print(Out,"Temp");
+		if(PrintOut)
+			Temp.Print(Out,"Temp");
 	}
 
-//	Y.Print(Out,"Y");
+	if(PrintOut)
+		Y.Print(Out,"Y");
 
 	// Go trough each object
 	size_t count(0); // Suppose no object re-allocated
@@ -381,7 +500,7 @@ template<class cGroup,class cObj,class cGroups>
 			else
 				Value=-2*Y(Group()->GetId(),Objs()->GetId())+Temp[Group()->GetId()];
 			FitnessValue+=Value;
-			if((!Best)||(Value<BestValue))
+			if((!Best)||((!Spherical)&&(Value<BestValue))||((Spherical)&&(Value>BestValue)))
 			{
 				Best=Group();
 				BestValue=Value;
@@ -399,6 +518,8 @@ template<class cGroup,class cObj,class cGroups>
 	}
 
 	// Return the number of object re-allocated
+	if(PrintOut)
+		Out<<count<<"      objects re-allocated"<<std::endl;
 	return(count);
 }
 
@@ -418,21 +539,25 @@ template<class cGroup,class cObj,class cGroups>
 	double error(1.0);
 	for(NbIterations=0;((!max)||(max&&(NbIterations<max)))&&(error>0.0001);NbIterations++)
 	{
-		Out<<"  Iteration..."+RString::Number(NbIterations)<<std::endl;
+		if(PrintOut)
+			Out<<"  Iteration..."+RString::Number(NbIterations)<<std::endl;
 		if(Spherical)
-			CopyEinH();
+			UpdateBinaryH();
 		else
 			UpdateH();
 		ComputeY();
 		if(Spherical)
 		{
+			//Nb=ReAllocate();
+
 			// Second iteration is necessary
 			NormalizeH();
 			ComputeY();
 		}
-		size_t Nb(ReAllocate());
+		size_t Nb(ReAllocate()); // Allocate the elements
 		error=static_cast<double>(Nb)/static_cast<double>(Objs.GetNb());
-		Out<<"  Re-allocation="+RString::Number(error*100.0)+"%, Fitness="+RString::Number(Fitness())<<std::endl;
+		if(PrintOut)
+			Out<<"  Re-allocation="+RString::Number(error*100.0)+"%, Fitness="+RString::Number(Fitness())<<std::endl;
 	}
 }
 
@@ -450,27 +575,34 @@ template<class cGroup,class cObj,class cGroups>
 		ThrowRException("There are only "+R::RString::Number(Objs.GetNb())+" for "+R::RString::Number(nb)+" groups");
 
 	// Initialize the algorithm
-	Out.Open("/home/pfrancq/kmeans.txt",RIO::Create,"utf-8");
-	Out<<"Compute P & D"<<std::endl;
+	if(PrintOut)
+	{
+		Out.Open(OutName,RIO::Create,"utf-8");
+		Out<<"Compute P & D"<<std::endl;
+	}
 	Spherical=spherical;
 	H.VerifySize(nb,MaxId+1);    // Verify the size of M
 	Y.VerifySize(nb,MaxId+1);    // Verify the size of Y
 	if(!WasInit)
 	{
 		Init();
-		WasInit=false;
+		WasInit=true;
 	}
 
 	// Initialize randomly
-	Out<<"Init randomly the necessary group"<<std::endl;
+	if(PrintOut)
+		Out<<"Init randomly the necessary group"<<std::endl;
 	Groups=groups;
-	Rand->RandOrder(ObjsUsed,Objs.GetNb());
+	Rand.RandOrder(ObjsUsed,Objs.GetNb());
 	InitRandom(nb);
 
-	if(Spherical)
-		Out<<"Do Spherical Kernel kMeans"<<std::endl;
-	else
-		Out<<"Do Kernel kMeans"<<std::endl;
+	if(PrintOut)
+	{
+		if(Spherical)
+			Out<<"Do Spherical Kernel kMeans"<<std::endl;
+		else
+			Out<<"Do Kernel kMeans"<<std::endl;
+	}
 	DokMeans(max);
 }
 

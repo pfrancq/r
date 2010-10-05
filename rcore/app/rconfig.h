@@ -126,8 +126,9 @@ public:
 	/**
 	* Load a file in the structure.
 	* @param global          Global configuration file must be searched?
+	* @param exist           Should the configuration file exists?
 	*/
-	void Load(bool global=true);
+	void Load(bool global=true,bool exist=false);
 
 	/**
 	* Save a file in the structure.

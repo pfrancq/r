@@ -57,7 +57,7 @@ public:
 	/**
 	 * Type of the random generator.
 	 */
-	enum Type
+	enum tRandom
 	{
 		Good     /* A good and fast random generator using the Park & Miller
 		            minimal standard congruential generator.*/,
@@ -71,37 +71,77 @@ public:
 protected:
 
 	/**
+	 * Type of the random generator.
+	 */
+	tRandom Type;
+
+	/**
 	* Next random value.
 	*/
 	int Seed;
+
+	/**
+	* Variable for Internal use.
+	*/
+	int Aux1;
+
+	/**
+	* Variable for Internal use.
+	*/
+	int Aux2;
+
+	/**
+	* Variable for Internal use.
+	*/
+	int Table[32];
+
+	/**
+	* Variable for Internal use.
+	*/
+	int Value;
+
+	/**
+	* Calculation function for Internal use.
+	*/
+	int Calc1(void);
+
+	/**
+	* Calculation function for Internal use.
+	*/
+	int Calc2(void);
+
+	/**
+	* Calculation function for Internal use.
+	*/
+	int Calc3(void);
 
 public:
 
 	/**
 	* Construct the random generator.
+	* @param type            Type of the random generator.
 	* @param seed            Initial seed. Since this value cannot be null, if
 	*                        so, seed is set to 1.
 	*/
-	RRandom(const int seed=1) {Seed=seed;}
+	RRandom(tRandom type,const int seed=1);
 
 	/**
 	* Restart the sequence.
 	* @param seed            Initial seed. Since this value cannot be null, if
 	*                        so, seed is set to 1.
 	*/
-	virtual void Reset(const int seed);
+	void Reset(const int seed);
 
 	/**
-	* Return the next value in [0,1] from the sequence.
-	*
-	* This is an pure virtual function that	must be implement for a real random
-	* generator.
+	* Get the next value in the sequence.
+	* @return a value in [0,1].
 	*/
-	virtual double GetValue(void)=0;
+	double GetValue(void);
 
 	/**
-	* Return a number in the interval [0,max[.
+	* Get the next value in the sequence as an integer.
 	* @param max            Variable used to calculate the number.
+	* @return a number in the interval [0,max[.
 	*/
 	long GetValue(const long max)
 	{
@@ -135,17 +175,6 @@ public:
 			}
 		}
 	}
-
-    /**
-     * Create a random number generator.
-     * @param type           Type of the generator.
-     * @param seed           Initial seed.
-     */
-    static RRandom* Create(Type type,const int seed=0);
-
-    /**
-     */
-	virtual ~RRandom(void);
 };
 
 

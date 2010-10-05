@@ -52,7 +52,7 @@ template<class cInst,class cChromo>
 //------------------------------------------------------------------------------
 template<class cInst,class cChromo,class cFit,class cThreadData>
 	R::RInst<cInst,cChromo,cFit,cThreadData>::RInst(size_t popsize,const R::RString& name,R::RDebug* debug)
-		: RObject(name), Debug(debug), Random(0), tmpChrom1(0), tmpChrom2(0),bRandomConstruct(false),
+		: RObject(name), Debug(debug), Random(RRandom::Good,12345), tmpChrom1(0), tmpChrom2(0),bRandomConstruct(false),
 		  VerifyGA(false), DoPostEvaluation(false), DoOptimisation(true),
 		  Chromosomes(0), Ranked(0), PopSize(popsize), Gen(0), AgeBest(0), AgeBestPop(0)
 {
@@ -65,8 +65,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	FreqMutation=AgeNextMutation=5;
 	FreqBestMutation=AgeNextBestMutation=10;
 	BestInPop=BestChromosome=0;
-	Random = RRandom::Create(RRandom::Good,0);
-	Random->Reset(12345);
 	if(Debug)
 		Debug->EndFunc("RInst","RInst");
 }
@@ -515,6 +513,4 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		delete thDatas[0];
 		delete[] thDatas;
 	}
-	if(Random)
-		delete Random;
 }

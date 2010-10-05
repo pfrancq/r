@@ -205,7 +205,7 @@ template<class cNode,class cObj,class cNodes>
 
 //---------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	void RNodesGA<cNode,cObj,cNodes>::InsertObj(cNode* to,const cObj* obj)
+	void RNodesGA<cNode,cObj,cNodes>::InsertObj(cNode* to,cObj* obj)
 {
 	size_t j;
 

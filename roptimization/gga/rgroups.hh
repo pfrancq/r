@@ -150,7 +150,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void R::RGroups<cGroup,cObj,cGroups>::InsertObj(cGroup* to,const cObj* obj)
+	void R::RGroups<cGroup,cObj,cGroups>::InsertObj(cGroup* to,cObj* obj)
 {
 	size_t tmp,j;
 
@@ -201,7 +201,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void R::RGroups<cGroup,cObj,cGroups>::DeleteObj(cGroup* from,const cObj* obj)
+	void R::RGroups<cGroup,cObj,cGroups>::DeleteObj(cGroup* from,cObj* obj)
 {
 	size_t j;
 

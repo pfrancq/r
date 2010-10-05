@@ -37,7 +37,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
-#include <random.h>
+#include <rrandom.h>
 #include <rstring.h>
 
 

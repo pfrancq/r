@@ -38,7 +38,7 @@
 // include files for R Project
 #include <rstring.h>
 #include <rcontainer.h>
-#include <random.h>
+#include <rrandom.h>
 #include <rcursor.h>
 #include <rdebug.h>
 
@@ -160,7 +160,7 @@ protected:
 	/**
 	* Random number generator to use.
 	*/
-	RRandom* Rand;
+	RRandom& Rand;
 
 	/**
 	* Groups.
@@ -213,7 +213,7 @@ public:
 	* @param convergence     Convergence.
 	* @param debug           Debugger.
 	*/
-	RGroupingKMeans(const RString& n,RRandom* r,RCursor<cObj> objs,double convergence=0.0,RDebug* debug=0);
+	RGroupingKMeans(const RString& n,RRandom& r,RCursor<cObj> objs,double convergence=0.0,RDebug* debug=0);
 
 	/**
 	* Get the name of the heuristic.

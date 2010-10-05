@@ -231,7 +231,7 @@ double RLayout::ComputeWeight(RGeoInfo* info)
 
 
 //------------------------------------------------------------------------------
-void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,bool* selected,RPromKernel* kernel,RRandom* random)
+void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,bool* selected,RPromKernel* kernel,RRandom& random)
 {
 	RPromCriterion *weight,*dist;
 	RPromSol *sol,**sols,**best;
@@ -274,7 +274,7 @@ void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bou
 	{
 		// Choose a random not selected object
 		GetTab(treat);
-		random->RandOrder<RGeoInfo*>(treat,Problem->GetNbObjs());
+		random.RandOrder<RGeoInfo*>(treat,Problem->GetNbObjs());
 		RGeoInfo** info=treat;
 		while(selected[(*info)->GetObj()->GetId()])
 			info++;
@@ -361,7 +361,7 @@ RGeoInfo* RLayout::GetMostConnected(RGeoInfo** order,size_t nbobjs,size_t nbok)
 
 
 //------------------------------------------------------------------------------
-void RLayout::FillAggregator(RObj2DContainer* cont,bool* selected,RPromKernel* kernel,RRandom* random)
+void RLayout::FillAggregator(RObj2DContainer* cont,bool* selected,RPromKernel* kernel,RRandom& random)
 {
 	RRect bound,r;
 	RGeoInfo* i1;

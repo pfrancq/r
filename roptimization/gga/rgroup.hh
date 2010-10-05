@@ -176,8 +176,10 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	bool RGroup<cGroup,cObj,cGroups>::IsIn(const size_t id) const
 {
-	size_t i;
+	if(!NbSubObjects)
+		return(false);
 
+	size_t i;
 	RCursor<cObj> ptr(Owner->ObjsAss);
 	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next())
 		if(ptr()->GetId()==id) return(true);
@@ -189,8 +191,10 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	bool RGroup<cGroup,cObj,cGroups>::CommonObjs(const cGroup* grp) const
 {
-	size_t i;
+	if(!NbSubObjects)
+		return(false);
 
+	size_t i;
 	RCursor<cObj> ptr(Owner->ObjsAss);
 	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next())
 		if(grp->IsIn(ptr()->GetId())) return(true);
@@ -202,9 +206,9 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	bool RGroup<cGroup,cObj,cGroups>::SameObjs(const cGroup* grp) const
 {
+	if((!NbSubObjects)||(NbSubObjects!=grp->NbSubObjects))
+		return(false);
 	size_t i;
-
-	if(NbSubObjects!=grp->NbSubObjects) return(false);
 	RCursor<cObj> ptr(Owner->ObjsAss);
 	for(i=NbSubObjects+1,ptr.GoTo(SubObjects);--i;ptr.Next())
 		if(!grp->IsIn(ptr()->GetId())) return(false);

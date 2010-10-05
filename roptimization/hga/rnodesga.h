@@ -176,7 +176,7 @@ public:
 	* @param to             Pointer of the destination node.
 	* @param obj            Pointer to the object to insert.
 	*/
-	void InsertObj(cNode* to,const cObj* obj);
+	void InsertObj(cNode* to,cObj* obj);
 
 	/**
 	* Delete an object from a node.

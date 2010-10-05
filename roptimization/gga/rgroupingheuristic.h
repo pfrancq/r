@@ -36,7 +36,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstring.h>
-#include <random.h>
+#include <rrandom.h>
 #include <rgroups.h>
 #include <rdebug.h>
 
@@ -66,7 +66,7 @@ protected:
 	/**
 	* The random number generator to use.
 	*/
-	RRandom* Random;
+	RRandom& Random;
 
 	/**
 	* Objects to be grouped.
@@ -107,7 +107,7 @@ public:
 	* @param objs           Pointer to the objects.
 	* @param debug          Debugger.
 	*/
-	RGroupingHeuristic(const RString& n,RRandom* r,RCursor<cObj> objs,RDebug* debug=0);
+	RGroupingHeuristic(const RString& n,RRandom& r,RCursor<cObj> objs,RDebug* debug=0);
 
 	/**
 	* Get the name of the heuristic.
@@ -162,7 +162,7 @@ public:
 	* Return a number in the interval [0,max[ using the current random generator.
 	* @param max            Variable used to calculate the number.
 	*/
-	long RRand(long max) {return(Random->GetValue(max));}
+	long RRand(long max) {return(Random.GetValue(max));}
 
 	/**
 	* Random the position of elements of a vector using the current random generator.
@@ -170,7 +170,7 @@ public:
 	* @param size           The size of the vector.
 	*/
 	template<class T> inline void RandOrder(T* arr,size_t size)
-		{Random->RandOrder<T>(arr,size);}
+		{Random.RandOrder<T>(arr,size);}
 
 	/**
 	* Destruct the grouping heuristic.

@@ -48,7 +48,7 @@
 #include <rcontainer.h>
 #include <rtrace.h>
 #include <rtextfile.h>
-#include <random.h>
+#include <rrandom.h>
 
 
 //------------------------------------------------------------------------------

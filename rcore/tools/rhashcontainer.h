@@ -360,7 +360,7 @@ public:
 	* @param del             Specify if a similar existing element must be
 	*                        deleted.
 	*/
-	inline void InsertPtr(const C* ins,bool del=false)
+	inline void InsertPtr(C* ins,bool del=false)
 	{
 		RReturnIfFail(ins);
 		Hash* ptr=GetHash(ins->HashIndex(1));

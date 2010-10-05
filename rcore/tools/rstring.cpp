@@ -33,6 +33,7 @@
 #include <rstring.h>
 #include <rtextencoding.h>
 #include <langinfo.h>
+#include <rcontainer.h>
 using namespace std;
 using namespace R;
 
@@ -274,6 +275,13 @@ RString::operator std::string () const
 std::string RString::ToString(void) const
 {
 	return(operator std::string());
+}
+
+
+//-----------------------------------------------------------------------------
+void RString::Split(RContainer<RString,true,false>& elements,const RChar car,const RChar del) const
+{
+	BasicString<RChar,RString>::Split(elements,car,del);
 }
 
 

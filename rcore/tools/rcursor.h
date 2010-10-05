@@ -36,7 +36,6 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rcontainer.h>
-#include <basiccursor.h>
 
 
 //-----------------------------------------------------------------------------
@@ -69,20 +68,66 @@ namespace R{
 * @short Container Cursor.
 */
 template<class C>
-	class RCursor : public BasicCursor
+	class RCursor
 {
+protected:
+
+	/**
+	* This variable is used to go through the container.
+	*/
+	C** Current;
+
+	/**
+	* This variable is used to see if the end of the container is reached.
+	*/
+	size_t ActPtr;
+
+	/**
+	* The array of pointers for the elements.
+	*/
+	C** Tab;
+
+	/**
+	* The number of elements in the container.
+	*/
+	size_t NbPtr;
+
+	/**
+	* The first position in the array handled by the cursor.
+	*/
+	size_t FirstPtr;
+
+	/**
+	* The last position in the array handled by the cursor.
+	*/
+	size_t LastPtr;
+
+
 public:
 
 	/**
 	* Construct the cursor.
 	*/
-	RCursor(void) : BasicCursor() {}
+	RCursor(void)
+	{
+		ActPtr=0;
+		Current=Tab=0;
+		ActPtr=FirstPtr=LastPtr=NbPtr=0;
+	}
 
 	/**
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
-	RCursor(const RCursor<C>& src) : BasicCursor(src) {}
+	RCursor(const RCursor<C>& src)
+	{
+		ActPtr=src.ActPtr;
+		Current=src.Current;
+		Tab=src.Tab;
+		FirstPtr=src.FirstPtr;
+		LastPtr=src.LastPtr;
+		NbPtr=src.NbPtr;
+	}
 
 	/**
 	* Construct the cursor.
@@ -91,13 +136,26 @@ public:
 	* @param max             Maximum position of the elements to iterate (included max).
 	*                        If SIZE_MAX, iterate until the end of the container.
 	*/
-	template<bool a,bool o> RCursor(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX) : BasicCursor(c,min,max) {}
+	template<bool a,bool o> RCursor(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX)
+	{
+		Set(c,min,max);
+	}
+
 
 	/**
 	* Assignment operator using a "Cursor".
 	* @param src             Source container.
 	*/
-	RCursor<C>& operator=(const RCursor<C>& src) { return(static_cast<RCursor<C>&>(BasicCursor::operator=(src)));}
+	RCursor<C>& operator=(const RCursor<C>& src)
+	{
+		ActPtr=src.ActPtr;
+		Current=src.Current;
+		Tab=src.Tab;
+		FirstPtr=src.FirstPtr;
+		LastPtr=src.LastPtr;
+		NbPtr=src.NbPtr;
+		return(*this);
+	}
 
 	/**
 	* Set the container.
@@ -106,45 +164,156 @@ public:
 	* @param max             Maximum position of the elements to iterate (included max).
 	*                        If SZE_MAX, iterate until the end of the container.
 	*/
-	template<bool a,bool o> void Set(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX) {BasicCursor::Set(c,min,max);}
+	template<bool a,bool o> void Set(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX)
+	{
+		RAssert(min<=max);
+		NbPtr=c.NbPtr;
+		Tab=c.Tab;
+		if((max!=SIZE_MAX)&&(max<c.LastPtr))
+			LastPtr=max+1;
+		else
+			LastPtr=c.LastPtr;
+		if((min<=max)&&(min<c.LastPtr))
+			FirstPtr=min;
+		else
+			FirstPtr=0;
+		Current=0;
+		ActPtr=0;
+	}
 
-	/** @copydoc BasicCursor::Clear(void)*/
-	inline void Clear(void) {BasicCursor::Clear();}
+	/**
+	 * Clear the cursor.
+	 */
+	void Clear(void)
+	{
+		Current=Tab=0;
+		ActPtr=FirstPtr=LastPtr=NbPtr=0;
+	}
 
-	/** @copydoc BasicCursor::Start(void)*/
-	inline void Start(void) {BasicCursor::Start();}
+	/**
+	* Start the iterator at the beginning of the container.
+	*/
+	void Start(void)
+	{
+		ActPtr=FirstPtr;
+		if(!NbPtr)
+		{
+			Current=0;
+			return;
+		}
+		Current=&Tab[FirstPtr];
+		while((!(*Current))&&(ActPtr<LastPtr))
+			Next();
+	}
 
-	/** @copydoc BasicCursor::StartAtEnd(void)*/
-	inline void StartAtEnd(void) {BasicCursor::StartAtEnd();}
+	/**
+	 * Start the iterator at the end of the container.
+	 */
+	void StartAtEnd(void)
+	{
+		ActPtr=LastPtr-1;
+		if(!NbPtr)
+		{
+			Current=0;
+			return;
+		}
+		Current=&Tab[LastPtr-1];
+		while((!(*Current))&&(ActPtr))
+			Prev();
+	}
 
-	/** @copydoc BasicCursor::GoTo(size_t)*/
-	inline void GoTo(size_t idx) {BasicCursor::GoTo(idx);}
+	/**
+	* Go to the i-th element of the cursor.
+	* @param idx             Index of the element to get.
+	*/
+	void GoTo(size_t idx)
+	{
+		idx+=FirstPtr;
+		if(idx>=LastPtr)
+			throw std::range_error("void RCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(FirstPtr)+","+RString::Number(LastPtr-1)+"]");
+		Current=&Tab[idx];
+		ActPtr=idx;
+	}
 
-	inline size_t GetPos(void) const {return(BasicCursor::GetPos());}
-
-	inline size_t GetNb(void) const {return(BasicCursor::GetNb());}
+	/**
+	* Return the actual position in the cursor.
+	*/
+	inline size_t GetPos(void) const {return(ActPtr-FirstPtr);}
 
 	/**
 	* @return the maximal position occupied by an elements in the container.
 	*/
 	inline size_t GetMaxPos(void) const {if(NbPtr) return(LastPtr-1); else return(0);}
 
-	inline bool Begin(void) const {return(BasicCursor::Begin());}
+	/**
+	* Return the number of elements in the cursor.
+	*/
+	inline size_t GetNb(void) const {return(LastPtr-FirstPtr);}
 
-	inline bool End(void) const {return(BasicCursor::End());}
+	/**
+	* Test if the begin of the cursor is reached.
+	*/
+	inline bool Begin(void) const {return(ActPtr==cNoRef);}
 
-	inline bool IsAt(size_t idx) const {return(BasicCursor::IsAt(idx));}
+	/**
+	* Test if the end of the cursor is reached.
+	*/
+	inline bool End(void) const {return(ActPtr==LastPtr);}
 
-	/** @copydoc BasicCursor::Next(size_t)*/
-	inline void Next(size_t inc=1) {BasicCursor::Next(inc);}
+	/**
+	* Test if the cursor is at a given index.
+	* @param idx             Index of the element.
+	*/
+	inline bool IsAt(size_t idx) const {return(ActPtr==idx);}
 
-	/** @copydoc BasicCursor::Prev(size_t)*/
-	inline void Prev(size_t inc=1) {BasicCursor::Prev(inc);}
+	/**
+	* Go to a given number of next elements. If the end is reached, go to the
+	* beginning.
+	* @param inc             Number of elements to go to.
+	*/
+	void Next(size_t inc=1)
+	{
+		if(!NbPtr) return;
+		if(ActPtr==LastPtr)
+			Start();
+		else
+		{
+			ActPtr+=inc;
+			Current+=inc;
+			while((ActPtr<LastPtr)&&(!(*Current)))     // Go to next non-null pointer
+			{
+				ActPtr++;
+				Current++;
+			}
+		}
+	}
+
+	/**
+	* Go to a given number of previous elements. If the begin is reached, go to the
+	* end.
+	* @param inc             Number of elements to go to.
+	*/
+	void Prev(size_t inc=1)
+	{
+		if(!NbPtr) return;
+		if(ActPtr==cNoRef)
+			StartAtEnd();
+		else
+		{
+			ActPtr-=inc;
+			Current-=inc;
+			while((ActPtr)&&(!(*Current)))     // Go to previous non-null pointer
+			{
+				ActPtr--;
+				Current--;
+			}
+		}
+	}
 
 	/**
 	* @return the current element.
 	*/
-	inline C* operator()(void) const {return(static_cast<C*>(*Current));}
+	inline C* operator()(void) const {return(*Current);}
 };
 
 
@@ -199,32 +368,26 @@ public:
 * @short Container Child Cursor.
 */
 template<class B,class C>
-	class RCastCursor : public BasicCursor
+	class RCastCursor : public RCursor<B>
 {
 public:
 
 	/**
 	* Construct the cursor.
 	*/
-	RCastCursor(void) : BasicCursor() {}
+	RCastCursor(void) : RCursor<B>() {}
 
 	/**
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
-	RCastCursor(const BasicCursor& src) : BasicCursor(src) {}
+	RCastCursor(const RCursor<B>& src) : RCursor<B>(src) {}
 
 	/**
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
-	RCastCursor(const RCastCursor<B,C>& src) : BasicCursor(src) {}
-
-	/**
-	* Construct the cursor.
-	* @param src             Source container.
-	*/
-	RCastCursor(const RCursor<C>& src) : BasicCursor(src) {}
+	RCastCursor(const RCastCursor<B,C>& src) : RCursor<B>(src) {}
 
 	/**
 	* Construct the cursor.
@@ -233,27 +396,18 @@ public:
 	* @param max             Maximum position of the elements to iterate. If
 	*                        SIZE_MAX, iterate until the end of the container.
 	*/
-	RCastCursor(const BasicContainer& c,size_t min=0,size_t max=SIZE_MAX) : BasicCursor(c,min,max) {}
+	template<bool a,bool o> RCastCursor(const RContainer<B,a,o>& c,size_t min=0,size_t max=SIZE_MAX)  : RCursor<B>(c,min,max) {}
 
 	/**
 	* Assignment operator using a "Cursor".
 	* @param src             Source container.
 	*/
-	RCastCursor<B,C>& operator=(const RCastCursor<B,C>& src) { return(static_cast<RCastCursor<B,C>&>(BasicCursor::operator=(src)));}
-
-	/**
-	* Set the container.
-	* @param c               Container to iterate.
-	* @param min             Minimum position of the elements to iterate.
-	* @param max             Maximum position of the elements to iterate. If
-	*                        SIZE_MAX, iterate until the end of the container.
-	*/
-	void Set(const BasicContainer& c,size_t min=0,size_t max=SIZE_MAX) {BasicCursor::Set(c,min,max);}
+	RCastCursor<B,C>& operator=(const RCastCursor<B,C>& src) { return(static_cast<RCastCursor<B,C>&>(RCursor<B>::operator=(src)));}
 
 	/**
 	* Return the current element.
 	*/
-	inline C* operator()(void) const {return(dynamic_cast<C*>(static_cast<B*>(*Current)));	}
+	inline C* operator()(void) const {return(dynamic_cast<C*>(*RCursor<B>::Current));}
 };
 
 

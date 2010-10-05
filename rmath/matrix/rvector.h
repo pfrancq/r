@@ -67,6 +67,24 @@ public:
 	RVector(const RVector& vector);
 
 	/**
+	* Add a vector to the current one.
+	* @param vector          Vector to add.
+	*/
+	RVector& operator+=(const RVector& vector);
+
+	/**
+	* Subtract a vector from the current one.
+	* @param vector          Vector to subtract.
+	*/
+  	RVector& operator-=(const RVector& vector);
+
+	/**
+	* Multiply a vector with a given number.
+	* @param arg             Number.
+	*/
+	RVector& operator*=(const double arg);
+
+	/**
 	 * Print the content of the vector.
 	 * @tparam S             Stream class that implements the << operator.
 	 * @param stream         Stream.
@@ -152,6 +170,52 @@ public:
 	friend class RMatrix;
 	friend class RLowerTriangularMatrix;
 };
+
+
+//------------------------------------------------------------------------------
+/**
+* Addition of two vectors.
+* @param arg1                Vector.
+* @param arg2                Vector.
+*/
+RVector operator+(const RVector& arg1,const RVector& arg2);
+
+
+//------------------------------------------------------------------------------
+/**
+* Subtraction of two vectors.
+* @param arg1                Vector.
+* @param arg2                Vector.
+*/
+RVector operator-(const RVector& arg1,const RVector& arg2);
+
+
+//------------------------------------------------------------------------------
+/**
+* Multiplication of a vector and a number.
+* @param arg1                Vector.
+* @param arg2                Vector.
+*/
+RVector operator*(const RVector& arg1,const double arg2);
+
+
+//------------------------------------------------------------------------------
+/**
+* Multiplication of a vector and a number.
+* @param arg1                Number.
+* @param arg2                Vector.
+*/
+RVector operator*(const double arg1,const RVector& arg2);
+
+
+//------------------------------------------------------------------------------
+/**
+* Multiplication of two vectors, i.e. compute the scalar product.
+* @param arg1                Vector.
+* @param arg2                Vector.
+* @return the scalar product.
+*/
+double operator*(const RVector& arg1,const RVector& arg2);
 
 
 }  //------- End of namespace R ------------------------------------------------

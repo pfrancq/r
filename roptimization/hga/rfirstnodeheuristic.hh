@@ -36,7 +36,7 @@
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	RFirstNodeHeuristic<cNode,cObj,cNodes>::RFirstNodeHeuristic(RRandom* r,RCursor<cObj> objs,RDebug* debug)
+	RFirstNodeHeuristic<cNode,cObj,cNodes>::RFirstNodeHeuristic(RRandom& r,RCursor<cObj> objs,RDebug* debug)
 	: RTreeHeuristic<cNode,cObj,cNodes>("FistNode",r,objs,debug), tmpNodes(0), tmpAttrs(100), Test("/home/pfrancq/super.txt")
 {
 	Test.Open(R::RIO::Create);

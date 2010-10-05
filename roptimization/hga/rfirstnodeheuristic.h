@@ -80,7 +80,7 @@ public:
 	* @param objs           Pointer to the objects.
 	* @param debug          Debugger.
 	*/
-	RFirstNodeHeuristic(RRandom* r,RCursor<cObj> objs,RDebug* debug=0);
+	RFirstNodeHeuristic(RRandom& r,RCursor<cObj> objs,RDebug* debug=0);
 
 	/**
 	* Initialize the heuristic.

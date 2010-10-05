@@ -441,7 +441,7 @@ RCursor<RParam> RParamStruct::GetStruct(void) const
 
 
 //------------------------------------------------------------------------------
-void RParamStruct::Insert(const RParam* param)
+void RParamStruct::Insert(RParam* param)
 {
 	RParam* ptr=Parameters.GetPtr(*param);
 	if(ptr)

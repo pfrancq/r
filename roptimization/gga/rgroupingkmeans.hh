@@ -37,7 +37,7 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	R::RGroupingKMeans<cGroup,cObj,cGroups>::RGroupingKMeans(const R::RString& n,R::RRandom* r,R::RCursor<cObj> objs,double convergence,R::RDebug* debug)
+	R::RGroupingKMeans<cGroup,cObj,cGroups>::RGroupingKMeans(const R::RString& n,R::RRandom& r,R::RCursor<cObj> objs,double convergence,R::RDebug* debug)
 	: Name(n), Debug(debug), Rand(r), Objs(0), NbObjs(objs.GetNb()), ObjsUsed(0),
 	  NbObjsUsed(objs.GetNb()), Protos(40), Convergence(convergence)
 {
@@ -52,12 +52,12 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	double R::RGroupingKMeans<cGroup,cObj,cGroups>::ComputeSumSim(cGroup* group,const cObj* obj)
 {
-	double Sum;
+	double Sum(0.0);
 
 	if(!group->GetNbObjs())
-		return(0.0);
+		return(Sum);
 	R::RCursor<cObj> ptr(Groups->GetObjs(*group));
-	for(ptr.Start(),Sum=0.0;!ptr.End();ptr.Next())
+	for(ptr.Start();!ptr.End();ptr.Next())
 	{
 		if(ptr()==obj) continue;
 		Sum+=Similarity(obj,ptr());
@@ -99,6 +99,8 @@ template<class cGroup,class cObj,class cGroups>
 			Relevant->AvgSim=SumSim;
 		}
 	}
+
+	// Divide the average similarity by the number of objects
 	Relevant->AvgSim/=static_cast<double>(group->GetNbObjs()-1);
 }
 
@@ -269,7 +271,7 @@ template<class cGroup,class cObj,class cGroups>
 		}
 
 		// Find a random number in [0,total]
-		double rand=Rand->GetValue()*total;
+		double rand=Rand.GetValue()*total;
 
 		// Find the object having the right similarity
 		for(total=0.0,left=ptr,nbleft=nbobjs,obj=Probas;--nbleft;left++,obj++)
@@ -303,7 +305,7 @@ template<class cGroup,class cObj,class cGroups>
 	cGroup* grp;
 	cObj** Cur;
 
-	// Put the prototypes in each group
+	// Create one group for each prototype and containing it
 	Groups->ClearGroups();
 	R::RCursor<Centroid> Grp(Protos);
 	for(Grp.Start();!Grp.End();Grp.Next())
@@ -406,11 +408,12 @@ template<class cGroup,class cObj,class cGroups>
 	void R::RGroupingKMeans<cGroup,cObj,cGroups>::DokMeans(size_t max)
 {
 	double error(1.0);
-	for(NbIterations=0,error=1.0;((!max)||(max&&(NbIterations<max)))&&(error>Convergence);NbIterations++)
+	for(NbIterations=0,error=1.0;((!max)||(max&&(NbIterations<max)))&&(error>Convergence);)
 	{
+		NbIterations++;
 		ReAllocate();
 		error=static_cast<double>(CalcNewProtosNb())/static_cast<double>(Protos.GetNb());
-		std::cout<<"Iterations="<<NbIterations<<": "<<Fitness()<<std::endl;
+		std::cout<<"Iterations="<<NbIterations<<": "<<Fitness()<<" ("<<error<<")"<<std::endl;
 	}
 }
 
@@ -426,7 +429,7 @@ template<class cGroup,class cObj,class cGroups>
 
 	// Initialize randomly
 	Groups=groups;
-	Rand->RandOrder(Objs,NbObjs);
+	Rand.RandOrder(Objs,NbObjs);
 
 	// Create the prototypes
 	Protos.Clear();

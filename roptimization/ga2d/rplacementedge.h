@@ -102,7 +102,7 @@ public:
 	* @param area           Area criteria parameters.
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementEdge(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori=false);
+	RPlacementEdge(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool ori=false);
 
 	/**
 	* Initialize the heuristic.

@@ -219,6 +219,7 @@ void RIndexFile::NewRecord(size_t blockid,size_t indexid,size_t entry,size_t siz
 		// Go to previous entry and the position is obtained
 		size_t index;
 		RBlockFile::Seek(blockid,entry*SizeT2);
+
 		// Read the old index and the old record position
 		Read((char*)(&index),sizeof(size_t));
 		Read((char*)(&Pos),sizeof(size_t));
@@ -235,45 +236,59 @@ void RIndexFile::NewRecord(size_t blockid,size_t indexid,size_t entry,size_t siz
 	}
 	else
 	{
-		// The entry must be inserted at 'entry':
-		// 1. Increase the records table beginning at entry.
-		// 2. Decrease the corresponding records position of size
+		// The record must be inserted at 'entry':
+		// 1. Read the position of the record corresponding to 'entry-1' -> Pos
+		// 2. The new record will be inserted at 'entry' and the position Pos-size :
+		// 3. Decrease all the records starting from 'entry' from size positions.
+		// 4. Move the records in memory from size.
 
-		// Start the position of the first entry to modify and read the record position
-		size_t newindex,oldindex,newpos,oldpos;
-		RBlockFile::Seek(blockid,(entry+1)*SizeT2);
-		// Read the old index and the old record position
+		// Initialize
+		size_t newindex,oldindex,newpos,oldpos,LastPos;
+
+		// First Step
+		RBlockFile::Seek(blockid,entry*SizeT2);
 		Read((char*)(&newindex),sizeof(size_t));
 		Read((char*)(&newpos),sizeof(size_t));
-		RBlockFile::SeekRel(-SizeT2);
-		newindex=indexid;
-		size_t LastPos;
-		Pos=newpos;
+		Pos=newpos;  // This is where ends the last records
 
-		// Go trough the entries
+		// Second Step
+		newindex=indexid;
+		newpos-=size;
+
+		// Third Step : Go trough the entries
 		while(entry<=NbRecs)
 		{
-			// Read the old index and the old record position
-			Read((char*)(&oldindex),sizeof(size_t));
-			Read((char*)(&oldpos),sizeof(size_t));
-			RBlockFile::SeekRel(-SizeT2);
+			// Read the old index and the old record position at 'entry' if necessary
+			if(entry<NbRecs)
+			{
+				Read((char*)(&oldindex),sizeof(size_t));
+				Read((char*)(&oldpos),sizeof(size_t));
+				LastPos=oldpos;       // Suppose it it the last record to move
+
+				// Write to old position
+				RBlockFile::SeekRel(-SizeT2);
+			}
+
+			// Write the new entry
 			Write((char*)(&newindex),sizeof(size_t));
 			Write((char*)(&newpos),sizeof(size_t));
-			LastPos=newpos;
-			newindex=oldindex;
 			newpos=oldpos-size;
+			newindex=oldindex;
 			entry++;
 		}
 
-		// Move the Pos-LastPos bytes in memory starting from LastPos to LastPos-size
+		// Fourth step : Move the Pos-LastPos bytes in memory starting from LastPos to newpos
 		if(Pos-LastPos)
-			RBlockFile::MoveBlock(blockid,LastPos,LastPos-size,Pos-LastPos);
+			RBlockFile::MoveBlock(blockid,LastPos,newpos,Pos-LastPos);
 
 		// The spaces and the number of entries in the records table are inserted
 		ModifyFreeSpace(blockid,-size-SizeT2);
 		RBlockFile::Seek(blockid,sizeof(size_t));
 		NbRecs++;
 		Write((char*)(&NbRecs),sizeof(size_t));
+
+		// Pos must point where the new record was inserted
+		Pos-=size;
 	}
 
 	// Position the block at the right place
@@ -308,23 +323,53 @@ void RIndexFile::EraseRecord(size_t blockid,size_t indexid)
 	if(!IsOpen())
 		ThrowRIOException(this,"File not opened");
 
-	// Go to the record position in the record address table and
-	// remember the old internal position
-	size_t Entry;
-	size_t Pos;
-	size_t OldPos;
-	size_t Size;
-	RBlockFile::Seek(blockid,(indexid+1)*SizeT2+sizeof(size_t));
-	RBlockFile::Read((char*)&OldPos,sizeof(size_t));
-	RBlockFile::Read((char*)&Size,sizeof(size_t));
-	indexid++;
+	// Find the entry in the index table
+	bool find;
+	size_t entry(GetIndex(blockid,indexid,find));
+	if(!find)
+		ThrowRIOException(this,"No record "+RString::Number(indexid)+" in block "+RString::Number(blockid));
 
-	// Go trough all the next record entries and move them SizeT2 bytes before
-	while(indexid<NbRecs)
+	// To erase a record :
+	// 1. Look if it is the first record :
+	//    a) Yes : It ends at the end of the block.
+	//    b) No : It ends at the beginning of block 'entry-1'
+	// Compute the size of bytes to skip -> Size
+	// 2. Move all the records after 'entry' from Size position to the end
+    // 3. Move the records in memory to delete the record entry
+
+	// Initialize
+	size_t Entry,Pos,OldPos,Size,FirstPos;
+
+	// Step 1
+	if(entry)
+	{
+		// Not the first record -> Read both entries
+		RBlockFile::Seek(blockid,entry*SizeT2);
+		RBlockFile::Read((char*)&Entry,sizeof(size_t));
+		RBlockFile::Read((char*)&Size,sizeof(size_t));
+		RBlockFile::Read((char*)&Entry,sizeof(size_t));
+		RBlockFile::Read((char*)&OldPos,sizeof(size_t));
+		Size-=OldPos;
+	}
+	else
+	{
+		// First record
+		RBlockFile::Seek(blockid,(entry+1)*SizeT2);
+		RBlockFile::Read((char*)&Entry,sizeof(size_t));
+		RBlockFile::Read((char*)&OldPos,sizeof(size_t));
+		Size=BlockSize-OldPos;
+	}
+	FirstPos=OldPos;
+
+	//
+	// Go trough all the next record entries and move them Size bytes to the end
+	indexid++;
+	while(indexid<=NbRecs)
 	{
 		RBlockFile::Read((char*)&Entry,sizeof(size_t));
 		RBlockFile::Read((char*)&Pos,sizeof(size_t));
 		RBlockFile::SeekRel(-SizeT4);
+		OldPos=Pos;  // Suppose last record
 		Pos+=Size;
 		RBlockFile::Write((char*)&Entry,sizeof(size_t));
 		RBlockFile::Write((char*)&Pos,sizeof(size_t));
@@ -333,14 +378,17 @@ void RIndexFile::EraseRecord(size_t blockid,size_t indexid)
 	}
 
 	// Move the OldPos-Pos+Size bytes in memory starting from Pos-Size to Pos
-	if(OldPos-Pos+Size)
-		RBlockFile::MoveBlock(blockid,Pos-Size,Pos,OldPos-Pos+Size);
+	if(FirstPos-OldPos)
+		RBlockFile::MoveBlock(blockid,Pos-Size,Pos,FirstPos-OldPos);
 
 	// Modify the free space and the number of records
 	ModifyFreeSpace(blockid,Size+SizeT2);   // The spaces and the entry in the records table are removed
 	NbRecs--;
 	RBlockFile::Seek(blockid,sizeof(size_t));
 	RBlockFile::Write((char*)&NbRecs,sizeof(size_t));
+
+	// Position the block at the right place
+	RBlockFile::Seek(blockid,FirstPos+Size);
 }
 
 

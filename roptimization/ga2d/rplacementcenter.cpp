@@ -43,7 +43,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementCenter::RPlacementCenter(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori)
+RPlacementCenter::RPlacementCenter(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,r,dist,area,ori)
 {
 }

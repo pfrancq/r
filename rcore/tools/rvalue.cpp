@@ -39,7 +39,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 // Define static variables
-const RValue RValue::Null(cNoRef,0.0);
+const RValue RValue::Null(cNoRef,NAN);
 
 
 

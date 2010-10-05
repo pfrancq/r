@@ -30,6 +30,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rtrace.h>
+#include <rcontainer.h>
 using namespace R;
 
 

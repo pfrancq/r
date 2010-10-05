@@ -108,7 +108,7 @@ public:
 	/**
 	* Random number generator
 	*/
-	RRandom* Random;
+	RRandom Random;
 
 private:
 
@@ -316,12 +316,12 @@ public:
 	 * is wanted most of the time (in particular for debugging purposes).
 	 * @param seed           The seeded value.
 	 */
-	void SetSeed(int seed) {Random->Reset(seed);}
+	void SetSeed(int seed) {Random.Reset(seed);}
 
 	/**
 	 * Return the seed value of the internal random number generator.
 	 */
-	int GetSeed(void) const {return(Random->Seed());}
+	int GetSeed(void) const {return(Random.Seed());}
 
 	/**
 	* Initialization of the instance.
@@ -422,7 +422,7 @@ public:
 	* Return a number in the interval [0,max[ using the current random generator.
 	* @param max            Variable used to calculate the number.
 	*/
-	long RRand(long max) {return(Random->GetValue(max));}
+	long RRand(long max) {return(Random.GetValue(max));}
 
 	/**
 	* Random the position of elements of a vector using the current random generator.
@@ -430,7 +430,7 @@ public:
 	* @param size           The size of the vector.
 	*/
 	template<class T> inline void RandOrder(T* array,size_t size)
-		{Random->RandOrder<T>(array,size);}
+		{Random.RandOrder<T>(array,size);}
 
 	/**
 	* Destruct the instance.

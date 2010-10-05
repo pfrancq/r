@@ -63,7 +63,7 @@ public:
 	* @param objs           Pointer to the objects.
 	* @param debug          Debugger.
 	*/
-	RFirstFitHeuristic(RRandom* r,RCursor<cObj> objs,RDebug* debug=0);
+	RFirstFitHeuristic(RRandom& r,RCursor<cObj> objs,RDebug* debug=0);
 
 	/**
 	* Find a group for the next object.

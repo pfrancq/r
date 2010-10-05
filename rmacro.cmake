@@ -247,6 +247,7 @@ MACRO(DO_R_LIB_INCLUDE _libPath)
         INCLUDE_DIRECTORIES("${_libPath}/rmath/geometry")
         INCLUDE_DIRECTORIES("${_libPath}/rmath/graph")
         INCLUDE_DIRECTORIES("${_libPath}/rmath/matrix")
+		INCLUDE_DIRECTORIES("${_libPath}/rmath/stats")
 
         INCLUDE_DIRECTORIES("${_libPath}/roptimization")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/frontend")

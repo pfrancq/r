@@ -36,7 +36,7 @@
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	RTreeHeuristic<cNode,cObj,cNodes>::RTreeHeuristic(const RString& n,RRandom* r,RCursor<cObj> objs,RDebug* debug)
+	RTreeHeuristic<cNode,cObj,cNodes>::RTreeHeuristic(const RString& n,RRandom& r,RCursor<cObj> objs,RDebug* debug)
 		: Name(n), Random(r), Objs(objs), Nodes(0), Debug(debug)
 {
 	Order=new cObj*[Objs.GetNb()];

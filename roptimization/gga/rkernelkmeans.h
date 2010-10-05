@@ -36,7 +36,7 @@
 // include files for R Project
 #include <rstring.h>
 #include <rcontainer.h>
-#include <random.h>
+#include <rrandom.h>
 #include <rcursor.h>
 #include <rdebug.h>
 #include <rsparsematrix.h>
@@ -74,7 +74,7 @@ protected:
 	/**
 	* Random number generator to use.
 	*/
-	RRandom* Rand;
+	RRandom& Rand;
 
 	/**
 	* Groups.
@@ -137,6 +137,11 @@ protected:
 	RMatrix Y;
 
 	/**
+	 * Store the assignments of the different elements.
+	 */
+	RNumContainer<size_t>  Assignments;
+
+	/**
 	 * Temporary vector.
 	 */
 	RVector Temp;
@@ -147,11 +152,6 @@ protected:
 	bool WasInit;
 
 	/**
-	 * Output file with information.
-	 */
-	RTextFile Out;
-
-	/**
 	 * Fitness of the solution.
 	 */
 	double FitnessValue;
@@ -160,6 +160,21 @@ protected:
 	 * Spherical k-Means;
 	 */
 	bool Spherical;
+
+	/**
+	 * Output file with information.
+	 */
+	RTextFile Out;
+
+	/**
+	 * Print the information.
+	 */
+	bool PrintOut;
+
+	/**
+	 * Name of the output file.
+	 */
+	RString OutName;
 
 public:
 
@@ -174,7 +189,7 @@ public:
 	* @param convergence     Convergence when computing yk.
 	* @param debug           Debugger.
 	*/
-	RKernelkMeans(const RString& n,RRandom* r,RCursor<cObj> objs,size_t maxid,double alpha,double convergence,RDebug* debug=0);
+	RKernelkMeans(const RString& n,RRandom& r,RCursor<cObj> objs,size_t maxid,double alpha,double convergence,RDebug* debug=0);
 
 	/**
 	 * Initialize (once) the algorithm.
@@ -200,24 +215,31 @@ protected:
 	void InitRandom(size_t nb);
 
 	/**
-	 * Update the H matrix when the objects are assigned.
+	 * Update the H matrix when the objects are assigned. The elements of hk
+	 * are set to 1 if the object is assigned to group k, otherwise 0.
+	 * @param center         The H matrix must be centered.
 	 */
-	void CopyEinH(void);
+	void UpdateBinaryH(bool center=true);
 
 	/**
-	 * Update the H matrix when the objects are assigned.
+	 * Update the H matrix when the objects are assigned. The elements of hk
+	 * are set to 1/(number of elements in group k) if the object is assigned
+	 * to group k, otherwise 0.
+	 * @param center         The H matrix must be centered.
 	 */
-	void UpdateH(void);
+	void UpdateH(bool center=true);
 
 	/**
 	 * Normalize the H matrix.
+	 * @param center         The H matrix must be centered.
 	 */
-	void NormalizeH(void);
+	void NormalizeH(bool center=true);
 
 	/**
 	 * Compute re-cursively the Y matrix.
+	 * @param center         The Y matrix must be centered.
 	 */
-	void ComputeY(void);
+	void ComputeY(bool center=true);
 
 	/**
 	* Re-Allocation step where the objects are put in the group that minimize

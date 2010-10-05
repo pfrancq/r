@@ -79,6 +79,16 @@ int RSparseVector::Compare(const size_t id) const
 
 
 //------------------------------------------------------------------------------
+void RSparseVector::SetExistingElements(double val)
+{
+	RCursor<RValue> Values(*this);
+	for(Values.Start();!Values.End();Values.Next())
+		(*Values())=val;
+}
+
+
+
+//------------------------------------------------------------------------------
 double RSparseVector::operator[](size_t i) const
 {
 	RValue* ptr(GetPtr(i));

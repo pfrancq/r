@@ -58,10 +58,12 @@ namespace R{
 * block manages the block address table which contains, for each identifier,
 * the address of the record inside the block. In practice, a block is composed
 * from:
-* 1. The number of bytes free in the block.
-* 2. The number of records in the block.
-* 3. Some free spaces.
-* 4. The records.
+* -# The number of bytes free in the block (size_t).
+* -# The number of records in the block (size_t).
+* -# The block table representing for each index the corresponding address
+*    (size_t,size_t).
+* -# Some free spaces.
+* -# The records at the different addresses.
 *
 * The records are stored like a memory heap : Starting from the end, new
 * entries have decreasing internal addresses.

@@ -140,6 +140,11 @@ void RTextFile::Begin(void)
 //------------------------------------------------------------------------------
 void RTextFile::ReadChars(void)
 {
+	// Verify that there is something to read
+	if(End())
+		return;
+
+	// Initialize some local variables
 	size_t treat,len=20*4,s;
 	char* ptr=Buffer+SkipBytes;
 	bool end;
@@ -220,7 +225,6 @@ void RTextFile::Next(void)
 	bool ReadTwice(false);
 
 	Cur=(*(NextRead++));
-	SeekRel(*(SizeNextRead++));
 	PosChars++;
 
 	if(Cur==10)          // UNIX case
@@ -237,6 +241,8 @@ void RTextFile::Next(void)
 
 	if(End())
 		return;
+
+	SeekRel(*(SizeNextRead++)); // Seek file
 
 	FillBuffer();
 

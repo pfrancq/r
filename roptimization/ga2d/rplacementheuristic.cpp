@@ -31,7 +31,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rplacementheuristic.h>
-#include <random.h>
+#include <rrandom.h>
 #include <rxmlstruct.h>
 using namespace R;
 
@@ -65,7 +65,7 @@ public:
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementHeuristic::RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori)
+RPlacementHeuristic::RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool ori)
 	: Random(r), Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori), ValidPos(500), Prom("Orientations",100,2),
 	  Dist(0), DistParams(dist), Area(0), AreaParams(area)
 {
@@ -108,7 +108,7 @@ void RPlacementHeuristic::Init(RProblem2D* prob,RLayout* layout,RGrid* grid)
 			ptr++;
 			NbObjs++;
 		}
-	Random->RandOrder<RGeoInfo*>(Order,NbObjs);
+	Random.RandOrder<RGeoInfo*>(Order,NbObjs);
 }
 
 

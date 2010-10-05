@@ -418,7 +418,7 @@ public:
 	* Add a new parameter to the list.
 	* @param param           Parameter to add.
 	*/
-	void Insert(const RParam* param);
+	void Insert(RParam* param);
 
 	/**
 	* Get a parameter with a given name.

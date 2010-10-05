@@ -35,7 +35,8 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <basiccontainer.h>
+#include <rstd.h>
+#include <rstring.h>
 
 
 //-----------------------------------------------------------------------------
@@ -44,6 +45,7 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 // forward declaration
+template<class C> class RCursor;
 template<class C> class RQuickSort;
 
 
@@ -121,18 +123,35 @@ template<class C> class RQuickSort;
 * @short Container template.
 */
 template<class C,bool bAlloc,bool bOrder=false>
-	class RContainer : public BasicContainer
+	class RContainer
 {
+protected:
+
 	/**
-	* Generate static template function to make comparisons.
-	* @tparam TUse           Class used for the comparison.
-	* @param ptr             Element used as reference.
-	* @param tag             Element to compare.
+	* The array of pointers for the elements.
 	*/
-	template<class TUse> static int Compare(const void* ptr,const void* tag)
-	{
-		return(reinterpret_cast<const C*>(ptr)->Compare(*reinterpret_cast<const TUse*>(tag)));
-	}
+	C** Tab;
+
+	/**
+	* The number of elements in the container.
+	*/
+	size_t NbPtr;
+
+	/**
+	* The maximal number of elements that can be hold by the container
+	* actually.
+	*/
+	size_t MaxPtr;
+
+	/**
+	* The last position in the array used by an object.
+	*/
+	size_t LastPtr;
+
+	/**
+	* When the array is increased, this value is used.
+	*/
+	size_t IncPtr;
 
 	/**
 	* Generic static template function to sort a container.
@@ -140,15 +159,6 @@ template<class C,bool bAlloc,bool bOrder=false>
 	static int SortOrder(const void* a,const void* b)
 	{
 		return((*((C**)a))->Compare(**((C**)b)));
-	}
-
-	/**
-	* Method to delete a given element of the container.
-	* @param ptr             Element to delete.
-	*/
-	virtual void Delete(void* ptr)
-	{
-		delete(reinterpret_cast<C*>(ptr));
 	}
 
 	/**
@@ -207,32 +217,29 @@ public:
 	RContainer(const RContainer<C,false,bOrder>& src);
 
 	/**
-	* Get the number of elements in the container.
-	* @return size_t.
+	* @return the number of elements in the container.
 	*/
 	inline size_t GetNb(void) const {return(NbPtr);}
 
 	/**
-	* Get the maximal position occupied by an elements in the container.
-	* @return size_t.
+	* @return  the maximal position occupied by an elements in the container.
 	*/
 	inline size_t GetMaxPos(void) const {if(NbPtr) return(LastPtr-1); else return(0);}
 
 	/**
-	* Get the maximum number of elements in the container.
-	* @return size_t.
+	* @return the maximum number of elements in the container.
 	*/
 	inline size_t GetMaxNb(void) const {return(MaxPtr);}
 
 	/**
-	* Get the increment used to resize the container.
-	* @return size_t.
+	* @return the increment used to resize the container.
 	*/
 	inline size_t GetIncNb(void) const {return(IncPtr);}
 
 	/**
 	 * Verify if an index is a valid one in the container.
 	 * @param idx            Index.
+	 * @return true if the index is valid.
 	 */
 	inline bool VerifyIndex(size_t idx) const {if(!NbPtr) return(0); return(idx<LastPtr);}
 
@@ -243,7 +250,7 @@ public:
 	*                        If null, the method verifies that one element can
 	*                        be added.
 	*/
-	inline void VerifyTab(size_t max=0) {BasicContainer::VerifyTab(max);}
+	void VerifyTab(size_t max=0);
 
 	/**
 	* Clear the container and destruct the elements if it is responsible for
@@ -253,7 +260,7 @@ public:
 	* @param i              New increasing value. If null, the old value
 	*                       remains.
 	*/
-	inline void Clear(size_t m=0,size_t i=0) {BasicContainer::Clear(bAlloc,m,i);}
+	void Clear(size_t m=0,size_t i=0);
 
 	/**
 	* ReOrder the container. This method must be used with caution, because it
@@ -264,14 +271,18 @@ public:
 	*
 	* @param sortOrder       Pointer to a (static) function used for the ordering.
 	*/
-	inline void ReOrder(int sortOrder(const void*,const void*)) {BasicContainer::ReOrder(sortOrder);}
+	inline void ReOrder(int sortOrder(const void*,const void*))
+	{
+		if(NbPtr)
+			qsort(static_cast<void*>(Tab),LastPtr,sizeof(void*),sortOrder);
+	}
 
 	/**
 	* ReOrder the container based on the 'Compare' method of the objects
 	* contained. This method must be used with caution, because it can crash
 	* the container if the container contains null pointers.
 	*/
-	inline void ReOrder(void) {BasicContainer::ReOrder(SortOrder);}
+	inline void ReOrder(void) {ReOrder(SortOrder);}
 
 	/**
 	* Exchange two elements in the container. The method does not verify if the
@@ -279,7 +290,7 @@ public:
 	* @param pos1            Position of the first element.
 	* @param pos2            Position of the second element.
 	*/
-	inline void Exchange(size_t pos1,size_t pos2) {BasicContainer::Exchange(pos1,pos2);}
+	void Exchange(size_t pos1,size_t pos2);
 
 	/**
 	 * Transfer a container into another one. The destination container is
@@ -288,7 +299,7 @@ public:
 	 * @tparam o             Determine if the source container is ordered.
 	 * @param src            Source container.
 	 */
-	template<bool a,bool o> inline void Transfer(RContainer<C,a,o>& src) {BasicContainer::Transfer(bAlloc,src);}
+	template<bool a,bool o> void Transfer(RContainer<C,a,o>& src);
 
 	/**
 	* The assignment operator.
@@ -349,6 +360,7 @@ public:
 	* a part of the container.
 	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
+	* @param order           Must the search be done on an ordered basis ?
 	* @param tag             The tag used.
 	* @param find            If the element represented by tag exist, find is set to
 	*                        true.
@@ -357,7 +369,26 @@ public:
 	* @return Returns the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
-	template<class TUse> inline size_t GetIndex(const TUse& tag,bool& find,size_t min=0, size_t max=0) const {return(BasicContainer::GetIndex(bOrder,static_cast<const void*>(&tag),find,min,max,Compare<TUse>));}
+	template<class TUse> size_t GetIndex(bool order,const TUse& tag,bool& find,size_t min=0,size_t max=0) const;
+
+	/**
+	* This function returns the index of an element represented by tag, and it
+	* is used when the elements are to be ordered. The search can be limited to
+	* a part of the container.
+	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param find            If the element represented by tag exist, find is set to
+	*                        true.
+	* @param min             Starting index of the container's part concerned.
+	* @param max             Ending index of the container's part concerned.
+	* @return Returns the index of the element if it exists or the index where
+	* is has to inserted.
+	*/
+	template<class TUse> inline size_t GetIndex(const TUse& tag,bool& find,size_t min=0,size_t max=0) const
+	{
+		return(GetIndex(bOrder,tag,find,min,max));
+	}
 
 	/**
 	* Look if a certain element is in the container. The search can be limited
@@ -372,7 +403,12 @@ public:
 	* @param max             Ending index of the container's part concerned.
 	* @return Return true if the element is in the container.
 	*/
-	template<class TUse> inline bool IsIn(const TUse& tag,bool sortkey=bOrder,size_t min=0, size_t max=0) const {return(BasicContainer::IsIn(bOrder,static_cast<const void*>(&tag),sortkey,min,max,Compare<TUse>));}
+	template<class TUse> inline bool IsIn(const TUse& tag,bool sortkey=bOrder,size_t min=0,size_t max=0) const
+	{
+		bool Find;
+		GetIndex(bOrder&&sortkey,tag,Find,min,max);
+		return(Find);
+	}
 
 	/**
 	* Get a pointer to the ith element in the container (Only read). The
@@ -380,7 +416,7 @@ public:
 	* @param idx             Index of the element to get.
 	* @return Return the pointer.
 	*/
-	inline const C* operator[](size_t idx) const {return(static_cast<const C*>(BasicContainer::operator[](idx)));}
+	const C* operator[](size_t idx) const;
 
 	/**
 	* Get a pointer to the ith element in the container (Read/Write). The
@@ -388,21 +424,31 @@ public:
 	* @param idx             Index of the element to get.
 	* @return the pointer.
 	*/
-	inline C* operator[](size_t idx) {return(static_cast<C*>(BasicContainer::operator[](idx)));}
+	C* operator[](size_t idx);
 
 	/**
 	 * Get a pointer of the ith element in the container (Only read).
 	 * @param idx            Index of the element to get.
 	 * @return the pointer of null if the index is out of range.
 	 */
-	inline const C* GetPtrAt(size_t idx) const {return(static_cast<const C*>(BasicContainer::GetPtrAt(idx)));}
+	inline const C* GetPtrAt(size_t idx) const
+	{
+		if(idx>=LastPtr)
+			return(0);
+		return(Tab[idx]);
+	}
 
 	/**
 	 * Get a pointer of the ith element in the container (Read/Write).
 	 * @param idx            Index of the element to get.
 	 * @return the pointer of null if the index is out of range.
 	 */
-	inline C* GetPtrAt(size_t idx) {return(static_cast<C*>(BasicContainer::GetPtrAt(idx)));}
+	inline C* GetPtrAt(size_t idx)
+	{
+		if(idx>=LastPtr)
+			return(0);
+		return(Tab[idx]);
+	}
 
 	/**
 	* Get a pointer to a certain element in the container.
@@ -416,7 +462,7 @@ public:
 	* @param max             Ending index of the container's part concerned.
 	* @return Return the pointer or 0 if the element is not in the container.
 	*/
-	template<class TUse> inline C* GetPtr(const TUse& tag,bool sortkey=bOrder,size_t min=0, size_t max=0) const {return(static_cast<C*>(BasicContainer::GetPtr(bOrder,static_cast<const void*>(&tag),sortkey,min,max,Compare<TUse>)));}
+	template<class TUse> C* GetPtr(const TUse& tag,bool sortkey=bOrder,size_t min=0,size_t max=0) const;
 
 	/**
 	* Get a pointer to a certain element in the container. If the element is
@@ -432,7 +478,19 @@ public:
 	* @param max             Ending index of the container's part concerned.
 	* @return The function returns a pointer to the element of the container.
 	*/
-	template<class TUse> inline C* GetInsertPtr(const TUse& tag,bool sortkey=bOrder,size_t min=0, size_t max=0);
+	template<class TUse> C* GetInsertPtr(const TUse& tag,bool sortkey=bOrder,size_t min=0,size_t max=0);
+
+	/**
+	* Get a pointer to a certain element in the container. If the element is
+	* not existing, the container creates it by using the constructor with TUse
+	* as parameter.
+	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param pos             The position where to insert it.
+	* @return The function returns a pointer to the element of the container.
+	*/
+	template<class TUse> C* GetInsertPtrAt(const TUse& tag,size_t pos);
 
 	/**
 	* Copy the array of pointers into a temporary array. This array must have
@@ -444,7 +502,7 @@ public:
 	* @return number of elements in the array (including eventually null
 	* pointers).
 	*/
-	inline size_t GetTab(const void** tab,size_t min=0, size_t max=0) const {return(BasicContainer::GetTab(tab,min,max));}
+	size_t GetTab(const void** tab,size_t min=0,size_t max=0) const;
 
 	/**
 	* Copy the array of pointers into a temporary array. This array must have
@@ -456,7 +514,7 @@ public:
 	* @return number of elements in the array (including eventually null
 	* pointers).
 	*/
-	inline size_t GetTab(void** tab,size_t min=0, size_t max=0) {return(BasicContainer::GetTab(tab,min,max));}
+	size_t GetTab(void** tab,size_t min=0,size_t max=0);
 
 	/**
 	* Copy the array of pointers into a temporary array. This array must have
@@ -468,7 +526,7 @@ public:
 	* @return number of elements in the array (including eventually null
 	* pointers).
 	*/
-	inline size_t GetTab(const C** tab,size_t min=0, size_t max=0) const {return(BasicContainer::GetTab(reinterpret_cast<const void**>(tab),min,max));}
+	inline size_t GetTab(const C** tab,size_t min=0,size_t max=0) const {return(GetTab(reinterpret_cast<const void**>(tab),min,max));}
 
 	/**
 	* Copy the array of pointers into a temporary array. This array must have
@@ -480,7 +538,7 @@ public:
 	* @return number of elements in the array (including eventually null
 	* pointers).
 	*/
-	inline size_t GetTab(C** tab,size_t min=0, size_t max=0) {return(BasicContainer::GetTab(reinterpret_cast<void**>(tab),min,max));}
+	inline size_t GetTab(C** tab,size_t min=0,size_t max=0) {return(GetTab(reinterpret_cast<void**>(tab),min,max));}
 
 	/**
 	* This method returns a container of all the elements that are responding
@@ -493,21 +551,7 @@ public:
 	* @param max             Ending index of the container's part concerned.
 	* @return The function returns a pointer to the result container.
 	*/
-	template<class TUse> inline RContainer<C,false,bOrder>* GetPtrs(const TUse& tag,size_t min=0, size_t max=0) const;
-
-	/**
-	* Insert an element in the container. If the container is ordered and if
-	* the corresponding index is already used, the previously inserted element
-	* is removed from the container (and destroy if the container is
-	* responsible for the allocation).  This method can be limited to a part of
-	* the container.
-	* @param ins             A pointer to the element to insert.
-	* @param del             Specify if a similar existing element must be
-	*                        deleted.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
-	*/
-	inline void InsertPtr(const C* ins,bool del=false,size_t min=0, size_t max=0)  {BasicContainer::InsertPtr(bAlloc,bOrder,static_cast<const void*>(ins),del,min,max,Compare<C>);}
+	template<class TUse> inline RContainer<C,false,bOrder>* GetPtrs(const TUse& tag,size_t min=0,size_t max=0) const;
 
 	/**
 	* Insert an element at a certain position. Two remarks must be made :
@@ -523,7 +567,32 @@ public:
 	* @param del             Specify if the object that was previously at the
 	*                        position should be deleted or shifted.
 	*/
-	inline void InsertPtrAt(const C* ins,size_t pos,bool del=bAlloc)  {BasicContainer::InsertPtrAt(bAlloc,static_cast<const void*>(ins),pos,del);}
+	void InsertPtrAt(C* ins,size_t pos,bool del=bAlloc);
+
+	/**
+	* Insert an element in the container. If the container is ordered and if
+	* the corresponding index is already used, the previously inserted element
+	* is removed from the container (and destroy if the container is
+	* responsible for the allocation).  This method can be limited to a part of
+	* the container.
+	* @param ins             A pointer to the element to insert.
+	* @param del             Specify if a similar existing element must be
+	*                        deleted.
+	* @param min             Starting index of the container's part concerned.
+	* @param max             Ending index of the container's part concerned.
+	*/
+	void InsertPtr(C* ins,bool del=false,size_t min=0,size_t max=0);
+
+	/**
+	* Delete an element from the container at a given position.
+	* @param pos             Position of the element.
+	* @param shift           Specify if the the container should be shifted or
+	*                        if the position should be left empty.
+	* @param del             Specify if the object must deleted or not. By
+	*                        default, the element is destruct if the container
+	*                        is responsible of the deallocation.
+	*/
+	void DeletePtrAt(size_t pos,bool shift=true,bool del=bAlloc);
 
 	/**
 	* Delete an element from the container. This method can be limited to a
@@ -540,18 +609,7 @@ public:
 	* @param min             Starting index of the container's part concerned.
 	* @param max             Ending index of the container's part concerned.
 	*/
-	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=bOrder,bool del=bAlloc,size_t min=0, size_t max=0) {BasicContainer::DeletePtr(bOrder,del,static_cast<const void*>(&tag),sortkey,min,max,Compare<TUse>);}
-
-	/**
-	* Delete an element from the container at a given position.
-	* @param pos             Position of the element.
-	* @param shift           Specify if the the container should be shifted or
-	*                        if the position should be left empty.
-	* @param del             Specify if the object must deleted or not. By
-	*                        default, the element is destruct if the container
-	*                        is responsible of the deallocation.
-	*/
-	inline void DeletePtrAt(size_t pos,bool shift=true,bool del=bAlloc) {BasicContainer::DeletePtrAt(del,pos,shift);}
+	template<class TUse> void DeletePtr(const TUse& tag,bool sortkey=bOrder,bool del=bAlloc,size_t min=0,size_t max=0);
 
 	/**
 	* Destruct the container.
@@ -562,6 +620,7 @@ public:
 	friend class RContainer<C,true,false>;
 	friend class RContainer<C,false,true>;
 	friend class RContainer<C,false,false>;
+	friend class RCursor<C>;
 	friend class RQuickSort<C>;
 };
 

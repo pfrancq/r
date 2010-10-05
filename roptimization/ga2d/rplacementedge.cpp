@@ -42,7 +42,7 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementEdge::RPlacementEdge(size_t maxobjs,bool calc,bool use,RRandom* r,RParamStruct* dist,RParamStruct* area,bool ori)
+RPlacementEdge::RPlacementEdge(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool ori)
 	: RPlacementHeuristic(maxobjs,calc,use,r,dist,area,ori)
 {
 }

@@ -193,7 +193,7 @@ private:
 	* @param kernel         PROMETHEE kernel used.
 	* @param random         Random number generator.
 	*/
-	void GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,bool* selected,RPromKernel* kernel,RRandom* random);
+	void GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,bool* selected,RPromKernel* kernel,RRandom& random);
 
 public:
 
@@ -217,7 +217,7 @@ public:
 	* @param kernel         PROMETHEE kernel used.
 	* @param random         Random number generator.
 	*/
-	void FillAggregator(RObj2DContainer* cont,bool* selected,RPromKernel* kernel,RRandom* random);
+	void FillAggregator(RObj2DContainer* cont,bool* selected,RPromKernel* kernel,RRandom& random);
 
 	/**
 	* Compute all the connections from scratch.

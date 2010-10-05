@@ -37,13 +37,15 @@
 // include files for R Project
 #include <rstd.h>
 #include <rchar.h>
-#include <rcontainer.h>
 #include <rshareddata.h>
 
 
 //-----------------------------------------------------------------------------
 namespace R{
 //-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+template<class C,bool bAlloc,bool bOrder> class RContainer;
 
 
 //-----------------------------------------------------------------------------
@@ -394,7 +396,7 @@ public:
 	* @param car             Character used as separator.
 	* @param del             Delimiter of an element.
 	*/
-	void Split(RContainer<S,true,false>& elements,const C car,const C del) const;
+	inline void Split(RContainer<S,true,false>& elements,const C car,const C del) const;
 
 	/**
 	* Return a number between 0 and 26 according to the character at position

@@ -166,7 +166,7 @@ public:
 	* @param to             Pointer of the group.
 	* @param obj            Pointer of the object to insert.
 	*/
-	void InsertObj(cGroup* to,const cObj* obj);
+	void InsertObj(cGroup* to,cObj* obj);
 
 	/**
 	* Insert all the objects of a group into another one. PostInsert() is not
@@ -181,7 +181,7 @@ public:
 	* @param from           Pointer of the node.
 	* @param obj            Pointer of the object to insert.
 	*/
-	void DeleteObj(cGroup* from,const cObj* obj);
+	void DeleteObj(cGroup* from,cObj* obj);
 
 	/**
 	* Delete all the objects attached to a given group.

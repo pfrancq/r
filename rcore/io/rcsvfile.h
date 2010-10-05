@@ -167,6 +167,11 @@ public:
 	size_t GetSizeT(size_t idx) const;
 
 	/**
+	 * @return the number of values at the last line read.
+	 */
+	size_t GetNbValues(void) const {return(NbValues);}
+
+	/**
 	 * Destruct the file.
 	 */
 	virtual ~RCSVFile(void);
