@@ -6,7 +6,7 @@
 
 	Widget to show a XML structure of a document - Implementation.
 
-	Copyright 2001-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2001-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2001 by Julien Lamoral.
 	Copyright 2001-2008 by the Université Libre de Bruxelles (ULB).
 

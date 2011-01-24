@@ -6,7 +6,7 @@
 
 	XML file - Implementation.
 
-	Copyright 2000-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2000-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify

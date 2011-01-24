@@ -6,7 +6,7 @@
 
 	Class representing a container of numbers - Inline implementation
 
-	Copyright 2001-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2001-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2001 by Valery Vandaele.
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 

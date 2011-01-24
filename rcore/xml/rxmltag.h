@@ -6,7 +6,7 @@
 
 	XML tag - Header.
 
-	Copyright 2000-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2000-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2001 by Thomas L'Eglise.
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
