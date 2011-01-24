@@ -255,7 +255,7 @@ MACRO(DO_R_LIB_INCLUDE _libPath)
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/ga")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/ga2d")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/gga")
-        INCLUDE_DIRECTORIES("${_libPath}/roptimization/scga")
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization/nngga")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/hga")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/promethee")
 

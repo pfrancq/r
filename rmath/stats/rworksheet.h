@@ -50,7 +50,7 @@ namespace R{
  * The RWorksheet class provides a representation for a worksheet, i.a. a
  * two-dimensional array of data.
  *
- * In practice, it is represented by a set of lines. Each line holds different
+ * In practice, it is represented by a set of lines representing different
  * items for which different measures (columns) are computed.
  * @short Worksheet
  * @author Pascal Francq

@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	SGGA.cpp
+	NNGGA.cpp
 
-	Similarity-bases Clustering Genetic Algorithm - Implementation.
+	Nearest Neighbors Grouping Genetic Algorithm (NNGGA) - Implementation.
 
-	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2002-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -30,19 +30,19 @@
 
 //-----------------------------------------------------------------------------
 // includes files for GCA
-#include <scga.h>
+#include <nngga.h>
 using namespace R;
 
 
 
 //-----------------------------------------------------------------------------
 //
-// class GCAParams
+// class RParamsNN
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RParamsSC::RParamsSC(void)
+RParamsNN::RParamsNN(void)
 	: PopSize(16), MaxGen(50), Step(false), StepGen(1),MinSimLevel(0.0),
 	  MinAgreement(1.0), MinDisagreement(1.0), ParamsSim(0), ParamsAgreement(0),
 	  ParamsDisagreement(0), Incremental(false), NbMinObjs(0), NbMaxObjs(cNoRef)
@@ -53,12 +53,12 @@ RParamsSC::RParamsSC(void)
 
 //-----------------------------------------------------------------------------
 //
-// class RObjSC
+// class RObjNN
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RObjSC::RObjSC(const size_t id,const RString& name,bool social,size_t parentid)
+RObjNN::RObjNN(const size_t id,const RString& name,bool social,size_t parentid)
 	: RObjG(id,name), Social(social), ParentId(parentid)
 {
 }

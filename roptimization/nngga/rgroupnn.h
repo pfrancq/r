@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RGroupSC.h
+	RGroupNN.h
 
-	Similarity-based Clustering Group - Header.
+	NNGGA Group - Header.
 
-	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2002-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -29,8 +29,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RGroupSC_H
-#define RGroupSC_H
+#ifndef RGroupNN_H
+#define RGroupNN_H
 
 //-----------------------------------------------------------------------------
 // include files for ANSI C/C++
@@ -50,15 +50,15 @@ class GCAObj;
 namespace R{
 //------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
-* The RGroupSC provides a representation for a group for the similarity-based
-* clustering.
+* The RGroupNN provides a representation for a group for the Nearest Neighbors
+* Grouping Genetic Algorithm.
 * @author Pascal Francq
-* @short Similarity-based Clustering Group.
+* @short NNGGA Group.
 */
 template<class cGroup,class cObj,class cGroups>
-	class RGroupSC : public RGroup<cGroup,cObj,cGroups>
+	class RGroupNN : public RGroup<cGroup,cObj,cGroups>
 {
 	using RGroup<cGroup,cObj,cGroups>::Id;
 	using RGroup<cGroup,cObj,cGroups>::Owner;
@@ -81,14 +81,14 @@ public:
 	* Construct the group.
 	* @param grp            Group used as source.
 	*/
-	RGroupSC(RGroupSC* grp);
+	RGroupNN(RGroupNN* grp);
 
 	/**
 	* Construct the group.
 	* @param owner          Owner of the group.
 	* @param id             Identifier of the group.
 	*/
-	RGroupSC(cGroups* owner,const size_t id);
+	RGroupNN(cGroups* owner,const size_t id);
 
 	/**
 	* Clear the information container in a group.
@@ -141,7 +141,7 @@ public:
 	/**
 	* Destruct the group.
 	*/
-	virtual ~RGroupSC(void);
+	virtual ~RGroupNN(void);
 
 	friend class OrderBySim;
 };
@@ -149,7 +149,7 @@ public:
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rgroupsc.hh>
+#include <rgroupnn.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

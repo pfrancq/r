@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RInstSC.h
+	RInstNN.h
 
-	Similarity-based Clustering Instance - Implementation
+	NNGGA Instance - Implementation
 
 	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
@@ -30,14 +30,14 @@
 
 //-----------------------------------------------------------------------------
 //
-// RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>
+// RThreadDataNN<cInst,cChromo,cThreadData,cGroup,cObj>
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>::RThreadDataSC(cInst* owner)
-		: RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(owner),
+	RThreadDataNN<cInst,cChromo,cThreadData,cGroup,cObj>::RThreadDataNN(cInst* owner)
+		: RThreadDataG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>(owner),
 	  ToDel(owner->Objs.GetNb()<4?4:owner->Objs.GetNb()/4), tmpObjs1(0), tmpObjs2(0)
 {
 }
@@ -45,9 +45,9 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	void RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>::Init(void)
+	void RThreadDataNN<cInst,cChromo,cThreadData,cGroup,cObj>::Init(void)
 {
-	RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Init();
+	RThreadDataG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Init();
 	tmpObjs1=new cObj*[Owner->Objs.GetNb()];
 	tmpObjs2=new cObj*[Owner->Objs.GetNb()];
 }
@@ -55,7 +55,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>::~RThreadDataSC(void)
+	RThreadDataNN<cInst,cChromo,cThreadData,cGroup,cObj>::~RThreadDataNN(void)
 {
 	delete[] tmpObjs1;
 	delete[] tmpObjs2;
@@ -65,15 +65,15 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 //
-// RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>
+// RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::RInstSC(RCursor<cObj> objs,RParamsSC* p,RDebug *debug)
-		: RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(p->PopSize,objs,"SCFirstFit","SCGA",debug),
-		RPromKernelSC<cChromo>(p,p->PopSize+1), Params(p), Sols(0), NoSocialObjs(objs.GetNb())
+	RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>::RInstNN(RCursor<cObj> objs,RParamsNN* p,RDebug *debug)
+		: RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>(p->PopSize,objs,"NNFirstFit","NNCGA",debug),
+		RPromKernelNN<cChromo>(p,p->PopSize+1), Params(p), Sols(0), NoSocialObjs(objs.GetNb())
 #if BESTSOLSVERIFICATION
 	  , BestSols(p->MaxGen,p->MaxGen/2)
 #endif
@@ -98,15 +98,15 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	RGroupingHeuristic<cGroup,cObj,cChromo>* RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::CreateHeuristic(void)
+	RGroupingHeuristic<cGroup,cObj,cChromo>* RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>::CreateHeuristic(void)
 {
-	return(new RHeuristicSC<cGroup,cObj,cChromo>(Random,Objs,Params,Debug));
+	return(new RHeuristicNN<cGroup,cObj,cChromo>(Random,Objs,Params,Debug));
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	bool RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::StopCondition(void)
+	bool RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>::StopCondition(void)
 {
 	return(GetGen()==Params->MaxGen);
 }
@@ -114,7 +114,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	void RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::WriteChromoInfo(cChromo* c)
+	void RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>::WriteChromoInfo(cChromo* c)
 {
 	if(!Debug) return;
 	RString Msg("Id "+RString::Number(c->Id)+" - Nb Groups="+RString::Number(c->Used.GetNb()));
@@ -126,7 +126,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	void RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::PostEvaluate(void)
+	void RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>::PostEvaluate(void)
 {
 	size_t i;
 	cChromo** C;
@@ -139,7 +139,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	double r;
 
 	if(Debug)
-		Debug->BeginFunc("PostEvaluate","RInstSC");
+		Debug->BeginFunc("PostEvaluate","RInstNN");
 	ptr=Sols;
 	AssignChromo(*ptr,BestChromosome);
 	for(i=GetPopSize()+1,C=Chromosomes,ptr++;--i;C++,ptr++)
@@ -220,13 +220,13 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	delete[] Res;
 
 	if(Debug)
-		Debug->EndFunc("PostEvaluate","RInstSC");
+		Debug->EndFunc("PostEvaluate","RInstNN");
 }
 
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	bool RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::IsSocial(const cObj*)
+	bool RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>::IsSocial(const cObj*)
 {
 	return(false);
 }
@@ -234,7 +234,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	void RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::PostRun(void)
+	void RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>::PostRun(void)
 {
 #if BESTSOLSVERIFICATION
 	RPromSol* s;
@@ -255,7 +255,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	void RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::HandlerNotFound(const RNotification& /*notification*/)
+	void RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>::HandlerNotFound(const RNotification& /*notification*/)
 {
 //	std::cout<<" GCA '"<<notification.GetName()<<"' not treated (Gen="<<Gen<<")."<<std::endl;
 }
@@ -263,7 +263,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>::~RInstSC(void)
+	RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>::~RInstNN(void)
 {
 	if(Sols)
 		delete[] Sols;

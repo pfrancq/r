@@ -4,9 +4,9 @@
 
 	RSHeuristicSC.h
 
-	Similarity-based Clustering Heuristic - Header
+	NNGGA Heuristic - Header
 
-	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2002-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -29,14 +29,14 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RHeuristicSC_H
-#define RHeuristicSC_H
+#ifndef RHeuristicNN_H
+#define RHeuristicNN_H
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rgroupingheuristic.h>
-#include <scga.h>
+#include <nngga.h>
 
 
 //------------------------------------------------------------------------------
@@ -44,15 +44,15 @@ namespace R{
 //------------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
-* The RHeuristicSC class provides a specific heuristic for the similarity-based
-* clustering algorithm.
+* The RHeuristicNN class provides a specific heuristic for the Nearest
+* Neighbors Grouping Genetic Algorithm.
 * @author Pascal Francq
-* @short Similarity-based Clustering Heuristic.
+* @short NNGGA Heuristic.
 */
 template<class cGroup,class cObj,class cGroups>
-	class RHeuristicSC : public RGroupingHeuristic<cGroup,cObj,cGroups>
+	class RHeuristicNN : public RGroupingHeuristic<cGroup,cObj,cGroups>
 {
 	using RGroupingHeuristic<cGroup,cObj,cGroups>::Objs;
 	using RGroupingHeuristic<cGroup,cObj,cGroups>::NbObjs;
@@ -72,7 +72,7 @@ template<class cGroup,class cObj,class cGroups>
 	/**
 	 * Parameters of the SCGA.
 	 */
-	RParamsSC* Params;
+	RParamsNN* Params;
 
 	/**
 	 * Container that count the number of nearest neighbors
@@ -93,7 +93,7 @@ public:
 	* @param params          Parameters.
 	* @param debug           Debugger.
 	*/
-	 RHeuristicSC(R::RRandom& r,R::RCursor<cObj> objs,RParamsSC* params,R::RDebug* debug=0);
+	 RHeuristicNN(R::RRandom& r,R::RCursor<cObj> objs,RParamsNN* params,R::RDebug* debug=0);
 
 	/**
 	* Initialize the heuristic.
@@ -117,7 +117,7 @@ public:
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rheuristicsc.hh>
+#include <rheuristicnn.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

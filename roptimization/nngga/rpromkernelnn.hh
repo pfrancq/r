@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	RPromKernelSC.hh
+	RPromKernelNN.hh
 
 	Similarity-based Clustering PROMETHEE Kernel - Implementation.
 
@@ -30,14 +30,14 @@
 
 //-----------------------------------------------------------------------------
 //
-// class RPromKernelSC<cChromo>
+// class RPromKernelNN<cChromo>
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 template<class cChromo>
-	RPromKernelSC<cChromo>::RPromKernelSC(RParamsSC* p,size_t nbsols)
-	: RPromKernel("RPromKernelSC",nbsols,3), Params(p),CritSimJ(0), CritAgreement(0),
+	RPromKernelNN<cChromo>::RPromKernelNN(RParamsNN* p,size_t nbsols)
+	: RPromKernel("RPromKernelNN",nbsols,3), Params(p),CritSimJ(0), CritAgreement(0),
 	  CritDisagreement(0)
 {
 	// Init Criterion and Solutions of the PROMETHEE part
@@ -49,7 +49,7 @@ template<class cChromo>
 
 //-----------------------------------------------------------------------------
 template<class cChromo>
-	void RPromKernelSC<cChromo>::AssignChromo(RPromSol* s,cChromo* c)
+	void RPromKernelNN<cChromo>::AssignChromo(RPromSol* s,cChromo* c)
 {
 	Assign(s,CritSimJ,c->CritSimJ);
 	Assign(s,CritAgreement,c->CritAgreement);
@@ -59,7 +59,7 @@ template<class cChromo>
 
 //-----------------------------------------------------------------------------
 template<class cChromo>
-	void RPromKernelSC<cChromo>::AssignSol(RPromSol* s,double sim,double agree,double disagree)
+	void RPromKernelNN<cChromo>::AssignSol(RPromSol* s,double sim,double agree,double disagree)
 {
 	Assign(s,CritSimJ,sim);
 	Assign(s,CritAgreement,agree);

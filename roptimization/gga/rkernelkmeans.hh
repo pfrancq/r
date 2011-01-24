@@ -35,7 +35,7 @@
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RKernelkMeans<cGroup,cObj,cGroups>::RKernelkMeans(const RString& n,RRandom& r,RCursor<cObj> objs,size_t maxid,double alpha,double convergence,RDebug* debug)
+	RKernelkMeans<cGroup,cObj,cGroups>::RKernelkMeans(const RString& n,RRandom* r,RCursor<cObj> objs,size_t maxid,double alpha,double convergence,RDebug* debug)
 	: Name(n), Debug(debug), Rand(r), MaxId(maxid), Objs(objs), CopyObjs(objs), ObjsUsed(0), Alpha(alpha), Convergence(convergence),
 	  P(maxid+1,maxid+1), InvD(maxid+1), H(10,maxid+1), Y(10,maxid+1), Assignments(maxid+1), Temp(maxid+1), WasInit(false),
 	  PrintOut(false), OutName("/home/pfrancq/kmeans.txt")

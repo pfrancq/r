@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RChromoSC.h
+	RChromoNN.h
 
-	Similarity-based Clustering Chromosome - Header
+	NNGGA Chromosome - Header
 
-	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2002-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -29,15 +29,15 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RChromoSC_H
-#define RChromoSC_H
+#ifndef RChromoNN_H
+#define RChromoNN_H
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <scga.h>
+#include <nngga.h>
 #include <rchromog.h>
-#include <rpromkernelsc.h>
+#include <rpromkernelnn.h>
 #include <rvector.h>
 
 
@@ -48,28 +48,28 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 /**
-* The RChromoGC class provides a representation for a chromosome for the IR
-* Problem.
+* The RChromoNN class provides a representation for a chromosome for
+* the Nearest Neighbors Grouping Genetic Algorithm.
 * @author Pascal Francq
-* @short Similarity-based Clustering Chromosome.
+* @short NNGGA Chromosome.
 */
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	class RChromoSC : public RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>
+	class RChromoNN : public RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>
 {
 public:
 
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Instance;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Used;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ObjectsAss;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Clear;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ReserveGroup;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ReleaseGroup;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::GetObjs;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Objs;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Id;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ObjsNoAss;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ToEval;
-	using RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::ComputeOrd;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Instance;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Used;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::ObjectsAss;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Clear;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::ReserveGroup;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::ReleaseGroup;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::GetObjs;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Objs;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Id;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::ObjsNoAss;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::ToEval;
+	using RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::ComputeOrd;
 
 protected:
 
@@ -136,7 +136,7 @@ public:
 	* @param inst           The instance of the problem.
 	* @param id             The identifier of the chromosome.
 	*/
-	RChromoSC(cInst* inst,size_t id);
+	RChromoNN(cInst* inst,size_t id);
 
 	/**
 	* Initialization of the chromosome.
@@ -199,18 +199,18 @@ public:
 	/**
 	* Destruct the chromosome.
 	*/
-	virtual ~RChromoSC(void);
+	virtual ~RChromoNN(void);
 
 	// friend classes
-	friend class RInstSC<cInst,cChromo,cThreadData,cGroup,cObj>;
-	friend class RGroupSC<cGroup,cObj,cChromo>;
-	friend class RPromKernelSC<cChromo>;
+	friend class RInstNN<cInst,cChromo,cThreadData,cGroup,cObj>;
+	friend class RGroupNN<cGroup,cObj,cChromo>;
+	friend class RPromKernelNN<cChromo>;
 };
 
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rchromosc.hh>
+#include <rchromonn.hh>
 
 
 }//------- End of namespace R --------------------------------------------------

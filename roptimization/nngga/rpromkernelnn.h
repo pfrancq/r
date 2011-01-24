@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RPromKernelSC.h
+	RPromKernelNN.h
 
-	Similarity-based Clustering PROMETHEE Kernel - Header.
+	NNGA PROMETHEE Kernel - Header.
 
 	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
@@ -29,8 +29,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RPromKernelSC_H
-#define RPromKernelSC_H
+#ifndef RPromKernelNN_H
+#define RPromKernelNN_H
 
 
 //-----------------------------------------------------------------------------
@@ -38,7 +38,7 @@
 #include <rpromkernel.h>
 #include <rpromsol.h>
 #include <rpromcriterion.h>
-#include <scga.h>
+#include <nngga.h>
 
 
 //------------------------------------------------------------------------------
@@ -48,19 +48,19 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 /**
-* The RPromSC represented a PROMETHEE Kernel for the a clustering of objects
+* The RPromNN represented a PROMETHEE Kernel for the a clustering of objects
 * having three matrices of measures: similarities, agreement ratios and
 * disagreement ratios.
 * @author Pascal Francq
-* @short Similarity-based Clustering PROMETHEE Kernel.
+* @short NNGGA PROMETHEE Kernel.
 */
 template<class cChromo>
-	class RPromKernelSC : public RPromKernel
+	class RPromKernelNN : public RPromKernel
 {
 	/**
 	* Parameters.
 	*/
-	RParamsSC* Params;
+	RParamsNN* Params;
 
 	/**
 	* Criteria representing the Similarity criterion "J".
@@ -84,7 +84,7 @@ public:
 	* @param p              Parameters.
 	* @param nbsols         Number of solutions.
 	*/
-	RPromKernelSC(RParamsSC* p,size_t nbsols);
+	RPromKernelNN(RParamsNN* p,size_t nbsols);
 
 	/**
 	* Assign chromosome as a solution.
@@ -106,7 +106,7 @@ public:
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rpromkernelsc.hh>
+#include <rpromkernelnn.hh>
 
 
 }//------- End of namespace R --------------------------------------------------

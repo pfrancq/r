@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RChromoSC.cpp
+	RChromoNN.cpp
 
-	Similarity-based Clustering Chromosome - Implementation
+	NNGGA Chromosome - Implementation
 
-	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2002-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -30,14 +30,14 @@
 
 //-----------------------------------------------------------------------------
 //
-// class RChromoSC
+// class RChromoNN
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::RChromoSC(cInst* inst,size_t id)
-		: RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>(inst,id),
+	RChromoNN<cInst,cChromo,cThreadData,cGroup,cObj>::RChromoNN(cInst* inst,size_t id)
+		: RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>(inst,id),
 	  ToDel(0), CritSimJ(0.0), CritAgreement(0.0), CritDisagreement(1.0)
 {
 }
@@ -45,10 +45,10 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::Init(cThreadData* thData)
+	void RChromoNN<cInst,cChromo,cThreadData,cGroup,cObj>::Init(cThreadData* thData)
 {
 	// Parent Initialization
-	RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Init(thData);
+	RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Init(thData);
 
 	// Current
 	thObjs1=thData->tmpObjs1;
@@ -59,7 +59,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::Evaluate(void)
+	void RChromoNN<cInst,cChromo,cThreadData,cGroup,cObj>::Evaluate(void)
 {
 	CritAgreement=CritDisagreement=CritSimJ=0.0;
 	if(!Used.GetNb())
@@ -186,7 +186,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	bool RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::SameGroup(size_t obj1,size_t obj2) const
+	bool RChromoNN<cInst,cChromo,cThreadData,cGroup,cObj>::SameGroup(size_t obj1,size_t obj2) const
 {
 	return(ObjectsAss[obj1]==ObjectsAss[obj2]);
 }
@@ -194,9 +194,9 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	void RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::Copy(const cChromo& chromo)
+	void RChromoNN<cInst,cChromo,cThreadData,cGroup,cObj>::Copy(const cChromo& chromo)
 {
-	RChromoG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Copy(chromo);
+	RChromoG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Copy(chromo);
 	CritSimJ=chromo.CritSimJ;
 	CritAgreement=chromo.CritAgreement;
 	CritDisagreement=chromo.CritDisagreement;
@@ -208,6 +208,6 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 //-----------------------------------------------------------------------------
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>::~RChromoSC(void)
+	RChromoNN<cInst,cChromo,cThreadData,cGroup,cObj>::~RChromoNN(void)
 {
 }

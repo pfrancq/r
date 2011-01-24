@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	RGroupSC.hh
+	RGroupNN.hh
 
-	Similarity-based Clustering Group - Implementation.
+	NNGGA Group - Implementation.
 
-	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2002-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -30,13 +30,13 @@
 
 //-----------------------------------------------------------------------------
 //
-// class RGroupSC<cGroup,cObj,cGroups>
+// class RGroupNN<cGroup,cObj,cGroups>
 //
 
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroupSC<cGroup,cObj,cGroups>::RGroupSC(RGroupSC* grp)
+	RGroupNN<cGroup,cObj,cGroups>::RGroupNN(RGroupNN* grp)
 	: RGroup<cGroup,cObj,cGroups>(grp), ToEval(true)
 {
 }
@@ -44,7 +44,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroupSC<cGroup,cObj,cGroups>::RGroupSC(cGroups* owner,const size_t id)
+	RGroupNN<cGroup,cObj,cGroups>::RGroupNN(cGroups* owner,const size_t id)
 	: RGroup<cGroup,cObj,cGroups>(owner,id), ToEval(true)
 {
 }
@@ -52,7 +52,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupSC<cGroup,cObj,cGroups>::Clear(void)
+	void RGroupNN<cGroup,cObj,cGroups>::Clear(void)
 {
 	RGroup<cGroup,cObj,cGroups>::Clear();
 	ToEval=true;
@@ -61,7 +61,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	bool RGroupSC<cGroup,cObj,cGroups>::HasSameUser(const cObj* obj) const
+	bool RGroupNN<cGroup,cObj,cGroups>::HasSameUser(const cObj* obj) const
 {
 	size_t usr=obj->GetParentId();
 	if(!usr)
@@ -76,7 +76,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	bool RGroupSC<cGroup,cObj,cGroups>::CanInsert(const cObj* obj)
+	bool RGroupNN<cGroup,cObj,cGroups>::CanInsert(const cObj* obj)
 {
 	// If no objects -> OK
 	if(!RGroup<cGroup,cObj,cGroups>::NbSubObjects)
@@ -109,14 +109,14 @@ template<class cGroup,class cObj,class cGroups>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupSC<cGroup,cObj,cGroups>::PostInsert(const cObj* /*obj*/)
+	void RGroupNN<cGroup,cObj,cGroups>::PostInsert(const cObj* /*obj*/)
 {
 }
 
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	bool RGroupSC<cGroup,cObj,cGroups>::PreInsertAll(const cGroup* /*from*/)
+	bool RGroupNN<cGroup,cObj,cGroups>::PreInsertAll(const cGroup* /*from*/)
 {
 	return(false);
 }
@@ -124,14 +124,14 @@ template<class cGroup,class cObj,class cGroups>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RGroupSC<cGroup,cObj,cGroups>::PostDelete(const cObj* /*obj*/)
+	void RGroupNN<cGroup,cObj,cGroups>::PostDelete(const cObj* /*obj*/)
 {
 }
 
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	bool RGroupSC<cGroup,cObj,cGroups>::PreDeleteAll(void)
+	bool RGroupNN<cGroup,cObj,cGroups>::PreDeleteAll(void)
 {
 	ToEval=true;
 	return(false);
@@ -140,6 +140,6 @@ template<class cGroup,class cObj,class cGroups>
 
 //---------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RGroupSC<cGroup,cObj,cGroups>::~RGroupSC(void)
+	RGroupNN<cGroup,cObj,cGroups>::~RGroupNN(void)
 {
 }

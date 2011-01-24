@@ -2,11 +2,11 @@
 
 	R Project Library
 
-	SCGA.h
+	NNGGA.h
 
-	Similarity-based Clustering Genetic Algorithm - Header.
+	Nearest Neighbors Grouping Genetic Algorithm (NNGGA) - Header.
 
-	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
+	Copyright 2002-2011 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -28,8 +28,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef SCGA_H
-#define SCGA_H
+#ifndef NNGGA_H
+#define NNGGA_H
 
 
 //-----------------------------------------------------------------------------
@@ -49,33 +49,33 @@ namespace R{
 //------------------------------------------------------------------------------
 // Forward class declaration
 class RSCObj;
-template<class cGroup,class cObj,class cGroups> class RGroupSC;
-template<class cGroup,class cObj,class cGroups> class RHeuristicSC;
-template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj> class RThreadDataSC;
-template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj> class RChromoSC;
-template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj> class RInstSC;
+template<class cGroup,class cObj,class cGroups> class RGroupNN;
+template<class cGroup,class cObj,class cGroups> class RGroupingHeuristicNN;
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj> class RThreadDataNN;
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj> class RChromoNN;
+template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj> class RInstNN;
 
 
 //-----------------------------------------------------------------------------
 /**
-* The RSCFitness provides a representation for a fitness function for the
-* similarity-based clustering genetic algorithm.
+* The RFitnessNN provides a representation for a fitness function for the
+* Nearest Neighbors Grouping Genetic Algorithm.
 * @author Pascal Francq
-* @short Similarity-based Clustering Fitness.
+* @short NNGGA Fitness.
 */
-class RFitnessSC : public RFitness<double,true>
+class RFitnessNN : public RFitness<double,true>
 {
 public:
 
 	/**
 	* Constructor of the fitness function used for the Bin Packing.
 	*/
-	RFitnessSC(void) : RFitness<double,true>() {}
+	RFitnessNN(void) : RFitness<double,true>() {}
 
 	/**
 	* Assignment operator with a fitness f.
 	*/
-	RFitnessSC& operator=(const RFitnessSC &f)
+	RFitnessNN& operator=(const RFitnessNN &f)
 	{
 		RFitness<double,true>::operator=(f);
 		return(*this);
@@ -84,7 +84,7 @@ public:
 	/**
 	* Assignment operator with a double value.
 	*/
-	RFitnessSC& operator=(const double val)
+	RFitnessNN& operator=(const double val)
 	{
 		RFitness<double,true>::operator=(val);
 		return(*this);
@@ -94,10 +94,11 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-* The GCAParam represents all the parameter used in the GCA module.
-* @short GCA Parameters.
+* The RParamNN represents all the parameter used in the Nearest Neighbors
+* Grouping Genetic Algorithm.
+* @short NNGGA Parameters.
 */
-class RParamsSC
+class RParamsNN
 {
 public:
 
@@ -152,7 +153,7 @@ public:
 	RParam* ParamsDisagreement;
 
 	/**
-	* Incremental mode. The GCA constructs the chromosomes from existing
+	* Incremental mode. The NNGA constructs the chromosomes from existing
 	* solutions.
 	*/
 	bool Incremental;
@@ -170,18 +171,18 @@ public:
 	/**
 	* Constructor.
 	*/
-	RParamsSC(void);
+	RParamsNN(void);
 };
 
 
 //------------------------------------------------------------------------------
 /**
-* The RObjSC class provides a representation of an object to group by the
-* similarity-based clustering algorithm.
+* The RObjNN class provides a representation of an object to group by the
+* Nearest Neighbors Grouping Genetic Algorithm.
 * @author Pascal Francq
-* @short Similarity-based Clustering Object.
+* @short NNGGA Object.
 */
-class RObjSC : public RObjG
+class RObjNN : public RObjG
 {
 protected:
 
@@ -205,7 +206,7 @@ public:
 	* @param social         Is the object social.
 	* @param parentid       Identifier of the parent (if any).
 	*/
-	RObjSC(const size_t id,const RString& name,bool social=true,size_t parentid=0);
+	RObjNN(const size_t id,const RString& name,bool social=true,size_t parentid=0);
 
 	/**
 	 * See if the element is social or not.

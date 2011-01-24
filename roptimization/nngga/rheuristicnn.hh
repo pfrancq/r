@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RHeuristicSC.h
+	RHeuristicNN.h
 
-	Similarity-based Clustering Heuristic - Implementation
+	NNGGA Heuristic - Implementation
 
 	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
@@ -30,13 +30,13 @@
 
 //-----------------------------------------------------------------------------
 //
-// class RHeuristicSC<cGroup,cObj,cGroups>::Local
+// class RHeuristicNN<cGroup,cObj,cGroups>::Local
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	class RHeuristicSC<cGroup,cObj,cGroups>::Local
+	class RHeuristicNN<cGroup,cObj,cGroups>::Local
 {
 public:
 	size_t Id;        // Identifier of the group
@@ -70,14 +70,14 @@ public:
 
 //-----------------------------------------------------------------------------
 //
-// class RHeuristicSC<cGroup,cObj,cGroups>
+// class RHeuristicNN<cGroup,cObj,cGroups>
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	RHeuristicSC<cGroup,cObj,cGroups>::RHeuristicSC(RRandom& r,RCursor<cObj> objs,RParamsSC* params,RDebug* debug)
-	: RGroupingHeuristic<cGroup,cObj,cGroups>("SCGA Heuristic",r,objs,debug),
+	RHeuristicNN<cGroup,cObj,cGroups>::RHeuristicNN(RRandom& r,RCursor<cObj> objs,RParamsNN* params,RDebug* debug)
+	: RGroupingHeuristic<cGroup,cObj,cGroups>("NNFirstFit",r,objs,debug),
 	  ToDel(Objs.GetNb()<11?10:Objs.GetNb()/4), ToReAssign(100), Params(params), NbNearestNeighbors(100)
 {
 }
@@ -85,7 +85,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RHeuristicSC<cGroup,cObj,cGroups>::Init(cGroups* groups)
+	void RHeuristicNN<cGroup,cObj,cGroups>::Init(cGroups* groups)
 {
 	RGroupingHeuristic<cGroup,cObj,cGroups>::Init(groups);
 	NbPossibleGrps=0;
@@ -94,7 +94,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	cGroup* RHeuristicSC<cGroup,cObj,cGroups>::FindGroup(cObj* obj)
+	cGroup* RHeuristicNN<cGroup,cObj,cGroups>::FindGroup(cObj* obj)
 {
 	// Look first if an object with a high agreement ratio with the current object
 	// is already grouped
@@ -149,7 +149,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //-----------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	void RHeuristicSC<cGroup,cObj,cGroups>::PostRun(void)
+	void RHeuristicNN<cGroup,cObj,cGroups>::PostRun(void)
 {
 	std::cout<<"Average number of possible groups "<<static_cast<double>(NbPossibleGrps)/static_cast<double>(NbObjs)<<std::endl;
 	R::RCursor<cGroup> Cur1(Groups->Used);//,Cur2(Groups->Used);

@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RInstSC.h
+	RInstNN.h
 
-	Similarity-based Clustering Instance - Header
+	NNGGA Instance - Header
 
 	Copyright 2002-2010 by Pascal Francq (pascal@francq.info).
 	Copyright 2002-2008 by the Université Libre de Bruxelles (ULB).
@@ -29,8 +29,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RInstSC_H
-#define RInstSC_H
+#ifndef RInstNN_H
+#define RInstNN_H
 
 
 //-----------------------------------------------------------------------------
@@ -41,9 +41,9 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rinstg.h>
-#include <scga.h>
-#include <rpromkernelsc.h>
-#include <rheuristicsc.h>
+#include <nngga.h>
+#include <rpromkernelnn.h>
+#include <rheuristicnn.h>
 #include <rmaxvector.h>
 
 
@@ -55,16 +55,16 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
 * The RThreadDataSC class provides a representation for "thread-dependent" data
-* for the similarity-based clustering algorithm.
+* for the Nearest Neighbors Grouping Genetic Algorithm.
 * @author Pascal Francq
-* @short Similarity-based Clustering "thread-dependent" Data.
+* @short NNGGA "thread-dependent" Data.
 */
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	class RThreadDataSC : public RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>
+	class RThreadDataNN : public RThreadDataG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>
 {
 public:
 
-	using RThreadDataG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Owner;
+	using RThreadDataG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Owner;
 
 	/**
 	 * Groups to delete because they contain only one "social" object.
@@ -85,7 +85,7 @@ public:
 	* Construct the data.
 	* @param owner           Instance of the problem.
 	*/
-	RThreadDataSC(cInst* owner);
+	RThreadDataNN(cInst* owner);
 
 	/**
 	* Initialize the data.
@@ -95,39 +95,39 @@ public:
 	/**
 	* Destruct the data.
 	*/
-	virtual ~RThreadDataSC(void);
+	virtual ~RThreadDataNN(void);
 };
 
 
 //-----------------------------------------------------------------------------
 /**
-* The instance of the similarity-based clustering genetic algorithm.
+* The instance of the Nearest Neighbors Grouping Genetic Algorithm.
 * @author Pascal Francq
-* @short Similarity-based Clustering Instance.
+* @short NNGGA Instance.
 */
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
-	class RInstSC : public RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>, public RPromKernelSC<cChromo>
+	class RInstNN : public RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>, public RPromKernelNN<cChromo>
 {
 public:
 
-	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::SetMutationParams;
-	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::GetPopSize;
-	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Objs;
-	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Random;
-	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Debug;
-	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::GetGen;
-	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::BestChromosome;
-	using RInstG<cInst,cChromo,RFitnessSC,cThreadData,cGroup,cObj>::Chromosomes;
-	using RPromKernelSC<cChromo>::NewSol;
-	using RPromKernelSC<cChromo>::ComputePrometheeII;
-	using RPromKernelSC<cChromo>::GetSols;
+	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::SetMutationParams;
+	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::GetPopSize;
+	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Objs;
+	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Random;
+	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Debug;
+	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::GetGen;
+	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::BestChromosome;
+	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Chromosomes;
+	using RPromKernelNN<cChromo>::NewSol;
+	using RPromKernelNN<cChromo>::ComputePrometheeII;
+	using RPromKernelNN<cChromo>::GetSols;
 
 protected:
 
 	/**
 	* Parameter of the GA.
 	*/
-	RParamsSC* Params;
+	RParamsNN* Params;
 
 	/**
 	* Solutions corresponding to the chromosome.
@@ -154,7 +154,7 @@ public:
 	* @param p              Parameters.
 	* @param debug          Debugger.
 	*/
-	RInstSC(RCursor<cObj> objs,RParamsSC* p,RDebug* debug);
+	RInstNN(RCursor<cObj> objs,RParamsNN* p,RDebug* debug);
 
 	/**
 	* Create a specific heuristic for the algorithm.
@@ -217,18 +217,18 @@ public:
 	/**
 	* Destruct the instance.
 	*/
-	virtual ~RInstSC(void);
+	virtual ~RInstNN(void);
 
 	// friend classes
-	friend class RGroupSC<cGroup,cObj,cChromo>;
-	friend class RThreadDataSC<cInst,cChromo,cThreadData,cGroup,cObj>;
-	friend class RChromoSC<cInst,cChromo,cThreadData,cGroup,cObj>;
+	friend class RGroupNN<cGroup,cObj,cChromo>;
+	friend class RThreadDataNN<cInst,cChromo,cThreadData,cGroup,cObj>;
+	friend class RChromoNN<cInst,cChromo,cThreadData,cGroup,cObj>;
 };
 
 
 //------------------------------------------------------------------------------
 // inline implementation
-#include <rinstsc.hh>
+#include <rinstnn.hh>
 
 
 }//------- End of namespace R --------------------------------------------------
