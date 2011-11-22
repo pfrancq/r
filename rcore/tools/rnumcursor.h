@@ -55,7 +55,6 @@ namespace R{
 * RNumCursor<double> Cur(a);
 * for(Cur.Start();!Cur.End();Cur.Next())
 * 	cout<<Cur()<<endl;
-* }
 * @endcode
 * @author Pascal Francq.
 * @short Container of Numbers Cursor.
@@ -135,12 +134,22 @@ public:
 	/**
 	* Start the iterator to go trough the list.
 	*/
-	void Start(void);// {Pos=0; Parse=List;}
+	void Start(void);
+
+	/**
+	 * Start the iterator at the end of the container.
+	 */
+	void StartFromEnd(void);
 
 	/**
 	* Test if the end of the list is reached.
 	*/
-	bool End(void) const {return(Pos==Last);}
+	inline bool End(void) const {return(Pos==Last);}
+
+	/**
+	* Test if the begin of the cursor is reached.
+	*/
+	inline bool Begin(void) const {return(Pos==cNoRef);}
 
 	/**
 	* Go to the i-th element of the cursor.
@@ -149,15 +158,18 @@ public:
 	void GoTo(size_t idx);
 
 	/**
-	* Goto the next element of the list.
-	*/
-	//void Next(void);// {Pos++; Parse++;}
-	/**
 	* Go to a given number of next elements. If the end is reached, go to the
 	* beginning.
 	* @param inc             Number of elements to go to.
 	*/
 	void Next(size_t inc=1);
+
+	/**
+	* Go to a given number of previous elements. If the begin is reached, go to the
+	* end.
+	* @param inc             Number of elements to go to.
+	*/
+	void Prev(size_t inc=1);
 
 	/**
 	* Return the current element (const version).

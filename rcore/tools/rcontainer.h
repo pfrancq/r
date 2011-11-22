@@ -263,26 +263,41 @@ public:
 	void Clear(size_t m=0,size_t i=0);
 
 	/**
-	* ReOrder the container. This method must be used with caution, because it
-	* can crash the container if:
+	* ReOrder the container.
+	*
+	* @param sortOrder       Pointer to a (static) function used for the ordering.
+   * @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
+   * @warning This method must be used with caution, because it can crash the
+   * container if:
 	* -# The container contains null pointers.
 	* -# The container is ordered and the method does not use the same criterion
 	*    for the ordering.
-	*
-	* @param sortOrder       Pointer to a (static) function used for the ordering.
 	*/
-	inline void ReOrder(int sortOrder(const void*,const void*))
+	inline void ReOrder(int sortOrder(const void*,const void*),size_t min=0,size_t max=0)
 	{
-		if(NbPtr)
-			qsort(static_cast<void*>(Tab),LastPtr,sizeof(void*),sortOrder);
+       size_t NbMin,NbMax;
+       if(min<LastPtr-1)
+          NbMin=min;
+       else
+          NbMin=0;
+       if((!max)||(max>=LastPtr)||(max<min))
+          NbMax=LastPtr-1;
+       else
+          NbMax=max;
+		if(NbMax)
+			qsort(static_cast<void*>(&Tab[NbMin]),NbMax,sizeof(void*),sortOrder);
 	}
 
 	/**
 	* ReOrder the container based on the 'Compare' method of the objects
-	* contained. This method must be used with caution, because it can crash
-	* the container if the container contains null pointers.
+	* contained.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
+   * @warning This method must be used with caution, because it can crash the
+   * container if the container contains null pointers.
 	*/
-	inline void ReOrder(void) {ReOrder(SortOrder);}
+	inline void ReOrder(size_t min=0,size_t max=0) {ReOrder(SortOrder,min,max);}
 
 	/**
 	* Exchange two elements in the container. The method does not verify if the
@@ -364,8 +379,8 @@ public:
 	* @param tag             The tag used.
 	* @param find            If the element represented by tag exist, find is set to
 	*                        true.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return Returns the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
@@ -380,8 +395,8 @@ public:
 	* @param tag             The tag used.
 	* @param find            If the element represented by tag exist, find is set to
 	*                        true.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return Returns the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
@@ -556,16 +571,14 @@ public:
 	/**
 	* Insert an element at a certain position. Two remarks must be made :
 	* -#    The function verifies not if the index used is compatible with the
-	*       order in case of the elements are treated in ascending order.
-	* -#    By using this function, the user can leave "blanks" in the container,
-	*       in other words, some "valid" pointers could be null. This situation is
+	*       order in case of the elements treated in ascending order.
+	* -#    By using this function, the user can leave "blanks" in the container.
+	*       In other words, some "valid" pointers could be null. This situation is
 	*       not handle by the other functions of the container.
-	*
-	* This method can be limited to a part of the container.
 	* @param ins             A pointer to the element to insert.
 	* @param pos             The position where to insert it.
 	* @param del             Specify if the object that was previously at the
-	*                        position should be deleted or shifted.
+	*                        position should be deleted (true) or shifted (false).
 	*/
 	void InsertPtrAt(C* ins,size_t pos,bool del=bAlloc);
 

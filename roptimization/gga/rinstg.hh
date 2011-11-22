@@ -71,12 +71,14 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	R::RInstG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::RInstG(size_t popsize,R::RCursor<cObj> objs,const RString& h,const R::RString& name,R::RDebug* debug)
 		: R::RInst<cInst,cChromo,cFit,cThreadData>(popsize,name,debug),
-		  Heuristic(h), EmptyModifiedGroups(true), Objs(objs), DoLocalOptimisation(true)
+		  Heuristic(h), EmptyModifiedGroups(true), Objs(objs.GetNb()), DoLocalOptimisation(true)
 {
 	if(Objs.GetNb()<11)
 		MaxGroups=10;
 	else
 		MaxGroups=Objs.GetNb()/4;
+	for(objs.Start();!objs.End();objs.Next())
+		Objs.InsertPtr(objs());
 }
 
 
@@ -128,6 +130,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	R::RInst<cInst,cChromo,cFit,cThreadData>::AnalyzePop();
 
 	// Look if same chromosomes and modify population to have only one copy of each
+	RVectorBool DoMutation(GetPopSize());
+	DoMutation.Init(GetPopSize(),false);
 	for(i=0,C=Chromosomes;i<GetPopSize()-1;C++,i++)
 	{
 		for(j=i+1,C1=C+1;j<GetPopSize();C1++,j++)
@@ -139,14 +143,21 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 				else
 					p=(*C);
 				if(RRand(100)<90)
-				{
-					p->Modify();
-					PostNotification("RInst::Interact");
-					p->Evaluate();
-					PostNotification("RInst::Interact");
-					p->ToEval=false;
-				}
+					DoMutation[p->Id]=true;
 			}
+		}
+	}
+
+	for(i=0;i<GetPopSize();i++)
+	{
+		if(DoMutation[i])
+		{
+			p=Chromosomes[i];
+			p->Modify();
+			PostNotification("RInst::Interact");
+			p->Evaluate();
+			PostNotification("RInst::Interact");
+			p->ToEval=false;
 		}
 	}
 

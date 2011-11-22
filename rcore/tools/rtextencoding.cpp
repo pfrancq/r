@@ -125,7 +125,7 @@ RTextEncoding::RTextEncoding(const RCString& name)
 	// Test the order
 	char Tab[20];
 	char Test[]="test";
-	size_t s1,s2,err;
+	size_t s1,s2/*,err*/;
 	char *ptr1,*ptr2;
 	s1=4;
 	s2=12;
@@ -134,7 +134,7 @@ RTextEncoding::RTextEncoding(const RCString& name)
 	#ifdef _LIBICONV_VERSION
 		err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 	#else
-		err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+		/*err=*/iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
 	#endif
 	if(s2>6)
 		Order=true;

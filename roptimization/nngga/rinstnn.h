@@ -54,7 +54,7 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 /**
-* The RThreadDataSC class provides a representation for "thread-dependent" data
+* The RThreadDataSG class provides a representation for "thread-dependent" data
 * for the Nearest Neighbors Grouping Genetic Algorithm.
 * @author Pascal Francq
 * @short NNGGA "thread-dependent" Data.

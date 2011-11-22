@@ -100,8 +100,9 @@ public:
 	 */
 	enum Db
 	{
-		MySQL,     /** MySQL database. */
-		SQLite     /** SQLite database. */
+		MySQL,           /** MySQL database. */
+		SQLite,            /** SQLite database. */
+                                                PostgreSQL    /** PostgreSQL database.*/
 	};
 
 protected:

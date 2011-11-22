@@ -209,7 +209,7 @@ public:
 	/**
 	 * Start the iterator at the end of the container.
 	 */
-	void StartAtEnd(void)
+	void StartFromEnd(void)
 	{
 		ActPtr=LastPtr-1;
 		if(!NbPtr)
@@ -234,6 +234,40 @@ public:
 		Current=&Tab[idx];
 		ActPtr=idx;
 	}
+
+   /**
+    * Delete the current element from the container.
+    * @param c              Container to delete from. Must be the one associated
+    *                       with the cursor.
+    */
+   template<bool a,bool o> void DeleteCurrent(RContainer<C,a,o>& c)
+   {
+       if(Tab!=c.Tab)
+           throw std::invalid_argument("template<bool a,bool o> void RCursor::DeleteCur(RContainer<C,a,o>& c) : cursor and container are not synchronized");
+
+       // Remember the position
+       size_t where(ActPtr);
+       bool IsEnd(ActPtr+1>=LastPtr);
+
+       // Delete the element and reset the container
+       c.DeletePtr(**Current);
+       Set(c);
+
+       // Put the cursor at the right place
+       if(IsEnd)
+       {
+           if(NbPtr>1)
+           {
+               ActPtr=where;
+               Current=&Tab[where];
+               Prev();
+           }
+           else
+               Start(); // Less than two elements -> start again
+       }
+       else
+         GoTo(where);  // Not at the end -> goes to the previous position
+   }
 
 	/**
 	* Return the actual position in the cursor.
@@ -297,15 +331,24 @@ public:
 	{
 		if(!NbPtr) return;
 		if(ActPtr==cNoRef)
-			StartAtEnd();
+		{
+			StartFromEnd();
+			if(inc>1)
+				Prev(inc);
+		}
 		else
 		{
-			ActPtr-=inc;
-			Current-=inc;
-			while((ActPtr)&&(!(*Current)))     // Go to previous non-null pointer
+			if(inc>ActPtr)
+				ActPtr=cNoRef;
+			else
 			{
-				ActPtr--;
-				Current--;
+				ActPtr-=inc;
+				Current-=inc;
+				while((ActPtr)&&(!(*Current)))     // Go to previous non-null pointer
+				{
+					ActPtr--;
+					Current--;
+				}
 			}
 		}
 	}

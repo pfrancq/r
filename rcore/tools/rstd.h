@@ -357,6 +357,11 @@ const double cEpsi=0.000001;
 */
 class RException
 {
+    /*
+     * Null member for internal purposes.
+     */
+    void Null(void);
+
 protected:
 
 	/**

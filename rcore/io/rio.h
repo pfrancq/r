@@ -80,51 +80,66 @@ public:
 		                                 exists, it is destruct.*/,
 		Undefined                    /** The mode of the file is undefined.*/
 	};
+};
+
+
+//------------------------------------------------------------------------------
+/**
+ * This class provides a "smart" temporary file. In practice, once the name of
+ * a temporary file is asked, when the instance is deleted, the temporary file
+ * is created. Of course, the temporary file may be explicitly leave if
+ * necessary.
+ *
+ * It can be useful in an exception environment, since temporary files are
+ * always removed.
+ * @code
+ * void BadFunction(void)
+ * {
+ * 	RSmartTempFile Tmp;
+ *
+ * 	RTextFile Text(Tmp.GetName());
+ * 	Text.Open(RIO::Create);
+ * 	int Wrong (2/0); // This will generate an exception -> Temporary file is removed
+ * }
+ * @endcode
+ * @author Pascal Francq
+ * @short Smart Temporary File.
+ */
+class RSmartTempFile
+{
+	/**
+	 * Name of the temporary file.
+	 */
+	RURI Name;
 
 	/**
-	 * This class provides a "smart" temporary file. In practice, if the class
-	 * is asked for a temporary file, this file is automatically removed. The
-	 * temporary file may be explicitly leave. It can be useful in an exception
-	 * environment, since temporary files are always removed.
-	 * @author Pascal Francq
-	 * @short Smart Temporary File.
+	 * Name requested?
 	 */
-	class RSmartTempFile
-	{
-		/**
-		 * Name of the temporary file.
-		 */
-		RURI Name;
+	bool Requested;
 
-		/**
-		 * Name requested?
-		 */
-		bool Requested;
+	/**
+	 * Temporary file must be removed.
+	 */
+	bool Remove;
 
-		/**
-		 * Temporary file must be removed.
-		 */
-		bool Remove;
+public:
 
-	public:
+	/**
+	 * Constructor.
+	 */
+	RSmartTempFile(void);
 
-		/**
-		 * Constructor.
-		 */
-		RSmartTempFile(void);
+	/**
+	 * Get the name of the temporary file.
+	 * @param remove     File must be removed?
+	 */
+	RURI GetName(bool remove=true);
 
-		/**
-		 * Get the name of the temporary file.
-		 * @param remove     File must be removed?
-		 */
-		RURI GetName(bool remove=true);
-
-		/**
-		 * Destruct. If the name was requested, the temporary file is
-		 * removed.
-		 */
-		~RSmartTempFile(void);
-	};
+	/**
+	 * Destruct. If the name was requested, the temporary file is
+	 * removed.
+	 */
+	~RSmartTempFile(void);
 };
 
 

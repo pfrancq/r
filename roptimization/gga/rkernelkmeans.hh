@@ -609,7 +609,7 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
-	R::RKernelkMeans<cGroup,cObj,cGroups>::~RGroupingSkMeans(void)
+	R::RKernelkMeans<cGroup,cObj,cGroups>::~RKernelkMeans(void)
 {
 	if(ObjsUsed)
 		delete[] ObjsUsed;

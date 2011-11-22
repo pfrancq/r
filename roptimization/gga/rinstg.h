@@ -125,7 +125,7 @@ protected:
 	/**
 	* Objects to group.
 	*/
-	RCursor<cObj> Objs;
+	RContainer<cObj,false,false> Objs;
 
 	/**
 	* Maximal number of groups to allocate by default.

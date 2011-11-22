@@ -306,7 +306,7 @@ public:
 	* @param groups          Group to initialize.
 	* @param max             Maximal number of iterations.
 	* @param nb              Number of groups to create.
-	* @param start           How to the start the clustering.* @param convergence     Convergence.
+	* @param start           How to the start the clustering.
 	*/
 	void Run(cGroups* groups,size_t max,size_t nb,tInitial start=Random);
 

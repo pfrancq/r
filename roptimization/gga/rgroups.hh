@@ -42,7 +42,7 @@ template<class cGroup,class cObj,class cGroups>
 		  OrdObjectsAss(0), NewUsedId(0)
 {
 	// Look for the maximum identifier of the objects
-	Objs.StartAtEnd();
+	Objs.StartFromEnd();
 	size_t MaxId(Objs()->GetId()+1);
 
 	// Initialized of the arrays needed.

@@ -1234,7 +1234,8 @@ INCLUDE_PATH           = /home/pfrancq/prj/r/roptimization/ga \
                          /home/pfrancq/prj/r/roptimization/ga2d \
                          /home/pfrancq/prj/r/roptimization/gga \
                          /home/pfrancq/prj/r/roptimization/hga \
-                         /home/pfrancq/prj/r/roptimization/scga
+                         /home/pfrancq/prj/r/roptimization/nngga \
+                         /home/pfrancq/prj/r/roptimization/promethee
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard 
 # patterns (like *.h and *.hpp) to filter out the header-files in the 
@@ -1287,7 +1288,7 @@ SKIP_FUNCTION_MACROS   = YES
 # If a tag file is not located in the directory in which doxygen 
 # is run, you must also specify the path to the tagfile here.
 
-TAGFILES               = /home/public/api/r/r.tags \
+TAGFILES               = /home/public/api/rcore/rcore.tags \
                          /home/public/api/rmath/rmath.tags
 
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create 

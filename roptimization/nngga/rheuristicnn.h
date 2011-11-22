@@ -48,6 +48,9 @@ namespace R{
 /**
 * The RHeuristicNN class provides a specific heuristic for the Nearest
 * Neighbors Grouping Genetic Algorithm.
+* @htmlonly
+* <meta article="Nearest Neighbors Grouping Genetic Algorithm::Heuristic">
+* @endhtmlonly
 * @author Pascal Francq
 * @short NNGGA Heuristic.
 */

@@ -96,7 +96,7 @@ template<class cGroup,class cObj,class cGroups>
 
 	// Verify that the minimum similarity is respected
 	RCursor<RMaxValue> Sim(*Owner->Instance->GetSims(obj));
-	for(Sim.StartAtEnd();(!Sim.Begin())&&(Sim()->Value<=Owner->Instance->Params->MinSimLevel);Sim.Prev())
+	for(Sim.StartFromEnd();(!Sim.Begin())&&(Sim()->Value<=Owner->Instance->Params->MinSimLevel);Sim.Prev())
 	{
 		if(Owner->ObjectsAss[Sim()->Id]==Id)
 			return(false);

@@ -229,7 +229,7 @@ public:
 	inline void Insert(const RString& sub,int pos,size_t del=0)  {BasicString<RChar,RString>::Insert(sub,pos,del);}
 
 	/** @copydoc BasicString::Split(RContainer<S,true,false>&,const C,const C) const */
-	void Split(RContainer<RString,true,false>& elements,const RChar car,const RChar del=0) const;
+	void Split(RContainer<RString,true,false>& elements,const RChar car,const RChar del=RChar(0)) const;
 	//@} Manipulation methods
 
 	/** @name Methods related to R::RContainer	*/ // @{

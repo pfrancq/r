@@ -231,8 +231,10 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	// Compute number of groups to eliminate
 	if(Used.GetNb()>10)
 		nb=Used.GetNb()/5;
-	else
+	else if(Used.GetNb()>5)
 		nb=2;
+	else
+		nb=1;
 	while(--nb)
 		ReleaseGroup(Used[Instance->RRand(Used.GetNb())]);
 
@@ -253,7 +255,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
 	void R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Inversion(void)
 {
-	size_t g1,g2,hold;
+	size_t g1,g2;
 
 	if(Used.GetNb()<3)
 		return;
@@ -262,7 +264,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		Instance->Debug->BeginFunc("Inversion","RChromoG");
 
 	g1=Instance->RRand(Used.GetNb());
-	hold=g2=g1+Instance->RRand(Used.GetNb()-2)+1;
+	g2=g1+Instance->RRand(Used.GetNb()-2)+1;
 	if(g2>Used.GetNb()-1)
 		g2-=Used.GetNb()-1;
 	RReturnIfFail(g2!=g1);

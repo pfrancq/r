@@ -94,6 +94,20 @@ template<class I>
 
 //-----------------------------------------------------------------------------
 template<class I>
+	void RNumCursor<I>::StartFromEnd(void)
+{
+	Pos=Last-1;
+	if(!NbInt)
+	{
+		Parse=0;
+		return;
+	}
+	Parse=&List[Last-1];
+}
+
+
+//-----------------------------------------------------------------------------
+template<class I>
 	void RNumCursor<I>::GoTo(size_t idx)
 {
 	idx+=First;
@@ -115,5 +129,29 @@ template<class I>
 	{
 		Pos+=inc;
 		Parse+=inc;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+template<class I>
+	void RNumCursor<I>::Prev(size_t inc)
+{
+	if(!NbInt) return;
+	if(Pos==cNoRef)
+	{
+		StartFromEnd();
+		if(inc>1)
+			Prev(inc);
+	}
+	else
+	{
+		if(inc>Pos)
+			Pos=cNoRef;
+		else
+		{
+			Pos-=inc;
+			Parse-=inc;
+		}
 	}
 }

@@ -105,7 +105,7 @@ ENDMACRO(SUBDIR_PATH_MANIPULATION)
 ## in this file, define the source list with a SET(${current_target}_current_path_to_dir_from_target_dir_with_underscore_in_place_of_path_separator_TARGET_SOURCES list of SOURCE FILES)
 ## also define the header list for installation with a SET(${current_target}_current_path_to_dir_from_target_dir_with_underscore_in_place_of_path_separator_INCLUDES list of HEADER FILES)
 MACRO(ADD_SOURCE_FILE _for_target _in_dir _includes)
-    
+
   #MESSAGE(STATUS "ADD_SOURCE_FILE ${_for_target} ${_in_dir}")
 
     SET(R_CUR_PATH ${PROJECT_SOURCE_DIR})
@@ -256,6 +256,7 @@ MACRO(DO_R_LIB_INCLUDE _libPath)
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/ga2d")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/gga")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/nngga")
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization/sgga")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/hga")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/promethee")
 

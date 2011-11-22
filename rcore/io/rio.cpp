@@ -41,19 +41,19 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 //
-// class RIO::RSmartTempFile
+// class RSmartTempFile
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RIO::RSmartTempFile::RSmartTempFile(void)
+RSmartTempFile::RSmartTempFile(void)
 	: Name(), Requested(false), Remove(false)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RURI RIO::RSmartTempFile::GetName(bool remove)
+RURI RSmartTempFile::GetName(bool remove)
 {
 	Remove=remove;
 	if(!Requested)
@@ -66,7 +66,7 @@ RURI RIO::RSmartTempFile::GetName(bool remove)
 
 
 //------------------------------------------------------------------------------
-RIO::RSmartTempFile::~RSmartTempFile(void)
+RSmartTempFile::~RSmartTempFile(void)
 {
 	try
 	{

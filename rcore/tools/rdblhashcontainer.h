@@ -206,6 +206,11 @@ public:
 		*/
 		Hash2(size_t m,size_t i) : RContainer<C,bAlloc,true>(m,i) {}
 
+		/**
+		 * Compare method.
+		 */
+		int Compare(const Hash2&) const {return(-1);}
+
 		friend class RDblHashContainer;
 		friend class Hash;
 	};
@@ -251,10 +256,10 @@ public:
 	* 	c.InsertPtr(new MyElement("Other"));
 	*
 	*	// Parse the double hash table
-	*	RCursor<RDblHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+	*	RCursor<RDblHashContainer<MyElement,true>::Hash> Cur(c.GetCursor());
 	*	for(Cur.Start();!Cur.End();Cur.Next())
 	*	{
-	*		RCursor<RDblHashContainer<MyElement,27,true>::Hash2> Cur2(*Cur());
+	*		RCursor<RDblHashContainer<MyElement,true>::Hash2> Cur2(*Cur());
 	*		for(Cur2.Start();!Cur2.End();Cur2.Next())
 	*		{
 	*			RCursor<MyElement> Cur3(*Cur2());
@@ -284,6 +289,11 @@ public:
 			for(size_t pos=0;pos<s;pos++)
 				InsertPtrAt(new Hash2(m,i),pos);
 		}
+
+		/**
+		 * Compare method.
+		 */
+		int Compare(const Hash&) const {return(-1);}
 
 		/**
 		* Get the number of elements in the container.
@@ -332,6 +342,24 @@ public:
 				InsertPtrAt(ptr=new Hash2(m,i),hash);
 			return(ptr);
 		}
+
+	public:
+
+		/**
+		* Get a pointer to the ith element in the container (Only read).
+		* @param idx             Index of the element to get.
+		* @return Return the pointer or 0 if the index is outside the scope of the
+		*         container.
+		*/
+		const Hash2* operator[](size_t idx) const {return(RContainer<Hash2,true,true>::operator[](idx));}
+
+		/**
+		* Get a pointer to the ith element in the container (Only read).
+		* @param idx             Index of the element to get.
+		* @return Return the pointer or 0 if the index is outside the scope of the
+		*         container.
+		*/
+		Hash2* operator[](size_t idx) {return(RContainer<Hash2,true,true>::operator[](idx));}
 
 		friend class RDblHashContainer;
 	};
