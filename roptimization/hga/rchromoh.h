@@ -62,6 +62,7 @@ public:
 	using RNodesGA<cNode,cObj,cChromo>::GetNodes;
 	using RNodesGA<cNode,cObj,cChromo>::GetNbNodes;
 	using RNodesGA<cNode,cObj,cChromo>::BuildFile;
+   using RNodesGA<cNode,cObj,cChromo>::Clear;
 
 protected:
 

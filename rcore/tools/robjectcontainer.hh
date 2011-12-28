@@ -78,7 +78,7 @@ template<class C,bool bAlloc>
 {
 	if(alloc)
 		tab=new C*[Objects.GetMaxPos()+1];
-	return(Objects.GetTab(tab,0,0));
+	return(Objects.GetTab(tab,min,max));
 }
 
 

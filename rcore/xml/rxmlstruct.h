@@ -70,6 +70,8 @@ namespace R{
 */
 class RXMLStruct : public RTree<RXMLStruct,RXMLTag,true>
 {
+    using RTree<RXMLStruct,RXMLTag,true>::Clear;
+
 	/**
 	* The entities of the structure.
 	*/

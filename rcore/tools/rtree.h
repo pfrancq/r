@@ -139,7 +139,13 @@ public:
 	 * @param max             Initial size of the array of top nodes.
 	 * @param inc             Increment size of the array.
 	 */
-	void Clear(size_t max=0,size_t inc=0);
+	virtual void Clear(size_t max,size_t inc=0);
+
+	/**
+	 * Clear the nodes of the tree. If the tree is not responsible for the
+	 * deallocation, the method calls RNode::Clear() for each node.
+	 */
+	virtual void Clear(void) {Clear(0,0);}
 
 	/**
 	 * Get the depth of the tree. If necessary, the depth is recomputed.

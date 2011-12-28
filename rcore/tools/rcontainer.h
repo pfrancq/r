@@ -276,6 +276,8 @@ public:
 	*/
 	inline void ReOrder(int sortOrder(const void*,const void*),size_t min=0,size_t max=0)
 	{
+       if(!NbPtr)
+           return;  // No elements -> no sorting
        size_t NbMin,NbMax;
        if(min<LastPtr-1)
           NbMin=min;
