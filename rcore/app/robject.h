@@ -87,7 +87,7 @@ namespace R{
 class RObject
 {
 	/**
-	* Name fo the object.
+	* Name of the object.
 	*/
 	RString Name;
 

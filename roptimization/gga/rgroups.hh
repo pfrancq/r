@@ -43,12 +43,12 @@ template<class cGroup,class cObj,class cGroups>
 {
 	// Look for the maximum identifier of the objects
 	Objs.StartFromEnd();
-	size_t MaxId(Objs()->GetId()+1);
+	MaxObjId=Objs()->GetId();
 
 	// Initialized of the arrays needed.
-	ObjectsAss = new size_t[MaxId];
-	memset(ObjectsAss,0xFF,(MaxId)*sizeof(size_t));
-	OrdObjectsAss=new size_t[MaxId];
+	ObjectsAss = new size_t[MaxObjId+1];
+	memset(ObjectsAss,0xFF,(MaxObjId+1)*sizeof(size_t));
+	OrdObjectsAss=new size_t[MaxObjId+1];
 	NewUsedId=new size_t[GetMaxNb()];
 
 	// Suppose no object is assigned
@@ -81,7 +81,7 @@ template<class cGroup,class cObj,class cGroups>
 	ObjsNoAss.Clear();
 	for(Objs.Start();!Objs.End();Objs.Next())
 		ObjsNoAss.InsertPtr(Objs());
-	memset(ObjectsAss,0xFF,(Objs.GetMaxPos()+1)*sizeof(size_t));
+	memset(ObjectsAss,0xFF,(MaxObjId+1)*sizeof(size_t));
 }
 
 
@@ -258,7 +258,7 @@ template<class cGroup,class cObj,class cGroups>
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->Verify();
 	if(ObjsAss.GetNb()+ObjsNoAss.GetNb()!=Objs.GetNb())
-		throw RGAException("Problem with the number of objects: ObjsAss="+RString::Number(ObjsAss.GetNb())+" and ObjsNoAss="+RString::Number(ObjsNoAss.GetNb()),RGAException::eGAVerify);
+		throw RGAException(" R::RGroups<cGroup,cObj,cGroups>::Verify(); Problem with the number of objects: ObjsAss="+RString::Number(ObjsAss.GetNb())+" and ObjsNoAss="+RString::Number(ObjsNoAss.GetNb()),RGAException::eGAVerify);
 }
 
 
@@ -267,8 +267,8 @@ template<class cGroup,class cObj,class cGroups>
 	cGroup* R::RGroups<cGroup,cObj,cGroups>::GetGroup(size_t id) const
 {
 	size_t idx=ObjectsAss[id];
-
-	if(idx==cNoRef) return(0);
+	if(idx==cNoRef)
+		return(0);
 	return((*const_cast<RGroups<cGroup,cObj,cGroups>*>(this))[idx]);
 }
 
@@ -278,8 +278,8 @@ template<class cGroup,class cObj,class cGroups>
 	cGroup* R::RGroups<cGroup,cObj,cGroups>::GetGroup(const cObj* obj) const
 {
 	size_t idx=ObjectsAss[obj->GetId()];
-
-	if(idx==cNoRef) return(0);
+	if(idx==cNoRef)
+		return(0);
 	return((*const_cast<RGroups<cGroup,cObj,cGroups>*>(this))[idx]);
 }
 

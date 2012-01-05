@@ -47,7 +47,7 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 /**
-* The RChromoGC class provides a representation for a chromosome for the
+* The RChromoSG class provides a representation for a chromosome for the
 * similarity-based grouping genetic algorithm.
 * @author Pascal Francq
 * @short Similarity-based Grouping Genetic Algorithm Chromosome.

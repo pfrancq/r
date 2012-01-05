@@ -91,6 +91,11 @@ protected:
 	RCursor<cObj> Objs;
 
 	/**
+	 * Highest object identifier.
+	 */
+	size_t MaxObjId;
+
+	/**
 	* Assignment of the objects.
 	*/
 	size_t* ObjectsAss;

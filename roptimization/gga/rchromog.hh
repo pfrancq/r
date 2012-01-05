@@ -205,12 +205,26 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 		LocalOptimisation();
 	Heuristic->Run(static_cast<cChromo*>(this));
 	if(ObjsNoAss.GetNb())
-		throw RGAException(RString::Number(ObjsNoAss.GetNb())+" objects are not assigned",RGAException::eGACrossover);
+	{
+		RString Msg("R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(cChromo*,cChromo*): ");
+		if(ObjsNoAss.GetNb()==1)
+			Msg+="one object is";
+		else
+			Msg+=RString::Number(ObjsNoAss.GetNb())+" objects are";
+		throw RGAException(Msg+" not assigned after heuristic",RGAException::eGACrossover);
+	}
 	if(Instance->DoOptimisation)
 	{
 		Optimisation();
 		if(ObjsNoAss.GetNb())
-			throw RGAException(RString::Number(ObjsNoAss.GetNb())+" objects are not assigned",RGAException::eGACrossover);
+		{
+		RString Msg("R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(cChromo*,cChromo*): ");
+		if(ObjsNoAss.GetNb()==1)
+			Msg+="one object is";
+		else
+			Msg+=RString::Number(ObjsNoAss.GetNb())+" objects are";
+			throw RGAException(Msg+" not assigned after optimization",RGAException::eGACrossover);
+		}
 	}
 	ComputeOrd();
 

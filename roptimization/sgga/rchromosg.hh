@@ -148,7 +148,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		if(!grp)
 		{
 			Grp.Set(Used);
-			for(Grp.Start(),maxsim=-1.0;!Grp.End();Grp.Next())
+			for(Grp.Start(),maxsim=-2.0;!Grp.End();Grp.Next())
 			{
 				// If all the hard constraints are not respected -> skip the group.
 				if(!Grp()->CanInsert(*Cur))
@@ -163,8 +163,6 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 				}
 			}
 		}
-/*		else
-			std::cout<<"Automatic existing group"<<std::endl;*/
 
 		// Insert the object in the current group.
 		if(grp)
@@ -176,9 +174,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 			grp=ReserveGroup();
 			grp->Insert(*Cur);
 			grp->SetCentroid(*Cur);
-//			std::cout<<"New Group"<<std::endl;
 		}
-
 	}
 
 	// Compute the average similarity of the groups
@@ -189,7 +185,7 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		Grp()->SetCentroid(0); // Force to recompute the new centroids
 		maxsim+=Grp()->GetAvgIntraSim();
 	}
-	return(maxsim/Used.GetNb());
+	return(maxsim/static_cast<double>(Used.GetNb()));
 }
 
 
@@ -238,10 +234,8 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		for(Grp.Start();!Grp.End();Grp.Next())
 			OldProtos.InsertPtr(Grp()->GetCentroid());
 		ReAllocate();
-		//std::cout<<itermax<<" : "<<ReAllocate()<<std::endl;
 		error=static_cast<double>(CalcNewProtosNb())/static_cast<double>(Used.GetNb());
 	}
-	//std::cout<<std::endl;
 
 	if(Instance->Debug)
 	{
@@ -339,15 +333,19 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	if(Used.GetNb()<2)
 		return;
 
-	size_t i;
+	// Verify that two groups can be merge
 	if((MostSimilarGroup1==cNoRef)||(MostSimilarGroup2==cNoRef))
-		ThrowRException("'MostSimilarGroup1' and/or 'MostSimilarGroup2' not correctly assigned");
+	{
+		std::cerr<<"'MostSimilarGroup1' and/or 'MostSimilarGroup2' not correctly assigned"<<std::endl;
+		return;
+	}
 
 	cGroup* bestgrp1((*this)[MostSimilarGroup1]);
 	cGroup* bestgrp2((*this)[MostSimilarGroup2]);
 	cObj** ptr;
 
 	// Put the objects of bestgrp1 in bestgrp2 only if there are not already have the same user
+	size_t i;
 	RCursor<cObj> CurObj(GetObjs(*bestgrp1));
 	for(CurObj.Start(),ptr=thObjs1,NbObjs1=0;!CurObj.End();CurObj.Next(),ptr++,NbObjs1++)
 		(*ptr)=CurObj();
@@ -373,9 +371,6 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	R::RCursor<cGroup> Cur1(Used),Cur2(Used);
 	cGroup* grp=0;
 	double tmp,max;
-
-//	cout<<"Do not treat social"<<endl;
-	return;
 
 	// Look for the groups to delete
 	ToDel->Clear();
@@ -447,7 +442,6 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		LastDiv->DivideWorstObjects();
 		thTests[i*2]->Copy(*LastMerge);
 		LastMerge=thTests[i*2];
-		//LastMerge->Evaluate();
 		LastMerge->MergeBestGroups();
 	}
 
