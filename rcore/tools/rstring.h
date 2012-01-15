@@ -6,7 +6,7 @@
 
 	Unicode String - Header.
 
-	Copyright 1999-2011 by Pascal Francq (pascal@francq.info).
+	Copyright 1999-2012 by Pascal Francq (pascal@francq.info).
 	Copyright 1999-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -720,7 +720,7 @@ inline const RString operator+(const RString& arg1,RChar arg2) {return(RString(a
 *
 * 	Cur.Set(str);
 * 	for(Cur.Start();!Cur.End();Cur.Next())
-* 		cout<<Cur()->Latin1();
+* 		cout<<Cur().Latin1();
 * }
 * @endcode
 *

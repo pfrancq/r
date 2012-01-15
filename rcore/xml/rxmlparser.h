@@ -6,7 +6,7 @@
 
 	XML Parser - Header.
 
-	Copyright 2000-2011 by Pascal Francq (pascal@francq.info).
+	Copyright 2000-2012 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
@@ -172,7 +172,7 @@ private:
 	/**
 	 * Current Depth.
 	 */
-	char CurDepth;
+	size_t CurDepth;
 
 	/**
 	 * Position of the last "token" extracted.
@@ -249,7 +249,7 @@ public:
 	/**
 	 * Get the current depth of the XML tree parsed.
 	 */
-	char GetCurrentDepth(void) const;
+	size_t GetCurrentDepth(void) const;
 
 	/**
 	 * Get the position of the last token extracted

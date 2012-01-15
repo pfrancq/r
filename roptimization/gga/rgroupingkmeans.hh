@@ -6,7 +6,7 @@
 
 	k-Means Algorithm - Inline Implemenation
 
-	Copyright 2004-2011 by Pascal Francq (pascal@francq.info).
+	Copyright 2004-2012 by Pascal Francq (pascal@francq.info).
 	Copyright 2003-2004 by David Wartel.
 	Copyright 2003-2008 by the Université Libre de Bruxelles (ULB).
 

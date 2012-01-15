@@ -6,7 +6,7 @@
 
 	XML parser - Implementation.
 
-	Copyright 2000-2011 by Pascal Francq (pascal@francq.info).
+	Copyright 2000-2012 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify
@@ -34,6 +34,20 @@
 #include <rxmlattr.h>
 using namespace R;
 using namespace std;
+
+
+
+//------------------------------------------------------------------------------
+// Skip ending '/' if necessary
+RString AdaptNamespace(const RString& name)
+{
+	if(name[name.GetLen()-1]=='/')
+	{
+		return(name.Mid(0,name.GetLen()-1));
+	}
+	else
+		return(name);
+}
 
 
 //------------------------------------------------------------------------------
@@ -68,7 +82,9 @@ public:
 	RString Prefix;
 	RStack<RString,true,true,true> URI;
 
-	Namespace(const RString& prefix) : Prefix(prefix), URI(5) {}
+	Namespace(const RString& prefix) : Prefix(prefix), URI(5)
+	{
+	}
 	int Compare(const Namespace& sp) const {return(Prefix.Compare(sp.Prefix));}
 	int Compare(const Namespace* sp) const {return(Prefix.Compare(sp->Prefix));}
 	int Compare(const RString& sp) const {return(Prefix.Compare(sp));}
@@ -266,7 +282,7 @@ void RXMLParser::InitValidTags(void)
 
 
 //------------------------------------------------------------------------------
-char RXMLParser::GetCurrentDepth(void) const
+size_t RXMLParser::GetCurrentDepth(void) const
 {
 	if(Mode!=RIO::Read)
 		ThrowRIOException(this,"File not in read mode");
@@ -496,18 +512,26 @@ void RXMLParser::LoadHeader(void)
 	{
 		Section=Header;
 		SkipSpaces();
-		if(!CurString("xml",false))
-			ThrowRIOException(this,"Wrong XML header");
-		SkipSpaces();
+		bool XMLHeader(CurString("xml",false));
+		if(XMLHeader)
+		{
+			SkipSpaces();
 
-		// Search for parameters until ?> is found
-		bool PopDefault;
-		RContainer<Namespace,false,false> PopURI(5);
-		LoadAttributes(PopDefault,PopURI,'?','>');
+			// Search for parameters until ?> is found
+			bool PopDefault;
+			RContainer<Namespace,false,false> PopURI(5);
+			LoadAttributes(PopDefault,PopURI,'?','>');
 
-		// Skip '>' and the spaces after that
-		Next();
-		SkipSpaces();
+			// Skip '>' and the spaces after that
+			Next();
+			SkipSpaces();
+		}
+		else
+		{
+			// A HTML file doesn't need it.
+			if(!HTMLMode)
+				ThrowRIOException(this,"Wrong XML header");
+		}
 	}
 
 	// Search after "<?xml-stylesheet"
@@ -534,10 +558,12 @@ void RXMLParser::LoadHeader(void)
 			ThrowRIOException(this,"Wrong DOCTYPE command");
 
 		RString Content(GetToken(">["));
+		if(HTMLMode)
+			Content=Content.ToLower();
 		SetDocType(XMLToString(Content));
 		SkipSpaces();
 
-		if(Content=="HTML")
+		if(Content=="html")
 		{
 			// Skip Everything until end of the header
 			while((!End())&&(GetNextChar()!='>'))
@@ -577,12 +603,12 @@ void RXMLParser::LoadHeader(void)
 						if(i!=-1)
 						{
 							Namespace* ptr=Namespaces.GetInsertPtr(ns.Mid(i+1,ns.GetLen()-i));
-							ptr->URI.Push(new RString(uri));
+							ptr->URI.Push(new RString(AdaptNamespace(uri)));
 						}
 						else
 						{
 							// If not : -> default namespace
-							DefaultNamespace.Push(new RString(uri));
+							DefaultNamespace.Push(new RString(AdaptNamespace(uri)));
 						}
 
 						// Skip >
@@ -910,8 +936,8 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 		if(i!=-1)
 		{
 			// Namespace defined
-			RString prefix=attrn.Mid(0,i);
-			lname=attrn.Mid(i+1,attrn.GetLen()-i-1);
+			RString prefix(attrn.Mid(0,i));
+			lname=AdaptNamespace(attrn.Mid(i+1,attrn.GetLen()-i-1));
 			if(prefix=="xmlns")
 			{
 				uri="http://www.w3.org/2000/xmlns";  // New namespace declared
@@ -1003,11 +1029,11 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 			// Verify if the attribute is a namespace
 			if(GetNs)
 			{
-				uri=XMLToString(ns);
+				uri=AdaptNamespace(XMLToString(ns));
 				int i=attrn.Find(':');
 				if(i!=-1)
 				{
-					Namespace* ptr=Namespaces.GetInsertPtr(attrn.Mid(i+1,attrn.GetLen()-i));
+					Namespace* ptr=Namespaces.GetInsertPtr(AdaptNamespace(attrn.Mid(i+1,attrn.GetLen()-i)));
 					ptr->URI.Push(new RString(uri));
 					popuri.InsertPtr(ptr);
 				}

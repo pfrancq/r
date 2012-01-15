@@ -6,7 +6,7 @@
 
 	Directory - Header.
 
-	Copyright 2004-2011 by Pascal Francq (pascal@francq.info).
+	Copyright 2004-2012 by Pascal Francq (pascal@francq.info).
 	Copyright 2004-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
