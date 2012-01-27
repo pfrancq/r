@@ -186,18 +186,23 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RNumContainer<I,bOrder>::Insert(I ins)
+	size_t RNumContainer<I,bOrder>::Insert(I ins)
 {
+	size_t Index;
 	Verify(NbInt+1);
 	if(bOrder)
 	{
 		bool Find;
-		size_t Index=GetId(ins,Find);
+		Index=GetId(ins,Find);
 		if(!Find)
 			InsertAt(ins,Index);
 	}
 	else
-		List[NbInt++]=ins;
+	{
+		Index=NbInt++;
+		List[Index]=ins;
+	}
+	return(Index);
 }
 
 

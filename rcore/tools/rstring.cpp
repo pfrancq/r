@@ -34,6 +34,7 @@
 #include <rtextencoding.h>
 #include <langinfo.h>
 #include <rcontainer.h>
+#include <rcursor.h>
 using namespace std;
 using namespace R;
 
@@ -282,6 +283,34 @@ std::string RString::ToString(void) const
 void RString::Split(RContainer<RString,true,false>& elements,const RChar car,const RChar del) const
 {
 	BasicString<RChar,RString>::Split(elements,car,del);
+}
+
+
+//-----------------------------------------------------------------------------
+void RString::Concat(const RContainer<RString,true,true>& elements,const RChar car)
+{
+	BasicString<RChar,RString>::Concat(elements,car);
+}
+
+
+//-----------------------------------------------------------------------------
+void RString::Concat(const RContainer<RString,false,true>& elements,const RChar car)
+{
+	BasicString<RChar,RString>::Concat(elements,car);
+}
+
+
+//-----------------------------------------------------------------------------
+void RString::Concat(const RContainer<RString,true,false>& elements,const RChar car)
+{
+	BasicString<RChar,RString>::Concat(elements,car);
+}
+
+
+//-----------------------------------------------------------------------------
+void RString::Concat(const RContainer<RString,false,false>& elements,const RChar car)
+{
+	BasicString<RChar,RString>::Concat(elements,car);
 }
 
 

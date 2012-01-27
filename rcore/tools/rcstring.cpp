@@ -154,3 +154,38 @@ size_t RCString::HashIndex(size_t idx) const
 		return(c-char('a'));
 	return(26);
 }
+
+
+//-----------------------------------------------------------------------------
+void RCString::Split(RContainer<RCString,true,false>& elements,const char car,const char del) const
+{
+	BasicString<char,RCString>::Split(elements,car,del);
+}
+
+
+//-----------------------------------------------------------------------------
+void RCString::Concat(const RContainer<RCString,true,true>& elements,const char car)
+{
+	BasicString<char,RCString>::Concat(elements,car);
+}
+
+
+//-----------------------------------------------------------------------------
+void RCString::Concat(const RContainer<RCString,false,true>& elements,const char car)
+{
+	BasicString<char,RCString>::Concat(elements,car);
+}
+
+
+//-----------------------------------------------------------------------------
+void RCString::Concat(const RContainer<RCString,true,false>& elements,const char car)
+{
+	BasicString<char,RCString>::Concat(elements,car);
+}
+
+
+//-----------------------------------------------------------------------------
+void RCString::Concat(const RContainer<RCString,false,false>& elements,const char car)
+{
+	BasicString<char,RCString>::Concat(elements,car);
+}

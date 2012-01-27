@@ -230,6 +230,19 @@ public:
 
 	/** @copydoc BasicString::Split(RContainer<S,true,false>&,const C,const C) const */
 	void Split(RContainer<RString,true,false>& elements,const RChar car,const RChar del=RChar(0)) const;
+
+	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	void Concat(const RContainer<RString,true,true>& elements,const RChar car=RChar(0));
+
+	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	void Concat(const RContainer<RString,false,true>& elements,const RChar car=RChar(0));
+
+	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	void Concat(const RContainer<RString,true,false>& elements,const RChar car=RChar(0));
+
+	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	void Concat(const RContainer<RString,false,false>& elements,const RChar car=RChar(0));
+
 	//@} Manipulation methods
 
 	/** @name Methods related to R::RContainer	*/ // @{

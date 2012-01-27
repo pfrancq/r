@@ -47,15 +47,16 @@ namespace R{
  *
  * \section main_classes_sec Main classes
  * The main types of classes are:
- * - A complete implementation of the PROMETHEE multi-criteria decision method.
- * - A basic Genetic Algorithm (GA).
- * - A complete implementation of the Grouping Genetic Algorithms (GGA).
- * - A complete implementation of the Similarity-based Clustering Genetic Algorithm (SCGA).
- * - A complete implementation of the Hierarchical Genetic Algorithms (HGA).
- * - A complete implementation of the 2D Placement Genetic Algorithm (GA2D).
+ * - A complete implementation of the [article PROMETHEE PROMETHEE multi-criteria decision method].
+ * - A generic [article Genetic_Algorithms Genetic Algorithm (GA)].
+ * - A complete implementation of the [article Grouping_Genetic_Algorithms Grouping Genetic Algorithms (GGA)].
+ * - A complete implementation of the [article Similarity-based_Grouping_Genetic_Algorithm Similarity-based Grouping Genetic Algorithm (SGGA)].
+ * - A complete implementation of the [article Nearest_Neighbors_Grouping_Genetic_Algorithm Nearest Neighbors Grouping Genetic Algorithm (NNGGA)].
+ * - A complete implementation of the [article Hierarchical_Genetic_Algorithms Hierarchical Genetic Algorithms (HGA)].
+ * - A complete implementation of the [article 2D_Genetic_Algorithms 2D Genetic Algorithms (2DGA)].
  *
  * \section roptimization_promethee PROMETHEE
- * PROMETHEE is multi-criteria decision method which allows to classify of
+ * [article PROMETHEE PROMETHEE] is multi-criteria decision method which allows to classify of
  * solutions depending of different criteria, each criterion having a given
  * weight. One of the advantages of the PROMETHEE method is that it allows to
  * compare criteria with different scales.
@@ -69,9 +70,9 @@ namespace R{
  * given pair of solution and criteria.
  *
  * \section roptimization_ga Genetic Algorithms (GA)
- * A set of classes provides a representation for a generic algorithm. These
- * classes are implemented as templates since the genetic algorithms are a
- * generic approach to solve optimization problem.
+ * A set of classes provides a representation for a [article Genetic_Algorithms generic
+ * algorithm]. These classes are implemented as templates since the
+ * genetic algorithms are a generic approach to solve optimization problem.
  *
  * To implement a particular genetic algorithm, at least, three classes must be
  * created. A first one inheriting from RChromo and representing the chromosome

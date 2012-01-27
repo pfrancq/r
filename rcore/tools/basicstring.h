@@ -399,6 +399,14 @@ public:
 	inline void Split(RContainer<S,true,false>& elements,const C car,const C del) const;
 
 	/**
+	 * Concatenate a series of elements and, eventually, separated them by a
+	 * given character.
+	 * @param elements       Container of elements to concatenate.
+	 * @param car            Character used as separator.
+    */
+	template<bool a,bool o> inline void Concat(const RContainer<S,a,o>& elements,const C car);
+
+	/**
 	* Return a number between 0 and 26 according to the character at position
 	* idx in the string.
 	* @remark Supported values for idx are 1 and 2.

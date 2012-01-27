@@ -111,6 +111,12 @@ public:
 	void Clear(size_t m=0,size_t i=0);
 
 	/**
+	 * Compare method that can be used to construct an unordered container of
+	 * containers.
+    */
+	int Compare(const RObjectContainer<C,bAlloc>&) const {return(-1);}
+
+	/**
 	 * Get the number of the objects.
 	 * @return Maximum position occupied by the elements.
 	 */

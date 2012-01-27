@@ -174,7 +174,20 @@ public:
 	void Insert(const RCString& sub,int pos,size_t del=0)  {BasicString<char,RCString>::Insert(sub,pos,del);}
 
 	/** @copydoc BasicString::Split(RContainer<S,true,false>&,const C,const C) const */
-	inline void Split(RContainer<RCString,true,false>& elements,const char car,const char del=0) const {BasicString<char,RCString>::Split(elements,car,del);}
+	void Split(RContainer<RCString,true,false>& elements,const char car,const char del=0) const;
+
+	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	void Concat(const RContainer<RCString,true,true>& elements,const char car=0);
+
+	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	void Concat(const RContainer<RCString,false,true>& elements,const char car=0);
+
+	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	void Concat(const RContainer<RCString,true,false>& elements,const char car=0);
+
+	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	void Concat(const RContainer<RCString,false,false>& elements,const char car=0);
+
 	//@} Manipulation methods
 
 	/** @name Methods related to R::RContainer	*/ // @{

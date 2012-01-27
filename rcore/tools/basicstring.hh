@@ -928,6 +928,37 @@ template<class C,class S>
 
 
 //-----------------------------------------------------------------------------
+template<class C,class S> template<bool a,bool o>
+	void R::BasicString<C,S>::Concat(const R::RContainer<S,a,o>& elements,const C car)
+{
+	Clear();
+	if(!elements.GetNb())
+		return;
+	C Sep[2];
+	bool Add(false);
+	for(size_t i=0;i<=elements.GetMaxPos();i++) // Cannot use a RCursor because of header dependencies
+	{
+		if(Add)
+			(*this)+=Sep;
+		else
+		{
+			if(car!=C(0))
+			{
+				Sep[0]=car;
+				Sep[1]=C(0);
+			}
+			else
+				Sep[0]=C(0);
+			Add=true;
+		}
+		const S* Cur(elements[i]);
+		if(Cur)
+			(*this)+=(*Cur);
+	}
+}
+
+
+//-----------------------------------------------------------------------------
 template<class C,class S>
 	R::BasicString<C,S>::~BasicString(void)
 {

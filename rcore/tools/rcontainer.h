@@ -263,6 +263,12 @@ public:
 	void Clear(size_t m=0,size_t i=0);
 
 	/**
+	 * Compare method that can be used to construct an unordered container of
+	 * containers.
+    */
+	int Compare(const RContainer<C,bAlloc,bOrder>&) const {return(-1);}
+
+	/**
 	* ReOrder the container.
 	*
 	* @param sortOrder       Pointer to a (static) function used for the ordering.

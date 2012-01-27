@@ -108,7 +108,11 @@ public:
 	 */
 	void Init(size_t nb,I val);
 
-private:
+	/**
+	 * Compare method that can be used to construct an unordered container of
+	 * containers.
+    */
+	int Compare(const RNumContainer<I,bOrder>&) const {return(-1);}
 
 	/**
 	* This function returns the index of an element represented by tag, and it
@@ -120,8 +124,6 @@ private:
 	* is has to inserted.
 	*/
 	size_t GetId(I nb,bool& find) const;
-
-public:
 
 	/**
 	* Test if two lists have exactly the same values.
@@ -142,8 +144,9 @@ public:
 	* verifies that the value is not in before insertion. If the vector is
 	* unordered, the value is simply inserted at the end.
 	* @param ins             The value to insert.
+	* @return the position of the value in the list.
 	*/
-	void Insert(I ins);
+	size_t Insert(I ins);
 
 	/**
 	* Insert a value in the list at a given position.
