@@ -44,7 +44,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RXMLStruct::RXMLStruct(void)
-	: RTree<RXMLStruct,RXMLTag,true>(100,50), Entities(20,10), Version("1.0"),
+	: RTree<RXMLStruct,RXMLTag,true>(), Entities(20,10), Version("1.0"),
 	  Encoding("UTF-8"), Namespaces(10)
 {
 }

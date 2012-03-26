@@ -106,6 +106,40 @@ void RTextFile::Close(void)
 
 
 //------------------------------------------------------------------------------
+void RTextFile::Seek(off_t pos)
+{
+	RIOFile::Seek(pos);
+
+	// Initialize the buffer
+	NextWrite=NextRead=Chars;
+	SizeNextWrite=SizeNextRead=SizeChars;
+	PosChars=0;
+	SkipBytes=0;
+	Resting=0;
+
+	// Read the first characters at the new position
+	ReadChars();
+}
+
+
+//------------------------------------------------------------------------------
+void RTextFile::SeekRel(off_t pos)
+{
+	RIOFile::SeekRel(pos);
+
+	// Initialize the buffer
+	NextWrite=NextRead=Chars;
+	SizeNextWrite=SizeNextRead=SizeChars;
+	PosChars=0;
+	SkipBytes=0;
+	Resting=0;
+
+	// Read the first characters at the new position
+	ReadChars();
+}
+
+
+//------------------------------------------------------------------------------
 void RTextFile::Begin(void)
 {
 	if(!CanRead)
@@ -120,12 +154,12 @@ void RTextFile::Begin(void)
 	if((Buffer[0]==char(0xfe))&&(Buffer[1]==char(0xff)))
 	{
 		cout<<"networkOrder = TRUE"<<endl;
-		SeekRel(2);
+		RIOFile::SeekRel(2);
 	}
 	else if((Buffer[0]==char(0xff))&&(Buffer[1]==char(0xfe)))
 	{
 		cout<<"networkOrder = FALSE"<<endl;
-		SeekRel(2);
+		RIOFile::SeekRel(2);
 	}
 
 	// Read the first characters
@@ -242,14 +276,14 @@ void RTextFile::Next(void)
 	if(End())
 		return;
 
-	SeekRel(*(SizeNextRead++)); // Seek file
+	RIOFile::SeekRel(*(SizeNextRead++)); // Seek file
 
 	FillBuffer();
 
 	if(ReadTwice)
 	{
 		Cur=(*(NextRead++));
-		SeekRel(*(SizeNextRead++));
+		RIOFile::SeekRel(*(SizeNextRead++));
 		PosChars++;
 
 		FillBuffer();

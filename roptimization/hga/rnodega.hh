@@ -132,7 +132,7 @@ template<class cNode,class cObj,class cNodes>
 // 	}
 
 	// Verify child nodes
-	RCursor<cNode> Sub(GetNodes());
+	RNodeCursor<cNodes,cNode> Sub(static_cast<const cNode*>(this));
 	for(Sub.Start();!Sub.End();Sub.Next())
 		if(!Sub()->Verify(nbobjs))
 			return(false);
@@ -192,7 +192,7 @@ template<class cNode,class cObj,class cNodes>
 	CopyInfos(*from);
 
 	// Copy first the child nodes of from
-	RCursor<cNode> Cur(from->GetNodes());
+	RNodeCursor<cNodes,cNode> Cur(from);
 	for(Cur.Start(),Ret=0;!Cur.End();Cur.Next())
 	{
 		CurNode=Cur();
@@ -291,7 +291,7 @@ template<class cNode,class cObj,class cNodes>
 	size_t id;
 
 	// Goes in each child nodes to find their objects
-	RCursor<cNode> Cur(GetNodes());
+	RNodeCursor<cNodes,cNode> Cur(this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->ConstructAllObjects(objs,nbobjs);
 
@@ -320,7 +320,7 @@ template<class cNode,class cObj,class cNodes>
 	void RNodeGA<cNode,cObj,cNodes>::GetAllObjects(RNumContainer<size_t,true>& objs) const
 {
 	// Goes in each child nodes to find their objects
-	RCursor<cNode> Cur(GetNodes());
+	RNodeCursor<cNodes,cNode> Cur(static_cast<const cNode*>(this));
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->GetAllObjects(objs);
 
@@ -347,7 +347,7 @@ template<class cNode,class cObj,class cNodes>
 	size_t* tmp2;
 
 	tmp2=tmp=new size_t[GetNbNodes()+1];
-	RCursor<cNode> Cur(GetNodes());
+	RNodeCursor<cNodes,cNode> Cur(this);
 	for(Cur.Start();!Cur.End();Cur.Next(),tmp2++)
 		(*tmp2)=Cur()->GetId();
 	(*tmp2)=cNoRef;
@@ -398,7 +398,7 @@ template<class cNode,class cObj,class cNodes>
 		file<<List();
 	}
 	file<<"]"<<endl;
-	RCursor<cNode> Cur(GetNodes());
+	RNodeCursor<cNodes,cNode> Cur(this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->PrintNode(file,depth+1);
 }

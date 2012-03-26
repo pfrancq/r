@@ -781,11 +781,7 @@ template<class C,class S>
 	const C& R::BasicString<C,S>::operator[](size_t idx) const
 {
 	if(idx>=Data->Len)
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("BasicString::operator[] const : index outside the string");
-	#endif
+		throw std::range_error("const C& R::BasicString<C,S>::operator[](size_t) const : index outside the string");
 	return(Data->Text[idx]);
 }
 
@@ -795,11 +791,7 @@ template<class C,class S>
 	C& R::BasicString<C,S>::operator[](size_t idx)
 {
 	if(idx>=Data->Len)
-	#ifdef __GNUC__
-		throw std::range_error(__PRETTY_FUNCTION__);
-	#else
-		throw std::range_error("BasicString::operator[] : index outside the string");
-	#endif
+		throw std::range_error("C& R::BasicString<C,S>::operator[](size_t) : index outside the string");
 	return(Data->Text[idx]);
 }
 

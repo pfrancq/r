@@ -31,7 +31,7 @@
 //---------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	RNodesGA<cNode,cObj,cNodes>::RNodesGA(RCursor<cObj> objs,size_t maxnodes,size_t maxattr)
-		: RTree<cNodes,cNode,false>(maxnodes,maxnodes/2), Reserved(maxnodes),
+		: RTree<cNodes,cNode,false>(), Reserved(maxnodes), Nodes(maxnodes),
 		   Objs(objs), ObjsAss(objs.GetNb()), ObjsNoAss(objs.GetNb()), MaxAttr(maxattr)
 {
 	ObjectsAss = new size_t[Objs.GetNb()];
@@ -58,6 +58,7 @@ template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::ClearNodes(void)
 {
 	RTree<cNodes,cNode,false>::Clear();
+	Nodes.Clear();
 	ObjsAss.Clear();
 	ObjsNoAss.Clear();
 	for(Objs.Start();!Objs.End();Objs.Next())
@@ -107,6 +108,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::InsertNode(cNode* to,cNode* node)
 {
+	Nodes.InsertPtr(node);
 	RTree<cNodes,cNode,false>::InsertNode(to,node);
 	if(to)
 		to->PostInsert(node);
@@ -117,6 +119,8 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::DeleteNode(cNode* node)
 {
+	RAssert(node->GetNbNodes());
+	Nodes.DeletePtr(node);
 	cNode* from(node->Parent);
 	RTree<cNodes,cNode,false>::DeleteNode(node,true);
 	if(from)
@@ -132,18 +136,12 @@ template<class cNode,class cObj,class cNodes>
 	if(!from->NbSubNodes)
 		return;
 
-	RContainer<cNode,false,false> Del(from->NbSubNodes);
-	RCursor<cNode> Cur(from->GetNodes());
-	for(Cur.Start();!Cur.End();Cur.Next())
-		Del.InsertPtr(Cur());
-	Cur.Set(Del);
-	for(Cur.Start();!Cur.End();Cur.Next())
+	cNode* Node(from->GetFirst());
+	while(Node)
 	{
-		cNode* from(Cur()->GetParent());
-		DeleteNode(Cur());
-		if(from)
-			from->PostDelete(Cur());
-		ReleaseNode(Cur());
+		cNode* Next(Node->Next);
+		DeleteNode(Next);
+		Node=Next;
 	}
 }
 
@@ -156,10 +154,10 @@ template<class cNode,class cObj,class cNodes>
 		return;
 	cNode* from(node->Parent);
 	RTree<cNodes,cNode,false>::MoveNode(to,node);
-	if(to)
-		to->PostInsert(node);
 	if(from)
 		from->PostDelete(node);
+	if(to)
+		to->PostInsert(node);
 }
 
 
@@ -171,7 +169,7 @@ template<class cNode,class cObj,class cNodes>
 	cNode* CurNode;
 
 	// Copy first the top nodes
-	RCursor<cNode> Cur(from->GetTopNodes());
+	RNodeCursor<cNodes,cNode> Cur(*from);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		CurNode=Cur();
@@ -212,7 +210,7 @@ template<class cNode,class cObj,class cNodes>
 	if(to->NbSubObjects)
 	{
 		j=to->SubObjects;
-		RCursor<cNode> Cur(GetNodes());
+		RCursor<cNode> Cur(Nodes);
 		for(Cur.Start();!Cur.End();Cur.Next())
 			if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 				Cur()->SubObjects++;
@@ -243,7 +241,7 @@ template<class cNode,class cObj,class cNodes>
 	if(!(--(from->NbSubObjects)))
 		from->SubObjects=cNoRef;
 	from->PostDelete(obj);
-	RCursor<cNode> Cur(*this);
+	RCursor<cNode> Cur(Nodes);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 			Cur()->SubObjects--;
@@ -267,7 +265,7 @@ template<class cNode,class cObj,class cNodes>
 	if(!(--(from->NbSubObjects)))
 		from->SubObjects=cNoRef;
 	from->PostDelete(obj);
-	RCursor<cNode> Cur(*this);
+	RCursor<cNode> Cur(Nodes);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 			Cur()->SubObjects--;
@@ -293,7 +291,7 @@ template<class cNode,class cObj,class cNodes>
 		from->PostDelete(o());
 	}
 	j=from->SubObjects;
-	RCursor<cNode> Cur(GetNodes());
+	RCursor<cNode> Cur(Nodes);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
 			Cur()->SubObjects-=from->NbSubObjects;
@@ -329,14 +327,9 @@ template<class cNode,class cObj,class cNodes>
 	bool RNodesGA<cNode,cObj,cNodes>::VerifyNodes(bool complete)
 {
 	size_t nbobjs=0;
-	RCursor<cNode> Cur(GetTopNodes());
+	RCursor<cNode> Cur(Nodes);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		if(Cur()->Parent)
-		{
-			std::cerr<<"Top nodes cannot have a parent"<<std::endl;
-			return(false);
-		}
 		if(!Cur()->Verify(nbobjs))
 			return(false);
 	}
@@ -359,7 +352,7 @@ template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::CopyTree(const cNodes& nodes)
 {
 	ClearNodes();
-	RCursor<cNode> Cur(nodes.GetTopNodes());
+	RNodeCursor<cNodes,cNode> Cur(nodes);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		// Create a top node
@@ -378,7 +371,7 @@ template<class cNode,class cObj,class cNodes>
 {
 	RTextFile File(name);
 	File.Open(RIO::Create);
-	RCursor<cNode> Cur(GetTopNodes());
+	RNodeCursor<cNodes,cNode> Cur(this);
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->PrintNode(File,0);
 }

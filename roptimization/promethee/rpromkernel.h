@@ -36,7 +36,6 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee.h>
 #include <rpromsol.h>
 #include <rpromcriterion.h>
 
@@ -76,11 +75,11 @@ namespace R{
 * Prom.ComputePrometheeII();
 *
 * // Print Fi
-* RPromSol** Res=Prom.GetSols();
+* RCursor<RPromSol> Res(Prom.GetSols());
 * cout<<"Sol\tFiPlus\t\tFiMinus\t\tFi"<<endl;
 * cout.precision(3);
-* for(int i=0;i<4;i++,Res++)
-*    cout<<"Car"<<(*Res)->GetId()+1<<"\t"<<(*Res)->GetFiPlus()<<"\t\t"<<(*Res)->GetFiMinus()<<"\t\t"<<(*Res)->GetFi()<<endl;
+* for(Res.Start();!Res.End();Res.Next())
+*    cout<<"Car"<<Res()->GetId()+1<<"\t"<<Res()->GetFiPlus()<<"\t\t"<<Res()->GetFiMinus()<<"\t\t"<<Res()->GetFi()<<endl;
 * @endcode
 * @short PROMETHEE Kernel.
 * @author Pascal Francq & Thomas L'Eglise.
@@ -98,16 +97,19 @@ class RPromKernel
 	RContainer<RPromSol,true,true> Solutions;
 
 	/**
+	 * Solutions ordered by fitness.
+	 */
+	RContainer<RPromSol,false,false> OrderedSolutions;
+
+	/**
 	* Criteria.
 	*/
 	RContainer<RPromCriterion,true,true> Criteria;
 
 	/**
-	* Function used to sort the solutions by fit.
-	* @param a              Pointer to the first solution.
-	* @param b              Pointer to the second solution.
-	*/
-	static int sort_function_solutions(const void *a,const void *b);
+	 * Look if the solution must be reordered (for example after a computing).
+	 */
+	bool MustReOrder;
 
 public:
 
@@ -148,6 +150,14 @@ public:
 	RPromCriterion* GetCriterion(const size_t id) const {return(Criteria.GetPtr(id));}
 
 	/**
+	 * Add a solution to the PROMETHEE kernel. Each solution must have an unique
+	 * identifier. A way to manage that is to assign to each solution added an
+	 * identifier equals to GetNbSols().
+    * @param sol            Solution to add.
+    */
+	void AddSol(RPromSol* sol);
+
+	/**
 	* Create a new solution.
 	*/
 	virtual RPromSol* NewSol(void);
@@ -156,7 +166,7 @@ public:
 	* Create a new solution.
 	* @param name           Name of the solution.
 	*/
-	virtual RPromSol* NewSol(const char* name);
+	virtual RPromSol* NewSol(const RString& name);
 
 	/**
 	 * @return the number of solutions managed by the kernel.
@@ -177,7 +187,7 @@ public:
 	* @param crit           Pointer to the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(const char* sol,RPromCriterion* crit,const double v);
+	virtual void Assign(const RString& sol,RPromCriterion* crit,const double v);
 
 	/**
 	* Assign a value to a criterion.
@@ -185,7 +195,7 @@ public:
 	* @param crit           Name of the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(RPromSol* sol,const char* crit,const double v);
+	virtual void Assign(RPromSol* sol,const RString& crit,const double v);
 
 	/**
 	* Assign a value to a criterion.
@@ -193,24 +203,49 @@ public:
 	* @param crit           Name of the criterion.
 	* @param v              Value.
 	*/
-	virtual void Assign(const char* sol,const char* crit,const double v);
+	virtual void Assign(const RString& sol,const RString& crit,const double v);
+
+private:
 
 	/**
-	* Return the best solution.
+	* Function used to sort the solutions by fit.
+	* @param a              Pointer to the first solution.
+	* @param b              Pointer to the second solution.
 	*/
-	RPromSol* GetBestSol(void);
+	static int sort_function_solutions(const void *a,const void *b);
 
 	/**
-	* Return the solutions order by fit increase. The resulting array must be
-	* deleted by the caller.
-	*/
-	RPromSol** GetSols(void);
+	 * Order the solutions by descending order of their fitness.
+	 */
+	void OrderSolutions(void);
+
+public:
 
 	/**
-	* Fill an array with pointer to the solutions order by fit. The array must
-	* be one size larger than the number of solutions.
+	* @return the best solution.
 	*/
-	void GetSols(RPromSol** sols);
+	const RPromSol* GetBestSol(void);
+
+	/**
+	* @return a cursor over the solutions ordered descending by their fitness.
+	*/
+	RCursor<RPromSol> GetSols(void);
+
+	/**
+	 * Copy the solutions ordered descending by their fitness into a container.
+	 * @param sols           Container holding the results.
+	 */
+	void CopySols(RContainer<RPromSol,false,false>& sols);
+
+	/**
+    * @return the Fi of the worst solution.
+    */
+	double GetMinFi(void);
+
+	/**
+    * @return the Fi of the best solution.
+    */
+	double GetMaxFi(void);
 
 	/**
 	* Return the best solution identifier.
@@ -226,6 +261,12 @@ public:
 	* Clear the solutions of the kernel.
 	*/
 	void ClearSols(void);
+
+	/**
+	 * Print the solutions ordered on screen.
+	 * @param normalized     Show the values normalized or not.
+    */
+	void Print(bool normalized);
 
 	/**
 	* Destruct the kernel.

@@ -35,11 +35,6 @@
 
 
 //------------------------------------------------------------------------------
-// include files for R Project
-#include <rpromethee.h>
-
-
-//------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
 
@@ -74,6 +69,11 @@ protected:
 	* The value of the solution/criterion.
 	*/
 	double Value;
+
+	/**
+	 * The value of the solution/criterion normalized.
+    */
+	double Normalized;
 
 public:
 

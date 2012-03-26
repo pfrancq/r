@@ -37,6 +37,7 @@
 // include files foor R Project
 #include <rxmltag.h>
 #include <rxmlstruct.h>
+#include <rnodecursor.h>
 using namespace R;
 using namespace std;
 
@@ -137,7 +138,7 @@ RXMLTag* RXMLTag::GetTag(const RString& name) const
 //-----------------------------------------------------------------------------
 void RXMLTag::GetTags(const RString& name,RContainer<RXMLTag,false,false>& find) const
 {
-	RCursor<RXMLTag> Tags(GetNodes());
+	RNodeCursor<RXMLStruct,RXMLTag> Tags(this);
 	for(Tags.Start();!Tags.End();Tags.Next())
 		if(Tags()->GetName()==name)
 			find.InsertPtr(Tags());
@@ -226,13 +227,13 @@ bool RXMLTag::Merge(const RXMLTag* merge)
 	}
 
 	// Pass through the subnodes of merge
-	RCursor<RXMLTag> Cur(merge->GetNodes());
+	RNodeCursor<RXMLStruct,RXMLTag> Cur(merge);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		size_t nb;
 		RXMLTag* same=0;
 		// Go trough each subnode and count the number of same
-		RCursor<RXMLTag> My(GetNodes());
+		RNodeCursor<RXMLStruct,RXMLTag> My(this);
 		for(My.Start(),nb=0;!My.End();My.Next())
 		{
 			if(static_cast<RXMLStruct*>(Tree)->Compare(Cur(),My()))

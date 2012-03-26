@@ -37,7 +37,6 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstring.h>
-#include <rpromethee.h>
 #include <rpromcritvalue.h>
 #include <rparam.h>
 
@@ -45,6 +44,11 @@
 //------------------------------------------------------------------------------
 namespace R{
 //------------------------------------------------------------------------------
+
+	
+//------------------------------------------------------------------------------
+// forward declaration
+class RPromKernel;
 
 
 //------------------------------------------------------------------------------
@@ -89,6 +93,11 @@ protected:
 	*/
 	double Weight;
 
+	/**
+	 * Is the criteria active ?
+    */
+	bool Active;
+
 public:
 
 	/**
@@ -98,7 +107,7 @@ public:
 	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromCriterion(tCriteriaType type,double w,const char* name=0,size_t nb=30);
+	RPromCriterion(tCriteriaType type,double w,const RString& name=RString::Null,size_t nb=30);
 
 	/**
 	* Compare the identifier of two criteria.
@@ -139,6 +148,11 @@ public:
 	* current criteria is less, equal or greater than the one given as parameter.
 	*/
 	int Compare(const char* name) const {return(Name.Compare(name));}
+
+	/**
+    * @return if the criteria is active.
+    */
+	bool IsActive(void) const {return(Active);}
 
 	/**
 	 * Get the type of criteria.
@@ -221,13 +235,13 @@ public:
 	/**
 	* Construct a criterion.
 	* @param type           Type of the criterion.
-	* @param p              Preference's threshold.
-	* @param q              Indifference's threshold.
+	* @param p              Preference threshold.
+	* @param q              Indifference threshold.
 	* @param w              Weight of the criterion.
 	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromLinearCriterion(tCriteriaType type,double p,double q,double w,const char* name=0,size_t nb=30);
+	RPromLinearCriterion(tCriteriaType type,double p,double q,double w,const RString& name=RString::Null,size_t nb=30);
 
 	/**
 	* Construct a criterion.
@@ -236,15 +250,16 @@ public:
 	* @param name           Name of the criterion.
 	* @param nb             Number of solution.
 	*/
-	RPromLinearCriterion(tCriteriaType type,const RParam* params,const char* name=0,size_t nb=30);
+	RPromLinearCriterion(tCriteriaType type,const RParam* params,const RString& name=RString::Null,size_t nb=30);
 
  	/**
  	* Set the parameters.
- 	* @param p              Preference's threshold.
- 	* @param q              Indifference's threshold.
+ 	* @param p              Preference threshold.
+ 	* @param q              Indifference threshold.
  	* @param w              Weight of the criterion.
+	* @param active         Is the criterion active ?
  	*/
-	void Set(double p,double q,double w);
+	void Set(double p,double q,double w,bool active=true);
 
 	/**
 	* Set the parameter of the parameter.
@@ -253,12 +268,12 @@ public:
 	virtual void Set(const RParam* param);
 
 	/**
-	* Get the preference's threshold.
+	* @return the preference threshold.
 	*/
 	double GetP(void) const {return(P);}
 
 	/**
-	* Get the indifference's threshold.
+	* @return the indifference threshold.
 	*/
 	double GetQ(void) const {return(Q);}
 
@@ -275,7 +290,7 @@ public:
 	*            returns 1.
 	* @param u              Value of the first solution.
 	* @param v              Value of the second solution.
-	* @return The result of the preference function defined.
+	* @return the result of the preference function defined.
 	*/
 	virtual double ComputePref(double u,double v);
 

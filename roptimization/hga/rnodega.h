@@ -35,7 +35,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rcursor.h>
+#include <rnodecursor.h>
 #include <rnode.h>
 #include <rhga.h>
 #include <rattrlist.h>
@@ -66,7 +66,6 @@ public:
 
 	using RNode<cNodes,cNode,false>::Tree;
 	using RNode<cNodes,cNode,false>::GetNbNodes;
-	using RNode<cNodes,cNode,false>::GetNodes;
 	using RNode<cNodes,cNode,false>::Clear;
 
 protected:

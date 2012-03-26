@@ -4,7 +4,7 @@
 
 	RXMLStruct.cpp
 
-	Widget to show a XML structure of a document - Implementation.
+	Widget to show a XML structure - Implementation.
 
 	Copyright 2001-2012 by Pascal Francq (pascal@francq.info).
 	Copyright 2001 by Julien Lamoral.
@@ -41,7 +41,8 @@
 
 
 //-----------------------------------------------------------------------------
-// include files for GALILEI
+// include files for R
+#include <rnodecursor.h>
 #include <qrxmlstruct.h>
 #include <ui_qrxmlstruct.h>
 #include <rqt.h>
@@ -106,7 +107,7 @@ QRXMLStruct::QRXMLStruct(QWidget* parent)
 //-----------------------------------------------------------------------------
 void QRXMLStruct::ConstructTag(RXMLTag* t,QTreeWidgetItem* parent)
 {
-	RCursor<RXMLTag> Cur(t->GetNodes());
+	RNodeCursor<RXMLStruct,RXMLTag> Cur(t);
 	QTreeWidgetItem* ptr=0,*ptr2;
 	QTreeWidgetItem* prec=0;
 

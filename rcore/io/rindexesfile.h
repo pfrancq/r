@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RIndexFile.h
+	RIndexesFile.h
 
-	Generic Index File - Header.
+	Generic Indexes File - Header.
 
 	Copyright 2009-2012 by Pascal Francq (pascal@francq.info).
 
@@ -28,15 +28,14 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RIndexFile_H
-#define RIndexFile_H
+#ifndef RIndexesFile_H
+#define RIndexesFile_H
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rblockfile.h>
 #include <rnumcontainer.h>
-#include <rcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -45,8 +44,8 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RIndexFile class represents a generic file for managing an index of
-* records (such as a inverted file used by search engines). The size of the
+* The RIndexesFile class represents a generic file for managing index pairs of
+* records (such as keyword pairs used by search engines). The size of the
 * records cannot exceed the size of a single block.
 *
 * The approach is based on Zobel, Moffat, and Sack-Davis (1993):
@@ -54,14 +53,14 @@ namespace R{
 * - Each blocks contains a block address table, several records, and some free
 *   space.
 *
-* Each element indexed has a given identifier and a given block number. Each
-* block manages the block address table which contains, for each identifier,
-* the address of the record inside the block. In practice, a block is composed
-* from:
+* Each element indexed has two identifiers and a given block number. Each
+* block manages the block address table which contains, for each identifier
+* pair, the address of the record inside the block. In practice, a block is
+* composed from:
 * -# The number of bytes free in the block (size_t).
 * -# The number of records in the block (size_t).
-* -# The block table representing for each index the corresponding address
-*    (size_t,size_t).
+* -# The block table representing for each indexes the corresponding address
+*    (size_t,size_t,size_t).
 * -# Some free spaces.
 * -# The records at the different addresses.
 *
@@ -69,7 +68,7 @@ namespace R{
 * entries have decreasing internal addresses.
 *
 * The methods Seek are used to position the block to a specific record
-* corresponding to a block number and an index. The basic Read and Write
+* corresponding to a block number and a index pair. The basic Read and Write
 * methods can then be used to read or write data.
 *
 * The class provides high level methods to manage RVectorInt objects:
@@ -81,11 +80,11 @@ namespace R{
 * RVectorInt<size_t,false> Vec(30);
 * Vec.Insert(3); Vec.Insert(6); Vec.Insert(7); Vec.Insert(10); Vec.Insert(11);
 * size_t BlockNb(0); // No block is currently assign
-* Test.Write(BlockNb,300,Vec);
+* Test.Write(BlockNb,300,201,Vec);
 *
 * // Read Vec2
 * RVectorInt<size_t,false> Vec2(30);
-* Test.Read(BlockNb,300,Vec2);
+* Test.Read(BlockNb,300,201,Vec2);
 * for(Vec2.Start();!Vec2.End();Vec2.Next())
 * 	cout<<"Read "<<Vec2()<<endl;
 * @endcode
@@ -128,20 +127,19 @@ namespace R{
 *	RContainer<MyClass,true,true> Cont(30);
 *	Cont.InsertPtr(new MyClass(2,23.0)); Cont.InsertPtr(new MyClass(1,2.0));
 *	size_t BlockNb(0); // Start without any block
-*	Test.Write(BlockNb,300,Cont);
+*	Test.Write(BlockNb,300,201,Cont);
 *
 *	// Read Cont2
 *	RContainer<MyClass,true,true> Cont2(30);
-*	Test.Read(BlockNb,300,Cont2);
+*	Test.Read(BlockNb,300,201,Cont2);
 *	RCursor<MyClass> Cur(Cont2);
 *	for(Cur.Start();!Cur.End();Cur.Next())
 *		cout<<"Read "<<Cur()->Id<<" "<<Cur()->Nb<<endl;
 * @endcode
-*
 * @author Pascal Francq
-* @short Generic Index File.
+* @short Generic Index Pair File.
 */
-class RIndexFile : protected RBlockFile
+class RIndexesFile : protected RBlockFile
 {
 	/**
 	 * Free spaces in each block.
@@ -168,7 +166,7 @@ public:
 	* @param tolerance       Fix the size of the tolerance, i.e. minimal free
 	*                        size to add a new index (in KBytes).
 	*/
-	RIndexFile(const RURI& uri,size_t blocksize,size_t nbcaches,size_t tolerance);
+	RIndexesFile(const RURI& uri,size_t blocksize,size_t nbcaches,size_t tolerance);
 
 protected:
 
@@ -194,7 +192,6 @@ public:
 	 * Clear the file.
 	 */
 	void Clear(void);
-	
 	/**
 	 * Get the number of blocks.
 	 */
@@ -223,11 +220,12 @@ private:
 	/**
 	 * Get the index of the a identifier in the current block address table.
 	 * @param block          Block number.
-	 * @param id             Identifier.
+	 * @param id1            First identifier.
+	 * @param id2            Second identifier.
 	 * @param find           Was it found ?
 	 * @return Position in the block address table.
 	 */
-	size_t GetIndex(size_t block,size_t id,bool& find);
+	size_t GetIndex(size_t block,size_t id1,size_t id2,bool& find);
 
 	/**
 	 * Move all the records of all entries in the table.
@@ -250,11 +248,12 @@ private:
 	 * A new record of a given size is added to the block. Position the block
 	 * to good position to write the content.
 	 * @param blockid        Identifier of the block.
-	 * @param indexid        Identifier of the index.
+	 * @param id1            First identifier.
+	 * @param id2            Second identifier.
 	 * @param entry          Entry in the index table.
 	 * @param size           Size of the record.
 	 */
-	void NewRecord(size_t blockid,size_t indexid,size_t entry,size_t size);
+	void NewRecord(size_t blockid,size_t id1,size_t id2,size_t entry,size_t size);
 
 	/**
 	* Go to a specific position of the file. In fact this method should never be
@@ -279,12 +278,13 @@ public:
 	 * @tparam I             Type of the numbers contained.
 	 * @tparam bOrder        Determine is the container to write is ordered.
 	 * @param blockid        Identifier of the block.
-	 * @param indexid        Identifier of the index.
+	 * @param id1            First identifier.
+	 * @param id2            Second identifier.
 	 * @param vec            Vector to write.
 	 */
-	template<class I,bool bOrder> void Write(size_t& blockid,size_t indexid,const RNumContainer<I,bOrder>& vec)
+	template<class I,bool bOrder> void Write(size_t& blockid,size_t id1,size_t id2,const RNumContainer<I,bOrder>& vec)
 	{
-		Seek(blockid,indexid,sizeof(size_t)+(vec.GetNb()*sizeof(I)));
+		Seek(blockid,id1,id2,sizeof(size_t)+(vec.GetNb()*sizeof(I)));
 		size_t size(vec.GetNb());
 		Write((char*)&size,sizeof(size_t));
 		const I* ptr(vec.GetList());
@@ -300,12 +300,13 @@ public:
 	 * @tparam bAlloc        The container to write is responsible of the deallocation.
 	 * @tparam bOrder        The container to write is ordered.
 	 * @param blockid        Identifier of the block.
-	 * @param indexid        Identifier of the index.
+	 * @param id1            First identifier.
+	 * @param id2            Second identifier.
 	 * @param cont           Container to write.
 	 */
-	template<class C,bool bAlloc,bool bOrder> void Write(size_t& blockid,size_t indexid,const RContainer<C,bAlloc,bOrder>& cont)
+	template<class C,bool bAlloc,bool bOrder> void Write(size_t& blockid,size_t id1,size_t id2,const RContainer<C,bAlloc,bOrder>& cont)
 	{
-		Seek(blockid,indexid,sizeof(size_t)+(cont.GetNb()*C::GetSizeT()));
+		Seek(blockid,id1,id2,sizeof(size_t)+(cont.GetNb()*C::GetSizeT()));
 		size_t nb,size(cont.GetNb());
 		Write((char*)&size,sizeof(size_t));
 		RCursor<C> Cur(cont);
@@ -325,14 +326,15 @@ public:
 	 * @tparam I             Type of the numbers contained.
 	 * @tparam bOrder        Determine is the container to read is ordered.
 	 * @param blockid        Identifier of the block.
-	 * @param indexid        Identifier of the index.
+	 * @param id1            First identifier.
+	 * @param id2            Second identifier.
 	 * @param vec            Read to write.
 	 */
-	template<class I,bool bOrder> void Read(size_t blockid,size_t indexid,RNumContainer<I,bOrder>& vec)
+	template<class I,bool bOrder> void Read(size_t blockid,size_t id1,size_t id2,RNumContainer<I,bOrder>& vec)
 	{
 		size_t nb,size;
 		vec.Clear();
-		Seek(blockid,indexid);
+		Seek(blockid,id1,id2);
 		Read((char*)&size,sizeof(size_t));
 		vec.Verify(size);
 		for(size_t i=0;i<size;i++)
@@ -348,12 +350,13 @@ public:
 	 * @tparam bAlloc        The container to read is responsible of the deallocation.
 	 * @tparam bOrder        The container to read is ordered.
 	 * @param blockid        Identifier of the block.
-	 * @param indexid        Identifier of the index.
+	 * @param id1            First identifier.
+	 * @param id2            Second identifier.
 	 * @param cont           Container to Read.
 	 */
-	template<class C,bool bAlloc,bool bOrder> void Read(size_t blockid,size_t indexid,RContainer<C,bAlloc,bOrder>& cont)
+	template<class C,bool bAlloc,bool bOrder> void Read(size_t blockid,size_t id1,size_t id2,RContainer<C,bAlloc,bOrder>& cont)
 	{
-		Seek(blockid,indexid);
+		Seek(blockid,id1,id2);
 		size_t size;
 		Read((char*)&size,sizeof(size_t));
 		cont.Clear(size);
@@ -364,16 +367,18 @@ public:
 	/**
 	 * Erase a given record from the block file.
 	 * @param blockid        Block number.
-	 * @param indexid        Identifier of the index.
+	 * @param id1            First identifier.
+	 * @param id2            Second identifier.
 	 */
-	void EraseRecord(size_t blockid,size_t indexid);
+	void EraseRecord(size_t blockid,size_t id1,size_t id2);
 
 	/**
 	* Go to a specific position of the file.
 	* @param blockid        Identifier of the block.
-	* @param indexid        Identifier of the index.
+	* @param id1            First identifier.
+	* @param id2            Second identifier.
 	*/
-	void Seek(size_t blockid,size_t indexid);
+	void Seek(size_t blockid,size_t id1,size_t id2);
 
 	/**
 	* Go to a specific position of the file to write a given number of bytes
@@ -390,15 +395,16 @@ public:
 	* implies to write in another block, the old content is lost.
 	* @param blockid        Identifier of the block. If null, a new block is
 	*                       searched and the identifier is updated.
-	* @param indexid        Identifier of the index.
+	* @param id1            First identifier.
+	* @param id2            Second identifier.
 	* @param size           Number of bytes to read/write.
 	*/
-	void Seek(size_t& blockid,size_t indexid,size_t size);
+	void Seek(size_t& blockid,size_t id1,size_t id2,size_t size);
 
 	/**
 	* Destruct the file.
 	*/
-	virtual ~RIndexFile(void);
+	virtual ~RIndexesFile(void);
 };
 
 

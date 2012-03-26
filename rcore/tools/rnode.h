@@ -34,6 +34,7 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for R
 #include <rcontainer.h>
 #include <rcursor.h>
 
@@ -45,6 +46,7 @@ namespace R{
 
 // forward declaration
 template<class T,class N,bool bAlloc> class RTree;
+template<class T,class N> class RNodeCursor;
 
 
 //-----------------------------------------------------------------------------
@@ -61,19 +63,18 @@ template<class T,class N,bool bAlloc> class RTree;
 * signature:
 * @code
 * int Compare(const TUse& tag) const;
-* int Compare(const TUse* tag) const;
 * @endcode
 *
 * At least, a compare function must be implemented in the class N:
 * @code
-* int Compare(const N&) const;bOrde
+* int Compare(const N&) const;
 * @endcode
 *
 * Here is an example:
 * @code
 * #include <rtree.h>
 * #include <rnode.h>
-* #include <rcursor.h>
+* #include <rnodecursor.h>
 * using namespace R;
 *
 * class MyTree;         // Forward declaration
@@ -84,33 +85,40 @@ template<class T,class N,bool bAlloc> class RTree;
 * public:
 *    MyNode(const RString& name) : RNode<MyTree,MyNode,true>(), Name(name) {}
 *    int Compare(const MyNode& node) const {return(Name.Compare(node.Name));}
-*    void DoSomething(void) {cout<<Name<<endl;}
+*    void DoSomething(void)
+*    {
+*       for(size_t i=0;i<GetDepth();i++)
+*          cout<<" ";
+*       cout<<Name<<endl;
+*       RNodeCursor<MyTree,MyNode> Cur(this);
+*       for(Cur.Start();!Cur.End();Cur.Next())
+*          Cur()->DoSomething();
+*    }
 * };
 *
 * class MyTree : public RTree<MyTree,MyNode,true>
 * {
 * public:
-*    MyTree(size_t max,size_t inc) : RTree<MyTree,MyNode,true>(max,inc) {}
+*    MyTree(void) : RTree<MyTree,MyNode,true>() {}
 * };
 *
 * int main()
 * {
-*    MyTree Tree(20,10);
+*    MyTree Tree;
+*    MyNode *a,*b,*c,*d,*m;
+*    Tree.InsertNode(0,a=new MyNode("mammal"));
+*    Tree.InsertNode(a,m=new MyNode("rabbit"));
+*    Tree.InsertNode(a,d=new MyNode("carnivore"));
+*    Tree.InsertNode(m,b=new MyNode("fox"));
+*    Tree.InsertNode(m,c=new MyNode("dog"));
 *
-*    // Insert a top node
-*    cNode* Top(new MyNode("First Level"));bOrde
-*    Tree.InsertNode(0,Top);
-*
-*    // Insert two sub nodes
-*    Tree.InsertNode(Top,new MyNode("Second Level (1)"));
-*    Tree.InsertNode(Top,new MyNode("Second Level (2)"));
-*
-*    // Parse the nodes
-*    R::RCursor<MyNode> Cur(Tree.GetNodes());
-*    for(Cur.Start();!Cur.End();Cur.Next())Type
+*    RNodeCursor<MyTree,MyNode> Cur(Tree);
+*    for(Cur.Start();!Cur.End();Cur.Next())
 *       Cur()->DoSomething();
 * }
 * @endcode
+* In practice, all child nodes of a given node (or the root node) are stored as
+* a doubly linked list.
 * @author Pascal Francq
 * @short Generic Node.
 */
@@ -130,9 +138,24 @@ protected:
 	N* Parent;
 
 	/**
-	* Index of the first child node in Nodes.
+	 * Previous node.
+	 */
+	N* Prev;
+
+	/**
+	 * Next node.
+	 */
+	N* Next;
+
+	/**
+	* First child node.
 	*/
-	size_t SubNodes;
+	N* First;
+
+	/**
+	* Last child node.
+	*/
+	N* Last;
 
 	/**
 	* Number of child nodes
@@ -140,15 +163,9 @@ protected:
 	size_t NbSubNodes;
 
 	/**
-	* Index of the node.
-	*/
-	size_t Index;
-
-	/**
 	 * Depth of the node.
 	 */
 	size_t Depth;
-
 
 public:
 
@@ -169,35 +186,56 @@ public:
 	virtual void Clear(void);
 
 	/**
+    * @return a pointer to the concept tree.
+    */
+	T* GetTree(void) const {return(Tree);}
+
+	/**
 	* Return the parent of the node.
 	* @returns Pointer to N.
 	*/
-	N* GetParent(void) const;
+	inline N* GetParent(void) const {return(Parent);}
 
 	/**
-	* Get the number of child nodes.
-	* @return size_t
-	*/
-	size_t GetNbNodes(void) const;
+    * @return the first child node. If null, the node has no children.
+    */
+	inline N* GetFirst(void) const {return(First);}
 
 	/**
-	* Return the index of a given node in the tree.
+    * @return the last child node. If null, the node has no children.
+    */
+	inline N* GetLast(void) const {return(Last);}
+
+	/**
+    * @return the previous node of the same parent. If null, the node is the
+	 * first child.
+    */
+	inline N* GetPrev(void) const {return(Prev);}
+
+	/**
+    * @return the next node of the same parent. If null, the node is the last
+	 * child.
+    */
+	inline N* GetNext(void) const {return(Next);}
+
+	/**
+	* @return the number of child nodes.
 	*/
-	size_t GetIndex(void) const;
+	inline size_t GetNbNodes(void) const {return(NbSubNodes);}
+
+	/**
+    * @return the total number of child nodes (including all possible children).
+    */
+	size_t GetNbTotalNodes(void) const;
 
 	/**
 	 * Get the depth of the node.
 	 */
-	size_t GetDepth(void) const {return(Depth);}
+	inline size_t GetDepth(void) const {return(Depth);}
 
 	/**
-	* Get a cursor over the child nodes.
-	* @return RCursor<N>.
-	*/
-	RCursor<N> GetNodes(void) const;
-
-	/**
-	* Get a pointer to a certain child node.
+	* Get a pointer to a certain child node. In practice, In practice, the search
+	* is done by parsing the tree starting from the first child node inserted.
 	* @tparam TUse           The type of the tag used for the search.
 	* @param tag             The tag used.
 	* @return Return the pointer or 0 if the element is not a child node.
@@ -214,28 +252,6 @@ public:
 	* Test if the tag is empty, i.e. it has no child nodes.
 	*/
 	virtual bool IsEmpty(void);
-
-	/**
-	* Get a pointer to the ith child node in the node (Only read).
-	* @param idx             Index of the node to get.
-	* @return Return the pointer.
-	*/
-	const N* operator[](size_t idx) const;
-
-	/**
-	* Get a pointer to the ith child node in the node (Read/Write).
-	* @param idx             Index of the node to get.
-	* @return Return the pointer.
-	*/
-	N* operator[](size_t idx);
-
-	/**
-	 * Copy the nodes into a temporary array. This array must have the right
-	 * size.
-	 * @param nodes           Temporary array.
-	 * @return Number of the nodes copied in the array
-	 */
-	size_t GetTab(N** nodes);
 
 	/**
 	 * Verify the integrity of the node.
@@ -263,6 +279,7 @@ public:
 
 	// The RTree is a  friend class
 	friend class RTree<T,N,bAlloc>;
+	friend class RNodeCursor<T,N>;
 };
 
 

@@ -58,8 +58,8 @@ public:
 
 	using RChromo<cInst,cChromo,cFit,cThreadData>::Instance;
 	using RChromo<cInst,cChromo,cFit,cThreadData>::Id;
+	using RNodesGA<cNode,cObj,cChromo>::Nodes;
 	using RNodesGA<cNode,cObj,cChromo>::ReserveNode;
-	using RNodesGA<cNode,cObj,cChromo>::GetNodes;
 	using RNodesGA<cNode,cObj,cChromo>::GetNbNodes;
 	using RNodesGA<cNode,cObj,cChromo>::BuildFile;
    using RNodesGA<cNode,cObj,cChromo>::Clear;

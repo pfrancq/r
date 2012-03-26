@@ -30,7 +30,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rxmlfile.h>
-#include <rcursor.h>
+#include <rnodecursor.h>
 using namespace R;
 using namespace std;
 
@@ -212,7 +212,7 @@ void RXMLFile::SaveNextTag(int depth)
 	// Write the tags (if any)
 	if(CurTag->GetNbNodes())
 	{
-		RCursor<RXMLTag> Tags(CurTag->GetNodes());
+		RNodeCursor<RXMLStruct,RXMLTag> Tags(CurTag);
 		for(Tags.Start();!Tags.End();Tags.Next())
 		{
 			CurTag=Tags();

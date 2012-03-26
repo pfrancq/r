@@ -37,9 +37,8 @@
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
 	RFirstNodeHeuristic<cNode,cObj,cNodes>::RFirstNodeHeuristic(RRandom& r,RCursor<cObj> objs,RDebug* debug)
-	: RTreeHeuristic<cNode,cObj,cNodes>("FistNode",r,objs,debug), tmpNodes(0), tmpAttrs(100), Test("/home/pfrancq/super.txt")
+	: RTreeHeuristic<cNode,cObj,cNodes>("FistNode",r,objs,debug), tmpNodes(0), tmpAttrs(100)
 {
-	Test.Open(R::RIO::Create);
 }
 
 
@@ -80,7 +79,7 @@ template<class cNode,class cObj,class cNodes>
 	while(true)
 	{
 		// Parse randomly all the nodes of that level
-		size_t NbNodes(Nodes->GetTab(tmpNodes,ParentNode));
+		size_t NbNodes(Nodes->GetTab(tmpNodes,ParentNode,false));
 		RandOrder(tmpNodes,NbNodes);
 		for(CurNode=tmpNodes,Node=0,GoDeeper=false,NbMax=0,NbNodes++;--NbNodes;CurNode++)
 		{

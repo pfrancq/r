@@ -419,7 +419,6 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	size_t i;
 	size_t nb;
 	RPromSol** s;
-	RPromSol** tab;
 	cChromo* LastDiv;
 	cChromo* LastMerge;
 
@@ -467,14 +466,14 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 
 	if(Instance->Debug)
 	{
-		for(tab=s=thProm->GetSols(),i=nb+2;--i;s++)
+		RCursor<RPromSol> Sol(thProm->GetSols());
+		for(Sol.Start();!Sol.End();Sol.Next())
 		{
-			if((*s)->GetId())
-				Instance->WriteChromoInfo(thTests[(*s)->GetId()-1]);
+			if(Sol()->GetId())
+				Instance->WriteChromoInfo(thTests[Sol()->GetId()-1]);
 			else
 				Instance->WriteChromoInfo(static_cast<cChromo*>(this));
 		}
-		delete[] tab;
 		Instance->Debug->EndFunc("kMeansOptimisation","RChromoSG");
 	}
 }

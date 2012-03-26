@@ -41,13 +41,14 @@ using namespace std;
 // Skip ending '/' if necessary
 RString AdaptNamespace(const RString& name)
 {
-	if(name[name.GetLen()-1]=='/')
+	if((name.GetLen())&&(name[name.GetLen()-1]=='/'))
 	{
 		return(name.Mid(0,name.GetLen()-1));
 	}
 	else
 		return(name);
 }
+
 
 
 //------------------------------------------------------------------------------
@@ -794,6 +795,7 @@ void RXMLParser::LoadNextTag(void)
 			CDATA=CurString("<![CDATA[",true);
 			if(CDATA)
 			{
+				CurDepth++;   	// Increase the depth
 				Text("<![CDATA[");
 				SkipSpaces();
 				SetParseSpace(RTextFile::LeaveSpaces);
@@ -809,11 +811,16 @@ void RXMLParser::LoadNextTag(void)
 
 					// Add all spaces
 					while(GetNextChar().IsSpace())
+					{
+						LastTokenPos=GetPos();
 						Text(RString(GetChar()));
+					}
 				}
+				LastTokenPos=GetPos();
 				Text("]]>");
 				SetParseSpace(RTextFile::SkipAllSpaces);
 				SkipSpaces();
+				CurDepth--;   	// Decrease the depth
 			}
 			else
 			{
@@ -828,6 +835,7 @@ void RXMLParser::LoadNextTag(void)
 			Contains.SetLen(0);
 			CDATA=true; // Suppose that first '<' found is a "<![CDATA["
 			SetParseSpace(RTextFile::LeaveSpaces);
+			CurDepth++;   	// Increase the depth
 			while(CDATA)
 			{
 				// Get the next word
@@ -838,12 +846,16 @@ void RXMLParser::LoadNextTag(void)
 
 				// Add all spaces
 				while(GetNextChar().IsSpace())
+				{
+					LastTokenPos=GetPos();
 					Text(RString(GetChar()));
+				}
 
 				// Look if the next '<' is the beginning of "<![CDATA["
 				CDATA=CurString("<![CDATA[",true);
 				if(CDATA)
 				{
+					LastTokenPos=GetPos();
 					Text("<![CDATA[");
 					SkipSpaces();
 					SetParseSpace(RTextFile::LeaveSpaces);
@@ -859,13 +871,18 @@ void RXMLParser::LoadNextTag(void)
 
 						// Add all spaces
 						while(GetNextChar().IsSpace())
+						{
+							LastTokenPos=GetPos();
 							Text(RString(GetChar()));
+						}
 					}
+					LastTokenPos=GetPos();
 					Text("]]>");
 					SetParseSpace(RTextFile::SkipAllSpaces);
 					SkipSpaces();
 				}
 			}
+			CurDepth--;   	// Decrease the depth
 		}
 		SetParseSpace(RTextFile::SkipAllSpaces);
 		SkipSpaces();
@@ -915,6 +932,8 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 	RChar What;
 	bool Quotes;
 //	size_t NbAttrs(0);
+
+	CurDepth++;
 
 	// No namespace
 	popdefault=false;
@@ -1048,6 +1067,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 		}
 	}
 
+	CurDepth--;
 	Next(); // Put the internal pointer to the first ending character found
 }
 

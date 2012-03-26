@@ -164,7 +164,8 @@ protected:
 	/**
 	* Create a container from another one. If the pointer to the container is
 	* null, an empty container is created.
-	* @tparam b              Determine if the source container is responsible for the allocation.
+	* @tparam b              Determine if the source container is responsible for
+	*                        the allocation.
 	* @param src             Pointer to the source container.
 	*/
 	template<bool b> void Create(const RContainer<C,b,bOrder>& src);
@@ -172,7 +173,8 @@ protected:
 	/**
 	* Copy a container from another one. If the pointer to the container is
 	* null, the container is just emptied.
-	* @tparam b              Determine if the source container is responsible for the allocation.
+	* @tparam b              Determine if the source container is responsible for
+	*                        the allocation.
 	* @param src             Pointer to the source container.
 	*/
 	template<bool b> RContainer& NormalCopy(const RContainer<C,b,bOrder>& src);
@@ -180,14 +182,16 @@ protected:
 	/**
 	* Deep copy of a container in another one. If the pointer to the container is
 	* null, the container is just emptied.
-	* @tparam b              Determine if the source container is responsible for the allocation.
+	* @tparam b              Determine if the source container is responsible for
+	*                        the allocation.
 	* @param src             Pointer to the source container.
 	*/
 	template<bool b> void DeepCopy(const RContainer<C,b,bOrder>& src);
 
 	/**
 	* Add a container (if the pointer is not null) from another one.
-	* @tparam b              Determine if the source container is responsible for the allocation.
+	* @tparam b              Determine if the source container is responsible for
+	*                        the allocation.
 	* @tparam o              Determine if the source container is ordered.
 	* @param src             Pointer to the source container.
 	*/
@@ -290,7 +294,7 @@ public:
        else
           NbMin=0;
        if((!max)||(max>=LastPtr)||(max<min))
-          NbMax=LastPtr-1;
+          NbMax=LastPtr;
        else
           NbMax=max;
 		if(NbMax)
@@ -583,6 +587,7 @@ public:
 	* -#    By using this function, the user can leave "blanks" in the container.
 	*       In other words, some "valid" pointers could be null. This situation is
 	*       not handle by the other functions of the container.
+	*
 	* @param ins             A pointer to the element to insert.
 	* @param pos             The position where to insert it.
 	* @param del             Specify if the object that was previously at the

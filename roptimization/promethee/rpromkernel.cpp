@@ -31,6 +31,7 @@
 //------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdlib.h>
+#include <math.h>
 using namespace std;
 
 
@@ -51,7 +52,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RPromKernel::RPromKernel(const char* name,size_t sol,size_t crit)
-	: Name(name), Solutions(sol,sol/2), Criteria(crit,crit/2)
+	: Name(name), Solutions(sol,sol/2), OrderedSolutions(sol,sol/2), Criteria(crit,crit/2), MustReOrder(false)
 {
 }
 
@@ -91,6 +92,8 @@ void RPromKernel::ComputePrometheeII(void)
 		sol()->FiMinus/=SumWTot*((double)sol.GetNb()-1);
 		sol()->Fi=sol()->FiPlus-sol()->FiMinus;
 	}
+
+	MustReOrder=true;
 }
 
 
@@ -99,6 +102,13 @@ void RPromKernel::AddCriterion(RPromCriterion* crit)
 {
 	crit->SetId(Criteria.GetNb());
 	Criteria.InsertPtr(crit);
+}
+
+
+//------------------------------------------------------------------------------
+void RPromKernel::AddSol(RPromSol* sol)
+{
+	Solutions.InsertPtr(sol);
 }
 
 
@@ -112,7 +122,7 @@ RPromSol* RPromKernel::NewSol(void)
 
 
 //------------------------------------------------------------------------------
-RPromSol* RPromKernel::NewSol(const char* name)
+RPromSol* RPromKernel::NewSol(const RString& name)
 {
 	RPromSol* sol=new RPromSol(Solutions.GetNb(),name,Criteria.GetMaxNb());
 	Solutions.InsertPtr(sol);
@@ -134,7 +144,6 @@ void RPromKernel::Assign(RPromSol* sol,RPromCriterion* crit,const double v)
 	}
 	else
 	{
-		val->Value=v;
 		val=(*crit)[sol->Id];
 		val->Value=v;
 	}
@@ -142,71 +151,100 @@ void RPromKernel::Assign(RPromSol* sol,RPromCriterion* crit,const double v)
 
 
 //------------------------------------------------------------------------------
-void RPromKernel::Assign(const char* sol,RPromCriterion* crit,const double v)
+void RPromKernel::Assign(const RString& sol,RPromCriterion* crit,const double v)
 {
 	Assign(Solutions.GetPtr<RString>(sol),crit,v);
 }
 
 
 //------------------------------------------------------------------------------
-void RPromKernel::Assign(RPromSol* sol,const char* crit,const double v)
+void RPromKernel::Assign(RPromSol* sol,const RString& crit,const double v)
 {
 	Assign(sol,Criteria.GetPtr<RString>(crit),v);
 }
 
 
 //------------------------------------------------------------------------------
-void RPromKernel::Assign(const char* sol,const char* crit,const double v)
+void RPromKernel::Assign(const RString& sol,const RString& crit,const double v)
 {
 	Assign(Solutions.GetPtr<RString>(sol),Criteria.GetPtr<RString>(crit),v);
 }
 
 
 //------------------------------------------------------------------------------
-RPromSol* RPromKernel::GetBestSol(void)
-{
-	RPromSol *best;
-	RCursor<RPromSol> sol(Solutions);
-	sol.Start();
-	best=sol();
-	for(sol.Next();!sol.End();sol.Next())
-		if(best->Fi<sol()->Fi)
-			best=sol();
-	return(best);
-}
-
-
-//------------------------------------------------------------------------------
 int RPromKernel::sort_function_solutions(const void *a,const void *b)
 {
-	const RPromSol* as=(*((RPromSol**)(a)));
-	const RPromSol* bs=(*((RPromSol**)(b)));
-	double d;
+	double as((*((RPromSol**)(a)))->Fi);
+	double bs((*((RPromSol**)(b)))->Fi);
 
-	d=bs->Fi-as->Fi;
-	if(d==0.0) return(0);
-	if(d<0.0)
+	if(as>bs)
 		return(-1);
-	else
+	else if(as<bs)
 		return(1);
+	return(0);
 }
 
 
 //------------------------------------------------------------------------------
-RPromSol** RPromKernel::GetSols(void)
+void RPromKernel::OrderSolutions(void)
 {
-	RPromSol** Sols=new RPromSol*[Solutions.GetMaxPos()+1];
-	Solutions.GetTab(Sols);
-	qsort(static_cast<void*>(Sols),Solutions.GetNb(),sizeof(RPromSol*),sort_function_solutions);
-	return(Sols);
+	OrderedSolutions.VerifyTab(Solutions.GetNb());
+	RCursor<RPromSol> Sol(Solutions);
+	for(Sol.Start();!Sol.End();Sol.Next())
+		OrderedSolutions.InsertPtr(Sol());
+	OrderedSolutions.ReOrder(sort_function_solutions);
+	MustReOrder=false;
 }
 
 
 //------------------------------------------------------------------------------
-void RPromKernel::GetSols(RPromSol** sols)
+const RPromSol* RPromKernel::GetBestSol(void)
 {
-	Solutions.GetTab(sols);
-	qsort(static_cast<void*>(sols),Solutions.GetNb(),sizeof(RPromSol*),sort_function_solutions);
+	if(!Solutions.GetNb())
+		return(0);
+	if(MustReOrder)
+		OrderSolutions();
+	return(OrderedSolutions[0]);
+}
+
+
+//------------------------------------------------------------------------------
+RCursor<RPromSol> RPromKernel::GetSols(void)
+{
+	if(MustReOrder)
+		OrderSolutions();
+	return(RCursor<RPromSol>(OrderedSolutions));
+}
+
+
+//------------------------------------------------------------------------------
+void RPromKernel::CopySols(RContainer<RPromSol,false,false>& sols)
+{
+	if(MustReOrder)
+		OrderSolutions();
+	sols=OrderedSolutions;
+}
+
+
+//------------------------------------------------------------------------------
+double RPromKernel::GetMinFi(void)
+{
+	if(!Solutions.GetNb())
+		return(0.0);
+	if(MustReOrder)
+		OrderSolutions();
+	return(OrderedSolutions[OrderedSolutions.GetMaxPos()]->Fi);
+}
+
+
+//------------------------------------------------------------------------------
+double RPromKernel::GetMaxFi(void)
+{
+	if(!Solutions.GetNb())
+		return(0.0);
+	if(MustReOrder)
+		OrderSolutions();
+	return(OrderedSolutions[0]->Fi);
 }
 
 
@@ -215,6 +253,7 @@ void RPromKernel::Clear(void)
 {
 	Criteria.Clear();
 	Solutions.Clear();
+	OrderedSolutions.Clear();
 }
 
 
@@ -225,6 +264,68 @@ void RPromKernel::ClearSols(void)
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->Clear();
 	Solutions.Clear();
+	OrderedSolutions.Clear();
+}
+
+
+//------------------------------------------------------------------------------
+void RPromKernel::Print(bool normalized)
+{
+	if(!Solutions.GetNb())
+		return;
+	if(MustReOrder)
+		OrderSolutions();
+
+	// Print Header
+	RString Str("Id");
+	Str.SetLen(15," ");
+	cout<<Str;
+	Str="Fi";
+	Str.SetLen(15," ");
+	cout<<Str;
+	Str="Fi+";
+	Str.SetLen(15," ");
+	cout<<Str;
+	Str="Fi-";
+	Str.SetLen(15," ");
+	cout<<Str;
+	RCursor<RPromCriterion> Crit(Criteria);
+	for(Crit.Start();!Crit.End();Crit.Next())
+	{
+		Str=Crit()->Name;
+		Str.SetLen(20," ");
+		cout<<Str;
+	}
+	cout<<"Name"<<endl;
+
+	// Print Solution
+	RCursor<RPromSol> Sol(OrderedSolutions);
+	for(Sol.Start();!Sol.End();Sol.Next())
+	{
+		Str=RString::Number(Sol()->Id);
+		Str.SetLen(15," ");
+		cout<<Str;
+		Str=RString::Number(Sol()->Fi,"%E");
+		Str.SetLen(15," ");
+		cout<<Str;
+		Str=RString::Number(Sol()->FiPlus,"%E");
+		Str.SetLen(15," ");
+		cout<<Str;
+		Str=RString::Number(Sol()->FiMinus,"%E");
+		Str.SetLen(15," ");
+		cout<<Str;
+		RCursor<RPromCritValue> Value(*Sol());
+		for(Value.Start();!Value.End();Value.Next())
+		{
+			if(normalized)
+				Str=RString::Number(Value()->Normalized,"%E");
+			else
+				Str=RString::Number(Value()->Value,"%E");
+			Str.SetLen(20," ");
+			cout<<Str;
+		}
+		cout<<Sol()->Name<<endl;
+	}
 }
 
 

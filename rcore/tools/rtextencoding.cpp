@@ -132,7 +132,11 @@ RTextEncoding::RTextEncoding(const RCString& name)
 	ptr1=Test;
 	ptr2=Tab;
 	#ifdef _LIBICONV_VERSION
+    #ifndef __APPLE__
 		err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+    #else
+        iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+    #endif
 	#else
 		/*err=*/iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
 	#endif
@@ -189,7 +193,11 @@ RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 		ptr2=Tab;
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION
-			err=iconv(ToUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
+        #ifndef __APPLE__
+            err=iconv(ToUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
+        #else
+            iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
+        #endif
 		#else
 			err=iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
 		#endif
@@ -241,7 +249,11 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 		if(s2==6)
 			throw RException("Big Error in RTextEncoding::NextUnicode");
 		#ifdef _LIBICONV_VERSION
-			err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+        #ifndef __APPLE__
+            err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+        #else
+            iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+        #endif
 		#else
 			err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
 		#endif
@@ -296,7 +308,11 @@ RCString RTextEncoding::FromUnicode(const RString& text) const
 		ptr2=Tab;
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION
-			err=iconv(FromUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
+        #ifndef __APPLE__
+            err=iconv(FromUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+        #else
+            iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
+        #endif
 		#else
 			err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
 		#endif

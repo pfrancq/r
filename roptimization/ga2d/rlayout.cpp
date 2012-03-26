@@ -234,7 +234,7 @@ double RLayout::ComputeWeight(RGeoInfo* info)
 void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,bool* selected,RPromKernel* kernel,RRandom& random)
 {
 	RPromCriterion *weight,*dist;
-	RPromSol *sol,**sols,**best;
+	RPromSol *sol;
 	RGeoInfo **treat;
 	size_t Nb=0;
 	double w,d;
@@ -270,6 +270,7 @@ void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bou
 		}
 	}
 
+
 	if(!Nb)
 	{
 		// Choose a random not selected object
@@ -303,15 +304,17 @@ void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bou
 	else
 	{
 		kernel->ComputePrometheeII();           // Compute PROMETHEE
-		best=sols=kernel->GetSols();            // Get the solutions
-		i1=treat[(*(best++))->GetId()];        // The first one is the best
+		RCursor<RPromSol> Best(kernel->GetSols());                // Get the solutions
+		Best.Start();
+		i1=treat[Best()->GetId()];        // The first one is the best
+		Best.Next();
 
 		// Go through the others and find the best one that can go in bound
 		i1->Boundary(r1);                      // Get The boundary rectangle
 		bFound=false;
 		while((--Nb)&&(!bFound))
 		{
-			treat[(*best)->GetId()]->Boundary(r2);      // Get The boundary rectangle
+			treat[Best()->GetId()]->Boundary(r2);      // Get The boundary rectangle
 			tCoord X1(r2.GetX1()), Y1(r2.GetY1()), X2(r2.GetX2()), Y2(r2.GetY2());
 			if(r1.GetX1()<X1) X1=r1.GetX1();
 			if(r1.GetY1()<Y1) Y1=r1.GetY1();
@@ -321,11 +324,11 @@ void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bou
 			if((r2.GetWidth()<=bound.GetWidth())&&(r2.GetHeight()<=bound.GetHeight()))
 			{
 					bFound=true;
-					i2=treat[(*(best++))->GetId()];
+					i2=treat[Best()->GetId()];
+					Best.Next();
 			}
-			best++;
+			Best.Next();
 		}
-		delete[] sols;
 	}
 
 	// Clear

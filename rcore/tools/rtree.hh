@@ -36,24 +36,43 @@
 
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
-	RTree<T,N,bAlloc>::RTree(size_t max,size_t inc)
-		: RContainer<N,bAlloc,false>(max,inc), NbTopNodes(0), MaxDepth(0)
+	RTree<T,N,bAlloc>::RTree(void)
+		: First(0), Last(0), NbTopNodes(0), NbNodes(0), MaxDepth(0)
 {
 }
 
 
 //---------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
-	void RTree<T,N,bAlloc>::Clear(size_t max,size_t inc)
+	void RTree<T,N,bAlloc>::ClearNode(N* node)
 {
-	if(!bAlloc)
+	N* Node(node->First);
+	while(Node)
 	{
-		RCursor<N> Cur(*this);
-		for(Cur.Start();!Cur.End();Cur.Next())
-			Cur()->Clear();
+		N* Next(Node->Next);
+		ClearNode(Node);
+		Node=Next;
 	}
-	NbTopNodes=0;
-	RContainer<N,bAlloc,false>::Clear(max,inc);
+	node->Clear();
+}
+
+
+//---------------------------------------------------------------------------
+template<class T,class N,bool bAlloc>
+	void RTree<T,N,bAlloc>::Clear(void)
+{
+	N* Node(First);
+	while(Node)
+	{
+		N* Next(Node->Next);
+		if(bAlloc)
+			DeleteNode(Node,true);
+		else
+			ClearNode(Node);
+		Node=Next;
+	}
+	NbNodes=NbTopNodes=0;
+	First=Last=0;
 	MaxDepth=0;
 }
 
@@ -79,11 +98,9 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	N* RTree<T,N,bAlloc>::GetTop(void)
 {
-	if(!NbTopNodes)
-		return(0);
 	if(NbTopNodes>1)
 		ThrowRException("More than one top node");
-	return((*this)[0]);
+	return(First);
 }
 
 
@@ -91,51 +108,35 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	const N* RTree<T,N,bAlloc>::GetTop(void) const
 {
-	if(!NbTopNodes)
-		return(0);
 	if(NbTopNodes>1)
 		ThrowRException("More than one top node");
-	return((*this)[0]);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class T,class N,bool bAlloc>
-	RCursor<N> RTree<T,N,bAlloc>::GetTopNodes(void) const
-{
-	if(!NbTopNodes)
-		return(R::RCursor<N>());
-	return(R::RCursor<N>(*this,0,NbTopNodes-1));
-}
-
-
-//-----------------------------------------------------------------------------
-template<class T,class N,bool bAlloc>
-	RCursor<N> RTree<T,N,bAlloc>::GetNodes(const N* node) const
-{
-	if(node)
-	{
-		if(!node->NbSubNodes)
-			return(R::RCursor<N>());
-		return(R::RCursor<N>(*this,node->SubNodes,node->SubNodes+node->NbSubNodes-1));
-	}
-	if(!NbTopNodes)
-		return(R::RCursor<N>());
-	return(R::RCursor<N>(*this,0,NbTopNodes-1));
+	return(First);
 }
 
 
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
-	size_t RTree<T,N,bAlloc>::GetTab(N** nodes,N* node)
+	size_t RTree<T,N,bAlloc>::GetTab(N** nodes,N* node,bool children)
 {
+	size_t Pos(0);
+	N** ptr(nodes);
+	N* n;
 	if(node)
+		n=node->First;
+	else
+		n=First;
+	while(n)
 	{
-		GetTab(nodes,node->SubNodes,node->SubNodes+node->NbSubNodes-1);
-		return(node->NbSubNodes);
+		(*(ptr++))=n;
+		Pos++;
+		if(children)
+		{
+			Pos+=GetTab(ptr,n,true);
+			ptr=&nodes[Pos]; // The pointer must be repositionned.
+		}
+		n=n->Next;
 	}
-	GetTab(nodes,0,NbTopNodes-1);
-	return(NbTopNodes);
+	return(Pos);
 }
 
 
@@ -143,126 +144,119 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	void RTree<T,N,bAlloc>::InsertNode(N* to,N* node)
 {
-	size_t Index;        // Index where the node will be inserted (All references after must be increased by one).
-
 	if((node->Tree)&&(node->Tree!=static_cast<T*>(this)))
 		ThrowRException("Node is already inserted in another tree");
-	if(to&&((to->Tree!=static_cast<T*>(this))||(to->Index==cNoRef)))
+	if(to&&(to->Tree!=static_cast<T*>(this)))
 		ThrowRException("Node where to attach is not inserted in the same tree");
+
+	// Insert the node in its parent and siblings
 	node->Tree=static_cast<T*>(this);
 	if(to)
 	{
-		// Parent node
-		if(!to->NbSubNodes)
-			to->SubNodes=RContainer<N,bAlloc,false>::GetNb();
-		Index=to->SubNodes+to->NbSubNodes++;
+		to->NbSubNodes++;
+		if(!to->First)
+			to->First=node;
+		node->Prev=to->Last;
+		if(to->Last)
+			to->Last->Next=node;
+		to->Last=node;
 	}
 	else
 	{
 		// Top node
-		Index=NbTopNodes++;
+		NbTopNodes++;
+		if(!First)
+			First=node;
+		node->Prev=Last;
+		if(Last)
+			Last->Next=node;
+		Last=node;
 	}
-	InsertPtrAt(node,Index,false);
 	node->Parent=to;
-	node->Index=Index;
-	RCursor<N> Nodes(*this);
-	for(Nodes.Start();!Nodes.End();Nodes.Next())
-	{
-		if(Nodes()==node)
-			continue;
+	NbNodes++;
 
-		// Update the index
-		if(Nodes()->Index>=Index)
-			Nodes()->Index++;
-
-		// Update the references to the child nodes
-		if((Nodes()!=to)&&(Nodes()->SubNodes!=cNoRef)&&(Nodes()->SubNodes>=Index))
-			Nodes()->SubNodes++;
-	}
 	if(to)
 		node->Depth=to->Depth+1;
 	else
-		node->Depth=1;
+		node->Depth=0;
 	if(node->Depth>MaxDepth)
 		MaxDepth=node->Depth;
 }
 
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
-	void RTree<T,N,bAlloc>::DeleteNode(N* node,bool childs,bool del)
+	void RTree<T,N,bAlloc>::DeleteNodes(N* from,bool del)
 {
-	// If the depth of the node to delete correspond to the maximal depth -> it must be recomputed.
-	if(node->Depth==MaxDepth)
-		MaxDepth=cNoRef;
-
-	// Delete child nodes
-	if(childs&&node->NbSubNodes)
+	N* ptr(from->First);
+	while(ptr)
 	{
-		RContainer<N,false,false> Del(node->NbSubNodes);
-		RCursor<N> Cur(node->GetNodes());
-		for(Cur.Start();!Cur.End();Cur.Next())
-			Del.InsertPtr(Cur());
-		Cur.Set(Del);
-		for(Cur.Start();!Cur.End();Cur.Next())
-			DeleteNode(Cur(),true);
-		node->NbSubNodes=0;
-		node->SubNodes=cNoRef;
+		N* Next(ptr->Next);
+		DeleteNodes(ptr,del);
+		if(del)
+			delete ptr;
+		else
+		{
+			ptr->Tree=0;
+			ptr->Parent=ptr->Next=ptr->Prev=0;
+		}
+		NbNodes--;
+		ptr=Next;
 	}
-
-	// Delete the node and update the index
-	N* From(node->Parent);
-	node->Parent=0;
-	node->Tree=0;
-	size_t Index(node->Index);      // Index where the node will be inserted (All references after must be decreased by one).
-	node->Index=cNoRef;
-	DeletePtrAt(Index,true,del);
-	if(From)
-	{
-		// Parent node
-		if(!(--From->NbSubNodes))
-			From->SubNodes=cNoRef;
-	}
-	else
-	{
-		// Top node
-		NbTopNodes--;
-	}
-	RCursor<N> Nodes(*this);
-	for(Nodes.Start();!Nodes.End();Nodes.Next())
-	{
-		// Update the index
-		if(Nodes()->Index>Index)
-			Nodes()->Index--;
-
-		// Update the references to the child nodes
-		if((Nodes()->SubNodes!=cNoRef)&&(Nodes()->SubNodes>Index))
-			Nodes()->SubNodes--;
-	}
-
-	// Since node is not deleted -> update its references to child nodes
-	if(!del)
-	{
-		if((node->SubNodes!=cNoRef)&&(node->SubNodes>Index))
-			node->SubNodes--;
-	}
+	from->NbSubNodes=0;
+	from->First=from->Last=0;
 }
 
 
-//------------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
-	void RTree<T,N,bAlloc>::DeleteNodes(N* from)
+	void RTree<T,N,bAlloc>::DeleteNode(N* node,bool del)
 {
-	if(!from->NbSubNodes)
-		return;
+	// If the depth of the node to delete correspond to the maximal depth -> it must be recomputed.
+	if(node->Depth==MaxDepth)
+	{
+		if((!node->Prev)&&(!node->Next))
+			MaxDepth=cNoRef;
+	}
 
-	RContainer<N,false,false> Del(from->NbSubNodes);
-	RCursor<N> Cur(from->GetNodes());
-	for(Cur.Start();!Cur.End();Cur.Next())
-		Del.InsertPtr(Cur());
-	Cur.Set(Del);
-	for(Cur.Start();!Cur.End();Cur.Next())
-		DeleteNode(Cur(),true);
+	// Delete child nodes
+	DeleteNodes(node,del);
+
+	// Delete the node from its parents and siblings
+	if(node->Parent)
+	{
+		if(node->Prev)
+			node->Prev->Next=node->Next;
+		if(node->Next)
+			node->Next->Prev=node->Prev;
+		if(node->Parent->First==node)
+			node->Parent->First=node->Next;
+		if(node->Parent->Last==node)
+			node->Parent->Last=node->Prev;
+		node->Parent->NbSubNodes--;
+	}
+	else
+	{
+		if(node->Prev)
+			node->Prev->Next=node->Next;
+		if(node->Next)
+			node->Next->Prev=node->Prev;
+		if(First==node)
+			First=node->Next;
+		if(Last==node)
+			Last=node->Prev;
+		NbTopNodes--;
+	}
+
+	// Delete the node
+	if(del)
+		delete node;
+	else
+	{
+		node->Tree=0;
+		node->Parent=node->Next=node->Prev=0;
+	}
+	NbNodes--;
 }
 
 
@@ -275,8 +269,53 @@ template<class T,class N,bool bAlloc>
 	if(to==node->Parent)
 		return;
 
-	DeleteNode(node,false,false);  // Do not delete the nodes and do not deallocate the node
-	InsertNode(to,node);
+	// Delete the node from its parents and siblings
+	if(node->Parent)
+	{
+		if(node->Prev)
+			node->Prev->Next=node->Next;
+		if(node->Next)
+			node->Next->Prev=node->Prev;
+		if(node->Parent->First==node)
+			node->Parent->First=node->Next;
+		if(node->Parent->Last==node)
+			node->Parent->Last=node->Prev;
+		node->Parent->NbSubNodes--;
+	}
+	else
+	{
+		if(node->Prev)
+			node->Prev->Next=node->Next;
+		if(node->Next)
+			node->Next->Prev=node->Prev;
+		if(First==node)
+			First=node->Next;
+		if(Last==node)
+			Last=node->Prev;
+		NbTopNodes--;
+	}
+
+	// Insert it in the new parent and siblings
+	if(to)
+	{
+		to->NbSubNodes++;
+		if(!to->First)
+			to->First=node;
+		node->Prev=to->Last;
+		to->Last->Next=node;
+		to->Last=node;
+	}
+	else
+	{
+		// Top node
+		NbTopNodes++;
+		if(!First)
+			First=node;
+		node->Prev=Last;
+		Last->Next=node;
+		Last=node;
+	}
+	node->Parent=to;
 }
 
 
@@ -284,9 +323,12 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc> template<bool a>
 	void RTree<T,N,bAlloc>::Copy(const RTree<T,N,a>& src)
 {
-	RCursor<N> Nodes(src.Top->GetNodes());
-	for(Nodes.Start();!Nodes.End();Nodes.Next())
-		DeepCopy(Nodes(),0);
+	N* ptr(src.First);
+	while(ptr)
+	{
+		DeepCopy(ptr,0);
+		ptr=ptr->Next;
+	}
 }
 
 
@@ -296,9 +338,12 @@ template<class T,class N,bool bAlloc>
 {
 	N* NewNode=new N(*src);
 	InsertNode(parent,NewNode);
-	RCursor<N> curs(src->GetNodes());
-	for(curs.Start(); !curs.End(); curs.Next())
-		DeepCopy(curs(),NewNode);
+	N* ptr(src->First);
+	while(ptr)
+	{
+		DeepCopy(ptr,NewNode);
+		ptr=ptr->Next;
+	}
 }
 
 
@@ -307,7 +352,17 @@ template<class T,class N,bool bAlloc>
 	template<class TUse>
 		N* RTree<T,N,bAlloc>::GetNode(const TUse& tag) const
 {
-	return(RContainer<N,bAlloc,false>::GetPtr(tag,false));
+	N* ptr(First);
+	while(ptr)
+	{
+		if(!ptr->Compare(tag))
+			return(ptr);
+		N* Find(ptr->GetNode(tag));
+		if(Find)
+			return(Find);
+		ptr=ptr->Next;
+	}
+	return(0);
 }
 
 
@@ -350,4 +405,14 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	RTree<T,N,bAlloc>::~RTree(void)
 {
+	if(bAlloc)
+	{
+		N* Node(First);
+		while(Node)
+		{
+			N* Next(Node->Next);
+			DeleteNode(Node,true);
+			Node=Next;
+		}
+	}
 }

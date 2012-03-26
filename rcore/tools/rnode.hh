@@ -37,7 +37,8 @@
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
 	RNode<T,N,bAlloc>::RNode(void)
-		: Tree(0), Parent(0), SubNodes(cNoRef), NbSubNodes(0), Index(cNoRef)
+		: Tree(0), Parent(0), Prev(0), Next(0), First(0), Last(0), NbSubNodes(0),
+	     Depth(cNoRef)
 {
 }
 
@@ -45,7 +46,8 @@ template<class T,class N,bool bAlloc>
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
 	RNode<T,N,bAlloc>::RNode(T* tree)
-		: Tree(tree), Parent(0), SubNodes(cNoRef), NbSubNodes(0), Index(cNoRef)
+		: Tree(tree), Parent(0), Prev(0), Next(0), First(0), Last(0), NbSubNodes(0),
+	     Depth(cNoRef)
 {
 }
 
@@ -54,44 +56,24 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	void RNode<T,N,bAlloc>::Clear(void)
 {
-	Parent=0;
-	SubNodes=cNoRef;
+	Parent=Last=First=Prev=Next=0;
 	NbSubNodes=0;
-	Index=cNoRef;
+	Depth=cNoRef;
 }
 
 
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
-	N* RNode<T,N,bAlloc>::GetParent(void) const
+	size_t RNode<T,N,bAlloc>::GetNbTotalNodes(void) const
 {
-	return(Parent);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class T,class N,bool bAlloc>
-	size_t RNode<T,N,bAlloc>::GetNbNodes(void) const
-{
-	return(NbSubNodes);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class T,class N,bool bAlloc>
-	size_t RNode<T,N,bAlloc>::GetIndex(void) const
-{
-	return(Index);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class T,class N,bool bAlloc>
-	RCursor<N> RNode<T,N,bAlloc>::GetNodes(void) const
-{
-	if((!Tree)||(Index==cNoRef))
-		ThrowRException("Node not assign to a tree");
-	return(Tree->GetNodes(static_cast<const N*>(this)));
+	size_t Nb(0);
+	N* Node(First);
+	while(Node)
+	{
+		Nb+=1+Node->GetNbTotalNodes();
+		Node=Node->Next;
+	}
+	return(Nb);
 }
 
 
@@ -99,9 +81,17 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	template<class TUse> N* RNode<T,N,bAlloc>::GetNode(const TUse& tag) const
 {
-	if((!Tree)||(Index==cNoRef))
-		ThrowRException("Node not assign to a tree");
-	return(Tree->GetPtr(tag,false,SubNodes,SubNodes+NbSubNodes-1));
+	N* ptr(First);
+	while(ptr)
+	{
+		if(!ptr->Compare(tag))
+			return(ptr);
+		N* Find(ptr->GetNode(tag));
+		if(Find)
+			return(Find);
+		ptr=ptr->Next;
+	}
+	return(0);
 }
 
 
@@ -109,7 +99,7 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	void RNode<T,N,bAlloc>::InsertNode(N* node)
 {
-	if((!Tree)||(Index==cNoRef))
+	if(!Tree)
 		ThrowRException("Node not assign to a tree");
 	Tree->InsertNode(static_cast<N*>(this),node);
 }
@@ -126,53 +116,10 @@ template<class T,class N,bool bAlloc>
 
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
-	const N* RNode<T,N,bAlloc>::operator[](size_t idx) const
-{
-	if((!Tree)||(Index==cNoRef))
-		ThrowRException("Node not assign to a tree");
-	if(idx>=NbSubNodes)
-	{
-		char tmp[80];
-		sprintf(tmp,"RNode::operator[] const : index %u outside range [0,%u]",idx,NbSubNodes-1);
-		throw std::range_error(tmp);
-	}
-	return((*Tree)[SubNodes+idx]);
-}
-
-
-//------------------------------------------------------------------------------
-template<class T,class N,bool bAlloc>
-	N* RNode<T,N,bAlloc>::operator[](size_t idx)
-{
-	if((!Tree)||(Index==cNoRef))
-		ThrowRException("Node not assign to a tree");
-	if(idx>=NbSubNodes)
-	{
-		char tmp[80];
-		sprintf(tmp,"RNode::operator[] : index %u outside range [0,%u]",idx,NbSubNodes-1);
-		throw std::range_error(tmp);
-	}
-	return((*Tree)[SubNodes+idx]);
-}
-
-
-//------------------------------------------------------------------------------
-template<class T,class N,bool bAlloc>
-	size_t RNode<T,N,bAlloc>::GetTab(N** nodes)
-{
-	if((!Tree)||(Index==cNoRef))
-		ThrowRException("Node not assign to a tree");
-	Tree->GetTab(nodes,SubNodes,SubNodes+NbSubNodes-1);
-	return(NbSubNodes);
-}
-
-
-//------------------------------------------------------------------------------
-template<class T,class N,bool bAlloc>
 	bool RNode<T,N,bAlloc>::VerifyNode(size_t id)
 {
 	// Each node must have a parent.
-	if((!Tree)||(Index==cNoRef))
+	if(!Tree)
 	{
 		std::cerr<<"Node "<<id<<": No Owner for this node."<<std::endl;
 		return(false);
@@ -181,31 +128,17 @@ template<class T,class N,bool bAlloc>
 	// Verify information about child nodes
 	if(NbSubNodes)
 	{
-		// There number of child nodes can't be null.
-		if(SubNodes==cNoRef)
+		// There must exist at least one child.
+		if(!First)
 		{
 			std::cerr<<"Node "<<id<<": SubNodes==NoNode"<<std::endl;
-			return(false);
-		}
-
-		// The index of the first child node can not exceed the total number of nodes allocated in the parent.
-		if(SubNodes>Tree->GetNb())
-		{
-			std::cerr<<"Node "<<id<<": SubNodes>Tree->NbPtr"<<std::endl;
-			return(false);
-		}
-
-		// The index of the last child node can not exceed the total number of nodes allocated in the parent.
-		if(SubNodes+NbSubNodes>Tree->GetNb())
-		{
-			std::cerr<<"Node "<<id<<": SubNodes+NbSubNodes>Tree->NbPtr"<<std::endl;
 			return(false);
 		}
 	}
 	else
 	{
-		// The number of child nodes must be null.
-		if(SubNodes!=cNoRef)
+		// No children.
+		if(First)
 		{
 			std::cerr<<"Node "<<id<<": SubNodes!=NoNode"<<std::endl;
 			return(false);

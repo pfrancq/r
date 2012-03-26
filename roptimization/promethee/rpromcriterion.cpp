@@ -51,9 +51,9 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPromCriterion::RPromCriterion(tCriteriaType type,double w,const char* name,size_t nb)
+RPromCriterion::RPromCriterion(tCriteriaType type,double w,const RString& name,size_t nb)
 	: RContainer<RPromCritValue,false,false>(nb,nb/2), Id(cNoRef), Name(name),
-	  Type(type)
+	  Type(type), Active(true)
 {
 	Weight=w;
 }
@@ -88,7 +88,7 @@ void RPromCriterion::Normalize(void)
 	if(diff)
 	{
 		for(ptr.Start();!ptr.End();ptr.Next())
-			ptr()->Value=(ptr()->Value-min)/diff;
+			ptr()->Normalized=(ptr()->Value-min)/diff;
 	}
 }
 
@@ -109,8 +109,8 @@ void RPromCriterion::ComputeFiCrit(RPromKernel* kern)
 		{
 			// Only if secondary solution is not the same than the primary one.
 			if(sol()==sol2()) continue;
-			ptr()->FiCritPlus+=ComputePref(ptr()->Value,ptr2()->Value);
-			ptr()->FiCritMinus+=ComputePref(ptr2()->Value,ptr()->Value);
+			ptr()->FiCritPlus+=ComputePref(ptr()->Normalized,ptr2()->Normalized);
+			ptr()->FiCritMinus+=ComputePref(ptr2()->Normalized,ptr()->Normalized);
 		}
 	}
 
@@ -134,7 +134,7 @@ RPromCriterion::~RPromCriterion(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,double p,double q,double w,const char* name,size_t nb)
+RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,double p,double q,double w,const RString& name,size_t nb)
 	: RPromCriterion(type,w,name,nb)
 {
 	Set(p,q,w);
@@ -142,7 +142,7 @@ RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,double p,double q,
 
 
 //------------------------------------------------------------------------------
-RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,const RParam* params,const char* name,size_t nb)
+RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,const RParam* params,const RString& name,size_t nb)
 	: RPromCriterion(type,0.0,name,nb)
 {
 	Set(params);
@@ -153,6 +153,7 @@ RPromLinearCriterion::RPromLinearCriterion(tCriteriaType type,const RParam* para
 void RPromLinearCriterion::Set(const RParam* param)
 {
 	double p,q,w;
+	bool a;
 	const RParamStruct* Param(dynamic_cast<const RParamStruct*>(param));
 	if(!Param)
 		ThrowRException("Parameter '"+param->GetName()+"' is not of type 'RParamStuct'");
@@ -168,29 +169,23 @@ void RPromLinearCriterion::Set(const RParam* param)
 	if(!Val)
 		ThrowRException("Parameter '"+param->GetName()+"' has no member 'Weight'");
 	w=Val->GetDouble();
-	Set(p,q,w);
+	Val=Param->Get<RParamValue>("Active");
+	if(!Val)
+		ThrowRException("Parameter '"+param->GetName()+"' has no member 'Active'");
+	a=Val->GetBool();
+	Set(p,q,w,a);
 }
 
 
 //-----------------------------------------------------------------------------
-RParam* RPromLinearCriterion::CreateParam(const R::RString& name,const RString& desc)
-{
-	RParamStruct* param=new RParamStruct(name,desc);
-	param->Insert(new RParamValue("P",0.2,"Preference threshold"));
-	param->Insert(new RParamValue("Q",0.05,"Indifference threshold"));
-	param->Insert(new RParamValue("Weight",1.0,"Weight"));
-	return(param);
-}
-
-
-//-----------------------------------------------------------------------------
-void RPromLinearCriterion::Set(double p,double q,double w)
+void RPromLinearCriterion::Set(double p,double q,double w,bool active)
 {
 	if((p<0.0)||(q<0.0)||(p>1.0)||(q>1.0)||(p<=q))
 		throw RException("Wrong Promethee Parameters: 0<Q<P<1");
 	P=p;
 	Q=q;
 	Weight=w;
+	Active=active;
 }
 
 
@@ -239,4 +234,16 @@ double RPromLinearCriterion::ComputePref(double u,double v)
 		else
 			return(0);
 	}
+}
+
+
+//-----------------------------------------------------------------------------
+RParam* RPromLinearCriterion::CreateParam(const R::RString& name,const RString& desc)
+{
+	RParamStruct* param=new RParamStruct(name,desc);
+	param->Insert(new RParamValue("P",0.2,"Preference threshold"));
+	param->Insert(new RParamValue("Q",0.05,"Indifference threshold"));
+	param->Insert(new RParamValue("Weight",1.0,"Weight"));
+	param->Insert(new RParamValue("Active",true,"Active"));
+	return(param);
 }

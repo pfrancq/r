@@ -58,17 +58,20 @@ template<class cNode,class cObj,class cNodes>
 	class RNodesGA : public RTree<cNodes,cNode,false>
 {
 public:
-
 	using RTree<cNodes,cNode,false>::GetNbNodes;
-	using RTree<cNodes,cNode,false>::GetTopNodes;
-	using RTree<cNodes,cNode,false>::GetNodes;
 
 protected:
 
 	/**
-	 * Nodes reserved.
+	 * Nodes reserved. It contains a number of allocated nodes, some of them
+	 * being used in the tree.
 	 */
 	RContainer<cNode,true,false> Reserved;
+
+	/**
+	 * All the nodes used in the tree, ordered by identifier.
+	 */
+	RContainer<cNode,false,true> Nodes;
 
 	/**
 	* The Objects to put in a tree.

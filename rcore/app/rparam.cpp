@@ -31,6 +31,7 @@
 // include files for R
 #include <rparam.h>
 #include <rxmlstruct.h>
+#include <rnodecursor.h>
 using namespace R;
 
 
@@ -320,7 +321,7 @@ void RParamValue::Reset(void)
 RParamList::RParamList(const RXMLTag* tag)
 	: RParam(tag->GetAttrValue("name"),tag->GetAttrValue("desc")), Values(tag->GetNbNodes())
 {
-	RCursor<RXMLTag> Cur(tag->GetNodes());
+	RNodeCursor<RXMLStruct,RXMLTag> Cur(tag);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		if(Cur()->GetName()!="item")
@@ -367,7 +368,7 @@ bool RParamList::Set(RXMLTag* tag)
 {
 	if((tag->GetName()!="list")||(tag->GetAttrValue("name")!=Name))
 		return(false);
-	RCursor<RXMLTag> Cur(tag->GetNodes());
+	RNodeCursor<RXMLStruct,RXMLTag> Cur(tag);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		if(Cur()->GetName()!="item")
@@ -413,7 +414,7 @@ void RParamList::Reset(void)
 RParamStruct::RParamStruct(const RXMLTag* tag)
 	: RParam(tag->GetAttrValue("name"),tag->GetAttrValue("desc")), Parameters(tag->GetNbNodes())
 {
-	RCursor<RXMLTag> Cur(tag->GetNodes());
+	RNodeCursor<RXMLStruct,RXMLTag> Cur(tag);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		if(Cur()->GetName()=="param")
@@ -455,7 +456,7 @@ bool RParamStruct::Set(RXMLTag* tag)
 {
 	if((tag->GetName()!="struct")||(tag->GetAttrValue("name")!=Name))
 		return(false);
-	RCursor<RXMLTag> Cur(tag->GetNodes());
+	RNodeCursor<RXMLStruct,RXMLTag> Cur(tag);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		if(Cur()->GetName()=="param")

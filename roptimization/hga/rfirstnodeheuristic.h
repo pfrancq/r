@@ -70,8 +70,6 @@ template<class cNode,class cObj,class cNodes>
 	 */
 	RAttrList tmpAttrs;
 
-	R::RTextFile Test;
-
 public:
 
 	/**

@@ -102,7 +102,6 @@ protected:
 	*/
 	size_t LastPtr;
 
-
 public:
 
 	/**

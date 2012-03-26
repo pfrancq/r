@@ -66,7 +66,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	RContainer<cNode,false,false> ToDel(20);
 
 	// Search for all nodes to remove
-	RCursor<cNode> Cur(GetNodes());
+	RCursor<cNode> Cur(Nodes);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		if((Cur()->GetNbObjs())||(Cur()->GetNbNodes()))
@@ -87,9 +87,6 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 {
 	if(Instance->Debug)
 		Instance->Debug->BeginFunc("RamdomConstruct","RChromoH");
-//	std::cout<<"Init Chromosome "<<Id<<std::endl;
-//	if(Id==4)
-//		std::cout<<"Debug"<<std::endl;
 	Heuristic->Run(static_cast<cChromo*>(this));
 	if(Instance->Debug)
 		Instance->Debug->EndFunc("RamdomConstruct","RChromoH");
@@ -114,8 +111,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	// 1. Two nodes having the same attributes are chosen in each parent:
 	// Node1 from parent1.
 	// Node2 from parent2.
-	size_t Nb1=parent1->GetTab(thNodes1);
-	size_t Nb2=parent2->GetTab(thNodes2);
+	size_t Nb1=parent1->Nodes.GetTab(thNodes1);
+	size_t Nb2=parent2->Nodes.GetTab(thNodes2);
 	Instance->RandOrder(thNodes1,Nb1);
 	Instance->RandOrder(thNodes2,Nb2);
 	for(i=Nb1+1,Ref1=thNodes1,Node1=Node2=0;(--i)&&(!Node1);Ref1++)
@@ -187,7 +184,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 		Instance->Debug->BeginFunc("Mutation","RChromoH");
 
 	// Choose Randomly a node and delete it.
-	cNode* Node=GetNodeAt(Instance->RRand(GetNbNodes()));
+	cNode* Node(Nodes[Instance->RRand(GetNbNodes())]);
 	if(Instance->Debug)
 		Instance->Debug->PrintInfo("Node "+RString::Number(Node->GetId())+" use for Mutation");
 	ReleaseNode(Node);
@@ -204,10 +201,9 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	void RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::Print(void)
 {
-/*	size_t i,*ptr;
-
-	for(i=NbTopNodes,ptr=&NodesList[TopNodes];i--;ptr++)
-		Nodes[*ptr]->Print(0);*/
+//	RNodeCursor<cChromo,cNode> Cur(this);
+//	for(Cur.Start();!Cur.End();Cur.Next)
+//		Cur()->Print(0);
 }
 
 

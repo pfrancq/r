@@ -16,14 +16,14 @@ before the first build:
 - cd /path/to/r/build
 - cmake .. [OPTIONS]
 - update Eclipse C++ project options:
-	--> C/C++ Build (click on title) 
-		-> builder settings tab 
-		-> disable 'use the default build command' (untick checkbox) 
+	--> C/C++ Build (click on title)
+		-> builder settings tab
+		-> disable 'use the default build command' (untick checkbox)
 		-> fill the 'build command' text field with 'make -C ${project_loc}/build VERBOSE=1'
-	--> C/C++ Build (click on title) 
+	--> C/C++ Build (click on title)
 		---> Settings
 			-> enable the good parser on the 'binary parsers' tab (ELF related for Linux)
-- configure a target for all in Ecplise 
+- configure a target for all in Ecplise
 
 anytime after
 - build the project ...
@@ -46,7 +46,7 @@ ABOUT OPTIONS (when running cmake)
 In CMake, options are in the form -D<option_name>=<option_value>, where <option_name> (case sensitive) and <option_value> are mandatory.
 When you set a value, it's stored in cache, until you provide a new value.
 
-So if you first configure with 
+So if you first configure with
 cmake .. -DCMAKE_BUILD_TYPE=Debug
 the first time, the project will be build with debug informations.  Future cmake invocation without paramater (like cmake ..)
 still prepare configuration for debug.  You need to set one time the new value for the configuration to update this setting
@@ -77,6 +77,11 @@ rcmake-verbose=<true|false> -> Enable verbose output during cmake run (by defaul
 
 disable-rmath=<true|false> -> Disable rmath library construction (by default, rmath library is enabled [false])
 disable-roptimization=<true|false> -> Disable roptimization library construction (by default, roptimization library is enabled [false])
+
+EXEMPLE
+------------------
+To compile R without debugging information and without Qt/KDE support, type (if you compile it in a subdirectory of R):
+	cmake -Ddisable-kde=true ..
 
 ABOUT INSTALLATION
 ------------------

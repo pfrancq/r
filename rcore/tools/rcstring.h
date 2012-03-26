@@ -240,7 +240,7 @@ public:
 
 	inline const char& operator[](size_t idx) const {return(BasicString<char,RCString>::operator[](idx));}
 
-	inline char& operator[](size_t idx) {return(BasicString<char,RCString>::operator[](idx));}
+	inline char& operator[](size_t idx) {BasicString<char,RCString>::Copy(); return(BasicString<char,RCString>::operator[](idx));}
 
 	/**
 	* Equal operator.

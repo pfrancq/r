@@ -49,13 +49,17 @@ class RXMLAttr;
 
 //------------------------------------------------------------------------------
 /**
-* This class represents a parser for a XML stream. The stream can be read from
-* a file. By default, it does nothing.
+* This class represents a parser for a XML stream read from a file. By default,
+* it does nothing. It should be inherited by child classes that actually treat
+* the information parsed (tags, attributes and content).
+*
+* The RXMLFile is an example of a child class that fill a RXMLStruct from a XML
+* file.
 * @code
 * #include <rxmlparser.h>
 * using namespace R;
 *
-* RXMLParser In("/home/user/data.xml",&XML);
+* RXMLParser In("/home/user/data.xml");
 * In.Open(RIO::Read);
 * @endcode
 * @short XML Stream Parser.
@@ -308,7 +312,7 @@ protected:
 	* string with normal characters.
 	* @param str            XML string.
 	* @returns A RString containing a normal string.
-	* @exception RIOException An exception is generated if the string contains
+	* @exception A RIOException exception is generated if the string contains
 	*                         an invalid XML or HTML code.
 	*/
 	RString XMLToString(const RString& str);

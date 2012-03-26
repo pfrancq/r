@@ -288,6 +288,20 @@ public:
 	virtual void Close(void);
 
 	/**
+	* Go to a specific position of the file.
+	* @warning this method doesn't take the count of lines into account.
+	* @param pos            Position to reach.
+	*/
+	virtual void Seek(off_t pos);
+
+	/**
+	* Move for a given number of bytes from the current position of the file.
+	* @warning this method doesn't take the count of lines into account.
+	* @param pos            Relative position.
+	*/
+	virtual void SeekRel(off_t pos);
+
+	/**
 	* Return the next character but without to move internal pointer of the
 	* file.
 	*/
@@ -730,8 +744,10 @@ namespace std{
 
 //------------------------------------------------------------------------------
 // Global functions
+#ifndef __APPLE__
 extern "C++"
 {
+#endif
 	/**
 	* Write an end-of-line in a RTextFile.
 	*/
@@ -746,7 +762,9 @@ extern "C++"
 	* Operator needed for using generic writing functions.
 	*/
 	inline R::RTextFile& operator<<(R::RTextFile& o, R::RTextFile& (&f)(R::RTextFile&)) {return(f(o));}
+#ifndef __APPLE__
 }
+#endif
 
 
 }  //-------- End of namespace std ---------------------------------------------

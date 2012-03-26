@@ -200,25 +200,25 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 	#if BESTSOLSVERIFICATION
 		cChromo* b;
 	#endif
-	RPromSol** Res;
-	RPromSol** ptr;
 	double r;
 
 	if(Debug)
 		Debug->BeginFunc("PostEvaluate","RInstSG");
-	ptr=Sols;
-	AssignChromo(*ptr,BestChromosome);
-	for(i=GetPopSize()+1,C=Chromosomes,ptr++;--i;C++,ptr++)
-		AssignChromo(*ptr,*C);
+	RPromSol** sol(Sols);
+	AssignChromo(*sol,BestChromosome);
+	for(i=GetPopSize()+1,C=Chromosomes,sol++;--i;C++,sol++)
+		AssignChromo(*sol,*C);
 	ComputePrometheeII();
-	Res=GetSols();
-	ptr=Res;
+	RContainer<RPromSol,false,false> Res(GetPopSize()+1);
+	RPromKernel::CopySols(Res);
+	RCursor<RPromSol> ptr(Res);
+	ptr.Start();
 
 	// Look if the best chromosome ever is still the best (and have some groups)
 	// -> If not, change the fitness of the best solution.
-	if((*ptr)->GetId())
+	if(ptr()->GetId())
 	{
-		s=Chromosomes[(*ptr)->GetId()-1];
+		s=Chromosomes[ptr()->GetId()-1];
 		(*s->Fitness)=static_cast<double>(GetGen())+1.1;
 		#if BESTSOLSVERIFICATION
 			BestSols.InsertPtr(b=new cChromo(this,BestSols.NbPtr));
@@ -234,56 +234,53 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
 		// -> If not, exchange the first two solutions
 		if(!BestChromosome->Used.GetNb())
 		{
-			RPromSol* old=(*ptr);
-			(*ptr)=(*(ptr+1));
-			(*(ptr+1))=old;
-			s=Chromosomes[(*ptr)->GetId()-1];
+			RPromSol* old=Res[0];
+			Res.InsertPtrAt(Res[1],0,false);
+			Res.InsertPtrAt(old,1,false);
+			s=Chromosomes[ptr()->GetId()-1];
 		}
 
 		if(s->Fitness->Value==0.0)
 			(*s->Fitness)=1.1;
 	}
-	s->FiPlus=(*ptr)->GetFiPlus();
-	s->FiMinus=(*ptr)->GetFiMinus();
-	s->Fi=(*ptr)->GetFi();
+	s->FiPlus=ptr()->GetFiPlus();
+	s->FiMinus=ptr()->GetFiMinus();
+	s->Fi=ptr()->GetFi();
 	if(Debug)
 		WriteChromoInfo(s);
-	ptr++;
+	ptr.Next();
 
 	//  The second best has the fitness of 1
-	if((*ptr)->GetId())
+	if(ptr()->GetId())
 	{
-		s=Chromosomes[(*ptr)->GetId()-1];
+		s=Chromosomes[ptr()->GetId()-1];
 		(*s->Fitness)=1.0;
 	}
 	else
 		s=BestChromosome;
-	s->FiPlus=(*ptr)->GetFiPlus();
-	s->FiMinus=(*ptr)->GetFiMinus();
-	s->Fi=(*ptr)->GetFi();
+	s->FiPlus=ptr()->GetFiPlus();
+	s->FiMinus=ptr()->GetFiMinus();
+	s->Fi=ptr()->GetFi();
 	if(Debug)
 		WriteChromoInfo(s);
 
 	// Look for the rest
-	for(i=GetPopSize(),ptr++;--i;ptr++)
+	for(i=GetPopSize(),ptr.Next();!ptr.End();ptr.Next(),--i)
 	{
 		r=((double)i)/((double)(GetPopSize()));
-		if((*ptr)->GetId())
+		if(ptr()->GetId())
 		{
-			s=Chromosomes[(*ptr)->GetId()-1];
+			s=Chromosomes[ptr()->GetId()-1];
 			(*s->Fitness)=r;
 		}
 		else
 			s=BestChromosome;
-		s->FiPlus=(*ptr)->GetFiPlus();
-		s->FiMinus=(*ptr)->GetFiMinus();
-		s->Fi=(*ptr)->GetFi();
+		s->FiPlus=ptr()->GetFiPlus();
+		s->FiMinus=ptr()->GetFiMinus();
+		s->Fi=ptr()->GetFi();
 		if(Debug)
 			WriteChromoInfo(s);
 	}
-
-	// Delete the resulting array
-	delete[] Res;
 
 	if(Debug)
 		Debug->EndFunc("PostEvaluate","RInstSG");

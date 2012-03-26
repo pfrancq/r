@@ -49,6 +49,7 @@ namespace R{
 //------------------------------------------------------------------------------
 // forward declaration
 template<class T,class N,bool bAlloc> class RNode;
+template<class T,class N> class RNodeCursor;
 
 
 //------------------------------------------------------------------------------
@@ -64,7 +65,7 @@ template<class T,class N,bool bAlloc> class RNode;
 * @code
 * #include <rtree.h>
 * #include <rnode.h>
-* #include <rcursor.h>
+* #include <rnodecursor.h>
 * using namespace R;
 *
 * class MyTree;         // Forward declaration
@@ -75,47 +76,76 @@ template<class T,class N,bool bAlloc> class RNode;
 * public:
 *    MyNode(const RString& name) : RNode<MyTree,MyNode,true>(), Name(name) {}
 *    int Compare(const MyNode& node) const {return(Name.Compare(node.Name));}
-*    void DoSomething(void) {cout<<Name<<endl;}
+*    void DoSomething(void)
+*    {
+*       for(size_t i=0;i<GetDepth();i++)
+*          cout<<" ";
+*       cout<<Name<<endl;
+*       RNodeCursor<MyTree,MyNode> Cur(this);
+*       for(Cur.Start();!Cur.End();Cur.Next())
+*          Cur()->DoSomething();
+*    }
 * };
 *
 * class MyTree : public RTree<MyTree,MyNode,true>
 * {
 * public:
-*    MyTree(size_t max,size_t inc) : RTree<MyTree,MyNode,true>(max,inc) {}
+*    MyTree(void) : RTree<MyTree,MyNode,true>() {}
 * };
 *
 * int main()
 * {
-*    MyTree Tree(20,10);
+*    MyTree Tree;
+*    MyNode *a,*b,*c,*d,*m;
+*    Tree.InsertNode(0,a=new MyNode("mammal"));
+*    Tree.InsertNode(a,m=new MyNode("rabbit"));
+*    Tree.InsertNode(a,d=new MyNode("carnivore"));
+*    Tree.InsertNode(m,b=new MyNode("fox"));
+*    Tree.InsertNode(m,c=new MyNode("dog"));
 *
-*    // Insert a top node
-*    cNode* Top(new MyNode("First Level"));
-*    Tree.InsertNode(0,Top);
-*
-*    // Insert two sub nodes
-*    Tree.InsertNode(Top,new MyNode("Second Level (1)"));
-*    Tree.InsertNode(Top,new MyNode("Second Level (2)"));
-*
-*    // Parse the nodes
-*    R::RCursor<MyNode> Cur(Tree.GetNodes());
-*    for(Cur.Start();!Cur.End();Cur.Next())Type
+*    RNodeCursor<MyTree,MyNode> Cur(Tree);
+*    for(Cur.Start();!Cur.End();Cur.Next())
 *       Cur()->DoSomething();
 * }
 * @endcode
+* In practice, all child nodes of a given node (or the root node) are stored as
+* a doubly linked list.
+*
+* The tree itself acts a root node, i.e. there may be several top nodes. Since
+* the root node is not managed as an instance of the node class, the developer
+* must always create at least one top node.
+*
+* When the processes implied to the tree involves multiple steps of insertions
+* and deletes, it is a better idea to ensure the allocations and deallocations
+* through a specific class inheriting from RTree rather than let the latest be
+* the responsible. The RNodesGA class illustrates this approach.
 * @author Pascal Francq
 * @short Generic Tree.
 */
 template<class T,class N,bool bAlloc>
-	class RTree : protected RContainer<N,bAlloc>
+	class RTree
 {
-	using RContainer<N,bAlloc>::DeletePtrAt;
-
 protected:
 
 	/**
-	* Number of top nodes
+	 * First top node.
+	 */
+	N* First;
+
+	/**
+	 * Last top node.
+	 */
+	N* Last;
+
+	/**
+	* Number of top nodes.
 	*/
 	size_t NbTopNodes;
+
+	/**
+	* Number of nodes.
+	*/
+	size_t NbNodes;
 
 	/**
 	 * Depth of the tree. The depth can be undefined, the value is then set to
@@ -127,30 +157,35 @@ public:
 
 	/**
 	* Construct the tree.
-	* @param max             Initial size of the array of top nodes.
-	* @param inc             Increment size of the array. If null, it is set to
-	*                        the half of initial size.
 	*/
-	RTree(size_t max,size_t inc=0);
+	RTree(void);
+
+	/**
+	 * Call the RNode::Clear() method for a node and all its children.
+    * @param node           Node to clear.
+    */
+	void ClearNode(N* node);
 
 	/**
 	 * Clear the nodes of the tree. If the tree is not responsible for the
 	 * deallocation, the method calls RNode::Clear() for each node.
-	 * @param max             Initial size of the array of top nodes.
-	 * @param inc             Increment size of the array.
 	 */
-	virtual void Clear(size_t max,size_t inc=0);
+	virtual void Clear(void);
 
 	/**
-	 * Clear the nodes of the tree. If the tree is not responsible for the
-	 * deallocation, the method calls RNode::Clear() for each node.
-	 */
-	virtual void Clear(void) {Clear(0,0);}
+    * @return the first root node. If null, the tree is empty.
+    */
+	inline N* GetFirst(void) const {return(First);}
 
 	/**
-	 * Get the depth of the tree. If necessary, the depth is recomputed.
+    * @return the last root node. If null, the tree is empty.
+    */
+	inline N* GetLast(void) const {return(Last);}
+
+	/**
+	 * @return the depth of the tree. If necessary, the depth is recomputed.
 	 */
-	size_t GetMaxDepth(void) const;
+	inline size_t GetMaxDepth(void) const;
 
 	/**
 	 * This method should be used with caution, since it works only if there is
@@ -168,49 +203,14 @@ public:
 	const N* GetTop(void) const;
 
 	/**
-	* Get a cursor over the top nodes.
-	* @return RCursor<N>.
+	* @return the total number of nodes in the tree.
 	*/
-	RCursor<N> GetTopNodes(void) const;
+	inline size_t GetNbNodes(void) const {return(NbNodes);}
 
 	/**
-	* Get the total number of nodes in the tree.
-	* @return size_t
+	* @return the total number of top nodes in the tree.
 	*/
-	inline size_t GetNbNodes(void) const {return(RContainer<N,bAlloc,false>::GetNb());}
-
-	/**
-	* Get a cursor over all the nodes of the tree.
-	*/
-	inline RCursor<N> GetNodes(void) const {return(R::RCursor<N>(*this));}
-
-	/**
-	* Get a cursor over the child nodes of a given node.
-	* @param node            Parent node. If null, the top nodes are returned.
-	*/
-	inline RCursor<N> GetNodes(const N* node) const;
-
-	/**
-	* Copy the array of nodes into a temporary array. This array must have
-	* the right size (Read only). This method can be limited to a part of the
-	* tree.
-	* @param tab             Array of nodes.
-	* @param min             Starting index.
-	* @param max             Ending index.
-	* @return number of elements of the tree.
-	*/
-	inline size_t GetTab(const N** tab,size_t min=0, size_t max=0) const {return(RContainer<N,bAlloc,false>::GetTab(tab,min,max));}
-
-	/**
-	* Copy the array of nodes into a temporary array. This array must have
-	* the right size (Read/Write). This method can be limited to a part of the
-	* tree.
-	* @param tab             Array of nodes.
-	* @param min             Starting index.
-	* @param max             Ending index.
-	* @return number of elements in the tree.
-	*/
-	inline size_t GetTab(N** tab,size_t min=0, size_t max=0) {return(RContainer<N,bAlloc,false>::GetTab(tab,min,max));}
+	inline size_t GetNbTopNodes(void) const {return(NbTopNodes);}
 
 	/**
 	 * Copy the nodes of a node into a temporary array. This array must have
@@ -218,9 +218,10 @@ public:
 	 * @param tab             Temporary array.
 	 * @param node            Parent node. If null, the array contains the top
 	 *                        nodes.
+	 * @param children        Must the children be copied too.
 	 * @return Number of the nodes copied in the array
 	 */
-	size_t GetTab(N** tab,N* node);
+	size_t GetTab(N** tab,N* node,bool children=false);
 
 	/**
 	* Insert a node and attached it to a parent. If the parent is null,
@@ -232,20 +233,22 @@ public:
 	void InsertNode(N* to,N* node);
 
 	/**
-	* Delete a node from the tree.
-	* @param node            Node to delete.
-	* @param childs          Child nodes are also deleted ?
+	* Delete all the child nodes of a given node.
+	* @param node           Pointer to the node.
 	* @param del             Specify if the object must deleted or not. By
 	*                        default, the element is destruct if the container
 	*                        is responsible of the deallocation.
 	*/
-	void DeleteNode(N* node,bool childs,bool del=bAlloc);
+	void DeleteNodes(N* node,bool del=bAlloc);
 
 	/**
-	* Delete all the child nodes of a given node.
-	* @param node           Pointer to the node.
+	* Delete a node from the tree. Its child nodes are also deleted.
+	* @param node            Node to delete.
+	* @param del             Specify if the object must deleted or not. By
+	*                        default, the element is destruct if the container
+	*                        is responsible of the deallocation.
 	*/
-	virtual void DeleteNodes(N* node);
+	void DeleteNode(N* node,bool del=bAlloc);
 
 	/**
 	 * Move a node from one parent to another inside the same tree.
@@ -256,8 +259,10 @@ public:
 
 	/**
 	* Deep copy of a the tree.
-	* @tparam a              Determine if the source container is responsible for the deallocation.
+	* @tparam a              Determine if the source container is responsible for
+	*                        the deallocation.
 	* @param src             Source tree.
+	* @warning The tree is not emptied before the source tree is copied.
 	*/
 	template<bool a> void Copy(const RTree<T,N,a>& src);
 
@@ -269,27 +274,13 @@ public:
 	void DeepCopy(N* src,N* newparent);
 
 	/**
-	* Get a pointer to a certain node of the tree.
+	* Get a pointer to a certain node of the tree. In practice, the search is
+	* done by parsing the tree, starting from the first top node inserted.
 	* @tparam TUse           The type of the tag used for the search.
 	* @param tag             The tag used.
 	* @return Return the pointer or 0 if the element is not in the tree.
 	*/
 	template<class TUse> N* GetNode(const TUse& tag) const;
-
-	/**
-	 * Get a node at a given index (const version). This function must be used
-	 * carefully.
-	 * @param idx            Index.
-	 * @return Pointer to the node.
-	 */
-	const N* GetNodeAt(size_t idx) const {return((*this)[idx]);}
-
-	/**
-	 * Get a node at a given index. This function must be used carefully.
-	 * @param idx            Index.
-	 * @return Pointer to the node.
-	 */
-	N* GetNodeAt(size_t idx) {return((*this)[idx]);}
 
 	/**
 	 * Get the cost of the Up operations to move a token from a node to another
@@ -312,6 +303,7 @@ public:
 
 	// The RNode is a friend class
 	friend class RNode<T,N,bAlloc>;
+	friend class RNodeCursor<T,N>;
 };
 
 

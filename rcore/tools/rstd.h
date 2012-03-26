@@ -216,12 +216,17 @@
 
 #endif 		// !__RDISABLECHECKS__
 
+
 //-----------------------------------------------------------------------------
 // MAX SIZE of size_t
-#if __WORDSIZE == 64
-#define SIZE_MAX		(18446744073709551615UL)
-#else
-#define SIZE_MAX		(4294967295U)
+#ifndef __APPLE__
+	#ifndef WIN32
+		#if __WORDSIZE == 64
+			#define SIZE_MAX		(18446744073709551615UL)
+		#else
+			#define SIZE_MAX		(4294967295U)
+		#endif
+	#endif
 #endif
 
 

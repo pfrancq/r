@@ -82,6 +82,8 @@ namespace R{
 */
 class RBlockFile : protected RIOFile
 {
+	using RIOFile::Seek;
+	
 	class Block;
 
 public:

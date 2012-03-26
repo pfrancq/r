@@ -214,13 +214,13 @@ public:
 	* Go to a specific position of the file.
 	* @param pos            Position to reach.
 	*/
-	void Seek(off_t pos);
+	virtual void Seek(off_t pos);
 
 	/**
 	* Move for a given number of bytes from the current position of the file.
 	* @param pos            Relative position.
 	*/
-	void SeekRel(off_t pos);
+	virtual void SeekRel(off_t pos);
 
 	/**
 	 * Truncate the file.

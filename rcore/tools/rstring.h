@@ -288,7 +288,7 @@ public:
 	* Return the string.  The resulting array should be copied (and not
 	* destroyed) since it is an internal structure.
 	*/
-	inline RChar* operator()(void) {return(Data->Text);}
+	inline RChar* operator()(void) {BasicString<RChar,RString>::Copy(); return(Data->Text);}
 
 	/**
 	* Return the string.  The resulting array should be copied (and not
@@ -319,7 +319,7 @@ public:
 	* This function returns the character at a given position in the string.
 	* @param idx             Position of the character.
 	*/
-	inline RChar& operator[](size_t idx) {return(BasicString<RChar,RString>::operator[](idx));}
+	inline RChar& operator[](size_t idx) {BasicString<RChar,RString>::Copy(); return(BasicString<RChar,RString>::operator[](idx));}
 
 	/**
 	* Equal operator.

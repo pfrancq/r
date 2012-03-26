@@ -152,7 +152,7 @@ public:
 	* Insert a value in the list at a given position.
 	* @param ins             The value to insert.
 	* @param pos             The position where to insert.
-	* @param del             Specify if the object that was previously at the
+	* @param del             Specify if the value that was previously at the
 	*                        position should be deleted or shifted.
 	*
 	*/

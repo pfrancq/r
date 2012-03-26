@@ -36,7 +36,7 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rpromethee.h>
+#include <rcontainer.h>
 #include <rpromcritvalue.h>
 
 
@@ -86,7 +86,7 @@ public:
 	* @param id             Identifier of the solution.
 	* @param nbcrit         Number of criteria.
 	*/
-	RPromSol(const size_t id,const size_t nbcrit=30);
+	RPromSol(size_t id,size_t nbcrit=30);
 
 	/**
 	* Construct a PROMETHEE solution.
@@ -94,7 +94,7 @@ public:
 	* @param name           Name of the solution
 	* @param nbcrit         Number of criteria.
 	*/
-	RPromSol(const size_t id,const char* name,const size_t nbcrit=30);
+	RPromSol(size_t id,const RString& name,size_t nbcrit=30);
 
 	/**
 	* Compare two PROMETHEE solutions.
@@ -128,14 +128,6 @@ public:
 	* current solution is less, equal or greater than the one passed as argument.
 	*/
 	int Compare(const RString& name) const {return(Name.Compare(name));}
-
-	/**
-	* Compare the name of the PROMETHEE solution with another string.
-	* @param name           The string used for the comparison.
-	* @return The function returns -1,0,+1 depends if the identifier of the
-	* current solution is less, equal or greater than the one passed as argument.
-	*/
-	int Compare(const char* name) const {return(Name.Compare(name));}
 
 	/**
 	* @return Fi of the solution.

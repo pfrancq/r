@@ -35,6 +35,7 @@
 #include <rxmlfile.h>
 #include <rconfig.h>
 #include <rdir.h>
+#include <rnodecursor.h>
 using namespace R;
 using namespace std;
 
@@ -123,7 +124,7 @@ void RConfig::Load(lParams* cat,RXMLTag* tag)
 	if(tag->GetName()=="category")
 	{
 		lParams* Cat(cat->Cats.GetInsertPtr(tag->GetAttrValue("name")));
-		RCursor<RXMLTag> SubLevel(tag->GetNodes());
+		RNodeCursor<RXMLStruct,RXMLTag> SubLevel(tag);
 		for(SubLevel.Start();!SubLevel.End();SubLevel.Next())
 			Load(Cat,SubLevel());
 	}
@@ -188,7 +189,7 @@ void RConfig::Load(bool global,bool exist)
 		ThrowRException("Not valid XML config file");
 
 	// Parse the first level
-	RCursor<RXMLTag> Level(RootTag->GetNodes());
+	RNodeCursor<RXMLStruct,RXMLTag> Level(RootTag);
 	for(Level.Start();!Level.End();Level.Next())
 		Load(Root,Level());
 }
