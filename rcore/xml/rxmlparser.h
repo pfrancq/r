@@ -289,17 +289,17 @@ protected:
 
 	/**
 	* This function transform a given string that is supposed to represent a
-	* HTML code (ex: "Ucirc") into the corresponding character (ex: û).
-	* @param code           HTML Code.
-	* @returns A RChar corresponding to the code or 0 if the code is not
-	* identified.
+	* character. For example, the code #quot; is a quote.
+	* @param code           Code.
+	* @returns A RChar corresponding to the code or 0 if the code is not a valid
+	* one.
 	*/
 	virtual RChar CodeToChar(RString& code);
 
 	/**
 	* This function transform a given character (ex: <) into a string that
 	* represents a HTML code (ex: "lt").
-	* @param car            Character.
+	* @param car             Character.
 	* @param strict          If strict is true, the quotes are also transform,
 	*                        else on < and > are transformed.
 	* @returns A RString corresponding to the character or the character itself

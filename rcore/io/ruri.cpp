@@ -97,9 +97,9 @@ void RURI::AnalyzeString(void)
 	{
 		// No, it is a path -> add file:
 		Scheme.Size=4;
-		Path.Pos=7;
+		Path.Pos=5;
 		Path.Size=URI.GetLen();
-		URI="file://"+URI;
+		URI="file:"+URI;
 		return;
 	}
 
