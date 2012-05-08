@@ -165,6 +165,12 @@ public:
 	/** @copydoc BasicString::ReplaceStr(const S&,const S&,bool,int) */
 	inline void ReplaceStr(const RCString& search,const RCString& rep,bool first=false,int pos=0) {BasicString<char,RCString>::ReplaceStr(search,rep,first,pos);}
 
+	/** @copydoc BasicString::Begins(const S&,bool) const */
+	inline bool Begins(const RCString& begin,bool skip=false) const {return(BasicString<char,RCString>::Begins(begin,skip));}
+
+	/** @copydoc BasicString::Ends(const S&,bool) const */
+	inline bool Ends(const RCString& end,bool skip=false) const {return(BasicString<char,RCString>::Ends(end,skip));}
+
 	inline RCString Mid(size_t idx,size_t len=(size_t)-1) const {return(BasicString<char,RCString>::Mid(idx,len));}
 
 	/** @copydoc BasicString::IsAt(const S&,int) const */

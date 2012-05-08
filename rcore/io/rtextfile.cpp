@@ -311,6 +311,27 @@ RChar RTextFile::GetChar(void)
 
 
 //------------------------------------------------------------------------------
+RString RTextFile::GetChars(size_t size)
+{
+	RString res;
+	char Buffer[513];
+	size_t len;
+
+	while((!End())&&size)
+	{
+		// Read a block of maximum 512 characters in Buffer
+		len=Read(Buffer,512);
+		if(len>size)
+			len=size;
+		Buffer[len]=0;
+		res+=Buffer;
+		size-=len;
+	}
+	return(res);
+}
+
+
+//------------------------------------------------------------------------------
 RString RTextFile::GetUntilEnd(void)
 {
 	RString res;

@@ -795,6 +795,83 @@ template<class C,class S>
 	return(Data->Text[idx]);
 }
 
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	bool R::BasicString<C,S>::Begins(const S& begin,bool skip) const
+{
+	// If the string is shorter -> Nothing to do
+	if(Data->Len<begin.Data->Len)
+		return(false);
+
+	// Set the pointers to the characters to compare
+	const C* Ptr1(Data->Text);
+	const C* Ptr2(begin.Data->Text);
+
+	// If spaces must be skipped -> do it
+	if(skip)
+	{
+		while(((*Ptr1)!=0)&&(isspace(*Ptr1)))
+			Ptr1++;
+		while(((*Ptr2)!=0)&&(isspace(*Ptr2)))
+			Ptr2++;
+	}
+
+	// Verify if all characters of Ptr2 are in the correct order
+	while((*Ptr2)!=0)
+	{
+		if((*Ptr1)!=(*Ptr2))
+			return(false);
+		Ptr1++;
+		Ptr2++;
+	}
+
+	return(true);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C,class S>
+	bool R::BasicString<C,S>::Ends(const S& end,bool skip) const
+{
+	// If the string is shorter -> Nothing to do
+	if(Data->Len<end.Data->Len)
+		return(false);
+
+	// Set the pointers to the characters to compare
+	const C* Ptr1(&Data->Text[Data->Len-1]);
+	const C* Ptr2(&end.Data->Text[end.Data->Len-1]);
+	size_t Pos1(Data->Len);
+	size_t Pos2(end.Data->Len);
+
+	// If spaces must be skipped -> do it
+	if(skip)
+	{
+		while(Pos1&&(isspace(*Ptr1)))
+		{
+			Ptr1--;
+			Pos1--;
+		}
+		while(Pos2&&(isspace(*Ptr2)))
+		{
+			Ptr2--;
+			Pos2--;
+		}
+	}
+
+	// Verify if all characters of Ptr2 are in the correct order
+	while(Pos2)
+	{
+		if((!Pos1)||(*Ptr1)!=(*Ptr2))
+			return(false);
+		Ptr1--;
+		Pos1--;
+		Ptr2--;
+		Pos2--;
+	}
+
+	return(true);
+}
+
 
 //-----------------------------------------------------------------------------
 template<class C,class S>

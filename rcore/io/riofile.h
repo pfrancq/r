@@ -223,6 +223,11 @@ public:
 	virtual void SeekRel(off_t pos);
 
 	/**
+	* Go to the end of the file.
+	*/
+	virtual void SeekToEnd(void);
+
+	/**
 	 * Truncate the file.
 	 * @param newsize        New size.
 	 */

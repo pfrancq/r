@@ -296,6 +296,13 @@ void RXMLParser::InitValidTags(void)
 
 
 //------------------------------------------------------------------------------
+void RXMLParser::StopAnalysis(void)
+{
+	Break=true;
+}
+
+
+//------------------------------------------------------------------------------
 size_t RXMLParser::GetCurrentDepth(void) const
 {
 	if(Mode!=RIO::Read)
@@ -316,6 +323,7 @@ size_t RXMLParser::GetLastTokenPos(void) const
 //------------------------------------------------------------------------------
 void RXMLParser::InitParser(void)
 {
+	Break=false;
 	TreatEncoding=false;
 	CurHTMLTag=0;
 	Namespaces.Clear();
@@ -358,9 +366,13 @@ void RXMLParser::Open(RIO::ModeType mode)
 		case RIO::Read:
 			CurDepth=0;
 			LoadHeader();
+			if(Break)
+				return;
 			TreatEncoding=false;
 			Section=Body;
 			LoadNextTag();
+			if(Break)
+				return;
 			CurDepth=0;
 			break;
 
@@ -809,6 +821,8 @@ void RXMLParser::LoadHeader(void)
 			bool PopDefault;
 			RContainer<Namespace,false,false> PopURI(5);
 			LoadAttributes(PopDefault,PopURI,'?','>');
+			if(Break)
+				return;
 
 			// Skip '>' and the spaces after that
 			Next();
@@ -832,6 +846,8 @@ void RXMLParser::LoadHeader(void)
 		bool PopDefault;
 		RContainer<Namespace,false,false> PopURI(5);
 		LoadAttributes(PopDefault,PopURI,'?','>');
+		if(Break)
+			return;
 
 		// Skip '>' and the spaces after that
 		Next(); SkipSpaces();
@@ -849,6 +865,8 @@ void RXMLParser::LoadHeader(void)
 		if(HTMLMode)
 			Content=Content.ToLower();
 		SetDocType(XMLToString(Content));
+		if(Break)
+			return;
 		SkipSpaces();
 
 		if(Content=="html")
@@ -921,6 +939,8 @@ void RXMLParser::LoadHeader(void)
 					if(!Quotes)
 						ThrowRIOException(this,"Bad XML file");
 					SetDTD(GetToken(RString(What)));
+					if(Break)
+						return;
 					SkipSpaces();
 					if(GetChar()!=What)
 						ThrowRIOException(this,"Bad XML file");
@@ -936,6 +956,8 @@ void RXMLParser::LoadHeader(void)
 					{
 						Next();  // Skip the quote
 						SetDTD(GetToken(RString(What)));
+						if(Break)
+							return;
 						SkipSpaces();
 						if(GetChar()!=What)
 							ThrowRIOException(this,"Bad XML file");
@@ -1010,6 +1032,8 @@ void RXMLParser::LoadNextTag(void)
 			ThrowRIOException(this,"Unknown opening HTML Tag '"+lname+"'.");
 	}
 	BeginTag(uri,lname,TagName);
+	if(Break)
+		return;
 	if(HTMLMode)
 	{
 		// Verify that is not a single tag in HTML
@@ -1020,6 +1044,8 @@ void RXMLParser::LoadNextTag(void)
 
 	// Read Attributes
 	LoadAttributes(PopDefault,PopURI);
+	if(Break)
+		return;
 	if(Resolve)
 	{
 		if(!prefix.IsEmpty())
@@ -1029,14 +1055,20 @@ void RXMLParser::LoadNextTag(void)
 				ThrowRIOException(this,"Namespace with prefix '"+prefix+"' no defined");
 			uri=(*ptr->URI());
 			ResolveNamespace(uri);
+			if(Break)
+				return;
 		}
 		else if(DefaultNamespace.GetNb())
 		{
 			uri=(*DefaultNamespace()); // Default namespace.
 			ResolveNamespace(uri);
+			if(Break)
+				return;
 		}
 	}
 	BeginTagParsed(uri,lname,TagName);
+	if(Break)
+		return;
 
 	// If the parser does not now if it is a closing tag -> test it.
 	if(!CurTagClosing)
@@ -1062,6 +1094,8 @@ void RXMLParser::LoadNextTag(void)
 				ThrowRIOException(this,"Unknown closing HTML Tag '"+lname+"'.");
 		}
 		EndTag(uri,lname,TagName);
+		if(Break)
+			return;
 		if(HTMLMode)
 		{
 			CurHTMLTag=0;
@@ -1094,13 +1128,19 @@ void RXMLParser::LoadNextTag(void)
 					LastTokenPos=GetPos();
 					RString tmp(GetTokenString("]]>"));
 					if(tmp.GetLen())
+					{
 						Text(tmp);
+						if(Break)
+							return;
+					}
 
 					// Add all spaces
 					while(GetNextChar().IsSpace())
 					{
 						LastTokenPos=GetPos();
 						Text(RString(GetChar()));
+						if(Break)
+							return;
 					}
 				}
 				LastTokenPos=GetPos();
@@ -1113,6 +1153,8 @@ void RXMLParser::LoadNextTag(void)
 			{
 				CurDepth++;   	// Increase the depth
 				LoadNextTag();
+				if(Break)
+					return;
 				CurDepth--;   	// Decrease the depth
 			}
 		}
@@ -1129,13 +1171,19 @@ void RXMLParser::LoadNextTag(void)
 				LastTokenPos=GetPos();
 				RString tmp(GetToken("<"));
 				if(tmp.GetLen())
+				{
 					Text(XMLToString(tmp));
+					if(Break)
+					return;
+				}
 
 				// Add all spaces
 				while(GetNextChar().IsSpace())
 				{
 					LastTokenPos=GetPos();
 					Text(RString(GetChar()));
+					if(Break)
+						return;
 				}
 
 				// Look if the next '<' is the beginning of "<![CDATA["
@@ -1154,13 +1202,19 @@ void RXMLParser::LoadNextTag(void)
 						LastTokenPos=GetPos();
 						RString tmp(GetTokenString("]]>"));
 						if(tmp.GetLen())
+						{
 							Text(tmp);
+							if(Break)
+								return;
+						}
 
 						// Add all spaces
 						while(GetNextChar().IsSpace())
 						{
 							LastTokenPos=GetPos();
 							Text(RString(GetChar()));
+							if(Break)
+								return;
 						}
 					}
 					LastTokenPos=GetPos();
@@ -1198,6 +1252,8 @@ void RXMLParser::LoadNextTag(void)
 			ThrowRIOException(this,"Unknown closing HTML Tag '"+lname+"'.");
 	}
 	EndTag(uri,lname,TagName);
+	if(Break)
+		return;
 	if(HTMLMode)
 		CurHTMLTag=0;
 	if(PopDefault)
@@ -1277,6 +1333,8 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 			HeaderAttribute(uri,lname,attrn);
 		else
 			AddAttribute(uri,lname,attrn);
+		if(Break)
+			return;
 
 		// Determine if a value is assign
 		Next();
@@ -1304,6 +1362,8 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 							HeaderValue(XMLToString(tmp));
 						else
 							Value(XMLToString(tmp));
+						if(Break)
+							return;
 					}
 					if(GetNs)
 						ns+=tmp;
@@ -1315,6 +1375,8 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 							HeaderValue(tmp);
 						else
 							Value(RString(GetChar()));
+						if(Break)
+							return;
 					}
 				}
 				SetParseSpace(RTextFile::SkipAllSpaces);
@@ -1330,6 +1392,8 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 					HeaderValue(tmp);
 				else
 					Value(tmp);
+				if(Break)
+					return;
 			}
 
 			// Verify if the attribute is a namespace

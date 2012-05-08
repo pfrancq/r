@@ -220,6 +220,12 @@ public:
 	/** @copydoc BasicString::ReplaceStr(const S&,const S&,bool,int) */
 	inline void ReplaceStr(const RString& search,const RString& rep,bool first=false,int pos=0) {BasicString<RChar,RString>::ReplaceStr(search,rep,first,pos);}
 
+	/** @copydoc BasicString::Begins(const S&,bool) const */
+	inline bool Begins(const RString& begin,bool skip=false) const {return(BasicString<RChar,RString>::Begins(begin,skip));}
+
+	/** @copydoc BasicString::Ends(const S&,bool) const */
+	inline bool Ends(const RString& end,bool skip=false) const {return(BasicString<RChar,RString>::Ends(end,skip));}
+
 	inline RString Mid(size_t idx,size_t len=(size_t)-1) const {return(BasicString<RChar,RString>::Mid(idx,len));}
 
 	/** @copydoc BasicString::IsAt(const S&,int) const */

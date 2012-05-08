@@ -361,6 +361,24 @@ public:
 	C& operator[](size_t idx);
 
 	/**
+	* Look if a string begins with a given sub-string.
+   * @param begin           Sub-string to search for.
+   * @param skip            If true, leading spaces are skipped for the
+	*                        comparison.
+   * @return true if the string begins with the sub-string.
+   */
+	bool Begins(const S& begin,bool skip=false) const;
+
+	/**
+	* Look if a string ends with a given sub-string.
+   * @param begin           Sub-string to search for.
+   * @param skip            If true, ending spaces are skipped for the
+	*                        comparison.
+   * @return true if the string ends with the sub-string.
+   */
+	bool Ends(const S& end,bool skip=false) const;
+
+	/**
 	* Get a sub-string of a given string.
 	* @param idx             Index of the first character.
 	* @param len             Length of the sub-string. If the length is not

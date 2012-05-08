@@ -308,9 +308,16 @@ public:
 	RChar GetNextChar(void) const;
 
 	/**
-	* Get the next character.
+	* @return the next character.
 	*/
 	RChar GetChar(void);
+
+	/**
+	* Get the next characters.
+	* @param size            Number to characters to read.
+	* @return a RString.
+	*/
+	RString GetChars(size_t size);
 
 	/**
 	* Read the rest of the file.

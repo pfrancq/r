@@ -520,6 +520,16 @@ void RIOFile::SeekRel(off_t rel)
 
 
 //------------------------------------------------------------------------------
+void RIOFile::SeekToEnd(void)
+{
+	// Verify all internal conditions
+	if(Handle==-1)
+		ThrowRIOException(this,"Can't seek the file");
+	Seek(Size-1);
+}
+
+
+//------------------------------------------------------------------------------
 void RIOFile::Truncate(off_t newsize)
 {
 	// Verify all internal conditions

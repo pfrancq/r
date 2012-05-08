@@ -321,7 +321,7 @@ public:
 	/**
 	 * Return the seed value of the internal random number generator.
 	 */
-	int GetSeed(void) const {return(Random.Seed());}
+	int GetSeed(void) const {return(Random.GetSeed());}
 
 	/**
 	* Initialization of the instance.

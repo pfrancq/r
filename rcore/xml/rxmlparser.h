@@ -213,6 +213,11 @@ private:
 	 */
 	HTMLTag* CurHTMLTag;
 
+	/**
+	 * Define if the analysis must be stopped.
+    */
+	bool Break;
+
 public:
 
 	/**
@@ -244,6 +249,11 @@ private:
 	void InitValidTags(void);
 
 public:
+
+	/**
+	 * Specify that the analysis should be stopped.
+    */
+	void StopAnalysis(void);
 
 	/**
 	 * Avoid spaces when a XML file is created.
