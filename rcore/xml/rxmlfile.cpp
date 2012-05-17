@@ -31,6 +31,7 @@
 // include files for R Project
 #include <rxmlfile.h>
 #include <rnodecursor.h>
+#include <rstringbuilder.h>
 using namespace R;
 using namespace std;
 
@@ -98,16 +99,18 @@ void RXMLFile::Open(RIO::ModeType mode)
 			if(!XMLStruct)
 				throw RIOException("A XML structure must be assign");
 			RXMLTag* top(XMLStruct->GetTop());
-			RString Header("<?xml");
+			RStringBuilder Header;
+			Header+="<?xml";
 			if(!XMLStruct->GetVersion().IsEmpty())
 				Header+=" version=\""+XMLStruct->GetVersion()+"\"";
 			if(!XMLStruct->GetEncoding().IsEmpty())
 				Header+=" encoding=\""+XMLStruct->GetEncoding()+"\"";
 			Header+="?>";
-			(*this)<<Header;
+			(*this)<<Header();
 			if(!MustAvoidSpaces())
 				(*this)<<endl;
-			Header="<!DOCTYPE "+top->GetName();
+			Header.Clear();
+			Header+="<!DOCTYPE "+top->GetName();
 			if(XMLStruct)
 			{
 				RString DTD=XMLStruct->GetDTD();
@@ -134,7 +137,7 @@ void RXMLFile::Open(RIO::ModeType mode)
 			}
 			else
 				Header+=">";
-			(*this)<<Header;
+			(*this)<<Header();
 			if(!MustAvoidSpaces())
 				(*this)<<endl;
 			CurTag=top;
@@ -172,7 +175,7 @@ void RXMLFile::Close(void)
 //------------------------------------------------------------------------------
 void RXMLFile::SaveNextTag(int depth)
 {
-	RString line;
+	RStringBuilder line;
 	RXMLTag* Current(CurTag);
 
 	if(!MustAvoidSpaces())
@@ -196,7 +199,7 @@ void RXMLFile::SaveNextTag(int depth)
 		line+=">"; // There is some content -> add '>'
 	else
 		line+="/>"; // No content -> add '/>'
-	(*this)<<line<<endl; // Write the line
+	(*this)<<line()<<endl; // Write the line
 	line.Clear();        // Start a new line
 
 	// Wrote the content (if any)
@@ -205,7 +208,7 @@ void RXMLFile::SaveNextTag(int depth)
 		if(!MustAvoidSpaces())
 			for(int i=0;i<depth+1;i++) line+="\t";
 		line+=StringToXML(CurTag->GetContent().Trim(),false);
-		(*this)<<line<<endl;
+		(*this)<<line()<<endl;
 		line.Clear();
 	}
 
@@ -233,7 +236,7 @@ void RXMLFile::SaveNextTag(int depth)
 		if(!MustAvoidSpaces())
 			for(int i=0;i<depth;i++) line+="\t";
 		line+="</"+Current->GetName()+">";
-		(*this)<<line<<endl;
+		(*this)<<line()<<endl;
 	}
 
 	CurTag=Current;
