@@ -1,11 +1,11 @@
 SET(rcore_tools_INST_INCLUDES
 	rstd.h
 	rcontainer.h
-	robjectcontainer.h	
+	robjectcontainer.h
 	rcontainer.hh
 	robjectcontainer.hh
 	rcursor.h
-	rstack.h                       
+	rstack.h
 	rhashcontainer.h
 	rdblhashcontainer.h
 	rnode.h
@@ -18,10 +18,11 @@ SET(rcore_tools_INST_INCLUDES
 	rportsmacro.h
 	rnumcontainer.h
 	rnumcontainer.hh
-	rnumcursor.h 
+	rnumcursor.h
 	rnumcursor.hh
 	rtrace.h
 	rstring.h
+	rstringbuilder.h
 	rchar.h
 	rrandom.h
 	rdate.h
@@ -42,6 +43,7 @@ SET(rcore_tools_TARGET_SOURCES
 	rlocale.cpp
 	rtrace.cpp
 	rstring.cpp
+	rstringbuilder.cpp
 	rchar.cpp
 	rtextencoding.cpp
 	rcstring.cpp

@@ -241,11 +241,6 @@ protected:
 	*/
 	RChar Cur;
 
-	/**
-	 * Temporary buffer of characters.
-	 */
-	RChar TmpBuffer[256];
-
 public:
 
 	/**

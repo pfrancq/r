@@ -304,7 +304,7 @@ protected:
 	* @returns A RChar corresponding to the code or 0 if the code is not a valid
 	* one.
 	*/
-	virtual RChar CodeToChar(RString& code);
+	virtual RChar CodeToChar(const RString& code);
 
 	/**
 	* This function transform a given character (ex: <) into a string that

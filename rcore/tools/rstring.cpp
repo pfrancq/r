@@ -35,6 +35,7 @@
 #include <langinfo.h>
 #include <rcontainer.h>
 #include <rcursor.h>
+#include <rstack.h>
 using namespace std;
 using namespace R;
 

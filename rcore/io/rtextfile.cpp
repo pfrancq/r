@@ -38,8 +38,15 @@
 #include <rtextfile.h>
 #include <rstring.h>
 #include <rtextencoding.h>
+#include <rstringbuilder.h>
 using namespace R;
 using namespace std;
+
+
+//------------------------------------------------------------------------------
+// constants
+extern const RString sOne("1");
+extern const RString sZero("0");
 
 
 
@@ -57,6 +64,7 @@ RTextFile::RTextFile(void)
 	Separator(" "), Line(0), LastLine(0), Codec(0)
 {
 }
+
 
 //------------------------------------------------------------------------------
 RTextFile::RTextFile(const RURI& uri,const RCString& encoding)
@@ -253,6 +261,7 @@ inline void RTextFile::FillBuffer(void)
 	}
 }
 
+
 //------------------------------------------------------------------------------
 void RTextFile::Next(void)
 {
@@ -313,51 +322,33 @@ RChar RTextFile::GetChar(void)
 //------------------------------------------------------------------------------
 RString RTextFile::GetChars(size_t size)
 {
-	RString res;
-	char Buffer[513];
-	size_t len;
+	RStringBuilder Res;
 
-	while((!End())&&size)
-	{
-		// Read a block of maximum 512 characters in Buffer
-		len=Read(Buffer,512);
-		if(len>size)
-			len=size;
-		Buffer[len]=0;
-		res+=Buffer;
-		size-=len;
-	}
-	return(res);
+	while((!End())&&(size--))
+		Res+=GetChar();
+	return(Res());
 }
 
 
 //------------------------------------------------------------------------------
 RString RTextFile::GetUntilEnd(void)
 {
-	RString res;
-	char Buffer[513];
-	size_t len;
-
+	RStringBuilder Res;
 	while(!End())
-	{
-		// Read a block of maximum 512 characters in Buffer
-		len=Read(Buffer,512);
-		Buffer[len]=0;
-		res+=Buffer;
-	}
-	return(res);
+		Res+=GetChar();
+	return(Res());
 }
 
 
 //------------------------------------------------------------------------------
 bool RTextFile::CurString(const RString& str,bool CaseSensitive,bool skip)
 {
-	size_t max=str.GetLen();
+	size_t max(str.GetLen());
 
 	if((!max)||End())
 		return(false);
 
-	const RChar* tofind=str(); // String to find
+	const RChar* tofind(str()); // String to find
 
 	// Test if the first characters are the same -> return false
 	if((CaseSensitive&&((*tofind)!=(*NextRead)))||(!CaseSensitive&&(RChar::ToLower(*tofind)!=RChar::ToLower(*NextRead))))
@@ -596,24 +587,12 @@ RString RTextFile::GetWord(void)
 {
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
-	RString res(RString::Null);
+	RStringBuilder Res;
 	bool FindComment(false);
 	SkipSpaces();
-	RChar* ptr=TmpBuffer;
-	size_t i(0);
 
 	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!(FindComment=BeginComment())))
-	{
-		(*(ptr++))=GetChar();
-		i++;
-		if(i==255)
-		{
-			(*ptr)=0;
-			res+=TmpBuffer;
-			ptr=TmpBuffer;
-			i=0;
-		}
-	}
+		Res+=GetChar();
 
 	// Skip spaces and comments if necessary
 	if(!End())
@@ -624,12 +603,7 @@ RString RTextFile::GetWord(void)
 			SkipComments();
 	}
 
-	if(i)
-	{
-		(*ptr)=0;
-		res+=TmpBuffer;
-	}
-	return(res);
+	return(Res());
 }
 
 
@@ -638,24 +612,12 @@ RString RTextFile::GetToken(const RString& endingchar)
 {
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
-	RString res(RString::Null);
+	RStringBuilder Res;
 	bool FindComment(false);
 	SkipSpaces();
-	RChar* ptr=TmpBuffer;
-	size_t i(0);
 
 	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!(FindComment=BeginComment()))&&(endingchar.Find(GetNextChar())==-1))
-	{
-		(*(ptr++))=GetChar();
-		i++;
-		if(i==255)
-		{
-			(*ptr)=0;
-			res+=TmpBuffer;
-			ptr=TmpBuffer;
-			i=0;
-		}
-	}
+		Res+=GetChar();
 
 	// Skip spaces and comments if necessary
 	if(!End())
@@ -666,12 +628,7 @@ RString RTextFile::GetToken(const RString& endingchar)
 			SkipComments();
 	}
 
-	if(i)
-	{
-		(*ptr)=0;
-		res+=TmpBuffer;
-	}
-	return(res);
+	return(Res());
 }
 
 
@@ -680,24 +637,12 @@ RString RTextFile::GetTokenString(const RString& endingstr)
 {
 	if(!CanRead)
 		throw RIOException(this,"File Mode is not Read");
-	RString res(RString::Null);
+	RStringBuilder Res;
 	bool FindComment(false);
 	SkipSpaces();
-	RChar* ptr=TmpBuffer;
-	size_t i(0);
 
 	while((!End())&&(!Eol(GetNextChar()))&&(!GetNextChar().IsSpace())&&(!(FindComment=BeginComment()))&&(!CurString(endingstr,true,false)))
-	{
-		(*(ptr++))=GetChar();
-		i++;
-		if(i==255)
-		{
-			(*ptr)=0;
-			res+=TmpBuffer;
-			ptr=TmpBuffer;
-			i=0;
-		}
-	}
+		Res+=GetChar();
 
 	// Skip spaces and comments if necessary
 	if(!End())
@@ -708,12 +653,7 @@ RString RTextFile::GetTokenString(const RString& endingstr)
 			SkipComments();
 	}
 
-	if(i)
-	{
-		(*ptr)=0;
-		res+=TmpBuffer;
-	}
-	return(res);
+	return(Res());
 }
 
 
@@ -724,24 +664,13 @@ RString RTextFile::GetLine(bool skipempty)
 		throw(RIOException(this,"File Mode is not Read"));
 	if(End())
 		return(RString::Null);
-	RString res(RString::Null);
-	RChar* ptr=TmpBuffer;
-	size_t i(0);
+	RStringBuilder Res;
 
 	while((!End())&&(!Eol(*NextRead)))
 	{
 		if(BeginComment())
 			SkipComments();
-
-		(*(ptr++))=GetChar();
-		i++;
-		if(i==255)
-		{
-			(*ptr)=0;
-			res+=TmpBuffer;
-			ptr=TmpBuffer;
-			i=0;
-		}
+		Res+=GetChar();
 	}
 	LastLine=Line;
 
@@ -757,18 +686,12 @@ RString RTextFile::GetLine(bool skipempty)
 		}
 	}
 
-	if(i)
-	{
-		(*ptr)=0;
-		res+=TmpBuffer;
-	}
-
 	// If the line is empty or contains only spaces -> read next line
-	if((res.IsEmpty())&&skipempty)
+	if((Res().IsEmpty())&&skipempty)
 		return(GetLine(true));
 
 	// Return read line
-	return(res);
+	return(Res());
 }
 
 
@@ -777,7 +700,7 @@ long RTextFile::GetInt(void)
 {
 	long nb;
 	char* ptr;
-	RString str;
+	RStringBuilder Res;
 
 	SkipSpaces();
 
@@ -785,14 +708,14 @@ long RTextFile::GetInt(void)
 	if((GetNextChar()=='+')||(GetNextChar()=='-'))
 	{
 		Next();
-		str+=Cur;
+		Res+=Cur;
 	}
 
 	// Get number
 	while(GetNextChar().IsDigit())
 	{
 		Next();
-		str+=Cur;
+		Res+=Cur;
 	}
 
 	// Skip spaces and comments if necessary
@@ -804,8 +727,8 @@ long RTextFile::GetInt(void)
 			SkipComments();
 	}
 
-	nb=strtol(str,&ptr,10);
-	if(ptr==str)
+	nb=strtol(Res(),&ptr,10);
+	if(ptr==Res())
 		throw RIOException(this,"No Int");
 	return(nb);
 }
@@ -816,7 +739,7 @@ unsigned long RTextFile::GetUInt(void)
 {
 	unsigned long nb;
 	char* ptr;
-	RString str;
+	RStringBuilder Res;
 
 	SkipSpaces();
 
@@ -824,14 +747,14 @@ unsigned long RTextFile::GetUInt(void)
 	if((GetNextChar()=='+')||(GetNextChar()=='-'))
 	{
 		Next();
-		str+=Cur;
+		Res+=Cur;
 	}
 
 	// Get Number
 	while(GetNextChar().IsDigit())
 	{
 		Next();
-		str+=Cur;
+		Res+=Cur;
 	}
 
 	// Skip spaces and comments if necessary
@@ -843,8 +766,8 @@ unsigned long RTextFile::GetUInt(void)
 			SkipComments();
 	}
 
-	nb=strtoul(str,&ptr,10);
-	if(ptr==str)
+	nb=strtoul(Res(),&ptr,10);
+	if(ptr==Res())
 		throw RIOException(this,"No size_t");
 	return(nb);
 }
@@ -925,47 +848,47 @@ RTextFile& RTextFile::operator>>(unsigned long &nb)
 //------------------------------------------------------------------------------
 RString RTextFile::GetRealNb(void)
 {
-	RString str;
+	RStringBuilder Res;
 
-	// Patern [whitespaces][+|-][nnnnn][.nnnnn][e|E[+|-]nnnn]
+	// Pattern [whitespace][+|-][nnnnn][.nnnnn][e|E[+|-]nnnn]
 	SkipSpaces();
 
 	//Check for sign
 	if((Cur=='-')||(Cur=='+'))
 	{
-		str+=Cur;
+		Res+=Cur;
 		Next();
 	}
 	//Read digits
 	while(Cur.IsDigit())
 	{
-		str+=Cur;
+		Res+=Cur;
 		Next();
 	}
 	//Read digit after '.'
 	if(Cur=='.')
 	{
-		str+=Cur;
+		Res+=Cur;
 		Next();
 		while(Cur.IsDigit())
 		{
-			str+=Cur;
+			Res+=Cur;
 			Next();
 		}
 	}
 	if((Cur=='e')||(Cur=='E'))
 	{
-		str+=Cur;
+		Res+=Cur;
 		Next();
 		//Check for sign
 		if((Cur=='-')||(Cur=='+'))
 		{
-			str+=Cur;
+			Res+=Cur;
 			Next();
 		}
 		while(Cur.IsDigit())
 		{
-			str+=Cur;
+			Res+=Cur;
 			Next();
 		}
 	}
@@ -979,7 +902,7 @@ RString RTextFile::GetRealNb(void)
 			SkipComments();
 	}
 
-	return(str);
+	return(Res());
 }
 
 
@@ -1059,8 +982,7 @@ void RTextFile::WriteStr(const RString& str)
 //------------------------------------------------------------------------------
 void RTextFile::WriteStr(const char* c)
 {
-	RString str(c);
-	WriteStr(str);
+	WriteStr(RString(c));
 }
 
 
@@ -1079,8 +1001,7 @@ void RTextFile::WriteStr(const char* c,size_t l)
 //------------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const char* c)
 {
-	RString str(c);
-	WriteStr(str);
+	WriteStr(RString(c));
 	return(*this);
 }
 
@@ -1096,8 +1017,7 @@ RTextFile& RTextFile::operator<<(const RString& str)
 //------------------------------------------------------------------------------
 void RTextFile::WriteLong(const long nb)
 {
-	RString res=RString::Number(nb);
-	WriteStr(res);
+	WriteStr(RString::Number(nb));
 }
 
 
@@ -1128,8 +1048,7 @@ RTextFile& RTextFile::operator<<(const long nb)
 //------------------------------------------------------------------------------
 void RTextFile::WriteULong(const unsigned long nb)
 {
-	RString res=RString::Number(nb);
-	WriteStr(res);
+	WriteStr(RString::Number(nb));
 }
 
 
@@ -1161,15 +1080,9 @@ RTextFile& RTextFile::operator<<(const unsigned long nb)
 void RTextFile::WriteBool(const bool b)
 {
 	if(b)
-	{
-		RString res('1');
-		WriteStr(res);
-	}
+		WriteStr(sOne);
 	else
-	{
-		RString res('0');
-		WriteStr(res);
-	}
+		WriteStr(sZero);
 }
 
 
@@ -1184,8 +1097,7 @@ RTextFile& RTextFile::operator<<(const bool b)
 //------------------------------------------------------------------------------
 void RTextFile::WriteChar(const char c)
 {
-	RString res(c);
-	WriteStr(res);
+	WriteStr(RString(c));
 }
 
 
@@ -1200,8 +1112,7 @@ RTextFile& RTextFile::operator<<(const char c)
 //------------------------------------------------------------------------------
 void RTextFile::WriteFloat(const float nb)
 {
-	RString str=RString::Number(nb);
-	WriteStr(str);
+	WriteStr(RString::Number(nb));
 }
 
 
@@ -1216,8 +1127,7 @@ RTextFile& RTextFile::operator<<(const float nb)
 //------------------------------------------------------------------------------
 void RTextFile::WriteDouble(const double nb)
 {
-	RString str=RString::Number(nb);
-	WriteStr(str);
+	WriteStr(RString::Number(nb));
 }
 
 
@@ -1232,8 +1142,7 @@ RTextFile& RTextFile::operator<<(const double nb)
 //------------------------------------------------------------------------------
 void RTextFile::WriteLongDouble(const long double nb)
 {
-	RString str=RString::Number(nb);
-	WriteStr(str);
+	WriteStr(RString::Number(nb));
 }
 
 
@@ -1256,8 +1165,7 @@ void RTextFile::WriteTime(void)
 	tblock = localtime(&timer);
 	asctime_r(tblock,tmp);
 	tmp[strlen(tmp)-1]=0;
-	RString str=tmp;
-	WriteStr(str);
+	WriteStr(tmp);
 }
 
 
@@ -1269,14 +1177,12 @@ void RTextFile::WriteLog(const RString& entry)
 	struct tm *tblock;
 
 	RReturnIfFail(entry.GetLen()>0);
-	RString str;
 	if(!NewLine) WriteLine();
 	timer = time(NULL);
 	tblock = localtime(&timer);
 	asctime_r(tblock,tmp);
 	tmp[strlen(tmp)-1]=0;
-	str=RString("[")+tmp+"] : "+entry;
-	WriteStr(str);
+	WriteStr(RString("[")+tmp+"] : "+entry);
 	WriteLine();
 }
 

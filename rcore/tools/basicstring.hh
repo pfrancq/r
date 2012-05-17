@@ -638,13 +638,13 @@ template<class C,class S>
 
 		// Start from 0 with maximal Len-pos+1 character to test.
 		start=&Data->Text[pos];
-		max=Data->Len-pos+1;
+		max=Data->Len-pos;
 	}
 
 	// Search for the maximal number of character
 	for(max++;--max;)
 	{
-		if(str.Find(*start,0,CaseSensitive))
+		if(str.Find(*start,0,CaseSensitive)!=-1)
 			return(pos);
 		if(left)
 		{

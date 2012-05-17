@@ -32,6 +32,7 @@
 #include <rxmlparser.h>
 #include <rcursor.h>
 #include <rxmlattr.h>
+#include <rstringbuilder.h>
 using namespace R;
 using namespace std;
 
@@ -395,7 +396,7 @@ void RXMLParser::Open(const RURI& uri,RIO::ModeType mode,const RCString& encodin
 
 
 //------------------------------------------------------------------------------
-RChar RXMLParser::CodeToChar(RString& str)
+RChar RXMLParser::CodeToChar(const RString& str)
 {
 	if(!str.Compare("quot"))
 		return('"');
@@ -722,9 +723,9 @@ RString RXMLParser::CharToCode(RChar car,bool strict)
 //------------------------------------------------------------------------------
 RString RXMLParser::XMLToString(const RString& str)
 {
-	RString res;
+	RStringBuilder Res;
 	RCharCursor Cur(str);
-	RString Code;
+	RStringBuilder Code;
 	RChar What;
 
 	while(!Cur.End())
@@ -736,7 +737,7 @@ RString RXMLParser::XMLToString(const RString& str)
 			Cur.Next();
 
 			// Read what could be a code
-			Code.SetLen(0);
+			Code.Clear();
 			while((!Cur.End())&&(Cur()!=RChar(';'))&&(!Cur().IsSpace()))
 			{
 				Code+=Cur();
@@ -744,17 +745,17 @@ RString RXMLParser::XMLToString(const RString& str)
 			}
 
 			// Is it a code (len<10 and last character is ";'))
-			if((!Cur.End())&&(Cur()==RChar(';'))&&(Code.GetLen()<10))
+			if((!Cur.End())&&(Cur()==RChar(';'))&&(Code().GetLen()<10))
 			{
-				What=CodeToChar(Code);
+				What=CodeToChar(Code());
 				if(What.IsNull())
 				{
 					if(InvalidXMLCodes)
-						return(Code);
-					ThrowRIOException(this,"Invalid XML/HTML code \""+Code+"\"");
+						return(Code());
+					ThrowRIOException(this,"Invalid XML/HTML code \""+Code()+"\"");
 				}
 				else
-					res+=What;
+					Res+=What;
 
 				// Skip ;
 				if(!Cur.End())
@@ -763,18 +764,18 @@ RString RXMLParser::XMLToString(const RString& str)
 			else
 			{
 				if(InvalidXMLCodes)
-					return(Code);
-				ThrowRIOException(this,"Invalid XML/HTML code \""+Code+"\"");
+					return(Code());
+				ThrowRIOException(this,"Invalid XML/HTML code \""+Code()+"\"");
 			}
 		}
 		else
 		{
-			res+=Cur();
+			Res+=Cur();
 			Cur.Next();
 		}
 	}
 
-	return(res);
+	return(Res());
 }
 
 
@@ -782,15 +783,15 @@ RString RXMLParser::XMLToString(const RString& str)
 RString RXMLParser::StringToXML(const RString& str,bool strict)
 {
 	RCharCursor Cur(str);
-	RString res;
+	RStringBuilder Res;
 
 	if(str.FindStr("<![CDATA[")!=-1)
 		return(str);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		res+=CharToCode(Cur(),strict);
+		Res+=CharToCode(Cur(),strict);
 	}
-	return(res);
+	return(Res());
 }
 
 
@@ -888,7 +889,7 @@ void RXMLParser::LoadHeader(void)
 					while((!End())&&(GetNextChar()!=']'))
 					{
 						// Get next name
-						RString cmd=GetWord();
+						RString cmd(GetWord());
 						if(cmd!="<!ENTITY")
 							ThrowRIOException(this,"Wrong entities formating");
 
@@ -1274,7 +1275,6 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 {
 	RChar What;
 	bool Quotes;
-//	size_t NbAttrs(0);
 
 	CurDepth++;
 
@@ -1291,7 +1291,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 
 		// Read the name of the attribute
 		LastTokenPos=GetPos();
-		RString attrn=GetToken("=>");
+		RString attrn(GetToken("=>"));
 
 		// Verify if the attribute name has a namespace
 		int i=attrn.Find(':');

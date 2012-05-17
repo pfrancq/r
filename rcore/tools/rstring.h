@@ -59,6 +59,9 @@ namespace R{
 * @endcode
 * The strings str1 and str2 use (as long as none of them is modified) the same
 * copy of the characters string.
+*
+* The RStringBuilder class is an efficient implementation to build string by
+* adding characters.
 * @author Pascal Francq
 * @short Unicode String
 */
@@ -394,13 +397,15 @@ public:
 	RString& operator+=(const char* src);
 
 	/**
-	* Add a character to the string.
+	* Add a character to the string. If mutliple characters must be added, it is
+	* more efficient to use RStringBuilder.
 	* @param src             Character.
 	*/
 	RString& operator+=(const char src);
 
 	/**
-	* Add a character to the string.
+	* Add a character to the string. If mutliple characters must be added, it is
+	* more efficient to use RStringBuilder.
 	* @param src             Character.
 	*/
 	RString& operator+=(const RChar src);
