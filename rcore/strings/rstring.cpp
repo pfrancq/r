@@ -47,7 +47,6 @@ using namespace R;
 //
 //-----------------------------------------------------------------------------
 const RString RString::Null;
-static RTextEncoding* StdCodec(0);
 
 
 
@@ -165,7 +164,7 @@ void RString::Copy(const char* text,size_t nb)
 
 
 //-----------------------------------------------------------------------------
-const char* RString::Latin1(void) const
+const char* RString::ToLatin1(void) const
 {
 	if(Data==DataNull)
 		return("");
@@ -336,11 +335,9 @@ RChar* RString::Latin1ToUnicode(const char* src,size_t& len,size_t& maxlen)
 		return(0);
 	}
 
-	if(!StdCodec)
-		StdCodec=RTextEncoding::GetTextEncoding("utf8");
 	if(!maxlen)
 		maxlen=strlen(src);
-	RString Str(StdCodec->ToUnicode(src,maxlen));
+	RString Str(RTextEncoding::GetUTF8Encoding()->ToUnicode(src,maxlen));
 	size_t lenutf16(Str.Data->Len+1);
 	RChar* res=new RChar[lenutf16];
 	memcpy(res,Str.Data->Text,lenutf16*sizeof(RChar));
@@ -355,9 +352,7 @@ char* RString::UnicodeToLatin1(void) const
 	if(!Data)
 		return(0);
 
-	if(!StdCodec)
-		StdCodec=RTextEncoding::GetTextEncoding("utf8");
-	RCString Str(StdCodec->FromUnicode(*this));
+	RCString Str(RTextEncoding::GetUTF8Encoding()->FromUnicode(*this));
 	size_t lenlatin1(Str.GetLen()+1);
 	char* res=new char[lenlatin1];
 	memcpy(res,Str(),lenlatin1*sizeof(char));
@@ -376,7 +371,7 @@ void RString::GenerateException(const RString& msg) const
 char RString::ToChar(bool& valid) const
 {
 	int v;
-	valid=(sscanf(Latin1(),"%d",&v)>0);
+	valid=(sscanf(ToLatin1(),"%d",&v)>0);
 	return(static_cast<char>(v));
 }
 
@@ -385,7 +380,7 @@ char RString::ToChar(bool& valid) const
 int RString::ToInt(bool& valid) const
 {
 	int v;
-	valid=(sscanf(Latin1(),"%d",&v)>0);
+	valid=(sscanf(ToLatin1(),"%d",&v)>0);
 	return(v);
 }
 
@@ -394,7 +389,7 @@ int RString::ToInt(bool& valid) const
 unsigned int RString::ToUInt(bool& valid) const
 {
 	unsigned int v;
-	valid=(sscanf(Latin1(),"%u",&v)>0);
+	valid=(sscanf(ToLatin1(),"%u",&v)>0);
 	return(v);
 }
 
@@ -403,7 +398,7 @@ unsigned int RString::ToUInt(bool& valid) const
 long RString::ToLong(bool& valid) const
 {
 	long v;
-	valid=(sscanf(Latin1(),"%ld",&v)>0);
+	valid=(sscanf(ToLatin1(),"%ld",&v)>0);
 	return(v);
 }
 
@@ -412,7 +407,7 @@ long RString::ToLong(bool& valid) const
 unsigned long RString::ToULong(bool& valid) const
 {
 	unsigned long v;
-	valid=(sscanf(Latin1(),"%lu",&v)>0);
+	valid=(sscanf(ToLatin1(),"%lu",&v)>0);
 	return(v);
 }
 
@@ -422,9 +417,9 @@ size_t RString::ToSizeT(bool& valid) const
 {
 	size_t v;
 	#if __WORDSIZE == 32
-		valid=(sscanf(Latin1(),"%u",&v)>0);
+		valid=(sscanf(ToLatin1(),"%u",&v)>0);
 	#elif __WORDSIZE == 64
-		valid=(sscanf(Latin1(),"%lu",&v)>0);
+		valid=(sscanf(ToLatin1(),"%lu",&v)>0);
 	#endif
 	return(v);
 }
@@ -436,12 +431,12 @@ off_t RString::ToOffT(bool& valid) const
 	off_t v;
 	#ifdef _FILE_OFFSET_BITS
 		#if _FILE_OFFSET_BITS == 64
-			valid=(sscanf(Latin1(),"%lld",&v)==1);
+			valid=(sscanf(ToLatin1(),"%lld",&v)==1);
 		#else
-			valid=(sscanf(Latin1(),"%d",&v)==1);
+			valid=(sscanf(ToLatin1(),"%d",&v)==1);
 		#endif
 	#else
-		valid=(sscanf(Latin1(),"%ld",&v)==1);
+		valid=(sscanf(ToLatin1(),"%ld",&v)==1);
 	#endif
 	return(v);
 }
@@ -451,7 +446,7 @@ off_t RString::ToOffT(bool& valid) const
 float RString::ToFloat(bool& valid) const
 {
 	float v;
-	valid=(sscanf(Latin1(),"%f",&v)>0);
+	valid=(sscanf(ToLatin1(),"%f",&v)>0);
 	return(v);
 }
 
@@ -460,7 +455,7 @@ float RString::ToFloat(bool& valid) const
 double RString::ToDouble(bool& valid) const
 {
 	double v;
-	valid=(sscanf(Latin1(),"%lf",&v)>0);
+	valid=(sscanf(ToLatin1(),"%lf",&v)>0);
 	return(v);
 }
 

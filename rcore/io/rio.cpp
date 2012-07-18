@@ -87,21 +87,21 @@ RSmartTempFile::~RSmartTempFile(void)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const char* str) throw()
+RIOException::RIOException(const RString& str)
 	: RException(str)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const char* func,long where,const char* str) throw()
+RIOException::RIOException(const RString& func,long where,const RString& str)
 	: RException(func,where,str)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RFile* file,const char* str) throw()
+RIOException::RIOException(const RFile* file,const RString& str)
 	: RException()
 {
 	if(file)
@@ -112,7 +112,7 @@ RIOException::RIOException(const RFile* file,const char* str) throw()
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RFile* file,const char* func,long where,const char* str) throw()
+RIOException::RIOException(const RFile* file,const RString& func,long where,const RString& str)
 	: RException()
 {
 	if(file)
@@ -123,7 +123,7 @@ RIOException::RIOException(const RFile* file,const char* func,long where,const c
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RIOFile* file,const char* str) throw()
+RIOException::RIOException(const RIOFile* file,const RString& str)
 	: RException()
 {
 	if(file)
@@ -134,7 +134,7 @@ RIOException::RIOException(const RIOFile* file,const char* str) throw()
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RIOFile* file,const char* func,long where,const char* str) throw()
+RIOException::RIOException(const RIOFile* file,const RString& func,long where,const RString& str)
 	: RException()
 {
 	if(file)
@@ -145,7 +145,7 @@ RIOException::RIOException(const RIOFile* file,const char* func,long where,const
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RTextFile* file,const char* str) throw()
+RIOException::RIOException(const RTextFile* file,const RString& str)
 	: RException()
 {
 	if(file)
@@ -156,7 +156,7 @@ RIOException::RIOException(const RTextFile* file,const char* str) throw()
 
 
 //------------------------------------------------------------------------------
-RIOException::RIOException(const RTextFile* file,const char* func,long where,const char* str) throw()
+RIOException::RIOException(const RTextFile* file,const RString& func,long where,const RString& str)
 	: RException()
 {
 	if(file)

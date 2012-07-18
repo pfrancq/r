@@ -35,10 +35,9 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd.h>
-#include <rstring.h>
 #include <ruri.h>
 #include <rdate.h>
+#include <rexception.h>
 
 
 //------------------------------------------------------------------------------
@@ -72,13 +71,13 @@ public:
 	/**
 	* Constructor.
 	*/
-	RDbException(void) throw() : RException() {}
+	RDbException(void) : RException() {}
 
 	/**
 	* Constructor.
 	* @param str                      Message of the error.
 	*/
-	RDbException(const char* str) throw() : RException(str) {}
+	RDbException(const RString& str) : RException(str) {}
 };
 
 
@@ -184,8 +183,9 @@ public:
 	 * utf-8. Lines starting with C comment with "!", "--" or "#" are considered as comments
 	 * and not send to the database.
 	 * @param file           File to execute.
+	 * @param coutit         If yes, each SQL query is printed on screen.
 	 */
-	void RunSQLFile(const RURI& file);
+	void RunSQLFile(const RURI& file,bool coutit=false);
 
 	/**
 	* Destruct the connection to the database.

@@ -48,7 +48,7 @@ struct HTMLCode
 	int Compare(const HTMLCode& code) const {return(Code.Compare(code.Code));}
 	int Compare(const RString& code) const {return(Code.Compare(code));}
 };
-RContainer<HTMLCode,true,true> HTMLCodes(270);
+RContainer<HTMLCode,true,true> TheHTMLCodes(270);
 
 
 //------------------------------------------------------------------------------
@@ -150,7 +150,7 @@ RContainer<RXMLParser::HTMLTag,true,true> RXMLParser::Tags(200,10);
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(void)
 	: RTextFile(), Namespaces(20), DefaultNamespace(5), Attributes(20),
-	  AvoidSpaces(false), InvalidXMLCodes(false), HTMLMode(false)
+	  AvoidSpaces(false), HTMLCodes(false), HTMLMode(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -162,7 +162,7 @@ RXMLParser::RXMLParser(void)
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(const RURI& uri,const RCString& encoding)
  : RTextFile(uri,encoding), Namespaces(20), DefaultNamespace(5), Attributes(20),
-   AvoidSpaces(false), InvalidXMLCodes(false), HTMLMode(false)
+   AvoidSpaces(false), HTMLCodes(false), HTMLMode(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -174,7 +174,7 @@ RXMLParser::RXMLParser(const RURI& uri,const RCString& encoding)
 //------------------------------------------------------------------------------
 RXMLParser::RXMLParser(RIOFile& file,const RCString& encoding)
  : RTextFile(file,encoding), Namespaces(20), DefaultNamespace(5), Attributes(20),
-   AvoidSpaces(false), /*Attrs(10),*/ InvalidXMLCodes(false), HTMLMode(false)
+   AvoidSpaces(false), HTMLCodes(false), HTMLMode(false)
 {
 	SetRemStyle(MultiLineComment);
 	SetRem("<!--","-->");
@@ -349,7 +349,7 @@ void RXMLParser::InitParser(void)
 void RXMLParser::SetHTMLMode(bool html)
 {
 	HTMLMode=html;
-	SetInvalidXMLCodes(html);
+	SetAcceptHTMLCodes(html);
 }
 
 
@@ -396,7 +396,7 @@ void RXMLParser::Open(const RURI& uri,RIO::ModeType mode,const RCString& encodin
 
 
 //------------------------------------------------------------------------------
-RChar RXMLParser::CodeToChar(const RString& str)
+RChar RXMLParser::CodeToChar(const RString& str,bool html)
 {
 	if(!str.Compare("quot"))
 		return('"');
@@ -415,264 +415,265 @@ RChar RXMLParser::CodeToChar(const RString& str)
 		unsigned int Num(Code.ToUInt(Valid));
 		if(Valid)
 			return(RChar(Num));
-		if(HTMLMode)
+		if(html)
 		{
-			if(!HTMLCodes.GetNb())
+			if(!TheHTMLCodes.GetNb())
 			{
 				// Insert all codes
-				HTMLCodes.InsertPtr(new HTMLCode("AElig",0x00C6));
-				HTMLCodes.InsertPtr(new HTMLCode("Aacute",0x00C1));
-				HTMLCodes.InsertPtr(new HTMLCode("Acirc",0x00C2));
-				HTMLCodes.InsertPtr(new HTMLCode("Agrave",0x00C0));
-				HTMLCodes.InsertPtr(new HTMLCode("Alpha",0x0391));
-				HTMLCodes.InsertPtr(new HTMLCode("Aring",0x00C5));
-				HTMLCodes.InsertPtr(new HTMLCode("Atilde",0x00C3));
-				HTMLCodes.InsertPtr(new HTMLCode("Auml",0x00C4));
-				HTMLCodes.InsertPtr(new HTMLCode("Beta",0x0392));
-				HTMLCodes.InsertPtr(new HTMLCode("Ccedil",0x00C7));
-				HTMLCodes.InsertPtr(new HTMLCode("Chi",0x03A7));
-				HTMLCodes.InsertPtr(new HTMLCode("Dagger",0x2021));
-				HTMLCodes.InsertPtr(new HTMLCode("Delta",0x0394));
-				HTMLCodes.InsertPtr(new HTMLCode("ETH",0x00D0));
-				HTMLCodes.InsertPtr(new HTMLCode("Eacute",0x00C9));
-				HTMLCodes.InsertPtr(new HTMLCode("Ecirc",0x00CA));
-				HTMLCodes.InsertPtr(new HTMLCode("Egrave",0x00C8));
-				HTMLCodes.InsertPtr(new HTMLCode("Epsilon",0x0395));
-				HTMLCodes.InsertPtr(new HTMLCode("Eta",0x0397));
-				HTMLCodes.InsertPtr(new HTMLCode("Euml",0x00CB));
-				HTMLCodes.InsertPtr(new HTMLCode("Gamma",0x0393));
-				HTMLCodes.InsertPtr(new HTMLCode("Iacute",0x00CD));
-				HTMLCodes.InsertPtr(new HTMLCode("Icirc",0x00CE));
-				HTMLCodes.InsertPtr(new HTMLCode("Igrave",0x00CC));
-				HTMLCodes.InsertPtr(new HTMLCode("Iota",0x0399));
-				HTMLCodes.InsertPtr(new HTMLCode("Iuml",0x00CF));
-				HTMLCodes.InsertPtr(new HTMLCode("Kappa",0x039A));
-				HTMLCodes.InsertPtr(new HTMLCode("Lambda",0x039B));
-				HTMLCodes.InsertPtr(new HTMLCode("Mu",0x039C));
-				HTMLCodes.InsertPtr(new HTMLCode("Ntilde",0x00D1));
-				HTMLCodes.InsertPtr(new HTMLCode("Nu",0x039D));
-				HTMLCodes.InsertPtr(new HTMLCode("OElig",0x0152));
-				HTMLCodes.InsertPtr(new HTMLCode("Oacute",0x00D3));
-				HTMLCodes.InsertPtr(new HTMLCode("Ocirc",0x00D4));
-				HTMLCodes.InsertPtr(new HTMLCode("Ograve",0x00D2));
-				HTMLCodes.InsertPtr(new HTMLCode("Omega",0x03A9));
-				HTMLCodes.InsertPtr(new HTMLCode("Omicron",0x039F));
-				HTMLCodes.InsertPtr(new HTMLCode("Oslash",0x00D8));
-				HTMLCodes.InsertPtr(new HTMLCode("Otilde",0x00D5));
-				HTMLCodes.InsertPtr(new HTMLCode("Ouml",0x00D6));
-				HTMLCodes.InsertPtr(new HTMLCode("Phi",0x03A6));
-				HTMLCodes.InsertPtr(new HTMLCode("Pi",0x03A0));
-				HTMLCodes.InsertPtr(new HTMLCode("Prime",0x2033));
-				HTMLCodes.InsertPtr(new HTMLCode("Psi",0x03A8));
-				HTMLCodes.InsertPtr(new HTMLCode("Rho",0x03A1));
-				HTMLCodes.InsertPtr(new HTMLCode("Scaron",0x0160));
-				HTMLCodes.InsertPtr(new HTMLCode("Sigma",0x03A3));
-				HTMLCodes.InsertPtr(new HTMLCode("THORN",0x00DE));
-				HTMLCodes.InsertPtr(new HTMLCode("Tau",0x03A4));
-				HTMLCodes.InsertPtr(new HTMLCode("Theta",0x0398));
-				HTMLCodes.InsertPtr(new HTMLCode("Uacute",0x00DA));
-				HTMLCodes.InsertPtr(new HTMLCode("Ucirc",0x00DB));
-				HTMLCodes.InsertPtr(new HTMLCode("Ugrave",0x00D9));
-				HTMLCodes.InsertPtr(new HTMLCode("Upsilon",0x03A5));
-				HTMLCodes.InsertPtr(new HTMLCode("Uuml",0x00DC));
-				HTMLCodes.InsertPtr(new HTMLCode("Xi",0x039E));
-				HTMLCodes.InsertPtr(new HTMLCode("Yacute",0x00DD));
-				HTMLCodes.InsertPtr(new HTMLCode("Yuml",0x0178));
-				HTMLCodes.InsertPtr(new HTMLCode("Zeta",0x0396));
-				HTMLCodes.InsertPtr(new HTMLCode("aacute",0x00E1));
-				HTMLCodes.InsertPtr(new HTMLCode("acirc",0x00E2));
-				HTMLCodes.InsertPtr(new HTMLCode("acute",0x00E1));
-				HTMLCodes.InsertPtr(new HTMLCode("aelig",0x00E6));
-				HTMLCodes.InsertPtr(new HTMLCode("agrave",0x00E0));
-				HTMLCodes.InsertPtr(new HTMLCode("alefsym",0x2135));
-				HTMLCodes.InsertPtr(new HTMLCode("alpha",0x03B1));
-				HTMLCodes.InsertPtr(new HTMLCode("amp",0x0026));
-				HTMLCodes.InsertPtr(new HTMLCode("and",0x2227));
-				HTMLCodes.InsertPtr(new HTMLCode("ang",0x2220));
-				HTMLCodes.InsertPtr(new HTMLCode("aring",0x00E5));
-				HTMLCodes.InsertPtr(new HTMLCode("asymp",0x2248));
-				HTMLCodes.InsertPtr(new HTMLCode("atilde",0x00E3));
-				HTMLCodes.InsertPtr(new HTMLCode("auml",0x00E4));
-				HTMLCodes.InsertPtr(new HTMLCode("bdquo",0x201E));
-				HTMLCodes.InsertPtr(new HTMLCode("beta",0x03B2));
-				HTMLCodes.InsertPtr(new HTMLCode("brvbar",0x00A6));
-				HTMLCodes.InsertPtr(new HTMLCode("bull",0x2022));
-				HTMLCodes.InsertPtr(new HTMLCode("cap",0x2229));
-				HTMLCodes.InsertPtr(new HTMLCode("ccedil",0x00E7));
-				HTMLCodes.InsertPtr(new HTMLCode("cedil",0x00B8));
-				HTMLCodes.InsertPtr(new HTMLCode("cent",0x00A2));
-				HTMLCodes.InsertPtr(new HTMLCode("chi",0x03C7));
-				HTMLCodes.InsertPtr(new HTMLCode("circ",0x02C6));
-				HTMLCodes.InsertPtr(new HTMLCode("clubs",0x2663));
-				HTMLCodes.InsertPtr(new HTMLCode("cong",0x2245));
-				HTMLCodes.InsertPtr(new HTMLCode("copy",0x00A9));
-				HTMLCodes.InsertPtr(new HTMLCode("crarr",0x21B5));
-				HTMLCodes.InsertPtr(new HTMLCode("cup",0x222A));
-				HTMLCodes.InsertPtr(new HTMLCode("curren",0x00A4));
-				HTMLCodes.InsertPtr(new HTMLCode("dArr",0x21D3));
-				HTMLCodes.InsertPtr(new HTMLCode("dagger",0x2020));
-				HTMLCodes.InsertPtr(new HTMLCode("darr",0x2193));
-				HTMLCodes.InsertPtr(new HTMLCode("deg",0x00B0));
-				HTMLCodes.InsertPtr(new HTMLCode("delta",0x03B4));
-				HTMLCodes.InsertPtr(new HTMLCode("diams",0x2666));
-				HTMLCodes.InsertPtr(new HTMLCode("divide",0x00F7));
-				HTMLCodes.InsertPtr(new HTMLCode("eacute",0x00E9));
-				HTMLCodes.InsertPtr(new HTMLCode("ecirc",0x00EA));
-				HTMLCodes.InsertPtr(new HTMLCode("egrave",0x00E8));
-				HTMLCodes.InsertPtr(new HTMLCode("empty",0x2205));
-				HTMLCodes.InsertPtr(new HTMLCode("emsp",0x2003));
-				HTMLCodes.InsertPtr(new HTMLCode("ensp",0x2002));
-				HTMLCodes.InsertPtr(new HTMLCode("epsilon",0x03B5));
-				HTMLCodes.InsertPtr(new HTMLCode("equiv",0x2261));
-				HTMLCodes.InsertPtr(new HTMLCode("eta",0x03B7));
-				HTMLCodes.InsertPtr(new HTMLCode("eth",0x00F0));
-				HTMLCodes.InsertPtr(new HTMLCode("euml",0x00E4));
-				HTMLCodes.InsertPtr(new HTMLCode("euro",0x20AC));
-				HTMLCodes.InsertPtr(new HTMLCode("exist",0x2203));
-				HTMLCodes.InsertPtr(new HTMLCode("forall",0x2200));
-				HTMLCodes.InsertPtr(new HTMLCode("frac12",0x00BD));
-				HTMLCodes.InsertPtr(new HTMLCode("frac14",0x00BC));
-				HTMLCodes.InsertPtr(new HTMLCode("frac34",0x00B3));
-				HTMLCodes.InsertPtr(new HTMLCode("frasl",0x002F));
-				HTMLCodes.InsertPtr(new HTMLCode("gamma",0x03B3));
-				HTMLCodes.InsertPtr(new HTMLCode("ge",0x2265));
-				HTMLCodes.InsertPtr(new HTMLCode("gt",0x003E));
-				HTMLCodes.InsertPtr(new HTMLCode("hArr",0x21D4));
-				HTMLCodes.InsertPtr(new HTMLCode("harr",0x2194));
-				HTMLCodes.InsertPtr(new HTMLCode("hearts",0x2665));
-				HTMLCodes.InsertPtr(new HTMLCode("hellip",0x2026));
-				HTMLCodes.InsertPtr(new HTMLCode("iacute",0x00ED));
-				HTMLCodes.InsertPtr(new HTMLCode("icirc",0x00EE));
-				HTMLCodes.InsertPtr(new HTMLCode("iexcl",0x00A1));
-				HTMLCodes.InsertPtr(new HTMLCode("igrave",0x00EC));
-				HTMLCodes.InsertPtr(new HTMLCode("image",0x2111));
-				HTMLCodes.InsertPtr(new HTMLCode("infin",0x221E));
-				HTMLCodes.InsertPtr(new HTMLCode("int",0x222B));
-				HTMLCodes.InsertPtr(new HTMLCode("iota",0x03B9));
-				HTMLCodes.InsertPtr(new HTMLCode("iquest",0x00BF));
-				HTMLCodes.InsertPtr(new HTMLCode("isin",0x2208));
-				HTMLCodes.InsertPtr(new HTMLCode("iuml",0x00EF));
-				HTMLCodes.InsertPtr(new HTMLCode("kappa",0x03BA));
-				HTMLCodes.InsertPtr(new HTMLCode("lArr",0x21D0));
-				HTMLCodes.InsertPtr(new HTMLCode("lang",0x2329));
-				HTMLCodes.InsertPtr(new HTMLCode("lambda",0x03BB));
-				HTMLCodes.InsertPtr(new HTMLCode("laquo",0x00AB));
-				HTMLCodes.InsertPtr(new HTMLCode("larr",0x2190));
-				HTMLCodes.InsertPtr(new HTMLCode("lceil",0x2308));
-				HTMLCodes.InsertPtr(new HTMLCode("ldquo",0x201C));
-				HTMLCodes.InsertPtr(new HTMLCode("le",0x2264));
-				HTMLCodes.InsertPtr(new HTMLCode("lfloor",0x230A));
-				HTMLCodes.InsertPtr(new HTMLCode("lowast",0x2217));
-				HTMLCodes.InsertPtr(new HTMLCode("loz",0x25CA));
-				HTMLCodes.InsertPtr(new HTMLCode("lrm",0x200E));
-				HTMLCodes.InsertPtr(new HTMLCode("lsaquo",0x2039));
-				HTMLCodes.InsertPtr(new HTMLCode("lsquo",0x2018));
-				HTMLCodes.InsertPtr(new HTMLCode("lt",0x003C));
-				HTMLCodes.InsertPtr(new HTMLCode("macr",0x00AF));
-				HTMLCodes.InsertPtr(new HTMLCode("mdash",0x2014));
-				HTMLCodes.InsertPtr(new HTMLCode("micro",0x00B5));
-				HTMLCodes.InsertPtr(new HTMLCode("middot",0x00B7));
-				HTMLCodes.InsertPtr(new HTMLCode("minus",0x2212));
-				HTMLCodes.InsertPtr(new HTMLCode("mu",0x03BC));
-				HTMLCodes.InsertPtr(new HTMLCode("nabla",0x2207));
-				HTMLCodes.InsertPtr(new HTMLCode("nbsp",0x0020));
-				HTMLCodes.InsertPtr(new HTMLCode("ndash",0x2013));
-				HTMLCodes.InsertPtr(new HTMLCode("ne",0x2260));
-				HTMLCodes.InsertPtr(new HTMLCode("ni",0x220B));
-				HTMLCodes.InsertPtr(new HTMLCode("not",0x00AC));
-				HTMLCodes.InsertPtr(new HTMLCode("notin",0x2209));
-				HTMLCodes.InsertPtr(new HTMLCode("nsub",0x2284));
-				HTMLCodes.InsertPtr(new HTMLCode("ntilde",0x00F1));
-				HTMLCodes.InsertPtr(new HTMLCode("nu",0x03BD));
-				HTMLCodes.InsertPtr(new HTMLCode("oacute",0x00F3));
-				HTMLCodes.InsertPtr(new HTMLCode("ocirc",0x00F4));
-				HTMLCodes.InsertPtr(new HTMLCode("oelig",0x0153));
-				HTMLCodes.InsertPtr(new HTMLCode("ograve",0x00F2));
-				HTMLCodes.InsertPtr(new HTMLCode("oline",0x203E));
-				HTMLCodes.InsertPtr(new HTMLCode("omega",0x03C9));
-				HTMLCodes.InsertPtr(new HTMLCode("omicron",0x03BF));
-				HTMLCodes.InsertPtr(new HTMLCode("oplus",0x2295));
-				HTMLCodes.InsertPtr(new HTMLCode("or",0x2228));
-				HTMLCodes.InsertPtr(new HTMLCode("ordf",0x00AA));
-				HTMLCodes.InsertPtr(new HTMLCode("ordm",0x00BA));
-				HTMLCodes.InsertPtr(new HTMLCode("oslash",0x00F8));
-				HTMLCodes.InsertPtr(new HTMLCode("otilde",0x00F5));
-				HTMLCodes.InsertPtr(new HTMLCode("otimes",0x2297));
-				HTMLCodes.InsertPtr(new HTMLCode("ouml",0x00F6));
-				HTMLCodes.InsertPtr(new HTMLCode("para",0x00B6));
-				HTMLCodes.InsertPtr(new HTMLCode("part",0x2202));
-				HTMLCodes.InsertPtr(new HTMLCode("permil",0x2030));
-				HTMLCodes.InsertPtr(new HTMLCode("perp",0x22A5));
-				HTMLCodes.InsertPtr(new HTMLCode("phi",0x03C6));
-				HTMLCodes.InsertPtr(new HTMLCode("pi",0x03C0));
-				HTMLCodes.InsertPtr(new HTMLCode("piv",0x03D6));
-				HTMLCodes.InsertPtr(new HTMLCode("plusmn",0x00B1));
-				HTMLCodes.InsertPtr(new HTMLCode("pound",0x00A3));
-				HTMLCodes.InsertPtr(new HTMLCode("prime",0x2032));
-				HTMLCodes.InsertPtr(new HTMLCode("prod",0x220F));
-				HTMLCodes.InsertPtr(new HTMLCode("prop",0x221D));
-				HTMLCodes.InsertPtr(new HTMLCode("psi",0x03C8));
-				HTMLCodes.InsertPtr(new HTMLCode("quot",0x0022));
-				HTMLCodes.InsertPtr(new HTMLCode("rArr",0x21D2));
-				HTMLCodes.InsertPtr(new HTMLCode("radic",0x221A));
-				HTMLCodes.InsertPtr(new HTMLCode("rang",0x232A));
-				HTMLCodes.InsertPtr(new HTMLCode("raquo",0x00BB));
-				HTMLCodes.InsertPtr(new HTMLCode("rarr",0x2192));
-				HTMLCodes.InsertPtr(new HTMLCode("rceil",0x2309));
-				HTMLCodes.InsertPtr(new HTMLCode("rdquo",0x201D));
-				HTMLCodes.InsertPtr(new HTMLCode("real",0x211C));
-				HTMLCodes.InsertPtr(new HTMLCode("reg",0x00AE));
-				HTMLCodes.InsertPtr(new HTMLCode("rfloor",0x230B));
-				HTMLCodes.InsertPtr(new HTMLCode("rho",0x03C1));
-				HTMLCodes.InsertPtr(new HTMLCode("rlm",0x200F));
-				HTMLCodes.InsertPtr(new HTMLCode("rsaquo",0x203A));
-				HTMLCodes.InsertPtr(new HTMLCode("rsquo",0x2019));
-				HTMLCodes.InsertPtr(new HTMLCode("sbquo",0x201A));
-				HTMLCodes.InsertPtr(new HTMLCode("scaron",0x0161));
-				HTMLCodes.InsertPtr(new HTMLCode("sdot",0x22C5));
-				HTMLCodes.InsertPtr(new HTMLCode("sect",0x00A7));
-				HTMLCodes.InsertPtr(new HTMLCode("shy",0x00AF));
-				HTMLCodes.InsertPtr(new HTMLCode("sigma",0x03C3));
-				HTMLCodes.InsertPtr(new HTMLCode("sigmaf",0x03C2));
-				HTMLCodes.InsertPtr(new HTMLCode("sim",0x223C));
-				HTMLCodes.InsertPtr(new HTMLCode("spades",0x2660));
-				HTMLCodes.InsertPtr(new HTMLCode("sub",0x2282));
-				HTMLCodes.InsertPtr(new HTMLCode("sube",0x2286));
-				HTMLCodes.InsertPtr(new HTMLCode("sum",0x2211));
-				HTMLCodes.InsertPtr(new HTMLCode("sup",0x2283));
-				HTMLCodes.InsertPtr(new HTMLCode("sup1",0x00B9));
-				HTMLCodes.InsertPtr(new HTMLCode("sup2",0x00B2));
-				HTMLCodes.InsertPtr(new HTMLCode("sup3",0x00B3));
-				HTMLCodes.InsertPtr(new HTMLCode("supe",0x2287));
-				HTMLCodes.InsertPtr(new HTMLCode("szlig",0x00DF));
-				HTMLCodes.InsertPtr(new HTMLCode("tau",0x03C4));
-				HTMLCodes.InsertPtr(new HTMLCode("there4",0x2234));
-				HTMLCodes.InsertPtr(new HTMLCode("theta",0x03B8));
-				HTMLCodes.InsertPtr(new HTMLCode("thetasym",0x03D1));
-				HTMLCodes.InsertPtr(new HTMLCode("thinsp",0x2009));
-				HTMLCodes.InsertPtr(new HTMLCode("thorn",0x00FE));
-				HTMLCodes.InsertPtr(new HTMLCode("tilde",0x007E));
-				HTMLCodes.InsertPtr(new HTMLCode("times",0x00D7));
-				HTMLCodes.InsertPtr(new HTMLCode("trade",0x2122));
-				HTMLCodes.InsertPtr(new HTMLCode("uArr",0x21D1));
-				HTMLCodes.InsertPtr(new HTMLCode("uacute",0x00FA));
-				HTMLCodes.InsertPtr(new HTMLCode("uarr",0x2191));
-				HTMLCodes.InsertPtr(new HTMLCode("ucirc",0x00FB));
-				HTMLCodes.InsertPtr(new HTMLCode("ugrave",0x00F9));
-				HTMLCodes.InsertPtr(new HTMLCode("uml",0x00A8));
-				HTMLCodes.InsertPtr(new HTMLCode("upsih",0x03D2));
-				HTMLCodes.InsertPtr(new HTMLCode("upsilon",0x03C5));
-				HTMLCodes.InsertPtr(new HTMLCode("uuml",0x00FC));
-				HTMLCodes.InsertPtr(new HTMLCode("weierp",0x2118));
-				HTMLCodes.InsertPtr(new HTMLCode("xi",0x03BE));
-				HTMLCodes.InsertPtr(new HTMLCode("yacute",0x00FD));
-				HTMLCodes.InsertPtr(new HTMLCode("yen",0x00A5));
-				HTMLCodes.InsertPtr(new HTMLCode("yuml",0x00FF));
-				HTMLCodes.InsertPtr(new HTMLCode("zeta",0x03B6));
-				HTMLCodes.InsertPtr(new HTMLCode("zwj",0x200D));
-				HTMLCodes.InsertPtr(new HTMLCode("zwnj",0x200C));
+				TheHTMLCodes.InsertPtr(new HTMLCode("AElig",0x00C6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Aacute",0x00C1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Acirc",0x00C2));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Agrave",0x00C0));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Alpha",0x0391));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Aring",0x00C5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Atilde",0x00C3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Auml",0x00C4));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Beta",0x0392));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Ccedil",0x00C7));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Chi",0x03A7));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Dagger",0x2021));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Delta",0x0394));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ETH",0x00D0));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Eacute",0x00C9));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Ecirc",0x00CA));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Egrave",0x00C8));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Epsilon",0x0395));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Eta",0x0397));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Euml",0x00CB));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Gamma",0x0393));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Iacute",0x00CD));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Icirc",0x00CE));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Igrave",0x00CC));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Iota",0x0399));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Iuml",0x00CF));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Kappa",0x039A));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Lambda",0x039B));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Mu",0x039C));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Ntilde",0x00D1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Nu",0x039D));
+				TheHTMLCodes.InsertPtr(new HTMLCode("OElig",0x0152));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Oacute",0x00D3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Ocirc",0x00D4));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Ograve",0x00D2));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Omega",0x03A9));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Omicron",0x039F));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Oslash",0x00D8));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Otilde",0x00D5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Ouml",0x00D6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Phi",0x03A6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Pi",0x03A0));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Prime",0x2033));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Psi",0x03A8));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Rho",0x03A1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Scaron",0x0160));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Sigma",0x03A3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("THORN",0x00DE));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Tau",0x03A4));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Theta",0x0398));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Uacute",0x00DA));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Ucirc",0x00DB));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Ugrave",0x00D9));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Upsilon",0x03A5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Uuml",0x00DC));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Xi",0x039E));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Yacute",0x00DD));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Yuml",0x0178));
+				TheHTMLCodes.InsertPtr(new HTMLCode("Zeta",0x0396));
+				TheHTMLCodes.InsertPtr(new HTMLCode("aacute",0x00E1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("acirc",0x00E2));
+				TheHTMLCodes.InsertPtr(new HTMLCode("acute",0x00E1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("aelig",0x00E6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("agrave",0x00E0));
+				TheHTMLCodes.InsertPtr(new HTMLCode("alefsym",0x2135));
+				TheHTMLCodes.InsertPtr(new HTMLCode("alpha",0x03B1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("amp",0x0026));
+				TheHTMLCodes.InsertPtr(new HTMLCode("and",0x2227));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ang",0x2220));
+				TheHTMLCodes.InsertPtr(new HTMLCode("apos",0x0027));
+				TheHTMLCodes.InsertPtr(new HTMLCode("aring",0x00E5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("asymp",0x2248));
+				TheHTMLCodes.InsertPtr(new HTMLCode("atilde",0x00E3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("auml",0x00E4));
+				TheHTMLCodes.InsertPtr(new HTMLCode("bdquo",0x201E));
+				TheHTMLCodes.InsertPtr(new HTMLCode("beta",0x03B2));
+				TheHTMLCodes.InsertPtr(new HTMLCode("brvbar",0x00A6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("bull",0x2022));
+				TheHTMLCodes.InsertPtr(new HTMLCode("cap",0x2229));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ccedil",0x00E7));
+				TheHTMLCodes.InsertPtr(new HTMLCode("cedil",0x00B8));
+				TheHTMLCodes.InsertPtr(new HTMLCode("cent",0x00A2));
+				TheHTMLCodes.InsertPtr(new HTMLCode("chi",0x03C7));
+				TheHTMLCodes.InsertPtr(new HTMLCode("circ",0x02C6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("clubs",0x2663));
+				TheHTMLCodes.InsertPtr(new HTMLCode("cong",0x2245));
+				TheHTMLCodes.InsertPtr(new HTMLCode("copy",0x00A9));
+				TheHTMLCodes.InsertPtr(new HTMLCode("crarr",0x21B5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("cup",0x222A));
+				TheHTMLCodes.InsertPtr(new HTMLCode("curren",0x00A4));
+				TheHTMLCodes.InsertPtr(new HTMLCode("dArr",0x21D3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("dagger",0x2020));
+				TheHTMLCodes.InsertPtr(new HTMLCode("darr",0x2193));
+				TheHTMLCodes.InsertPtr(new HTMLCode("deg",0x00B0));
+				TheHTMLCodes.InsertPtr(new HTMLCode("delta",0x03B4));
+				TheHTMLCodes.InsertPtr(new HTMLCode("diams",0x2666));
+				TheHTMLCodes.InsertPtr(new HTMLCode("divide",0x00F7));
+				TheHTMLCodes.InsertPtr(new HTMLCode("eacute",0x00E9));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ecirc",0x00EA));
+				TheHTMLCodes.InsertPtr(new HTMLCode("egrave",0x00E8));
+				TheHTMLCodes.InsertPtr(new HTMLCode("empty",0x2205));
+				TheHTMLCodes.InsertPtr(new HTMLCode("emsp",0x2003));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ensp",0x2002));
+				TheHTMLCodes.InsertPtr(new HTMLCode("epsilon",0x03B5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("equiv",0x2261));
+				TheHTMLCodes.InsertPtr(new HTMLCode("eta",0x03B7));
+				TheHTMLCodes.InsertPtr(new HTMLCode("eth",0x00F0));
+				TheHTMLCodes.InsertPtr(new HTMLCode("euml",0x00E4));
+				TheHTMLCodes.InsertPtr(new HTMLCode("euro",0x20AC));
+				TheHTMLCodes.InsertPtr(new HTMLCode("exist",0x2203));
+				TheHTMLCodes.InsertPtr(new HTMLCode("forall",0x2200));
+				TheHTMLCodes.InsertPtr(new HTMLCode("frac12",0x00BD));
+				TheHTMLCodes.InsertPtr(new HTMLCode("frac14",0x00BC));
+				TheHTMLCodes.InsertPtr(new HTMLCode("frac34",0x00B3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("frasl",0x002F));
+				TheHTMLCodes.InsertPtr(new HTMLCode("gamma",0x03B3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ge",0x2265));
+				TheHTMLCodes.InsertPtr(new HTMLCode("gt",0x003E));
+				TheHTMLCodes.InsertPtr(new HTMLCode("hArr",0x21D4));
+				TheHTMLCodes.InsertPtr(new HTMLCode("harr",0x2194));
+				TheHTMLCodes.InsertPtr(new HTMLCode("hearts",0x2665));
+				TheHTMLCodes.InsertPtr(new HTMLCode("hellip",0x2026));
+				TheHTMLCodes.InsertPtr(new HTMLCode("iacute",0x00ED));
+				TheHTMLCodes.InsertPtr(new HTMLCode("icirc",0x00EE));
+				TheHTMLCodes.InsertPtr(new HTMLCode("iexcl",0x00A1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("igrave",0x00EC));
+				TheHTMLCodes.InsertPtr(new HTMLCode("image",0x2111));
+				TheHTMLCodes.InsertPtr(new HTMLCode("infin",0x221E));
+				TheHTMLCodes.InsertPtr(new HTMLCode("int",0x222B));
+				TheHTMLCodes.InsertPtr(new HTMLCode("iota",0x03B9));
+				TheHTMLCodes.InsertPtr(new HTMLCode("iquest",0x00BF));
+				TheHTMLCodes.InsertPtr(new HTMLCode("isin",0x2208));
+				TheHTMLCodes.InsertPtr(new HTMLCode("iuml",0x00EF));
+				TheHTMLCodes.InsertPtr(new HTMLCode("kappa",0x03BA));
+				TheHTMLCodes.InsertPtr(new HTMLCode("lArr",0x21D0));
+				TheHTMLCodes.InsertPtr(new HTMLCode("lang",0x2329));
+				TheHTMLCodes.InsertPtr(new HTMLCode("lambda",0x03BB));
+				TheHTMLCodes.InsertPtr(new HTMLCode("laquo",0x00AB));
+				TheHTMLCodes.InsertPtr(new HTMLCode("larr",0x2190));
+				TheHTMLCodes.InsertPtr(new HTMLCode("lceil",0x2308));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ldquo",0x201C));
+				TheHTMLCodes.InsertPtr(new HTMLCode("le",0x2264));
+				TheHTMLCodes.InsertPtr(new HTMLCode("lfloor",0x230A));
+				TheHTMLCodes.InsertPtr(new HTMLCode("lowast",0x2217));
+				TheHTMLCodes.InsertPtr(new HTMLCode("loz",0x25CA));
+				TheHTMLCodes.InsertPtr(new HTMLCode("lrm",0x200E));
+				TheHTMLCodes.InsertPtr(new HTMLCode("lsaquo",0x2039));
+				TheHTMLCodes.InsertPtr(new HTMLCode("lsquo",0x2018));
+				TheHTMLCodes.InsertPtr(new HTMLCode("lt",0x003C));
+				TheHTMLCodes.InsertPtr(new HTMLCode("macr",0x00AF));
+				TheHTMLCodes.InsertPtr(new HTMLCode("mdash",0x2014));
+				TheHTMLCodes.InsertPtr(new HTMLCode("micro",0x00B5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("middot",0x00B7));
+				TheHTMLCodes.InsertPtr(new HTMLCode("minus",0x2212));
+				TheHTMLCodes.InsertPtr(new HTMLCode("mu",0x03BC));
+				TheHTMLCodes.InsertPtr(new HTMLCode("nabla",0x2207));
+				TheHTMLCodes.InsertPtr(new HTMLCode("nbsp",0x0020));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ndash",0x2013));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ne",0x2260));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ni",0x220B));
+				TheHTMLCodes.InsertPtr(new HTMLCode("not",0x00AC));
+				TheHTMLCodes.InsertPtr(new HTMLCode("notin",0x2209));
+				TheHTMLCodes.InsertPtr(new HTMLCode("nsub",0x2284));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ntilde",0x00F1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("nu",0x03BD));
+				TheHTMLCodes.InsertPtr(new HTMLCode("oacute",0x00F3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ocirc",0x00F4));
+				TheHTMLCodes.InsertPtr(new HTMLCode("oelig",0x0153));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ograve",0x00F2));
+				TheHTMLCodes.InsertPtr(new HTMLCode("oline",0x203E));
+				TheHTMLCodes.InsertPtr(new HTMLCode("omega",0x03C9));
+				TheHTMLCodes.InsertPtr(new HTMLCode("omicron",0x03BF));
+				TheHTMLCodes.InsertPtr(new HTMLCode("oplus",0x2295));
+				TheHTMLCodes.InsertPtr(new HTMLCode("or",0x2228));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ordf",0x00AA));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ordm",0x00BA));
+				TheHTMLCodes.InsertPtr(new HTMLCode("oslash",0x00F8));
+				TheHTMLCodes.InsertPtr(new HTMLCode("otilde",0x00F5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("otimes",0x2297));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ouml",0x00F6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("para",0x00B6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("part",0x2202));
+				TheHTMLCodes.InsertPtr(new HTMLCode("permil",0x2030));
+				TheHTMLCodes.InsertPtr(new HTMLCode("perp",0x22A5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("phi",0x03C6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("pi",0x03C0));
+				TheHTMLCodes.InsertPtr(new HTMLCode("piv",0x03D6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("plusmn",0x00B1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("pound",0x00A3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("prime",0x2032));
+				TheHTMLCodes.InsertPtr(new HTMLCode("prod",0x220F));
+				TheHTMLCodes.InsertPtr(new HTMLCode("prop",0x221D));
+				TheHTMLCodes.InsertPtr(new HTMLCode("psi",0x03C8));
+				TheHTMLCodes.InsertPtr(new HTMLCode("quot",0x0022));
+				TheHTMLCodes.InsertPtr(new HTMLCode("rArr",0x21D2));
+				TheHTMLCodes.InsertPtr(new HTMLCode("radic",0x221A));
+				TheHTMLCodes.InsertPtr(new HTMLCode("rang",0x232A));
+				TheHTMLCodes.InsertPtr(new HTMLCode("raquo",0x00BB));
+				TheHTMLCodes.InsertPtr(new HTMLCode("rarr",0x2192));
+				TheHTMLCodes.InsertPtr(new HTMLCode("rceil",0x2309));
+				TheHTMLCodes.InsertPtr(new HTMLCode("rdquo",0x201D));
+				TheHTMLCodes.InsertPtr(new HTMLCode("real",0x211C));
+				TheHTMLCodes.InsertPtr(new HTMLCode("reg",0x00AE));
+				TheHTMLCodes.InsertPtr(new HTMLCode("rfloor",0x230B));
+				TheHTMLCodes.InsertPtr(new HTMLCode("rho",0x03C1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("rlm",0x200F));
+				TheHTMLCodes.InsertPtr(new HTMLCode("rsaquo",0x203A));
+				TheHTMLCodes.InsertPtr(new HTMLCode("rsquo",0x2019));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sbquo",0x201A));
+				TheHTMLCodes.InsertPtr(new HTMLCode("scaron",0x0161));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sdot",0x22C5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sect",0x00A7));
+				TheHTMLCodes.InsertPtr(new HTMLCode("shy",0x00AF));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sigma",0x03C3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sigmaf",0x03C2));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sim",0x223C));
+				TheHTMLCodes.InsertPtr(new HTMLCode("spades",0x2660));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sub",0x2282));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sube",0x2286));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sum",0x2211));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sup",0x2283));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sup1",0x00B9));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sup2",0x00B2));
+				TheHTMLCodes.InsertPtr(new HTMLCode("sup3",0x00B3));
+				TheHTMLCodes.InsertPtr(new HTMLCode("supe",0x2287));
+				TheHTMLCodes.InsertPtr(new HTMLCode("szlig",0x00DF));
+				TheHTMLCodes.InsertPtr(new HTMLCode("tau",0x03C4));
+				TheHTMLCodes.InsertPtr(new HTMLCode("there4",0x2234));
+				TheHTMLCodes.InsertPtr(new HTMLCode("theta",0x03B8));
+				TheHTMLCodes.InsertPtr(new HTMLCode("thetasym",0x03D1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("thinsp",0x2009));
+				TheHTMLCodes.InsertPtr(new HTMLCode("thorn",0x00FE));
+				TheHTMLCodes.InsertPtr(new HTMLCode("tilde",0x007E));
+				TheHTMLCodes.InsertPtr(new HTMLCode("times",0x00D7));
+				TheHTMLCodes.InsertPtr(new HTMLCode("trade",0x2122));
+				TheHTMLCodes.InsertPtr(new HTMLCode("uArr",0x21D1));
+				TheHTMLCodes.InsertPtr(new HTMLCode("uacute",0x00FA));
+				TheHTMLCodes.InsertPtr(new HTMLCode("uarr",0x2191));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ucirc",0x00FB));
+				TheHTMLCodes.InsertPtr(new HTMLCode("ugrave",0x00F9));
+				TheHTMLCodes.InsertPtr(new HTMLCode("uml",0x00A8));
+				TheHTMLCodes.InsertPtr(new HTMLCode("upsih",0x03D2));
+				TheHTMLCodes.InsertPtr(new HTMLCode("upsilon",0x03C5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("uuml",0x00FC));
+				TheHTMLCodes.InsertPtr(new HTMLCode("weierp",0x2118));
+				TheHTMLCodes.InsertPtr(new HTMLCode("xi",0x03BE));
+				TheHTMLCodes.InsertPtr(new HTMLCode("yacute",0x00FD));
+				TheHTMLCodes.InsertPtr(new HTMLCode("yen",0x00A5));
+				TheHTMLCodes.InsertPtr(new HTMLCode("yuml",0x00FF));
+				TheHTMLCodes.InsertPtr(new HTMLCode("zeta",0x03B6));
+				TheHTMLCodes.InsertPtr(new HTMLCode("zwj",0x200D));
+				TheHTMLCodes.InsertPtr(new HTMLCode("zwnj",0x200C));
 			}
-			HTMLCode* code(HTMLCodes.GetPtr(Code));
+			HTMLCode* code(TheHTMLCodes.GetPtr(Code));
 			if(code)
 				return(code->Car);
 		}
@@ -721,7 +722,7 @@ RString RXMLParser::CharToCode(RChar car,bool strict)
 
 
 //------------------------------------------------------------------------------
-RString RXMLParser::XMLToString(const RString& str)
+RString RXMLParser::XMLToString(const RString& str,bool html)
 {
 	RStringBuilder Res;
 	RCharCursor Cur(str);
@@ -747,12 +748,12 @@ RString RXMLParser::XMLToString(const RString& str)
 			// Is it a code (len<10 and last character is ";'))
 			if((!Cur.End())&&(Cur()==RChar(';'))&&(Code().GetLen()<10))
 			{
-				What=CodeToChar(Code());
+				What=CodeToChar(Code(),html);
 				if(What.IsNull())
 				{
-					if(InvalidXMLCodes)
+					if(html)
 						return(Code());
-					ThrowRIOException(this,"Invalid XML/HTML code \""+Code()+"\"");
+					ThrowRException("Invalid XML/HTML code \""+Code()+"\"");
 				}
 				else
 					Res+=What;
@@ -763,9 +764,9 @@ RString RXMLParser::XMLToString(const RString& str)
 			}
 			else
 			{
-				if(InvalidXMLCodes)
+				if(html)
 					return(Code());
-				ThrowRIOException(this,"Invalid XML/HTML code \""+Code()+"\"");
+				ThrowRException("Invalid XML/HTML code \""+Code()+"\"");
 			}
 		}
 		else
@@ -776,6 +777,20 @@ RString RXMLParser::XMLToString(const RString& str)
 	}
 
 	return(Res());
+}
+
+
+//------------------------------------------------------------------------------
+RString RXMLParser::XMLToString(const RString& str)
+{
+	try
+	{
+		return(XMLToString(str,HTMLCodes));
+	}
+	catch(RException& e)
+	{
+		ThrowRIOException(this,e.GetMsg());
+	}
 }
 
 
@@ -1437,7 +1452,7 @@ void RXMLParser::HeaderAttribute(const RString&,const RString& lName,const RStri
 void RXMLParser::HeaderValue(const RString& value)
 {
 	if(TreatEncoding)
-		SetEncoding(value.Latin1());
+		SetEncoding(value.ToLatin1());
 }
 
 

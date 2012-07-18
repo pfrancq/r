@@ -97,7 +97,7 @@ void RDir::Open(RIO::ModeType mode)
 			break;
 
 		case RIO::Create:
-			err=mkdir(URI.GetPath().Latin1(),S_IRWXU | S_IRGRP | S_IXGRP | S_IXOTH);
+			err=mkdir(URI.GetPath().ToLatin1(),S_IRWXU | S_IRGRP | S_IXGRP | S_IXOTH);
 			if(err!=0)
 			{
 				switch(errno)
@@ -126,7 +126,7 @@ void RDir::OpenEntries(void)
 	struct stat statbuf;
 	int handle;
 
-	Data->Handle=opendir(URI.GetPath().Latin1());
+	Data->Handle=opendir(URI.GetPath().ToLatin1());
 	if(!Data->Handle)
 		throw(RIOException(this,"Directory does not exist"));
 	RString Path=URI.GetPath()+RFile::GetDirSeparator();
@@ -163,7 +163,7 @@ void RDir::Clear(void)
 	int handle;
 	bool IsDir;
 
-	Data->Handle=opendir(URI.GetPath().Latin1());
+	Data->Handle=opendir(URI.GetPath().ToLatin1());
 	if(!Data->Handle)
 		throw(RIOException(this,"Directory does not exist"));
 	RString Path=URI.GetPath()+RFile::GetDirSeparator();
@@ -228,7 +228,7 @@ void RDir::CreateDirIfNecessary(const RString& dir,bool cascade)
 		RDir Dir(dir);
 		Dir.Open(RIO::Create);
 	}
-	catch(RIOException& )
+	catch(...)
 	{
 		// Ok, nothing to do.
 	}

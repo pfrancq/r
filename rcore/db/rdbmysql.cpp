@@ -96,7 +96,7 @@ void RDbMySQL::Create(const RString& db,const RString& host,const RString& user,
 
 	RString sql="CREATE DATABASE IF NOT EXISTS ";
 	sql+=db;
-	if(mysql_query(&ms,sql.Latin1()))
+	if(mysql_query(&ms,sql.ToLatin1()))
 		throw RDbException(mysql_error(&ms));
 }
 

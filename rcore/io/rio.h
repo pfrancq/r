@@ -38,6 +38,7 @@
 #include <rstd.h>
 #include <rstring.h>
 #include <ruri.h>
+#include <rexception.h>
 
 
 //------------------------------------------------------------------------------
@@ -157,7 +158,7 @@ public:
 	* Construct an IO exception.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const char* str) throw();
+	RIOException(const RString& str);
 
 	/**
 	* Construct an exception with the message "func [where]: str". A typical use is:
@@ -170,30 +171,14 @@ public:
 	* @param where                    Line position of the error.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const char* func,long where,const char* str) throw();
+	RIOException(const RString& func,long where,const RString& str);
 
 	/**
 	* Construct an IO exception.
 	* @param file                     File process when the error occurs.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const RFile* file,const char* str) throw();
-
-	/**
-	* Construct an IO exception.
-	* @param file                     File process when the error occurs.
-	* @param func                     Function producing the error.
-	* @param where                    Line position of the error.
-	* @param str                      Message of the error.
-	*/
-	RIOException(const RFile* file,const char* func,long where,const char* str) throw();
-
-	/**
-	* Construct an IO exception.
-	* @param file                     File process when the error occurs.
-	* @param str                      Message of the error.
-	*/
-	RIOException(const RIOFile* file,const char* str) throw();
+	RIOException(const RFile* file,const RString& str);
 
 	/**
 	* Construct an IO exception.
@@ -202,14 +187,14 @@ public:
 	* @param where                    Line position of the error.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const RIOFile* file,const char* func,long where,const char* str) throw();
+	RIOException(const RFile* file,const RString& func,long where,const RString& str);
 
 	/**
 	* Construct an IO exception.
 	* @param file                     File process when the error occurs.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const RTextFile* file,const char* str) throw();
+	RIOException(const RIOFile* file,const RString& str);
 
 	/**
 	* Construct an IO exception.
@@ -218,7 +203,23 @@ public:
 	* @param where                    Line position of the error.
 	* @param str                      Message of the error.
 	*/
-	RIOException(const RTextFile* file,const char* func,long where,const char* str) throw();
+	RIOException(const RIOFile* file,const RString& func,long where,const RString& str);
+
+	/**
+	* Construct an IO exception.
+	* @param file                     File process when the error occurs.
+	* @param str                      Message of the error.
+	*/
+	RIOException(const RTextFile* file,const RString& str);
+
+	/**
+	* Construct an IO exception.
+	* @param file                     File process when the error occurs.
+	* @param func                     Function producing the error.
+	* @param where                    Line position of the error.
+	* @param str                      Message of the error.
+	*/
+	RIOException(const RTextFile* file,const RString& func,long where,const RString& str);
 };
 
 

@@ -30,6 +30,7 @@
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <ruri.h>
+#include <rexception.h>
 using namespace R;
 
 
@@ -93,7 +94,7 @@ void RURI::AnalyzeString(void)
 	if(!URI.GetLen()) return;
 
 	// Test if it is a local file
-	if(URI()[0]=='/')
+	if(URI.ToLatin1()[0]=='/')
 	{
 		// No, it is a path -> add file:
 		Scheme.Size=4;
@@ -106,7 +107,7 @@ void RURI::AnalyzeString(void)
 	// Extract Scheme (search first :)
 	for(i=0;(i<URI.GetLen())&&(URI[i]!=':');i++,Scheme.Size++) ;
 	if(i==URI.GetLen())
-		throw RException(URI+" is not a valid URI");
+		ThrowRException(URI+" is not a valid URI");
 
 	// Test if it is a local file
 	if(GetScheme()=="file")
@@ -130,15 +131,15 @@ void RURI::AnalyzeString(void)
 	// Skip ":"
 	i++;
 	if(i==URI.GetLen())
-		throw RException(URI+" is not a valid URI");
+		ThrowRException(URI+" is not a valid URI");
 	RChar c1=URI[i];
 	i++;
 	if(i==URI.GetLen())
-		throw RException(URI+" is not a valid URI");
+		ThrowRException(URI+" is not a valid URI");
 	RChar c2=URI[i];
+	i++;
 	if(i==URI.GetLen())
 		throw RException(URI+" is not a valid URI");
-	i++;
 
 	if((c1=='/')&&(c2=='/'))
 	{
@@ -155,6 +156,8 @@ void RURI::AnalyzeString(void)
 			if(i==URI.GetLen())
 				throw RException(URI+" is not a valid URI");
 			for(Port.Pos=i;((i<URI.GetLen())&&(URI[i]!='/'));i++,Port.Size++) ;
+			if(i==URI.GetLen())
+				return;
 		}
 
 		// Extract the path
@@ -168,8 +171,10 @@ void RURI::AnalyzeString(void)
 			// Test Query
 			i++;
 			if(i==URI.GetLen())
-				throw RException(URI+" is not a valid URI");
+				return; // May be the last character of a valid URI.
 			for(Query.Pos=i;((i<URI.GetLen())&&(URI[i]!='#'));i++,Query.Size++) ;
+			if(i==URI.GetLen())
+				return;
 		}
 		if(URI[i]=='#')
 		{
@@ -178,6 +183,8 @@ void RURI::AnalyzeString(void)
 			if(i==URI.GetLen())
 				throw RException(URI+" is not a valid URI");
 			for(Fragment.Pos=i;i<URI.GetLen();i++,Fragment.Size++) ;
+			if(i==URI.GetLen())
+				throw RException(URI+" is not a valid URI");
 		}
 
 		return;

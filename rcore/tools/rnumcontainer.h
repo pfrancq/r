@@ -123,7 +123,7 @@ public:
 	* @return Returns the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
-	size_t GetId(I nb,bool& find) const;
+	size_t GetIndex(I nb,bool& find) const;
 
 	/**
 	* Test if two lists have exactly the same values.
@@ -152,11 +152,11 @@ public:
 	* Insert a value in the list at a given position.
 	* @param ins             The value to insert.
 	* @param pos             The position where to insert.
-	* @param del             Specify if the value that was previously at the
-	*                        position should be deleted or shifted.
+	* @param replace         Specify if the value that was previously at the
+	*                        position should be replaced or shifted.
 	*
 	*/
-	void InsertAt(I ins,size_t pos,bool del=false);
+	void InsertAt(I ins,size_t pos,bool replace=false);
 
 	/**
 	* Delete a value in the list.

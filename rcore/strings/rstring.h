@@ -141,12 +141,12 @@ public:
 	* structure.
 	* @return C String
 	*/
-	const char* Latin1(void) const;
+	const char* ToLatin1(void) const;
 
 	/**
 	* Return the string in UTF16.
 	*/
-	inline const RChar* UTF16(void) const {return(Data->Text);}
+	inline const RChar* ToUTF16(void) const {return(Data->Text);}
 
 	/**
 	* Get a normal C++ string representing the current string.
@@ -309,7 +309,7 @@ public:
 	* Return the string.  The resulting array should be copied (and not
 	* destroyed) since it is an internal structure.
 	*/
-	inline operator const char* (void) const {return(Latin1());}
+	inline operator const char* (void) const {return(ToLatin1());}
 
 	/**
 	* Get a normal C++ string representing the current string.
@@ -328,7 +328,7 @@ public:
 	* This function returns the character at a given position in the string.
 	* @param idx             Position of the character.
 	*/
-	inline RChar& operator[](size_t idx) {BasicString<RChar,RString>::Copy(); return(BasicString<RChar,RString>::operator[](idx));}
+	inline RChar& operator[](size_t idx) {return(BasicString<RChar,RString>::operator[](idx));}
 
 	/**
 	* Equal operator.
@@ -744,7 +744,7 @@ inline const RString operator+(const RString& arg1,RChar arg2) {return(RString(a
 *
 * 	Cur.Set(str);
 * 	for(Cur.Start();!Cur.End();Cur.Next())
-* 		cout<<Cur().Latin1();
+* 		cout<<Cur().ToLatin1();
 * }
 * @endcode
 *

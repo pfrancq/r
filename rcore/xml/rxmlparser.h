@@ -189,9 +189,9 @@ private:
 	SectionType Section;
 
 	/**
-	 * Specify if only invalid XML codes are accepted.
+	 * Specify if HTML codes are accepted.
 	 */
-	bool InvalidXMLCodes;
+	bool HTMLCodes;
 
 	/**
 	 * Specify if the encoding is currently treated.
@@ -301,21 +301,33 @@ protected:
 	* This function transform a given string that is supposed to represent a
 	* character. For example, the code #quot; is a quote.
 	* @param code           Code.
+	* @param html           HTML codes accepted ?
 	* @returns A RChar corresponding to the code or 0 if the code is not a valid
 	* one.
 	*/
-	virtual RChar CodeToChar(const RString& code);
+	static RChar CodeToChar(const RString& code,bool html);
 
 	/**
 	* This function transform a given character (ex: <) into a string that
 	* represents a HTML code (ex: "lt").
 	* @param car             Character.
 	* @param strict          If strict is true, the quotes are also transform,
-	*                        else on < and > are transformed.
+	*                        else only the characters '<' and '>' are transformed.
 	* @returns A RString corresponding to the character or the character itself
 	* if a code is not identified.
 	*/
-	RString CharToCode(RChar car,bool strict=true);
+	static RString CharToCode(RChar car,bool strict=true);
+
+	/**
+	* This function transform a string containing some XML or HTML code into a
+	* string with normal characters.
+	* @param str            XML string.
+	* @param html           HTML codes accepted ?
+	* @returns A RString containing a normal string.
+	* @exception A RException exception is generated if the string contains
+	*                         an invalid XML or HTML code.
+	*/
+	static RString XMLToString(const RString& str,bool html);
 
 	/**
 	* This function transform a string containing some XML or HTML code into a
@@ -524,13 +536,13 @@ public:
 	* By default, this function return false which is the syntax of XML. This
 	* can be changed with the method 'SetInvalidXMLCodes'.
 	*/
-	bool AcceptInvalidXMLCodes(void) {return(InvalidXMLCodes);}
+	bool AcceptHTMLCodes(void) {return(HTMLCodes);}
 
 	/**
 	 * Specify if invalid XML codes should be accepted.
 	 * @param accepted       Yes/No.
 	 */
-	void SetInvalidXMLCodes(bool accepted) {InvalidXMLCodes=accepted;}
+	void SetAcceptHTMLCodes(bool accepted) {HTMLCodes=accepted;}
 
 	/**
 	* Destruct the XML file.

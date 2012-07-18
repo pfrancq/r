@@ -1,5 +1,6 @@
 SET(rcore_tools_INST_INCLUDES
 	rstd.h
+	rexception.h
 	rcontainer.h
 	robjectcontainer.h
 	rcontainer.hh
@@ -13,23 +14,16 @@ SET(rcore_tools_INST_INCLUDES
 	rtree.h
 	rtree.hh
 	rshareddata.h
-	basicstring.h
- 	basicstring.hh
 	rportsmacro.h
 	rnumcontainer.h
 	rnumcontainer.hh
 	rnumcursor.h
 	rnumcursor.hh
 	rtrace.h
-	rstring.h
-	rstringbuilder.h
-	rchar.h
 	rrandom.h
 	rdate.h
 	rlang.h
 	rlocale.h
-	rtextencoding.h
-	rcstring.h
 	rvectorbool.h
 	rvalue.h
 	rquicksort.h
@@ -37,17 +31,12 @@ SET(rcore_tools_INST_INCLUDES
 )
 
 SET(rcore_tools_TARGET_SOURCES
+	rexception.cpp
 	rrandom.cpp
 	rdate.cpp
 	rlang.cpp
 	rlocale.cpp
 	rtrace.cpp
-	rstring.cpp
-	rstringbuilder.cpp
-	rchar.cpp
-	rtextencoding.cpp
-	rcstring.cpp
-	rstd.cpp
 	rvectorbool.cpp
 	rvalue.cpp
 )

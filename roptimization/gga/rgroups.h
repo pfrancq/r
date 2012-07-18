@@ -67,13 +67,13 @@ private:
 	class GroupId
 	{
 	public:
-		int GrpId;       // Group Identifier.
-		int position;    // Position of the group.
+		size_t GrpId;       // Group Identifier.
+		size_t position;    // Position of the group.
 
 		// Constructor and Compare methods.
-		GroupId(int RealId,int Position) : GrpId(RealId), position(Position) {}
-		int Compare(const int ID) const {return(GrpId-ID);}
-		int Compare(const GroupId& grp) const {return(GrpId-grp.GrpId);}
+		GroupId(size_t RealId,size_t Position) : GrpId(RealId), position(Position) {}
+		int Compare(const int ID) const {return(CompareIds(GrpId,ID));}
+		int Compare(const GroupId& grp) const {return(CompareIds(GrpId,grp.GrpId));}
 	};
 
 public:

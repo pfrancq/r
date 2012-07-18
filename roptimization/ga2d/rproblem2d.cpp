@@ -30,7 +30,6 @@
 //------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <stdlib.h>
-using namespace std;
 
 
 //------------------------------------------------------------------------------
@@ -40,6 +39,7 @@ using namespace std;
 #include <rpoints.h>
 #include <rvectorbool.h>
 #include <robj2dconfig.h>
+using namespace std;
 using namespace R;
 
 

@@ -92,7 +92,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	size_t RNumContainer<I,bOrder>::GetId(I nb,bool& find) const
+	size_t RNumContainer<I,bOrder>::GetIndex(I nb,bool& find) const
 {
 	if(bOrder)
 	{
@@ -179,7 +179,7 @@ template<class I,bool bOrder>
 	bool RNumContainer<I,bOrder>::IsIn(I value) const
 {
 	bool find;
-	GetId(value,find);
+	GetIndex(value,find);
 	return(find);
 }
 
@@ -193,7 +193,7 @@ template<class I,bool bOrder>
 	if(bOrder)
 	{
 		bool Find;
-		Index=GetId(ins,Find);
+		Index=GetIndex(ins,Find);
 		if(!Find)
 			InsertAt(ins,Index);
 	}
@@ -208,14 +208,14 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RNumContainer<I,bOrder>::InsertAt(I ins,size_t pos,bool del)
+	void RNumContainer<I,bOrder>::InsertAt(I ins,size_t pos,bool replace)
 {
 	I* ptr;
 
 	if(pos+1>MaxInt)
 		Verify(pos+1);
 	ptr=&List[pos];
-	if((!del)&&(pos<NbInt))
+	if((!replace)&&(pos<NbInt))
 	{
 		memmove(ptr+1,ptr,(NbInt-pos)*sizeof(I));
 		NbInt++;
@@ -231,7 +231,7 @@ template<class I,bool bOrder>
 	void RNumContainer<I,bOrder>::Delete(I del)
 {
 	bool Find;
-	size_t Index=GetId(del,Find);
+	size_t Index=GetIndex(del,Find);
 	if(Find)
 		DeleteAt(Index,true);
 }

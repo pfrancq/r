@@ -2,12 +2,11 @@
 
 	R Project Library
 
-	BasicString.h
+	RTmpString.h
 
-	Generic String - Header.
+	Temporary String - Header.
 
-	Copyright 2005-2012 by Pascal Francq (pascal@francq.info).
-	Copyright 2005-2008 by the Université Libre de Bruxelles (ULB).
+	Copyright 2011-2012 by Pascal Francq (pascal@francq.info).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -29,15 +28,16 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef BasicString_H
-#define BasicString_H
+#ifndef RTmpString_H
+#define RTmpString_H
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
 #include <rchar.h>
-#include <rshareddata.h>
+#include <stringmethods.h>
+#include <rtextencoding.h>
 
 
 //-----------------------------------------------------------------------------
@@ -50,122 +50,67 @@ template<class C,bool bAlloc,bool bOrder> class RContainer;
 
 //-----------------------------------------------------------------------------
 /**
-* This class implements a generic string. It is used to instantiate RString and
-* RCString. Its role is to centralize as much code as possible.
-* @tparam C                  Class representing a character.
-* @tparam S                  Final class representing the string.
+* This class implements a temporary string of Unicode characters (RChar). The
+* template proposes to instantiate strings of a given size. Contrary to
+* RString, RTmpString does not allocate the text on the heap but on the stack.
+* It should therefore be optimized for temporary string (as the name suggests)
+* where a maximum size is known.
+* @warning Some compilers generate the codes for each instantiation. It is
+* therefore a good practice to limit the number of instantiations. Moreover,
+* since these strings occupy the stack, using too many of them with large sizes
+* can lead to a problem (in particular for recursive functions).
+* @tparam MaxLen             Maximum size of the string.
 * @author Pascal Francq
-* @short Generic String
+* @short Temporary String.
 */
-template<class C,class S>
-	class BasicString
+template<size_t MaxLen>
+	class RTmpString
 {
+	/**
+	 * Text.
+	 */
+	RChar Text[MaxLen+1];
+
+	/**
+	 * Actual length.
+	 */
+	size_t Len;
+
+	/**
+	 * Latin1 version of the string.
+	 */
+	char Latin1[MaxLen+1];
+
 public:
-
-	/**
-	 * The BasicStrinf::Ref class provides a reference to a sub-string.
-	 */
-	class Ref
-	{
-	public:
-
-		/**
-		 * Position where the sub-string begins.
-		 */
-		size_t Pos;
-
-		/**
-		 * Length of the sub-string.
-		 */
-		size_t Len;
-
-		/**
-		 * Pointer to the original string.
-		 */
-		S* Str;
-	};
-
-protected:
-
-	/**
-	 * This class implement a string that can be shared between strings.
-	 */
-	class CharBuffer : public RSharedData
-	{
-	public:
-
-		/** Text. */
-		C* Text;
-		/** Actual length.*/
-		size_t Len;
-		/** Maximum Length.*/
-		size_t MaxLen;
-		/**Latin1 version of the string. */
-		char* Latin1;
-
-		/**
-		 * Constructor.
-		 */
-		CharBuffer(void)
-			: RSharedData(), Text(0), Len(0), MaxLen(0), Latin1(0) {}
-		/**
-		 * Constructor.
-		 * @param tab        Array corresponding to a string.
-		 * @param len        Length of the string.
-		 * @param maxlen     Length of the array.
-		 */
-		CharBuffer(C* tab,size_t len,size_t maxlen)
-			: RSharedData(), Text(tab), Len(len), MaxLen(maxlen),Latin1(0) {}
-
-		/**
-		 * Verify if the buffer can contained a given number of parameters.
-		 * @param maxlen     Maximum size of the array.
-		 */
-		void Verify(size_t maxlen);
-
-		/**
-		 * Invalid the Latin1 representation.
-		 */
-		void InvalidLatin1(void) {delete[] Latin1; Latin1=0;}
-
-		/**
-		 * Destruct the buffer.
-		 */
-		~CharBuffer(void){delete[] Text; delete[] Latin1;}
-	};
-
-	/**
-	* Pointer to the buffer representing the null string.
-	*/
-	static CharBuffer* DataNull;
-
-	/**
-	* Pointer to the buffer of the string.
-	*/
-	CharBuffer* Data;
 
 	/**
 	* Construct a null string.
 	*/
-	BasicString(void);
+	RTmpString(void);
 
 	/**
 	* Copy constructor.
 	* @param str             Original string.
 	*/
-	BasicString(const BasicString& str);
+	RTmpString(const RTmpString& str);
 
 	/**
 	* Construct a string with one character.
 	* @param car             Character.
 	*/
-	BasicString(const C car);
+	RTmpString(const RChar car);
 
 	/**
 	* Construct a string from an array.
 	* @param src             Array used as reference.
 	*/
-	BasicString(const C* src);
+	RTmpString(const char* src);
+
+	/**
+	* Construct a string from an array.
+	* @param src             Array used as reference.
+	*/
+	RTmpString(const RChar* src);
 
 	/**
 	* Construct a string by doing a deep copy of the first characters of a
@@ -173,52 +118,72 @@ protected:
 	* @param src             C-style string used as reference.
 	* @param len             Length.
 	*/
-	BasicString(const C* src,size_t len);
-
-protected:
-
-	/**
-	* Return the pointer to the "null" buffer. If it is not created, create it.
-	* @return Pointer to the "null" buffer.
-	*/
-	static CharBuffer* GetDataNull(void);
-
-	/**
-	* Deep copy of the string if necessary, i.e. when the string points to an
-	* internal buffer referenced by other strings, make a copy of it.
-	*/
-	void Copy(void);
-
-public:
+	RTmpString(const RChar* src,size_t len);
 
 	/**
 	* Copy a certain number of characters in the string.
 	* @param text            Text to copy.
 	* @param nb              Number of characters to copy.
 	*/
-	void Copy(const C* text,size_t nb);
+	void Copy(const RChar* text,size_t nb);
+
+private:
+
+	/**
+	* Transform the RString into C string. The resulting C string should be
+	* destroyed by the caller of the function.
+	*/
+	void UnicodeToLatin1(void) const;
+
+public:
+
+	/**
+	* Transform the string into a "C String" in Latin1 encoding. The resulting
+	* array should be copied (and not destroyed) since it is an internal
+	* structure.
+	* @return C String
+	*/
+	const char* ToLatin1(void) const;
+
+	/**
+	* Return the string in UTF16.
+	*/
+	inline const RChar* ToUTF16(void) const {return(Text);}
+
+	/**
+	* Get a normal C++ string representing the current string.
+	* @return std::string.
+	*/
+	std::string ToString(void) const;
 
 	/**
 	* Assignment operator using another string.
 	* @param src             Source string.
 	*/
-	S& operator=(const S& src);
+	RTmpString& operator=(const RTmpString& src);
 
 	/**
 	* Assignment operator using another string.
 	* @param src             Source string.
 	*/
-	S& operator=(const C* src);
+	RTmpString& operator=(const char* src);
+
+	/**
+	* Assignment operator using another string.
+	* @param src             Source string.
+	*/
+	RTmpString& operator=(const RChar* src);
+
 
 	/**
 	* Return the length of the string.
 	*/
-	inline size_t GetLen(void) const {return(Data->Len);}
+	inline size_t GetLen(void) const {return(Len);}
 
 	/**
 	* Return the maximal length of the string.
 	*/
-	inline size_t GetMaxLen(void) const {return(Data->MaxLen);}
+	inline size_t GetMaxLen(void) const {return(MaxLen);}
 
 	/**
 	* Set the length of the string. If the length is shorter that the current
@@ -237,13 +202,13 @@ public:
 	* @param len             Length of the string.
 	* @param str             String used to fill.
 	*/
-	void SetLen(size_t len,const S& str);
+	void SetLen(size_t len,const RChar* str);
 
 	/**
 	* Look if the string is empty.
 	* @returns true if the length is null, false else.
 	*/
-	inline bool IsEmpty(void) const {return(!Data->Len);}
+	inline bool IsEmpty(void) const {return(!Len);}
 
 	/**
 	* Clear the content of the string.
@@ -254,20 +219,20 @@ public:
 	* Get a uppercase version of the string.
 	* @return String.
 	*/
-	S ToUpper(void) const;
+	void ToUpper(void) const;
 
 	/**
 	* Get a lowercase version of the string.
 	* @return String.
 	*/
-	S ToLower(void) const;
+	void ToLower(void) const;
 
 	/**
 	* This function return a string by stripping whitespace (or other
 	* characters) from the beginning and end of the string.
 	* @return String.
 	*/
-	S Trim(void) const;
+	void Trim(void) const;
 
 	/**
 	* This function return a string by stripping a given sub-string from the
@@ -275,24 +240,30 @@ public:
 	* @param str             Sub-string to strip.
 	* @return String.
 	*/
-	S Trim(const S& str) const;
+	void Trim(const RChar* str) const;
 
 	/**
 	 * Look if the string contains only spaces.
 	 */
-	bool ContainOnlySpaces(void) const;
+	bool ContainOnlySpaces(void) const {return(StringMethods::ContainOnlySpaces<RChar>(Text));}
 
 	/**
 	* Add another string.
 	* @param src             Source string.
 	*/
-	S& operator+=(const S& src);
+	RTmpString& operator+=(const RTmpString& src);
 
 	/**
 	* Add a string to the string.
 	* @param src             Source string.
 	*/
-	S& operator+=(const C* src);
+	RTmpString& operator+=(const char* src);
+
+	/**
+	* Add a string to the string.
+	* @param src             Source string.
+	*/
+	RTmpString& operator+=(const RChar* src);
 
 	/**
 	* Find the position of a given character in the string.
@@ -303,7 +274,7 @@ public:
 	* @return The position of the first occurrence or -1 if the character was not
 	*         found.
 	*/
-	int Find(const C car,int pos=0,bool CaseSensitive=true) const;
+	int Find(const RChar car,int pos=0,bool CaseSensitive=true) const {return(StringMethods::ContainOnlySpaces<RChar>(Text));}
 
 	/**
 	* Find the position of a given string in the string.
@@ -314,7 +285,7 @@ public:
 	* @return The position of the first occurrence or -1 if the character was not
 	*         found.
 	*/
-	int FindStr(const S& str,int pos=0,bool CaseSensitive=true) const;
+	int FindStr(const RTmpString& str,int pos=0,bool CaseSensitive=true) const {return(StringMethods::FindStr<RChar>(Text,Len,pos,CaseSensitive));}
 
 	/**
 	* Find the position of a character of a given set in the string.
@@ -325,7 +296,7 @@ public:
 	* @return The position of the first occurrence or -1 if the character was not
 	*         found.
 	*/
-	int FindAnyStr(const S& str,int pos=0,bool CaseSensitive=true) const;
+	int FindAnyStr(const RTmpString& str,int pos=0,bool CaseSensitive=true) const {return(StringMethods::FindAnyStr<RChar>(Text,Len,str.Text,str.Len,pos,CaseSensitive));}
 
 	/**
 	 * Replace a given character in the string.
@@ -335,7 +306,7 @@ public:
 	 * @param pos            Position to start. Negative values start the
 	 *                       search from the end.
 	 */
-	void Replace(const C search,const C rep,bool first=false,int pos=0);
+	void Replace(const RChar search,const RChar rep,bool first=false,int pos=0);
 
 	/**
 	 * Replace a given sub-string in the string.
@@ -345,38 +316,64 @@ public:
 	 * @param pos            Position to start. Negative values start the
 	 *                       search from the end.
 	 */
-	void ReplaceStr(const S& search,const S& rep,bool first=false,int pos=0);
+	void ReplaceStr(const RTmpString& search,const RTmpString& rep,bool first=false,int pos=0);
+
+	/**
+	* Return the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
+	*/
+	inline RChar* operator()(void) {return(Text);}
+
+	/**
+	* Return the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
+	*/
+	inline const RChar* operator()(void) const {return(Text);}
+
+	/**
+	* Return the string.  The resulting array should be copied (and not
+	* destroyed) since it is an internal structure.
+	*/
+	inline operator const char* (void) const {return(ToLatin1());}
+
+	/**
+	* Get a normal C++ string representing the current string.
+	* @return std::string.
+	*/
+	operator std::string () const;
 
 	/**
 	* This function returns the character at a given position in the string.
 	* (Read only).
 	* @param idx             Position of the character.
 	*/
-	const C& operator[](size_t idx) const;
+	const RChar& operator[](size_t idx) const;
 
 	/**
 	* This function returns the character at a given position in the string.
 	* @param idx             Position of the character.
 	*/
-	C& operator[](size_t idx);
+	RChar& operator[](size_t idx);
 
 	/**
 	* Look if a string begins with a given sub-string.
    * @param begin           Sub-string to search for.
    * @param skip            If true, leading spaces are skipped for the
 	*                        comparison.
+	* @param CaseSensitive   Is the search case sensitive.
    * @return true if the string begins with the sub-string.
    */
-	bool Begins(const S& begin,bool skip=false) const;
+	bool Begins(const RTmpString& begin,bool skip=false,bool CaseSensitive=true) const {return(StringMethods::Begins<RChar>(Text,Len,begin.Text,begin.Len,skip,CaseSensitive));}
 
 	/**
 	* Look if a string ends with a given sub-string.
    * @param begin           Sub-string to search for.
    * @param skip            If true, ending spaces are skipped for the
 	*                        comparison.
+	* @param CaseSensitive   Is the search case sensitive.
    * @return true if the string ends with the sub-string.
    */
-	bool Ends(const S& end,bool skip=false) const;
+	bool Ends(const RTmpString& end,bool skip=false,bool CaseSensitive=true) const {return(StringMethods::Ends<RChar>(Text,Len,end.Text,end.Len,skip,CaseSensitive));}
 
 	/**
 	* Get a sub-string of a given string.
@@ -385,16 +382,17 @@ public:
 	*                        specified, the end of the string is copied.
 	* @returns A string containing the substring.
 	*/
-	S Mid(size_t idx,size_t len=(size_t)-1) const;
+	void Mid(RTmpString& to,size_t idx,size_t len=(size_t)-1) const;
 
 	/**
 	 * Verify if a given sub-string is at a given position.
 	 * @param sub            Sub-string.
 	 * @param pos            Position. If negative, the sub-string is searched
 	 *                       at a given position of the end.
+	  @param CaseSensitive   Is the search case sensitive.
 	 * @return true if the string at a given position.
 	 */
-	bool IsAt(const S& sub,int pos) const;
+	bool IsAt(const RTmpString& sub,int pos,bool CaseSensitive=true) const {return(StringMethods::IsAt<RChar>(Text,Len,sub.Text,sub.Len,pos,CaseSensitive));}
 
 	/**
 	 * Insert a sub-string at a given position of the string.
@@ -405,7 +403,7 @@ public:
 	 *                       sub-string. If del=(size_t)-1, all the characters
 	 *                       after pos are deleted.
 	 */
-	void Insert(const S& sub,int pos,size_t del=0);
+	void Insert(const RTmpString& sub,int pos,size_t del=0);
 
 	/**
 	* Split the string to find all the elements separated by a given character.
@@ -414,7 +412,7 @@ public:
 	* @param car             Character used as separator.
 	* @param del             Delimiter of an element.
 	*/
-	inline void Split(RContainer<S,true,false>& elements,const C car,const C del) const;
+	inline void Split(RContainer<RTmpString,true,false>& elements,const RChar car,const RChar del) const;
 
 	/**
 	 * Concatenate a series of elements and, eventually, separated them by a
@@ -422,7 +420,7 @@ public:
 	 * @param elements       Container of elements to concatenate.
 	 * @param car            Character used as separator.
     */
-	template<bool a,bool o> inline void Concat(const RContainer<S,a,o>& elements,const C car);
+	template<bool a,bool o> inline void Concat(const RContainer<RTmpString,a,o>& elements,const RChar car);
 
 	/**
 	* Return a number between 0 and 26 according to the character at position
@@ -436,13 +434,13 @@ public:
 	/**
 	 * Destruct the string.
 	 */
-	~BasicString(void);
+	~RTmpString(void);
 };
 
 
 //-----------------------------------------------------------------------------
 // Template implementation
-#include <basicstring.hh>
+#include <rtmpstring.hh>
 
 
 }  //-------- End of namespace R ----------------------------------------------

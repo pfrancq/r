@@ -167,6 +167,8 @@ template<class C,class S>
 		RDecRef<CharBuffer>(Data);
 		Data=new CharBuffer(ptr,len,maxlen);
 	}
+	else if(Data)
+		Data->InvalidLatin1();
 }
 
 
@@ -239,6 +241,8 @@ template<class C,class S>
 template<class C,class S>
 	void R::BasicString<C,S>::SetLen(size_t len,const S& str)
 {
+	if(len!=Data->Len)
+		Copy();
 	size_t oldsize=Data->Len;
 	SetLen(len);
 	Data->Len=len;
@@ -401,22 +405,6 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	bool R::BasicString<C,S>::ContainOnlySpaces(void) const
-{
-	if(!Data->Len)
-		return(false);
-	C* ptr=Data->Text;
-	while((*ptr)!=0)
-	{
-		if(!isspace(*(ptr++)))
-			return(false);
-	}
-	return(true);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class C,class S>
 	S& R::BasicString<C,S>::operator+=(const S& src)
 {
 	if(src.Data==DataNull)
@@ -431,7 +419,6 @@ template<class C,class S>
 		Data->Verify(src.Data->Len+Data->Len+1);
 		memcpy(&Data->Text[Data->Len],src.Data->Text,(src.Data->Len+1)*sizeof(C));
 		Data->Len+=src.Data->Len;
-		static_cast<CharBuffer*>(Data)->InvalidLatin1();
 	}
 	return(static_cast<S&>(*this));
 }
@@ -453,211 +440,8 @@ template<class C,class S>
 		Data->Verify(len+Data->Len+1);
 		memcpy(&Data->Text[Data->Len],src,sizeof(C)*len+1);
 		Data->Len+=len;
-		static_cast<CharBuffer*>(Data)->InvalidLatin1();
 	}
 	return(static_cast<S&>(*this));
-}
-
-
-//-----------------------------------------------------------------------------
-template<class C,class S>
-	int R::BasicString<C,S>::Find(const C car,int pos,bool CaseSensitive) const
-{
-	C* start;
-	bool left;
-	size_t max;        // Maximal number of character to search.
-	C search;
-
-	// Initialize the search
-	if(!CaseSensitive)
-		search=static_cast<C>(toupper(car));
-	else
-		search=car;
-	if(pos<0)
-	{
-		// From right
-		left=false;
-
-		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=static_cast<int>(Data->Len)+pos;
-		if(pos<=0) return(-1);
-		start=&Data->Text[pos];
-		max=pos+1;
-	}
-	else
-	{
-		// From left
-		left=true;
-
-		// Start from 0 with maximal Len-pos+1 character to test.
-		start=&Data->Text[pos];
-		max=Data->Len-pos+1;
-	}
-
-	// Search for the maximal number of character
-	for(max++;--max;)
-	{
-		if(((CaseSensitive)&&((*start)==search)) || ((!CaseSensitive)&&(toupper(*start)==search)))
-			return(pos);
-		if(left)
-		{
-			start++;
-			pos++;
-		}
-		else
-		{
-			pos--;
-			start--;
-		}
-	}
-	return(-1);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class C,class S>
-	int R::BasicString<C,S>::FindStr(const S& str,int pos,bool CaseSensitive) const
-{
-	C* start;
-	const C* toFind;
-	size_t max;        // Maximal number of character to search.
-	size_t avanct;
-	size_t maxlen;  //max number of char contained in the string to search
-	int incr;
-	S search(str);
-
-	// Initialize the search
-	if(!CaseSensitive)
-		search=search.ToUpper();
-	if(pos<0)
-	{
-		// From right
-		incr=-1;
-
-		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=static_cast<int>(Data->Len)+pos;
-		if(pos<=0) return(-1);
-		start=&Data->Text[pos];
-		max=pos+1;
-
-		// Init string to find (here the last character)
-		toFind=search();
-		toFind+=search.GetLen()-1;
-	}
-	else
-	{
-		// From left
-		incr=+1;
-
-		// Start from 0 with maximal Len-pos+1 character to test.
-		start=&Data->Text[pos];
-		max=Data->Len-pos+1;
-
-		// Init string to find
-		toFind=search();
-	}
-
-	// If string to find is longer than the string return -1
-	if (search.GetLen()>max)
-		return(-1);
-
-	// Search for the maximal number of character
-	for(max++;--max;)
-	{
-		if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(toupper(*start)==(*toFind))))
-		{
-			if(max>=search.GetLen())
-			{
-				avanct=0;
-				maxlen=search.GetLen();
-				bool found=true;
-				for(maxlen++;--maxlen,found;)
-				{
-					if(((CaseSensitive)&&((*start)==(*toFind))) || ((!CaseSensitive)&&(toupper(*start)==(*toFind))))
-					{
-						if(!(maxlen-1))
-						{
-							// String found
-							if(incr>0)
-								return(pos);
-							else
-								return(pos-static_cast<int>(search.GetLen())+1);
-						}
-						start+=incr;
-						toFind+=incr;
-						avanct+=incr;
-					}
-					else
-					{
-						start-=avanct;
-						toFind-=avanct;
-						found=false;
-					}
-				}
-				if(found)
-				{
-					// String found
-					if(incr>0)
-						return(pos);
-					else
-						return(pos-static_cast<int>(search.GetLen()+1));
-				}
-			}
-		}
-		start+=incr;
-		pos+=incr;
-	}
-	return(-1);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class C,class S>
-	int R::BasicString<C,S>::FindAnyStr(const S& str,int pos,bool CaseSensitive) const
-{
-	C* start;
-	bool left;
-	size_t max;        // Maximal number of character to search.
-
-	// Initialize the search
-	if(pos<0)
-	{
-		// From right
-		left=false;
-
-		// Start from Length-(-pos) with maximal pos+1 character to test.
-		pos=static_cast<int>(Data->Len)+pos;
-		if(pos<=0) return(-1);
-		start=&Data->Text[pos];
-		max=pos+1;
-	}
-	else
-	{
-		// From left
-		left=true;
-
-		// Start from 0 with maximal Len-pos+1 character to test.
-		start=&Data->Text[pos];
-		max=Data->Len-pos;
-	}
-
-	// Search for the maximal number of character
-	for(max++;--max;)
-	{
-		if(str.Find(*start,0,CaseSensitive)!=-1)
-			return(pos);
-		if(left)
-		{
-			start++;
-			pos++;
-		}
-		else
-		{
-			pos--;
-			start--;
-		}
-	}
-	return(-1);
 }
 
 
@@ -792,84 +576,8 @@ template<class C,class S>
 {
 	if(idx>=Data->Len)
 		throw std::range_error("C& R::BasicString<C,S>::operator[](size_t) : index outside the string");
+	Copy();
 	return(Data->Text[idx]);
-}
-
-//-----------------------------------------------------------------------------
-template<class C,class S>
-	bool R::BasicString<C,S>::Begins(const S& begin,bool skip) const
-{
-	// If the string is shorter -> Nothing to do
-	if(Data->Len<begin.Data->Len)
-		return(false);
-
-	// Set the pointers to the characters to compare
-	const C* Ptr1(Data->Text);
-	const C* Ptr2(begin.Data->Text);
-
-	// If spaces must be skipped -> do it
-	if(skip)
-	{
-		while(((*Ptr1)!=0)&&(isspace(*Ptr1)))
-			Ptr1++;
-		while(((*Ptr2)!=0)&&(isspace(*Ptr2)))
-			Ptr2++;
-	}
-
-	// Verify if all characters of Ptr2 are in the correct order
-	while((*Ptr2)!=0)
-	{
-		if((*Ptr1)!=(*Ptr2))
-			return(false);
-		Ptr1++;
-		Ptr2++;
-	}
-
-	return(true);
-}
-
-
-//-----------------------------------------------------------------------------
-template<class C,class S>
-	bool R::BasicString<C,S>::Ends(const S& end,bool skip) const
-{
-	// If the string is shorter -> Nothing to do
-	if(Data->Len<end.Data->Len)
-		return(false);
-
-	// Set the pointers to the characters to compare
-	const C* Ptr1(&Data->Text[Data->Len-1]);
-	const C* Ptr2(&end.Data->Text[end.Data->Len-1]);
-	size_t Pos1(Data->Len);
-	size_t Pos2(end.Data->Len);
-
-	// If spaces must be skipped -> do it
-	if(skip)
-	{
-		while(Pos1&&(isspace(*Ptr1)))
-		{
-			Ptr1--;
-			Pos1--;
-		}
-		while(Pos2&&(isspace(*Ptr2)))
-		{
-			Ptr2--;
-			Pos2--;
-		}
-	}
-
-	// Verify if all characters of Ptr2 are in the correct order
-	while(Pos2)
-	{
-		if((!Pos1)||(*Ptr1)!=(*Ptr2))
-			return(false);
-		Ptr1--;
-		Pos1--;
-		Ptr2--;
-		Pos2--;
-	}
-
-	return(true);
 }
 
 
@@ -897,32 +605,6 @@ template<class C,class S>
 	ptr[Len]=0;
 	res.Data=new CharBuffer(ptr,Len,Len);
 	return(res);
-}
-
-//-----------------------------------------------------------------------------
-template<class C,class S>
-	bool R::BasicString<C,S>::IsAt(const S& sub,int pos) const
-{
-	// Verify first if the length are compatible
-	size_t Pos;
-	if(pos<0)
-	{
-		Pos=abs(pos);
-		if(Pos>=Data->Len)
-			return(false);
-		Pos=Data->Len-Pos;
-	}
-	else
-		Pos=pos;
-	if(Pos+sub.Data->Len>Data->Len)
-		return(false);
-
-	const C* ptr(&Data->Text[Pos]);
-	const C* ptr2(sub.Data->Text);
-	for(size_t len(sub.Data->Len+1);--len;ptr++,ptr2++)
-		if((*ptr)!=(*ptr2))
-			return(false);
-	return(true);
 }
 
 

@@ -550,7 +550,7 @@ void RTextFile::SetEncoding(const RCString& name)
 	}
 	catch(...)
 	{
-		throw RIOException("Encoding "+name+" not supported");
+		throw RIOException("Encoding "+RString(name())+" not supported");
 	}
 }
 

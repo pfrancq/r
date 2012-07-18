@@ -36,8 +36,10 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
+#include <rexception.h>
 #include <rdate.h>
 #include <rstring.h>
+#include <rstringbuilder.h>
 using namespace R;
 
 
@@ -222,7 +224,22 @@ bool RDate::operator>=(const RDate& d) const
 //------------------------------------------------------------------------------
 RDate::operator RString () const
 {
-	return(RString::Number(Year)+"-"+RString::Number(Month)+"-"+RString::Number(Day)+" "+RString::Number(Hour)+":"+RString::Number(Minute)+":"+RString::Number(Second));
+	RStringBuilder Tmp;
+	Tmp+=RString::Number(Year);
+	Tmp+="-";
+	Tmp+=RString::Number(Month);
+	Tmp+="-";
+	Tmp+=RString::Number(Day);
+	if(Hour||Minute||Second)
+	{
+		Tmp+=" ";
+		Tmp+=RString::Number(Hour);
+		Tmp+=":";
+		Tmp+=RString::Number(Minute);
+		Tmp+=":";
+		Tmp+=RString::Number(Second);
+	}
+	return(Tmp());
 }
 
 

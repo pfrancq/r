@@ -77,7 +77,7 @@ void RDb::CreateTransactionTable(const RString& name,size_t nb,...)
 
 
 //-----------------------------------------------------------------------------
-void RDb::RunSQLFile(const RURI& file)
+void RDb::RunSQLFile(const RURI& file,bool coutit)
 {
 	RString sql("");
 	RString line("");
@@ -109,6 +109,8 @@ void RDb::RunSQLFile(const RURI& file)
 		}
 		if(!sql.IsEmpty())
 		{
+			if(coutit)
+				cout<<sql<<endl;
 			RQuery Sendquery(this,sql);
 		}
 

@@ -313,7 +313,7 @@ void RXMLFile::Value(const RString& value)
 		if(AttrName=="version")
 			XMLStruct->SetVersion(value);
 		if(AttrName=="encoding")
-			SetEncoding(value.Latin1());
+			SetEncoding(value.ToLatin1());
 	}
 }
 

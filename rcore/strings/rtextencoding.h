@@ -75,7 +75,8 @@ NEWREXCEPTION(IncompleteByteSequence);
 * than Unicode UTF-16 used internally by the R library.
 *
 * Actually, there is only a single class implementing the functions proposed in
-* <iconv.h>
+* <iconv.h>. In practice, it uses the UTF-16 little-endian encoding scheme for
+* internal transformation from and to RString.
 * @short Generic Text Encoding Scheme.
 * @author Pascal Francq.
 */
@@ -118,11 +119,6 @@ private:
 	* Descriptor used to make the conversion from Unicode UTF-16.
 	*/
 	iconv_t FromUTF16;
-
-	/**
-	* Order of the bytes.
-	*/
-	bool Order;
 
 public:
 
@@ -183,19 +179,37 @@ public:
 	/**
 	* Transform a string in Unicode to a string of the given encoding.
 	* @param text           Unicode string.
+	* @param len            Length of the string.
+	* @return RCString.
+	*/
+	virtual RCString FromUnicode(const RChar* text,size_t len) const;
+
+	/**
+	* Transform a string in Unicode to a string of the given encoding.
+	* @param text           Unicode string.
 	* @return RCString.
 	*/
 	virtual RCString FromUnicode(const RString& text) const;
 
 	/**
 	* This method returns a text encoding scheme based on a name. The method
-	* construct a text encoding for UTF-16 the first time it is used.
+	* constructs a text encoding for UTF-16 the first time it is used.
 	*
 	* The encoding schemes are added when they are requested.
 	* @param name           Name of encoding.
 	* @return Pointer to a RTextEncoding.
 	*/
 	static RTextEncoding* GetTextEncoding(const RCString& name);
+
+	/**
+	* This method returns a text encoding UTF8. The method constructs a text
+	* encoding for UTF-16 the first time it is used.
+	*
+	* The encoding schemes are added when they are requested.
+	* @param name           Name of encoding.
+	* @return Pointer to a RTextEncoding.
+	*/
+	static RTextEncoding* GetUTF8Encoding(void);
 
 	/**
 	* Destruct the encoding.

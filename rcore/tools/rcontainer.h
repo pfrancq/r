@@ -37,6 +37,7 @@
 // include files for R Project
 #include <rstd.h>
 #include <rstring.h>
+#include <rexception.h>
 
 
 //-----------------------------------------------------------------------------

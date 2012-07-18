@@ -92,7 +92,7 @@ public:
 	* @param msg             The message.
 	* @param type            Type of the exception.
 	*/
-	RGGAException(const char* msg,tException type=eGGA) : RGAException(msg,type) {}
+	RGGAException(const RString& msg,tException type=eGGA) : RGAException(msg,type) {}
 };
 
 

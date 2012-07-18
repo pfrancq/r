@@ -167,8 +167,6 @@ void RFile::RemoveFile(const RURI& uri)
 			throw RIOException(__PRETTY_FUNCTION__,__LINE__,"The permissions of "+uri()+" deny to remove it");
 		case EBUSY:
 			throw RIOException(__PRETTY_FUNCTION__,__LINE__,uri()+" is used by the system");
-		case ENOENT:
-			throw RIOException(__PRETTY_FUNCTION__,__LINE__,uri()+" doesn't exist");
 		case EPERM:
 			throw RIOException(__PRETTY_FUNCTION__,__LINE__,uri()+" is a directory");
 		case EROFS:

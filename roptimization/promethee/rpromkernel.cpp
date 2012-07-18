@@ -32,7 +32,6 @@
 // include files for ANSI C/C++
 #include <stdlib.h>
 #include <math.h>
-using namespace std;
 
 
 //------------------------------------------------------------------------------
@@ -40,6 +39,7 @@ using namespace std;
 #include <rpromkernel.h>
 #include <rpromcritvalue.h>
 #include <rcursor.h>
+using namespace std;
 using namespace R;
 
 

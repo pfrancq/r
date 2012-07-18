@@ -44,8 +44,8 @@ const size_t BufSize=2048;
 
 //------------------------------------------------------------------------------
 // General Variables
-RContainer<RTextEncoding,true,true> Encodings(20,10);
-
+static RContainer<RTextEncoding,true,true> Encodings(20,10);
+static RTextEncoding* CodecUTF8(0);
 
 
 //------------------------------------------------------------------------------
@@ -115,12 +115,12 @@ RCString GetOfficialName(const RCString& alias)
 RTextEncoding::RTextEncoding(const RCString& name)
 	: Name(name.ToLower())
 {
-	ToUTF16=iconv_open("utf-16",Name);
+	ToUTF16=iconv_open("utf-16le",Name);
 	if((ToUTF16==(iconv_t)-1)&&(errno==EINVAL))
-		throw EncodingNotSupported(Name+" encoding not supported");
-	FromUTF16=iconv_open(Name,"utf-16");
+		throw EncodingNotSupported(RString(Name())+" encoding not supported");
+	FromUTF16=iconv_open(Name,"utf-16le");
 	if((FromUTF16==(iconv_t)-1)&&(errno==EINVAL))
-		throw EncodingNotSupported(Name+" encoding not supported");
+		throw EncodingNotSupported(RString(Name())+" encoding not supported");
 
 	// Test the order
 	char Tab[20];
@@ -132,27 +132,14 @@ RTextEncoding::RTextEncoding(const RCString& name)
 	ptr1=Test;
 	ptr2=Tab;
 	#ifdef _LIBICONV_VERSION
-    #ifndef __APPLE__
-		err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
-    #else
-        iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
-    #endif
+		#ifndef __APPLE__
+			iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+		#else
+			iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+		#endif
 	#else
-		/*err=*/iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+		iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
 	#endif
-	if(s2>6)
-		Order=true;
-	else
-	{
-		if((Tab[0]==char(0xfe))&&(Tab[1]==char(0xff)))
-		{
-			Order=true;
-		}
-		else if((Tab[0]==char(0xff))&&(Tab[1]==char(0xfe)))
-		{
-			Order=false;
-		}
-	}
 }
 
 
@@ -193,11 +180,11 @@ RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 		ptr2=Tab;
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION
-        #ifndef __APPLE__
-            err=iconv(ToUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
-        #else
-            iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
-        #endif
+			#ifndef __APPLE__
+				err=iconv(ToUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
+			#else
+            err=iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
+			#endif
 		#else
 			err=iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
 		#endif
@@ -206,16 +193,16 @@ RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 			switch(errno)
 			{
 				case EILSEQ:
-					throw InvalidByteSequence("Invalid byte sequence for encoding "+Name);
+					throw InvalidByteSequence("Invalid byte sequence for encoding "+RString(Name()));
 					break;
 				case E2BIG:
 					ToFill=true;
 					break;
 				case EINVAL:
-					throw IncompleteByteSequence("Incomplete byte sequence for encoding "+Name);
+					throw IncompleteByteSequence("Incomplete byte sequence for encoding "+RString(Name()));
 					break;
 				case EBADF:
-					throw RException("Invalid descriptor for encoding "+Name);
+					throw RException("Invalid descriptor for encoding "+RString(Name()));
 					break;
 			}
 		}
@@ -249,11 +236,11 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 		if(s2==6)
 			throw RException("Big Error in RTextEncoding::NextUnicode");
 		#ifdef _LIBICONV_VERSION
-        #ifndef __APPLE__
-            err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
-        #else
-            iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
-        #endif
+			#ifndef __APPLE__
+				err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+			#else
+				err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+			#endif
 		#else
 			err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
 		#endif
@@ -268,17 +255,17 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 					return(Code);
 				}
 				else
-					throw InvalidByteSequence("Invalid byte sequence for encoding "+Name);
+					throw InvalidByteSequence("Invalid byte sequence for encoding "+RString(Name()));
 				break;
 			case E2BIG:
 				if(!s2)
 					ToFill=false;
 				break;
 			case EINVAL:
-				throw IncompleteByteSequence("Incomplete byte sequence for encoding "+Name);
+				throw IncompleteByteSequence("Incomplete byte sequence for encoding "+RString(Name()));
 				break;
 			case EBADF:
-				throw RException("Invalid descriptor for encoding  "+Name);
+				throw RException("Invalid descriptor for encoding  "+RString(Name()));
 				break;
 			}
 		}
@@ -293,7 +280,7 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 
 
 //------------------------------------------------------------------------------
-RCString RTextEncoding::FromUnicode(const RString& text) const
+RCString RTextEncoding::FromUnicode(const RChar* text,size_t len) const
 {
 	char *ptr,*ptr2;
 	char Tab[BufSize*sizeof(char)];
@@ -301,18 +288,18 @@ RCString RTextEncoding::FromUnicode(const RString& text) const
 	bool ToFill=true;
 	RCString out;
 
-	ptr=(char*)(text.UTF16());
-	s1=text.GetLen()*sizeof(UChar);
+	ptr=(char*)(text);
+	s1=len*sizeof(UChar);
 	while(ToFill)
 	{
 		ptr2=Tab;
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION
-        #ifndef __APPLE__
-            err=iconv(FromUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
-        #else
-            iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
-        #endif
+			#ifndef __APPLE__
+				err=iconv(FromUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+			#else
+				err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
+			#endif
 		#else
 			err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
 		#endif
@@ -330,7 +317,58 @@ RCString RTextEncoding::FromUnicode(const RString& text) const
 					throw IncompleteByteSequence("Incomplete byte sequence for encoding UTF-16");
 					break;
 				case EBADF:
-					throw RException("Invalid descriptor for encoding "+Name);
+					throw RException("Invalid descriptor for encoding "+RString(Name()));
+					break;
+			}
+		}
+		else
+			ToFill=false;
+		s2=BufSize-s2;
+		out+=RCString(Tab,s2);
+	}
+	return(out);
+}
+
+
+//------------------------------------------------------------------------------
+RCString RTextEncoding::FromUnicode(const RString& text) const
+{
+	char *ptr,*ptr2;
+	char Tab[BufSize*sizeof(char)];
+	size_t s1,s2,err;
+	bool ToFill=true;
+	RCString out;
+
+	ptr=(char*)(text.ToUTF16());
+	s1=text.GetLen()*sizeof(UChar);
+	while(ToFill)
+	{
+		ptr2=Tab;
+		s2=BufSize;
+		#ifdef _LIBICONV_VERSION
+			#ifndef __APPLE__
+				err=iconv(FromUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+			#else
+				err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
+			#endif
+		#else
+			err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
+		#endif
+		if(err==(size_t)-1)
+		{
+			switch(errno)
+			{
+				case EILSEQ:
+					throw InvalidByteSequence("Invalid byte sequence for encoding UFT-16");
+					break;
+				case E2BIG:
+					ToFill=true;
+					break;
+				case EINVAL:
+					throw IncompleteByteSequence("Incomplete byte sequence for encoding UTF-16");
+					break;
+				case EBADF:
+					throw RException("Invalid descriptor for encoding "+RString(Name()));
 					break;
 			}
 		}
@@ -352,7 +390,7 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RCString& name)
 	// Find the official name
 	search=GetOfficialName(search);
 	if(search.IsEmpty())
-		throw EncodingNotSupported("Encoding "+name+" is not supported");
+		throw EncodingNotSupported("Encoding "+RString(name())+" is not supported");
 
 	// Search it
 	ptr=Encodings.GetPtr(search);
@@ -362,6 +400,15 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RCString& name)
 	Encodings.InsertPtr(ptr);
 	ptr->Init();
 	return(ptr);
+}
+
+
+//------------------------------------------------------------------------------
+RTextEncoding* RTextEncoding::GetUTF8Encoding(void)
+{
+	if(!CodecUTF8)
+		CodecUTF8=GetTextEncoding("utf8");
+	return(CodecUTF8);
 }
 
 

@@ -1,0 +1,19 @@
+SET(rcore_strings_INST_INCLUDES
+	basicstring.h
+ 	basicstring.hh
+	rstring.h
+	rtmpstring.h
+	rtmpstring.hh
+	rstringbuilder.h
+	rchar.h
+	rtextencoding.h
+	rcstring.h
+)
+
+SET(rcore_strings_TARGET_SOURCES
+	rstring.cpp
+	rstringbuilder.cpp
+	rchar.cpp
+	rtextencoding.cpp
+	rcstring.cpp
+)

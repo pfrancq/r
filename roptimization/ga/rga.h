@@ -104,14 +104,14 @@ public:
 	* Construct an GA exception.
 	* @param type            Type of the exception.
 	*/
-	RGAException(tException type=eGA) throw();
+	RGAException(tException type=eGA);
 
 	/**
 	* Construct an GA exception.
 	* @param type            Type of the exception.
 	* @param str             Message of the error.
 	*/
-	RGAException(const char* str,tException type=eGA) throw();
+	RGAException(const RString& str,tException type=eGA);
 
 	/**
 	* Construct an GA exception.
@@ -119,7 +119,7 @@ public:
 	* @param g               Generation.
 	* @param c               Identifier of chromosome.
 	*/
-	RGAException(tException type,const size_t g,const size_t c) throw();
+	RGAException(tException type,const size_t g,const size_t c);
 
 	/**
 	* Construct the crossover exception.
@@ -128,7 +128,7 @@ public:
 	* @param p2             Identifier of the second parent.
 	* @param c              Identifier of the child.
 	*/
-	RGAException(const size_t g,const size_t p1,const size_t p2,const size_t c) throw();
+	RGAException(const size_t g,const size_t p1,const size_t p2,const size_t c);
 
 	/**
 	 * Get the type of the exception.

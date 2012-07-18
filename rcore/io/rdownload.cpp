@@ -39,6 +39,7 @@
 //------------------------------------------------------------------------------
 // include files for R library
 #include <rdownload.h>
+#include <rexception.h>
 using namespace R;
 using namespace std;
 
@@ -135,10 +136,10 @@ void RDownload::DownloadFile(const RURI& uri,const RURI& local)
 	First=true;
 	Stream=fopen(local.GetPath(), "wb");
 	if(!Stream)
-		throw RException(__PRETTY_FUNCTION__,__LINE__,"Cannot create file '"+local()+"'");
+		ThrowRException("Cannot create file '"+local()+"'");
 
 	// Download the file
-	curl_easy_setopt(Lib, CURLOPT_URL, uri().Latin1());
+	curl_easy_setopt(Lib, CURLOPT_URL, uri().ToLatin1());
 	CURLcode err=curl_easy_perform(Lib);
 
 	// Done Part
@@ -147,7 +148,7 @@ void RDownload::DownloadFile(const RURI& uri,const RURI& local)
 	if(err)
 	{
 		if(!ValidContent)
-			throw RException(__PRETTY_FUNCTION__,__LINE__,"Cannot treat the MIME type '"+MIME+"'");
+			ThrowRException("Cannot treat the MIME type '"+MIME+"'");
 		throw RException(curl_easy_strerror(err)+RString(" : ")+uri());
 	}
 }

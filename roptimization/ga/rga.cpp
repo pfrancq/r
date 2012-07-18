@@ -52,21 +52,21 @@ bool R::ExternBreak=false;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGAException::RGAException(tException type) throw()
+RGAException::RGAException(tException type)
 	: RException(), Type(type)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RGAException::RGAException(const char* str,tException type) throw()
+RGAException::RGAException(const RString& str,tException type)
 	: RException(str), Type(type)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RGAException::RGAException(tException type,const size_t g,const size_t c) throw()
+RGAException::RGAException(tException type,const size_t g,const size_t c)
 	: RException(), Type(type)
 {
 	RString Msg("Generation "+RString::Number(g)+": ");
@@ -103,7 +103,7 @@ RGAException::RGAException(tException type,const size_t g,const size_t c) throw(
 
 
 //------------------------------------------------------------------------------
-RGAException::RGAException(const size_t g,const size_t p1,const size_t p2,const size_t c) throw()
+RGAException::RGAException(const size_t g,const size_t p1,const size_t p2,const size_t c)
 	: RException(), Type(eGACrossover)
 {
 	SetMsg("Generation "+RString::Number(g)+": Crossover error: parent "+RString::Number(p1)+" + parent "+RString::Number(p2)+" -> Child "+RString::Number(c));

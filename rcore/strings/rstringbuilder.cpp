@@ -2,12 +2,11 @@
 
 	R Project Library
 
-	RStd.cpp
+	RTextFile.h
 
-	R Standard Library - Implementation.
+	Text File - Implementation.
 
-	Copyright 1999-2008 by Pascal Francq (pascal@francq.info).
-	Copyright 1999-2008 by the Université Libre de Bruxelles (ULB).
+	Copyright 1999-2012 by Pascal Francq (pascal@francq.info).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -27,90 +26,91 @@
 */
 
 
-
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rstd.h>
+#include <rstringbuilder.h>
 using namespace R;
-using namespace std;
-
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// class RStringBuilder
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-void RException::Null(void)
+RStringBuilder::RStringBuilder(void)
+	: Len(0), CurChar(Buffer)
 {
-	cout<<cNoCoord<<cMaxCoord<<cMinCoord<<endl;
 }
 
 
 //------------------------------------------------------------------------------
-RException::RException(void) throw()
+RStringBuilder& RStringBuilder::operator+=(const RChar src)
 {
-	Msg[0]='\0';
+	// Read a block of maximum 1025 characters in Buffer
+	if(Len==1024)
+		AppendBuffer();
+	(*(CurChar++))=src;
+	Len++;
+	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
-RException::RException(const char* str) throw()
+RStringBuilder& RStringBuilder::operator+=(const RString& src)
 {
-	SetMsg(str);
-	cerr<<Msg<<endl;
+	if(Len)
+		AppendBuffer();
+	String+=src;
+	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
-RException::RException(const char* func,long where,const char* str) throw()
+RStringBuilder& RStringBuilder::operator+=(const RChar* src)
 {
-	SetMsg(func,where,str);
-	cerr<<Msg<<endl;
+	if(Len)
+		AppendBuffer();
+	String+=src;
+	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
-void RException::SetMsg(const char* str)
+RStringBuilder& RStringBuilder::operator+=(const char* src)
 {
-	size_t len(0);
-	char* msg(Msg);
-	if(str)
-	{
-		for(const char* ptr(str);(len<1024)&&(*ptr);ptr++,len++,msg++)
-			(*msg)=(*ptr);
-	}
-	(*msg)='\0';
+	if(Len)
+		AppendBuffer();
+	String+=src;
+	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
-void RException::SetMsg(const char* func,long where,const char* str)
+const RString& RStringBuilder::operator()(void)
 {
-	size_t len(0);
-	const char* ptr;
-	char* msg(Msg);
-	if(func)
-	{
-		for(ptr=func;(len<1024)&&(*ptr);ptr++,len++,msg++)
-			(*msg)=(*ptr);
-		char add[30];
-		sprintf(add," [%li]: ",where);
-		for(ptr=add;(len<1024)&&(*ptr);ptr++,len++,msg++)
-			(*msg)=(*ptr);
-	}
-	if(str)
-	{
-		for(ptr=str;(len<1024)&&(*ptr);ptr++,len++,msg++)
-			(*msg)=(*ptr);
-	}
-	(*msg)='\0';
+	if(Len)
+		AppendBuffer();
+	return(String);
 }
 
 
 //------------------------------------------------------------------------------
-RException::~RException(void) throw()
+void RStringBuilder::Clear(void)
 {
+	Len=0;
+	CurChar=Buffer;
+	String.Clear();
+}
+
+
+
+//------------------------------------------------------------------------------
+void RStringBuilder::AppendBuffer(void)
+{
+	Buffer[Len]=0;
+	String+=Buffer;
+	Len=0;
+	CurChar=Buffer;
 }
