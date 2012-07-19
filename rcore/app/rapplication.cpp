@@ -25,6 +25,9 @@
 
 */
 
+#include "rdir.h"
+
+
 
 
 //-----------------------------------------------------------------------------
@@ -94,7 +97,8 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
 	if(ptr)
 		HomeConfig=ptr->Get();
 	if(HomeConfig.IsEmpty())
-		HomeConfig=RString(getenv("HOME"))+"/.r";
+		HomeConfig=RString(getenv("HOME"))+RDir::GetDirSeparator()+".r";
+	RDir::CreateDirIfNecessary(HomeConfig+RDir::GetDirSeparator()+Name,true);
 }
 
 

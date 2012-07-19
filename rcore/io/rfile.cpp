@@ -148,8 +148,8 @@ const RString RFile::GetFileName(void) const
 //------------------------------------------------------------------------------
 RChar RFile::GetDirSeparator(void)
 {
-#ifdef _BSD_SOURCE
-    return('/');
+#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
+	return('/');
 #else
     return('\\');
 #endif
