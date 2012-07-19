@@ -31,7 +31,6 @@
 //------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <math.h>
-using namespace std;
 
 
 //------------------------------------------------------------------------------
@@ -40,6 +39,7 @@ using namespace std;
 #include <rpromcritvalue.h>
 #include <rpromkernel.h>
 #include <rcursor.h>
+using namespace std;
 using namespace R;
 
 

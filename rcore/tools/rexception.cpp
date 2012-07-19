@@ -51,8 +51,8 @@ void RException::Null(void)
 
 //------------------------------------------------------------------------------
 RException::RException(void)
+	: Msg(RString::Null)
 {
-	Msg[0]='\0';
 }
 
 
