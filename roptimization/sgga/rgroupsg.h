@@ -97,6 +97,8 @@ template<class cGroup,class cObj,class cGroups>
 public:
 
 	using RGroup<cGroup,cObj,cGroups>::GetObjs;
+	using RGroup<cGroup,cObj,cGroups>::Delete;
+	using RGroup<cGroup,cObj,cGroups>::Insert;
 
 protected:
 

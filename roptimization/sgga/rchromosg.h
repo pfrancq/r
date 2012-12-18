@@ -67,6 +67,7 @@ public:
 	using RChromoG<cInst,cChromo,RFitnessSG,cThreadData,cGroup,cObj>::Objs;
 	using RChromoG<cInst,cChromo,RFitnessSG,cThreadData,cGroup,cObj>::Id;
 	using RChromoG<cInst,cChromo,RFitnessSG,cThreadData,cGroup,cObj>::ObjsNoAss;
+	using RChromoG<cInst,cChromo,RFitnessSG,cThreadData,cGroup,cObj>::GetGroup;
 
 protected:
 

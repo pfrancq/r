@@ -61,7 +61,7 @@ class RFile
 protected:
 
 	/**
-	* How to file has to be used.
+	* How the file has to be used.
 	*/
 	RIO::ModeType Mode;
 
@@ -176,10 +176,20 @@ public:
 	static RURI GetTempFile(void);
 
 	/**
-	 * Test if a file exists.
-	 * @param uri            URI of the file.
+	 * Test if an URI correspond to an existing file or directory that can be
+	 * accessed. If the URI is correct but the calling application has the not
+	 * the correct rights, the function returns false.
+	 * @param uri            URI to test.
 	 */
 	static bool Exists(const RURI& uri);
+
+	/**
+	 * Test if an URI is a directory or not. If the directory exists but the
+	 * calling application has the not the correct rights, the function returns
+	 * false.
+	 * @param uri            URI to test.
+	 */
+	static bool IsDir(const RURI& uri);
 
 	/**
 	* Destruct the file.

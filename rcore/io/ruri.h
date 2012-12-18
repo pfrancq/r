@@ -245,6 +245,11 @@ public:
 	inline RString GetFragment(void) const {return(Extract(Fragment));}
 
 	/**
+	 * Get the extension of a file.
+    */
+	RString GetExtension(void) const;
+
+	/**
 	* @return String representing the URI.
 	*/
 	inline RString operator()(void) const {return(URI);}

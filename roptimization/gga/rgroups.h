@@ -60,6 +60,7 @@ public:
 	using RContainer<cGroup,true,false>::GetMaxNb;
 	using RContainer<cGroup,true,false>::GetIncNb;
 	using RContainer<cGroup,true,false>::VerifyTab;
+	using RContainer<cGroup,true,false>::InsertPtr;
 
 private:
 

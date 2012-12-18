@@ -216,14 +216,26 @@ RURI RFile::GetTempFile(void)
 //------------------------------------------------------------------------------
 bool RFile::Exists(const RURI& uri)
 {
-    if(FILE* file=fopen(uri.GetPath(),"r"))
-    {
-        fclose(file);
-        return(true);
-    }
-    return(false);
+	struct stat Buf;
+	if(stat(uri.GetPath(),&Buf)!=-1)
+		return(true);
+	return(false);
 }
 
+
+//------------------------------------------------------------------------------
+bool RFile::IsDir(const RURI& uri)
+{
+	struct stat Buf;
+	if(stat(uri.GetPath(),&Buf)!= -1)
+	{
+		if(S_ISDIR(Buf.st_mode))
+			return(true);
+		else
+			return(false);
+   }
+	return(false);
+}
 
 //------------------------------------------------------------------------------
 RFile::~RFile(void)

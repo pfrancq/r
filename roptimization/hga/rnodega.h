@@ -67,6 +67,7 @@ public:
 	using RNode<cNodes,cNode,false>::Tree;
 	using RNode<cNodes,cNode,false>::GetNbNodes;
 	using RNode<cNodes,cNode,false>::Clear;
+	using RNode<cNodes,cNode,false>::InsertNode;
 
 protected:
 

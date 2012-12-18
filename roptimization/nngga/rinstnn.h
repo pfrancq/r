@@ -118,6 +118,7 @@ public:
 	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::GetGen;
 	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::BestChromosome;
 	using RInstG<cInst,cChromo,RFitnessNN,cThreadData,cGroup,cObj>::Chromosomes;
+	using RPromKernelNN<cChromo>::AssignChromo;
 	using RPromKernelNN<cChromo>::NewSol;
 	using RPromKernelNN<cChromo>::ComputePrometheeII;
 	using RPromKernelNN<cChromo>::GetSols;

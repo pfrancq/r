@@ -274,6 +274,7 @@ public:
 	{
 		using RContainer<Hash2,true,true>::Tab;
 		using RContainer<Hash2,true,true>::MaxPtr;
+		using RContainer<Hash2,true,true>::InsertPtrAt;
 
 		/**
 		* Constructor.

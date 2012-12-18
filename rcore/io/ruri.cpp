@@ -197,6 +197,17 @@ void RURI::AnalyzeString(void)
 
 
 //-----------------------------------------------------------------------------
+RString RURI::GetExtension(void) const
+{
+	RString path(GetPath());
+	int pos(path.Find('.',-1));
+	if(pos==-1)
+		return(RString::Null);
+	return(path.Mid(pos+1));
+}
+
+
+//-----------------------------------------------------------------------------
 RURI& RURI::operator=(const RURI& src)
 {
 	URI=src.URI;

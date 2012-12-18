@@ -54,9 +54,9 @@ namespace R{
 *
 * RDir Dir("/home/user/data");
 * Dir.Open(RIO::Read);
-* RCursor<RFile> Files=Dir.GetEntries();
+* RCursor<RFile> Files(Dir.GetEntries());
 * for(Files.Start();!Files.End();Files.Next())
-*    cout<<Files()->GetName()<<endl;
+*    cout<<Files()->GetURI()()<<endl;
 * @endcode
 * @author Pascal Francq
 * @short Directory.

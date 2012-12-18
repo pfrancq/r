@@ -137,6 +137,7 @@ public:
 	using RInstG<cInst,cChromo,RFitnessSG,cThreadData,cGroup,cObj>::GetGen;
 	using RInstG<cInst,cChromo,RFitnessSG,cThreadData,cGroup,cObj>::BestChromosome;
 	using RInstG<cInst,cChromo,RFitnessSG,cThreadData,cGroup,cObj>::Chromosomes;
+	using RPromKernelSC<cChromo>::AssignChromo;
 	using RPromKernelSC<cChromo>::NewSol;
 	using RPromKernelSC<cChromo>::ComputePrometheeII;
 	using RPromKernelSC<cChromo>::GetSols;

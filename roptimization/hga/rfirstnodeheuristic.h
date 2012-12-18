@@ -59,6 +59,7 @@ template<class cNode,class cObj,class cNodes>
 	using RTreeHeuristic<cNode,cObj,cNodes>::Nodes;
 	using RTreeHeuristic<cNode,cObj,cNodes>::CurObj;
 	using RTreeHeuristic<cNode,cObj,cNodes>::Random;
+	using RTreeHeuristic<cNode,cObj,cNodes>::RandOrder;
 
 	/**
 	* Temporary array of nodes.

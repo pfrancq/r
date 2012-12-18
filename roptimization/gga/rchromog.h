@@ -65,6 +65,7 @@ public:
 	using RGroups<cGroup,cObj,cChromo>::Used;
 	using RGroups<cGroup,cObj,cChromo>::ObjsNoAss;
 	using RGroups<cGroup,cObj,cChromo>::ObjsAss;
+	using RGroups<cGroup,cObj,cChromo>::InsertObjs;
 
 protected:
 
