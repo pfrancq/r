@@ -259,7 +259,7 @@ MACRO(DO_R_LIB_INCLUDE _libPath)
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/nngga")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/sgga")
         INCLUDE_DIRECTORIES("${_libPath}/roptimization/hga")
-        INCLUDE_DIRECTORIES("${_libPath}/roptimization/promethee")
+        INCLUDE_DIRECTORIES("${_libPath}/roptimization/multicriteria")
 
         LINK_DIRECTORIES(${_libPath}/build/rcore)
         LINK_DIRECTORIES(${_libPath}/build/rmath)

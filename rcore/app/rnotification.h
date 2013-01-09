@@ -152,7 +152,7 @@ public:
 *    virtual RCString GetClassName(void) const {return("MyObject");}
 *    void Handle(const RNotification& notification)
 *    {
-*       cout<<"From "<<GetName()<<" : "<<GetData<long>(msg)<<endl;
+*       cout<<"From "<<notification.GetName()<<" : "<<GetData<long>(msg)<<endl;
 *    }
 * };
 *
@@ -160,7 +160,7 @@ public:
 * {
 *    MyObject Obj1("Object 1");
 *    MyObject Obj2("Object 2");
-*    NotificationCenter.PostNotification("Message",3);
+*    NotificationCenter.PostNotification("Message",(long)3);
 * }
 * @endcode
 * To be sure that PostNotification calls the right handlers, it is always
