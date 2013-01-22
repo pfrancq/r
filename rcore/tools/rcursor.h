@@ -343,7 +343,7 @@ public:
 			{
 				ActPtr-=inc;
 				Current-=inc;
-				while((ActPtr)&&(!(*Current)))     // Go to previous non-null pointer
+				while((ActPtr!=cNoRef)&&(!(*Current)))     // Go to previous non-null pointer
 				{
 					ActPtr--;
 					Current--;

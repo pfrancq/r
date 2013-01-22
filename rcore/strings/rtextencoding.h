@@ -206,7 +206,6 @@ public:
 	* encoding for UTF-16 the first time it is used.
 	*
 	* The encoding schemes are added when they are requested.
-	* @param name           Name of encoding.
 	* @return Pointer to a RTextEncoding.
 	*/
 	static RTextEncoding* GetUTF8Encoding(void);

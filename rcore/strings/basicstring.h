@@ -372,7 +372,7 @@ public:
 
 	/**
 	* Look if a string ends with a given sub-string.
-   * @param begin           Sub-string to search for.
+   * @param end             Sub-string to search for.
    * @param skip            If true, ending spaces are skipped for the
 	*                        comparison.
    * @return true if the string ends with the sub-string.

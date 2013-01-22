@@ -114,11 +114,9 @@ public:
 	 * @param len            Length of the character array.
 	 * @param begin          String to to search for.
 	 * @param beginlen       Length of the string to find.
+	 * @param CaseSensitive  Is the search case sensitive.
     * @param skip           If true, leading spaces are skipped for the
 	 *                       comparison.
-	 * @param pos            Position to start the search. Negative values start
-	 *                       the search from the end.
-	 * @param CaseSensitive  Is the search case sensitive.
     * @return true if the string begins with the sub-string.
     */
 	template<class C> static bool Begins(const C* src,size_t len,const C* begin,size_t beginlen,bool CaseSensitive=true,bool skip=false);
@@ -130,11 +128,9 @@ public:
 	 * @param len            Length of the character array.
 	 * @param end            String to to search for.
 	 * @param endlen         Length of the string to find.
+	 * @param CaseSensitive  Is the search case sensitive.
     * @param skip            If true, ending spaces are skipped for the
 	 *                        comparison.
-	 * @param pos            Position to start the search. Negative values start
-	 *                       the search from the end.
-	 * @param CaseSensitive  Is the search case sensitive.
     * @return true if the string ends with the sub-string.
     */
 	template<class C> static bool Ends(const C* src,size_t len,const C* end,size_t endlen,bool CaseSensitive=true,bool skip=false);

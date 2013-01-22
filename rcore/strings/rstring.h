@@ -125,7 +125,11 @@ public:
 
 	/** @name Internal methods	*/ // @{
 
-	/** @copydoc BasicString::Copy(const C*,size_t)*/
+	/**
+	* Copy a certain number of characters in the string.
+	* @param text            Text to copy.
+	* @param nb              Number of characters to copy.
+	*/
 	inline void Copy(const RChar* text,size_t nb) {BasicString<RChar,RString>::Copy(text,nb);}
 
 	/**
@@ -185,10 +189,23 @@ public:
 
 	inline size_t GetMaxLen(void) const {return(BasicString<RChar,RString>::GetMaxLen());}
 
-	/** @copydoc BasicString::SetLen(size_t) */
+	/**
+	* Set the length of the string. If the length is shorter that the current
+	* one, the string is truncated. If the length is greater than the current
+	* one, the internal buffer is updated. Any new space allocated contains
+	* arbitrary data.
+	* @param len             Length of the string.
+	*/
 	inline void SetLen(size_t len) {BasicString<RChar,RString>::SetLen(len);}
 
-	/** @copydoc BasicString::SetLen(size_t,const S&) */
+	/**
+	* Set the length of the string. If the length is shorter that the current
+	* one, the string is truncated. If the length is greater than the current
+	* one, the second string is used to fill the first string (eventually it is
+	* copied several times).
+	* @param len             Length of the string.
+	* @param str             String used to fill.
+	*/
 	inline void SetLen(size_t len,const RString& str) {BasicString<RChar,RString>::SetLen(len,str);}
 
 	inline bool IsEmpty(void) const {return(BasicString<RChar,RString>::IsEmpty());}
@@ -197,59 +214,178 @@ public:
 	//@} Internal methods
 
 	/** @name Manipulation methods	*/ // @{
+
+	/**
+	* Clear the content of the string.
+	*/
 	inline void Clear(void) {BasicString<RChar,RString>::Clear();}
 
+	/**
+	* Get a uppercase version of the string.
+	* @return String.
+	*/
 	inline RString ToUpper(void) const {return(BasicString<RChar,RString>::ToUpper());}
 
+	/**
+	* Get a lowercase version of the string.
+	* @return String.
+	*/
 	inline RString ToLower(void) const {return(BasicString<RChar,RString>::ToLower());}
 
+	/**
+	* This function return a string by stripping whitespace (or other
+	* characters) from the beginning and end of the string.
+	* @return String.
+	*/
 	inline RString Trim(void) const {return(BasicString<RChar,RString>::Trim());}
 
-	/** @copydoc BasicString::Trim(const S&) const */
+	/**
+	* This function return a string by stripping a given sub-string from the
+	* beginning and end of the string.
+	* @param str             Sub-string to strip.
+	* @return String.
+	*/
 	inline RString Trim(const RString& str) const {return(BasicString<RChar,RString>::Trim(str));}
 
-	/** @copydoc BasicString::Find(const C,int,bool) const */
+	/**
+	* Find the position of a given character in the string.
+	* @param car             Character to find.
+	* @param pos             Position to start the search. Negative values
+	*                        start the search from the end.
+	* @param CaseSensitive   Is the search case sensitive.
+	* @return The position of the first occurrence or -1 if the character was not
+	*         found.
+	*/
 	inline int Find(const RChar car,int pos=0,bool CaseSensitive=true) const {return(BasicString<RChar,RString>::Find(car,pos,CaseSensitive));}
 
-	/** @copydoc BasicString::FindStr(const S&,int,bool) const */
+	/**
+	* Find the position of a given string in the string.
+	* @param str             String to find.
+	* @param pos             Position to start the search. Negative values
+	*                        start the search from the end.
+	* @param CaseSensitive   Is the search case sensitive.
+	* @return The position of the first occurrence or -1 if the character was not
+	*         found.
+	*/
 	inline int FindStr(const RString& str,int pos=0,bool CaseSensitive=true) const {return(BasicString<RChar,RString>::FindStr(str,pos,CaseSensitive));}
 
-	/** @copydoc BasicString::FindAnyStr(const S&,int,bool) const */
+	/**
+	* Find the position of a character of a given set in the string.
+	* @param str             String to find.
+	* @param pos             Position to start the search. Negative values
+	*                        start the search from the end.
+	* @param CaseSensitive   Is the search case sensitive.
+	* @return The position of the first occurrence or -1 if the character was not
+	*         found.
+	*/
 	inline int FindAnyStr(const RString& str,int pos=0,bool CaseSensitive=true) const {return(BasicString<RChar,RString>::FindAnyStr(str,pos,CaseSensitive));}
 
-	/** @copydoc BasicString::Replace(const C,const C,bool,int) */
+	/**
+	 * Replace a given character in the string.
+	 * @param search         Character to search.
+	 * @param rep            Character that will put in.
+	 * @param first          Must it stops after the first occurrence.
+	 * @param pos            Position to start. Negative values start the
+	 *                       search from the end.
+	 */
 	inline void Replace(const RChar search,const RChar rep,bool first=false,int pos=0) {BasicString<RChar,RString>::Replace(search,rep,first,pos);}
 
-	/** @copydoc BasicString::ReplaceStr(const S&,const S&,bool,int) */
+	/**
+	 * Replace a given sub-string in the string.
+	 * @param search         String to search.
+	 * @param rep            String that will put in.
+	 * @param first          Must it stops after the first occurrence.
+	 * @param pos            Position to start. Negative values start the
+	 *                       search from the end.
+	 */
 	inline void ReplaceStr(const RString& search,const RString& rep,bool first=false,int pos=0) {BasicString<RChar,RString>::ReplaceStr(search,rep,first,pos);}
 
-	/** @copydoc BasicString::Begins(const S&,bool) const */
+	/**
+	* Look if a string begins with a given sub-string.
+   * @param begin           Sub-string to search for.
+   * @param skip            If true, leading spaces are skipped for the
+	*                        comparison.
+   * @return true if the string begins with the sub-string.
+   */
 	inline bool Begins(const RString& begin,bool skip=false) const {return(BasicString<RChar,RString>::Begins(begin,skip));}
 
-	/** @copydoc BasicString::Ends(const S&,bool) const */
+	/**
+	* Look if a string ends with a given sub-string.
+   * @param end             Sub-string to search for.
+   * @param skip            If true, ending spaces are skipped for the
+	*                        comparison.
+   * @return true if the string ends with the sub-string.
+   */
 	inline bool Ends(const RString& end,bool skip=false) const {return(BasicString<RChar,RString>::Ends(end,skip));}
 
+	/**
+	* Get a sub-string of a given string.
+	* @param idx             Index of the first character.
+	* @param len             Length of the sub-string. If the length is not
+	*                        specified, the end of the string is copied.
+	* @returns A string containing the substring.
+	*/
 	inline RString Mid(size_t idx,size_t len=(size_t)-1) const {return(BasicString<RChar,RString>::Mid(idx,len));}
 
-	/** @copydoc BasicString::IsAt(const S&,int) const */
+	/**
+	 * Verify if a given sub-string is at a given position.
+	 * @param sub            Sub-string.
+	 * @param pos            Position. If negative, the sub-string is searched
+	 *                       at a given position of the end.
+	 * @return true if the string at a given position.
+	 */
 	inline bool IsAt(const RString& sub,int pos) const  {return(BasicString<RChar,RString>::IsAt(sub,pos));}
 
-	/** @copydoc BasicString::Insert(const S&,int,size_t) */
+	/**
+	 * Insert a sub-string at a given position of the string.
+	 * @param sub            Sub-string to insert.
+	 * @param pos            Position. If negative, the sub-string is searched
+	 *                       at a given position of the end.
+	 * @param del            Number of characters that will be replaced by the
+	 *                       sub-string. If del=(size_t)-1, all the characters
+	 *                       after pos are deleted.
+	 */
 	inline void Insert(const RString& sub,int pos,size_t del=0)  {BasicString<RChar,RString>::Insert(sub,pos,del);}
 
-	/** @copydoc BasicString::Split(RContainer<S,true,false>&,const C,const C) const */
+	/**
+	* Split the string to find all the elements separated by a given character.
+	* @param elements        Container that will hold the results. It is not
+	*                        emptied by the method.
+	* @param car             Character used as separator.
+	* @param del             Delimiter of an element.
+	*/
 	void Split(RContainer<RString,true,false>& elements,const RChar car,const RChar del=RChar(0)) const;
 
-	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	/**
+	 * Concatenate a series of elements and, eventually, separated them by a
+	 * given character.
+	 * @param elements       Container of elements to concatenate.
+	 * @param car            Character used as separator.
+    */
 	void Concat(const RContainer<RString,true,true>& elements,const RChar car=RChar(0));
 
-	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	/**
+	 * Concatenate a series of elements and, eventually, separated them by a
+	 * given character.
+	 * @param elements       Container of elements to concatenate.
+	 * @param car            Character used as separator.
+    */
 	void Concat(const RContainer<RString,false,true>& elements,const RChar car=RChar(0));
 
-	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	/**
+	 * Concatenate a series of elements and, eventually, separated them by a
+	 * given character.
+	 * @param elements       Container of elements to concatenate.
+	 * @param car            Character used as separator.
+    */
 	void Concat(const RContainer<RString,true,false>& elements,const RChar car=RChar(0));
 
-	/** @copydoc BasicString::Concat(const R::RContainer<S,a,o>&,const C) */
+	/**
+	 * Concatenate a series of elements and, eventually, separated them by a
+	 * given character.
+	 * @param elements       Container of elements to concatenate.
+	 * @param car            Character used as separator.
+    */
 	void Concat(const RContainer<RString,false,false>& elements,const RChar car=RChar(0));
 
 	//@} Manipulation methods
@@ -366,10 +502,16 @@ public:
 	*/
 	inline bool operator!=(const RChar* src) const {return(Compare(src));}
 
-	/** @copydoc BasicString::operator=(const S&) */
+	/**
+	* Assignment operator using another string.
+	* @param src             Source string.
+	*/
 	RString& operator=(const RString& src) {return(BasicString<RChar,RString>::operator=(src));}
 
-	/** @copydoc BasicString::operator=(const C*) */
+	/**
+	* Assignment operator using another string.
+	* @param src             Source string.
+	*/
 	RString& operator=(const RChar* src) {return(BasicString<RChar,RString>::operator=(src));}
 
 	/**
@@ -384,10 +526,16 @@ public:
 	*/
 	RString& operator=(const std::string& src);
 
-	/** @copydoc BasicString::operator+=(const S&) */
+	/**
+	* Add another string.
+	* @param src             Source string.
+	*/
 	inline RString& operator+=(const RString& src) {return(BasicString<RChar,RString>::operator+=(src));}
 
-	/** @copydoc BasicString::operator+=(const C*) */
+	/**
+	* Add another string.
+	* @param src             Source string.
+	*/
 	inline RString& operator+=(const RChar* src) {return(BasicString<RChar,RString>::operator+=(src));}
 
 	/**
@@ -782,15 +930,20 @@ public:
 	RCharCursor(const RString& src);
 
 	/**
+	* Set the string and start the iterator.
+	* param src              String to iterate.
+	*/
+	void Set(const RString& src);
+
+	/**
 	* Start the iterator to go trough the string.
 	*/
 	void Start(void);
 
 	/**
-	* Set the string and start the iterator.
-	* param src              String to iterate.
-	*/
-	void Set(const RString& src);
+	 * Start the iterator at the end of the string.
+	 */
+	void StartFromEnd(void);
 
 	/**
 	* Go to the i-th character of the string.
@@ -809,14 +962,27 @@ public:
 	size_t GetPos(void);
 
 	/**
+	* Test if the begin of the cursor is reached.
+	*/
+	bool Begin(void) const;
+
+	/**
 	* Test if the end of the string is reached.
 	*/
 	bool End(void) const;
 
 	/**
 	* Goto the next character, if the end is reached, go to the beginning.
+	* @param inc             Number of elements to go to.
 	*/
-	void Next(void);
+	void Next(size_t inc=1);
+
+	/**
+	* Go to a given number of previous elements. If the begin is reached, go to the
+	* end.
+	* @param inc             Number of elements to go to.
+	*/
+	void Prev(size_t inc=1);
 
 	/**
 	* Return the current character.

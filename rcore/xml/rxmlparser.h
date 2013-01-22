@@ -299,7 +299,7 @@ protected:
 
 	/**
 	* This function transform a given string that is supposed to represent a
-	* character. For example, the code #quot; is a quote.
+	* character. For example, the code &#35; is a quote.
 	* @param code           Code.
 	* @param html           HTML codes accepted ?
 	* @returns A RChar corresponding to the code or 0 if the code is not a valid

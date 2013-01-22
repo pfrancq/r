@@ -45,7 +45,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 R2AdditiveChoquet::R2AdditiveChoquet(size_t n)
-	: NbCriteria(n), Params(n)
+	: NbCriteria(n), Params(n), Verified(false)
 {
 	if(!NbCriteria)
 		throw std::range_error("R2AdditiveChoquet::R2AdditiveChoquet : Null number of criteria");
@@ -54,11 +54,25 @@ R2AdditiveChoquet::R2AdditiveChoquet(size_t n)
 
 //------------------------------------------------------------------------------
 R2AdditiveChoquet::R2AdditiveChoquet(size_t n,RSymmetricMatrix& params)
-	: NbCriteria(n),Params(n)
+	: NbCriteria(n),Params(n), Verified(false)
 {
 	if(!NbCriteria)
 		throw std::range_error("R2AdditiveChoquet::R2AdditiveChoquet : Null number of criteria");
 	SetParams(params);
+}
+
+
+//------------------------------------------------------------------------------
+bool R2AdditiveChoquet::Verify(void)
+{
+	if(Verified)
+		return(true);
+	double Sum(0.0);
+	for(size_t i=0;i<NbCriteria;i++)
+		for(size_t j=i;j<NbCriteria;j++)
+			Sum+=Params(i,j);
+	Verified=fabs(Sum-1.0)<0.00000000001;
+	return(Verified);
 }
 
 
@@ -72,7 +86,8 @@ void R2AdditiveChoquet::SetParams(RSymmetricMatrix& params)
 	for(size_t i=0;i<NbCriteria;i++)
 		for(size_t j=i;j<NbCriteria;j++)
 			Sum+=params(i,j);
-	if(fabs(Sum-1.0)>=0.0000000000001)
+	Verified=fabs(Sum-1.0)<0.00000000001;
+	if(!Verified)
 		throw std::invalid_argument("R2AdditiveChoquet::SetParams : The sum of the parameters is not 1");
 
 	// Do the assignation
@@ -81,8 +96,57 @@ void R2AdditiveChoquet::SetParams(RSymmetricMatrix& params)
 
 
 //------------------------------------------------------------------------------
+void R2AdditiveChoquet::SetCriteria(size_t i,double weight)
+{
+	if(i>=NbCriteria)
+		throw std::range_error("R2AdditiveChoquet::SetCriteria : "+RString::Number(i)+" is not a valid criteria index");
+	Params(i,i)=weight;
+	Verified=false;
+}
+
+
+//------------------------------------------------------------------------------
+double R2AdditiveChoquet::GetCriteria(size_t i) const
+{
+	if(i>=NbCriteria)
+		throw std::range_error("R2AdditiveChoquet::GetCriteria : "+RString::Number(i)+" is not a valid criteria index");
+	return(Params(i,i));
+}
+
+
+//------------------------------------------------------------------------------
+void R2AdditiveChoquet::SetInteraction(size_t i,size_t j,double weight)
+{
+	if(i>=NbCriteria)
+		throw std::range_error("R2AdditiveChoquet::SetInteraction : "+RString::Number(i)+" is not a valid criteria index");
+	if(j>=NbCriteria)
+		throw std::range_error("R2AdditiveChoquet::SetInteraction : "+RString::Number(j)+" is not a valid criteria index");
+	if(i==j)
+		throw std::range_error("R2AdditiveChoquet::SetInteraction : Different criteria indexes are needed");
+	Params(i,j)=weight;
+	Verified=false;
+}
+
+
+//------------------------------------------------------------------------------
+double R2AdditiveChoquet::GetInteraction(size_t i,size_t j) const
+{
+	if(i>=NbCriteria)
+		throw std::range_error("R2AdditiveChoquet::GetInteraction : "+RString::Number(i)+" is not a valid criteria index");
+	if(j>=NbCriteria)
+		throw std::range_error("R2AdditiveChoquet::GetInteraction : "+RString::Number(j)+" is not a valid criteria index");
+	if(i==j)
+		throw std::range_error("R2AdditiveChoquet::GetInteraction : Different criteria indexes are needed");
+	return(Params(i,j));
+}
+
+
+//------------------------------------------------------------------------------
 double R2AdditiveChoquet::Compute(RNumContainer<double,false>& obj)
 {
+	// Verifications
+	if(!Verify())
+		throw std::invalid_argument("R2AdditiveChoquet::SetParams : The sum of the parameters is not 1");
 	if(obj.GetNb()!=NbCriteria)
 		throw std::range_error("R2AdditiveChoquet::Compute : The vector has not a size of "+RString::Number(NbCriteria));
 	double Choquet(0.0);

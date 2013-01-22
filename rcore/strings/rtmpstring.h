@@ -367,7 +367,7 @@ public:
 
 	/**
 	* Look if a string ends with a given sub-string.
-   * @param begin           Sub-string to search for.
+   * @param end             Sub-string to search for.
    * @param skip            If true, ending spaces are skipped for the
 	*                        comparison.
 	* @param CaseSensitive   Is the search case sensitive.
@@ -376,7 +376,8 @@ public:
 	bool Ends(const RTmpString& end,bool skip=false,bool CaseSensitive=true) const {return(StringMethods::Ends<RChar>(Text,Len,end.Text,end.Len,skip,CaseSensitive));}
 
 	/**
-	* Get a sub-string of a given string.
+	* Extract a sub-string of a given string.
+	* @param to              The sub-string that will be extracted.
 	* @param idx             Index of the first character.
 	* @param len             Length of the sub-string. If the length is not
 	*                        specified, the end of the string is copied.

@@ -59,15 +59,21 @@ namespace R{
  * The sum of these parameters must be 1.
  *
  * The 2-additive Choquet integral for a given object, \f$f\f$ can then be
- * computed using:
+ * computed using [1]:
  * \f[
  		C_{\mu}(f)=
                   \sum_{i,j|I_{i,j}>0}(f(i)\wedge f(j))I_{ij}
-                 +\sum_{i,j|I_{i,j}<0}(f(i)\vee f(j))\left|I_{ij}\right|
+                 +\sum_{i,j|I_{i,j}\leq 0}(f(i)\vee f(j))\left|I_{ij}\right|
                  +\sum_{i\in N}f(i)\left[\phi(i)-\frac{1}{2}\sum_{j\neq i}\left|I_{ij}\right|\right]
  * \f]
  * where \f$f(i)\f$ is the value of the object for the \f$i\f$th criteria,
  * \f$\wedge\f$ is the minimum operator, and \f$\vee\f$ is the maximum operator.
+ *
+ * <div class="groupHeader">
+ * References
+ * </div>
+ * [1] M. Grabisch (2006), L'utilisation de l'intégrale de Choquet en aide multicritère à la décision. <em>Newsletter of the European Working
+ *   Group "Multicriteria Aid for Decisions"</em>, 3(14), pp. 5-10.
  * @short 2-Additive Choquet Integral.
  * @author Pascal Francq.
  */
@@ -84,6 +90,11 @@ class R2AdditiveChoquet
     */
 	RSymmetricMatrix Params;
 
+	/**
+	 * Parameters verified?
+    */
+	bool Verified;
+
 public:
 
 	/**
@@ -95,8 +106,21 @@ public:
 	/**
 	 * Constructor.
     * @param n               Number of criteria.
+	 * @param params          Parameters. params(i,i) is supposed to be the
+	 * weights of each criteria while params(i,j) is supposed to be the weights
+	 * of each interactions.
+	 * \exception std::range_error is generated if the container has not a value
+	 * for each criteria.
+	 * \exception std::invalid_argument is generated if the sum of parameters is
+	 * not equal to 1.
     */
 	R2AdditiveChoquet(size_t n,RSymmetricMatrix& params);
+
+	/**
+	 * Verify that the sum of the parameters is one.
+	 * @return true if it is the case.
+    */
+	bool Verify(void);
 
 	/**
 	 * Set the parameters of the Choquet integral.
@@ -105,8 +129,40 @@ public:
 	 * of each interactions.
 	 * \exception std::range_error is generated if the container has not a value
 	 * for each criteria.
+	 * \exception std::invalid_argument is generated if the sum of parameters is
+	 * not equal to 1.
 	 */
 	void SetParams(RSymmetricMatrix& params);
+
+	/**
+	 * Set the weight of a given criteria.
+	 * @param i               Index of the criteria.
+	 * @param weight          Weight of the criteria.
+    */
+	void SetCriteria(size_t i,double weight);
+
+	/**
+	 * Get the weight of a given criteria.
+    * @param i               Index of the criteria.
+    * @return the weight of the criteria.
+    */
+	double GetCriteria(size_t i) const;
+
+	/**
+	 * Set the weight of the interaction of a pair of criteria..
+	 * @param i               Index of the first criteria.
+	 * @param j               Index of the second criteria.
+	 * @param weight          Weight of the interaction.
+    */
+	void SetInteraction(size_t i,size_t j,double weight);
+
+	/**
+	 * Get the weight of the interaction of a pair of criteria..
+	 * @param i               Index of the first criteria.
+	 * @param j               Index of the second criteria.
+    * @return the weight of the interaction.
+    */
+	double GetInteraction(size_t i,size_t j) const;
 
 	/**
 	 * Compute the 2-Additive Choquet integral of an object defined by a set of
@@ -115,6 +171,8 @@ public:
     * @return the 2-Additive Choquet integral.
 	 * \exception std::range_error is generated if the container has not a value
 	 * for each criteria.
+	 * \exception std::invalid_argument is generated if the sum of parameters is
+	 * not equal to 1.
     */
 	double Compute(RNumContainer<double,false>& obj);
 
