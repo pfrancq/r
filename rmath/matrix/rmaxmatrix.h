@@ -103,6 +103,13 @@ public:
 	RMaxMatrix(const RMaxMatrix& src);
 
 	/**
+	 * Compare method used by RContainer.
+    * @param matrix          Matrix to compare with.
+    * @return always -1.
+    */
+	int Compare(const RMaxMatrix& matrix) const;
+
+	/**
 	 * Clear the matrix. All the elements are removed.
 	 * @param val            Value eventually used to assign to the elements
 	 *                       (not used for sparse matrix).

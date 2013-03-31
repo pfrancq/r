@@ -33,6 +33,11 @@
 
 
 //------------------------------------------------------------------------------
+// include files for ANSI C/C++
+#include <limits>
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rcontainer.h>
 #include <rcursor.h>
@@ -47,23 +52,51 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RGraph class provides a representation of a graph.
+* The RGraph class provides a template that represents of a graph.
+* @tparam V                  Class representing a vertex. It must inherits from
+*                            RVertex.
+* @tparam E                  Class representing an edge. It must inherits from
+*                            REdge.
+* @tparam bAllocVertices     Specify if the vertices are deallocated by the
+*                            graph.
+* @tparam bAllocEdges        Specify if the edges are deallocated by the graph.
 * @author Pascal Francq
 * @short Graph
+*
+* In practice, the RVertex and REdge classes can be used directly to initialize
+* an instance:
+* @code
+* int main()
+* {
+*    // Create a graph
+*    RGraph<RVertex,REdge,true,true> Graph(5);
+*    RVertex* v1(Graph.CreateVertex());
+*    RVertex* v2(Graph.CreateVertex());
+*    RVertex* v3(Graph.CreateVertex());
+*    Graph.CreateEdge(v1,v2,2.0);
+*    Graph.CreateEdge(v2,v3,1.0);
+*    Graph.CreateEdge(v2,v3,5.0);
+*
+*    // Compute the minimum spanning tree
+*    RGraph<RVertex,REdge,true,true> MinTree(5);
+*	  Graph.MinSpanningTree(&MinTree);
+* }
+* @endcode
 */
-class RGraph
+template<class V,class E,bool bAllocVertices=true,bool bAllocEdges=true>
+	class RGraph
 {
 protected:
 
 	/**
 	* The vertices of the graph.
 	*/
-	RContainer<RVertex,true,false> Vertices;
+	RContainer<V,bAllocVertices,false> Vertices;
 
 	/**
 	* The edges of the graph.
 	*/
-	RContainer<REdge,true,false> Edges;
+	RContainer<E,bAllocEdges,false> Edges;
 
 public:
 
@@ -81,31 +114,31 @@ public:
 	/**
 	* Get a cursor over the vertices of the graph.
 	*/
-	RCursor<RVertex> GetVertices(void) const;
+	RCursor<V> GetVertices(void) const;
 
 	/**
 	* Get a cursor over the edges of the graph.
 	*/
-	RCursor<REdge> GetEdges(void) const;
+	RCursor<E> GetEdges(void) const;
 
 	/**
 	 * Insert a vertex. It cannot have edges.
 	 * @param v              Vertex to insert.
 	 */
-	void Insert(RVertex* v);
+	void Insert(V* v);
 
 	/**
 	* Create a vertex.
 	* @returns Pointer to the new created vertex.
 	*/
-	RVertex* CreateVertex(void);
+	virtual V* CreateVertex(void);
 
 	/**
 	* Create a vertex with a given identifier.
 	* @param id              Identifier.
 	* @returns Pointer to the new created vertex.
 	*/
-	RVertex* CreateVertex(const size_t id);
+	virtual V* CreateVertex(const size_t id);
 
 	/**
 	* Get the vertex with a given identifier. If the vertex doesn't exist,
@@ -113,13 +146,13 @@ public:
 	* @param id              Identifier.
 	* @returns Pointer to the vertex.
 	*/
-	RVertex* GetVertex(const size_t id);
+	V* GetVertex(const size_t id);
 
 	/**
 	 * Insert an edge.
 	 * @param e              Edge to insert.
 	 */
-	void Insert(REdge* e);
+	void Insert(E* e);
 
 	/**
 	* Create an edge.
@@ -127,7 +160,7 @@ public:
 	* @param v2              First Vertex.
 	* @param w               Weight.
 	*/
-	REdge* CreateEdge(RVertex* v1,RVertex* v2,double w);
+	virtual E* CreateEdge(V* v1,V* v2,double w);
 
 	/**
 	* Compute the minimum spanning trees using the Prim's algorithm.
@@ -138,8 +171,13 @@ public:
 	/**
 	* Destruct the graph.
 	*/
-	~RGraph(void);
+	virtual ~RGraph(void);
 };
+
+
+//-----------------------------------------------------------------------------
+// Template implementation
+#include <rgraph.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

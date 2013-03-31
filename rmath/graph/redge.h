@@ -135,7 +135,10 @@ public:
 	virtual ~REdge(void);
 
 	// friend classes
-	friend class RGraph;
+//	friend class RGraph<RVertex,REdge,true,true>;
+//	friend class RGraph<RVertex,REdge,true,false>;
+//	friend class RGraph<RVertex,REdge,false,true>;
+//	friend class RGraph<RVertex,REdge,false,false>;
 	friend class RVertex;
 };
 

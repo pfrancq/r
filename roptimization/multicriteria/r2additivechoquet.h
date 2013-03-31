@@ -80,6 +80,11 @@ namespace R{
 class R2AdditiveChoquet
 {
 	/**
+	 * Name representing the function computed.
+	 */
+	RString Name;
+
+	/**
 	 * Number of criteria.
 	 */
 	size_t NbCriteria;
@@ -100,21 +105,42 @@ public:
 	/**
 	 * Constructor.
     * @param n               Number of criteria.
+	 * @param name            Name of the function computed.
     */
-	R2AdditiveChoquet(size_t n);
+	R2AdditiveChoquet(size_t n,const RString& name=RString::Null);
 
 	/**
 	 * Constructor.
     * @param n               Number of criteria.
 	 * @param params          Parameters. params(i,i) is supposed to be the
-	 * weights of each criteria while params(i,j) is supposed to be the weights
-	 * of each interactions.
+	 *                        weights of each criteria while params(i,j) is
+	 *                        supposed to be the weights of each interactions.
+	 * @param name            Name of the function computed.
 	 * \exception std::range_error is generated if the container has not a value
 	 * for each criteria.
 	 * \exception std::invalid_argument is generated if the sum of parameters is
 	 * not equal to 1.
     */
-	R2AdditiveChoquet(size_t n,RSymmetricMatrix& params);
+	R2AdditiveChoquet(size_t n,RSymmetricMatrix& params,const RString& name=RString::Null);
+
+	/**
+	 * Compare two choquet function regarding their name.
+    * @param choquet         Choquet function to compare with.
+    * @return an integral value indicating the relationship between the names.
+    */
+	int Compare(const R2AdditiveChoquet& choquet) const;
+
+	/**
+	 * Compare a choquet function based on its name.
+    * @param name            Name to compare with.
+    * @return an integral value indicating the relationship between the names.
+    */
+	int Compare(const RString& name) const;
+
+	/**
+    * @return the name of the function computed.
+    */
+	RString GetName(void) const {return(Name);}
 
 	/**
 	 * Verify that the sum of the parameters is one.

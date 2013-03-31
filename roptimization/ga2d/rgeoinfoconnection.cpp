@@ -122,8 +122,8 @@ tCoord RGeoInfoConnection::ComputeMinDist(RLayout* layout)
 	size_t id1,id2,i;
 	RVertex *v1,*v2;
 	RPoint pt1,pt2;
-	RGraph Graph(Con->GetNb());  // The complete graph of all placed pins
-	RGraph Tree(Con->GetNb());   // The minimum spanning tree
+	RGraph<RVertex,REdge> Graph(Con->GetNb());  // The complete graph of all placed pins
+	RGraph<RVertex,REdge> Tree(Con->GetNb());   // The minimum spanning tree
 	RContainer<Part,true,false> Local(Con->GetNb());
 
 	// Initialize

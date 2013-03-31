@@ -55,13 +55,13 @@ RWorksheet::RWorksheet(const RString& name,const RString& colname)
 
 
 //------------------------------------------------------------------------------
-RVector& RWorksheet::Verify(size_t col,size_t line)
+RNumContainer<double,false>& RWorksheet::Verify(size_t col,size_t line)
 {
 	if(LineLabels.GetMaxPos()<line)
 		ThrowRException("Line "+RString::Number(line)+" is outside [0,"+RString::Number(LineLabels.GetMaxPos())+"]");
 	if(ColLabels.GetMaxPos()<col)
 		ThrowRException("Col "+RString::Number(col)+" is outside [0,"+RString::Number(ColLabels.GetMaxPos())+"]");
-	RVector& Col(*Values[col]);
+	RNumContainer<double,false>& Col(*Values[col]);
 	Col.Verify(line+1);
 	return(Col);
 }
@@ -71,7 +71,7 @@ RVector& RWorksheet::Verify(size_t col,size_t line)
 void RWorksheet::AddCol(size_t col,const RString& label)
 {
 	ColLabels.InsertPtrAt(new RString(label),col);
-	Values.InsertPtrAt(new RVector(20),col);
+	Values.InsertPtrAt(new RNumContainer<double,false>(20),col);
 }
 
 
@@ -141,7 +141,7 @@ void RWorksheet::DivideValue(size_t col,size_t line,double val)
 
 
 //------------------------------------------------------------------------------
-const RVector& RWorksheet::GetCol(size_t col) const
+const RNumContainer<double,false>& RWorksheet::GetCol(size_t col) const
 {
 	if(ColLabels.GetMaxPos()<col)
 		ThrowRException("Col "+RString::Number(col)+"is outside [0,"+RString::Number(ColLabels.GetMaxPos())+"]");
@@ -150,7 +150,7 @@ const RVector& RWorksheet::GetCol(size_t col) const
 
 
 //------------------------------------------------------------------------------
-RVector& RWorksheet::GetCol(size_t col)
+RNumContainer<double,false>& RWorksheet::GetCol(size_t col)
 {
 	if(ColLabels.GetMaxPos()<col)
 		ThrowRException("Col "+RString::Number(col)+"is outside [0,"+RString::Number(ColLabels.GetMaxPos())+"]");

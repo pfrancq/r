@@ -59,6 +59,13 @@ RSymmetricMatrix::RSymmetricMatrix(const RSymmetricMatrix& matrix)
 
 
 //------------------------------------------------------------------------------
+int RSymmetricMatrix::Compare(const RSymmetricMatrix&) const
+{
+	return(-1);
+}
+
+
+//------------------------------------------------------------------------------
 double RSymmetricMatrix::operator()(size_t i,size_t j) const
 {
 	if(j>i)

@@ -63,6 +63,13 @@ RSparseMatrix::RSparseMatrix(const RSparseMatrix& src)
 
 
 //-----------------------------------------------------------------------------
+int RSparseMatrix::Compare(const RSparseMatrix&) const
+{
+	return(-1);
+}
+
+
+//-----------------------------------------------------------------------------
 void RSparseMatrix::Clear(double,bool clean)
 {
 	if(clean)
@@ -150,7 +157,7 @@ RSparseMatrix& RSparseMatrix::operator=(const RSparseMatrix& matrix)
 //------------------------------------------------------------------------------
 double RSparseMatrix::operator()(size_t i,size_t j) const
 {
-	if((i>NbLines)||(j>NbCols))
+	if((i>=NbLines)||(j>=NbCols))
 		throw std::range_error("RSparseMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
 
 	const RSparseVector* Line;
@@ -176,7 +183,7 @@ double RSparseMatrix::operator()(size_t i,size_t j) const
 //------------------------------------------------------------------------------
 double& RSparseMatrix::operator()(size_t i,size_t j)
 {
-	if((i>NbLines)||(j>NbCols))
+	if((i>=NbLines)||(j>=NbCols))
 		throw std::range_error("RSparseMatrix::operator() : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
 
 	RSparseVector* Line;
@@ -205,7 +212,7 @@ double& RSparseMatrix::operator()(size_t i,size_t j)
 //------------------------------------------------------------------------------
 const RSparseVector* RSparseMatrix::operator[](size_t i) const
 {
-	if(i>NbLines)
+	if(i>=NbLines)
 		throw std::range_error("RSparseMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
 
 	if(AllLines)
@@ -222,7 +229,7 @@ const RSparseVector* RSparseMatrix::operator[](size_t i) const
 //------------------------------------------------------------------------------
 RSparseVector* RSparseMatrix::operator[](size_t i)
 {
-	if(i>NbLines)
+	if(i>=NbLines)
 		throw std::range_error("RSparseMatrix::operator[] : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
 
 	RSparseVector* Line;

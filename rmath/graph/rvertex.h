@@ -105,6 +105,12 @@ public:
 	RCursor<REdge> GetEdges(void) const;
 
 	/**
+	 * Get the number of edges to which the vertex is connected.
+    * @return the number of adjacent edges.
+    */
+	size_t GetNbEdges(void) const {return(Edges.GetNb());}
+
+	/**
 	 * @return Pointer to the edge that connects the current node with a node
 	 * given by the identifier. If no edge is found, the method returns 0.
 	 * @note This methods supposes an undirected graph.
@@ -134,7 +140,7 @@ public:
 	virtual ~RVertex(void);
 
 	// friend classes
-	friend class RGraph;
+//	friend class RGraph;
 	friend class REdge;
 };
 

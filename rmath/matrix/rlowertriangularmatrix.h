@@ -62,7 +62,7 @@ namespace R{
 * a(1,0)=2.0;
 * a(1,1)=3.0;
 *
-* RCursor<RMatrixLine> Lines(c.GetLines());
+* RCursor<RVector> Lines(c.GetLines());
 * for(Lines.Start();!Lines.End();Lines.Next())
 * {
 * 	RNumCursor<double> Cols(Lines()->GetCols());
@@ -93,6 +93,13 @@ public:
 	*/
 	RLowerTriangularMatrix(const RLowerTriangularMatrix& matrix);
 
+	/**
+	 * Compare method used by RContainer.
+    * @param matrix          Matrix to compare with.
+    * @return always -1.
+    */
+	int Compare(const RLowerTriangularMatrix& matrix) const;
+
 protected:
 
 	/**
@@ -119,7 +126,7 @@ public:
 	/**
 	* Get the number of lines in the matrix.
 	*/
-	RCursor<RMatrixLine> GetLines(void) const {return(RCursor<RMatrixLine>(*this));}
+	RCursor<RVector> GetLines(void) const {return(RCursor<RVector>(*this));}
 
 	/**
 	* Return a specific element of the matrix (const version).

@@ -75,6 +75,13 @@ public:
 	RSymmetricMatrix(const RSymmetricMatrix& matrix);
 
 	/**
+	 * Compare method used by RContainer.
+    * @param matrix          Matrix to compare with.
+    * @return always -1.
+    */
+	int Compare(const RSymmetricMatrix& matrix) const;
+
+	/**
 	 * Get the type of the matrix.
 	 */
 	virtual tType GetType(void) const {return(tSymmetric);}

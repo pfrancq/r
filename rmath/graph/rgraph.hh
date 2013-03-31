@@ -4,7 +4,7 @@
 
 	RGraph.h
 
-	A Graph - Implementation.
+	A Graph - Inline Implementation.
 
 	Copyright 2001-2012 by Pascal Francq (pascal@francq.info).
 	Copyright 2001-2008 by the Université Libre de Bruxelles (ULB).
@@ -28,33 +28,22 @@
 
 
 //------------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <math.h>
-
-
-//------------------------------------------------------------------------------
-// include files for R Project
-#include <rgraph.h>
-#include <rcursor.h>
-using namespace R;
-
-
-
-//------------------------------------------------------------------------------
 //
 // clas RGraph
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGraph::RGraph(size_t nb)
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	RGraph<V,E,bAllocVertices,bAllocEdges>::RGraph(size_t nb)
 	: Vertices(nb,nb/2), Edges(nb*(nb-1)/2,nb*(nb-1)/4)
 {
 }
 
 
 //------------------------------------------------------------------------------
-void RGraph::Clear(void)
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	void RGraph<V,E,bAllocVertices,bAllocEdges>::Clear(void)
 {
 	Vertices.Clear();
 	Edges.Clear();
@@ -62,102 +51,111 @@ void RGraph::Clear(void)
 
 
 //------------------------------------------------------------------------------
-RCursor<RVertex> RGraph::GetVertices(void) const
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	RCursor<V> RGraph<V,E,bAllocVertices,bAllocEdges>::GetVertices(void) const
 {
-	return(RCursor<RVertex>(Vertices));
+	return(RCursor<V>(Vertices));
 }
 
 
 //------------------------------------------------------------------------------
-RCursor<REdge> RGraph::GetEdges(void) const
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	RCursor<E> RGraph<V,E,bAllocVertices,bAllocEdges>::GetEdges(void) const
 {
-	return(RCursor<REdge>(Edges));
+	return(RCursor<E>(Edges));
 }
 
 
 //------------------------------------------------------------------------------
-void RGraph::Insert(RVertex* v)
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	void RGraph<V,E,bAllocVertices,bAllocEdges>::Insert(V* v)
 {
-	if(v->Edges.GetNb())
+	if(v->GetNbEdges())
 		throw RException("Graph::InsertVertex(RVertex*) : Cannot insert a vertex with edges");
 	Vertices.InsertPtr(v);
 }
 
 
 //------------------------------------------------------------------------------
-RVertex* RGraph::CreateVertex(void)
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	V* RGraph<V,E,bAllocVertices,bAllocEdges>::CreateVertex(void)
 {
-	RVertex* ptr(new RVertex(Vertices.GetNb(),Vertices.GetMaxNb()));
+	V* ptr(new V(Vertices.GetNb(),Vertices.GetMaxNb()));
 	Insert(ptr);
 	return(ptr);
 }
 
 
 //------------------------------------------------------------------------------
-RVertex* RGraph::CreateVertex(const size_t id)
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	V* RGraph<V,E,bAllocVertices,bAllocEdges>::CreateVertex(const size_t id)
 {
-	RVertex* ptr(new RVertex(id,Vertices.GetMaxNb()));
+	V* ptr(new V(id,Vertices.GetMaxNb()));
 	Insert(ptr);
 	return(ptr);
 }
 
 
 //------------------------------------------------------------------------------
-RVertex* RGraph::GetVertex(const size_t id)
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	V* RGraph<V,E,bAllocVertices,bAllocEdges>::GetVertex(const size_t id)
 {
-	RVertex* ptr(Vertices.GetPtr(id));
+	V* ptr(Vertices.GetPtr(id));
 	if(!ptr)
-		Vertices.InsertPtr(ptr=new RVertex(id,Vertices.GetMaxNb()));
+		Vertices.InsertPtr(ptr=new V(id,Vertices.GetMaxNb()));
 	return(ptr);
 }
 
 
 //------------------------------------------------------------------------------
-void RGraph::Insert(REdge* e)
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	void RGraph<V,E,bAllocVertices,bAllocEdges>::Insert(E* e)
 {
 	Edges.InsertPtr(e);
 }
 
 
 //------------------------------------------------------------------------------
-REdge* RGraph::CreateEdge(RVertex* v1,RVertex* v2,double w)
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	E* RGraph<V,E,bAllocVertices,bAllocEdges>::CreateEdge(V* v1,V* v2,double w)
 {
-	REdge* ptr(new REdge(v1,v2,w));
+	E* ptr(new REdge(v1,v2,w));
 	Insert(ptr);
 	return(ptr);
 }
 
 
 //------------------------------------------------------------------------------
-void RGraph::MinSpanningTree(RGraph* g)
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	void RGraph<V,E,bAllocVertices,bAllocEdges>::MinSpanningTree(RGraph* g)
 {
-	RVertex *v1, *v2;
-	REdge *best=0;
+	V *v1, *v2;
+	E* best(0);
 	double bestw;
 	size_t nb=Vertices.GetNb();
 	bool b1,b2,b(false);
 
 	g->Clear();
 	if(!nb) return;
-	g->CreateVertex(Vertices[0]->Id);
+	g->CreateVertex(Vertices[0]->GetId());
 	while(--nb)
 	{
-		bestw=HUGE_VAL;
+		bestw=std::numeric_limits<double>::max();
 
 		// Go through the edges and find the minimal one with a connected.
-		RCursor<REdge> e(Edges);
+		RCursor<E> e(Edges);
 		for(e.Start();!e.End();e.Next())
 		{
 			// Test if possible good vertex
-			if(e()->Weight<bestw)
+			if(e()->GetWeight()<bestw)
 			{
 				// Test if only one is in g
-				b1=g->Vertices.IsIn<const size_t>(e()->GetVertex1()->GetId());
-				b2=g->Vertices.IsIn<const size_t>(e()->GetVertex2()->GetId());
+				b1=g->Vertices.IsIn(e()->GetVertex1()->GetId());
+				b2=g->Vertices.IsIn(e()->GetVertex2()->GetId());
 				if((b1&&!b2)||(!b1&&b2))
 				{
 					best=e();
-					bestw=best->Weight;
+					bestw=best->GetWeight();
 					b=b1;
 				}
 			}
@@ -166,22 +164,23 @@ void RGraph::MinSpanningTree(RGraph* g)
 		// Insert the vertex
 		if(b)
 		{
-			v1=g->Vertices.GetPtr<const size_t>(best->GetVertex1()->GetId());
+			v1=g->Vertices.GetPtr(best->GetVertex1()->GetId());
 			v2=g->CreateVertex(best->GetVertex2()->GetId());
 		}
 		else
 		{
-			v1=g->Vertices.GetPtr<const size_t>(best->GetVertex2()->GetId());
+			v1=g->Vertices.GetPtr(best->GetVertex2()->GetId());
 			v2=g->CreateVertex(best->GetVertex1()->GetId());
 		}
 
 		// Insert the Edge
-		g->Edges.InsertPtr(new REdge(v1,v2,best->GetWeight()));
+		g->Edges.InsertPtr(new E(v1,v2,best->GetWeight()));
 	}
 }
 
 
 //------------------------------------------------------------------------------
-RGraph::~RGraph(void)
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	RGraph<V,E,bAllocVertices,bAllocEdges>::~RGraph(void)
 {
 }

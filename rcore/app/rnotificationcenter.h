@@ -114,8 +114,11 @@ public:
 	*    for a particular object.
 	* -# handle and object are null. The handler catches every notification of
 	*    every object.
+	*
+	* \warning The same combination of (handler,observer,handle,object) can be
+	* inserted multiple times.
 	*/
-	void InsertObserver(tNotificationHandler handler,RObject* observer,hNotification handle=0,RObject* object=0);
+	void InsertObserver(tNotificationHandler handler,RObject* observer,const hNotification handle=0,RObject* object=0);
 
 	/**
 	* Add an observer, eventually for a particular object and/or a particular
@@ -131,6 +134,9 @@ public:
 	*    for a particular object.
 	* -# name and object are null. The handler catches every notification of
 	*    every object.
+	*
+	* \warning The same combination of (handler,observer,name,object) can be
+	* inserted multiple times.
 	*/
 	void InsertObserver(tNotificationHandler handler,RObject* observer,const RCString& name=RCString::Null,RObject* object=0)
 	{
@@ -146,12 +152,32 @@ public:
 	/**
 	* Post a notification.
 	* @tparam T              Class of the data to the send with the notification.
+	* @param handle          Handle of the notification.
+	* @param data            Data associated to the notification.
+	*/
+	template<class T> void PostNotification(const hNotification handle,T data)
+	{
+		PostNotification(RNotificationData<T>(handle,0,data));
+	}
+
+	/**
+	* Post a notification.
+	* @tparam T              Class of the data to the send with the notification.
 	* @param name            Name of the notification.
 	* @param data            Data associated to the notification.
 	*/
 	template<class T> void PostNotification(const RCString& name,T data)
 	{
 		PostNotification(RNotificationData<T>(name,0,data));
+	}
+
+	/**
+	* Post a notification without any data.
+	* @param handle          Handle of the notification.
+	*/
+	void PostNotification(const hNotification handle)
+	{
+		PostNotification(RNotification(handle,0));
 	}
 
 	/**
@@ -181,7 +207,7 @@ public:
 	*    are deleted.
 	* -# handle and object are null. All default handlers are deleted.
 	*/
-	void DeleteObserver(RObject* observer,hNotification handle,RObject* object);
+	void DeleteObserver(RObject* observer,const hNotification handle,RObject* object);
 
 	/**
 	* Delete a given handler of a given observer.

@@ -63,6 +63,22 @@ RVector::RVector(const RVector& vec)
 
 
 //------------------------------------------------------------------------------
+int RVector::Compare(const RVector&) const
+{
+	return(-1);
+}
+
+
+//------------------------------------------------------------------------------
+void RVector::Init(double val)
+{
+	RNumCursor<double> Vec1(*this);
+	for(Vec1.Start();!Vec1.End();Vec1.Next())
+		Vec1()=val;
+}
+
+
+//------------------------------------------------------------------------------
 RVector& RVector::operator+=(const RVector& vector)
 {
 	if(GetNb()!=vector.GetNb())
@@ -99,34 +115,17 @@ RVector& RVector::operator*=(const double arg)
 
 
 //------------------------------------------------------------------------------
+RVector& RVector::operator/=(const double arg)
+{
+	RNumCursor<double> Vec(*this);
+	for(Vec.Start();!Vec.End();Vec.Next())
+		Vec()/=arg;
+	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
 RVector::~RVector(void)
-{
-}
-
-
-
-//------------------------------------------------------------------------------
-//
-// class RMatrixLine
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-RMatrixLine::RMatrixLine(size_t max)
-	: RVector(max)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RMatrixLine::RMatrixLine(const RMatrixLine& vec)
-	: RVector(vec)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RMatrixLine::~RMatrixLine(void)
 {
 }
 
@@ -167,6 +166,35 @@ RVector R::operator*(const double arg1,const RVector& arg2)
 	return(res);
 }
 
+
+//------------------------------------------------------------------------------
+RVector R::operator*(const RVector& arg1,const double arg2)
+{
+	RVector res(arg1);
+
+	res*=arg2;
+	return(res);
+}
+
+
+//------------------------------------------------------------------------------
+RVector R::operator/(const double arg1,const RVector& arg2)
+{
+	RVector res(arg2);
+
+	res/=arg1;
+	return(res);
+}
+
+
+//------------------------------------------------------------------------------
+RVector R::operator/(const RVector& arg1,const double arg2)
+{
+	RVector res(arg1);
+
+	res/=arg2;
+	return(res);
+}
 
 
 //------------------------------------------------------------------------------

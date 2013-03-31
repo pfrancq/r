@@ -114,6 +114,13 @@ public:
 	*/
 	RGenericMatrix(const RGenericMatrix& matrix);
 
+	/**
+	 * Compare method used by RContainer.
+    * @param matrix          Matrix to compare with.
+    * @return always -1.
+    */
+	int Compare(const RGenericMatrix& matrix) const;
+
 public:
 
 	/**
@@ -188,8 +195,10 @@ public:
 	 * @tparam S             Stream class that implements the << operator.
 	 * @param stream         Stream.
 	 * @param name           Name of the matrix.
+	 * @param format         Format used to print the number. By default, it is "%E".
+	 * @param colsize        Size of a column. By default, it is 12.
 	 */
-	template<class S> void Print(S& stream,const RString& name)
+	template<class S> void Print(S& stream,const RString& name,const char* format="%E",size_t colsize=12) const
 	{
 	 	RTextEncoding* Trans(RTextEncoding::GetTextEncoding("UTF-8"));
 		RString Spaces;
@@ -200,7 +209,13 @@ public:
 		for(size_t i=0;i<NbLines;i++)
 		{
 			if(NamePos==i)
-				stream<<name<<Trans->ToUnicode("=│",strlen("=│"));
+			{
+				stream<<name<<"=";
+				if(i==NbLines-1)
+					stream<<Trans->ToUnicode("└",strlen("└"));
+				else
+					stream<<Trans->ToUnicode("│",strlen("│"));
+			}
 			else
 			{
 				stream<<Spaces;
@@ -213,8 +228,10 @@ public:
 			}
 			for(size_t j=0;j<NbCols;j++)
 			{
-				RString Str(RString::Number((*this)(i,j)));
-				Str.SetLen(14," ");
+				RString Str(RString::Number((*this)(i,j),format));
+				Str.SetLen(colsize," ");
+				if(j!=NbCols-1)
+					Str+=" ";
 				stream<<Str;
 			}
 			if(!i)

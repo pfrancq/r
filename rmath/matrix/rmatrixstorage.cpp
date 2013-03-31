@@ -64,6 +64,7 @@ void RMatrixStorage::Open(const RString& baseuri,RGenericMatrix::tType type)
 
 	// Open the Index
 	Index.Open(BaseURI+".info",RIO::ReadWrite);
+	Index.Seek(0);
 	if(!Index.End())
 		Index>>NbLines>>NbCols;
 
@@ -122,7 +123,7 @@ void RMatrixStorage::Close(void)
 inline size_t RMatrixStorage::GetLowerPos(size_t i,size_t j)
 {
 	if((NbLines>=NbCols)&&(i>NbCols))
-			return((NbCols*(NbCols+1))/2+(i-NbCols)*NbCols+j);
+			return((NbCols*(NbCols+1))/2+(i-NbCols-1)*NbCols+j);
 	return((i*(i+1))/2+j);
 }
 
@@ -131,7 +132,7 @@ inline size_t RMatrixStorage::GetLowerPos(size_t i,size_t j)
 inline size_t RMatrixStorage::GetUpperPos(size_t i,size_t j)
 {
 	if((NbCols>=NbLines)&&(j>NbLines))
-		return((NbLines*(NbLines-1))/2+(j-NbLines)*NbLines+i+Pos01);
+		return((NbLines*(NbLines-1))/2+(j-NbLines-1)*NbLines+i+Pos01);
 	return((j*(j-1))/2+i+Pos01);
 }
 
@@ -185,6 +186,105 @@ void RMatrixStorage::Clear(double val)
 	}
 }
 
+
+//------------------------------------------------------------------------------
+void RMatrixStorage::ReCreateLowerFile(size_t newlines,size_t newcols,double val)
+{
+	// Rec-create the lower part
+	RBinaryFile NewFile1;
+	NewFile1.Open(BaseURI+".lower_new",RIO::Create);
+	File1.Seek(0);
+	size_t maxlines,maxcols;
+	if(NbLines>newlines)
+		maxlines=newlines;
+	else
+		maxcols=NbLines;
+	for(size_t i=0;i<maxlines;i++)
+	{
+		if(i<=NbCols)
+			maxcols=i;
+		else
+			maxcols=NbCols;
+
+		// Read all the existing columns
+		for(size_t j=0;j<=maxcols;j++)
+		{
+			double tmp;
+			File1>>tmp;
+
+			// If column is valid in the matrix -> Write it.
+			if(j<newcols)
+				NewFile1<<tmp;
+		}
+	}
+
+	// Add lines ?
+	for(size_t i=NbLines;i<newlines;i++)
+	{
+		if(i<=newcols)
+			maxcols=i;
+		else
+			maxcols=newcols;
+
+		// Add columns
+		for(size_t j=0;j<=maxcols;j++)
+			NewFile1<<val;
+	}
+
+	// Replace File1 by NewFile1
+	File1.Close();
+	NewFile1.Close();
+	RFile::RemoveFile(BaseURI+".lower");
+	RFile::RenameFile(BaseURI+".lower_new",BaseURI+".lower");
+	File1.Open(BaseURI+".lower",RIO::ReadWrite);
+}
+
+
+//------------------------------------------------------------------------------
+void RMatrixStorage::ReModifyLowerFile(size_t newlines,size_t newcols,bool fill,double val)
+{
+	// Modify the file.
+
+	// Column of the last element in lower part.
+	size_t maxcols;
+	if(newlines>=newcols)
+		maxcols=newcols;
+	else
+		maxcols=newlines;
+
+	// 1. Lines are reduced -> Truncate the file.
+	// 2. Lines are added or columns extended -> Write at the last position NAN.
+	if(newlines<NbLines)
+	{
+		// Truncate position
+		File1.Truncate((GetLowerPos(newlines,maxcols)+1)*sizeof(double));
+	}
+	else if((newlines>NbLines)||(newcols>NbCols))
+	{
+		if(fill)
+		{
+			// Go through at the first position to add
+			size_t max(NbLines>=NbCols?NbCols:NbLines);
+			size_t pos(GetLowerPos(NbLines,max));
+			if(pos)
+				pos++;
+			File1.Seek(pos*sizeof(double));
+
+			// While the end of the file is not reached, fill the new value
+			for(max=GetLowerPos(newlines,maxcols)+1;pos<max;pos++)
+				File1<<val;
+		}
+		else
+		{
+			File1.Seek((GetLowerPos(newlines,maxcols)+1)*sizeof(double));
+			File1<<val;
+		}
+	}
+	else
+		cerr<<"Problem in RMatrixStorage::VerifySize"<<endl;
+}
+
+
 //------------------------------------------------------------------------------
 void RMatrixStorage::ReCreateUpperFile(size_t newlines,size_t newcols,double val)
 {
@@ -207,7 +307,7 @@ void RMatrixStorage::ReCreateUpperFile(size_t newlines,size_t newcols,double val
 	}
 
 	// Read all existing columns
-	for(size_t j=1;j<maxcols;j++)
+	for(size_t j=1;j<maxcols;j++)		// Rec-create the lower part
 	{
 		if(j<=NbLines)
 			maxlines=j;
@@ -271,7 +371,9 @@ void RMatrixStorage::ReModifyUpperFile(size_t newlines,size_t newcols,bool fill,
 		{
 			// Go through at the first position to add
 			size_t max(NbCols>NbLines?NbLines:NbCols-1);
-			size_t pos(GetUpperPos(max,NbCols)+1);
+			size_t pos(GetUpperPos(max,NbCols));
+			if(pos)
+				pos++;
 			File2.Seek(pos*sizeof(double));
 
 			// While the end of the file is not reached, fill the new value
@@ -290,6 +392,149 @@ void RMatrixStorage::ReModifyUpperFile(size_t newlines,size_t newcols,bool fill,
 
 
 //------------------------------------------------------------------------------
+void RMatrixStorage::VerifySizeNormal(size_t newlines,size_t newcols,bool fill,double val)
+{
+	// Two situations need that the lower part must be re-created:
+	// 1. Number of columns are reduced  : Something was there before and must be there now
+	// 2. Number of columns are extended : Something was not there before and must be there now
+	if( ((newcols<NbCols)&&(newcols<NbLines)&&(newlines>newcols+1)) || ((newcols>NbCols)&&(NbCols<NbLines)&&(newcols>=newlines)) )
+		ReCreateLowerFile(newlines,newcols,val);
+	else
+		ReModifyLowerFile(newlines,newcols,fill,val);
+
+	if(!Upper)
+		return;
+
+	// Two situations need that the upper part must be re-created:
+	// 1. Number of lines are reduced  : Something was there before and must be there now
+	// 2. Number of lines are extended : Something was not there before and must be there now
+	if(((newlines<NbLines)&&(newlines<NbCols)&&(newcols>newlines+2)) || ((newlines>NbLines)&&(NbLines<NbCols)&&(newlines!=NbLines+1)&&(newlines+1!=newcols)) )
+		ReCreateUpperFile(newlines,newcols,val);
+	else
+		ReModifyUpperFile(newlines,newcols,fill,val);
+}
+
+
+//------------------------------------------------------------------------------
+void RMatrixStorage::VerifySizeSparse(size_t newlines,size_t newcols)
+{
+	// Only if the matrix is smaller a be re-created
+	if((NbLines>newlines)||(NbCols>newcols))
+	{
+		RNumContainer<off_t,false> FirstLines(NbLines);   // Remember position of the first element of a line
+		RNumContainer<off_t,false> LastLines(NbLines);    // Remember position of the last element of a line
+		RNumContainer<off_t,false> PrevLines(NbCols);     // Remember position of the previous element of a line
+		RNumContainer<off_t,false> FirstCols(NbCols);     // Remember position of the first element of a column
+		RNumContainer<off_t,false> LastCols(NbCols);      // Remember position of the last element of a column
+		RNumContainer<off_t,false> PrevCols(NbCols);      // Remember position of the previous element of a column
+		for(size_t i=NbLines+1;--i;)
+		{
+			FirstLines.Insert(MaxOffT);
+			LastLines.Insert(MaxOffT);
+		}
+		for(size_t j=NbCols+1;--j;)
+		{
+			FirstCols.Insert(MaxOffT);
+			LastCols.Insert(MaxOffT);
+			PrevCols.Insert(MaxOffT);
+		}
+
+		// Create a new file
+		RBinaryFile NewFile1;
+		off_t CurPos(0); // Current position in the file
+		NewFile1.Open(BaseURI+".rec_new",RIO::Create);
+
+		// Parse File1 and copy in NewFile1 if (i,j) are OK and the value is not null
+		File1.Seek(0);
+		while(!File1.End())
+		{
+			double nb;
+			size_t i,j;
+			off_t ni,nj;
+			File1>>nb>>i>>j>>ni>>nj;
+			if((nb==0.0)||(i>=newlines)||(j>=newcols))
+				continue;
+			NewFile1.Seek(CurPos);
+			NewFile1<<nb<<i<<j<<ni<<nj;
+
+			// Make the previous element of the line points to CurPos
+			off_t& PrevLine(PrevLines[i]);
+			if(PrevLine!=MaxOffT)
+			{
+				File1.Seek(PrevLine+sizeof(double)+2*sizeof(size_t));
+				File1<<CurPos;
+			}
+			PrevLine=CurPos;
+
+			// Make the previous element of the column points to CurPos
+			off_t& PrevCol(PrevCols[j]);
+			if(PrevCol!=MaxOffT)
+			{
+				File1.Seek(PrevCol+sizeof(double)+2*sizeof(size_t)+sizeof(off_t));
+				File1<<CurPos;
+			}
+			PrevCol=CurPos;
+
+			// Verify if it is the first element of the line
+			off_t& FirstLine(FirstLines[i]);
+			if(FirstLine==MaxOffT)
+				FirstLine=CurPos;
+
+			// Verify if it is the first element of the column
+			off_t& FirstCol(FirstCols[j]);
+			if(FirstCol==MaxOffT)
+				FirstCol=CurPos;
+
+			// Suppose it the last element in the column and in the line
+			LastCols[j]=CurPos;
+			LastLines[i]=CurPos;
+
+			// Increase Position
+			CurPos+=SizeRec;
+		}
+
+		// Replace File1 by NewFile1
+		File1.Close();
+		NewFile1.Close();
+		RFile::RemoveFile(BaseURI+".rec");
+		RFile::RenameFile(BaseURI+".rec_new",BaseURI+".rec");
+		File1.Open(BaseURI+".rec",RIO::ReadWrite);
+
+		// Write the index
+		Index.Truncate(0);
+		Index.Seek(2*sizeof(size_t));
+		RNumCursor<off_t> FirstLine(FirstLines);
+		RNumCursor<off_t> LastLine(LastLines);
+		RNumCursor<off_t> FirstCol(FirstCols);
+		RNumCursor<off_t> LastCol(LastCols);
+		for(FirstLine.Start(),LastLine.Start(),FirstCol.Start(),LastCol.Start();(!FirstLine.End())||(!FirstCol.End());)
+		{
+			// Write first and last element of the line (or SIZE_MAX if no lines anymore)
+			if(FirstLine.End())
+				Index<<MaxOffT<<MaxOffT;
+			else
+			{
+				Index<<FirstLine()<<LastLine();
+				FirstLine.Next();
+				LastLine.Next();
+			}
+
+			// Write first and last element of the column (or SIZE_MAX if no columns anymore)
+			if(FirstCol.End())
+				Index<<MaxOffT<<MaxOffT;
+			else
+			{
+				Index<<FirstCol()<<LastCol();
+				FirstCol.Next();
+				LastCol.Next();
+			}
+		}
+	}
+}
+
+
+
+//------------------------------------------------------------------------------
 void RMatrixStorage::VerifySize(size_t newlines,size_t newcols,bool fill,double val)
 {
 	if(BaseURI==RString::Null)
@@ -300,227 +545,9 @@ void RMatrixStorage::VerifySize(size_t newlines,size_t newcols,bool fill,double 
 
 
 	if(Sparse||Max)
-	{
-		// Only if the matrix is smaller a be re-created
-		if((NbLines>newlines)||(NbCols>newcols))
-		{
-			RNumContainer<off_t,false> FirstLines(NbLines);   // Remember position of the first element of a line
-			RNumContainer<off_t,false> LastLines(NbLines);    // Remember position of the last element of a line
-			RNumContainer<off_t,false> PrevLines(NbCols);     // Remember position of the previous element of a line
-			RNumContainer<off_t,false> FirstCols(NbCols);     // Remember position of the first element of a column
-			RNumContainer<off_t,false> LastCols(NbCols);      // Remember position of the last element of a column
-			RNumContainer<off_t,false> PrevCols(NbCols);      // Remember position of the previous element of a column
-			for(size_t i=NbLines+1;--i;)
-			{
-				FirstLines.Insert(MaxOffT);
-				LastLines.Insert(MaxOffT);
-			}
-			for(size_t j=NbCols+1;--j;)
-			{
-				FirstCols.Insert(MaxOffT);
-				LastCols.Insert(MaxOffT);
-				PrevCols.Insert(MaxOffT);
-			}
-
-			// Create a new file
-			RBinaryFile NewFile1;
-			off_t CurPos(0); // Current position in the file
-			NewFile1.Open(BaseURI+".rec_new",RIO::Create);
-
-			// Parse File1 and copy in NewFile1 if (i,j) are OK and the value is not null
-			File1.Seek(0);
-			while(!File1.End())
-			{
-				double nb;
-				size_t i,j;
-				off_t ni,nj;
-				File1>>nb>>i>>j>>ni>>nj;
-				if((nb==0.0)||(i>=newlines)||(j>=newcols))
-					continue;
-				NewFile1.Seek(CurPos);
-				NewFile1<<nb<<i<<j<<ni<<nj;
-
-				// Make the previous element of the line points to CurPos
-				off_t& PrevLine(PrevLines[i]);
-				if(PrevLine!=MaxOffT)
-				{
-					File1.Seek(PrevLine+sizeof(double)+2*sizeof(size_t));
-					File1<<CurPos;
-				}
-				PrevLine=CurPos;
-
-				// Make the previous element of the column points to CurPos
-				off_t& PrevCol(PrevCols[j]);
-				if(PrevCol!=MaxOffT)
-				{
-					File1.Seek(PrevCol+sizeof(double)+2*sizeof(size_t)+sizeof(off_t));
-					File1<<CurPos;
-				}
-				PrevCol=CurPos;
-
-				// Verify if it is the first element of the line
-				off_t& FirstLine(FirstLines[i]);
-				if(FirstLine==MaxOffT)
-					FirstLine=CurPos;
-
-				// Verify if it is the first element of the column
-				off_t& FirstCol(FirstCols[j]);
-				if(FirstCol==MaxOffT)
-					FirstCol=CurPos;
-
-				// Suppose it the last element in the column and in the line
-				LastCols[j]=CurPos;
-				LastLines[i]=CurPos;
-
-				// Increase Position
-				CurPos+=SizeRec;
-			}
-
-			// Replace File1 by NewFile1
-			File1.Close();
-			NewFile1.Close();
-			RFile::RemoveFile(BaseURI+".rec");
-			RFile::RenameFile(BaseURI+".rec_new",BaseURI+".rec");
-			File1.Open(BaseURI+".rec",RIO::ReadWrite);
-
-			// Write the index
-			Index.Truncate(0);
-			Index.Seek(2*sizeof(size_t));
-			RNumCursor<off_t> FirstLine(FirstLines);
-			RNumCursor<off_t> LastLine(LastLines);
-			RNumCursor<off_t> FirstCol(FirstCols);
-			RNumCursor<off_t> LastCol(LastCols);
-			for(FirstLine.Start(),LastLine.Start(),FirstCol.Start(),LastCol.Start();(!FirstLine.End())||(!FirstCol.End());)
-			{
-				// Write first and last element of the line (or SIZE_MAX if no lines anymore)
-				if(FirstLine.End())
-					Index<<MaxOffT<<MaxOffT;
-				else
-				{
-					Index<<FirstLine()<<LastLine();
-					FirstLine.Next();
-					LastLine.Next();
-				}
-
-				// Write first and last element of the column (or SIZE_MAX if no columns anymore)
-				if(FirstCol.End())
-					Index<<MaxOffT<<MaxOffT;
-				else
-				{
-					Index<<FirstCol()<<LastCol();
-					FirstCol.Next();
-					LastCol.Next();
-				}
-			}
-		}
-	}
+		VerifySizeSparse(newlines,newcols);
 	else
-	{
-		// Must the lower part be re-created:
-		// 1. Number of columns are reduced : Something was there before and must be there now
-		// 2. Number of columns are extended : Something was not there before and must be there now
-		if( ((newcols<NbCols)&&(newcols<NbLines)&&(newlines>newcols+1)) || ((newcols>NbCols)&&(NbCols<NbLines)&&(newcols>=newlines)) )
-		{
-			// Rec-create the lower part
-			RBinaryFile NewFile1;
-			NewFile1.Open(BaseURI+".lower_new",RIO::Create);
-			File1.Seek(0);
-			size_t maxlines,maxcols;
-			if(NbLines>newlines)
-				maxlines=newlines;
-			else
-				maxcols=NbLines;
-			for(size_t i=0;i<maxlines;i++)
-			{
-				if(i<=NbCols)
-					maxcols=i;
-				else
-					maxcols=NbCols;
-
-				// Read all the existing columns
-				for(size_t j=0;j<=maxcols;j++)
-				{
-					double tmp;
-					File1>>tmp;
-
-					// If column is valid in the matrix -> Write it.
-					if(j<newcols)
-						NewFile1<<tmp;
-				}
-			}
-
-			// Add lines ?
-			for(size_t i=NbLines;i<newlines;i++)
-			{
-				if(i<=newcols)
-					maxcols=i;
-				else
-					maxcols=newcols;
-
-				// Add columns
-				for(size_t j=0;j<=maxcols;j++)
-					NewFile1<<val;
-			}
-
-			// Replace File1 by NewFile1
-			File1.Close();
-			NewFile1.Close();
-			RFile::RemoveFile(BaseURI+".lower");
-			RFile::RenameFile(BaseURI+".lower_new",BaseURI+".lower");
-			File1.Open(BaseURI+".lower",RIO::ReadWrite);
-		}
-		else
-		{
-			// Modify the file.
-
-			// Column of the last element in lower part.
-			size_t maxcols;
-			if(newlines>=newcols)
-				maxcols=newcols;
-			else
-				maxcols=newlines;
-
-			// 1. Lines are reduced -> Truncate the file.
-			// 2. Lines are added or columns extended -> Write at the last position NAN.
-			if(newlines<NbLines)
-			{
-				// Truncate position
-				File1.Truncate((GetLowerPos(newlines,maxcols)+1)*sizeof(double));
-			}
-			else if((newlines>NbLines)||(newcols>NbCols))
-			{
-				if(fill)
-				{
-					// Go through at the first position to add
-					size_t max(NbLines>=NbCols?NbCols:NbLines);
-					size_t pos(GetLowerPos(NbLines,max)+1);
-					File1.Seek(pos*sizeof(double));
-
-					// While the end of the file is not reached, fill the new value
-					for(max=GetLowerPos(newlines,maxcols)+1;pos<max;pos++)
-						File1<<val;
-				}
-				else
-				{
-					File1.Seek((GetLowerPos(newlines,maxcols)+1)*sizeof(double));
-					File1<<val;
-				}
-			}
-			else
-				cerr<<"Problem in RMatrixStorage::VerifySize"<<endl;
-		}
-
-		if(Upper)
-		{
-			// Must the upper part be re-created:  <----
-			// 1. Number of lines are reduced : Something was there before and must be there now
-			// 2. Number of lines are extended : Something was not there before and must be there now
-			if(((newlines<NbLines)&&(newlines<NbCols)&&(newcols>newlines+2)) || ((newlines>NbLines)&&(NbLines<NbCols)&&(newlines!=NbLines+1)&&(newlines+1!=newcols)) )
-				ReCreateUpperFile(newlines,newcols,val);
-			else
-				ReModifyUpperFile(newlines,newcols,fill,val);
-		}
-	}
+		VerifySizeNormal(newlines,newcols,fill,val);
 
 	// Write the size
 	NbLines=newlines;
@@ -557,7 +584,7 @@ void RMatrixStorage::Load(RGenericMatrix& matrix)
 	{
 		// Load the lower part
 		File1.Seek(0);
-		RCursor<RMatrixLine> Lines(static_cast<RMatrix&>(matrix).GetLines());
+		RCursor<RVector> Lines(static_cast<RMatrix&>(matrix).GetLines());
 		for(Lines.Start();!Lines.End();Lines.Next())
 		{
 			RNumCursor<double> Cols(Lines()->GetCols(0,Lines.GetPos()));
@@ -572,8 +599,13 @@ void RMatrixStorage::Load(RGenericMatrix& matrix)
 			if(Pos01)
 				File2>>matrix(0,0);   // Upper contains element (0,0)
 			for(size_t j=1;j<NbCols;j++)
-				for(size_t i=0;i<j;i++)
+			{
+				size_t Max(j>NbLines?NbLines:j);
+				for(size_t i=0;i<Max;i++)
+				{
 					File2>>matrix(i,j);
+				}
+			}
 		}
 	}
 }
@@ -584,7 +616,7 @@ void RMatrixStorage::SaveFull(const RGenericMatrix& matrix)
 {
 	// Load the lower part
 	File1.Seek(0);
-	RCursor<RMatrixLine> Lines(static_cast<const RMatrix&>(matrix).GetLines());
+	RCursor<RVector> Lines(static_cast<const RMatrix&>(matrix).GetLines());
 	for(Lines.Start();!Lines.End();Lines.Next())
 	{
 		RNumCursor<double> Cols(Lines()->GetCols(0,Lines.GetPos()));
@@ -592,16 +624,22 @@ void RMatrixStorage::SaveFull(const RGenericMatrix& matrix)
 			File1<<Cols();
 	}
 
-	// Load the upper part if necessary
+	// Save the upper part if necessary
 	if(Upper)
 	{
 		File2.Truncate(0);
 		File2.Seek(0);
 		if(Pos01)
 			File2<<matrix(0,0);   // Upper contains element (0,0)
+
 		for(size_t j=1;j<NbCols;j++)
-			for(size_t i=0;i<j;i++)
+		{
+			size_t Max(j>NbLines?NbLines:j);
+			for(size_t i=0;i<Max;i++)
+			{
 				File2<<matrix(i,j);
+			}
+		}
 	}
 }
 
@@ -1059,4 +1097,12 @@ bool RMatrixStorage::HasInfo(void) const
 		deb+=max;
 	}
 	return(deb<Index.GetSize());
+}
+
+
+//------------------------------------------------------------------------------
+RMatrixStorage::~RMatrixStorage(void)
+{
+	if(Index.IsOpen())
+		Close();
 }

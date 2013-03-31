@@ -205,6 +205,23 @@ public:
 private:
 
 	/**
+	 * Method called to re-created the lower file.
+	 * @param newlines       New lines.
+	 * @param newcols        New cols.
+	 * @param val            Value used eventually to fill the elements created.
+	 */
+	void ReCreateLowerFile(size_t newlines,size_t newcols,double val);
+
+	/**
+	 * Method called to truncate or extend the lower file.
+	* @param newlines        New line number.
+	* @param newcols         New column number.
+	* @param fill            Elements must be filled with a value.
+	* @param val             Value used eventually to fill the elements created.
+	 */
+	void ReModifyLowerFile(size_t newlines,size_t newcols,bool fill,double val);
+
+	/**
 	 * Method called to re-created the upper file.
 	 * @param newlines       New lines.
 	 * @param newcols        New cols.
@@ -221,6 +238,26 @@ private:
 	 */
 	void ReModifyUpperFile(size_t newlines,size_t newcols,bool fill,double val);
 
+	/**
+	* Verify if a normal matrix has a given size, and increase and reduce the
+	* file if necessary.
+	* @param newlines        New line number.
+	* @param newcols         New column number.
+	* @param fill            Elements must be filled with a value.
+	* @param val             Value used eventually to fill the elements created.
+	*/
+	void VerifySizeNormal(size_t newlines,size_t newcols,bool fill,double val);
+	
+	/**
+	* Verify if a sparse matrix has a given size, and increase and reduce the
+	* file if necessary.
+	* @param newlines        New line number.
+	* @param newcols         New column number.
+	* @param fill            Elements must be filled with a value.
+	* @param val             Value used eventually to fill the elements created.
+	*/
+	void VerifySizeSparse(size_t newlines,size_t newcols);
+
 public:
 
 	/**
@@ -232,6 +269,7 @@ public:
 	*   files are re-created.
 	* - When a sparse matrix is reduced, a new file is re-created and the
 	*   unnecessary elements are removed.
+	* - When a sparse matrix is extended, no values are filled.
 	* @param newlines        New line number.
 	* @param newcols         New column number.
 	* @param fill            Elements must be filled with a value.
@@ -332,6 +370,11 @@ public:
 	 * See if there are some information contained in the ".info" file.
 	 */
 	bool HasInfo(void) const;
+
+	/**
+	 * Destructor.
+	 */
+	~RMatrixStorage(void);
 };
 
 

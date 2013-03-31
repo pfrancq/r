@@ -49,7 +49,7 @@ RNotification::RNotification(const RCString& name,RObject* sender)
 
 
 //------------------------------------------------------------------------------
-RNotification::RNotification(hNotification handle,RObject* sender)
+RNotification::RNotification(const hNotification handle,RObject* sender)
 	: Handle(handle), Sender(sender), Receiver(0)
 {
 }

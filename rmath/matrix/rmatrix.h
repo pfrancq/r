@@ -72,7 +72,7 @@ namespace R{
 * c=a*b;
 * c=(2*a)+(b*a);
 *
-* RCursor<RMatrixLine> Lines(c.GetLines());
+* RCursor<RVector> Lines(c.GetLines());
 * for(Lines.Start();!Lines.End();Lines.Next())
 * {
 * 	RNumCursor<double> Cols(Lines()->GetCols());
@@ -84,7 +84,7 @@ namespace R{
 * @short Matrix.
 * @author Pascal Francq
 */
-class RMatrix : public RGenericMatrix, protected RContainer<RMatrixLine,true,false>
+class RMatrix : public RGenericMatrix, protected RContainer<RVector,true,false>
 {
 protected:
 
@@ -114,6 +114,13 @@ public:
 	* @param matrix          Matrix.
 	*/
 	RMatrix(const RMatrix& matrix);
+
+	/**
+	 * Compare method used by RContainer.
+    * @param matrix          Matrix to compare with.
+    * @return always -1.
+    */
+	int Compare(const RMatrix& matrix) const;
 
 protected:
 
@@ -152,7 +159,7 @@ public:
 	/**
 	* Get the number of lines in the matrix.
 	*/
-	RCursor<RMatrixLine> GetLines(void) const {return(RCursor<RMatrixLine>(*this));}
+	RCursor<RVector> GetLines(void) const {return(RCursor<RVector>(*this));}
 
 	/**
 	* Make the matrix symmetric by copying the "left-upper" part in the
@@ -178,13 +185,13 @@ public:
  	 * Return the vector at a given line from the matrix (const version).
  	 * @param i               Line number of the vector.
  	 */
- 	const RMatrixLine* operator[](size_t i) const;
+ 	const RVector* operator[](size_t i) const;
 
  	/**
  	 * Return the vector at a given line from the matrix.
  	 * @param i               Line number of the vector.
  	 */
- 	RMatrixLine* operator[](size_t i);
+ 	RVector* operator[](size_t i);
 
 	/**
 	* Assign operator.
@@ -209,6 +216,12 @@ public:
 	* @param arg             Number.
 	*/
 	RMatrix& operator*=(const double arg);
+
+	/**
+	* Divide a matrix with a given number.
+	* @param arg             Number.
+	*/
+	RMatrix& operator/=(const double arg);
 
 	/**
 	* Multiply a matrix with the current one. It is important to remember that
@@ -269,6 +282,24 @@ RMatrix operator*(const RMatrix& arg1,const double arg2);
 * @param arg2                Matrix.
 */
 RMatrix operator*(const double arg1,const RMatrix& arg2);
+
+
+//------------------------------------------------------------------------------
+/**
+* Division of a matrix and a number.
+* @param arg1                Matrix.
+* @param arg2                Number.
+*/
+RMatrix operator/(const RMatrix& arg1,const double arg2);
+
+
+//------------------------------------------------------------------------------
+/**
+* Division of a matrix and a number.
+* @param arg1                Number.
+* @param arg2                Matrix.
+*/
+RMatrix operator/(const double arg1,const RMatrix& arg2);
 
 
 //------------------------------------------------------------------------------

@@ -59,12 +59,19 @@ RLowerTriangularMatrix::RLowerTriangularMatrix(const RLowerTriangularMatrix& mat
 
 
 //------------------------------------------------------------------------------
+int RLowerTriangularMatrix::Compare(const RLowerTriangularMatrix&) const
+{
+	return(-1);
+}
+
+
+//------------------------------------------------------------------------------
 void RLowerTriangularMatrix::Create(void)
 {
-	RMatrixLine* ptr;
+	RVector* ptr;
 	for(size_t i=0;i<NbLines;i++)
 	{
-		InsertPtrAt(ptr=new RMatrixLine(i+1),i,true);
+		InsertPtrAt(ptr=new RVector(i+1),i,true);
 		ptr->InsertAt(NAN,i,true);
 	}
 	MustCreate=false;
@@ -82,13 +89,13 @@ void RLowerTriangularMatrix::VerifySize(size_t newlines,size_t newcols,bool fill
 	// Verify the lines
 	if(newlines>NbLines)
 	{
-		RMatrixLine* ptr;
+		RVector* ptr;
 
 		// New lines must be added.
 		VerifyTab(newlines);
 		for(size_t i=NbLines;i<newlines;i++)
 		{
-			InsertPtrAt(ptr=new RMatrixLine(i+1),i,true);
+			InsertPtrAt(ptr=new RVector(i+1),i,true);
 			if(fill)
 			{
 				for(size_t j=0;j<=i;j++)
@@ -113,7 +120,7 @@ void RLowerTriangularMatrix::VerifySize(size_t newlines,size_t newcols,bool fill
 //------------------------------------------------------------------------------
 double RLowerTriangularMatrix::operator()(size_t i,size_t j) const
 {
-	if((i>NbLines)||(j>NbCols))
+	if((i>=NbLines)||(j>=NbCols))
 		throw std::range_error("RLowerTriangularMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
 	if(j>i)
 		return(0.0);
@@ -125,7 +132,7 @@ double RLowerTriangularMatrix::operator()(size_t i,size_t j) const
 //------------------------------------------------------------------------------
 double& RLowerTriangularMatrix::operator()(size_t i,size_t j)
 {
-	if((i>NbLines)||(j>NbCols))
+	if((i>=NbLines)||(j>=NbCols))
 		throw std::range_error("RLowerTriangularMatrix::operator() : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
 	if(j>i)
 		throw std::range_error("RLowerTriangularMatrix::operator() : Invalid column "+RString::Number(j)+" for line "+RString::Number(i));

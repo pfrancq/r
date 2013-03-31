@@ -71,6 +71,13 @@ public:
 	RSparseSymmetricMatrix(const RSparseSymmetricMatrix& src);
 
 	/**
+	 * Compare method used by RContainer.
+    * @param matrix          Matrix to compare with.
+    * @return always -1.
+    */
+	int Compare(const RSparseSymmetricMatrix& matrix) const;
+
+	/**
 	 * Get the type of the matrix.
 	 */
 	virtual tType GetType(void) const {return(tSparseSymmetric);}

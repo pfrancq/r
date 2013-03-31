@@ -30,8 +30,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <r2additivechoquet.h>
-
-#include "rgenericmatrix.h"
+#include <rgenericmatrix.h>
 using namespace std;
 using namespace R;
 
@@ -44,8 +43,8 @@ using namespace R;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-R2AdditiveChoquet::R2AdditiveChoquet(size_t n)
-	: NbCriteria(n), Params(n), Verified(false)
+R2AdditiveChoquet::R2AdditiveChoquet(size_t n,const RString& name)
+	: Name(name), NbCriteria(n), Params(n), Verified(false)
 {
 	if(!NbCriteria)
 		throw std::range_error("R2AdditiveChoquet::R2AdditiveChoquet : Null number of criteria");
@@ -53,12 +52,26 @@ R2AdditiveChoquet::R2AdditiveChoquet(size_t n)
 
 
 //------------------------------------------------------------------------------
-R2AdditiveChoquet::R2AdditiveChoquet(size_t n,RSymmetricMatrix& params)
-	: NbCriteria(n),Params(n), Verified(false)
+R2AdditiveChoquet::R2AdditiveChoquet(size_t n,RSymmetricMatrix& params,const RString& name)
+	: Name(name), NbCriteria(n),Params(n), Verified(false)
 {
 	if(!NbCriteria)
 		throw std::range_error("R2AdditiveChoquet::R2AdditiveChoquet : Null number of criteria");
 	SetParams(params);
+}
+
+
+//------------------------------------------------------------------------------
+int R2AdditiveChoquet::Compare(const R2AdditiveChoquet& choquet) const
+{
+	return(Name.Compare(choquet.Name));
+}
+
+
+//------------------------------------------------------------------------------
+int R2AdditiveChoquet::Compare(const RString& name) const
+{
+	return(Name.Compare(name));
 }
 
 

@@ -36,7 +36,7 @@
 // include files for R Project
 #include <rstring.h>
 #include <rcontainer.h>
-#include <rvector.h>
+#include <rnumcontainer.h>
 #include <rtextfile.h>
 
 
@@ -80,7 +80,7 @@ class RWorksheet
 	/**
 	 * The values stored as columns of numbers.
 	 */
-	RContainer<RVector,true,false> Values;
+	RContainer<RNumContainer<double,false>,true,false> Values;
 
 	/**
 	 * Number of lines.
@@ -95,7 +95,7 @@ protected:
 	 * @param line           Line.
 	 * @return Reference to the vector corresponding to the column.
 	 */
-	inline RVector& Verify(size_t col,size_t line);
+	inline RNumContainer<double,false>& Verify(size_t col,size_t line);
 
 public:
 
@@ -186,14 +186,14 @@ public:
 	 * @param col            Column.
 	 * @return a reference to the vector.
 	 */
-	const RVector& GetCol(size_t col) const;
+	const RNumContainer<double,false>& GetCol(size_t col) const;
 
 	/**
 	 * Get the values of a column.
 	 * @param col            Column.
 	 * @return a reference to the vector.
 	 */
-	RVector& GetCol(size_t col);
+	RNumContainer<double,false>& GetCol(size_t col);
 
 	/**
 	 * Save the statistics in an opened file as CVS file.

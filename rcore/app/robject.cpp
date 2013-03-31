@@ -63,6 +63,13 @@ int RObject::Compare(const RObject* obj) const
 
 
 //-----------------------------------------------------------------------------
+void RObject::SetName(const RString& name)
+{
+	Name=name;
+}
+
+
+//-----------------------------------------------------------------------------
 void RObject::HandlerNotFound(const RNotification& notification)
 {
 	std::cout<<Name<<" : Message '"<<notification.GetName()<<"' not treated."<<std::endl;

@@ -76,7 +76,7 @@ class RNotification
 	/**
 	* Type of the notification.
 	*/
-	hNotification Handle;
+	const hNotification Handle;
 
 	/**
 	* Object that has send the notification.
@@ -102,7 +102,7 @@ public:
 	* @param handle          Handle of the notification.
 	* @param sender          Object sending the notification.
 	*/
-	RNotification(hNotification handle,RObject* sender);
+	RNotification(const hNotification handle,RObject* sender);
 
 	/**
 	* Get the name of a notification.

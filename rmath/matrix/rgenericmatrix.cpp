@@ -64,6 +64,13 @@ RGenericMatrix::RGenericMatrix(const RGenericMatrix& matrix)
 
 
 //------------------------------------------------------------------------------
+int RGenericMatrix::Compare(const RGenericMatrix&) const
+{
+	return(-1);
+}
+
+
+//------------------------------------------------------------------------------
 void RGenericMatrix::Clear(double val,bool)
 {
 	Init(val);

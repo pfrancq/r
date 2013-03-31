@@ -58,6 +58,15 @@ RSparseSymmetricMatrix::RSparseSymmetricMatrix(size_t size,bool alllines,size_t 
 RSparseSymmetricMatrix::RSparseSymmetricMatrix(const RSparseSymmetricMatrix& src)
 	: RSparseMatrix(src)
 {
+
+
+}
+
+
+//-----------------------------------------------------------------------------
+int RSparseSymmetricMatrix::Compare(const RSparseSymmetricMatrix&) const
+{
+	return(-1);
 }
 
 
@@ -72,7 +81,7 @@ RSparseSymmetricMatrix& RSparseSymmetricMatrix::operator=(const RSparseSymmetric
 //------------------------------------------------------------------------------
 double RSparseSymmetricMatrix::operator()(size_t i,size_t j) const
 {
-	if((i>NbLines)||(j>NbCols))
+	if((i>=NbLines)||(j>=NbCols))
 		throw std::range_error("RSparseSymmetricMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
 
 	if(j>i)
@@ -105,7 +114,7 @@ double RSparseSymmetricMatrix::operator()(size_t i,size_t j) const
 //------------------------------------------------------------------------------
 double& RSparseSymmetricMatrix::operator()(size_t i,size_t j)
 {
-	if((i>NbLines)||(j>NbCols))
+	if((i>=NbLines)||(j>=NbCols))
 		throw std::range_error("RSparseSymmetricMatrix::operator() : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
 
 	if(j>i)

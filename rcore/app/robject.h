@@ -122,6 +122,12 @@ public:
 	inline RString GetName(void) const {return(Name);}
 
 	/**
+	 * Set the name of the object.
+    * @param name            Name.
+    */
+	void SetName(const RString& name);
+
+	/**
 	* This is the handler that is called when an object does not find any
 	* handler for a sended notification. By default, it prints the name of the
 	* message.
@@ -138,7 +144,7 @@ public:
 	* Post a notification to the notification center.
 	* @param handle          Handle of the notification.
 	*/
-	void PostNotification(hNotification handle)
+	void PostNotification(const hNotification handle)
 	{
 		NotificationCenter.PostNotification(RNotification(handle,this));
 	}
@@ -158,7 +164,7 @@ public:
 	* @param handle          Handle of the notification.
 	* @param data            Data associated to the notification.
 	*/
-	template<class T> void PostNotification(hNotification handle,T data)
+	template<class T> void PostNotification(const hNotification handle,T data)
 	{
 		NotificationCenter.PostNotification(RNotificationData<T>(handle,this,data));
 	}
@@ -179,8 +185,11 @@ public:
 	* @param handler         Handler of the notification.
 	* @param handle          Handle of the notification.
 	* @param object          Object posting the notification.
+	*
+	* \warning The same combination of (handler,handle,object) can be inserted
+	* multiple times.
 	*/
-	inline void InsertObserver(tNotificationHandler handler,hNotification handle,RObject* object)
+	inline void InsertObserver(tNotificationHandler handler,const hNotification handle,RObject* object)
 	{
 		NotificationCenter.InsertObserver(handler,this,handle,object);
 	}
@@ -190,6 +199,9 @@ public:
 	* @param handler         Handler of the notification.
 	* @param name            Name of the notification.
 	* @param object          Object emitting the notification.
+	*
+	* \warning The same combination of (handler,name,object) can be inserted
+	* multiple times.
 	*/
 	inline void InsertObserver(tNotificationHandler handler,const RCString& name,RObject* object)
 	{
@@ -200,8 +212,11 @@ public:
 	* Add a handler for a particular notification of every object.
 	* @param handler         Handler of the notification.
 	* @param handle          Handle of the notification.
+	*
+	* \warning The same combination of (handler,handle) can be inserted multiple
+	*  times.
 	*/
-	inline void InsertObserver(tNotificationHandler handler,hNotification handle)
+	inline void InsertObserver(tNotificationHandler handler,const hNotification handle)
 	{
 		NotificationCenter.InsertObserver(handler,this,handle,0);
 	}
@@ -210,6 +225,9 @@ public:
 	* Add a handler for a particular notification of every object.
 	* @param handler         Handler of the notification.
 	* @param name            Name of the notification.
+	*
+	* \warning The same combination of (handler,name) can be inserted multiple
+	* times.
 	*/
 	inline void InsertObserver(tNotificationHandler handler,const RCString& name)
 	{
@@ -220,6 +238,9 @@ public:
 	* Add a handler for every notification of a particular object.
 	* @param handler         Handler of the notification.
 	* @param object          Object posting the notification.
+	*
+	* \warning The same combination of (handler,object) can be inserted multiple
+	* times.
 	*/
 	inline void InsertObserver(tNotificationHandler handler,RObject* object)
 	{
@@ -229,6 +250,8 @@ public:
 	/**
 	* Add a handler for every notification of every object.
 	* @param handler         Handler of the notification.
+	*
+	* \warning The same handler can be inserted multiple times.
 	*/
 	inline void InsertObserver(tNotificationHandler handler)
 	{
@@ -241,6 +264,39 @@ public:
 	inline void DeleteObserver(void)
 	{
 		NotificationCenter.DeleteObserver(this);
+
+	}
+	/**
+	* Delete a given handler.
+	* @param handle          Handle of the notification.
+	* @param object          Object which notifications must be handle.
+	* Several possibilities exists:
+	* -# handle is not null, but object is. All handlers defined for the
+	*    particular notification are deleted.
+	* -# handle is null, but object isn't. All handlers defined for the object
+	*    are deleted.
+	* -# handle and object are null. All default handlers are deleted.
+	*/
+	inline void DeleteObserver(const hNotification handle,RObject* object)
+	{
+		NotificationCenter.DeleteObserver(this,handle,object);
+	}
+
+	/**
+	* Delete a given handler.
+	* @param observer        Observer of the handle.
+	* @param name            Name of the notification to handle.
+	* @param object          Object which notifications must be handle.
+	* Several possibilities exists:
+	* -# name is not null, but object is. All handlers defined for the
+	*    particular notification are deleted.
+	* -# name is null, but object isn't. All handlers defined for the object
+	*    are deleted.
+	* -# name and object are null. All default handlers are deleted.
+	*/
+	inline void DeleteObserver(const RCString& name,RObject* object)
+	{
+		DeleteObserver(GetNotificationHandle(name),object);
 	}
 
 	/**
@@ -257,7 +313,7 @@ public:
 	* Get the name of a notification.
 	* @param handle          Handle of the notification.
 	*/
-	RCString GetNotificationName(hNotification handle) const
+	RCString GetNotificationName(const hNotification handle) const
 	{
 		return(NotificationCenter.GetNotificationName(handle));
 	}

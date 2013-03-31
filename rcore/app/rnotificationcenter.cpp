@@ -56,13 +56,19 @@ struct IListener
 public:
 	tNotificationHandler Handler;          // The handler.
 	RObject* Observer;                     // The observer.
-	hNotification Handle;                  // The notification.
+	const hNotification Handle;            // The notification.
 	RObject* Object;                       // Eventually, a particular object
 
-	IListener(tNotificationHandler handler,RObject* observer,hNotification handle,RObject* object)
+	IListener(tNotificationHandler handler,RObject* observer,const hNotification handle,RObject* object)
 		: Handler(handler), Observer(observer), Handle(handle), Object(object) {}
-	int Compare(const IListener& listener) const {return(ComparePtrs(this,&listener));}
-	int Compare(const IListener* listener) const {return(ComparePtrs(this,listener));}
+	int Compare(const IListener& listener) const
+	{
+		return(ComparePtrs(this,&listener));
+	}
+	int Compare(const IListener* listener) const
+	{
+		return(ComparePtrs(this,listener));
+	}
 };
 
 
@@ -136,12 +142,12 @@ struct IObjects : public RContainer<IListener,true,true>
 
 	int Compare(const IObjects& object) const {return(ComparePtrs(Object,object.Object));}
 	int Compare(RObject* object) const {return(ComparePtrs(Object,object));}
-	void DeleteObserver(const RObject* observer,hNotification type);
+	void DeleteObserver(const RObject* observer,const hNotification type);
 };
 
 
 //-----------------------------------------------------------------------------
-void IObjects::DeleteObserver(const RObject* observer,hNotification handle)
+void IObjects::DeleteObserver(const RObject* observer,const hNotification handle)
 {
 	RContainer<IListener,false,false> Dels(20);
 	RCursor<IListener> List(*this);
@@ -207,7 +213,7 @@ RCString RNotificationCenter::GetNotificationName(hNotification handle) const
 
 
 //-----------------------------------------------------------------------------
-void RNotificationCenter::InsertObserver(tNotificationHandler handler,RObject* observer,hNotification handle,RObject* object)
+void RNotificationCenter::InsertObserver(tNotificationHandler handler,RObject* observer,const hNotification handle,RObject* object)
 {
 	// Verify that the observer is not null
 	RReturnIfFail(observer);
@@ -222,12 +228,20 @@ void RNotificationCenter::InsertObserver(tNotificationHandler handler,RObject* o
 	{
 		// Notification to track does not depend of a particular object
 		if(!handle)
-			Data->Defaults.InsertPtr(listener);          // Observer catch all messages
+		{
+			if(!Data->Defaults.IsIn(listener))
+				Data->Defaults.InsertPtr(listener);          // Observer catch all messages
+			else
+				delete listener;
+		}
 		else
 		{
 			// Observer catch a given message from all objects
 			INotifications* msg=reinterpret_cast<INotifications*>(handle);
-			msg->InsertPtr(listener);
+			if(!msg->IsIn(listener))
+				msg->InsertPtr(listener);
+			else
+				delete listener;
 		}
 	}
 	else
@@ -241,7 +255,10 @@ void RNotificationCenter::InsertObserver(tNotificationHandler handler,RObject* o
 		}
 		else
 			obj=static_cast<IObjects*>(object->Handlers);
-		obj->InsertPtr(listener);
+		if(!obj->IsIn(listener))
+			obj->InsertPtr(listener);
+		else
+			delete listener;
 	}
 }
 
@@ -325,7 +342,7 @@ void RNotificationCenter::DeleteObserver(RObject* observer)
 
 
 //-----------------------------------------------------------------------------
-void RNotificationCenter::DeleteObserver(RObject* observer,hNotification handle,RObject* object)
+void RNotificationCenter::DeleteObserver(RObject* observer,const hNotification handle,RObject* object)
 {
 	// Verify that the observer is not null
 	RReturnIfFail(observer);
