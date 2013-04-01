@@ -327,8 +327,8 @@ template<class cGroup,class cObj,class cGroups>
 	for(Group.Start();!Group.End();Group.Next())
 	{
 		// Init yk(t) to zero
-		RMatrixLine* hk(H[Group()->GetId()]);
-		RMatrixLine* ykt(Y[Group()->GetId()]);
+		RVector* hk(H[Group()->GetId()]);
+		RVector* ykt(Y[Group()->GetId()]);
 		RNumCursor<double> ykt_i(ykt->GetCols());
 
 		// Compute first iteration : yk(t)=(1/D)*hk
@@ -350,7 +350,7 @@ template<class cGroup,class cObj,class cGroups>
 			avg=0;
 
 			// Compute yk(t')
-			RNumCursor<double> yktprim_i(Temp);
+			RNumCursor<double> yktprim_i(Temp.GetCols());
 			for(yktprim_i.Start(),Objs.Start();(!yktprim_i.End())&&(!Objs.End());yktprim_i.Next())  // Objs()->GetId must always be equal to yktprim_i.GetPos()
 			{
 				// Not a valid column ?
