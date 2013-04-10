@@ -43,63 +43,13 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 RVertex::RVertex(size_t id,size_t nb)
-	: Id(id), Edges(nb,nb/2)
+	: RGenericVertex<RVertex,REdge>(id,nb)
 {
 }
 
 
 //------------------------------------------------------------------------------
 RVertex::RVertex(const RVertex& v)
-	: Edges(v.Edges.GetMaxNb(),v.Edges.GetIncNb())
-{
-}
-
-
-//------------------------------------------------------------------------------
-RCursor<REdge> RVertex::GetEdges(void) const
-{
-	return(RCursor<REdge>(Edges));
-}
-
-
-//------------------------------------------------------------------------------
-REdge* RVertex::GetEdge(size_t id) const
-{
-	RCursor<REdge> Cur(Edges);
-	for(Cur.Start();!Cur.End();Cur.Next())
-		if(Cur()->Connects(id))
-			return(Cur());
-	return(0);
-}
-
-
-//------------------------------------------------------------------------------
-REdge* RVertex::GetEdgeTo(size_t id) const
-{
-	RCursor<REdge> Cur(Edges);
-	for(Cur.Start();!Cur.End();Cur.Next())
-	{
-		cout<<"  Search "<<id<<"=?="<<Cur()->GetTo()->GetId()<<endl;
-		if(Cur()->GetTo()->GetId()==id)
-			return(Cur());
-	}
-	cout<<"   Not Found"<<endl;
-	return(0);
-}
-
-
-//------------------------------------------------------------------------------
-REdge* RVertex::GetEdgeFrom(size_t id) const
-{
-	RCursor<REdge> Cur(Edges);
-	for(Cur.Start();!Cur.End();Cur.Next())
-		if(Cur()->GetFrom()->GetId()==id)
-			return(Cur());
-	return(0);
-}
-
-
-//------------------------------------------------------------------------------
-RVertex::~RVertex(void)
+	: RGenericVertex<RVertex,REdge>(v)
 {
 }

@@ -176,7 +176,7 @@ tCoord RGeoInfoConnection::ComputeMinDist(RLayout* layout)
 	for(e.Start();!e.End();e.Next())
 	{
 		Dist+=e()->GetWeight();
-		Part Search(e()->GetVertex1()->GetId(),e()->GetVertex2()->GetId());
+		Part Search(e()->GetFrom()->GetId(),e()->GetTo()->GetId());
 		Part* Net(Local.GetPtr(Search));
 		g1=(*layout)[Net->Obj1];
 		g2=(*layout)[Net->Obj2];

@@ -150,8 +150,8 @@ template<class V,class E,bool bAllocVertices,bool bAllocEdges>
 			if(e()->GetWeight()<bestw)
 			{
 				// Test if only one is in g
-				b1=g->Vertices.IsIn(e()->GetVertex1()->GetId());
-				b2=g->Vertices.IsIn(e()->GetVertex2()->GetId());
+				b1=g->Vertices.IsIn(e()->GetFrom()->GetId());
+				b2=g->Vertices.IsIn(e()->GetTo()->GetId());
 				if((b1&&!b2)||(!b1&&b2))
 				{
 					best=e();
@@ -164,13 +164,13 @@ template<class V,class E,bool bAllocVertices,bool bAllocEdges>
 		// Insert the vertex
 		if(b)
 		{
-			v1=g->Vertices.GetPtr(best->GetVertex1()->GetId());
-			v2=g->CreateVertex(best->GetVertex2()->GetId());
+			v1=g->Vertices.GetPtr(best->GetFrom()->GetId());
+			v2=g->CreateVertex(best->GetTo()->GetId());
 		}
 		else
 		{
-			v1=g->Vertices.GetPtr(best->GetVertex2()->GetId());
-			v2=g->CreateVertex(best->GetVertex1()->GetId());
+			v1=g->Vertices.GetPtr(best->GetTo()->GetId());
+			v2=g->CreateVertex(best->GetFrom()->GetId());
 		}
 
 		// Insert the Edge

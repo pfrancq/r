@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	REdge.h
+	RGenericEdge.h
 
-	Edge of a graph - Header.
+	Generic edge of a graph - Header.
 
 	Copyright 2001-2008 by Pascal Francq (pascal@francq.info).
 	Copyright 2001-2011 by the Université Libre de Bruxelles (ULB).
@@ -28,13 +28,13 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef REdge_H
-#define REdge_H
+#ifndef RGenericEdge_H
+#define RGenericEdge_H
 
 
 //------------------------------------------------------------------------------
 // include files for R
-#include <rgenericedge.h>
+#include <rexception.h>
 
 
 //------------------------------------------------------------------------------
@@ -43,20 +43,40 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// forward class declaration
-class RVertex;
+//	forward declaration
+template<class V,class E> class RGenericVertex;
 
 
 //------------------------------------------------------------------------------
 /**
-* The RVertex class provides a representation for an edge from one vertex to
-* another one in a given graph. The edge is directed but may be considered as
-* undirected in some situations.
+* The RGenericVertex class provides a representation for a generic edge from one
+*  vertex to another one in a given graph. The edge is directed but may be
+* considered as undirected in some situations.
+* @tparam V                  Class representing a vertex. It must inherits from
+*                            RVertex.
+* @tparam E                  Class representing an edge. It must inherits from
+*                            REdge.
 * @author Pascal Francq
-* @short Edge.
+* @short Generic Edge.
 */
-class REdge : public RGenericEdge<RVertex,REdge>
+template<class V,class E>
+	class RGenericEdge
 {
+	/**
+	* Origin of the edge.
+	*/
+	V* From;
+
+	/**
+	* Destination of the edge.
+	*/
+	V* To;
+
+	/**
+	* Weight of the edge.
+	*/
+	double Weight;
+
 public:
 
 	/**
@@ -65,7 +85,7 @@ public:
 	* @param t               Vertex ending the edge.
 	* @param w               Weight
 	*/
-	REdge(RVertex* f,RVertex* t,double w);
+	RGenericEdge(V* f,V* t,double w);
 
 	/**
 	* The methods used to compare two edges. The function returns the same type
@@ -73,8 +93,42 @@ public:
 	* @see R::RContainer.
 	* @param e               Edge used for the comparison.
 	*/
-	int Compare(const REdge& e) const {return(this!=&e);}
+	int Compare(const RGenericEdge& e) const {return(this!=&e);}
+
+	/**
+	* @return a pointer over the starting vertex of the edge.
+	*/
+	V* GetFrom(void) const {return(From);}
+
+	/**
+	* @return pointer over the ending vertex of the edge.
+	*/
+	V* GetTo(void) const {return(To);}
+
+	/**
+	 * @return true if the edge connects the node given by the identifier.
+	 * @param id             Identifier.
+	 */
+	bool Connects(size_t id) const;
+
+	/**
+	* Get the weight of the edge.
+	*/
+	double GetWeight(void) const {return(Weight);}
+
+	/**
+	* Destruct the edge.
+	*/
+	virtual ~RGenericEdge(void);
+
+	// friend classes
+	friend class RGenericVertex<V,E>;
 };
+
+
+//-----------------------------------------------------------------------------
+// Template implementation
+#include <rgenericedge.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

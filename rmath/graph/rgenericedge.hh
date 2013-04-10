@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	REdge.cpp
+	RGenericEdge.cpp
 
-	Edge of a graph  - Implementation.
+	Generic edge of a graph  - Inline Implementation.
 
 	Copyright 2001-2012 by Pascal Francq (pascal@francq.info).
 	Copyright 2001-2008 by the Université Libre de Bruxelles (ULB).
@@ -27,22 +27,44 @@
 
 
 
-//------------------------------------------------------------------------------
-// include files for R Project
-#include <redge.h>
-#include <rvertex.h>
-using namespace R;
-
-
 
 //------------------------------------------------------------------------------
 //
-// class REdge
+// class RGenericEdge
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-REdge::REdge(RVertex* f,RVertex* t,const double w)
-	: RGenericEdge<RVertex,REdge>(f,t,w)
+template<class V,class E>
+	RGenericEdge<V,E>::RGenericEdge(V* f,V* t,const double w)
+		: From(f), To(t), Weight(w)
 {
+	if((!From)||(!To))
+		throw RException("REdge::REdge(RVertex*,RVertex*,const double) : Null vertices");
+
+	// Insert the edge in the corresponding vertices
+	From->Edges.InsertPtr(static_cast<E*>(this));
+	To->Edges.InsertPtr(static_cast<E*>(this));
+}
+
+
+//------------------------------------------------------------------------------
+template<class V,class E>
+	bool RGenericEdge<V,E>::Connects(size_t id) const
+{
+	if((!From)||(!To))
+		return(false);
+	if((From->GetId()==id)||(From->GetId()==id))
+		return(true);
+	return(false);
+}
+
+
+//------------------------------------------------------------------------------
+template<class V,class E>
+	RGenericEdge<V,E>::~RGenericEdge(void)
+{
+	// Delete the edge in the corresponding vertices
+	//From->Edges.DeletePtr(*this);
+	//To->Edges.DeletePtr(*this);
 }

@@ -34,9 +34,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rcontainer.h>
-#include <rcursor.h>
 #include <redge.h>
+#include <rgenericvertex.h>
 
 
 //------------------------------------------------------------------------------
@@ -50,20 +49,8 @@ namespace R{
 * @author Pascal Francq
 * @short Vertex.
 */
-class RVertex
+class RVertex : public RGenericVertex<RVertex,REdge>
 {
-protected:
-
-	/**
-	* Identifier of the vertex.
-	*/
-	size_t Id;
-
-	/**
-	* All the edges connecting the given vertex.
-	*/
-	RContainer<REdge,false,false> Edges;
-
 public:
 
 	/**
@@ -85,63 +72,6 @@ public:
 	* @param v               Vertex used for the comparison.
 	*/
 	int Compare(const RVertex& v) const {return(Id-v.Id);}
-
-	/**
-	* Is used to compare a vertex and an identifier. The function returns
-	* the same type of information than the strcmp function from the standard
-	* C library.
-	* @param i               Identifier used for the comparison.
-	*/
-	int Compare(const size_t i) const {return(Id-i);}
-
-	/**
-	* Get the identifier of the vertex.
-	*/
-	size_t GetId(void) const {return(Id);}
-
-	/**
-	* Get a cursor over the edges of the graph.
-	*/
-	RCursor<REdge> GetEdges(void) const;
-
-	/**
-	 * Get the number of edges to which the vertex is connected.
-    * @return the number of adjacent edges.
-    */
-	size_t GetNbEdges(void) const {return(Edges.GetNb());}
-
-	/**
-	 * @return Pointer to the edge that connects the current node with a node
-	 * given by the identifier. If no edge is found, the method returns 0.
-	 * @note This methods supposes an undirected graph.
-	 * @param id             Identifier of the node.
-	 */
-	REdge* GetEdge(size_t id) const;
-
-	/**
-	 * @return Pointer to the edge that connects the current node to a node
-	 * given by the identifier. If no edge is found, the method returns 0.
-	 * @note This methods supposes an directed graph.
-	 * @param id             Identifier of the node.
-	 */
-	REdge* GetEdgeTo(size_t id) const;
-
-	/**
-	 * @return Pointer to the edge that connects a node given by the identifier
-	 * to the current node. If no edge is found, the method returns 0.
-	 * @note This methods supposes an directed graph.
-	 * @param id             Identifier of the node.
-	 */
-	REdge* GetEdgeFrom(size_t id) const;
-
-	/**
-	* Destruct the vertex.
-	*/
-	virtual ~RVertex(void);
-
-	// friend classes
-//	friend class RGraph;
-	friend class REdge;
 };
 
 
