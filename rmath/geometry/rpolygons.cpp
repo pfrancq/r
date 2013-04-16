@@ -98,10 +98,10 @@ void RPolygons::PutPoints(RPoints& points) const
 	points.Clear();
 	RCursor<RPolygon> poly(*this);
 	for(poly.Start();!poly.End();poly.Next())
-		poly()->AddPoints(points);
+		poly()->AddVertices(points);
 	for(poly.Start();!poly.End();poly.Next())
 	{
-		RCursor<RPoint> point(*poly());
+		RCursor<RPoint> point(poly()->GetVertices());
 		for(point.Start();!point.End();point.Next())
 		{
 			tmp.X=point()->X;
@@ -141,7 +141,7 @@ void RPolygons::Union(RPolygon& upoly) const
 	// Find the most (left,bottom) point -> curpt,curpoly -> next pt on the right
 	last=first=next=pts.FindBottomLeft();
 	ins=new RPoint(next);
-	upoly.InsertPtr(ins);
+	upoly.InsertVertex(ins);
 	next=pts.FindRight(next,*this);
 	FromDir=dLeft;
 
@@ -149,7 +149,7 @@ void RPolygons::Union(RPolygon& upoly) const
 	while(next!=first)
 	{
 		ins=new RPoint(next);
-		upoly.InsertPtr(ins);
+		upoly.InsertVertex(ins);
 		last=next;
 
 		switch(FromDir)
@@ -165,7 +165,7 @@ void RPolygons::Union(RPolygon& upoly) const
 				next=pts.FindRight(last,*this);
 				if(next.IsValid())
 				{
-					upoly.DeletePtr(ins);
+					upoly.DeleteVertex(ins);
 					break;
 				}
 				next=pts.FindUp(last,*this);
@@ -187,7 +187,7 @@ void RPolygons::Union(RPolygon& upoly) const
 				next=pts.FindLeft(last,*this);
 				if(next.IsValid())
 				{
-					upoly.DeletePtr(ins);
+					upoly.DeleteVertex(ins);
 					break;
 				}
 				next=pts.FindBottom(last,*this);
@@ -209,7 +209,7 @@ void RPolygons::Union(RPolygon& upoly) const
 				next=pts.FindBottom(last,*this);
 				if(next.IsValid())
 				{
-					upoly.DeletePtr(ins);
+					upoly.DeleteVertex(ins);
 					break;
 				}
 				next=pts.FindRight(last,*this);
@@ -231,7 +231,7 @@ void RPolygons::Union(RPolygon& upoly) const
 				next=pts.FindUp(last,*this);
 				if(next.IsValid())
 				{
-					upoly.DeletePtr(ins);
+					upoly.DeleteVertex(ins);
 					break;
 				}
 				next=pts.FindLeft(last,*this);

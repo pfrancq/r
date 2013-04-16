@@ -344,7 +344,7 @@ public:
 	/**
 	* Return the number of points contained in the polygon.
 	*/
-	inline size_t GetNbPoints(void) const {return(Config->GetPolygon().GetNb());}
+	inline size_t GetNbPoints(void) const {return(Config->GetPolygon().GetNbVertices());}
 
 	/**
 	* @return the position of the geometric information.

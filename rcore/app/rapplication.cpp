@@ -25,14 +25,12 @@
 
 */
 
-#include "rdir.h"
-
-
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
 #include <rapplication.h>
+#include <rdir.h>
 using namespace R;
 
 

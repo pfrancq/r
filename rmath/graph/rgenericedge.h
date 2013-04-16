@@ -45,6 +45,7 @@ namespace R{
 //------------------------------------------------------------------------------
 //	forward declaration
 template<class V,class E> class RGenericVertex;
+template<class V,class E,bool bAllocVertices,bool bAllocEdges> class RGraph;
 
 
 //------------------------------------------------------------------------------
@@ -96,20 +97,23 @@ public:
 	int Compare(const RGenericEdge& e) const {return(this!=&e);}
 
 	/**
-	* @return a pointer over the starting vertex of the edge.
+	* Get the starting vertex of the edge.
+	* @return a pointer.
 	*/
 	V* GetFrom(void) const {return(From);}
 
 	/**
-	* @return pointer over the ending vertex of the edge.
+	* Get the ending vertex of the edge.
+	* @return a pointer.
 	*/
 	V* GetTo(void) const {return(To);}
 
 	/**
-	 * @return true if the edge connects the node given by the identifier.
+	 * Look if the edge connects the node given by the identifier.
 	 * @param id             Identifier.
+	 * @return true if the connects a node.
 	 */
-	bool Connects(size_t id) const;
+	bool IsConnect(size_t id) const;
 
 	/**
 	* Get the weight of the edge.
@@ -117,12 +121,17 @@ public:
 	double GetWeight(void) const {return(Weight);}
 
 	/**
-	* Destruct the edge.
+	* Destruct the edge. It is eventually removed from the corresponding
+	* vertices.
 	*/
 	virtual ~RGenericEdge(void);
 
 	// friend classes
 	friend class RGenericVertex<V,E>;
+	friend class RGraph<V,E,true,true>;
+	friend class RGraph<V,E,true,false>;
+	friend class RGraph<V,E,false,true>;
+	friend class RGraph<V,E,false,false>;
 };
 
 

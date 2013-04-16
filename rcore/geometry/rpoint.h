@@ -114,18 +114,14 @@ public:
 	RPoint& operator-=(const RPoint& pt) {X-=pt.X;Y-=pt.Y;return(*this);}
 
 	/**
-	* Compare two points and return 0 if there are at the same position. This function
-	* is used with the class RContainer.
+	* Compare two points. This function is used with the class RContainer.
 	* @param pt             Point used for the comparison.
+	* @return
+	* - A negative value if the current point is more left and/or bottom.
+	* - 0  if there are at the same position.
+	* - A positive value if the current point is more right and/or up.
 	*/
-	inline int Compare(const RPoint* pt) const { return((*this)!=(*pt)); }
-
-	/**
-	* Compare two points and return 0 if there are at the same position. This function
-	* is used with the class RContainer.
-	* @param pt             Point used for the comparison.
-	*/
-	inline int Compare(const RPoint& pt) const { return((*this)!=pt); }
+	int Compare(const RPoint& pt) const;
 
 	/**
 	* Assignment operator.
@@ -169,21 +165,21 @@ public:
 	bool IsValid(void) const { return((X!=cNoCoord)&&(Y!=cNoCoord));}
 
 	/**
-	* @return the classification of the current point relative to the segment
-	* formed by two points.
-	* @param p0              First point.
-	* @param p1              Second point.
+	* Search for the classification of a point relative to the current point. If
+	* the two points are at the same position, dNoDirection is returned.
+	* @param pt              Point for which the orientation must be find.
+	* @return the classification.
 	*/
-	tDirection Classify(const RPoint& p0,const RPoint& p1) const;
+	tDirection Classify(const RPoint& pt) const;
 
 	/**
-	* @return the classification of the current point relative to the segment
+	* Search for the classification of the current point relative to the segment
 	* formed by two points.
-	* @param p0              First point.
-	* @param p1              Second point.
+	* @param pt0             First point.
+	* @param pt1             Second point.
+	* @return the classification
 	*/
-	inline tDirection Classify(const RPoint* p0,const RPoint* p1) const
-		{ return(Classify(*p0,*p1)); }
+	tDirection Classify(const RPoint& pt0,const RPoint& pt1) const;
 
 	/**
 	* Change the "orientation" of the point.

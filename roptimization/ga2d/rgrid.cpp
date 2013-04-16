@@ -337,7 +337,7 @@ bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,tDirection from,const RRect& 
 
 	// Init Part
 	poly.Clear();
-	poly.InsertPtr(first=new RPoint(X,Y));
+	poly.InsertVertex(first=new RPoint(X,Y));
 	pt.Set(X,Y);
 
 	// Find the next vertex of the polygon
@@ -377,7 +377,7 @@ bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,tDirection from,const RRect& 
 	// Find next Vertices
 	while((first->X!=X)||(first->Y!=Y))
 	{
-		poly.InsertPtr(next=new RPoint(X,Y));
+		poly.InsertVertex(next=new RPoint(X,Y));
 		pt.Set(X,Y);
 		switch(from)
 		{
@@ -492,34 +492,34 @@ bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,tDirection from,const RRect& 
 	}
 
 	// Verify that the not same X or not same Y
-	next=poly[poly.GetNb()-1];
+	next=poly[poly.GetNbVertices()-1];
 	if((first->X==next->X)&&(first->X==poly[1]->X))
 	{
 		if(poly.GetConY(*next).X<first->X)
 		{
-			poly.InsertPtr(new RPoint(next->X-1,next->Y));
-			poly.InsertPtr(new RPoint(next->X-1,first->Y));
+			poly.InsertVertex(new RPoint(next->X-1,next->Y));
+			poly.InsertVertex(new RPoint(next->X-1,first->Y));
 		}
 		else
 		{
-			poly.InsertPtr(new RPoint(next->X+1,next->Y));
-			poly.InsertPtr(new RPoint(next->X+1,first->Y));
+			poly.InsertVertex(new RPoint(next->X+1,next->Y));
+			poly.InsertVertex(new RPoint(next->X+1,first->Y));
 		}
-		poly.DeletePtr(next);
+		poly.DeleteVertex(next);
 	}
 	if((first->Y==next->Y)&&(first->Y==poly[1]->Y))
 	{
 		if(poly.GetConX(*next).Y<first->Y)
 		{
-			poly.InsertPtr(new RPoint(next->X,next->Y-1));
-			poly.InsertPtr(new RPoint(first->X-1,next->Y-1));
+			poly.InsertVertex(new RPoint(next->X,next->Y-1));
+			poly.InsertVertex(new RPoint(first->X-1,next->Y-1));
 		}
 		else
 		{
-			poly.InsertPtr(new RPoint(next->X,next->Y+1));
-			poly.InsertPtr(new RPoint(first->X,next->Y+1));
+			poly.InsertVertex(new RPoint(next->X,next->Y+1));
+			poly.InsertVertex(new RPoint(first->X,next->Y+1));
 		}
-		poly.DeletePtr(next);
+		poly.DeleteVertex(next);
 	}
 
 	// Ok
@@ -546,7 +546,7 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,const RRect& bound
 	FromDir=dLeft;
 	X=start.X;
 	Y=start.Y;
-	nbpts=Poly.GetNb();
+	nbpts=Poly.GetNbVertices();
 
 	// Go through the vertices
 	while(nbpts)
@@ -570,7 +570,7 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,const RRect& bound
 			{
 				New.ReOrder();    // The points must order anti-clockwise.
 				New.ReValid();    // The vertex can't be close.
-				if(New.GetNb())
+				if(New.GetNbVertices())
 				{
 					NewOne.InsertPtr(new RPolygon(New));
 					free->InsertPtr(new RFreePolygon(New));

@@ -50,7 +50,7 @@ template<class V,class E>
 
 //------------------------------------------------------------------------------
 template<class V,class E>
-	bool RGenericEdge<V,E>::Connects(size_t id) const
+	bool RGenericEdge<V,E>::IsConnect(size_t id) const
 {
 	if((!From)||(!To))
 		return(false);
@@ -64,7 +64,9 @@ template<class V,class E>
 template<class V,class E>
 	RGenericEdge<V,E>::~RGenericEdge(void)
 {
-	// Delete the edge in the corresponding vertices
-	//From->Edges.DeletePtr(*this);
-	//To->Edges.DeletePtr(*this);
+	// Delete the edge in the corresponding vertices if necessary
+	if(From)
+		From->Edges.DeletePtr(*static_cast<E*>(this));
+	if(To)
+		To->Edges.DeletePtr(*static_cast<E*>(this));
 }

@@ -46,7 +46,7 @@ RFreePolygon::RFreePolygon(const RPolygon& poly)
 	: RPolygon(poly), Pos(cNoCoord,cNoCoord)
 {
 	// Find the translation
-	RCursor<RPoint> Cur(*this);
+	RCursor<RPoint> Cur(GetVertices());
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		if(Cur()->X<Pos.X)
@@ -73,7 +73,7 @@ int RFreePolygon::CanContain(const RGeoInfo* info,RPoint& pos) const
 	size_t nbpts;
 	RPolygon Test;
 
-	nbpts=GetNb();
+	nbpts=GetNbVertices();
 	act=GetBottomLeft();
 	while(nbpts>0)
 	{

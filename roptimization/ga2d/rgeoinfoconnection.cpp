@@ -29,6 +29,8 @@
 
 //------------------------------------------------------------------------------
 // include files for R Project
+#include <redge.h>
+#include <rvertex.h>
 #include <rgeoinfoconnection.h>
 #include <rlayout.h>
 #include <robj2dconfig.h>

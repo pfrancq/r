@@ -119,4 +119,13 @@ template<class V,class E>
 template<class V,class E>
 	RGenericVertex<V,E>::~RGenericVertex(void)
 {
+	// Go trough the edges
+	RCursor<E> Cur(Edges);
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		if(Cur()->To==this)
+			Cur()->To=0;
+		else
+			Cur()->From=0;
+	}
 }

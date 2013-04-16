@@ -109,7 +109,7 @@ template<class V,class E,bool bAllocVertices,bool bAllocEdges>
 
 //------------------------------------------------------------------------------
 template<class V,class E,bool bAllocVertices,bool bAllocEdges>
-	void RGraph<V,E,bAllocVertices,bAllocEdges>::Insert(E* e)
+	void RGraph<V,E,bAllocVertices,bAllocEdges>::InsertEdge(E* e)
 {
 	Edges.InsertPtr(e);
 }
@@ -120,8 +120,30 @@ template<class V,class E,bool bAllocVertices,bool bAllocEdges>
 	E* RGraph<V,E,bAllocVertices,bAllocEdges>::CreateEdge(V* v1,V* v2,double w)
 {
 	E* ptr(new E(v1,v2,w));
-	Insert(ptr);
+	InsertEdge(ptr);
 	return(ptr);
+}
+
+
+//------------------------------------------------------------------------------
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	void RGraph<V,E,bAllocVertices,bAllocEdges>::DeleteVertex(V* v)
+{
+	// Delete all the adjacent edges
+	while(v->Edges.GetNb())
+		DeleteEdge(v->Edges[0]);
+
+	// Delete the vertex
+   Vertices.DeletePtr(*v);
+}
+
+
+//------------------------------------------------------------------------------
+template<class V,class E,bool bAllocVertices,bool bAllocEdges>
+	void RGraph<V,E,bAllocVertices,bAllocEdges>::DeleteEdge(E * e)
+{
+	// Delete the edge
+   Edges.DeletePtr(e);
 }
 
 

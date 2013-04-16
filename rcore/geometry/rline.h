@@ -44,19 +44,12 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* This class represent a line.
-* @author Pascal Francq
+* This class represent a line. In practice, Pt1 is always the most left/bottom
+* point and Pt2 is always the most right/upper point.
 * @short Line.
 */
 class RLine
 {
-	/**
-	* Internal function to determine if two lines intersect.
-	*/
-	int CCW(const RPoint &) const;
-
-public:
-
 	/**
 	* The First point of the line.
 	*/
@@ -72,61 +65,138 @@ public:
 	*/
 	bool Segment;
 
+public:
+
 	/**
 	* Construct a imaginary line.
 	*/
 	RLine(void);
 
 	/**
-	* Construct a line.
+	 * Copy constructor.
+    * @param line           Line used for the initialization.
+    */
+	RLine(const RLine& line);
+
+	/**
+	* Construct a line. The points are eventually exchanged to ensure that the
+	* first one is the most left-upper point.
+	* @param x1             X-coordinate of the first point used.
+	* @param y1             Y-coordinate of the first point used.
+	* @param x2             X-coordinate of the second point used.
+	* @param y2             Y-coordinate of the second point used.
+	* @param seg            Is the line a segment.
+	*/
+	RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,const bool seg=true);
+
+	/**
+	* Construct a line. The points are eventually exchanged to ensure that the
+	* first one is the most left-upper point.
 	* @param pt1            The first point used.
 	* @param pt2            The second point used.
 	* @param seg            Is the line a segment.
 	*/
-	RLine(const RPoint* pt1,const RPoint* pt2,const bool seg=true);
+	RLine(const RPoint& pt1,const RPoint& pt2,const bool seg=true);
 
 	/**
-	* Return the length of the line.
+	* Compute the length of the segment formed by both points.
+	* @return the length.
 	*/
-	double Length(void) const;
+	tCoord GetLength(void) const;
+
+	/**
+	* Compute the angle of the line compared to an horizontal one.
+	* @return the angle.
+	*/
+	tCoord GetAngle(void) const;
+
+	/**
+	* Compute the angle of the line compared to another one.
+	* @param line            Line to compared with.
+	* @return the angle.
+	*/
+	tCoord GetAngle(const RLine& line) const;
+
+private:
+
+	/**
+	* Look at the needed clock direction to go between the two extremities by
+	* passing by an intermediate point.
+	* @param pt             Intermediate point.
+	* @return
+	* -1 if the direction is anticlockwise.
+	* 0 if the point is one the two extremities.
+	* +1 if the direction is clockwise.
+	*/
+	int CounterClockwise(const RPoint& pt) const;
+
+public:
+
+	/**
+	* Determine if there is an intersection between two lines. If the two lines
+	* are similar, the intersection point is left undefined.
+	* @param line            Line used for the comparison.
+	* @param pt              Point that will contain the intersection point (if
+	*                        any).
+   * @return true if there is at least one intersection.
+	*/
+	bool Inter(const RLine& line,RPoint& pt) const;
 
 	/**
 	* Determine if there is an intersection between two lines (To verify!!!).
-	* @param line           Line used for the comparaison.
-	*/
-	bool Inter(const RLine* line) const;
-
-	/**
-	* Determine if there is an intersection between two lines (To verify!!!).
-	* @param line           Line used for the comparaison.
+	* @param line           Line used for the comparison.
+	* @return true if there is an intersection.
 	*/
 	bool Inter(const RLine& line) const;
 
 	/**
 	* Determine if a point is on the line/segment.
-	* @param pt             Point used for the comparaison.
+	* @param pt             Point used for the comparison.
+	* @return true if there the point is contained.
 	*/
 	bool IsIn(const RPoint& pt) const;
 
 	/**
 	* Get the X position of the first point.
+	* @return a coordinate.
 	*/
 	tCoord GetX1(void) const {return(Pt1.X);}
 
 	/**
 	* Get the Y position of the first point.
+	* @return a coordinate.
 	*/
 	tCoord GetY1(void) const {return(Pt1.Y);}
 
 	/**
 	* Get the X position of the second point.
+	* @return a coordinate.
 	*/
 	tCoord GetX2(void) const {return(Pt2.X);}
 
 	/**
 	* Get the Y position of the second point.
+	* @return a coordinate.
 	*/
 	tCoord GetY2(void) const {return(Pt2.Y);}
+
+	/**
+	 * Get the most left-bottom point.
+    * @return a point.
+    */
+	RPoint GetPt1(void) const {return(RPoint(Pt1));}
+
+	/**
+	 * Get the most right-up point.
+    * @return a point.
+    */
+	RPoint GetPt2(void) const {return(RPoint(Pt2));}
+
+	/**
+	 * Verify that if the line is a segment or not.
+    * @return true if it is a segment.
+    */
+	bool IsSegment(void) const {return(Segment);}
 };
 
 

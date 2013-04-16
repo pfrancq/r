@@ -50,13 +50,23 @@ namespace R{
 /**
 * This class represent a polygon as a set of points regroup in a container.
 * Most of the functions assume that the order of the points in the container
-* must be anti-clockwise. The ReOrder() method does this job, so don't be
-* afraid to call it each time it's necessary.
-* @author Pascal Francq
+* must be anti-clockwise. The ReOrder() method does this job, it is
+* automatically called by these functions.
 * @short Polygon class.
+* @attention Currently, some methods work only with rectangular polygons.
 */
-class RPolygon : public RContainer<RPoint,true,false>
+class RPolygon : RContainer<RPoint,true,false>
 {
+	/**
+	 *  Remember if the polygon is reordered.
+	 */
+	bool Order;
+
+	/**
+	 * Remember if the polygon is a rectangular one.
+	 */
+	bool Rect;
+
 public:
 
 	/**
@@ -77,17 +87,78 @@ public:
 	RPolygon(const RPolygon& poly);
 
 	/**
+	* This function compares two polygons. This function is used for the class
+	* RContainer.
+ 	* @param poly            Polygon used for the comparison.
+	* @return
+	* - -1 The left-bottom point of the current polygon is more at the left (at
+	*   the bottom) of the other one.
+	* - 0 if there have the same number of points and at the same positions.
+	* - +1 The left-bottom point of the current polygon is more at the right (
+	*   upper) of the other one.
+	* @attention The polygons are reordered if necessary.
+	*/
+	int Compare(const RPolygon& poly) const;
+
+	/**
+	 * Get the number of vertices
+    * @return the number of vertices.
+	 */
+	size_t GetNbVertices(void) const {return(GetNb());}
+
+	/**
+	* Get a cursor on the vertices of the polygon.
+	* @return RPointCursor.
+	*/
+	R::RCursor<RPoint> GetVertices(void) const;
+
+	/**
+	* Get the ith vertex of the polygon (Only read). The operator generates an
+	* exception is the index is out of range.
+	* @param idx             Index of the vertex to get.
+	* @return Return a point.
+	*/
+	const RPoint* operator[](size_t idx) const {return(RContainer<RPoint,true,false>::operator[](idx));}
+
+	/**
+	* Get the ith vertex of the polygon (Read/Write). The operator generates an
+	* exception is the index is out of range.
+	* @param idx             Index of the vertex to get.
+	* @return the pointer.
+	*/
+	RPoint* operator[](size_t idx) {return(RContainer<RPoint,true,false>::operator[](idx));}
+
+	/**
+	 * Clear the polygon.
+    */
+	void Clear(void);
+
+	/**
+	 * Insert an vertex into the polygon.
+    * @param pt             Vertex to insert.
+    */
+	void InsertVertex(RPoint* pt);
+
+	/**
+	 * Delete an vertex from the polygon.
+    * @param pt             Vertex to insert.
+    */
+	void DeleteVertex(RPoint* pt);
+
+	/**
 	* The assign operator.
 	*/
 	RPolygon& operator=(const RPolygon& poly);
 
 	/**
 	* The equal operator.
+	* @attention The polygons are reordered if necessary.
 	*/
 	bool operator==(const RPolygon& poly) const;
 
 	/**
 	* The non-equal operator.
+	* @attention The polygons are reordered if necessary.
 	*/
 	bool operator!=(const RPolygon& poly) const;
 
@@ -104,51 +175,48 @@ public:
 	RPolygon& operator-=(const RPoint& pt);
 
 	/**
-	* This function compares two polygons and returns 0 if there have the same
-	* number of points and at the same positions. This function is used for the
-	* class RContainer.
-	* @param poly           Polygon used for the comparison.
-	*/
-	int Compare(const RPolygon& poly) const {return((*this)!=poly);}
-
-	/**
-	* This function returns a pointer to the point on the same horizontal vertex.
+	* This function returns a pointer to the vertex on the same horizontal line.
+	* If the polygon is not a rectangular one, such a vertex may not be found.
 	* @param pt             Point used as reference.
+	* @return the vertex or an infinitive point (no vertex found).
 	*/
 	RPoint GetConX(const RPoint& pt) const;
 
-	/** This function returns a pointer to the point on the same vertical vertex.
+	/**
+	* This function returns a pointer to the vertex on the same vertical line.
+	* If the polygon is not a rectangular one, such a vertex may not be found.
 	* @param pt             Point used as reference.
+	* @return the vertex or an infinitive point (no vertex found).
 	*/
 	RPoint GetConY(const RPoint& pt) const;
 
 	/**
-	* Return a pointer to the most bottom-left point of the polygon.
+	* Return a pointer to the most bottom-left vertex of the polygon.
 	*/
 	RPoint GetBottomLeft(void) const;
 
 	/**
-	* Return a pointer to the most bottom-left point of the polygon responding
+	* Return a pointer to the most bottom-left vertex of the polygon responding
 	* to the criteria.
-	* @param MinX           Minimal X position of the point to search.
-	* @param MinY           Minimal Y position of the point to search.
-	* @param MaxX           Maximal X position of the point to search.
+	* @param minx           Minimal X position of the vertex to search.
+	* @param miny           Minimal Y position of the vertex to search.
+	* @param maxx           Maximal X position of the vertex to search.
 	*/
-	RPoint* GetBottomLeft(const tCoord MinX,const tCoord MinY,const tCoord MaxX) const;
+	RPoint* GetBottomLeft(const tCoord minx,const tCoord miny,const tCoord maxx) const;
 
 	/**
-	* Return a pointer to the most left-bottom point of the polygon.
+	* Return a pointer to the most left-bottom vertex of the polygon.
 	*/
 	RPoint* GetLeftBottom(void) const;
 
 	/**
-	* Return a pointer to the most left-bottom point of the polygon responding
+	* Return a pointer to the most left-bottom vertex of the polygon responding
 	* to the criteria.
-	* @param MinX           Minimal X position of the point to search.
-	* @param MinY           Minimal Y position of the point to search.
-	* @param MaxY           Maximal Y position of the point to search.
+	* @param minx           Minimal X position of the vertex  to search.
+	* @param miny           Minimal Y position of the vertex to search.
+	* @param maxy           Maximal Y position of the vertex to search.
 	*/
-	RPoint* GetLeftBottom(const tCoord MinX,const tCoord MinY,const tCoord MaxY) const;
+	RPoint* GetLeftBottom(const tCoord minx,const tCoord miny,const tCoord maxy) const;
 
 	/**
 	* Return true if the point is on an edge.
@@ -172,23 +240,36 @@ public:
 
 	/**
 	* Return true if the point is a vertex.
+	* @param x               X-coordinate of the point.
+	* @param y               Y-coordinate of the point.
+	* @param pt              Point to verify.
 	*/
-	bool IsVertice(const RPoint& pt) const;
+	bool IsVertex(const tCoord x,const tCoord y) const;
+
+	/**
+	* Return true if the point is a vertex.
+	* @param pt              Point to verify.
+	*/
+	bool IsVertex(const RPoint& pt) const
+		{return(IsVertex(pt.X,pt.Y));}
 
 	/**
 	* Return true if the point is inside the polygon.
+	* @param x               X-coordinate of the point.
+	* @param y               Y-coordinate of the point.
 	*/
-	bool IsIn(const tCoord X,const tCoord Y) const;
+	bool IsIn(const tCoord x,const tCoord y) const;
 
 	/**
-	* Return true if the point is inside the polygon.
+	* Return true if a point is inside the polygon.
+	* @param pt              Point to verify.
 	*/
 	bool IsIn(const RPoint& pt) const
 		{return(IsIn(pt.X,pt.Y));}
 
 	/**
 	* Return true if the polygon poly is inside the polygon. The two polygons are
-	* supposed to be "rectangular". This function determines if all the points
+	* supposed to be "rectangular". This function determines if all the vertices
 	* of poly are inside the polygon.
 	* @param poly           The polygon to known if is in.
 	*/
@@ -226,26 +307,26 @@ public:
 	void RectDecomposition(RContainer<RRect,true,false>& rects) const;
 
 	/**
-	* Add the points of the polygon to a container of points.
+	* Add the vertices of the polygon to a container of points.
 	* @param points         A pointer to the container of points.
 	*/
-	void AddPoints(RContainer<RPoint,true,false>& points) const;
+	void AddVertices(RContainer<RPoint,true,false>& points) const;
 
 	/**
-	* Shift the points of the polygon to make the bottom-left point be the first
+	* Shift the vertices of the polygon to make the bottom-left point be the first
 	* one, and the rest are in the anti-clockwise order.
 	*/
 	void ReOrder(void);
 
 	/**
-	* Delete all necessary points to not have two adjacent vertexes.
+	* Delete all necessary vertices to not have two adjacent vertexes.
 	*/
 	void ReValid(void);
 
 	/**
-	* This function returns when there are duplicate points.
+	* This function returns when there are duplicate vertices.
 	*/
-	bool DuplicatePoints(void) const;
+	bool DuplicateVertices(void) const;
 
 	/**
 	* Compute a point in the polygon which represents a sort of "Mass Point".
@@ -273,12 +354,6 @@ public:
 	 * @return true if the polygon is a square.
 	 */
 	inline bool IsSquare(void) const {return(IsRect()&&(((*this)[2])->X==((*this)[2])->Y));}
-
-	/**
-	* Get a cursor on the points of the polygon.
-	* @return RPointCursor.
-	*/
-	R::RCursor<RPoint> GetPointsCursor(void);
 };
 
 

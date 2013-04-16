@@ -41,8 +41,6 @@
 // include files for R Project
 #include <rcontainer.h>
 #include <rcursor.h>
-#include <redge.h>
-#include <rvertex.h>
 
 
 //------------------------------------------------------------------------------
@@ -152,7 +150,7 @@ public:
 	 * Insert an edge.
 	 * @param e              Edge to insert.
 	 */
-	void Insert(E* e);
+	void InsertEdge(E* e);
 
 	/**
 	* Create an edge.
@@ -161,6 +159,18 @@ public:
 	* @param w               Weight.
 	*/
 	virtual E* CreateEdge(V* v1,V* v2,double w);
+
+	/**
+	* Delete a vertex with all the edges connected to it.
+	 @param v                Vertex.
+	*/
+	void DeleteVertex(V* v);
+
+   /**
+	* Delete an edge with all the corresponding vertices.
+	* @param e               Edge.
+	*/
+	void DeleteEdge(E* e);
 
 	/**
 	* Compute the minimum spanning trees using the Prim's algorithm.

@@ -72,6 +72,17 @@ RPoint::RPoint(const RPoint& pt)
 
 
 //------------------------------------------------------------------------------
+int RPoint::Compare(const RPoint& pt) const
+{
+	// Compare first the X coordinate
+	int comp(static_cast<int>(X-pt.X));
+	if(X==pt.X)
+		comp=static_cast<int>(Y-pt.Y); // If the two points are horizontal -> Compare Y
+	return(comp);
+}
+
+
+//------------------------------------------------------------------------------
 bool RPoint::Near(const RPoint& pt) const
 {
 	return((Abs(X-pt.X)<=1)&&(Abs(Y-pt.Y)<=1));
@@ -97,18 +108,54 @@ double RPoint::EuclideanDist(const RPoint& pt) const
 
 
 //------------------------------------------------------------------------------
-tDirection RPoint::Classify(const RPoint& p0,const RPoint& p1) const
+tDirection RPoint::Classify(const RPoint& pt) const
 {
-	RPoint a=p1-p0;
-	RPoint b=(*this)-p0;
+	if(X>pt.X)
+	{
+		// The point p is on the left
+		if(Y>pt.Y)
+			return(dLeftDown);
+		else if(Y<pt.Y)
+			return(dLeftUp);
+		else
+			return(dLeft);
+	}
+	else if(X<pt.X)
+	{
+		// The point p is on the right
+		if(Y>pt.Y)
+			return(dRightDown);
+		else if(Y<pt.Y)
+			return(dRightUp);
+		else
+			return(dRight);
+	}
+	else
+	{
+		// Points are on the vertical line
+		if(Y>pt.Y)
+			return(dDown);
+		else if(Y<pt.Y)
+			return(dUp);
+		else
+			return(dNoDirection);
+	}
+}
+
+
+//------------------------------------------------------------------------------
+tDirection RPoint::Classify(const RPoint& pt0,const RPoint& pt1) const
+{
+	RPoint a=pt1-pt0;
+	RPoint b=(*this)-pt0;
 	double sa=a.X*b.Y-b.X*a.Y;
 
 	if(sa>cEpsi) return(dLeft);
 	if(sa<-cEpsi) return(dRight);
 	if(((a.X*b.X)<cEpsi)||((a.Y*b.Y)<cEpsi)) return(dBehind);
 	if(a.Length()<b.Length()) return(dBeyond);
-	if((*this)==p0) return(dOrigin);
-	if((*this)==p1) return(dDestination);
+	if((*this)==pt0) return(dOrigin);
+	if((*this)==pt1) return(dDestination);
 	return(dBetween);
 }
 

@@ -121,7 +121,7 @@ void RGeoInfoCursor::Set(RGeoInfo& info)
 {
 	if(!info.GetConfig())
 		ThrowRException("The geometric information has no configuration specified");
-	RCursor<RPoint>::Set(info.GetConfig()->GetPolygon());
+	RCursor<RPoint>::operator=(info.GetConfig()->GetPolygon().GetVertices());
 	Base=info.GetPos();
 }
 

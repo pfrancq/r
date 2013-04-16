@@ -45,6 +45,7 @@ namespace R{
 //------------------------------------------------------------------------------
 //	forward declaration
 template<class V,class E> class RGenericEdge;
+template<class V,class E,bool bAllocVertices,bool bAllocEdges> class RGraph;
 
 
 //------------------------------------------------------------------------------
@@ -142,7 +143,6 @@ public:
 	 */
 	E* GetEdgeFrom(size_t id) const;
 
-
 	/**
 	 * Find all the adjacent vertices from the current one. In practice, it
 	 * parses the edges and add the other vertex to the container.
@@ -159,12 +159,17 @@ public:
 		void GetAdjacentVertices(RContainer<V,false,bOrder>& vertices,bool verify=false) const;
 
 	/**
-	* Destruct the vertex.
+	* Destruct the vertex. The corresponding pointers of the adjacent edges are
+	* set to 0.
 	*/
 	virtual ~RGenericVertex(void);
 
 	// friend classes
 	friend class RGenericEdge<V,E>;
+	friend class RGraph<V,E,true,true>;
+	friend class RGraph<V,E,true,false>;
+	friend class RGraph<V,E,false,true>;
+	friend class RGraph<V,E,false,false>;
 };
 
 

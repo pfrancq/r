@@ -79,7 +79,7 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 
 	// Find the Bottom-Left coordinate of the boundary rectangle
 	Actual=Union.GetBottomLeft();
-	i=Union.GetNb()+1;
+	i=Union.GetNbVertices()+1;
 	LookX=true;                 // Go anti-clockwise, begin with X-Axis and then right.
 	LookBottom=true;            // Look (X,Y-1) or (X,Y+1) ?
 	LookLeft=true;              // Look (X-1,Y) or (X+1,Y) ?

@@ -78,7 +78,7 @@ QRDrawGeoInfos::MyItem::MyItem(const RGeoInfo* info,QRDrawGeoInfos* widget,const
 		// Set the polygon
 		RPolygon Obj(info->GetPlacedPolygon());
 		QPolygonF Polygon;
-		RCursor<RPoint> Cur(Obj);
+		RCursor<RPoint> Cur(Obj.GetVertices());
 		for(Cur.Start();!Cur.End();Cur.Next())
 			Polygon<<QPointF(Widget->x(Cur()->X),Widget->y(Cur()->Y));
 		setPolygon(Polygon);
@@ -300,7 +300,7 @@ void QRDrawGeoInfos::paintFree(const RFreePolygon* poly,bool)
 	if(!poly)
 		return;
 	QPolygonF Polygon;
-	RCursor<RPoint> Pt(*poly);
+	RCursor<RPoint> Pt(poly->GetVertices());
 	for(Pt.Start();!Pt.End();Pt.Next())
 		Polygon<<QPointF(x(Pt()->X),y(Pt()->Y));
 	QGraphicsPolygonItem* ptr=Scene.addPolygon(Polygon,QPen(Qt::black),YellowBrush);

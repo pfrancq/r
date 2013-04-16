@@ -343,13 +343,19 @@ enum tDirection
 	dBeyond,                 /** Beyond.*/
 	dOrigin,                 /** Origin.*/
 	dDestination,            /** Specific destination.*/
-	dBetween                 /** Between two positions.*/
+	dBetween,                /** Between two positions.*/
+	dLeftDown,               /** Left-Down.*/
+	dLeftUp,                 /** Left-Up.*/
+	dRightDown,              /** Right-Down.*/
+	dRightUp	                /** Right-Up.*/
 };
 
 
 //------------------------------------------------------------------------------
 /**
-* This variable represents a tolerance for calculations.
+* This variable represents a tolerance for calculations. if a calculation (for
+* example the difference between two coordinates) is less than cEpsi, it is
+* considered as zero.
 */
 const double cEpsi=0.000001;
 
