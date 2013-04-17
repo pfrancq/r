@@ -75,10 +75,10 @@ RPlacementHeuristic::RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRand
 
 	// Initialize PROMTEHEE Criteria
 	if(!AreaParams)
-		ThrowRException("PROMETHEE parameters for the area criterion not specified");
+		mThrowRException("PROMETHEE parameters for the area criterion not specified");
 	Prom.AddCriterion(Area=new RPromLinearCriterion(RPromCriterion::Maximize,AreaParams,"Weight"));
 	if(!DistParams)
-		ThrowRException("PROMETHEE parameters for the distance criterion not specified");
+		mThrowRException("PROMETHEE parameters for the distance criterion not specified");
 	Prom.AddCriterion(Dist=new RPromLinearCriterion(RPromCriterion::Minimize,DistParams,"Distance"));
 }
 
@@ -168,7 +168,7 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 RGeoInfo* RPlacementHeuristic::NextObject(void)
 {
 	if(NbObjsOk>=NbObjs)
-		ThrowRException("All objects placed");
+		mThrowRException("All objects placed");
 
 	// Init
 	RPoint pos(RPoint::Null);
@@ -223,7 +223,7 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 
 	// Place it
 	if(!pos.IsValid())
-		ThrowRException("Can't place an object!");
+		mThrowRException("Can't place an object!");
 
 	// Assign the object to the current position
 	CurInfo->Assign(pos,Grid,NbObjsOk);

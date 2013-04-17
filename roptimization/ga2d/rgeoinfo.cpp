@@ -47,7 +47,7 @@ RGeoInfoPin::RGeoInfoPin(RObj2DConfigPin* pin,RGeoInfo* info)
 	: Pin(pin), Info(info)
 {
 	if(!Pin)
-		ThrowRException("Invalid pin");
+		mThrowRException("Invalid pin");
 }
 
 
@@ -120,7 +120,7 @@ RGeoInfoCursor::RGeoInfoCursor(RGeoInfo& info)
 void RGeoInfoCursor::Set(RGeoInfo& info)
 {
 	if(!info.GetConfig())
-		ThrowRException("The geometric information has no configuration specified");
+		mThrowRException("The geometric information has no configuration specified");
 	RCursor<RPoint>::operator=(info.GetConfig()->GetPolygon().GetVertices());
 	Base=info.GetPos();
 }
@@ -154,7 +154,7 @@ RGeoInfo::RGeoInfo(RObj2D* obj)
 	: Obj(obj), Config(0), Pos(RPoint::Null), Container(0), Order(cNoRef)
 {
 	if(!obj)
-		ThrowRException("Null object is not allowed");
+		mThrowRException("Null object is not allowed");
 }
 
 
@@ -190,7 +190,7 @@ void RGeoInfo::ClearInfo(void)
 tCoord RGeoInfo::GetArea(void) const
 {
 	if(!Config)
-		ThrowRException("No configuration defined");
+		mThrowRException("No configuration defined");
 	return(Config->GetArea());
 }
 
@@ -221,7 +221,7 @@ void RGeoInfo::SetConfig(tOrientation ori)
 void RGeoInfo::Assign(const RPoint& pos,RGrid* grid,size_t order)
 {
 	if(!Config)
-		ThrowRException("No configuration defined");
+		mThrowRException("No configuration defined");
 	Pos=pos;
 	if(order!=cNoRef)
 		Order=order;
@@ -248,7 +248,7 @@ bool RGeoInfo::IsValid(const RPoint& pos,const RSize& limits) const
 bool RGeoInfo::Test(RPoint& pos,RGrid* grid)
 {
 	if(!Config)
-		ThrowRException("No configuration defined");
+		mThrowRException("No configuration defined");
 
 /*	RPoint start,end;
 	size_t nbpts;
@@ -381,7 +381,7 @@ void RGeoInfo::PushCenter(RPoint& pos,const RSize& limits,RGrid* grid)
 bool RGeoInfo::Overlap(RGeoInfo* info) const
 {
 	if((!Config)||(!info->Config))
-		ThrowRException("No configuration defined");
+		mThrowRException("No configuration defined");
 
 	RRect R1,R2;
 
@@ -426,7 +426,7 @@ RGeoInfo& RGeoInfo::operator=(const RGeoInfo& info)
 bool RGeoInfo::IsIn(RPoint pos) const
 {
 	if(!Config)
-		ThrowRException("No configuration defined");
+		mThrowRException("No configuration defined");
 
 	if(!IsValid()) return(false);
 	pos-=Pos;

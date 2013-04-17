@@ -538,7 +538,7 @@ void RMatrixStorage::VerifySizeSparse(size_t newlines,size_t newcols)
 void RMatrixStorage::VerifySize(size_t newlines,size_t newcols,bool fill,double val)
 {
 	if(BaseURI==RString::Null)
-		ThrowRIOException(&Index,"File not open");
+		mThrowRIOException(&Index,"File not open");
 
 	if((NbLines==newlines)&&(NbCols==newcols))
 		return;
@@ -562,9 +562,9 @@ void RMatrixStorage::VerifySize(size_t newlines,size_t newcols,bool fill,double 
 void RMatrixStorage::Load(RGenericMatrix& matrix)
 {
 	if(BaseURI==RString::Null)
-		ThrowRIOException(&Index,"File not open");
+		mThrowRIOException(&Index,"File not open");
 	if(Type!=matrix.GetType())
-		ThrowRIOException(&Index,"Invalid type");
+		mThrowRIOException(&Index,"Invalid type");
 
 	matrix.VerifySize(NbLines,NbCols); // Verify the size of the matrix
 
@@ -847,9 +847,9 @@ void RMatrixStorage::SaveMax(const RGenericMatrix& matrix)
 void RMatrixStorage::Save(const RGenericMatrix& matrix)
 {
 	if(BaseURI==RString::Null)
-		ThrowRIOException(&Index,"File not open");
+		mThrowRIOException(&Index,"File not open");
 	if(Type!=matrix.GetType())
-		ThrowRIOException(&Index,"Invalid type");
+		mThrowRIOException(&Index,"Invalid type");
 
 	// Verify the size of the file if needed
 	VerifySize(matrix.GetNbLines(),matrix.GetNbCols());
@@ -871,7 +871,7 @@ void RMatrixStorage::Save(const RGenericMatrix& matrix)
 double RMatrixStorage::Read(size_t i,size_t j)
 {
 	if(BaseURI==RString::Null)
-		ThrowRIOException(&Index,"File not open");
+		mThrowRIOException(&Index,"File not open");
 	if((i>NbLines)||(j>NbCols))
 		throw std::range_error("RMatrixStorage::Read(size_t,size_t) : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
 
@@ -887,7 +887,7 @@ double RMatrixStorage::Read(size_t i,size_t j)
 
 	if(Max)
 	{
-		ThrowRIOException(&Index,"RMaxMatrix not supported");
+		mThrowRIOException(&Index,"RMaxMatrix not supported");
 	}
 	else if(Sparse)
 	{
@@ -947,7 +947,7 @@ void RMatrixStorage::Write(size_t i,size_t j,double val)
 
 	if(Max)
 	{
-		ThrowRIOException(&Index,"RMaxMatrix not supported");
+		mThrowRIOException(&Index,"RMaxMatrix not supported");
 	}
 	else if(Sparse)
 	{
@@ -1040,7 +1040,7 @@ void RMatrixStorage::Write(size_t i,size_t j,double val)
 void RMatrixStorage::ReadInfo(size_t posinfo,char* buffer,size_t nb)
 {
 	if(BaseURI==RString::Null)
-		throw RException("RMatrixStorage::ReadInfo(size_t,char*,size_t) : File not open");
+		mThrowRException("File not open");
 
 	size_t deb(2*sizeof(size_t));
 	if(Sparse||Max)
@@ -1056,7 +1056,7 @@ void RMatrixStorage::ReadInfo(size_t posinfo,char* buffer,size_t nb)
 	Index.Seek(deb+posinfo);
 	size_t nbread(Index.Read(buffer,nb));
 	if(nbread!=nb)
-		throw RException("RMatrixStorage::ReadInfo(size_t,char*,size_t) : Internal problem in the information stored");
+		mThrowRException("Internal problem in the information stored");
 }
 
 
@@ -1064,7 +1064,7 @@ void RMatrixStorage::ReadInfo(size_t posinfo,char* buffer,size_t nb)
 void RMatrixStorage::WriteInfo(size_t posinfo,const char* buffer,size_t nb)
 {
 	if(BaseURI==RString::Null)
-		throw RException("RMatrixStorage::WriteInfo(size_t,const char*,size_t) : File not open");
+		mThrowRException("File not open");
 
 	size_t deb(2*sizeof(size_t));
 	if(Sparse||Max)

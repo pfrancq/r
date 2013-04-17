@@ -140,6 +140,7 @@ template<class D>
  * from RSharedData.
  * @tparam C                 Class pointed.
  * It is an implementation of Scott Meyers proposition in "MORE EFFECTIVE C++".
+ * @short Smart Pointer.
  */
 template<class C>
 	class RSmartPtr

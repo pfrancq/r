@@ -216,8 +216,8 @@ RCString RNotificationCenter::GetNotificationName(hNotification handle) const
 void RNotificationCenter::InsertObserver(tNotificationHandler handler,RObject* observer,const hNotification handle,RObject* object)
 {
 	// Verify that the observer is not null
-	RReturnIfFail(observer);
-	RReturnIfFail(handler);
+	mReturnIfFail(observer);
+	mReturnIfFail(handler);
 
 	// Register the notification and the observer
 	IListener* listener=new IListener(handler,observer,handle,object);
@@ -314,7 +314,7 @@ void RNotificationCenter::PostNotification(const RNotification& notification)
 void RNotificationCenter::DeleteObserver(RObject* observer)
 {
 	// Verify that the observer is not null
-	RReturnIfFail(observer);
+	mReturnIfFail(observer);
 	RContainer<IListener,false,false> Dels(20);
 
 	// Goes through to all listeners that receive a particular notification
@@ -345,7 +345,7 @@ void RNotificationCenter::DeleteObserver(RObject* observer)
 void RNotificationCenter::DeleteObserver(RObject* observer,const hNotification handle,RObject* object)
 {
 	// Verify that the observer is not null
-	RReturnIfFail(observer);
+	mReturnIfFail(observer);
 
 	// Goes through to all listeners that receive a particular notification
 	if(handle&&(!object))

@@ -244,14 +244,14 @@ void RPolygons::Union(RPolygon& upoly) const
 				break;
 
 			case dNoDirection:
-				RAssertMsg("Direction can't be undefined");
+				mAssertMsg("Direction can't be undefined");
 				break;
 
 			default:
-				RAssertMsg("Not a valid Direction in this context");
+				mAssertMsg("Not a valid Direction in this context");
 				break;
 		}
-		RAssert(next.IsValid());
+		mAssert(next.IsValid());
 	}
 }
 

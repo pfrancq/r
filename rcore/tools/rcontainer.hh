@@ -302,7 +302,7 @@ template<class C,bool bAlloc,bool bOrder>
 				i=(NbMax+NbMin)/2;
 				ptr=Tab[i];
 				if(!ptr)
-					ThrowRException("Problem!");
+					mThrowRException("Problem!");
 				Comp=ptr->Compare(tag);
 				if(!Comp)
 				{

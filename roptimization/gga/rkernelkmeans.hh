@@ -128,7 +128,7 @@ template<class cGroup,class cObj,class cGroups>
 	}
 
 	if(Groups->Used.GetNb()!=nb)
-		ThrowRException("Cannot initialize the Kernel k-Means");
+		mThrowRException("Cannot initialize the Kernel k-Means");
 
 	// Assign randomly all the non assigned objects
 /*	for(i=0,ptr=ObjsUsed;i<Objs.GetNb();i++,ptr++)
@@ -572,7 +572,7 @@ template<class cGroup,class cObj,class cGroups>
 		return;
 
 	if(Objs.GetNb()<nb)
-		ThrowRException("There are only "+R::RString::Number(Objs.GetNb())+" for "+R::RString::Number(nb)+" groups");
+		mThrowRException("There are only "+R::RString::Number(Objs.GetNb())+" for "+R::RString::Number(nb)+" groups");
 
 	// Initialize the algorithm
 	if(PrintOut)

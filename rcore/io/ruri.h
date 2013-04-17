@@ -57,6 +57,7 @@ namespace R{
  *   urn:example:animal:ferret:nose
  * @endcode
  * @remarks The whole specification is not supported.
+ * @short Uniform Resource Identifier.
  */
 class RURI
 {

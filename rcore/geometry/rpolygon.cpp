@@ -118,6 +118,22 @@ void RPolygon::Clear(void)
 
 
 //------------------------------------------------------------------------------
+void RPolygon::InsertVertex(tCoord x,tCoord y)
+{
+	InsertPtr(new RPoint(x,y));
+	Order=false;
+}
+
+
+//------------------------------------------------------------------------------
+void RPolygon::InsertVertex(const RPoint& pt)
+{
+	InsertPtr(new RPoint(pt));
+	Order=false;
+}
+
+
+//------------------------------------------------------------------------------
 void RPolygon::InsertVertex(RPoint* pt)
 {
 	InsertPtr(pt);
@@ -661,7 +677,7 @@ bool RPolygon::IsIn(const RPolygon& poly) const
 					break;
 
 				default:
-					RAssertMsg("Not a valid Direction in this context");
+					mAssertMsg("Not a valid Direction in this context");
 					break;
 			}
 		}
@@ -701,7 +717,7 @@ tCoord RPolygon::Area(void) const
 void RPolygon::Boundary(RRect& rect) const
 {
 	if(!GetNb())
-		ThrowRException("No points defined");
+		mThrowRException("No points defined");
 
 	tCoord MinX=cMaxCoord,MinY=cMaxCoord,MaxX=0,MaxY=0,X,Y;
 

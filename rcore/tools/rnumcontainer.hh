@@ -243,7 +243,7 @@ template<class I,bool bOrder>
 {
 	I* ptr;
 
-	RReturnIfFail(pos<NbInt);
+	mReturnIfFail(pos<NbInt);
 	ptr=&List[pos];
 
 	// Decrease number of elements

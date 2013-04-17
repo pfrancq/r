@@ -307,7 +307,7 @@ void RXMLParser::StopAnalysis(void)
 size_t RXMLParser::GetCurrentDepth(void) const
 {
 	if(Mode!=RIO::Read)
-		ThrowRIOException(this,"File not in read mode");
+		mThrowRIOException(this,"File not in read mode");
 	return(CurDepth);
 }
 
@@ -316,7 +316,7 @@ size_t RXMLParser::GetCurrentDepth(void) const
 size_t RXMLParser::GetLastTokenPos(void) const
 {
 	if(Mode!=RIO::Read)
-		ThrowRIOException(this,"File not in read mode");
+		mThrowRIOException(this,"File not in read mode");
 	return(LastTokenPos);
 }
 
@@ -379,11 +379,11 @@ void RXMLParser::Open(RIO::ModeType mode)
 
 		case RIO::Append:
 		case RIO::Create:
-			ThrowRIOException(this,"A XML Parser is read-only");
+			mThrowRIOException(this,"A XML Parser is read-only");
 			break;
 
 		default:
-			ThrowRIOException(this,"No Valid Mode");
+			mThrowRIOException(this,"No Valid Mode");
 	};
 }
 
@@ -753,7 +753,7 @@ RString RXMLParser::XMLToString(const RString& str,bool html)
 				{
 					if(html)
 						return(Code());
-					ThrowRException("Invalid XML/HTML code \""+Code()+"\"");
+					mThrowRException("Invalid XML/HTML code \""+Code()+"\"");
 				}
 				else
 					Res+=What;
@@ -766,7 +766,7 @@ RString RXMLParser::XMLToString(const RString& str,bool html)
 			{
 				if(html)
 					return(Code());
-				ThrowRException("Invalid XML/HTML code \""+Code()+"\"");
+				mThrowRException("Invalid XML/HTML code \""+Code()+"\"");
 			}
 		}
 		else
@@ -789,7 +789,7 @@ RString RXMLParser::XMLToString(const RString& str)
 	}
 	catch(RException& e)
 	{
-		ThrowRIOException(this,e.GetMsg());
+		mThrowRIOException(this,e.GetMsg());
 	}
 }
 
@@ -815,7 +815,7 @@ const RXMLParser::HTMLTag* RXMLParser::GetHTMLTag(const RString& name) const
 {
 	HTMLTag* tag(Tags.GetPtr(name));
 	if(!tag)
-		ThrowRIOException(this,"Unknown HTML Tag '"+name+"'.");
+		mThrowRIOException(this,"Unknown HTML Tag '"+name+"'.");
 	return(tag);
 }
 
@@ -848,7 +848,7 @@ void RXMLParser::LoadHeader(void)
 		{
 			// A HTML file doesn't need it.
 			if(!HTMLMode)
-				ThrowRIOException(this,"Wrong XML header");
+				mThrowRIOException(this,"Wrong XML header");
 		}
 	}
 
@@ -875,7 +875,7 @@ void RXMLParser::LoadHeader(void)
 	{
 		Section=DOCTYPE;
 		if(!CurString("DOCTYPE",false))
-			ThrowRIOException(this,"Wrong DOCTYPE command");
+			mThrowRIOException(this,"Wrong DOCTYPE command");
 
 		RString Content(GetToken(">["));
 		if(HTMLMode)
@@ -906,16 +906,16 @@ void RXMLParser::LoadHeader(void)
 						// Get next name
 						RString cmd(GetWord());
 						if(cmd!="<!ENTITY")
-							ThrowRIOException(this,"Wrong entities formating");
+							mThrowRIOException(this,"Wrong entities formating");
 
 						RString ns(GetWord());
 						Cur=GetChar();
 						if(Cur!='"')
-							ThrowRIOException(this,"Wrong entities formating");
+							mThrowRIOException(this,"Wrong entities formating");
 						RString uri(GetToken(RString('"')));
 						Cur=GetChar();
 						if(Cur!='"')
-							ThrowRIOException(this,"Wrong entities formating");
+							mThrowRIOException(this,"Wrong entities formating");
 
 						// Add the entity
 						AddEntity(ns,uri);
@@ -940,7 +940,7 @@ void RXMLParser::LoadHeader(void)
 					}
 
 					if(End())
-						ThrowRIOException(this,"Wrong entities formating");
+						mThrowRIOException(this,"Wrong entities formating");
 
 					// Skip ] and spaces
 					Next();
@@ -953,13 +953,13 @@ void RXMLParser::LoadHeader(void)
 					RChar What=GetChar();
 					bool Quotes=((What==RChar('\''))||(What==RChar('"')));
 					if(!Quotes)
-						ThrowRIOException(this,"Bad XML file");
+						mThrowRIOException(this,"Bad XML file");
 					SetDTD(GetToken(RString(What)));
 					if(Break)
 						return;
 					SkipSpaces();
 					if(GetChar()!=What)
-						ThrowRIOException(this,"Bad XML file");
+						mThrowRIOException(this,"Bad XML file");
 					SkipSpaces();
 					Cont=true;
 				}
@@ -976,7 +976,7 @@ void RXMLParser::LoadHeader(void)
 							return;
 						SkipSpaces();
 						if(GetChar()!=What)
-							ThrowRIOException(this,"Bad XML file");
+							mThrowRIOException(this,"Bad XML file");
 						SkipSpaces();
 						Cont=true;
 					}
@@ -984,7 +984,7 @@ void RXMLParser::LoadHeader(void)
 			}
 		}
 		if(GetChar()!='>') // Skip >
-			ThrowRIOException(this,"Bad XML file");
+			mThrowRIOException(this,"Bad XML file");
 		SkipSpaces();
 	}
 }
@@ -1005,7 +1005,7 @@ void RXMLParser::LoadNextTag(void)
 
 	// If not a tag -> Error
 	if(GetChar()!='<')
-		ThrowRIOException(this,"Not a tag");
+		mThrowRIOException(this,"Not a tag");
 
 	// Read name of the tag
 	LastTokenPos=GetPos();
@@ -1045,7 +1045,7 @@ void RXMLParser::LoadNextTag(void)
 		// Valid HTML Tag?
 		CurHTMLTag=Tags.GetPtr(lname);
 		if(!CurHTMLTag)
-			ThrowRIOException(this,"Unknown opening HTML Tag '"+lname+"'.");
+			mThrowRIOException(this,"Unknown opening HTML Tag '"+lname+"'.");
 	}
 	BeginTag(uri,lname,TagName);
 	if(Break)
@@ -1068,7 +1068,7 @@ void RXMLParser::LoadNextTag(void)
 		{
 			Namespace* ptr=Namespaces.GetPtr(prefix);
 			if(!ptr)
-				ThrowRIOException(this,"Namespace with prefix '"+prefix+"' no defined");
+				mThrowRIOException(this,"Namespace with prefix '"+prefix+"' no defined");
 			uri=(*ptr->URI());
 			ResolveNamespace(uri);
 			if(Break)
@@ -1107,7 +1107,7 @@ void RXMLParser::LoadNextTag(void)
 			// Valid HTML Tag?
 			CurHTMLTag=Tags.GetPtr(lname);
 			if(!CurHTMLTag)
-				ThrowRIOException(this,"Unknown closing HTML Tag '"+lname+"'.");
+				mThrowRIOException(this,"Unknown closing HTML Tag '"+lname+"'.");
 		}
 		EndTag(uri,lname,TagName);
 		if(Break)
@@ -1140,7 +1140,7 @@ void RXMLParser::LoadNextTag(void)
 				while(!CurString("]]>",false))
 				{
 					if(End())
-						ThrowRIOException(this,"Invalid '[CDATA[]]>'.");
+						mThrowRIOException(this,"Invalid '[CDATA[]]>'.");
 					LastTokenPos=GetPos();
 					RString tmp(GetTokenString("]]>"));
 					if(tmp.GetLen())
@@ -1214,7 +1214,7 @@ void RXMLParser::LoadNextTag(void)
 					while(!CurString("]]>"))
 					{
 						if(End())
-							ThrowRIOException(this,"Invalid '[CDATA[]]>'.");
+							mThrowRIOException(this,"Invalid '[CDATA[]]>'.");
 						LastTokenPos=GetPos();
 						RString tmp(GetTokenString("]]>"));
 						if(tmp.GetLen())
@@ -1251,7 +1251,7 @@ void RXMLParser::LoadNextTag(void)
 	LastTokenPos=GetPos();
 	RString EndTagName(GetToken(RString('>')));
 	if((EndTagName!=TagName))
-		ThrowRIOException(this,"Found closing tag '"+EndTagName+"' while closing tag '"+TagName+"' ("+RString::Number(OpenTagLine)+") was expected.");
+		mThrowRIOException(this,"Found closing tag '"+EndTagName+"' while closing tag '"+TagName+"' ("+RString::Number(OpenTagLine)+") was expected.");
 	SkipSpaces();
 	if(HTMLMode&&(lname=="html"))
 			FoundClosingHTML=true;
@@ -1265,7 +1265,7 @@ void RXMLParser::LoadNextTag(void)
 		// Valid HTML Tag?
 		CurHTMLTag=Tags.GetPtr(lname);
 		if(!CurHTMLTag)
-			ThrowRIOException(this,"Unknown closing HTML Tag '"+lname+"'.");
+			mThrowRIOException(this,"Unknown closing HTML Tag '"+lname+"'.");
 	}
 	EndTag(uri,lname,TagName);
 	if(Break)
@@ -1324,7 +1324,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 			{
 				Namespace* ptr=Namespaces.GetPtr(prefix);
 				if(!ptr)
-					ThrowRIOException(this,"Namespace with prefix '"+prefix+"' no defined");
+					mThrowRIOException(this,"Namespace with prefix '"+prefix+"' no defined");
 				uri=(*ptr->URI());
 			}
 		}
@@ -1401,7 +1401,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 			{
 				// If Quote must be used -> generate an exception
 				if(OnlyQuote())
-					ThrowRIOException(this,"Quote must be used to delimit the parameter value in a tag.");
+					mThrowRIOException(this,"Quote must be used to delimit the parameter value in a tag.");
 				RString tmp(What+GetToken(">"));
 				if(Section==Header)
 					HeaderValue(tmp);

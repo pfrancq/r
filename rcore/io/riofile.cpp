@@ -114,7 +114,7 @@ void RIOFile::Open(RIO::ModeType mode)
 
 	// Verify that it is not a urn
 	if(URI.GetScheme()==sURN)
-		ThrowRIOException(this,"URI does not represent a file");
+		mThrowRIOException(this,"URI does not represent a file");
 
 	// look if it is a local file
 	if(URI.GetScheme()==sFile)
@@ -137,7 +137,7 @@ void RIOFile::Open(RIO::ModeType mode)
 
 		case RIO::Write:
 			if(!local)
-				ThrowRIOException(this,"Cannot write with an URL");
+				mThrowRIOException(this,"Cannot write with an URL");
 			localmode=O_WRONLY | O_CREAT;
 			CanWrite=true;
 			CanRead=false;
@@ -145,7 +145,7 @@ void RIOFile::Open(RIO::ModeType mode)
 
 		case RIO::ReadWrite:
 			if(!local)
-				ThrowRIOException(this,"Cannot write with an URL");
+				mThrowRIOException(this,"Cannot write with an URL");
 			localmode=O_RDWR | O_CREAT;
 			CanWrite=true;
 			CanRead=true;
@@ -153,7 +153,7 @@ void RIOFile::Open(RIO::ModeType mode)
 
 		case RIO::Append:
 			if(!local)
-				ThrowRIOException(this,"Cannot append to an URL");
+				mThrowRIOException(this,"Cannot append to an URL");
 			localmode=O_WRONLY | O_CREAT | O_APPEND;
 			CanWrite=true;
 			CanRead=true;
@@ -161,14 +161,14 @@ void RIOFile::Open(RIO::ModeType mode)
 
 		case RIO::Create:
 			if(!local)
-				ThrowRIOException(this,"Cannot create with an URL");
+				mThrowRIOException(this,"Cannot create with an URL");
 			localmode=O_WRONLY | O_CREAT | O_TRUNC;
 			CanWrite=true;
 			CanRead=false;
 			break;
 
 		default:
-			ThrowRIOException(this,"No valid mode");
+			mThrowRIOException(this,"No valid mode");
 	};
 
 	// If reading is possible -> create an internal buffer
@@ -198,27 +198,27 @@ void RIOFile::Open(RIO::ModeType mode)
 		switch(errno)
 		{
 			case EACCES:
-				ThrowRIOException(this,"The file exists but it cannot be access at the requested mode");
+				mThrowRIOException(this,"The file exists but it cannot be access at the requested mode");
 			case EEXIST:
-				ThrowRIOException(this,"Both O_CREAT and O_EXCL are set, and the named file already exists");
+				mThrowRIOException(this,"Both O_CREAT and O_EXCL are set, and the named file already exists");
 			case EINTR:
-				ThrowRIOException(this,"The open operation was interrupted by a signal");
+				mThrowRIOException(this,"The open operation was interrupted by a signal");
 			case EISDIR:
-				ThrowRIOException(this,"The mode specified is write access, but the file is a directory");
+				mThrowRIOException(this,"The mode specified is write access, but the file is a directory");
 			case EMFILE:
-				ThrowRIOException(this,"The process has too many files open");
+				mThrowRIOException(this,"The process has too many files open");
 			case ENFILE:
-				ThrowRIOException(this,"The system has too many files open");
+				mThrowRIOException(this,"The system has too many files open");
 			case ENOENT:
-				ThrowRIOException(this,"The named file does not exist, and Create is not specified");
+				mThrowRIOException(this,"The named file does not exist, and Create is not specified");
 			case ENOSPC:
-				ThrowRIOException(this,"No disk space left");
+				mThrowRIOException(this,"No disk space left");
 			case ENXIO:
-				ThrowRIOException(this,"O_NONBLOCK and O_WRONLY are both set in the arguments, and the file is a FIFO");
+				mThrowRIOException(this,"O_NONBLOCK and O_WRONLY are both set in the arguments, and the file is a FIFO");
 			case EROFS:
-				ThrowRIOException(this,"The file resides on a read-only file system or the file does not exist");
+				mThrowRIOException(this,"The file resides on a read-only file system or the file does not exist");
 			default:
-				ThrowRIOException(this,"Cannot open the file");
+				mThrowRIOException(this,"Cannot open the file");
 		}
 	}
 
@@ -259,14 +259,14 @@ void RIOFile::Close(void)
 			switch(errno)
 			{
 				case EBADF:
-					ThrowRIOException(this,"Not a valid descriptor");
+					mThrowRIOException(this,"Not a valid descriptor");
 				case EINTR:
-					ThrowRIOException(this,"The close call was interrupted by a signal");
+					mThrowRIOException(this,"The close call was interrupted by a signal");
 				case EIO:
 				case EDQUOT:
-					ThrowRIOException(this,"When the file is accessed by NFS, these errors from write can sometimes not be detected until close");
+					mThrowRIOException(this,"When the file is accessed by NFS, these errors from write can sometimes not be detected until close");
 				default:
-					ThrowRIOException(this,"Cannot close the file");
+					mThrowRIOException(this,"Cannot close the file");
 			}
 		}
 		Handle=-1;
@@ -286,11 +286,11 @@ size_t RIOFile::Read(char* buffer,size_t nb,bool move)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		ThrowRIOException(this,"Can't read in the file");
+		mThrowRIOException(this,"Can't read in the file");
 	if(!CanRead)
-		ThrowRIOException(this,"No Read access");
+		mThrowRIOException(this,"No Read access");
 	if(End())
-		ThrowRIOException(this,"End of the file reached");
+		mThrowRIOException(this,"End of the file reached");
 
 	// Verify if the number of bytes to read must be adapted
 	if(static_cast<off_t>(nb)>Size-Pos)
@@ -382,9 +382,9 @@ void RIOFile::Write(const char* buffer,size_t nb)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		ThrowRIOException(this,"Can't write into the file");
+		mThrowRIOException(this,"Can't write into the file");
 	if(!CanWrite)
-		ThrowRIOException(this,"No write access");
+		mThrowRIOException(this,"No write access");
 
 	// Verify that the internal positions are OK
 	if(Pos!=RealPos)
@@ -462,9 +462,9 @@ void RIOFile::Seek(off_t pos)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		ThrowRIOException(this,"Can't seek the file");
+		mThrowRIOException(this,"Can't seek the file");
 	if((pos>=Size)&&(!CanWrite))
-		ThrowRIOException(this,"Position outside of the file");
+		mThrowRIOException(this,"Position outside of the file");
 
 	// Update current position
 	Pos=pos;
@@ -493,11 +493,11 @@ void RIOFile::SeekRel(off_t rel)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		ThrowRIOException(this,"Can't seek the file");
+		mThrowRIOException(this,"Can't seek the file");
 	if(static_cast<ssize_t>(Pos)+rel<0)//<static_cast<size_t>(labs(rel)))
-		ThrowRIOException(this,"Position before beginning of the file");
+		mThrowRIOException(this,"Position before beginning of the file");
 	if((Pos+rel>Size)&&(!CanWrite))
-		ThrowRIOException(this,"Position outside of the file");
+		mThrowRIOException(this,"Position outside of the file");
 
 	// Update current position
 	Pos+=rel;
@@ -526,7 +526,7 @@ void RIOFile::SeekToEnd(void)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		ThrowRIOException(this,"Can't seek the file");
+		mThrowRIOException(this,"Can't seek the file");
 	Seek(Size-1);
 }
 
@@ -536,26 +536,26 @@ void RIOFile::Truncate(off_t newsize)
 {
 	// Verify all internal conditions
 	if(Handle==-1)
-		ThrowRIOException(this,"Can't truncate the file");
+		mThrowRIOException(this,"Can't truncate the file");
 	if(!CanWrite)
-		ThrowRIOException(this,"No write access");
+		mThrowRIOException(this,"No write access");
 
 	if(ftruncate(Handle,newsize)==-1)
 	{
 		switch(errno)
 		{
 			case EACCES:
-				ThrowRIOException(this,"File is a directory");
+				mThrowRIOException(this,"File is a directory");
 			case EINVAL:
-				ThrowRIOException(this,"New length is negative");
+				mThrowRIOException(this,"New length is negative");
 			case EFBIG:
-				ThrowRIOException(this,"New size beyond the limits of the operating system");
+				mThrowRIOException(this,"New size beyond the limits of the operating system");
 			case EIO:
-				ThrowRIOException(this,"A hardware I/O error occurred");
+				mThrowRIOException(this,"A hardware I/O error occurred");
 			case EPERM:
-				ThrowRIOException(this,"File is \"append-only\" or \"immutable\"");
+				mThrowRIOException(this,"File is \"append-only\" or \"immutable\"");
 			case EINTR:
-				ThrowRIOException(this,"Operation was interrupted by a signal");
+				mThrowRIOException(this,"Operation was interrupted by a signal");
 		}
 	}
 

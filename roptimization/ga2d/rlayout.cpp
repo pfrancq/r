@@ -59,7 +59,7 @@ RLayout::RLayout(RProblem2D* prob,bool create)
 		for(obj.Start(),id=0;!obj.End();obj.Next(),id++)
 		{
 			if(id!=obj()->GetId())
-				ThrowRException("The identifiers of the objects must follow [0,"+RString::Number(Problem->GetNbObjs()-1)+"]");
+				mThrowRException("The identifiers of the objects must follow [0,"+RString::Number(Problem->GetNbObjs()-1)+"]");
 			InsertPtr(new RGeoInfo(obj()));
 		}
 
@@ -160,7 +160,7 @@ const RGeoInfo* RLayout::operator[](size_t id) const
 RObj2DContainer* RLayout::GetNewAggregator(void)
 {
 	if(NbAggregators==2)
-		ThrowRException("Maximum two aggregates per RLayout");
+		mThrowRException("Maximum two aggregates per RLayout");
 	RObj2DContainer* container(new RObj2DContainer(Problem->GetNbObjs()+NbAggregators,this));
 	InsertPtrAt(container,Problem->GetNbObjs()+NbAggregators);
 	NbAggregators++;

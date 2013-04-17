@@ -57,11 +57,11 @@ void R::AdaptXY(tCoord& x,tCoord& y,const tDirection from)
 			break;
 
 		case dNoDirection:
-			RAssertMsg("Direction can't be undefined");
+			mAssertMsg("Direction can't be undefined");
 			break;
 
 		default:
-			RAssertMsg("Not a valid Direction in this context");
+			mAssertMsg("Not a valid Direction in this context");
 			break;
 	}
 }
@@ -89,11 +89,11 @@ void R::AdaptTestXY(tCoord& x,tCoord& y,const tDirection from)
 			break;
 
 		case dNoDirection:
-			RAssertMsg("Direction can't be undefined");
+			mAssertMsg("Direction can't be undefined");
 			break;
 
 		default:
-			RAssertMsg("Not a valid Direction in this context");
+			mAssertMsg("Not a valid Direction in this context");
 			break;
 	}
 }

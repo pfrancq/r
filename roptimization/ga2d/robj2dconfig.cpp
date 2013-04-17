@@ -178,7 +178,7 @@ int RObj2DConfig::Compare(const tOrientation ori) const
 void RObj2DConfig::Set(const RPolygon& poly)
 {
 	if(Polygon.GetNbVertices())
-		ThrowRException("Polygon is already set");
+		mThrowRException("Polygon is already set");
 	Polygon=poly;
 	Polygon.RectDecomposition(Rects);
 	Polygon.Boundary(Rect);

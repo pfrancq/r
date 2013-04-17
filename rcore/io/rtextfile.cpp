@@ -968,7 +968,7 @@ void RTextFile::WriteLine(void)
 //------------------------------------------------------------------------------
 void RTextFile::WriteStr(const RString& str)
 {
-	RReturnIfFail(str.GetLen()>0);
+	mReturnIfFail(str.GetLen()>0);
 	WriteSeparator();
 	RCString res=Codec->FromUnicode(str);
 	Write(res,res.GetLen());
@@ -1176,7 +1176,7 @@ void RTextFile::WriteLog(const RString& entry)
 	time_t timer;
 	struct tm *tblock;
 
-	RReturnIfFail(entry.GetLen()>0);
+	mReturnIfFail(entry.GetLen()>0);
 	if(!NewLine) WriteLine();
 	timer = time(NULL);
 	tblock = localtime(&timer);

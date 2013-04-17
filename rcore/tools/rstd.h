@@ -57,65 +57,49 @@
 
 //------------------------------------------------------------------------------
 // Assertion macros
+#ifdef __GNUC__
+	#define mInfo \
+		"file "<<__FILE__<<": line "<<__LINE__<<" ("<<__PRETTY_FUNCTION__<<")"
+#else 	// !__GNUC__
+	#define mInfo \
+		"file "<<__FILE__<<": line "<<__LINE__
+#endif 	// __GNUC__
+
+
 #ifdef __RDISABLEASSERT__
 
-	#define RAssert(expr)
-	#define RAssertNotReached()
+	#define mAssert(expr)
+	#define mAssert2(expr)
+	#define mAssertNotReached()
 
 #else 		// !__RDISABLEASSERT__
 
-	#ifdef __GNUC__
+	#define mAssert(expr)                                             \
+	if(!(expr))                                                       \
+	{                                                                 \
+		std::cerr<<mInfo                                               \
+					<<": assertion failed: "<<#expr<<std::endl;           \
+	}
 
-		#define RAssert(expr)                                                 \
-		if(!(expr))                                                           \
-		{                                                                     \
-			std::cerr	<<"file "<<__FILE__                                   \
-						<<": line "<<__LINE__                                 \
-						<<" ("<<__PRETTY_FUNCTION__                           \
-						<<"): assertion failed: "<<#expr<<std::endl;          \
-		}
+	#define mAssert2(expr,msg)                                        \
+	if(!(expr))                                                       \
+	{                                                                 \
+		std::cerr<<mInfo                                               \
+					<<": assertion failed: "<<#expr                       \
+					<<" ("<<msg<<")"<<std::endl;                          \
+	}
 
-		#define RAssertNotReached()                                           \
-		{                                                                     \
-			std::cerr	<<"file "<<__FILE__                                   \
-						<<": line "<<__LINE__                                 \
-						<<" ("<<__PRETTY_FUNCTION__                           \
-						<<"): should not be reached"<<std::endl;              \
-		}
+	#define mAssertNotReached()                                       \
+	{                                                                 \
+		std::cerr<<mInfo                                               \
+					<<": should not be reached"<<std::endl;               \
+	}
 
-		#define RAssertMsg(msg)                                               \
-		{                                                                     \
-			std::cerr	<<"file "<<__FILE__                                   \
-						<<": line "<<__LINE__                                 \
-						<<" ("<<__PRETTY_FUNCTION__                           \
-						<<"): "<<#msg<<std::endl;                             \
-		}
-
-	#else 	// !__GNUC__
-
-		#define RAssert(expr)                                                 \
-		if(!(expr))                                                           \
-		{                                                                     \
-			std::cerr	<<"file "<<__FILE__                                   \
-						<<": line "<<__LINE__                                 \
-						<<" : assertion failed: "<<#expr<<std::endl;          \
-		}
-
-		#define RAssertNotReached()                                           \
-		{                                                                     \
-			std::cerr	<<"file "<<__FILE__                                   \
-						<<": line "<<__LINE__                                 \
-						<<" : should not be reached"<<std::endl;              \
-		}
-
-		#define RAssertMsg(msg)                                               \
-		{                                                                     \
-			std::cerr	<<"file "<<__FILE__                                   \
-						<<": line "<<__LINE__                                 \
-						<<": "<<#msg<<std::endl;                              \
-		}
-
-	#endif 	// __GNUC__
+	#define mAssertMsg(msg)                                           \
+	{                                                                 \
+		std::cerr<<mInfo                                               \
+					<<": "<<#msg<<std::endl;                              \
+	}
 
 #endif 		// !__RDISABLEASSERT__
 
@@ -124,55 +108,46 @@
 // Check macros
 #ifdef __RDISABLECHECKS__
 
-	#define RReturnIfFail(expr)
-	#define RReturnValIfFail(expr,val)
+	#define mReturnIfFail(expr)
+	#define mReturnIfFail2(expr,msg)
+	#define mReturnValIfFail(expr,val)
+	#define mReturnValIfFail3(expr,val,msg)
 
 #else 		// !__RDISABLECHECKS__
 
-	#ifdef __GNUC__
+	#define mReturnIfFail(expr)                                       \
+	if(!(expr))                                                       \
+	{                                                                 \
+		std::cerr<<mInfo                                               \
+					<<": check failed: "<<#expr<<std::endl;               \
+		return;                                                        \
+	}
 
-		#define RReturnIfFail(expr)                                           \
-		if(!(expr))                                                           \
-		{                                                                     \
-			std::cerr	<<"file "<<__FILE__                                   \
-						<<": line "<<__LINE__                                 \
-						<<" ("<<__PRETTY_FUNCTION__                           \
-						<<"): check failed: "<<#expr<<std::endl;              \
-			return;                                                           \
-		}
+	#define mReturnIfFail2(expr,msg)                                  \
+	if(!(expr))                                                       \
+	{                                                                 \
+		std::cerr<<mInfo                                               \
+					<<": check failed: "<<#expr                           \
+					<<" ("<<msg<<")"<<std::endl;                          \
+		return;                                                        \
+	}
 
-		#define RReturnValIfFail(expr,val)                                    \
-		if(!(expr))                                                           \
-		{                                                                     \
-			std::cerr	<<"file "<<__FILE__                                   \
-						<<": line "<<__LINE__                                 \
-						<<" ("<<__PRETTY_FUNCTION__                           \
-						<<"): check failed: "<<#expr<<std::endl;              \
-			return(val);                                                      \
-		}
+	#define mReturnValIfFail(expr,val)                                \
+	if(!(expr))                                                       \
+	{                                                                 \
+		std::cerr<<mInfo                                               \
+					<<": check failed: "<<#expr<<std::endl;               \
+		return(val);                                                   \
+	}
 
-	#else 	// !__GNUC__
-
-		#define RReturnIfFail(expr)                                           \
-		if(!(expr))                                                           \
-		{                                                                     \
-			std::cerr	<<"file "<<__FILE__                                   \
-						<<": line "<<__LINE__                                 \
-						<<" : check failed: "<<#expr<<std::endl;              \
-			return;                                                           \
-		}
-
-		#define RReturnValIfFail(expr,val)                                    \
-		if(!(expr))                                                           \
-		{                                                                     \
-			std::cerr	<<"file "<<__FILE__                                   \
-						<<": line "<<__LINE__                                 \
-						<<" : check failed: "<<#expr<<std::endl;              \
-			return(val);                                                      \
-		}
-
-
-	#endif 	// !__GNUC__
+	#define mReturnValIfFail3(expr,val,msg)                           \
+	if(!(expr))                                                       \
+	{                                                                 \
+		std::cerr<<mInfo                                               \
+					<<": check failed: "<<#expr                           \
+					<<" ("<<msg<<")"<<std::endl;                          \
+		return(val);                                                   \
+	}
 
 #endif 		// !__RDISABLECHECKS__
 
@@ -181,38 +156,18 @@
 // To-Do Macros
 #ifdef __RDISABLECHECKS__
 
-	#define RToImplement()
-	#define RToDo(expr)
+	#define mToImplement()
+	#define mToDo(expr)
 
 #else 		// !__RDISABLECHECKS__
 
-	#ifdef __GNUC__
+	#define mToImplement()                                             \
+	std::cout<<mInfo                                                   \
+				<<": to implement"<<std::endl;                            \
 
-		#define RToImplement()                                                \
-		std::cout	<<"file "<<__FILE__                                       \
-					<<": line "<<__LINE__                                     \
-					<<" ("<<__PRETTY_FUNCTION__                               \
-					<<"): to implement"<<std::endl;                           \
-
-		#define RToDo(expr)                                                   \
-		std::cout	<<"file "<<__FILE__                                       \
-					<<": line "<<__LINE__                                     \
-					<<" ("<<__PRETTY_FUNCTION__                               \
-					<<"): to do: "<<#expr<<std::endl;                         \
-
-	#else 	// !__GNUC__
-
-		#define RToImplement()                                                \
-		std::cout	<<"file "<<__FILE__                                       \
-					<<": line "<<__LINE__                                     \
-					<<" : to implement"<<std::endl;                           \
-
-		#define RToDo(expr)                                                   \
-		std::cout	<<"file "<<__FILE__                                       \
-					<<": line "<<__LINE__                                     \
-					<<" : to do: "<<#expr<<std::endl;                         \
-
-	#endif 	// !__GNUC__
+	#define mToDo(expr)                                                \
+	std::cout<<mInfo                                                   \
+				<<") to do: "<<#expr<<std::endl;                          \
 
 #endif 		// !__RDISABLECHECKS__
 

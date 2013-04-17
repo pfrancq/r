@@ -82,7 +82,7 @@ template<size_t MaxLen>
 			Len++;
 		}
 		if(*src)
-			ThrowRException("Maximal length is not large enough");
+			mThrowRException("Maximal length is not large enough");
 	}
 }
 
@@ -102,7 +102,7 @@ template<size_t MaxLen>
 			Len++;
 		}
 		if(!src->IsNull())
-			ThrowRException("Maximal length is not large enough");
+			mThrowRException("Maximal length is not large enough");
 	}
 }
 
@@ -122,7 +122,7 @@ template<size_t MaxLen>
 			Len++;
 		}
 		if(!src->IsNull())
-			ThrowRException("Maximal length is not large enough");
+			mThrowRException("Maximal length is not large enough");
 	}
 }
 
@@ -142,7 +142,7 @@ template<size_t MaxLen>
 			Len++;
 		}
 		if(!text->IsNull())
-			ThrowRException("Maximal length is not large enough");
+			mThrowRException("Maximal length is not large enough");
 	}
 }
 
@@ -153,7 +153,7 @@ template<size_t MaxLen>
 {
 	RCString Str(RTextEncoding::GetUTF8Encoding()->FromUnicode(Text,Len));
 	if(Str.GetLen()>MaxLen)
-		ThrowRException("Maximal length is not large enough");
+		mThrowRException("Maximal length is not large enough");
 	size_t lenlatin1(Str.GetLen()+1);
 	memcpy(const_cast<char*>(Latin1),Str(),lenlatin1*sizeof(char));
 }
@@ -221,7 +221,7 @@ template<size_t MaxLen>
 			Len++;
 		}
 		if(*src)
-			ThrowRException("Maximal length is not large enough");
+			mThrowRException("Maximal length is not large enough");
 	}
 	return(*this);
 }
@@ -241,7 +241,7 @@ template<size_t MaxLen>
 			Len++;
 		}
 		if(!src->IsNull())
-			ThrowRException("Maximal length is not large enough");
+			mThrowRException("Maximal length is not large enough");
 	}
 	return(*this);
 }
@@ -258,7 +258,7 @@ template<size_t MaxLen>
 		Latin1[0]=0;
 	}
 	else
-		ThrowRException("Maximal length is not large enough");
+		mThrowRException("Maximal length is not large enough");
 }
 
 
@@ -394,7 +394,7 @@ template<size_t MaxLen>
 	if(!src.Len)
 		return(*this);
 	if(src.Len+Len>MaxLen)
-		ThrowRException("Maximal length is not large enough");
+		mThrowRException("Maximal length is not large enough");
 	memcpy(&Text[Len],src.Text,src.Len*sizeof(RChar));
 	Len+=src.Len;
 	Text[Len+1]=0;
@@ -409,7 +409,7 @@ template<size_t MaxLen>
 {
 	size_t len(strlen(src));
 	if(len+Len>MaxLen)
-		ThrowRException("Maximal length is not large enough");
+		mThrowRException("Maximal length is not large enough");
 	RChar* ptr(&Text[Len]);
 	const char* ptr2(src);
 	while(*ptr2)
@@ -427,7 +427,7 @@ template<size_t MaxLen>
 {
 	size_t len(strlen(src));
 	if(len+Len>MaxLen)
-		ThrowRException("Maximal length is not large enough");
+		mThrowRException("Maximal length is not large enough");
 	memcpy(&Text[Len],src,len*sizeof(RChar));
 	Len+=len;
 	Text[Len+1]=0;
@@ -623,7 +623,7 @@ template<size_t MaxLen>
 		del=Len-Pos;
 
 	if(sub.Len+Len-del>MaxLen)
-		ThrowRException("Maximal length is not large enough");
+		mThrowRException("Maximal length is not large enough");
 
 	// Move the string to leave
 	if(del<=Len-Pos)

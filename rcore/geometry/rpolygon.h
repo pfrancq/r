@@ -134,6 +134,20 @@ public:
 	void Clear(void);
 
 	/**
+	* Insert an vertex into the polygon.
+	* @param x	            X Position.
+	* @param y              Y Position.
+   */
+	void InsertVertex(tCoord x,tCoord y);
+
+	/**
+	 * Insert an vertex into the polygon. A new RPoint is created and added to
+	 * the polygon.
+    * @param pt             Vertex to insert.
+    */
+	void InsertVertex(const RPoint& pt);
+
+	/**
 	 * Insert an vertex into the polygon.
     * @param pt             Vertex to insert.
     */

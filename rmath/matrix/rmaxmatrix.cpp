@@ -86,7 +86,7 @@ void RMaxMatrix::Clear(double,bool clean)
 //------------------------------------------------------------------------------
 void RMaxMatrix::Init(double)
 {
-	ThrowRException("Not valid operator for RMaxMatrix.");
+	mThrowRException("Not valid operator for RMaxMatrix.");
 }
 
 
@@ -177,7 +177,7 @@ double RMaxMatrix::operator()(size_t i,size_t j) const
 //------------------------------------------------------------------------------
 double& RMaxMatrix::operator()(size_t,size_t)
 {
-	ThrowRException("Not valid operator for RMaxMatrix : use Add");
+	mThrowRException("Not valid operator for RMaxMatrix : use Add");
 }
 
 

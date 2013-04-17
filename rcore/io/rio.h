@@ -166,7 +166,7 @@ public:
 	* if(!ptr)
 	* 	throw RIOException(__PRETTY_FUNCTION__,__LINE__,"ptr cannot be a null pointer");
 	* @endcode
-	* @see The ThrowRIOException marco.
+	* @see The mThrowRIOException marco.
 	* @param func                     Function producing the error.
 	* @param where                    Line position of the error.
 	* @param str                      Message of the error.
@@ -228,7 +228,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Macro to generate a RIOException
-#define ThrowRIOException(file,msg) throw RIOException(file,__PRETTY_FUNCTION__,__LINE__,msg)
+#define mThrowRIOException(file,msg) throw RIOException(file,__PRETTY_FUNCTION__,__LINE__,msg)
 
 
 //------------------------------------------------------------------------------

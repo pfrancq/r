@@ -257,7 +257,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			idx1=0;
 			idx2=1;
 		}
-		RAssert(idx1!=idx2);
+		mAssert(idx1!=idx2);
 		s1=tmpChrom1[idx1];
 		s2=tmpChrom1[idx2];
 		if((*s1->Fitness)>(*s2->Fitness))

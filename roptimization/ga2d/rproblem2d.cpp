@@ -75,7 +75,7 @@ void RProblem2D::DetermineBoard(void)
 
 			// Verify that it is an external connector
 			if(Rect.IsIn(r))
-				ThrowRException("Pin '"+Pins()->GetPin()->GetName()+"' of external connector '"+Con()->GetConnector()->GetName()+"' is invalid");
+				mThrowRException("Pin '"+Pins()->GetPin()->GetName()+"' of external connector '"+Con()->GetConnector()->GetName()+"' is invalid");
 
 			// Adapt the board
 			if(r.GetX1()<X1) X1=r.GetX1();

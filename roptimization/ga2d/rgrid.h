@@ -148,7 +148,7 @@ public:
 	*/
 	inline size_t GetObjId(tCoord x,tCoord y) const
 	{
-		RReturnValIfFail(OccupiedX,false);
+		mReturnValIfFail(OccupiedX,false);
 		return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]);
 	}
 

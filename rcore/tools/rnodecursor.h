@@ -185,7 +185,7 @@ public:
 	*/
 	void Set(const T& root,size_t min=0,size_t max=SIZE_MAX)
 	{
-		RAssert(min<=max);
+		mAssert(min<=max);
 		NbPtr=root.NbTopNodes;
 		if((max!=SIZE_MAX)&&(max<root.NbTopNodes))
 			LastPtr=max+1;
@@ -210,7 +210,7 @@ public:
 	*/
 	void Set(const N* node,size_t min=0,size_t max=SIZE_MAX)
 	{
-		RAssert(min<=max);
+		mAssert(min<=max);
 		NbPtr=node->NbSubNodes;
 		if((max!=SIZE_MAX)&&(max<node->NbSubNodes))
 			LastPtr=max+1;

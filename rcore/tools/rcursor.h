@@ -165,7 +165,7 @@ public:
 	*/
 	template<bool a,bool o> void Set(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX)
 	{
-		RAssert(min<=max);
+		mAssert(min<=max);
 		NbPtr=c.NbPtr;
 		Tab=c.Tab;
 		if((max!=SIZE_MAX)&&(max<c.LastPtr))

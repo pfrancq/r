@@ -83,6 +83,7 @@ protected:
 
 	/**
 	 * The HTMLTag provides a representation for a HTML Tag.
+	 * @short HTML Tag.
 	 */
 	class HTMLTag
 	{

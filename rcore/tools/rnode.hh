@@ -100,7 +100,7 @@ template<class T,class N,bool bAlloc>
 	void RNode<T,N,bAlloc>::InsertNode(N* node)
 {
 	if(!Tree)
-		ThrowRException("Node not assign to a tree");
+		mThrowRException("Node not assign to a tree");
 	Tree->InsertNode(static_cast<N*>(this),node);
 }
 

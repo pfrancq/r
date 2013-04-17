@@ -128,7 +128,7 @@ template<class cGroup,class cObj,class cGroups>
 		VerifyGroups(id);
 		Grp=(*this)[id];
 		if(Grp->Reserved)
-			ThrowRException("Group '"+RString(id)+"' is already used.");
+			mThrowRException("Group '"+RString(id)+"' is already used.");
 	}
 	Grp->Reserved=true;
 	Used.InsertPtr(Grp);
@@ -180,8 +180,8 @@ template<class cGroup,class cObj,class cGroups>
 template<class cGroup,class cObj,class cGroups>
 	void R::RGroups<cGroup,cObj,cGroups>::InsertObjs(const cGroup* from,cGroup* to)
 {
-	RReturnIfFail(from->Owner!=to->Owner);
-	RReturnIfFail(!to->NbSubObjects);
+	mReturnIfFail(from->Owner!=to->Owner);
+	mReturnIfFail(!to->NbSubObjects);
 	if(!(from->NbSubObjects)) return;
 	bool CallPostInsert(to->PreInsertAll(from));
 	to->SubObjects=ObjsAss.GetNb();

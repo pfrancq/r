@@ -133,7 +133,7 @@ tCoord RGeoInfoConnection::ComputeMinDist(RLayout* layout)
 	Complete=true;  // Suppose it is completed
 
 	// Construct the graph between all pairs of pins
-	RAssert(Con->GetNb());
+	mAssert(Con->GetNb());
 	RCursor<RObj2DConnector> con(Con->GetConnectors());
 	RCursor<RObj2DConnector> con2(Con->GetConnectors());
 	for(con.Start(),i=con.GetNb();--i;con.Next())

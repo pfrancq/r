@@ -179,7 +179,7 @@ const char* RString::ToLatin1(void) const
 //-----------------------------------------------------------------------------
 RString& RString::operator+=(const char* src)
 {
-	RReturnValIfFail(src,*this);
+	mReturnValIfFail(src,*this);
 	if(Data==DataNull)
 	{
 		(*this)=src;
@@ -612,7 +612,7 @@ void RCharCursor::Set(const RString& src)
 void RCharCursor::Start(void)
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	Current=Str->Data->Text;
 	ActPtr=0;
 }
@@ -622,7 +622,7 @@ void RCharCursor::Start(void)
 void RCharCursor::StartFromEnd(void)
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	ActPtr=Str->Data->Len-1;
 	if(!Str->Data->Len)
 	{
@@ -638,7 +638,7 @@ void RCharCursor::StartFromEnd(void)
 void RCharCursor::GoTo(size_t idx)
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	if(idx>=Str->Data->Len)
 	#ifdef __GNUC__
 		throw std::range_error(__PRETTY_FUNCTION__);
@@ -654,7 +654,7 @@ void RCharCursor::GoTo(size_t idx)
 size_t RCharCursor::GetNb(void)
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	return(Str->Data->Len);
 }
 
@@ -663,7 +663,7 @@ size_t RCharCursor::GetNb(void)
 size_t RCharCursor::GetPos(void)
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	return(ActPtr);
 }
 
@@ -672,7 +672,7 @@ size_t RCharCursor::GetPos(void)
 bool RCharCursor::Begin(void) const
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	return(ActPtr==cNoRef);
 }
 
@@ -681,7 +681,7 @@ bool RCharCursor::Begin(void) const
 bool RCharCursor::End(void) const
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	return(ActPtr==Str->Data->Len);
 }
 
@@ -690,7 +690,7 @@ bool RCharCursor::End(void) const
 void RCharCursor::Next(size_t inc)
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	if(!Str->Data->Len) return;
 	if(ActPtr==Str->Data->Len)
 	{
@@ -709,7 +709,7 @@ void RCharCursor::Next(size_t inc)
 void RCharCursor::Prev(size_t inc)
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	if(!Str->Data->Len) return;
 	if(ActPtr==cNoRef)
 	{
@@ -734,7 +734,7 @@ void RCharCursor::Prev(size_t inc)
 RChar RCharCursor::operator()(void) const
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	return(*Current);
 }
 
@@ -743,7 +743,7 @@ RChar RCharCursor::operator()(void) const
 RChar RCharCursor::operator[](size_t idx) const
 {
 	if(!Str)
-		ThrowRException("No string defined");
+		mThrowRException("No string defined");
 	if(idx>=Str->Data->Len)
 	#ifdef __GNUC__
 		throw std::range_error(__PRETTY_FUNCTION__);

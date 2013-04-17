@@ -182,6 +182,7 @@ public:
 	*	}
 	* }
 	* @endcode
+	* @short First Index Container.
 	*/
 	class Hash : public RContainer<C,bAlloc,true>
 	{

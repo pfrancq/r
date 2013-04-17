@@ -428,7 +428,7 @@ template<class C,class S>
 template<class C,class S>
 	S& R::BasicString<C,S>::operator+=(const C* src)
 {
-	RReturnValIfFail(src,static_cast<S&>(*this));
+	mReturnValIfFail(src,static_cast<S&>(*this));
 	if(Data==DataNull)
 	{
 		static_cast<S&>(*this)=src;

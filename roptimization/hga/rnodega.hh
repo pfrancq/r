@@ -186,7 +186,7 @@ template<class cNode,class cObj,class cNodes>
 	cNode* CurNode;
 
 	// Verify that the nodes are from different owners
-	RReturnValIfFail(Tree!=from->Tree,0);
+	mReturnValIfFail(Tree!=from->Tree,0);
 
 	// Update other information
 	CopyInfos(*from);

@@ -156,22 +156,22 @@ void RPromLinearCriterion::Set(const RParam* param)
 	bool a;
 	const RParamStruct* Param(dynamic_cast<const RParamStruct*>(param));
 	if(!Param)
-		ThrowRException("Parameter '"+param->GetName()+"' is not of type 'RParamStuct'");
+		mThrowRException("Parameter '"+param->GetName()+"' is not of type 'RParamStuct'");
 	RParamValue* Val(Param->Get<RParamValue>("P"));
 	if(!Val)
-		ThrowRException("Parameter '"+param->GetName()+"' has no member 'P'");
+		mThrowRException("Parameter '"+param->GetName()+"' has no member 'P'");
 	p=Val->GetDouble();
 	Val=Param->Get<RParamValue>("Q");
 	if(!Val)
-		ThrowRException("Parameter '"+param->GetName()+"' has no member 'Q'");
+		mThrowRException("Parameter '"+param->GetName()+"' has no member 'Q'");
 	q=Val->GetDouble();
 	Val=Param->Get<RParamValue>("Weight");
 	if(!Val)
-		ThrowRException("Parameter '"+param->GetName()+"' has no member 'Weight'");
+		mThrowRException("Parameter '"+param->GetName()+"' has no member 'Weight'");
 	w=Val->GetDouble();
 	Val=Param->Get<RParamValue>("Active");
 	if(!Val)
-		ThrowRException("Parameter '"+param->GetName()+"' has no member 'Active'");
+		mThrowRException("Parameter '"+param->GetName()+"' has no member 'Active'");
 	a=Val->GetBool();
 	Set(p,q,w,a);
 }

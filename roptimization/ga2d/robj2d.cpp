@@ -113,7 +113,7 @@ void RObj2D::CreateOri(tOrientation ori)
 	RObj2DConfig* Normal(GetPtr(oNormal));
 
 	if(!Normal)
-		ThrowRException("No normal configuration is created");
+		mThrowRException("No normal configuration is created");
 
 	if(ori==oNormal)
 		return;

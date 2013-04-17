@@ -69,7 +69,7 @@ void RCSVFile::Open(RIO::ModeType mode)
 void RCSVFile::Open(const RURI& uri,RChar sep,RIO::ModeType mode,const RCString& encoding)
 {
 	if(mode!=RIO::Read)
-		ThrowRIOException(this,"RCSVFile can only be read");
+		mThrowRIOException(this,"RCSVFile can only be read");
 	Sep=sep;
 	RTextFile::Open(uri,mode,encoding);
 	NbValues=0;
@@ -93,11 +93,11 @@ inline RString* RCSVFile::NewValue(void)
 	// Insert a null string
 	// First character of the value
 	if(NbValues<Values.GetNb())
-		ThrowRIOException(this,"Internal Problem");
+		mThrowRIOException(this,"Internal Problem");
 	Values.InsertPtr(Cur=new RString());
 	Cur->SetLen(0);
 	if(SizeBuffer)
-		ThrowRIOException(this,"Non null buffer size");
+		mThrowRIOException(this,"Non null buffer size");
 	SizeBuffer=0;
 	Buffer=Internal;
 

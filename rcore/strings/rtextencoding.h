@@ -56,17 +56,17 @@ namespace R{
 /**
 * Exception specifying that the chosen encoding is not supported.
 */
-NEWREXCEPTION(EncodingNotSupported);
+mNewRException(EncodingNotSupported);
 
 /**
 * Exception specifying that an invalid byte sequence cannot be handle.
 */
-NEWREXCEPTION(InvalidByteSequence);
+mNewRException(InvalidByteSequence);
 
 /**
 * Exception specifying that the byte sequence is incomplete.
 */
-NEWREXCEPTION(IncompleteByteSequence);
+mNewRException(IncompleteByteSequence);
 
 
 //------------------------------------------------------------------------------
@@ -88,6 +88,7 @@ public:
 	 * Structure representing a Unicode character encoded using a RChar. If
 	 * only one RChar is necessary to store the character, the second one is
 	 * set to null.
+	 * @short Unicode Character Structure.
 	 */
 	struct UnicodeCharacter
 	{

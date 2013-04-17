@@ -281,7 +281,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	g2=g1+Instance->RRand(Used.GetNb()-2)+1;
 	if(g2>Used.GetNb()-1)
 		g2-=Used.GetNb()-1;
-	RReturnIfFail(g2!=g1);
+	mReturnIfFail(g2!=g1);
 
 	// Exchange them in Used
 	Used.Exchange(g1,g2);

@@ -84,7 +84,7 @@ void RIndexFile::Close(void)
 void RIndexFile::Clear(void)
 {
 	if(!IsOpen())
-		ThrowRIOException(this,"File not opened");
+		mThrowRIOException(this,"File not opened");
 
 	// Clear the block file and the free spaces
 	RBlockFile::Clear();
@@ -96,7 +96,7 @@ void RIndexFile::Clear(void)
 size_t RIndexFile::GetIndex(size_t block,size_t id,bool& find)
 {
 	if(!IsOpen())
-		ThrowRIOException(this,"File not opened");
+		mThrowRIOException(this,"File not opened");
 
 	struct Index
 	{
@@ -151,7 +151,7 @@ size_t RIndexFile::GetIndex(size_t block,size_t id,bool& find)
 void RIndexFile::MoveRecords(size_t blockid,size_t entry,long rel)
 {
 	if(!IsOpen())
-		ThrowRIOException(this,"File not opened");
+		mThrowRIOException(this,"File not opened");
 
 	// Go to the record position in the record address table
 	size_t Pos;
@@ -180,7 +180,7 @@ void RIndexFile::MoveRecords(size_t blockid,size_t entry,long rel)
 void RIndexFile::ModifyFreeSpace(size_t blockid,long rel)
 {
 	if(!IsOpen())
-		ThrowRIOException(this,"File not opened");
+		mThrowRIOException(this,"File not opened");
 
 	RBlockFile::Seek(blockid,0);
 	rel+=FreeSpaces[blockid-1];
@@ -193,7 +193,7 @@ void RIndexFile::ModifyFreeSpace(size_t blockid,long rel)
 void RIndexFile::NewRecord(size_t blockid,size_t indexid,size_t entry,size_t size)
 {
 	if(!IsOpen())
-		ThrowRIOException(this,"File not opened");
+		mThrowRIOException(this,"File not opened");
 
 	size_t Pos;
 
@@ -279,7 +279,7 @@ void RIndexFile::NewRecord(size_t blockid,size_t indexid,size_t entry,size_t siz
 
 		// Fourth step : Move the Pos-LastPos bytes in memory starting from LastPos to newpos
 		if(LastPos>Pos)
-			ThrowRException("Corrupted index file '"+GetURI()()+"'");
+			mThrowRException("Corrupted index file '"+GetURI()()+"'");
 		if(Pos-LastPos)
 			RBlockFile::MoveBlock(blockid,LastPos,newpos,Pos-LastPos);
 
@@ -301,7 +301,7 @@ void RIndexFile::NewRecord(size_t blockid,size_t indexid,size_t entry,size_t siz
 //------------------------------------------------------------------------------
 void RIndexFile::Seek(off_t)
 {
-	ThrowRIOException(this,"Method cannot be called");
+	mThrowRIOException(this,"Method cannot be called");
 }
 
 
@@ -309,7 +309,7 @@ void RIndexFile::Seek(off_t)
 void RIndexFile::Write(const char* buffer,size_t nb)
 {
 	if(!IsOpen())
-		ThrowRIOException(this,"File not opened");
+		mThrowRIOException(this,"File not opened");
 
 	RBlockFile::Write(buffer,nb);
 }
@@ -319,7 +319,7 @@ void RIndexFile::Write(const char* buffer,size_t nb)
 void RIndexFile::Read(char* buffer,size_t nb)
 {
 	if(!IsOpen())
-		ThrowRIOException(this,"File not opened");
+		mThrowRIOException(this,"File not opened");
 
 	RBlockFile::Read(buffer,nb);
 }
@@ -329,13 +329,13 @@ void RIndexFile::Read(char* buffer,size_t nb)
 void RIndexFile::EraseRecord(size_t blockid,size_t indexid)
 {
 	if(!IsOpen())
-		ThrowRIOException(this,"File not opened");
+		mThrowRIOException(this,"File not opened");
 
 	// Find the entry in the index table
 	bool find;
 	size_t entry(GetIndex(blockid,indexid,find));
 	if(!find)
-		ThrowRIOException(this,"No record "+RString::Number(indexid)+" in block "+RString::Number(blockid));
+		mThrowRIOException(this,"No record "+RString::Number(indexid)+" in block "+RString::Number(blockid));
 
 	// To erase a record :
 	// 1. Look if it is the first record :
@@ -404,13 +404,13 @@ void RIndexFile::EraseRecord(size_t blockid,size_t indexid)
 void RIndexFile::Seek(size_t blockid,size_t indexid)
 {
 	if(!IsOpen())
-		ThrowRIOException(this,"File not opened");
+		mThrowRIOException(this,"File not opened");
 
 	// Find the right index in the table
 	bool Find;
 	size_t Entry(GetIndex(blockid,indexid,Find));
 	if(!Find)
-		ThrowRIOException(this,"No record "+RString::Number(indexid)+" in block "+RString::Number(blockid));
+		mThrowRIOException(this,"No record "+RString::Number(indexid)+" in block "+RString::Number(blockid));
 
 	// Read the position of the record and seek to it
 	RBlockFile::Seek(blockid,((Entry+1)*SizeT2)+sizeof(size_t));
@@ -424,10 +424,10 @@ void RIndexFile::Seek(size_t blockid,size_t indexid)
 void RIndexFile::Seek(size_t& blockid,size_t indexid,size_t size)
 {
 	if(!IsOpen())
-		ThrowRIOException(this,"File not opened");
+		mThrowRIOException(this,"File not opened");
 
 	if(size>BlockSize)
-		ThrowRIOException(this,"The size of a record ("+RString::Number(size)+") exceeds the block size ("+RString::Number(BlockSize)+")");
+		mThrowRIOException(this,"The size of a record ("+RString::Number(size)+") exceeds the block size ("+RString::Number(BlockSize)+")");
 
 	size_t Entry,Pos;
 
@@ -439,7 +439,7 @@ void RIndexFile::Seek(size_t& blockid,size_t indexid,size_t size)
 		bool Find;
 		Entry=GetIndex(blockid,indexid,Find);
 		if(!Find)
-			ThrowRIOException(this,"No record "+RString::Number(indexid)+" in block "+RString::Number(blockid));
+			mThrowRIOException(this,"No record "+RString::Number(indexid)+" in block "+RString::Number(blockid));
 
 		// Compute the size previously allocated
 		RBlockFile::Seek(blockid,((Entry+1)*SizeT2)+sizeof(size_t));

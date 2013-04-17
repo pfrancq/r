@@ -194,6 +194,7 @@ public:
 	*	}
 	* }
 	* @endcode
+	* @short Second Index Container.
 	*/
 	class Hash2 : public RContainer<C,bAlloc,true>
 	{
@@ -269,6 +270,7 @@ public:
 	*	}
 	* }
 	* @endcode
+	* @short First Index Container.
 	*/
 	class Hash : public RContainer<Hash2,true,true>
 	{
@@ -554,7 +556,7 @@ public:
 	*/
 	inline void InsertPtr(C* ins,bool del=false)
 	{
-		RReturnIfFail(ins);
+		mReturnIfFail(ins);
 		Hash* ptr=GetHash(ins->HashIndex(1));
 		Hash2* ptr2=ptr->GetHash(ins->HashIndex(2),Max,Inc);
 		ptr2->InsertPtr(ins,del);

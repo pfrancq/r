@@ -107,7 +107,7 @@ void RURI::AnalyzeString(void)
 	// Extract Scheme (search first :)
 	for(i=0;(i<URI.GetLen())&&(URI[i]!=':');i++,Scheme.Size++) ;
 	if(i==URI.GetLen())
-		ThrowRException(URI+" is not a valid URI");
+		mThrowRException(URI+" is not a valid URI");
 
 	// Test if it is a local file
 	if(GetScheme()=="file")
@@ -131,15 +131,15 @@ void RURI::AnalyzeString(void)
 	// Skip ":"
 	i++;
 	if(i==URI.GetLen())
-		ThrowRException(URI+" is not a valid URI");
+		mThrowRException(URI+" is not a valid URI");
 	RChar c1=URI[i];
 	i++;
 	if(i==URI.GetLen())
-		ThrowRException(URI+" is not a valid URI");
+		mThrowRException(URI+" is not a valid URI");
 	RChar c2=URI[i];
 	i++;
 	if(i==URI.GetLen())
-		throw RException(URI+" is not a valid URI");
+		mThrowRException(URI+" is not a valid URI");
 
 	if((c1=='/')&&(c2=='/'))
 	{
@@ -154,7 +154,7 @@ void RURI::AnalyzeString(void)
 		{
 			i++;
 			if(i==URI.GetLen())
-				throw RException(URI+" is not a valid URI");
+				mThrowRException(URI+" is not a valid URI");
 			for(Port.Pos=i;((i<URI.GetLen())&&(URI[i]!='/'));i++,Port.Size++) ;
 			if(i==URI.GetLen())
 				return;
@@ -181,10 +181,10 @@ void RURI::AnalyzeString(void)
 			// Test Query
 			i++;
 			if(i==URI.GetLen())
-				throw RException(URI+" is not a valid URI");
+				mThrowRException(URI+" is not a valid URI");
 			for(Fragment.Pos=i;i<URI.GetLen();i++,Fragment.Size++) ;
 			if(i==URI.GetLen())
-				throw RException(URI+" is not a valid URI");
+				mThrowRException(URI+" is not a valid URI");
 		}
 
 		return;

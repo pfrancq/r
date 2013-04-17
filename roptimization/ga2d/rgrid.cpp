@@ -72,8 +72,8 @@ RGrid::RGrid(const RSize &limits)
 //------------------------------------------------------------------------------
 void RGrid::Clear(void)
 {
-	RReturnIfFail(OccupiedX);
-	RReturnIfFail(OccupiedY);
+	mReturnIfFail(OccupiedX);
+	mReturnIfFail(OccupiedY);
 
 	// OccupiedX
 	for(size_t R=0;R<GetMaxX();R++)
@@ -88,21 +88,21 @@ void RGrid::Clear(void)
 //------------------------------------------------------------------------------
 void RGrid::Assign(RRect& rect,RPoint& pos,size_t id)
 {
-	RReturnIfFail(OccupiedX);
-	RReturnIfFail(OccupiedY);
+	mReturnIfFail(OccupiedX);
+	mReturnIfFail(OccupiedY);
 
 	size_t BeginX(static_cast<size_t>(rect.GetX1()+pos.X));
 	if(BeginX>=InternalLimits.GetWidth())
-		ThrowRException("BeginX ("+RString::Number(BeginX)+")>="+RString::Number(InternalLimits.GetWidth()));
+		mThrowRException("BeginX ("+RString::Number(BeginX)+")>="+RString::Number(InternalLimits.GetWidth()));
 	size_t BeginY(static_cast<size_t>(rect.GetY1()+pos.Y));
 	if(BeginY>=InternalLimits.GetHeight())
-		ThrowRException("BeginY ("+RString::Number(BeginY)+")>="+RString::Number(InternalLimits.GetHeight()));
+		mThrowRException("BeginY ("+RString::Number(BeginY)+")>="+RString::Number(InternalLimits.GetHeight()));
 	size_t H(static_cast<size_t>(rect.GetHeight()+1));
 	if(H>=InternalLimits.GetHeight())
-		ThrowRException("H ("+RString::Number(H)+")>="+RString::Number(InternalLimits.GetHeight()));
+		mThrowRException("H ("+RString::Number(H)+")>="+RString::Number(InternalLimits.GetHeight()));
 	size_t W(static_cast<size_t>(rect.GetWidth()+1));
 	if(W>=InternalLimits.GetWidth())
-		ThrowRException("W ("+RString::Number(W)+")>="+RString::Number(InternalLimits.GetWidth()));
+		mThrowRException("W ("+RString::Number(W)+")>="+RString::Number(InternalLimits.GetWidth()));
 
 	// OccupiedX
 	size_t **ptr1,*ptr2;
@@ -121,7 +121,7 @@ void RGrid::Assign(RRect& rect,RPoint& pos,size_t id)
 //------------------------------------------------------------------------------
 bool RGrid::IsFree(tCoord x,tCoord y) const
 {
-	RReturnValIfFail(OccupiedX,false);
+	mReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.GetWidth())||y<0||y>(InternalLimits.GetHeight()))
 		return(true);
 	return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]==cNoRef);
@@ -131,7 +131,7 @@ bool RGrid::IsFree(tCoord x,tCoord y) const
 //------------------------------------------------------------------------------
 bool RGrid::IsOcc(tCoord x,tCoord y) const
 {
-	RReturnValIfFail(OccupiedX,false);
+	mReturnValIfFail(OccupiedX,false);
 	if(x<0||x>(InternalLimits.GetWidth())||y<0||y>(InternalLimits.GetHeight()))
 		return(false);
 	return(OccupiedX[static_cast<size_t>(x)][static_cast<size_t>(y)]!=cNoRef);
@@ -360,10 +360,10 @@ bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,tDirection from,const RRect& 
 			from=dRight;
 			break;
 		case dNoDirection:
-			RAssertMsg("Direction can't be undefined");
+			mAssertMsg("Direction can't be undefined");
 			break;
 		default:
-			RAssertMsg("Not a valid Direction in this context");
+			mAssertMsg("Not a valid Direction in this context");
 			break;
 	}
 
@@ -482,11 +482,11 @@ bool RGrid::CalculateFreePolygon(tCoord X,tCoord Y,tDirection from,const RRect& 
 				break;
 
 			case dNoDirection:
-				RAssertMsg("Direction can't be undefined");
+				mAssertMsg("Direction can't be undefined");
 				break;
 
 			default:
-				RAssertMsg("Not a valid Direction in this context");
+				mAssertMsg("Not a valid Direction in this context");
 				break;
 		}
 	}

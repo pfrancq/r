@@ -79,7 +79,7 @@ void RPlacementBottomLeft::SearchValidPositions(RGeoInfo* info)
 
 	// If too high, generate an exception
 	if((Pos.X+info->GetConfig()->GetWidth()>Limits.GetWidth())||(Pos.Y+info->GetConfig()->GetHeight()>Limits.GetHeight()))
-		ThrowRException("Objects does not fit in the actual limits");
+		mThrowRException("Objects does not fit in the actual limits");
 
 	AddValidPosition(Pos);
 }

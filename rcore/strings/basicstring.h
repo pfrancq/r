@@ -65,6 +65,7 @@ public:
 
 	/**
 	 * The BasicStrinf::Ref class provides a reference to a sub-string.
+	 * @short Generic Sub-String Reference.
 	 */
 	class Ref
 	{
@@ -90,6 +91,7 @@ protected:
 
 	/**
 	 * This class implement a string that can be shared between strings.
+	 * @short Shared String Buffer.
 	 */
 	class CharBuffer : public RSharedData
 	{

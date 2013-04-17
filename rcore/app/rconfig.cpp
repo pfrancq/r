@@ -179,14 +179,14 @@ void RConfig::Load(bool global,bool exist)
 	catch(...)
 	{
 		if(exist)
-			ThrowRException("Invalid configuration file '"+App->GetHomeConfig()+"/config/"+Category+"/"+Name+".config"+"'");
+			mThrowRException("Invalid configuration file '"+App->GetHomeConfig()+"/config/"+Category+"/"+Name+".config"+"'");
 	}
 
 	// Create the parameters based on the xml structure
 	if(!RootTag)
 		return;
 	if(RootTag->GetName()!="config")
-		ThrowRException("Not valid XML config file");
+		mThrowRException("Not valid XML config file");
 
 	// Parse the first level
 	RNodeCursor<RXMLStruct,RXMLTag> Level(RootTag);
@@ -349,7 +349,7 @@ void RConfig::Reset(const RString& name,const RString& cat,const RString& subcat
 {
 	RParam* param=FindParam<RParam>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	param->Reset();
 }
 
@@ -359,7 +359,7 @@ RString RConfig::Get(const RString& name,const RString& cat,const RString& subca
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	return(param->Get());
 }
 
@@ -369,7 +369,7 @@ int RConfig::GetInt(const RString& name,const RString& cat,const RString& subcat
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	return(param->GetInt());
 }
 
@@ -379,7 +379,7 @@ unsigned int RConfig::GetUInt(const RString& name,const RString& cat,const RStri
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	return(param->GetUInt());
 }
 
@@ -389,7 +389,7 @@ long RConfig::GetLong(const RString& name,const RString& cat,const RString& subc
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	return(param->GetLong());
 }
 
@@ -399,7 +399,7 @@ unsigned long RConfig::GetULong(const RString& name,const RString& cat,const RSt
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	return(param->GetULong());
 }
 
@@ -409,7 +409,7 @@ double RConfig::GetDouble(const RString& name,const RString& cat,const RString& 
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	return(param->GetDouble());
 }
 
@@ -419,7 +419,7 @@ bool RConfig::GetBool(const RString& name,const RString& cat,const RString& subc
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	return(param->GetBool());
 }
 
@@ -429,7 +429,7 @@ RCursor<RString> RConfig::GetList(const RString& name,const RString& cat,const R
 {
 	RParamList* param=FindParam<RParamList>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	return(param->GetList());
 }
 
@@ -439,7 +439,7 @@ RCursor<RParam> RConfig::GetStruct(const RString& name,const RString& cat,const 
 {
 	RParamStruct* param=FindParam<RParamStruct>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	return(param->GetStruct());
 }
 
@@ -449,7 +449,7 @@ void RConfig::Set(const RString& name,const RString& v,const RString& cat,const 
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	param->Set(v);
 }
 
@@ -459,7 +459,7 @@ void RConfig::SetInt(const RString& name,int v,const RString& cat,const RString&
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	param->SetInt(v);
 }
 
@@ -469,7 +469,7 @@ void RConfig::SetUInt(const RString& name,size_t v,const RString& cat,const RStr
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	param->SetUInt(v);
 }
 
@@ -479,7 +479,7 @@ void RConfig::SetDouble(const RString& name,double v,const RString& cat,const RS
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	param->SetDouble(v);
 }
 
@@ -489,7 +489,7 @@ void RConfig::SetBool(const RString& name,bool v,const RString& cat,const RStrin
 {
 	RParamValue* param=FindParam<RParamValue>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	param->SetBool(v);
 }
 
@@ -499,7 +499,7 @@ void RConfig::AddToList(const RString& name,const RString& v,const RString& cat,
 {
 	RParamList* param=FindParam<RParamList>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	param->Insert(v);
 }
 
@@ -509,7 +509,7 @@ void RConfig::AddToStruct(const RString& name,RParam* param,const RString& cat,c
 {
 	RParamStruct* ptr=FindParam<RParamStruct>(name,cat,subcat,subsubcat);
 	if(!param)
-		ThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
+		mThrowRException("Parameter '"+name+"' not found in ('"+cat+"','"+subcat+"','"+subsubcat+"')");
 	ptr->Insert(param);
 }
 

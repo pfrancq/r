@@ -51,7 +51,7 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
 	: Name(name), Args(argc), Params(argc/2), HomeConfig(RString::Null), Config("app",name), HasInitApp(false)
 {
 	if(App)
-		ThrowRException("Already one application running");
+		mThrowRException("Already one application running");
 	App=this;
 
 	// Set locale information specified by the user.
@@ -59,9 +59,9 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
 	setlocale(LC_NUMERIC, "POSIX");
 
 	// Verify parameters
-	RAssert(argc);
-	RAssert(argv);
-	RAssert(name.GetLen());
+	mAssert(argc);
+	mAssert(argv);
+	mAssert(name.GetLen());
 
 	// Initialize information
 	File=argv[0];

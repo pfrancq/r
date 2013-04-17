@@ -169,7 +169,7 @@ bool RLine::Inter(const RLine& line,RPoint& pt) const
 	}
 
 	// If both segments are on the same line -> verify if they overlap
-	if((Abs(GetAngle()-line.GetAngle())<=cEpsi)||(Abs(GetAngle()-line.GetAngle())-180<=cEpsi))
+	if((Abs(GetAngle()-line.GetAngle())<=cEpsi)||(Abs(GetAngle()-line.GetAngle()-180)<=cEpsi))
 	{
 		if(IsIn(line.Pt1) || IsIn(line. Pt2) || line.IsIn(Pt1) || line.IsIn(Pt2))
 			return(true);  // Joint lines
@@ -193,8 +193,9 @@ bool RLine::Inter(const RLine& line,RPoint& pt) const
 		a1 = cMaxCoord;
 		x1 = Pt1.X;
 	}
-	if(line.Pt2.X-line.Pt1.X<=cEpsi) //line not vertical
+	if(line.Pt2.X-line.Pt1.X>cEpsi)
 	{
+		// Non-vertical line
 		a2=static_cast<double>(line.Pt2.Y-line.Pt1.Y)/static_cast<double>(line.Pt2.X-line.Pt1.X);
 		b2=static_cast<double>(line.Pt1.Y-a2*(line.Pt1.X));
 	}
@@ -223,19 +224,15 @@ bool RLine::Inter(const RLine& line,RPoint& pt) const
 			 y = a1 * x + b1;
 		}
 	}
-	if(Segment)
+
+	if ((!IsSegment() || (Segment && IsIn(RPoint(x,y))))
+    && (!line.IsSegment() || (line.IsSegment() && line.IsIn(RPoint(x,y)))))
 	{
-		// Verify if the point is included in the line
-		if(IsIn(RPoint(x,y)))
-		{
-			 pt.Set(x,y);
-			 return(true);
-		}
-		else
-			 return(false);
+		 pt.Set(x,y);
+		 return(true);
 	}
-	pt.Set(x,y);
-	return(true);
+	else
+		 return(false);
 }
 
 

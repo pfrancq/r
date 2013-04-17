@@ -71,7 +71,7 @@ void RObj2DContainer::Add(RGeoInfo* info)
 	// Copy the geometric information
 	RObj2DConfig* Config(info->GetConfig());
 	if(!Config)
-		ThrowRException("Geometric information of object '"+RString::Number(info->GetObj()->GetId())+"' has no configuration selected");
+		mThrowRException("Geometric information of object '"+RString::Number(info->GetObj()->GetId())+"' has no configuration selected");
 	ptr->SetConfig(info->GetConfig()->GetOrientation());
 	ptr->Assign(RPoint::Null,0,cNoRef);
 

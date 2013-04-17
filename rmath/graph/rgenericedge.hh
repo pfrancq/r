@@ -40,7 +40,7 @@ template<class V,class E>
 		: From(f), To(t), Weight(w)
 {
 	if((!From)||(!To))
-		ThrowRException("Null vertices");
+		mThrowRException("Null vertices");
 
 	// Insert the edge in the corresponding vertices
 	From->Edges.InsertPtr(static_cast<E*>(this));

@@ -71,7 +71,7 @@ template<class V,class E,bool bAllocVertices,bool bAllocEdges>
 	void RGraph<V,E,bAllocVertices,bAllocEdges>::Insert(V* v)
 {
 	if(v->GetNbEdges())
-		ThrowRException("Cannot insert a vertex with edges");
+		mThrowRException("Cannot insert a vertex with edges");
 	Vertices.InsertPtr(v);
 }
 
