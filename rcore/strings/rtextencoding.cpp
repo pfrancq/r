@@ -166,14 +166,14 @@ int RTextEncoding::Compare(const RCString& name) const
 //------------------------------------------------------------------------------
 RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 {
-	char* ptr;
+	char* ptr1;
 	char* ptr2;
 	char Tab[BufSize*sizeof(UChar)];
 	size_t s1,s2,err;
 	RString out;
 	bool ToFill=true;
 
-	ptr=(char*)(text);
+	ptr1=(char*)(text);
 	s1=len;
 	while(ToFill)
 	{
@@ -181,12 +181,12 @@ RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION
 			#if (#defined __APPLE__ || #defined __WIN32__)
-				err=iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
+				err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
 			#else
-				err=iconv(ToUTF16,const_cast<const char**>(&ptr),&s1,&ptr2,&s2);
+				err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 			#endif
 		#else
-			err=iconv(ToUTF16,&ptr,&s1,&ptr2,&s2);
+			err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
 		#endif
 		if(err==(size_t)-1)
 		{
@@ -282,13 +282,13 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 //------------------------------------------------------------------------------
 RCString RTextEncoding::FromUnicode(const RChar* text,size_t len) const
 {
-	char *ptr,*ptr2;
+	char *ptr1,*ptr2;
 	char Tab[BufSize*sizeof(char)];
 	size_t s1,s2,err;
 	bool ToFill=true;
 	RCString out;
 
-	ptr=(char*)(text);
+	ptr1=(char*)(text);
 	s1=len*sizeof(UChar);
 	while(ToFill)
 	{
@@ -296,12 +296,12 @@ RCString RTextEncoding::FromUnicode(const RChar* text,size_t len) const
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION
 			#if (#defined __APPLE__ || #defined __WIN32__)
-				err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
+				err=iconv(FromUTF16,&ptr1,&s1,&ptr2,&s2);
 			#else
 				err=iconv(FromUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 			#endif
 		#else
-			err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
+			err=iconv(FromUTF16,&ptr1,&s1,&ptr2,&s2);
 		#endif
 		if(err==(size_t)-1)
 		{
@@ -333,13 +333,13 @@ RCString RTextEncoding::FromUnicode(const RChar* text,size_t len) const
 //------------------------------------------------------------------------------
 RCString RTextEncoding::FromUnicode(const RString& text) const
 {
-	char *ptr,*ptr2;
+	char *ptr1,*ptr2;
 	char Tab[BufSize*sizeof(char)];
 	size_t s1,s2,err;
 	bool ToFill=true;
 	RCString out;
 
-	ptr=(char*)(text.ToUTF16());
+	ptr1=(char*)(text.ToUTF16());
 	s1=text.GetLen()*sizeof(UChar);
 	while(ToFill)
 	{
@@ -347,12 +347,12 @@ RCString RTextEncoding::FromUnicode(const RString& text) const
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION
 			#if (#defined __APPLE__ || #defined __WIN32__)
-				err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
+				err=iconv(FromUTF16,&ptr1,&s1,&ptr2,&s2);
 			#else
 				err=iconv(FromUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 			#endif
 		#else
-			err=iconv(FromUTF16,&ptr,&s1,&ptr2,&s2);
+			err=iconv(FromUTF16,&ptr1,&s1,&ptr2,&s2);
 		#endif
 		if(err==(size_t)-1)
 		{
