@@ -58,33 +58,33 @@ RPolygons::RPolygons(size_t nb)
 
 
 //------------------------------------------------------------------------------
-bool RPolygons::Edge(const RPoint& pt) const
+bool RPolygons::IsOnEdge(const RPoint& pt) const
 {
 	RCursor<RPolygon> poly(*this);
 	for(poly.Start();!poly.End();poly.Next())
-		if(poly()->Edge(pt))
+		if(poly()->IsOnEdge(pt))
 			return(true);
 	return(false);
 }
 
 
 //------------------------------------------------------------------------------
-bool RPolygons::Edge(const RPoint& pt,const RPolygon& poly) const
+bool RPolygons::IsOnEdge(const RPoint& pt,const RPolygon* exclude) const
 {
 	RCursor<RPolygon> polys(*this);
 	for(polys.Start();!polys.End();polys.Next())
-		if((polys()!=&poly)&&(polys()->Edge(pt)))
+		if((polys()!=exclude)&&(polys()->IsOnEdge(pt)))
 			return(true);
 	return(false);
 }
 
 
 //------------------------------------------------------------------------------
-bool RPolygons::Edge(const RPoint& pt1,const RPoint& pt2) const
+bool RPolygons::IsOnEdge(const RPoint& pt1,const RPoint& pt2) const
 {
 	RCursor<RPolygon> poly(*this);
 	for(poly.Start();!poly.End();poly.Next())
-		if(poly()->Edge(pt1,pt2))
+		if(poly()->IsOnEdge(pt1,pt2))
 			return(true);
 	return(false);
 }
@@ -107,20 +107,20 @@ void RPolygons::PutPoints(RPoints& points) const
 			tmp.X=point()->X;
 			tmp.Y=point()->Y-1;
 			if(!points.IsIn(tmp))
-				if(Edge(tmp,*poly()))
+				if(IsOnEdge(tmp,poly()))
 					points.InsertPtr(new RPoint(tmp));
 			tmp.Y=point()->Y+1;
 			if(!points.IsIn(tmp))
-				if(Edge(tmp,*poly()))
+				if(IsOnEdge(tmp,poly()))
 					points.InsertPtr(new RPoint(tmp));
 			tmp.X=point()->X+1;
 			tmp.Y=point()->Y;
 			if(!points.IsIn(tmp))
-				if(Edge(tmp,*poly()))
+				if(IsOnEdge(tmp,poly()))
 					points.InsertPtr(new RPoint(tmp));
 				tmp.X=point()->X-1;
 			if(!points.IsIn(tmp))
-				if(Edge(tmp,*poly()))
+				if(IsOnEdge(tmp,poly()))
 					points.InsertPtr(new RPoint(tmp));
 		}
 	}

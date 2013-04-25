@@ -136,7 +136,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 					RString Tmp("Overlapping Problem (Id=="+RString::Number(Id)+") between "+infoi()->GetObj()->GetName()+" and "+infoj()->GetObj()->GetName());
 					if(Instance->Debug)
 						Instance->Debug->PrintInfo(Tmp);
-					throw RGAException(Tmp,RGAException::eGAVerify);
+					mThrowRGAException("Verify",Tmp);
 				}
 			}
 		}

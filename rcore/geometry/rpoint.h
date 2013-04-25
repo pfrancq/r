@@ -188,7 +188,8 @@ public:
 	void ChangeOrientation(const tOrientation o);
 
 	/**
-	* Save the point in a file.
+	* Save the point in a file. The two coordinates are written on the current
+	* line and are separated by the text file separator.
 	* @param f               File where to save.
 	*/
 	void Save(RTextFile& f) const;
@@ -207,14 +208,30 @@ public:
 //------------------------------------------------------------------------------
 /**
 * Add two points.
+* @param arg1               First point.
+* @param arg2               Second point.
+* @return the addition.
 */
 inline RPoint operator+(const RPoint& arg1,const RPoint& arg2)  {return(RPoint(arg1)+=arg2);}
 
 //------------------------------------------------------------------------------
 /**
 * Subtract two points.
+* @param arg1               First point.
+* @param arg2               Second point.
+* @return the subtraction.
 */
 inline RPoint operator-(const RPoint& arg1,const RPoint& arg2) {return(RPoint(arg1)-=arg2);}
+
+
+//------------------------------------------------------------------------------
+/**
+ * Print the coordinate of the point in the form (x,y).
+ * @param os                Output stream.
+ * @param pt                Point to print.
+ * @return the stream.
+ */
+std::ostream& operator<<(std::ostream& os,const RPoint& pt);
 
 
 }  //-------- End of namespace R -----------------------------------------------

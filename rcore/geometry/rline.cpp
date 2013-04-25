@@ -56,19 +56,9 @@ RLine::RLine(const RLine& line)
 
 //------------------------------------------------------ -----------------------
 RLine::RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,const bool seg)
-	: Pt1(), Pt2(), Segment(seg)
+	: Pt1(x1,y1), Pt2(x2,y2), Segment(seg)
 {
-	// Verify if the (x2,y2) is the first point
-	if((x1>x2)||((x1==x2)&&(y2<y1)))
-	{
-		Pt1.Set(x2,y2);
-		Pt2.Set(x1,y1);
-	}
-	else
-	{
-		Pt2.Set(x1,y1);
-		Pt1.Set(x2,y2);
-	}
+	ReOrder();
 }
 
 
@@ -76,6 +66,20 @@ RLine::RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,const bool seg)
 RLine::RLine(const RPoint& pt1,const RPoint& pt2,const bool seg)
 	: Pt1(pt1.X,pt1.Y), Pt2(pt2.X,pt2.Y), Segment(seg)
 {
+	ReOrder();
+}
+
+
+//------------------------------------------------------------------------------
+void RLine::ReOrder(void)
+{
+	// Verify if Pt2 is the first point
+	if((Pt1.Y>Pt2.Y)||((Pt1.Y==Pt2.Y)&&(Pt2.X<Pt1.X)))
+	{
+		RPoint Tmp(Pt1);
+		Pt1=Pt2;
+		Pt2=Pt1;
+	}
 }
 
 
@@ -132,6 +136,7 @@ int RLine::CounterClockwise(const RPoint& pt) const
 		return(1);       // pt is not between Pt1 and Pt2
 	return(0);
 }
+
 
 //------------------------------------------------------------------------------
 bool RLine::Inter(const RLine& line,RPoint& pt) const
@@ -248,11 +253,21 @@ bool RLine::IsIn(const RPoint& pt) const
 {
 	if(Pt2.X==Pt1.X)
 	{
-		// The line is vertical
-      if((Abs(pt.Y-Pt1.Y)<=cEpsi)||(Abs(pt.Y-Pt2.Y)<=cEpsi))
-			return(true);  // Points are very closed
+		// The line is vertical -> Verify that the point is on the same vertical
+      if(pt.X == Pt1.X)
+		{
+			if(Segment)
+			{
+				if((Abs(pt.Y-Pt1.Y)<=cEpsi)||(Abs(pt.Y-Pt2.Y)<=cEpsi))
+					return(true);  // Points are very closed
+				else
+					return(((pt.Y-Pt1.Y)*(pt.Y-Pt2.Y))<=cEpsi); // Point cannot be lower or upper to both extremities
+			}
+			else
+				return(true);  // Point is in the line
+		}
 		else
-			return(((pt.Y-Pt1.Y)*(pt.Y-Pt2.Y))<=0); // Point cannot be lower or upper to both extremities
+			 return(false);
 	}
 	else
 	{
@@ -266,11 +281,25 @@ bool RLine::IsIn(const RPoint& pt) const
 				if((Abs(pt.X-Pt1.X)<=cEpsi)||(Abs(pt.X-Pt2.X)<=cEpsi))
 					return(true);  // Points are very closed
 				else
-					return(((pt.X-Pt1.X)*(pt.X-Pt2.X))<=0); // Point cannot be left or right to both extremities
+					return(((pt.X-Pt1.X)*(pt.X-Pt2.X))<=cEpsi); // Point cannot be left or right to both extremities
 			}
 			else
 				return(true);
 		}
 	}
 	return(false);
+}
+
+
+//------------------------------------------------------------------------------
+//
+// Operators
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+std::ostream& R::operator<<(std::ostream& os, const RLine& line)
+{
+	os<<"("<<line.GetX1()<<","<<line.GetY1()<<")"<<";("<<line.GetX2()<<","<<line.GetY2()<<")";
+   return(os);
 }

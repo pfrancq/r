@@ -102,7 +102,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RCursor<RObj2D> Objs(Problem->GetObjs());
 	for(Objs.Start();!Objs.End();Objs.Next(),id++)
 		if(Objs()->GetId()!=id)
-			throw RGAException("RInst2D::RInst2D(size_t,RProblem2D*,const RString&,const R::RString&,R::RDebug*) : Identifiers must be continuous and starting from zero");
+			mThrowRGAException("Initialization","Identifiers must be continuous and starting from zero");
 }
 
 

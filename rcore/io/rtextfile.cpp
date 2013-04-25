@@ -32,7 +32,11 @@
 // include files for R Project
 #ifdef WIN32
 	#include <sys/time.h> //for asctime_s
-	#include <c99_support.h>
+	#ifdef  __MINGW32__
+		#include <time.h>
+	#else
+		#include <c99_support.h>
+#endif
 #endif
 #include <rstd.h>
 #include <rtextfile.h>
@@ -1157,13 +1161,17 @@ RTextFile& RTextFile::operator<<(const long double nb)
 //------------------------------------------------------------------------------
 void RTextFile::WriteTime(void)
 {
-	char tmp[30];
 	time_t timer;
 	struct tm *tblock;
 
 	timer = time(NULL);
 	tblock = localtime(&timer);
-	asctime_r(tblock,tmp);
+	#ifdef  __MINGW32__
+		char* tmp(asctime(tblock));
+	#else
+		char tmp[30];
+		asctime_r(tblock,tmp);
+	#endif
 	tmp[strlen(tmp)-1]=0;
 	WriteStr(tmp);
 }
@@ -1172,7 +1180,6 @@ void RTextFile::WriteTime(void)
 //------------------------------------------------------------------------------
 void RTextFile::WriteLog(const RString& entry)
 {
-	char tmp[30];
 	time_t timer;
 	struct tm *tblock;
 
@@ -1180,7 +1187,12 @@ void RTextFile::WriteLog(const RString& entry)
 	if(!NewLine) WriteLine();
 	timer = time(NULL);
 	tblock = localtime(&timer);
-	asctime_r(tblock,tmp);
+	#ifdef  __MINGW32__
+		char* tmp(asctime(tblock));
+	#else
+		char tmp[30];
+		asctime_r(tblock,tmp);
+	#endif
 	tmp[strlen(tmp)-1]=0;
 	WriteStr(RString("[")+tmp+"] : "+entry);
 	WriteLine();

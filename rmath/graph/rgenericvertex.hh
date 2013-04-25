@@ -43,7 +43,7 @@ template<class V,class E>
 //------------------------------------------------------------------------------
 template<class V,class E>
 	RGenericVertex<V,E>::RGenericVertex(const RGenericVertex& v)
-	: Edges(v.Edges.GetMaxNb(),v.Edges.GetIncNb())
+	: Id(v.Id), Edges(v.Edges.GetMaxNb(),v.Edges.GetIncNb())
 {
 }
 

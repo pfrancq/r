@@ -52,59 +52,14 @@ bool R::ExternBreak=false;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RGAException::RGAException(tException type)
-	: RException(), Type(type)
+RGAException::RGAException(const RString& type,const RString& str)
+	: RException(type+": "+str), Type(type)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RGAException::RGAException(const RString& str,tException type)
-	: RException(str), Type(type)
+RGAException::RGAException(const RString& type,const RString& func,long where,const RString& str)
+	: RException(func,where,str), Type(type)
 {
-}
-
-
-//------------------------------------------------------------------------------
-RGAException::RGAException(tException type,const size_t g,const size_t c)
-	: RException(), Type(type)
-{
-	RString Msg("Generation "+RString::Number(g)+": ");
-	switch(Type)
-	{
-		case eGAVerify:
-			Msg+="Verify";
-			break;
-		case eGAMutation:
-			Msg+="Mutation";
-			break;
-		case eGAInversion:
-			Msg+="Inversion";
-			break;
-		case eGAOptimisation:
-			Msg+="Optimization";
-			break;
-		case eGARandomConstruct:
-			Msg+="Random construction";
-			break;
-		case eGAEvaluation:
-			Msg+="Evaluation";
-			break;
-		case eGAPostEvaluation:
-			Msg+="Post-evaluation";
-			break;
-		default:
-			Msg+="Unknown";
-	}
-	Msg+=" error for chromosome "+RString::Number(c);
-	SetMsg(Msg);
-}
-
-
-
-//------------------------------------------------------------------------------
-RGAException::RGAException(const size_t g,const size_t p1,const size_t p2,const size_t c)
-	: RException(), Type(eGACrossover)
-{
-	SetMsg("Generation "+RString::Number(g)+": Crossover error: parent "+RString::Number(p1)+" + parent "+RString::Number(p2)+" -> Child "+RString::Number(c));
 }

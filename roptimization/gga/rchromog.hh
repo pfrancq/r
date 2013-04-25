@@ -211,19 +211,19 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 			Msg+="one object is";
 		else
 			Msg+=RString::Number(ObjsNoAss.GetNb())+" objects are";
-		throw RGAException(Msg+" not assigned after heuristic",RGAException::eGACrossover);
+		mThrowRGAException("Crossover",Msg+" not assigned after heuristic");
 	}
 	if(Instance->DoOptimisation)
 	{
 		Optimisation();
 		if(ObjsNoAss.GetNb())
 		{
-		RString Msg("R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(cChromo*,cChromo*): ");
-		if(ObjsNoAss.GetNb()==1)
-			Msg+="one object is";
-		else
-			Msg+=RString::Number(ObjsNoAss.GetNb())+" objects are";
-			throw RGAException(Msg+" not assigned after optimization",RGAException::eGACrossover);
+			RString Msg("R::RChromoG<cInst,cChromo,cFit,cThreadData,cGroup,cObj>::Crossover(cChromo*,cChromo*): ");
+			if(ObjsNoAss.GetNb()==1)
+				Msg+="one object is";
+			else
+				Msg+=RString::Number(ObjsNoAss.GetNb())+" objects are";
+			mThrowRGAException("Crossover",Msg+" not assigned after optimization");
 		}
 	}
 	ComputeOrd();
@@ -311,7 +311,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 {
 	R::RGroups<cGroup,cObj,cChromo>::Verify();
 	if(!Used.GetNb())
-		throw RGAException("No Group used.",RGAException::eGAVerify);
+		mThrowRGAException("Verify","No Group used.");
 }
 
 

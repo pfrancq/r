@@ -64,28 +64,28 @@ template<class cGroup,class cObj,class cGroups>
 
 	// Each group must have a parent.
 	if(!Owner)
-		throw RGAException("No Owner for used group "+RString::Number(Id),RGAException::eGAVerify);
+		mThrowRGAException("Verify","No Owner for used group "+RString::Number(Id));
 
 	// Verify objects attached.
 	if(SubObjects!=cNoRef)
 	{
 		// The number of objects attached can't be null.
 		if(!NbSubObjects)
-			throw RGAException("!NbSubObjects for used group "+RString::Number(Id),RGAException::eGAVerify);
+			mThrowRGAException("Verify","!NbSubObjects for used group "+RString::Number(Id));
 
 		// The index of the first objects attached can not exceed the total number of objects.
 		if(SubObjects>NbObjects)
-			throw RGAException("SubObjects>NbObjects for group "+RString::Number(Id),RGAException::eGAVerify);
+			mThrowRGAException("Verify","SubObjects>NbObjects for group "+RString::Number(Id));
 
 		// The index of the last objects attached can not exceed the total number of objects.
 		if(SubObjects+NbSubObjects>NbObjects+1)
-			throw RGAException("SubObjects+NbSubObjects>NbObjects+1 for group "+RString::Number(Id),RGAException::eGAVerify);
+			mThrowRGAException("Verify","SubObjects+NbSubObjects>NbObjects+1 for group "+RString::Number(Id));
 	}
 	else
 	{
 		// The number of objects attached must be null.
 		if(NbSubObjects)
-			throw RGAException("NbSubObjects for empty group "+RString::Number(Id),RGAException::eGAVerify);
+			mThrowRGAException("Verify","NbSubObjects for empty group "+RString::Number(Id));
 	}
 
 	// Verify coherence with the objects.
@@ -93,9 +93,9 @@ template<class cGroup,class cObj,class cGroups>
 	for(ptr.Start();!ptr.End();ptr.Next())
 	{
 		if(!ptr())
-			throw RGAException("Owner->ObjsAss is null for group "+RString::Number(Id),RGAException::eGAVerify);
+			mThrowRGAException("Verify","Owner->ObjsAss is null for group "+RString::Number(Id));
 		if(Owner->ObjectsAss[ptr()->GetId()]!=Id)
-			throw RGAException("Owner->ObjsAss[(*obj)->GetId()]!=Id for group "+RString::Number(Id)+" and object "+RString::Number(ptr()->GetId()),RGAException::eGAVerify);
+			mThrowRGAException("Verify","Owner->ObjsAss[(*obj)->GetId()]!=Id for group "+RString::Number(Id)+" and object "+RString::Number(ptr()->GetId()));
 	}
 }
 

@@ -37,6 +37,7 @@
 // include files for R Project
 #include <rpolygon.h>
 #include <rtextfile.h>
+#include <rline.h>
 using namespace R;
 using namespace std;
 
@@ -294,21 +295,32 @@ RPoint RPolygon::GetConY(const RPoint& pt) const
 //------------------------------------------------------------------------------
 RPoint RPolygon::GetBottomLeft(void) const
 {
+	return(RPoint(*(*this)[GetBottomLeftIndex()]));
+}
+
+
+//------------------------------------------------------------------------------
+size_t RPolygon::GetBottomLeftIndex(void) const
+{
 	RPoint* bl;
-	size_t i;
+	size_t i,idx;
 	tCoord X,Y;
 
 	RCursor<RPoint> point(*this);
 	point.Start();
 	bl=point();
+	idx=0;
 	for(i=GetNb(),point.Next();--i;point.Next())
 	{
 		X=point()->X;
 		Y=point()->Y;
 		if((Y<bl->Y)||((Y==bl->Y)&&(X<bl->X)))
+		{
 			bl=point();
+			idx=point.GetPos();
+		}
 	}
-	return(RPoint(*bl));
+	return(idx);
 }
 
 
@@ -396,133 +408,6 @@ RPoint* RPolygon::GetLeftBottom(const tCoord minx,const tCoord miny,const tCoord
 
 
 //------------------------------------------------------------------------------
-bool RPolygon::Edge(const tCoord X,const tCoord Y) const
-{
-	RPoint *deb;
-	size_t i;
-	tCoord DiffX,DiffY;
-
-	RCursor<RPoint> point(*this);
-	point.Start();
-	i=GetNb()+1;
-	while(--i)
-	{
-		deb=point();
-		point.Next();
-		if(i==1)
-		{
-			point.Start();
-		}
-		DiffX=deb->X-point()->X;
-		DiffY=deb->Y-point()->Y;
-		if(!DiffY)
-		{
-			// Horizontal edge
-			if(Y!=deb->Y) continue;
-			if(DiffX<0)
-			{
-				if((X>=deb->X)&&(X<=point()->X)) return(true);
-			}
-			else
-			{
-				if((X<=deb->X)&&(X>=point()->X)) return(true);
-			}
-		}
-		else
-		{
-			// Vertical edge
-			if(X!=deb->X) continue;
-			if(DiffY<0)
-			{
-				if((Y>=deb->Y)&&(Y<=point()->Y)) return(true);
-			}
-			else
-			{
-				if((Y<=deb->Y)&&(Y>=point()->Y)) return(true);
-			}
-		}
-	}
-	return(false);
-}
-
-
-//------------------------------------------------------------------------------
-bool RPolygon::Edge(const RPoint& pt1,const RPoint& pt2) const
-{
-	RPoint *deb;
-	size_t i;
-	tCoord X,Y;
-
-	if((pt1.X!=pt2.X)&&(pt1.Y!=pt2.Y)) return(false);
-	RCursor<RPoint> point(*this);
-	point.Start();
-	i=GetNb()+1;
-	while(--i)
-	{
-		deb=point();
-		point.Next();
-		if(i==1)
-		{
-			point.Start();
-		}
-		X=deb->X-point()->X;
-		Y=deb->Y-point()->Y;
-		if(!Y)
-		{
-			// Horizontal edge
-			if((pt1.Y!=deb->Y)||(pt2.Y!=deb->Y)) continue;
-			if(X<0)
-			{
-				if((pt1.X>=deb->X)&&(pt1.X<=point()->X))
-				{
-					if((pt2.X>=deb->X)&&(pt2.X<=point()->X))
-						return(true);
-					else
-						return(false);
-				}
-			}
-			else
-			{
-				if((pt1.X<=deb->X)&&(pt1.X>=point()->X))
-				{
-					if((pt2.X<=deb->X)&&(pt2.X>=point()->X))
-						return(true);
-					else
-						return(false);
-				}
-			}
-		}
-		else
-		{
-			// Vertical edge
-			if((pt1.X!=deb->X)||(pt2.X!=deb->X)) continue;
-			if(Y<0)
-			{
-				if((pt1.Y>=deb->Y)&&(pt1.Y<=point()->Y))
-				{
-					if((pt2.Y>=deb->Y)&&(pt2.Y<=point()->Y))
-						return(true);
-					else
-						return(false);
-				}
-			}
-			else
-			{
-				if((pt1.Y<=deb->Y)&&(pt1.Y>=point()->Y))
-				{
-					if((pt2.Y<=deb->Y)&&(pt2.Y>=point()->Y))
-						return(true);
-					else
-						return(false);
-				}
-			}
-		}
-	}
-	return(false);
-}
-
-
-//------------------------------------------------------------------------------
 bool RPolygon::IsVertex(const tCoord x,const tCoord y) const
 {
 	RPoint pt(x,y);
@@ -534,63 +419,97 @@ bool RPolygon::IsVertex(const tCoord x,const tCoord y) const
 
 
 //------------------------------------------------------------------------------
+bool RPolygon::IsOnEdge(const tCoord x,const tCoord y) const
+{
+	// Special cases
+	if(!GetNb())
+		return(false);
+	RPoint pt(x,y);
+	if(GetNb()==1)
+		return(pt==(*((*this)[0])));
+
+	// Look for each edge if the point is on it
+	RPoint** Cur(RContainer<RPoint,true,false>::Tab);
+	for(size_t i=0;i<GetNb();Cur++,i++)
+	{
+		// If the point is the current vertex -> It is on a edge
+		if((**Cur)==pt)
+			return(true);
+
+		RPoint** Next;
+		if(i==GetNb()-1)
+			Next=RContainer<RPoint,true,false>::Tab;
+		else
+			Next=Cur+1;
+		RLine Edge(**Cur,**Next);
+		if(Edge.IsIn(pt))
+			return(true);
+	}
+
+	return(false);
+}
+
+
+//------------------------------------------------------------------------------
+bool RPolygon::IsOnEdge(const RPoint& pt1,const RPoint& pt2) const
+{
+	// Special cases
+	if(!GetNb())
+		return(false);
+	if(GetNb()==1)
+		return((pt1==(*((*this)[0])))&&(pt1==pt2));
+
+	// Look for each edge if both points are on it
+	RPoint** Cur(RContainer<RPoint,true,false>::Tab);
+	for(size_t i=0;i<GetNb();Cur++,i++)
+	{
+		// If both points are the current vertex -> they are on the same edge
+		if(((**Cur)==pt1)&&(pt1==pt2))
+			return(true);
+
+		RPoint** Next;
+		if(i==GetNb()-1)
+			Next=RContainer<RPoint,true,false>::Tab;
+		else
+			Next=Cur+1;
+		RLine Edge(**Cur,**Next);
+		if(Edge.IsIn(pt1)&&Edge.IsIn(pt2))
+			return(true);
+	}
+
+	return(false);
+}
+
+
+//------------------------------------------------------------------------------
 bool RPolygon::IsIn(const tCoord x,const tCoord y) const
 {
-	RPoint p(x,y),act,next;
-	size_t i,count;
-	tCoord y1,y2;
-
 	// Special cases
-	if(GetNb()==1)
-		return(p==(*((*this)[0])));
-	if(GetNb()==2)
-	{
-		tDirection c=p.Classify(*(*this)[0],*(*this)[1]);
-		return((c==dBetween)||(c==dOrigin)||(c==dDestination));
-	}
-	if(GetNb())
-	{
-		if((x>=(*this)[0]->X)&&(y>=(*this)[0]->Y)&&(x<=(*this)[2]->X)&&(y<=(*this)[2]->Y))
-			return(true);
+	if(!GetNb())
 		return(false);
-	}
+	RPoint pt(x,y);
+	if(GetNb()==1)
+		return(pt==(*((*this)[0])));
 
-	// Verify if not a vertex
-	RCursor<RPoint> Cur(*this);
-	for(Cur.Start();!Cur.End();Cur.Next())
-		if((Cur()->X==x)&&(Cur()->Y==y))
+	// Count the intersection between each edge and the vertical line at x (cMaxCoord,y)
+	RLine Ref(x,y,x,cMaxCoord);
+	size_t count(0);
+	RPoint** Cur(RContainer<RPoint,true,false>::Tab);
+	for(size_t i=0;i<GetNb();Cur++,i++)
+	{
+		// If the point is the current vertex -> It is in the polygon
+		if((**Cur)==pt)
 			return(true);
 
-	// Verify if not on a vertex
-	if(IsVertex(x,y))
-		return(true);
-
-	// Count the intersections between the line (X,Y) and (MaxCoord,Y) and the vertices
-	count=0;
-	i=GetNb();
-	act=GetBottomLeft();
-	while(i>0)
-	{
-		// Look for act
-		next=GetConY(act);
-		if(act.Y>next.Y)
-		{
-			y1=next.Y;
-			y2=act.Y;
-		}
+		RPoint** Next;
+		if(i==GetNb()-1)
+			Next=RContainer<RPoint,true,false>::Tab;
 		else
-		{
-			y1=act.Y;
-			y2=next.Y;
-		}
+			Next=Cur+1;
+		RLine Edge(**Cur,**Next);
 
-		// Test Line e1,act
-		if((act.X>=x)&&(y>=y1)&&(y<=y2))
+		if((Edge.IsVertical()&&Edge.IsIn(pt)) || ((!Edge.IsVertical())&&Edge.Inter(Ref)))
 			count++;
-		i--;
-		act=GetConX(act);
-		i--;
-		act=GetConY(act);
 	}
 
 	// if count%2==0 -> Not in
@@ -599,89 +518,75 @@ bool RPolygon::IsIn(const tCoord x,const tCoord y) const
 
 
 //------------------------------------------------------------------------------
-bool RPolygon::IsIn(const RPolygon& poly) const
+bool RPolygon::IsIn(const RPolygon& poly,bool overlap) const
 {
-	RRect r1,r2;
-	tDirection FromDir;
-	RPoint start,end;
-	tCoord X,Y;
-	size_t nbpts;
+	// Special cases
+	if(!GetNb())
+		return(false);
+	if(poly.GetNb()==1)
+		return(IsIn(*poly[0]));
 
-	// Polygon is a rectangle?
-	if(GetNb()==4)
+	// Go trough each vertex and edges of the polygon to test
+	RPoint** Cur(poly.Tab);
+	for(size_t i=0;i<poly.GetNb();Cur++,i++)
 	{
-		// Each vertex of poly have to be in it.
-		RCursor<RPoint> pt(poly);
-		for(pt.Start();!pt.End();pt.Next())
+		// The vertex must be in the polygon
+		if(IsIn(**Cur))
 		{
-			if(!IsIn(*pt()))
+			// Test if it is on an edge.
+			bool OnEdge(IsOnEdge(**Cur));
+
+			// If overlap is accepted -> It must be on the edge
+			// If overlap is non accepted -> It cannot be on the edge
+			if((overlap&&(!OnEdge))||((!overlap)&&(OnEdge)))
 				return(false);
 		}
-		return(true);
-	}
-
-	// Verify first if the boundary rectangles overlap
-	Boundary(r1);
-	poly.Boundary(r2);
-	if(!r1.Overlap(&r2))
-		return(false);
-
-	// Test it and go through the other
-	start=poly.GetBottomLeft();
-	end=poly.GetConX(start);
-	FromDir=dLeft;
-	X=start.X;
-	Y=start.Y;
-	nbpts=poly.GetNb();
-	while(nbpts)
-	{
-		if(!IsIn(X,Y))
-			return(false);
-
-		// If end of an edge
-		if((X==end.X)&&(Y==end.Y))
-		{
-			start=end;
-			nbpts--;        // Next point
-			X=start.X;
-			Y=start.Y;
-			if((FromDir==dLeft)||(FromDir==dRight))
-			{
-				end=poly.GetConY(start);
-				if(start.Y<end.Y) FromDir=dDown; else FromDir=dUp;
-			}
-			else           // Go to left/right
-			{
-				end=poly.GetConX(start);
-				if(start.X<end.X) FromDir=dLeft; else FromDir=dRight;
-			}
-		}
 		else
+			return(false); // If the point is not in -> The polygon cannot be contained
+
+		RPoint** Next;
+		if(i==poly.GetNb()-1)
+			Next=poly.Tab;
+		else
+			Next=Cur+1;
+		RLine Edge(**Cur,**Next);
+
+		// We must compare Edge with all the edges of the polygon
+		RPoint** Cur2(RContainer<RPoint,true,false>::Tab);
+		for(size_t j=0;j<GetNb();Cur2++,j++)
 		{
-			switch(FromDir)
+			RPoint** Next2;
+			if(j==GetNb()-1)
+				Next2=poly.Tab;
+			else
+				Next2=Cur2+1;
+			RLine Edge2(**Cur2,**Next2);
+			RPoint Inter;
+
+			// If there is an intersection -> The polygon may not be contained
+			if(Edge2.Inter(Edge,Inter))
 			{
-				case dLeft:
-					X++;
-					break;
+				if(!overlap)
+					return(false);  // If no overlap is allowed -> we are sure to return false
 
-				case dRight:
-					X--;
-					break;
-
-				case dDown:
-					Y++;
-					break;
-
-				case dUp:
-					Y--;
-					break;
-
-				default:
-					mAssertMsg("Not a valid Direction in this context");
-					break;
+				// Overlap is admitted
+				if(Inter.IsValid())
+				{
+					// Verify that Inter is on Edge2
+					if(!Edge2.IsIn(Inter))
+						return(false);
+				}
+				else
+				{
+					// The two vertices **Cur and **Next must be on In
+					if((!Edge2.IsIn(**Cur))||(!Edge2.IsIn(**Next)))
+						return(false);
+				}
 			}
 		}
 	}
+
+	// OK
 	return(true);
 }
 
@@ -778,6 +683,9 @@ void RPolygon::ChangeOrientation(const tOrientation o,RPoint& min)
 //------------------------------------------------------------------------------
 void RPolygon::RectDecomposition(RContainer<RRect,true,false>& rects) const
 {
+	if(!IsRectangular())
+		mThrowRException("Polygon not rectangular");
+
 	RPolygon work(*this),tmpPoly(20);
 	RContainer<RRect,true,false> tmpRects(20);
 	RPoint Pt11;                               // Point at (X1,Y1)
@@ -789,6 +697,9 @@ void RPolygon::RectDecomposition(RContainer<RRect,true,false>& rects) const
 	size_t i=0,Count,Nb;
 	bool bFind;                                 // To use with GetId
 	bool bFind21;                               // True if Point (X2,?) is (X2,Y1)
+
+	// ReOrder the polygon
+	const_cast<RPolygon*>(this)->ReOrder();
 
 	// Init
 	rects.Clear();
@@ -948,79 +859,85 @@ void RPolygon::AddVertices(RContainer<RPoint,true,false>& points) const
 
 
 //------------------------------------------------------------------------------
+bool RPolygon::IsClockwise(void) const
+{
+	// Some simple verifications
+	if(GetNb()<2)
+		return(false);
+	if(Order)
+		return(false);
+
+	tCoord Sum(0.0);
+	RPoint** Cur(RContainer<RPoint,true,false>::Tab);
+	for(size_t i=0;i<GetNb();i++,Cur++)
+	{
+		RPoint** Next;
+		if(i==GetNb()-1)
+			Next=RContainer<RPoint,true,false>::Tab;
+		else
+			Next=Cur+1;
+		Sum+=((*Next)->X-(*Cur)->X)*((*Next)->Y+(*Cur)->Y);
+
+		// Verify if the polygon is rectangle
+		if(Rect && ((Abs((*Next)->X-(*Cur)->X)>cEpsi) && (Abs((*Next)->Y-(*Cur)->Y)>cEpsi)))
+			const_cast<RPolygon*>(this)->Rect=false;
+	}
+	return(Sum>0.0);
+}
+
+
+//------------------------------------------------------------------------------
 void RPolygon::ReOrder(void)
 {
-	if(Order)
+	// Verify first if the polygon must be reorder
+	if(Order||(GetNb()<2))
 		return;
 
-	RPoint *tmp,*point,next;
-	size_t i;
-	bool bX;            // Next Vertex is horizontal
-
-	if(GetNb()<2) return;
-	point=tmp=new RPoint[GetMaxNb()];
-	next=GetBottomLeft();
-	(*(point++))=next;
-	next=GetConX(next);
-	(*(point++))=next;
-	bX=false;
-	i=GetNb()-1;
-	while(--i)
-	{
-		if(bX)
-			next=GetConX(next);
-		else
-			next=GetConY(next);
-		(*(point++))=next;
-		bX=(!bX);
-	}
-	i=GetNb()+1;
-	Clear();
-	for(point=tmp;--i;point++)
-		InsertPtr(new RPoint(*point));
-	delete[] tmp;
+	// Find the most bottom-left vertex and shift the elements
+	Rect=true;      // Suppose it is a rectangular polygon
+	size_t idx(GetBottomLeftIndex());
+	if(IsClockwise())
+		Shift(idx,true);  // The elements must be shifted and reversed.
+	else if(idx)
+		Shift(idx,false);  // The elements must only be shifted.
 
 	Order=true;
 }
 
 
 //------------------------------------------------------------------------------
-void RPolygon::ReValid(void)
+void RPolygon::ReValid(double t)
 {
-	size_t i;
-	RPoint *pt1,nextx,nexty,pt2;
-	bool c=false;
+	// Go trough the vertices
+	size_t Idx(0);  // Current vertex analyzed
+	RPoint** Cur(RContainer<RPoint,true,false>::Tab);
+	for(size_t i=0;i<GetNb();i++)
+	{
+		RPoint** Next;
+		size_t NextIdx;
+		if(i==GetNb()-1)
+		{
+			Next=RContainer<RPoint,true,false>::Tab;
+			NextIdx=0;
+		}
+		else
+		{
+			Next=Cur+1;
+			NextIdx=Idx+1;
+		}
 
-	for(i=0;i<GetNb();i++)
-	{
-		pt1=(*this)[i];
-		nextx=GetConX(*pt1);
-		if(pt1->X==nextx.X-1)
+		if((Abs((*Cur)->X-(*Next)->X)-t<cEpsi)&&(Abs((*Cur)->Y-(*Next)->Y)-t<cEpsi))
 		{
-			pt2=GetConY(nextx);
-			pt1->Y=pt2.Y;
-			DeletePtr(nextx);
-			DeletePtr(pt2);
-			c=true;
+			DeletePtrAt(NextIdx);
+			Order=false;
 		}
-		nexty=GetConY(*pt1);
-		if(pt1->Y==nexty.Y-1)
+		else
 		{
-			pt2=GetConX(nexty);
-			pt1->X=pt2.X;
-			DeletePtr(nexty);
-			DeletePtr(pt2);
-			c=true;
+			Idx++;
+			Cur++;
 		}
 	}
-	if(GetNb()<4)
-	{
-		Clear();
-	}
-	else
-	{
-		if(c) ReOrder();    // The points must order anti-clockwise.
-	}
+	ReOrder();
 }
 
 
@@ -1102,4 +1019,36 @@ bool RPolygon::IsRect(void) const
 	if(GetNb()!=4)
 		return(false);
 	return(true);
+}
+
+
+//------------------------------------------------------------------------------
+bool RPolygon::IsRectangular(void) const
+{
+	if(Order)
+		return(Rect);
+	const_cast<RPolygon*>(this)->Rect=true;      // Suppose it is a rectangular polygon
+	IsClockwise();
+	return(Rect);
+}
+
+
+
+//------------------------------------------------------------------------------
+//
+// Operators
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+ostream& R::operator<<(ostream& os, const RPolygon& poly)
+{
+	RCursor<RPoint> Cur(poly.GetVertices());
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		os<<(*Cur());
+		if(Cur.GetPos()<Cur.GetNb()-1)
+			os<<";";
+	}
+   return(os);
 }

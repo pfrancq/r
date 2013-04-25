@@ -33,28 +33,3 @@
 #include <rgga.h>
 #include <rstring.h>
 using namespace R;
-
-
-
-//------------------------------------------------------------------------------
-//
-// class RGGAException
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-RGGAException::RGGAException(tException type,const size_t g,const size_t c)
-	: RGAException(type)
-{
-	switch(Type)
-	{
-		case eGAModify:
-			SetMsg("Generation "+RString::Number(g)+" : Modify error for chromosome "+RString::Number(c));
-			break;
-		case eGALocalOptimisation:
-			SetMsg("Generation "+RString::Number(g)+" : Local optimization error for chromosome "+RString::Number(c));
-			break;
-		default:
-			RGAException(Type,g,c);
-	}
-}

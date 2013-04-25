@@ -87,7 +87,7 @@ RPoint RPoints::FindBottom(const RPoint& pt,const RPolygons& polys) const
 	while((!Activ)&&(--i))
 	{
 		if((point()->X==X)&&(point()->Y==Y-1)) return(*point());
-		if((point()->X==X)&&(polys.Edge(*point(),pt))&&(point()->Y<Y))
+		if((point()->X==X)&&(polys.IsOnEdge(*point(),pt))&&(point()->Y<Y))
 			Activ=point();
 		point.Next();
 	}
@@ -97,7 +97,7 @@ RPoint RPoints::FindBottom(const RPoint& pt,const RPolygons& polys) const
 	for(;--i;point.Next())
 	{
 		if((point()->X==X)&&(point()->Y==Y-1)) return(*point());
-		if((point()->X==X)&&(polys.Edge(*point(),pt))&&(point()->Y>AY)&&(point()->Y<Y))
+		if((point()->X==X)&&(polys.IsOnEdge(*point(),pt))&&(point()->Y>AY)&&(point()->Y<Y))
 		{
 			Activ=point();
 			AY=Activ->Y;
@@ -126,7 +126,7 @@ RPoint RPoints::FindLeft(const RPoint& pt,const RPolygons& polys) const
 	while((!Activ)&&(--i))
 	{
 		if((point()->Y==Y)&&(point()->X==X-1)) return(*point());
-		if((point()->Y==Y)&&(polys.Edge(*point(),pt))&&(point()->X<X))
+		if((point()->Y==Y)&&(polys.IsOnEdge(*point(),pt))&&(point()->X<X))
 			Activ=point();
 		point.Next();
 	}
@@ -136,7 +136,7 @@ RPoint RPoints::FindLeft(const RPoint& pt,const RPolygons& polys) const
 	for(;--i;point.Next())
 	{
 		if((point()->Y==Y)&&(point()->X==X-1)) return(*point());
-		if((point()->Y==Y)&&(polys.Edge(*point(),pt))&&(point()->X>AX)&&(point()->X<X))
+		if((point()->Y==Y)&&(polys.IsOnEdge(*point(),pt))&&(point()->X>AX)&&(point()->X<X))
 		{
 			Activ=point();
 			AX=Activ->X;
@@ -161,7 +161,7 @@ RPoint RPoints::FindRight(const RPoint& pt,const RPolygons& polys) const
 	while((!Activ)&&(--i))
 	{
 		if((point()->Y==Y)&&(point()->X==X+1)) return(*point());
-		if((point()->Y==Y)&&(polys.Edge(*point(),pt))&&(point()->X>X))
+		if((point()->Y==Y)&&(polys.IsOnEdge(*point(),pt))&&(point()->X>X))
 			Activ=point();
 		point.Next();
 	}
@@ -172,7 +172,7 @@ RPoint RPoints::FindRight(const RPoint& pt,const RPolygons& polys) const
 	for(;--i;point.Next())
 	{
 		if((point()->Y==Y)&&(point()->X==X+1)) return(*point());
-		if((point()->Y==Y)&&(polys.Edge(*point(),pt))&&(point()->X<AX)&&(point()->X>X))
+		if((point()->Y==Y)&&(polys.IsOnEdge(*point(),pt))&&(point()->X<AX)&&(point()->X>X))
 		{
 			Activ=point();
 			AX=Activ->X;
@@ -197,7 +197,7 @@ RPoint RPoints::FindUp(const RPoint& pt,const RPolygons& polys) const
 	while((!Activ)&&(--i))
 	{
 		if((point()->X==X)&&(point()->Y==Y+1)) return(*point());
-		if((point()->X==X)&&(polys.Edge(*point(),pt))&&(point()->Y>Y))
+		if((point()->X==X)&&(polys.IsOnEdge(*point(),pt))&&(point()->Y>Y))
 			Activ=point();
 		point.Next();
 	}
@@ -208,7 +208,7 @@ RPoint RPoints::FindUp(const RPoint& pt,const RPolygons& polys) const
 	for(;--i;point.Next())
 	{
 		if((point()->X==X)&&(point()->Y==Y+1)) return(*point());
-		if((point()->X==X)&&(polys.Edge(*point(),pt))&&(point()->Y<AY)&&(point()->Y>Y))
+		if((point()->X==X)&&(polys.IsOnEdge(*point(),pt))&&(point()->Y<AY)&&(point()->Y>Y))
 		{
 			Activ=point();
 			AY=Activ->Y;

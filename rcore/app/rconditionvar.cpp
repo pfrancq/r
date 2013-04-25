@@ -59,25 +59,25 @@ void RConditionVar::Wait(RMutex* mutex,unsigned long time)
 {
 	if(time)
 	{
-#ifndef WIN32
-		// Get the current time
-		struct timeval tv;
-		gettimeofday(&tv, 0);
+		#if (!defined WIN32 || defined __MINGW32__)
+			// Get the current time
+			struct timeval tv;
+			gettimeofday(&tv, 0);
 
-		// Add it the number of milliseconds defined by the function
-		timespec ti;
-		ti.tv_nsec=(tv.tv_usec+(time%1000)*1000)* 1000;
-		ti.tv_sec=tv.tv_sec+(time/1000)+(ti.tv_nsec/1000000000);
-		ti.tv_nsec%=1000000000;
+			// Add it the number of milliseconds defined by the function
+			timespec ti;
+			ti.tv_nsec=(tv.tv_usec+(time%1000)*1000)* 1000;
+			ti.tv_sec=tv.tv_sec+(time/1000)+(ti.tv_nsec/1000000000);
+			ti.tv_nsec%=1000000000;
 
-		pthread_cond_timedwait(&Cond,mutex->GetMutex(),&ti);
-#else
-		FILETIME        ftime;
-		GetSystemTimeAsFileTime(&ftime);
-		timespec ti;
-		ti.tv.ft = ftime;
-		pthread_cond_timedwait(&Cond,mutex->GetMutex(),&ti);
-#endif
+			pthread_cond_timedwait(&Cond,mutex->GetMutex(),&ti);
+		#else
+			FILETIME        ftime;
+			GetSystemTimeAsFileTime(&ftime);
+			timespec ti;
+			ti.tv.ft = ftime;
+			pthread_cond_timedwait(&Cond,mutex->GetMutex(),&ti);
+		#endif
 	}
 	else
 		pthread_cond_wait(&Cond,mutex->GetMutex());
@@ -88,34 +88,34 @@ void RConditionVar::Wait(RMutex* mutex,unsigned long time)
 void RConditionVar::Wait(unsigned long time)
 {
 	// A imaginary mutex must be created and lock because pthread_cond_* methods need one
-#ifndef WIN32
-	static pthread_mutex_t Mutex = PTHREAD_MUTEX_INITIALIZER;
-#else
-	static pthread_mutex_t Mutex;
-	pthread_mutex_init(&Mutex, MY_MUTEX_INIT_FAST)
-#endif
+	#if (!defined WIN32 || defined __MINGW32__)
+		static pthread_mutex_t Mutex = PTHREAD_MUTEX_INITIALIZER;
+	#else
+		static pthread_mutex_t Mutex;
+		pthread_mutex_init(&Mutex, MY_MUTEX_INIT_FAST)
+	#endif
 	pthread_mutex_lock(&Mutex);
 
 	if(time)
 	{
-#ifndef WIN32
-		// Get the current time
-		struct timeval tv;
-		gettimeofday(&tv, 0);
+		#if (!defined WIN32 || defined __MINGW32__)
+			// Get the current time
+			struct timeval tv;
+			gettimeofday(&tv, 0);
 
-		// Add it the number of milliseconds defined by the function
-		timespec ti;
-		ti.tv_nsec=(tv.tv_usec+(time%1000)*1000)* 1000;
-		ti.tv_sec=tv.tv_sec+(time/1000)+(ti.tv_nsec/1000000000);
-		ti.tv_nsec%=1000000000;
-		pthread_cond_timedwait(&Cond,&Mutex,&ti);
-#else
-		FILETIME        ftime;
-		GetSystemTimeAsFileTime(&ftime);
-		timespec ti;
-		ti.tv.ft = ftime;
-		pthread_cond_timedwait(&Cond,&Mutex,&ti);
-#endif
+			// Add it the number of milliseconds defined by the function
+			timespec ti;
+			ti.tv_nsec=(tv.tv_usec+(time%1000)*1000)* 1000;
+			ti.tv_sec=tv.tv_sec+(time/1000)+(ti.tv_nsec/1000000000);
+			ti.tv_nsec%=1000000000;
+			pthread_cond_timedwait(&Cond,&Mutex,&ti);
+		#else
+			FILETIME        ftime;
+			GetSystemTimeAsFileTime(&ftime);
+			timespec ti;
+			ti.tv.ft = ftime;
+			pthread_cond_timedwait(&Cond,&Mutex,&ti);
+		#endif
 	}
 	else
 		pthread_cond_wait(&Cond,&Mutex);

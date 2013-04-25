@@ -74,7 +74,7 @@ template<class cGroup,class cObj,class cGroups>
 	{
 		cGroup* CurGroup=FindGroup(*CurObj);
 		if(!CurGroup)
-			throw RGAException("No Group find.",RGAException::eGAHeuristic);
+			mThrowRGAException("Heuristic","No Group find.");
 		CurGroup->Insert(*CurObj);
 	}
 	PostRun();

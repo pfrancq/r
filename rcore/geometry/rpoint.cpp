@@ -112,7 +112,7 @@ tDirection RPoint::Classify(const RPoint& pt) const
 {
 	if(X>pt.X)
 	{
-		// The point p is on the left
+		// The point pt is on the left
 		if(Y>pt.Y)
 			return(dLeftDown);
 		else if(Y<pt.Y)
@@ -122,7 +122,7 @@ tDirection RPoint::Classify(const RPoint& pt) const
 	}
 	else if(X<pt.X)
 	{
-		// The point p is on the right
+		// The point pt is on the right
 		if(Y>pt.Y)
 			return(dRightDown);
 		else if(Y<pt.Y)
@@ -189,4 +189,19 @@ void RPoint::ChangeOrientation(const tOrientation o)
 void RPoint::Save(RTextFile& f) const
 {
 	f<<X<<Y<<endl;
+}
+
+
+
+//------------------------------------------------------------------------------
+//
+// Operators
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+ostream& R::operator<<(ostream& os, const RPoint& pt)
+{
+	os<<"("<<pt.X<<","<<pt.Y<<")";
+   return(os);
 }

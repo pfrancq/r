@@ -174,14 +174,8 @@
 
 //-----------------------------------------------------------------------------
 // MAX SIZE of size_t
-#ifndef __APPLE__
-	#ifndef WIN32
-		#if __WORDSIZE == 64
-			#define SIZE_MAX		(18446744073709551615UL)
-		#else
-			#define SIZE_MAX		(4294967295U)
-		#endif
-	#endif
+#ifndef SIZE_MAX
+	#define SIZE_MAX std::numeric_limits<std::size_t>::max()
 #endif
 
 

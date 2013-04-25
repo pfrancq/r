@@ -75,7 +75,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	void R::RInst<cInst,cChromo,cFit,cThreadData>::SetMutationParams(size_t agemut,size_t agebestmut,size_t nbmut)
 {
 		if(nbmut>PopSize)
-			throw RGAException("Number of mutations cannot be greater than the population size");
+			mThrowRGAException("Parameters","Number of mutations cannot be greater than the population size");
 		NbMutations=nbmut;
 		FreqMutation=agemut;
 		FreqBestMutation=agebestmut;

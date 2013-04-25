@@ -35,7 +35,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rcontainer.h>
+#include <ricontainer.h>
 
 
 //-----------------------------------------------------------------------------
@@ -93,6 +93,11 @@ protected:
 	size_t NbPtr;
 
 	/**
+	* The number of elements in the cursor.
+	*/
+	size_t CurNbPtr;
+
+	/**
 	* The first position in the array handled by the cursor.
 	*/
 	size_t FirstPtr;
@@ -112,6 +117,7 @@ public:
 		ActPtr=0;
 		Current=Tab=0;
 		ActPtr=FirstPtr=LastPtr=NbPtr=0;
+		CurNbPtr=SIZE_MAX;
 	}
 
 	/**
@@ -126,6 +132,7 @@ public:
 		FirstPtr=src.FirstPtr;
 		LastPtr=src.LastPtr;
 		NbPtr=src.NbPtr;
+		CurNbPtr=src.CurNbPtr;
 	}
 
 	/**
@@ -135,7 +142,7 @@ public:
 	* @param max             Maximum position of the elements to iterate (included max).
 	*                        If SIZE_MAX, iterate until the end of the container.
 	*/
-	template<bool a,bool o> RCursor(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX)
+	RCursor(const RIContainer<C>& c,size_t min=0,size_t max=SIZE_MAX)
 	{
 		Set(c,min,max);
 	}
@@ -153,6 +160,7 @@ public:
 		FirstPtr=src.FirstPtr;
 		LastPtr=src.LastPtr;
 		NbPtr=src.NbPtr;
+		CurNbPtr=src.CurNbPtr;
 		return(*this);
 	}
 
@@ -163,7 +171,7 @@ public:
 	* @param max             Maximum position of the elements to iterate (included max).
 	*                        If SZE_MAX, iterate until the end of the container.
 	*/
-	template<bool a,bool o> void Set(const RContainer<C,a,o>& c,size_t min=0,size_t max=SIZE_MAX)
+	void Set(const RIContainer<C>& c,size_t min=0,size_t max=SIZE_MAX)
 	{
 		mAssert(min<=max);
 		NbPtr=c.NbPtr;
@@ -178,6 +186,10 @@ public:
 			FirstPtr=0;
 		Current=0;
 		ActPtr=0;
+		if((min==0)&&(max==SIZE_MAX))
+			CurNbPtr=c.NbPtr;   // The whole container is covered -> The exact number of elements is known.
+		else
+			CurNbPtr=SIZE_MAX;  // We must delay the computation until it is necessary.
 	}
 
 	/**
@@ -187,6 +199,7 @@ public:
 	{
 		Current=Tab=0;
 		ActPtr=FirstPtr=LastPtr=NbPtr=0;
+		CurNbPtr=SIZE_MAX;
 	}
 
 	/**
@@ -222,7 +235,8 @@ public:
 	}
 
 	/**
-	* Go to the i-th element of the cursor.
+	* Go to the i-th position of the cursor, event if this position contains a
+	* null pointer.
 	* @param idx             Index of the element to get.
 	*/
 	void GoTo(size_t idx)
@@ -249,8 +263,15 @@ public:
        bool IsEnd(ActPtr+1>=LastPtr);
 
        // Delete the element and reset the container
+		 size_t Rem;
+		 if(*Current)
+			 Rem=CurNbPtr-1;
+		 else
+			 Rem=SIZE_MAX;
        c.DeletePtr(**Current);
        Set(c);
+		 if(Rem!=SIZE_MAX)
+			CurNbPtr=Rem;
 
        // Put the cursor at the right place
        if(IsEnd)
@@ -269,19 +290,36 @@ public:
    }
 
 	/**
-	* Return the actual position in the cursor.
+	* Get the actual position in the cursor.
 	*/
 	inline size_t GetPos(void) const {return(ActPtr-FirstPtr);}
 
 	/**
-	* @return the maximal position occupied by an elements in the container.
+	* Get the maximal position occupied by an elements in the container.
 	*/
 	inline size_t GetMaxPos(void) const {if(NbPtr) return(LastPtr-1); else return(0);}
 
 	/**
-	* Return the number of elements in the cursor.
+	* Get the number of elements in the cursor.
+	* @attention Since a cursor has no idea of the number of non null elements
+	* in a cursor for the domain it covers, it must recompute it for each
+	* new assignment.
 	*/
-	inline size_t GetNb(void) const {return(LastPtr-FirstPtr);}
+	inline size_t GetNb(void) const
+	{
+		if(CurNbPtr==SIZE_MAX)
+		{
+			const_cast<RCursor<C>*>(this)->CurNbPtr=0;
+			if(Tab)
+			{
+				C** ptr(&Tab[FirstPtr]);
+				for(size_t i=FirstPtr;i<LastPtr;i++,ptr++)
+					if(*ptr)
+						const_cast<RCursor<C>*>(this)->CurNbPtr++;
+			}
+		}
+		return(CurNbPtr);
+	}
 
 	/**
 	* Test if the begin of the cursor is reached.

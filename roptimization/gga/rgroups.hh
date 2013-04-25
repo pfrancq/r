@@ -258,7 +258,7 @@ template<class cGroup,class cObj,class cGroups>
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->Verify();
 	if(ObjsAss.GetNb()+ObjsNoAss.GetNb()!=Objs.GetNb())
-		throw RGAException(" R::RGroups<cGroup,cObj,cGroups>::Verify(); Problem with the number of objects: ObjsAss="+RString::Number(ObjsAss.GetNb())+" and ObjsNoAss="+RString::Number(ObjsNoAss.GetNb()),RGAException::eGAVerify);
+		mThrowRGAException("Verify","Problem with the number of objects: ObjsAss="+RString::Number(ObjsAss.GetNb())+" and ObjsNoAss="+RString::Number(ObjsNoAss.GetNb()));
 }
 
 

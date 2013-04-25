@@ -44,15 +44,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RQuickSort<C>::RQuickSort(RContainer<C,true,false>& cont)
-		: Tab(reinterpret_cast<C**>(cont.Tab)), Max(cont.NbPtr)
-{
-}
-
-
-//-----------------------------------------------------------------------------
-template<class C>
-	RQuickSort<C>::RQuickSort(RContainer<C,false,false>& cont)
+	RQuickSort<C>::RQuickSort(RIContainer<C>& cont)
 		: Tab(reinterpret_cast<C**>(cont.Tab)), Max(cont.NbPtr)
 {
 }

@@ -68,7 +68,7 @@ RDbMySQL::RDbMySQL(const RString& db,const RString& host,const RString& user,con
 	{
 		Coding=RTextEncoding::GetTextEncoding(coding);
 	}
-	catch(EncodingNotSupported e)
+	catch(REncodingException& e)
 	{
 		throw RDbException(RString(e.GetMsg())+" for database "+db);
 	}

@@ -1,9 +1,11 @@
 SET(rcore_tools_INST_INCLUDES
 	rstd.h
 	rexception.h
+	ricontainer.h
+	ricontainer.hh
 	rcontainer.h
-	robjectcontainer.h
 	rcontainer.hh
+	robjectcontainer.h
 	robjectcontainer.hh
 	rcursor.h
 	rteststd.h

@@ -207,6 +207,8 @@ public:
 		*/
 		Hash2(size_t m,size_t i) : RContainer<C,bAlloc,true>(m,i) {}
 
+	public:
+
 		/**
 		 * Compare method.
 		 */
@@ -292,6 +294,8 @@ public:
 			for(size_t pos=0;pos<s;pos++)
 				InsertPtrAt(new Hash2(m,i),pos);
 		}
+
+	public:
 
 		/**
 		 * Compare method.

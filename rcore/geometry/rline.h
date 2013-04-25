@@ -44,8 +44,8 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* This class represent a line. In practice, Pt1 is always the most left/bottom
-* point and Pt2 is always the most right/upper point.
+* This class represent a line. In practice, Pt1 is always the most bottom/left
+* point and Pt2 is always the most upper/right point.
 * @short Line.
 */
 class RLine
@@ -97,6 +97,15 @@ public:
 	* @param seg            Is the line a segment.
 	*/
 	RLine(const RPoint& pt1,const RPoint& pt2,const bool seg=true);
+
+private:
+
+	/**
+	 * ReOrder de points if necessary to follow the convention.
+    */
+	void ReOrder(void);
+
+public:
 
 	/**
 	* Compute the length of the segment formed by both points.
@@ -197,7 +206,34 @@ public:
     * @return true if it is a segment.
     */
 	bool IsSegment(void) const {return(Segment);}
+
+	/**
+	 * Verify if a line is a horizontal one.
+    * @return true if the line is horizontal.
+    */
+	bool IsHorizontal(void) const {return(Pt1.Y==Pt2.Y);}
+
+	/**
+	 * Verify if a line is a vertical one.
+    * @return true if the line is vertical.
+    */
+	bool IsVertical(void) const {return(Pt1.X==Pt2.X);}
+
 };
+
+
+//------------------------------------------------------------------------------
+// Operators
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+/**
+ * Print the coordinate of the line in the form (x1,y1);(x2,y2).
+ * @param os                Output stream.
+ * @param line              Line to print.
+ * @return the stream.
+ */
+std::ostream& operator<<(std::ostream& os,const RLine& line);
 
 
 }  //-------- End of namespace R -----------------------------------------------

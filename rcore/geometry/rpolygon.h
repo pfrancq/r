@@ -1,4 +1,4 @@
-	/*
+/*
 
 	R Project Library
 
@@ -96,7 +96,7 @@ public:
 	* - 0 if there have the same number of points and at the same positions.
 	* - +1 The left-bottom point of the current polygon is more at the right (
 	*   upper) of the other one.
-	* @attention The polygons are reordered if necessary.
+	* @attention The polygons are reordered.
 	*/
 	int Compare(const RPolygon& poly) const;
 
@@ -166,13 +166,13 @@ public:
 
 	/**
 	* The equal operator.
-	* @attention The polygons are reordered if necessary.
+	* @attention The polygons are reordered.
 	*/
 	bool operator==(const RPolygon& poly) const;
 
 	/**
 	* The non-equal operator.
-	* @attention The polygons are reordered if necessary.
+	* @attention The polygons are reordered.
 	*/
 	bool operator!=(const RPolygon& poly) const;
 
@@ -210,6 +210,11 @@ public:
 	RPoint GetBottomLeft(void) const;
 
 	/**
+	* Get the index of the most bottom-left vertex of the polygon.
+	*/
+	size_t GetBottomLeftIndex(void) const;
+
+	/**
 	* Return a pointer to the most bottom-left vertex of the polygon responding
 	* to the criteria.
 	* @param minx           Minimal X position of the vertex to search.
@@ -233,61 +238,74 @@ public:
 	RPoint* GetLeftBottom(const tCoord minx,const tCoord miny,const tCoord maxy) const;
 
 	/**
-	* Return true if the point is on an edge.
-	* @param X              The X Coordinate used.
-	* @param Y              The Y Coordinate used.
-	*/
-	bool Edge(const tCoord X,const tCoord Y) const;
-
-	/**
-	* Return true if the point is on an edge.
-	* @param pt             The point used.
-	*/
-	bool Edge(const RPoint& pt) const {return(Edge(pt.X,pt.Y));}
-
-	/**
-	* Return true if two points are on the same edge.
-	* @param pt1            The first point used.
-	* @param pt2            The second point used.
-	*/
-	bool Edge(const RPoint& pt1,const RPoint& pt2) const;
-
-	/**
-	* Return true if the point is a vertex.
+	* Look if a point is a vertex.
 	* @param x               X-coordinate of the point.
 	* @param y               Y-coordinate of the point.
 	* @param pt              Point to verify.
+	* @return true if it is a vertex.
 	*/
 	bool IsVertex(const tCoord x,const tCoord y) const;
 
 	/**
-	* Return true if the point is a vertex.
+	* Look if the point is a vertex.
 	* @param pt              Point to verify.
+	* @return true if it is a vertex.
 	*/
-	bool IsVertex(const RPoint& pt) const
+	inline bool IsVertex(const RPoint& pt) const
 		{return(IsVertex(pt.X,pt.Y));}
 
 	/**
-	* Return true if the point is inside the polygon.
+	* Look if the point is on one of edges of the polygon.
 	* @param x               X-coordinate of the point.
 	* @param y               Y-coordinate of the point.
+	* @return true if the point is inside the polygon.
+	*/
+	bool IsOnEdge(const tCoord x,const tCoord y) const;
+
+	/**
+	* Look if the point is on one of edges of the polygon.
+	* @param pt              Point to verify.
+	* @return true if the point is inside the polygon.
+	*/
+	inline bool IsOnEdge(const RPoint& pt) const
+		{return(IsOnEdge(pt.X,pt.Y));}
+
+	/**
+	* Look if two points are on the same edge.
+	* @param pt1            The first point used.
+	* @param pt2            The second point used.
+	* @return true if two points are on the same edge.
+	*/
+	bool IsOnEdge(const RPoint& pt1,const RPoint& pt2) const;
+
+
+	/**
+	* Look if the point is inside the polygon.
+	* @param x               X-coordinate of the point.
+	* @param y               Y-coordinate of the point.
+	 c
 	*/
 	bool IsIn(const tCoord x,const tCoord y) const;
 
 	/**
-	* Return true if a point is inside the polygon.
+	* Look if the point is inside the polygon.
 	* @param pt              Point to verify.
+	* Look if the point is inside the polygon.
 	*/
-	bool IsIn(const RPoint& pt) const
+	inline bool IsIn(const RPoint& pt) const
 		{return(IsIn(pt.X,pt.Y));}
 
 	/**
-	* Return true if the polygon poly is inside the polygon. The two polygons are
-	* supposed to be "rectangular". This function determines if all the vertices
-	* of poly are inside the polygon.
+	* Look if a given polygon is contained in the current polygon. The two
+	* polygons are supposed to be "rectangular". This function determines if all
+	* the vertices of poly are inside the polygon.
 	* @param poly           The polygon to known if is in.
+	* @param overlap        Specify if the polygon may overlap, i.e. some of its
+	*                       vertices or edges may completely overlap an edge
+	*                       of the other one. By default, it is false.
+	* @return true if poly is contained in the polygon.
 	*/
-	bool IsIn(const RPolygon& poly) const;
+	bool IsIn(const RPolygon& poly,bool overlap=false) const;
 
 	/**
 	* Return true if the polygon is inside the rectangle.
@@ -296,7 +314,9 @@ public:
 	bool Contained(const RRect& rect) const;
 
 	/**
-	* Return the area of the polygon.
+	* Compute the area of the polygon.
+	* @return the area.
+	* @attention The polygon is reordered.
 	*/
 	tCoord Area(void) const;
 
@@ -315,8 +335,10 @@ public:
 	void ChangeOrientation(const tOrientation o,RPoint& min);
 
 	/**
-	* Decompose the polygon in a container of rectangles.
+	* Decompose the polygon in a container of rectangles. This is only possible
+	* for a rectangular polygon.
 	* @param rects          A pointer to the container of rectangles.
+	* @attention The polygon is reordered.
 	*/
 	void RectDecomposition(RContainer<RRect,true,false>& rects) const;
 
@@ -327,15 +349,26 @@ public:
 	void AddVertices(RContainer<RPoint,true,false>& points) const;
 
 	/**
+	 * Look if the polygon is clockwise or not.
+	 * @return true if it is clockwise.
+	 * @remark The sum of \f$(x_j-x_i)(y_j+y_i)\f$ is computed for each edges of
+	 * vertices \f$v_i(x_i,y_i)\f$ and \f$v_j(x_j,y_j)\f$. If the result is
+	 * positive the polygon is clockwise, otherwise it is anticlockwise.
+    */
+	bool IsClockwise(void) const;
+
+	/**
 	* Shift the vertices of the polygon to make the bottom-left point be the first
 	* one, and the rest are in the anti-clockwise order.
 	*/
 	void ReOrder(void);
 
 	/**
-	* Delete all necessary vertices to not have two adjacent vertexes.
+	* Goes trough the vertices and if two adjacent vertices are closer than a
+	* given threshold, the second one is removed.
+	* @param t               Threshold.
 	*/
-	void ReValid(void);
+	void ReValid(double t=0.0);
 
 	/**
 	* This function returns when there are duplicate vertices.
@@ -348,7 +381,8 @@ public:
 	RPoint GetCentralPoint(void);
 
 	/**
-	* Save the polygon in a file.
+	* Save the polygon in a file. The number of vertices is written on the
+	* current line and then each vertex on a single line.
 	* param f               Text file where the information must be written.
 	*/
 	void Save(RTextFile& f);
@@ -365,10 +399,30 @@ public:
 	bool IsRect(void) const;
 
 	/**
+    * @return true if the polygon is rectangular.
+    */
+	bool IsRectangular(void) const;
+
+	/**
 	 * @return true if the polygon is a square.
 	 */
 	inline bool IsSquare(void) const {return(IsRect()&&(((*this)[2])->X==((*this)[2])->Y));}
 };
+
+
+//------------------------------------------------------------------------------
+// Operators
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+/**
+ * Print the coordinate of the vertices on a same line in the form
+ * \f$(x_1,y_1);(x_2,y_2);...;(x_n,y_n)\f$.
+ * @param os                Output stream.
+ * @param poly              Polygon to print.
+ * @return the stream.
+ */
+std::ostream& operator<<(std::ostream& os,const RPolygon& poly);
 
 
 }  //-------- End of namespace R -----------------------------------------------

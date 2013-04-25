@@ -64,21 +64,21 @@ public:
 	* Return true if the point is on an edge of one of the polygon contained.
 	* @param pt             The point used.
 	*/
-	bool Edge(const RPoint& pt) const;
+	bool IsOnEdge(const RPoint& pt) const;
 
 	/**
 	* Return true if the point is on an edge of a certain polygon.
 	* @param pt             The point used.
-	* @param poly           The polygon to look in.
+	* @param poly           The polygon not to look in.
 	*/
-	bool Edge(const RPoint& pt,const RPolygon& poly) const;
+	bool IsOnEdge(const RPoint& pt,const RPolygon* exclude) const;
 
 	/**
 	* Return true if two points are on the same edge of one of the polygon contained.
 	* @param pt1            The first point used.
 	* @param pt2            The second point used.
 	*/
-	bool Edge(const RPoint& pt1,const RPoint& pt2) const;
+	bool IsOnEdge(const RPoint& pt1,const RPoint& pt2) const;
 
 	/**
 	* Add the points of the polygons contained to a container of points.

@@ -32,7 +32,6 @@
 // include files for R Project
 #include <rstring.h>
 #include <rtextencoding.h>
-#include <langinfo.h>
 #include <rcontainer.h>
 #include <rcursor.h>
 #include <rstack.h>

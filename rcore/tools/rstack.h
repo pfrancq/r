@@ -123,7 +123,7 @@ public:
 	* Get the number of elements in the stack.
 	* @return size_t.
 	*/
-	inline size_t GetNb(void) const {return(RContainer<C,bAlloc,false>::NbPtr);}
+	inline size_t GetNb(void) const {return(RContainer<C,bAlloc,false>::GetNb());}
 
 	/**
 	* Clear the stack and destruct the elements if it is responsible for
@@ -145,7 +145,7 @@ public:
 		if(bPopTop)
 			return(RContainer<C,bAlloc,false>::operator[](0));
 		else
-			return(RContainer<C,bAlloc,false>::operator[](RContainer<C,bAlloc,false>::LastPtr-1));
+			return(RContainer<C,bAlloc,false>::operator[](RContainer<C,bAlloc,false>::GetMaxPos()));
 	}
 
 	/**
@@ -158,7 +158,7 @@ public:
 		if(bPopTop)
 			return(RContainer<C,bAlloc,false>::operator[](0));
 		else
-			return(RContainer<C,bAlloc,false>::operator[](RContainer<C,bAlloc,false>::LastPtr-1));
+			return(RContainer<C,bAlloc,false>::operator[](RContainer<C,bAlloc,false>::GetMaxPos()));
 	}
 
 	/**
@@ -183,7 +183,7 @@ public:
 		if(bPopTop)
 			RContainer<C,bAlloc,false>::DeletePtrAt(0,true);
 		else
-			RContainer<C,bAlloc,false>::DeletePtrAt(RContainer<C,bAlloc,false>::LastPtr-1,true);
+			RContainer<C,bAlloc,false>::DeletePtrAt(RContainer<C,bAlloc,false>::GetMaxPos(),true);
 	}
 
 	/**

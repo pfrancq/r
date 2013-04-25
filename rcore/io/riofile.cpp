@@ -263,7 +263,9 @@ void RIOFile::Close(void)
 				case EINTR:
 					mThrowRIOException(this,"The close call was interrupted by a signal");
 				case EIO:
+			#ifndef WIN32
 				case EDQUOT:
+			#endif
 					mThrowRIOException(this,"When the file is accessed by NFS, these errors from write can sometimes not be detected until close");
 				default:
 					mThrowRIOException(this,"Cannot close the file");

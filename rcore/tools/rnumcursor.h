@@ -152,7 +152,7 @@ public:
 	inline bool Begin(void) const {return(Pos==cNoRef);}
 
 	/**
-	* Go to the i-th element of the cursor.
+	* Go to the i-th position of the cursor.
 	* @param idx             Index of the element to get.
 	*/
 	void GoTo(size_t idx);

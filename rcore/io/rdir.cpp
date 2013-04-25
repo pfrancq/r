@@ -97,7 +97,11 @@ void RDir::Open(RIO::ModeType mode)
 			break;
 
 		case RIO::Create:
-			err=mkdir(URI.GetPath().ToLatin1(),S_IRWXU | S_IRGRP | S_IXGRP | S_IXOTH);
+			#ifdef WIN32
+				err=mkdir(URI.GetPath().ToLatin1());
+			#else
+				err=mkdir(URI.GetPath().ToLatin1(),S_IRWXU | S_IRGRP | S_IXGRP | S_IXOTH);
+			#endif
 			if(err!=0)
 			{
 				switch(errno)

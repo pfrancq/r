@@ -51,22 +51,51 @@ namespace R{
 
 
 //------------------------------------------------------------------------------
-// New Exceptions
-
 /**
 * Exception specifying that the chosen encoding is not supported.
+* @short Encoding Exception.
 */
-mNewRException(EncodingNotSupported);
+class REncodingException : public RException
+{
+public:
+	/**
+	* Construct an exception.
+	* @param str                      Message of the error.
+	*/
+	REncodingException(const RString& str) : RException(str) {}
+};
 
+
+//------------------------------------------------------------------------------
 /**
 * Exception specifying that an invalid byte sequence cannot be handle.
+* @short Invalid Byte Sequence Exception
 */
-mNewRException(InvalidByteSequence);
+class RInvalidByteException : public RException
+{
+public:
+	/**
+	* Construct an exception.
+	* @param str                      Message of the error.
+	*/
+	RInvalidByteException(const RString& str) : RException(str) {}
+};
 
+
+//------------------------------------------------------------------------------
 /**
 * Exception specifying that the byte sequence is incomplete.
+* @short Incomplete Byte Exception
 */
-mNewRException(IncompleteByteSequence);
+class RIncompleteByteException : public RException
+{
+public:
+	/**
+	* Construct an exception.
+	* @param str                      Message of the error.
+	*/
+	RIncompleteByteException(const RString& str) : RException(str) {}
+};
 
 
 //------------------------------------------------------------------------------

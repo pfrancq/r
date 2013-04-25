@@ -117,10 +117,10 @@ RTextEncoding::RTextEncoding(const RCString& name)
 {
 	ToUTF16=iconv_open("utf-16le",Name);
 	if((ToUTF16==(iconv_t)-1)&&(errno==EINVAL))
-		throw EncodingNotSupported(RString(Name())+" encoding not supported");
+		throw REncodingException(RString(Name())+" encoding not supported");
 	FromUTF16=iconv_open(Name,"utf-16le");
 	if((FromUTF16==(iconv_t)-1)&&(errno==EINVAL))
-		throw EncodingNotSupported(RString(Name())+" encoding not supported");
+		throw REncodingException(RString(Name())+" encoding not supported");
 
 	// Test the order
 	char Tab[20];
@@ -193,13 +193,13 @@ RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 			switch(errno)
 			{
 				case EILSEQ:
-					throw InvalidByteSequence("Invalid byte sequence for encoding "+RString(Name()));
+					throw RInvalidByteException("Invalid byte sequence for encoding "+RString(Name()));
 					break;
 				case E2BIG:
 					ToFill=true;
 					break;
 				case EINVAL:
-					throw IncompleteByteSequence("Incomplete byte sequence for encoding "+RString(Name()));
+					throw RIncompleteByteException("Incomplete byte sequence for encoding "+RString(Name()));
 					break;
 				case EBADF:
 					throw RException("Invalid descriptor for encoding "+RString(Name()));
@@ -255,14 +255,14 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 					return(Code);
 				}
 				else
-					throw InvalidByteSequence("Invalid byte sequence for encoding "+RString(Name()));
+					throw RInvalidByteException("Invalid byte sequence for encoding "+RString(Name()));
 				break;
 			case E2BIG:
 				if(!s2)
 					ToFill=false;
 				break;
 			case EINVAL:
-				throw IncompleteByteSequence("Incomplete byte sequence for encoding "+RString(Name()));
+				throw RIncompleteByteException("Incomplete byte sequence for encoding "+RString(Name()));
 				break;
 			case EBADF:
 				throw RException("Invalid descriptor for encoding  "+RString(Name()));
@@ -308,13 +308,13 @@ RCString RTextEncoding::FromUnicode(const RChar* text,size_t len) const
 			switch(errno)
 			{
 				case EILSEQ:
-					throw InvalidByteSequence("Invalid byte sequence for encoding UFT-16");
+					throw RInvalidByteException("Invalid byte sequence for encoding UFT-16");
 					break;
 				case E2BIG:
 					ToFill=true;
 					break;
 				case EINVAL:
-					throw IncompleteByteSequence("Incomplete byte sequence for encoding UTF-16");
+					throw RIncompleteByteException("Incomplete byte sequence for encoding UTF-16");
 					break;
 				case EBADF:
 					throw RException("Invalid descriptor for encoding "+RString(Name()));
@@ -359,13 +359,13 @@ RCString RTextEncoding::FromUnicode(const RString& text) const
 			switch(errno)
 			{
 				case EILSEQ:
-					throw InvalidByteSequence("Invalid byte sequence for encoding UFT-16");
+					throw RInvalidByteException("Invalid byte sequence for encoding UFT-16");
 					break;
 				case E2BIG:
 					ToFill=true;
 					break;
 				case EINVAL:
-					throw IncompleteByteSequence("Incomplete byte sequence for encoding UTF-16");
+					throw RIncompleteByteException("Incomplete byte sequence for encoding UTF-16");
 					break;
 				case EBADF:
 					throw RException("Invalid descriptor for encoding "+RString(Name()));
@@ -390,7 +390,7 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RCString& name)
 	// Find the official name
 	search=GetOfficialName(search);
 	if(search.IsEmpty())
-		throw EncodingNotSupported("Encoding "+RString(name())+" is not supported");
+		throw REncodingException("Encoding "+RString(name())+" is not supported");
 
 	// Search it
 	ptr=Encodings.GetPtr(search);

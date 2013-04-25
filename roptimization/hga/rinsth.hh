@@ -84,11 +84,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	{
 		// Verify that the identifiers are continuous starting from 0
 		if(Objs()->GetId()!=id)
-			throw RGAException("RInstH::RInstH(size_t,R::RCursor<cObj>,const RString&,const R::RString&,R::RDebug*) : Identifiers must be continuous and starting from zero");
+			mThrowRGAException("Initialization","Identifiers must be continuous and starting from zero");
 
 		size_t tmp=Objs()->Attr.GetNbAttr();
 		if(!tmp)
-			throw RGAException("RInstH::RInstH(size_t,RCursor<cObj>,const RString&,const RString&,RDebug*) : Object "+RString::Number(Objs()->GetId())+" has no attributes");
+			mThrowRGAException("Initialization","Object "+RString::Number(Objs()->GetId())+" has no attributes");
 		size_t tmp2=static_cast<const RAttrList&>(Objs()->Attr)[tmp-1];
 		if(tmp>MaxAttr) MaxAttr=tmp;
 		if(tmp2>ControlAttr) ControlAttr=tmp2;

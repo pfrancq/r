@@ -34,7 +34,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rcontainer.h>
+#include <ricontainer.h>
 
 
 //-----------------------------------------------------------------------------
@@ -73,7 +73,7 @@ namespace R{
  *
  * int main()
  * {
- * 	  RContainer<MyElement,true,false> Tab(5);
+ *    RContainer<MyElement,true,false> Tab(5);
  *    Tab.InsertPtr(new MyElement("Str2"));
  *    Tab.InsertPtr(new MyElement("Str5"));
  *    Tab.InsertPtr(new MyElement("Str1"));
@@ -112,13 +112,7 @@ public:
 	 * Constructor of the algorithm.
 	 * @param cont           Container to sort.
 	 */
-	RQuickSort(RContainer<C,true,false>& cont);
-
-	/**
-	 * Constructor of the algorithm.
-	 * @param cont           Container to sort.
-	 */
-	RQuickSort(RContainer<C,false,false>& cont);
+	RQuickSort(RIContainer<C>& cont);
 
 private:
 

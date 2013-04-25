@@ -82,7 +82,7 @@ public:
 	* if(!ptr)
 	* 	throw RException(__PRETTY_FUNCTION__,__LINE__,"ptr cannot be a null pointer");
 	* @endcode
-	* @see The mThrowRException marco.
+	* @see The mThrowRException macro.
 	* @param func                     Function producing the error.
 	* @param where                    Line position of the error.
 	* @param str                      Message of the error.
@@ -126,17 +126,6 @@ public:
 //------------------------------------------------------------------------------
 // Macro to generate a RException
 #define mThrowRException(msg) throw RException(__PRETTY_FUNCTION__,__LINE__,msg)
-
-
-//------------------------------------------------------------------------------
-// Macro to create a new exception directly derived from RException
-#define mNewRException(name)                                                  \
-class name : public R::RException                                             \
-{                                                                             \
-public:                                                                       \
-	name(void) throw() : R::RException() {}                                    \
-	name(const RString& str) throw() : R::RException(str) {}                   \
-}
 
 
 //------------------------------------------------------------------------------

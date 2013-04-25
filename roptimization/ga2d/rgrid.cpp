@@ -568,9 +568,9 @@ void RGrid::AddFreePolygons(RGeoInfo* ins,RFreePolygons* free,const RRect& bound
 			// Calculate Polygon
 			if(CalculateFreePolygon(TestX,TestY,FromDir,bound,New))
 			{
-				New.ReOrder();    // The points must order anti-clockwise.
-				New.ReValid();    // The vertex can't be close.
-				if(New.GetNbVertices())
+				New.ReOrder();       // The points must order anti-clockwise.
+				New.ReValid(1.0);    // The vertex can't be close.
+				if(New.GetNbVertices()>3)
 				{
 					NewOne.InsertPtr(new RPolygon(New));
 					free->InsertPtr(new RFreePolygon(New));
