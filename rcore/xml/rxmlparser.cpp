@@ -408,7 +408,7 @@ RChar RXMLParser::CodeToChar(const RString& str,bool html)
 		return('<');
 	if(!str.Compare("gt"))
 		return('>');
-	if(str[0]=='#')
+	if(str[static_cast<size_t>(0)]=='#')
 	{
 		RString Code(str.Mid(1));
 		bool Valid;
