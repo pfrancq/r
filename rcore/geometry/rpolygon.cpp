@@ -482,17 +482,16 @@ bool RPolygon::IsOnEdge(const RPoint& pt1,const RPoint& pt2) const
 
 
 //------------------------------------------------------------------------------
-bool RPolygon::IsIn(const tCoord x,const tCoord y) const
+bool RPolygon::IsIn(const RPoint& pt) const
 {
 	// Special cases
 	if(!GetNb())
 		return(false);
-	RPoint pt(x,y);
 	if(GetNb()==1)
 		return(pt==(*((*this)[0])));
 
 	// Count the intersection between each edge and the vertical line at x (cMaxCoord,y)
-	RLine Ref(x,y,x,cMaxCoord);
+	RLine Ref(pt.X,pt.Y,pt.X,cMaxCoord);
 	size_t count(0);
 	RPoint** Cur(RContainer<RPoint,true,false>::Tab);
 	for(size_t i=0;i<GetNb();Cur++,i++)
@@ -508,7 +507,9 @@ bool RPolygon::IsIn(const tCoord x,const tCoord y) const
 			Next=Cur+1;
 		RLine Edge(**Cur,**Next);
 
-		if((Edge.IsVertical()&&Edge.IsIn(pt)) || ((!Edge.IsVertical())&&Edge.Inter(Ref)))
+		if(Edge.IsVertical()&&Edge.IsIn(pt))
+			count+=2;  // For a vertical line -> two intersections must be count, because the next edge will have an intersection
+		else if((!Edge.IsVertical())&&Edge.Inter(Ref))
 			count++;
 	}
 
@@ -1041,7 +1042,7 @@ bool RPolygon::IsRectangular(void) const
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-ostream& R::operator<<(ostream& os, const RPolygon& poly)
+ostream& std::operator<<(ostream& os, const RPolygon& poly)
 {
 	RCursor<RPoint> Cur(poly.GetVertices());
 	for(Cur.Start();!Cur.End();Cur.Next())

@@ -99,14 +99,23 @@ public:
 	bool DuplicatePoints(void) const;
 
 	/**
-	* Return true if the point is inside one of the polygons.
-	*/
-	bool IsIn(const tCoord X,const tCoord Y) const;
-
-	/**
-	* Return true if the point is inside one of the polygons.
+	* Look if the point is inside one of the polygons.
+	* @param pt              Point to verify.
+	* @return true if the point is inside.
 	*/
 	bool IsIn(const RPoint& pt) const;
+
+	/**
+	* Look if the point is inside of the polygons.
+	* @param x               X-coordinate of the point.
+	* @param y               Y-coordinate of the point.
+	* @return true if the point is inside.
+	*/
+	bool IsIn(const tCoord x,const tCoord y) const
+	{
+		RPoint pt(x,y);
+		return(IsIn(pt));
+	}
 
 	/**
 	* Assign operator.

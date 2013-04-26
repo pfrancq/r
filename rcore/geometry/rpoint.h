@@ -224,6 +224,19 @@ inline RPoint operator+(const RPoint& arg1,const RPoint& arg2)  {return(RPoint(a
 inline RPoint operator-(const RPoint& arg1,const RPoint& arg2) {return(RPoint(arg1)-=arg2);}
 
 
+}  //-------- End of namespace R -----------------------------------------------
+
+
+//------------------------------------------------------------------------------
+namespace std{
+//------------------------------------------------------------------------------
+
+
+#ifndef __APPLE__
+extern "C++"
+{
+#endif
+
 //------------------------------------------------------------------------------
 /**
  * Print the coordinate of the point in the form (x,y).
@@ -231,11 +244,14 @@ inline RPoint operator-(const RPoint& arg1,const RPoint& arg2) {return(RPoint(ar
  * @param pt                Point to print.
  * @return the stream.
  */
-std::ostream& operator<<(std::ostream& os,const RPoint& pt);
+extern std::ostream& operator<<(std::ostream& os,const R::RPoint& pt);
+
+#ifndef __APPLE__
+}
+#endif
 
 
-}  //-------- End of namespace R -----------------------------------------------
-
+}  //-------- End of namespace std ---------------------------------------------
 
 //------------------------------------------------------------------------------
 #endif

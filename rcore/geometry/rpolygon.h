@@ -278,22 +278,24 @@ public:
 	*/
 	bool IsOnEdge(const RPoint& pt1,const RPoint& pt2) const;
 
+	/**
+	* Look if the point is inside the polygon.
+	* @param pt              Point to verify.
+	* @return true if the point is inside.
+	*/
+	bool IsIn(const RPoint& pt) const;
 
 	/**
 	* Look if the point is inside the polygon.
 	* @param x               X-coordinate of the point.
 	* @param y               Y-coordinate of the point.
-	 c
+	* @return true if the point is inside.
 	*/
-	bool IsIn(const tCoord x,const tCoord y) const;
-
-	/**
-	* Look if the point is inside the polygon.
-	* @param pt              Point to verify.
-	* Look if the point is inside the polygon.
-	*/
-	inline bool IsIn(const RPoint& pt) const
-		{return(IsIn(pt.X,pt.Y));}
+	inline bool IsIn(const tCoord x,const tCoord y) const
+	{
+		RPoint pt(x,y);
+		return(IsIn(pt));
+	}
 
 	/**
 	* Look if a given polygon is contained in the current polygon. The two
@@ -410,9 +412,18 @@ public:
 };
 
 
+}  //-------- End of namespace R -----------------------------------------------
+
+
 //------------------------------------------------------------------------------
-// Operators
+namespace std{
 //------------------------------------------------------------------------------
+
+
+#ifndef __APPLE__
+extern "C++"
+{
+#endif
 
 //------------------------------------------------------------------------------
 /**
@@ -422,11 +433,14 @@ public:
  * @param poly              Polygon to print.
  * @return the stream.
  */
-std::ostream& operator<<(std::ostream& os,const RPolygon& poly);
+extern std::ostream& operator<<(std::ostream& os,const R::RPolygon& poly);
+
+#ifndef __APPLE__
+}
+#endif
 
 
-}  //-------- End of namespace R -----------------------------------------------
-
+}  //-------- End of namespace std ---------------------------------------------
 
 //------------------------------------------------------------------------------
 #endif

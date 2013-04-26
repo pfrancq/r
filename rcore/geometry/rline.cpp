@@ -78,7 +78,7 @@ void RLine::ReOrder(void)
 	{
 		RPoint Tmp(Pt1);
 		Pt1=Pt2;
-		Pt2=Pt1;
+		Pt2=Tmp;
 	}
 }
 
@@ -187,7 +187,7 @@ bool RLine::Inter(const RLine& line,RPoint& pt) const
 	double a2,b2;         // y2=a2x+b2
 	double x,y,x1,x2;     // y1 = y2;
 
-	if(Pt2.X-Pt1.X>=cEpsi)
+	if(Abs(Pt2.X-Pt1.X)>=cEpsi)
 	{
 		a1=static_cast<double>(Pt2.Y-Pt1.Y)/static_cast<double>(Pt2.X-Pt1.X);
 		b1=static_cast<double>(Pt1.Y-a1*(Pt1.X));
@@ -198,7 +198,7 @@ bool RLine::Inter(const RLine& line,RPoint& pt) const
 		a1 = cMaxCoord;
 		x1 = Pt1.X;
 	}
-	if(line.Pt2.X-line.Pt1.X>cEpsi)
+	if(Abs(line.Pt2.X-line.Pt1.X)>cEpsi)
 	{
 		// Non-vertical line
 		a2=static_cast<double>(line.Pt2.Y-line.Pt1.Y)/static_cast<double>(line.Pt2.X-line.Pt1.X);
@@ -298,7 +298,7 @@ bool RLine::IsIn(const RPoint& pt) const
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-std::ostream& R::operator<<(std::ostream& os, const RLine& line)
+std::ostream& std::operator<<(std::ostream& os, const RLine& line)
 {
 	os<<"("<<line.GetX1()<<","<<line.GetY1()<<")"<<";("<<line.GetX2()<<","<<line.GetY2()<<")";
    return(os);

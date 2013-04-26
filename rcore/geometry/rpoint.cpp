@@ -200,7 +200,7 @@ void RPoint::Save(RTextFile& f) const
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-ostream& R::operator<<(ostream& os, const RPoint& pt)
+ostream& std::operator<<(ostream& os, const RPoint& pt)
 {
 	os<<"("<<pt.X<<","<<pt.Y<<")";
    return(os);
