@@ -211,13 +211,13 @@ public:
 	 * Verify if a line is a horizontal one.
     * @return true if the line is horizontal.
     */
-	bool IsHorizontal(void) const {return(Pt1.Y==Pt2.Y);}
+	bool IsHorizontal(void) const {return(Abs(Pt1.Y-Pt2.Y)<cEpsi);}
 
 	/**
 	 * Verify if a line is a vertical one.
     * @return true if the line is vertical.
     */
-	bool IsVertical(void) const {return(Pt1.X==Pt2.X);}
+	bool IsVertical(void) const {return(Abs(Pt1.X-Pt2.X)<cEpsi);}
 
 };
 

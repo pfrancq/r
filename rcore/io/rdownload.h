@@ -40,14 +40,8 @@
 
 
 //------------------------------------------------------------------------------
-// include files for CURL
-#include <curl/curl.h>
-
-
-//------------------------------------------------------------------------------
 // include files for R library
 #include <ruri.h>
-
 
 
 //------------------------------------------------------------------------------
@@ -66,7 +60,7 @@ class RDownload
 	/**
 	* Pointer to an instance of the library.
 	*/
-	CURL* Lib;
+	void* Lib;
 
 	/**
 	 * Valid Content?

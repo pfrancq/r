@@ -208,37 +208,6 @@ inline tCoord Abs(tCoord x) {return(x<0.0?-x:x);}
 
 //------------------------------------------------------------------------------
 /**
- * The function compares two identifiers. Useful for R::RContainer.
- * @param id1                First identifier.
- * @param id2                Second identifier.
- * @return
- */
-inline int CompareIds(size_t id1,size_t id2)
-{
-	if(id1>id2) return (1);
-	else if(id1<id2) return(-1);
-	return(0);
-}
-
-
-//------------------------------------------------------------------------------
-/**
- * The function compares two pointers. Useful for R::RContainer.
- * @tparam C                 Class to compare.
- * @param ptr1               First pointer.
- * @param ptr2               Second pointer.
- */
-template<class C>
-	inline int ComparePtrs(C* ptr1,C* ptr2)
-{
-	if(ptr1>ptr2) return (1);
-	else if(ptr1<ptr2) return(-1);
-	return(0);
-}
-
-
-//------------------------------------------------------------------------------
-/**
 * The cNoCoord constant represent an invalid coordinate. It practice, it is the
 * maximal positive value that a coordinate can have.
 */
@@ -307,6 +276,65 @@ enum tDirection
 * considered as zero.
 */
 const double cEpsi=0.000001;
+
+
+//------------------------------------------------------------------------------
+/**
+ * The function compares two identifiers. Useful for R::RContainer.
+ * @param id1                First identifier.
+ * @param id2                Second identifier.
+ * @return
+ */
+inline int CompareIds(size_t id1,size_t id2)
+{
+	if(id1>id2) return (1);
+	else if(id1<id2) return(-1);
+	return(0);
+}
+
+
+//------------------------------------------------------------------------------
+/**
+ * The function compares two doubles. Useful for R::RContainer.
+ * @param num1               First double.
+ * @param num2               Second double.
+ * @return
+ * - <0 if num1<num2
+ * - 0  if num1=num2
+ * - >0 if num1>num2
+ */
+inline int CompareDoubles(double num1,double num2)
+{
+	if(Abs(num1-num2)<=cEpsi)
+		return(0);
+	double diff(num1-num2);
+	if(num1>num2)
+	{
+		if(diff>1.0)
+			return(static_cast<int>(diff));
+		else
+			return(1.0);
+	}
+	if(diff<-1.0)
+			return(static_cast<int>(diff));
+	return(-1.0);
+}
+
+
+//------------------------------------------------------------------------------
+/**
+ * The function compares two pointers. Useful for R::RContainer.
+ * @tparam C                 Class to compare.
+ * @param ptr1               First pointer.
+ * @param ptr2               Second pointer.
+ */
+template<class C>
+	inline int ComparePtrs(C* ptr1,C* ptr2)
+{
+	if(ptr1>ptr2) return (1);
+	else if(ptr1<ptr2) return(-1);
+	return(0);
+}
 
 
 }  //-------- End of namespace R -----------------------------------------------

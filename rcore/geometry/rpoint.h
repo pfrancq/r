@@ -93,13 +93,13 @@ public:
 	* The equal operator.
 	* @param pt             Point used for the comparison.
 	*/
-	inline bool operator==(const RPoint& pt) const {return((X==pt.X)&&(Y==pt.Y));}
+	inline bool operator==(const RPoint& pt) const {return((Abs(X-pt.X)<=cEpsi)&&(Abs(Y-pt.Y)<=cEpsi));}
 
 	/**
 	* The non-equal operator.
 	 @param pt             Point used for the comparison.
 	*/
-	inline bool operator!=(const RPoint& pt) const {return((X!=pt.X)||(Y!=pt.Y));}
+	inline bool operator!=(const RPoint& pt) const {return((Abs(X-pt.X)>cEpsi)||(Abs(Y-pt.Y)>cEpsi));}
 
 	/**
 	* Make a translation of the point.

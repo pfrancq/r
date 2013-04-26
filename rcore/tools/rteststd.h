@@ -46,33 +46,33 @@
 
 #else 		// !__RDISABLEASSERT__
 
-	#define mAssertSameContainers(class1,obj1,class2,obj2)            \
-	{                                                                 \
-		R::RCursor<class1> Cur1(obj1);                                 \
-		R::RCursor<class2> Cur2(obj2);                                 \
-		if(Cur1.GetNb()==Cur2.GetNb())                                 \
-		{                                                              \
-			for(Cur1.Start(),Cur2.Start();                              \
-             (!Cur1.End())&&(!Cur2.End());                           \
-				 Cur1.Next(),Cur2.Next())                                \
-			{                                                           \
-				if(!(*Cur1()==*Cur2()))                                  \
-				{                                                        \
-					size_t Idx(min(Cur1.GetPos(),Cur2.GetPos()));         \
-					std::cerr<<mInfo                                      \
-								<<": assertion failed: "                     \
-								<<#obj1<<"["<<Idx<<"]=="                     \
-								<<#obj2<<"["<<Idx<<"]"<<std::endl;           \
-					break;                                                \
-				}                                                        \
-			}                                                           \
-		}                                                              \
-		else                                                           \
-		{                                                              \
-			std::cerr<<mInfo                                            \
-			         <<": assertion failed: |"                          \
-			         <<#obj1<<"|==|"<<#obj2<<"|"<<std::endl;            \
-		}                                                              \
+	#define mAssertSameContainers(class1,obj1,class2,obj2)                              \
+	{                                                                                   \
+		R::RCursor<class1> Cur1(obj1);                                                   \
+		R::RCursor<class2> Cur2(obj2);                                                   \
+		if(Cur1.GetNb()==Cur2.GetNb())                                                   \
+		{                                                                                \
+			for(Cur1.Start(),Cur2.Start();                                                \
+             (!Cur1.End())&&(!Cur2.End());                                             \
+				 Cur1.Next(),Cur2.Next())                                                  \
+			{                                                                             \
+				if(!(*Cur1()==*Cur2()))                                                    \
+				{                                                                          \
+					size_t Idx(Cur1.GetPos()<=Cur2.GetPos()?Cur1.GetPos():Cur2.GetPos());   \
+					std::cerr<<mInfo                                                        \
+								<<": assertion failed: "                                       \
+								<<#obj1<<"["<<Idx<<"]=="                                       \
+								<<#obj2<<"["<<Idx<<"]"<<std::endl;                             \
+					break;                                                                  \
+				}                                                                          \
+			}                                                                             \
+		}                                                                                \
+		else                                                                             \
+		{                                                                                \
+			std::cerr<<mInfo                                                              \
+			         <<": assertion failed: |"                                            \
+			         <<#obj1<<"|==|"<<#obj2<<"|"<<std::endl;                              \
+		}                                                                                \
 }
 
 #endif 		// !__RDISABLEASSERT__

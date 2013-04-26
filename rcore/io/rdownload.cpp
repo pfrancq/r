@@ -37,6 +37,11 @@
 
 
 //------------------------------------------------------------------------------
+// include files for CURL
+#include <curl/curl.h>
+
+
+//------------------------------------------------------------------------------
 // include files for R library
 #include <rdownload.h>
 #include <rexception.h>
@@ -113,17 +118,17 @@ RDownload::RDownload(void)
 	: ValidContent(true), MIME(30), Stream(0), First(true)
 {
 	// Create link to CURL library and put global options
-	Lib = curl_easy_init();
-	curl_easy_setopt(Lib, CURLOPT_WRITEFUNCTION,RDownload::WriteTmpFile);
-	curl_easy_setopt(Lib, CURLOPT_HEADERFUNCTION,RDownload::TreatHeader);
-	curl_easy_setopt(Lib, CURLOPT_CONNECTTIMEOUT,30);
-	curl_easy_setopt(Lib, CURLOPT_TIMEOUT,240);
-	curl_easy_setopt(Lib, CURLOPT_NOPROGRESS, 1);
-	curl_easy_setopt(Lib, CURLOPT_USERAGENT, "libcurl-agent/1.0");
- 	curl_easy_setopt(Lib, CURLOPT_COOKIEFILE, "");
- 	curl_easy_setopt(Lib, CURLOPT_NOSIGNAL, 1);
-	curl_easy_setopt(Lib, CURLOPT_WRITEHEADER,this);
- 	curl_easy_setopt(Lib, CURLOPT_WRITEDATA,this);
+	Lib = static_cast<void*>(curl_easy_init());
+	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_WRITEFUNCTION,RDownload::WriteTmpFile);
+	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_HEADERFUNCTION,RDownload::TreatHeader);
+	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_CONNECTTIMEOUT,30);
+	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_TIMEOUT,240);
+	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_NOPROGRESS, 1);
+	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_USERAGENT, "libcurl-agent/1.0");
+ 	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_COOKIEFILE, "");
+ 	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_NOSIGNAL, 1);
+	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_WRITEHEADER,this);
+ 	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_WRITEDATA,this);
 }
 
 
@@ -139,8 +144,8 @@ void RDownload::DownloadFile(const RURI& uri,const RURI& local)
 		mThrowRException("Cannot create file '"+local()+"'");
 
 	// Download the file
-	curl_easy_setopt(Lib, CURLOPT_URL, uri().ToLatin1());
-	CURLcode err=curl_easy_perform(Lib);
+	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_URL, uri().ToLatin1());
+	CURLcode err=curl_easy_perform(static_cast<CURL*>(Lib));
 
 	// Done Part
 	if(Stream)
@@ -184,5 +189,5 @@ RString RDownload::GetMIMEType(void)
 //------------------------------------------------------------------------------
 RDownload::~RDownload(void)
 {
-	curl_easy_cleanup(Lib);
+	curl_easy_cleanup(static_cast<CURL*>(Lib));
 }

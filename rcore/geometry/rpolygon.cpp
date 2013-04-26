@@ -482,7 +482,7 @@ bool RPolygon::IsOnEdge(const RPoint& pt1,const RPoint& pt2) const
 
 
 //------------------------------------------------------------------------------
-bool RPolygon::IsIn(const RPoint& pt) const
+bool RPolygon::IsIn(const RPoint& pt,bool overlap) const
 {
 	// Special cases
 	if(!GetNb())
@@ -496,9 +496,9 @@ bool RPolygon::IsIn(const RPoint& pt) const
 	RPoint** Cur(RContainer<RPoint,true,false>::Tab);
 	for(size_t i=0;i<GetNb();Cur++,i++)
 	{
-		// If the point is the current vertex -> It is in the polygon
+		// If the point is the current vertex -> It is then also on two edges
 		if((**Cur)==pt)
-			return(true);
+			return(overlap);  // Return overlap
 
 		RPoint** Next;
 		if(i==GetNb()-1)
@@ -507,11 +507,11 @@ bool RPolygon::IsIn(const RPoint& pt) const
 			Next=Cur+1;
 		RLine Edge(**Cur,**Next);
 
-		if(Edge.IsVertical()&&Edge.IsIn(pt))
-			count+=2;  // For a vertical line -> two intersections must be count, because the next edge will have an intersection
-		else if((!Edge.IsVertical())&&Edge.Inter(Ref))
+		if(Edge.IsIn(pt))
+			return(overlap); // If the point is on an edge -> return overlap
+      else if(Edge.Inter(Ref))
 			count++;
-	}
+    }
 
 	// if count%2==0 -> Not in
 	return(count%2);
@@ -532,18 +532,8 @@ bool RPolygon::IsIn(const RPolygon& poly,bool overlap) const
 	for(size_t i=0;i<poly.GetNb();Cur++,i++)
 	{
 		// The vertex must be in the polygon
-		if(IsIn(**Cur))
-		{
-			// Test if it is on an edge.
-			bool OnEdge(IsOnEdge(**Cur));
-
-			// If overlap is accepted -> It must be on the edge
-			// If overlap is non accepted -> It cannot be on the edge
-			if((overlap&&(!OnEdge))||((!overlap)&&(OnEdge)))
-				return(false);
-		}
-		else
-			return(false); // If the point is not in -> The polygon cannot be contained
+		if(!IsIn(**Cur,overlap))  // Depending of overlap, the point may be or not on a edge
+			return(false);
 
 		RPoint** Next;
 		if(i==poly.GetNb()-1)

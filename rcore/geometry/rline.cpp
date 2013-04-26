@@ -74,7 +74,7 @@ RLine::RLine(const RPoint& pt1,const RPoint& pt2,const bool seg)
 void RLine::ReOrder(void)
 {
 	// Verify if Pt2 is the first point
-	if((Pt1.Y>Pt2.Y)||((Pt1.Y==Pt2.Y)&&(Pt2.X<Pt1.X)))
+	if(((Abs(Pt1.Y-Pt2.Y)<=cEpsi)&&(Pt2.X<Pt1.X))||(Pt1.Y>Pt2.Y))
 	{
 		RPoint Tmp(Pt1);
 		Pt1=Pt2;
@@ -251,10 +251,10 @@ bool RLine::Inter(const RLine& line) const
 //------------------------------------------------------------------------------
 bool RLine::IsIn(const RPoint& pt) const
 {
-	if(Pt2.X==Pt1.X)
+	if(Abs(Pt2.X-Pt1.X)<=cEpsi)
 	{
 		// The line is vertical -> Verify that the point is on the same vertical
-      if(pt.X == Pt1.X)
+      if(Abs(pt.X-Pt1.X)<=cEpsi)
 		{
 			if(Segment)
 			{

@@ -74,11 +74,11 @@ RPoint::RPoint(const RPoint& pt)
 //------------------------------------------------------------------------------
 int RPoint::Compare(const RPoint& pt) const
 {
-	// Compare first the X coordinate
-	int comp(static_cast<int>(X-pt.X));
-	if(X==pt.X)
-		comp=static_cast<int>(Y-pt.Y); // If the two points are horizontal -> Compare Y
-	return(comp);
+	// Compare first the Y coordinates
+	int comp(CompareDoubles(Y,pt.Y));
+	if(comp)
+		return(comp);
+	return(CompareDoubles(X,pt.X));
 }
 
 

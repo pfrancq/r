@@ -281,33 +281,37 @@ public:
 	/**
 	* Look if the point is inside the polygon.
 	* @param pt              Point to verify.
+	* @param overlap         Specify if the point can be on one of the edges. By
+	*                        default, it is true.
 	* @return true if the point is inside.
 	*/
-	bool IsIn(const RPoint& pt) const;
+	bool IsIn(const RPoint& pt,bool overlap=true) const;
 
 	/**
 	* Look if the point is inside the polygon.
 	* @param x               X-coordinate of the point.
 	* @param y               Y-coordinate of the point.
+	* @param overlap         Specify if the point can be on one of the edges. By
+	*                        default, it is true.
 	* @return true if the point is inside.
 	*/
-	inline bool IsIn(const tCoord x,const tCoord y) const
+	inline bool IsIn(const tCoord x,const tCoord y,bool overlap=true) const
 	{
 		RPoint pt(x,y);
-		return(IsIn(pt));
+		return(IsIn(pt,overlap));
 	}
 
 	/**
 	* Look if a given polygon is contained in the current polygon. The two
 	* polygons are supposed to be "rectangular". This function determines if all
 	* the vertices of poly are inside the polygon.
-	* @param poly           The polygon to known if is in.
-	* @param overlap        Specify if the polygon may overlap, i.e. some of its
-	*                       vertices or edges may completely overlap an edge
-	*                       of the other one. By default, it is false.
+	* @param poly            The polygon to known if is in.
+	* @param overlap         Specify if the polygon may overlap, i.e. some of its
+	*                        vertices or edges may completely overlap an edge
+	*                        of the other one. By default, it is true.
 	* @return true if poly is contained in the polygon.
 	*/
-	bool IsIn(const RPolygon& poly,bool overlap=false) const;
+	bool IsIn(const RPolygon& poly,bool overlap=true) const;
 
 	/**
 	* Return true if the polygon is inside the rectangle.
