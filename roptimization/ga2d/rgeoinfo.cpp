@@ -395,7 +395,7 @@ bool RGeoInfo::Overlap(RGeoInfo* info) const
 		{
 			R2=(*rect2());
 			R2+=info->Pos;
-			if(R1.Overlap(&R2))
+			if(R1.Overlap(R2))
 				return(true);
     	}
 	}

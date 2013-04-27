@@ -45,31 +45,22 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* This class implements a rectangle.
+* This class implements a rectangle. In practice, Pt1 is always the bottom/left
+* point while Pt2 is always the upper/right point.
 * @author Pascal Francq
 * @short Rectangle.
 */
 class RRect
 {
 	/**
-	* Left limit.
+	* The First point of the line.
 	*/
-	tCoord X1;
+	RPoint Pt1;
 
 	/**
-	* Bottom limit.
+	* The second point of the line.
 	*/
-	tCoord Y1;
-
-	/**
-	* Right limit.
-	*/
-	tCoord X2;
-
-	/**
-	* Upper limit.
-	*/
-	tCoord Y2;
+	RPoint Pt2;
 
 public:
 
@@ -86,19 +77,48 @@ public:
 
 	/**
 	* Construct a rectangle with two points.
-	* @param pt1            Point used as (left,bottom) edge.
-	* @param pt2            Point used as (right,up) edge.
+	* @param pt1            First point used.
+	* @param pt2            Second point used.
 	*/
 	RRect(const RPoint& pt1,const RPoint& pt2);
 
 	/**
 	* Construct a rectangle from four coordinates.
-	* @param x1              The most left position.
-	* @param y1              The most bottom position
-	* @param x2              The most right position.
-	* @param y2              The most up position.
+	* @param x1              First X-coordinate.
+	* @param y1              First Y-coordinate.
+	* @param x2              Second X-coordinate.
+	* @param y2              Second Y-coordinate.
 	*/
 	RRect(tCoord x1,tCoord y1,tCoord x2,tCoord y2);
+
+private:
+
+	/**
+	 * ReOrder de points if necessary to follow the convention.
+    */
+	void ReOrder(void);
+
+public:
+
+	/**
+	* Compare two rectangles. This function is used with the class RContainer.
+	* @param rect           Rectangle used for the comparison.
+	* @return
+	* - -1 The left-bottom point of the current polygon is more at the left (at
+	*   the bottom) of the other one. If identical, the second points are
+	*   compared.
+	* - 0 if there have the points.
+	* - +1 The left-bottom point of the current line is more at the right (
+	*   upper) of the other one. If identical, the second points are compared.
+	*/
+	int Compare(const RRect& rect) const;
+
+	/**
+	* Set the coordinates of the rectangle.
+	* @param pt1            First point used.
+	* @param pt2            Second point used.
+	*/
+	void Set(const RPoint& pt1,const RPoint& pt2);
 
 	/**
 	* Set the coordinates of the rectangle.
@@ -110,55 +130,67 @@ public:
 	void Set(tCoord x1,tCoord y1,tCoord x2,tCoord y2);
 
 	/**
+	 * Get the (bottom,left) point.
+	 * @return RPoint
+	 */
+	RPoint inline GetPt1(void) const {return(Pt1);}
+
+	/**
 	* @return the left limit.
 	*/
-	tCoord GetX1(void) const {return(X1);}
+	tCoord GetX1(void) const {return(Pt1.X);}
 
 	/**
 	* @return the bottom limit.
 	*/
-	tCoord GetY1(void) const {return(Y1);}
+	tCoord GetY1(void) const {return(Pt1.Y);}
+
+	/**
+	 * Get the (upper,right) point.
+	 * @return RPoint
+	 */
+	RPoint inline GetPt2(void) const {return(Pt2);}
 
 	/**
 	* @return the right limit.
 	*/
-	tCoord GetX2(void) const {return(X2);}
+	tCoord GetX2(void) const {return(Pt2.X);}
 
 	/**
 	* @return the upper limit.
 	*/
-	tCoord GetY2(void) const {return(Y2);}
+	tCoord GetY2(void) const {return(Pt2.Y);}
 
 	/**
 	* Return the width of the rectangle. The width includes the border, i.e. a
 	* rectangle where X1=X2 has a width of 1.
 	*/
-	tCoord GetWidth(void) const {return(Abs(X2-X1+1));}
+	tCoord GetWidth(void) const {return(Abs(Pt2.X-Pt1.X+1));}
 
 	/**
 	* Return the height of the rectangle. The height includes the border, i.e.
 	* a rectangle where Y1=Y2 has a height of 1.
 	*/
-	tCoord GetHeight(void) const {return(Abs(Y2-Y1+1));}
+	tCoord GetHeight(void) const {return(Abs(Pt2.Y-Pt1.Y+1));}
 
 	/**
 	 * @return the size of the rectangle.
 	 */
-	RSize GetSize(void) const {return(RSize(Abs(X2-X1+1),Abs(Y2-Y1+1)));}
+	RSize GetSize(void) const {return(RSize(Abs(Pt2.X-Pt1.X+1),Abs(Pt2.Y-Pt1.Y+1)));}
 
 	/**
 	* Set the width of the rectangle. The method adapts the X-coordinate of
 	* Pt2. The width includes the border, i.e. a width of 1 means that X2=X1.
 	* @param width           New width.
 	*/
-	inline void SetWidth(tCoord width) {X2=width+X1-1;}
+	inline void SetWidth(tCoord width) {Pt2.X=width+Pt1.X-1;}
 
 	/**
 	* Set the height of the rectangle. The method adapts the Y-coordinate of
 	* Pt2. The height includes the border, i.e. a width of 1 means that Y2=Y1.
 	* @param height          New height.
 	*/
-	inline void SetHeight(tCoord height) {Y2=height+Y1-1;}
+	inline void SetHeight(tCoord height) {Pt2.Y=height+Pt1.Y-1;}
 
 	/**
 	* Set the coordinates of the rectangle based on a shape.
@@ -167,7 +199,7 @@ public:
 	* @param w               Width.
 	* @param h               Height.
 	*/
-	inline void SetShape(tCoord x,tCoord y,tCoord w,tCoord h) {X1=x; Y1=y; X2=x+w-1; Y2=y+h-1;}
+	inline void SetShape(tCoord x,tCoord y,tCoord w,tCoord h) {Pt1.Set(x,y); Pt2.Set(x+w-1,y+h-1);}
 
 	/**
 	* Return the area of the rectangle.
@@ -177,26 +209,46 @@ public:
 	/**
 	* The equal operator.
 	*/
-	inline bool operator==(const RRect& rect) const {return((X1==rect.X1)&&(Y1==rect.Y1)&&(X2==rect.X2)&&(Y2==rect.Y2));}
+	inline bool operator==(const RRect& rect) const {return((Pt1==rect.Pt1)&&(Pt2==rect.Pt2));}
 
 	/**
 	* The non-equal operator.
 	*/
-	inline bool operator!=(const RRect& rect) const {return((X1!=rect.X1)||(Y1!=rect.Y1)||(X2!=rect.X2)||(Y2!=rect.Y2));}
+	inline bool operator!=(const RRect& rect) const {return((Pt1!=rect.Pt1)||(Pt2!=rect.Pt2));}
+
+	/**
+	* Make a translation of the rectangle.
+	* @param pt             The point representing the vector used.
+	*/
+	void Translation(const RPoint& pt);
 
 	/**
 	* Make a translation of the rectangle.
 	* @param x              The x to add.
 	* @param y              The y to add.
 	*/
-	void Translation(tCoord x,tCoord y);
+	inline void Translation(tCoord x,tCoord y)
+	{
+		RPoint pt(x,y);
+		Translation(pt);
+	}
+
+	/**
+	* Put a rectangle at a given position.
+	* @param pt             New position.
+	*/
+	void SetPos(const RPoint& pt);
 
 	/**
 	* Put a rectangle at a given position.
 	* @param x              X position.
 	* @param y              Y position.
 	*/
-	void SetPos(tCoord x,tCoord y);
+	inline void SetPos(tCoord x,tCoord y)
+	{
+		RPoint pt(x,y);
+		SetPos(pt);
+	}
 
 	/**
 	* Make a translation of the rectangle.
@@ -211,13 +263,6 @@ public:
 	inline RRect& operator-=(const RPoint& pt) {Translation(-pt.X,-pt.Y); return(*this);}
 
 	/**
-	* Compare two rectangles and return 0 if there are at the same. This function
-	* is used with the class RContainer.
-	* @param rect           Rectangle used for the comparison.
-	*/
-	int Compare(const RRect& rect) const;
-
-	/**
 	* Adapt the rectangle to be contained in a given region.
 	* @param clip           The region used as reference.
 	* @returns The function returns true if the rectangle was clipped.
@@ -226,7 +271,8 @@ public:
 
 	/**
 	* Adapt the rectangle to be contained in a given region.
-	* @param limits         The point representing the limits of the region.
+	* @param limits         The point representing the right/up limits of the
+	 *                      region.
 	* @returns The function returns true if the rectangle was clipped.
 	*/
 	bool Clip(const RPoint& limits);
@@ -238,46 +284,39 @@ public:
 	bool Overlap(const RRect& rect) const;
 
 	/**
-	* This function returns true if the two rectangles overlapped.
-	* @param rect            Reference rectangle.
+	* This function returns true if a given point is in the rectangle.
+	* @param pt              Point to analyze.
+	* @param overlap         Specify if the point can be on one of the edges. By
+	*                        default, it is true.
 	*/
-	inline bool Overlap(const RRect* rect) const {return(Overlap(*rect));}
+	bool IsIn(const RPoint& pt,bool overlap=true) const;
 
 	/**
 	* This function returns true if a given point is in the rectangle.
-	* @param X              X position of the point.
-	* @param Y              Y position of the point.
+	* @param x               X position of the point.
+	* @param y               Y position of the point.
+	* @param overlap         Specify if the point can be on one of the edges. By
+	*                        default, it is true.
 	*/
-	bool IsIn(tCoord X,tCoord Y) const;
-
-	/**
-	* This function returns true if a given point is in the rectangle.
-	* @param pos             Position.
-	*/
-	inline bool IsIn(const RPoint& pos) const {return(IsIn(pos.X,pos.Y));}
+	inline bool IsIn(tCoord x,tCoord y,bool overlap=true) const
+	{
+		RPoint pt(x,y);
+		return(IsIn(pt,overlap));
+	}
 
 	/**
 	* This function returns true if a given rect is in the rectangle.
 	* @param rect            Rectangle.
+	* @param overlap         Specify if the rectangle may overlap, i.e. some of
+	*                        its points are on an edge of the other one. By
+	*                       default, it is true.
 	*/
-	inline bool IsIn(const RRect& rect) const {return(IsIn(rect.X1,rect.Y1)||IsIn(rect.X2,rect.Y2));}
+	inline bool IsIn(const RRect& rect,bool overlap=true) const {return(IsIn(rect.Pt1,overlap)&&IsIn(rect.Pt2,overlap));}
 
 	/**
 	* The assign Operator.
 	*/
-	inline RRect& operator=(const RRect& rect) {X1=rect.X1;Y1=rect.Y1;X2=rect.X2;Y2=rect.Y2;return(*this);}
-
-	/**
-	 * Get the (bottom,left) point.
-	 * @return RPoint
-	 */
-	RPoint inline GetPt1(void) const {return(RPoint(X1,Y1));}
-
-	/**
-	 * Get the (upper,right) point.
-	 * @return RPoint
-	 */
-	RPoint inline GetPt2(void) const {return(RPoint(X2,Y2));}
+	inline RRect& operator=(const RRect& rect) {Pt1=rect.Pt1;Pt2=rect.Pt2;return(*this);}
 
 	/**
 	* Modify the rectangle to a certain orientation.

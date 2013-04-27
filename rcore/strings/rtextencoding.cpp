@@ -28,6 +28,11 @@
 
 
 //------------------------------------------------------------------------------
+// include files for iconv
+#include <iconv.h>
+
+
+//------------------------------------------------------------------------------
 // include files for R library
 #include <rcontainer.h>
 #include <rcursor.h>
@@ -115,10 +120,10 @@ RCString GetOfficialName(const RCString& alias)
 RTextEncoding::RTextEncoding(const RCString& name)
 	: Name(name.ToLower())
 {
-	ToUTF16=iconv_open("utf-16le",Name);
+	ToUTF16=static_cast<void*>(iconv_open("utf-16le",Name));
 	if((ToUTF16==(iconv_t)-1)&&(errno==EINVAL))
 		throw REncodingException(RString(Name())+" encoding not supported");
-	FromUTF16=iconv_open(Name,"utf-16le");
+	FromUTF16=static_cast<void*>(iconv_open(Name,"utf-16le"));
 	if((FromUTF16==(iconv_t)-1)&&(errno==EINVAL))
 		throw REncodingException(RString(Name())+" encoding not supported");
 
@@ -133,12 +138,12 @@ RTextEncoding::RTextEncoding(const RCString& name)
 	ptr2=Tab;
 	#ifdef _LIBICONV_VERSION
 		#if (defined __APPLE__ || defined WIN32)
-			iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+			iconv(static_cast<iconv_t>(ToUTF16),&ptr1,&s1,&ptr2,&s2);
 		#else
-			iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+			iconv(static_cast<iconv_t>(ToUTF16),const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 		#endif
 	#else
-		iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+		iconv(static_cast<iconv_t>(ToUTF16),&ptr1,&s1,&ptr2,&s2);
 	#endif
 }
 
@@ -181,12 +186,12 @@ RString RTextEncoding::ToUnicode(const char* text,size_t len) const
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION
 			#if (defined __APPLE__ || defined WIN32)
-				err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+				err=iconv(static_cast<iconv_t>(ToUTF16),&ptr1,&s1,&ptr2,&s2);
 			#else
-				err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+				err=iconv(static_cast<iconv_t>(ToUTF16),const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 			#endif
 		#else
-			err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+			err=iconv(static_cast<iconv_t>(ToUTF16),&ptr1,&s1,&ptr2,&s2);
 		#endif
 		if(err==(size_t)-1)
 		{
@@ -237,12 +242,12 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 			throw RException("Big Error in RTextEncoding::NextUnicode");
 		#ifdef _LIBICONV_VERSION
 			#if (defined __APPLE__ || defined WIN32)
-				err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+				err=iconv(static_cast<iconv_t>(ToUTF16),&ptr1,&s1,&ptr2,&s2);
 			#else
-				err=iconv(ToUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+				err=iconv(static_cast<iconv_t>(ToUTF16),const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 			#endif
 		#else
-			err=iconv(ToUTF16,&ptr1,&s1,&ptr2,&s2);
+			err=iconv(static_cast<iconv_t>(ToUTF16),&ptr1,&s1,&ptr2,&s2);
 		#endif
 		if(err==(size_t)-1)
 		{
@@ -296,12 +301,12 @@ RCString RTextEncoding::FromUnicode(const RChar* text,size_t len) const
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION
 			#if (defined __APPLE__ || defined WIN32)
-				err=iconv(FromUTF16,&ptr1,&s1,&ptr2,&s2);
+				err=iconv(static_cast<iconv_t>(FromUTF16),&ptr1,&s1,&ptr2,&s2);
 			#else
-				err=iconv(FromUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+				err=iconv(static_cast<iconv_t>(FromUTF16),const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 			#endif
 		#else
-			err=iconv(FromUTF16,&ptr1,&s1,&ptr2,&s2);
+			err=iconv(static_cast<iconv_t>(FromUTF16),&ptr1,&s1,&ptr2,&s2);
 		#endif
 		if(err==(size_t)-1)
 		{
@@ -347,12 +352,12 @@ RCString RTextEncoding::FromUnicode(const RString& text) const
 		s2=BufSize;
 		#ifdef _LIBICONV_VERSION
 			#if (defined __APPLE__ || defined WIN32)
-				err=iconv(FromUTF16,&ptr1,&s1,&ptr2,&s2);
+				err=iconv(static_cast<iconv_t>(FromUTF16),&ptr1,&s1,&ptr2,&s2);
 			#else
-				err=iconv(FromUTF16,const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
+				err=iconv(static_cast<iconv_t>(FromUTF16),const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
 			#endif
 		#else
-			err=iconv(FromUTF16,&ptr1,&s1,&ptr2,&s2);
+			err=iconv(static_cast<iconv_t>(FromUTF16),&ptr1,&s1,&ptr2,&s2);
 		#endif
 		if(err==(size_t)-1)
 		{
@@ -415,6 +420,6 @@ RTextEncoding* RTextEncoding::GetUTF8Encoding(void)
 //------------------------------------------------------------------------------
 RTextEncoding::~RTextEncoding(void)
 {
-	iconv_close(ToUTF16);
-	iconv_close(FromUTF16);
+	iconv_close(static_cast<iconv_t>(ToUTF16));
+	iconv_close(static_cast<iconv_t>(FromUTF16));
 }

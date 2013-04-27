@@ -32,12 +32,6 @@
 #define RTextEncoding_H
 
 
-
-//------------------------------------------------------------------------------
-// include files for ANSI C/C++
-#include <iconv.h>
-
-
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstd.h>
@@ -143,12 +137,12 @@ private:
 	/**
 	* Descriptor used to make the conversion to Unicode UTF-16.
 	*/
-	iconv_t ToUTF16;
+	void* ToUTF16;
 
 	/**
 	* Descriptor used to make the conversion from Unicode UTF-16.
 	*/
-	iconv_t FromUTF16;
+	void* FromUTF16;
 
 public:
 

@@ -108,6 +108,19 @@ private:
 public:
 
 	/**
+	* Compare two lines. This function is used with the class RContainer.
+	* @param line            Line used for the comparison.
+	* @return
+	* - -1 The left-bottom point of the current polygon is more at the left (at
+	*   the bottom) of the other one. If identical, the second points are
+	*   compared.
+	* - 0 if there have the points.
+	* - +1 The left-bottom point of the current line is more at the right (
+	*   upper) of the other one. If identical, the second points are compared.
+	*/
+	int Compare(const RLine& line) const;
+
+	/**
 	* Compute the length of the segment formed by both points.
 	* @return the length.
 	*/

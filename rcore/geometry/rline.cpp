@@ -84,6 +84,16 @@ void RLine::ReOrder(void)
 
 
 //------------------------------------------------------------------------------
+int RLine::Compare(const RLine& line) const
+{
+	int comp(Pt1.Compare(line.Pt1));
+	if(comp)
+		return(comp);
+	return(Pt2.Compare(line.Pt2));
+}
+
+
+//------------------------------------------------------------------------------
 tCoord  RLine::GetLength(void) const
 {
 	tCoord X=Abs(Pt2.X-Pt1.X),Y=Abs(Pt2.Y-Pt1.Y);
