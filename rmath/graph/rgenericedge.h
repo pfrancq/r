@@ -100,13 +100,13 @@ public:
 	* Get the starting vertex of the edge.
 	* @return a pointer.
 	*/
-	V* GetFrom(void) const {return(From);}
+	inline V* GetFrom(void) const {return(From);}
 
 	/**
 	* Get the ending vertex of the edge.
 	* @return a pointer.
 	*/
-	V* GetTo(void) const {return(To);}
+	inline V* GetTo(void) const {return(To);}
 
 	/**
 	 * Look if the edge connects the node given by the identifier.
@@ -118,7 +118,13 @@ public:
 	/**
 	* Get the weight of the edge.
 	*/
-	double GetWeight(void) const {return(Weight);}
+	inline double GetWeight(void) const {return(Weight);}
+
+	/**
+	* Set the weight of the edge.
+	* @param weight          Weight to assign.
+	*/
+	inline void GetWeight(double weight) {Weight=weight;}
 
 	/**
 	* Destruct the edge. It is eventually removed from the corresponding
