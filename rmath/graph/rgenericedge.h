@@ -124,7 +124,7 @@ public:
 	* Set the weight of the edge.
 	* @param weight          Weight to assign.
 	*/
-	inline void GetWeight(double weight) {Weight=weight;}
+	inline void SetWeight(double weight) {Weight=weight;}
 
 	/**
 	* Destruct the edge. It is eventually removed from the corresponding
