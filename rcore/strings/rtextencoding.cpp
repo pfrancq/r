@@ -62,8 +62,8 @@ struct EncodingName // Structure representing an official encoding
 };
 struct EncodingAlias // Structure representing an alias
 {
-	RCString Name;
 	RCString Alias;
+	RCString Name;
 };
 #include "rtextencoding_data.cpp"   // Include all possibilities
 
@@ -90,7 +90,7 @@ RCString GetOfficialName(const RCString& alias)
 	{
 		i=(NbMax+NbMin)/2;
 		ptr=&EncodingAliases[i];
-		Comp=ptr->Name.Compare(alias);
+		Comp=ptr->Alias.Compare(alias);
 		if(!Comp)
 		{
 			return(ptr->Name);
