@@ -118,6 +118,15 @@ tCoord  RLine::GetAngle(void) const
 }
 
 
+//------------------------------------------------------ -----------------------
+void RLine::SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2)
+{
+    Pt1.Set(x1,y1);
+    Pt2.Set(x2,y2);
+    ReOrder();
+}
+
+
 //------------------------------------------------------------------------------
 tCoord  RLine::GetAngle(const RLine& line) const
 {

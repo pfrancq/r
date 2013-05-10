@@ -109,6 +109,22 @@ RCursor<RPoint> RPolygon::GetVertices(void) const
 }
 
 
+//-----------------------------------------------------------------------------
+void RPolygon::GetEdges(R::RContainer<R::RLine,true,false>& edges) const
+{
+	RPoint** Cur(RContainer<RPoint,true,false>::Tab);
+	for(size_t i=0;i<GetNb();Cur++,i++)
+	{
+		RPoint** Next;
+		if(i==GetNb()-1)
+			Next=RContainer<RPoint,true,false>::Tab;
+		else
+			Next=Cur+1;
+		edges.InsertPtr(new RLine(**Cur,**Next));
+	}
+}
+
+
 //------------------------------------------------------------------------------
 void RPolygon::Clear(void)
 {
@@ -541,37 +557,107 @@ bool RPolygon::IsIn(const RPolygon& poly,bool overlap) const
 		else
 			Next=Cur+1;
 		RLine Edge(**Cur,**Next);
+		if(!IsIn(Edge))
+			return(false);
+	}
 
-		// We must compare Edge with all the edges of the polygon
-		RPoint** Cur2(RContainer<RPoint,true,false>::Tab);
-		for(size_t j=0;j<GetNb();Cur2++,j++)
+	// OK
+	return(true);
+}
+
+
+//------------------------------------------------------------------------------
+size_t RPolygon::GetNbInter(const RLine& line) const
+{
+	// Special cases
+	if(!GetNb())
+		return(0);
+
+	size_t nb = 0;
+
+	// We must compare Edge with the line
+	RPoint** Cur(RContainer<RPoint,true,false>::Tab);
+	for(size_t j=0;j<GetNb();Cur++,j++)
+	{
+		RPoint** Next;
+		if(j==GetNb()-1)
+				Next=Tab;//RContainer<RPoint,true,false>::Tab
+		else
+				Next=Cur+1;
+		RLine Edge(**Cur,**Next);
+		RPoint Inter;
+
+		// If there is an intersection -> The polygon may not be contained
+		if(Edge.Inter(line,Inter))
 		{
-			RPoint** Next2;
-			if(j==GetNb()-1)
-				Next2=poly.Tab;
+			if(Inter.IsValid())
+				 nb++;
 			else
-				Next2=Cur2+1;
-			RLine Edge2(**Cur2,**Next2);
-			RPoint Inter;
+				 nb+=4;  // The line and the edge are combined
+		}
+	}
 
-			// If there is an intersection -> The polygon may not be contained
-			if(Edge2.Inter(Edge,Inter))
+	// OK
+	return(nb);
+}
+
+
+//------------------------------------------------------------------------------
+bool RPolygon::IsIn(const RLine& line,bool overlap) const
+{
+	// Special cases
+	if(!GetNb())
+		return(false);
+
+	if(!IsIn(line.GetPt1(),overlap))  // Depending of overlap, the point may be or not on a edge
+		return(false);
+	if(!IsIn(line.GetPt2(),overlap))  // Depending of overlap, the point may be or not on a edge
+		return(false);
+	if(!IsIn(RPoint((line.GetX1()+line.GetX2())/2,(line.GetY1()+line.GetY2())/2),overlap))  // Depending of overlap, the middle point may be inside the polygon
+		return(false);
+
+	// We must compare Edge with all the edges of the polygon
+	RPoint** Cur(RContainer<RPoint,true,false>::Tab);
+	for(size_t j=0;j<GetNb();Cur++,j++)
+	{
+		RPoint** Next;
+		if(j==GetNb()-1)
+			Next=Tab;
+		else
+			Next=Cur+1;
+		RLine Edge(**Cur,**Next);
+		RPoint Inter;
+
+		// If there is an intersection -> The polygon may not be contained
+		if(Edge.Inter(line,Inter))
+		{
+			if(!overlap)
+				return(false);  // If no overlap is allowed -> we are sure to return false
+
+			// Overlap is admitted
+			if(Inter.IsValid())
 			{
-				if(!overlap)
-					return(false);  // If no overlap is allowed -> we are sure to return false
+				// Verify that Inter is on Edge
+				if(!Edge.IsIn(Inter))
+						 return(false);
 
-				// Overlap is admitted
-				if(Inter.IsValid())
+				// Verify if the neighbors of 'Inter' are inside the polygon
+				tCoord a,b;         // y=ax+b
+				if(Abs(line.GetX2()-line.GetX1())>=cEpsi)
 				{
-					// Verify that Inter is on Edge2
-					if(!Edge2.IsIn(Inter))
-						return(false);
+					a=static_cast<double>(line.GetY2()-line.GetY1())/static_cast<double>(line.GetX2()-line.GetX1());
+					b=static_cast<double>(line.GetY1()-a*line.GetX1());
+					RPoint pt1(Inter.X+cEpsi,a*(Inter.X+cEpsi)+b);
+					RPoint pt2(Inter.X-cEpsi,a*(Inter.X+cEpsi)+b);
+					if( (line.IsIn(pt1) && !(IsIn(pt1))) || (line.IsIn(pt2) && (!IsIn(pt2))) )
+						 return(false);
 				}
 				else
 				{
-					// The two vertices **Cur and **Next must be on In
-					if((!Edge2.IsIn(**Cur))||(!Edge2.IsIn(**Next)))
-						return(false);
+					RPoint pt1(line.GetX1(),Inter.Y+cEpsi);
+					RPoint pt2(line.GetX1(),Inter.Y-cEpsi);
+					if ((line.IsIn(pt1) && (!IsIn(pt1))) || (line.IsIn(pt2) && (!IsIn(pt2))) )
+						 return(false);
 				}
 			}
 		}

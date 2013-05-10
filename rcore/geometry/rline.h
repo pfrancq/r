@@ -139,6 +139,15 @@ public:
 	*/
 	tCoord GetAngle(const RLine& line) const;
 
+	/**
+	* Set new points to the line
+	* @param x1             X-coordinate of the first point used.
+	* @param y1             Y-coordinate of the first point used.
+	* @param x2             X-coordinate of the second point used.
+	* @param y2             Y-coordinate of the second point used.
+	*/
+	void SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2);
+
 private:
 
 	/**

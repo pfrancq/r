@@ -29,6 +29,11 @@
 
 
 //------------------------------------------------------------------------------
+// include files for ANSI C/C++
+ #include <time.h>
+
+
+//------------------------------------------------------------------------------
 // include files for R Project
 #include <rdebug.h>
 using namespace R;

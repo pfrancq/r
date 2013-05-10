@@ -38,6 +38,7 @@
 #include <rcontainer.h>
 #include <rcursor.h>
 #include <rpoint.h>
+#include <rline.h>
 #include <rrect.h>
 
 
@@ -111,6 +112,14 @@ public:
 	* @return RPointCursor.
 	*/
 	R::RCursor<RPoint> GetVertices(void) const;
+
+	/**
+	 * Put the edges of the polygon in a container. In practice, the container
+	 * is not cleared.
+    * @param edges          Container that will contain the edges.
+    * @return
+    */
+	void GetEdges(RContainer<RLine,true,false>& edges) const;
 
 	/**
 	* Get the ith vertex of the polygon (Only read). The operator generates an
@@ -312,6 +321,23 @@ public:
 	* @return true if poly is contained in the polygon.
 	*/
 	bool IsIn(const RPolygon& poly,bool overlap=true) const;
+
+	/**
+	* Count the number of intersections of a line with the polygon.
+	* @param line             Line to verify.
+	* @return the number of intersections with the polygon (a line combined with
+	*         an edge count for 4).
+	*/
+   size_t GetNbInter(const RLine& line) const;
+
+	/**
+	* Look if a line is inside the polygon.
+	* @param line            Line to verify.
+	* @param overlap         Specify if the line can be on one of the edges. By
+	*                        default, it is true.
+	* @return true if the line is inside.
+	*/
+    bool IsIn(const RLine& line,bool overlap=true) const;
 
 	/**
 	* Return true if the polygon is inside the rectangle.
