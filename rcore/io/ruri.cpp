@@ -31,6 +31,8 @@
 // include files for R Project
 #include <ruri.h>
 #include <rexception.h>
+#include <rdir.h>
+#include <rfile.h>
 using namespace R;
 
 
@@ -96,12 +98,32 @@ void RURI::AnalyzeString(void)
 	// Test if it is a local file
 	if(URI.ToLatin1()[0]=='/')
 	{
-		// No, it is a path -> add file:
+		// No, it is a path under Unix scheme -> add file:
 		Scheme.Size=4;
 		Path.Pos=5;
 		Path.Size=URI.GetLen();
 		URI="file:"+URI;
+		ReplaceChars();
 		return;
+	}
+	else
+	{
+		// Test if have a windows scheme
+		int pos(URI.Find(':'));
+		if(pos!=-1)
+		{
+			// Look if next character a '\'
+			if((pos+1<URI.GetLen())&&(URI[pos+1]=='\\'))
+			{
+				// No, it is a path under Unix scheme -> add file:
+				Scheme.Size=7;
+				Path.Pos=8;
+				Path.Size=URI.GetLen();
+				URI="file:///"+URI;
+				ReplaceChars();
+				return;
+			}
+		}
 	}
 
 	// Extract Scheme (search first :)
@@ -124,6 +146,7 @@ void RURI::AnalyzeString(void)
 			Path.Size=URI.GetLen()-5;
 		}
 		Scheme.Size=4;
+		ReplaceChars();
 		return;
 	}
 
@@ -193,6 +216,38 @@ void RURI::AnalyzeString(void)
 	// Normal URI -> rest is the path.
 	Path.Pos=i-2;  // Must use car1 and car2
 	Path.Size=URI.GetLen()-i+2;
+}
+
+
+//-----------------------------------------------------------------------------
+void RURI::ReplaceChars(bool keepspaces)
+{
+	if((RDir::GetDirSeparator()=='/')&&keepspaces)
+		return;
+	size_t pos(Path.Pos);
+	for(size_t i=Path.Size+1;--i;)
+	{
+		RChar Car(URI[pos]);
+		if(Car=='\\')
+		{
+			URI[pos]='/';
+			pos++;
+		}
+		else if(Car==' ')
+		{
+			if(keepspaces)
+				pos++;
+			else
+			{
+				// Replace it by '%20'
+				URI=URI.Mid(0,pos)+"%20"+URI.Mid(pos+1);
+				Path.Size+=2;
+				pos+=3;
+			}
+		}
+		else
+			pos++;
+	}
 }
 
 

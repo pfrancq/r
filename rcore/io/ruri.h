@@ -56,6 +56,15 @@ namespace R{
  *   / \ /                        \
  *   urn:example:animal:ferret:nose
  * @endcode
+ *
+ * Under windows, the '\' is replaced by the '/'. For example:
+ * @code
+ *   C:\Documents and Settings\pal\test.doc
+ * @endcode
+ * is transformed in:
+ * @code
+ *   file:///C:/Documents%20and%20Settings/pal/test.doc
+ * @endcode
  * @remarks The whole specification is not supported.
  * @short Uniform Resource Identifier.
  */
@@ -147,6 +156,13 @@ private:
 	 * Analyze the current URI.
 	 */
 	void AnalyzeString(void);
+
+	/**
+	 * Replace certain characters such as '\' by '/' or ' ' by '%20'.
+	 * @param keepspaces     Specify if the spaces must be keeped or replaced
+	 *                       by '%20'.
+    */
+	void ReplaceChars(bool keepspaces=true);
 
 	/**
 	 * Extract a given part of the URI based on a structure.
