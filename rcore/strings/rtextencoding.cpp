@@ -392,6 +392,9 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RCString& name)
 	RTextEncoding* ptr;
 	RCString search(name.ToLower());
 
+	if(!CodecUTF8)
+		GetUTF8Encoding();
+	
 	// Find the official name
 	search=GetOfficialName(search);
 	if(search.IsEmpty())
@@ -412,7 +415,11 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RCString& name)
 RTextEncoding* RTextEncoding::GetUTF8Encoding(void)
 {
 	if(!CodecUTF8)
-		CodecUTF8=GetTextEncoding("utf8");
+	{
+		CodecUTF8=new RTextEncoding("utf-8");
+		Encodings.InsertPtr(CodecUTF8);
+		CodecUTF8->Init();
+	}
 	return(CodecUTF8);
 }
 
