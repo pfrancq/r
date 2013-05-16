@@ -79,7 +79,7 @@ public:
 	 * @param pwd            Password.
 	 * @param coding         Name of the coding used.
 	 */
-	RDbPostgreSQL(const RString& db,const RString& host,const RString& user,const RString& pwd,const RCString& coding="utf8");
+	RDbPostgreSQL(const RString& db,const RString& host,const RString& user,const RString& pwd,const RCString& coding="utf-8");
 
 	/**
 	 * Create an empty PostgreSQL database.

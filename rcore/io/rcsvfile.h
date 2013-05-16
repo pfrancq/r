@@ -52,7 +52,7 @@ namespace R{
  *
  * Here is an example of use:
  * @code
- * RCSVFile File("test.csv",';',"utf8");
+ * RCSVFile File("test.csv",';',"utf-8");
  * File.Open();
  * cout<<"Field1"<<"\t"<<"Field2"<<endl;  // Print the header
  * while(!File.End())
@@ -112,7 +112,7 @@ public:
 	 * @param encoding       The encoding scheme of the file.
 	 * @return
 	 */
-	RCSVFile(const RURI& uri,RChar sep=',',const RCString& encoding="Latin1");
+	RCSVFile(const RURI& uri,RChar sep=',',const RCString& encoding="utf-8");
 
 	/**
 	 * Open the file.
@@ -127,7 +127,7 @@ public:
 	 * @param mode           The open mode for the file.
 	 * @param encoding       The encoding scheme of the file.
 	 */
-	virtual void Open(const RURI& uri,RChar sep,RIO::ModeType mode=RIO::Read,const RCString& encoding="Latin1");
+	virtual void Open(const RURI& uri,RChar sep,RIO::ModeType mode=RIO::Read,const RCString& encoding="utf-8");
 
 	/**
 	 * Close the file.

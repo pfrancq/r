@@ -49,8 +49,8 @@ const size_t BufSize=2048;
 
 //------------------------------------------------------------------------------
 // General Variables
-static RContainer<RTextEncoding,true,true> Encodings(20,10);
-static RTextEncoding* CodecUTF8(0);
+RContainer<RTextEncoding,true,true> Encodings(20,10);
+RTextEncoding* CodecUTF8(0);
 
 
 //------------------------------------------------------------------------------
@@ -392,8 +392,13 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RCString& name)
 	RTextEncoding* ptr;
 	RCString search(name.ToLower());
 
-	if(!CodecUTF8)
-		GetUTF8Encoding();
+	// Short cur since utf-8 is probably the most used encoding
+	if(name=="utf-8")
+	{
+		if(!CodecUTF8)
+			return(GetUTF8Encoding());
+		return(CodecUTF8);
+	}
 	
 	// Find the official name
 	search=GetOfficialName(search);
