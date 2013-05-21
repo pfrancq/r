@@ -56,8 +56,6 @@ using namespace std;
 //------------------------------------------------------------------------------
 // Global constants
 static const size_t InternalBufferSize=10240;
-static const RString sURN("urn");
-static const RString sFile("file");
 
 
 
@@ -113,11 +111,11 @@ void RIOFile::Open(RIO::ModeType mode)
 		Close();
 
 	// Verify that it is not a urn
-	if(URI.GetScheme()==sURN)
+	if(URI.GetScheme()=="urn")
 		mThrowRIOException(this,"URI does not represent a file");
 
 	// look if it is a local file
-	if(URI.GetScheme()==sFile)
+	if(URI.GetScheme()=="file")
 	{
 		local=true;
 		File=URI.GetPath();

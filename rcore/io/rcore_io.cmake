@@ -1,10 +1,10 @@
 SET(rcore_io_INST_INCLUDES
 	rio.h
+	rfile.h
 	rtextfile.h
 	rrecfile.h
 	rrecfile.hh
 	rdownload.h
-	rfile.h
 	rdir.h
 	riofile.h
 	rbinaryfile.h
@@ -17,13 +17,13 @@ SET(rcore_io_INST_INCLUDES
 
 SET(rcore_io_TARGET_SOURCES
 	rio.cpp
-	rtextfile.cpp
+	ruri.cpp
 	rdownload.cpp
 	rfile.cpp
 	rdir.cpp
 	riofile.cpp
+	rtextfile.cpp
 	rbinaryfile.cpp
-	ruri.cpp
 	rcsvfile.cpp
 	rblockfile.cpp
 	rindexfile.cpp

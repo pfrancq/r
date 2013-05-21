@@ -116,7 +116,7 @@ void RURI::AnalyzeString(void)
 			if((pos+1<URI.GetLen())&&(URI[pos+1]=='\\'))
 			{
 				// No, it is a path under Unix scheme -> add file:
-				Scheme.Size=7;
+				Scheme.Size=4;
 				Path.Pos=8;
 				Path.Size=URI.GetLen();
 				URI="file:///"+URI;

@@ -235,11 +235,13 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 	ptr1=(char*)text;
 	s1=len;
 	ptr2=(char*)Code.Codes;
-	for(s2=0;ToFill;)
+	size_t trytoread(0);
+	for(;ToFill;)
 	{
-		s2+=2;
-		if(s2==6)
+		trytoread+=2;
+		if(trytoread==6)
 			throw RException("Big Error in RTextEncoding::NextUnicode");
+		s2=trytoread;
 		#ifdef _LIBICONV_VERSION
 			#if (defined __APPLE__ || defined WIN32)
 				err=iconv(static_cast<iconv_t>(ToUTF16),&ptr1,&s1,&ptr2,&s2);
@@ -253,25 +255,34 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 		{
 			switch(errno)
 			{
-			case EILSEQ:
-				if(invalid)
-				{
-					Code.Valid=false;
-					return(Code);
-				}
-				else
-					throw RInvalidByteException("Invalid byte sequence for encoding "+RString(Name()));
-				break;
-			case E2BIG:
-				if(!s2)
-					ToFill=false;
-				break;
-			case EINVAL:
-				throw RIncompleteByteException("Incomplete byte sequence for encoding "+RString(Name()));
-				break;
-			case EBADF:
-				throw RException("Invalid descriptor for encoding  "+RString(Name()));
-				break;
+				// Strange behavior with iconv under MinGW (err==-1 and errno==0)
+				case 0:
+					if(!s2)
+						ToFill=false;
+					break;
+
+				case EILSEQ:
+					if(invalid)
+					{
+						Code.Valid=false;
+						return(Code);
+					}
+					else
+						throw RInvalidByteException("Invalid byte sequence for encoding "+RString(Name()));
+					break;
+
+				case E2BIG:
+					if(!s2)
+						ToFill=false;
+					break;
+
+				case EINVAL:
+					throw RIncompleteByteException("Incomplete byte sequence for encoding "+RString(Name()));
+					break;
+
+				case EBADF:
+					throw RException("Invalid descriptor for encoding  "+RString(Name()));
+					break;
 			}
 		}
 		else
@@ -399,7 +410,7 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RCString& name)
 			return(GetUTF8Encoding());
 		return(CodecUTF8);
 	}
-	
+
 	// Find the official name
 	search=GetOfficialName(search);
 	if(search.IsEmpty())
@@ -422,7 +433,6 @@ RTextEncoding* RTextEncoding::GetUTF8Encoding(void)
 	if(!CodecUTF8)
 	{
 		CodecUTF8=new RTextEncoding("utf-8");
-		Encodings.InsertPtr(CodecUTF8);
 		CodecUTF8->Init();
 	}
 	return(CodecUTF8);

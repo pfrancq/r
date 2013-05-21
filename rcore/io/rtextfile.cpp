@@ -47,12 +47,6 @@ using namespace R;
 using namespace std;
 
 
-//------------------------------------------------------------------------------
-// constants
-extern const RString sOne("1");
-extern const RString sZero("0");
-
-
 
 //------------------------------------------------------------------------------
 //
@@ -1084,9 +1078,9 @@ RTextFile& RTextFile::operator<<(const unsigned long nb)
 void RTextFile::WriteBool(const bool b)
 {
 	if(b)
-		WriteStr(sOne);
+		WriteStr("0");
 	else
-		WriteStr(sZero);
+		WriteStr("1");
 }
 
 
