@@ -120,6 +120,20 @@ void RMatrixStorage::Close(void)
 
 
 //------------------------------------------------------------------------------
+inline size_t RMatrixStorage::GetLowerSize(size_t i,size_t j)
+{
+	return((i*(i+1))/2+j);
+}
+
+
+//------------------------------------------------------------------------------
+inline size_t RMatrixStorage::GetUpperSize(size_t i,size_t j)
+{
+	return((j*(j-1))/2+i+Pos01);
+}
+
+
+//------------------------------------------------------------------------------
 inline size_t RMatrixStorage::GetLowerPos(size_t i,size_t j)
 {
 	if((NbLines>=NbCols)&&(i>NbCols))
@@ -257,7 +271,7 @@ void RMatrixStorage::ReModifyLowerFile(size_t newlines,size_t newcols,bool fill,
 	if(newlines<NbLines)
 	{
 		// Truncate position
-		File1.Truncate((GetLowerPos(newlines,maxcols)+1)*sizeof(double));
+		File1.Truncate((GetLowerSize(newlines,maxcols)+1)*sizeof(double));
 	}
 	else if((newlines>NbLines)||(newcols>NbCols))
 	{
@@ -271,12 +285,12 @@ void RMatrixStorage::ReModifyLowerFile(size_t newlines,size_t newcols,bool fill,
 			File1.Seek(pos*sizeof(double));
 
 			// While the end of the file is not reached, fill the new value
-			for(max=GetLowerPos(newlines,maxcols)+1;pos<max;pos++)
+			for(max=GetLowerSize(newlines,maxcols)+1;pos<max;pos++)
 				File1<<val;
 		}
 		else
 		{
-			File1.Seek((GetLowerPos(newlines,maxcols)+1)*sizeof(double));
+			File1.Seek((GetLowerSize(newlines,maxcols)+1)*sizeof(double));
 			File1<<val;
 		}
 	}
@@ -363,7 +377,7 @@ void RMatrixStorage::ReModifyUpperFile(size_t newlines,size_t newcols,bool fill,
 	if(newcols<NbCols)
 	{
 		// Truncate position
-		File2.Truncate((GetUpperPos(maxlines,newcols)+1)*sizeof(double));
+		File2.Truncate((GetUpperSize(maxlines,newcols)+1)*sizeof(double));
 	}
 	else if((newcols>NbCols)||(newlines>NbLines))
 	{
@@ -377,12 +391,12 @@ void RMatrixStorage::ReModifyUpperFile(size_t newlines,size_t newcols,bool fill,
 			File2.Seek(pos*sizeof(double));
 
 			// While the end of the file is not reached, fill the new value
-			for(max=GetUpperPos(maxlines,newcols)+1;pos<max;pos++)
+			for(max=GetUpperSize(maxlines,newcols)+1;pos<max;pos++)
 				File2<<val;
 		}
 		else
 		{
-			File2.Seek((GetUpperPos(maxlines,newcols)+1)*sizeof(double));
+			File2.Seek((GetUpperSize(maxlines,newcols)+1)*sizeof(double));
 			File2<<val;
 		}
 	}

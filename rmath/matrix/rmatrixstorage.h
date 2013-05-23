@@ -152,6 +152,22 @@ public:
 private:
 
 	/**
+	 * Compute the size of the lower part of the matrix.
+	 * @param i              Line.
+	 * @param j              Column.
+	 * @return the size.
+	 */
+	inline size_t GetLowerSize(size_t i,size_t j);
+
+	/**
+	 * Compute the size of the upper part of the matrix.
+	 * @param i              Line.
+	 * @param j              Column.
+	 * @return the size.
+	 */
+	inline size_t GetUpperSize(size_t i,size_t j);
+
+	/**
 	 * Compute the position if a given element in the lower part of the matrix.
 	 * @param i              Line.
 	 * @param j              Column.
@@ -247,7 +263,7 @@ private:
 	* @param val             Value used eventually to fill the elements created.
 	*/
 	void VerifySizeNormal(size_t newlines,size_t newcols,bool fill,double val);
-	
+
 	/**
 	* Verify if a sparse matrix has a given size, and increase and reduce the
 	* file if necessary.
