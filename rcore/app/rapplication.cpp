@@ -122,12 +122,16 @@ RCursor<RString> RApplication::GetArgs(void) const
 
 
 //-----------------------------------------------------------------------------
-RString RApplication::GetParamValue(const RString& name) const
+bool RApplication::GetParamValue(const RString& name,RString& value) const
 {
 	RParamValue* ptr(Params.GetPtr(name));
 	if(!ptr)
-		return(RString::Null);
-	return(ptr->Get());
+	{
+		value=RString::Null;
+		return(false);
+	}
+	value=ptr->Get();
+	return(true);
 }
 
 

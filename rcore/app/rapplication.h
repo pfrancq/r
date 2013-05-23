@@ -168,11 +168,36 @@ public:
 	RCursor<RString> GetArgs(void) const;
 
 	/**
+	 * Get the value of a parameter passed as argument to program. Suppose the
+	 * following program launch:
+	 * @code
+	 * ./testr --o ~/test.txt --d
+	 * @endcode
+	 * These parameters can be treated with the code:
+	 * @code
+	 * void MyApplication::TestParams(void)
+	 * {
+	 *    RString val;
+	 *    if(GetParamValue("o",val))
+	 *    {
+	 *       // Create the file with name is given by the variable 'val'.
+	 *    }
+	 *    if(GetParamValue("d",val))
+	 *    {
+	 *       // The value of 'val' is RString::Null.
+	 *    }
+	 *    if(GetParamValue("z",val))
+	 *    {
+	 *       // Nothing happens since '--z' was not passed to the program.
+	 *    }
+	 * }
+	 * @endcode
 	 * @param name           Name of the parameter.
-	 * @return the value of the parameter with a given name, or RString::Null
-	 * if the parameter is not defined.
+	 * @param value          The value of the parameter. It can be RString::Null
+	 *                       if no value is associated.
+	 * @return true if the parameter was found.
 	 */
-	RString GetParamValue(const RString& name) const;
+	bool GetParamValue(const RString& name,RString& value) const;
 
 	/**
 	 * @return a cursor on the parameters.
