@@ -96,7 +96,8 @@ void RURI::AnalyzeString(void)
 	if(!URI.GetLen()) return;
 
 	// Test if it is a local file
-	if(URI.ToLatin1()[0]=='/')
+	char FirstCar(URI.ToLatin1()[0]);
+	if((FirstCar=='/')||((RFile::GetDirSeparator()=='/')&&(FirstCar=='~')))
 	{
 		// No, it is a path under Unix scheme -> add file:
 		Scheme.Size=4;

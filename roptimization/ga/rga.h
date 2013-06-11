@@ -111,11 +111,6 @@ public:
 
 
 //------------------------------------------------------------------------------
-// Macros to generate a RGAException
-#define mThrowRGAException(type,msg) throw RGAException(type,__PRETTY_FUNCTION__,__LINE__,msg)
-
-
-//------------------------------------------------------------------------------
 // Forward declaration
 template<class cVal,bool Max> class RFitness;
 template<class cInst,class cChromo,class cFit,class cThreadData> class RChromo;
@@ -123,6 +118,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData> class RInst;
 
 
 }  //------- End of namespace R ------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// Macros to generate a RGAException
+#define mThrowRGAException(type,msg) throw R::RGAException(type,__PRETTY_FUNCTION__,__LINE__,msg)
 
 
 //------------------------------------------------------------------------------

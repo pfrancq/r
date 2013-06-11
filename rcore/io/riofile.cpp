@@ -190,7 +190,9 @@ void RIOFile::Open(RIO::ModeType mode)
 		Handle=open(File.GetPath().ToLatin1(),localmode);
 	}
 	else
+	{
 		Handle=open(File.GetPath().ToLatin1(),localmode,S_IREAD|S_IWRITE);
+	}
 	if(Handle==-1)
 	{
 		switch(errno)
