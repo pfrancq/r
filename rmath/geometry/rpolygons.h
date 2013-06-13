@@ -69,7 +69,7 @@ public:
 	/**
 	* Return true if the point is on an edge of a certain polygon.
 	* @param pt             The point used.
-	* @param poly           The polygon not to look in.
+	* @param exclude        The polygon not to look in.
 	*/
 	bool IsOnEdge(const RPoint& pt,const RPolygon* exclude) const;
 

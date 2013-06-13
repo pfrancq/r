@@ -284,7 +284,6 @@ public:
 
 	/**
 	* Delete a given handler.
-	* @param observer        Observer of the handle.
 	* @param name            Name of the notification to handle.
 	* @param object          Object which notifications must be handle.
 	* Several possibilities exists:

@@ -250,7 +250,6 @@ public:
 	* Look if a point is a vertex.
 	* @param x               X-coordinate of the point.
 	* @param y               Y-coordinate of the point.
-	* @param pt              Point to verify.
 	* @return true if it is a vertex.
 	*/
 	bool IsVertex(const tCoord x,const tCoord y) const;

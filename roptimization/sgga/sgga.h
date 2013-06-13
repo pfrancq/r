@@ -314,7 +314,7 @@ public:
 
    /**
     * Look if a given object is social.
-    * @param id             Object.
+    * @param id             Identifier of the object.
     * @return a boolean
     */
    inline bool IsSocial(size_t id)
@@ -324,6 +324,7 @@ public:
 
    /**
     * Set if a given object is social or not.
+    * @param id             Identifier of the object.
     * @param social         Social object ?
     */
    inline void SetSocial(size_t id,bool social)
@@ -334,7 +335,7 @@ public:
 	/**
 	 * Add a close object to an object.
 	 * @param id             Identifier of the object.
-    * @param closeid        Identifier of a close object.
+     * @param closeid        Identifier of a close object.
 	 * @param ratio          Ratio representing the closeness.
 	 */
 	void AddCloseObject(size_t id,size_t closeid,double ratio);
@@ -342,6 +343,7 @@ public:
 	/**
 	 * Find the best group for the object based on the current clustering and
 	 * the ratio.
+	 * @param id             Identifier of the object.
 	 * @param groups         Clustering.
 	 * @param grp            Variable that will hold the pointer to the group
 	 *                       (or 0 if no group was found).
