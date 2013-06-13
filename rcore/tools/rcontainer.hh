@@ -39,13 +39,6 @@ template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>::RContainer(size_t m,size_t i)
 		: RIContainer<C>(bAlloc,bOrder,m,i)
 {
-	if(!IncPtr)
-	{
-		if(MaxPtr) IncPtr=MaxPtr/2;
-		if(IncPtr<10) IncPtr=10;
-	}
-	Tab = new C*[MaxPtr];
-	memset(Tab,0x0,MaxPtr*sizeof(C*));
 }
 
 

@@ -134,7 +134,7 @@ public:
 	* @param m               The initial maximal size of the array.
 	* @param i               The value used when increasing the array. If null
 	*                        value, the size is set to the half the maximal
-	*                        size.
+	*                        size and at least at 10.
 	*/
 	explicit RContainer(size_t m,size_t i=0);
 

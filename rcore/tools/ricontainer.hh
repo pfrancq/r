@@ -42,17 +42,12 @@ template<class C>
 	C** tab;
 	C** tab2;
 
-	MaxPtr=src.MaxPtr;
 	IncPtr=src.IncPtr;
+	if(!src.NbPtr)
+		return;
+	VerifyTab(src.LastPtr);
 	NbPtr=src.NbPtr;
 	LastPtr=src.LastPtr;
-	if(!MaxPtr)
-	{
-		MaxPtr=10;
-		if(!IncPtr) IncPtr=10;
-	}
-	Tab = new C*[MaxPtr];
-	memset(Tab,0,MaxPtr*sizeof(C*));
 	if(Dealloc&&src.Dealloc)
 	{
 		for(i=src.LastPtr+1,tab=src.Tab,tab2=Tab;--i;tab++,tab2++)
@@ -173,8 +168,11 @@ template<class C>
 		if(MaxPtr) IncPtr=MaxPtr/2;
 		if(IncPtr<10) IncPtr=10;
 	}
-	Tab = new C*[MaxPtr];
-	memset(Tab,0x0,MaxPtr*sizeof(C*));
+	if(MaxPtr)
+	{
+		Tab = new C*[MaxPtr];
+		memset(Tab,0x0,MaxPtr*sizeof(C*));
+	}
 }
 
 
@@ -192,8 +190,11 @@ template<class C>
 		OldSize=MaxPtr;
 		MaxPtr=max;
 		ptr=new C*[MaxPtr];
-		memcpy(ptr,Tab,OldSize*sizeof(C*));
-		delete[] Tab;
+		if(Tab)
+		{
+			memcpy(ptr,Tab,OldSize*sizeof(C*));
+			delete[] Tab;
+		}
 		Tab=ptr;
 		memset(&Tab[OldSize],0x0,(MaxPtr-OldSize)*sizeof(C*));
 	}
@@ -204,18 +205,21 @@ template<class C>
 template<class C>
 	void RIContainer<C>::Clear(size_t m,size_t i)
 {
-	if(Dealloc)
+	if(Tab)
 	{
-		C **ptr;
-
-		for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
+		if(Dealloc)
 		{
-			if(*ptr)
-				delete(*ptr);
+			C **ptr;
+
+			for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
+			{
+				if(*ptr)
+					delete(*ptr);
+			}
 		}
+		memset(Tab,0x0,MaxPtr*sizeof(C*));
+		LastPtr=NbPtr=0;
 	}
-	memset(Tab,0x0,MaxPtr*sizeof(C*));
-	LastPtr=NbPtr=0;
 	if(i)
 		IncPtr=i;
 	if(m)
@@ -617,11 +621,14 @@ template<class C>
 template<class C>
 	RIContainer<C>::~RIContainer(void)
 {
-	if(Dealloc)
+	if(Tab)
 	{
-		C** ptr;
-		for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
-			delete(*ptr);
+		if(Dealloc)
+		{
+			C** ptr;
+			for(LastPtr++,ptr=Tab;--LastPtr;ptr++)
+				delete(*ptr);
+		}
+		delete[] Tab;
 	}
-	delete[] Tab;
 }
