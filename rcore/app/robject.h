@@ -87,14 +87,16 @@ namespace R{
 class RObject
 {
 	/**
-	* Name of the object.
-	*/
-	RString Name;
-
-	/**
 	* Handlers of the object.
 	*/
 	void* Handlers;
+
+protected:
+
+	/**
+	* Name of the object.
+	*/
+	RString Name;
 
 public:
 
@@ -120,12 +122,6 @@ public:
 	* Get the name of the object.
 	*/
 	inline RString GetName(void) const {return(Name);}
-
-	/**
-	 * Set the name of the object.
-    * @param name            Name.
-    */
-	void SetName(const RString& name);
 
 	/**
 	* This is the handler that is called when an object does not find any

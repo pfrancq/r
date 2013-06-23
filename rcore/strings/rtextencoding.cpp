@@ -403,7 +403,7 @@ RTextEncoding* RTextEncoding::GetTextEncoding(const RCString& name)
 	RTextEncoding* ptr;
 	RCString search(name.ToLower());
 
-	// Short cur since utf-8 is probably the most used encoding
+	// Shortcut since utf-8 is probably the most used encoding
 	if(name=="utf-8")
 	{
 		if(!CodecUTF8)

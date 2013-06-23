@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RCursor.h
+	RConstCursor.h
 
-	Container Cursor - Header.
+	Const Container Cursor - Header.
 
 	Copyright 1999-2012 by Pascal Francq (pascal@francq.info).
 	Copyright 1999-2008 by the Université Libre de Bruxelles (ULB).
@@ -29,8 +29,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RCursorH
-#define RCursorH
+#ifndef RConstCursorH
+#define RConstCursorH
 
 
 //-----------------------------------------------------------------------------
@@ -45,10 +45,10 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 /**
-* This class represent a cursor iterating a RContainer.
+* This class represent a constant cursor iterating a RContainer. Contrary
 * @param C                   Class of the elements of the container.
 *
-* Contrary to R::RCastCursor<C>, the elements iterated can be modified.
+* Contrary to R::RCursor<C>, the elements iterated cannot be modified.
 *
 * Here is an example of a cursor used:
 * @code
@@ -67,10 +67,10 @@ namespace R{
 * \attention When an element is added or removed from the container parsed by
 * the cursor, the cursor is not valid anymore.
 * @author Pascal Francq
-* @short Container Cursor.
+* @short Constant Container Cursor.
 */
 template<class C>
-	class RCursor
+	class RConstCursor
 {
 protected:
 
@@ -114,7 +114,7 @@ public:
 	/**
 	* Construct the cursor.
 	*/
-	RCursor(void)
+	RConstCursor(void)
 	{
 		ActPtr=0;
 		Current=Tab=0;
@@ -126,7 +126,7 @@ public:
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
-	RCursor(const RCursor<C>& src)
+	RConstCursor(const RConstCursor<C>& src)
 	{
 		ActPtr=src.ActPtr;
 		Current=src.Current;
@@ -144,7 +144,7 @@ public:
 	* @param max             Maximum position of the elements to iterate (included max).
 	*                        If SIZE_MAX, iterate until the end of the container.
 	*/
-	RCursor(const RIContainer<C>& c,size_t min=0,size_t max=SIZE_MAX)
+	RConstCursor(const RIContainer<C>& c,size_t min=0,size_t max=SIZE_MAX)
 	{
 		Set(c,min,max);
 	}
@@ -154,7 +154,7 @@ public:
 	* Assignment operator using a "Cursor".
 	* @param src             Source container.
 	*/
-	RCursor<C>& operator=(const RCursor<C>& src)
+	RConstCursor<C>& operator=(const RConstCursor<C>& src)
 	{
 		ActPtr=src.ActPtr;
 		Current=src.Current;
@@ -245,7 +245,7 @@ public:
 	{
 		idx+=FirstPtr;
 		if(idx>=LastPtr)
-			throw std::range_error("void RCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(FirstPtr)+","+RString::Number(LastPtr-1)+"]");
+			throw std::range_error("void RConstCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(FirstPtr)+","+RString::Number(LastPtr-1)+"]");
 		Current=&Tab[idx];
 		ActPtr=idx;
 	}
@@ -258,7 +258,7 @@ public:
    template<bool a,bool o> void DeleteCurrent(RContainer<C,a,o>& c)
    {
        if(Tab!=c.Tab)
-           throw std::invalid_argument("template<bool a,bool o> void RCursor::DeleteCur(RContainer<C,a,o>& c) : cursor and container are not synchronized");
+           throw std::invalid_argument("template<bool a,bool o> void RConstCursor::DeleteCur(RContainer<C,a,o>& c) : cursor and container are not synchronized");
 
        // Remember the position
        size_t where(ActPtr);
@@ -311,13 +311,13 @@ public:
 	{
 		if(CurNbPtr==SIZE_MAX)
 		{
-			const_cast<RCursor<C>*>(this)->CurNbPtr=0;
+			const_cast<RConstCursor<C>*>(this)->CurNbPtr=0;
 			if(Tab)
 			{
 				C** ptr(&Tab[FirstPtr]);
 				for(size_t i=FirstPtr;i<LastPtr;i++,ptr++)
 					if(*ptr)
-						const_cast<RCursor<C>*>(this)->CurNbPtr++;
+						const_cast<RConstCursor<C>*>(this)->CurNbPtr++;
 			}
 		}
 		return(CurNbPtr);
@@ -395,23 +395,23 @@ public:
 	/**
 	* @return the current element.
 	*/
-	inline C* operator()(void) const {return(*Current);}
+	inline const C* operator()(void) const {return(*Current);}
 };
 
 
 //-----------------------------------------------------------------------------
 /**
-* This class represent a cursor iterating a RContainer and performing cast of
-* the pointers stored. It is used when the container to iterate is supposed to
-* handle objects from a given class but the objects allocated are of a child
-* class.
+* This class represent a constant cursor iterating a RContainer and performing
+* cast of the pointers stored. It is used when the container to iterate is
+* supposed to handle objects from a given class but the objects allocated are of
+*  a child class.
 * @tparam C                  Class of the elements of the container. It must
 *                            inherit from the class B.
 * @tparam B                  Base class of the elements of the container. The
 *                            class must declare at least one virtual method
-*                            (for example the destructor).
+*                             (for example the destructor).
 *
-* Contrary to R::RConstCastCursor<B,C>, the elements iterated can be modified.
+* Contrary to R::RCastCursor<B,C>, the elements iterated cannot be modified.
 *
 * Here is an example of a cursor used:
 * @code
@@ -448,30 +448,31 @@ public:
 *
 * \attention When an element is added or removed from the container parsed by
 * the cursor, the cursor is not valid anymore.
+*
 * @author Pascal Francq
-* @short Container Child Cursor.
+* @short Constant Container Child Cursor.
 */
 template<class B,class C>
-	class RCastCursor : public RCursor<B>
+	class RConstCastCursor : public RConstCursor<B>
 {
 public:
 
 	/**
 	* Construct the cursor.
 	*/
-	RCastCursor(void) : RCursor<B>() {}
+	RConstCastCursor(void) : RConstCursor<B>() {}
 
 	/**
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
-	RCastCursor(const RCursor<B>& src) : RCursor<B>(src) {}
+	RConstCastCursor(const RConstCursor<B>& src) : RConstCursor<B>(src) {}
 
 	/**
 	* Construct the cursor.
 	* @param src             Source container.
 	*/
-	RCastCursor(const RCastCursor<B,C>& src) : RCursor<B>(src) {}
+	RConstCastCursor(const RCastCursor<B,C>& src) : RConstCursor<B>(src) {}
 
 	/**
 	* Construct the cursor.
@@ -480,18 +481,18 @@ public:
 	* @param max             Maximum position of the elements to iterate. If
 	*                        SIZE_MAX, iterate until the end of the container.
 	*/
-	template<bool a,bool o> RCastCursor(const RContainer<B,a,o>& c,size_t min=0,size_t max=SIZE_MAX)  : RCursor<B>(c,min,max) {}
+	template<bool a,bool o> RConstCastCursor(const RContainer<B,a,o>& c,size_t min=0,size_t max=SIZE_MAX)  : RCursor<B>(c,min,max) {}
 
 	/**
 	* Assignment operator using a "Cursor".
 	* @param src             Source container.
 	*/
-	RCastCursor<B,C>& operator=(const RCastCursor<B,C>& src) { return(static_cast<RCastCursor<B,C>&>(RCursor<B>::operator=(src)));}
+	RConstCastCursor<B,C>& operator=(const RCastCursor<B,C>& src) { return(static_cast<RCastCursor<B,C>&>(RCursor<B>::operator=(src)));}
 
 	/**
 	* Return the current element.
 	*/
-	inline C* operator()(void) const {return(dynamic_cast<C*>(*RCursor<B>::Current));}
+	inline const C* operator()(void) const {return(dynamic_cast<C*>(*RCursor<B>::Current));}
 };
 
 

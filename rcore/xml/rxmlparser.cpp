@@ -909,12 +909,10 @@ void RXMLParser::LoadHeader(void)
 							mThrowRIOException(this,"Wrong entities formating");
 
 						RString ns(GetWord());
-						Cur=GetChar();
-						if(Cur!='"')
+						if(GetChar()!='"')
 							mThrowRIOException(this,"Wrong entities formating");
 						RString uri(GetToken(RString('"')));
-						Cur=GetChar();
-						if(Cur!='"')
+						if(GetChar()!='"')
 							mThrowRIOException(this,"Wrong entities formating");
 
 						// Add the entity
@@ -1090,7 +1088,7 @@ void RXMLParser::LoadNextTag(void)
 	if(!CurTagClosing)
 	{
 		// It is a closing tag? -> Skip / and >
-		CurTagClosing=(Cur==RChar('/'));
+		CurTagClosing=(GetCur()==RChar('/'));
 		if(CurTagClosing)
 			Next();  // Skip / from "/>"
 	}
@@ -1353,13 +1351,13 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 
 		// Determine if a value is assign
 		Next();
-		if(Cur==RChar('='))
+		if(GetCur()==RChar('='))
 		{
 			SkipSpaces();
 
 			// Determine if the parameter is delimited by quotes
 			Next();
-			What=Cur;
+			What=GetCur();
 			Quotes=((What==RChar('\''))||(What==RChar('"')));
 
 			// Read the value

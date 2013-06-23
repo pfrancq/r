@@ -8,6 +8,7 @@ SET(rcore_tools_INST_INCLUDES
 	robjectcontainer.h
 	robjectcontainer.hh
 	rcursor.h
+	rconstcursor.h
 	rteststd.h
 	rstack.h
 	rhashcontainer.h

@@ -47,9 +47,9 @@ namespace R{
 /**
  * This class represent a container of objects (class C). It is supposed that
  * each object has an unique identifier (managed by this container). The
- * container maintains a list of objects ordered by an identifier and one a
- * search criteria (used for search purposes). The container can be
- * responsible for the deallocation of the elements (bAlloc).
+ * container maintains a list of objects ordered by their identifier and one
+ * ordered by a search criteria (used for search purposes). The container can
+ * be responsible for the deallocation of the elements (bAlloc).
  * @tparam C                  The class of the elements to be contained.
  * @tparam bAlloc             Specify if the elements are deallocated by the
  *                            container.
@@ -96,7 +96,7 @@ public:
 	 * @param m               The initial maximal size of the array.
 	 * @param i               The value used when increasing the array. If null
 	 *                        value, the size is set to the half the maximal
-	 *                        size.
+	 *                        size or at least to 10.
 	 */
 	RObjectContainer(size_t first,size_t m,size_t i=0);
 

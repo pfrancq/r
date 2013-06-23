@@ -47,6 +47,7 @@ namespace R{
 //-----------------------------------------------------------------------------
 // forward declaration
 template<class C> class RCursor;
+template<class C> class RConstCursor;
 template<class C> class RQuickSort;
 template<class C,bool bAlloc,bool bOrder>	class RContainer;
 
@@ -712,6 +713,7 @@ public:
 	friend class RContainer<C,false,true>;
 	friend class RContainer<C,false,false>;
 	friend class RCursor<C>;
+	friend class RConstCursor<C>;
 	friend class RQuickSort<C>;
 };
 

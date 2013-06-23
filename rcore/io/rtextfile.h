@@ -100,6 +100,17 @@ class RTextEncoding;
 *    cout<<"Pt2=("<<Pt2.X<<","<<Pt2.Y<<")"<<endl;
 * }
 * @endcode
+* \note
+* Internally, when a file is read, a buffer holds a small number of Unicode
+* characters (Chars), and a buffer holds the size in bytes of each character
+* read (SizeChars). Two pointers (NextRead and SizeNextRead) parse these buffers
+* when characters already read must be treated. Two other buffers (NextWrite and
+* SizeNextWrite) parse the buffers when new characters must be read from the
+* file.
+* \par
+* Each character is decoded one by one. This multiplies the call to
+* RTextEnconding which is time-consumming, but ensure that the file always now
+* the exact position (in byte) of every Unicode character read.
 * @author Pascal Francq
 * @short Text File.
 */
@@ -129,7 +140,7 @@ public:
 		SkipAllSpaces            /** Skip all spaces. */
 	};
 
-protected:
+private:
 
 	/**
 	* Temporary buffer (Used only if read mode).
@@ -137,12 +148,12 @@ protected:
 	char Buffer[512];
 
 	/**
-	 * Unicode characters already read.
+	 * Buffer of Unicode characters already read.
 	 */
 	RChar Chars[40];
 
 	/**
-	 * Size of Unicode characters already read.
+	 * Size of Unicode characters already read in the buffer.
 	 */
 	size_t SizeChars[40];
 
@@ -297,15 +308,34 @@ public:
 	virtual void SeekRel(off_t pos);
 
 	/**
-	* Return the next character but without to move internal pointer of the
+	* Read the next character but without to move the internal pointer of the
 	* file.
 	*/
-	RChar GetNextChar(void) const;
+	inline RChar GetNextChar(void) const
+	{
+		if(End())
+			return(RChar());
+		return(*NextRead);
+	}
 
 	/**
-	* @return the next character.
+	* Read the next character and move the internal pointer of the file.
 	*/
-	RChar GetChar(void);
+	inline RChar GetChar(void)
+	{
+		if(End())
+			return(RChar());
+		Next();
+		return(Cur);
+	}
+
+	/**
+	 * Get the last character read in the buffer.
+    */
+	inline const RChar GetCur(void) const
+	{
+		return(Cur);
+	}
 
 	/**
 	* Get the next characters.
@@ -333,7 +363,7 @@ private:
 	inline void FillBuffer(void);
 
 	/**
-	* Read a series of 10 characters of variable size and store the result in
+	* Read a series of 20 characters of variable size and store the result in
 	* an internal buffer. If the file is at the end, nothing is done.
 	*/
 	void ReadChars(void);

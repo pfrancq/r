@@ -1,4 +1,4 @@
-	/*
+/*
 
 	R Project Library
 
@@ -55,7 +55,7 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 // Global constants
-static const size_t InternalBufferSize=10240;
+static const off_t InternalBufferSize=10240;
 
 
 
@@ -178,9 +178,7 @@ void RIOFile::Open(RIO::ModeType mode)
 		Get.DownloadFile(URI,File);
 
 	// Play with internal switches
-	#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
-		//do nothing
-	#else
+	#if (defined WIN32)
 		localmode|=O_BINARY;
 	#endif
 
@@ -294,87 +292,91 @@ size_t RIOFile::Read(char* buffer,size_t nb,bool move)
 	if(End())
 		mThrowRIOException(this,"End of the file reached");
 
-	// Verify if the number of bytes to read must be adapted
+	// Compute the real number of bytes to read
 	if(static_cast<off_t>(nb)>Size-Pos)
 		nb=Size-Pos;
+	off_t left(nb);
 
-	size_t left(nb);   // Number of bytes left to read
-
-	// Verify if something can be read from the internal buffer
-	if((Pos>=RealInternalPos)&&(Pos<RealInternalPos+static_cast<off_t>(InternalBufferSize)))
-	{
-		// Everything can get from the internal buffer or not
-		if(nb>InternalToRead)
-		{
-			memcpy(buffer,CurByte,InternalToRead);
-			left=nb-InternalToRead;
-			buffer+=InternalToRead;
-			if(move)
-			{
-				Pos+=InternalToRead;
-				InternalToRead=0;
-				RealInternalPos=MaxOffT;
-			}
-		}
-		else
-		{
-			memcpy(buffer,CurByte,nb);
-			if(move)
-			{
-				Pos+=nb;
-				InternalToRead-=nb;
-				CurByte+=nb;
-			}
-			left=0;
-		}
-	}
-
-	// If nothing more to read -> finished
-	if(!left)
-		return(nb);
-
-	// If there is more than the internal size to read or if nothing must be moved -> read (at least) a part directly
-	if((left>InternalBufferSize)||(!move))
+	// If the number of bytes to read is greater than the size of the internal buffer -> read it directly
+	if(static_cast<off_t>(nb)>InternalBufferSize)
 	{
 		off_t total;
-		if(!move)
-			total=left;
-		else
-			total=left-InternalBufferSize;
-		total=read(Handle,buffer,total);
-		left-=total;
-		buffer+=total;
+		total=read(Handle,buffer,left);
+		left=0;
 		if(move)
 		{
 			Pos+=total;
 			RealPos+=total;
 		}
 		else
-			lseek(Handle,-total,SEEK_CUR);  // OK -> Go back
+			lseek(Handle,-total,SEEK_CUR);
 	}
 
-	// If there is still something to read -> first read in the buffer
-	if(left)
+	// While there are some bytes left to read
+	while(left)
 	{
-		if(Size-RealPos<static_cast<off_t>(InternalBufferSize))
-			InternalToRead=Size-RealPos;
-		else
-			InternalToRead=InternalBufferSize;
-		RealInternalPos=RealPos;
-		RealPos+=read(Handle,Internal,InternalToRead);
-		CurByte=Internal;
-
-		// Copy now the number of bytes for the user
-		memcpy(buffer,CurByte,left);
-		if(move)
+		// Verify if something can be read from the internal buffer
+		if((Pos>=RealInternalPos)&&(Pos<RealInternalPos+static_cast<off_t>(InternalBufferSize)))
 		{
-			CurByte+=left;
-			Pos+=left;
-			InternalToRead-=left;
+			// Verify if everything can be get from the internal buffer
+			if(left>static_cast<off_t>(InternalToRead))
+			{
+				memcpy(buffer,CurByte,InternalToRead);
+				left-=static_cast<off_t>(InternalToRead);
+				buffer+=InternalToRead;
+				if(move)
+				{
+					Pos+=InternalToRead;
+					InternalToRead=0;
+					RealInternalPos=MaxOffT;
+				}
+			}
+			else
+			{
+				memcpy(buffer,CurByte,left);
+				if(move)
+				{
+					Pos+=left;
+					InternalToRead-=left;
+					CurByte+=left;
+				}
+				left=0;
+			}
+		}
+
+		// If there are some byte left to read -> fill the internal buffer
+		if(left)
+		{
+			// Suppose that the whole buffer must be filled
+			off_t ToRead(InternalBufferSize);
+			size_t InternalPos(0);
+
+			// Verify if there still bytes to read in the internal buffer
+			if(InternalToRead)
+			{
+				// Save the byte to the beginning of the internal buffer and modify the number of bytes to read
+				ToRead=InternalBufferSize-InternalToRead;
+				memmove(Internal,&Internal[ToRead],InternalToRead);
+				InternalPos=InternalToRead;
+			}
+
+			// Verify that there are enough bytes to read left in the file
+			if(Size-RealPos<ToRead)
+			{
+				ToRead=Size-RealPos;
+				InternalToRead+=ToRead;
+			}
+			else
+				InternalToRead=InternalBufferSize;
+
+			// Read the bytes from the file and synchronize the different positions
+			RealInternalPos=RealPos-InternalPos;                 // RealInternalPos is now at RealPos eventually decreases from the number of bytes saved
+			RealPos+=read(Handle,&Internal[InternalPos],ToRead); // RealPos is just incremented by the number of bytes read
+			CurByte=Internal;
 		}
 	}
 
-	// Return number of bytes read
+	// Return the number of byte read
 	return(nb);
 }
 
@@ -406,12 +408,12 @@ void RIOFile::Write(const char* buffer,size_t nb)
 			ptr=&buffer[written];
 	}
 
-	#ifdef windows
+	#if (defined WIN32)
 		flushall();
 	#endif
 
 	// Verify if a part of the buffer must be stored into the internal buffer
-    if((Pos<RealInternalPos+static_cast<off_t>(InternalBufferSize))&&(after>=RealInternalPos))
+	if(CanRead&&(Pos<RealInternalPos+static_cast<off_t>(InternalBufferSize))&&(after>=RealInternalPos))
 	{
 		// If after the write, we are still in the internal buffer -> update it
     	// Else dirtied it.
@@ -425,7 +427,7 @@ void RIOFile::Write(const char* buffer,size_t nb)
 				begini=Internal;
 				beginb=&buffer[RealInternalPos-Pos];
 				len-=RealInternalPos-Pos;
-				if(len>InternalBufferSize)
+				if(static_cast<off_t>(len)>InternalBufferSize)
 					len=InternalBufferSize;
 			}
 			else

@@ -299,25 +299,6 @@ void RTextFile::Next(void)
 
 
 //------------------------------------------------------------------------------
-RChar RTextFile::GetNextChar(void) const
-{
-	if(End())
-		return(RChar());
-	return(*NextRead);
-}
-
-
-//------------------------------------------------------------------------------
-RChar RTextFile::GetChar(void)
-{
-	if(End())
-		return(RChar());
-	Next();
-	return(Cur);
-}
-
-
-//------------------------------------------------------------------------------
 RString RTextFile::GetChars(size_t size)
 {
 	RStringBuilder Res;

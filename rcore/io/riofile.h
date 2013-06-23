@@ -78,6 +78,10 @@ const off_t MaxOffT=MAX_INT_VAL(off_t);
 * Buffer[len]=0;
 * cout<<Buffer<<endl;
 * @endcode
+* \note
+* When the file is read, an internal buffer is used to avoid to many accesses to
+* the disk. When something must be written, it is first physically written on
+* the disk and, if the file can also be read, the internal buffer is updated.
 * @author Pascal Francq
 * @short Generic File for Input/Output.
 */
@@ -114,7 +118,7 @@ class RIOFile : public RFile
 	char* Internal;
 
 	/**
-	 * Number of internal bytes left to read.
+	 * Number of bytes left to read in the internal buffer.
 	 */
 	size_t InternalToRead;
 
@@ -124,7 +128,7 @@ class RIOFile : public RFile
 	off_t RealPos;
 
 	/**
-	 * Physical (real) position of the first byte in the internal buffer.
+	 * Physical (real) position of the first byte of the internal buffer.
 	 */
 	off_t RealInternalPos;
 

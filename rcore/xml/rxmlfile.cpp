@@ -77,8 +77,7 @@ void RXMLFile::SetEncoding(const RCString& name)
 //------------------------------------------------------------------------------
 void RXMLFile::Open(RIO::ModeType mode)
 {
-	RTextFile::Open(mode);
-	switch(Mode)
+	switch(mode)
 	{
 		case RIO::Read:
 			CurTag=0;
@@ -89,13 +88,14 @@ void RXMLFile::Open(RIO::ModeType mode)
 				NewStruct=true;
 			}
 			else
-				XMLStruct->Clear(); // Make sure the xml structure is empty
+				XMLStruct->Clear(); // Make sure the XML structure is empty
 			RXMLParser::Open(mode);
 			break;
 
 		case RIO::Append:
 		case RIO::Create:
 		{
+			RTextFile::Open(mode);
 			if(!XMLStruct)
 				throw RIOException("A XML structure must be assign");
 			RXMLTag* top(XMLStruct->GetTop());
