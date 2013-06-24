@@ -409,7 +409,7 @@ void RIOFile::Write(const char* buffer,size_t nb)
 	}
 
 	#if (defined WIN32)
-		flushall();
+		_flushall();
 	#endif
 
 	// Verify if a part of the buffer must be stored into the internal buffer
