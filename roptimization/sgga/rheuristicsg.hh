@@ -72,7 +72,7 @@ template<class cGroup,class cObj,class cGroups>
 		if(!Cur()->CanInsert(obj))
 			continue;
 
-		// Compute average similarity with the profiles already in the group.
+		// Compute best similarity with the objects already in the group.
 		double sim(Cur()->GetLastMaxSim());
 		if(sim>maxsim)
 		{
@@ -103,7 +103,7 @@ template<class cGroup,class cObj,class cGroups>
 		// Verify if the number of objects is greater than the minimum
 		if(Cur1()->GetNbObjs()>=Params->NbMinObjs)
 		{
-			// Look if this group contains only 1 social profile
+			// Look if this group contains only 1 social object
 			if(Cur1()->GetNbObjs()!=1)
 				continue;
 			if(!Params->IsSocial(Cur1()->GetObjPos(0)->GetId()))

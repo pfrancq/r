@@ -179,6 +179,10 @@ void RCSVFile::Read(void)
 					Car=GetChar();
 			}
 
+			// If end of line -> return
+			if(Eol(Car))
+				return;
+
 			continue;
 		}
 
@@ -233,6 +237,22 @@ size_t RCSVFile::GetSizeT(size_t idx) const
 		Field=Field.Mid(1,Field.GetLen()-2);
 	bool Ok;
 	size_t res(Field.ToSizeT(Ok));
+	if(!Ok)
+		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): '"+Field+"' is not a size_t");
+	return(res);
+}
+
+
+//------------------------------------------------------------------------------
+double RCSVFile::GetDouble(size_t idx) const
+{
+	if(idx>NbValues)
+		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
+	RString Field(*Values[idx]);
+	if(Field()[0]=='\"') // Verify
+		Field=Field.Mid(1,Field.GetLen()-2);
+	bool Ok;
+	double res(Field.ToDouble(Ok));
 	if(!Ok)
 		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): '"+Field+"' is not a size_t");
 	return(res);

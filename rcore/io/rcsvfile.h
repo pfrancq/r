@@ -167,6 +167,13 @@ public:
 	size_t GetSizeT(size_t idx) const;
 
 	/**
+	 * @return a double corresponding to a given value of the current line. if
+	 * the value is not an number, an exception is generated.
+	 * @param idx            Index of the value.
+	 */
+	double GetDouble(size_t idx) const;
+
+	/**
 	 * @return the number of values at the last line read.
 	 */
 	size_t GetNbValues(void) const {return(NbValues);}
