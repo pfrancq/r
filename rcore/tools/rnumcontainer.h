@@ -57,8 +57,10 @@ template<class I> class RNumCursor;
 * @tparam I                  Type (int, double, etc.).
 * @tparam bOrder             Is the container ordered?
 *
-* @author Pascal Francq (initial coding from Valery Vandaele).
 * @short Container of Numbers.
+* @warning Some methods applied on an ordered container can disorder the
+*          container.
+* @author Pascal Francq (initial coding from Valery Vandaele).
 */
 template<class I,bool bOrder=true>
 	class RNumContainer
@@ -154,7 +156,7 @@ public:
 	* @param pos             The position where to insert.
 	* @param replace         Specify if the value that was previously at the
 	*                        position should be replaced or shifted.
-	*
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	void InsertAt(I ins,size_t pos,bool replace=false);
 
@@ -168,6 +170,7 @@ public:
 	* Delete an element at a given position.
 	* @param pos             Position of the element to remove.
 	* @param shift           Must the elements be shifted.
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	void DeleteAt(size_t pos,bool shift=true);
 
@@ -195,6 +198,7 @@ public:
 	* @param rand            Random number generator to use.
 	* @param nb              Number of first element to randomize. If null,
 	*                        all values are randomized.
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	void Randomize(RRandom* rand,size_t nb=0);
 
@@ -221,6 +225,7 @@ public:
 	/**
 	* Return the value at position i. The first value is at position 0.
 	* @param i               Index.
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	I& operator[](size_t i);
 

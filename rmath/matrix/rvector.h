@@ -58,10 +58,10 @@ public:
 	using RNumContainer<double,false>::Init;
 
 	/**
-	* Construct a vector.Cols
-	* @param max             Maximum number of values.
+	* Construct a vector.
+	* @param size            Size of the vector.
 	*/
-	RVector(size_t max);
+	RVector(size_t size);
 
 	/**
 	* Copy constructor.
@@ -81,6 +81,14 @@ public:
 	 * @param val             Value to assign.
     */
 	virtual void Init(double val=0.0);
+
+	/**
+	* Resize the size of the vector. If the new size is smaller than the old one,
+	* the unused memory space is only released when the vector is destruct,
+   * @param size            Size of the vector.
+   * @param val             Value to assign to the new elements created.
+	*/
+	void ReSize(size_t size,double val=0.0);
 
 	/**
 	* Test if two vectors have exactly the same values.

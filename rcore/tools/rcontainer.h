@@ -112,6 +112,8 @@ namespace R{
 *       cur()->DoSomething(2.3);
 * }
 * @endcode
+* @warning Some methods applied on an ordered container can disorder the
+*          container.
 * @author Pascal Francq
 * @short Container.
 */

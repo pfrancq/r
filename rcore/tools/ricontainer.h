@@ -99,6 +99,8 @@ template<class C,bool bAlloc,bool bOrder>	class RContainer;
 * @endcode
 *
 * @short Container Interface.
+* @warning Some methods applied on an ordered container can disorder the
+*          container.
 */
 template<class C>
 	class RIContainer
@@ -284,6 +286,7 @@ public:
 	* exchange is compatible with the ordering of the container.
 	* @param pos1            Position of the first element.
 	* @param pos2            Position of the second element.
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	void Exchange(size_t pos1,size_t pos2);
 
@@ -313,6 +316,7 @@ public:
 	 * (with a maximal size of NbPtr/2). It makes the shift fast since the method
 	 * uses the memcpy and memmove functions. If the shift is reserved, the
 	 * method makes NbPtr/2 exchanges.
+	 * @warning If applied on an ordered container, this method can disorder it.
     */
 	void Shift(size_t idx,bool reverse);
 
@@ -433,6 +437,7 @@ public:
 	* operator generates an exception is the index is out of range.
 	* @param idx             Index of the element to get.
 	* @return the pointer.
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	C* operator[](size_t idx);
 
@@ -529,6 +534,7 @@ public:
 	* @param tag             The tag used.
 	* @param pos             The position where to insert it.
 	* @return The function returns a pointer to the element of the container.
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	template<class TUse> C* GetInsertPtrAt(const TUse& tag,size_t pos);
 
@@ -592,6 +598,7 @@ public:
 	* @param pos             The position where to insert it.
 	* @param del             Specify if the object that was previously at the
 	*                        position should be deleted (true) or shifted (false).
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	void InsertPtrAt(C* ins,size_t pos,bool del);
 
@@ -605,6 +612,7 @@ public:
 	*
 	* @param ins             A pointer to the element to insert.
 	* @param pos             The position where to insert it.
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	inline void InsertPtrAt(C* ins,size_t pos)
 	{
@@ -631,6 +639,7 @@ public:
 	* @param shift           Specify if the the container should be shifted or
 	*                        if the position should be left empty.
 	* @param del             Specify if the object must deleted or not.
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	void DeletePtrAt(size_t pos,bool shift,bool del);
 
@@ -640,6 +649,7 @@ public:
 	* @param pos             Position of the element.
 	* @param shift           Specify if the the container should be shifted or
 	*                        if the position should be left empty.
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	inline void DeletePtrAt(size_t pos,bool shift)
 	{
@@ -650,6 +660,7 @@ public:
 	* Delete an element from the container at a given position. The elements are
 	* shifted and deallocated if the container is responsible for that.
 	* @param pos             Position of the element.
+	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	inline void DeletePtrAt(size_t pos)
 	{

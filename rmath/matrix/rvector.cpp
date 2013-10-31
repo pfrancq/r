@@ -47,10 +47,10 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RVector::RVector(size_t max)
-	: RNumContainer<double,false>(max)
+RVector::RVector(size_t size)
+	: RNumContainer<double,false>(size)
 {
-	NbInt=max; // Suppose the vector has the correct size.
+	NbInt=size; // Suppose the vector has the correct size.
 }
 
 
@@ -75,6 +75,26 @@ void RVector::Init(double val)
 	RNumCursor<double> Vec1(*this);
 	for(Vec1.Start();!Vec1.End();Vec1.Next())
 		Vec1()=val;
+}
+
+
+//------------------------------------------------------------------------------
+void RVector::ReSize(size_t size,double val)
+{
+	NbInt=size;
+	if(size>MaxInt)
+	{
+		size_t OldSize(MaxInt);
+		MaxInt=size;
+		double* ptr(new double[MaxInt]);
+		memcpy(ptr,List,OldSize*sizeof(double));
+		delete[] List;
+		List=ptr;
+		RNumCursor<double> Vec1(*this);
+		Vec1.Start();
+		for(Vec1.GoTo(OldSize);!Vec1.End();Vec1.Next())
+			Vec1()=val;
+	}
 }
 
 

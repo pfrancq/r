@@ -245,6 +245,39 @@ public:
 	* @param maxy           Maximal Y position of the vertex to search.
 	*/
 	RPoint* GetLeftBottom(const tCoord minx,const tCoord miny,const tCoord maxy) const;
+        
+	/**
+	* Return a pointer to the most top-right vertex of the polygon.
+	*/
+	RPoint GetTopRight(void) const;
+
+	/**
+	* Get the index of the most top-right vertex of the polygon.
+	*/
+	size_t GetTopRightIndex(void) const;
+
+	/**
+	* Return a pointer to the most top-right vertex of the polygon responding
+	* to the criteria.
+	* @param minx           Minimal X position of the vertex to search.
+	* @param miny           Minimal Y position of the vertex to search.
+	* @param maxx           Maximal X position of the vertex to search.
+	*/
+	RPoint* GetTopRight(const tCoord minx,const tCoord miny,const tCoord maxx) const;
+
+	/**
+	* Return a pointer to the most top-right vertex of the polygon.
+	*/
+	RPoint* GetRightTop(void) const;
+
+	/**
+	* Return a pointer to the most top-right vertex of the polygon responding
+	* to the criteria.
+	* @param minx           Minimal X position of the vertex  to search.
+	* @param miny           Minimal Y position of the vertex to search.
+	* @param maxy           Maximal Y position of the vertex to search.
+	*/
+	RPoint* GetRightTop(const tCoord minx,const tCoord miny,const tCoord maxy) const;
 
 	/**
 	* Look if a point is a vertex.

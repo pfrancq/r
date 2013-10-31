@@ -423,6 +423,125 @@ RPoint* RPolygon::GetLeftBottom(const tCoord minx,const tCoord miny,const tCoord
 }
 
 
+
+
+
+
+
+//------------------------------------------------------------------------------
+RPoint RPolygon::GetTopRight(void) const
+{
+	return(RPoint(*(*this)[GetTopRightIndex()]));
+}
+
+
+//------------------------------------------------------------------------------
+size_t RPolygon::GetTopRightIndex(void) const
+{
+	RPoint* bl;
+	size_t i,idx;
+	tCoord X,Y;
+
+	RCursor<RPoint> point(*this);
+	point.Start();
+	bl=point();
+	idx=0;
+	for(i=GetNb(),point.Next();--i;point.Next())
+	{
+		X=point()->X;
+		Y=point()->Y;
+		if((Y>bl->Y)||((Y==bl->Y)&&(X>bl->X)))
+		{
+			bl=point();
+			idx=point.GetPos();
+		}
+	}
+	return(idx);
+}
+
+
+//------------------------------------------------------------------------------
+RPoint* RPolygon::GetRightTop(const tCoord minx,const tCoord miny,const tCoord maxx) const
+{
+	RPoint *bl;
+	size_t i;
+	tCoord X,Y;
+
+	i=GetNb()+1;
+	RCursor<RPoint> point(*this);
+	point.Start();
+	X=point()->X;
+	Y=point()->Y;
+	while((Y>miny)||((X>minx)&&(X<maxx)))
+	{
+		point.Next();
+		i--;
+		X=point()->X;
+		Y=point()->Y;
+	}
+	bl=point();
+	for(;--i;point.Next())
+	{
+		X=point()->X;
+		Y=point()->Y;
+		if(((Y>=miny)&&(X>=minx)&&(X<=maxx))&&((Y>bl->Y)||((Y==bl->Y)&&(X>bl->X))))
+			bl=point();
+	}
+	return(bl);
+}
+
+
+//------------------------------------------------------------------------------
+RPoint* RPolygon::GetRightTop(void) const
+{
+	RPoint *lb;
+	size_t i;
+	tCoord X,Y;
+
+	RCursor<RPoint> point(*this);
+	point.Start();
+	lb=point();
+	for(i=GetNb(),point.Next();--i;point.Next())
+	{
+		X=point()->X;
+		Y=point()->Y;
+		if((X>lb->X)||((X==lb->X)&&(Y>lb->Y)))
+			lb=point();
+	}
+	return(lb);
+}
+
+
+//------------------------------------------------------------------------------
+RPoint* RPolygon::GetTopRight(const tCoord minx,const tCoord miny,const tCoord maxy) const
+{
+	RPoint *lb;
+	size_t i;
+	tCoord X,Y;
+
+	i=GetNb()+1;
+	RCursor<RPoint> point(*this);
+	point.Start();
+	X=point()->X;
+	Y=point()->Y;
+	while((Y>miny)||(X>minx)||(Y<maxy))
+	{
+		point.Next();
+		i--;
+		X=point()->X;
+		Y=point()->Y;
+	}
+	lb=point();
+	for(;--i;point.Next())
+	{
+		X=point()->X;
+		Y=point()->Y;
+		if(((Y>=miny)&&(Y<=maxy)&&(X>minx))&&((X>lb->X)||((X==lb->X)&&(Y>lb->Y))))
+			lb=point();
+	}
+	return(lb);
+}
+
 //------------------------------------------------------------------------------
 bool RPolygon::IsVertex(const tCoord x,const tCoord y) const
 {
