@@ -170,7 +170,11 @@ public:
 	static void RenameFile(const RURI& olduri,const RURI& newuri);
 
 	/**
-	* Get a name for temporary file.
+	* Get a name for a temporary file.
+	* @attention Under Unix-like OS (such as Linux), a empty file is created by
+	* the OS to ensure that a given name cannot be used by multiple calls. It can
+	* be necessary to delete manually the file (normally, the temporary directory
+	* is automatically emptied).
 	* @return Name of the file.
 	*/
 	static RURI GetTempFile(void);
