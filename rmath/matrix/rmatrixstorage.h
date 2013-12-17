@@ -51,10 +51,10 @@ namespace R{
  *
  * For a full matrix (all elements must be stored), maximum 3 files are needed:
  * -# File ".lower" contains the lower triangular part of the matrix. For a
- * \$ 4\cdot 4\$ matrix, the values stored are (0,0), (1,0), (1,1), (2,0),
+ * \f$4\cdot 4\f$ matrix, the values stored are (0,0), (1,0), (1,1), (2,0),
  * (2,1), (2,2), (3,0), (3,1), (3,2) and (3,3).
  * -# File ".upper" contains the upper triangular part of the matrix, For a
- * \$ 4\cdot 4\$ matrix, the values stored are (0,1), (0,2), (1,2), (0,3),
+ * \f$4\cdot 4\f$ matrix, the values stored are (0,1), (0,2), (1,2), (0,3),
  * (1,3) and (2,3).
  * -# File ".info" contains the size of the matrix and other information that
  *    the developer may add.
@@ -387,8 +387,8 @@ public:
 	/**
 	 * Read a value of a given element.
 	 *
-	 * In the case of an ascending ordered sparse matrix, \f$$j$\f$ represents the
-	 * f\$$jth$\f$ greater elements of line \f$$i$\f$.
+	 * In the case of an ascending ordered sparse matrix, \f$j\f$ represents the
+	 * \f$jth\f$ greater elements of line \f$i\f$.
 	 * @param i              Line of the element.
 	 * @param j              Column of the element. For an ascending ordered
 	 *                       sparse matrix, this parameter is the index at that
