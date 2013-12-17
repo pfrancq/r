@@ -128,6 +128,16 @@ public:
 	operator double () const {return(Value);}
 
 	/**
+	 * Get the value.
+    */
+	double GetValue(void) const {return(Value);}
+
+	/**
+	 * Get the identifier.
+    */
+	size_t GetId(void) const {return(Id);}
+
+	/**
 	* Destruct the object.
 	*/
 	virtual ~RMaxValue(void);

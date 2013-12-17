@@ -48,23 +48,32 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
 * The RMaxMatrix provides a representation for a sparse ordered matrix. The
-* matrix is coded as a container of RMaxVector. The matrix can be created so
-* that to each line a vector is always build to speed up the access.
+* matrix is coded as a container of RMaxVector. To speed up the access, a vector
+* can be build for every line of the matrix.
 *
 * Here is an example of code:
 * @code
 * RMaxMatrix a(2,2); // Matrix initially contains 2 lines and 2 values per line.
-* a.Add(0,1,0.2);
-* a.Add(0,2,1.5);
-* a.Add(1,2,1.0);
-* a.Add(1,3,5.1);
+* a.Add(0,1,0.2);    // First element of line 0 is (0,1)
+* a.Add(0,2,1.5);    // Second element of line 0 is (0,2)
+* a.Add(1,2,1.0);    // First element of line 1 is (1,2)
+* a.Add(1,3,5.1);    // Second element of line 1 is (1,3)
 * for(size_t i=0;i<2;i++)
 * {
-* 	for(size_t j=0;j<a[i]->GetNb();j++)
+* 	 for(size_t j=0;j<a[i]->GetNb();j++)
 * 		cout<<static_cast<const RMaxMatrix&>(a)(i,j)<<"\t";
-* 	cout<<endl;
+* 	 cout<<endl;
 * }
 * @endcode
+*
+* The number of of the columns of the matrix is fixed (but can be changed). It
+* represents the maximal number of elements per line. Of course, an identifier
+* can be greater than a column index (see example). The following code will
+* generate an exception since the matrix a is of size \f$2 \cdot 2\f$.
+* @code
+* cout<<static_cast<const RMaxMatrix&>(a)(1,3)<<endl; // There are already two elements in the matrix at line 1
+* @endcode
+*
 * An important aspect is the use of static_cast<const RMaxMatrix&> to ensure
 * the call of the const version of the operator(). If static_cast<const RMaxMatrix&>
 * is not used, the different elements are created with uninitialized values.
@@ -159,7 +168,7 @@ public:
 	/**
 	* Return a specific element of the matrix (const version).
 	* @param i               Line number of the element.
-	* @param j               Column number of the element.
+	* @param j               Index of the element.
 	*/
  	virtual double operator()(size_t i,size_t j) const;
 
@@ -167,16 +176,19 @@ public:
 	* Return a specific element of the matrix. This function cannot be used
 	* with RMaxMatrix.
 	* @param i               Line number of the element.
-	* @param j               Column number of the element.
+	* @param j               Index of the element.
 	*/
  	virtual double& operator()(size_t i,size_t j);
 
 	/**
-	 * Add a value associated to a given index into the matrix.
+	* Add a value associated to a given line and identifier into the matrix.
+	* If the number of elements for that line equals the size of the matrix, the
+	* value is only inserted if another value of that line is smaller (this
+	* latest value will then be removed).
 	* @param i               Line number of the element.
-	* @param j               Column number of the element.
-	 * @param val            Value to add.
-	 */
+	* @param j               Identifier of the element.
+	* @param val             Value to add.
+	*/
 	virtual void Add(size_t i,size_t j,double val);
 
  	/**
@@ -192,16 +204,16 @@ public:
  	RMaxVector* operator[](size_t i);
 
 	/**
-	 * Verify if a given index has a vector defined in the matrix.
-	 * @param i              Index.
+	 * Verify if a given identifier has a vector defined in the matrix.
+	 * @param i              Identifier.
 	 * @return true or false.
 	 */
 	bool IsIn(size_t i) const {return(RContainer<RMaxVector,true,true>::IsIn(i));}
 
 	/**
-	 * Get a pointer over the vector at a given index.
-	 * @param i              Index.
-	 * @return Pointer or null if the index hasn't no vector.
+	 * Get a pointer over the vector associated with a given identifier.
+	 * @param i              Identifier.
+	 * @return Pointer or null if the identifier hasn't no vector.
 	 */
 	RMaxVector* GetValue(size_t i) const {return(RContainer<RMaxVector,true,true>::GetPtr(i));}
 

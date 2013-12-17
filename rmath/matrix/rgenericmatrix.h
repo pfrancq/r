@@ -78,7 +78,7 @@ public:
 		tSymmetric           /** Symmetric matrix.*/,
 		tSparse              /** Sparse matrix.*/,
 		tSparseSymmetric     /** Sparse symmetric matrix.*/,
-		tMax                 /** Sparse ordered matrix.*/
+		tMax                 /** Ascending ordered sparse matrix.*/
 	};
 
 protected:

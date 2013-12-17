@@ -250,6 +250,14 @@ bool RIOFile::IsOpen(void) const
 //------------------------------------------------------------------------------
 void RIOFile::Close(void)
 {
+	// If non-local file -> remove the temporary file
+	if(URI.GetScheme()!="file")
+			Get.DeleteFile(File);
+	File=RString::Null;
+	RealPos=InternalToRead=Pos=Size=0;
+	Mode=RIO::Undefined;
+	CurByte=0;
+
 	if(Handle!=-1)
 	{
 		if(close(Handle)==-1)
@@ -271,13 +279,6 @@ void RIOFile::Close(void)
 		}
 		Handle=-1;
 	}
-	// If non-local file -> remove the temporary file
-	if(URI.GetScheme()!="file")
-			Get.DeleteFile(File);
-	File=RString::Null;
-	RealPos=InternalToRead=Pos=Size=0;
-	Mode=RIO::Undefined;
-	CurByte=0;
 }
 
 
@@ -565,9 +566,9 @@ void RIOFile::Truncate(off_t newsize)
 
 	Size=newsize;
 	if(RealPos>=Size)
-	{
-		Seek(newsize);
-	}
+		Seek(Size);
+	else
+		Seek(RealPos);
 }
 
 

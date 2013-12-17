@@ -87,49 +87,73 @@ double RMaxVector::operator[](size_t i) const
 
 
 //------------------------------------------------------------------------------
-void RMaxVector::Add(size_t id,double val)
+size_t RMaxVector::Add(size_t id,double val,bool fixed)
 {
-	InsertPtr(new RMaxValue(id,val));
-}
-
-
-//-----------------------------------------------------------------------------
-size_t RMaxVector::Replace(double& val,size_t& id)
-{
-	// Test where the value is to be placed in the vector
-	bool Find;
-	RMaxValue Search(id,val);
-	size_t Pos(GetIndex(Search,Find));
-
-	// If it must be placed at the end -> worser than all the other ones
-	if(Pos==GetNb())
-		return(cNoRef);
-
-	// if Find and the same identifier -> nothing to do
-	const RMaxValue* Old(GetValue(Pos));
-	if(Find&&(Old->Id==id))
-		return(cNoRef);
-
-		// Verify one step after and one step beyond
-/*		if((GetNb()>2)&&(Pos<GetNb()-2)&&(GetValue(Pos+1)->Id==id))
-			return(cNoRef);
-
-		// Verify one step beyond
-		if((Pos>0)&&(GetValue(Pos-1)->Id==id))
-			return(cNoRef);
-	}*/
-
-	// Replace the worser one by the new one
-	RMaxValue* New(new RMaxValue(id,val));
-	if(GetNb())
+	// Go through the vector to see where the identifier must be inserted (Where) and
+	// if it is already in the vector (Act)
+	size_t Act(cNoRef), Where(cNoRef);
+	RMaxValue** Cur(Tab);
+	for(size_t i=0;i<NbPtr;Cur++,i++)
 	{
-		// There is at least one element
-		id=Old->Id;
-		val=Old->Value;
-		DeletePtrAt(GetNb()-1);
+		if((Where==cNoRef)&&(val>(*Cur)->Value))
+			Where=i;
+		if((*Cur)->Id==id)
+			Act=i;
+
+		// If both positions are found -> stop the parsing of the vector
+		if((Act!=cNoRef)&&(Where!=cNoRef))
+			break;
 	}
-	InsertPtrAt(New,Pos,false);
-	return(Pos);
+
+	if(Act==cNoRef)
+	{
+		// The identifier doesn't exist -> a new element must be inserted
+		if(fixed)
+		{
+			// If the identifier must be inserted at the end -> nothing to do
+			if(Where==cNoRef)
+				return(cNoRef);
+
+			// Remove the identifier at the end and put the new one at Where
+			RMaxValue* ptr(Tab[NbPtr-1]);
+			DeletePtrAt(NbPtr-1,true,false);
+			ptr->Id=id;
+			ptr->Value=val;
+			InsertPtrAt(ptr,Where,false);
+		}
+		else
+		{
+			// Simply add it
+			if(Where==cNoRef)
+			{
+				// Insert it at the end
+				if(NbPtr)
+					InsertPtrAt(new RMaxValue(id,val),NbPtr-1,false);
+				else
+					InsertPtrAt(new RMaxValue(id,val),0,false);
+			}
+			else
+				InsertPtrAt(new RMaxValue(id,val),Where,false);
+		}
+	}
+	else
+	{
+		// The identifier exist
+		if(Where==cNoRef)
+			Where=NbPtr-1; // The identifier must be put at the end of the vector
+
+		// Change the value
+		RMaxValue* ptr(Tab[Act]);
+		ptr->Value=val;
+
+		if(Act!=Where)
+		{
+			// Remove it from Act and put it at Where
+			DeletePtrAt(Act,true,false);
+			InsertPtrAt(ptr,Where,false);
+		}
+	}
+	return(Where);
 }
 
 

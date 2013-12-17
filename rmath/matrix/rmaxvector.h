@@ -116,11 +116,16 @@ public:
 	double operator[](size_t i) const;
 
 	/**
-	 * Add a value associated to a given index into the vector.
-	 * @param id             Identifier to associate.
+	 * Add a value associated to a given identifier into the vector.
+	 * @param id             Identifier.
 	 * @param val            Value to add.
+	 * @param fixed          Indicate if the size of the vector is fixed. If
+	 *                       true, the value is only inserted if another value is
+	 *                       smaller (this latest value will then be removed).
+	 * @return the index of the value inserted or if the value is
+	 * worser than all the existing one and fixed was true.
 	 */
-	void Add(size_t id,double val);
+	size_t Add(size_t id,double val,bool fixed=false);
 
 	/**
 	 * Verify if a given identifier has a value defined in the vector.
@@ -139,25 +144,14 @@ public:
 	/**
 	 * Get a pointer over the value associated to a given identifier.
 	 * @param id             Identifier.
-	 * @return Pointer or null if the index hasn't no value.
+	 * @return Pointer or null if the identifier hasn't no value.
 	 */
 	const RMaxValue* GetValueId(size_t id) const {return(RContainer<RMaxValue,true,true>::GetPtr(id,false));}
 
 	/**
-	* @return Identifier of the cell.
+	* @return Identifier of the vector.
 	*/
 	size_t GetId(void) const {return(Id);}
-
-	/**
-	 * The method looks if a given value is better than the worst one, and
-	 * replace it if necessary.
-	 * @param val            Value to verify (it contains the value replaced).
-	 * @param id             Corresponding identifier (it contains the
-	 *                       identifier replaced).
-	 * @return the position of the value inserted or cNoRef if the value is
-	 * worser than all the existing one.
-	 */
-	size_t Replace(double& val,size_t& id);
 
 	/**
 	* Destruct the sparse ordered vector.

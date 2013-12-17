@@ -205,9 +205,7 @@ void RMaxMatrix::Add(size_t i,size_t j,double val)
 		if(!Line)
 			InsertPtr(Line=new RMaxVector(InitNbCols,i));
 	}
-	if(Line->GetNb()+1>=NbLines)
-		throw std::range_error("RMaxMatrix::Add(size_t,size_t,double) : Maximal number of elements for index "+RString::Number(i));
-	Line->Add(j,val);
+	Line->Add(j,val,Line->GetNb()==NbCols);
 }
 
 

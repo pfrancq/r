@@ -228,7 +228,7 @@ public:
 
 //------------------------------------------------------------------------------
 // Macro to generate a RIOException
-#define mThrowRIOException(file,msg) throw RIOException(file,__PRETTY_FUNCTION__,__LINE__,msg)
+#define mThrowRIOException(file,msg) throw R::RIOException(file,__PRETTY_FUNCTION__,__LINE__,msg)
 
 
 //------------------------------------------------------------------------------

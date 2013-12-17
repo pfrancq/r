@@ -85,7 +85,7 @@ template<class T,class N,bool bAlloc>
 	{
 		// Depth must be recomputed
 		const_cast<RTree<T,N,bAlloc>*>(this)->MaxDepth=0;
-		RCursor<N> Nodes(*this);
+		RNodeCursor<T,N> Nodes(*dynamic_cast<const T*>(this));
 		for(Nodes.Start();!Nodes.End();Nodes.Next())
 			if(Nodes()->Depth>MaxDepth)
 				const_cast<RTree<T,N,bAlloc>*>(this)->MaxDepth=Nodes()->Depth;
@@ -144,13 +144,13 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	void RTree<T,N,bAlloc>::InsertNode(N* to,N* node)
 {
-	if((node->Tree)&&(node->Tree!=static_cast<T*>(this)))
+	if((node->GetTree())&&(node->GetTree()!=GetTree()))
 		mThrowRException("Node is already inserted in another tree");
-	if(to&&(to->Tree!=static_cast<T*>(this)))
+	if(to&&(to->GetTree()!=GetTree()))
 		mThrowRException("Node where to attach is not inserted in the same tree");
 
 	// Insert the node in its parent and siblings
-	node->Tree=static_cast<T*>(this);
+	node->Tree=GetTree();
 	if(to)
 	{
 		to->NbSubNodes++;

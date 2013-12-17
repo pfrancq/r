@@ -54,8 +54,9 @@ template<class T,class N> class RNodeCursor;
 
 //------------------------------------------------------------------------------
 /**
-* @tparam T                  The class of the tree.
-* @tparam N                  The class of the elements of the tree.
+* @tparam T                  The class of the tree. It must inherit from RTree.
+* @tparam N                  The class of the nodes in the tree. It must
+*                            inherit from RNode.
 * @tparam bAlloc             Specify if the elements are deallocated by the
 *                            tree.
 * This class implement a generic tree of node of a given class N. The class N
@@ -85,12 +86,14 @@ template<class T,class N> class RNodeCursor;
 *       for(Cur.Start();!Cur.End();Cur.Next())
 *          Cur()->DoSomething();
 *    }
+*    friend class R::RNodeCursor<MyTree,MyNode>;
 * };
 *
 * class MyTree : public RTree<MyTree,MyNode,true>
 * {
 * public:
 *    MyTree(void) : RTree<MyTree,MyNode,true>() {}
+*    friend class R::RNodeCursor<MyTree,MyNode>;
 * };
 *
 * int main()
@@ -108,6 +111,9 @@ template<class T,class N> class RNodeCursor;
 *       Cur()->DoSomething();
 * }
 * @endcode
+* @remark Note that RNodeCursor class is defined as friend class for both, the
+* node class and the tree class. This is necessary to use the RNodeCursor class.
+*
 * In practice, all child nodes of a given node (or the root node) are stored as
 * a doubly linked list.
 *
@@ -159,6 +165,16 @@ public:
 	* Construct the tree.
 	*/
 	RTree(void);
+
+	/**
+    * @return a pointer of the instantiated object of the tree (const version).
+    */
+	inline const T* GetTree(void) const {return(dynamic_cast<T*>(this));}
+
+	/**
+    * @return a pointer of the instantiated object of the tree.
+    */
+	inline T* GetTree(void) {return(dynamic_cast<T*>(this));}
 
 	/**
 	 * Call the RNode::Clear() method for a node and all its children.
