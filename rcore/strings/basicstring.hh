@@ -216,7 +216,14 @@ template<class C,class S>
 template<class C,class S>
 	void R::BasicString<C,S>::SetLen(size_t len)
 {
+	// If length is already correct -> Nothing to do
+	if(len==Data->Len)
+		return;
+
+	// Duplicate the string because it will change
 	Copy();
+
+	// Modify the length (eventually expand the string)
 	if(len<=Data->MaxLen)
 	{
 		Data->Len=len;
@@ -241,8 +248,14 @@ template<class C,class S>
 template<class C,class S>
 	void R::BasicString<C,S>::SetLen(size_t len,const S& str)
 {
-	if(len!=Data->Len)
-		Copy();
+	// If length is already correct -> Nothing to do
+	if(len==Data->Len)
+		return;
+
+	// Duplicate the string because it will change
+	Copy();
+
+	// Modify the length (eventually expand the string) and fill it
 	size_t oldsize=Data->Len;
 	SetLen(len);
 	Data->Len=len;

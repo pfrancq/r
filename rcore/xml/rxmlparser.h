@@ -296,8 +296,6 @@ public:
 	 */
 	SectionType GetSection(void) const {return(Section);}
 
-protected:
-
 	/**
 	* This function transform a given string that is supposed to represent a
 	* character. For example, the code &#35; is a quote.
@@ -330,6 +328,8 @@ protected:
 	*/
 	static RString XMLToString(const RString& str,bool html);
 
+protected:
+
 	/**
 	* This function transform a string containing some XML or HTML code into a
 	* string with normal characters.
@@ -340,6 +340,8 @@ protected:
 	*/
 	RString XMLToString(const RString& str);
 
+public:
+
 	/**
 	* This function transform a normal string into a valid XML string where some
 	* characters are replaced by codes.
@@ -348,7 +350,9 @@ protected:
 	*                        else on < and > are transformed.
 	* @returns A RString containing a valid XML string.
 	*/
-	RString StringToXML(const RString& str,bool strict=true);
+	static RString StringToXML(const RString& str,bool strict=true);
+
+protected:
 
 	/**
 	 * @return the current HTML Tag (if any).
