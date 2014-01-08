@@ -98,16 +98,12 @@ public:
 	*/
 	RVectorBool(const RVectorBool& vec);
 
-private:
-
 	/**
 	* Verify if the container can hold a certain number of elements. If not,
 	* the container is extended.
     * @param max             Number of elements that must be contained.
 	*/
 	void Verify(size_t max);
-
-public:
 
 	/**
 	 * Initialize the vector with a given values.
@@ -124,7 +120,8 @@ public:
 	bool IsSame(const RVectorBool& vi) const;
 
 	/**
-	* Set the boolean value at a given position.
+	* Set the boolean value at a given position. If necessary, the vector is
+	* extended.
 	* @param value           Value to insert.
 	* @param pos             The position where to insert.
 	*/
@@ -158,7 +155,7 @@ public:
 	 * position.
 	 * @param i               Index.
 	 */
-	bool IsDefined(size_t i) const {return(List[i]!=-1);}
+	inline bool IsDefined(size_t i) const {return(List[i]!=-1);}
 
 	/**
 	 * Get the list of the integers contained in the vector.

@@ -44,7 +44,7 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 RVectorBool::RVectorBool(size_t max)
-	: MaxBool(max)
+	: MaxBool(max), List(0)
 {
 	NbBool = 0;
 	if(!max)
@@ -84,6 +84,7 @@ void RVectorBool::Verify(size_t max)
 	}
 }
 
+
 //------------------------------------------------------------------------------
 void RVectorBool::Init(size_t nb,bool val)
 {
@@ -93,6 +94,7 @@ void RVectorBool::Init(size_t nb,bool val)
 	for(++nb;--nb;ptr++)
 		(*ptr)=val;
 }
+
 
 //------------------------------------------------------------------------------
 bool RVectorBool::IsSame(const RVectorBool& vi) const
