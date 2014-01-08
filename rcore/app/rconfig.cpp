@@ -6,7 +6,7 @@
 
 	XML Structure representing a configuration - Implementation.
 
-	Copyright 2003-2012 by Pascal Francq (pascal@francq.info).
+	Copyright 2003-2014 by Pascal Francq (pascal@francq.info).
 	Copyright 2003-2006 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or

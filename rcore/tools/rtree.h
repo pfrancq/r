@@ -121,10 +121,10 @@ template<class T,class N> class RNodeCursor;
 * the root node is not managed as an instance of the node class, the developer
 * must always create at least one top node.
 *
-* When the processes implied to the tree involves multiple steps of insertions
-* and deletes, it is a better idea to ensure the allocations and deallocations
-* through a specific class inheriting from RTree rather than let the latest be
-* the responsible. The RNodesGA class illustrates this approach.
+* When you have to do multiple steps of insertions and deletes in the tree, it
+* is a better idea to ensure the allocations and deallocations through a
+* specific class inheriting from RTree rather than let the latest be the
+* responsible. The RNodesGA class illustrates this approach.
 * @author Pascal Francq
 * @short Generic Tree.
 */
