@@ -191,6 +191,43 @@ void RMatrixStorage::Clear(double val)
 
 
 //------------------------------------------------------------------------------
+void RMatrixStorage::Init(double val)
+{
+	if(Sparse||Max)
+	{
+		if(val==0.0)
+			Clear(val);
+		else
+		{
+			for(size_t i=0;i<NbLines;i++)
+				for(size_t j=0;j<NbCols;j++)
+					Write(i,j,val);
+		}
+	}
+	else
+	{
+		Clear(val);
+	}
+}
+
+
+//------------------------------------------------------------------------------
+void RMatrixStorage::InitLine(size_t line,double val)
+{
+	for(size_t j=0;j<NbCols;j++)
+		Write(line,j,val);
+}
+
+
+//------------------------------------------------------------------------------
+void RMatrixStorage::InitCol(size_t col,double val)
+{
+	for(size_t i=0;i<NbLines;i++)
+		Write(i,col,val);
+}
+
+
+//------------------------------------------------------------------------------
 void RMatrixStorage::ReCreateLowerFile(size_t newlines,size_t newcols,double val)
 {
 	size_t i,j; // variables used to parse elements of the matrix
@@ -263,7 +300,7 @@ void RMatrixStorage::ReCreateUpperFile(size_t newlines,size_t newcols,double val
 	NewFile2.Open(BaseURI+".upper_new",RIO::Create);
 
 	// Read element (i,j) in the existing file
-	File1.Seek(0);
+	File2.Seek(0);
 	size_t maxlines; // Maximum number of lines to read
 	for(j=1;(j<NbCols)&&(j<newcols);j++)
 	{
@@ -276,7 +313,7 @@ void RMatrixStorage::ReCreateUpperFile(size_t newlines,size_t newcols,double val
 		for(i=0;i<maxlines;i++)
 		{
 			double tmp;
-			File1>>tmp;
+			File2>>tmp;
 
 			// If the element read is valid in the new matrix -> Write it.
 			if(i<newlines)
@@ -334,6 +371,7 @@ void RMatrixStorage::TruncUpperFile(size_t newlines,size_t newcols)
 	NbLines=tmp1;
 	NbCols=tmp2;
 }
+
 
 //------------------------------------------------------------------------------
 void RMatrixStorage::TruncLowerFile(size_t newlines,size_t newcols)
@@ -466,7 +504,7 @@ void RMatrixStorage::ModifyFull(size_t newlines,size_t newcols,bool fill,double 
 	}
 	else if(newlines<NbLines)
 	{
-		if((newcols>=newlines)&&(newcols>=newlines))
+		if((newcols>=newlines)&&(NbCols>=newlines))
 			TruncLowerFile(newlines,newcols);
 		else
 			ReCreateLowerFile(newlines,newcols,val);
@@ -480,14 +518,16 @@ void RMatrixStorage::ModifyFull(size_t newlines,size_t newcols,bool fill,double 
 	// Treat the upper part
 	if(newcols>NbCols)
 	{
-		if((newlines>=NbCols)&&(NbLines>=NbCols))
+		//if((newlines>=NbCols)&&(NbLines>=NbCols))
+		if((newcols>=NbLines)&&(NbCols>=NbLines))
 			ExtendUpperFile(newlines,newcols,fill,val);
 		else
 			ReCreateUpperFile(newlines,newcols,val);
 	}
 	else if(newcols<NbCols)
 	{
-		if((newlines>=newcols)&&(newlines>=newcols))
+		//if((newlines>=newcols)&&(newlines>=newcols))
+		if((newcols>=newlines)&&(NbCols>=newlines))
 			TruncUpperFile(newlines,newcols);
 		else
 			ReCreateUpperFile(newlines,newcols,val);

@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	RNumCursor.hh
+	RBoolCursor.cpp
 
 	Cursor over a container of numbers - Inline implementation
 
@@ -28,51 +28,53 @@
 
 
 //------------------------------------------------------------------------------
+// include files for R Project
+#include <rboolcursor.h>
+#include <rstring.h>
+using namespace R;
+
+
+
+//------------------------------------------------------------------------------
 //
-// class RNumCursor
+// class RBoolCursor
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-template<class I>
-	RNumCursor<I>::RNumCursor(void)
-		: NbInt(0), List(0), Parse(0), Pos(0), First(0), Last(0)
+RBoolCursor::RBoolCursor(void)
+	: NbBool(0), List(0), Parse(0), Pos(0), First(0), Last(0)
 {
 }
 
 
 //------------------------------------------------------------------------------
-template<class I>
-	RNumCursor<I>::RNumCursor(const RNumCursor& cur)
-		: NbInt(cur.NbInt), List(cur.List), Parse(cur.Parse), Pos(cur.Pos), First(cur.First), Last(cur.Last)
+RBoolCursor::RBoolCursor(const RBoolCursor& cur)
+	: NbBool(cur.NbBool), List(cur.List), Parse(cur.Parse), Pos(cur.Pos), First(cur.First), Last(cur.Last)
 {
 }
 
 
 //------------------------------------------------------------------------------
-template<class I>
-	template<bool o>
-		RNumCursor<I>::RNumCursor(const RNumContainer<I,o>& cont,size_t min,size_t max)
-			: NbInt(0), List(0), Parse(0), Pos(0), First(0), Last(0)
+RBoolCursor::RBoolCursor(const RBoolVector& vector,size_t min,size_t max)
+	: NbBool(0), List(0), Parse(0), Pos(0), First(0), Last(0)
 {
-	Set(cont,min,max);
+	Set(vector,min,max);
 }
 
 
 //------------------------------------------------------------------------------
-template<class I>
-	template<bool o>
-		void RNumCursor<I>::Set(const RNumContainer<I,o>& cont,size_t min,size_t max)
+void RBoolCursor::Set(const RBoolVector& vector,size_t min,size_t max)
 {
-	NbInt=cont.NbInt;
-	List=cont.List;
-	Parse=cont.List;
+	NbBool=vector.NbBool;
+	List=vector.List;
+	Parse=vector.List;
 	Pos=0;
-	if((max!=SIZE_MAX)&&(max<cont.GetNb()))
+	if((max!=SIZE_MAX)&&(max<vector.GetNb()))
 		Last=max+1;
 	else
-		Last=cont.GetNb();
-	if((min<=max)&&(min<cont.GetNb()))
+		Last=vector.GetNb();
+	if((min<=max)&&(min<vector.GetNb()))
 		First=min;
 	else
 		First=0;
@@ -80,11 +82,10 @@ template<class I>
 
 
 //-----------------------------------------------------------------------------
-template<class I>
-	void RNumCursor<I>::Start(void)
+void RBoolCursor::Start(void)
 {
 	Pos=First;
-	if(!NbInt)
+	if(!NbBool)
 	{
 		Parse=0;
 		return;
@@ -94,11 +95,10 @@ template<class I>
 
 
 //-----------------------------------------------------------------------------
-template<class I>
-	void RNumCursor<I>::StartFromEnd(void)
+void RBoolCursor::StartFromEnd(void)
 {
 	Pos=Last-1;
-	if(!NbInt)
+	if(!NbBool)
 	{
 		Parse=0;
 		return;
@@ -108,22 +108,20 @@ template<class I>
 
 
 //-----------------------------------------------------------------------------
-template<class I>
-	void RNumCursor<I>::GoTo(size_t idx)
+void RBoolCursor::GoTo(size_t idx)
 {
 	idx+=First;
 	if(idx>=Last)
-		throw std::range_error("void RNumCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(First)+","+RString::Number(Last-1)+"]");
+		throw std::range_error("void RBoolCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(First)+","+RString::Number(Last-1)+"]");
 	Parse=&List[idx];
 	Pos=idx;
 }
 
 
 //-----------------------------------------------------------------------------
-template<class I>
-	void RNumCursor<I>::Next(size_t inc)
+void RBoolCursor::Next(size_t inc)
 {
-	if(!NbInt) return;
+	if(!NbBool) return;
 	if(Pos==Last)
 		Start();
 	else
@@ -135,10 +133,9 @@ template<class I>
 
 
 //-----------------------------------------------------------------------------
-template<class I>
-	void RNumCursor<I>::Prev(size_t inc)
+void RBoolCursor::Prev(size_t inc)
 {
-	if(!NbInt) return;
+	if(!NbBool) return;
 	if(Pos==cNoRef)
 	{
 		StartFromEnd();

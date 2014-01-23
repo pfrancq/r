@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	RVectorBool.cpp
+	RBoolVector.cpp
 
 	Class representing a list of boolean values - Implementation
 
@@ -30,7 +30,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rstring.h>
-#include <rvectorbool.h>
+#include <rboolvector.h>
 #include <rexception.h>
 using namespace R;
 
@@ -38,82 +38,95 @@ using namespace R;
 
 //------------------------------------------------------------------------------
 //
-// class RVectorBool
+// class RBoolVector
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RVectorBool::RVectorBool(size_t max)
-	: MaxBool(max), List(0)
+RBoolVector::RBoolVector(size_t nb,bool val)
+	: NbBool(nb), MaxBool(nb), List(0), Default(val)
 {
-	NbBool = 0;
-	if(!max)
+	if(!MaxBool)
 		MaxBool=100;
-	List = new char[MaxBool];
-	memset(List,-1,MaxBool*sizeof(char));
+	List = new bool[MaxBool];
+	memset(List,char(Default),MaxBool*sizeof(bool));
 }
 
 
 //------------------------------------------------------------------------------
-RVectorBool::RVectorBool(const RVectorBool& vector)
+RBoolVector::RBoolVector(const RBoolVector& vector)
 	: MaxBool(vector.MaxBool)
 {
 	NbBool = vector.NbBool;
-	List = new char[MaxBool];
-	memcpy(List,vector.List,vector.MaxBool*sizeof(char));
+	MaxBool = vector.MaxBool;
+	List = new bool[MaxBool];
+	memcpy(List,vector.List,vector.MaxBool*sizeof(bool));
 }
 
 
 //------------------------------------------------------------------------------
-void RVectorBool::Verify(size_t max)
+void RBoolVector::SetDefault(bool val)
+{
+	Default=val;
+}
+
+
+//------------------------------------------------------------------------------
+void RBoolVector::Verify(size_t max)
 {
 	if(max>MaxBool)
 	{
-		char* ptr;
-		size_t OldSize;
-
-		OldSize=MaxBool;
-		MaxBool+=(MaxBool/2);
-		if(max>MaxBool)
-			MaxBool=max;
-		ptr=new char[MaxBool];
-		memcpy(ptr,List,OldSize*sizeof(char));
+		size_t OldSize(MaxBool);
+		MaxBool=max;
+		bool* ptr(new bool[MaxBool]);
+		memcpy(ptr,List,OldSize*sizeof(bool));
 		delete[] List;
 		List=ptr;
-		memset(&List[OldSize],-1,(MaxBool-OldSize)*sizeof(char));
+
 	}
 }
 
 
 //------------------------------------------------------------------------------
-void RVectorBool::Init(size_t nb,bool val)
+void RBoolVector::ReSize(size_t size)
 {
-	Verify(nb);
-	NbBool = nb;
-	char* ptr(List);
-	for(++nb;--nb;ptr++)
-		(*ptr)=val;
+	if(size>MaxBool)
+	{
+		 size_t OldSize(MaxBool);
+		 Verify(size);
+		 memset(&List[OldSize],char(Default),(MaxBool-OldSize)*sizeof(bool));
+	}
+	NbBool=size;
 }
 
 
 //------------------------------------------------------------------------------
-bool RVectorBool::IsSame(const RVectorBool& vi) const
+void RBoolVector::Init(size_t nb,bool val)
+{
+	Verify(nb);
+	NbBool=nb;
+	memset(List,char(val),nb*sizeof(bool));
+}
+
+
+//------------------------------------------------------------------------------
+bool RBoolVector::IsSame(const RBoolVector& vector) const
 {
 	size_t i;
-	char *ptr1,*ptr2;
+	bool *ptr1,*ptr2;
 
-	if(NbBool!=vi.NbBool) return(false);
-	for(i=NbBool+1,ptr1=List,ptr2=vi.List;--i;ptr1++,ptr2++)
+	if(NbBool!=vector.NbBool) return(false);
+	for(i=NbBool+1,ptr1=List,ptr2=vector.List;--i;ptr1++,ptr2++)
 		if(((*ptr1)!=-1)&&((*ptr1)!=(*ptr2))) return(false);
 	return(true);
 }
 
 
 //------------------------------------------------------------------------------
-void RVectorBool::Set(bool value,size_t pos)
+void RBoolVector::Set(bool value,size_t pos)
 {
 	if(pos+1>MaxBool)
-		Verify(pos+1);
+		ReSize(pos+1);
 	List[pos]=value;
 	NbBool++;
 	if(NbBool<pos+1)
@@ -122,69 +135,56 @@ void RVectorBool::Set(bool value,size_t pos)
 
 
 //------------------------------------------------------------------------------
-void RVectorBool::Clear(void)
+void RBoolVector::Clear(void)
 {
 	NbBool=0;
-	memset(List,-1,MaxBool*sizeof(char));
+	memset(List,char(Default),MaxBool*sizeof(char));
 }
 
 
 //------------------------------------------------------------------------------
-RVectorBool& RVectorBool::operator=(const RVectorBool& src)
+RBoolVector& RBoolVector::operator=(const RBoolVector& src)
 {
 	Verify(src.NbBool);
 	NbBool = src.NbBool;
-	memcpy(List,src.List,sizeof(char)*NbBool);
+	memcpy(List,src.List,sizeof(bool)*NbBool);
 	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
-bool RVectorBool::operator[](size_t i) const
+bool RBoolVector::operator[](size_t i) const
 {
 	if(i>=NbBool)
 	{
 		if(NbBool)
-			throw std::range_error("RVectorBool::operator[] const : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbBool-1)+"]");
+			throw std::range_error("RBoolVector::operator[] const : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbBool-1)+"]");
 		else
-			throw std::range_error("RVectorBool::operator[] const : no elements");
+			throw std::range_error("RBoolVector::operator[] const : no elements");
 	}
 	char ptr(List[i]);
 	if(ptr==-1)
-		throw RException(RString("RVectorBool::operator[](size_t) const : Undefined value at position '")+RString::Number(i)+"'");
+		throw RException(RString("RBoolVector::operator[](size_t) const : Undefined value at position '")+RString::Number(i)+"'");
 	return(ptr);
 }
 
 
 //------------------------------------------------------------------------------
-char& RVectorBool::operator[](size_t i)
+bool& RBoolVector::operator[](size_t i)
 {
 	if(i>=NbBool)
 	{
 		if(NbBool)
-			throw std::range_error("RVectorBool::operator[] : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbBool-1)+"]");
+			throw std::range_error("RBoolVector::operator[] : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbBool-1)+"]");
 		else
-			throw std::range_error("RVectorBool::operator[] : no elements");
+			throw std::range_error("RBoolVector::operator[] : no elements");
 	}
 	return(List[i]);
 }
 
 
 //------------------------------------------------------------------------------
-void RVectorBool::Next(void)
-{
-	Pos++;
-	Parse++;
-	while(((*Parse)==-1)&&(Pos!=NbBool))
-	{
-		Pos++;
-		Parse++;
-	}
-}
-
-
-//------------------------------------------------------------------------------
-RVectorBool::~RVectorBool(void)
+RBoolVector::~RBoolVector(void)
 {
 	delete[] List;
 }

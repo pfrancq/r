@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	RVectorBool.h
+	RBoolVector.h
 
 	Class representing a list of boolean values - Header
 
@@ -28,8 +28,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RVectorBoolH
-#define RVectorBoolH
+#ifndef RBoolVectorH
+#define RBoolVectorH
 
 
 //------------------------------------------------------------------------------
@@ -50,85 +50,103 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RVectorBool class provides a representation of a vector of boolean
-* values. The elements are set to -1 if undefined.
+* The RBoolVector class provides a representation of a vector of boolean
+* values. A default value (that can be modified) is assigned to new elements.
 * @author Pascal Francq.
 * @short Boolean Vector.
 */
-class RVectorBool
+class RBoolVector
 {
 	/**
-	* Number of values in the list.
+	* Number of values in the vector.
 	*/
 	size_t NbBool;
 
 	/**
-	* Maximal number of values in the list.
+	* Maximal number of values in the vector.
 	*/
 	size_t MaxBool;
 
 	/**
 	* The array representing the boolean values.
 	*/
-	char* List;
-
-private:
+	bool* List;
 
 	/**
-	* Pointer used to parse the list.
-	*/
-	char* Parse;
-
-	/**
-	* Current position parsed.
-	*/
-	size_t Pos;
+	 * Default value.
+    */
+	bool Default;
 
 public:
 
 	/**
-	* Construct the list of boolean values.
-	* @param max             Maximum number of values.
+	* Construct the vector of boolean values.
+	* @param nb              Number of values.
+	* @param val             Default value.
 	*/
-	RVectorBool(size_t max);
+	RBoolVector(size_t nb,bool val=false);
 
 	/**
 	* Copy constructor.
 	* @param vec             Vector to copy.
 	*/
-	RVectorBool(const RVectorBool& vec);
+	RBoolVector(const RBoolVector& vec);
 
 	/**
-	* Verify if the container can hold a certain number of elements. If not,
-	* the container is extended.
-    * @param max             Number of elements that must be contained.
+	 * Get the default value.
+    */
+	bool GetDefault(void) const {return(Default);}
+
+	/**
+	 * Set the default value that will be used for the new elements created in
+	 * the future.
+	 * @param val             Default value.
+    */
+	void SetDefault(bool val);
+
+private:
+
+	/**
+	* Verify if the vector can hold a certain number of elements. If necessary,
+	* the vector is extended with undefined values.
+   * @param max              Number of elements in the vector.
 	*/
 	void Verify(size_t max);
 
+public:
+
 	/**
-	 * Initialize the vector with a given values.
+	* Resize the vector. If necessary, the vector is extended and new elements
+	* are set to the default value.
+   * @param size             Number of elements in the vector.
+	*/
+	void ReSize(size_t size);
+
+	/**
+	 * Initialize the first element of the vector with a given values. If
+	 * necessary, the vector is extended.
 	 * @param nb             Number of elements.
 	 * @param val            Value used to initialize.
 	 */
 	void Init(size_t nb,bool val);
 
 	/**
-	* Test if two lists have exactly the same values.
-	* @param vi              The list used for the comparison.
+	* Test if two vectors have exactly the same values.
+	* @param vector          Vector used for the comparison.
 	* @return True if the lists are the same.
 	*/
-	bool IsSame(const RVectorBool& vi) const;
+	bool IsSame(const RBoolVector& vector) const;
 
 	/**
 	* Set the boolean value at a given position. If necessary, the vector is
-	* extended.
+	* extended and the new elements receive the default value.
 	* @param value           Value to insert.
 	* @param pos             The position where to insert.
 	*/
 	void Set(bool value,size_t pos);
 
 	/**
-	* Clear the list (set all values to -1).
+	* Clear the vector (set all values to the default value).
 	*/
 	void Clear(void);
 
@@ -136,74 +154,45 @@ public:
 	* Assignment operator.
 	* @param src             List used for the assignment.
 	*/
-	RVectorBool& operator=(const RVectorBool& src);
+	RBoolVector& operator=(const RBoolVector& src);
 
 	/**
-	* Return the Integer value at position i. The first Integer value is at position 0.
+	* Return the boolean value at position i. The first boolean value is at
+	* position 0 (const version).
 	* @param i               Index.
 	*/
 	bool operator[](size_t i) const;
 
 	/**
-	* Return the Integer value at position i. The first Integer value is at position 0.
+	* Return the boolean value at position i. The first boolean value is at
+	* position 0.
 	* @param i               Index.
 	*/
-	char& operator[](size_t i);
+	bool& operator[](size_t i);
 
 	/**
-	 * @return true if the element is defined (true or false) at a given
-	 * position.
-	 * @param i               Index.
+	 * Get the list of the booleans contained in the vector.
 	 */
-	inline bool IsDefined(size_t i) const {return(List[i]!=-1);}
+	const bool* GetList(void) const {return(List);}
 
 	/**
-	 * Get the list of the integers contained in the vector.
-	 */
-	const char* GetList(void) const {return(List);}
-
-	/**
-	* Get the number of values in the list.
+	* Get the number of values in the vector.
 	* @return size_t
 	*/
 	size_t GetNb(void) const {return(NbBool);}
 
 	/**
-	* Get the actual maximal number of values in the list.
+	* Get the actual maximal number of values in the vector.
 	* @return size_t
 	*/
 	size_t GetMax(void) const {return(MaxBool);}
 
 	/**
-	* Start the iterator to go trough the list.
+	* Destruct the vector.
 	*/
-	void Start(void) {Pos=0; Parse=List;}
+	virtual ~RBoolVector(void);
 
-	/**
-	* Get the current position parsed in the list.
-	* @return size_t
-	*/
-	size_t GetPos(void) const {return(Pos);}
-
-	/**
-	* Test if the end of the list is reached.
-	*/
-	bool End(void) const {return(Pos==NbBool);}
-
-	/**
-	* Goto the next element of the list.
-	*/
-	void Next(void);
-
-	/**
-	* Return the current element.
-	*/
-	bool operator()(void) const {return(*Parse);}
-
-	/**
-	* Destruct the list.
-	*/
-	virtual ~RVectorBool(void);
+	friend class RBoolCursor;
 };
 
 

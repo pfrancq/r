@@ -37,7 +37,7 @@
 #include <rproblem2d.h>
 #include <rsize.h>
 #include <rpoints.h>
-#include <rvectorbool.h>
+#include <rboolvector.h>
 #include <robj2dconfig.h>
 using namespace std;
 using namespace R;

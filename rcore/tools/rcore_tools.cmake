@@ -28,7 +28,8 @@ SET(rcore_tools_INST_INCLUDES
 	rdate.h
 	rlang.h
 	rlocale.h
-	rvectorbool.h
+	rboolvector.h
+	rboolcursor.h
 	rvalue.h
 	rquicksort.h
 	rquicksort.hh
@@ -41,6 +42,7 @@ SET(rcore_tools_TARGET_SOURCES
 	rlang.cpp
 	rlocale.cpp
 	rtrace.cpp
-	rvectorbool.cpp
+	rboolvector.cpp
+	rboolcursor.cpp
 	rvalue.cpp
 )

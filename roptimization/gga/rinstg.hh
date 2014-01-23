@@ -130,7 +130,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 	R::RInst<cInst,cChromo,cFit,cThreadData>::AnalyzePop();
 
 	// Look if same chromosomes and modify population to have only one copy of each
-	RVectorBool DoMutation(GetPopSize());
+	RBoolVector DoMutation(GetPopSize());
 	DoMutation.Init(GetPopSize(),false);
 	for(i=0,C=Chromosomes;i<GetPopSize()-1;C++,i++)
 	{

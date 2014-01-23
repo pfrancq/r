@@ -224,10 +224,37 @@ public:
 	size_t GetNbCols(size_t line) const;
 
 	/**
-	 * Clear the files. In practice, the files are re-created with, eventually,
-	 * a new value.
+	 * Clear the files. In practice, when the files correspond to full matrices,
+	 * a default value is assigned.
+	 * @param val            Default value.
 	 */
 	void Clear(double val=NAN);
+
+	/**
+	 * Set the elements to a given value. In the case of sparse matrices, this
+	 * may lead to the creation of a high number of records when the value is
+	 * not null.
+	 * @param val            Value to set.
+	 */
+	void Init(double val);
+
+	/**
+	 * Set the elements corresponding to a line to a given value. In the case of
+	 * sparse matrices, this may lead to the creation of a high number of records
+	 * when the value is not null.
+	 * @param line           Line of the elements.
+	 * @param val            Value to set.
+	 */
+	void InitLine(size_t line,double val);
+
+	/**
+	 * Set the elements corresponding to a column to a given value. In the case
+	 * of sparse matrices, this may lead to the creation of a high number of
+	 * records when the value is not null.
+	 * @param col            Columns of the elements.
+	 * @param val            Value to set.
+	 */
+	void InitCol(size_t col,double val);
 
 private:
 

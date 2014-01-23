@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	RNumCursor.h
+	RBoolCursor.h
 
 	Cursor over a container of numbers - Header
 
@@ -28,13 +28,13 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RNumCursorH
-#define RNumCursorH
+#ifndef RBoolCursorH
+#define RBoolCursorH
 
 
 //------------------------------------------------------------------------------
 // include files for R Project
-#include <rnumcontainer.h>
+#include <rboolvector.h>
 
 
 //------------------------------------------------------------------------------
@@ -44,38 +44,36 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RNumCursor class provides a cursor over a container of number.
-* @tparam I                  Type (int, double, etc.).
+* The RBoolCursor class provides a cursor over a vector of boolean values.
 *
 * @code
-* RNumContainer<double,false> a(3);
+* RBoolVector a(3);
 * a[0]=1.0;
 * a[1]=2.0;
 * a[2]=3.0;
-* RNumCursor<double> Cur(a);
+* RBoolCursor Cur(a);
 * for(Cur.Start();!Cur.End();Cur.Next())
 * 	cout<<Cur()<<endl;
 * @endcode
 * @author Pascal Francq.
-* @short Container of Numbers Cursor.
+* @short Boolean Vector Cursor.
 */
-template<class I>
-	class RNumCursor
+class RBoolCursor
 {
 	/**
-	* Number of values in the list.
+	* Number of values in the vector.
 	*/
-	size_t NbInt;
+	size_t NbBool;
 
 	/**
 	* The array representing the values.
 	*/
-	I* List;
+	bool* List;
 
 	/**
-	* Pointer used to parse the list.
+	* Pointer used to parse the vector.
 	*/
-	I* Parse;
+	bool* Parse;
 
 	/**
 	* Current position parsed.
@@ -97,33 +95,31 @@ public:
 	/**
 	* Construct a null cursor.
 	*/
-	RNumCursor(void);
+	RBoolCursor(void);
 
 	/**
 	* Copy constructor.
 	* @param cur             Cursor to copy.
 	*/
-	RNumCursor(const RNumCursor& cur);
+	RBoolCursor(const RBoolCursor& cur);
 
 	/**
-	 * Construct a cursor over a given container.
-	 * @tparam o             Determine if the container is ordered.
-	 * @param cont           Container of numbers.
+	 * Construct a cursor over a given vector.
+	 * @param vector         Vector.
 	 * @param min            Minimum position of the elements to iterate.
  	 * @param max            Maximum position of the elements to iterate (included max).
  	 *                       If SZE_MAX, iterate until the end of the container.
 	 */
-	template<bool o> RNumCursor(const RNumContainer<I,o>& cont,size_t min=0,size_t max=SIZE_MAX);
+	RBoolCursor(const RBoolVector& vector,size_t min=0,size_t max=SIZE_MAX);
 
 	/**
-	 * Set a cursor to a given container.
-	 * @tparam o             Determine if the container is ordered.
-	 * @param cont           Container of numbers.
+	 * Set a cursor to a given vector.
+	 * @param vector         Vector.
 	 * @param min            Minimum position of the elements to iterate.
 	 * @param max            Maximum position of the elements to iterate (included max).
 	 *                       If SZE_MAX, iterate until the end of the container.
 	 */
-	template<bool o> void Set(const RNumContainer<I,o>& cont,size_t min=0,size_t max=SIZE_MAX);
+	void Set(const RBoolVector& vector,size_t min=0,size_t max=SIZE_MAX);
 
 	/**
 	* Get the number of values in the list.
@@ -132,22 +128,22 @@ public:
 	size_t GetNb(void) const  {return(Last-First);}
 
 	/**
-	* Start the iterator to go trough the list.
+	* Start the iterator to go trough the vector.
 	*/
 	void Start(void);
 
 	/**
-	 * Start the iterator at the end of the container.
+	 * Start the iterator at the end of the vector.
 	 */
 	void StartFromEnd(void);
 
 	/**
-	* Test if the end of the list is reached.
+	* Test if the end of the vector is reached.
 	*/
 	inline bool End(void) const {return(Pos==Last);}
 
 	/**
-	* Test if the begin of the list is reached.
+	* Test if the begin of the vector is reached.
 	*/
 	inline bool Begin(void) const {return(Pos==cNoRef);}
 
@@ -174,23 +170,18 @@ public:
 	/**
 	* Return the current element (const version).
 	*/
-	I operator()(void) const {return(*Parse);}
+	bool operator()(void) const {return(*Parse);}
 
 	/**
 	* Return the current element.
 	*/
-	I& operator()(void) {return(*Parse);}
+	bool& operator()(void) {return(*Parse);}
 
 	/**
 	* Return the actual position in the cursor.
 	*/
 	inline size_t GetPos(void) const {return(Pos-First);}
 };
-
-
-//------------------------------------------------------------------------------
-// Template implementation
-#include <rnumcursor.hh>
 
 
 }  //------- End of namespace R ------------------------------------------------

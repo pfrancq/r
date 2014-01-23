@@ -37,7 +37,7 @@
 // include files for R Project
 #include <rstring.h>
 #include <rtextfile.h>
-#include <rvectorbool.h>
+#include <rboolvector.h>
 
 
 //------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ protected:
 	/**
 	* If Depths[i]=true -> i+1 not null.
 	*/
-	RVectorBool Depths;
+	RBoolVector Depths;
 
 public:
 

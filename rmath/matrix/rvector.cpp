@@ -102,7 +102,7 @@ void RVector::ReSize(size_t size,double val)
 RVector& RVector::operator+=(const RVector& vector)
 {
 	if(GetNb()!=vector.GetNb())
-		throw std::range_error("R::operator* : Not Compatible Sizes");
+		throw std::range_error("RVector::operator+=(const RVector&) : Not Compatible Sizes");
 	RNumCursor<double> Vec1(*this);
 	RNumCursor<double> Vec2(vector);
 	for(Vec1.Start(),Vec2.Start();!Vec1.End();Vec1.Next(),Vec2.Next())
@@ -115,7 +115,7 @@ RVector& RVector::operator+=(const RVector& vector)
 RVector& RVector::operator-=(const RVector& vector)
 {
 	if(GetNb()!=vector.GetNb())
-		throw std::range_error("R::operator* : Not Compatible Sizes");
+		throw std::range_error("RVector::operator-=(const RVector&) : Not Compatible Sizes");
 	RNumCursor<double> Vec1(*this);
 	RNumCursor<double> Vec2(vector);
 	for(Vec1.Start(),Vec2.Start();!Vec1.End();Vec1.Next(),Vec2.Next())
@@ -221,7 +221,7 @@ RVector R::operator/(const RVector& arg1,const double arg2)
 double R::operator*(const RVector& arg1,const RVector& arg2)
 {
 	if(arg1.GetNb()!=arg2.GetNb())
-		throw std::range_error("R::operator* : Not Compatible Sizes");
+		throw std::range_error("R::operator*(const RVector&,const RVector&) : Not Compatible Sizes");
 
 	double Sum(0.0);
 	double Norm1(0.0);
