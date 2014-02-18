@@ -86,8 +86,9 @@ public:
 	* @param x2             X-coordinate of the second point used.
 	* @param y2             Y-coordinate of the second point used.
 	* @param seg            Is the line a segment.
+	* @param reorder        Define if the line must be reorder.
 	*/
-	RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,const bool seg=true);
+	RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,const bool seg=true,bool reorder=true);
 
 	/**
 	* Construct a line. The points are eventually exchanged to ensure that the
@@ -95,8 +96,9 @@ public:
 	* @param pt1            The first point used.
 	* @param pt2            The second point used.
 	* @param seg            Is the line a segment.
+	* @param reorder        Define if the line must be reorder.
 	*/
-	RLine(const RPoint& pt1,const RPoint& pt2,const bool seg=true);
+	RLine(const RPoint& pt1,const RPoint& pt2,const bool seg=true,bool reorder=true);
 
 private:
 
@@ -128,16 +130,20 @@ public:
 
 	/**
 	* Compute the angle of the line compared to an horizontal one.
+	* @param ccw             Define if the angles are measured counter-clockwise
+	*                        or not.
 	* @return the angle.
 	*/
-	tCoord GetAngle(void) const;
+	tCoord GetAngle(bool ccw=true) const;
 
 	/**
 	* Compute the angle of the line compared to another one.
 	* @param line            Line to compared with.
+	* @param ccw             Define if the angles are measured counter-clockwise
+	*                        or not.
 	* @return the angle.
 	*/
-	tCoord GetAngle(const RLine& line) const;
+	tCoord GetAngle(const RLine& line,bool ccw=true) const;
 
 	/**
 	* Set new points to the line
@@ -145,8 +151,9 @@ public:
 	* @param y1             Y-coordinate of the first point used.
 	* @param x2             X-coordinate of the second point used.
 	* @param y2             Y-coordinate of the second point used.
+	* @param reorder        Define if the line must be reorder.
 	*/
-	void SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2);
+	void SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2,bool reorder=true);
 
 private:
 

@@ -55,18 +55,20 @@ RLine::RLine(const RLine& line)
 
 
 //------------------------------------------------------ -----------------------
-RLine::RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,const bool seg)
+RLine::RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,const bool seg,bool reorder)
 	: Pt1(x1,y1), Pt2(x2,y2), Segment(seg)
 {
-	ReOrder();
+	if(reorder)
+		ReOrder();
 }
 
 
 //------------------------------------------------------ -----------------------
-RLine::RLine(const RPoint& pt1,const RPoint& pt2,const bool seg)
+RLine::RLine(const RPoint& pt1,const RPoint& pt2,const bool seg,bool reorder)
 	: Pt1(pt1.X,pt1.Y), Pt2(pt2.X,pt2.Y), Segment(seg)
 {
-	ReOrder();
+	if(reorder)
+		ReOrder();
 }
 
 
@@ -102,12 +104,34 @@ tCoord  RLine::GetLength(void) const
 
 
 //------------------------------------------------------------------------------
-tCoord  RLine::GetAngle(void) const
+tCoord  RLine::GetAngle(bool ccw) const
 {
 	tCoord X=(Pt2.X-Pt1.X);
-	tCoord Y=(Pt2.Y-Pt1.Y);
+	tCoord Y;
+	if(ccw)
+		Y=-(Pt2.Y-Pt1.Y);
+	else
+		Y = (Pt2.Y-Pt1.Y);
 	if(X)
-		return(atan(static_cast<double>(Y/X)));
+	{
+		if (Pt2.X > Pt1.X)
+		{
+			double angle(atan(static_cast<double>(Y/X))*(180)/3.14159265);
+			if(angle<0)
+				angle+=360;
+			return(angle);
+		}
+		else
+		{
+			//X<0
+			double angle(atan(static_cast<double>(Y/X))*(180)/3.14159265);
+			//if(Y > 0)
+			//    angle = 180-angle;
+			//else
+			angle=180+angle;
+			return(angle);
+		}
+	}
 	else
    {
 		if(Y>0)
@@ -119,18 +143,22 @@ tCoord  RLine::GetAngle(void) const
 
 
 //------------------------------------------------------ -----------------------
-void RLine::SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2)
+void RLine::SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2,bool reorder)
 {
-    Pt1.Set(x1,y1);
-    Pt2.Set(x2,y2);
-    ReOrder();
+	Pt1.Set(x1,y1);
+   Pt2.Set(x2,y2);
+	if(reorder)
+		ReOrder();
 }
 
 
 //------------------------------------------------------------------------------
-tCoord  RLine::GetAngle(const RLine& line) const
+tCoord  RLine::GetAngle(const RLine& line,bool ccw) const
 {
-	return(GetAngle()-line.GetAngle());
+    double angle(GetAngle(ccw)-line.GetAngle(ccw));
+	if(angle>0)
+		return(angle);
+	return(angle+360);
 }
 
 
