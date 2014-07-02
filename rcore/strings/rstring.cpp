@@ -326,6 +326,55 @@ size_t RString::HashIndex(size_t idx) const
 
 
 //-----------------------------------------------------------------------------
+size_t RString::ExtendedHashIndex(size_t idx) const
+{
+	if((!Data)||(Data->Len<idx)) return(36);
+	UChar c(RChar::ToLower(Data->Text[idx-1]).Unicode());
+	UChar a(RChar('a').Unicode());
+	if((c>=a)&&(c<=RChar('z').Unicode()))
+		return(c-a);
+	UChar z(RChar('0').Unicode());
+	if((c>=z)&&(c<=RChar('9').Unicode()))
+	return(c-z+26);
+	return(36);
+}
+
+
+//-----------------------------------------------------------------------------
+int RString::SortOrder(const void* a,const void* b)
+{
+	RString* as(*((RString**)a));
+	RString* bs(*((RString**)b));
+	if(!as)
+	{
+		if(!bs)
+			return(0);
+		return(-1);
+	}
+	else if(!bs)
+		return(1);
+	return(as->Compare(*bs));
+}
+
+
+//-----------------------------------------------------------------------------
+int RString::SortDesOrder(const void* a,const void* b)
+{
+	RString* as(*((RString**)a));
+	RString* bs(*((RString**)b));
+	if(!bs)
+	{
+		if(!as)
+			return(0);
+		return(-1);
+	}
+	else if(!as)
+		return(1);
+	return(bs->Compare(*as));
+}
+
+
+//-----------------------------------------------------------------------------
 RChar* RString::Latin1ToUnicode(const char* src,size_t& len,size_t& maxlen)
 {
 	if(!src)

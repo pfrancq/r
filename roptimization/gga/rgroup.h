@@ -136,7 +136,7 @@ public:
 	 * from one group to the other.
 	 * @param from           The group used as source.
 	 * @return true if the PostInsert method should be called after each object
-	 * is inserted from the group (true if the default value).
+	 * is inserted from the group (true is the default value).
 	 */
 	virtual bool PreInsertAll(const cGroup* from);
 

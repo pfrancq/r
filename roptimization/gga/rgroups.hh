@@ -352,6 +352,16 @@ template<class cGroup,class cObj,class cGroups>
 
 //------------------------------------------------------------------------------
 template<class cGroup,class cObj,class cGroups>
+	R::RCursor<cGroup> R::RGroups<cGroup,cObj,cGroups>::GetUsedGroups(void) const
+{
+	if(Used.GetNb())
+		return(R::RCursor<cGroup>(Used));
+	return(R::RCursor<cGroup>());
+}
+
+
+//------------------------------------------------------------------------------
+template<class cGroup,class cObj,class cGroups>
 	double R::RGroups<cGroup,cObj,cGroups>::ComputeAdjustedRandIndex(const cGroups& groups) const
 {
 	size_t NbRows,NbCols;                   // Rows and Cols for matrix

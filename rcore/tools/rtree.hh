@@ -269,52 +269,81 @@ template<class T,class N,bool bAlloc>
 	if(to==node->Parent)
 		return;
 
-	// Delete the node from its parents and siblings
+	// Connect the previous (node->Prev) and the next (node->Next) sibling notes
+	if(node->Prev)
+		node->Prev->Next=node->Next;
+	if(node->Next)
+		node->Next->Prev=node->Prev;
+
+	// Delete the node from it parent (eventually root)
 	if(node->Parent)
 	{
-		if(node->Prev)
-			node->Prev->Next=node->Next;
-		if(node->Next)
-			node->Next->Prev=node->Prev;
+		// If the node is the first one -> Replace by the next one
 		if(node->Parent->First==node)
 			node->Parent->First=node->Next;
+
+		// If the node is the last one -> Replace by the previous one
 		if(node->Parent->Last==node)
 			node->Parent->Last=node->Prev;
+
+		// Decrease the number of nodes of its parent
 		node->Parent->NbSubNodes--;
 	}
 	else
 	{
-		if(node->Prev)
-			node->Prev->Next=node->Next;
-		if(node->Next)
-			node->Next->Prev=node->Prev;
+		// If the node is the first root one -> Replace by the next one
 		if(First==node)
 			First=node->Next;
+
+		// If the node is the last root one -> Replace by the previous one
 		if(Last==node)
 			Last=node->Prev;
+
+		// Decrease the number of top nodes
 		NbTopNodes--;
 	}
 
 	// Insert it in the new parent and siblings
 	if(to)
 	{
-		to->NbSubNodes++;
+		// If no first chilren node -> Make it the first one
 		if(!to->First)
 			to->First=node;
+
+		// Make the last sibling node the previous one
 		node->Prev=to->Last;
-		to->Last->Next=node;
+
+		// Make the node the next one of the last sibling node
+		if(to->Last)
+			to->Last->Next=node;
+
+		// The node becomes the last sibling one
 		to->Last=node;
+
+		// Increase the number of nodes of its parent
+		to->NbSubNodes++;
 	}
 	else
 	{
-		// Top node
-		NbTopNodes++;
+		// If no first root node -> Make it the first one
 		if(!First)
 			First=node;
+
+		// Make the last root node the previous one
 		node->Prev=Last;
-		Last->Next=node;
+
+		// Make the node the next one of the last root node
+		if(Last)
+			Last->Next=node;
+
+		// The node becomes the last root one
 		Last=node;
+
+		// Increase the number of top nodes
+		NbTopNodes++;
 	}
+
+	// Change the parent of the current node
 	node->Parent=to;
 }
 

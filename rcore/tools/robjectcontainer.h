@@ -59,7 +59,7 @@ namespace R{
  * @code
  * int Compare(const TUse& tag) const;
  * int GetId(void) const;
- * int SetId(size_t id) const;
+ * int SetId(size_t id);
  * @endcode
  *
  *

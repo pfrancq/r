@@ -34,7 +34,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <ricontainer.h>
+#include <ircontainer.h>
 
 
 //-----------------------------------------------------------------------------
@@ -112,7 +112,7 @@ public:
 	 * Constructor of the algorithm.
 	 * @param cont           Container to sort.
 	 */
-	RQuickSort(RIContainer<C>& cont);
+	RQuickSort(iRContainer<C>& cont);
 
 private:
 

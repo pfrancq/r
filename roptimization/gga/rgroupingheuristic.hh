@@ -48,6 +48,7 @@ template<class cGroup,class cObj,class cGroups>
 	void R::RGroupingHeuristic<cGroup,cObj,cGroups>::Init(cGroups* groups)
 {
 	Groups=groups;
+	BuildOrder();
 }
 
 
@@ -67,7 +68,6 @@ template<class cGroup,class cObj,class cGroups>
 {
 	// Initialize
 	Init(groups);
-	BuildOrder();
 
 	// Group resting objects
 	for(cObj** CurObj=Order;NbObjsOk<NbObjs;CurObj++,NbObjsOk++)

@@ -193,7 +193,7 @@ public:
 	RCursor<cObj> GetObjs(void) const {return(RCursor<cObj>(Objs));}
 
 	/**
-	* Create a heuristic object.
+	* Create a heuristic object. By default, a first-fit heuristic is created.
 	*/
 	virtual RGroupingHeuristic<cGroup,cObj,cChromo>* CreateHeuristic(void);
 

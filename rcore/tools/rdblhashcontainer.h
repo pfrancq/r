@@ -69,8 +69,8 @@ namespace R{
 * hash index of the given argument for the first hash table (idx=1) or for the
 * second hash table (idx=2).
 *
-* At least, a compare function and a HashIndex and HashIndex2 method must be
-* implemented in the class C:
+* At least, a compare function and a HashIndex method must be implemented in the
+*  class C:
 * @code
 * int Compare(const C&) const;
 * size_t HashIndex(size_t idx) const;

@@ -228,7 +228,7 @@ void QRDrawGeoInfos::repaint(void)
 {
 	if(!Layout)
 		return;
-	QGraphicsView* Draw(static_cast<Ui_QRDrawGeoInfos*>(Ui)->Draw);
+	QWidget* Draw((static_cast<Ui_QRDrawGeoInfos*>(Ui)->Draw)->viewport());
 	RRect Board(Layout->GetProblem()->GetBoard());
 	RSize Limits(Board.GetSize());
 	XScale=((static_cast<double>(Draw->width()-10)/static_cast<double>(Limits.GetWidth())));

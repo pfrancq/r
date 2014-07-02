@@ -37,7 +37,7 @@
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>::RContainer(size_t m,size_t i)
-		: RIContainer<C>(bAlloc,bOrder,m,i)
+		: iRContainer<C>(bAlloc,bOrder,m,i)
 {
 }
 
@@ -45,18 +45,18 @@ template<class C,bool bAlloc,bool bOrder>
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>::RContainer(const RContainer<C,true,bOrder>& src)
-	: RIContainer<C>(bAlloc,bOrder,0,10)
+	: iRContainer<C>(bAlloc,bOrder,0,10)
 {
-	RIContainer<C>::Create(src);
+	iRContainer<C>::Create(src);
 }
 
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc,bool bOrder>
 	RContainer<C,bAlloc,bOrder>::RContainer(const RContainer<C,false,bOrder>& src)
-		: RIContainer<C>(bAlloc,bOrder,0,10)
+		: iRContainer<C>(bAlloc,bOrder,0,10)
 {
-	RIContainer<C>::Create(src);
+	iRContainer<C>::Create(src);
 }
 
 

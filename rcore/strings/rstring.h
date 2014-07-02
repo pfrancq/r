@@ -420,12 +420,40 @@ public:
 
 	/**
 	* Return a number between 0 and 26 according to the character at position
-	* idx in the string.
+	* idx in the string. In practice, all letters are considered as a different
+	* index (0-25), all other characters are considered as the same index (26).
 	* @remark Supported values for idx are 1 and 2.
 	* @param idx             Index of hash asked.
 	* @see R::RHashContainer and R::RDblHashContainer.
 	*/
 	size_t HashIndex(size_t idx) const;
+
+	/**
+	* Return a number between 0 and 36 according to the character at position
+	* idx in the string. In practice, all letters are considered as a different
+	* index (0-25), all numbers are considered as a different index (26-35),
+	* other characters are considered as the same index (36).
+	* @remark Supported values for idx are 1 and 2.
+	* @param idx             Index of hash asked.
+	* @see R::RHashContainer and R::RDblHashContainer.
+	*/
+	size_t ExtendedHashIndex(size_t idx) const;
+
+	/**
+	 * Static function used to order a container of strings in ascending order.
+    * @param a              First string.
+	 * @param b              Second string.
+	 * @see R::RContainer.
+    */
+	static int SortOrder(const void* a,const void* b);
+
+	/**
+	 * Static function used to order a container of  strings in descending order.
+    * @param a              First string.
+	 * @param b              Second string.
+	 * @see R::RContainer.
+    */
+	static int SortDesOrder(const void* a,const void* b);
 	//@} Methods related to R::RContainer
 
 	/** @name Operators	*/ // @{

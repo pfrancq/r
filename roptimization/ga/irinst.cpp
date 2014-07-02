@@ -2,12 +2,12 @@
 
 	R Project Library
 
-	RStd.cpp
+	RInst.hh
 
-	R Standard Library - Implementation.
+	Genetic Algorithm Instance Interface - Implementation
 
-	Copyright 1999-2008 by Pascal Francq (pascal@francq.info).
-	Copyright 1999-2008 by the Université Libre de Bruxelles (ULB).
+	Copyright 1998-2014 by Pascal Francq (pascal@francq.info).
+	Copyright 1998-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -29,61 +29,27 @@
 
 
 //------------------------------------------------------------------------------
-// include files for R Project
-#include <rexception.h>
-using namespace R;
+// include files for R Library
+#include <irinst.h>
 using namespace std;
+using namespace R;
 
 
 
 //------------------------------------------------------------------------------
 //
-// class RException
+// iRInst
 //
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-void RException::Null(void)
+iRInst::iRInst(size_t popsize)
+		: PopSize(popsize), Gen(0), AgeBest(0), AgeBestPop(0)
 {
 }
 
 
 //------------------------------------------------------------------------------
-RException::RException(void)
-	: Msg(RString::Null)
-{
-}
-
-
-//------------------------------------------------------------------------------
-RException::RException(const RString& str)
-{
-	SetMsg(str);
-}
-
-
-//------------------------------------------------------------------------------
-RException::RException(const RString& func,long where,const RString& str)
-{
-	SetMsg(func,where,str);
-}
-
-
-//------------------------------------------------------------------------------
-void RException::SetMsg(const RString& str)
-{
-	Msg=str;
-}
-
-
-//------------------------------------------------------------------------------
-void RException::SetMsg(const RString& func,long where,const RString& str)
-{
-	Msg=func+" ["+RString::Number(where)+"]: "+str;
-}
-
-
-//------------------------------------------------------------------------------
-RException::~RException(void)
+iRInst::~iRInst(void)
 {
 }

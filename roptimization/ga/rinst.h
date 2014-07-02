@@ -40,6 +40,7 @@
 #include <rcursor.h>
 #include <robject.h>
 #include <rnotification.h>
+#include <irinst.h>
 
 
 //------------------------------------------------------------------------------
@@ -96,7 +97,7 @@ public:
 * @short Generic GA instance.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	class RInst : public RObject
+	class RInst : public RObject, protected iRInst
 {
 public:
 
@@ -173,26 +174,6 @@ public:
 	cChromo* BestInPop;
 
 private:
-
-	/**
-	* Size of the population.
-	*/
-	size_t PopSize;
-
-	/**
-	* Number of generations.
-	*/
-	size_t Gen;
-
-	/**
-	* Age of the best chromosome.
-	*/
-	size_t AgeBest;
-
-	/**
-	* Age of the best chromosome ever calculate.
-	*/
-	size_t AgeBestPop;
 
 	/**
 	* Number of crossovers to be done in a generation.
@@ -281,26 +262,6 @@ public:
 	 * @param opti           Perform optimization?
 	 */
 	void SetOptimisation(bool opti);
-
-	/**
-	 * @return the size of the population.
-	 */
-	inline size_t GetPopSize(void) const {return(PopSize);}
-
-	/**
-	 * @return the number of generations run.
-	 */
-	inline size_t GetGen(void) const {return(Gen);}
-
-	/**
-	* @return the age of the best chromosome.
-	*/
-	inline size_t GetAgeBest(void) const {return(AgeBest);}
-
-	/**
-	* @return the age of the best chromosome ever calculate.
-	*/
-	inline size_t GetAgeBestPop(void) const {return(AgeBestPop);}
 
 	/**
 	 * @return the best chromosome.
@@ -403,7 +364,7 @@ public:
 	/**
 	* This functions runs the GA.
 	*/
-	void Run(void);
+	virtual void Run(void);
 
 	/**
 	* This functions verifies all the chromosomes after each generation.

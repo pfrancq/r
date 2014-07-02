@@ -47,8 +47,8 @@ const size_t MaxBuffer=1024;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RCSVFile::RCSVFile(const RURI& uri,RChar sep,const RCString& encoding)
-	: RTextFile(uri,encoding), Sep(sep), Escape('\\'), Values(20),
+RCSVFile::RCSVFile(const RURI& uri,RChar sep,bool quotes,const RCString& encoding)
+	: RTextFile(uri,encoding), Sep(sep), Quotes(quotes), Escape('\\'), Values(20),
 	  Internal(0), SizeBuffer(0), Buffer(0)
 {
 	Internal=new RChar[MaxBuffer+1];
@@ -66,11 +66,12 @@ void RCSVFile::Open(RIO::ModeType mode)
 
 
 //------------------------------------------------------------------------------
-void RCSVFile::Open(const RURI& uri,RChar sep,RIO::ModeType mode,const RCString& encoding)
+void RCSVFile::Open(const RURI& uri,RChar sep,bool quotes,RIO::ModeType mode,const RCString& encoding)
 {
 	if(mode!=RIO::Read)
 		mThrowRIOException(this,"RCSVFile can only be read");
 	Sep=sep;
+	Quotes=quotes;
 	RTextFile::Open(uri,mode,encoding);
 	NbValues=0;
 }
@@ -109,12 +110,12 @@ inline RString* RCSVFile::NewValue(void)
 void RCSVFile::Read(void)
 {
 	bool ReadField(false); // Suppose a value to read
-	RString* Cur;
+	RString* Cur(0);
 	RChar Search;
 
 	Values.Clear();
 	NbValues=0;  // No values read
-	while(!End())
+	for(bool First=true;!End();First=false)
 	{
 		RChar Car(GetChar());
 
@@ -125,6 +126,8 @@ void RCSVFile::Read(void)
 			{
 				// Skip the new line
 				SkipEol();
+				if(First)
+					continue;
 				break;
 			}
 			else if(Car==Sep)
@@ -139,9 +142,10 @@ void RCSVFile::Read(void)
 
 			Cur=NewValue();
 			ReadField=true;
+			NbValues++;
 
 			// Value with " ?
-			if(Car=='"')
+			if(Quotes&&(Car=='"'))
 			{
 				Search='"';
 				continue;
@@ -152,10 +156,28 @@ void RCSVFile::Read(void)
 			}
 		}
 
+		// Look if valid double quote
+		if(Quotes&&(Search=='"')&&(Car=='"')&&((!End())&&(GetNextChar()=='"')))
+		{
+			if(SizeBuffer==MaxBuffer)
+			{
+				// Verify if the buffer is filled.
+				(*Buffer)=0;
+				(*Cur)+=Internal;
+				SizeBuffer=0;
+				Buffer=Internal;
+			}
+
+			// Add the character "
+			SizeBuffer++;
+			(*(Buffer++))=Car;
+			Car=GetChar(); // Second Quote
+			Car=GetChar(); // Next character
+		}
+
 		// If end of a field or of the line -> prepare next value
 		if(((Search==Sep)&&(Eol(Car)))||(Car==Search))
 		{
-			NbValues++;
 			ReadField=false;
 
 			if(SizeBuffer)
@@ -172,15 +194,20 @@ void RCSVFile::Read(void)
 				// Skip spaces
 				RChar Next(GetNextChar());
 				while((Next==' ')||(Next=='\t'))
+				{
 					Car=GetChar();
+					if(End())
+						break;
+					Next=GetNextChar();
+				}
 
 				// Skip the separation if any
-				if(GetNextChar()==Sep)
+				if((!End())&&(GetNextChar()==Sep))
 					Car=GetChar();
 			}
 
-			// If end of line -> return
-			if(Eol(Car))
+			// If end of line or end of file -> return
+			if(End()||Eol(Car))
 				return;
 
 			continue;
@@ -207,6 +234,7 @@ void RCSVFile::Read(void)
 	}
 	if(SizeBuffer)
 	{
+		(*Buffer)=0;
 		(*Cur)+=Internal;
 		Buffer=Internal;
 		SizeBuffer=0;
@@ -218,11 +246,9 @@ void RCSVFile::Read(void)
 //------------------------------------------------------------------------------
 RString RCSVFile::Get(size_t idx) const
 {
-	if(idx>NbValues)
+	if(idx>=NbValues)
 		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
 	RString Field(*Values[idx]);
-	if(Field()[0]=='\"') // Verify
-		Field=Field.Mid(1,Field.GetLen()-2);
 	return(Field);
 }
 
@@ -230,11 +256,9 @@ RString RCSVFile::Get(size_t idx) const
 //------------------------------------------------------------------------------
 size_t RCSVFile::GetSizeT(size_t idx) const
 {
-	if(idx>NbValues)
+	if(idx>=NbValues)
 		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
 	RString Field(*Values[idx]);
-	if(Field()[0]=='\"') // Verify
-		Field=Field.Mid(1,Field.GetLen()-2);
 	bool Ok;
 	size_t res(Field.ToSizeT(Ok));
 	if(!Ok)
@@ -246,11 +270,9 @@ size_t RCSVFile::GetSizeT(size_t idx) const
 //------------------------------------------------------------------------------
 double RCSVFile::GetDouble(size_t idx) const
 {
-	if(idx>NbValues)
+	if(idx>=NbValues)
 		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
 	RString Field(*Values[idx]);
-	if(Field()[0]=='\"') // Verify
-		Field=Field.Mid(1,Field.GetLen()-2);
 	bool Ok;
 	double res(Field.ToDouble(Ok));
 	if(!Ok)

@@ -35,7 +35,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <ricontainer.h>
+#include <ircontainer.h>
 
 
 //-----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
 * This class represent a container of elements (class C). It inherits all the
-* methods provided by the interface defined by RIContainer. Its elements are
+* methods provided by the interface defined by iRContainer. Its elements are
 * stored in an array of pointers which will be increase when necessary. The
 * container can be responsible for the deallocation of the elements
 * (bAlloc), and the elements can be ordered (bOrder).
@@ -118,16 +118,16 @@ namespace R{
 * @short Container.
 */
 template<class C,bool bAlloc,bool bOrder=false>
-	class RContainer : public RIContainer<C>
+	class RContainer : public iRContainer<C>
 {
 protected:
 
-	using RIContainer<C>::NbPtr;
-	using RIContainer<C>::LastPtr;
-	using RIContainer<C>::MaxPtr;
-	using RIContainer<C>::IncPtr;
-	using RIContainer<C>::Tab;
-	using RIContainer<C>::SortOrder;
+	using iRContainer<C>::NbPtr;
+	using iRContainer<C>::LastPtr;
+	using iRContainer<C>::MaxPtr;
+	using iRContainer<C>::IncPtr;
+	using iRContainer<C>::Tab;
+	using iRContainer<C>::SortOrder;
 
 public:
 
@@ -165,7 +165,7 @@ public:
 	 * @tparam o             Determine if the source container is ordered.
 	 * @param src            Source container.
 	 */
-	template<bool a,bool o> inline void Transfer(RContainer<C,a,o>& src) {RIContainer<C>::Transfer(src);}
+	template<bool a,bool o> inline void Transfer(RContainer<C,a,o>& src) {iRContainer<C>::Transfer(src);}
 
 	/**
 	* The assignment operator.
@@ -174,7 +174,7 @@ public:
 	* elements of src are just copied and not re-created. Use Copy if you want a
 	* "deep" copy of src.
 	*/
-	inline RContainer& operator=(const RContainer<C,true,bOrder>& src) {RIContainer<C>::NormalCopy(src); return(*this);}
+	inline RContainer& operator=(const RContainer<C,true,bOrder>& src) {iRContainer<C>::NormalCopy(src); return(*this);}
 
 	/**
 	* The assignment operator.
@@ -183,21 +183,21 @@ public:
 	* elements of src are just copied and not re-created. Use Copy if you want a
 	* "deep" copy of src.
 	*/
-	inline RContainer& operator=(const RContainer<C,false,bOrder>& src) {RIContainer<C>::NormalCopy(src); return(*this);}
+	inline RContainer& operator=(const RContainer<C,false,bOrder>& src) {iRContainer<C>::NormalCopy(src); return(*this);}
 
 	/**
 	* Deep copy of a container.
 	* @tparam a              Determine if the source container is responsible for the allocation.
 	* @param src             Container used as source.
 	*/
-	template<bool a> inline void Copy(const RContainer<C,a,bOrder>& src) {RIContainer<C>::DeepCopy(src);}
+	template<bool a> inline void Copy(const RContainer<C,a,bOrder>& src) {iRContainer<C>::DeepCopy(src);}
 
 	/**
 	* Add the elements of a container. If the source container contains null
 	* elements, these elements are not copied.
 	* @param src             Container used as source.
 	*/
-	template<bool a,bool o> inline RContainer& operator+=(const RContainer<C,a,o>& src) {RIContainer<C>::Add(src); return(*this);}
+	template<bool a,bool o> inline RContainer& operator+=(const RContainer<C,a,o>& src) {iRContainer<C>::Add(src); return(*this);}
 
 	/**
 	* This method returns a container of all the elements that are responding

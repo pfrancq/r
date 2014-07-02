@@ -74,6 +74,11 @@ class RCSVFile : private RTextFile
 	RChar Sep;
 
 	/**
+	 * Can the columns be delimited by quotes.
+	 */
+	bool Quotes;
+
+	/**
 	 * Escape character
 	 */
 	RChar Escape;
@@ -109,10 +114,16 @@ public:
 	 * Constructor of the CSV file.
 	 * @param uri            URI of the file.
 	 * @param sep            Separator (comma by default).
+	 * @param quotes         Can columns be delimited by quotes ?
 	 * @param encoding       The encoding scheme of the file.
 	 * @return
 	 */
-	RCSVFile(const RURI& uri,RChar sep=',',const RCString& encoding="utf-8");
+	RCSVFile(const RURI& uri,RChar sep=',',bool quotes=true,const RCString& encoding="utf-8");
+
+	/**
+	* Return the URI of the file including.
+	*/
+	inline const RURI GetURI(void) const {return(RTextFile::GetURI());}
 
 	/**
 	 * Open the file.
@@ -124,10 +135,11 @@ public:
 	 * Open the file.
 	 * @param uri            URI of the file.
 	 * @param sep            Separator (comma by default).
+	 * @param quotes         Can columns be delimited by quotes ?
 	 * @param mode           The open mode for the file.
 	 * @param encoding       The encoding scheme of the file.
 	 */
-	virtual void Open(const RURI& uri,RChar sep,RIO::ModeType mode=RIO::Read,const RCString& encoding="utf-8");
+	virtual void Open(const RURI& uri,RChar sep=',',bool quotes=true,RIO::ModeType mode=RIO::Read,const RCString& encoding="utf-8");
 
 	/**
 	 * Close the file.
@@ -138,6 +150,12 @@ public:
 	 * @return true if the end of the file is reached.
 	 */
 	inline bool End(void) const {return(RTextFile::End());}
+
+	/**
+	 * Get the number of the current line.
+    * @return current line.
+    */
+	unsigned int GetLineNb(void) const {return(RTextFile::GetLineNb());}
 
 private:
 
@@ -177,6 +195,13 @@ public:
 	 * @return the number of values at the last line read.
 	 */
 	size_t GetNbValues(void) const {return(NbValues);}
+
+	/**
+	 * Verify if the current line has a value for a given index.
+    * @param idx            Index to verify.
+    * @return true if a value exists.
+    */
+	bool HasValue(size_t idx) const {return(idx<NbValues);}
 
 	/**
 	 * Destruct the file.

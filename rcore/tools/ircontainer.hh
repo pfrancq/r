@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	RIContainer.hh
+	iRContainer.hh
 
 	Container Interface - Inline Implementation.
 
@@ -30,13 +30,13 @@
 
 //-----------------------------------------------------------------------------
 //
-// class RContainer
+// class iRContainer
 //
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RIContainer<C>::Create(const RIContainer<C>& src)
+	void iRContainer<C>::Create(const iRContainer<C>& src)
 {
 	size_t i;
 	C** tab;
@@ -65,7 +65,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RIContainer<C>& RIContainer<C>::NormalCopy(const RIContainer<C>& src)
+	iRContainer<C>& iRContainer<C>::NormalCopy(const iRContainer<C>& src)
 {
 	size_t i;
 	C** tab;
@@ -95,7 +95,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RIContainer<C>::DeepCopy(const RIContainer<C>& src)
+	void iRContainer<C>::DeepCopy(const iRContainer<C>& src)
 {
 	size_t i;
 	C** tab;
@@ -117,7 +117,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RIContainer<C>& RIContainer<C>::Add(const RIContainer<C>& src)
+	iRContainer<C>& iRContainer<C>::Add(const iRContainer<C>& src)
 {
 	size_t i;
 	C** tab;
@@ -160,7 +160,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RIContainer<C>::RIContainer(bool dealloc,bool order,size_t m,size_t i)
+	iRContainer<C>::iRContainer(bool dealloc,bool order,size_t m,size_t i)
 		: Dealloc(dealloc), Order(order),Tab(0), NbPtr(0), MaxPtr(m), LastPtr(0), IncPtr(i)
 {
 	if(!IncPtr)
@@ -178,7 +178,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RIContainer<C>::VerifyTab(size_t max)
+	void iRContainer<C>::VerifyTab(size_t max)
 {
 	if((!max)&&(LastPtr==MaxPtr))
 		max=MaxPtr+IncPtr;
@@ -203,7 +203,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RIContainer<C>::Clear(size_t m,size_t i)
+	void iRContainer<C>::Clear(size_t m,size_t i)
 {
 	if(Tab)
 	{
@@ -229,14 +229,14 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RIContainer<C>::Exchange(size_t pos1,size_t pos2)
+	void iRContainer<C>::Exchange(size_t pos1,size_t pos2)
 {
 	if(!LastPtr)
-		throw std::range_error("RIContainer<C>::operator[] const : no elements");
+		throw std::range_error("iRContainer<C>::operator[] const : no elements");
 	if(pos1>=LastPtr)
-		throw std::range_error("RIContainer<C>::operator[] const : idx "+RString::Number(pos1)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+		throw std::range_error("iRContainer<C>::operator[] const : idx "+RString::Number(pos1)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 	if(pos2>=LastPtr)
-		throw std::range_error("RIContainer<C>::operator[] const : idx "+RString::Number(pos2)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+		throw std::range_error("iRContainer<C>::operator[] const : idx "+RString::Number(pos2)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 	C* ptr=Tab[pos1];
 	Tab[pos1]=Tab[pos2];
 	Tab[pos2]=ptr;
@@ -245,12 +245,12 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RIContainer<C>::Shift(size_t idx,bool reverse)
+	void iRContainer<C>::Shift(size_t idx,bool reverse)
 {
 	if(!LastPtr)
-		throw std::range_error("RIContainer<C>::operator[] const : no elements");
+		throw std::range_error("iRContainer<C>::operator[] const : no elements");
 	if(idx>=LastPtr)
-		throw std::range_error("RIContainer<C>::operator[] const : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+		throw std::range_error("iRContainer<C>::operator[] const : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 
 	if(reverse)
 	{
@@ -288,7 +288,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RIContainer<C>::Transfer(RIContainer<C>& src)
+	void iRContainer<C>::Transfer(iRContainer<C>& src)
 
 {
 	Clear(src.LastPtr,0);
@@ -307,7 +307,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	template<class TUse> size_t RIContainer<C>::GetIndex(bool order,const TUse& tag,bool& find,size_t min,size_t max) const
+	template<class TUse> size_t iRContainer<C>::GetIndex(bool order,const TUse& tag,bool& find,size_t min,size_t max) const
 {
 	size_t NbMin,NbMax,i=0;
 	int Comp=0;
@@ -381,31 +381,31 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	const C* RIContainer<C>::operator[](size_t idx) const
+	const C* iRContainer<C>::operator[](size_t idx) const
 {
 	if(!LastPtr)
-		throw std::range_error("RIContainer<C>::operator[] const : no elements");
+		throw std::range_error("iRContainer<C>::operator[] const : no elements");
 	if(idx>=LastPtr)
-		throw std::range_error("RIContainer<C>::operator[] const : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+		throw std::range_error("iRContainer<C>::operator[] const : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 	return(Tab[idx]);
 }
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	C* RIContainer<C>::operator[](size_t idx)
+	C* iRContainer<C>::operator[](size_t idx)
 {
 	if(!LastPtr)
-		throw std::range_error("RIContainer<C>::operator[] const : no elements");
+		throw std::range_error("iRContainer<C>::operator[] : no elements");
 	if(idx>=LastPtr)
-		throw std::range_error("RIContainer<C>::operator[] : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+		throw std::range_error("iRContainer<C>::operator[] : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 	return(Tab[idx]);
 }
 
 
 //-----------------------------------------------------------------------------
 template<class C>
-	template<class TUse> C* RIContainer<C>::GetPtr(const TUse& tag,bool sortkey,size_t min,size_t max) const
+	template<class TUse> C* iRContainer<C>::GetPtr(const TUse& tag,bool sortkey,size_t min,size_t max) const
 {
 	bool Find;
 	size_t Index=GetIndex(Order&&sortkey,tag,Find,min,max);
@@ -418,7 +418,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C> template<class TUse>
-	C* RIContainer<C>::GetInsertPtr(const TUse& tag,bool sortkey,size_t min,size_t max)
+	C* iRContainer<C>::GetInsertPtr(const TUse& tag,bool sortkey,size_t min,size_t max)
 {
 	C* ptr;
 	bool Find;
@@ -433,7 +433,7 @@ template<class C> template<class TUse>
 
 //-----------------------------------------------------------------------------
 template<class C> template<class TUse>
-	C* RIContainer<C>::GetInsertPtrAt(const TUse& tag,size_t pos)
+	C* iRContainer<C>::GetInsertPtrAt(const TUse& tag,size_t pos)
 {
 	C* ptr;
 
@@ -453,7 +453,7 @@ template<class C> template<class TUse>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	size_t RIContainer<C>::GetTab(const void** tab,size_t min,size_t max) const
+	size_t iRContainer<C>::GetTab(const void** tab,size_t min,size_t max) const
 {
 	if(!LastPtr)
 		return(0);
@@ -476,7 +476,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	size_t RIContainer<C>::GetTab(void** tab,size_t min,size_t max)
+	size_t iRContainer<C>::GetTab(void** tab,size_t min,size_t max)
 {
 	if(!LastPtr)
 		return(0);
@@ -499,12 +499,12 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RIContainer<C>::InsertPtrAt(C* ins,size_t pos,bool del)
+	void iRContainer<C>::InsertPtrAt(C* ins,size_t pos,bool del)
 {
 	C** ptr;
 
 	if(!ins)
-		throw std::invalid_argument("RIContainer<C>::InsertPtrAt : Cannot insert a null pointer");
+		throw std::invalid_argument("iRContainer<C>::InsertPtrAt : Cannot insert a null pointer");
 	if(pos+1>MaxPtr)
 	{
 		VerifyTab(pos+1+IncPtr);
@@ -544,10 +544,10 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RIContainer<C>::InsertPtr(C* ins,bool del,size_t min,size_t max)
+	void iRContainer<C>::InsertPtr(C* ins,bool del,size_t min,size_t max)
 {
 	if(!ins)
-		throw std::invalid_argument("RIContainer<C>::InsertPtr : Cannot insert a null pointer");
+		throw std::invalid_argument("iRContainer<C>::InsertPtr : Cannot insert a null pointer");
 
 	if(Order)
 	{
@@ -566,12 +566,12 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void RIContainer<C>::DeletePtrAt(size_t pos,bool shift,bool del)
+	void iRContainer<C>::DeletePtrAt(size_t pos,bool shift,bool del)
 {
 	C** ptr;
 
 	if(pos>=LastPtr)
-		throw std::range_error("RIContainer<C>::DeletePtrAt : idx "+RString::Number(pos)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+		throw std::range_error("iRContainer<C>::DeletePtrAt : idx "+RString::Number(pos)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
 	ptr=&Tab[pos];
 	if(del)
 		delete(*ptr);
@@ -604,10 +604,10 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	template<class TUse> void RIContainer<C>::DeletePtr(const TUse& tag,bool sortkey,bool del,size_t min,size_t max)
+	template<class TUse> void iRContainer<C>::DeletePtr(const TUse& tag,bool sortkey,bool del,size_t min,size_t max)
 {
 	if(!(&tag))
-		throw std::invalid_argument("RIContainer<C>::DeletePtr : Cannot delete a null pointer");
+		throw std::invalid_argument("iRContainer<C>::DeletePtr : Cannot delete a null pointer");
 
 	bool Find;
 	size_t Index=GetIndex(Order&&sortkey,tag,Find,min,max);
@@ -619,7 +619,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RIContainer<C>::~RIContainer(void)
+	iRContainer<C>::~iRContainer(void)
 {
 	if(Tab)
 	{

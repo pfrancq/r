@@ -44,7 +44,7 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	RQuickSort<C>::RQuickSort(RIContainer<C>& cont)
+	RQuickSort<C>::RQuickSort(iRContainer<C>& cont)
 		: Tab(reinterpret_cast<C**>(cont.Tab)), Max(cont.NbPtr)
 {
 }

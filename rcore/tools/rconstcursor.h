@@ -35,7 +35,7 @@
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <ricontainer.h>
+#include <ircontainer.h>
 
 
 //-----------------------------------------------------------------------------
@@ -144,7 +144,7 @@ public:
 	* @param max             Maximum position of the elements to iterate (included max).
 	*                        If SIZE_MAX, iterate until the end of the container.
 	*/
-	RConstCursor(const RIContainer<C>& c,size_t min=0,size_t max=SIZE_MAX)
+	RConstCursor(const iRContainer<C>& c,size_t min=0,size_t max=SIZE_MAX)
 	{
 		Set(c,min,max);
 	}
@@ -173,7 +173,7 @@ public:
 	* @param max             Maximum position of the elements to iterate (included max).
 	*                        If SZE_MAX, iterate until the end of the container.
 	*/
-	void Set(const RIContainer<C>& c,size_t min=0,size_t max=SIZE_MAX)
+	void Set(const iRContainer<C>& c,size_t min=0,size_t max=SIZE_MAX)
 	{
 		mAssert(min<=max);
 		NbPtr=c.NbPtr;

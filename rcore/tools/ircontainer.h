@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	RIContainer.h
+	iRContainer.h
 
 	Container Interface - Header.
 
@@ -29,8 +29,8 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RIContainerH
-#define RIContainerH
+#ifndef iRContainerH
+#define iRContainerH
 
 
 //-----------------------------------------------------------------------------
@@ -81,7 +81,7 @@ template<class C,bool bAlloc,bool bOrder>	class RContainer;
 *    }
 * };
 *
-* void Do(R::RIContainer<MyElement>& cont,double c)
+* void Do(R::iRContainer<MyElement>& cont,double c)
 * {
 *    cont.DoSomething(c);
 * }
@@ -103,7 +103,7 @@ template<class C,bool bAlloc,bool bOrder>	class RContainer;
 *          container.
 */
 template<class C>
-	class RIContainer
+	class iRContainer
 {
 	/**
 	 * Specify if the container deallocate its elements.
@@ -148,7 +148,17 @@ protected:
 	*/
 	static int SortOrder(const void* a,const void* b)
 	{
-		return((*((C**)a))->Compare(**((C**)b)));
+		C* ac(*((C**)a));
+		C* bc(*((C**)b));
+		if(!ac)
+		{
+			if(!bc)
+				return(0);
+			return(-1);
+		}
+		else if(!bc)
+			return(1);
+		return(ac->Compare(*bc));
 	}
 
 	/**
@@ -156,27 +166,27 @@ protected:
 	* null, an empty container is created.
 	* @param src             Pointer to the source container.
 	*/
-	void Create(const RIContainer<C>& src);
+	void Create(const iRContainer<C>& src);
 
 	/**
 	* Copy a container from another one. If the pointer to the container is
 	* null, the container is just emptied.
 	* @param src             Pointer to the source container.
 	*/
-	RIContainer& NormalCopy(const RIContainer<C>& src);
+	iRContainer& NormalCopy(const iRContainer<C>& src);
 
 	/**
 	* Deep copy of a container in another one. If the pointer to the container is
 	* null, the container is just emptied.
 	* @param src             Pointer to the source container.
 	*/
-	void DeepCopy(const RIContainer<C>& src);
+	void DeepCopy(const iRContainer<C>& src);
 
 	/**
 	* Add a container (if the pointer is not null) from another one.
 	* @param src             Pointer to the source container.
 	*/
-	RIContainer& Add(const RIContainer<C>& src);
+	iRContainer& Add(const iRContainer<C>& src);
 
 private:
 
@@ -192,7 +202,7 @@ private:
 	*                        value, the size is set to the half the maximal
 	*                        size and at least at 10.
 	*/
-	RIContainer(bool dealloc,bool order,size_t m,size_t i);
+	iRContainer(bool dealloc,bool order,size_t m,size_t i);
 
 public:
 
@@ -326,7 +336,7 @@ public:
 	 * is, ReOrder is called.
 	 * @param src            Source container.
 	 */
-	void Transfer(RIContainer<C>& src);
+	void Transfer(iRContainer<C>& src);
 
 	/**
 	* The assignment operator.
@@ -335,21 +345,21 @@ public:
 	* elements of src are just copied and not re-created. Use Copy if you want a
 	* "deep" copy of src.
 	*/
-	inline RIContainer& operator=(const RIContainer<C>& src) {return(NormalCopy(src));}
+	inline iRContainer& operator=(const iRContainer<C>& src) {return(NormalCopy(src));}
 
 	/**
 	* Deep copy of a container.
 	* @tparam a              Determine if the source container is responsible for the allocation.
 	* @param src             Container used as source.
 	*/
-	inline void Copy(const RIContainer<C>& src) {DeepCopy(src);}
+	inline void Copy(const iRContainer<C>& src) {DeepCopy(src);}
 
 	/**
 	* Add the elements of a container. If the source container contains null
 	* elements, these elements are not copied.
 	* @param src             Container used as source.
 	*/
-	inline RIContainer& operator+=(const RIContainer<C>& src) {return(Add(src));}
+	inline iRContainer& operator+=(const iRContainer<C>& src) {return(Add(src));}
 
 	/**
 	* This function returns the index of an element represented by tag, and it
@@ -717,7 +727,7 @@ public:
 	/**
 	* Simple destructor.
 	*/
-	virtual ~RIContainer(void);
+	virtual ~iRContainer(void);
 
 	friend class RContainer<C,true,true>;
 	friend class RContainer<C,true,false>;
@@ -731,7 +741,7 @@ public:
 
 //-----------------------------------------------------------------------------
 // Template implementation
-#include <ricontainer.hh>
+#include <ircontainer.hh>
 
 
 }  //-------- End of namespace R ----------------------------------------------

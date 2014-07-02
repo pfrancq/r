@@ -231,5 +231,5 @@ PRINT_LIST_WITH_MESSAGE("R Library is now configured, the following part will be
 ##keep this macro for r based project in a standard place
 INSTALL(FILES rmacro.cmake DESTINATION share/r)
 ##keep it for compatibility with auto tools...
-INSTALL(FILES libr.m4 DESTINATION share/aclocal)
+#INSTALL(FILES libr.m4 DESTINATION share/aclocal)
 

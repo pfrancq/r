@@ -253,6 +253,11 @@ public:
 	RCursor<cObj> GetObjsCursor(void) const;
 
 	/**
+	 * Get a cursor over the used groups.
+    */
+	RCursor<cGroup> GetUsedGroups(void) const;
+
+	/**
 	* Method to compute the adjusted Rand index with another clustering in
 	* order to determine a similarity between two clusterings. The results is
 	* between -1 (nothing in common) and +1 (identical).

@@ -112,6 +112,8 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,cla
 
 	if(Heuristic=="FirstFit")
 		h = new R::RFirstFitHeuristic<cGroup,cObj,cChromo>(Random,Objs,Debug);
+	else
+		h = new R::RFirstFitHeuristic<cGroup,cObj,cChromo>(Random,Objs,Debug);
 	return(h);
 }
 
