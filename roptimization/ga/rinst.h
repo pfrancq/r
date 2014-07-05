@@ -97,7 +97,7 @@ public:
 * @short Generic GA instance.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData>
-	class RInst : public RObject, protected iRInst
+	class RInst : public RObject, public iRInst
 {
 public:
 
