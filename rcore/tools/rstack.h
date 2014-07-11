@@ -51,9 +51,9 @@ namespace R{
 * @param bAlloc              Specify if the elements are destroyed when removed
 *                            from the stack.
 * @param bPushTop            Specify if a new element is added at the top of
-*                            the stack.
-* @param bPopTop             Specify if the next element is removed from the
-*                            top of the stack.
+*                            the stack (true) or at the end (false).
+* @param bPopTop             Specify if the next element to remove is taken from
+*                            the top of the stack (true) or at the end (false).
 *
 * To make the necessary comparisons, the stack needs that a compare function
 * must be implemented in the class C:
@@ -79,7 +79,11 @@ namespace R{
 *
 * int main()
 * {
-*    R::RStack<MyElement,true,true,true> c(20,10); // Last-in - Last-out
+*    // Create a Last-in - First-out stack :
+*    // - A new element is push at the end of the stack (false)
+*    // - The element to remove is taken from the end of the stack (false)²
+*    R::RStack<MyElement,true,false,false> c(20,10);
+*
 *    c.Push(new MyElement(5));
 *    c.Push(new MyElement(10));
 *    while(c.GetNb())

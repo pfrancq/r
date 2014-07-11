@@ -134,7 +134,7 @@ public:
 	/**
 	* Return the URI of the file including.
 	*/
-	const RURI GetURI(void) const {return(URI);}
+	const RURI& GetURI(void) const {return(URI);}
 
 	/**
 	* Set the URI of the file.
