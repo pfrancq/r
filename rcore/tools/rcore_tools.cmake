@@ -1,8 +1,8 @@
 SET(rcore_tools_INST_INCLUDES
 	rstd.h
 	rexception.h
-	ricontainer.h
-	ricontainer.hh
+	ircontainer.h
+	ircontainer.hh
 	rcontainer.h
 	rcontainer.hh
 	robjectcontainer.h
