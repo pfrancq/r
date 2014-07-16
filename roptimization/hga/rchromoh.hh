@@ -77,7 +77,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	// Remove them.
 	Cur.Set(ToDel);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		ReleaseNode(Cur());
+		DeleteNode(Cur());
 }
 
 
@@ -187,7 +187,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	cNode* Node(Nodes[Instance->RRand(GetNbNodes())]);
 	if(Instance->Debug)
 		Instance->Debug->PrintInfo("Node "+RString::Number(Node->GetId())+" use for Mutation");
-	ReleaseNode(Node);
+	DeleteNode(Node);
 
 	// Used the heuristic to attach the objects attached to the node
 	Heuristic->Run(static_cast<cChromo*>(this));

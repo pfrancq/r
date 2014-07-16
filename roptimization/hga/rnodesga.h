@@ -129,11 +129,15 @@ public:
 	*/
 	cNode* ReserveNode(void);
 
+private:
+
 	/**
 	* Release a node.
 	* @param node           Pointer to the node.
 	*/
 	void ReleaseNode(cNode* node);
+
+public:
 
 	/**
 	* Insert a node in the list attached to a parent. If the parent is null,
@@ -144,8 +148,10 @@ public:
 	void InsertNode(cNode* parent,cNode* node);
 
 	/**
-	* Delete a node in the list attached from a parent. If the parent is null,
-	* the node to delete as a top node of the tree.
+	* Delete and release a node in the list attached from a parent. If the parent
+	*  is null, the node to delete is considered a top node of the tree.
+	*
+	*  The child nodes are also deleted and released.
 	* @param node           Node to delete.
 	*/
 	void DeleteNode(cNode* node);

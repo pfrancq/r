@@ -120,10 +120,9 @@ template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::DeleteNode(cNode* node)
 {
 	mAssert(node);
-	mAssert(node->GetNbNodes());
-	Nodes.DeletePtr(*node);
+	Nodes.DeletePtr(node);
 	cNode* from(node->Parent);
-	RTree<cNodes,cNode,false>::DeleteNode(node,true);
+	RTree<cNodes,cNode,false>::DeleteNode(node,false);
 	if(from)
 		from->PostDelete(node);
 	ReleaseNode(node);

@@ -60,7 +60,7 @@ public:
 	using RChromo<cInst,cChromo,cFit,cThreadData>::Id;
 	using RNodesGA<cNode,cObj,cChromo>::Nodes;
 	using RNodesGA<cNode,cObj,cChromo>::ReserveNode;
-	using RNodesGA<cNode,cObj,cChromo>::ReleaseNode;
+	using RNodesGA<cNode,cObj,cChromo>::DeleteNode;
 	using RNodesGA<cNode,cObj,cChromo>::InsertNode;
 	using RNodesGA<cNode,cObj,cChromo>::GetNbNodes;
 	using RNodesGA<cNode,cObj,cChromo>::BuildFile;
