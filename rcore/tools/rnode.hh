@@ -37,7 +37,7 @@
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
 	RNode<T,N,bAlloc>::RNode(void)
-		: Tree(0), Parent(0), Prev(0), Next(0), First(0), Last(0), NbSubNodes(0),
+		: Parent(0), Prev(0), Next(0), First(0), Last(0), NbSubNodes(0),
 	     Depth(cNoRef)
 {
 }
@@ -46,7 +46,7 @@ template<class T,class N,bool bAlloc>
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
 	RNode<T,N,bAlloc>::RNode(T* tree)
-		: Tree(tree), Parent(0), Prev(0), Next(0), First(0), Last(0), NbSubNodes(0),
+		: Parent(0), Prev(0), Next(0), First(0), Last(0), NbSubNodes(0),
 	     Depth(cNoRef)
 {
 }
@@ -96,13 +96,13 @@ template<class T,class N,bool bAlloc>
 
 
 //------------------------------------------------------------------------------
-template<class T,class N,bool bAlloc>
+/*template<class T,class N,bool bAlloc>
 	void RNode<T,N,bAlloc>::InsertNode(N* node)
 {
 	if(!Tree)
 		mThrowRException("Node not assign to a tree");
 	Tree->InsertNode(static_cast<N*>(this),node);
-}
+}*/
 
 
 
@@ -119,11 +119,11 @@ template<class T,class N,bool bAlloc>
 	bool RNode<T,N,bAlloc>::VerifyNode(size_t id)
 {
 	// Each node must have a parent.
-	if(!Tree)
+/*	if(!Tree)
 	{
 		std::cerr<<"Node "<<id<<": No Owner for this node."<<std::endl;
 		return(false);
-	}
+	}*/
 
 	// Verify information about child nodes
 	if(NbSubNodes)

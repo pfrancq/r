@@ -209,7 +209,7 @@ void RConfig::Save(lParams* cat,RXMLStruct& config,RXMLTag* parent)
 	{
 		RXMLTag* ins(new RXMLTag("category"));
 		config.AddTag(parent,ins);
-		ins->InsertAttr("name",Cur()->Cat);
+		ins->InsertAttr(&config,"name",Cur()->Cat);
 		Save(Cur(),config,ins);
 	}
 }

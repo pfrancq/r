@@ -320,6 +320,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 			p->Copy(*BestInPop);
 			p->Id=id;
 		}
+
 		if(Debug)
 			Debug->PrintInfo("Normal Mutation (BestInPop) -> Chromosome "+RString::Number(p->Id));
 		PostNotification("RInst::Interact");

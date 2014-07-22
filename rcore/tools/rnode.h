@@ -134,11 +134,6 @@ template<class T,class N,bool bAlloc>
 protected:
 
 	/**
-	* Tree holding the node.
-	*/
-	T* Tree;
-
-	/**
 	* Parent Node.
 	*/
 	N* Parent;
@@ -194,7 +189,12 @@ public:
 	/**
     * @return a pointer to the concept tree.
     */
-	T* GetTree(void) const {return(Tree);}
+//	const T* GetTree(void) const {return(Tree);}
+
+	/**
+    * @return a pointer to the concept tree.
+    */
+//	T* GetTree(void) {return(Tree);}
 
 	/**
 	* Return the parent of the node.
@@ -252,7 +252,7 @@ public:
 	* Method call to insert a node.
 	* @param node           Node to insert.
 	*/
-	void InsertNode(N* node);
+//	void InsertNode(N* node);
 
 	/**
 	* Test if the tag is empty, i.e. it has no child nodes.

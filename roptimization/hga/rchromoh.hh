@@ -55,7 +55,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
 	void RChromoH<cInst,cChromo,cFit,cThreadData,cNode,cObj>::Clear(void)
 {
-	RNodesGA<cNode,cObj,cChromo>::ClearNodes();
+	RNodesGA<cNode,cObj,cChromo>::Clear();
 }
 
 
@@ -87,7 +87,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 {
 	if(Instance->Debug)
 		Instance->Debug->BeginFunc("RamdomConstruct","RChromoH");
-	Heuristic->Run(static_cast<cChromo*>(this));
+	Heuristic->Run(dynamic_cast<cChromo*>(this));
 	if(Instance->Debug)
 		Instance->Debug->EndFunc("RamdomConstruct","RChromoH");
 }
@@ -103,19 +103,15 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	size_t i,j;
 	cNode** Ref1;
 	cNode** Ref2;
-	cNode* Node1;
-	cNode* Node2;
-	cNode* Node;
-	cNode* NewNode;
+	cNode* Node1(0);        // Node from parent1 that will be used for the crossover
+	cNode* Node2(0);        // Node from parent2 that will be used for the crossover
 
 	// 1. Two nodes having the same attributes are chosen in each parent:
-	// Node1 from parent1.
-	// Node2 from parent2.
 	size_t Nb1=parent1->Nodes.GetTab(thNodes1);
 	size_t Nb2=parent2->Nodes.GetTab(thNodes2);
 	Instance->RandOrder(thNodes1,Nb1);
 	Instance->RandOrder(thNodes2,Nb2);
-	for(i=Nb1+1,Ref1=thNodes1,Node1=Node2=0;(--i)&&(!Node1);Ref1++)
+	for(i=Nb1+1,Ref1=thNodes1;(--i)&&(!Node1);Ref1++)
 	{
 		for(j=Nb2+1,Ref2=thNodes2;(--j)&&(!Node1);Ref2++)
 		{
@@ -127,7 +123,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 		}
 	}
 
-	if(Node1)
+	if(Node1&&Node2)
 	{
 		// Clear the current chromosome
 		Clear();
@@ -155,18 +151,18 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 			Instance->Debug->PrintInfo(tmp);
 		}
 
-		// 2. parent1 is copied except its nodes having objects attached to Node2 and Node1.
+		// 2. parent1 is copied except the branch starting with Node1 and the objects attached to Node2 and its child nodes.
 		thObjects->Clear();
-		Node2->GetAllObjects(*thObjects); // Put all objects of Node2 in ObjectsNode2
-		Node=CopyExceptBranch(parent1,Node1,thObjects);
+		Node2->GetAllObjects(*thObjects); // Put all objects of Node2 and child nodes in ObjectsNode2
+		cNode* Node(CopyExceptBranch(parent1,Node1,thObjects));
 
-		// 3. Node2 is copied at the place of Node1.
-		NewNode=ReserveNode();
+		// 3. Create a new node and use it to get the branch of Node2
+		cNode* NewNode(ReserveNode());
 		InsertNode(Node,NewNode);
-		NewNode->CopyExceptBranch(Node2); // (Branch to exclude is null)
+		CopyExceptBranch(NewNode,Node2); // (Branch to exclude is null)
 
 		// 4. The objects which are not attached are placed using the heuristic.
-		Heuristic->Run(static_cast<cChromo*>(this));
+		Heuristic->Run(reinterpret_cast<cChromo*>(this));
 	}
 	else
 		std::cerr<<"No crossing nodes where found"<<std::endl;
@@ -190,7 +186,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,clas
 	DeleteNode(Node);
 
 	// Used the heuristic to attach the objects attached to the node
-	Heuristic->Run(static_cast<cChromo*>(this));
+	Heuristic->Run(reinterpret_cast<cChromo*>(this));
 
 	if(Instance->Debug)
 		Instance->Debug->EndFunc("Mutation","RChromoH");

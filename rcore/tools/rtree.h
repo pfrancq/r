@@ -167,16 +167,6 @@ public:
 	RTree(void);
 
 	/**
-    * @return a pointer of the instantiated object of the tree (const version).
-    */
-	inline const T* GetTree(void) const {return(static_cast<T*>(this));}
-
-	/**
-    * @return a pointer of the instantiated object of the tree.
-    */
-	inline T* GetTree(void) {return(static_cast<T*>(this));}
-
-	/**
 	 * Call the RNode::Clear() method for a node and all its children.
     * @param node           Node to clear.
     */

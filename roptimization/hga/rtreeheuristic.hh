@@ -100,7 +100,7 @@ template<class cNode,class cObj,class cNodes>
 {
 	SelectNextObject();
 	CurNode=FindNode();
-	CurNode->Insert(CurObj);
+	Nodes->InsertObj(CurNode,CurObj);
 	NbObjsOk++;
 }
 
@@ -110,10 +110,12 @@ template<class cNode,class cObj,class cNodes>
 	void RTreeHeuristic<cNode,cObj,cNodes>::Run(cNodes* nodes)
 {
 	Init(nodes);
+	//std::cout<<std::endl<<"Chromo "<<nodes->Id<<std::endl;;
 	while(NbObjsOk<NbObjs)
 	{
 		PutNextObject();
 	}
+	//cout<<std::endl;
 	PostRun();
 }
 

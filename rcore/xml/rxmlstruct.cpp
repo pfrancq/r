@@ -200,7 +200,7 @@ bool RXMLStruct::Compare(const RXMLTag* tag1,const RXMLTag* tag2)
 //------------------------------------------------------------------------------
 bool RXMLStruct::Merge(const RXMLStruct& xml)
 {
-	return(GetTop()->Merge(xml.GetTop()));
+	return(GetTop()->Merge(this,xml.GetTop()));
 }
 
 

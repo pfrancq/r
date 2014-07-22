@@ -170,8 +170,9 @@ public:
 	* Set the container.
 	* @param c               Container to iterate.
 	* @param min             Minimum position of the elements to iterate.
-	* @param max             Maximum position of the elements to iterate (included max).
-	*                        If SZE_MAX, iterate until the end of the container.
+	* @param max             Maximum position of the elements to iterate
+	*                        (included max). If SIZE_MAX, iterate until the end
+	*                        of the container.
 	*/
 	void Set(const iRContainer<C>& c,size_t min=0,size_t max=SIZE_MAX)
 	{

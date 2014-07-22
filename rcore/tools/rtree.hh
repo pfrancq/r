@@ -144,13 +144,6 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	void RTree<T,N,bAlloc>::InsertNode(N* to,N* node)
 {
-	if((node->GetTree())&&(node->GetTree()!=GetTree()))
-		mThrowRException("Node is already inserted in another tree");
-	if(to&&(to->GetTree()!=GetTree()))
-		mThrowRException("Node where to attach is not inserted in the same tree");
-
-	// Insert the node in its parent and siblings
-	node->Tree=GetTree();
 	if(to)
 	{
 		to->NbSubNodes++;
@@ -197,7 +190,7 @@ template<class T,class N,bool bAlloc>
 			delete ptr;
 		else
 		{
-			ptr->Tree=0;
+//			ptr->Tree=0;
 			ptr->Parent=ptr->Next=ptr->Prev=0;
 		}
 		NbNodes--;
@@ -253,7 +246,7 @@ template<class T,class N,bool bAlloc>
 		delete node;
 	else
 	{
-		node->Tree=0;
+//		node->Tree=0;
 		node->Parent=node->Next=node->Prev=0;
 	}
 	NbNodes--;
@@ -264,8 +257,8 @@ template<class T,class N,bool bAlloc>
 template<class T,class N,bool bAlloc>
 	void RTree<T,N,bAlloc>::MoveNode(N* to,N* node)
 {
-	if(to->Tree!=node->Tree)
-		mThrowRException("Cannot move between different trees");
+//	if(to->Tree!=node->Tree)
+//		mThrowRException("Cannot move between different trees");
 	if(to==node->Parent)
 		return;
 

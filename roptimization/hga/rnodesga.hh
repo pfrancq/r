@@ -49,13 +49,13 @@ template<class cNode,class cObj,class cNodes>
 {
 	// Initialize Nodes
 	for(size_t i=0;i<Reserved.GetMaxNb();i++)
-		Reserved.InsertPtr(new cNode(static_cast<cNodes*>(this),i,MaxAttr));
+		Reserved.InsertPtr(new cNode(i,MaxAttr));
 }
 
 
 //---------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	void RNodesGA<cNode,cObj,cNodes>::ClearNodes(void)
+	void RNodesGA<cNode,cObj,cNodes>::Clear(void)
 {
 	RTree<cNodes,cNode,false>::Clear();
 	Nodes.Clear();
@@ -73,18 +73,22 @@ template<class cNode,class cObj,class cNodes>
 {
 	size_t i,NewSize;
 
-	if(GetNbNodes()+1>Reserved.GetMaxNb())
+	if(Nodes.GetNb()+10>Reserved.GetMaxNb())
 	{
 		NewSize=Reserved.GetMaxNb()+Reserved.GetIncNb();
+		if(NewSize<Nodes.GetNb()+10)
+			NewSize=Nodes.GetNb()+10;
 
 		// Create New nodes
 		for(i=Reserved.GetMaxNb();i<NewSize;i++)
-			Reserved.InsertPtr(new cNode(static_cast<cNodes*>(this),i,MaxAttr));
+			Reserved.InsertPtr(new cNode(i,MaxAttr));
 	}
 	RCursor<cNode> ptr(Reserved);
 	ptr.Start();
-	while(ptr()->Reserved)
+	while((ptr()->Reserved)&&(!ptr.End()))
 		ptr.Next();
+	if(ptr.End())
+		mThrowRException("Too many unused reserved nodes");
 	ptr()->Reserved=true;
 	return(ptr());
 }
@@ -96,7 +100,8 @@ template<class cNode,class cObj,class cNodes>
 {
 	if(!node->Reserved)
 		return;
-	DeleteNodes(node);
+	if(node->GetNbNodes())
+		mThrowRException("Cannot release a node with child nodes");
 	DeleteObjs(node);
 	if(node->Parent)
 		DeleteNode(node);
@@ -109,6 +114,7 @@ template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::InsertNode(cNode* to,cNode* node)
 {
 	Nodes.InsertPtr(node);
+	node->Owner=static_cast<cNodes*>(this);
 	RTree<cNodes,cNode,false>::InsertNode(to,node);
 	if(to)
 		to->PostInsert(node);
@@ -120,11 +126,20 @@ template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::DeleteNode(cNode* node)
 {
 	mAssert(node);
+
+	// Delete the child nodes
+	RNodesGA<cNode,cObj,cNodes>::DeleteNodes(node);
+
+	// Delete the node from RNodesGA and RTree
 	Nodes.DeletePtr(node);
 	cNode* from(node->Parent);
 	RTree<cNodes,cNode,false>::DeleteNode(node,false);
+
+	// Launch a Post-Delete
 	if(from)
 		from->PostDelete(node);
+
+	// Release the nodes and its objects
 	ReleaseNode(node);
 }
 
@@ -140,8 +155,7 @@ template<class cNode,class cObj,class cNodes>
 	while(Node)
 	{
 		cNode* Next(Node->Next);
-		if(Next)
-			DeleteNode(Next);
+		RNodesGA<cNode,cObj,cNodes>::DeleteNode(Node);
 		Node=Next;
 	}
 }
@@ -167,23 +181,72 @@ template<class cNode,class cObj,class cNodes>
 	cNode* RNodesGA<cNode,cObj,cNodes>::CopyExceptBranch(const cNodes* from,const cNode* excluded,RNumContainer<size_t,true>* objs,bool copyobjs)
 {
 	cNode* Ret(0);
-	cNode* CurNode;
 
 	// Copy first the top nodes
 	RNodeCursor<cNodes,cNode> Cur(*from);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
-		CurNode=Cur();
-		if(CurNode==excluded)
-			Ret=static_cast<cNode*>(0);
+		if(Cur()==excluded)
+			Ret=static_cast<cNode*>(0);  // The node to exclude is a top node
 		else
 		{
 			// Insert a new top node
 			cNode* New=ReserveNode();
-			InsertNode(0,New);
+			RNodesGA<cNode,cObj,cNodes>::InsertNode(0,New);
 
 			// Copy the attributes, the child nodes and the objects from CurNode
-			cNode* Find=New->CopyExceptBranch(CurNode,excluded,objs,copyobjs);
+			cNode* Find=CopyExceptBranch(New,Cur(),excluded,objs,copyobjs);
+			if(Find)
+				Ret=Find;
+
+			// If the node 'New' has no child nodes and no objects attached -> Remove it.
+			if((!New->GetNbObjs())&&(!New->GetNbNodes()))
+			{
+				// If the node to remove is the crossing node -> The node to exclude is a top node
+				if(Ret==New)
+					Ret=static_cast<cNode*>(0);
+				DeleteNode(New);   // Remove it from the tree
+			}
+		}
+	}
+	return(Ret);
+}
+
+
+//------------------------------------------------------------------------------
+template<class cNode,class cObj,class cNodes>
+	cNode* RNodesGA<cNode,cObj,cNodes>::CopyExceptBranch(cNode* to,const cNode* from,const cNode* excluded,RNumContainer<size_t,true>* objs,bool copyobjs)
+{
+	// Verify that the nodes are from different owners
+	mReturnValIfFail(to->Owner!=from->Owner,0);
+
+	cNode* Ret;
+
+	// Copy information
+	to->CopyInfos(*from);
+
+	// Copy first the child nodes of from
+	RNodeCursor<cNodes,cNode> Cur(from);
+	for(Cur.Start(),Ret=0;!Cur.End();Cur.Next())
+	{
+		// Verify if the node to copy is not the one to exclude
+		// -> Remember it and pass to the next node
+		if(Cur()==excluded)
+			Ret=to;
+		else
+		{
+			// If the current node has at least one object attached and no child nodes
+			// -> do not copied it
+			/*bool CopyObjs=(!Cur()->HasSomeObjects(objs));
+			if((!CopyObjs)&&(!Cur()->NbSubNodes))
+				continue;*/
+
+			// Insert a new child node
+			cNode* New(ReserveNode());
+			InsertNode(to,New);
+
+			// Copy the attributes, the child nodes and the objects from Cur())
+			cNode* Find=CopyExceptBranch(New,Cur(),excluded,objs,copyobjs);
 			if(Find)
 				Ret=Find;
 
@@ -192,12 +255,23 @@ template<class cNode,class cObj,class cNodes>
 			{
 				// If the node to remove is the crossing node -> The current node becomes the crossing node
 				if(Ret==New)
-					Ret=static_cast<cNode*>(0);
+					Ret=to;
 				DeleteNode(New);   // Remove it from the tree
-				ReleaseNode(New);  // Release it.
 			}
 		}
 	}
+
+	// Copy the objects of from that are not in objs
+	if(copyobjs)
+	{
+		RCursor<cObj> Objs(from->GetObjs());
+		for(Objs.Start();!Objs.End();Objs.Next())
+		{
+			if((!objs)||(!objs->IsIn(Objs()->GetId())))
+				InsertObj(to,Objs());
+		}
+	}
+
 	return(Ret);
 }
 
@@ -207,6 +281,10 @@ template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::InsertObj(cNode* to,cObj* obj)
 {
 	size_t j;
+	size_t* Ass(&ObjectsAss[obj->GetId()]);
+
+	if((*Ass)!=cNoRef)
+		mThrowRException("Cannot insert an object twice ina tree");
 
 	if(to->NbSubObjects)
 	{
@@ -223,7 +301,7 @@ template<class cNode,class cObj,class cNodes>
 		ObjsAss.InsertPtrAt(obj,to->SubObjects,false);
 	}
 	to->NbSubObjects++;
-	ObjectsAss[obj->GetId()]=to->Id;
+	(*Ass)=to->Id;
 	ObjsNoAss.DeletePtr(obj);
 	to->PostInsert(obj);
 }
@@ -277,25 +355,22 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::DeleteObjs(cNode* from)
 {
-	size_t j;
-
 	if(!(from->NbSubObjects)) return;
-	RCursor<cObj> o(GetObjs(*from));
+	RCursor<cObj> o(from->GetObjs());
 	for(o.Start();!o.End();o.Next())
 	{
 		// No need to increment o, because delete moves the everything
 		ObjectsAss[o()->GetId()]=cNoRef;
 		ObjsNoAss.InsertPtr(o());
 		ObjsAss.DeletePtr(o());
-		if(!(--from->NbSubObjects))
-			from->SubObjects=cNoRef;
 		from->PostDelete(o());
 	}
-	j=from->SubObjects;
 	RCursor<cNode> Cur(Nodes);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		if((Cur()->SubObjects>j)&&(Cur()->SubObjects!=cNoRef))
+		if((Cur()->SubObjects>from->SubObjects)&&(Cur()->SubObjects!=cNoRef))
 			Cur()->SubObjects-=from->NbSubObjects;
+	from->SubObjects=cNoRef;
+	from->NbSubObjects=0;
 }
 
 
@@ -315,11 +390,11 @@ template<class cNode,class cObj,class cNodes>
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	RCursor<cObj> RNodesGA<cNode,cObj,cNodes>::GetObjs(const cNode& node) const
+	RCursor<cObj> RNodesGA<cNode,cObj,cNodes>::GetObjs(const cNode* node) const
 {
-	if(!node.NbSubObjects)
-		return(RCursor<cObj>(ObjsAss,0,0));
-	return(RCursor<cObj>(ObjsAss,node.SubObjects,node.SubObjects+node.NbSubObjects-1));
+	if((!node)||(!node->NbSubObjects))
+		return(RCursor<cObj>());
+	return(RCursor<cObj>(ObjsAss,node->SubObjects,node->SubObjects+node->NbSubObjects-1));
 }
 
 
@@ -334,9 +409,32 @@ template<class cNode,class cObj,class cNodes>
 		if(!Cur()->Verify(nbobjs))
 			return(false);
 	}
+	if(nbobjs>Objs.GetNb())
+	{
+		size_t Prob(nbobjs-Objs.GetNb());
+		std::cerr<<Prob<<" object";
+		if(Prob==1)
+			std::cerr<<" is assigned twice"<<std::endl;
+		else
+			std::cerr<<"s are assigned twice"<<std::endl;
+		return(false);
+	}
 	if(complete&&(nbobjs!=Objs.GetNb()))
 	{
-		std::cerr<<"All objects are not attached"<<std::endl;
+		bool First(true);
+		std::cerr<<"All objects are not attached (";
+		for(size_t i=0;i<Objs.GetNb();i++)
+		{
+			size_t Id(ObjectsAss[i]);
+			if(Id!=cNoRef)
+				continue;
+			if(First)
+				First=false;
+			else
+				std::cerr<<",";
+			std::cerr<<i;
+		}
+		std::cerr<<")"<<std::endl;
 		return(false);
 	}
  	if(ObjsAss.GetNb()+ObjsNoAss.GetNb()!=Objs.GetNb())
@@ -352,7 +450,7 @@ template<class cNode,class cObj,class cNodes>
 template<class cNode,class cObj,class cNodes>
 	void RNodesGA<cNode,cObj,cNodes>::CopyTree(const cNodes& nodes)
 {
-	ClearNodes();
+	Clear();
 	RNodeCursor<cNodes,cNode> Cur(nodes);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
@@ -360,8 +458,8 @@ template<class cNode,class cObj,class cNodes>
 		cNode* New(ReserveNode());
 		InsertNode(0,New);
 
-		// Copy the attributes, all the child nodes and objects of Cur() in Top.
-		New->CopyExceptBranch(Cur());
+		// Copy the attributes, all the child nodes and objects of Cur() in New.
+		CopyExceptBranch(New,Cur());
 	}
 }
 
@@ -372,7 +470,7 @@ template<class cNode,class cObj,class cNodes>
 {
 	RTextFile File(name);
 	File.Open(RIO::Create);
-	RNodeCursor<cNodes,cNode> Cur(this);
+	RNodeCursor<cNodes,cNode> Cur(*static_cast<cNodes*>(this));
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->PrintNode(File,0);
 }

@@ -174,10 +174,10 @@ void RXMLTag::InsertAttr(RXMLAttr* attr,bool overwrite)
 
 
 //-----------------------------------------------------------------------------
-void RXMLTag::InsertAttr(const RString& name,const RString& value,const RString& xmlns,bool overwrite)
+void RXMLTag::InsertAttr(RXMLStruct* xml,const RString& name,const RString& value,const RString& xmlns,bool overwrite)
 {
-	if(Tree)
-		InsertAttr(static_cast<RXMLStruct*>(Tree)->NewAttr(name,value,xmlns),overwrite);
+	if(xml)
+		InsertAttr(xml->NewAttr(name,value,xmlns),overwrite);
 	else
 		InsertAttr(new RXMLAttr(name,value,0),overwrite);
 }
@@ -205,12 +205,12 @@ RCursor<RXMLAttr> RXMLTag::GetAttrs(void) const
 
 
 //-----------------------------------------------------------------------------
-bool RXMLTag::Merge(const RXMLTag* merge)
+bool RXMLTag::Merge(RXMLStruct* xml,const RXMLTag* merge)
 {
-	if(!Tree)
+	if(!xml)
 		throw RException("Node "+Name+" has no parent structure");
 
-	if(!static_cast<RXMLStruct*>(Tree)->Compare(this,merge))
+	if(!xml->Compare(this,merge))
 		return(false);
 
 	// Merge the attributes
@@ -236,16 +236,16 @@ bool RXMLTag::Merge(const RXMLTag* merge)
 		RNodeCursor<RXMLStruct,RXMLTag> My(this);
 		for(My.Start(),nb=0;!My.End();My.Next())
 		{
-			if(static_cast<RXMLStruct*>(Tree)->Compare(Cur(),My()))
+			if(xml->Compare(Cur(),My()))
 			{
 				nb++;
 				same=My();
 			}
 		}
 		if(nb==1)
-			same->Merge(Cur());
+			same->Merge(xml,Cur());
 		else
-			Tree->DeepCopy(Cur(),this);
+			xml->DeepCopy(Cur(),this);
 	}
 
 	// Merge OK

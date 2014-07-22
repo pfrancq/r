@@ -57,7 +57,7 @@ namespace R{
 template<class cNode,class cObj,class cNodes>
 	class RNodesGA : public RTree<cNodes,cNode,false>
 {
-public:
+	using RTree<cNodes,cNode,false>::InsertNode;
 	using RTree<cNodes,cNode,false>::GetNbNodes;
 
 protected:
@@ -94,11 +94,6 @@ protected:
 	RContainer<cObj,false,false> ObjsNoAss;
 
 	/**
-	* Maximal depth of the tree.
-	*/
-	int NbLevels;
-
-	/**
 	 * Maximum number of attributes for an object.
 	 */
 	size_t MaxAttr;
@@ -119,9 +114,24 @@ public:
 	void Init(void);
 
 	/**
-	* Clear all the information of the chromosome.
+	* Clear all the information.
 	*/
-	void ClearNodes(void);
+	virtual void Clear(void);
+
+	/**
+	* @return the total number of nodes in the tree.
+	*/
+	inline size_t GetNbNodes(void) const {return(Nodes.GetNb());}
+
+	/**
+	* @return the total number of top nodes in the tree.
+	*/
+	inline size_t GetNbTopNodes(void) const {return(RTree<cNodes,cNode,false>::GetNbTopNodes());}
+
+	/**
+	* @return the maximum depth in the tree.
+	*/
+	inline size_t GetMaxDepth(void) const {return(RTree<cNodes,cNode,false>::GetMaxDepth());}
 
 	/**
 	* Reserve a Node.
@@ -172,13 +182,31 @@ public:
 	/**
 	* Copy a tree except one branch.
 	* @param from           Tree to copy from.
-	* @param copyobjs       Must the objects of from be copied?
-	* @param objs           Objects which nodes must not be copied.
 	* @param excluded       Node that must (eventually) not be copied.
+	* @param objs           Objects that must not be copied.
+	* @param copyobjs       Must the objects be copied?
 	* @return Pointer to the node that was supposed to have the node excluded
 	* (or 0 if not found).
 	*/
 	cNode* CopyExceptBranch(const cNodes* from,const cNode* excluded=0,RNumContainer<size_t,true>* objs=0,bool copyobjs=true);
+
+	/**
+	* Copy all the objects and the nodes to a node except one node if it exists.
+	* The two nodes have to be of two different owners.
+	* @param to             Node where to copy.
+	* @param from           Node to copy from.
+	* @param copyobjs       Must the objects of from be copied?
+	* @param objs           Objects that must not be copied.
+	* @param excluded       Node that must (eventually) not be copied.
+	*
+	* This method can be used to copy a whole tree "from" into another "to":
+	* @code
+	* to->Copy(to->GetTop(),from->GetTop);
+	* @endcode
+	* @return Pointer to the node that was supposed to have the node excluded
+	* (or 0 if not found).
+	*/
+	cNode* CopyExceptBranch(cNode* to,const cNode* from,const cNode* excluded=0,RNumContainer<size_t,true>* objs=0,bool copyobjs=true);
 
 	/**
 	* Insert an object to a node.
@@ -218,7 +246,7 @@ public:
 	* after the last object.
 	* @param node            Node.
 	*/
-	RCursor<cObj> GetObjs(const cNode& node) const;
+	RCursor<cObj> GetObjs(const cNode* node) const;
 
 	/**
 	* Verify the validity of the tree.
@@ -228,7 +256,7 @@ public:
 	bool VerifyNodes(bool complete);
 
 	/**
-	* The assignment operator.
+	* Copy a whole tree in the current one.
 	* @param nodes           Nodes used as source.
 	*/
 	void CopyTree(const cNodes& nodes);
@@ -248,6 +276,7 @@ public:
 	friend class RNodeGA<cNode,cObj,cNodes>;
 	friend class RTreeHeuristic<cNode,cObj,cNodes>;
 	friend class RFirstNodeHeuristic<cNode,cObj,cNodes>;
+	friend class RNodeCursor<cNodes,cNode>;
 };
 
 

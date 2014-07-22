@@ -66,6 +66,7 @@ public:
 	using RNodesGA<cNode,cObj,cChromo>::BuildFile;
    using RNodesGA<cNode,cObj,cChromo>::Clear;
 	using RNodesGA<cNode,cObj,cChromo>::CopyExceptBranch;
+	//using RNodesGA<cNode,cObj,cChromo>::GetTree;
 
 protected:
 

@@ -36,8 +36,8 @@
 
 //------------------------------------------------------------------------------
 template<class cNode,class cObj,class cNodes>
-	RNodeGA<cNode,cObj,cNodes>::RNodeGA(cNodes* owner,size_t id,size_t max)
-		: RNode<cNodes,cNode,false>(owner), Id(id), Attr(max)
+	RNodeGA<cNode,cObj,cNodes>::RNodeGA(size_t id,size_t max)
+		: RNode<cNodes,cNode,false>(), Owner(0), Id(id), Attr(max)
 {
 	NbSubObjects= 0;
 	SubObjects = cNoRef;
@@ -131,12 +131,6 @@ template<class cNode,class cObj,class cNodes>
 // 			Ok=false;
 // 	}
 
-	// Verify child nodes
-	RNodeCursor<cNodes,cNode> Sub(static_cast<const cNode*>(this));
-	for(Sub.Start();!Sub.End();Sub.Next())
-		if(!Sub()->Verify(nbobjs))
-			return(false);
-
 	// return the value of the verification.
 	return(true);
 }
@@ -178,68 +172,68 @@ template<class cNode,class cObj,class cNodes>
 }
 
 
-//------------------------------------------------------------------------------
-template<class cNode,class cObj,class cNodes>
-	cNode* RNodeGA<cNode,cObj,cNodes>::CopyExceptBranch(const cNode* from,const cNode* excluded,RNumContainer<size_t,true>* objs,bool copyobjs)
-{
-	cNode* Ret;
-	cNode* CurNode;
-
-	// Verify that the nodes are from different owners
-	mReturnValIfFail(Tree!=from->Tree,0);
-
-	// Update other information
-	CopyInfos(*from);
-
-	// Copy first the child nodes of from
-	RNodeCursor<cNodes,cNode> Cur(from);
-	for(Cur.Start(),Ret=0;!Cur.End();Cur.Next())
-	{
-		CurNode=Cur();
-
-		// Verify if the node to copy is not the one to exclude
-		// -> Remember it and pass to the next node
-		if(CurNode==excluded)
-			Ret=static_cast<cNode*>(this);
-		else
-		{
-			// If the current node has at least one object attached and no child nodes
-			// -> do not copied it
-			bool CopyObjs=(!CurNode->HasSomeObjects(objs));
-			if((!CopyObjs)&&(!CurNode->NbSubNodes))
-				continue;
-
-			// Insert a new child node
-			cNode* New=Tree->ReserveNode();
-			InsertNode(New);
-
-			// Copy the attributes, the child nodes and the objects from CurNode
-			cNode* Find=New->CopyExceptBranch(CurNode,excluded,objs,CopyObjs);
-			if(Find)
-				Ret=Find;
-
-			// If the node 'Node' has no child nodes and no objects attached -> Remove it.
-			if((!New->GetNbObjs())&&(!New->GetNbNodes()))
-			{
-				// If the node to remove is the crossing node -> The current node becomes the crossing node
-				if(Ret==New)
-					Ret=static_cast<cNode*>(this);
-				Tree->DeleteNode(New);   // Remove it from the tree
-				Tree->ReleaseNode(New);  // Release it.
-			}
-		}
-	}
-
-	// Copy the objects of from
-	if(copyobjs)
-	{
-		RCursor<cObj> Objs(from->GetObjs());
-		for(Objs.Start();!Objs.End();Objs.Next())
-			Insert(Objs());
-	}
-
-	return(Ret);
-}
+////------------------------------------------------------------------------------
+//template<class cNode,class cObj,class cNodes>
+//	cNode* RNodeGA<cNode,cObj,cNodes>::CopyExceptBranch(const cNode* from,const cNode* excluded,RNumContainer<size_t,true>* objs,bool copyobjs)
+//{
+//	cNode* Ret;
+//	cNode* CurNode;
+//
+//	// Verify that the nodes are from different owners
+////	mReturnValIfFail(Tree!=from->Tree,0);
+//
+//	// Update other information
+//	CopyInfos(*from);
+//
+//	// Copy first the child nodes of from
+//	RNodeCursor<cNodes,cNode> Cur(from);
+//	for(Cur.Start(),Ret=0;!Cur.End();Cur.Next())
+//	{
+//		CurNode=Cur();
+//
+//		// Verify if the node to copy is not the one to exclude
+//		// -> Remember it and pass to the next node
+//		if(CurNode==excluded)
+//			Ret=static_cast<cNode*>(this);
+//		else
+//		{
+//			// If the current node has at least one object attached and no child nodes
+//			// -> do not copied it
+//			bool CopyObjs=(!CurNode->HasSomeObjects(objs));
+//			if((!CopyObjs)&&(!CurNode->NbSubNodes))
+//				continue;
+//
+//			// Insert a new child node
+//			cNode* New=Tree->ReserveNode();
+//			InsertNode(New);
+//
+//			// Copy the attributes, the child nodes and the objects from CurNode
+//			cNode* Find=New->CopyExceptBranch(CurNode,excluded,objs,CopyObjs);
+//			if(Find)
+//				Ret=Find;
+//
+//			// If the node 'Node' has no child nodes and no objects attached -> Remove it.
+//			if((!New->GetNbObjs())&&(!New->GetNbNodes()))
+//			{
+//				// If the node to remove is the crossing node -> The current node becomes the crossing node
+//				if(Ret==New)
+//					Ret=static_cast<cNode*>(this);
+//				Tree->DeleteNode(New);   // Remove it from the tree
+//				Tree->ReleaseNode(New);  // Release it.
+//			}
+//		}
+//	}
+//
+//	// Copy the objects of from
+//	if(copyobjs)
+//	{
+//		RCursor<cObj> Objs(from->GetObjs());
+//		for(Objs.Start();!Objs.End();Objs.Next())
+//			Insert(Objs());
+//	}
+//
+//	return(Ret);
+//}
 
 
 //------------------------------------------------------------------------------
@@ -278,6 +272,7 @@ template<class cNode,class cObj,class cNodes>
 	Reserved=false;
 	SubObjects=cNoRef;
 	NbSubObjects=0;
+	Owner=0;
 	Attr.Clear();
 }
 
@@ -291,7 +286,7 @@ template<class cNode,class cObj,class cNodes>
 	size_t id;
 
 	// Goes in each child nodes to find their objects
-	RNodeCursor<cNodes,cNode> Cur(this);
+	RNodeCursor<cNodes,cNode> Cur(static_cast<cNode*>(this));
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->ConstructAllObjects(objs,nbobjs);
 
@@ -398,7 +393,14 @@ template<class cNode,class cObj,class cNodes>
 		file<<List();
 	}
 	file<<"]"<<endl;
-	RNodeCursor<cNodes,cNode> Cur(this);
+	RCursor<cObj> Obj(GetObjs());
+	for(Obj.Start();!Obj.End();Obj.Next())
+	{
+		for(int i=0;i<depth+1;i++)
+			file<<"\t";
+		file<<"Obj"<<Obj()->GetId()<<endl;
+	}
+	RNodeCursor<cNodes,cNode> Cur(static_cast<cNode*>(this));
 	for(Cur.Start();!Cur.End();Cur.Next())
 		Cur()->PrintNode(file,depth+1);
 }

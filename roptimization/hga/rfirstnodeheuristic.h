@@ -93,7 +93,7 @@ public:
 	 * @param attr           Attributes for the node.
 	 * @param parent         Parent node.
 	 */
-	cNode* NewNode(const RAttrList& attr,cNode* parent);
+	virtual cNode* NewNode(const RAttrList& attr,cNode* parent);
 
 	/**
 	* Find a node where to attach the next object to treat.

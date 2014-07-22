@@ -212,15 +212,16 @@ public:
 
 	/**
 	* Insert an attribute. If the attribute already exist, the value can be
-	* overwritten depending of the third parameter. If the tag is attached to a
-	* XML structure, the method RXMLStruct::NewAttr is used to create the
-	* attribute. If not, a RXMLAttr is created.
+	* overwritten depending of the third parameter.
+	* @param xml            If not null, the method RXMLStruct::NewAttr is
+	 *                      used to create the attribute. If not, a RXMLAttr is
+	 *                      created.
 	* @param name           Name of the attribute.
 	* @param value          Value of the attribute.
 	* @param xmlns          XML Namespace.
 	* @param overwrite      Overwrite existing parameter.
 	*/
-	void InsertAttr(const RString& name,const RString& value,const RString& xmlns=RString::Null,bool overwrite=true);
+	void InsertAttr(RXMLStruct* xml,const RString& name,const RString& value,const RString& xmlns=RString::Null,bool overwrite=true);
 
 	/**
 	* Add a string to the content of the tag.
@@ -261,9 +262,10 @@ public:
 	* attributes. Each sub-tag of merge is merged if it correspond to one of
 	* the sub-tags,else merge it is added.
 	* @param merge           Tag to merge.
+	* @param xml             XML Structure.
 	* @return true if the merge could be done.
 	*/
-	bool Merge(const RXMLTag* merge);
+	bool Merge(RXMLStruct* xml,const RXMLTag* merge);
 
 	/**
 	* Destruct the XML Tag.

@@ -62,14 +62,18 @@ template<class cNode,class cObj,class cNodes> class RNodesGA;
 template<class cNode,class cObj,class cNodes>
 	class RNodeGA : public RNode<cNodes,cNode,false>
 {
+	using RNode<cNodes,cNode,false>::Clear;
+
 public:
 
-	using RNode<cNodes,cNode,false>::Tree;
 	using RNode<cNodes,cNode,false>::GetNbNodes;
-	using RNode<cNodes,cNode,false>::Clear;
-	using RNode<cNodes,cNode,false>::InsertNode;
 
 protected:
+
+	/**
+	 * Owner of the node.
+    */
+	cNodes* Owner;
 
 	/**
 	 * Identifier of the Node
@@ -100,11 +104,10 @@ public:
 
 	/**
 	* Construct the node.
-	* @param owner           Owner of the node.
 	* @param id              Identifier of the node.
 	* @param max             Maximum number of attributes.
 	*/
-	RNodeGA(cNodes* owner,size_t id,size_t max);
+	RNodeGA(size_t id,size_t max);
 
 	/**
 	* Verify if the node is not violating the integrity of the system.
@@ -165,24 +168,24 @@ public:
 	* @return Pointer to the node that was supposed to have the node excluded
 	* (or 0 if not found).
 	*/
-	cNode* CopyExceptBranch(const cNode* from,const cNode* excluded=0,RNumContainer<size_t,true>* objs=0,bool copyobjs=true);
+//	cNode* CopyExceptBranch(const cNode* from,const cNode* excluded=0,RNumContainer<size_t,true>* objs=0,bool copyobjs=true);
 
 	/**
 	* Method call to insert an object.
 	* @param obj            Object to insert.
 	*/
-	void Insert(cObj* obj) {Tree->InsertObj(static_cast<cNode*>(this),obj);}
+//	void Insert(cObj* obj) {Tree->InsertObj(static_cast<cNode*>(this),obj);}
 
 	/**
 	* Method call to delete an object.
 	* @param obj             Object to delete.
 	*/
-	void Delete(cObj* obj) {Tree->DeleteObj(obj);}
+//	void Delete(cObj* obj) {Tree->DeleteObj(obj);}
 
 	/**
 	* Return a cursor over the objects attached to the node.
 	*/
-	RCursor<cObj> GetObjs(void) const {return(Tree->GetObjs(*static_cast<const cNode*>(this)));}
+	RCursor<cObj> GetObjs(void) const {return(Owner->GetObjs(static_cast<const cNode*>(this)));}
 
 	/**
 	* Method called after a node is attach.
