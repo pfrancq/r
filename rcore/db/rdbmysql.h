@@ -34,8 +34,11 @@
 
 //------------------------------------------------------------------------------
 // include files for MySQL
-#include <mysql/mysql.h>
-
+#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
+	#include <mysql/mysql.h>
+#else
+	#include <mysql.h>
+#endif
 
 //------------------------------------------------------------------------------
 // include files for R Project

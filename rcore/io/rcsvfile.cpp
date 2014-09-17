@@ -87,159 +87,348 @@ void RCSVFile::Close(void)
 
 
 //------------------------------------------------------------------------------
-inline RString* RCSVFile::NewValue(void)
+inline void RCSVFile::NewValue(void)
 {
-	RString* Cur;
-
 	// Insert a null string
 	// First character of the value
 	if(NbValues<Values.GetNb())
 		mThrowRIOException(this,"Internal Problem");
-	Values.InsertPtr(Cur=new RString());
-	Cur->SetLen(0);
+	Values.InsertPtr(CurValue=new RString());
+	CurValue->SetLen(0);
+	NbValues++;
 	if(SizeBuffer)
 		mThrowRIOException(this,"Non null buffer size");
 	SizeBuffer=0;
 	Buffer=Internal;
+}
 
-	return(Cur);
+
+//------------------------------------------------------------------------------
+void RCSVFile::AddBuffer(void)
+{
+	(*Buffer)=0;
+	(*CurValue)+=Internal;
+	SizeBuffer=0;
+	Buffer=Internal;
+}
+
+
+//------------------------------------------------------------------------------
+void RCSVFile::AddToBuffer(void)
+{
+	if(SizeBuffer==MaxBuffer)
+		AddBuffer();
+
+	// Add the character
+	SizeBuffer++;
+	(*(Buffer++))=CurChar;
+}
+
+
+//------------------------------------------------------------------------------
+void RCSVFile::NextChar(void)
+{
+	CurChar=GetChar();
+	CurCol++;
+}
+
+
+//------------------------------------------------------------------------------
+bool RCSVFile::IsEol(void)
+{
+	// Skip the spaces (excepted an end of line)
+	while((!Eol(CurChar))&&CurChar.IsSpace())
+		NextChar();
+
+	// If we found an end of line -> Skip the new line
+	if(Eol(CurChar))
+	{
+		SkipEol();
+		if(!NbValues)    // It is an empty line -> Continue to read
+			return(false);
+		return(true);   // End of the line
+	}
+
+	// A new value starts
+	NewValue();
+	ReadValue=true;   // Read the value
+
+	// Look if the value will ends with a quotes or the separation character
+	if(Quotes&&(GetNextChar()=='"'))
+	{
+		EndValueChar='"';
+		NextChar(); // Skip the '"'
+	}
+	else
+	{
+		EndValueChar=Sep;
+	}
+
+	return(false);
 }
 
 
 //------------------------------------------------------------------------------
 void RCSVFile::Read(void)
 {
-	bool ReadField(false); // Suppose a value to read
-	RString* Cur(0);
-	RChar Search;
-
+	// Init
+	CurValue=0;
+	CurCol=0;
 	Values.Clear();
-	NbValues=0;  // No values read
-	for(bool First=true;!End();First=false)
+	NbValues=0;
+	ReadValue=false;
+	CurChar=0;
+
+	// Read the values
+	while(!End())
 	{
-		RChar Car(GetChar());
-
-		// If no value are read -> make some test
-		if(!ReadField)
+		if(ReadValue)
 		{
-			if(Eol(Car))
+			// Read the next character
+			NextChar();
+
+			if(Quotes&&(EndValueChar=='"')&&(CurChar=='"')&&((!End())&&(GetNextChar()=='"')))
 			{
-				// Skip the new line
-				SkipEol();
-				if(First)
-					continue;
-				break;
+				// Valid double quote
+
+				AddToBuffer();  // Add the character "
+				NextChar();     // Skip the second Quote
 			}
-			else if(Car==Sep)
+			else if(Eol(CurChar)||(CurChar==EndValueChar))
 			{
-				// Empty field
-				NewValue();
-				NbValues++;
-				continue;
-			}
-			else if(Car.IsSpace())
-				continue;    // Skip spaces
+				// End of a value is reached
 
-			Cur=NewValue();
-			ReadField=true;
-			NbValues++;
+				// Problem if we are at the end of the line and a quote is searched to finish the current value
+				if(Eol(CurChar)&&(EndValueChar=='"'))
+					throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+","+RString::Number(CurCol)+"): CSV line doesn't finish with a quote");
 
-			// Value with " ?
-			if(Quotes&&(Car=='"'))
-			{
-				Search='"';
-				continue;
-			}
-			else
-			{
-				Search=Sep;
-			}
-		}
+				// End the reading of the current value and add the buffer to it
+				ReadValue=false;
+				if(SizeBuffer)
+					AddBuffer();
 
-		// Look if valid double quote
-		if(Quotes&&(Search=='"')&&(Car=='"')&&((!End())&&(GetNextChar()=='"')))
-		{
-			if(SizeBuffer==MaxBuffer)
-			{
-				// Verify if the buffer is filled.
-				(*Buffer)=0;
-				(*Cur)+=Internal;
-				SizeBuffer=0;
-				Buffer=Internal;
-			}
+				// If the current character is a quote -> skip it
+				if(CurChar=='\"')
+					NextChar();
 
-			// Add the character "
-			SizeBuffer++;
-			(*(Buffer++))=Car;
-			Car=GetChar(); // Second Quote
-			Car=GetChar(); // Next character
-		}
-
-		// If end of a field or of the line -> prepare next value
-		if(((Search==Sep)&&(Eol(Car)))||(Car==Search))
-		{
-			ReadField=false;
-
-			if(SizeBuffer)
-			{
-				(*Buffer)=0;
-				(*Cur)+=Internal;
-				SizeBuffer=0;
-				Buffer=Internal;
-			}
-
-			// If the current character is a quote -> Skip all characters until the separation
-			if(Car=='\"')
-			{
-				// Skip spaces
-				RChar Next(GetNextChar());
-				while((Next==' ')||(Next=='\t'))
+				// Skip all space characters until the separation
+				while((!Eol(CurChar))&&(CurChar!=Sep))
 				{
-					Car=GetChar();
-					if(End())
-						break;
-					Next=GetNextChar();
+					if(!CurChar.IsSpace())
+						throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+","+RString::Number(CurCol)+"): invalid character "+CurChar);
+					NextChar();
 				}
 
-				// Skip the separation if any
-				if((!End())&&(GetNextChar()==Sep))
-					Car=GetChar();
+				// If we are at the end of a line -> finish the reading
+				if(Eol(CurChar))
+					break;
 			}
-
-			// If end of line or end of file -> return
-			if(End()||Eol(Car))
-				return;
-
-			continue;
+			else if(CurChar==Escape)
+			{
+				// The next character must be added
+				if(!End())
+				{
+					NextChar();
+					if(Eol(CurChar))
+						break;
+				}
+				AddToBuffer();
+			}
+			else
+				AddToBuffer();
 		}
-
-		if(Car==Escape)
+		else
 		{
-			// The next character must be added
-			Car=GetChar();
+			if(IsEol())
+				break;
 		}
-
-		if(SizeBuffer==MaxBuffer)
-		{
-			// Verify if the buffer is filled.
-			(*Buffer)=0;
-			(*Cur)+=Internal;
-			SizeBuffer=0;
-			Buffer=Internal;
-		}
-
-		// Add the character
-		SizeBuffer++;
-		(*(Buffer++))=Car;
 	}
+
+	// If something is still in the buffer when the eof is reached -> Add it
 	if(SizeBuffer)
-	{
-		(*Buffer)=0;
-		(*Cur)+=Internal;
-		Buffer=Internal;
-		SizeBuffer=0;
-	}
+		AddBuffer();
 }
+
+
+//------------------------------------------------------------------------------
+//void RCSVFile::Read(void)
+//{
+//	bool MustCreate(false);  // Suppose a value must be created
+//	RChar Last(0);           // Last character treated
+//
+//	// Init
+//	CurValue=0;
+//	CurCol=0;
+//	Values.Clear();
+//	NbValues=0;  // No values read
+//	ReadValue=false;
+//
+//	// Read the value
+//	for(bool First=true;!End();First=false)
+//	{
+//		NextChar();
+//
+//		// If no value are read -> make some test
+///*		if(!ReadField)
+//		{
+//			// Skip the new line
+//			if(Eol(CurChar))
+//			{
+//				SkipEol();
+//				if(First)    // It is an empty line.
+//					continue;
+//				break;       // End of the line
+//			}
+//
+//			  // Skip spaces other than EOL
+//			if(CurChar.IsSpace())
+//				continue;
+//
+//			// Skip separation
+//			if(CurChar==Sep)
+//			{
+//				if(Last==Sep)
+//				{
+//					// First empty field
+//					NewValue();
+//					ReadField=true;
+//					NbValues++;
+//				}
+//				continue;
+//			}
+//
+//			NewValue();
+//			ReadField=true;
+//			NbValues++;
+//			MustCreate=false; // A value was created
+//
+//			// Value with " ?
+//			if(Quotes&&(CurChar=='"'))
+//			{
+//				Search='"';
+//				continue;
+//			}
+//			else
+//			{
+//				Search=Sep;
+//			}
+//		}*/
+//
+//		if(ReadValue)
+//		{
+//			// Look if we are at the end of a value:
+//			if(Eol(CurChar)||(CurChar==EndValueChar))
+//			//if(((EndValueChar==Sep)&&(Eol(CurChar)))||(CurChar==EndValueChar))
+//			{
+//				// Problem if we are at the end of the line and a quote finishes a value
+//				if(Eol(CurChar)&&(EndValueChar=='"'))
+//					throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+","+RString::Number(CurCol)+"): CSV line doesn't finish with a quote");
+//
+//				// End the reading of the current value and add the buffer
+//				ReadValue=false;
+//				if(SizeBuffer)
+//					AddBuffer();
+//
+//				// If the current character is a quote -> skip it
+//				if(CurChar=='\"')
+//					NextChar();
+//
+//
+//				// Skip all space characters until the separation
+//				while((!Eol(CurChar))&&(CurChar!=Sep))
+//				{
+//					if(!CurChar.IsSpace())
+//						throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+","+RString::Number(CurCol)+"): only spaces characters allowed");
+//					NextChar();
+//				}
+//
+//				// If the character is a separation -> Skip it
+///*				if(CurChar==Sep)
+//					NextChar();*/
+//
+///*				if(CurChar=='\"')
+//				{
+//					// Skip spaces
+//					RChar Next(GetNextChar());
+//					while((!Eol(Next))&&(Next.IsSpace()))
+//					{
+//						NextChar();
+//						if(End())
+//							break;
+//						Next=GetNextChar();
+//					}
+//
+//					// Skip the separation if any
+//		/*			if((!End())&&(GetNextChar()==Sep))
+//					{
+//						NextChar();
+//					}
+//				}*/
+//
+//	/*			if(CurChar==Sep)
+//				{
+//					MustCreate=true;
+//					NextChar();
+//				}
+//
+//				// If end of line or end of file -> break
+//				if(End())
+//					break;
+//				else if(Eol(CurChar))
+//				{
+//					SkipEol();
+//					break;
+//				}*/
+//
+//				//continue;
+//			}
+//
+//			// Look if valid double quote
+//			if(Quotes&&(EndValueChar=='"')&&(CurChar=='"')&&((!End())&&(GetNextChar()=='"')))
+//			{
+//
+//				if(SizeBuffer==MaxBuffer)
+//					AddBuffer();
+//
+//				// Add the character "
+//				SizeBuffer++;
+//				(*(Buffer++))=CurChar;
+//				NextChar(); // Second Quote
+//				NextChar(); // Next character
+//			}
+//
+//
+//			if(CurChar==Escape)
+//			{
+//				// The next character must be added
+//				NextChar();
+//			}
+//
+//			if(SizeBuffer==MaxBuffer)
+//				AddBuffer();
+//
+//			// Add the character
+//			SizeBuffer++;
+//			(*(Buffer++))=CurChar;
+//		}
+//		else
+//		{
+//			if(IsEol())
+//				break;
+//		}
+//	}
+//
+//	// If something is still in the buffer when the eof is reached -> Add it
+//	if(SizeBuffer)
+//		AddBuffer();
+//
+//	if(MustCreate)
+//	{
+//		// The last character read was the separation one -> Empty field
+//		NewValue();
+//		NbValues++;
+//	}
+//}
 
 
 
@@ -254,29 +443,33 @@ RString RCSVFile::Get(size_t idx) const
 
 
 //------------------------------------------------------------------------------
-size_t RCSVFile::GetSizeT(size_t idx) const
+size_t RCSVFile::GetSizeT(size_t idx,bool zero) const
 {
 	if(idx>=NbValues)
 		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
 	RString Field(*Values[idx]);
+	if(zero&&Field.IsEmpty())
+		return(0);
 	bool Ok;
 	size_t res(Field.ToSizeT(Ok));
 	if(!Ok)
-		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): '"+Field+"' is not a size_t");
+		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): Column "+RString::Number(idx)+": '"+Field+"' is not a size_t");
 	return(res);
 }
 
 
 //------------------------------------------------------------------------------
-double RCSVFile::GetDouble(size_t idx) const
+double RCSVFile::GetDouble(size_t idx,bool zero) const
 {
 	if(idx>=NbValues)
 		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
 	RString Field(*Values[idx]);
+	if(zero&&Field.IsEmpty())
+		return(0.0);
 	bool Ok;
 	double res(Field.ToDouble(Ok));
 	if(!Ok)
-		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): '"+Field+"' is not a size_t");
+		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): Column "+RString::Number(idx)+": '"+Field+"' is not a size_t");
 	return(res);
 }
 

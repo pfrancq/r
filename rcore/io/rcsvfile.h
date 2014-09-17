@@ -108,6 +108,31 @@ class RCSVFile : private RTextFile
 	 */
 	RChar* Buffer;
 
+	/**
+	 * Current value read.
+    */
+	RString* CurValue;
+
+	/**
+	 * Current column.
+    */
+	int CurCol;
+
+	/**
+	 * Current character.
+    */
+	RChar CurChar;
+
+	/**
+	 * Is a value currently read?
+	 */
+	bool ReadValue;
+
+	/**
+	 * Character that will represent the end of a value.
+	 */
+	RChar EndValueChar;
+
 public:
 
 	/**
@@ -160,9 +185,31 @@ public:
 private:
 
 	/**
-	 * @return a pointer to the next value.
+	 * Create a new value to read and assign it the CurValue.
 	 */
-	inline RString* NewValue(void);
+	inline void NewValue(void);
+
+	/**
+	 * Add the content of the buffer to CurValue and reset the buffer.
+    */
+	inline void AddBuffer(void);
+
+	/**
+	 * Add the current character to the buffer.
+    */
+	inline void AddToBuffer(void);
+
+	/**
+	 * Read the current character in CurChar and increment CurCol.
+    */
+	inline void NextChar(void);
+
+	/**
+	 * Look if there is some values to read at thr current column. In practice,
+	 * the method is called at the beginning and after a separation.
+	 * @return true if the end of line is reached.
+    */
+	inline bool IsEol(void);
 
 public:
 
@@ -181,15 +228,19 @@ public:
 	 * @return a size_t corresponding to a given value of the current line. if
 	 * the value is not an integer, an exception is generated.
 	 * @param idx            Index of the value.
+	 * @param zero           Specify if an empty field must be considered as a
+	 *                       zero (true) or generate an exception (false).
 	 */
-	size_t GetSizeT(size_t idx) const;
+	size_t GetSizeT(size_t idx,bool zero=true) const;
 
 	/**
 	 * @return a double corresponding to a given value of the current line. if
 	 * the value is not an number, an exception is generated.
 	 * @param idx            Index of the value.
-	 */
-	double GetDouble(size_t idx) const;
+	 * @param zero           Specify if an empty field must be considered as a
+	 *                       zero (true) or generate an exception (false).
+	 * 	 */
+	double GetDouble(size_t idx,bool zero=true) const;
 
 	/**
 	 * @return the number of values at the last line read.
