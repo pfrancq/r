@@ -214,7 +214,7 @@ public:
 	* in the current list.
 	* @param ins             The list to insert.
 	*/
-	void Add(const RNumContainer& ins);
+	RNumContainer<I,bOrder>&  Add(const RNumContainer& ins);
 
 	/**
 	* Return the value at position i. The first value is at position 0.

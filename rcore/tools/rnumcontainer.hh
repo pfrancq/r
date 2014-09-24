@@ -310,7 +310,7 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	void RNumContainer<I,bOrder>::Add(const RNumContainer& ins)
+	RNumContainer<I,bOrder>&  RNumContainer<I,bOrder>::Add(const RNumContainer& ins)
 {
 	I* ptr;
 	size_t i;
@@ -318,6 +318,7 @@ template<class I,bool bOrder>
 	Verify(NbInt+ins.NbInt);
 	for(i=ins.NbInt+1,ptr=ins.List;--i;ptr++)
 		Insert(*ptr);
+	return(*this);
 }
 
 
