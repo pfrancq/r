@@ -133,6 +133,11 @@ class RCSVFile : private RTextFile
 	 */
 	RChar EndValueChar;
 
+	/**
+	 * Debug characters read.
+	 */
+	bool Debug;
+
 public:
 
 	/**
@@ -180,7 +185,13 @@ public:
 	 * Get the number of the current line.
     * @return current line.
     */
-	unsigned int GetLineNb(void) const {return(RTextFile::GetLineNb());}
+	unsigned int GetLineNb(void) const;
+
+	/**
+	 * Specify if information must be printed during the treatment of a line.
+    * @param debug          If true, information is printed.
+    */
+	void SetPrintDebug(bool debug);
 
 private:
 

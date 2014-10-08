@@ -49,7 +49,7 @@ const size_t MaxBuffer=1024;
 //------------------------------------------------------------------------------
 RCSVFile::RCSVFile(const RURI& uri,RChar sep,bool quotes,const RCString& encoding)
 	: RTextFile(uri,encoding), Sep(sep), Quotes(quotes), Escape('\\'), Values(20),
-	  Internal(0), SizeBuffer(0), Buffer(0)
+	  Internal(0), SizeBuffer(0), Buffer(0), Debug(false)
 {
 	Internal=new RChar[MaxBuffer+1];
 }
@@ -87,6 +87,23 @@ void RCSVFile::Close(void)
 
 
 //------------------------------------------------------------------------------
+unsigned int RCSVFile::GetLineNb(void) const
+{
+	unsigned int Nb(RTextFile::GetLineNb());
+	if(Nb&&(!End()))
+		return(Nb-1);
+	return(Nb);
+}
+
+
+//------------------------------------------------------------------------------
+void RCSVFile::SetPrintDebug(bool debug)
+{
+	Debug=debug;
+}
+
+
+//------------------------------------------------------------------------------
 inline void RCSVFile::NewValue(void)
 {
 	// Insert a null string
@@ -100,6 +117,13 @@ inline void RCSVFile::NewValue(void)
 		mThrowRIOException(this,"Non null buffer size");
 	SizeBuffer=0;
 	Buffer=Internal;
+	if(Debug)
+	{
+		if(NbValues>1)
+			cout<<"*";
+		cout<<endl<<"   *";
+		cout.flush();
+	}
 }
 
 
@@ -129,6 +153,11 @@ void RCSVFile::AddToBuffer(void)
 void RCSVFile::NextChar(void)
 {
 	CurChar=GetChar();
+	if(Debug)
+	{
+		cout<<CurChar.Latin1();
+		cout.flush();
+	}
 	CurCol++;
 }
 
@@ -136,8 +165,8 @@ void RCSVFile::NextChar(void)
 //------------------------------------------------------------------------------
 bool RCSVFile::IsEol(void)
 {
-	// Skip the spaces (excepted an end of line)
-	while((!Eol(CurChar))&&CurChar.IsSpace())
+	// Skip the spaces (excepted an end of line or the separation character)
+	while((!Eol(CurChar))&&(CurChar!=Sep)&&CurChar.IsSpace())
 		NextChar();
 
 	// If we found an end of line -> Skip the new line
@@ -179,6 +208,14 @@ void RCSVFile::Read(void)
 	ReadValue=false;
 	CurChar=0;
 
+	if(End())
+		mThrowRIOException(this,"End of file reached");
+	if(Debug)
+	{
+		cout<<"---------> Start new line";
+		cout.flush();
+	}
+
 	// Read the values
 	while(!End())
 	{
@@ -190,7 +227,6 @@ void RCSVFile::Read(void)
 			if(Quotes&&(EndValueChar=='"')&&(CurChar=='"')&&((!End())&&(GetNextChar()=='"')))
 			{
 				// Valid double quote
-
 				AddToBuffer();  // Add the character "
 				NextChar();     // Skip the second Quote
 			}
@@ -200,22 +236,22 @@ void RCSVFile::Read(void)
 
 				// Problem if we are at the end of the line and a quote is searched to finish the current value
 				if(Eol(CurChar)&&(EndValueChar=='"'))
-					throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+","+RString::Number(CurCol)+"): CSV line doesn't finish with a quote");
+					throw RIOException(URI()+" ("+RString::Number(GetLineNb())+","+RString::Number(CurCol)+"): CSV line doesn't finish with a quote");
 
 				// End the reading of the current value and add the buffer to it
 				ReadValue=false;
 				if(SizeBuffer)
 					AddBuffer();
 
-				// If the current character is a quote -> skip it
-				if(CurChar=='\"')
+				// If quotes are delimiting a field and the current character is a quote -> skip it
+				if(Quotes&&CurChar=='\"')
 					NextChar();
 
 				// Skip all space characters until the separation
 				while((!Eol(CurChar))&&(CurChar!=Sep))
 				{
 					if(!CurChar.IsSpace())
-						throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+","+RString::Number(CurCol)+"): invalid character "+CurChar);
+						throw RIOException(URI()+" ("+RString::Number(GetLineNb())+","+RString::Number(CurCol)+"): invalid character "+CurChar);
 					NextChar();
 				}
 
@@ -247,6 +283,8 @@ void RCSVFile::Read(void)
 	// If something is still in the buffer when the eof is reached -> Add it
 	if(SizeBuffer)
 		AddBuffer();
+
+	SkipEol();
 }
 
 
@@ -436,7 +474,7 @@ void RCSVFile::Read(void)
 RString RCSVFile::Get(size_t idx) const
 {
 	if(idx>=NbValues)
-		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
+		throw RIOException(URI()+" ("+RString::Number(GetLineNb())+"): CSV line has not "+RString::Number(idx+1)+" fields");
 	RString Field(*Values[idx]);
 	return(Field);
 }
@@ -446,14 +484,14 @@ RString RCSVFile::Get(size_t idx) const
 size_t RCSVFile::GetSizeT(size_t idx,bool zero) const
 {
 	if(idx>=NbValues)
-		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
+		throw RIOException(URI()+" ("+RString::Number(GetLineNb())+"): CSV line has not "+RString::Number(idx+1)+" fields");
 	RString Field(*Values[idx]);
 	if(zero&&Field.IsEmpty())
 		return(0);
 	bool Ok;
 	size_t res(Field.ToSizeT(Ok));
 	if(!Ok)
-		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): Column "+RString::Number(idx)+": '"+Field+"' is not a size_t");
+		throw RIOException(URI()+" ("+RString::Number(GetLineNb())+"): Column "+RString::Number(idx)+": '"+Field+"' is not a size_t");
 	return(res);
 }
 
@@ -462,14 +500,14 @@ size_t RCSVFile::GetSizeT(size_t idx,bool zero) const
 double RCSVFile::GetDouble(size_t idx,bool zero) const
 {
 	if(idx>=NbValues)
-		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): CSV line has not "+RString::Number(idx+1)+" fields");
+		throw RIOException(URI()+" ("+RString::Number(GetLineNb())+"): CSV line has not "+RString::Number(idx+1)+" fields");
 	RString Field(*Values[idx]);
 	if(zero&&Field.IsEmpty())
 		return(0.0);
 	bool Ok;
 	double res(Field.ToDouble(Ok));
 	if(!Ok)
-		throw RIOException(URI()+" ("+RString::Number(GetLineNb()-1)+"): Column "+RString::Number(idx)+": '"+Field+"' is not a size_t");
+		throw RIOException(URI()+" ("+RString::Number(GetLineNb())+"): Column "+RString::Number(idx)+": '"+Field+"' is not a size_t");
 	return(res);
 }
 

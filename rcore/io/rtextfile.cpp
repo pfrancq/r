@@ -551,6 +551,7 @@ void RTextFile::SetRem(const RString& c)
 		throw RIOException(this,"Maximum of 10 characters for defining comments");
 }
 
+
 //------------------------------------------------------------------------------
 void RTextFile::SetRem(const RString& b,const RString& e)
 {
