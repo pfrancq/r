@@ -61,7 +61,8 @@ class RTextEncoding;
 *
 * When multiple elements are inserted on the same text line, before each
 * insertion, and except for the first one, a set of characters representing
-* a separator (' ' by default) are added.
+* a separator (' ' by default) can be added. By default, the separation is
+* added, but this can be change with the @ref RTextFile::SetAddSeparator method.
 *
 * The user can write his own operators to read and write with RTextFile. Here
 * is an example:
@@ -231,6 +232,11 @@ private:
 	* This string represent a separator for different elements on the same line
 	*/
 	RString Separator;
+
+	/**
+	 * Skip the separator each time something is written on the current line?
+	 */
+	bool SkipSeparator;
 
 	/**
 	* This variable is holding the current line number.
@@ -480,6 +486,18 @@ public:
 	void SetRem(const RString& b,const RString& e) ;
 
 	/**
+	 * Look if a separator must be added when something is written.
+    * @return true if it is the case.
+    */
+	bool MustAddSeparator(void) const {return(!SkipSeparator);}
+
+	/**
+	 * Define if a separator must be added when something is written.
+    * @param add            Must the separator be added?
+    */
+	void SetAddSeparator(bool add);
+
+	/**
 	* Get the next word contained in the file. A word is a suite of characters
 	* delimited by spaces.
 	*/
@@ -599,27 +617,29 @@ public:
 protected:
 
 	/**
-	* Write a separator if the current pointer of the file is not at the
-	* beginning of a new line.
+	* Write a separator if necessary:
+	* - A seperator must be added.
+	* - The current pointer of the file is not at the beginning of a new line.
 	*/
-	void WriteSeparator(void);
+	inline void WriteSeparator(void);
 
 public:
 
 	/**
 	* Write a string in the file. If the string is not the first thing on the
-	* line, a separator is add before it.
+	* line, a separator is eventually added before it.
 	*/
 	void WriteStr(const RString& str);
 
 	/**
 	* Write a string in the file. If the string is not the first thing on the
-	* line, a separator is add before it.
+	* line, a separator is eventually added before it.
 	*/
 	void WriteStr(const char* c);
 
 	/**
-	* Write a string of a give length in the file.
+	* Write a string of a give length in the file. If the string is not the first
+	* thing on the line, a separator is eventually added before it.
 	*/
 	void WriteStr(const char* c,size_t l);
 

@@ -59,7 +59,7 @@ RTextFile::RTextFile(void)
   : RIOFile(), NewLine(true),
     Rem("%"), BeginRem("/*"), EndRem("*/"),
     CommentType(NoComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
-	Separator(" "), Line(0), LastLine(0), Codec(0)
+	Separator(" "), SkipSeparator(false), Line(0), LastLine(0), Codec(0)
 {
 }
 
@@ -69,7 +69,7 @@ RTextFile::RTextFile(const RURI& uri,const RCString& encoding)
   : RIOFile(uri), NewLine(true),
     Rem("%"), BeginRem("/*"), EndRem("*/"),
     CommentType(NoComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
-	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
+	Separator(" "), SkipSeparator(false), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
 {
 }
 
@@ -79,7 +79,7 @@ RTextFile::RTextFile(RIOFile& file,const RCString& encoding)
 	: RIOFile(file), NewLine(true),
 	Rem("%"), BeginRem("/*"), EndRem("*/"),
 	CommentType(NoComment), ActivComment(NoComment), ParseSpace(SkipAllSpaces),
-	Separator(" "), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
+	Separator(" "), SkipSeparator(false), Line(0), LastLine(0), Codec(RTextEncoding::GetTextEncoding(encoding))
 {
 }
 
@@ -563,6 +563,13 @@ void RTextFile::SetRem(const RString& b,const RString& e)
 
 
 //------------------------------------------------------------------------------
+void RTextFile::SetAddSeparator(bool add)
+{
+	SkipSeparator=!add;
+}
+
+
+//------------------------------------------------------------------------------
 RString RTextFile::GetWord(void)
 {
 	if(!CanRead)
@@ -925,7 +932,7 @@ RTextFile& RTextFile::operator>>(long double& nb)
 //------------------------------------------------------------------------------
 void RTextFile::WriteSeparator(void)
 {
-	if(NewLine) return;
+	if(NewLine||SkipSeparator) return;
 	RCString str=Codec->FromUnicode(Separator);
 	Write(str,str.GetLen());
 }
@@ -1135,6 +1142,24 @@ RTextFile& RTextFile::operator<<(const long double nb)
 
 
 //------------------------------------------------------------------------------
+inline void Add(char* tmp,int add,int len)
+{
+	int idx(0);
+	for(len--;len>0;len--)
+	{
+		int dec(1);
+		for(int i=len;i--;)
+			dec*=10;
+		//int dec(10*len);
+		int rest(add/dec);
+		tmp[idx++]=48+rest;
+		add-=rest*dec;
+	}
+	tmp[idx]=48+add;
+}
+
+
+//------------------------------------------------------------------------------
 void RTextFile::WriteTime(void)
 {
 	time_t timer;
@@ -1142,35 +1167,61 @@ void RTextFile::WriteTime(void)
 
 	timer = time(NULL);
 	tblock = localtime(&timer);
-	#ifdef  __MINGW32__
-		char* tmp(asctime(tblock));
-	#else
-		char tmp[30];
-		asctime_r(tblock,tmp);
-	#endif
-	tmp[strlen(tmp)-1]=0;
-	WriteStr(tmp);
+	char Tmp[25];
+	switch(tblock->tm_wday)
+	{
+		case 0:  Tmp[0]='S'; Tmp[1]='u'; Tmp[2]='n'; break;
+		case 1:  Tmp[0]='M'; Tmp[1]='o'; Tmp[2]='n'; break;
+		case 2:  Tmp[0]='T'; Tmp[1]='u'; Tmp[2]='e'; break;
+		case 3:  Tmp[0]='W'; Tmp[1]='e'; Tmp[2]='d'; break;
+		case 4:  Tmp[0]='T'; Tmp[1]='h'; Tmp[2]='u'; break;
+		case 5:  Tmp[0]='F'; Tmp[1]='r'; Tmp[2]='i'; break;
+		case 6:  Tmp[0]='S'; Tmp[1]='a'; Tmp[2]='t'; break;
+	}
+	Tmp[3]=' ';
+	switch(tblock->tm_mon)
+	{
+		case 0:  Tmp[4]='J'; Tmp[5]='a'; Tmp[6]='n'; break;
+		case 1:  Tmp[4]='F'; Tmp[5]='e'; Tmp[6]='b'; break;
+		case 2:  Tmp[4]='M'; Tmp[5]='a'; Tmp[6]='r'; break;
+		case 3:  Tmp[4]='A'; Tmp[5]='p'; Tmp[6]='r'; break;
+		case 4:  Tmp[4]='M'; Tmp[5]='a'; Tmp[6]='y'; break;
+		case 5:  Tmp[4]='J'; Tmp[5]='u'; Tmp[6]='n'; break;
+		case 6:  Tmp[4]='J'; Tmp[5]='u'; Tmp[6]='l'; break;
+		case 7:  Tmp[4]='A'; Tmp[5]='u'; Tmp[6]='g'; break;
+		case 8:  Tmp[4]='S'; Tmp[5]='e'; Tmp[6]='p'; break;
+		case 9:  Tmp[4]='O'; Tmp[5]='c'; Tmp[6]='t'; break;
+		case 10: Tmp[4]='N'; Tmp[5]='o'; Tmp[6]='v'; break;
+		case 11: Tmp[4]='D'; Tmp[5]='e'; Tmp[6]='c'; break;
+	}
+	Tmp[7]=' ';
+	Add(&Tmp[8],tblock->tm_mday,2);
+	Tmp[10]=' ';
+	Add(&Tmp[11],tblock->tm_year+1900,4);
+	Tmp[15]=' ';
+	Add(&Tmp[16],tblock->tm_hour,2);
+	Tmp[18]=':';
+	Add(&Tmp[19],tblock->tm_min,2);
+	Tmp[21]=':';
+	Add(&Tmp[22],tblock->tm_sec,2);
+	Tmp[24]=0;
+	WriteStr(Tmp,24);
 }
 
 
 //------------------------------------------------------------------------------
 void RTextFile::WriteLog(const RString& entry)
 {
-	time_t timer;
-	struct tm *tblock;
-
 	mReturnIfFail(entry.GetLen()>0);
 	if(!NewLine) WriteLine();
-	timer = time(NULL);
-	tblock = localtime(&timer);
-	#ifdef  __MINGW32__
-		char* tmp(asctime(tblock));
-	#else
-		char tmp[30];
-		asctime_r(tblock,tmp);
-	#endif
-	tmp[strlen(tmp)-1]=0;
-	WriteStr(RString("[")+tmp+"] : "+entry);
+	WriteSeparator();
+	bool SkipSep(SkipSeparator);
+	SkipSeparator=true;
+	WriteStr("[");
+	WriteTime();
+	WriteStr("] : ");
+	WriteStr(entry);
+	SkipSeparator=SkipSep;
 	WriteLine();
 }
 
