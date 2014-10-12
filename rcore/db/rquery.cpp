@@ -53,9 +53,12 @@ RQuery::RQuery(RDb* db,const RString& sql)
 //------------------------------------------------------------------------------
 RString RQuery::SQLValue(const RString val)
 {
-	RString ret("'");
+	RString ret;
 	const RChar* ptr;
 
+	ret.SetLen(val.GetLen()+10);
+	ret.SetLen(0);
+	ret+="'";
 	for(ptr=val();!ptr->IsNull();ptr++)
 	{
 		if((*ptr)==RChar('\''))

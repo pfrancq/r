@@ -87,7 +87,7 @@ void RCSVFile::Close(void)
 
 
 //------------------------------------------------------------------------------
-unsigned int RCSVFile::GetLineNb(void) const
+unsigned long RCSVFile::GetLineNb(void) const
 {
 	unsigned int Nb(RTextFile::GetLineNb());
 	if(Nb&&(!End()))
@@ -100,6 +100,26 @@ unsigned int RCSVFile::GetLineNb(void) const
 void RCSVFile::SetPrintDebug(bool debug)
 {
 	Debug=debug;
+}
+
+
+//------------------------------------------------------------------------------
+RString RCSVFile::CSVValue(const RString val)
+{
+	RString ret;
+	const RChar* ptr;
+
+	ret.SetLen(val.GetLen()+10);
+	ret.SetLen(0);
+	ret+="\"";
+	for(ptr=val();!ptr->IsNull();ptr++)
+	{
+		if((*ptr)==RChar('\"'))
+			ret+='\"';
+		ret+=(*ptr);
+	}
+	ret+=RChar('\"');
+	return(ret);
 }
 
 
@@ -248,7 +268,7 @@ void RCSVFile::Read(void)
 					NextChar();
 
 				// Skip all space characters until the separation
-				while((!Eol(CurChar))&&(CurChar!=Sep))
+				while((!CurChar.IsNull())&&(!Eol(CurChar))&&(CurChar!=Sep))
 				{
 					if(!CurChar.IsSpace())
 						throw RIOException(URI()+" ("+RString::Number(GetLineNb())+","+RString::Number(CurCol)+"): invalid character "+CurChar);
@@ -256,7 +276,7 @@ void RCSVFile::Read(void)
 				}
 
 				// If we are at the end of a line -> finish the reading
-				if(Eol(CurChar))
+				if(Eol(CurChar)||(CurChar.IsNull()))
 					break;
 			}
 			else if(CurChar==Escape)
@@ -283,6 +303,9 @@ void RCSVFile::Read(void)
 	// If something is still in the buffer when the eof is reached -> Add it
 	if(SizeBuffer)
 		AddBuffer();
+
+	if(CurChar==Sep)
+		IsEol();
 
 	SkipEol();
 }

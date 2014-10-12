@@ -185,13 +185,21 @@ public:
 	 * Get the number of the current line.
     * @return current line.
     */
-	unsigned int GetLineNb(void) const;
+	unsigned long GetLineNb(void) const;
 
 	/**
 	 * Specify if information must be printed during the treatment of a line.
     * @param debug          If true, information is printed.
     */
 	void SetPrintDebug(bool debug);
+
+	/**
+	* Transform a string to be used in a csv file (add quotes before and after,
+	* double quotes inside the string).
+	* @param val            String containing the value.
+	* @return a RString.
+	*/
+	static RString CSVValue(const RString val);
 
 private:
 
@@ -250,7 +258,7 @@ public:
 	 * @param idx            Index of the value.
 	 * @param zero           Specify if an empty field must be considered as a
 	 *                       zero (true) or generate an exception (false).
-	 * 	 */
+	 */
 	double GetDouble(size_t idx,bool zero=true) const;
 
 	/**
