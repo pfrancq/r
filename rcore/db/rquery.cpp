@@ -53,6 +53,9 @@ RQuery::RQuery(RDb* db,const RString& sql)
 //------------------------------------------------------------------------------
 RString RQuery::SQLValue(const RString val)
 {
+	if(val.IsEmpty())
+		return("NULL");
+	
 	RString ret;
 	const RChar* ptr;
 

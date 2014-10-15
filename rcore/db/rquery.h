@@ -162,7 +162,7 @@ public:
 	* Transform a string to be used in a SQL (add quotes before and after,
 	* double quotes inside the string).
 	* @param val            String containing the value.
-	* @return a RString.
+	* @return a SQL value or NULL if the string is empty.
 	*/
 	static RString SQLValue(const RString val);
 
