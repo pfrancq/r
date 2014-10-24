@@ -34,7 +34,7 @@
 
 //------------------------------------------------------------------------------
 // include files for MySQL
-#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
+#if (defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)) || !defined(WIN32)
 	#include <mysql/mysql.h>
 #else
 	#include <mysql.h>
