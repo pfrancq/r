@@ -55,7 +55,7 @@ RString RQuery::SQLValue(const RString val)
 {
 	if(val.IsEmpty())
 		return("NULL");
-	
+
 	RString ret;
 	const RChar* ptr;
 
@@ -72,6 +72,33 @@ RString RQuery::SQLValue(const RString val)
 	}
 	ret+=RChar('\'');
 	return(ret);
+}
+
+
+//------------------------------------------------------------------------------
+RString RQuery::SQLValue(int val)
+{
+	return(SQLValue(RString::Number(val)));
+}
+
+
+//------------------------------------------------------------------------------
+RString RQuery::SQLValue(unsigned int val)
+{
+	return(SQLValue(RString::Number(val)));
+}
+
+//------------------------------------------------------------------------------
+RString RQuery::SQLValue(long val)
+{
+	return(SQLValue(RString::Number(val)));
+}
+
+
+//------------------------------------------------------------------------------
+RString RQuery::SQLValue(unsigned long val)
+{
+	return(SQLValue(RString::Number(val)));
 }
 
 

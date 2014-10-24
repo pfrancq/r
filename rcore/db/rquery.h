@@ -167,6 +167,34 @@ public:
 	static RString SQLValue(const RString val);
 
 	/**
+	* Transform an integer into a SQL date (with quotes).
+	* @param val             Value.
+	* @return a RString.
+	*/
+	static RString SQLValue(int val);
+
+	/**
+	* Transform an unsigned integer into a SQL date (with quotes).
+	* @param val             Value.
+	* @return a RString.
+	*/
+	static RString SQLValue(unsigned int val);
+
+	/**
+	* Transform an integer into a SQL date (with quotes).
+	* @param val             Value.
+	* @return a RString.
+	*/
+	static RString SQLValue(long val);
+
+	/**
+	* Transform an unsigned integer into a SQL date (with quotes).
+	* @param val             Value.
+	* @return a RString.
+	*/
+	static RString SQLValue(unsigned long val);
+
+	/**
 	* Transform a date into a SQL date (with quotes).
 	* @param d              Date.
 	* @return a RString.
