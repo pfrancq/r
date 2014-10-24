@@ -159,11 +159,13 @@ void RDownload::DownloadFile(const RURI& uri,const RURI& local)
 }
 
 
+#if !defined(WIN32)
 //------------------------------------------------------------------------------
 void RDownload::DeleteFile(const RURI& tmpFile)
 {
 	remove(tmpFile.GetPath());
 }
+#endif
 
 
 //------------------------------------------------------------------------------

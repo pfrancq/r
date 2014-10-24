@@ -112,13 +112,15 @@ public:
 	*/
 	virtual void DownloadFile(const RURI& uri,const R::RURI& local);
 
+#if !defined(WIN32)
 	/**
 	* Delete a temporary copy of a file created by the manager. This method is
 	* only called if a temporary file was really created.
 	* @param tmpFile        Temporary file to delete.
 	*/
 	virtual void DeleteFile(const R::RURI& tmpFile);
-
+#endif
+	
 protected:
 
 	/**
