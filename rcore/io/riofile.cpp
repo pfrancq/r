@@ -251,8 +251,10 @@ bool RIOFile::IsOpen(void) const
 void RIOFile::Close(void)
 {
 	// If non-local file -> remove the temporary file
-	if(URI.GetScheme()!="file")
-			Get.DeleteFile(File);
+	#if !defined(WIN32)
+		if(URI.GetScheme()!="file")
+				Get.DeleteFile(File);
+	#endif
 	File=RString::Null;
 	RealPos=InternalToRead=Pos=Size=0;
 	Mode=RIO::Undefined;
