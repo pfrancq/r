@@ -103,6 +103,13 @@ RString RQuery::SQLValue(unsigned long val)
 
 
 //------------------------------------------------------------------------------
+RString RQuery::SQLValue(double val)
+{
+	return(SQLValue(RString::Number(val)));
+}
+
+
+//------------------------------------------------------------------------------
 RString RQuery::SQLValue(const RDate& d)
 {
 	return("'"+d+"'");

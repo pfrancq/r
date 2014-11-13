@@ -271,10 +271,11 @@ void RDate::SetToday(void)
 void RDate::SetDate(char day,char month,int year,char hour,char minute,char second)
 {
 	// Verify the null value
-	if((day==0)&&(month==0))
+	if(day==0)
 	{
 		day=1;
-		month=1;
+		if(month==0)
+			month=1;
 	}
 
 	// Verify the values
@@ -295,8 +296,7 @@ void RDate::SetDate(const RString& date)
 	const RChar* ptr;
 	char* begin;
 	char num[10];
-	int year;
-	char month,day,hour,minute,second;
+	int year,month,day,hour,minute,second;
 
 	if(date.ToUpper()=="NULL")
 	{

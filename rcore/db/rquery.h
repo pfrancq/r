@@ -195,6 +195,13 @@ public:
 	static RString SQLValue(unsigned long val);
 
 	/**
+	* Transform a double into a SQL date (with quotes).
+	* @param val             Value.
+	* @return a RString.
+	*/
+	static RString SQLValue(double val);
+
+	/**
 	* Transform a date into a SQL date (with quotes).
 	* @param d              Date.
 	* @return a RString.
