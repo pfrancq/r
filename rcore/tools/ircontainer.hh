@@ -619,6 +619,138 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
+	void iRContainer<C>::Inter(const iRContainer<C>& src1,const iRContainer<C>& src2)
+{
+	Clear();
+
+	if(src1.Order&&src2.Order)
+	{
+		C** ptr1(src1.Tab);
+		int Nb1(src1.LastPtr+1);
+		C** ptr2(src2.Tab);
+		int Nb2(src2.LastPtr);
+
+		// Parse the elements of each container once
+		for(;--Nb1;ptr1++)
+		{
+			if(!(*ptr1))
+				continue;
+
+			while(Nb2&&((!(*ptr2))||((*ptr2)&&((*ptr1)->Compare(**ptr2)>0))))
+			{
+				Nb2--;
+				ptr2++;
+			}
+
+			if(Nb2&&((*ptr1)->Compare(**ptr2)==0))
+			{
+				if(Dealloc)
+					InsertPtr(new C(**ptr1));
+				else
+					InsertPtr(*ptr1);
+			}
+		}
+	}
+	else
+	{
+		C** ptr1(src1.Tab);
+		int Nb1(src1.LastPtr+1);
+
+		// Look for each element of src1 if it is in src2
+		for(;--Nb1;ptr1++)
+		{
+			if(!(*ptr1))
+				continue;
+
+			if(src2.IsIn(**ptr1))
+			{
+				if(Dealloc)
+					InsertPtr(new C(**ptr1));
+				else
+					InsertPtr(*ptr1);
+			}
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C>
+	void iRContainer<C>::Union(const iRContainer<C>& src1,const iRContainer<C>& src2)
+{
+	Clear();
+
+	if(src1.Order&&src2.Order)
+	{
+		C** ptr1(src1.Tab);
+		int Nb1(src1.LastPtr+1);
+		C** ptr2(src2.Tab);
+		int Nb2(src2.LastPtr);
+
+		// Parse the elements of each container once
+		for(;--Nb1;ptr1++)
+		{
+			if(!(*ptr1))
+				continue;
+
+			while(Nb2&&((!(*ptr2))||((*ptr2)&&((*ptr1)->Compare(**ptr2)>0))))
+			{
+				if(Dealloc)
+					InsertPtr(new C(**ptr2));
+				else
+					InsertPtr(*ptr2);
+				Nb2--;
+				ptr2++;
+			}
+
+			if(Dealloc)
+				InsertPtr(new C(**ptr1));
+			else
+				InsertPtr(*ptr1);
+
+
+			if(Nb2&&(*ptr2)&&(*ptr1)->Compare(**ptr2)==0)
+			{
+				Nb2--;
+				ptr2++;
+			}
+		}
+		while(Nb2)
+		{
+			if(Dealloc)
+				InsertPtr(new C(**ptr2));
+			else
+				InsertPtr(*ptr2);
+			Nb2--;
+			ptr2++;
+		}
+	}
+	else
+	{
+		C** ptr1(src1.Tab);
+		int Nb1(src1.LastPtr+1);
+
+		// Copy one container and add the elements of the second one that are not already in
+		NormalCopy(src2);
+		for(;--Nb1;ptr1++)
+		{
+			if(!(*ptr1))
+				continue;
+
+			if(!src2.IsIn(**ptr1))
+			{
+				if(Dealloc)
+					InsertPtr(new C(**ptr1));
+				else
+					InsertPtr(*ptr1);
+			}
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+template<class C>
 	iRContainer<C>::~iRContainer(void)
 {
 	if(Tab)

@@ -725,6 +725,22 @@ public:
 	}
 
 	/**
+	 * Compute the intersection of two containers. The container is emptied.
+	 * before.
+    * @param src1           First container.
+    * @param src2           Second container.
+    */
+	void Inter(const iRContainer<C>& src1,const iRContainer<C>& src2);
+
+	/**
+	 * Compute the union of two containers. The container is emptied.
+	 * before.
+    * @param src1           First container.
+    * @param src2           Second container.
+    */
+	void Union(const iRContainer<C>& src1,const iRContainer<C>& src2);
+
+	/**
 	* Simple destructor.
 	*/
 	virtual ~iRContainer(void);

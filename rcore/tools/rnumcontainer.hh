@@ -299,24 +299,37 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	RNumContainer<I,bOrder>& RNumContainer<I,bOrder>::operator=(const RNumContainer& src)
+		template<bool bOrder1>
+	RNumContainer<I,bOrder>& RNumContainer<I,bOrder>::operator=(const RNumContainer<I,bOrder1>& src)
 {
-	Verify(src.NbInt);
-	NbInt = src.NbInt;
-	memcpy(List,src.List,sizeof(I)*NbInt);
+	Verify(src.GetNb());
+	if(bOrder&&(!bOrder1))
+	{
+		const I* ptr;
+		size_t i;
+
+		for(i=src.GetNb()+1,ptr=src.GetList();--i;ptr++)
+			Insert(*ptr);
+	}
+	else
+	{
+		NbInt = src.GetNb();
+		memcpy(List,src.GetList(),sizeof(I)*NbInt);
+	}
 	return(*this);
 }
 
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-	RNumContainer<I,bOrder>&  RNumContainer<I,bOrder>::Add(const RNumContainer& ins)
+		template<bool bOrder1>
+	RNumContainer<I,bOrder>&  RNumContainer<I,bOrder>::Add(const RNumContainer<I,bOrder1>& src)
 {
-	I* ptr;
+	const I* ptr;
 	size_t i;
 
-	Verify(NbInt+ins.NbInt);
-	for(i=ins.NbInt+1,ptr=ins.List;--i;ptr++)
+	Verify(NbInt+src.GetNb());
+	for(i=src.GetNb()+1,ptr=src.GetList();--i;ptr++)
 		Insert(*ptr);
 	return(*this);
 }
@@ -347,6 +360,106 @@ template<class I,bool bOrder>
 		NbInt=i+1;
 	}
 	return(List[i]);
+}
+
+
+//-----------------------------------------------------------------------------
+template<class I,bool bOrder>
+	template<bool bOrder1,bool bOrder2>
+		void RNumContainer<I,bOrder>::Inter(const RNumContainer<I,bOrder1>& src1,const RNumContainer<I,bOrder2>& src2)
+{
+	Clear();
+
+	if(bOrder1&&bOrder2)
+	{
+		const I* ptr1(src1.GetList());
+		int Nb1(src1.GetNb()+1);
+		const I* ptr2(src2.GetList());
+		int Nb2(src2.GetNb());
+
+		// Parse the elements of each container once
+		for(;--Nb1;ptr1++)
+		{
+			while(Nb2&&((*ptr1)>(*ptr2)))
+			{
+				Nb2--;
+				ptr2++;
+			}
+
+			if(Nb2&&((*ptr1)==(*ptr2)))
+			{
+				Insert(*ptr1);
+			}
+		}
+	}
+	else
+	{
+		const I* ptr1(src1.GetList());
+		int Nb1(src1.GetNb()+1);
+
+		// Look for each element of src1 if it is in src2
+		for(;--Nb1;ptr1++)
+		{
+			if(src2.IsIn(*ptr1))
+				Insert(*ptr1);
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+template<class I,bool bOrder>
+	template<bool bOrder1,bool bOrder2>
+		void RNumContainer<I,bOrder>::Union(const RNumContainer<I,bOrder1>& src1,const RNumContainer<I,bOrder2>& src2)
+{
+	Clear();
+
+	if(bOrder1&&bOrder2)
+	{
+		const I* ptr1(src1.GetList());
+		int Nb1(src1.GetNb()+1);
+		const I* ptr2(src2.GetList());
+		int Nb2(src2.GetNb());
+
+		// Parse the elements of each container once
+		for(;--Nb1;ptr1++)
+		{
+			while(Nb2&&((*ptr1)>(*ptr2)))
+			{
+				Insert(*ptr2);
+				Nb2--;
+				ptr2++;
+			}
+
+			Insert(*ptr1);
+
+
+			if(Nb2&&((*ptr1)==(*ptr2)))
+			{
+				Nb2--;
+				ptr2++;
+			}
+		}
+		while(Nb2)
+		{
+			Insert(*ptr2);
+			Nb2--;
+			ptr2++;
+		}
+	}
+	else
+	{
+		const I* ptr1(src1.GetList());
+		int Nb1(src1.GetNb()+1);
+
+		// Copy one container and add the elements of the second one that are not already in
+		(*this)=src2;
+		for(;--Nb1;ptr1++)
+		{
+			if(!src2.IsIn(*ptr1))
+				Insert(*ptr1);
+		}
+	}
 }
 
 

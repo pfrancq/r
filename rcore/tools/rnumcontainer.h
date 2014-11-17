@@ -204,17 +204,19 @@ public:
 
 	/**
 	* Assignment operator.
+	* @tparam bOrder1        Is the list ordered?
 	* @param src             List used for the assignment.
 	*/
-	RNumContainer& operator=(const RNumContainer& src);
+	template<bool bOrder1> RNumContainer& operator=(const RNumContainer<I,bOrder1>& src);
 
 	/**
 	* Insert all the values of a list in the current one. This function
 	* supposes that the list to insert don't contain any value already
 	* in the current list.
-	* @param ins             The list to insert.
+	* @tparam bOrder1        Is the list ordered?
+	* @param src             The list to insert.
 	*/
-	RNumContainer<I,bOrder>&  Add(const RNumContainer& ins);
+	template<bool bOrder1> RNumContainer<I,bOrder>&  Add(const RNumContainer<I,bOrder1>& src);
 
 	/**
 	* Return the value at position i. The first value is at position 0.
@@ -239,6 +241,26 @@ public:
 	* @return size_t
 	*/
 	size_t GetNb(void) const {return(NbInt);}
+
+	/**
+	 * Compute the intersection of two lists. The list is emptied.
+	 * before.
+	 * @tparam bOrder1       Is the first list ordered?
+	 * @tparam bOrder2       Is the second list ordered?
+    * @param src1           First list.
+    * @param src2           Second list.
+    */
+	template<bool bOrder1,bool bOrder2> void Inter(const RNumContainer<I,bOrder1>& src1,const RNumContainer<I,bOrder2>& src2);
+
+	/**
+	 * Compute the union of two lists. The list is emptied.
+	 * before.
+	 * @tparam bOrder1       Is the first list ordered?
+	 * @tparam bOrder2       Is the second list ordered?
+    * @param src1           First list.
+    * @param src2           Second list.
+    */
+	template<bool bOrder1,bool bOrder2> void Union(const RNumContainer<I,bOrder1>& src1,const RNumContainer<I,bOrder2>& src2);
 
 	/**
 	* Destructor of the list.
