@@ -27,14 +27,16 @@ ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 OPTION(disable-mysql "Disable MySQL support" OFF)
 OPTION(disable-sqlite "Disable SQLite support" OFF)
 OPTION(disable-postgres "Disable PostgreSQL support" OFF)
-OPTION(disable-kde "Disable KDE 4 support" OFF)
+OPTION(disable-qt "Disable QT4 support" OFF)
+OPTIOn(disable-rmath "Disable compiling rmath" OFF)
+OPTIOn(disable-roptimization "Disable compiling roptimization" OFF)
 OPTION(rcmake-verbose "Enable verbose output during cmake construction" OFF)
 
 INCLUDE(rmacro.cmake)
 
 IF(UNIX)
     ADD_DEFINITIONS("-fexceptions")
-    MESSAGE(STATUS "C++ exceptions will be re-enabled (since KDE4 detection disable them)")
+    MESSAGE(STATUS "C++ exceptions will be re-enabled")
     ADD_DEFINITIONS("-pedantic")
     ADD_DEFINITIONS("-Wno-long-long")
     ADD_DEFINITIONS("-DPIC")
@@ -44,17 +46,21 @@ ELSE(UNIX)
     ADD_DEFINITIONS("/D_RCORE_DLLAPI_")
 ENDIF(UNIX)
 
+
+#--------------------------------
+#path for iconv
+# iconv is a main dependency of R so find it or die
 SET(ICONVNAME iconv)
 IF(WIN32)
     SET(ICONVNAME libiconv)
+	IF(MINGW AND NOT DEFINED ${iconv-include})
+		SET(iconv-include $ENV{CMAKE_INCLUDE_DIR})
+		SET(iconv-library $ENV{CMAKE_LIBRARY_DIR})
+	ENDIF(MINGW AND NOT DEFINED ${iconv-include})
 ENDIF(WIN32)
-
-##set some vars
-#path for iconv
 LIB_SEARCH_PATH(iconv "${iconv-library}")
 INCLUDE_SEARCH_PATH(iconv "${iconv-include}")
-#iconv is a main dependency of R so find it or die
-FIND_LIBRARY(ICONV_LIB_PATH ${ICONVNAME} ${iconv_LIB_SEARCH_PATH})
+FIND_LIBRARY(ICONV_LIB_PATH ${ICONVNAME} ${iconv_LIB_SEARCH_PATH} ${ICONV_LIB_PATH})
 FIND_PATH(ICONV_INCLUDE_PATH iconv.h ${iconv_INCLUDE_SEARCH_PATH})
 IF(rcmake-verbose)
     MESSAGE(STATUS "iconv library path  configured: lib ${iconv_LIB_SEARCH_PATH} includes ${iconv_INCLUDE_SEARCH_PATH}")
@@ -76,6 +82,43 @@ ELSE(ICONV_LIB_PATH)
 	ENDIF(ICONV_INCLUDE_PATH)
 ENDIF(ICONV_LIB_PATH)
 
+
+#--------------------------------
+#path for curl
+SET(CURLNAME curl)
+IF(WIN32)
+	IF(MINGW)
+		SET(CURLNAME libcurl)
+		IF(NOT DEFINED ${curl-include})
+			SET(curl-include "C:/curl/include")
+		ENDIF(NOT DEFINED ${curl-include})
+		IF(NOT DEFINED ${curl-library})
+			SET(curl-library "C:/curl/lib")
+		ENDIF(NOT DEFINED ${curl-library})
+	ELSE(MINGW)
+		SET(CURLNAME libcurl_imp)
+	ENDIF(MINGW)
+ENDIF(WIN32)
+LIB_SEARCH_PATH(curl "${curl-library}")
+INCLUDE_SEARCH_PATH(curl "${curl-include}")
+FIND_LIBRARY(CURL_LIB_PATH ${CURLNAME} ${curl_LIB_SEARCH_PATH})
+FIND_PATH(CURL_INCLUDE_PATH curl/curl.h ${curl_INCLUDE_SEARCH_PATH})
+IF(rcmake-verbose)
+    MESSAGE(STATUS "curl library path configured: lib ${curl_LIB_SEARCH_PATH} includes ${curl_INCLUDE_SEARCH_PATH}")
+ENDIF(rcmake-verbose)
+IF(CURL_LIB_PATH)
+	IF(CURL_INCLUDE_PATH)
+	    INCLUDE_DIRECTORIES(${CURL_INCLUDE_PATH})
+		MESSAGE(STATUS "CURL library successfully configured: lib ${CURL_LIB_PATH} includes ${CURL_INCLUDE_PATH}")
+	ELSE(CURL_INCLUDE_PATH)
+		MESSAGE(FATAL_ERROR "CURL header files cannot be found.")
+	ENDIF(CURL_INCLUDE_PATH)
+ELSE(CURL_LIB_PATH)
+	MESSAGE(FATAL_ERROR "CURL library cannot be found.")
+ENDIF(CURL_LIB_PATH)
+
+
+#--------------------------------
 #path for mysql
 IF(disable-mysql)
     IF(WIN32 AND NOT MINGW)
@@ -85,6 +128,9 @@ IF(disable-mysql)
 	    SET(MYSQLCLIENT_LIB_PATH "")
 	ENDIF(WIN32 AND NOT MINGW)
 ELSE(disable-mysql)
+	IF(${mysql-library})
+		MESSAGE(STATUS "coucou")
+	ENDIF(${mysql-library})
     LIB_SEARCH_PATH(mysql "${mysql-library}")
     INCLUDE_SEARCH_PATH(mysql "${mysql-include}")
     FIND_LIBRARY(MYSQLCLIENT_LIB_PATH mysqlclient ${mysql_LIB_SEARCH_PATH})
@@ -107,6 +153,8 @@ ELSE(disable-mysql)
 	ENDIF(MYSQLCLIENT_LIB_PATH)
 ENDIF(disable-mysql)
 
+
+#--------------------------------
 #path for sqlite
 IF(disable-sqlite)
     MESSAGE(STATUS "SQLite support disabled")
@@ -131,34 +179,8 @@ ELSE(disable-sqlite)
 	ENDIF(SQLITE_LIB_PATH)
 ENDIF(disable-sqlite)
 
-#path for curl
-SET(CURLNAME curl)
-IF(WIN32)
-	IF(MINGW)
-		SET(CURLNAME libcurl)
-	ELSE(MINGW)
-		SET(CURLNAME libcurl_imp)
-	ENDIF(MINGW)
-ENDIF(WIN32)
 
-LIB_SEARCH_PATH(curl "${curl-library}")
-INCLUDE_SEARCH_PATH(curl "${curl-include}")
-FIND_LIBRARY(CURL_LIB_PATH ${CURLNAME} ${curl_LIB_SEARCH_PATH})
-FIND_PATH(CURL_INCLUDE_PATH curl/curl.h ${curl_INCLUDE_SEARCH_PATH})
-IF(rcmake-verbose)
-    MESSAGE(STATUS "curl library path configured: lib ${curl_LIB_SEARCH_PATH} includes ${curl_INCLUDE_SEARCH_PATH}")
-ENDIF(rcmake-verbose)
-IF(CURL_LIB_PATH)
-	IF(CURL_INCLUDE_PATH)
-	    INCLUDE_DIRECTORIES(${CURL_INCLUDE_PATH})
-		MESSAGE(STATUS "CURL library successfully configured: lib ${CURL_LIB_PATH} includes ${CURL_INCLUDE_PATH}")
-	ELSE(CURL_INCLUDE_PATH)
-		MESSAGE(FATAL_ERROR "CURL header files cannot be found.")
-	ENDIF(CURL_INCLUDE_PATH)
-ELSE(CURL_LIB_PATH)
-	MESSAGE(FATAL_ERROR "CURL library cannot be found.")
-ENDIF(CURL_LIB_PATH)
-
+#--------------------------------
 #search for PostgreSQL
 IF(disable-postgres)
 	MESSAGE(STATUS "PostgreSQL support disabled")
@@ -178,10 +200,13 @@ ELSE(disable-postgres)
 ENDIF(disable-postgres)
 
 
+#--------------------------------
 IF(extra-include)
     INCLUDE_DIRECTORIES(${extra-include})
 ENDIF(extra-include)
 
+
+#--------------------------------
 IF(UNIX)
 #need thread for using RTHREAD
     FIND_PACKAGE(Threads REQUIRED)
@@ -191,21 +216,21 @@ ELSE(UNIX)
     ADD_DEFINITIONS("/DDBUG_OFF")
 ENDIF(UNIX)
 
-#search for kde4
-IF(disable-kde)
-	MESSAGE(STATUS "KDE4 support disabled")
-ELSE(disable-kde)
-	FIND_PACKAGE(KDE4 REQUIRED)
-	FIND_PACKAGE(Qt4)
-	IF(KDE4_FOUND)
-	    INCLUDE (KDE4Defaults)
-		ADD_DEFINITIONS(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-		INCLUDE_DIRECTORIES( ${KDE4_INCLUDE_DIR} ${QT_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
-		MESSAGE(STATUS "KDE4 support enabled.")
-	ELSE(KDE4_FOUND)
-		MESSAGE(FATAL_ERROR "KDE4 can't be found as requested")
-	ENDIF(KDE4_FOUND)
-ENDIF(disable-kde)
+
+#--------------------------------
+#search for Qt4
+IF(disable-qt)
+	MESSAGE(STATUS "Qt4 support disabled")
+ELSE(disable-qt)
+	FIND_PACKAGE(Qt4 REQUIRED)
+	IF(QT4_FOUND)
+		ADD_DEFINITIONS(${QT_DEFINITIONS})
+		INCLUDE_DIRECTORIES( ${QT_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+		MESSAGE(STATUS "Qt4 support enabled.")
+	ELSE(QT4_FOUND)
+		MESSAGE(FATAL_ERROR "QT4 can't be found as requested")
+	ENDIF(QT4_FOUND)
+ENDIF(disable-qt)
 
 
 SET(SUB_PROJECT rcore)

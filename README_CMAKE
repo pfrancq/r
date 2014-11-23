@@ -72,7 +72,7 @@ mysql-include=/path/to/libmysqlclient_includes -> where to find mysql client inc
 curl-library=/path/to/libcurl.so -> where to find curl library if not in standard library path
 curl-include=/path/to/libcurl_includes -> where to find curl includes if not in standard include path
 
-disable-kde=<true|false> -> Disable kde 3 support (by default, kde support is enabled [false])
+disable-qt=<true|false> -> Disable Qt support (by default, Qt support is enabled [false])
 rcmake-verbose=<true|false> -> Enable verbose output during cmake run (by default, verbose output is disabled [true], useful for debug of cmake scripts)
 
 disable-rmath=<true|false> -> Disable rmath library construction (by default, rmath library is enabled [false])
@@ -80,8 +80,8 @@ disable-roptimization=<true|false> -> Disable roptimization library construction
 
 EXEMPLE
 ------------------
-To compile R without debugging information and without Qt/KDE support, type (if you compile it in a subdirectory of R):
-	cmake -Ddisable-kde=true ..
+To compile R without debugging information and without Qt support, type (if you compile it in a subdirectory of R):
+	cmake -Ddisable-qt=true ..
 
 ABOUT INSTALLATION
 ------------------

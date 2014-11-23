@@ -35,12 +35,6 @@
 
 
 //-----------------------------------------------------------------------------
-// includes files for KDE
-#include <kicon.h>
-#include <kiconloader.h>
-
-
-//-----------------------------------------------------------------------------
 // include files for R
 #include <rnodecursor.h>
 #include <qrxmlstruct.h>
@@ -111,7 +105,7 @@ void QRXMLStruct::ConstructTag(RXMLTag* t,QTreeWidgetItem* parent)
 	QTreeWidgetItem* ptr=0,*ptr2;
 	QTreeWidgetItem* prec=0;
 
-	parent->setIcon(0,KIconLoader::global()->loadIcon("xml_element.png",KIconLoader::Small));
+	parent->setIcon(0,QIcon::fromTheme("xml_element.png"));
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		if(!prec)
@@ -125,7 +119,7 @@ void QRXMLStruct::ConstructTag(RXMLTag* t,QTreeWidgetItem* parent)
 		if(!Cur()->GetContent().IsEmpty())
 		{
 			ptr2=new QListViewItemXMLTag(ptr,0,ToQString(Cur()->GetContent().Trim()));
-			ptr2->setIcon(0,KIconLoader::global()->loadIcon("xml_text.png",KIconLoader::Small));
+			ptr2->setIcon(0,QIcon::fromTheme("xml_text.png"));
 		}
 		ConstructTag(Cur(),ptr);
 	}

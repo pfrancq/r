@@ -1,24 +1,32 @@
-SET(rcore_frontend_kde_INST_INCLUDES
+SET(rcore_frontend_qt_INST_INCLUDES
 rqt.h
 qrconsole.h
 qrxmlstruct.h
 qrpainter.h
 )
 
-SET(rcore_frontend_kde_TARGET_SOURCES
+SET(rcore_frontend_qt_TARGET_SOURCES
 rqt.cpp
 qrconsole.cpp
 qrxmlstruct.cpp
 qrpainter.cpp
 )
 
-SET(rcore_frontend_kde_UI_INCLUDES qrxmlstruct.ui)
+SET(rcore_frontend_qt_UI_INCLUDES
+	qrxmlstruct.ui
+)
 
 
-FOREACH(file ${rcore_frontend_kde_UI_INCLUDES})
-   SET(REALFILE frontend/kde/${file})
-   KDE4_ADD_UI_FILES(rcore_frontend_kde_UIFILE ${REALFILE})
-ENDFOREACH(file ${rcore_frontend_kde_UI_INCLUDES})
+FOREACH(file ${rcore_frontend_qt_UI_INCLUDES})
+   SET(REALFILE frontend/qt/${file})
+   QT4_WRAP_UI(rcore_frontend_qt_UIFILE ${REALFILE})
+ENDFOREACH(file ${rcore_frontend_qt_UI_INCLUDES})
+
+FOREACH(file ${rcore_frontend_qt_INST_INCLUDES})
+   SET(REALFILE frontend/qt/${file})
+   QT4_WRAP_CPP(rcore_frontend_qt_UIFILE ${REALFILE})
+ENDFOREACH(file ${rcore_frontend_qt_INST_INCLUDES})
+
 
 # INSTALL(FILES frontend/kde/nokonqueror.png
 # 		frontend/kde/xml_cdata_b.png
@@ -34,5 +42,5 @@ ENDFOREACH(file ${rcore_frontend_kde_UI_INCLUDES})
 # 		frontend/kde/xml_element.png
 # 		frontend/kde/xml_procinstr.png
 # 		frontend/kde/xml_text.png
-# 
+#
 # 		DESTINATION share/icons/hicolor/16x16/actions/)
