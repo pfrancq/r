@@ -68,3 +68,81 @@ RString R::FromQString(const QString& str)
 		(*const_cast<RChar*>(ptr))=str.at(i).unicode();
 	return(ret);
 }
+
+
+//-----------------------------------------------------------------------------
+QString R::ToPlainText(const R::RString& str,int maxlen)
+{
+	RString New;
+	New.SetLen(110);
+	New.SetLen(0);
+	RChar Last(0);
+
+	RCharCursor Cur(str);
+	for(Cur.Start();(!Cur.End())&&maxlen;Cur.Next())
+	{
+		// Skip Spaces
+		if(Last.IsSpace())
+		{
+			while((!Cur.End())&&Cur().IsSpace())
+				Cur.Next();
+		}
+		if(Cur.End())
+			break;
+
+		if(Cur()=='<')
+		{
+			// Skip HTML codes
+			RChar Skip[6];
+			int nb(0);
+			while((!Cur.End())&&(Cur()!='>'))
+			{
+				if(nb<6)
+					Skip[nb++]+=Cur();
+				Cur.Next();
+			}
+			if(RChar::StrNCmp(Skip,"<style",6)==0)
+			{
+				// Skip everything until </style>
+				while((!Cur.End())&&(Cur()!='<'))
+					Cur.Next();
+				if(!Cur.End())
+					Cur.Prev();
+			}
+		}
+		else
+		{
+			maxlen--;
+			New+=Cur();
+		}
+		Last=Cur();
+	}
+
+	// If maxlen is null -> add (...) at the end
+	if(!maxlen)
+		New+=" (...)";
+
+	return(ToQString(New.Trim()));
+}
+
+
+//-----------------------------------------------------------------------------
+QString R::ToPlainText(const QString& str,int maxlen)
+{
+	return(ToPlainText(R::FromQString(str),maxlen));
+}
+
+
+//-----------------------------------------------------------------------------
+RString R::ToSimpleHTML(const QTextEdit* edit)
+{
+	if(edit->toPlainText().isEmpty())
+		return(RString::Null);
+	QString str(edit->toHtml());
+	// Find <body and </body>
+	int BeginBody(str.indexOf("<body"));
+	int EndBody(str.indexOf("</body>"));
+	QString Text("<div"+str.mid(BeginBody+5,EndBody-BeginBody-6)+"</div");
+	RString New(FromQString(Text));
+	return(New);
+}

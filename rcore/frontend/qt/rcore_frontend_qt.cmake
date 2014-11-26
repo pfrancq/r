@@ -5,6 +5,14 @@ qrxmlstruct.h
 qrpainter.h
 )
 
+
+SET(rcore_frontend_qt_Qt_INCLUDES
+qrconsole.h
+qrxmlstruct.h
+qrpainter.h
+)
+
+
 SET(rcore_frontend_qt_TARGET_SOURCES
 rqt.cpp
 qrconsole.cpp
@@ -22,10 +30,10 @@ FOREACH(file ${rcore_frontend_qt_UI_INCLUDES})
    QT4_WRAP_UI(rcore_frontend_qt_UIFILE ${REALFILE})
 ENDFOREACH(file ${rcore_frontend_qt_UI_INCLUDES})
 
-FOREACH(file ${rcore_frontend_qt_INST_INCLUDES})
+FOREACH(file ${rcore_frontend_qt_Qt_INCLUDES})
    SET(REALFILE frontend/qt/${file})
    QT4_WRAP_CPP(rcore_frontend_qt_UIFILE ${REALFILE})
-ENDFOREACH(file ${rcore_frontend_qt_INST_INCLUDES})
+ENDFOREACH(file ${rcore_frontend_qt_Qt_INCLUDES})
 
 
 # INSTALL(FILES frontend/kde/nokonqueror.png

@@ -68,6 +68,7 @@ class RXMLAttr;
 class RXMLParser : public RTextFile
 {
 public:
+
 	/**
 	 * Define the section of the XML actually treated.
 	 */
@@ -77,6 +78,16 @@ public:
 		StyleSheet                   /** The Tag "<?xml-stylesheet >".*/,
 		DOCTYPE                      /** The Tag "<!DOCTYPE >".*/,
 		Body                         /** The body of the XML file.*/
+	};
+
+	/**
+	 * Define the type of header actually treated.
+	 */
+	enum HeaderAttributeType
+	{
+		Encoding                     /** The attribute "encoding".*/,
+		Version                      /** The attribute "version".*/,
+		Unknown                      /** Unknown attribute.*/
 	};
 
 protected:
@@ -190,14 +201,14 @@ private:
 	SectionType Section;
 
 	/**
+	 * Determine which header attribute is actually treated.
+	 */
+	HeaderAttributeType CurHeaderAttribute;
+
+	/**
 	 * Specify if HTML codes are accepted.
 	 */
 	bool HTMLCodes;
-
-	/**
-	 * Specify if the encoding is currently treated.
-	 */
-	bool TreatEncoding;
 
 	/**
 	 * HTMLMode active.
@@ -295,6 +306,11 @@ public:
 	 * Get the current section treated.
 	 */
 	SectionType GetSection(void) const {return(Section);}
+
+	/**
+	 * Get the current header attribute treated.
+	 */
+	HeaderAttributeType GetHeaderAttribute(void) const {return(CurHeaderAttribute);}
 
 	/**
 	* This function transform a given string that is supposed to represent a
@@ -400,7 +416,7 @@ private:
 	* @param lName           Local name of the attribute.
 	* @param name            Complete name of the attribute.
 	 */
-	void HeaderAttribute(const RString& namespaceURI,const RString& lName,const RString& name);
+	void LoadHeaderAttribute(const RString& namespaceURI,const RString& lName,const RString& name);
 
 	/**
 	* Method called each time some attribute value elements (words or spaces)
@@ -409,7 +425,7 @@ private:
 	* attribute.
 	* @param value           Value processed.
 	 */
-	void HeaderValue(const RString& value);
+	void LoadHeaderValue(const RString& value);
 
 public:
 
@@ -465,6 +481,22 @@ public:
 	 * @param value          Corresponding value.
 	 */
 	virtual void AddEntity(const RString& name,const RString& value);
+
+	/**
+	* Method called each time an attribute will be treated when reading the XML
+	* header.
+	* @param namespaceURI    Namespace (if any).
+	* @param lName           Local name of the attribute.
+	* @param name            Complete name of the attribute.
+	 */
+	virtual void HeaderAttribute(const RString& namespaceURI,const RString& lName,const RString& name);
+
+	/**
+	* Method called each time some attribute value elements (words or spaces)
+	* are parsed when reading the XML header.
+	* @param value           Value processed.
+	 */
+	virtual void HeaderValue(const RString& value);
 
 	/**
 	* Method called each time a tag will be treated when reading a XML file.

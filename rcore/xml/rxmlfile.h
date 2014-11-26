@@ -89,6 +89,11 @@ protected:
 	 */
 	RString AttrName;
 
+	/**
+	 * Try to compress tags.
+    */
+	bool CompressTags;
+
 public:
 
 	/**
@@ -113,6 +118,20 @@ public:
 	* @param encoding       The encoding scheme of the file.
 	*/
 	RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RCString& encoding="UTF-8");
+
+	/**
+	 * Look if the tags must be compressed or not.
+    * @return true if yes.
+    */
+	bool MustCompressTags(void) const {return(CompressTags);}
+
+	/**
+	 * Specify if the tags must be compressed. If yes, when a tag is written in a
+	 * file, when it has no child tags, the content is written on the same line
+	 * as the tag. If no, the content is written on a separate line.
+    * @param compress       Must the tags be compressed?
+    */
+	void SetCompressTags(bool compress);
 
 	/**
 	* Set the encoding of the XML document.
@@ -157,6 +176,14 @@ protected:
 	 * @param value          Corresponding value.
 	 */
 	virtual void AddEntity(const RString& name,const RString& value);
+
+	/**
+	* Method called each time some attribute value elements (words or spaces)
+	* are parsed when reading the XML header. In practice, it sets the version if
+	* found.
+	* @param value           Value processed.
+	 */
+	virtual void HeaderValue(const RString& value);
 
 	/**
 	* Method called each time a tag will be treated when reading a XML file.

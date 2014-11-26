@@ -325,7 +325,6 @@ size_t RXMLParser::GetLastTokenPos(void) const
 void RXMLParser::InitParser(void)
 {
 	Break=false;
-	TreatEncoding=false;
 	CurHTMLTag=0;
 	Namespaces.Clear();
 	DefaultNamespace.Clear();
@@ -369,7 +368,6 @@ void RXMLParser::Open(RIO::ModeType mode)
 			LoadHeader();
 			if(Break)
 				return;
-			TreatEncoding=false;
 			Section=Body;
 			LoadNextTag();
 			if(Break)
@@ -1343,7 +1341,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 
 		// Add the attribute
 		if(Section==Header)
-			HeaderAttribute(uri,lname,attrn);
+			LoadHeaderAttribute(uri,lname,attrn);
 		else
 			AddAttribute(uri,lname,attrn);
 		if(Break)
@@ -1372,7 +1370,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 					if(tmp.GetLen())
 					{
 						if(Section==Header)
-							HeaderValue(XMLToString(tmp));
+							LoadHeaderValue(XMLToString(tmp));
 						else
 							Value(XMLToString(tmp));
 						if(Break)
@@ -1385,7 +1383,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 					while(GetNextChar().IsSpace())
 					{
 						if(Section==Header)
-							HeaderValue(tmp);
+							LoadHeaderValue(tmp);
 						else
 							Value(RString(GetChar()));
 						if(Break)
@@ -1402,7 +1400,7 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 					mThrowRIOException(this,"Quote must be used to delimit the parameter value in a tag.");
 				RString tmp(What+GetToken(">"));
 				if(Section==Header)
-					HeaderValue(tmp);
+					LoadHeaderValue(tmp);
 				else
 					Value(tmp);
 				if(Break)
@@ -1437,20 +1435,24 @@ void RXMLParser::LoadAttributes(bool& popdefault,RContainer<Namespace,false,fals
 
 
 //------------------------------------------------------------------------------
-void RXMLParser::HeaderAttribute(const RString&,const RString& lName,const RString&)
+void RXMLParser::LoadHeaderAttribute(const RString& namespaceURI,const RString& lName,const RString& name)
 {
 	if(lName=="encoding")
-		TreatEncoding=true;
+		CurHeaderAttribute=Encoding;
+	else if(lName=="version")
+		CurHeaderAttribute=Version;
 	else
-		TreatEncoding=false;
+		CurHeaderAttribute=Unknown;
+	HeaderAttribute(namespaceURI,lName,name);
 }
 
 
 //------------------------------------------------------------------------------
-void RXMLParser::HeaderValue(const RString& value)
+void RXMLParser::LoadHeaderValue(const RString& value)
 {
-	if(TreatEncoding)
+	if(CurHeaderAttribute==Encoding)
 		SetEncoding(value.ToLatin1());
+	HeaderValue(value);
 }
 
 
@@ -1463,6 +1465,18 @@ void RXMLParser::SetDocType(const RString& docType)
 
 //------------------------------------------------------------------------------
 void RXMLParser::AddEntity(const RString&,const RString&)
+{
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::HeaderAttribute(const RString&,const RString&,const RString&)
+{
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLParser::HeaderValue(const RString&)
 {
 }
 

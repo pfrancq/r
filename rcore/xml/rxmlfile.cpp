@@ -45,24 +45,34 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 RXMLFile::RXMLFile(void)
- : RXMLParser(), XMLStruct(0), NewStruct(false), CurTag(0)
+ : RXMLParser(), XMLStruct(0), NewStruct(false), CurTag(0), CompressTags(true)
 {
+	SetAddSeparator(false);
 }
 
 
 //------------------------------------------------------------------------------
 RXMLFile::RXMLFile(const RURI& uri,RXMLStruct* xmlstruct,const RCString& encoding)
- : RXMLParser(uri,encoding), XMLStruct(xmlstruct), NewStruct(false), CurTag(0)
+ : RXMLParser(uri,encoding), XMLStruct(xmlstruct), NewStruct(false), CurTag(0), CompressTags(true)
 {
 	XMLStruct->SetEncoding(encoding);
+	SetAddSeparator(false);
 }
 
 
 //------------------------------------------------------------------------------
 RXMLFile::RXMLFile(RIOFile& file,RXMLStruct* xmlstruct,const RCString& encoding)
- : RXMLParser(file,encoding), XMLStruct(xmlstruct), NewStruct(false),CurTag(0)
+ : RXMLParser(file,encoding), XMLStruct(xmlstruct), NewStruct(false),CurTag(0), CompressTags(true)
 {
 	XMLStruct->SetEncoding(encoding);
+	SetAddSeparator(false);
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLFile::SetCompressTags(bool compress)
+{
+	CompressTags=compress;
 }
 
 
@@ -178,6 +188,9 @@ void RXMLFile::SaveNextTag(int depth)
 	RStringBuilder line;
 	RXMLTag* Current(CurTag);
 
+	// Look if a end of line must be writtent
+	bool PrintEndl((!CompressTags)||CurTag->GetNbNodes());
+
 	if(!MustAvoidSpaces())
 		for(int i=0;i<depth;i++) line+="\t";
 
@@ -199,16 +212,24 @@ void RXMLFile::SaveNextTag(int depth)
 		line+=">"; // There is some content -> add '>'
 	else
 		line+="/>"; // No content -> add '/>'
-	(*this)<<line()<<endl; // Write the line
+	if(PrintEndl)
+		(*this)<<line()<<endl; // Write the line
+	else if(CurTag->GetNbNodes()||CurTag->HasContent())
+		(*this)<<line(); // Write the line
+	else
+		 (*this)<<line()<<endl; // Write the line
 	line.Clear();        // Start a new line
 
 	// Wrote the content (if any)
 	if(CurTag->HasContent())
 	{
-		if(!MustAvoidSpaces())
+		if(!MustAvoidSpaces()&&PrintEndl)
 			for(int i=0;i<depth+1;i++) line+="\t";
 		line+=StringToXML(CurTag->GetContent().Trim(),false);
-		(*this)<<line()<<endl;
+		if(PrintEndl)
+			(*this)<<line()<<endl;
+		else
+			(*this)<<line();
 		line.Clear();
 	}
 
@@ -233,7 +254,7 @@ void RXMLFile::SaveNextTag(int depth)
 
 	if(Current->GetNbNodes()||Current->HasContent())
 	{
-		if(!MustAvoidSpaces())
+		if(!MustAvoidSpaces()&&PrintEndl)
 			for(int i=0;i<depth;i++) line+="\t";
 		line+="</"+Current->GetName()+">";
 		(*this)<<line()<<endl;
@@ -247,6 +268,14 @@ void RXMLFile::SaveNextTag(int depth)
 void RXMLFile::AddEntity(const RString& name,const RString& value)
 {
 	XMLStruct->InsertEntity(name,value);
+}
+
+
+//------------------------------------------------------------------------------
+void RXMLFile::HeaderValue(const RString& value)
+{
+	if(GetHeaderAttribute()==RXMLParser::Version)
+		XMLStruct->SetVersion(value);
 }
 
 
