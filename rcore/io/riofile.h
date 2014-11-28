@@ -174,6 +174,13 @@ public:
 	RIOFile(RIOFile& file);
 
 	/**
+	 * When the URI associated to a RIOFile is not local, it is downloaded and
+	 * stored in a temporary file (which becomes the real name of the file).
+	 * @return the real name of the file.
+    */
+	RURI GetRealName(void) const {return(File);}
+
+	/**
 	* Open the file
 	* @param mode           The open mode for the file.
 	*/

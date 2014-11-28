@@ -251,8 +251,10 @@ bool RIOFile::IsOpen(void) const
 void RIOFile::Close(void)
 {
 	// If non-local file -> remove the temporary file
-	if(URI.GetScheme()!="file")
-			RFile::RemoveFile(File);
+	#if defined(_BSD_SOURCE) || (defined(__GNUC__) && !defined(__MINGW32__)) || defined(__APPLE_)
+		if(URI.GetScheme()!="file")
+				RFile::RemoveFile(File);
+	#endif
 	File=RString::Null;
 	RealPos=InternalToRead=Pos=Size=0;
 	Mode=RIO::Undefined;

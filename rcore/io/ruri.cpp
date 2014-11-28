@@ -97,35 +97,81 @@ void RURI::AnalyzeString(void)
 
 	// Test if it is a local file
 	char FirstCar(URI.ToLatin1()[0]);
-	if((FirstCar=='/')||((RFile::GetDirSeparator()=='/')&&(FirstCar=='~')))
+	if(RFile::GetDirSeparator()=='/')
 	{
-		// No, it is a path under Unix scheme -> add file:
-		Scheme.Size=4;
-		Path.Pos=5;
-		Path.Size=URI.GetLen();
-		URI="file:"+URI;
-		ReplaceChars();
-		return;
+		// Unix-like file
+
+		// Look if a scheme must be added
+		if((FirstCar=='/')||(FirstCar=='~'))
+		{
+			// No, it is a path under Unix scheme -> add file:
+			Scheme.Size=4;
+			Path.Pos=5;
+			Path.Size=URI.GetLen();
+			URI="file:"+URI;
+			ReplaceChars();
+			return;
+		}
 	}
 	else
 	{
-		// Test if have a windows scheme
+		// Window-like file
+
+		// Look if a scheme must be added
 		int pos(URI.Find(':'));
-		if(pos!=-1)
+		if((pos==1)||(pos==-1))
 		{
-			// Look if next character a '\'
-			if((pos+1<URI.GetLen())&&(URI[pos+1]=='\\'))
+			// pos==1   |   C:\DOS\Tmp -> file:///C:/DOS/Tmp
+			// pos==-1  |   \DOS\TMP -> file:///DOS/Tmp
+			Scheme.Size=4;
+			Path.Size=URI.GetLen();
+			if(pos==1)
 			{
-				// No, it is a path under Unix scheme -> add file:
-				Scheme.Size=4;
 				Path.Pos=8;
-				Path.Size=URI.GetLen();
 				URI="file:///"+URI;
-				ReplaceChars();
-				return;
 			}
+			else
+			{
+				Path.Pos=7;
+				URI="file://"+URI;
+			}
+			ReplaceChars();
+			return;
 		}
 	}
+
+
+//	// Test if it is a local file
+//	char FirstCar(URI.ToLatin1()[0]);
+//	if((FirstCar=='/')||((RFile::GetDirSeparator()=='/')&&(FirstCar=='~')))
+//	{
+//		// No, it is a path under Unix scheme -> add file:
+//		Scheme.Size=4;
+//		Path.Pos=5;
+//		Path.Size=URI.GetLen();
+//		URI="file:"+URI;
+//		ReplaceChars();
+//		return;
+//	}
+//	else
+//	{
+//		// Test if have a windows scheme
+//		int pos(URI.Find(':'));
+//		if(pos==-1)
+//		{
+//			// Look if next character a '\'
+//			if((pos+1<URI.GetLen())&&(URI[pos+1]=='\\'))
+//			{
+//				// No, it is a path under Unix scheme -> add file:
+//				Scheme.Size=4;
+//				Path.Pos=8;
+//				Path.Size=URI.GetLen();
+//				URI="file:///"+URI;
+//				ReplaceChars();
+//				return;
+//			}
+//		}
+//	}
 
 	// Extract Scheme (search first :)
 	for(i=0;(i<URI.GetLen())&&(URI[i]!=':');i++,Scheme.Size++) ;

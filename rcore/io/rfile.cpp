@@ -210,26 +210,26 @@ void RFile::RenameFile(const RURI& olduri,const RURI& newuri)
 //------------------------------------------------------------------------------
 RURI RFile::GetTempFile(void)
 {
-#if defined(_BSD_SOURCE) || (defined(__GNUC__) && !defined(__MINGW32__)) || defined(__APPLE_)
-	char tmpname[15]="";
-	FILE *sfp;
-	int fd(-1);
+	#if defined(_BSD_SOURCE) || (defined(__GNUC__) && !defined(__MINGW32__)) || defined(__APPLE_)
+		char tmpname[15]="";
+		FILE *sfp;
+		int fd(-1);
 
-	strncpy(tmpname, "/tmp/ed.XXXXXX", sizeof(tmpname));
-	if ((fd = mkstemp(tmpname)) == -1 || (sfp = fdopen(fd, "w+")) == NULL)
-	{
-		if (fd != -1)
+		strncpy(tmpname, "/tmp/ed.XXXXXX", sizeof(tmpname));
+		if ((fd = mkstemp(tmpname)) == -1 || (sfp = fdopen(fd, "w+")) == NULL)
 		{
-			unlink(tmpname);
-			close(fd);
+			if (fd != -1)
+			{
+				unlink(tmpname);
+				close(fd);
+			}
+			mThrowRException(strerror(errno));
 		}
-	   mThrowRException(strerror(errno));
-	}
-	close(fd);
-	return (RURI(tmpname));
-#else
-	return(RURI(tmpnam(0)));
-#endif
+		close(fd);
+		return (RURI(tmpname));
+	#else
+		return(RURI(tmpnam(0)));
+	#endif
 }
 
 
