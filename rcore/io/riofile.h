@@ -105,7 +105,7 @@ class RIOFile : public RFile
 	/**
 	 * Downloader for non-local files.
 	 */
-	static RDownload Get;
+	static RDownloadFile Get;
 
 	/**
 	 * File which is really treated.

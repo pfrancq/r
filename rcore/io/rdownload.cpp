@@ -57,7 +57,11 @@ using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-int RDownload::WriteTmpFile(void* buffer,size_t size,size_t nmemb,void* param)
+bool RDownload::MustInitCURL=true;
+
+
+//------------------------------------------------------------------------------
+size_t RDownload::WriteTmpFile(void* buffer,size_t size,size_t nmemb,void* param)
 {
 	if(((RDownload*)param)->First)
 	{
@@ -68,12 +72,12 @@ int RDownload::WriteTmpFile(void* buffer,size_t size,size_t nmemb,void* param)
         	return(-1);
 		}
 	}
-	return(static_cast<int>(fwrite(buffer,size,nmemb,((RDownload*)param)->Stream)));
+	return(((RDownload*)param)->GetData(buffer,size,nmemb));
 }
 
 
 //------------------------------------------------------------------------------
-int RDownload::TreatHeader(void* buffer,size_t size,size_t nmemb,void* param)
+size_t RDownload::TreatHeader(void* buffer,size_t size,size_t nmemb,void* param)
 {
 	// Only handle single-byte data
 	if(size!=1)
@@ -115,8 +119,16 @@ int RDownload::TreatHeader(void* buffer,size_t size,size_t nmemb,void* param)
 
 //------------------------------------------------------------------------------
 RDownload::RDownload(void)
-	: ValidContent(true), MIME(30), Stream(0), First(true)
+	: ValidContent(true), MIME(30), First(true)
 {
+	if(MustInitCURL)
+	{
+		CURLcode err;
+		if(err=curl_global_init(CURL_GLOBAL_ALL))
+			mThrowRException(RString("Error in CURL: ")+curl_easy_strerror(err));
+		MustInitCURL=false;
+	}
+
 	// Create link to CURL library and put global options
 	Lib = static_cast<void*>(curl_easy_init());
 	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_WRITEFUNCTION,RDownload::WriteTmpFile);
@@ -133,39 +145,10 @@ RDownload::RDownload(void)
 
 
 //------------------------------------------------------------------------------
-void RDownload::DownloadFile(const RURI& uri,const RURI& local)
+size_t RDownload::GetData(void* buffer, size_t size, size_t nmemb)
 {
-	// Init Part
-	ValidContent=true;  // Suppose the content is OK
-	MIME="";            // No MIME type.
-	First=true;
-	Stream=fopen(local.GetPath(), "wb");
-	if(!Stream)
-		mThrowRException("Cannot create file '"+local()+"'");
-
-	// Download the file
-	curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_URL, uri().ToLatin1());
-	CURLcode err=curl_easy_perform(static_cast<CURL*>(Lib));
-
-	// Done Part
-	if(Stream)
-		fclose(Stream);
-	if(err)
-	{
-		if(!ValidContent)
-			mThrowRException("Cannot treat the MIME type '"+MIME+"'");
-		throw RException(curl_easy_strerror(err)+RString(" : ")+uri());
-	}
+	return(size*nmemb);
 }
-
-
-#if !defined(WIN32)
-//------------------------------------------------------------------------------
-void RDownload::DeleteFile(const RURI& tmpFile)
-{
-	remove(tmpFile.GetPath());
-}
-#endif
 
 
 //------------------------------------------------------------------------------
@@ -183,6 +166,38 @@ bool RDownload::StartDownload(void)
 
 
 //------------------------------------------------------------------------------
+void RDownload::Download(const RURI& uri)
+{
+	CURLcode err;
+
+	// Init Part
+	ValidContent=true;  // Suppose the content is OK
+	MIME="";            // No MIME type.
+	First=true;
+	URI=uri;
+
+	// Download the file
+	if(err=curl_easy_setopt(static_cast<CURL*>(Lib), CURLOPT_URL, uri().ToLatin1()))
+		mThrowRException(RString("Error in CURL: ")+curl_easy_strerror(err));
+
+	if(err=curl_easy_perform(static_cast<CURL*>(Lib)))
+		mThrowRException(RString("Error in CURL: ")+curl_easy_strerror(err));
+
+	// Done Part
+	EndDownload();
+
+	if(!ValidContent)
+		mThrowRException("Cannot treat the MIME type '"+MIME+"'");
+}
+
+
+//------------------------------------------------------------------------------
+void RDownload::EndDownload(void)
+{
+}
+
+
+//------------------------------------------------------------------------------
 RString RDownload::GetMIMEType(void)
 {
 	return(MIME);
@@ -192,4 +207,42 @@ RString RDownload::GetMIMEType(void)
 RDownload::~RDownload(void)
 {
 	curl_easy_cleanup(static_cast<CURL*>(Lib));
+}
+
+
+
+//------------------------------------------------------------------------------
+//
+// class RDownloadFile
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+RDownloadFile::RDownloadFile(void)
+	: RDownload(), Stream(0)
+{
+}
+
+
+//------------------------------------------------------------------------------
+void RDownloadFile::Download(const RURI& uri,const R::RURI& local)
+{
+	Stream=fopen(local.GetPath(), "wb");
+	if(!Stream)
+		mThrowRException("Cannot create file '"+local()+"'");
+	RDownload::Download(uri);
+
+	// Done Part
+	if(Stream)
+	{
+		fclose(Stream);
+		Stream=0;
+	}
+}
+
+
+//------------------------------------------------------------------------------
+size_t RDownloadFile::GetData(void* buffer, size_t size, size_t nmemb)
+{
+	return(fwrite(buffer,size,nmemb,Stream));
 }

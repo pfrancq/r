@@ -66,7 +66,7 @@ static const off_t InternalBufferSize=10240;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RDownload RIOFile::Get;
+RDownloadFile RIOFile::Get;
 
 
 //------------------------------------------------------------------------------
@@ -175,7 +175,7 @@ void RIOFile::Open(RIO::ModeType mode)
 
 	// If not local -> Download it
 	if(!local)
-		Get.DownloadFile(URI,File);
+		Get.Download(URI,File);
 
 	// Play with internal switches
 	#if (defined WIN32)
@@ -251,10 +251,8 @@ bool RIOFile::IsOpen(void) const
 void RIOFile::Close(void)
 {
 	// If non-local file -> remove the temporary file
-	#if !defined(WIN32)
-		if(URI.GetScheme()!="file")
-				Get.DeleteFile(File);
-	#endif
+	if(URI.GetScheme()!="file")
+			RFile::RemoveFile(File);
 	File=RString::Null;
 	RealPos=InternalToRead=Pos=Size=0;
 	Mode=RIO::Undefined;

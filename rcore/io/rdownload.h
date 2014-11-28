@@ -51,8 +51,10 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RDownload class provides a representation for a downloader.
-* @author Valery Vandaele
+* The RDownload class provides a session that will download content retrieved
+* from URLs. To store the content in a file, use the RDownloadFile class.
+*
+* This class is a encapsulation of libCURL.
 * @short Downloader.
 */
 class RDownload
@@ -73,14 +75,19 @@ class RDownload
 	RString MIME;
 
 	/**
-	 * Stream that will store the file to download.
-	 */
-	FILE* Stream;
-
-	/**
 	 * Is it the first bloc of data downloaded?
 	 */
 	bool First;
+
+	/**
+	 * URI to download.
+	 */
+	RURI URI;
+
+	/**
+	 * Was CURL Initialize ?
+	 */
+	static bool MustInitCURL;
 
 public:
 
@@ -94,34 +101,25 @@ private:
 	/**
 	* Parameter function given to CURLOPT_WRITEFUNCTION and called by CURL when
 	* data are downloaded.
+	*
+	* The total size downloaded is given by size multiplied with nmemb.
+	* @param buffer          Pointer to the delivered data
+	* @param size            Size of an element downloaded.
+	* @param nmemb           Number of elements downloaded.
 	*/
-	static int WriteTmpFile(void* buffer, size_t size, size_t nmemb,void* param);
+	static size_t WriteTmpFile(void* buffer, size_t size, size_t nmemb,void* param);
 
 	/**
 	* Parameter function given to CURLOPT_HEADERFUNCTION and called by CURL when
 	* a part of the header is downloaded.
-	 */
-	static int TreatHeader(void* buffer, size_t size, size_t nmemb,void* param);
-
-public:
-
-	/**
-	* Download a document given by an URI and store it in a local file.
-	* @param uri            URI of the document.
-	* @param local          Local file where to store.
+	*
+	* The total size downloaded is given by size multiplied with nmemb.
+	* @param buffer          Pointer to the delivered data
+	* @param size            Size of an element downloaded.
+	* @param nmemb           Number of elements downloaded.
+	*
 	*/
-	virtual void DownloadFile(const RURI& uri,const R::RURI& local);
-
-#if !defined(WIN32)
-	/**
-	* Delete a temporary copy of a file created by the manager. This method is
-	* only called if a temporary file was really created.
-	* @param tmpFile        Temporary file to delete.
-	*/
-	virtual void DeleteFile(const R::RURI& tmpFile);
-#endif
-	
-protected:
+	static size_t TreatHeader(void* buffer, size_t size, size_t nmemb,void* param);
 
 	/**
 	 * If the protocol is HTTP and the server returns a content type for the
@@ -138,6 +136,30 @@ protected:
 	 */
 	virtual bool StartDownload(void);
 
+	/**
+	* Call each time a given amount of data is downloaded. By default, it does
+	* nothing.
+	* @param buffer          Pointer to the delivered data
+	* @param size            Size of an element downloaded.
+	* @param nmemb           Number of elements downloaded.
+   * @return the number of bytes actually taken care of. If it differs from the
+	* numpber of bytes downloaded, the download is stopped.
+   */
+	virtual size_t GetData(void* buffer, size_t size, size_t nmemb);
+
+	/**
+	 * Method called when the dowload finishes. By default, it does nothing
+    */
+	virtual void EndDownload(void);
+
+public:
+
+	/**
+	* Download a document given by an URI.
+	* @param uri            URI of the document.
+	*/
+	void Download(const RURI& uri);
+
 public:
 
 	/**
@@ -149,6 +171,48 @@ public:
 	* Destruct the downloader.
 	*/
 	virtual ~RDownload(void);
+};
+
+
+
+//------------------------------------------------------------------------------
+/**
+* The RDownloadFile class provides a session that will download content
+* retrieved from URLs and storeit in a file.
+* @short File Downloader.
+*/
+class RDownloadFile : public RDownload
+{
+	/**
+	 * Stream that will store the file to download.
+	 */
+	FILE* Stream;
+
+public:
+
+	/**
+	* Download a document given by an URI and store it in a local file.
+	*/
+	RDownloadFile(void);
+
+	/**
+	* Download a document given by an URI.
+	* @param uri            URI of the document.
+	* @param local          Local file where to store.
+	*/
+	void Download(const RURI& uri,const R::RURI& local);
+
+private:
+
+	/**
+	* Call each time a given amount of data is downloaded and store it in the
+	* file.
+	* @param buffer          Pointer to the delivered data
+	* @param size            Size of an element downloaded.
+	* @param nmemb           Number of elements downloaded.
+   * @return the number of bytes written in a file.
+   */
+	virtual size_t GetData(void* buffer, size_t size, size_t nmemb);
 };
 
 
