@@ -48,9 +48,9 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
 * The RApplication class provides a representation for a generic application.
-* It defines a configuration file (stored in "~/.r/config") that can eventually
-* have a template (stored in "/usr/r/config"). It manages also arguments on the
-* form: "--argwithoutvalue" or "--argwithvalue value".
+* It defines a configuration file (stored in "~/.r/config/app") that can
+* eventually have a template (stored in "/usr/r/config/app"). It manages also
+* arguments on the form: "--argwithoutvalue" or "--argwithvalue value".
 *
 * In practice, the important methods are CreateConfig(void) to create some
 * configuration parameters, Init(void) to initialize the application (for
