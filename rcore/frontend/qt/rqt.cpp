@@ -74,16 +74,18 @@ RString R::FromQString(const QString& str)
 QString R::ToPlainText(const R::RString& str,int maxlen)
 {
 	RString New;
-	New.SetLen(110);
+	New.SetLen(maxlen+10);
 	New.SetLen(0);
-	RChar Last(0);
 
 	RCharCursor Cur(str);
-	for(Cur.Start();(!Cur.End())&&maxlen;Cur.Next())
+	for(Cur.Start();(!Cur.End())&&maxlen;)
 	{
 		// Skip Spaces
-		if(Last.IsSpace())
+		if(Cur().IsSpace())
 		{
+			// Add a space
+			if(!New.IsEmpty())
+				New+=' ';
 			while((!Cur.End())&&Cur().IsSpace())
 				Cur.Next();
 		}
@@ -106,19 +108,19 @@ QString R::ToPlainText(const R::RString& str,int maxlen)
 				// Skip everything until </style>
 				while((!Cur.End())&&(Cur()!='<'))
 					Cur.Next();
-				if(!Cur.End())
-					Cur.Prev();
 			}
+			else if(!Cur.End())
+				Cur.Next();
 		}
 		else
 		{
 			maxlen--;
 			New+=Cur();
+			Cur.Next();
 		}
-		Last=Cur();
 	}
 
-	// If maxlen is null -> add (...) at the end
+	// If maxlen is not null -> add (...) at the end
 	if(!maxlen)
 		New+=" (...)";
 
