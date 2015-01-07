@@ -82,7 +82,7 @@ template<class T,class N> class RNodeCursor;
 *       for(size_t i=0;i<GetDepth();i++)
 *          cout<<" ";
 *       cout<<Name<<endl;
-*       RNodeCursor<MyTree,MyNode> Cur(this);
+*       RNodeCursor<MyTree,MyNode> Cur(*this);
 *       for(Cur.Start();!Cur.End();Cur.Next())
 *          Cur()->DoSomething();
 *    }
