@@ -6,7 +6,7 @@
 
 	Parameter - Header.
 
-	Copyright 2003-2011 by the Pascal Francq (pascal@francq.info).
+	Copyright 2003-2015 by the Pascal Francq (pascal@francq.info).
 	Copyright 2003-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify

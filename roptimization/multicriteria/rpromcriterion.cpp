@@ -6,7 +6,7 @@
 
 	PROMETHEE Criterion - Implementation.
 
-	Copyright 2000-2012 by Pascal Francq (pascal@francq.info).
+	Copyright 2000-2015 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
 	This library is free software; you can redistribute it and/or
@@ -238,7 +238,7 @@ double RPromLinearCriterion::ComputePref(double u,double v)
 
 
 //-----------------------------------------------------------------------------
-RParam* RPromLinearCriterion::CreateParam(const R::RString& name,const RString& desc)
+RParamStruct* RPromLinearCriterion::CreateParam(const R::RString& name,const RString& desc)
 {
 	RParamStruct* param=new RParamStruct(name,desc);
 	param->Insert(new RParamValue("P",0.2,"Preference threshold"));

@@ -6,7 +6,7 @@
 
 	Generic function used for Qt compatibility - Implementation.
 
-	Copyright 2004-2014 by Pascal Francq (pascal@francq.info).
+	Copyright 2004-2015 by Pascal Francq (pascal@francq.info).
 	Copyright 2004-2008 by the Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify

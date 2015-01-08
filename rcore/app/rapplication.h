@@ -6,7 +6,7 @@
 
 	Generic Application - Header.
 
-	Copyright 2006-2014 by Pascal Francq (pascal@francq.info).
+	Copyright 2006-2015 by Pascal Francq (pascal@francq.info).
 	Copyright 2006-2008 Université Libre de Bruxelles (ULB).
 
 	This program is free software; you can redistribute it and/or modify

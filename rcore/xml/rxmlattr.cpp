@@ -6,7 +6,7 @@
 
 	Attribute for a XML Tag - Implementation.
 
-	Copyright 2000-2012 by Pascal Francq (pascal@francq.info).
+	Copyright 2000-2015 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2001 by Thomas L'Eglise.
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 

@@ -6,7 +6,7 @@
 
 	Class to download files - Implementation.
 
-	Copyright 2004-2011 Pascal Francq (pascal@francq.info).
+	Copyright 2004-2015 Pascal Francq (pascal@francq.info).
 	Copyright 2004 by Valery Vandaele.
 	Copyright 2004-2008 by the Université Libre de Bruxelles (ULB).
 

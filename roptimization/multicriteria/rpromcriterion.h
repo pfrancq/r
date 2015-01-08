@@ -6,7 +6,7 @@
 
 	PROMETHEE Criterion - Header.
 
-	Copyright 2000-2012 by Pascal Francq (pascal@francq.info).
+	Copyright 2000-2015 by Pascal Francq (pascal@francq.info).
 	Copyright 2000 by Thomas L'Eglise.
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
 
@@ -45,7 +45,7 @@
 namespace R{
 //------------------------------------------------------------------------------
 
-	
+
 //------------------------------------------------------------------------------
 // forward declaration
 class RPromKernel;
@@ -299,7 +299,7 @@ public:
 	* @param name            Name of the criteria.
 	* @param desc            Description of the criteria.
 	*/
-	static RParam* CreateParam(const RString& name,const RString& desc=RString::Null);
+	static RParamStruct* CreateParam(const RString& name,const RString& desc=RString::Null);
 };
 
 
