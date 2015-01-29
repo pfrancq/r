@@ -194,7 +194,7 @@ public:
 	 * Clear the file.
 	 */
 	void Clear(void);
-	
+
 	/**
 	 * Get the number of blocks.
 	 */
@@ -247,8 +247,8 @@ private:
 	void ModifyFreeSpace(size_t blockid,long rel);
 
 	/**
-	 * A new record of a given size is added to the block. Position the block
-	 * to good position to write the content.
+	 * A new record of a given size is added to the block. Set the block to the
+	 * good position to write the content.
 	 * @param blockid        Identifier of the block.
 	 * @param indexid        Identifier of the index.
 	 * @param entry          Entry in the index table.

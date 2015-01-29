@@ -215,13 +215,15 @@ template<class T,class N,bool bAlloc>
 	// Delete child nodes
 	DeleteNodes(node,del);
 
-	// Delete the node from its parents and siblings
+	// Delete the node from its siblings
+	if(node->Prev)
+		node->Prev->Next=node->Next;
+	if(node->Next)
+		node->Next->Prev=node->Prev;
+
+	// Delete the node from its parent
 	if(node->Parent)
 	{
-		if(node->Prev)
-			node->Prev->Next=node->Next;
-		if(node->Next)
-			node->Next->Prev=node->Prev;
 		if(node->Parent->First==node)
 			node->Parent->First=node->Next;
 		if(node->Parent->Last==node)
@@ -230,10 +232,6 @@ template<class T,class N,bool bAlloc>
 	}
 	else
 	{
-		if(node->Prev)
-			node->Prev->Next=node->Next;
-		if(node->Next)
-			node->Next->Prev=node->Prev;
 		if(First==node)
 			First=node->Next;
 		if(Last==node)

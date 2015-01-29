@@ -216,13 +216,15 @@ void RIndexFile::NewRecord(size_t blockid,size_t indexid,size_t entry,size_t siz
 	else if(entry==NbRecs)
 	{
 		// The entry is the last one :
-		// Go to previous entry and the position is obtained
+		// Go to the last entry and the position is obtained
 		size_t index;
 		RBlockFile::Seek(blockid,entry*SizeT2);
 
-		// Read the old index and the old record position
+		// Read the old index and the record position
 		Read((char*)(&index),sizeof(size_t));
 		Read((char*)(&Pos),sizeof(size_t));
+
+		// Compute the new index and record position and write them
 		Pos-=size;
 		index=indexid;
 		Write((char*)(&index),sizeof(size_t));
@@ -237,19 +239,31 @@ void RIndexFile::NewRecord(size_t blockid,size_t indexid,size_t entry,size_t siz
 	else
 	{
 		// The record must be inserted at 'entry':
-		// 1. Read the position of the record corresponding to 'entry-1' -> Pos
+		// 1. Find where the current record and index 'entry' ends its data -> Pos
 		// 2. The new record will be inserted at 'entry' and the position Pos-size :
-		// 3. Decrease all the records starting from 'entry' from size positions.
-		// 4. Move the records in memory from size.
+		// 3. Decrease all the records starting from 'entry' from 'size' positions.
+		// 4. Move the records in memory from 'size'.
 
 		// Initialize
-		size_t newindex,oldindex,newpos,oldpos,LastPos;
+		size_t newindex,oldindex,newpos,oldpos,LastPos(0);
 
 		// First Step
-		RBlockFile::Seek(blockid,entry*SizeT2);
-		Read((char*)(&newindex),sizeof(size_t));
-		Read((char*)(&newpos),sizeof(size_t));
-		Pos=newpos;  // This is where ends the last records
+		if(entry)
+		{
+			// There are some entry before the first one to move
+			// Read the position of the record corresponding to 'entry-1'
+			//		-> It is where the current record at index 'entry' ends
+			RBlockFile::Seek(blockid,entry*SizeT2);
+			Read((char*)(&newindex),sizeof(size_t));
+			Read((char*)(&newpos),sizeof(size_t));
+			Pos=newpos;  // This is where ends the last records
+		}
+		else
+		{
+			// No record before -> the current record at index 'entry' ends at the end of the block
+			newpos=Pos=BlockSize;
+			RBlockFile::Seek(blockid,(entry+1)*SizeT2);
+		}
 
 		// Second Step
 		newindex=indexid;
