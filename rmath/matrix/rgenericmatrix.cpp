@@ -96,8 +96,8 @@ void RGenericMatrix::Add(size_t i,size_t j,double val)
 //------------------------------------------------------------------------------
 RGenericMatrix& RGenericMatrix::operator=(const RGenericMatrix& matrix)
 {
-	NbCols=matrix.NbLines;
-	NbLines=matrix.NbCols;
+	NbLines=matrix.NbLines;
+	NbCols=matrix.NbCols;
 	return(*this);
 }
 
