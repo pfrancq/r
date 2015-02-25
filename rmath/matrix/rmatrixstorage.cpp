@@ -99,7 +99,7 @@ void RMatrixStorage::Open(const RString& baseuri,RGenericMatrix::tType type)
 			Max=true;
 			break;
 		default:
-			throw RException("RMatrixStorage::Open(const RURI&,RGenericMatrix::tType) : Type "+RString::Number(type)+" is not supported");
+			throw RException(RString("RMatrixStorage::Open(const RURI&,RGenericMatrix::tType) : Type "+RString::Number(type)+" is not supported").ToString());
 	}
 }
 
@@ -140,7 +140,7 @@ inline size_t RMatrixStorage::GetUpperPos(size_t i,size_t j)
 size_t RMatrixStorage::GetNbCols(size_t line) const
 {
 	if(line>NbLines)
-		throw std::range_error("RMatrixStorage::GetNbCols(size_t) : index "+RString::Number(line)+" outside range [0,"+RString::Number(NbLines)+"]");
+		throw std::range_error(RString("RMatrixStorage::GetNbCols(size_t) : index "+RString::Number(line)+" outside range [0,"+RString::Number(NbLines)+"]").ToString());
 
 	if(Max)
 	{
@@ -1051,7 +1051,7 @@ double RMatrixStorage::Read(size_t i,size_t j)
 	if(BaseURI==RString::Null)
 		mThrowRIOException(&Index,"File not open");
 	if((i>NbLines)||(j>NbCols))
-		throw std::range_error("RMatrixStorage::Read(size_t,size_t) : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+		throw std::range_error(RString("RMatrixStorage::Read(size_t,size_t) : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")").ToString());
 
 	double res;
 
@@ -1408,7 +1408,7 @@ void RMatrixStorage::Write(size_t i,size_t j,double val)
 	if(BaseURI==RString::Null)
 		throw RException("RMatrixStorage::Save(RGenericMatrix&) : File not open");
 	if((Max&&(i>NbLines))||((!Max)&&((i>NbLines)||(j>NbCols))))
-		throw std::range_error("RMatrixStorage::Write(size_t,size_t,double) : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+		throw std::range_error(RString("RMatrixStorage::Write(size_t,size_t,double) : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")").ToString());
 
 	if(((Type==RGenericMatrix::tSymmetric)||(Type==RGenericMatrix::tSparseSymmetric))&&(j>i))
 	{

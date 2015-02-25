@@ -342,7 +342,7 @@ template<class I,bool bOrder>
 	if(i>=NbInt)
 	{
 		if(NbInt)
-			throw std::range_error("RNumContainer<I,bOrder>::operator[] const : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbInt-1)+"]");
+			throw std::range_error(RString("RNumContainer<I,bOrder>::operator[] const : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbInt-1)+"]").ToString());
 		else
 			throw std::range_error("RNumContainer<I,bOrder>::operator[] const : no elements");
 	}

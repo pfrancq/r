@@ -158,7 +158,7 @@ RSparseMatrix& RSparseMatrix::operator=(const RSparseMatrix& matrix)
 double RSparseMatrix::operator()(size_t i,size_t j) const
 {
 	if((i>=NbLines)||(j>=NbCols))
-		throw std::range_error("RSparseMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+		throw std::range_error(RString("RSparseMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")").ToString());
 
 	const RSparseVector* Line;
 
@@ -184,7 +184,7 @@ double RSparseMatrix::operator()(size_t i,size_t j) const
 double& RSparseMatrix::operator()(size_t i,size_t j)
 {
 	if((i>=NbLines)||(j>=NbCols))
-		throw std::range_error("RSparseMatrix::operator() : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+		throw std::range_error(RString("RSparseMatrix::operator() : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")").ToString());
 
 	RSparseVector* Line;
 
@@ -213,7 +213,7 @@ double& RSparseMatrix::operator()(size_t i,size_t j)
 const RSparseVector* RSparseMatrix::operator[](size_t i) const
 {
 	if(i>=NbLines)
-		throw std::range_error("RSparseMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
+		throw std::range_error(RString("RSparseMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")").ToString());
 
 	if(AllLines)
 	{
@@ -230,7 +230,7 @@ const RSparseVector* RSparseMatrix::operator[](size_t i) const
 RSparseVector* RSparseMatrix::operator[](size_t i)
 {
 	if(i>=NbLines)
-		throw std::range_error("RSparseMatrix::operator[] : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
+		throw std::range_error(RString("RSparseMatrix::operator[] : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")").ToString());
 
 	RSparseVector* Line;
 

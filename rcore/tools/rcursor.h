@@ -246,7 +246,7 @@ public:
 	{
 		idx+=FirstPtr;
 		if(idx>=LastPtr)
-			throw std::range_error("void RCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(FirstPtr)+","+RString::Number(LastPtr-1)+"]");
+            throw std::range_error(R::RString("void RCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(FirstPtr)+","+RString::Number(LastPtr-1)+"]").ToString());
 		Current=&Tab[idx];
 		ActPtr=idx;
 	}

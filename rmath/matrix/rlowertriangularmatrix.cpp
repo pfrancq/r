@@ -121,7 +121,7 @@ void RLowerTriangularMatrix::VerifySize(size_t newlines,size_t newcols,bool fill
 double RLowerTriangularMatrix::operator()(size_t i,size_t j) const
 {
 	if((i>=NbLines)||(j>=NbCols))
-		throw std::range_error("RLowerTriangularMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+		throw std::range_error(RString("RLowerTriangularMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")").ToString());
 	if(j>i)
 		return(0.0);
 	TestThis();
@@ -133,9 +133,9 @@ double RLowerTriangularMatrix::operator()(size_t i,size_t j) const
 double& RLowerTriangularMatrix::operator()(size_t i,size_t j)
 {
 	if((i>=NbLines)||(j>=NbCols))
-		throw std::range_error("RLowerTriangularMatrix::operator() : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+		throw std::range_error(RString("RLowerTriangularMatrix::operator() : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")").ToString());
 	if(j>i)
-		throw std::range_error("RLowerTriangularMatrix::operator() : Invalid column "+RString::Number(j)+" for line "+RString::Number(i));
+		throw std::range_error(RString("RLowerTriangularMatrix::operator() : Invalid column "+RString::Number(j)+" for line "+RString::Number(i)).ToString());
 	TestThis();
 	return((*static_cast<RVector*>(Tab[i]))[j]);
 }

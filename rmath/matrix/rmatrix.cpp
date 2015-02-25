@@ -185,7 +185,7 @@ void RMatrix::Symetrize(void)
 double RMatrix::operator()(size_t i,size_t j) const
 {
 	if((i>=NbLines)||(j>=NbCols))
-		throw std::range_error("RMatrix::operator(size_t,size_t) const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+		throw std::range_error(RString("RMatrix::operator(size_t,size_t) const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")").ToString());
 	TestThis();
 	return((*static_cast<const RVector*>(Tab[i]))[j]);
 }
@@ -195,7 +195,7 @@ double RMatrix::operator()(size_t i,size_t j) const
 double& RMatrix::operator()(size_t i,size_t j)
 {
 	if((i>=NbLines)||(j>=NbCols))
-		throw std::range_error("RMatrix::operator(size_t,size_t) : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+		throw std::range_error(RString("RMatrix::operator(size_t,size_t) : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")").ToString());
 	TestThis();
 	return((*static_cast<RVector*>(Tab[i]))[j]);
 }
@@ -205,7 +205,7 @@ double& RMatrix::operator()(size_t i,size_t j)
 const RVector* RMatrix::operator[](size_t i) const
 {
 	if(i>=NbLines)
-		throw std::range_error("RMatrix::operator[size_t] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
+		throw std::range_error(RString("RMatrix::operator[size_t] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")").ToString());
 	TestThis();
 	return(static_cast<const RVector*>(Tab[i]));
 }
@@ -215,7 +215,7 @@ const RVector* RMatrix::operator[](size_t i) const
 RVector* RMatrix::operator[](size_t i)
 {
 	if(i>=NbLines)
-		throw std::range_error("RMatrix::operator[size_t] : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
+		throw std::range_error(RString("RMatrix::operator[size_t] : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")").ToString());
 	TestThis();
 	return(static_cast<RVector*>(Tab[i]));
 }

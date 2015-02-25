@@ -113,7 +113,7 @@ template<class I>
 {
 	idx+=First;
 	if(idx>=Last)
-		throw std::range_error("void RNumCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(First)+","+RString::Number(Last-1)+"]");
+		throw std::range_error(RString("void RNumCursor::GoTo(size_t) : column "+RString::Number(idx)+" outside range ["+RString::Number(First)+","+RString::Number(Last-1)+"]").ToString());
 	Parse=&List[idx];
 	Pos=idx;
 }

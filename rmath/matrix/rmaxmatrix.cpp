@@ -157,7 +157,7 @@ RMaxMatrix& RMaxMatrix::operator=(const RMaxMatrix& matrix)
 double RMaxMatrix::operator()(size_t i,size_t j) const
 {
 	if((i>=NbLines)||(j>=NbCols))
-		throw std::range_error("RMaxMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")");
+		throw std::range_error(RString("RMaxMatrix::operator() const : index "+RString::Number(i)+","+RString::Number(j)+" outside range ("+RString::Number(NbLines)+","+RString::Number(NbCols)+")").ToString());
 
 	const RMaxVector* Line;
 
@@ -185,7 +185,7 @@ double& RMaxMatrix::operator()(size_t,size_t)
 void RMaxMatrix::Add(size_t i,size_t j,double val)
 {
 	if(i>=NbLines)
-		throw std::range_error("RMaxMatrix::Add(size_t,size_t,double) : index "+RString::Number(i)+" outside range ("+RString::Number(NbLines)+")");
+		throw std::range_error(RString("RMaxMatrix::Add(size_t,size_t,double) : index "+RString::Number(i)+" outside range ("+RString::Number(NbLines)+")").ToString());
 
 	RMaxVector* Line;
 
@@ -213,7 +213,7 @@ void RMaxMatrix::Add(size_t i,size_t j,double val)
 const RMaxVector* RMaxMatrix::operator[](size_t i) const
 {
 	if(i>=NbLines)
-		throw std::range_error("RMaxMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
+		throw std::range_error(RString("RMaxMatrix::operator[] const : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")").ToString());
 
 	if(AllLines)
 	{
@@ -230,7 +230,7 @@ const RMaxVector* RMaxMatrix::operator[](size_t i) const
 RMaxVector* RMaxMatrix::operator[](size_t i)
 {
 	if(i>=NbLines)
-		throw std::range_error("RMaxMatrix::operator[] : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")");
+		throw std::range_error(RString("RMaxMatrix::operator[] : index "+RString::Number(i)+" outside range (0,"+RString::Number(NbLines)+")").ToString());
 
 	RMaxVector* Line;
 

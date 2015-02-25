@@ -234,9 +234,9 @@ template<class C>
 	if(!LastPtr)
 		throw std::range_error("iRContainer<C>::operator[] const : no elements");
 	if(pos1>=LastPtr)
-		throw std::range_error("iRContainer<C>::operator[] const : idx "+RString::Number(pos1)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+        throw std::range_error(R::RString("iRContainer<C>::operator[] const : idx "+RString::Number(pos1)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
 	if(pos2>=LastPtr)
-		throw std::range_error("iRContainer<C>::operator[] const : idx "+RString::Number(pos2)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+        throw std::range_error(R::RString("iRContainer<C>::operator[] const : idx "+RString::Number(pos2)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
 	C* ptr=Tab[pos1];
 	Tab[pos1]=Tab[pos2];
 	Tab[pos2]=ptr;
@@ -250,7 +250,7 @@ template<class C>
 	if(!LastPtr)
 		throw std::range_error("iRContainer<C>::operator[] const : no elements");
 	if(idx>=LastPtr)
-		throw std::range_error("iRContainer<C>::operator[] const : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+        throw std::range_error(R::RString("iRContainer<C>::operator[] const : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
 
 	if(reverse)
 	{
@@ -386,7 +386,7 @@ template<class C>
 	if(!LastPtr)
 		throw std::range_error("iRContainer<C>::operator[] const : no elements");
 	if(idx>=LastPtr)
-		throw std::range_error("iRContainer<C>::operator[] const : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+        throw std::range_error(R::RString("iRContainer<C>::operator[] const : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
 	return(Tab[idx]);
 }
 
@@ -398,7 +398,7 @@ template<class C>
 	if(!LastPtr)
 		throw std::range_error("iRContainer<C>::operator[] : no elements");
 	if(idx>=LastPtr)
-		throw std::range_error("iRContainer<C>::operator[] : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+        throw std::range_error(R::RString("iRContainer<C>::operator[] : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
 	return(Tab[idx]);
 }
 
@@ -571,7 +571,7 @@ template<class C>
 	C** ptr;
 
 	if(pos>=LastPtr)
-		throw std::range_error("iRContainer<C>::DeletePtrAt : idx "+RString::Number(pos)+" outside range [0,"+RString::Number(LastPtr-1)+"]");
+        throw std::range_error(R::RString("iRContainer<C>::DeletePtrAt : idx "+RString::Number(pos)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
 	ptr=&Tab[pos];
 	if(del)
 		delete(*ptr);

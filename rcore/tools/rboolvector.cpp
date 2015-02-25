@@ -158,13 +158,13 @@ bool RBoolVector::operator[](size_t i) const
 	if(i>=NbBool)
 	{
 		if(NbBool)
-			throw std::range_error("RBoolVector::operator[] const : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbBool-1)+"]");
+			throw std::range_error(RString("RBoolVector::operator[] const : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbBool-1)+"]").ToString());
 		else
 			throw std::range_error("RBoolVector::operator[] const : no elements");
 	}
 	char ptr(List[i]);
 	if(ptr==-1)
-		throw RException(RString("RBoolVector::operator[](size_t) const : Undefined value at position '")+RString::Number(i)+"'");
+		throw RException(RString("RBoolVector::operator[](size_t) const : Undefined value at position '"+RString::Number(i)+"'").ToString());
 	return(ptr);
 }
 
@@ -175,7 +175,7 @@ bool& RBoolVector::operator[](size_t i)
 	if(i>=NbBool)
 	{
 		if(NbBool)
-			throw std::range_error("RBoolVector::operator[] : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbBool-1)+"]");
+			throw std::range_error(RString("RBoolVector::operator[] : idx "+RString::Number(i)+" outside range [0,"+RString::Number(NbBool-1)+"]").ToString());
 		else
 			throw std::range_error("RBoolVector::operator[] : no elements");
 	}
