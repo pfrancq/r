@@ -33,14 +33,6 @@
 
 
 //------------------------------------------------------------------------------
-// include files for MySQL
-#if (defined(_BSD_SOURCE) || defined(__GNUC__) ) && !defined(WIN32) && !defined(__APPLE__)
-	#include <mysql/mysql.h>
-#else
-	#include <mysql.h>
-#endif
-
-//------------------------------------------------------------------------------
 // include files for R Project
 #include <rtextencoding.h>
 #include <rquery.h>
@@ -66,7 +58,7 @@ protected:
 	/**
 	 * Database.
 	 */
-	MYSQL* Db;
+	void* Db;
 
 	/**
 	 * Coding used to read/write to MySQL.
