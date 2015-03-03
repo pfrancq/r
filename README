@@ -1,1 +1,49 @@
+QUICK BUILD
+-----------
+How-to build (command-line):
+- create a build directory (by exemple /path/to/r/build)
+- cd /path/to/r/build
+- cmake .. [OPTIONS]
+- make or make VERBOSE=1
+- sudo make install
+- sudo make uninstall (if you want to remove it ...)
 
+
+ABOUT OPTIONS (when running cmake)
+-----------------------------------
+In CMake, options are in the form -D<option_name>=<option_value>, where <option_name> (case sensitive) and <option_value> are mandatory.
+When you set a value, it's stored in cache, until you provide a new value.
+
+So if you first configure with
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+the first time, the project will be build with debug informations.  Future cmake invocation without paramater (like cmake ..)
+still prepare configuration for debug.  You need to set one time the new value for the configuration to update this setting
+cmake .. -DCMAKE_BUILD_TYPE=Release
+And again, until you didn't say it, cmake will keep this setting.
+
+This is false if you remove the content of your build directory (you must past again your options)...
+
+
+AVAILABLE OPTIONS (when running cmake)
+--------------------------------------
+The available options are (also cmake options are still available), and don't forget to use -D<option_name>=<option_value>:
+
+CMAKE_INSTALL_PREFIX=/path/to/install/top/dir -> where to install files
+CMAKE_BUILD_TYPE=<Debug|Release> -> where original default is Release
+CMAKE_BUILD_TYPE=Debug This option generates all the necessary debugging symbols.
+disable-mysql=true This option disables the support for MySQL.
+disable-sqlite=true This option disables the support for SQLite.
+disable-postgres=true This option disables the support for PostgreSQL.
+disable-qt=true This option disables the support for Qt.
+
+
+MORE INFORMATION
+----------------
+More information is available on the following Web page:
+http://www.otlet-institute.org/wikics/Building_R_Libraries.html
+
+
+AUTHORS
+-------
+Xavier Sacré 
+Pascal Francq
