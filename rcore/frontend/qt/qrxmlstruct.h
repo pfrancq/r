@@ -42,7 +42,7 @@
 //-----------------------------------------------------------------------------
 // include files for Qt
 #include <QtGui/QTreeWidgetItem>
-
+class Ui_QRXMLStruct; // Generate by Qt (moc)
 
 //-----------------------------------------------------------------------------
 namespace R{
@@ -58,7 +58,11 @@ namespace R{
 class QRXMLStruct : public QWidget
 {
 	Q_OBJECT
-	void* Ui;
+
+	/**
+	 * Main Widget.
+	 */
+	Ui_QRXMLStruct* Ui;
 
 public:
 

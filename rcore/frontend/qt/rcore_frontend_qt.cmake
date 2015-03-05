@@ -1,27 +1,31 @@
 SET(rcore_frontend_qt_INST_INCLUDES
-rqt.h
-qrconsole.h
-qrxmlstruct.h
-qrpainter.h
+	rqt.h
+	qrconsole.h
+	qrxmlstruct.h
+	qrpainter.h
+	qraboutdialog.h
 )
 
 
 SET(rcore_frontend_qt_Qt_INCLUDES
-qrconsole.h
-qrxmlstruct.h
-qrpainter.h
+	qrconsole.h
+	qrxmlstruct.h
+	qrpainter.h
+	qraboutdialog.h
 )
 
 
 SET(rcore_frontend_qt_TARGET_SOURCES
-rqt.cpp
-qrconsole.cpp
-qrxmlstruct.cpp
-qrpainter.cpp
+	rqt.cpp
+	qrconsole.cpp
+	qrxmlstruct.cpp
+	qrpainter.cpp
+	qraboutdialog.cpp
 )
 
 SET(rcore_frontend_qt_UI_INCLUDES
 	qrxmlstruct.ui
+	qraboutdialog.ui
 )
 
 

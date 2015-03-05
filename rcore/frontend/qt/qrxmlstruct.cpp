@@ -93,8 +93,8 @@ public:
 QRXMLStruct::QRXMLStruct(QWidget* parent)
 	: QWidget(parent), Ui(new Ui_QRXMLStruct())
 {
-	static_cast<Ui_QRXMLStruct*>(Ui)->setupUi(this);
-	connect(static_cast<Ui_QRXMLStruct*>(Ui)->Struct,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),this,SLOT(slotSelectionTag(QTreeWidgetItem*)));
+	Ui->setupUi(this);
+	connect(Ui->Struct,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),this,SLOT(slotSelectionTag(QTreeWidgetItem*)));
 }
 
 
@@ -134,19 +134,19 @@ void QRXMLStruct::slotSelectionTag(QTreeWidgetItem* item)
 
 	if(t->Tag)
 	{
-		static_cast<Ui_QRXMLStruct*>(Ui)->TagInfos->setTabEnabled(0,true);
-		static_cast<Ui_QRXMLStruct*>(Ui)->TagAttributes->clear();
+		Ui->TagInfos->setTabEnabled(0,true);
+		Ui->TagAttributes->clear();
 		Cur=t->Tag->GetAttrs();
 		int i;
 		for(Cur.Start(),i=0;!Cur.End();Cur.Next(),i++)
-			new QTreeWidgetItem(static_cast<Ui_QRXMLStruct*>(Ui)->TagAttributes,QStringList()<<ToQString(Cur()->GetName())<<ToQString(Cur()->GetValue()));
-		static_cast<Ui_QRXMLStruct*>(Ui)->TagInfos->setTabEnabled(1,false);
+			new QTreeWidgetItem(Ui->TagAttributes,QStringList()<<ToQString(Cur()->GetName())<<ToQString(Cur()->GetValue()));
+		Ui->TagInfos->setTabEnabled(1,false);
 	}
 	else
 	{
-		static_cast<Ui_QRXMLStruct*>(Ui)->TagInfos->setTabEnabled(1,true);
-		static_cast<Ui_QRXMLStruct*>(Ui)->TagContent->setText(t->text(0));
-		static_cast<Ui_QRXMLStruct*>(Ui)->TagInfos->setTabEnabled(0,false);
+		Ui->TagInfos->setTabEnabled(1,true);
+		Ui->TagContent->setText(t->text(0));
+		Ui->TagInfos->setTabEnabled(0,false);
 	}
 }
 
@@ -154,12 +154,12 @@ void QRXMLStruct::slotSelectionTag(QTreeWidgetItem* item)
 //-----------------------------------------------------------------------------
 void QRXMLStruct::Set(RXMLStruct* xml)
 {
-	static_cast<Ui_QRXMLStruct*>(Ui)->Struct->clear();
+	Ui->Struct->clear();
 	if(xml)
 	{
 		RXMLTag* ptr=xml->GetTop();
 		if(ptr)
-			ConstructTag(ptr,new QListViewItemXMLTag(static_cast<Ui_QRXMLStruct*>(Ui)->Struct,ptr,ToQString(ptr->GetName())));
+			ConstructTag(ptr,new QListViewItemXMLTag(Ui->Struct,ptr,ToQString(ptr->GetName())));
 	}
 }
 
@@ -167,5 +167,5 @@ void QRXMLStruct::Set(RXMLStruct* xml)
 //-----------------------------------------------------------------------------
 QRXMLStruct::~QRXMLStruct(void)
 {
-	delete static_cast<Ui_QRXMLStruct*>(Ui);
+	//delete Ui;
 }
