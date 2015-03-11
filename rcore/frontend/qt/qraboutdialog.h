@@ -47,8 +47,8 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The QRAboutDialog provides a representation for a dialog box presenting
-* "About information" for a given object (for example related to an
-* application). It is inspired by the KAboutApplicationDialog of KDE.
+* "About information" for a given object (for example an application). It is 
+* inspired by the KAboutApplicationDialog of KDE.
 *
 * Several information can be specified (description, an URL, a list of authors,
 * etc.).
