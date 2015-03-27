@@ -51,13 +51,11 @@ using namespace std;
 QRAboutDialog::QRAboutDialog(const QString& name,const QString& version,QWidget* parent)
 	: QDialog(parent), Ui(new Ui_QRAboutDialog()), License(License_Unknown)
 {
-	QVBoxLayout* verticalLayout = new QVBoxLayout(this);
-	QWidget* widget=new QWidget(this);
-	verticalLayout->addWidget(widget);
-	Ui->setupUi(widget);
+	Ui->setupUi(this);
 	Ui->Application->setText(name);
 	Ui->Version->setText("Version "+version);
 	connect(Ui->OK,SIGNAL(pressed()),this,SLOT(accept()));
+	setWindowTitle("About "+name);
 }
 
 
@@ -167,7 +165,6 @@ void QRAboutDialog::exec(void)
 	Ui->Authors->setTextInteractionFlags(Qt::TextBrowserInteraction);
 
 	adjustSize();
-	layout()->setSizeConstraint(QLayout::SetFixedSize);
 	QDialog::exec();
 }
 
