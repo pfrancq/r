@@ -34,7 +34,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/stat.h>
-#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
+#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE__)
 	#include <unistd.h>
 #else
 	#include <io.h>
@@ -251,7 +251,7 @@ bool RIOFile::IsOpen(void) const
 void RIOFile::Close(void)
 {
 	// If non-local file -> remove the temporary file
-	#if defined(_BSD_SOURCE) || (defined(__GNUC__) && !defined(__MINGW32__)) || defined(__APPLE_)
+	#if defined(_BSD_SOURCE) || (defined(__GNUC__) && !defined(__MINGW32__)) || defined(__APPLE__)
 		if(URI.GetScheme()!="file")
 				RFile::RemoveFile(File);
 	#endif

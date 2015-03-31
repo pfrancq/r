@@ -34,7 +34,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/stat.h>
-#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
+#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE__)
 	#include <unistd.h>
 #else
 	#include <io.h>
@@ -149,7 +149,7 @@ const RString RFile::GetFileName(void) const
 //------------------------------------------------------------------------------
 RChar RFile::GetDirSeparator(void)
 {
-#if defined(_BSD_SOURCE) || (defined(__GNUC__) && !defined(__MINGW32__)) || defined(__APPLE_)
+#if defined(_BSD_SOURCE) || (defined(__GNUC__) && !defined(__MINGW32__)) || defined(__APPLE__)
 	return('/');
 #else
     return('\\');
@@ -210,7 +210,7 @@ void RFile::RenameFile(const RURI& olduri,const RURI& newuri)
 //------------------------------------------------------------------------------
 RURI RFile::GetTempFile(void)
 {
-	#if defined(_BSD_SOURCE) || (defined(__GNUC__) && !defined(__MINGW32__)) || defined(__APPLE_)
+	#if defined(_BSD_SOURCE) || (defined(__GNUC__) && !defined(__MINGW32__)) || defined(__APPLE__)
 		char tmpname[15]="";
 		FILE *sfp;
 		int fd(-1);

@@ -33,7 +33,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <errno.h>
-#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE_)
+#if defined(_BSD_SOURCE) || defined(__GNUC__) || defined(__APPLE__)
 	#include <unistd.h>
 #else
 	#include <io.h>
