@@ -107,10 +107,10 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
 			WCHAR path[MAX_PATH];
 			if(SUCCEEDED(SHGetFolderPathW(NULL,CSIDL_PROFILE,NULL,0,path)))
 			{
-			char C[512];
-			char DefaultChar=' ';
-			WideCharToMultiByte(CP_ACP,0,path,-1,c,511,&DefaultChar,NULL);
-			HomeConfig=ch+RDir::GetDirSeparator()+".r";
+				char Dir[512];
+				char DefaultChar=' ';
+				WideCharToMultiByte(CP_ACP,0,path,-1,Dir,511,&DefaultChar,NULL);
+				HomeConfig=Dir+RDir::GetDirSeparator()+".r";
 		}
 		#else
 			HomeConfig=RString(getenv("HOME"))+RDir::GetDirSeparator()+".r";
