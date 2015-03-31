@@ -141,7 +141,7 @@ void RConfig::Load(bool global,bool exist)
 	if(global)
 	{
 		// Load first the default config
-		RURI Where("/usr/r/config/"+Category+"/"+Name+".config");
+		RURI Where(RDir::GetDirSeparator()+"usr"+RDir::GetDirSeparator()+"r"+RDir::GetDirSeparator()+"config"+RDir::GetDirSeparator()+Category+RDir::GetDirSeparator()+Name+".config");
 		try
 		{
 			RXMLFile File(Where,&Config);
@@ -161,7 +161,7 @@ void RConfig::Load(bool global,bool exist)
 	RXMLTag* RootTag(Config.GetTop());
 	try
 	{
-		RURI Where(App->GetHomeConfig()+"/config/"+Category+"/"+Name+".config");
+		RURI Where(App->GetHomeConfig()+RDir::GetDirSeparator()+"config"+RDir::GetDirSeparator()+Category+RDir::GetDirSeparator()+Name+".config");
 		if(RootTag)
 		{
 			RXMLStruct Local;
@@ -179,7 +179,7 @@ void RConfig::Load(bool global,bool exist)
 	catch(...)
 	{
 		if(exist)
-			mThrowRException("Invalid configuration file '"+App->GetHomeConfig()+"/config/"+Category+"/"+Name+".config"+"'");
+			mThrowRException("Invalid configuration file '"+App->GetHomeConfig()+RDir::GetDirSeparator()+"config"+RDir::GetDirSeparator()+Category+RDir::GetDirSeparator()+Name+".config"+"'");
 	}
 
 	// Create the parameters based on the xml structure
@@ -227,11 +227,11 @@ void RConfig::Save(void)
 	Save(Root,Config,RootTag);
 
 	RString Home(App->GetHomeConfig());
-	RString Where=Home+"/config/"+Category+"/"+Name+".config";
+	RString Where=Home+RDir::GetDirSeparator()+"config"+RDir::GetDirSeparator()+Category+RDir::GetDirSeparator()+Name+".config";
 	try
 	{
 		// Always save locally
-		RDir::CreateDirIfNecessary(Home+"/config/"+Category,true);
+		RDir::CreateDirIfNecessary(Home+RDir::GetDirSeparator()+"config"+RDir::GetDirSeparator()+Category,true);
 		RXMLFile File(Where,&Config);
 		File.Open(R::RIO::Create);
 	}
