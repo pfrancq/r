@@ -28,6 +28,13 @@
 
 
 //-----------------------------------------------------------------------------
+// include files for Windows
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+	#include <Shlobj.h>
+#endif
+
+
+//-----------------------------------------------------------------------------
 // include files for R Project
 #include <rapplication.h>
 #include <rdir.h>
@@ -95,7 +102,20 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
 	if(ptr)
 		HomeConfig=ptr->Get();
 	if(HomeConfig.IsEmpty())
-		HomeConfig=RString(getenv("HOME"))+RDir::GetDirSeparator()+".r";
+	{
+		#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+			WCHAR path[MAX_PATH];
+			if(SUCCEEDED(SHGetFolderPathW(NULL,CSIDL_PROFILE,NULL,0,path)))
+			{
+			char C[512];
+			char DefaultChar=' ';
+			WideCharToMultiByte(CP_ACP,0,path,-1,c,511,&DefaultChar,NULL);
+			HomeConfig=ch+RDir::GetDirSeparator()+".r";
+		}
+		#else
+			HomeConfig=RString(getenv("HOME"))+RDir::GetDirSeparator()+".r";
+		#endif
+	}
 }
 
 
