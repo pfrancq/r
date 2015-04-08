@@ -255,7 +255,7 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 		{
 			switch(errno)
 			{
-				// Strange behavior with iconv under MinGW (err==-1 and errno==0)
+				// Strange behaviour with iconv under MinGW (err==-1 and errno==0)
 				case 0:
 					if(!s2)
 						ToFill=false;

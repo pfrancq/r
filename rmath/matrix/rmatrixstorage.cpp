@@ -730,10 +730,10 @@ void RMatrixStorage::VerifySize(size_t newlines,size_t newcols,bool fill,double 
 	if(BaseURI==RString::Null)
 		mThrowRIOException(&Index,"File not open");
 
-	if(!newlines)
+/*	if(!newlines)
 		mThrowRException("Matrix must have at least one line");
 	if(!newcols)
-		mThrowRException("Matrix must have at least one column");
+		mThrowRException("Matrix must have at least one column");*/
 
 	if((NbLines==newlines)&&(NbCols==newcols))
 		return;
