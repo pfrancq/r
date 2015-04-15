@@ -129,7 +129,14 @@ protected:
 		/**
 		 * Invalid the Latin1 representation.
 		 */
-		void InvalidLatin1(void) {delete[] Latin1; Latin1=0;}
+		inline void InvalidLatin1(void)
+		{
+			if(Latin1)
+			{
+				delete[] Latin1;
+				Latin1=0;
+			}
+		}
 
 		/**
 		 * Destruct the buffer.

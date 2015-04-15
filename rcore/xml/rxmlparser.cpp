@@ -727,6 +727,7 @@ RString RXMLParser::XMLToString(const RString& str,bool html)
 	RStringBuilder Code;
 	RChar What;
 
+	Cur.Start();
 	while(!Cur.End())
 	{
 		// Verify if it is not a code

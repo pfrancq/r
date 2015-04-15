@@ -196,7 +196,12 @@ public:
 	* arbitrary data.
 	* @param len             Length of the string.
 	*/
-	inline void SetLen(size_t len) {BasicString<RChar,RString>::SetLen(len);}
+	inline void SetLen(size_t len)
+	{
+		BasicString<RChar,RString>::SetLen(len);
+		if(Data)
+			Data->InvalidLatin1();
+	}
 
 	/**
 	* Set the length of the string. If the length is shorter that the current
@@ -216,7 +221,10 @@ public:
 	/** @name Manipulation methods	*/ // @{
 
 	/**
-	* Clear the content of the string.
+	* Clear the content of the string. The string is deallocated and set to
+	* RSting::Null. If the memory must not be deallocated (for example if the
+	* string holds multiple temporary values), it is better to use
+	* RString::SetLen.
 	*/
 	inline void Clear(void) {BasicString<RChar,RString>::Clear();}
 
@@ -944,6 +952,21 @@ class RCharCursor
 	*/
 	const RString* Str;
 
+	/**
+	* The number of characters in the cursor.
+	*/
+	size_t CurNbPtr;
+
+	/**
+	* The first position in the string handled by the cursor.
+	*/
+	size_t FirstPtr;
+
+	/**
+	* The last position in the string handled by the cursor.
+	*/
+	size_t LastPtr;
+
 public:
 
 	/**
@@ -954,14 +977,20 @@ public:
 	/**
 	* Construct the cursor.
 	* param src              String to iterate.
+	* @param min             Minimum position of the string to iterate.
+	* @param max             Maximum position of the string to iterate (included max).
+	*                        If SIZE_MAX, iterate until the end of the string.
 	*/
-	RCharCursor(const RString& src);
+	RCharCursor(const RString& src,size_t min=0,size_t max=SIZE_MAX);
 
 	/**
 	* Set the string and start the iterator.
 	* param src              String to iterate.
+	* @param min             Minimum position of the string to iterate.
+	* @param max             Maximum position of the string to iterate (included max).
+	*                        If SIZE_MAX, iterate until the end of the string.
 	*/
-	void Set(const RString& src);
+	void Set(const RString& src,size_t min=0,size_t max=SIZE_MAX);
 
 	/**
 	* Start the iterator to go trough the string.
@@ -1024,6 +1053,12 @@ public:
 	* @returns RChar.
 	*/
 	RChar operator[](size_t idx) const;
+
+	/**
+	 * Get the pointer to the current place of the string.
+    * @return a constant pointer on the current character.
+    */
+	const RChar* GetCurrent(void) const {return(Current);}
 };
 
 

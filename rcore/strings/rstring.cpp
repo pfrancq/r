@@ -635,24 +635,37 @@ RString RString::Number(const long double nb,const char* format)
 
 ///----------------------------------------------------------------------------
 RCharCursor::RCharCursor(void)
-	: Current(0), ActPtr(0), Str(0)
+	: Current(0), ActPtr(0), Str(0), CurNbPtr(0), FirstPtr(0), LastPtr(0)
 {
 }
 
 
 //-----------------------------------------------------------------------------
-RCharCursor::RCharCursor(const RString& src)
-	: Current(src.Data->Text), ActPtr(0), Str(&src)
+RCharCursor::RCharCursor(const RString& src,size_t min,size_t max)
 {
+	Set(src,min,max);
 }
 
 
 //-----------------------------------------------------------------------------
-void RCharCursor::Set(const RString& src)
+void RCharCursor::Set(const RString& src,size_t min,size_t max)
 {
+	mAssert(min<=max);
 	Str=&src;
-	Current=Str->Data->Text;
+	if((max!=SIZE_MAX)&&(max<src.GetLen()))
+		LastPtr=max+1;
+	else
+		LastPtr=src.GetLen();
+	if((min<=max)&&(min<src.GetLen()))
+		FirstPtr=min;
+	else
+		FirstPtr=0;
+	Current=0;
 	ActPtr=0;
+	if((min==0)&&(max==SIZE_MAX))
+		CurNbPtr=src.GetLen();   // The whole string is covered -> The exact number of characters is known.
+	else
+		CurNbPtr=SIZE_MAX;  // We must delay the computation until it is necessary.
 }
 
 
@@ -661,8 +674,15 @@ void RCharCursor::Start(void)
 {
 	if(!Str)
 		mThrowRException("No string defined");
+	if(!Str->Data->Len)
+	{
+		Current=0;
+		ActPtr=0;
+		return;
+	}
 	Current=Str->Data->Text;
-	ActPtr=0;
+	ActPtr=FirstPtr;
+	Current=&Str->Data->Text[FirstPtr];
 }
 
 
@@ -671,13 +691,14 @@ void RCharCursor::StartFromEnd(void)
 {
 	if(!Str)
 		mThrowRException("No string defined");
-	ActPtr=Str->Data->Len-1;
 	if(!Str->Data->Len)
 	{
 		Current=0;
+		ActPtr=0;
 		return;
 	}
-	Current=&Str->Data->Text[Str->Data->Len-1];
+	ActPtr=LastPtr-1;
+	Current=&Str->Data->Text[LastPtr-1];
 }
 
 
@@ -703,7 +724,17 @@ size_t RCharCursor::GetNb(void)
 {
 	if(!Str)
 		mThrowRException("No string defined");
-	return(Str->Data->Len);
+	if(CurNbPtr==SIZE_MAX)
+	{
+		const_cast<RCharCursor*>(this)->CurNbPtr=0;
+		if(Str->Data->Text)
+		{
+			RChar* ptr(&Str->Data->Text[FirstPtr]);
+			for(size_t i=FirstPtr;i<LastPtr;i++,ptr++)
+				const_cast<RCharCursor*>(this)->CurNbPtr++;
+		}
+	}
+	return(CurNbPtr);
 }
 
 
@@ -712,7 +743,7 @@ size_t RCharCursor::GetPos(void)
 {
 	if(!Str)
 		mThrowRException("No string defined");
-	return(ActPtr);
+	return(ActPtr-FirstPtr);
 }
 
 
@@ -730,7 +761,7 @@ bool RCharCursor::End(void) const
 {
 	if(!Str)
 		mThrowRException("No string defined");
-	return(ActPtr==Str->Data->Len);
+	return(ActPtr==LastPtr);
 }
 
 
@@ -740,15 +771,12 @@ void RCharCursor::Next(size_t inc)
 	if(!Str)
 		mThrowRException("No string defined");
 	if(!Str->Data->Len) return;
-	if(ActPtr==Str->Data->Len)
-	{
-		Current=Str->Data->Text;
-		ActPtr=0;
-	}
+	if(ActPtr==LastPtr)
+		Start();
 	else
 	{
-		Current+=inc;
 		ActPtr+=inc;
+		Current+=inc;
 	}
 }
 
@@ -792,7 +820,7 @@ RChar RCharCursor::operator[](size_t idx) const
 {
 	if(!Str)
 		mThrowRException("No string defined");
-	if(idx>=Str->Data->Len)
+	if(idx>=LastPtr)
 	#ifdef __GNUC__
 		throw std::range_error(__PRETTY_FUNCTION__);
 	#else
