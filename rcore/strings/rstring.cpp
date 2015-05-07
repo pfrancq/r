@@ -395,12 +395,12 @@ RChar* RString::Latin1ToUnicode(const char* src,size_t& len,size_t& maxlen)
 
 
 //-----------------------------------------------------------------------------
-char* RString::UnicodeToLatin1(void) const
+char* RString::UnicodeToLatin1(bool escape) const
 {
 	if(!Data)
 		return(0);
 
-	RCString Str(RTextEncoding::GetUTF8Encoding()->FromUnicode(*this));
+	RCString Str(RTextEncoding::GetUTF8Encoding()->FromUnicode(*this,escape));
 	size_t lenlatin1(Str.GetLen()+1);
 	char* res=new char[lenlatin1];
 	memcpy(res,Str(),lenlatin1*sizeof(char));

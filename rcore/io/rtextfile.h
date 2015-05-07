@@ -628,20 +628,28 @@ public:
 	/**
 	* Write a string in the file. If the string is not the first thing on the
 	* line, a separator is eventually added before it.
+	* @param invalid        If true, invalid characters are allowed. If false,
+	*                       an exception is generated.
 	*/
-	void WriteStr(const RString& str);
+	void WriteStr(const RString& str,bool invalid=false);
 
 	/**
 	* Write a string in the file. If the string is not the first thing on the
 	* line, a separator is eventually added before it.
+	* @param escape         Escape invalid sequences of bytes?
+	* @param invalid        If true, invalid characters are allowed. If false,
+	*                       an exception is generated.
 	*/
-	void WriteStr(const char* c);
+	void WriteStr(const char* c,bool invalid=false);
 
 	/**
 	* Write a string of a give length in the file. If the string is not the first
 	* thing on the line, a separator is eventually added before it.
+	* @param escape         Escape invalid sequences of bytes?
+	* @param invalid        If true, invalid characters are allowed. If false,
+	*                       an exception is generated.
 	*/
-	void WriteStr(const char* c,size_t l);
+	void WriteStr(const char* c,size_t l,bool invalid=false);
 
 	/**
 	* << Operator for char *.
@@ -756,8 +764,10 @@ public:
 	* Write a log entry in the file. First the time is written, and then the
 	* entry. The entry is alone on a line, so end-of-lines are inserted if
 	* necessary before or after it.
+	* @param invalid        If true, invalid characters are allowed. If false,
+	*                       an exception is generated.
 	*/
-	void WriteLog(const RString& entry);
+	void WriteLog(const RString& entry,bool invalid);
 
 	/**
 	* Return the actual line number.

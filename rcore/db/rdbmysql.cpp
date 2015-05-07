@@ -135,7 +135,7 @@ void* RDbMySQL::InitQuery(const RString& sql,size_raw& nbcols)
 
 	try
 	{
-		SQL_utf8=Coding->FromUnicode(sql);
+		SQL_utf8=Coding->FromUnicode(sql,false);
 	}
 	catch(...)
 	{

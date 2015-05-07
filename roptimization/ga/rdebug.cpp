@@ -146,11 +146,11 @@ RDebugXML::RDebugXML(const RURI& name)
 	Depths.Set(false,++Depth);      // For the moment nothing as child
 	File.SetSeparator("");
 	File.Open(RIO::Create);
-	File.WriteStr("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+	File.WriteStr("<?xml version=\"1.0\" encoding=\"UTF-8\"?>",false);
 	File.WriteLine();
-	File.WriteStr("<!DOCTYPE RDebug>");
+	File.WriteStr("<!DOCTYPE RDebug>",false);
 	File.WriteLine();
-	File.WriteStr("<RDebug>");
+	File.WriteStr("<RDebug>",false);
 	tmpSizeTab=Depths.GetMax();
 	ptr=tmpTab=new char[tmpSizeTab];
 	for(size_t i=tmpSizeTab;--i;ptr++)
@@ -171,14 +171,14 @@ void RDebugXML::WriteBeginTag(const RString& tag,const RString& attrs)
 {
 	if(Depth)
 		WriteTabs(Depth);
-	File.WriteStr("<",1);
-	File.WriteStr(tag,tag.GetLen());
+	File.WriteStr("<",1,false);
+	File.WriteStr(tag,tag.GetLen(),false);
 	if(attrs.GetLen())
 	{
-		File.WriteStr(" ",1);
-		File.WriteStr(attrs);
+		File.WriteStr(" ",1,false);
+		File.WriteStr(attrs,false);
 	}
-	File.WriteStr(">",1);
+	File.WriteStr(">",1,false);
 }
 
 
@@ -187,9 +187,9 @@ void RDebugXML::WriteEndTag(const RString& tag)
 {
 	if(Depth&&Depths[Depth-1])
 		WriteTabs(Depth);
-	File.WriteStr("</",2);
-	File.WriteStr(tag);
-	File.WriteStr(">",1);
+	File.WriteStr("</",2,false);
+	File.WriteStr(tag,false);
+	File.WriteStr(">",1,false);
 }
 
 
@@ -197,7 +197,7 @@ void RDebugXML::WriteEndTag(const RString& tag)
 void RDebugXML::WriteText(const RString& text)
 {
 	WriteTabs(Depth+1);
-	File.WriteStr(text);
+	File.WriteStr(text,false);
 }
 
 
@@ -226,6 +226,6 @@ void RDebugXML::WriteTabs(size_t nb)
 RDebugXML::~RDebugXML(void)
 {
 	File.WriteLine();
-	File.WriteStr("</RDebug>");
+	File.WriteStr("</RDebug>",false);
 	delete[] tmpTab;
 }

@@ -171,7 +171,7 @@ template<class cGroup,class cObj,class cGroups>
 	}
 	to->NbSubObjects++;
 	ObjectsAss[obj->GetId()]=to->Id;
-	ObjsNoAss.DeletePtr(obj);
+	ObjsNoAss.DeletePtr(*obj);
 	to->PostInsert(obj);
 }
 
@@ -192,7 +192,7 @@ template<class cGroup,class cObj,class cGroups>
 	{
 		ObjsAss.InsertPtrAt(ptr(),pos,false);
 		ObjectsAss[ptr()->GetId()]=to->Id;
-		ObjsNoAss.DeletePtr(ptr());
+		ObjsNoAss.DeletePtr(*ptr());
 		if(CallPostInsert)
 			to->PostInsert(ptr());
 	}
@@ -208,7 +208,7 @@ template<class cGroup,class cObj,class cGroups>
 	j=from->SubObjects;
 	ObjectsAss[obj->GetId()]=cNoRef;
 	ObjsNoAss.InsertPtr(obj);
-	ObjsAss.DeletePtr(obj);
+	ObjsAss.DeletePtr(*obj);
 	if(!(--from->NbSubObjects))
 		from->SubObjects=cNoRef;
 	from->PostDelete(obj);
@@ -237,7 +237,7 @@ template<class cGroup,class cObj,class cGroups>
 		tmpObj=obj();
 		ObjectsAss[tmpObj->GetId()]=cNoRef;
 		ObjsNoAss.InsertPtr(tmpObj);
-		ObjsAss.DeletePtr(tmpObj);
+		ObjsAss.DeletePtr(*tmpObj);
 		if(!(--from->NbSubObjects))
 			from->SubObjects=cNoRef;
 		if(CallPostDelete)

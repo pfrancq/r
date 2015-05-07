@@ -56,13 +56,6 @@ int RObject::Compare(const RObject& obj) const
 
 
 //-----------------------------------------------------------------------------
-int RObject::Compare(const RObject* obj) const
-{
-	return(ComparePtrs(this,obj));
-}
-
-
-//-----------------------------------------------------------------------------
 void RObject::HandlerNotFound(const RNotification& notification)
 {
 	std::cout<<Name<<" : Message '"<<notification.GetName()<<"' not treated."<<std::endl;

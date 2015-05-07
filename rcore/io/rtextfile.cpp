@@ -185,7 +185,7 @@ void RTextFile::ReadChars(void)
 		return;
 
 	// Initialize some local variables
-	size_t treat,len=20*4,s;
+	size_t treat,len=20*4+SkipBytes,s;
 	char* ptr=Buffer+SkipBytes;
 	bool end;
 	RTextEncoding::UnicodeCharacter NextCar;
@@ -933,7 +933,7 @@ RTextFile& RTextFile::operator>>(long double& nb)
 void RTextFile::WriteSeparator(void)
 {
 	if(NewLine||SkipSeparator) return;
-	RCString str=Codec->FromUnicode(Separator);
+	RCString str=Codec->FromUnicode(Separator,false);
 	Write(str,str.GetLen());
 }
 
@@ -942,7 +942,7 @@ void RTextFile::WriteSeparator(void)
 void RTextFile::WriteLine(void)
 {
 	RString endofline("\n");
-	RCString str=Codec->FromUnicode(endofline);
+	RCString str=Codec->FromUnicode(endofline,false);
 	Write(str,str.GetLen());
 	LastLine=Line++;
 	#ifdef windows
@@ -953,11 +953,11 @@ void RTextFile::WriteLine(void)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteStr(const RString& str)
+void RTextFile::WriteStr(const RString& str,bool invalid)
 {
 	mReturnIfFail(str.GetLen()>0);
 	WriteSeparator();
-	RCString res=Codec->FromUnicode(str);
+	RCString res=Codec->FromUnicode(str,invalid);
 	Write(res,res.GetLen());
 	#ifdef windows
 		flushall();
@@ -967,14 +967,14 @@ void RTextFile::WriteStr(const RString& str)
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteStr(const char* c)
+void RTextFile::WriteStr(const char* c,bool invalid)
 {
-	WriteStr(RString(c));
+	WriteStr(RString(c),invalid);
 }
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteStr(const char* c,size_t l)
+void RTextFile::WriteStr(const char* c,size_t l,bool)
 {
 	if(!l) return;
 	WriteSeparator();
@@ -988,7 +988,7 @@ void RTextFile::WriteStr(const char* c,size_t l)
 //------------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const char* c)
 {
-	WriteStr(RString(c));
+	WriteStr(RString(c),false);
 	return(*this);
 }
 
@@ -996,7 +996,7 @@ RTextFile& RTextFile::operator<<(const char* c)
 //------------------------------------------------------------------------------
 RTextFile& RTextFile::operator<<(const RString& str)
 {
-	WriteStr(str);
+	WriteStr(str,false);
 	return(*this);
 }
 
@@ -1004,7 +1004,7 @@ RTextFile& RTextFile::operator<<(const RString& str)
 //------------------------------------------------------------------------------
 void RTextFile::WriteLong(const long nb)
 {
-	WriteStr(RString::Number(nb));
+	WriteStr(RString::Number(nb),false);
 }
 
 
@@ -1035,7 +1035,7 @@ RTextFile& RTextFile::operator<<(const long nb)
 //------------------------------------------------------------------------------
 void RTextFile::WriteULong(const unsigned long nb)
 {
-	WriteStr(RString::Number(nb));
+	WriteStr(RString::Number(nb),false);
 }
 
 
@@ -1067,9 +1067,9 @@ RTextFile& RTextFile::operator<<(const unsigned long nb)
 void RTextFile::WriteBool(const bool b)
 {
 	if(b)
-		WriteStr("0");
+		WriteStr("0",false);
 	else
-		WriteStr("1");
+		WriteStr("1",false);
 }
 
 
@@ -1084,7 +1084,7 @@ RTextFile& RTextFile::operator<<(const bool b)
 //------------------------------------------------------------------------------
 void RTextFile::WriteChar(const char c)
 {
-	WriteStr(RString(c));
+	WriteStr(RString(c),false);
 }
 
 
@@ -1099,7 +1099,7 @@ RTextFile& RTextFile::operator<<(const char c)
 //------------------------------------------------------------------------------
 void RTextFile::WriteFloat(const float nb)
 {
-	WriteStr(RString::Number(nb));
+	WriteStr(RString::Number(nb),false);
 }
 
 
@@ -1114,7 +1114,7 @@ RTextFile& RTextFile::operator<<(const float nb)
 //------------------------------------------------------------------------------
 void RTextFile::WriteDouble(const double nb)
 {
-	WriteStr(RString::Number(nb));
+	WriteStr(RString::Number(nb),false);
 }
 
 
@@ -1129,7 +1129,7 @@ RTextFile& RTextFile::operator<<(const double nb)
 //------------------------------------------------------------------------------
 void RTextFile::WriteLongDouble(const long double nb)
 {
-	WriteStr(RString::Number(nb));
+	WriteStr(RString::Number(nb),false);
 }
 
 
@@ -1205,22 +1205,22 @@ void RTextFile::WriteTime(void)
 	Tmp[21]=':';
 	Add(&Tmp[22],tblock->tm_sec,2);
 	Tmp[24]=0;
-	WriteStr(Tmp,24);
+	WriteStr(Tmp,24,false);
 }
 
 
 //------------------------------------------------------------------------------
-void RTextFile::WriteLog(const RString& entry)
+void RTextFile::WriteLog(const RString& entry,bool invalid)
 {
 	mReturnIfFail(entry.GetLen()>0);
 	if(!NewLine) WriteLine();
 	WriteSeparator();
 	bool SkipSep(SkipSeparator);
 	SkipSeparator=true;
-	WriteStr("[");
+	WriteStr("[",false);
 	WriteTime();
-	WriteStr("] : ");
-	WriteStr(entry);
+	WriteStr("] : ",false);
+	WriteStr(entry,invalid);
 	SkipSeparator=SkipSep;
 	WriteLine();
 }

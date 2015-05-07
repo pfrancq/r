@@ -113,12 +113,6 @@ public:
 	int Compare(const RObject& obj) const;
 
 	/**
-	* Compare method used by R::RContainer.
-	* @param obj             Object to compare with.
-	*/
-	int Compare(const RObject* obj) const;
-
-	/**
 	* Get the name of the object.
 	*/
 	inline RString GetName(void) const {return(Name);}

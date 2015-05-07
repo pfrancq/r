@@ -221,7 +221,7 @@ void RNotificationCenter::InsertObserver(tNotificationHandler handler,RObject* o
 
 	// Register the notification and the observer
 	IListener* listener=new IListener(handler,observer,handle,object);
-	if(!Data->Observers.IsIn(observer))
+	if(!Data->Observers.IsIn(*observer))
 		Data->Observers.InsertPtr(observer);
 
 	if(!object)
@@ -337,7 +337,7 @@ void RNotificationCenter::DeleteObserver(RObject* observer)
 		Dels.DeletePtr(*Listener());
 
 	// Remove the observer
-	Data->Observers.DeletePtr(observer);
+	Data->Observers.DeletePtr(*observer);
 }
 
 

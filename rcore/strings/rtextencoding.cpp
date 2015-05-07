@@ -296,7 +296,7 @@ RTextEncoding::UnicodeCharacter RTextEncoding::NextUnicode(const char* text,size
 
 
 //------------------------------------------------------------------------------
-RCString RTextEncoding::FromUnicode(const RChar* text,size_t len) const
+RCString RTextEncoding::FromUnicode(const RChar* text,size_t len,bool invalid) const
 {
 	char *ptr1,*ptr2;
 	char Tab[BufSize*sizeof(char)];
@@ -321,6 +321,17 @@ RCString RTextEncoding::FromUnicode(const RChar* text,size_t len) const
 		#endif
 		if(err==(size_t)-1)
 		{
+			if(invalid)
+			{
+				if(s1)
+				{
+					ptr1++;
+					s1--;
+				}
+				else
+					ToFill=false;
+			}
+			else
 			switch(errno)
 			{
 				case EILSEQ:
@@ -347,53 +358,9 @@ RCString RTextEncoding::FromUnicode(const RChar* text,size_t len) const
 
 
 //------------------------------------------------------------------------------
-RCString RTextEncoding::FromUnicode(const RString& text) const
+RCString RTextEncoding::FromUnicode(const RString& text,bool invalid) const
 {
-	char *ptr1,*ptr2;
-	char Tab[BufSize*sizeof(char)];
-	size_t s1,s2,err;
-	bool ToFill=true;
-	RCString out;
-
-	ptr1=(char*)(text.ToUTF16());
-	s1=text.GetLen()*sizeof(UChar);
-	while(ToFill)
-	{
-		ptr2=Tab;
-		s2=BufSize;
-		#ifdef _LIBICONV_VERSION
-			#if (defined __APPLE__ || defined WIN32)
-				err=iconv(static_cast<iconv_t>(FromUTF16),&ptr1,&s1,&ptr2,&s2);
-			#else
-				err=iconv(static_cast<iconv_t>(FromUTF16),const_cast<const char**>(&ptr1),&s1,&ptr2,&s2);
-			#endif
-		#else
-			err=iconv(static_cast<iconv_t>(FromUTF16),&ptr1,&s1,&ptr2,&s2);
-		#endif
-		if(err==(size_t)-1)
-		{
-			switch(errno)
-			{
-				case EILSEQ:
-					throw RInvalidByteException("Invalid byte sequence for encoding UFT-16");
-					break;
-				case E2BIG:
-					ToFill=true;
-					break;
-				case EINVAL:
-					throw RIncompleteByteException("Incomplete byte sequence for encoding UTF-16");
-					break;
-				case EBADF:
-					throw RException("Invalid descriptor for encoding "+RString(Name()));
-					break;
-			}
-		}
-		else
-			ToFill=false;
-		s2=BufSize-s2;
-		out+=RCString(Tab,s2);
-	}
-	return(out);
+	return(FromUnicode(text.ToUTF16(),text.GetLen(),invalid));
 }
 
 

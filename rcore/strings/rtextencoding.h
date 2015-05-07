@@ -204,16 +204,20 @@ public:
 	* Transform a string in Unicode to a string of the given encoding.
 	* @param text           Unicode string.
 	* @param len            Length of the string.
+	* @param invalid        If true, invalid characters are allowed. If false,
+	*                       an exception is generated.
 	* @return RCString.
 	*/
-	virtual RCString FromUnicode(const RChar* text,size_t len) const;
+	virtual RCString FromUnicode(const RChar* text,size_t len,bool invalid) const;
 
 	/**
 	* Transform a string in Unicode to a string of the given encoding.
 	* @param text           Unicode string.
+	* @param invalid        If true, invalid characters are allowed. If false,
+	*                       an exception is generated.
 	* @return RCString.
 	*/
-	virtual RCString FromUnicode(const RString& text) const;
+	virtual RCString FromUnicode(const RString& text,bool invlaid) const;
 
 	/**
 	* This method returns a text encoding scheme based on a name. The method

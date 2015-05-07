@@ -55,9 +55,9 @@ namespace R{
  *                            container.
  *
  * To manage the objects, the container uses member functions of the class
- * representing them (class C). These functions have the signature:
+ * representing them (class C). These functions have the signatures:
  * @code
- * int Compare(const TUse& tag) const;
+ * int Search(const TUse& tag) const;
  * int GetId(void) const;
  * int SetId(size_t id);
  * @endcode

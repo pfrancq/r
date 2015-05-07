@@ -41,9 +41,9 @@ public:
 	C* Obj;
 
 	ObjectRef(C* obj) : Obj(obj) {}
-	int Compare(const ObjectRef& obj) const {return(Obj->Compare(*obj.Obj));}
-	int Compare(const C& obj) const {return(Obj->Compare(obj));}
-	template<class TUse> int Compare(const TUse& tag) const {return(Obj->Compare(tag));}
+	int Compare(const ObjectRef& obj) const {return(Obj->Search(*obj.Obj));}
+	int Compare(const C& obj) const {return(Obj->Search(obj));}
+	template<class TUse> int Compare(const TUse& tag) const {return(Obj->Search(tag));}
 };
 
 

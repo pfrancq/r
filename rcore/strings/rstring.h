@@ -172,8 +172,9 @@ private:
 	/**
 	* Transform the RString into C string. The resulting C string should be
 	* destroyed by the caller of the function.
+	* @param escape         Escape invalid sequences of bytes?
 	*/
-	char* UnicodeToLatin1(void) const;
+	char* UnicodeToLatin1(bool escape=false) const;
 
 	/**
 	 * Generate an exception related to this string. Its contains:
