@@ -51,12 +51,23 @@ public:
 	bool Dirty;
 	char* Data;
 
-	Block(size_t id,size_t size) : Id(id), NbAccess(0), Dirty(false), Data(new char[size]) {/*memset(Data,0,sizeof(char)*size);*/}
+	Block(size_t id,size_t size) : Id(id), NbAccess(0), Dirty(false), Data(0)
+	{
+		Data=new char[size];
+	 /*memset(Data,0,sizeof(char)*size);*/
+	}
 	inline int Compare(const Block& block) const {return(CompareIds(Id,block.Id));}
 	inline int Compare(size_t id) const {return(CompareIds(Id,id));}
 	inline void Load(RIOFile* file,size_t size) {file->Read(Data,size);}
 	inline void Save(RIOFile* file,size_t size) {file->Write(Data,size);}
-	~Block(void) {delete[] Data;}
+	~Block(void)
+	{
+		if(Data)
+		{
+			delete[] Data;
+			Data=0;
+		}
+	}
 };
 
 

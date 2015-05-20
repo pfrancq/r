@@ -811,6 +811,8 @@ RChar RCharCursor::operator()(void) const
 {
 	if(!Str)
 		mThrowRException("No string defined");
+	if(!Current)
+		return(0);
 	return(*Current);
 }
 
