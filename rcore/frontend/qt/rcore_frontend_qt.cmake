@@ -4,6 +4,7 @@ SET(rcore_frontend_qt_INST_INCLUDES
 	qrxmlstruct.h
 	qrpainter.h
 	qraboutdialog.h
+	qrguiapplication.h
 )
 
 
@@ -21,6 +22,7 @@ SET(rcore_frontend_qt_TARGET_SOURCES
 	qrxmlstruct.cpp
 	qrpainter.cpp
 	qraboutdialog.cpp
+	qrguiapplication.cpp
 )
 
 SET(rcore_frontend_qt_UI_INCLUDES
