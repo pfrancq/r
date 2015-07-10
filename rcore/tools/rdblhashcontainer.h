@@ -505,7 +505,7 @@ public:
 		const Hash2* ptr2=ptr->GetHash(tag.HashIndex(2));
 		if(!ptr2)
 			return(false);
-		return(ptr2->IsIn<TUse>(tag,sortkey));
+		return(ptr2->IsIn(tag,sortkey));
 	}
 
 	/**
@@ -528,7 +528,7 @@ public:
 		const Hash2* ptr2=ptr->GetHash(hash2);
 		if(!ptr2)
 			return(0);
-		return(ptr2->GetPtr<TUse>(tag,sortkey));
+		return(ptr2->GetPtr(tag,sortkey));
 	}
 
 	/**
@@ -547,7 +547,7 @@ public:
 	{
 		Hash* ptr=GetHash(tag.HashIndex(1));
 		Hash2* ptr2=ptr->GetHash(tag.HashIndex(2),Max,Inc);
-		return(ptr2->GetInsertPtr<TUse>(tag,sortkey));
+		return(ptr2->GetInsertPtr(tag,sortkey));
 	}
 
 	/**
@@ -586,7 +586,7 @@ public:
 		Hash2* ptr2=ptr->GetHash(tag.HashIndex(2),Max,Inc);
 		if(!ptr2)
 			return;
-		ptr2->DeletePtr<TUse>(tag,sortkey,del);
+		ptr2->DeletePtr(tag,sortkey,del);
 	}
 
 	/**

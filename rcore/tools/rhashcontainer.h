@@ -314,7 +314,7 @@ public:
 		const Hash* ptr=GetHash(tag.HashIndex(1));
 		if(!ptr)
 			return(false);
-		return(ptr->template IsIn<TUse>(tag,sortkey));
+		return(ptr->IsIn(tag,sortkey));
 	}
 
 	/**
@@ -332,7 +332,7 @@ public:
 		const Hash* ptr=GetHash(tag.HashIndex(1));
 		if(!ptr)
 			return(0);
-		return(ptr->template GetPtr<TUse>(tag,sortkey));
+		return(ptr->GetPtr(tag,sortkey));
 	}
 
 	/**
@@ -350,7 +350,7 @@ public:
 	template<class TUse> inline C* GetInsertPtr(const TUse& tag,bool sortkey=true)
 	{
 		Hash* ptr=GetHash(tag.HashIndex(1));
-		return(ptr->template GetInsertPtr<TUse>(tag,sortkey));
+		return(ptr->GetInsertPtr(tag,sortkey));
 	}
 
 	/**
@@ -385,7 +385,7 @@ public:
 		Hash* ptr=GetHash(tag.HashIndex(1));
 		if(!ptr)
 			return;
-		ptr->DeletePtr<TUse>(tag,sortkey,del);
+		ptr->DeletePtr(tag,sortkey,del);
 	}
 
 	/**
