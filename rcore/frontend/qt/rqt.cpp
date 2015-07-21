@@ -198,7 +198,7 @@ R::RString R::ToSimpleHTML(const QTextEdit* edit)
 			}
 			else if((RChar::StrNCmp(Skip(),"h",1)==0)&&(Skip.GetLen()==2))
 			{
-				if((Skip[1]>='1')&&(Skip[1]<='6'))
+				if((Skip()[1]>='1')&&(Skip()[1]<='6'))
 				{
 					// OK
 					if(Body)
