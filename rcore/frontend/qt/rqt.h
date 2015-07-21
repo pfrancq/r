@@ -103,6 +103,18 @@ QString ToPlainText(const QString& str,int maxlen=100);
  * @param edit              QTextEdit from which the string must be extracted.
  * @return a R::RString.
  */
+R::RString ExtractHTMLBody(const QTextEdit* edit);
+
+
+//------------------------------------------------------------------------------
+/**
+ * When QTextEdit manipulates a rich content (using HTML tags), the resulting
+ * string represents a whole HTML document (starting with the <html> tag). This
+ * function construct a string with the content that contains only basic HTML
+ * tags (in particular <style> is excluded).
+ * @param edit              QTextEdit from which the string must be extracted.
+ * @return a R::RString.
+ */
 R::RString ToSimpleHTML(const QTextEdit* edit);
 
 

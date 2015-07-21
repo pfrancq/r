@@ -95,15 +95,16 @@ QString R::ToPlainText(const R::RString& str,int maxlen)
 		if(Cur()=='<')
 		{
 			// Skip HTML codes
-			RChar Skip[6];
+			RString Skip;
 			int nb(0);
 			while((!Cur.End())&&(Cur()!='>'))
 			{
 				if(nb<6)
-					Skip[nb++]+=Cur();
+					Skip+=Cur();
 				Cur.Next();
 			}
-			if(RChar::StrNCmp(Skip,"<style",6)==0)
+			Skip.ToLower();
+			if(RChar::StrNCmp(Skip(),"<style",6)==0)
 			{
 				// Skip everything until </style>
 				while((!Cur.End())&&(Cur()!='<'))
@@ -136,7 +137,7 @@ QString R::ToPlainText(const QString& str,int maxlen)
 
 
 //-----------------------------------------------------------------------------
-RString R::ToSimpleHTML(const QTextEdit* edit)
+RString R::ExtractHTMLBody(const QTextEdit* edit)
 {
 	if(edit->toPlainText().isEmpty())
 		return(RString::Null);
@@ -147,4 +148,97 @@ RString R::ToSimpleHTML(const QTextEdit* edit)
 	QString Text("<div"+str.mid(BeginBody+5,EndBody-BeginBody-6)+"</div");
 	RString New(FromQString(Text));
 	return(New);
+}
+
+
+//-----------------------------------------------------------------------------
+R::RString R::ToSimpleHTML(const QTextEdit* edit)
+{
+	if(edit->toPlainText().isEmpty())
+		return(RString::Null);
+	QString str(edit->toHtml());
+	bool Body(false);
+
+	RString New;
+	New.SetLen(200);
+	New.SetLen(0);
+
+	// Parse the string
+	for(int i=0;i<str.size();++i)
+	{
+		if(str.at(i)=='<')
+		{
+			bool End(false);
+			i++;
+			if((i<str.size())&&(str.at(i)=='/'))
+			{
+				End=true;
+				i++;
+			}
+
+			// Look for the HTML code
+			RString Skip;
+			int nb(0);
+			while((i<str.size())&&(str.at(i).isLetterOrNumber()))
+			{
+				if(nb<6)
+					Skip+=str.at(i).unicode();
+				i++;
+			}
+			Skip.ToLower();
+
+			// Look what is allowed (b,i,br,p,h1,h2,h3,h4,h5,h6)
+			if(Skip=="body")
+			{
+				Body=!End;
+
+				// NO -> Skip until >
+				while((i<str.size())&&(str.at(i)!='>'))
+					i++;
+			}
+			else if((RChar::StrNCmp(Skip(),"h",1)==0)&&(Skip.GetLen()==2))
+			{
+				if((Skip[1]>='1')&&(Skip[1]<='6'))
+				{
+					// OK
+					if(Body)
+					{
+						New+='<';
+						if(End)
+							New+='/';
+						New+=Skip+">";
+					}
+				}
+
+				// Skip until >
+				while((i<str.size())&&(str.at(i)!='>'))
+					i++;
+			}
+			else
+			{
+				if((Skip.Compare("b")==0)||(Skip.Compare("i")==0)||(Skip.Compare("br")==0)||(Skip.Compare("p")==0))
+				{
+					// OK
+					if(Body)
+					{
+						New+='<';
+						if(End)
+							New+='/';
+						New+=Skip+">";
+					}
+				}
+
+				// Skip until >
+				while((i<str.size())&&(str.at(i)!='>'))
+					i++;
+			}
+		}
+		else
+		{
+			if(Body)
+				New+=str.at(i).unicode();
+		}
+   }
+
+	return(New.Trim());
 }
