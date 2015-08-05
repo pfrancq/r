@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RIndexFile.h
+	RKeyValueFile.h
 
-	Generic Index File - Header.
+	Generic Key-Value File - Header.
 
 	Copyright 2009-2015 by Pascal Francq (pascal@francq.info).
 
@@ -28,8 +28,8 @@
 
 
 //------------------------------------------------------------------------------
-#ifndef RIndexFile_H
-#define RIndexFile_H
+#ifndef RKeyValueFile_H
+#define RKeyValueFile_H
 
 
 //------------------------------------------------------------------------------
@@ -37,6 +37,7 @@
 #include <rblockfile.h>
 #include <rnumcontainer.h>
 #include <rcursor.h>
+#include <rnumcursor.h>
 
 
 //------------------------------------------------------------------------------
@@ -45,49 +46,71 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* The RIndexFile class represents a generic file for managing an index of
-* records (such as a inverted file used by search engines). The size of the
-* records cannot exceed the size of a single block.
+* The RKeyValueFile class represents a generic file for managing (key,value)
+* pairs (such as an inverted file used by search engines).
 *
 * The approach is based on Zobel, Moffat, and Sack-Davis (1993):
-* - Each index is composed from several blocks.
-* - Each blocks contains a block address table, several records, and some free
-*   space.
+* - Each file is composed from several blocks.
+* - Each block manages a set of pairs. In practice, a block contains an address
+* table (storing for each key the position inside the block of the corresponding
+* value), several values, and some free space.
 *
-* Each element indexed has a given identifier and a given block number. Each
-* block manages the block address table which contains, for each identifier,
-* the address of the record inside the block. In practice, a block is composed
-* from:
+* It is supposed that all keys have the same size (for example an integer or a
+* hash code). Moreover, The size of a value cannot exceed the size of a single
+*  block.
+*
+* Each pair has a given key and a given block number. In practice, a block is
+* composed from:
 * -# The number of bytes free in the block (size_t).
 * -# The number of records in the block (size_t).
-* -# The block table representing for each index the corresponding address
-*    (size_t,size_t).
+* -# The block table representing for each key the corresponding address
+*    (key size,size_t).
 * -# Some free spaces.
-* -# The records at the different addresses.
+* -# The values at the different addresses.
 *
-* The records are stored like a memory heap : Starting from the end, new
-* entries have decreasing internal addresses.
+* The values are stored like a memory heap: starting from the end, new
+* values have decreasing internal addresses.
 *
-* The methods Seek are used to position the block to a specific record
-* corresponding to a block number and an index. The basic Read and Write
-* methods can then be used to read or write data.
+* The methods RKeyValueFile<K>::Seek are used to position the block to a
+* specific value corresponding to a block number and a key. The basic
+*  RKeyValueFile<K>::Read and RKeyValueFile<K>::Write methods can then be used
+* to read or write data.
+*
+* The key must be managed through a class that must be given as parameter of
+* this template. This class must define several methods:
+* @code
+* class cKey
+* {
+* public:
+*   cKey(const cKey& key);                         // Copy constructor.
+*   size_t GetSize(void) const;                    // Size of a key.
+*   int Compare(const char* data) const;           // Compare method.
+*   void Read(R::RKeyValueFile<cKey>& file);       // Read the key from the current position.
+*   void Write(R::RKeyValueFile<cKey>& file);      // Write the key to the current position.
+*   R::RString GetKey(void) const;                 // Build a string representing the key.
+*   cKey& operator=(const cKey &src)               // Assignment operator.
+* };
+* @endcode
+* Look at RIntKey and RIntsKey for examples of implementation.
+*
 *
 * The class provides high level methods to manage RVectorInt objects:
 * @code
-* RIndexFile Test("/home/pfrancq/test.bin",10,2,1);  // 10 Kb per blocks, 2 blocks in cache, tolerance of 1 Kb.
+* RKeyValueFile<RIntKey> Test("/home/pfrancq/test.bin",10,2,1);  // 10 Kb per blocks, 2 blocks in cache, tolerance of 1 Kb.
 * Test.Open();
 *
 * // Write Vec
 * RVectorInt<size_t,false> Vec(30);
 * Vec.Insert(3); Vec.Insert(6); Vec.Insert(7); Vec.Insert(10); Vec.Insert(11);
 * size_t BlockNb(0); // No block is currently assign
-* Test.Write(BlockNb,300,Vec);
+* RIntKey Key(300);
+* Test.Write(BlockNb,Key,Vec);
 *
 * // Read Vec2
 * RVectorInt<size_t,false> Vec2(30);
-* Test.Read(BlockNb,300,Vec2);
+* Test.Read(BlockNb,Key,Vec2);
 * for(Vec2.Start();!Vec2.End();Vec2.Next())
-* 	cout<<"Read "<<Vec2()<<endl;
+*   cout<<"Read "<<Vec2()<<endl;
 * @endcode
 *
 * The class provides also high level methods to manage containers. The class of
@@ -106,43 +129,56 @@ namespace R{
 * 	MyClass(size_t id,double nb) : Id(id), Nb(nb) {}
 * 	int Compare(const MyClass& c) const {return(CompareIds(Id,c.Id));}
 * 	static size_t GetSizeT(void) {return(sizeof(size_t)+sizeof(double));}
-* 	void Write(RIndexFile& file) const
+* 	template<class K>void Write(RKeyValueFile<K>& file) const
 * 	{
-* 		file.Write((char*)&Id,sizeof(size_t));
-* 		file.Write((char*)&Nb,sizeof(double));
+* 	  file.Write((char*)&Id,sizeof(size_t));
+* 	  file.Write((char*)&Nb,sizeof(double));
 * 	}
-* 	static MyClass* Read(RIndexFile& file)
+* 	* 	template<class K> static MyClass* Read(RKeyValueFile<K>& file)
 * 	{
-* 		size_t id;
-* 		double nb;
-* 		file.Read((char*)&id,sizeof(size_t));
-* 		file.Read((char*)&nb,sizeof(double));
-* 		return(new MyClass(id,nb));
+* 	  size_t id;
+* 	  double nb;
+* 	  file.Read((char*)&id,sizeof(size_t));
+* 	  file.Read((char*)&nb,sizeof(double));
+* 	  return(new MyClass(id,nb));
 * 	}
 * };
 *
-*	RIndexFile Test("/home/pfrancq/test.bin",10,2,1);  // 10 Kb per blocks, 2 blocks in cache, tolerance of 1 Kb.
+*  RIndexFile<RIntKey> Test("/home/pfrancq/test.bin",10,2,1); // 10 Kb per blocks, 2 blocks in cache, tolerance of 1 Kb.
 *	Test.Open();
 *
 *	// Write Cont
 *	RContainer<MyClass,true,true> Cont(30);
 *	Cont.InsertPtr(new MyClass(2,23.0)); Cont.InsertPtr(new MyClass(1,2.0));
 *	size_t BlockNb(0); // Start without any block
-*	Test.Write(BlockNb,300,Cont);
+*  RIntKey Key(300);
+*	Test.Write(BlockNb,Key,Cont);
 *
 *	// Read Cont2
 *	RContainer<MyClass,true,true> Cont2(30);
-*	Test.Read(BlockNb,300,Cont2);
+*	Test.Read(BlockNb,Key,Cont2);
 *	RCursor<MyClass> Cur(Cont2);
 *	for(Cur.Start();!Cur.End();Cur.Next())
-*		cout<<"Read "<<Cur()->Id<<" "<<Cur()->Nb<<endl;
+*	  cout<<"Read "<<Cur()->Id<<" "<<Cur()->Nb<<endl;
 * @endcode
 *
-* @author Pascal Francq
-* @short Generic Index File.
+* @tparam K                 Class corresponding the keys.
+* @short Generic Key-Value File.
 */
-class RIndexFile : protected RBlockFile
+template<class K>
+	class RKeyValueFile : protected RBlockFile
 {
+	/**
+	 * Basic length to store positions, number of records and free spaces.
+	 */
+	static const size_t cLen=sizeof(size_t);
+
+	/**
+	 * Double of the length to store positions, number of records and free
+	 * spaces. In practice, it corresponds to size of the "header" of a block.
+	 */
+	static const size_t cLen2=2*sizeof(size_t);
+
 	/**
 	 * Free spaces in each block.
 	 */
@@ -168,7 +204,7 @@ public:
 	* @param tolerance       Fix the size of the tolerance, i.e. minimal free
 	*                        size to add a new index (in KBytes).
 	*/
-	RIndexFile(const RURI& uri,size_t blocksize,size_t nbcaches,size_t tolerance);
+	RKeyValueFile(const RURI& uri,size_t blocksize,size_t nbcaches,size_t tolerance);
 
 protected:
 
@@ -227,7 +263,7 @@ private:
 	 * @param find           Was it found ?
 	 * @return Position in the block address table.
 	 */
-	size_t GetIndex(size_t block,size_t id,bool& find);
+	size_t GetIndex(size_t block,K& key,bool& find);
 
 	/**
 	 * Move all the records of all entries in the table.
@@ -254,7 +290,7 @@ private:
 	 * @param entry          Entry in the index table.
 	 * @param size           Size of the record.
 	 */
-	void NewRecord(size_t blockid,size_t indexid,size_t entry,size_t size);
+	void NewRecord(size_t blockid,K& key,size_t entry,size_t size);
 
 	/**
 	* Go to a specific position of the file. In fact this method should never be
@@ -282,9 +318,9 @@ public:
 	 * @param indexid        Identifier of the index.
 	 * @param vec            Vector to write.
 	 */
-	template<class I,bool bOrder> void Write(size_t& blockid,size_t indexid,const RNumContainer<I,bOrder>& vec)
+	template<class I,bool bOrder> void Write(size_t& blockid,K& key,const RNumContainer<I,bOrder>& vec)
 	{
-		Seek(blockid,indexid,sizeof(size_t)+(vec.GetNb()*sizeof(I)));
+		Seek(blockid,key,sizeof(size_t)+(vec.GetNb()*sizeof(I)));
 		size_t size(vec.GetNb());
 		Write((char*)&size,sizeof(size_t));
 		const I* ptr(vec.GetList());
@@ -303,9 +339,9 @@ public:
 	 * @param indexid        Identifier of the index.
 	 * @param cont           Container to write.
 	 */
-	template<class C,bool bAlloc,bool bOrder> void Write(size_t& blockid,size_t indexid,const RContainer<C,bAlloc,bOrder>& cont)
+	template<class C,bool bAlloc,bool bOrder> void Write(size_t& blockid,K& key,const RContainer<C,bAlloc,bOrder>& cont)
 	{
-		Seek(blockid,indexid,sizeof(size_t)+(cont.GetNb()*C::GetSizeT()));
+		Seek(blockid,key,sizeof(size_t)+(cont.GetNb()*C::GetSizeT()));
 		size_t nb,size(cont.GetNb());
 		Write((char*)&size,sizeof(size_t));
 		RCursor<C> Cur(cont);
@@ -328,11 +364,11 @@ public:
 	 * @param indexid        Identifier of the index.
 	 * @param vec            Read to write.
 	 */
-	template<class I,bool bOrder> void Read(size_t blockid,size_t indexid,RNumContainer<I,bOrder>& vec)
+	template<class I,bool bOrder> void Read(size_t blockid,K& key,RNumContainer<I,bOrder>& vec)
 	{
 		size_t nb,size;
 		vec.Clear();
-		Seek(blockid,indexid);
+		Seek(blockid,key);
 		Read((char*)&size,sizeof(size_t));
 		vec.Verify(size);
 		for(size_t i=0;i<size;i++)
@@ -351,9 +387,9 @@ public:
 	 * @param indexid        Identifier of the index.
 	 * @param cont           Container to Read.
 	 */
-	template<class C,bool bAlloc,bool bOrder> void Read(size_t blockid,size_t indexid,RContainer<C,bAlloc,bOrder>& cont)
+	template<class C,bool bAlloc,bool bOrder> void Read(size_t blockid,K& key,RContainer<C,bAlloc,bOrder>& cont)
 	{
-		Seek(blockid,indexid);
+		Seek(blockid,key);
 		size_t size;
 		Read((char*)&size,sizeof(size_t));
 		cont.Clear(size);
@@ -366,14 +402,14 @@ public:
 	 * @param blockid        Block number.
 	 * @param indexid        Identifier of the index.
 	 */
-	void EraseRecord(size_t blockid,size_t indexid);
+	void EraseRecord(size_t blockid,K& key);
 
 	/**
 	* Go to a specific position of the file.
 	* @param blockid        Identifier of the block.
 	* @param indexid        Identifier of the index.
 	*/
-	void Seek(size_t blockid,size_t indexid);
+	void Seek(size_t blockid,K& key);
 
 	/**
 	* Go to a specific position of the file to write a given number of bytes
@@ -393,13 +429,18 @@ public:
 	* @param indexid        Identifier of the index.
 	* @param size           Number of bytes to read/write.
 	*/
-	void Seek(size_t& blockid,size_t indexid,size_t size);
+	void Seek(size_t& blockid,K& key,size_t size);
 
 	/**
 	* Destruct the file.
 	*/
-	virtual ~RIndexFile(void);
+	virtual ~RKeyValueFile(void);
 };
+
+
+//-----------------------------------------------------------------------------
+// Template implementation
+#include <rkeyvaluefile.hh>
 
 
 }  //-------- End of namespace R -----------------------------------------------

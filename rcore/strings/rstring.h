@@ -363,7 +363,17 @@ public:
 	* @param car             Character used as separator.
 	* @param del             Delimiter of an element.
 	*/
-	void Split(RContainer<RString,true,false>& elements,const RChar car,const RChar del=RChar(0)) const;
+	void Split(iRContainer<RString>& elements,const RChar car,const RChar del=RChar(0)) const;
+
+	/**
+	* Try to guess the different words in a given string. In practice, it
+	* supposes that certain characters separates words (spaces, ponctuations,
+	* uppercase, etc.).
+	* @param elements        Container that will hold the results. It is not
+	*                        emptied by the method.
+	* @param hyphen          Should a hyphen be considered as a separator?
+	*/
+	void GuessWords(iRContainer<RString>& elements,bool hyphen=false) const;
 
 	/**
 	 * Concatenate a series of elements and, eventually, separated them by a
@@ -371,31 +381,7 @@ public:
 	 * @param elements       Container of elements to concatenate.
 	 * @param car            Character used as separator.
     */
-	void Concat(const RContainer<RString,true,true>& elements,const RChar car=RChar(0));
-
-	/**
-	 * Concatenate a series of elements and, eventually, separated them by a
-	 * given character.
-	 * @param elements       Container of elements to concatenate.
-	 * @param car            Character used as separator.
-    */
-	void Concat(const RContainer<RString,false,true>& elements,const RChar car=RChar(0));
-
-	/**
-	 * Concatenate a series of elements and, eventually, separated them by a
-	 * given character.
-	 * @param elements       Container of elements to concatenate.
-	 * @param car            Character used as separator.
-    */
-	void Concat(const RContainer<RString,true,false>& elements,const RChar car=RChar(0));
-
-	/**
-	 * Concatenate a series of elements and, eventually, separated them by a
-	 * given character.
-	 * @param elements       Container of elements to concatenate.
-	 * @param car            Character used as separator.
-    */
-	void Concat(const RContainer<RString,false,false>& elements,const RChar car=RChar(0));
+	void Concat(const iRContainer<RString>& elements,const RChar car=RChar(0));
 
 	//@} Manipulation methods
 

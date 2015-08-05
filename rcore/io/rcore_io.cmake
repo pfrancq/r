@@ -11,8 +11,9 @@ SET(rcore_io_INST_INCLUDES
 	ruri.h
 	rcsvfile.h
 	rblockfile.h
-	rindexfile.h
-	rindexesfile.h
+	rkeys.h
+	rkeyvaluefile.h
+	rkeyvaluefile.hh
 )
 
 SET(rcore_io_TARGET_SOURCES
@@ -26,6 +27,4 @@ SET(rcore_io_TARGET_SOURCES
 	rbinaryfile.cpp
 	rcsvfile.cpp
 	rblockfile.cpp
-	rindexfile.cpp
-	rindexesfile.cpp
 )

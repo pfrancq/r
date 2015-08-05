@@ -46,7 +46,7 @@ namespace R{
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-template<class C,bool bAlloc,bool bOrder> class RContainer;
+template<class C> class iRContainer;
 
 
 //-----------------------------------------------------------------------------
@@ -424,7 +424,17 @@ public:
 	* @param car             Character used as separator.
 	* @param del             Delimiter of an element.
 	*/
-	inline void Split(RContainer<S,true,false>& elements,const C car,const C del) const;
+	inline void Split(iRContainer<S>& elements,const C car,const C del) const;
+
+	/**
+	* Try to guess the different words in a given string. In practice, it
+	* supposes that certain characters separates words (spaces, ponctuations,
+	* uppercase, etc.).
+	* @param elements        Container that will hold the results. It is not
+	*                        emptied by the method.
+	* @param hyphen          Should a hyphen be considered as a separator?
+	*/
+	inline void GuessWords(iRContainer<S>& elements,bool hyphen) const;
 
 	/**
 	 * Concatenate a series of elements and, eventually, separated them by a
@@ -432,7 +442,7 @@ public:
 	 * @param elements       Container of elements to concatenate.
 	 * @param car            Character used as separator.
     */
-	template<bool a,bool o> inline void Concat(const RContainer<S,a,o>& elements,const C car);
+	inline void Concat(const iRContainer<S>& elements,const C car);
 
 	/**
 	* Return a number between 0 and 26 according to the character at position

@@ -53,9 +53,8 @@ namespace R{
  * - Application classes.
  * - Database-specific classes.
  * - Some basic geometric classes.
- * - Very simple scripting language.
  *
- * \subsection rcore_rapp_classesec Application Classes
+ * \section rcore_rapp_classes_sec Application Classes
  * A new application using the R Core library should define a class
  * inheriting from RApplication. This class manages XML-based configuration
  * classes (stored in ~\.r).

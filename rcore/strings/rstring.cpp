@@ -279,35 +279,21 @@ std::string RString::ToString(void) const
 
 
 //-----------------------------------------------------------------------------
-void RString::Split(RContainer<RString,true,false>& elements,const RChar car,const RChar del) const
+void RString::Split(iRContainer<RString>& elements,const RChar car,const RChar del) const
 {
 	BasicString<RChar,RString>::Split(elements,car,del);
 }
 
 
-//-----------------------------------------------------------------------------
-void RString::Concat(const RContainer<RString,true,true>& elements,const RChar car)
+//------------------------------------------------------------------------------
+void RString::GuessWords(iRContainer<RString>& elements,bool hyphen) const
 {
-	BasicString<RChar,RString>::Concat(elements,car);
+	BasicString<RChar,RString>::GuessWords(elements,hyphen);
 }
 
 
 //-----------------------------------------------------------------------------
-void RString::Concat(const RContainer<RString,false,true>& elements,const RChar car)
-{
-	BasicString<RChar,RString>::Concat(elements,car);
-}
-
-
-//-----------------------------------------------------------------------------
-void RString::Concat(const RContainer<RString,true,false>& elements,const RChar car)
-{
-	BasicString<RChar,RString>::Concat(elements,car);
-}
-
-
-//-----------------------------------------------------------------------------
-void RString::Concat(const RContainer<RString,false,false>& elements,const RChar car)
+void RString::Concat(const iRContainer<RString>& elements,const RChar car)
 {
 	BasicString<RChar,RString>::Concat(elements,car);
 }

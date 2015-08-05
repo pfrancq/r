@@ -665,7 +665,7 @@ template<class C,class S>
 
 //-----------------------------------------------------------------------------
 template<class C,class S>
-	void R::BasicString<C,S>::Split(R::RContainer<S,true,false>& elements,const C car,const C del) const
+	void R::BasicString<C,S>::Split(R::iRContainer<S>& elements,const C car,const C del) const
 {
 	S element;
 	size_t len;
@@ -691,9 +691,67 @@ template<class C,class S>
 }
 
 
+//------------------------------------------------------------------------------
+template<class C,class S>
+	void R::BasicString<C,S>::GuessWords(R::iRContainer<S>& elements,bool hyphen) const
+{
+	S New;
+	bool Lower(false);  // A lower case must be next character for a word ?
+	size_t len(Data->Len+1);
+	C* Car(Data->Text);
+	bool Start(true);
+
+	// Treat the rest
+	for(;--len;Car++)
+	{
+		if(Start)
+		{
+			// Skip leading non-alphanumber characters
+			if(!isalnum(*Car))
+				continue;
+			else
+				Start=false;
+		}
+
+		if(isspace(*Car)||(ispunct(*Car)&&(hyphen||((!hyphen)&&(*Car)!='-'))))
+		{
+			elements.InsertPtr(new S(New));
+			New.Clear();
+			Lower=false;
+			Start=true;
+		}
+		else
+		{
+			bool CurLower(*Car==tolower(*Car));
+			if(Lower)
+			{
+				if(CurLower)
+					New+=(*Car);
+				else
+				{
+					elements.InsertPtr(new S(New));
+					New.Clear();
+					Lower=false;
+					if(isalnum(*Car))
+						New+=(*Car);
+					else
+						Start=true;
+				}
+			}
+			else
+			{
+				Lower=true;
+				New+=(*Car);
+			}
+		}
+	}
+	elements.InsertPtr(new S(New));
+}
+
+
 //-----------------------------------------------------------------------------
-template<class C,class S> template<bool a,bool o>
-	void R::BasicString<C,S>::Concat(const R::RContainer<S,a,o>& elements,const C car)
+template<class C,class S>
+	void R::BasicString<C,S>::Concat(const R::iRContainer<S>& elements,const C car)
 {
 	Clear();
 	if(!elements.GetNb())

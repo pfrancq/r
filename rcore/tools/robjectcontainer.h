@@ -101,6 +101,12 @@ public:
 	RObjectContainer(size_t first,size_t m,size_t i=0);
 
 	/**
+	* Verify that a given set of containers can hold a given size of objects.
+	* @param max             Maximum number of objects.
+   */
+	void VerifyTab(size_t max);
+
+	/**
 	* Clear the container and destruct the elements if it is responsible for
 	* the deallocation. The container can also be extended.
 	* @param m               New maximal size of the array. If null, the old

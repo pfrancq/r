@@ -523,6 +523,7 @@ template<class C>
 		}
 		else
 		{
+			// Moving data "to the right"
 			memmove(ptr+1,ptr,(LastPtr-pos)*sizeof(C*));
 			NbPtr++;
 		}

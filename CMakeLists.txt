@@ -30,6 +30,7 @@ OPTION(disable-postgres "Disable PostgreSQL support" OFF)
 OPTION(disable-qt "Disable QT4 support" OFF)
 OPTIOn(disable-rmath "Disable compiling rmath" OFF)
 OPTIOn(disable-roptimization "Disable compiling roptimization" OFF)
+OPTIOn(disable-rprg "Disable compiling rprg" OFF)
 OPTION(rcmake-verbose "Enable verbose output during cmake construction" OFF)
 
 INCLUDE(rmacro.cmake)
@@ -249,6 +250,13 @@ ELSE(disable-roptimization)
 	SET(SUB_PROJECT ${SUB_PROJECT} roptimization)
 	ADD_SUBDIRECTORY(roptimization)
 ENDIF(disable-roptimization)
+
+IF(disable-rprg)
+	MESSAGE(STATUS "rprg disabled")
+ELSE(disable-rprg)
+	SET(SUB_PROJECT ${SUB_PROJECT} rprg)
+	ADD_SUBDIRECTORY(rprg)
+ENDIF(disable-rprg)
 
 PRINT_LIST_WITH_MESSAGE("R Library is now configured, the following part will be constructed:" SUB_PROJECT)
 

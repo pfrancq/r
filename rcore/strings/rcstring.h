@@ -296,7 +296,17 @@ public:
 	* @param car             Character used as separator.
 	* @param del             Delimiter of an element.
 	*/
-	void Split(RContainer<RCString,true,false>& elements,const char car,const char del=0) const;
+	void Split(iRContainer<RCString>& elements,const char car,const char del=0) const;
+
+	/**
+	* Try to guess the different words in a given string. In practice, it
+	* supposes that certain characters separates words (spaces, ponctuations,
+	* uppercase, etc.).
+	* @param elements        Container that will hold the results. It is not
+	*                        emptied by the method.
+	* @param hyphen          Should a hyphen be considered as a separator?
+	*/
+	void GuessWords(iRContainer<RCString>& elements,bool hyphen) const;
 
 	/**
 	 * Concatenate a series of elements and, eventually, separated them by a
@@ -304,31 +314,7 @@ public:
 	 * @param elements       Container of elements to concatenate.
 	 * @param car            Character used as separator.
     */
-	void Concat(const RContainer<RCString,true,true>& elements,const char car=0);
-
-	/**
-	 * Concatenate a series of elements and, eventually, separated them by a
-	 * given character.
-	 * @param elements       Container of elements to concatenate.
-	 * @param car            Character used as separator.
-    */
-	void Concat(const RContainer<RCString,false,true>& elements,const char car=0);
-
-	/**
-	 * Concatenate a series of elements and, eventually, separated them by a
-	 * given character.
-	 * @param elements       Container of elements to concatenate.
-	 * @param car            Character used as separator.
-    */
-	void Concat(const RContainer<RCString,true,false>& elements,const char car=0);
-
-	/**
-	 * Concatenate a series of elements and, eventually, separated them by a
-	 * given character.
-	 * @param elements       Container of elements to concatenate.
-	 * @param car            Character used as separator.
-    */
-	void Concat(const RContainer<RCString,false,false>& elements,const char car=0);
+	void Concat(const iRContainer<RCString>& elements,const char car=0);
 
 	//@} Manipulation methods
 

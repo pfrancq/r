@@ -62,6 +62,14 @@ template<class C,bool bAlloc>
 }
 
 
+//-----------------------------------------------------------------------------
+template<class C,bool bAlloc>
+	void RObjectContainer<C,bAlloc>::VerifyTab(size_t max)
+{
+	Objects.VerifyTab(max);
+	ObjectsByRef.VerifyTab(max);
+}
+
 
 //-----------------------------------------------------------------------------
 template<class C,bool bAlloc>

@@ -406,8 +406,8 @@ public:
 	* @param sortkey         The tag represents the sorting key. The default value
 	*                        depends if the container is ordered (true) or not
 	*                        (false).
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return Return true if the element is in the container.
 	*/
 	template<class TUse> inline bool IsIn(const TUse& tag,bool sortkey,size_t min=0,size_t max=0) const
@@ -423,8 +423,8 @@ public:
 	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return Return true if the element is in the container.
 	*/
 	template<class TUse> inline bool IsIn(const TUse& tag,size_t min=0,size_t max=0) const
@@ -483,8 +483,8 @@ public:
 	* @param sortkey         The tag represents the sorting key. The default value
 	*                        depends if the container is ordered (true) or not
 	*                        (false).
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return Return the pointer or 0 if the element is not in the container.
 	*/
 	template<class TUse> C* GetPtr(const TUse& tag,bool sortkey,size_t min=0,size_t max=0) const;
@@ -494,8 +494,8 @@ public:
 	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return Return the pointer or 0 if the element is not in the container.
 	*/
 	template<class TUse> inline C* GetPtr(const TUse& tag,size_t min=0,size_t max=0) const
@@ -513,8 +513,8 @@ public:
 	* @param sortkey         The tag represents the sorting key. The default value
 	*                        depends if the container is ordered (true) or not
 	*                        (false).
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return The function returns a pointer to the element of the container.
 	*/
 	template<class TUse> C* GetInsertPtr(const TUse& tag,bool sortkey,size_t min=0,size_t max=0);
@@ -526,8 +526,8 @@ public:
 	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return The function returns a pointer to the element of the container.
 	*/
 	template<class TUse> inline C* GetInsertPtr(const TUse& tag,size_t min=0,size_t max=0)
@@ -553,8 +553,8 @@ public:
 	* the right size (Read only). This method can be limited to a part of the
 	* container.
 	* @param tab             Array of pointers.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return number of elements in the array (including eventually null
 	* pointers).
 	*/
@@ -565,8 +565,8 @@ public:
 	* the right size (Read/Write). This method can be limited to a part of the
 	* container.
 	* @param tab             Array of pointers.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return number of elements in the array (including eventually null
 	* pointers).
 	*/
@@ -577,8 +577,8 @@ public:
 	* the right size (Read only). This method can be limited to a part of the
 	* container.
 	* @param tab             Array of pointers.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return number of elements in the array (including eventually null
 	* pointers).
 	*/
@@ -589,8 +589,8 @@ public:
 	* the right size (Read/Write). This method can be limited to a part of the
 	* container.
 	* @param tab             Array of pointers.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	* @return number of elements in the array (including eventually null
 	* pointers).
 	*/
@@ -638,8 +638,8 @@ public:
 	* @param ins             A pointer to the element to insert.
 	* @param del             Specify if a similar existing element must be
 	*                        deleted.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	*/
 	void InsertPtr(C* ins,bool del=false,size_t min=0,size_t max=0);
 
@@ -687,8 +687,8 @@ public:
 	*                        depends if the container is ordered (true) or not
 	*                        (false).
 	* @param del             Specify if the object must deleted or not.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	*/
 	template<class TUse> void DeletePtr(const TUse& tag,bool sortkey,bool del,size_t min=0,size_t max=0);
 
@@ -700,8 +700,8 @@ public:
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param sortkey         The tag represents the sorting key.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	*/
 	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey,size_t min=0,size_t max=0)
 	{
@@ -716,8 +716,8 @@ public:
 	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
 	*/
 	template<class TUse> inline void DeletePtr(const TUse& tag,size_t min=0,size_t max=0)
 	{
