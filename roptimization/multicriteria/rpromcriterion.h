@@ -55,7 +55,6 @@ class RPromKernel;
 /**
 * The RPromCriterion class provides a representation for a Promethee Criterion.
 * @short PROMETHEE Criterion.
-* @author Pascal Francq & Thomas L'Eglise.
 */
 class RPromCriterion : protected RContainer<RPromCritValue,false,false>
 {
@@ -215,7 +214,6 @@ public:
 /**
 * The RPromLinearCriterion class provides a representation for a PROMETHEE Criterion.
 * @short Linear PROMETHEE Criterion.
-* @author Pascal Francq.
 */
 class RPromLinearCriterion : public RPromCriterion
 {

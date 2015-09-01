@@ -58,7 +58,6 @@ namespace R{
 * @tparam bAllocVertices     Specify if the vertices are deallocated by the
 *                            graph.
 * @tparam bAllocEdges        Specify if the edges are deallocated by the graph.
-* @author Pascal Francq
 * @short Graph
 *
 * In practice, the RVertex and REdge classes can be used directly to initialize

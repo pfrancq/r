@@ -46,7 +46,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * This class represents a set of points regrouped in a container.
-* @author Pascal Francq
 * @short Container of points.
 */
 class RPoints : public RContainer<RPoint,true,false>

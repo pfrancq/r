@@ -60,7 +60,6 @@ template<class I> class RNumCursor;
 * @short Container of Numbers.
 * @warning Some methods applied on an ordered container can disorder the
 *          container.
-* @author Pascal Francq (initial coding from Valery Vandaele).
 */
 template<class I,bool bOrder=true>
 	class RNumContainer

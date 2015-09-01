@@ -51,7 +51,6 @@ namespace R{
 * The RPromNN represented a PROMETHEE Kernel for the a clustering of objects
 * having three matrices of measures: similarities, agreement ratios and
 * disagreement ratios.
-* @author Pascal Francq
 * @short NNGGA PROMETHEE Kernel.
 */
 template<class cChromo>

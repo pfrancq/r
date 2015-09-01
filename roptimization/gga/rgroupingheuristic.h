@@ -50,7 +50,6 @@ namespace R{
 /**
 * The RGroupingHeuristic class provides an abstract class for grouping
 * heuristics.
-* @author Pascal Francq
 * @short Generic Grouping Heuristic class.
 */
 template<class cGroup,class cObj,class cGroups>

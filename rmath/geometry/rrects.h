@@ -47,7 +47,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * This class implements a container of rectangles.
-* @author Pascal Francq
 * @short Rectangles container.
 */
 class RRects : public RContainer<RRect,true,false>

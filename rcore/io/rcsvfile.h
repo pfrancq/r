@@ -63,7 +63,6 @@ namespace R{
  * @endcode
  * @remark If this first line contains the headers, the programmer should
  * called the method 'Read' before reading the first values.
- * @author Pascal Francq.
  * @short CVS File.
  */
 class RCSVFile : private RTextFile

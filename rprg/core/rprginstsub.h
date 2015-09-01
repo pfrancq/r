@@ -53,7 +53,6 @@ class RPrgOutput;
 //------------------------------------------------------------------------------
 /**
 * The RPrgInstSub provides a class to define a subroutine.
-* @author Pascal Francq
 * @short Subroutine.
 */
 class RPrgInstSub : public RPrgInstBlock

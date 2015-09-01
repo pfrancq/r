@@ -50,7 +50,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * This class represent "thread-dependent" data for the GGA.
-* @author Pascal Francq
 * @short GGA "thread-dependent" Data.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>
@@ -93,7 +92,6 @@ public:
 //------------------------------------------------------------------------------
 /**
 * Generic instance for a GGA.
-* @author Pascal Francq
 * @short Generic GGA instance.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>

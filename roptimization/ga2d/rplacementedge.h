@@ -55,7 +55,6 @@ namespace R{
 * the first one depending of the width and height of the first object. The next
 * objects are then place to try to fill the resulting rectangle while his width
 * and height are proportional to the limits.
-* @author Pascal Francq
 * @short Edge Placement Heuristic.
 */
 class RPlacementEdge : public RPlacementHeuristic

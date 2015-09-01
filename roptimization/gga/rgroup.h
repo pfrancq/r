@@ -54,7 +54,6 @@ template<class cGroup,class cObj,class cGroups> class RGroups;
 /**
 * The RGroup class provides a representation for a group that will contain
 * objects.
-* @author Pascal Francq.
 * @short Group.
 */
 template<class cGroup,class cObj,class cGroups>

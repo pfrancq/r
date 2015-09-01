@@ -46,7 +46,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
  * The RObj2DPin represents a pin for a particular connector.
- * @author Pascal Francq.
  * @short Pin of a connector.
  */
 class RObj2DPin
@@ -111,7 +110,6 @@ public:
 /**
 * This basic class represent a connection point for an object to place by using
 * the 2D placement GA.
-* @author Pascal Francq
 * @short Connector of a 2D Object.
 */
 class RObj2DConnector : public RContainer<RObj2DPin,true,true>
@@ -201,7 +199,6 @@ public:
 //------------------------------------------------------------------------------
 /**
 * The RObj2D class represent an object to place.
-* @author Pascal Francq
 * @short 2D Object.
 */
 class RObj2D : public RContainer<RObj2DConfig,true,true>

@@ -52,7 +52,6 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
 * The QRXMLStruct class provides a representation of a XML structure.
-* @author Pascal Francq.
 * @short XML Structure Widget.
 */
 class QRXMLStruct : public QWidget

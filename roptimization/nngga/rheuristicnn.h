@@ -51,7 +51,6 @@ namespace R{
 * @htmlonly
 * <meta article="Nearest Neighbors Grouping Genetic Algorithm::Heuristic">
 * @endhtmlonly
-* @author Pascal Francq
 * @short NNGGA Heuristic.
 */
 template<class cGroup,class cObj,class cGroups>

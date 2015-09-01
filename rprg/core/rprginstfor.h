@@ -53,7 +53,6 @@ class RPrgOutput;
 //------------------------------------------------------------------------------
 /**
 * The RPrgInstFor provides a class for a "for" instruction.
-* @author Pascal Francq
 * @short "for" Instruction.
 */
 class RPrgInstFor : public RPrgInstBlock

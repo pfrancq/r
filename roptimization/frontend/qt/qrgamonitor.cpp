@@ -58,7 +58,6 @@ using namespace R;
 /**
 * The QInfoBox class provides a popupmenu that display information about a
 * specific object and geometric information.
-* @author Pascal Francq
 * @short Popup object information
 */
 class QInfoBox : public QMenu

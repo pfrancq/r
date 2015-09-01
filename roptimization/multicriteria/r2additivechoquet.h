@@ -75,7 +75,6 @@ namespace R{
  * [1] M. Grabisch (2006), L'utilisation de l'intégrale de Choquet en aide multicritère à la décision. <em>Newsletter of the European Working
  *   Group "Multicriteria Aid for Decisions"</em>, 3(14), pp. 5-10.
  * @short 2-Additive Choquet Integral.
- * @author Pascal Francq.
  */
 class R2AdditiveChoquet
 {

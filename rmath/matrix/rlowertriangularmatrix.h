@@ -75,7 +75,6 @@ namespace R{
 * a(0,1)=0.0;          // !!! Generate an exception : In fact, Matrix(i,j) cannot be written ∀ j>i
 * @endcode
 * @short Lower Triangular Matrix.
-* @author Pascal Francq
 */
 class RLowerTriangularMatrix : public RMatrix
 {

@@ -125,7 +125,6 @@ template<class T,class N> class RNodeCursor;
 * is a better idea to ensure the allocations and deallocations through a
 * specific class inheriting from RTree rather than let the latest be the
 * responsible. The RNodesGA class illustrates this approach.
-* @author Pascal Francq
 * @short Generic Tree.
 */
 template<class T,class N,bool bAlloc>

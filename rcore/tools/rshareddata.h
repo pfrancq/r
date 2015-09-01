@@ -42,7 +42,6 @@ namespace R{
 /**
 * This class implements a generic class representing data that will be shared
 * between several object.
-* @author Pascal Francq
 * @short Generic Shared Data
 */
 class RSharedData

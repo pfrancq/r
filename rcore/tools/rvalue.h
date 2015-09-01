@@ -44,7 +44,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RValue class provides an association of an identifier and a value.
-* @author Pascal Francq
 * @short Value Associated to a Identifier.
 */
 class RValue

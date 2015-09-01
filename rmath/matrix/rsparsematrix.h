@@ -68,7 +68,6 @@ namespace R{
 * An important aspect is the use of static_cast<const RSparseMatrix&> to ensure
 * the call of the const version of the operator(). If static_cast<const RSparseMatrix&>
 * is not used, the different elements are created with uninitialized values.
-* @author Pascal Francq (initial coding from Valery Vandaele).
 * @short Sparse Matrix.
 */
 class RSparseMatrix : public RGenericMatrix, protected RContainer<RSparseVector,true,true>

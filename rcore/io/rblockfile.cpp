@@ -37,6 +37,12 @@ using namespace std;
 
 
 //------------------------------------------------------------------------------
+// Constants
+const size_t HeaderSize=2048;
+
+
+
+//------------------------------------------------------------------------------
 //
 // RBlockFile::Block
 //
@@ -79,11 +85,21 @@ public:
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+RBlockFile::RBlockFile(const RURI& uri,size_t nbcaches)
+  : RIOFile(uri), Type(WriteBack), BlockSize(cNoRef), Cache(nbcaches),
+    Current(0), NbBlocks(0)
+{
+	if(!BlockSize)
+		mThrowRIOException(this,"Block size cannot be null");
+}
+
+
+//------------------------------------------------------------------------------
 RBlockFile::RBlockFile(const RURI& uri,size_t blocksize,size_t nbcaches)
   : RIOFile(uri), Type(WriteBack), BlockSize(blocksize*1024), Cache(nbcaches),
     Current(0), NbBlocks(0)
 {
-	if(!blocksize)
+	if(!BlockSize)
 		mThrowRIOException(this,"Block size cannot be null");
 }
 
@@ -92,7 +108,34 @@ RBlockFile::RBlockFile(const RURI& uri,size_t blocksize,size_t nbcaches)
 void RBlockFile::Open(RIO::ModeType mode)
 {
 	RIOFile::Open(mode);
-	NbBlocks=GetSize()/BlockSize;
+	if(End())
+	{
+		// Write the architecture and the block size
+		char Arch(static_cast<char>(sizeof(size_t)));
+		RIOFile::Write(&Arch,sizeof(char));
+		if(BlockSize==cNoRef)
+			BlockSize=1024*1024;
+		RIOFile::Write((char*)&BlockSize,sizeof(size_t));
+
+		// Fill the rest with 0
+		size_t Size(HeaderSize-sizeof(char)+sizeof(size_t));
+		char Header[HeaderSize];
+		memset(Header,0,Size);
+		RIOFile::Write(Header,Size);
+	}
+	else
+	{
+		char Arch;
+		RIOFile::Seek(0);
+		RIOFile::Read(&Arch,sizeof(char));
+		if(Arch!=static_cast<char>(sizeof(size_t)))
+			mThrowRIOException(this,"Wrong architecture.");
+		size_t Size;
+		RIOFile::Read((char*)&Size,sizeof(size_t));
+		if(BlockSize!=Size)
+			mThrowRIOException(this,"Wrong block size.");
+	}
+	NbBlocks=(GetSize()-HeaderSize)/BlockSize;
 }
 
 
@@ -147,7 +190,7 @@ void RBlockFile::Flush(void)
 	{
 		if(Cur()->Dirty)
 		{
-			RIOFile::Seek((Cur()->Id-1)*BlockSize);
+			RIOFile::Seek(((Cur()->Id-1)*BlockSize)+HeaderSize);
 			Cur()->Save(this,BlockSize);
 			Cur()->Dirty=true;
 		}
@@ -187,7 +230,7 @@ RBlockFile::Block* RBlockFile::LoadBlock(size_t id)
 		Cache.InsertPtr(ptr);
 		if(id<=NbBlocks)
 		{
-			RIOFile::Seek((id-1)*BlockSize);
+			RIOFile::Seek(((id-1)*BlockSize)+HeaderSize);
 			ptr->Load(this,BlockSize);
 		}
 		else
@@ -202,7 +245,7 @@ RBlockFile::Block* RBlockFile::LoadBlock(size_t id)
 		if(ptr->Dirty)
 		{
 			// If necessary save the old block
-			RIOFile::Seek((ptr->Id-1)*BlockSize);
+			RIOFile::Seek(((ptr->Id-1)*BlockSize)+HeaderSize);
 			ptr->Save(this,BlockSize);
 			ptr->Dirty=false;
 		}
@@ -211,7 +254,7 @@ RBlockFile::Block* RBlockFile::LoadBlock(size_t id)
 		ptr->Id=id;
 		if(id<=NbBlocks)
 		{
-			RIOFile::Seek((id-1)*BlockSize);
+			RIOFile::Seek(((id-1)*BlockSize)+HeaderSize);
 			ptr->Load(this,BlockSize);
 		}
 		else
@@ -255,7 +298,7 @@ void RBlockFile::Write(const char* buffer,size_t nb)
 	if(Type==WriteThrough)
 	{
 		// Must write it on file too
-		RIOFile::Seek((Current->Id-1)*BlockSize+CurrentPos);
+		RIOFile::Seek((Current->Id-1)*BlockSize+CurrentPos+HeaderSize);
 		RIOFile::Write(buffer,nb);
 	}
 	else
@@ -276,7 +319,7 @@ void RBlockFile::MoveBlock(size_t blockid,size_t start,size_t end,size_t size)
 	if(Type==WriteThrough)
 	{
 		// Must write it on file too
-		RIOFile::Seek((Current->Id-1)*BlockSize+end);
+		RIOFile::Seek((Current->Id-1)*BlockSize+end+HeaderSize);
 		RIOFile::Write(&Current->Data[end],size);
 	}
 	else

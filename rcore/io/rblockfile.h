@@ -75,15 +75,18 @@ namespace R{
 *	Test.Read(Buffer,7); Buffer[7]=0;
 *	cout<<"Read "<<Buffer<<endl;
 * @endcode
-* @warning When a file created with a given block size is opened with another
-*          size, it does not work.
-* @author Pascal Francq
+*
+* The file has a header of 2 Kb. The first byte indicates the number of bytes to
+* store a size_t type. Then, the next bytes represent a size_t that store the
+* block size. The rest of the bytes are actually unused.
+* @warning When a file created with a given block size on a given architecture,
+* it cannot be opened on another architecture and/or another block size.
 * @short Block File.
 */
 class RBlockFile : protected RIOFile
 {
 	using RIOFile::Seek;
-	
+
 	class Block;
 
 public:
@@ -138,7 +141,16 @@ protected:
 public:
 
 	/**
-	* Construct a file.
+	* Construct a file. It is suppose that the block size is either already
+	* defined (file exists) or that it is set to 1 Mb.
+	* @param uri             URI of the file.
+	* @param nbcaches        Number of blocks managed in memory.
+	*/
+	RBlockFile(const RURI& uri,size_t nbcaches);
+
+	/**
+	* Construct a file. If the block size differs from the one defined in an
+	* existing file, the file cannot be opened.
 	* @param uri             URI of the file.
 	* @param blocksize       Size of a block (in KBytes).
 	* @param nbcaches        Number of blocks managed in memory.

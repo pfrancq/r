@@ -52,7 +52,6 @@ namespace R{
 * The heuristic doubles the limits of the result during the placement. The
 * PostRun method make then a translation of the bottom-left coin of the
 * resulting rectangle to (0,0).
-* @author Pascal Francq
 * @short Center Placement Heuristic.
 */
 class RPlacementCenter : public RPlacementHeuristic

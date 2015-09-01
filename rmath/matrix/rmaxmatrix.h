@@ -77,7 +77,6 @@ namespace R{
 * An important aspect is the use of static_cast<const RMaxMatrix&> to ensure
 * the call of the const version of the operator(). If static_cast<const RMaxMatrix&>
 * is not used, the different elements are created with uninitialized values.
-* @author Pascal Francq.
 * @short Ascending Ordered Sparse Matrix.
 */
 class RMaxMatrix : public RGenericMatrix, protected RContainer<RMaxVector,true,true>

@@ -57,7 +57,6 @@ template<class V,class E,bool bAllocVertices,bool bAllocEdges> class RGraph;
 *                            RVertex.
 * @tparam E                  Class representing an edge. It must inherits from
 *                            REdge.
-* @author Pascal Francq
 * @short Generic Edge.
 */
 template<class V,class E>

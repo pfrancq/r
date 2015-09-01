@@ -54,7 +54,6 @@ class RTextFile;
 //------------------------------------------------------------------------------
 /**
 * This class represent a point.
-* @author Pascal Francq
 * @short Point class.
 */
 class RPoint

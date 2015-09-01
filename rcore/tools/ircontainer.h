@@ -172,6 +172,7 @@ protected:
 	* Copy a container from another one. If the pointer to the container is
 	* null, the container is just emptied.
 	* @param src             Pointer to the source container.
+	* @return a pointer to the container.
 	*/
 	iRContainer& NormalCopy(const iRContainer<C>& src);
 
@@ -185,6 +186,7 @@ protected:
 	/**
 	* Add a container (if the pointer is not null) from another one.
 	* @param src             Pointer to the source container.
+	* @return a pointer to the container.
 	*/
 	iRContainer& Add(const iRContainer<C>& src);
 
@@ -236,7 +238,7 @@ public:
 	/**
 	* Verify if the container can hold a certain number of elements. If not,
 	* the container is extended.
-    * @param max             Maximal number of elements that must be contained.
+   * @param max             Maximal number of elements that must be contained.
 	*                        If null, the method verifies that one element can
 	*                        be added.
 	*/
@@ -344,6 +346,7 @@ public:
 	* \warning If the container is not a responsible for the allocation, the
 	* elements of src are just copied and not re-created. Use Copy if you want a
 	* "deep" copy of src.
+	* @return a pointer to the container.
 	*/
 	inline iRContainer& operator=(const iRContainer<C>& src) {return(NormalCopy(src));}
 
@@ -358,6 +361,7 @@ public:
 	* Add the elements of a container. If the source container contains null
 	* elements, these elements are not copied.
 	* @param src             Container used as source.
+	* @return a pointer to the container.
 	*/
 	inline iRContainer& operator+=(const iRContainer<C>& src) {return(Add(src));}
 
@@ -373,7 +377,7 @@ public:
 	*                        true.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return Returns the index of the element if it exists or the index where
+	* @return the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
 	template<class TUse> size_t GetIndex(bool order,const TUse& tag,bool& find,size_t min=0,size_t max=0) const;
@@ -389,7 +393,7 @@ public:
 	*                        true.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return Returns the index of the element if it exists or the index where
+	* @return the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
 	template<class TUse> inline size_t GetIndex(const TUse& tag,bool& find,size_t min=0,size_t max=0) const
@@ -408,7 +412,7 @@ public:
 	*                        (false).
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return Return true if the element is in the container.
+	* @return true if the element is in the container.
 	*/
 	template<class TUse> inline bool IsIn(const TUse& tag,bool sortkey,size_t min=0,size_t max=0) const
 	{
@@ -425,7 +429,7 @@ public:
 	* @param tag             The tag used.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return Return true if the element is in the container.
+	* @return true if the element is in the container.
 	*/
 	template<class TUse> inline bool IsIn(const TUse& tag,size_t min=0,size_t max=0) const
 	{
@@ -438,7 +442,7 @@ public:
 	* Get a pointer to the ith element in the container (Only read). The
 	* operator generates an exception is the index is out of range.
 	* @param idx             Index of the element to get.
-	* @return Return the pointer.
+	* @return a pointer.
 	*/
 	const C* operator[](size_t idx) const;
 
@@ -446,7 +450,7 @@ public:
 	* Get a pointer to the ith element in the container (Read/Write). The
 	* operator generates an exception is the index is out of range.
 	* @param idx             Index of the element to get.
-	* @return the pointer.
+	* @return a pointer.
 	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	C* operator[](size_t idx);
@@ -485,7 +489,7 @@ public:
 	*                        (false).
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return Return the pointer or 0 if the element is not in the container.
+	* @return the pointer or 0 if the element is not in the container.
 	*/
 	template<class TUse> C* GetPtr(const TUse& tag,bool sortkey,size_t min=0,size_t max=0) const;
 
@@ -496,7 +500,7 @@ public:
 	* @param tag             The tag used.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return Return the pointer or 0 if the element is not in the container.
+	* @return the pointer or 0 if the element is not in the container.
 	*/
 	template<class TUse> inline C* GetPtr(const TUse& tag,size_t min=0,size_t max=0) const
 	{
@@ -515,7 +519,7 @@ public:
 	*                        (false).
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return The function returns a pointer to the element of the container.
+	* @return a pointer to the element of the container.
 	*/
 	template<class TUse> C* GetInsertPtr(const TUse& tag,bool sortkey,size_t min=0,size_t max=0);
 
@@ -528,7 +532,7 @@ public:
 	* @param tag             The tag used.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return The function returns a pointer to the element of the container.
+	* @return a pointer to the element of the container.
 	*/
 	template<class TUse> inline C* GetInsertPtr(const TUse& tag,size_t min=0,size_t max=0)
 	{
@@ -543,7 +547,7 @@ public:
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param pos             The position where to insert it.
-	* @return The function returns a pointer to the element of the container.
+	* @return a pointer to the element of the container.
 	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	template<class TUse> C* GetInsertPtrAt(const TUse& tag,size_t pos);
@@ -555,7 +559,7 @@ public:
 	* @param tab             Array of pointers.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return number of elements in the array (including eventually null
+	* @return the number of elements in the array (including eventually null
 	* pointers).
 	*/
 	size_t GetTab(const void** tab,size_t min=0,size_t max=0) const;
@@ -567,7 +571,7 @@ public:
 	* @param tab             Array of pointers.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return number of elements in the array (including eventually null
+	* @return the number of elements in the array (including eventually null
 	* pointers).
 	*/
 	size_t GetTab(void** tab,size_t min=0,size_t max=0);
@@ -579,7 +583,7 @@ public:
 	* @param tab             Array of pointers.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return number of elements in the array (including eventually null
+	* @return the number of elements in the array (including eventually null
 	* pointers).
 	*/
 	inline size_t GetTab(const C** tab,size_t min=0,size_t max=0) const {return(GetTab(reinterpret_cast<const void**>(tab),min,max));}
@@ -591,7 +595,7 @@ public:
 	* @param tab             Array of pointers.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return number of elements in the array (including eventually null
+	* @return the number of elements in the array (including eventually null
 	* pointers).
 	*/
 	inline size_t GetTab(C** tab,size_t min=0,size_t max=0) {return(GetTab(reinterpret_cast<void**>(tab),min,max));}

@@ -51,7 +51,6 @@ class RString;
 * RDate Date(30,12,2005,12,12,11);
 * cout<<Date.ToString()<<endl;
 * @endcode
-* @author Pascal Francq
 * @short Date.
 */
 class RDate

@@ -73,7 +73,6 @@ class RObject;
 * }
 * @endcode
 * @short Notification Center
-* @author Pascal Francq
 */
 class RNotificationCenter
 {

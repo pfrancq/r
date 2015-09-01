@@ -49,7 +49,6 @@ namespace R{
 /**
 * The RGeoInfoConnection class provides a representation for a connection
 * placed.
-* @author Pascal Francq
 * @short Placed Connection.
 */
 class RGeoInfoConnection : private RContainer<RGeoInfoPin,true,true>

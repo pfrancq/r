@@ -49,7 +49,6 @@ namespace R{
 * An important aspect is the use of static_cast<const RSparseSymmetricMatrix&> to ensure
 * the call of the const version of the operator(). If static_cast<const RSparseSymmetricMatrix&>
 * is not used, the different elements are created with uninitialized values.
-* @author Pascal Francq.
 * @short Sparse Symmetric Matrix.
 */
 class RSparseSymmetricMatrix : public RSparseMatrix

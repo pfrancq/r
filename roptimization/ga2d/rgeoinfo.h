@@ -64,7 +64,6 @@ class RGeoInfo;
  * The RGeoInfoPin provides a representation for a particular pin of a specific
  * geometric information. It represents a connection point used by a "real"
  * connection.
- * @author Pascal Francq
  * @short Connection Point of a Geometric Information.
  */
 class RGeoInfoPin
@@ -179,7 +178,6 @@ public:
 /**
 * The RGeoInfo class provides a geometric information concerning the placement
 * of an object.
-* @author Pascal Francq
 * @short Geometric Information.
 */
 class RGeoInfo

@@ -90,7 +90,6 @@ namespace R{
 * 	}
 * }
 * @endcode
-* @author Pascal Francq
 * @short Query.
 */
 class RQuery

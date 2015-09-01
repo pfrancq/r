@@ -55,7 +55,6 @@ template<class C> class iRContainer;
 * RCString. Its role is to centralize as much code as possible.
 * @tparam C                  Class representing a character.
 * @tparam S                  Final class representing the string.
-* @author Pascal Francq
 * @short Generic String
 */
 template<class C,class S>

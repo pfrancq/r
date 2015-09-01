@@ -50,7 +50,6 @@ namespace R{
 * The RPromSol class provides a representation of a solution in the PROMETHEE
 * method.
 * @short PROMETHEE Solution.
-* @author Pascal Francq & Thomas L'Eglise
 */
 class RPromSol : protected RContainer<RPromCritValue,true,false>
 {

@@ -47,8 +47,7 @@ namespace R{
 /**
  * The RObj2DPinConfig represents a possible configuration of a pin for a
  * particular connector.
- * @author Pascal Francq.
- * @short Configuration of a Pin.
+  * @short Configuration of a Pin.
  */
 class RObj2DConfigPin
 {
@@ -111,7 +110,6 @@ public:
 /**
 * The RObj2DConfigConnector  class represent a possible configuration of a
 * connector.
-* @author Pascal Francq
 * @short Configuration of a Connector.
 */
 class RObj2DConfigConnector : public RContainer<RObj2DConfigPin,true,true>
@@ -171,8 +169,7 @@ public:
 /**
  * The RObj2DConfig provides a representation for a particular configuration of
  * an object.
- * @author Pascal Francq
- * @short 2D object configuration.
+  * @short 2D object configuration.
  */
 class RObj2DConfig
 {

@@ -58,7 +58,6 @@ namespace R{
  * In particular, this widget can be used in interaction with a RInterpreter
  * instance.
  *
- * @author Pascal Francq.
  * @short Console Widget.
  */
 class QRConsole : public QTextEdit, public RPrgOutput

@@ -55,7 +55,6 @@ namespace R{
 * for(Cur.Start();!Cur.End();Cur.Next())
 * 	cout<<Cur()<<endl;
 * @endcode
-* @author Pascal Francq.
 * @short Boolean Vector Cursor.
 */
 class RBoolCursor

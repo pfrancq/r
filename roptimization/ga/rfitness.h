@@ -61,7 +61,6 @@ namespace R{
 *		MyFitness(void);
 *	};
 * @endcode
-* @author Pascal Francq
 * @short Generic Fitness.
 */
 template<class cVal,bool Max>

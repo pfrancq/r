@@ -112,7 +112,6 @@ class RTextEncoding;
 * Each character is decoded one by one. This multiplies the call to
 * RTextEnconding which is time-consumming, but ensure that the file always now
 * the exact position (in byte) of every Unicode character read.
-* @author Pascal Francq
 * @short Text File.
 */
 class RTextFile : public RIOFile

@@ -54,7 +54,6 @@ namespace R{
 * order:
 * - NbObjs ones corresponding to the objects (RObj2D).
 * - Eventually, several ones corresponding to aggregators (RObj2DContainer).
-* @author Pascal Francq
 * @short Layout.
 */
 class RLayout : private RContainer<RGeoInfo,true,false>

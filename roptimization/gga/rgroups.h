@@ -49,7 +49,6 @@ namespace R{
 /**
 * The RGroups class provides a representation for a set of groups that have to
 * contain objects.
-* @author Pascal Francq
 * @short Groups.
 */
 template<class cGroup,class cObj,class cGroups>

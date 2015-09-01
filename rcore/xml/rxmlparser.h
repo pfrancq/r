@@ -63,7 +63,6 @@ class RXMLAttr;
 * In.Open(RIO::Read);
 * @endcode
 * @short XML Stream Parser.
-* @author Pascal Francq.
 */
 class RXMLParser : public RTextFile
 {

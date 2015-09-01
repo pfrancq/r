@@ -45,7 +45,6 @@ namespace R{
 //-----------------------------------------------------------------------------
 /**
 * The RParam class provides a representation for a parameter.
-* @author Pascal Francq
 * @short Parameter.
 */
 class RParam
@@ -129,7 +128,6 @@ public:
 /**
 * The RParamValue class provides a representation for a parameter with an unique
 * value.
-* @author Pascal Francq
 * @short Only-one value of parameter.
 */
 class RParamValue : public RParam
@@ -307,7 +305,6 @@ public:
 /**
 * The RParamList class provides a representation for a parameter with multiple
 * value.
-* @author Pascal Francq
 * @short List of parameter's values.
 */
 class RParamList : public RParam
@@ -376,7 +373,6 @@ public:
 /**
 * The RParamStruct class provides a representation for a structure of multiple
 * parameters.
-* @author Pascal Francq
 * @short Structure of Parameters.
 */
 class RParamStruct : public RParam

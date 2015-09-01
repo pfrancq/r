@@ -45,7 +45,6 @@ namespace R{
 /**
 * The RMaxValue class provides an association of an identifier and a value
 * order by ascending or descending order of values.
-* @author Pascal Francq
 * @short Ordered Value Associated to a Identifier.
 */
 class RMaxValue

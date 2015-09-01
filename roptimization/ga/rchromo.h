@@ -47,7 +47,6 @@ namespace R{
 /**
 * \ingroup GA
 * Chromosome for the generic GA.
-* @author Pascal Francq
 * @short Generic chromosome.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData>

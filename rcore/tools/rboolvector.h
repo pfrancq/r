@@ -52,7 +52,6 @@ namespace R{
 /**
 * The RBoolVector class provides a representation of a vector of boolean
 * values. A default value (that can be modified) is assigned to new elements.
-* @author Pascal Francq.
 * @short Boolean Vector.
 */
 class RBoolVector

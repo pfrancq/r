@@ -51,7 +51,6 @@ namespace R{
 /**
  * The RNodesGA class provides a representation of a tree in a HGA.
  * @see R::RNodeGA
- * @author Pascal Francq
  * @short HGA Tree.
  */
 template<class cNode,class cObj,class cNodes>

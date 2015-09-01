@@ -58,7 +58,6 @@ namespace R{
 * for(Files.Start();!Files.End();Files.Next())
 *    cout<<Files()->GetURI()()<<endl;
 * @endcode
-* @author Pascal Francq
 * @short Directory.
 */
 class RDir : public RFile

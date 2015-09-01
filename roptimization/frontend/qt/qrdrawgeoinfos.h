@@ -53,8 +53,7 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
  * The QRDrawGeoInfos provides a widget that paints a layout.
- * @author Pascal Francq
- * @short Layout Widget.
+  * @short Layout Widget.
  */
 class QRDrawGeoInfos : public QWidget
 {

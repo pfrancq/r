@@ -56,7 +56,6 @@ class RPrgOutput;
 //------------------------------------------------------------------------------
 /**
 * The RPrgClass provides a class for a generic class.
-* @author Pascal Francq
 * @short Generic Class.
 */
 class RPrgClass
@@ -141,8 +140,7 @@ public:
 //------------------------------------------------------------------------------
 /**
  * The RPrgStringClass provides a representation for a string class.
- * @author Pascal Francq
- * @short String Class.
+  * @short String Class.
  */
 class RPrgStringClass : public RPrgClass
 {

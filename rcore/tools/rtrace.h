@@ -47,7 +47,6 @@ namespace R{
 * The RTrace class provides a representation for a message that can be leave by
 * some objects and that can be retrieve by others. This system can be used for
 * debugging purposes to handle inter-dependency problems.
-* @author Pascal Francq
 * @code
 * // Library A
 * #include <rtrace.h>

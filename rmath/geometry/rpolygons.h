@@ -47,9 +47,8 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * This class represents a set of polygons regrouped in a container.
-*	@author Pascal Francq
 *	@short Container of polygons.
- */
+*/
 class RPolygons : public RContainer<RPolygon,true,false>
 {
 public:

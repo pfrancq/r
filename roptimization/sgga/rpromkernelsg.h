@@ -51,7 +51,6 @@ namespace R{
 * The RPromSC represented a PROMETHEE Kernel for the a clustering of objects
 * having three matrices of measures: similarities, agreement ratios and
 * disagreement ratios.
-* @author Pascal Francq
 * @short Similarity-based Grouping Genetic Algorithm PROMETHEE Kernel.
 */
 template<class cChromo>

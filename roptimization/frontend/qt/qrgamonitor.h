@@ -50,7 +50,6 @@ namespace R{
 /**
 * The QRGAMonitorGraph provides the widget to display a graph with the evolution
 * of the fitness function represent by double.
-* @author Pascal Francq
 * @short GA graph display for Qt.
 */
 class QRGAMonitorGraph : public QWidget
@@ -170,7 +169,6 @@ public:
 * The QRGAMonitor class provides a widget to display information about the GA
 * who is working, like the number of generation or a graph with the evolution
 * of the fitnesses.
-* @author Pascal Francq
 * @short GA Information display.
 */
 class QRGAMonitor : public QWidget

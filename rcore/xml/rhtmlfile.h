@@ -47,7 +47,6 @@ namespace R{
 * This class represents a HTML file. The file is loaded in a XML structure that
 * should be compatible with XHTML.
 * @short HTML File.
-* @author Pascal Francq.
 */
 class RHTMLFile : public RXMLFile
 {

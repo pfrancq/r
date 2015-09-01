@@ -60,7 +60,6 @@ class RMatrix;
 * on the operator(i,j) and are not optimized. If possible, these operators
 * should be specialized in inheriting classes for performance purposes.
 * @short Generic Matrix.
-* @author Pascal Francq
 */
 class RGenericMatrix
 {

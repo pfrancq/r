@@ -50,7 +50,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * Interface for an instance of the generic GA.
-* @author Pascal Francq
 * @short Genetic Algorithm Instance Interface.
 */
 class iRInst

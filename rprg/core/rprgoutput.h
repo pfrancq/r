@@ -47,7 +47,6 @@ namespace R{
 /**
 * The RPrgOutput class provides a representation for a generic output for a
 * program.
-* @author Pascal Francq
 * @short Generic Output.
 */
 class RPrgOutput

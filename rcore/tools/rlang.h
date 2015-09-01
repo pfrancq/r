@@ -46,7 +46,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RLang class provides a representation for a particular language.
-* @author Pascal Francq
 * @short Language.
 */
 class RLang

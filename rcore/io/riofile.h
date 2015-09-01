@@ -82,7 +82,6 @@ const off_t MaxOffT=MAX_INT_VAL(off_t);
 * When the file is read, an internal buffer is used to avoid to many accesses to
 * the disk. When something must be written, it is first physically written on
 * the disk and, if the file can also be read, the internal buffer is updated.
-* @author Pascal Francq
 * @short Generic File for Input/Output.
 */
 class RIOFile : public RFile

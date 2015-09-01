@@ -56,7 +56,6 @@ namespace R{
 /**
 * The RThreadDataSG class provides a representation for "thread-dependent" data
 * for the Nearest Neighbors Grouping Genetic Algorithm.
-* @author Pascal Francq
 * @short NNGGA "thread-dependent" Data.
 */
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
@@ -102,7 +101,6 @@ public:
 //-----------------------------------------------------------------------------
 /**
 * The instance of the Nearest Neighbors Grouping Genetic Algorithm.
-* @author Pascal Francq
 * @short NNGGA Instance.
 */
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>

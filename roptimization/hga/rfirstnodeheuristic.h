@@ -50,7 +50,6 @@ namespace R{
 * Starting from the root node, the heuristic tries to find a branch where an
 * object can be attached. It tries to find the highest node in the tree. If
 * necessary, an intermediate node is created.
-* @author Pascal Francq
 * @short First Node Heuristic.
 */
 template<class cNode,class cObj,class cNodes>

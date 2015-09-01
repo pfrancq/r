@@ -53,7 +53,6 @@ namespace R{
 /**
 * The RKernelkMeans class provides the implementation of a kernel k-Means
 * grouping algorithm.
-* @author Pascal Francq
 * @short Kernel k-Means Algorithm.
 */
 template<class cGroup,class cObj,class cGroups>

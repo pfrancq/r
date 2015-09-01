@@ -61,7 +61,6 @@ typedef unsigned long long size_raw;
 /**
 * The RDbExcetion class provides a representation of an error that occurs while
 * working with a database.
-* @author Pascal Francq
 * @short Database Error.
 */
 class RDbException : public R::RException
@@ -86,8 +85,6 @@ public:
 /**
 * The RDb pure class provides a representation of connection to a database.
 * Actually, MySQL and SQLite child classes are supported.
-*
-* @author Pascal Francq
 * @short Generic Database.
 */
 class RDb

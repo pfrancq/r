@@ -4,7 +4,7 @@
 
 	RHashContainer.h
 
-	Single Hash Table Container - Header
+	Hash Table Container - Header
 
 	Copyright 2000-2015 by Pascal Francq (pascal@francq.info).
 	Copyright 2000-2008 by the Université Libre de Bruxelles (ULB).
@@ -36,7 +36,8 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rcontainer.h>
-
+#include <rcursor.h>
+#include <rconstcursor.h>
 
 //------------------------------------------------------------------------------
 namespace R{
@@ -45,76 +46,65 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* This class represent a container of elements (class C) with a hash table. The
-* container can be responsible for the deallocation of the elements (bAlloc).
+* The RHashContainer provides a class to manage a container of elements (class
+* C) with a hash table of a given fixed size. Each element must have a
+* key (such an unique name), but the hash code must not be unique. The container
+* can be responsible for the deallocation of the elements (bAlloc).
+*
+* In practice, a table of the given size is allocated, each row representing a
+* possible hash code. For each hash code, a container is maintained to manage
+* elements sharing the same hash code.
+*
 * @tparam C                 The class of the element to be contained.
 * @tparam bAlloc            Specify if the elements are deallocated by the
 *                           container.
 *
-* To make the necessary comparisons, the container uses member functions of
-* the class representing the elements (class C). These functions have the
-* signature:
+* To make the necessary comparisons, the container uses methods of the class
+* representing the elements (class C). These methods have the signature:
 * @code
 * int Compare(const TUse& tag) const;
-* int Compare(const TUse* tag) const;
-* size_t HashIndex(size_t idx) const;
+* size_t HashCode(size_t max) const;
 * @endcode
+* Look at R::RString and R::RCString for example of implementations.
 *
 * The TUse represent a class or a structure used for the comparisons. The
-* Compare methods are working like the strcmp function from the standard C/C++
+* Compare method are working like the strcmp function from the standard C/C++
 * library. The result returned specifies if the tag precedes (>0), is the
-* same (0) or is after (<0) the element used. The HashIndex methods return the
-* hash index of the given argument for the first hash table (idx=1) or for the
-* second hash table (idx=2).
-*
-* At least, a compare function and a HashIndex method must be implemented in
-* the class C:
-* @code
-* int Compare(const C&) const;
-* size_t HashIndex(size_t idx) const;
-* @endcode
+* same (0) or is after (<0) the element used. The HashCode methods return the
+* hash index of the given argument.
 *
 * Here is an example of class MyElement that will be contained in the
 * variable c:
 * @code
 * #include <string.h>
 * #include <rhashcontainer.h>
-* #include <rcursor.h>
 * using namespace R;
 *
 *
 * class MyElement
 * {
-*    char* Text;
+*    RString Text;
+*    char* AdditionalData;
 * public:
-*    MyElement(const char* text) {Text=strdup(text);}
-*    MyElement(const MyElement& e) {Text=strdup(e.Text);}
-*    int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
-*    int Compare(const char* text) const {return(strcmp(Text,text));}
-*    size_t HashIndex(size_t idx) const
-*    {
-*       if(strlen(Text)<idx)
-*          return(26);
-*       int c=tolower(Text[idx]);
-*       if(c>='a'&&c<='z') return(c-'a');
-*       return(26);
-*    }
+*    MyElement(RString text) : Text(text) {}
+*    int Compare(const MyElement& e) const {return(Text.Compare(e.Text));}
+*    size_t HashCode(size_t max) const {return(Text.HashCode(max));}
 *    void DoSomething(void) {cout<<Text<<endl;}
-*    ~MyElement(void) {free(Text);}
+*    ~MyElement(void) {}
 * };
 *
 *
 * int main()
 * {
-*    RHashContainer<MyElement,27,true> c(20,10);
+*    RHashContainer<MyElement,true> c(1000,20,10);
 *
 *    c.InsertPtr(new MyElement("Hello World"));
-*    if(c.IsIn<const char*>("Hello World"))
+*    if(c.IsIn("Hello World"))
 *       cout<<"An element of value \"Hello World\" is in the container"<<endl;
 *    c.InsertPtr(new MyElement("Other"));
 *
 *    // Parse the hash table
-*    RCursor<RHashContainer<MyElement,27,true>::Hash> Cur(c.GetCursor());
+*    RCursor<RContainer<MyElement,true,true> > Cur(c.GetCursor());
 *    for(Cur.Start();!Cur.End();Cur.Next())
 *    {
 *       RCursor<MyElement> Cur2(*Cur());
@@ -124,179 +114,115 @@ namespace R{
 * }
 * @endcode
 *
-* @author Pascal Francq
-* @short Single Hash Table Container.
+* @short Hash Table Container.
 */
 template<class C,bool bAlloc>
 	class RHashContainer
 {
-public:
-
-	/**
-	* Class representing the index in a hash table container.
-	* Here is an example of class MyElement that will be contained in the
-	* variable c:
-	* @code
-	* #include <string.h>
-	* #include <rhashcontainer.h>
-	* using namespace R;
-	*
-	*
-	* class MyElement
-	* {
-	* 	char* Text;
-	* public:
-	* 	MyElement(const char* text) {Text=strdup(text);}
-	* 	MyElement(const MyElement& e) {Text=strdup(e.Text);}
-	* 	int Compare(const MyElement& e) const {return(strcmp(Text,e.Text));}
-	* 	int Compare(const char* text) const {return(strcmp(Text,text));}
-	*    size_t HashIndex(size_t idx) const
-	*    {
-	*       if(strlen(Text)<idx)
-	*          return(26);
-	*       int c=tolower(Text[idx]);
-	*       if(c>='a'&&c<='z') return(c-'a');
-	*       return(26);
-    *    }
- 	* 	void DoSomething(void) {cout<<Text<<endl;}
-	*	~MyElement(void) {free(Text);}
-	* };
-	*
-	*
-	* int main()
-	* {
-	* 	RHashContainer<MyElement,true> c(27,20,10);
-	*
-	* 	c.InsertPtr(new MyElement("Hello World"));
-	* 	if(c.IsIn<const char*>("Hello World"))
-	* 		cout<<"An element of value \"Hello World\" is in the container"<<endl;
-	* 	c.InsertPtr(new MyElement("Other"));
-	*
-	*	// Parse the hash table
-	*	RCursor<RHashContainer<MyElement,true>::Hash> Cur(c.GetCursor());
-	*	for(Cur.Start();!Cur.End();Cur.Next())
-	*	{
-	*		RCursor<MyElement> Cur2(*Cur());
-	*		for(Cur2.Start();!Cur2.End();Cur2.Next())
-	*			Cur2()->DoSomething();
-	*	}
-	* }
-	* @endcode
-	* @short First Index Container.
-	*/
-	class Hash : public RContainer<C,bAlloc,true>
-	{
-		/*
-		* Constructor.
-		* @param m               The initial maximal size of the array.
-		* @param i               The value used when increasing the array. If
-		*                        null value, the size is set to the half the
-		*                        maximal size.
-		*/
-		Hash(size_t m,size_t i) : RContainer<C,bAlloc,true>(m,i) {}
-
-		friend class RHashContainer;
-	};
-
-private:
+	typedef RContainer<C,bAlloc,true> cHash;
 
 	/**
 	* This container represents the hash table of the elements.
 	*/
-	RContainer<Hash,true,true> HashTable;
-
-	/**
-	 * Maximum size of last container.
-	 */
-	size_t Max;
-
-	/**
-	 * Incremental size of last container.
-	 */
-	size_t Inc;
+	RContainer<cHash,true,false> Hash;
 
 public:
 
 	/**
-	* Constructor of a hash container.
-	* @param s               Size of the initial hash table.
-	* @param m               The initial maximal size of the array for a index.
-	* @param i               The value used when increasing the array for a
-	*                        index. If null value, the size is set to the half
-	*                        of the maximal size.
+	* Constructor of the container. In practice, the sizes should be used
+	* with caution. If the size of the hash table is small in comparison with the
+	* number of elements, the initial sizes of the individual array should be
+	* larger.
+	* @param s               Size of the hash table. The hash codes of the
+	*                        elements must be in the range [0,s-1].
+	* @param m               Initial size of the array for a given hash code.
+	* @param i               Incremental size of the array for a given hash code.
+	*                        If null value, the size is set to the half of the
+	*                        initial size.
 	*/
 	RHashContainer(size_t s,size_t m,size_t i=0)
-		: HashTable(s), Max(m), Inc(i)
+		: Hash(s)
 	{
-		for(size_t pos=0;pos<s;pos++)
-			HashTable.InsertPtrAt(new Hash(Max,Inc),pos);
+		for(size_t i=0;i<s;i++)
+			Hash.InsertPtr(new cHash(m,i));
 	}
 
 	/**
-	* Get the number of elements in the hash container.
+	* Get the number of elements in the container.
 	*/
 	inline size_t GetNb(void) const
 	{
-		RCursor<Hash> Cur(HashTable);
-		size_t nb;
-		for(Cur.Start(),nb=0;!Cur.End();Cur.Next())
+		RCursor<cHash> Cur(Hash);
+		size_t nb(0);
+		for(Cur.Start();!Cur.End();Cur.Next())
 			nb+=Cur()->GetNb();
 		return(nb);
 	}
 
 	/**
-	* Get a pointer to the ith element in the container (Only read).
-	* @param idx             Index of the element to get.
-	* @return Return the pointer or 0 if the index is outside the scope of the
-	*         container.
-	*/
-	const Hash* operator[](size_t idx) const {return(HashTable[idx]);}
+	 * Get a cursor over the hash table.
+	 * @return a R::RCursor.
+	 */
+	inline RCursor<cHash> GetCursor(void) const
+	{
+		return(RCursor<cHash>(Hash));
+	}
 
 	/**
-	* Get a pointer to the ith element in the container (Read/Write).
-	* @param idx             Index of the element to get.
-	* @return Return the pointer or 0 if the index is outside the scope of the
+	* Get a pointer to the elements of a given hash code (Only read).
+	* @param hash            Hash code of the elements to get.
+	* @return the pointer or 0 if the index is outside the scope of the
 	*         container.
 	*/
-	Hash* operator[](size_t idx) {return(HashTable[idx]);}
+	const cHash* operator[](size_t hash) const
+	{
+		if(hash>=Hash.GetNb())
+			throw std::range_error(R::RString("RHashContainer<C,bAlloc>::operator[] const: Hash code "+RString::Number(hash)+" outside range [0,"+RString::Number(Hash.GetNb()-1)+"]").ToString());
+		return(Hash[hash]);
+	}
 
 	/**
-	* Clear the hash container.
+	* Get a pointer to the elements of a given hash code (Read/Write).
+	* @param hash            Hash code of the element to get.
+	* @return the pointer or 0 if the index is outside the scope of the
+	*         container.
+	*/
+	cHash* operator[](size_t hash)
+	{
+		if(hash>=Hash.GetNb())
+			throw std::range_error(R::RString("RHashContainer<C,bAlloc>::operator[]: Hash code "+RString::Number(hash)+" outside range [0,"+RString::Number(Hash.GetNb()-1)+"]").ToString());
+		return(Hash[hash]);
+	}
+
+	/**
+	* Clear the container.
 	*/
 	void Clear(void)
 	{
-		RCursor<Hash> Cur(HashTable);
+		RCursor<cHash> Cur(Hash);
 		for(Cur.Start();!Cur.End();Cur.Next())
 			Cur()->Clear();
 	}
 
-private:
-
 	/**
-	 * Get a pointer to the hash table.
-	 * @param hash           Hash index.
-	 */
-	const Hash* GetHash(size_t hash) const
+	* This function returns the index of an element represented by tag in an
+	* array corresponding to a particular hash code.
+	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param hash            Hash code of the tag (set by the method)
+	* @param find            If the element represented by tag exist, find is set to
+	*                        true (set by the method).
+	* @return index of the element if it exists or the index where
+	* is has to inserted.
+	*/
+	template<class TUse> inline size_t GetIndex(const TUse& tag,size_t& hash,bool& find) const
 	{
-		const Hash* ptr;
-		if((hash>HashTable.GetMaxPos())||(!(ptr=HashTable[hash])))
-			return(0);
-		return(ptr);
+		hash=tag.HashCode(Hash.GetNb());
+		if(hash>=Hash.GetNb())
+			throw std::range_error(R::RString("RHashContainer<C,bAlloc>::GetIndex(const TUse&,size_t&,bool&) const: Hash code "+RString::Number(hash)+" outside range [0,"+RString::Number(Hash.GetNb()-1)+"]").ToString());
+		return(Hash[hash]->GetIndex(tag,find));
 	}
-
-	/**
-	 * Get a pointer to the hash table.
-	 * @param hash           Hash index.
-	 */
-	Hash* GetHash(size_t hash)
-	{
-		Hash* ptr;
-		if((hash>HashTable.GetMaxPos())||(!(ptr=HashTable[hash])))
-			HashTable.InsertPtrAt(ptr=new Hash(Max,Inc),hash);
-		return(ptr);
-	}
-
-public:
 
 	/**
 	* Look if a certain element is in the container.
@@ -306,15 +232,14 @@ public:
 	* @param sortkey         The tag represents the sorting key. The default value
 	*                        depends if the container is ordered (true) or not
 	*                        (false).
-	* @return Return true if the element is in the container.
+	* @return true if the element is in the container.
 	*/
 	template<class TUse> inline bool IsIn(const TUse& tag,bool sortkey=true) const
 	{
-
-		const Hash* ptr=GetHash(tag.HashIndex(1));
-		if(!ptr)
-			return(false);
-		return(ptr->IsIn(tag,sortkey));
+		size_t hash(tag.HashCode(Hash.GetNb()));
+		if(hash>=Hash.GetNb())
+			throw std::range_error(R::RString("RHashContainer<C,bAlloc>::IsIn(const TUse&,bool): hash code "+RString::Number(hash)+" outside range [0,"+RString::Number(Hash.GetNb()-1)+"]").ToString());
+		return(Hash[hash]->IsIn(tag,sortkey));
 	}
 
 	/**
@@ -325,19 +250,19 @@ public:
 	* @param sortkey         The tag represents the sorting key. The default value
 	*                        depends if the container is ordered (true) or not
 	*                        (false).
-	* @return Return the pointer or 0 if the element is not in the container.
+	* @return the pointer or 0 if the element is not in the container.
 	*/
 	template<class TUse> inline C* GetPtr(const TUse& tag,bool sortkey=true) const
 	{
-		const Hash* ptr=GetHash(tag.HashIndex(1));
-		if(!ptr)
-			return(0);
-		return(ptr->GetPtr(tag,sortkey));
+		size_t hash(tag.HashCode(Hash.GetNb()));
+		if(hash>=Hash.GetNb())
+			throw std::range_error(R::RString("RHashContainer<C,bAlloc>::GetPtr(const TUse& tag,bool): Hash code "+RString::Number(hash)+" outside range [0,"+RString::Number(Hash.GetNb()-1)+"]").ToString());
+		return(Hash[hash]->GetPtr(tag,sortkey));
 	}
 
 	/**
-	* Get a pointer to a certain element in the container. If the element is
-	* not existing, the container creates it by using the constructor with TUse
+	* Get a pointer to a certain element in the container. If the element doesn't
+	* exist, the container creates it by using the constructor with TUse
 	* as parameter.
 	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
@@ -345,12 +270,14 @@ public:
 	* @param sortkey         The tag represents the sorting key. The default value
 	*                        depends if the container is ordered (true) or not
 	*                        (false).
-	* @return The function returns a pointer to the element of the container.
+	* @return a pointer to the element of the container.
 	*/
 	template<class TUse> inline C* GetInsertPtr(const TUse& tag,bool sortkey=true)
 	{
-		Hash* ptr=GetHash(tag.HashIndex(1));
-		return(ptr->GetInsertPtr(tag,sortkey));
+		size_t hash(tag.HashCode(Hash.GetNb()));
+		if(hash>=Hash.GetNb())
+			throw std::range_error(R::RString("RHashContainer<C,bAlloc>::GetInsertPtr(const TUse&,bool): Hash code "+RString::Number(hash)+" outside range [0,"+RString::Number(Hash.GetNb()-1)+"]").ToString());
+		return(Hash[hash]->GetInsertPtr(tag,sortkey));
 	}
 
 	/**
@@ -359,13 +286,37 @@ public:
 	* destroy if the container is responsible for the allocation).
 	* @param ins             A pointer to the element to insert.
 	* @param del             Specify if a similar existing element must be
-	*                        deleted.
+	*                        deleted or shifted.
 	*/
 	inline void InsertPtr(C* ins,bool del=false)
 	{
-		RReturnIfFail(ins);
-		Hash* ptr=GetHash(ins->HashIndex(1));
-		ptr->InsertPtr(ins,del);
+		mReturnIfFail(ins);
+		size_t hash(ins->HashCode(Hash.GetNb()));
+		if(hash>=Hash.GetNb())
+			throw std::range_error(R::RString("RHashContainer<C,bAlloc>::InsertPtr(C*,bool): Hash code "+RString::Number(hash)+" outside range [0,"+RString::Number(Hash.GetNb()-1)+"]").ToString());
+		Hash[hash]->InsertPtr(ins,del);
+	}
+
+	/**
+	* Insert an element in the container at a given index of a given hash code.
+	* If the corresponding index is already used, the previously inserted element
+	* is removed from the container (and destroy if the container is
+	* responsible for the allocation).
+	*
+	* This method should be used very carefully (in general with the GetIndex
+	* method) because the container can then disfunction.
+	* @param ins             A pointer to the element to insert.
+	* @param hash            Hash code of the element to insert.
+	* @param index           Index of the element to insert.
+	* @param del             Specify if a similar existing element must be
+	*                        deleted or shifted.
+	*/
+	inline void InsertPtrAt(C* ins,size_t hash,size_t idx,bool del=false)
+	{
+		mReturnIfFail(ins);
+		if(hash>=Hash.GetNb())
+			throw std::range_error(R::RString("RHashContainer<C,bAlloc>::InsertPtr(C*,bool): Hash code "+RString::Number(hash)+" outside range [0,"+RString::Number(Hash.GetNb()-1)+"]").ToString());
+		Hash[hash]->InsertPtrAt(ins,idx,del);
 	}
 
 	/**
@@ -382,10 +333,10 @@ public:
 	*/
 	template<class TUse> inline void DeletePtr(const TUse& tag,bool sortkey=true,bool del=bAlloc)
 	{
-		Hash* ptr=GetHash(tag.HashIndex(1));
-		if(!ptr)
-			return;
-		ptr->DeletePtr(tag,sortkey,del);
+		size_t hash(tag.HashCode(Hash.GetNb()));
+		if(hash>=Hash.GetNb())
+			throw std::range_error(R::RString("RHashContainer<C,bAlloc>::DeletePtr(const TUse&,bool,bool): Hash code "+RString::Number(hash)+" outside range [0,"+RString::Number(Hash.GetNb()-1)+"]").ToString());
+		Hash[hash]->DeletePtr(tag,sortkey,del);
 	}
 
 	/**

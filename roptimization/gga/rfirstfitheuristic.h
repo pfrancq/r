@@ -47,7 +47,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RFitstFitHeuristic class provides a first fit heuristic.
-* @author Pascal Francq
 * @short Generic Grouping Heuristic class.
 */
 template<class cGroup,class cObj,class cGroups>

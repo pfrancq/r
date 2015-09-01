@@ -47,7 +47,6 @@ namespace R{
 /**
 * This class proposes some generic static methods working on array of characters
 * ending with a 0.
-* @author Pascal Francq
 * @short Generic String Methods.
 */
 class StringMethods

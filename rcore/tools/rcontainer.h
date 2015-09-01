@@ -128,7 +128,6 @@ namespace R{
 * @endcode
 * @warning Some methods applied on an ordered container can disorder the
 *          container.
-* @author Pascal Francq
 * @short Container.
 */
 template<class C,bool bAlloc,bool bOrder=false>
@@ -296,6 +295,7 @@ public:
 	* \warning If the container is not a responsible for the allocation, the
 	* elements of src are just copied and not re-created. Use Copy if you want a
 	* "deep" copy of src.
+	* @return a pointer to the container.
 	*/
 	inline RContainer& operator=(const RContainer<C,true,bOrder>& src) {iRContainer<C>::NormalCopy(src); return(*this);}
 
@@ -305,6 +305,7 @@ public:
 	* \warning If the container is not a responsible for the allocation, the
 	* elements of src are just copied and not re-created. Use Copy if you want a
 	* "deep" copy of src.
+	* @return a pointer to the container.
 	*/
 	inline RContainer& operator=(const RContainer<C,false,bOrder>& src) {iRContainer<C>::NormalCopy(src); return(*this);}
 
@@ -328,29 +329,12 @@ public:
 	* a part of the container.
 	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
-	* @param order           Must the search be done on an ordered basis ?
 	* @param tag             The tag used.
 	* @param find            If the element represented by tag exist, find is set to
-	*                        true.
+	*                        true (set by the method).
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return Returns the index of the element if it exists or the index where
-	* is has to inserted.
-	*/
-	template<class TUse> inline size_t GetIndex(bool order,const TUse& tag,bool& find,size_t min=0,size_t max=0) const {return(iRContainer<C>::GetIndex(order,tag,find,min,max));}
-
-	/**
-	* This function returns the index of an element represented by tag, and it
-	* is used when the elements are to be ordered. The search can be limited to
-	* a part of the container.
-	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
-	*                        member function of the elements.
-	* @param tag             The tag used.
-	* @param find            If the element represented by tag exist, find is set to
-	*                        true.
-	* @param min             Starting index of the container part concerned.
-	* @param max             Ending index of the container part concerned.
-	* @return Returns the index of the element if it exists or the index where
+	* @return the index of the element if it exists or the index where
 	* is has to inserted.
 	*/
 	template<class TUse> inline size_t GetIndex(const TUse& tag,bool& find,size_t min=0,size_t max=0) const {return(iRContainer<C>::GetIndex(bOrder,tag,find,min,max));}
@@ -364,9 +348,9 @@ public:
 	* @param sortkey         The tag represents the sorting key. The default value
 	*                        depends if the container is ordered (true) or not
 	*                        (false).
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
-	* @return Return true if the element is in the container.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
+	* @return true if the element is in the container.
 	*/
 	template<class TUse> inline bool IsIn(const TUse& tag,bool sortkey,size_t min=0,size_t max=0) const {return(iRContainer<C>::IsIn(tag,sortkey,min,max));}
 
@@ -376,9 +360,9 @@ public:
 	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
 	*                        member function of the elements.
 	* @param tag             The tag used.
-	* @param min             Starting index of the container's part concerned.
-	* @param max             Ending index of the container's part concerned.
-	* @return Return true if the element is in the container.
+	* @param min             Starting index of the container part concerned.
+	* @param max             Ending index of the container part concerned.
+	* @return true if the element is in the container.
 	*/
 	template<class TUse> inline bool IsIn(const TUse& tag,size_t min=0,size_t max=0) const {return(iRContainer<C>::IsIn(tag,min,max));}
 
@@ -386,7 +370,7 @@ public:
 	* Get a pointer to the ith element in the container (Only read). The
 	* operator generates an exception is the index is out of range.
 	* @param idx             Index of the element to get.
-	* @return Return the pointer.
+	* @return a pointer.
 	*/
 	inline const C* operator[](size_t idx) const {return(iRContainer<C>::operator[](idx));}
 
@@ -394,7 +378,7 @@ public:
 	* Get a pointer to the ith element in the container (Read/Write). The
 	* operator generates an exception is the index is out of range.
 	* @param idx             Index of the element to get.
-	* @return the pointer.
+	* @return a pointer.
 	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	inline C* operator[](size_t idx) {return(iRContainer<C>::operator[](idx));}
@@ -423,7 +407,7 @@ public:
 	*                        (false).
 	* @param min             Starting index of the container's part concerned.
 	* @param max             Ending index of the container's part concerned.
-	* @return Return the pointer or 0 if the element is not in the container.
+	* @return the pointer or 0 if the element is not in the container.
 	*/
 	template<class TUse> inline C* GetPtr(const TUse& tag,bool sortkey,size_t min=0,size_t max=0) const {return(iRContainer<C>::GetPtr(tag,sortkey,min,max));}
 
@@ -434,7 +418,7 @@ public:
 	* @param tag             The tag used.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return Return the pointer or 0 if the element is not in the container.
+	* @return the pointer or 0 if the element is not in the container.
 	*/
 	template<class TUse> inline C* GetPtr(const TUse& tag,size_t min=0,size_t max=0) const {return(iRContainer<C>::GetPtr(tag,min,max));}
 
@@ -450,7 +434,7 @@ public:
 	*                        (false).
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return The function returns a pointer to the element of the container.
+	* @return a pointer to the element of the container.
 	*/
 	template<class TUse> inline C* GetInsertPtr(const TUse& tag,bool sortkey,size_t min=0,size_t max=0) {return(iRContainer<C>::GetInsertPtr(tag,sortkey,min,max));}
 
@@ -463,7 +447,7 @@ public:
 	* @param tag             The tag used.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return The function returns a pointer to the element of the container.
+	* @return a pointer to the element of the container.
 	*/
 	template<class TUse> inline C* GetInsertPtr(const TUse& tag,size_t min=0,size_t max=0) {return(iRContainer<C>::GetInsertPtr(tag,min,max));}
 
@@ -475,7 +459,7 @@ public:
 	*                        member function of the elements.
 	* @param tag             The tag used.
 	* @param pos             The position where to insert it.
-	* @return The function returns a pointer to the element of the container.
+	* @return a pointer to the element of the container.
 	* @warning If applied on an ordered container, this method can disorder it.
 	*/
 	template<class TUse> inline C* GetInsertPtrAt(const TUse& tag,size_t pos) {return(iRContainer<C>::GetInsertPtrAt(tag,pos));}
@@ -489,7 +473,7 @@ public:
 	* @param tag             The tag used.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return The function returns a pointer to the result container.
+	* @return a pointer to the result container.
 	*/
 	template<class TUse> inline RContainer<C,false,bOrder>* GetPtrs(const TUse& tag,size_t min=0,size_t max=0) const;
 
@@ -500,7 +484,7 @@ public:
 	* @param tab             Array of pointers.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return number of elements in the array (including eventually null
+	* @return the number of elements in the array (including eventually null
 	* pointers).
 	*/
 	inline size_t GetTab(const void** tab,size_t min=0,size_t max=0) const {return(iRContainer<C>::GetTab(tab,min,max));}
@@ -512,7 +496,7 @@ public:
 	* @param tab             Array of pointers.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return number of elements in the array (including eventually null
+	* @return the number of elements in the array (including eventually null
 	* pointers).
 	*/
 	inline size_t GetTab(void** tab,size_t min=0,size_t max=0) {return(iRContainer<C>::GetTab(tab,min,max));}
@@ -524,7 +508,7 @@ public:
 	* @param tab             Array of pointers.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return number of elements in the array (including eventually null
+	* @return the number of elements in the array (including eventually null
 	* pointers).
 	*/
 	inline size_t GetTab(const C** tab,size_t min=0,size_t max=0) const {return(iRContainer<C>::GetTab(tab,min,max));}
@@ -536,7 +520,7 @@ public:
 	* @param tab             Array of pointers.
 	* @param min             Starting index of the container part concerned.
 	* @param max             Ending index of the container part concerned.
-	* @return number of elements in the array (including eventually null
+	* @return the number of elements in the array (including eventually null
 	* pointers).
 	*/
 	inline size_t GetTab(C** tab,size_t min=0,size_t max=0) {return(iRContainer<C>::GetTab(tab,min,max));}

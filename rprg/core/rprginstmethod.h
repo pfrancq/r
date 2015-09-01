@@ -54,7 +54,6 @@ class RPrgVar;
 //------------------------------------------------------------------------------
 /**
 * The RPrgInstMethod provides a class to call a method or a function.
-* @author Pascal Francq
 * @short Method or Function Runner.
 */
 class RPrgInstMethod : public RPrgInst

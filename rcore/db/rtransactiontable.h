@@ -47,7 +47,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RTransactionTable class provides a representation for a transaction table.
-* @author Pascal Francq
 * @short Transaction Table.
 */
 class RTransactionTable

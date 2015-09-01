@@ -82,7 +82,6 @@ namespace R{
 *    }
 * @endcode
 * @short Object.
-* @author Pascal Francq
 */
 class RObject
 {

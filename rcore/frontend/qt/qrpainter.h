@@ -46,7 +46,6 @@ namespace R{
 /**
  * The QRPainter provides a class to paint for Qt. In fact, it proposes a set
  * convenient methods to mix R and Qt.
- * @author Pascal Francq
  * @short Qt Painter
  */
 class QRPainter : public QPainter

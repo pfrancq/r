@@ -46,7 +46,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RException class provides a basic representation for an exception.
-* @author Pascal Francq
 * @short Basic Exception.
 */
 class RException

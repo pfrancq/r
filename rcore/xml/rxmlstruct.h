@@ -66,7 +66,6 @@ namespace R{
 *    cout<<Cur()->GetName()<<endl;
 * @endcode
 * @short XML Structure.
-* @author Pascal Francq and Thomas L'Eglise.
 */
 class RXMLStruct : public RTree<RXMLStruct,RXMLTag,true>
 {

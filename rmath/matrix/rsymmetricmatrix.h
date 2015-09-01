@@ -56,7 +56,6 @@ namespace R{
 /**
 * The RSymmetricMatrix class provides a representation of a symmetric matrix.
 * @short Symmetric Matrix.
-* @author Pascal Francq
 */
 class RSymmetricMatrix : public RLowerTriangularMatrix
 {

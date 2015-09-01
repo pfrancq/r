@@ -64,7 +64,6 @@ namespace R{
 * An important aspect is the use of static_cast<const RMaxVector&> to ensure
 * the call of the const version of the operator(). If static_cast<const RMaxVector&>
 * is not used, the different elements are created with uninitialized values.
-* @author Pascal Francq.
 * @short Ascending Ordered Sparse Vector.
 */
 class RMaxVector : public RContainer<RMaxValue,true,true>

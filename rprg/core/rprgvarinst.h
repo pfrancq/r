@@ -52,7 +52,6 @@ class RPrgClass;
 //------------------------------------------------------------------------------
 /**
 * The RPrgVarInst provides a class for an instance of a class.
-* @author Pascal Francq
 * @short Class Instance.
 */
 class RPrgVarInst : public RPrgVar

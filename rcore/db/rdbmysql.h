@@ -48,7 +48,6 @@ namespace R{
 * The RDbMySQL class provides a representation of connection to a MySQL
 * database.
 * @see RQuery
-* @author Pascal Francq
 * @short MySQL Database.
 */
 class RDbMySQL : public RDb

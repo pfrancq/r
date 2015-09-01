@@ -300,29 +300,17 @@ void RString::Concat(const iRContainer<RString>& elements,const RChar car)
 
 
 //-----------------------------------------------------------------------------
-size_t RString::HashIndex(size_t idx) const
+size_t RString::HashCode(size_t max) const
 {
-	if((!Data)||(Data->Len<idx)) return(26);
-	UChar c(RChar::ToLower(Data->Text[idx-1]).Unicode());
-	UChar a(RChar('a').Unicode());
-	if((c>=a)&&(c<=RChar('z').Unicode()))
-		return(c-a);
-	return(26);
-}
+    size_t hash(5381);
 
-
-//-----------------------------------------------------------------------------
-size_t RString::ExtendedHashIndex(size_t idx) const
-{
-	if((!Data)||(Data->Len<idx)) return(36);
-	UChar c(RChar::ToLower(Data->Text[idx-1]).Unicode());
-	UChar a(RChar('a').Unicode());
-	if((c>=a)&&(c<=RChar('z').Unicode()))
-		return(c-a);
-	UChar z(RChar('0').Unicode());
-	if((c>=z)&&(c<=RChar('9').Unicode()))
-	return(c-z+26);
-	return(36);
+	 if(!Data)
+		 return(0);
+    for(const RChar* ptr=Data->Text;!ptr->IsNull();ptr++)
+	 {
+        hash =((hash<<5)+hash)+ptr->Unicode();   // hash * 33 + c
+	 }
+    return (hash%max);
 }
 
 

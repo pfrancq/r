@@ -435,6 +435,9 @@ public:
 	* Destruct the file.
 	*/
 	virtual ~RKeyValueFile(void);
+
+	// Methods than can be used
+	using RBlockFile::SeekRel;
 };
 
 

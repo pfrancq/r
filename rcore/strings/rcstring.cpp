@@ -146,13 +146,17 @@ RCString& RCString::operator+=(const char src)
 
 
 //-----------------------------------------------------------------------------
-size_t RCString::HashIndex(size_t idx) const
+size_t RCString::HashCode(size_t max) const
 {
-	if((!Data)||(Data->Len<idx)) return(26);
-	char c(static_cast<char>(tolower(Data->Text[idx-1])));
-	if((c>=char('a'))&&(c<=char('z')))
-		return(c-char('a'));
-	return(26);
+    size_t hash(5381);
+
+	 if(!Data)
+		 return(0);
+    for(const char* ptr=Data->Text;!ptr;ptr++)
+	 {
+        hash =((hash<<5)+hash)+(*ptr);   // hash * 33 + c
+	 }
+    return (hash%max);
 }
 
 

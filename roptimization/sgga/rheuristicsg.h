@@ -48,7 +48,6 @@ namespace R{
 /**
 * The RHeuristicSG class provides a specific heuristic for the similarity-based
 * grouping genetic algorithm.
-* @author Pascal Francq
 * @short Similarity-based Grouping Genetic Algorithm Heuristic.
 */
 template<class cGroup,class cObj,class cGroups>

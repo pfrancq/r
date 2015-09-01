@@ -51,7 +51,6 @@ class RGeoInfo;
 //------------------------------------------------------------------------------
 /**
 * The RFreePolygons provides a representation for a container of polygons.
-* @author Pascal Francq
 * @short Container of free polygons.
 */
 class RFreePolygons : public RContainer<RFreePolygon,true,false>

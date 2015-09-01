@@ -78,7 +78,6 @@ namespace R{
  * should be loaded first, and store again before the file is closed after the
  * modification.
  * @short Matrix Storage
- * @author Pascal Francq
  */
 class RMatrixStorage
 {

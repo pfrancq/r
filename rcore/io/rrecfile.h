@@ -137,7 +137,6 @@ namespace R{
 *    File.Close();
 * }
 * @endcode
-* @author Pascal Francq
 * @short Fixed-length Records File.
 */
 template<class C,bool bOrder=false>

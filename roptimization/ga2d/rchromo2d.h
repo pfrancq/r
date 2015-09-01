@@ -49,7 +49,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * This class represents a chromosome for the 2D placement GA.
-* @author Pascal Francq
 * @short 2D GA chromosome.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>

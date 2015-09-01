@@ -51,7 +51,6 @@ class RInterpreter;
 //------------------------------------------------------------------------------
 /**
 * The RPrgVar provides a class for a generic variable of a given type.
-* @author Pascal Francq
 * @short Generic Variable.
 */
 class RPrgVar

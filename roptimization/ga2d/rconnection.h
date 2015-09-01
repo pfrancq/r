@@ -47,7 +47,6 @@ namespace R{
 /**
 * The RConnection class provides a representation for a connection between
 * objects.
-* @author Pascal Francq
 * @short Connection.
 */
 class RConnection : private RContainer<RObj2DConnector,false,false>

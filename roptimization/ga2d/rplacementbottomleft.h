@@ -52,7 +52,6 @@ namespace R{
 * object. When it is not more possible, the next object is place top of the
 * first one. The heuristic try then to put the rest of the objects to the right
 * and so on.
-* @author Pascal Francq
 * @short Bottom-Left Placement Heuristic.
 */
 class RPlacementBottomLeft : public RPlacementHeuristic

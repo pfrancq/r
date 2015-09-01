@@ -55,7 +55,6 @@ namespace R{
 /**
 * The RThreadDataSG class provides a representation for "thread-dependent" data
 * for the similarity-based grouping genetic algorithm.
-* @author Pascal Francq
 * @short Similarity-based Grouping Genetic Algorithm "thread-dependent" Data.
 */
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>
@@ -121,7 +120,6 @@ public:
 //-----------------------------------------------------------------------------
 /**
 * The instance of the similarity-based grouping genetic algorithm.
-* @author Pascal Francq
 * @short SSimilarity-based Grouping Genetic Algorithm Instance.
 */
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>

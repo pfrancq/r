@@ -59,7 +59,6 @@ namespace R{
 * Out.Open(RIO::Create);
 * @endcode
 * @short XML File.
-* @author Pascal Francq.
 */
 class RXMLFile : public RXMLParser
 {

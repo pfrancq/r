@@ -58,7 +58,6 @@ namespace R{
 /**
 * The RPlacementHeuristic class provides an abstract class for placement
 * heuristics.
-* @author Pascal Francq
 * @short Generic Placement Heuristic class.
 */
 class RPlacementHeuristic

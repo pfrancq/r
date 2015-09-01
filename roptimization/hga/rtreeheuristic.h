@@ -50,7 +50,6 @@ namespace R{
 /**
  * The RTreeHeuristic class proposes a generic heuristic for a Hierarchical
  * Genetic Algorithm (HGA).
- * @author Pascal Francq
  * @short HGA Heuristic.
  */
 template<class cNode,class cObj,class cNodes>

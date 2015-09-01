@@ -62,7 +62,6 @@ typedef unsigned short UChar;
 //------------------------------------------------------------------------------
 /**
 * This class implements a unicode character as a class.
-* @author Pascal Francq
 * @short Unicode Character
 */
 class RChar

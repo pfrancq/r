@@ -65,7 +65,6 @@ namespace R{
 * a.Wait();
 * b.Wait();
 * @endcode
-* @author Pascal Francq
 * @short Thread.
 */
 class RThread

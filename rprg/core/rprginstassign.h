@@ -55,7 +55,6 @@ class RPrgOutput;
 //------------------------------------------------------------------------------
 /**
 * The RPrgInstNew provides a class for a "new" instruction.
-* @author Pascal Francq
 * @short "new" Instruction.
 */
 class RPrgInstNew : public RPrgInst
@@ -103,7 +102,6 @@ public:
 //------------------------------------------------------------------------------
 /**
 * The RPrgInstAssignRef provides a class for the assignment instruction.
-* @author Pascal Francq
 * @short Assignment Instruction (=).
 */
 class RPrgInstAssignVar : public RPrgInst

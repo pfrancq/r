@@ -49,7 +49,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RPrg provides a class for a script program.
-* @author Pascal Francq
 * @short Script Program.
 */
 class RPrg : public RTextFile

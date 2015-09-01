@@ -53,7 +53,6 @@ class RDir;
 //------------------------------------------------------------------------------
 /**
 * The RFile class represents a file (text files, directories...).
-* @author Pascal Francq
 * @short Generic File.
 */
 class RFile

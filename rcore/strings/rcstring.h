@@ -67,7 +67,6 @@ class RCString;
 * @endcode
 * The strings str1 and str2 use (as long as none of them is modified) the same
 * copy of the characters string.
-* @author Pascal Francq
 * @short C String
 */
 class RCString : public BasicString<char,RCString>
@@ -318,7 +317,8 @@ public:
 
 	//@} Manipulation methods
 
-	/** @name Methods related to R::RContainer	*/ // @{
+	/** @name Methods related to containers */
+	// @{
 	/**
 	* Lexically compares two strings and returns an integer less than, equal
 	* to, or greater than zero if this is less than, equal to, or greater than
@@ -338,14 +338,16 @@ public:
 	inline int Compare(const char* src) const {return(strcmp(Data->Text,src)); }
 
 	/**
-	* Return a number between 0 and 26 according to the character at position
-	* idx in the string.
-	* @remark Supported values for idx are 1 and 2.
-	* @param idx             Index of hash asked.
-	* @see R::RHashContainer and R::RDblHashContainer.
+	* Compute a hash code that in the range [0,max-1]. In practice, in computes
+	* a sum based on the Unicode values the characters.
+	*
+	* This method is R::RHashContainer to manage string.
+	* @param max             Maximal value.
+	* @return a number in the range [0,max-1].
 	*/
-	size_t HashIndex(size_t idx) const;
-	//@} Methods related to R::RContainer
+	size_t HashCode(size_t max) const;
+
+	//@} Methods related to containers
 
 	/** @name Operators	*/ // @{
 	/**

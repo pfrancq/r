@@ -82,7 +82,6 @@ namespace R{
 *    cout<<"Car"<<Res()->GetId()+1<<"\t"<<Res()->GetFiPlus()<<"\t\t"<<Res()->GetFiMinus()<<"\t\t"<<Res()->GetFi()<<endl;
 * @endcode
 * @short PROMETHEE Kernel.
-* @author Pascal Francq & Thomas L'Eglise.
 */
 class RPromKernel
 {

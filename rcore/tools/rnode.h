@@ -125,7 +125,6 @@ template<class T,class N> class RNodeCursor;
 *
 * In practice, all child nodes of a given node (or the root node) are stored as
 * a doubly linked list.
-* @author Pascal Francq
 * @short Generic Node.
 */
 template<class T,class N,bool bAlloc>

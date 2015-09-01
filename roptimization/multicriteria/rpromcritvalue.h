@@ -44,7 +44,6 @@ namespace R{
 * The RPromCritValue class provides a representation for a value of a solution
 * for a given criterion.
 * @short PROMETHEE Solution value.
-* @author Pascal Francq & Thomas L'Eglise.
 */
 class RPromCritValue
 {

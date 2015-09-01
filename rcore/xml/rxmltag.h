@@ -73,7 +73,6 @@ class RXMLTagCursor;
 * }
 * @endcode
 * @short XML Tag.
-* @author Pascal Francq and Thomas L'Eglise.
 */
 class RXMLTag : public RNode<RXMLStruct,RXMLTag,true>
 {

@@ -60,7 +60,6 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj> cl
 /**
 * The RFitnessNN provides a representation for a fitness function for the
 * Nearest Neighbors Grouping Genetic Algorithm.
-* @author Pascal Francq
 * @short NNGGA Fitness.
 */
 class RFitnessNN : public RFitness<double,true>
@@ -179,7 +178,6 @@ public:
 /**
 * The RObjNN class provides a representation of an object to group by the
 * Nearest Neighbors Grouping Genetic Algorithm.
-* @author Pascal Francq
 * @short NNGGA Object.
 */
 class RObjNN : public RObjG

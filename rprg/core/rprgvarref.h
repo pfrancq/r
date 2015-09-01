@@ -47,7 +47,6 @@ namespace R{
 /**
 * The RPrgVar provides a class for a reference to a variable, i.e. a variable
 * of the type 'VarRef'.
-* @author Pascal Francq
 * @short Variable Reference.
 */
 class RPrgVarRef : public RPrgVar

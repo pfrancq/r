@@ -94,7 +94,6 @@ namespace R{
 * }
 * @endcode
 *
-* @author Pascal Francq
 * @short Stack template.
 */
 template<class C,bool bAlloc,bool bPushTop,bool bPopTop>

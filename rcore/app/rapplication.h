@@ -82,7 +82,6 @@ namespace R{
 *	return(EXIT_SUCCESS);
 * }
 * @endcode
-* @author Pascal Francq
 * @short Generic Application.
 */
 class RApplication

@@ -46,7 +46,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RPrgVarVal provides a class for a string variable.
-* @author Pascal Francq
 * @short String Variable.
 */
 class RPrgVarString : public RPrgVar

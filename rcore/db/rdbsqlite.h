@@ -54,7 +54,6 @@ namespace R{
 * The RDbSQLite class provides a representation of connection to a SQLite
 * database.
 * @see RQuery
-* @author Pascal Francq
 * @short SQLite Database.
 */
 class RDbSQLite : public RDb
@@ -132,7 +131,6 @@ public:
 //------------------------------------------------------------------------------
 /**
 * The RTransactionTable class provides a representation for a transaction table.
-* @author Pascal Francq
 * @short Transaction Table.
 */
 class RTransactionTable

@@ -52,7 +52,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * This is a class that holds all data needed by each thread for the 2D GA.
-* @author Pascal Francq
 * @short 2D GA "thread-dependent" data.
 */
 template<class cInst,class cChromo>
@@ -98,7 +97,6 @@ public:
 //------------------------------------------------------------------------------
 /**
 * Instance for the 2D placement GA.
-* @author Pascal Francq
 * @short 2D GA Instance.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>

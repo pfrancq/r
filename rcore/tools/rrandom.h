@@ -47,7 +47,6 @@ namespace R{
 /**
 * This is a class representing a random generator. In practice, it is an abstract
 * class internally re-implemented.
-* @author Pascal Francq
 * @short Random Generator.
 */
 class RRandom

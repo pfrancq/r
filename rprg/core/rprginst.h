@@ -56,7 +56,6 @@ class RPrgOutput;
 *
 * The Compare methods needed by R::RContainer are implemented so that it is
 * impossible to construct an ordered container of instructions.
-* @author Pascal Francq
 * @short Generic Instruction.
 */
 class RPrgInst

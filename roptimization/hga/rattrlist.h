@@ -54,7 +54,6 @@ namespace R{
 * The RAttrList class provides a representation of a list of attributes, each
 * attribute is represented by a number.
 * The objects and the nodes are using this class.
-* @author Pascal Francq
 * @short List of Attributes.
 */
 class RAttrList : public RNumContainer<size_t,true>

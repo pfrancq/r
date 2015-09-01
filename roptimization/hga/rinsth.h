@@ -48,7 +48,6 @@ namespace R{
 /**
 * This class represent "thread-dependent" data for a Hierarchical Genetic
 * Algorithm (HGA).
-* @author Pascal Francq
 * @short HGA "thread-dependent" Data.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>
@@ -107,7 +106,6 @@ public:
 /**
  * The RInstH class proposes a generic instance for a Hierarchical Genetic
  * Algorithm (HGA).
- * @author Pascal Francq
  * @short HGA Instance.
  */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>

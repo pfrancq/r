@@ -45,7 +45,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RObjg class provides a representation of an object to place in a group.
-* @author Pascal Francq
 * @short Object.
 */
 class RObjG

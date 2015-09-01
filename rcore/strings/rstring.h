@@ -62,7 +62,6 @@ namespace R{
 *
 * The RStringBuilder class is an efficient implementation to build string by
 * adding characters.
-* @author Pascal Francq
 * @short Unicode String
 */
 class RString : public BasicString<RChar,RString>
@@ -385,7 +384,8 @@ public:
 
 	//@} Manipulation methods
 
-	/** @name Methods related to R::RContainer	*/ // @{
+	/** @name Methods related to  containers */
+	// @{
 	/**
 	* Lexically compares two strings and returns an integer less than, equal
 	* to, or greater than zero if this is less than, equal to, or greater than
@@ -414,25 +414,14 @@ public:
 	inline int Compare(const RChar* src) const {return(strcmp(Data->Text,src));}
 
 	/**
-	* Return a number between 0 and 26 according to the character at position
-	* idx in the string. In practice, all letters are considered as a different
-	* index (0-25), all other characters are considered as the same index (26).
-	* @remark Supported values for idx are 1 and 2.
-	* @param idx             Index of hash asked.
-	* @see R::RHashContainer and R::RDblHashContainer.
+	* Compute a hash code that in the range [0,max-1]. In practice, in computes
+	* a sum based on the Unicode values the characters.
+	*
+	* This method is R::RHashContainer to manage string.
+	* @param max             Maximal value.
+	* @return a number in the range [0,max-1].
 	*/
-	size_t HashIndex(size_t idx) const;
-
-	/**
-	* Return a number between 0 and 36 according to the character at position
-	* idx in the string. In practice, all letters are considered as a different
-	* index (0-25), all numbers are considered as a different index (26-35),
-	* other characters are considered as the same index (36).
-	* @remark Supported values for idx are 1 and 2.
-	* @param idx             Index of hash asked.
-	* @see R::RHashContainer and R::RDblHashContainer.
-	*/
-	size_t ExtendedHashIndex(size_t idx) const;
+	size_t HashCode(size_t max) const;
 
 	/**
 	 * Static function used to order a container of strings in ascending order.
@@ -449,7 +438,7 @@ public:
 	 * @see R::RContainer.
     */
 	static int SortDesOrder(const void* a,const void* b);
-	//@} Methods related to R::RContainer
+	//@} Methods related to containers
 
 	/** @name Operators	*/ // @{
 	/**
@@ -919,7 +908,6 @@ inline const RString operator+(const RString& arg1,RChar arg2) {return(RString(a
 * }
 * @endcode
 *
-* @author Pascal Francq
 * @short Characters Cursor.
 */
 class RCharCursor

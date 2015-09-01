@@ -49,7 +49,6 @@ namespace R{
 /**
 * The RGeoInfoContainer class provides an aggregator of geometric information
 * to be considered like one entity.
-* @author Pascal Francq
 * @short Geometric Information Aggregator.
 */
 class RObj2DContainer : public RGeoInfo, private RContainer<RGeoInfo,false,false>

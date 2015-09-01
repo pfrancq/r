@@ -51,7 +51,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * This class represent "thread-dependent" data for the GA.
-* @author Pascal Francq
 * @short GA "thread-dependent" Data.
 */
 template<class cInst,class cChromo>
@@ -93,7 +92,6 @@ public:
 *   changed and the generation number is given as parameter.
 * - PostNotification("RInst::Generation",size_t) : A new generation has be done
 *   which number is passed as parameter.
-* @author Pascal Francq
 * @short Generic GA instance.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData>

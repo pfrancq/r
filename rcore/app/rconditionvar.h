@@ -74,7 +74,6 @@ class RMutex;
 *    // Continue to work
 * }
 * @endcode
-* @author Pascal Francq
 * @short Conditional Variable
 */
 class RConditionVar

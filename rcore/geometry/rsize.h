@@ -50,7 +50,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * This class represent a size.
-* @author Pascal Francq
 * @short Size.
 */
 class RSize

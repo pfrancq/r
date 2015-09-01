@@ -54,7 +54,6 @@ namespace R{
 /**
 * The RGroupNN provides a representation for a group for the Nearest Neighbors
 * Grouping Genetic Algorithm.
-* @author Pascal Francq
 * @short NNGGA Group.
 */
 template<class cGroup,class cObj,class cGroups>

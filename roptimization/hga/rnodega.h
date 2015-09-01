@@ -56,7 +56,6 @@ template<class cNode,class cObj,class cNodes> class RNodesGA;
 /**
  * The RNodeGA class provides a representation of a node in a HGA.
  * @see R::RNodesGA
- * @author Pascal Francq
  * @short HGA Node.
  */
 template<class cNode,class cObj,class cNodes>

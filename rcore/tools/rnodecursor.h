@@ -65,7 +65,6 @@ namespace R{
 * }
 * @endcode
 *
-* @author Pascal Francq
 * @short Node Cursor.
 */
 template<class T,class N>

@@ -47,7 +47,6 @@ namespace R{
 /**
 * This class implements a rectangle. In practice, Pt1 is always the bottom/left
 * point while Pt2 is always the upper/right point.
-* @author Pascal Francq
 * @short Rectangle.
 */
 class RRect

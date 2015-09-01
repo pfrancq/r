@@ -59,7 +59,6 @@ class RObject;
 /**
 * The hNotification provides a handle for a given notification.
 * @short Notification Handle
-* @author Pascal Francq
 */
 typedef void* hNotification;
 
@@ -69,7 +68,6 @@ typedef void* hNotification;
 * The RNotification provides a representation for a notification that can be
 * send by an object.
 * @short Notification
-* @author Pascal Francq
 */
 class RNotification
 {
@@ -166,7 +164,6 @@ public:
 * To be sure that PostNotification calls the right handlers, it is always
 * better to explicitly cast the parameter when sending.
 * @short Notification with Data.
-* @author Pascal Francq
 */
 template <class T>
 	class RNotificationData : public RNotification
@@ -209,7 +206,6 @@ public:
 * @tparam T                  Type of the parameter.
 * @param notification        Notification.
 * @short Data extracted of notification.
-* @author Pascal Francq
 */
 template<class T> T GetData(const RNotification& notification)
 {
@@ -240,7 +236,6 @@ template<class T> T GetData(const RNotification& notification)
 * @endcode
 * It is necessary to use the HANDLER macro to define a handler.
 * @short Message handler.
-* @author Pascal Francq
 */
 typedef void (RObject::*tNotificationHandler)(const RNotification& msg);
 

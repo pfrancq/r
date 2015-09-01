@@ -52,7 +52,6 @@ namespace R{
 * The RDbPostgreSQL class provides a representation of connection to a
  * PostgreSQL database.
 * @see RQuery
-* @author Pascal Francq
 * @short PostgreSQL Database.
 */
 class RDbPostgreSQL : public RDb

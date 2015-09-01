@@ -56,7 +56,6 @@ class RPrgOutput;
 //------------------------------------------------------------------------------
 /**
 * The RPrgFunc provides a class for a generic function.
-* @author Pascal Francq
 * @short Generic Function.
 */
 class RPrgFunc

@@ -52,7 +52,6 @@ class RVertex;
 * The RVertex class provides a representation for an edge from one vertex to
 * another one in a given graph. The edge is directed but may be considered as
 * undirected in some situations.
-* @author Pascal Francq
 * @short Edge.
 */
 class REdge : public RGenericEdge<RVertex,REdge>

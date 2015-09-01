@@ -46,7 +46,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RobjH class provides a representation of an object to place in the tree.
-* @author Pascal Francq
 * @short Object.
 */
 class RObjH

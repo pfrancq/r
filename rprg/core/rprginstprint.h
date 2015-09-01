@@ -48,7 +48,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RPrgInstPrint provides a class for a delete instruction.
-* @author Pascal Francq
 * @short Delete Instruction.
 */
 class RPrgInstPrint : public RPrgInst

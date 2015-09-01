@@ -52,7 +52,6 @@ class RGeoInfo;
 /**
 * The RFreePolygon class provides a representation of a "free" polygon on the
 * grid.
-* @author Pascal Francq
 * @short Free Polygon class.
 */
 class RFreePolygon : public RPolygon

@@ -50,7 +50,6 @@ namespace R{
 /**
 * The RChromoNN class provides a representation for a chromosome for
 * the Nearest Neighbors Grouping Genetic Algorithm.
-* @author Pascal Francq
 * @short NNGGA Chromosome.
 */
 template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj>

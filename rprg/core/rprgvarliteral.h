@@ -46,7 +46,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RPrgVarLiteral provides a class for a literal variable of the 'String'.
-* @author Pascal Francq
 * @short Literal Variable.
 */
 class RPrgVarLiteral : public RPrgVar

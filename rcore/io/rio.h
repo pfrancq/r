@@ -56,7 +56,6 @@ class RTextFile;
 //------------------------------------------------------------------------------
 /**
 * The RIO class provides some I/O types.
-* @author Pascal Francq
 * @short I/O Types.
 */
 class RIO
@@ -103,7 +102,6 @@ public:
  * 	int Wrong (2/0); // This will generate an exception -> Temporary file is removed
  * }
  * @endcode
- * @author Pascal Francq
  * @short Smart Temporary File.
  */
 class RSmartTempFile
@@ -147,7 +145,6 @@ public:
 //------------------------------------------------------------------------------
 /**
 * The RIOException class provides a basic representation for an IO exception.
-* @author Pascal Francq
 * @short IO Exception.
 */
 class RIOException : public RException

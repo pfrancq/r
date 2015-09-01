@@ -74,7 +74,6 @@ namespace R{
 *    mutex.UnLock();
 * }
 * @endcode
-* @author Pascal Francq
 * @short Mutex
 */
 class RMutex
@@ -164,7 +163,6 @@ public:
 *    return(0);
 * }
 * @endcode
-* @author Pascal Francq
 * @short Smart Mutex Pointer
 */
 class RSmartMutexPtr

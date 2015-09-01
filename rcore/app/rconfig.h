@@ -52,7 +52,6 @@ namespace R{
 * The parameters should be declare (with the InsertParam method) before the
 * structure is loaded. Parameters that are in the file but not declared are
 * lost.
-* @author Pascal Francq
 * @short XML Configuration Structure.
 */
 class RConfig

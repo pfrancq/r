@@ -63,7 +63,6 @@ namespace R{
 * An important aspect is the use of static_cast<const RSparseVector&> to ensure
 * the call of the const version of the operator(). If static_cast<const RSparseVector&>
 * is not used, the different elements are created with uninitialized values.
-* @author Pascal Francq (initial coding from Valery Vandaele).
 * @short Sparse Vector.
 */
 class RSparseVector : public RContainer<RValue,true,true>

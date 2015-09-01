@@ -48,7 +48,6 @@ namespace R{
 /**
  * The RPrgScope class provides a scope for a set of variables (in general
  * associated with a block of instructions).
- * @author Pascal Francq
  * @short Variables Scope.
  */
 class RPrgScope : public RContainer<RPrgVar,true,true>

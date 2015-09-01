@@ -60,7 +60,6 @@ template<class cInst,class cChromo,class cThreadData,class cGroup,class cObj> cl
 /**
 * The RSCFitness provides a representation for a fitness function for the
 * similarity-based grouping genetic algorithm.
-* @author Pascal Francq
 * @short Similarity-based Grouping Genetic Algorithm Fitness.
 */
 class RFitnessSG : public RFitness<double,true>
@@ -96,8 +95,7 @@ public:
 /*
 * The RCloseObjSG class provides a representation for an object that is close
  * from another one. For example, the two objects have a high agreement ratio.
- * @author Pascal Francq.
- * @short Similarity-based Grouping Genetic Algorithm Closed Object.
+  * @short Similarity-based Grouping Genetic Algorithm Closed Object.
  */
 class RCloseObjSG
 {
@@ -144,7 +142,6 @@ public:
  * It remembers the closest object and if the object should be considered as
  * social (it prefer to be grouped with other objects rather than to remain
  * alone).
- * @author Pascal Francq.
  * @short Similarity-based Grouping Genetic Algorithm Object Reference.
  */
 class RObjRefSG

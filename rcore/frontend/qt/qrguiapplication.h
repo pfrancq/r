@@ -101,7 +101,6 @@ namespace R{
 *	return(EXIT_SUCCESS);
 * }
 * @endcode
-* @author Pascal Francq
 * @short Generic QT-based GUI Application
 */
 class QRGUIApplication : public RApplication

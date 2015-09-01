@@ -101,7 +101,6 @@ public:
 * <iconv.h>. In practice, it uses the UTF-16 little-endian encoding scheme for
 * internal transformation from and to RString.
 * @short Generic Text Encoding Scheme.
-* @author Pascal Francq.
 */
 class RTextEncoding
 {

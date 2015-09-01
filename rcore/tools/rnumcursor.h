@@ -56,7 +56,6 @@ namespace R{
 * for(Cur.Start();!Cur.End();Cur.Next())
 * 	cout<<Cur()<<endl;
 * @endcode
-* @author Pascal Francq.
 * @short Container of Numbers Cursor.
 */
 template<class I>

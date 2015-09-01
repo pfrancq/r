@@ -53,7 +53,6 @@ const size_t ProblemId=cNoRef-1;
 //------------------------------------------------------------------------------
 /**
 * The RProblem2D class provides a representation for a 2D placement problem.
-* @author Pascal Francq
 * @short 2D Placement Problem
 */
 class RProblem2D : public RObj2D

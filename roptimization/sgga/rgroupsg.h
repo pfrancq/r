@@ -53,7 +53,6 @@ namespace R{
 /**
 * The RGroupSG provides a representation for a group for the similarity-based
 * grouping genetic algorithm.
-* @author Pascal Francq
 * @short Similarity-based Grouping Genetic Algorithm Group.
 */
 template<class cGroup,class cObj,class cGroups>

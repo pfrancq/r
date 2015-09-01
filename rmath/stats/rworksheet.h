@@ -53,8 +53,7 @@ namespace R{
  * In practice, it is represented by a set of lines representing different
  * items for which different measures (columns) are computed.
  * @short Worksheet
- * @author Pascal Francq
- */
+  */
 class RWorksheet
 {
 	/**

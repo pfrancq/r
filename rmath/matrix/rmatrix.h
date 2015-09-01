@@ -82,7 +82,6 @@ namespace R{
 * }
 * @endcode
 * @short Matrix.
-* @author Pascal Francq
 */
 class RMatrix : public RGenericMatrix, protected RContainer<RVector,true,false>
 {

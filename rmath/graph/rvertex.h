@@ -46,7 +46,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RVertex class provides a representation for a vertex.
-* @author Pascal Francq
 * @short Vertex.
 */
 class RVertex : public RGenericVertex<RVertex,REdge>

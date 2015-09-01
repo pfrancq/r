@@ -52,7 +52,6 @@ namespace R{
 /**
 * The RGrid class provides some functions to manipulate a grid of geometric
 * points.
-* @author Pascal Francq
 * @short Grid.
 */
 class RGrid

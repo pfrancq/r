@@ -48,7 +48,6 @@ namespace R{
 /**
  * The RChromoH class proposes a generic chromosome for a Hierarchical Genetic
  * Algorithm (HGA).
- * @author Pascal Francq
  * @short HGA Chromosome.
  */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cNode,class cObj>

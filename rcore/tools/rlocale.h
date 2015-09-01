@@ -46,7 +46,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RLocale class provides a representation for a particular location.
-* @author Pascal Francq
 * @short Locale.
 */
 class RLocale

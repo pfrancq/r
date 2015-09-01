@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RObjectContainer.h
+	RObjectHashContainer.h
 
-	Object Container - Header.
+	Object Hash Container - Header.
 
 	Copyright 2011-2015 by Pascal Francq (pascal@francq.info).
 
@@ -28,13 +28,13 @@
 
 
 //-----------------------------------------------------------------------------
-#ifndef RObjectContainer_H
-#define RObjectContainer_H
+#ifndef RObjectHashContainer_H
+#define RObjectHashContainer_H
 
 
 //-----------------------------------------------------------------------------
 // include files for R Project
-#include <rcontainer.h>
+#include <rhashcontainer.h>
 #include <rstring.h>
 
 
@@ -45,22 +45,23 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 /**
- * This class represent a container of objects (class C). It is supposed that
- * each object has an unique identifier (managed by this container). The
- * container maintains a list of objects ordered by their identifier and one
- * ordered by a search criteria (used for search purposes). The container can
- * be responsible for the deallocation of the elements (bAlloc).
+ * This class represent a container of objects (class C) managed through a hash
+ * index. It is supposed that each object has an unique identifier (managed by
+ * this container). The container maintains a list of objects ordered by their
+ * identifier and one with a hash index (used for search purposes). The
+ * container can be responsible for the deallocation of the elements (bAlloc).
  * @tparam C                  The class of the elements to be contained.
  * @tparam bAlloc             Specify if the elements are deallocated by the
  *                            container.
  *
- * To manage the objects, the container uses member functions of the class
- * representing them (class C). These functions have the signatures:
+ * To manage the objects, the container uses methods of the class
+ * representing them (class C). These methods have the signatures:
  * @code
  * int Search(const C& c) const;
  * int Search(const TUse& tag) const;
- * int GetId(void) const;
- * int SetId(size_t id);
+ * size_t HashCode(size_t max) const;
+ * size_t GetId(void) const;
+ * size_t SetId(size_t id);
  * @endcode
  * In practice, the Search method can be different than the Compare method of
  * the element (class C). While it supposes the allocation of reference pointer
@@ -71,7 +72,7 @@ namespace R{
  * @short Object Container.
  */
 template<class C,bool bAlloc>
-	class RObjectContainer
+	class RObjectHashContainer
 {
 protected:
 
@@ -83,9 +84,9 @@ protected:
 	RContainer<C,bAlloc,false> Objects;
 
 	/**
-	 * The objects of the list ordered by the search criteria.
+	 * The objects managed through the search criteria.
 	 */
-	R::RContainer<ObjectRef,true,true> ObjectsByRef;
+	RHashContainer<ObjectRef,false> ObjectsByRef;
 
 	/**
 	 * First identifier of the objects.
@@ -95,14 +96,18 @@ protected:
 public:
 
 	/**
-	 * Constructor of a container of objects.
-	 * @param first           First identifier assigned to an object.
-	 * @param m               The initial maximal size of the array.
-	 * @param i               The value used when increasing the array. If null
-	 *                        value, the size is set to the half the maximal
-	 *                        size or at least to 10.
+	* Constructor of a container of objects.
+	* @param first           First identifier assigned to an object.
+	* @pâram nb              Initial size of the container.
+	* @pâram nbi             Incremental size of the container.
+	* @param s               Size of the hash index. The hash codes of the
+	*                        elements must be in the range [0,s-1].
+	* @param m               The initial maximal size of the array for an index.
+	* @param i               The value used when increasing the array for an
+	*                        index. If null value, the size is set to the half
+	*                        of the maximal size.
 	 */
-	RObjectContainer(size_t first,size_t m,size_t i=0);
+	RObjectHashContainer(size_t first,size_t nb,size_t nbi,size_t s,size_t m,size_t i=0);
 
 	/**
 	* Verify that a given set of containers can hold a given size of objects.
@@ -124,13 +129,20 @@ public:
 	 * Compare method that can be used to construct an unordered container of
 	 * containers.
     */
-	int Compare(const RObjectContainer<C,bAlloc>&) const {return(-1);}
+	int Compare(const RObjectHashContainer<C,bAlloc>&) const {return(-1);}
 
 	/**
 	 * Get the number of the objects.
 	 * @return Maximum position occupied by the elements.
 	 */
 	inline size_t GetNbObjs(void) const {return(Objects.GetNb());}
+
+	/**
+	 * Get the number of the objects sharing a given hash code.
+	 * @param hash           Hash code.
+	 * @return Maximum position occupied by the elements.
+	 */
+	inline size_t GetNbObjsHashCode(size_t hash) const {return(ObjectsByRef[hash]->GetNb());}
 
 	/**
 	 * Get the highest identifier for the objects.
@@ -142,6 +154,20 @@ public:
 			return(0);
 		return(Objects[Objects.GetMaxPos()]->GetId());
 	}
+
+	/**
+	* This function returns the index of an element represented by tag in a
+	* particular array of a hash code.
+	* @tparam TUse           The type of tag, the container uses the Compare(TUse &)
+	*                        member function of the elements.
+	* @param tag             The tag used.
+	* @param hash            Hash code of the tag (set by the method)
+	* @param find            If the element represented by tag exist, find is set to
+	*                        true (set by the method).
+	* @return Returns the index of the element if it exists or the index where
+	* is has to inserted.
+	*/
+	template<class TUse> inline size_t GetIndex(const TUse& tag,size_t& hash,bool& find) const;
 
 	/**
 	 * Get the maximum position of the objects.
@@ -206,6 +232,23 @@ public:
 	bool InsertObj(C* obj);
 
 	/**
+	* Insert an element in the container at a given index of a given hash code.
+	* If the corresponding index is already used, the previously inserted element
+	* is removed from the container (and destroy if the container is
+	* responsible for the allocation).
+	*
+	* This method should be used very carefully (in general with the GetIndex
+	* method) because the container can then disfunction.
+	* @param obj             Object to insert.
+	* @param hash            Hash code of the object to insert.
+	* @param index           Index of the object to insert.
+	* @param del             Specify if a similar existing element must be
+	*                        deleted or shifted.
+	* @return true if the container has assigned an identifier to the object.
+	*/
+	bool InsertObjAt(C* obj,size_t hash,size_t idx,bool del=false);
+
+	/**
 	* Delete a object.
 	* @param obj             Object.
 	*/
@@ -220,13 +263,13 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~RObjectContainer(void);
+	virtual ~RObjectHashContainer(void);
 };
 
 
 //-----------------------------------------------------------------------------
 // Template implementation
-#include <robjectcontainer.hh>
+#include <robjecthashcontainer.hh>
 
 
 }  //-------- End of namespace R ----------------------------------------------

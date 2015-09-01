@@ -66,7 +66,6 @@ namespace R{
 *
 * \attention When an element is added or removed from the container parsed by
 * the cursor, the cursor is not valid anymore.
-* @author Pascal Francq
 * @short Constant Container Cursor.
 */
 template<class C>
@@ -449,7 +448,6 @@ public:
 * \attention When an element is added or removed from the container parsed by
 * the cursor, the cursor is not valid anymore.
 *
-* @author Pascal Francq
 * @short Constant Container Child Cursor.
 */
 template<class B,class C>

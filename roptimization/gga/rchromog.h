@@ -50,7 +50,6 @@ namespace R{
 //------------------------------------------------------------------------------
 /**
 * The RChromoG class provides a representation for a chromosome for the GGA.
-* @author Pascal Francq
 * @short GGA Chromosome.
 */
 template<class cInst,class cChromo,class cFit,class cThreadData,class cGroup,class cObj>

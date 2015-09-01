@@ -48,8 +48,7 @@ namespace R{
  * The RVector class provides a representation for a vector. It is a
  * specialized class inheriting from RNumContainer since a vector is supposed
  * to have a fixed size.
- * @author Pascal Francq
- * @short RVector
+  * @short RVector
  */
 class RVector : private RNumContainer<double,false>
 {

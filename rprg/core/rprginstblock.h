@@ -56,7 +56,6 @@ class RPrgOutput;
 //------------------------------------------------------------------------------
 /**
 * The RPrgInstBlock provides a class for a block of instructions.
-* @author Pascal Francq
 * @short Instructions Block.
 */
 class RPrgInstBlock : public RPrgInst

@@ -84,7 +84,6 @@ namespace R{
  * @warning This implementation is slower than the qsort method of the C/C++
  * library. It is therefore only useful, if the comparison method between two
  * elements cannot not be implemented as a static method of the class C.
- * @author Pascal Francq
  * @short Quicksort template.
 */
 template<class C> class RQuickSort

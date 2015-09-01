@@ -60,7 +60,6 @@ template<class C,bool bAlloc,bool bOrder> class RContainer;
 * since these strings occupy the stack, using too many of them with large sizes
 * can lead to a problem (in particular for recursive functions).
 * @tparam MaxLen             Maximum size of the string.
-* @author Pascal Francq
 * @short Temporary String.
 */
 template<size_t MaxLen>

@@ -7,12 +7,13 @@ SET(rcore_tools_INST_INCLUDES
 	rcontainer.hh
 	robjectcontainer.h
 	robjectcontainer.hh
+	robjecthashcontainer.h
+	robjecthashcontainer.hh
 	rcursor.h
 	rconstcursor.h
 	rteststd.h
 	rstack.h
 	rhashcontainer.h
-	rdblhashcontainer.h
 	rnode.h
 	rnode.hh
 	rtree.h

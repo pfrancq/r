@@ -81,7 +81,6 @@ namespace R{
 *    File.Close();
 * }
 * @endcode
-* @author Pascal Francq
 * @short Binary File.
 */
 class RBinaryFile : public RIOFile

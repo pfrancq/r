@@ -49,7 +49,6 @@ namespace R{
 /**
 * \ingroup GA
 * This file represent a generic debug output for the GA.
-* @author Pascal Francq
 * @short Generic Debug Output.
 */
 class RDebug
@@ -168,7 +167,6 @@ public:
 /**
 * \ingroup GA
 * This class implement a debugger file in XML format.
-* @author Pascal Francq
 * @short Debug XML file.
 */
 class RDebugXML : public RDebug

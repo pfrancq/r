@@ -47,7 +47,6 @@ namespace R{
 /**
 * This class provides a representation for a attribute of a XML tag.
 * @short XML Tag.
-* @author Pascal Francq and Thomas L'Eglise.
 * @see RXMLTag
 */
 class RXMLAttr
