@@ -134,7 +134,7 @@ protected:
 	size_t MaxPtr;
 
 	/**
-	* The last position in the array used by an object.
+	* The position next the last element in the array.
 	*/
 	size_t LastPtr;
 
@@ -142,24 +142,6 @@ protected:
 	* When the array is increased, this value is used.
 	*/
 	size_t IncPtr;
-
-	/**
-	* Generic static template function to sort a container.
-	*/
-	static int SortOrder(const void* a,const void* b)
-	{
-		C* ac(*((C**)a));
-		C* bc(*((C**)b));
-		if(!ac)
-		{
-			if(!bc)
-				return(0);
-			return(-1);
-		}
-		else if(!bc)
-			return(1);
-		return(ac->Compare(*bc));
-	}
 
 	/**
 	* Create a container from another one. If the pointer to the container is
@@ -214,7 +196,7 @@ public:
 	inline size_t GetNb(void) const {return(NbPtr);}
 
 	/**
-	* @return  the maximal position occupied by an elements in the container.
+	* @return the maximal position occupied by an elements in the container.
 	*/
 	inline size_t GetMaxPos(void) const {if(NbPtr) return(LastPtr-1); else return(0);}
 
@@ -246,16 +228,41 @@ public:
 
 	/**
 	* Clear the container and destruct the elements if it is responsible for
-	* the deallocation.The container can also be extended.
+	* the deallocation. The container can also be extended.
 	* @param m              New maximal size of the array. If null, the old
 	*                       size remains.
 	* @param i              New increasing value. If null, the old value
 	*                       remains.
+	* @param force          If the container isn't responsible for the
+	*                       deallocation, does the element be still destroyed
+	*                       (true) or not (force).
 	*/
-	void Clear(size_t m=0,size_t i=0);
+	void Clear(size_t m=0,size_t i=0,bool force=false);
 
 	/**
-	* ReOrder the container.
+	* Generic static template function to sort a container.
+	* @param a               First pointer.
+	* @param b               Second pointer.
+	* @return -1,0 or 1 depending of the result of the Compare method of the
+	* class of the elements contained.
+	*/
+	static int SortOrder(const void* a,const void* b)
+	{
+		C* ac(*((C**)a));
+		C* bc(*((C**)b));
+		if(!ac)
+		{
+			if(!bc)
+				return(0);
+			return(-1);
+		}
+		else if(!bc)
+			return(1);
+		return(ac->Compare(*bc));
+	}
+
+	/**
+	* ReOrder a part of the container based on a given sort function.
 	*
 	* @param sortOrder       Pointer to a (static) function used for the ordering.
    * @param min             Starting index of the container part concerned.
@@ -266,7 +273,7 @@ public:
 	* -# The container is ordered and the method does not use the same criterion
 	*    for the ordering.
 	*/
-	inline void ReOrder(int sortOrder(const void*,const void*),size_t min=0,size_t max=0)
+	inline void ReOrder(int sortOrder(const void*,const void*),size_t min,size_t max)
 	{
        if(!NbPtr)
            return;  // No elements -> no sorting
@@ -276,22 +283,32 @@ public:
        else
           NbMin=0;
        if((!max)||(max>=LastPtr)||(max<min))
-          NbMax=LastPtr;
+          NbMax=LastPtr-1;
        else
           NbMax=max;
-		if(NbMax)
-			qsort(static_cast<void*>(&Tab[NbMin]),NbMax,sizeof(void*),sortOrder);
+		if(NbMax>NbMin)
+			qsort(static_cast<void*>(&Tab[NbMin]),NbMax-NbMin+1,sizeof(void*),sortOrder);
 	}
 
 	/**
-	* ReOrder the container based on the 'Compare' method of the objects
+	* ReOrder the whole container based on a given sort function.
+	*
+	* @param sortOrder       Pointer to a (static) function used for the ordering.
+   * @warning This method must be used with caution, because it can crash the
+   * container if:
+	* -# The container contains null pointers.
+	* -# The container is ordered and the method does not use the same criterion
+	*    for the ordering.
+	*/
+	inline void ReOrder(int sortOrder(const void*,const void*)) {ReOrder(sortOrder,0,0);}
+
+	/**
+	* ReOrder the whole container based on the 'Compare' method of the objects
 	* contained.
-	* @param min             Starting index of the container part concerned.
-	* @param max             Ending index of the container part concerned.
    * @warning This method must be used with caution, because it can crash the
    * container if the container contains null pointers.
 	*/
-	inline void ReOrder(size_t min=0,size_t max=0) {ReOrder(SortOrder,min,max);}
+	inline void ReOrder(void) {ReOrder(SortOrder,0,0);}
 
 	/**
 	* Exchange two elements in the container. The method does not verify if the

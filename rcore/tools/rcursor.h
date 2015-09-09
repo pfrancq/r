@@ -482,6 +482,19 @@ public:
 	template<bool a,bool o> RCastCursor(const RContainer<B,a,o>& c,size_t min=0,size_t max=SIZE_MAX)  : RCursor<B>(c,min,max) {}
 
 	/**
+	* Set the container.
+	* @param c               Container to iterate.
+	* @param min             Minimum position of the elements to iterate.
+	* @param max             Maximum position of the elements to iterate
+	*                        (included max). If SIZE_MAX, iterate until the end
+	*                        of the container.
+	*/
+	void Set(const iRContainer<B>& c,size_t min=0,size_t max=SIZE_MAX)
+	{
+		RCursor<B>::Set(c,min,max);
+	}
+
+	/**
 	* Assignment operator using a "Cursor".
 	* @param src             Source container.
 	*/

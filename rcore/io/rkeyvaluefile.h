@@ -168,6 +168,12 @@ namespace R{
 template<class K>
 	class RKeyValueFile : protected RBlockFile
 {
+public:
+
+	using RBlockFile::GetURI;
+
+protected:
+
 	/**
 	 * Basic length to store positions, number of records and free spaces.
 	 */

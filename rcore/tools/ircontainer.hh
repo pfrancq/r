@@ -161,7 +161,7 @@ template<class C>
 //-----------------------------------------------------------------------------
 template<class C>
 	iRContainer<C>::iRContainer(bool dealloc,bool order,size_t m,size_t i)
-		: Dealloc(dealloc), Order(order),Tab(0), NbPtr(0), MaxPtr(m), LastPtr(0), IncPtr(i)
+		: Dealloc(dealloc), Order(order), Tab(0), NbPtr(0), MaxPtr(m), LastPtr(0), IncPtr(i)
 {
 	if(!IncPtr)
 	{
@@ -203,11 +203,11 @@ template<class C>
 
 //-----------------------------------------------------------------------------
 template<class C>
-	void iRContainer<C>::Clear(size_t m,size_t i)
+	void iRContainer<C>::Clear(size_t m,size_t i,bool force)
 {
 	if(Tab)
 	{
-		if(Dealloc)
+		if(Dealloc||force)
 		{
 			C **ptr;
 

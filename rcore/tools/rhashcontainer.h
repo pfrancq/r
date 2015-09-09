@@ -73,8 +73,8 @@ namespace R{
 * same (0) or is after (<0) the element used. The HashCode methods return the
 * hash index of the given argument.
 *
-* Here is an example of class MyElement that will be contained in the
-* variable c:
+* Here is an example of a container with a hash table managing instances of the
+* class MyElement:
 * @code
 * #include <string.h>
 * #include <rhashcontainer.h>

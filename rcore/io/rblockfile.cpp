@@ -60,7 +60,7 @@ public:
 	Block(size_t id,size_t size) : Id(id), NbAccess(0), Dirty(false), Data(0)
 	{
 		Data=new char[size];
-	 /*memset(Data,0,sizeof(char)*size);*/
+		memset(Data,0,sizeof(char)*size);
 	}
 	inline int Compare(const Block& block) const {return(CompareIds(Id,block.Id));}
 	inline int Compare(size_t id) const {return(CompareIds(Id,id));}
@@ -108,6 +108,7 @@ RBlockFile::RBlockFile(const RURI& uri,size_t blocksize,size_t nbcaches)
 void RBlockFile::Open(RIO::ModeType mode)
 {
 	RIOFile::Open(mode);
+	RIOFile::Seek(0);
 	if(End())
 	{
 		// Write the architecture and the block size
@@ -118,7 +119,7 @@ void RBlockFile::Open(RIO::ModeType mode)
 		RIOFile::Write((char*)&BlockSize,sizeof(size_t));
 
 		// Fill the rest with 0
-		size_t Size(HeaderSize-sizeof(char)+sizeof(size_t));
+		size_t Size(HeaderSize-sizeof(char)-sizeof(size_t));
 		char Header[HeaderSize];
 		memset(Header,0,Size);
 		RIOFile::Write(Header,Size);
@@ -126,7 +127,6 @@ void RBlockFile::Open(RIO::ModeType mode)
 	else
 	{
 		char Arch;
-		RIOFile::Seek(0);
 		RIOFile::Read(&Arch,sizeof(char));
 		if(Arch!=static_cast<char>(sizeof(size_t)))
 			mThrowRIOException(this,"Wrong architecture.");
@@ -136,6 +136,12 @@ void RBlockFile::Open(RIO::ModeType mode)
 			mThrowRIOException(this,"Wrong block size.");
 	}
 	NbBlocks=(GetSize()-HeaderSize)/BlockSize;
+
+	// Clear internal structure
+	Cache.Clear();
+	Current=0;
+	CurrentPos=0;
+	CurrentData=0;
 }
 
 
@@ -156,8 +162,6 @@ void RBlockFile::Clear(void)
 	// Close the file, erase it, initialize the parameter
 	RIOFile::Close();
 	RFile::RemoveFile(GetURI());
-	Cache.Clear();
-	Current=0;
 	NbBlocks=0;
 
 	// Open the file

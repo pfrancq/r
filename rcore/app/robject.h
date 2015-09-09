@@ -1,6 +1,6 @@
 /*
 
-	RStep Project Library
+	R Project Library
 
 	RObject.h
 

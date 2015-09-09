@@ -85,12 +85,12 @@ namespace R{
 */
 class RBlockFile : protected RIOFile
 {
-	using RIOFile::Seek;
-
 	class Block;
 
 public:
 
+	using RIOFile::GetURI;
+	
 	/**
 	 * Type of the cache.
 	 */

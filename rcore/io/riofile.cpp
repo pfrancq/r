@@ -304,6 +304,8 @@ size_t RIOFile::Read(char* buffer,size_t nb,bool move)
 	if(static_cast<off_t>(nb)>InternalBufferSize)
 	{
 		off_t total;
+
+		lseek(Handle,Pos,SEEK_SET);
 		total=read(Handle,buffer,left);
 		left=0;
 		if(move)

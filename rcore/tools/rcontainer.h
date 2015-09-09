@@ -91,7 +91,7 @@ namespace R{
 * @endcode
 *
 * To iterate through the container, a RCursor can be used. Here is an example
-* of class MyElement that will be contained in the variable c:
+* of a container managing instances of the class MyElement:
 * @code
 * #include <rcontainer.h>
 * #include <rcursor.h>
@@ -214,11 +214,36 @@ public:
 	*                       size remains.
 	* @param i              New increasing value. If null, the old value
 	*                       remains.
+	* @param force          If the container isn't responsible for the
+	*                       deallocation, does the element be still destroyed
+	*                       (true) or not (force).
 	*/
-	inline void Clear(size_t m=0,size_t i=0) {iRContainer<C>::Clear(m,i);}
+	inline void Clear(size_t m=0,size_t i=0,bool force=false) {iRContainer<C>::Clear(m,i,force);}
 
 	/**
-	* ReOrder the container.
+	* Generic static template function to sort a container.
+	* @param a               First pointer.
+	* @param b               Second pointer.
+	* @return -1,0 or 1 depending of the result of the Compare method of the
+	* class of the elements contained.
+	*/
+	static int SortOrder(const void* a,const void* b)
+	{
+		C* ac(*((C**)a));
+		C* bc(*((C**)b));
+		if(!ac)
+		{
+			if(!bc)
+				return(0);
+			return(-1);
+		}
+		else if(!bc)
+			return(1);
+		return(ac->Compare(*bc));
+	}
+
+	/**
+	* ReOrder a part of the container based on a given sort function.
 	*
 	* @param sortOrder       Pointer to a (static) function used for the ordering.
    * @param min             Starting index of the container part concerned.
@@ -228,8 +253,32 @@ public:
 	* -# The container contains null pointers.
 	* -# The container is ordered and the method does not use the same criterion
 	*    for the ordering.
+	*
+	* If you want to use the 'Compare' method of the objects contained as sort
+	* method for a given range, use the SortOrder method:
+	* @code
+	* RContainer<RString,true,false> Cont(10);
+	* Cont.InsertPtr(new RString("Second"));
+	* Cont.InsertPtr(new RString("First"));
+	* Cont.InsertPtr(new RString("Third"));
+	*
+	* // Sort the first two element with the default compare method of strings.
+	* Cont.ReOrder(RContainer<RString,true,false>::SortOrder,0,2);
+	* @endcode
 	*/
-	inline void ReOrder(int sortOrder(const void*,const void*),size_t min=0,size_t max=0) {iRContainer<C>::ReOrder(sortOrder,min,max);}
+	inline void ReOrder(int sortOrder(const void*,const void*),size_t min,size_t max) {iRContainer<C>::ReOrder(sortOrder,min,max);}
+
+	/**
+	* ReOrder the whole container based on a given sort function.
+	*
+	* @param sortOrder       Pointer to a (static) function used for the ordering.
+   * @warning This method must be used with caution, because it can crash the
+   * container if:
+	* -# The container contains null pointers.
+	* -# The container is ordered and the method does not use the same criterion
+	*    for the ordering.
+	*/
+	inline void ReOrder(int sortOrder(const void*,const void*)) {iRContainer<C>::ReOrder(sortOrder,0,0);}
 
 	/**
 	* ReOrder the container based on the 'Compare' method of the objects
@@ -239,7 +288,7 @@ public:
    * @warning This method must be used with caution, because it can crash the
    * container if the container contains null pointers.
 	*/
-	inline void ReOrder(size_t min=0,size_t max=0) {iRContainer<C>::ReOrder(min,max);}
+	inline void ReOrder(void) {iRContainer<C>::ReOrder(SortOrder,0,0);}
 
 	/**
 	* Exchange two elements in the container. The method does not verify if the
