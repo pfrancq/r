@@ -256,6 +256,15 @@ public:
 	void DeleteNode(N* node,bool del=bAlloc);
 
 	/**
+	 * Update the depth of all child nodes of a given node. In practice, at each
+	 * new step, the depth is incremented of 1.
+	 *
+	 * This method is used by MoveNode.
+    * @param node           Parent node.
+    */
+	void UpdateDepth(N* node);
+
+	/**
 	 * Move a node from one parent to another inside the same tree.
 	 * @param to             Parent where the node is to attached.
 	 * @param node           Node to insert.

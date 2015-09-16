@@ -253,6 +253,20 @@ template<class T,class N,bool bAlloc>
 
 //------------------------------------------------------------------------------
 template<class T,class N,bool bAlloc>
+	void RTree<T,N,bAlloc>::UpdateDepth(N* node)
+{
+	N* ptr(node->First);
+	while(ptr)
+	{
+		ptr->Depth=node->Depth+1;
+		UpdateDepth(ptr);
+		ptr=ptr->Next;
+	}
+}
+
+
+//------------------------------------------------------------------------------
+template<class T,class N,bool bAlloc>
 	void RTree<T,N,bAlloc>::MoveNode(N* to,N* node)
 {
 //	if(to->Tree!=node->Tree)
@@ -336,6 +350,13 @@ template<class T,class N,bool bAlloc>
 
 	// Change the parent of the current node
 	node->Parent=to;
+
+	// Update the depth of the node and its children
+	if(node->Parent)
+		node->Depth=node->Parent->Depth+1;
+	else
+		node->Depth=0;
+	UpdateDepth(node);
 }
 
 
