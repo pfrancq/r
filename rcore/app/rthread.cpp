@@ -47,8 +47,8 @@ void* RThread::ThreadFunc(void* p)
 
 
 //------------------------------------------------------------------------------
-RThread::RThread(const RString name)
-	: Thread(), Name(name)
+RThread::RThread(size_t id,const RString name)
+	: Thread(), Id(id), Name(name)
 {
 }
 
@@ -64,13 +64,6 @@ void RThread::Start(void)
 void RThread::Wait(void)
 {
 	pthread_join(Thread,NULL);
-}
-
-
-//-----------------------------------------------------------------------------
-RString RThread::GetName(void) const
-{
-	return(Name);
 }
 
 

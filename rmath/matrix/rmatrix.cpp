@@ -155,7 +155,10 @@ void RMatrix::VerifySize(size_t newlines,size_t newcols,bool fill,double val)
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
 			for(size_t i=NbCols-newcols+1;--i;)
-				Cur()->DeleteAt(GetNb()-1,false);
+			{
+				if(Cur()->NbInt<i)
+					Cur()->DeleteAt(GetNb()-1,false);
+			}
 		}
 	}
 

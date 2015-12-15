@@ -8,6 +8,7 @@ SET(rcore_app_INST_INCLUDES
 	rthread.h
 	rmutex.h
 	rconditionvar.h
+	rrwlock.h
 )
 
 SET(rcore_app_TARGET_SOURCES
@@ -20,4 +21,5 @@ SET(rcore_app_TARGET_SOURCES
 	rthread.cpp
 	rmutex.cpp
 	rconditionvar.cpp
+	rrwlock.cpp
 )

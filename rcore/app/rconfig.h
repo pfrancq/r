@@ -46,27 +46,39 @@ namespace R{
 
 //-----------------------------------------------------------------------------
 /**
-* The RConfig class provides a representation for a XML structure representing
-* a set of parameters that can load from and store to a file.
-*
-* The parameters should be declare (with the InsertParam method) before the
-* structure is loaded. Parameters that are in the file but not declared are
-* lost.
-* @short XML Configuration Structure.
-*/
+ * The RConfig class provides a representation for a XML structure representing
+ * a set of parameters that can load from and store.
+ *
+ * The parameters should be declare (with the InsertParam method) before the
+ *  structure is loaded. Parameters that are in the file but not declared are
+ *  lost.
+ *
+ * To each instance, two directory can be specified : a local one that is
+ * modified, and a global one that can propose default values. There are two
+ * ways to specify the directories: (a) specify their names, (b) provides a
+ * category and a name. In this latest case, default directory names are built.
+ *  In particular, the local file is managed in the ".r/config" subdirectory in
+ * the home directory of the user running the corresponding program.
+ * @short XML Configuration Structure.
+ */
 class RConfig
 {
 	class lParams;
 
 	/**
-	* Category of the configuration.
-	*/
-	RString Category;
+	 * Are the parameters directories or a pair (category,name).
+	 */
+	bool Dirs;
 
 	/**
-	* Name of the configuration.
-	*/
-	RString Name;
+	 * Parameter 1.
+	 */
+	RString Param1;
+
+	/**
+	 * Global file name.
+	 */
+	RString Param2;
 
 	/**
 	* Root of all parameters.
@@ -76,15 +88,30 @@ class RConfig
 public:
 
 	/**
-	* Constructor. The category is used to specify where to search. Examples:
-	* - "app", for an application.
-	* - "lib/galilei" for a library.
-	* - "lib/galilei/plugins/profiles" for a specific type of plug-in of a
-	*   specific library 'galilei'.
-	* @param cat             Category of the config.
-	* @param name            Name of the config ('/' are replaced by '-').
+	 * Default constructor. In practice, it does nothing. The method Set
+	 * should be called before the methods Load and Save.
+    */
+	RConfig(void);
+
+	/**
+	 * Constructor.
+	 * @param dirs           Specify if the parameters are directories or a pair
+	 *                       (name,category).
+	 * @param param1         Local directory or configuration name ('/' are
+	 *                       replaced by '-').
+	 * @param param2         Global directory of category name.
 	*/
-	RConfig(const RString& cat=RString::Null,const RString& name=RString::Null);
+	RConfig(bool dirs,const RString& param1,const RString& param2=RString::Null);
+
+	/**
+	 * Set the parameters.
+	 * @param dirs           Specify if the parameters are directories or a pair
+	 *                       (name,category).
+	 * @param param1         Local directory or configuration name ('/' are
+	 *                       replaced by '-').
+	 * @param param2         Global directory of category name.
+    */
+	void SetParams(bool dirs,const RString& param1,const RString& param2=RString::Null);
 
 private:
 
@@ -97,13 +124,6 @@ private:
 	void Analyze(RXMLTag* tag,lParams* cat);
 
 public:
-
-	/**
-	* Set the information about the configuration.
-	* @param cat             Category of the config.
-	* @param name            Name of the config ('/' are replaced by '-').
-	*/
-	void SetConfigInfos(const RString& cat,const RString& name);
 
 	/**
 	 * Load a given category (and its parameters and sub-categories).
@@ -137,12 +157,12 @@ public:
 	/**
 	* Get the name of the configuration.
 	*/
-	RString GetName(void) const {return(Name);}
+//	RString GetName(void) const {return(Param1);}
 
 	/**
 	* Get the category of the configuration.
 	*/
-	RString GetCategory(void) const {return(Category);}
+//	RString GetCategory(void) const {return(Category);}
 
 private:
 

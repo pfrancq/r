@@ -109,9 +109,9 @@ protected:
 	RContainer<RParamValue,true,false> Params;
 
 	/**
-	 * Home directory of the configuration files.
+	 * Local directory of the configuration.
 	 */
-	RString HomeConfig;
+	RString LocalConfigDir;
 
 	/**
 	* Configuration
@@ -128,13 +128,17 @@ private:
 public:
 
 	/**
-	* Construct an application.
-	* @param name            Name of the application.
-	* @param argc            Number of arguments of the program (received from
-	*                        main).
-	* @param argv            Arguments of the program (received from main).
-	*/
-	RApplication(const RString& name,int argc, char** argv);
+	 * Construct an application. If both parameters 'localconfig' and
+	 * 'globalconfig' are null (or not specified), the default directories are
+	 * chosen.
+	 * @param name           Name of the application.
+	 * @param argc           Number of arguments of the program (received from
+	 *                       main).
+	 * @param argv           Arguments of the program (received from main).
+	 * @param localconfig    Local configuration.
+	 * @param globalconfig   Local configuration.
+	 */
+	RApplication(const RString& name,int argc, char** argv,const RString& localconfig=RString::Null,const RString& globalconfig=RString::Null);
 
 	/**
 	* Get the name of the application.
@@ -152,9 +156,9 @@ public:
 	bool IsInit(void) const {return(HasInitApp);}
 
 	/**
-	 * @return the directory where the configuration files are stored.
+	 * @return the directory where the local configuration is stored.
 	 */
-	RString GetHomeConfig(void) const {return(HomeConfig);}
+	RString GetLocalConfigDir(void) const {return(LocalConfigDir);}
 
 	/**
 	* Get a pointer over the configuration.

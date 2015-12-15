@@ -232,6 +232,12 @@ public:
 	inline bool operator!=(const RString& src) const {return(URI.Compare(src));}
 
 	/**
+	 * Look if the URI is an empty one.
+    * @return true if it is the case.
+    */
+	bool IsEmpty(void) const {return(URI.IsEmpty());}
+
+	/**
 	 * Get the Scheme part of the uniform resource identifier.
 	 */
 	inline RString GetScheme(void) const {return(Extract(Scheme));}

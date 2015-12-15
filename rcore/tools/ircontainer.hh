@@ -234,9 +234,9 @@ template<class C>
 	if(!LastPtr)
 		throw std::range_error("iRContainer<C>::operator[] const : no elements");
 	if(pos1>=LastPtr)
-        throw std::range_error(R::RString("iRContainer<C>::operator[] const : idx "+RString::Number(pos1)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
+        throw std::range_error(R::RString("iRContainer<C>::Exchange(size_t,size_T): Position "+RString::Number(pos1)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
 	if(pos2>=LastPtr)
-        throw std::range_error(R::RString("iRContainer<C>::operator[] const : idx "+RString::Number(pos2)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
+        throw std::range_error(R::RString("iRContainer<C>::Exchange(size_t,size_T): Position "+RString::Number(pos2)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
 	C* ptr=Tab[pos1];
 	Tab[pos1]=Tab[pos2];
 	Tab[pos2]=ptr;
@@ -248,9 +248,9 @@ template<class C>
 	void iRContainer<C>::Shift(size_t idx,bool reverse)
 {
 	if(!LastPtr)
-		throw std::range_error("iRContainer<C>::operator[] const : no elements");
+		throw std::range_error("iRContainer<C>::Shift(size_t) : no elements");
 	if(idx>=LastPtr)
-        throw std::range_error(R::RString("iRContainer<C>::operator[] const : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
+        throw std::range_error(R::RString("iRContainer<C>::Shift(size_t) : idx "+RString::Number(idx)+" outside range [0,"+RString::Number(LastPtr-1)+"]").ToString());
 
 	if(reverse)
 	{

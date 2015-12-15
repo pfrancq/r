@@ -54,8 +54,8 @@ RApplication* R::App=0;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-RApplication::RApplication(const RString& name,int argc, char** argv)
-	: Name(name), Args(argc), Params(argc/2), HomeConfig(RString::Null), Config("app",name), HasInitApp(false)
+RApplication::RApplication(const RString& name,int argc, char** argv,const RString& localconfig,const RString& globalconfig)
+	: Name(name), Args(argc), Params(argc/2),HasInitApp(false)
 {
 	if(App)
 		mThrowRException("Already one application running");
@@ -97,24 +97,40 @@ RApplication::RApplication(const RString& name,int argc, char** argv)
 	if(!Param.IsEmpty())       // If a parameter is already defined -> insert it
 		Params.InsertPtr(new RParamValue(Param,RString::Null));
 
-	// Configuration directory specified
-	RParamValue* ptr(Params.GetPtr("config"));
-	if(ptr)
-		HomeConfig=ptr->Get();
-	if(HomeConfig.IsEmpty())
+	// Verify if a local configuration is specified as parameter
+	if(localconfig.IsEmpty()&&globalconfig.IsEmpty())
 	{
-		#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-			WCHAR path[MAX_PATH];
-			if(SUCCEEDED(SHGetFolderPathW(NULL,CSIDL_PROFILE,NULL,0,path)))
-			{
-				char Dir[512];
-				char DefaultChar=' ';
-				WideCharToMultiByte(CP_ACP,0,path,-1,Dir,511,&DefaultChar,NULL);
-				HomeConfig=Dir+RDir::GetDirSeparator()+".r";
+		RParamValue* ptr(Params.GetPtr("config"));
+		if(ptr)
+			LocalConfigDir=ptr->Get();
+		if(LocalConfigDir.IsEmpty())
+		{
+			#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+				WCHAR path[MAX_PATH];
+				if(SUCCEEDED(SHGetFolderPathW(NULL,CSIDL_PROFILE,NULL,0,path)))
+				{
+					char Dir[512];
+					char DefaultChar=' ';
+					WideCharToMultiByte(CP_ACP,0,path,-1,Dir,511,&DefaultChar,NULL);
+					LocalConfigDir=Dir+RDir::GetDirSeparator()+".r";
+			}
+			#else
+				RString Home(getenv("HOME"));
+				if(Home.IsEmpty())
+					Home="~";
+				LocalConfigDir=Home+RDir::GetDirSeparator()+".r";
+			#endif
 		}
-		#else
-			HomeConfig=RString(getenv("HOME"))+RDir::GetDirSeparator()+".r";
-		#endif
+		Config.SetParams(false,name,"app");
+	}
+	else
+	{
+		RString Tmp,Tmp2;
+		if(!localconfig.IsEmpty())
+			Tmp=localconfig+RDir::GetDirSeparator()+Name+".config";
+		if(!globalconfig.IsEmpty())
+			Tmp2=globalconfig+RDir::GetDirSeparator()+Name+".config";
+		Config.SetParams(true,Tmp,Tmp2);
 	}
 }
 

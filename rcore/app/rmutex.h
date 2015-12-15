@@ -92,7 +92,7 @@ public:
 
 	/**
 	* Lock the mutex. If the mutex is already locked, the calling thread is
-	*blocked.
+	* blocked.
 	*/
 	void Lock(void) {pthread_mutex_lock(&Mutex);}
 
@@ -130,31 +130,31 @@ public:
 *
 * Take the following example:
 * @code
-* RMutex mutex;
+* RMutex mTest;
 * int Func(void)
 * {
-*    mutex.Lock();
+*    mTest.Lock();
 *    a=a+5;
 *    if(a<25)
 *    {
-*       mutex.UnLock();
+*       mTest.UnLock();
 *       return(-1);
 *    }
 *    if(a<50)
 *    {
-*       mutex.UnLock();
+*       mTest.UnLock();
 *       return(1);
 *    }
-*    mutex.UnLock();
+*    mTest.UnLock();
 *    return(0);
 * }
 * @endcode
 * Using the RSmartMutexPtr class, the code is less complex:
 * @code
-* RMutex mutex;
+* RMutex mTest;
 * int Func(void)
 * {
-*    RSmartMutexPtr m(&mutex);
+*    RSmartMutexPtr m(&mTest);
 *    a=a+5;
 *    if(a<25)
 *       return(-1);
@@ -186,7 +186,7 @@ public:
 	RMutex* GetMutex(void) const {return(Mutex);}
 
 	/**
-	* Destruct the smart pointer, i.e. u,lock the mutex managed.
+	* Destruct the smart pointer, i.e. ulock the mutex managed.
 	*/
 	~RSmartMutexPtr(void) {Mutex->UnLock();}
 };
