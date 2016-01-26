@@ -49,9 +49,16 @@ RConnection::RConnection(const RString& name,double weight)
 
 
 //------------------------------------------------------------------------------
-int RConnection::Compare(const RConnection&) const
+int RConnection::Compare(const RConnection& c) const
 {
-	return(-1);
+	return(Name.Compare(c.Name));
+}
+
+
+//------------------------------------------------------------------------------
+int RConnection::Compare(const RString& name) const
+{
+	return(Name.Compare(name));
 }
 
 
@@ -67,4 +74,11 @@ void RConnection::Insert(RObj2DConnector* con)
 RCursor<RObj2DConnector> RConnection::GetConnectors(void) const
 {
 	return(RCursor<RObj2DConnector>(*this));
+}
+
+
+//------------------------------------------------------------------------------
+void RConnection::SetWeight(double weight)
+{
+	Weight=weight;
 }

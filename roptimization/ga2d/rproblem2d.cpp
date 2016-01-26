@@ -97,6 +97,13 @@ void RProblem2D::SetLimits(const RSize& limits)
 
 
 //------------------------------------------------------------------------------
+void RProblem2D::SetWeightedDistances(bool weighted)
+{
+	WeightedDistances=weighted;
+}
+
+
+//------------------------------------------------------------------------------
 void RProblem2D::Insert(RObj2D* obj)
 {
 	Objs.InsertPtr(obj);

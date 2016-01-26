@@ -177,13 +177,18 @@ void RLayout::DestroyAggregators(void)
 
 
 //------------------------------------------------------------------------------
-tCoord RLayout::ComputeDist(RGeoInfo* info,const RPoint& pos)
+tCoord RLayout::ComputeDist(RGeoInfo* info,bool weight,const RPoint& pos)
 {
 	// Initialize
 	tCoord sum(0.0);
 	RCursor<RGeoInfoConnection> Cur(PlacedConnections);
 	for(Cur.Start();!Cur.End();Cur.Next())
-		sum+=Cur()->GetDist(this,info,pos);
+	{
+		if(weight)
+			sum+=Cur()->GetDist(this,info,pos)*Cur()->GetConnection()->GetWeight();
+		else
+			sum+=Cur()->GetDist(this,info,pos);
+	}
 	return(sum);
 }
 
@@ -231,9 +236,9 @@ double RLayout::ComputeWeight(RGeoInfo* info)
 
 
 //------------------------------------------------------------------------------
-void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,bool* selected,RPromKernel* kernel,RRandom& random)
+void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,bool* selected,RPromKernel* kernel,RRandom& random,bool weight)
 {
-	RPromCriterion *weight,*dist;
+	RPromCriterion *cWeight,*cDist;
 	RPromSol *sol;
 	RGeoInfo **treat;
 	size_t Nb=0;
@@ -244,8 +249,8 @@ void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bou
 	// Init Part
 	i1=i2=0;
 	kernel->ClearSols();
-	weight=kernel->GetCriterion("Weight");
-	dist=kernel->GetCriterion("Distance");
+	cWeight=kernel->GetCriterion("Weight");
+	cDist=kernel->GetCriterion("Distance");
 	treat=new RGeoInfo*[Problem->GetNbObjs()+1];
 
 	// Go through each info
@@ -257,14 +262,14 @@ void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bou
 			continue;
 
 		// Calculate distance and weight
-		d=ComputeDist(info());
+		d=ComputeDist(info(),weight,RPoint::Null);
 		w=ComputeWeight(info());
 		if((w>0.0)&&(d>0.0))
 		{
 			// If both are not null -> Create a PROMETHEE solution
 			sol=kernel->NewSol();
-			kernel->Assign(sol,weight,w);
-			kernel->Assign(sol,dist,d);
+			kernel->Assign(sol,cWeight,w);
+			kernel->Assign(sol,cDist,d);
 			treat[sol->GetId()]=info();
 			Nb++;        // Increment number of solutions
 		}
@@ -337,7 +342,7 @@ void RLayout::GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bou
 
 
 //------------------------------------------------------------------------------
-RGeoInfo* RLayout::GetMostConnected(RGeoInfo** order,size_t nbobjs,size_t nbok)
+RGeoInfo* RLayout::GetMostConnected(RGeoInfo** order,size_t nbobjs,size_t nbok,bool weight)
 {
 	RGeoInfo **ptr=&order[nbok],*best;
 	size_t bestpos,i=nbok+1;
@@ -364,7 +369,7 @@ RGeoInfo* RLayout::GetMostConnected(RGeoInfo** order,size_t nbobjs,size_t nbok)
 
 
 //------------------------------------------------------------------------------
-void RLayout::FillAggregator(RObj2DContainer* cont,bool* selected,RPromKernel* kernel,RRandom& random)
+void RLayout::FillAggregator(RObj2DContainer* cont,bool* selected,RPromKernel* kernel,RRandom& random,bool weight)
 {
 	RRect bound,r;
 	RGeoInfo* i1;
@@ -377,7 +382,7 @@ void RLayout::FillAggregator(RObj2DContainer* cont,bool* selected,RPromKernel* k
 	Boundary(bound);
 	bound-=bound.GetPt1();
 	bound.Set(bound.GetX1(),bound.GetY1(),bound.GetX2()/4,bound.GetY2()/4);
-	GetBestsConnected(i1,i2,bound,selected,kernel,random);
+	GetBestsConnected(i1,i2,bound,selected,kernel,random,weight);
 	if(!i1)
 	{
 		cont->Complete();
@@ -415,14 +420,17 @@ void RLayout::FillAggregator(RObj2DContainer* cont,bool* selected,RPromKernel* k
 
 
 //------------------------------------------------------------------------------
-tCoord RLayout::ComputeConnections(void)
+tCoord RLayout::ComputeConnections(bool weight)
 {
 	tCoord Distances(0.0);
 	RCursor<RGeoInfoConnection> Cur(PlacedConnections);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		Cur()->UnComplete();
-		Distances+=Cur()->ComputeMinDist(this);
+		if(weight)
+			Distances+=Cur()->ComputeMinDist(this)*Cur()->GetConnection()->GetWeight();
+		else
+			Distances+=Cur()->ComputeMinDist(this);
 	}
 	return(Distances);
 }

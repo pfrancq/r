@@ -31,6 +31,7 @@
 //------------------------------------------------------------------------------
 // include files for ANSI C/C++
 #include <iostream>
+#include <cstdarg>
 
 
 //------------------------------------------------------------------------------
@@ -57,9 +58,18 @@ RPolygon::RPolygon(void)
 
 
 //------------------------------------------------------------------------------
-RPolygon::RPolygon(const int Max)
-	: RContainer<RPoint,true,false>(Max,10), Order(true), Rect(false)
+RPolygon::RPolygon(size_t nb,...)
+	: RContainer<RPoint,true,false>(nb,10), Order(true), Rect(nb==4)
 {
+	va_list points;
+   va_start(points,nb);
+   for(size_t i = 0; i < nb; i++ )
+	{
+		double X(va_arg(points,double));
+		double Y(va_arg(points,double));
+		InsertPtr(new RPoint(X,Y));
+   }
+   va_end(points);
 }
 
 
@@ -421,11 +431,6 @@ RPoint* RPolygon::GetLeftBottom(const tCoord minx,const tCoord miny,const tCoord
 	}
 	return(lb);
 }
-
-
-
-
-
 
 
 //------------------------------------------------------------------------------
@@ -882,7 +887,7 @@ void RPolygon::RectDecomposition(RContainer<RRect,true,false>& rects) const
 	if(!IsRectangular())
 		mThrowRException("Polygon not rectangular");
 
-	RPolygon work(*this),tmpPoly(20);
+	RPolygon work(*this),tmpPoly;
 	RContainer<RRect,true,false> tmpRects(20);
 	RPoint Pt11;                               // Point at (X1,Y1)
 	RPoint Pt12;                               // Point at (X1,Y2)

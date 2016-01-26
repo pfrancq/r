@@ -308,6 +308,18 @@ public:
 	bool IsValid(const RPoint& pos,const RSize& limits) const;
 
 	/**
+	 * Verify that a given position is not moving away from a reference one.
+	 * @param pos            Position to verify.
+	 * @param ref            Reference position.
+	 * @param left           Is the position moving to the left (true) or to the
+	 *                       right (false)?
+	 * @param bottom         Is the position moving to the bottom (true) or to
+	 *                       the up (false)?
+	 * @return true if the position moves away.
+	 */
+	bool IsMovingAway(const RPoint& pos,const RPoint& ref,bool left,bool bottom) const;
+
+	/**
 	* Test if the shape of the object can be placed at a specific position
 	* based on a given grid.
 	* @param pos            Position to test.

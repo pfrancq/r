@@ -89,16 +89,21 @@ QRDrawGeoInfos::MyItem::MyItem(const RGeoInfo* info,QRDrawGeoInfos* widget,const
 		if(info->GetOrder()!=cNoRef)
 			Tmp+="Order: "+QString::number(info->GetOrder())+"<br>";
 		Tmp+="Points:<br>";
-
+		QString Area("Area: <br>");
 		bool AddBr(false);
 		for(Cur.Start();!Cur.End();Cur.Next())
 		{
 			if(AddBr)
+			{
 				Tmp+="<br>";
+				Area+="<br>";
+			}
 			else
 				AddBr=true;
-			Tmp+="&nbsp;&nbsp;&nbsp;("+QString::number(Cur()->X)+","+QString::number(Cur()->Y)+")";
+			Tmp+="&nbsp;&nbsp;&nbsp;("+QString::number(Cur()->X-info->GetPos().X)+","+QString::number(Cur()->Y-info->GetPos().Y)+")";
+			Area+="&nbsp;&nbsp;&nbsp;("+QString::number(Cur()->X)+","+QString::number(Cur()->Y)+")";
 		}
+		Tmp+="<br>Position: ("+QString::number(info->GetPos().X)+","+QString::number(info->GetPos().Y)+")<br>"+Area;
 	}
 	else
 	{
@@ -186,12 +191,12 @@ void QRDrawGeoInfos::MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-QRDrawGeoInfos::QRDrawGeoInfos(QWidget* parent)
+QRDrawGeoInfos::QRDrawGeoInfos(QWidget* parent,bool showid)
 	: QWidget(parent), Ui(new Ui_QRDrawGeoInfos()), FreePolygons(0), Layout(0),
 	  BlueBrush(Qt::blue,Qt::BDiagPattern), RedBrush(Qt::red,Qt::SolidPattern),
 	  BlackBrush(Qt::black,Qt::SolidPattern), YellowBrush(Qt::yellow,Qt::BDiagPattern),
 	  GreenBrush(Qt::green,Qt::BDiagPattern), CyanBrush(Qt::cyan,Qt::BDiagPattern),
-	  Nets(), LastItem(0), XScale(1), YScale(1), StepMode(false)
+	  Nets(), LastItem(0), XScale(1), YScale(1), StepMode(false), ShowId(showid)
 {
 	static_cast<Ui_QRDrawGeoInfos*>(Ui)->setupUi(this);
 	static_cast<Ui_QRDrawGeoInfos*>(Ui)->Draw->setScene(&Scene);
@@ -290,6 +295,20 @@ void QRDrawGeoInfos::paintInfo(const RGeoInfo* info,bool fly)
 		}
 		else
 			Scene.addItem(new MyItem(info,this,BlueBrush));
+
+		if(ShowId)
+		{
+			// Size of the object
+			RRect Rect;
+			info->GetPlacedPolygon().Boundary(Rect);
+			int w(Rect.GetWidth()*XScale), h(Rect.GetHeight()*YScale);
+
+			if((w>15)&&(h>15))
+			{
+				QGraphicsTextItem* Item(Scene.addText(QString::number(info->GetObj()->GetId())));
+				Item->setPos(QPoint(x(info->GetPos().X)+10,y(info->GetPos().Y)-20));
+			}
+		}
 	}
 }
 

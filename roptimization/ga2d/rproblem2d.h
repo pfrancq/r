@@ -77,6 +77,11 @@ class RProblem2D : public RObj2D
 	*/
 	RContainer<RConnection,true,false> Connections;
 
+	/**
+	 * Should the distances computed be weighted?.
+	 */
+	bool WeightedDistances;
+
 public:
 
 	/**
@@ -105,6 +110,18 @@ public:
 	 * @return the board for the construction.
 	 */
 	RRect GetBoard(void) const {return(Board);}
+
+	/**
+	 * Set if the distances must be weighted.
+	 * @param weighted       Must the distances be weighed.
+	 */
+	void SetWeightedDistances(bool weighted);
+
+	/**
+	 * Look if the distances must be weighted.
+	 * @return true if yes.
+	 */
+	bool MustWeightedDistances(void) const {return(WeightedDistances);}
 
 	/**
 	 * Insert an object to the problem.

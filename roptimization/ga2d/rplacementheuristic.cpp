@@ -34,6 +34,8 @@
 #include <rrandom.h>
 #include <rxmlstruct.h>
 using namespace R;
+using namespace std;
+
 
 
 //------------------------------------------------------------------------------
@@ -90,6 +92,7 @@ void RPlacementHeuristic::Init(RProblem2D* prob,RLayout* layout,RGrid* grid)
 	Limits=prob->GetLimits();
 	Grid=grid;
 	Layout=layout;
+	WeightedDistances=prob->MustWeightedDistances();
 
 	// Init the data for a placement
 	NbObjsOk=0;
@@ -119,7 +122,7 @@ RGeoInfo* RPlacementHeuristic::SelectNextObject(void)
 		return(Order[0]);
 
 	// Find the most connected object
-	return(Layout->GetMostConnected(Order,NbObjs,NbObjsOk));
+	return(Layout->GetMostConnected(Order,NbObjs,NbObjsOk,WeightedDistances));
 }
 
 
@@ -137,13 +140,25 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 
 	// Compute the bounding rectangle of all placed objects and the current
 	// one at the given position
-	RRect CurRect(Result);
-	tCoord X1(CurRect.GetX1()), Y1(CurRect.GetY1()), X2(CurRect.GetX2()), Y2(CurRect.GetY2());
-	if(pos.X<X1) X1=pos.X;
-	if(pos.Y<Y1) Y1=pos.Y;
-	if(pos.X+CurInfo->GetConfig()->GetWidth()>X2) X2=pos.X+CurInfo->GetConfig()->GetWidth();
-	if(pos.Y+CurInfo->GetConfig()->GetHeight()>Y2) Y2=pos.Y+CurInfo->GetConfig()->GetHeight();
-	CurRect.Set(X1,Y1,X2,Y2);
+	RRect CurRect;
+	if(NbObjsOk)
+	{
+		// Objects already placed: start from existing rectangle and adapt it
+		CurRect=Result;
+		tCoord X1(CurRect.GetX1()), Y1(CurRect.GetY1()), X2(CurRect.GetX2()), Y2(CurRect.GetY2());
+		if(pos.X<X1) X1=pos.X;
+		if(pos.Y<Y1) Y1=pos.Y;
+		if(pos.X+CurInfo->GetConfig()->GetWidth()>X2)
+			X2=pos.X+CurInfo->GetConfig()->GetWidth();
+		if(pos.Y+CurInfo->GetConfig()->GetHeight()>Y2)
+			Y2=pos.Y+CurInfo->GetConfig()->GetHeight();
+		CurRect.Set(X1,Y1,X2,Y2);
+	}
+	else
+	{
+		// No objects placed: boundary corresponds to the first object
+		CurRect.Set(pos.X,pos.Y,pos.X+CurInfo->GetConfig()->GetWidth(),pos.Y+CurInfo->GetConfig()->GetHeight());
+	}
 	if((CurRect.GetX1()<0)||(CurRect.GetY1()<0)||(CurRect.GetX2()>=Limits.GetWidth())||(CurRect.GetY2()>=Limits.GetHeight()))
 		return;
 
@@ -160,7 +175,7 @@ void RPlacementHeuristic::AddValidPosition(RPoint& pos)
 	ptr->Pos=pos;
 	RPromSol* Sol(Prom.NewSol());
 	Prom.Assign(Sol,Area,CurRect.GetWidth()*CurRect.GetHeight());
-	Prom.Assign(Sol,Dist,Layout->ComputeDist(CurInfo,pos));
+	Prom.Assign(Sol,Dist,Layout->ComputeDist(CurInfo,WeightedDistances,pos));
 }
 
 
@@ -255,7 +270,7 @@ void RPlacementHeuristic::Run(RProblem2D* prob,RLayout* layout,RGrid* grid)
 void RPlacementHeuristic::PostRun(void)
 {
 	// Compute all connections part again
-	Distances=Layout->ComputeConnections();
+	Distances=Layout->ComputeConnections(WeightedDistances);
 }
 
 

@@ -87,6 +87,11 @@ protected:
 	RSize Limits;
 
 	/**
+	 * Should the distances computed be weighted?.
+	 */
+	bool WeightedDistances;
+
+	/**
 	* Total number of objects to place.
 	*/
 	size_t NbObjs;

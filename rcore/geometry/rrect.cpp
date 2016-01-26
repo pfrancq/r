@@ -290,3 +290,18 @@ void RRect::ChangeOrientation(const tOrientation o,RPoint& min)
 
 	ReOrder();
 }
+
+
+
+//------------------------------------------------------------------------------
+//
+// Operators
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+std::ostream& std::operator<<(std::ostream& os, const RRect& rect)
+{
+	os<<"("<<rect.GetX1()<<","<<rect.GetY1()<<")"<<";("<<rect.GetX2()<<","<<rect.GetY2()<<")";
+   return(os);
+}

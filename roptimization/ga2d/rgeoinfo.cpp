@@ -33,6 +33,7 @@
 #include <rgeoinfo.h>
 #include <rga.h>
 using namespace R;
+using namespace std;
 
 
 
@@ -245,6 +246,33 @@ bool RGeoInfo::IsValid(const RPoint& pos,const RSize& limits) const
 
 
 //------------------------------------------------------------------------------
+bool RGeoInfo::IsMovingAway(const RPoint& pos,const RPoint& ref,bool left,bool bottom) const
+{
+	if(bottom)
+	{
+		if(pos.Y<ref.Y)
+			return(true);
+	}
+	else
+	{
+		if(pos.Y>ref.Y)
+			return(true);
+	}
+	if(left)
+	{
+		if(pos.X<ref.X)
+			return(true);
+	}
+	else
+	{
+		if(pos.X>ref.X)
+			return(true);
+	}
+	return(false);
+}
+
+
+//------------------------------------------------------------------------------
 bool RGeoInfo::Test(RPoint& pos,RGrid* grid)
 {
 	if(!Config)
@@ -345,6 +373,7 @@ void RGeoInfo::PushCenter(RPoint& pos,const RSize& limits,RGrid* grid)
 	RPoint TestPos;
 	RPoint Center;
 	bool change=true;
+	size_t NbSteps(0);   // Number of steps done
 
 	Center.Set(limits.GetWidth()/2,limits.GetHeight()/2);
 	PushLeft=(pos.X-Center.X>0);
@@ -356,22 +385,38 @@ void RGeoInfo::PushCenter(RPoint& pos,const RSize& limits,RGrid* grid)
 
 		// Push Bottom/Up
 		TestPos=pos;
-		if(PushBottom) TestPos.Y--; else TestPos.Y++;
-		while(IsValid(TestPos,limits)&&(TestPos.Y!=Center.Y)&&Test(TestPos,grid))
+		if(PushBottom)
+			TestPos.Y--;
+		else
+			TestPos.Y++;
+		NbSteps++;
+		while((!IsMovingAway(TestPos,Center,PushLeft,PushBottom))&&IsValid(TestPos,limits)&&(TestPos.Y!=Center.Y)&&Test(TestPos,grid))
 		{
 			change=true;
 			pos=TestPos;
-			if(PushBottom) TestPos.Y--; else TestPos.Y++;
+			if(PushBottom)
+				TestPos.Y--;
+			else
+				TestPos.Y++;
+			NbSteps++;
 		}
 
 		// Push Left/Right
 		TestPos=pos;
-		if(PushLeft) TestPos.X--; else TestPos.X++;
-		while(IsValid(TestPos,limits)&&(TestPos.X!=Center.X)&&Test(TestPos,grid))
+		if(PushLeft)
+			TestPos.X--;
+		else
+			TestPos.X++;
+		NbSteps++;
+		while((!IsMovingAway(TestPos,Center,PushLeft,PushBottom))&&IsValid(TestPos,limits)&&(TestPos.X!=Center.X)&&Test(TestPos,grid))
 		{
 			pos=TestPos;
 			change=true;
-			if(PushLeft) TestPos.X--; else TestPos.X++;
+			if(PushLeft)
+				TestPos.X--;
+			else
+				TestPos.X++;
+			NbSteps++;
 		}
 	}
 }

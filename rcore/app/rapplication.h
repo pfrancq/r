@@ -141,6 +141,28 @@ public:
 	RApplication(const RString& name,int argc, char** argv,const RString& localconfig=RString::Null,const RString& globalconfig=RString::Null);
 
 	/**
+	 * Construct an application. If both parameters 'localconfig' and
+	 * 'globalconfig' are null (or not specified), the default directories are
+	 * chosen.
+	 *
+	 * This constructor doesn't analyzed the parameter passed to the program
+	 * throught the main function. The method RApplication::ParseArguments should
+	 * be manually called if parameters must be parsed.
+	 * @param name           Name of the application.
+	 * @param localconfig    Local configuration.
+	 * @param globalconfig   Local configuration.
+	 */
+	RApplication(const RString& name,const RString& localconfig=RString::Null,const RString& globalconfig=RString::Null);
+
+	/**
+	 * Parse the arguments.
+	 * @param argc           Number of arguments of the program (received from
+	 *                       main).
+	 * @param argv           Arguments of the program (received from main).
+	 */
+	void ParseArguments(int argc, char** argv);
+
+	/**
 	* Get the name of the application.
 	*/
 	RString GetName(void) const;

@@ -165,11 +165,13 @@ public:
 	 * @return the distances of the connections for a given object. Eventually,
 	 * the object is considered to be placed at a given position.
 	 * @param info           Object.
+	 * @param weigth         Must the weights of the connection be used to
+	 *                       compute the distance.
 	 * @param pos            Position where the object may be placed. If
 	 *                       RPoint::Null, the method uses the current
 	 *                       position.
 	 */
-	tCoord ComputeDist(RGeoInfo* info,const RPoint& pos=RPoint::Null);
+	tCoord ComputeDist(RGeoInfo* info,bool weight,const RPoint& pos/*=RPoint::Null*/);
 
 private:
 
@@ -191,8 +193,10 @@ private:
 	* @param selected       Which objects are selected.
 	* @param kernel         PROMETHEE kernel used.
 	* @param random         Random number generator.
+	* @param weigth         Must the weights of the connection be used to
+	*                       compute the distance.
 	*/
-	void GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,bool* selected,RPromKernel* kernel,RRandom& random);
+	void GetBestsConnected(RGeoInfo* (&i1),RGeoInfo* (&i2),const RRect& bound,bool* selected,RPromKernel* kernel,RRandom& random,bool weight);
 
 public:
 
@@ -204,7 +208,7 @@ public:
 	* @param nbok            Number of objects already placed.
 	* @return The geometric information of the object to place.
 	*/
-	RGeoInfo* GetMostConnected(RGeoInfo** order,size_t nbobjs,size_t nbok);
+	RGeoInfo* GetMostConnected(RGeoInfo** order,size_t nbobjs,size_t nbok,bool weight);
 
 	/**
 	* Fill an aggregator relative to another layout with a "good" set of
@@ -215,14 +219,18 @@ public:
 	* @param selected        Array given the already selected objects.
 	* @param kernel         PROMETHEE kernel used.
 	* @param random         Random number generator.
+	* @param weigth          Must the weights of the connection be used to
+	*                        compute the distance.
 	*/
-	void FillAggregator(RObj2DContainer* cont,bool* selected,RPromKernel* kernel,RRandom& random);
+	void FillAggregator(RObj2DContainer* cont,bool* selected,RPromKernel* kernel,RRandom& random,bool weight);
 
 	/**
 	* Compute all the connections from scratch.
+	* @param weigth          Must the weights of the connection be used to
+	*                        compute the distance.
 	* @return the total length of the connections.
 	*/
-	tCoord ComputeConnections(void);
+	tCoord ComputeConnections(bool weight);
 
 	/**
 	* Destruct the placement.

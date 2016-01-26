@@ -193,6 +193,12 @@ public:
 	*/
 	inline bool LocalOpti(void) { return(bLocalOpti); }
 
+	/**
+	 * Get a pointer to the problem to treat.
+	 * @return a pointer to RProblem2D.
+	 */
+	RProblem2D* GetProblem(void) const {return(Problem);};
+
 	friend class RThreadData2D<cInst,cChromo>;
 	friend class RChromo2D<cInst,cChromo,cFit,cThreadData,cInfo>;
 };

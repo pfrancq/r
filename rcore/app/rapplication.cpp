@@ -61,41 +61,14 @@ RApplication::RApplication(const RString& name,int argc, char** argv,const RStri
 		mThrowRException("Already one application running");
 	App=this;
 
+	// Verify parameters
+	mAssert(name.GetLen());
+
 	// Set locale information specified by the user.
 	setlocale(LC_ALL, "");
 	setlocale(LC_NUMERIC, "C");
 
-	// Verify parameters
-	mAssert(argc);
-	mAssert(argv);
-	mAssert(name.GetLen());
-
-	// Initialize information
-	File=argv[0];
-	RString Param(RString::Null);
-    for(int i=1;i<argc;i++)
-    {
-    	RString* Arg=new RString(argv[i]);
-    	if(Arg->Mid(0,2)=="--")
-    	{
-    		// A parameter is found
-    		if(!Param.IsEmpty())       // If a parameter is already defined -> insert it
-    			Params.InsertPtr(new RParamValue(Param,RString::Null));
-    		Param=Arg->Mid(2);
-    	}
-    	else
-    	{
-    		if(!Param.IsEmpty())
-    		{
-    			// Value of a parameter
-    			Params.InsertPtr(new RParamValue(Param,*Arg));
-    			Param=RString::Null;
-    		}
-    	}
-		Args.InsertPtr(Arg);
-    }
-	if(!Param.IsEmpty())       // If a parameter is already defined -> insert it
-		Params.InsertPtr(new RParamValue(Param,RString::Null));
+	ParseArguments(argc,argv);
 
 	// Verify if a local configuration is specified as parameter
 	if(localconfig.IsEmpty()&&globalconfig.IsEmpty())
@@ -132,6 +105,95 @@ RApplication::RApplication(const RString& name,int argc, char** argv,const RStri
 			Tmp2=globalconfig+RDir::GetDirSeparator()+Name+".config";
 		Config.SetParams(true,Tmp,Tmp2);
 	}
+}
+
+
+//-----------------------------------------------------------------------------
+RApplication::RApplication(const RString& name,const RString& localconfig,const RString& globalconfig)
+	: Name(name), Args(10), Params(5),HasInitApp(false)
+{
+	if(App)
+		mThrowRException("Already one application running");
+	App=this;
+
+	// Verify parameters
+	mAssert(name.GetLen());
+
+	// Set locale information specified by the user.
+	setlocale(LC_ALL, "");
+	setlocale(LC_NUMERIC, "C");
+
+	// Verify if a local configuration is specified as parameter
+	if(localconfig.IsEmpty()&&globalconfig.IsEmpty())
+	{
+		RParamValue* ptr(Params.GetPtr("config"));
+		if(ptr)
+			LocalConfigDir=ptr->Get();
+		if(LocalConfigDir.IsEmpty())
+		{
+			#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+				WCHAR path[MAX_PATH];
+				if(SUCCEEDED(SHGetFolderPathW(NULL,CSIDL_PROFILE,NULL,0,path)))
+				{
+					char Dir[512];
+					char DefaultChar=' ';
+					WideCharToMultiByte(CP_ACP,0,path,-1,Dir,511,&DefaultChar,NULL);
+					LocalConfigDir=Dir+RDir::GetDirSeparator()+".r";
+			}
+			#else
+				RString Home(getenv("HOME"));
+				if(Home.IsEmpty())
+					Home="~";
+				LocalConfigDir=Home+RDir::GetDirSeparator()+".r";
+			#endif
+		}
+		Config.SetParams(false,name,"app");
+	}
+	else
+	{
+		RString Tmp,Tmp2;
+		if(!localconfig.IsEmpty())
+			Tmp=localconfig+RDir::GetDirSeparator()+Name+".config";
+		if(!globalconfig.IsEmpty())
+			Tmp2=globalconfig+RDir::GetDirSeparator()+Name+".config";
+		Config.SetParams(true,Tmp,Tmp2);
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+void RApplication::ParseArguments(int argc, char** argv)
+{
+	// Verify parameters
+	mAssert(argc);
+	mAssert(argv);
+
+	// Initialize information
+	File=argv[0];
+	RString Param(RString::Null);
+    for(int i=1;i<argc;i++)
+    {
+    	RString* Arg=new RString(argv[i]);
+    	if(Arg->Mid(0,2)=="--")
+    	{
+    		// A parameter is found
+    		if(!Param.IsEmpty())       // If a parameter is already defined -> insert it
+    			Params.InsertPtr(new RParamValue(Param,RString::Null));
+    		Param=Arg->Mid(2);
+    	}
+    	else
+    	{
+    		if(!Param.IsEmpty())
+    		{
+    			// Value of a parameter
+    			Params.InsertPtr(new RParamValue(Param,*Arg));
+    			Param=RString::Null;
+    		}
+    	}
+		Args.InsertPtr(Arg);
+    }
+	if(!Param.IsEmpty())       // If a parameter is already defined -> insert it
+		Params.InsertPtr(new RParamValue(Param,RString::Null));
 }
 
 

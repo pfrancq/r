@@ -78,6 +78,13 @@ public:
 	int Compare(const RConnection& c) const;
 
 	/**
+	* This function compares the name of the connection with a string and returns
+	*  0 if there are the same.
+	* @param name            Name to compare with.
+	*/
+	int Compare(const RString& name) const;
+
+	/**
 	 * Add a connector to the connection.
 	 * @param con            Connector.
 	 */
@@ -92,6 +99,12 @@ public:
 	 * @return a cursor over the connectors.
 	 */
 	RCursor<RObj2DConnector> GetConnectors(void) const;
+
+	/**
+	 * Set the weight of the connection.
+	 * @param weight
+	 */
+	void SetWeight(double weight);
 
 	/**
 	* @return the weight.

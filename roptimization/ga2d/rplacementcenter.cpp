@@ -33,6 +33,7 @@
 #include <rpromkernel.h>
 #include <rplacementcenter.h>
 using namespace R;
+using namespace std;
 
 
 
@@ -247,7 +248,8 @@ void RPlacementCenter::SearchValidPositions(RGeoInfo* info)
 void RPlacementCenter::PostPlace(RGeoInfo* info,const RPoint&)
 {
 	Sol.Clear();
-	Sol.InsertPtr(new RPolygon(Union));
+	if(Union.GetNbVertices())
+		Sol.InsertPtr(new RPolygon(Union));
 	info->Add(Sol);
 	Sol.Union(Union);
 	Union.Boundary(Result);

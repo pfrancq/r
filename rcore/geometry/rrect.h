@@ -331,4 +331,31 @@ public:
 
 
 //------------------------------------------------------------------------------
+namespace std{
+//------------------------------------------------------------------------------
+
+
+#ifndef __APPLE__
+extern "C++"
+{
+#endif
+
+//------------------------------------------------------------------------------
+/**
+ * Print the coordinate of the rectangle in the form (x1,y1);(x2,y2).
+ * @param os                Output stream.
+ * @param rect              Rectangle to print.
+ * @return the stream.
+ */
+extern std::ostream& operator<<(std::ostream& os,const R::RRect& rect);
+
+#ifndef __APPLE__
+}
+#endif
+
+
+}  //-------- End of namespace std ---------------------------------------------
+
+
+//------------------------------------------------------------------------------
 #endif

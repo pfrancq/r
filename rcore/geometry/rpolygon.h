@@ -76,10 +76,11 @@ public:
 	RPolygon(void);
 
 	/**
-	* Construct a polygon with an initial maximum size.
-	* @param Max            Initial maximal size.
+	* Construct a polygon with a number of vertices.
+	* @param nb              Number of vertices.
+	* @param ...             Vertices.
 	*/
-	RPolygon(const int Max);
+	RPolygon(size_t nb,...);
 
 	/**
 	* Construct a polygon from another.
@@ -245,7 +246,7 @@ public:
 	* @param maxy           Maximal Y position of the vertex to search.
 	*/
 	RPoint* GetLeftBottom(const tCoord minx,const tCoord miny,const tCoord maxy) const;
-        
+
 	/**
 	* Return a pointer to the most top-right vertex of the polygon.
 	*/

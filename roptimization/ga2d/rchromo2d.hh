@@ -82,11 +82,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 
 	// Select the objects from the parents (parent1 -> thObj1,parent2 -> thObj2);
 	RObj2DContainer* thObj1(GetNewAggregator());
-	parent1->FillAggregator(thObj1,Selected,Kernel,Instance->Random);
+	parent1->FillAggregator(thObj1,Selected,Kernel,Instance->Random,Instance->GetProblem()->MustWeightedDistances());
 	if(Instance->Debug)
 		Instance->Debug->PrintInfo(RString::Number(thObj1->GetNbObjs())+" objects selected from "+RString::Number(parent1->Id));
 	RObj2DContainer* thObj2(GetNewAggregator());
-	parent2->FillAggregator(thObj2,Selected,Kernel,Instance->Random);
+	parent2->FillAggregator(thObj2,Selected,Kernel,Instance->Random,Instance->GetProblem()->MustWeightedDistances());
 	if(Instance->Debug)
 		Instance->Debug->PrintInfo(RString::Number(thObj2->GetNbObjs())+" objects selected from "+RString::Number(parent2->Id));
 
@@ -99,7 +99,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	DestroyAggregators();
 
 	// Compute all connections
-	ComputeConnections();
+	ComputeConnections(Instance->GetProblem()->MustWeightedDistances());
 
 	if(Instance->Debug)
 		Instance->Debug->EndFunc("Crossover","RChromo2D");

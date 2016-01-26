@@ -135,13 +135,19 @@ class QRDrawGeoInfos : public QWidget
 	 */
 	bool StepMode;
 
+	/**
+	 * Should the objects identifiers be showed?
+	 */
+	bool ShowId;
+
 public:
 
 	/**
 	* Constructor.
 	* @param parent          Parent of the widget.
+	* @param showid          Should the objects identifiers be showed?
 	*/
-	QRDrawGeoInfos(QWidget* parent=0);
+	QRDrawGeoInfos(QWidget* parent=0,bool showid=true);
 
 	/**
 	* Set the layout.
