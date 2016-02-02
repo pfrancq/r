@@ -842,7 +842,7 @@ void RPolygon::Boundary(RRect& rect) const
 
 
 //------------------------------------------------------------------------------
-void RPolygon::ChangeOrientation(const tOrientation o,RPoint& min)
+void RPolygon::ChangeOrientation(const tOrientation o)
 {
 	tCoord factx=1,facty=1,oldx,oldy;
 	double co=1,si=0;
@@ -857,7 +857,7 @@ void RPolygon::ChangeOrientation(const tOrientation o,RPoint& min)
 		co=0;
 		si=1;
 	}
-	min.X=min.Y=cMaxCoord;
+	RPoint min(cMaxCoord,cMaxCoord);
 
 	// Make the transformation for each vertex
 	RCursor<RPoint> ptr(*this);

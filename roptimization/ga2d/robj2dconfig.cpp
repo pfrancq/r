@@ -39,6 +39,7 @@
 #include <rlayout.h>
 #include <rgeoinfo.h>
 using namespace R;
+using namespace std;
 
 
 

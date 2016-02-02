@@ -320,10 +320,8 @@ public:
 	/**
 	* Modify the rectangle to a certain orientation.
 	* @param o              The orientation.
-	* @param min            The vector that has been subtracted to have the
-	*                       bottom-left point at (0,0).
 	*/
-	void ChangeOrientation(const tOrientation o,RPoint& min);
+	void ChangeOrientation(const tOrientation o);
 };
 
 

@@ -394,10 +394,8 @@ public:
 	/**
 	* Modify the polygon to a certain orientation.
 	* @param o              The orientation.
-	* @param min            The vector that has been subtracted to have the
-	*                       bottom-left point at (0,0).
 	*/
-	void ChangeOrientation(const tOrientation o,RPoint& min);
+	void ChangeOrientation(const tOrientation o);
 
 	/**
 	* Decompose the polygon in a container of rectangles. This is only possible

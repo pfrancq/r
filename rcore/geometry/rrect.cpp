@@ -249,7 +249,7 @@ bool RRect::IsIn(const RPoint& pt,bool overlap) const
 
 
 //------------------------------------------------------------------------------
-void RRect::ChangeOrientation(const tOrientation o,RPoint& min)
+void RRect::ChangeOrientation(const tOrientation o)
 {
 	tCoord factx=1,facty=1,oldx,oldy;
 	double co=1,si=0;
@@ -264,7 +264,10 @@ void RRect::ChangeOrientation(const tOrientation o,RPoint& min)
 		co=0;
 		si=1;
 	}
-	min.X=min.Y=cMaxCoord;
+	RPoint min(cMaxCoord,cMaxCoord);
+	RPoint Left(Pt1);
+//	Pt1-=Left;
+//	Pt2-=Left;
 
 	// Make the transformation for Pt1
 	oldx = factx*Pt1.X;
@@ -283,10 +286,15 @@ void RRect::ChangeOrientation(const tOrientation o,RPoint& min)
 	if(Pt2.Y<min.Y) min.Y=Pt2.Y;
 
 	// Replace (0,0) as the left-top point of the embedded rectangle
+	min-=Left;
 	Pt1.X-=min.X;
 	Pt1.Y-=min.Y;
 	Pt2.X-=min.X;
 	Pt2.Y-=min.Y;
+
+//*	Pt1+=Left;
+//	Pt2+=Left;
+
 
 	ReOrder();
 }

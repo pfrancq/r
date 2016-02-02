@@ -40,6 +40,7 @@
 #include <rgeoinfo.h>
 #include <rconnection.h>
 using namespace R;
+using namespace std;
 
 
 
@@ -118,7 +119,6 @@ void RObj2D::CreateOri(tOrientation ori)
 	if(ori==oNormal)
 		return;
 
-	RPoint Min;
 	RObj2DConfig* New;
 
 	// If Polygon is a rectangle
@@ -135,7 +135,7 @@ void RObj2D::CreateOri(tOrientation ori)
 		// Create the configuration
 		New=new RObj2DConfig(this,ori);
 		RPolygon Polygon(Normal->GetPolygon());
-		Polygon.ChangeOrientation(oRota90,Min);
+		Polygon.ChangeOrientation(oRota90);
 		New->Set(Polygon);
 		RCursor<RObj2DConfigConnector> Cur(Normal->GetConnectors());
 		for(Cur.Start();!Cur.End();Cur.Next())
@@ -148,7 +148,7 @@ void RObj2D::CreateOri(tOrientation ori)
 			{
 				// Create a pin
 				RRect Rect(Cur2()->GetRect());
-				Rect.ChangeOrientation(oRota90,Min);
+				Rect.ChangeOrientation(oRota90);
 				RObj2DConfigPin* Pin(new RObj2DConfigPin(Cur2()->GetPin(),Rect));
 				Con->InsertPtr(Pin);
 			}
@@ -159,7 +159,7 @@ void RObj2D::CreateOri(tOrientation ori)
 		// All configurations are allowed.
 		New=new RObj2DConfig(this,ori);
 		RPolygon Polygon(Normal->GetPolygon());
-		Polygon.ChangeOrientation(ori,Min);
+		Polygon.ChangeOrientation(ori);
 		New->Set(Polygon);
 		RCursor<RObj2DConfigConnector> Cur(Normal->GetConnectors());
 		for(Cur.Start();!Cur.End();Cur.Next())
@@ -172,7 +172,7 @@ void RObj2D::CreateOri(tOrientation ori)
 			{
 				// Create a pin
 				RRect Rect(Cur2()->GetRect());
-				Rect.ChangeOrientation(oRota90,Min);
+				Rect.ChangeOrientation(oRota90);
 				RObj2DConfigPin* Pin(new RObj2DConfigPin(Cur2()->GetPin(),Rect));
 				Con->InsertPtr(Pin);
 			}
