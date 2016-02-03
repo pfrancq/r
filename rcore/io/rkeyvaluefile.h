@@ -181,7 +181,7 @@ protected:
 
 	/**
 	 * Double of the length to store positions, number of records and free
-	 * spaces. In practice, it corresponds to size of the "header" of a block.
+	 * spaces. In practice, it corresponds to the size of the "header" of a block.
 	 */
 	static const size_t cLen2=2*sizeof(size_t);
 

@@ -4,7 +4,7 @@
 
 	RBlockFile.h
 
-	Blocks File - Header.
+	Block File - Header.
 
 	Copyright 2009-2015 by Pascal Francq (pascal@francq.info).
 
@@ -36,6 +36,7 @@
 // include files for R Project
 #include <riofile.h>
 #include <rcontainer.h>
+#include <rblockfiledata.h>
 
 
 //------------------------------------------------------------------------------
@@ -85,12 +86,10 @@ namespace R{
 */
 class RBlockFile : protected RIOFile
 {
-	class Block;
-
 public:
 
 	using RIOFile::GetURI;
-	
+
 	/**
 	 * Type of the cache.
 	 */
@@ -116,12 +115,12 @@ protected:
 	/**
 	 * Cache managed.
 	 */
-	RContainer<Block,true,true> Cache;
+	RContainer<RBlockFileData,true,true> Cache;
 
 	/**
 	 * Current block.
 	 */
-	Block* Current;
+	RBlockFileData* Current;
 
 	/**
 	 * Current position.
@@ -219,7 +218,7 @@ private:
 	 * @param id             Identifier.
 	 * @return Pointer to the block.
 	 */
-	Block* LoadBlock(size_t id);
+	RBlockFileData* LoadBlock(size_t id);
 
 public:
 

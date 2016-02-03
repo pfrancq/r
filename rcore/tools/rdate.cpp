@@ -222,6 +222,29 @@ bool RDate::operator>=(const RDate& d) const
 
 
 //------------------------------------------------------------------------------
+RDate::operator double () const
+{
+	struct tm zero,date;
+
+	zero.tm_year=0;
+	zero.tm_mon=1;
+	zero.tm_mday=1;
+	zero.tm_hour=0;
+	zero.tm_min=0;
+	zero.tm_sec=0;
+
+	date.tm_year=Year;
+	date.tm_mon=Month;
+	date.tm_mday=Day;
+	date.tm_hour=Hour;
+	date.tm_min=Minute;
+	date.tm_sec=Second;
+
+	return(difftime(mktime(&date),mktime(&zero)));
+}
+
+
+//------------------------------------------------------------------------------
 RDate::operator RString () const
 {
 	RStringBuilder Tmp;

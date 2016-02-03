@@ -4,7 +4,7 @@
 
 	RBlockFile.cpp
 
-	Blocks File - Implementation.
+	Block File - Implementation.
 
 	Copyright 2009-2015 by Pascal Francq (pascal@francq.info).
 
@@ -39,42 +39,6 @@ using namespace std;
 //------------------------------------------------------------------------------
 // Constants
 const size_t HeaderSize=2048;
-
-
-
-//------------------------------------------------------------------------------
-//
-// RBlockFile::Block
-//
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-class RBlockFile::Block
-{
-public:
-	size_t Id;
-	size_t NbAccess;
-	bool Dirty;
-	char* Data;
-
-	Block(size_t id,size_t size) : Id(id), NbAccess(0), Dirty(false), Data(0)
-	{
-		Data=new char[size];
-		memset(Data,0,sizeof(char)*size);
-	}
-	inline int Compare(const Block& block) const {return(CompareIds(Id,block.Id));}
-	inline int Compare(size_t id) const {return(CompareIds(Id,id));}
-	inline void Load(RIOFile* file,size_t size) {file->Read(Data,size);}
-	inline void Save(RIOFile* file,size_t size) {file->Write(Data,size);}
-	~Block(void)
-	{
-		if(Data)
-		{
-			delete[] Data;
-			Data=0;
-		}
-	}
-};
 
 
 
@@ -189,13 +153,13 @@ void RBlockFile::Flush(void)
 		mThrowRIOException(this,"File not opened");
 
 	// Go trough all the blocks in memory and save those who are dirty
-	RCursor<Block> Cur(Cache);
+	RCursor<RBlockFileData> Cur(Cache);
 	for(Cur.Start();!Cur.End();Cur.Next())
 	{
 		if(Cur()->Dirty)
 		{
 			RIOFile::Seek(((Cur()->Id-1)*BlockSize)+HeaderSize);
-			Cur()->Save(this,BlockSize);
+			RIOFile::Write(Cur()->Data,BlockSize);
 			Cur()->Dirty=true;
 		}
 	}
@@ -205,8 +169,8 @@ void RBlockFile::Flush(void)
 //------------------------------------------------------------------------------
 int RBlockFile::sortOrderAccess(const void* a,const void* b)
 {
-	size_t af((*((RBlockFile::Block**)(a)))->NbAccess);
-	size_t bf((*((RBlockFile::Block**)(b)))->NbAccess);
+	size_t af((*((RBlockFileData**)(a)))->NbAccess);
+	size_t bf((*((RBlockFileData**)(b)))->NbAccess);
 
 	if(af==bf) return(0);
 	if(af>bf)
@@ -217,25 +181,25 @@ int RBlockFile::sortOrderAccess(const void* a,const void* b)
 
 
 //------------------------------------------------------------------------------
-RBlockFile::Block* RBlockFile::LoadBlock(size_t id)
+RBlockFileData* RBlockFile::LoadBlock(size_t id)
 {
 	if(!IsOpen())
 		mThrowRIOException(this,"File not opened");
 
 	// Search for the block in memory
-	Block* ptr(Cache.GetPtr(id));
+	RBlockFileData* ptr(Cache.GetPtr(id));
 	if(ptr) return(ptr);
 
 	// Block must be load in memory
 	if(Cache.GetNb()<Cache.GetMaxNb())
 	{
 		// Cache is not full
-		ptr=new Block(id,BlockSize);
+		ptr=new RBlockFileData(id,BlockSize);
 		Cache.InsertPtr(ptr);
 		if(id<=NbBlocks)
 		{
 			RIOFile::Seek(((id-1)*BlockSize)+HeaderSize);
-			ptr->Load(this,BlockSize);
+			RIOFile::Read(ptr->Data,BlockSize);
 		}
 		else
 			NbBlocks=id;
@@ -250,7 +214,7 @@ RBlockFile::Block* RBlockFile::LoadBlock(size_t id)
 		{
 			// If necessary save the old block
 			RIOFile::Seek(((ptr->Id-1)*BlockSize)+HeaderSize);
-			ptr->Save(this,BlockSize);
+			RIOFile::Write(ptr->Data,BlockSize);
 			ptr->Dirty=false;
 		}
 		if(ptr==Current)
@@ -259,7 +223,7 @@ RBlockFile::Block* RBlockFile::LoadBlock(size_t id)
 		if(id<=NbBlocks)
 		{
 			RIOFile::Seek(((id-1)*BlockSize)+HeaderSize);
-			ptr->Load(this,BlockSize);
+			RIOFile::Read(ptr->Data,BlockSize);
 		}
 		else
 			NbBlocks=id;
@@ -353,6 +317,8 @@ void RBlockFile::Seek(size_t blockid,size_t pos)
 {
 	if(!IsOpen())
 		mThrowRIOException(this,"File not opened");
+	if(!blockid)
+		mThrowRIOException(this,"There is no block with a null identifier");
 	if(pos>BlockSize)
 		mThrowRIOException(this,"Size of a block is limited to "+RString::Number(BlockSize));
 

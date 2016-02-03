@@ -190,6 +190,13 @@ public:
 	char GetSecond(void) const {return(Second);}
 
 	/**
+	* Get a double version of the date. In practice, it computes the number of
+	* seconds elapsed since the 01/01/000 at 00:00:00.
+	* @return a number of seconds.
+	*/
+	operator double () const;
+
+	/**
 	* Get a string representring the date.
 	*/
 	operator RString () const;
