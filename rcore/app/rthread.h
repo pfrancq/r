@@ -170,7 +170,7 @@ public:
  * When a thread needs a structure, it calls the
  * RThreadLocalStorage::Reserve method and passes an unique identifier that can
  * be its own identifier (remember that it is the responsibility of the
- * developer to the unicity of the thread identifiers). A call to
+ * developer to ensure the unicity of the thread identifiers). A call to
  * RThreadLocalStorage::Release makes the data structure free again to be used
  * by another thread. The persistent of a data structure can be obtained by
  * never calling the RThreadLocalStorage::Release method.

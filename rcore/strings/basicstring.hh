@@ -681,13 +681,17 @@ template<class C,class S>
 		else if(((*ptr)==car)&&(!Skip))
 		{
 			// Insert element
-			elements.InsertPtr(new S(element));
-			element="";
+			if(!element.IsEmpty())
+			{
+				elements.InsertPtr(new S(element));
+				element="";
+			}
 		}
 		else
 			element+=(*ptr);
 	}
-	elements.InsertPtr(new S(element));
+	if(!element.IsEmpty())
+		elements.InsertPtr(new S(element));
 }
 
 
