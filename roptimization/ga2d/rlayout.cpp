@@ -437,6 +437,21 @@ tCoord RLayout::ComputeConnections(bool weight)
 
 
 //------------------------------------------------------------------------------
+RRect RLayout::ComputeBoundary(void)
+{
+	RPolygons Sol;
+	RCursor<RGeoInfo> info(GetInfos());
+	for(info.Start();!info.End();info.Next())
+		Sol.InsertPtr(new RPolygon(info()->GetPlacedPolygon()));
+	RPolygon Union;
+	Sol.Union(Union);
+	RRect Result;
+	Union.Boundary(Result);
+	return(Result);
+}
+
+
+//------------------------------------------------------------------------------
 RLayout::~RLayout(void)
 {
 }

@@ -233,6 +233,12 @@ public:
 	tCoord ComputeConnections(bool weight);
 
 	/**
+	 * Compute the boundary rectangle of all the objects.
+	 * @return a RRect.
+	 */
+	RRect ComputeBoundary(void);
+
+	/**
 	* Destruct the placement.
 	*/
 	virtual ~RLayout(void);

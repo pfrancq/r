@@ -289,6 +289,11 @@ public:
 	inline RFreePolygons* GetFreePolygons(void) {return(&Free);}
 
 	/**
+	 * Get a pointer to the current (or the last treated) layout.
+	 */
+	RLayout* GetLayout(void) const {return(Layout);}
+
+	/**
 	* Destruct the placement heuristic.
 	*/
 	virtual ~RPlacementHeuristic(void);
