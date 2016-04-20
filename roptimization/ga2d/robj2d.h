@@ -315,6 +315,13 @@ public:
 	template<class TUse> inline RObj2DConnector* GetConnector(const TUse& use,bool order=true) const {return(Connectors.GetPtr(use,order));}
 
 	/**
+	 * Compute the sum of the weights of all the connections which have a
+	 * connector linked to the object.
+	 * @return the sum of the weights.
+	 */
+	double GetConnectorWeights(void) const;
+
+	/**
 	 * Copy an object.
 	 * @param obj            Object to copy.
 	 */

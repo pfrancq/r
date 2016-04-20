@@ -217,8 +217,8 @@ public:
 	* This method is used by the crossover of the GA.
 	* @param cont            Aggregator to build (is emptied by this method).
 	* @param selected        Array given the already selected objects.
-	* @param kernel         PROMETHEE kernel used.
-	* @param random         Random number generator.
+	* @param kernel          PROMETHEE kernel used.
+	* @param random          Random number generator.
 	* @param weigth          Must the weights of the connection be used to
 	*                        compute the distance.
 	*/

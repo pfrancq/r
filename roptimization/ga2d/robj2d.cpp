@@ -206,6 +206,26 @@ RObj2DConfig* RObj2D::GetDefaultConfig(void)
 
 
 //------------------------------------------------------------------------------
+double RObj2D::GetConnectorWeights(void) const
+{
+	double weight(0.0);
+
+	// Go through all connectors
+	RCursor<RObj2DConnector> con(GetConnectors());
+	for(con.Start();!con.End();con.Next())
+	{
+		// Go through each connection
+		RCursor<RConnection> tab(con()->GetConnections());
+		for(tab.Start();!tab.End();tab.Next())
+		{
+				weight+=tab()->GetWeight();
+		}
+	}
+	return(weight);
+}
+
+
+//------------------------------------------------------------------------------
 void RObj2D::Copy(const RObj2D& obj)
 {
 	// Copy the internal data

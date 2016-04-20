@@ -67,9 +67,9 @@ public:
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-RPlacementHeuristic::RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool ori)
+RPlacementHeuristic::RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool firstrandom,bool ori)
 	: Random(r), Free(), CalcFree(calc), UseFree(calc&&use), AllOri(ori), ValidPos(500), Prom("Orientations",100,2),
-	  Dist(0), DistParams(dist), Area(0), AreaParams(area)
+	  Dist(0), DistParams(dist), Area(0), AreaParams(area), FirstRandom(firstrandom)
 {
 	Order=new RGeoInfo*[maxobjs];
 	for(size_t i=101;--i;)
@@ -119,10 +119,43 @@ void RPlacementHeuristic::Init(RProblem2D* prob,RLayout* layout,RGrid* grid)
 RGeoInfo* RPlacementHeuristic::SelectNextObject(void)
 {
 	if(!NbObjsOk)
-		return(Order[0]);
+	{
+		if(FirstRandom)
+			return(Order[0]);
+
+		if(!NbObjs)
+			return(0);
+
+		RGeoInfo** ptr(Order);
+		RGeoInfo* Super(*ptr);
+
+		// Suppose the first object is the most connected.
+		RGeoInfo* Best(*(ptr++));
+		size_t pos(0);
+		double BestW(Best->GetObj()->GetConnectorWeights());
+
+		// Go trough the other objects
+		for(size_t i=1;i<NbObjs;ptr++,i++)
+		{
+			double tmp((*ptr)->GetObj()->GetConnectorWeights());
+			if(tmp>BestW)
+			{
+				BestW=tmp;
+				Best=(*ptr);
+				pos=i;
+			}
+		}
+
+		Order[pos]=Super;
+		Order[0]=Best;
+		cout<<"Pick "<<Best->GetObj()->GetId()<<endl;
+		return(Best);
+	}
 
 	// Find the most connected object
-	return(Layout->GetMostConnected(Order,NbObjs,NbObjsOk,WeightedDistances));
+	RGeoInfo* Best(Layout->GetMostConnected(Order,NbObjs,NbObjsOk,WeightedDistances));
+	cout<<"Pick "<<Best->GetObj()->GetId()<<endl;
+	return(Best);
 }
 
 
@@ -242,11 +275,12 @@ RGeoInfo* RPlacementHeuristic::NextObject(void)
 
 	// Assign the object to the current position
 	CurInfo->Assign(pos,Grid,NbObjsOk);
+	cout<<"Place "<<CurInfo->GetObj()->GetId()<<" at "<<pos<<endl;
 	PostPlace(CurInfo,pos);
 
 	// Look for free polygons
-	if(CalcFree)
-		Grid->AddFreePolygons(CurInfo,&Free,Result);
+/*	if(CalcFree)
+		Grid->AddFreePolygons(CurInfo,&Free,Result);*/
 
 	// Next Object
 	NbObjsOk++;

@@ -172,6 +172,11 @@ protected:
 	*/
 	const RParam* AreaParams;
 
+	/**
+	 * Is the first object randomly chosen?
+	 */
+	bool FirstRandom;
+
 public:
 
 	/**
@@ -182,12 +187,13 @@ public:
 	* @param r              The random generator to use.
 	* @param dist           Distance criteria parameters.
 	* @param area           Area criteria parameters.
+	* @param firstrandom    Must the first object be placed randomly?
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool ori=false);
+	RPlacementHeuristic(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool firstrandom,bool ori);
 
 	/**
-	* Initialize the heuristic. The method chooses all the objects to place. In
+	* Initialise the heuristic. The method chooses all the objects to place. In
 	* particular, if an object is associated to an aggregator, it is not placed
 	* and the method supposes that the aggregator itself is to placed.
 	* @param prob            The problem.

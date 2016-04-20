@@ -81,12 +81,13 @@ public:
 	* @param r              The random generator to use.
 	* @param dist           Distance criteria parameters.
 	* @param area           Area criteria parameters.
+	* @param firstrandom    Must the first object be placed randomly?
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementCenter(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool ori=false);
+	RPlacementCenter(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool firstrandom,bool ori);
 
 	/**
-	* Initialize the heuristic.
+	* Initialise the heuristic.
 	* @param prob            The problem.
 	* @param layout          Layout.
 	* @param grid            Grid.

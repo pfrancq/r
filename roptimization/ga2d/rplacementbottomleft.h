@@ -76,9 +76,10 @@ public:
 	* @param r              The random generator to use.
 	* @param dist           Distance criteria parameters.
 	* @param area           Area criteria parameters.
+	* @param firstrandom    Must the first object be placed randomly?
 	* @param ori            Must all orientation be tested.
 	*/
-	RPlacementBottomLeft(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool ori=false);
+	RPlacementBottomLeft(size_t maxobjs,bool calc,bool use,RRandom& r,RParamStruct* dist,RParamStruct* area,bool firstrandom,bool ori);
 
 	/**
 	* Initialize the heuristic.

@@ -58,11 +58,11 @@ template<class cInst,class cChromo>
 	// Initialize the heuristic
 	RString Heur(Owner->GetHeuristic());
 	if(Heur=="Bottom-Left")
-		Heuristic=new RPlacementBottomLeft(Owner->Problem->GetNbObjs()+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->HeurDist,Owner->HeurArea,Owner->AllOrientations);
+		Heuristic=new RPlacementBottomLeft(Owner->Problem->GetNbObjs()+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->HeurDist,Owner->HeurArea,true,Owner->AllOrientations);
 	if(Heur=="Edge")
-		Heuristic=new RPlacementEdge(Owner->Problem->GetNbObjs()+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->HeurDist,Owner->HeurArea,Owner->AllOrientations);
+		Heuristic=new RPlacementEdge(Owner->Problem->GetNbObjs()+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->HeurDist,Owner->HeurArea,true,Owner->AllOrientations);
 	if(Heur=="Center")
-		Heuristic=new RPlacementCenter(Owner->Problem->GetNbObjs()+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->HeurDist,Owner->HeurArea,Owner->AllOrientations);
+		Heuristic=new RPlacementCenter(Owner->Problem->GetNbObjs()+2,Owner->ComputeFreePolygons,Owner->UseFreePolygons,Owner->Random,Owner->HeurDist,Owner->HeurArea,true,Owner->AllOrientations);
 
 	// Initialize the PROMETHEE Kernel
 	Kernel.AddCriterion(new RPromLinearCriterion(RPromCriterion::Maximize,Owner->SelectWeight,"Weight"));
