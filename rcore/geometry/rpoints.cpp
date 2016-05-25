@@ -2,9 +2,9 @@
 
 	R Project Library
 
-	RPoint.cpp
+	RPoints.cpp
 
-	Point - Implementation.
+	Points - Implementation.
 
 	Copyright 1999-2015 by Pascal Francq (pascal@francq.info).
 	Copyright 1999-2008 by the Université Libre de Bruxelles (ULB).

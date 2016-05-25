@@ -386,10 +386,18 @@ public:
 	tCoord Area(void) const;
 
 	/**
-	* Return the boundary rectangle of the polygon.
+	 * Compute the edges of the polygon.
+	 * @param edges          Edges that compose the polygon. The container is not
+	 *                       cleared by the method.
+	 * @param outside        Outside boundary rectangle.
+	 */
+	void EdgeDecomposition(RContainer<RLine,true,false>& edges,RRect& outside) const;
+
+	/**
+	* Compute the external boundary rectangle of the polygon.
 	* @param rect           The rectangle.
 	*/
-	void Boundary(RRect& rect) const;
+	void ExternalBoundary(RRect& rect) const;
 
 	/**
 	* Modify the polygon to a certain orientation.

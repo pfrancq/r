@@ -30,6 +30,7 @@
 //------------------------------------------------------------------------------
 // include files for R Project
 #include <rline.h>
+#include <rexception.h>
 using namespace R;
 
 
@@ -49,14 +50,15 @@ RLine::RLine(void)
 
 //------------------------------------------------------------------------------
 RLine::RLine(const RLine& line)
-	: Pt1(line.Pt1), Pt2(line.Pt2), Segment(line.Segment)
+	: Pt1(line.Pt1), Pt2(line.Pt2), Segment(line.Segment),
+	  OrientedTop(line.OrientedTop), OrientedRight(line.OrientedRight)
 {
 }
 
 
 //------------------------------------------------------ -----------------------
-RLine::RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,const bool seg,bool reorder)
-	: Pt1(x1,y1), Pt2(x2,y2), Segment(seg)
+RLine::RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,bool seg,bool reorder)
+	: Pt1(x1,y1), Pt2(x2,y2), Segment(seg), OrientedTop(y1<y2), OrientedRight(x1<x2)
 {
 	if(reorder)
 		ReOrder();
@@ -64,8 +66,8 @@ RLine::RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,const bool seg,bool reorder
 
 
 //------------------------------------------------------ -----------------------
-RLine::RLine(const RPoint& pt1,const RPoint& pt2,const bool seg,bool reorder)
-	: Pt1(pt1.X,pt1.Y), Pt2(pt2.X,pt2.Y), Segment(seg)
+RLine::RLine(const RPoint& pt1,const RPoint& pt2,bool seg,bool reorder)
+	: Pt1(pt1.X,pt1.Y), Pt2(pt2.X,pt2.Y), Segment(seg), OrientedTop(pt1.Y<pt2.Y), OrientedRight(pt1.X<pt2.X)
 {
 	if(reorder)
 		ReOrder();
@@ -143,12 +145,33 @@ tCoord  RLine::GetAngle(bool ccw) const
 
 
 //------------------------------------------------------ -----------------------
-void RLine::SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2,bool reorder)
+void RLine::SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2,bool seg,bool reorder)
 {
 	Pt1.Set(x1,y1);
    Pt2.Set(x2,y2);
+	Segment=seg;
+	OrientedTop=y1<y2;
+	OrientedRight=x1<x2;
 	if(reorder)
 		ReOrder();
+}
+
+
+//------------------------------------------------------------------------------
+bool RLine::IsOrientedTop(void) const
+{
+	if(!Segment)
+		mThrowRException("The line is not a segment");
+	return(OrientedTop);
+}
+
+
+//------------------------------------------------------------------------------
+bool RLine::IsOrientedRight(void) const
+{
+	if(!Segment)
+		mThrowRException("The line is not a segment");
+	return(OrientedRight);
 }
 
 
@@ -336,6 +359,7 @@ bool RLine::IsIn(const RPoint& pt) const
 	}
 	return(false);
 }
+
 
 
 //------------------------------------------------------------------------------

@@ -182,7 +182,7 @@ void RObj2DConfig::Set(const RPolygon& poly)
 		mThrowRException("Polygon is already set");
 	Polygon=poly;
 	Polygon.RectDecomposition(Rects);
-	Polygon.Boundary(Rect);
+	Polygon.ExternalBoundary(Rect);
 	Area=Rects.Area();
 }
 

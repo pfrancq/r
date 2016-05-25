@@ -44,8 +44,10 @@ namespace R{
 
 //------------------------------------------------------------------------------
 /**
-* This class represent a line. In practice, Pt1 is always the most bottom/left
+* This class represent a line. Be default, Pt1 is always the most bottom/left
 * point and Pt2 is always the most upper/right point.
+*
+* A line can also be considered as an oriented segment.
 * @short Line.
 */
 class RLine
@@ -65,6 +67,16 @@ class RLine
 	*/
 	bool Segment;
 
+	/**
+	 * Is the segment oriented to the top.
+	 */
+	bool OrientedTop;
+
+	/**
+	 * Is the segment oriented to the right.
+	 */
+	bool OrientedRight;
+
 public:
 
 	/**
@@ -74,7 +86,7 @@ public:
 
 	/**
 	 * Copy constructor.
-    * @param line           Line used for the initialization.
+    * @param line           Line used for the initialisation.
     */
 	RLine(const RLine& line);
 
@@ -88,7 +100,7 @@ public:
 	* @param seg            Is the line a segment.
 	* @param reorder        Define if the line must be reorder.
 	*/
-	RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,const bool seg=true,bool reorder=true);
+	RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,bool seg=true,bool reorder=true);
 
 	/**
 	* Construct a line. The points are eventually exchanged to ensure that the
@@ -98,7 +110,7 @@ public:
 	* @param seg            Is the line a segment.
 	* @param reorder        Define if the line must be reorder.
 	*/
-	RLine(const RPoint& pt1,const RPoint& pt2,const bool seg=true,bool reorder=true);
+	RLine(const RPoint& pt1,const RPoint& pt2,bool seg=true,bool reorder=true);
 
 private:
 
@@ -146,14 +158,41 @@ public:
 	tCoord GetAngle(const RLine& line,bool ccw=true) const;
 
 	/**
-	* Set new points to the line
+	* Set new points to the line.
 	* @param x1             X-coordinate of the first point used.
 	* @param y1             Y-coordinate of the first point used.
 	* @param x2             X-coordinate of the second point used.
 	* @param y2             Y-coordinate of the second point used.
+	* @param seg            Is the line a segment.
 	* @param reorder        Define if the line must be reorder.
 	*/
-	void SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2,bool reorder=true);
+	void SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2,bool seg=true,bool reorder=true);
+
+	/**
+	* Set new points to the line.
+	* @param pt1            The first point used.
+	* @param pt2            The second point used.
+	* @param seg            Is the line a segment.
+	* @param reorder        Define if the line must be reorder.
+	*/
+	void SetPoints(const RPoint& pt1,const RPoint& pt2,bool seg=true,bool reorder=true)
+	{
+		SetPoints(pt1.X,pt1.Y,pt2.X,pt2.Y,seg,reorder);
+	}
+
+	/**
+	 * Look a segment is oriented to the top.
+	 * @return true if it is the case.
+	 * @exception An exception is generated if the line is not a segment.
+	 */
+	bool IsOrientedTop(void) const;
+
+	/**
+	 * Look a segment is oriented to the right.
+	 * @return true if it is the case.
+	 * @exception An exception is generated if the line is not a segment.
+	 */
+	bool IsOrientedRight(void) const;
 
 private:
 

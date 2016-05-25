@@ -38,7 +38,7 @@
 // include files for R Project
 #include <rpolygon.h>
 #include <rtextfile.h>
-#include <rline.h>
+#include <rlines.h>
 using namespace R;
 using namespace std;
 
@@ -820,23 +820,58 @@ tCoord RPolygon::Area(void) const
 
 
 //------------------------------------------------------------------------------
-void RPolygon::Boundary(RRect& rect) const
+void RPolygon::EdgeDecomposition(RContainer<RLine,true,false>& edges,RRect& outside) const
 {
-	if(!GetNb())
-		mThrowRException("No points defined");
+	if(GetNb()<2)
+		mThrowRException("At least two points must be defined.");
 
-	tCoord MinX=cMaxCoord,MinY=cMaxCoord,MaxX=0,MaxY=0,X,Y;
-
-	RCursor<RPoint> ptr(*this);
-	for(ptr.Start();!ptr.End();ptr.Next())
+   RCursor<RPoint> Vertex(*this);
+	Vertex.Start();
+	RPoint a(*Vertex());
+	tCoord MinX(a.X),MinY(a.Y),MaxX(a.X),MaxY(a.Y),X,Y;
+	for(Vertex.Next();!Vertex.End();Vertex.Next())
 	{
-		X=ptr()->X;
-		Y=ptr()->Y;
+		// Look for the boundary rectangle
+		X=Vertex()->X;
+		Y=Vertex()->Y;
 		if(MinX>X) MinX=X;
 		if(MinY>Y) MinY=Y;
 		if(MaxX<X) MaxX=X;
 		if(MaxY<Y) MaxY=Y;
+
+		// Add an edge
+		edges.InsertPtr(new RLine(a,*Vertex(),true));
+		a = (*Vertex());
 	}
+
+	outside.Set(MinX,MinY,MaxX,MaxY);
+}
+
+
+//------------------------------------------------------------------------------
+void RPolygon::ExternalBoundary(RRect& rect) const
+{
+	if(!GetNb())
+		mThrowRException("No points defined");
+
+   RCursor<RPoint> Vertex(*this);
+	Vertex.Start();
+	RPoint a(*Vertex());
+	tCoord MinX(a.X),MinY(a.Y),MaxX(a.X),MaxY(a.Y),X,Y;
+	for(Vertex.Next();Vertex.End();Vertex.Next())
+	{
+		// Look for the boundary rectangle
+		X=Vertex()->X;
+		Y=Vertex()->Y;
+		if(MinX>X) MinX=X;
+		if(MinY>Y) MinY=Y;
+		if(MaxX<X) MaxX=X;
+		if(MaxY<Y) MaxY=Y;
+
+		// Add an edge
+		a = (*Vertex());
+	}
+
 	rect.Set(MinX,MinY,MaxX,MaxY);
 }
 
@@ -1165,7 +1200,7 @@ RPoint RPolygon::GetCentralPoint(void)
 	RRect r;
 	double min,act;
 
-	Boundary(r);
+	ExternalBoundary(r);
 	Middle.Set(r.GetWidth()/2,r.GetHeight()/2);
 	if(IsIn(Middle))
 		return(Middle);

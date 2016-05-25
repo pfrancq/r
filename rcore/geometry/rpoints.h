@@ -2,7 +2,7 @@
 
 	R Project Library
 
-	RPoint.h
+	RPoints.h
 
 	Points - Header
 
@@ -113,6 +113,7 @@ public:
 
 	/**
 	* Assignment operator.
+	* @param points         The container used as reference.
 	*/
 	RPoints& operator=(const RPoints& points);
 };

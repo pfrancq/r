@@ -252,7 +252,7 @@ void RPlacementCenter::PostPlace(RGeoInfo* info,const RPoint&)
 		Sol.InsertPtr(new RPolygon(Union));
 	info->Add(Sol);
 	Sol.Union(Union);
-	Union.Boundary(Result);
+	Union.ExternalBoundary(Result);
 }
 
 
@@ -265,7 +265,7 @@ void RPlacementCenter::PostRun(void)
 	for(info.Start();!info.End();info.Next())
 		Sol.InsertPtr(new RPolygon(info()->GetPlacedPolygon()));
 	Sol.Union(Union);
-	Union.Boundary(Result);
+	Union.ExternalBoundary(Result);
 }
 
 

@@ -199,7 +199,7 @@ tCoord RGeoInfo::GetArea(void) const
 //------------------------------------------------------------------------------
 void RGeoInfo::Boundary(RRect& rect)
 {
-	Config->GetPolygon().Boundary(rect);
+	Config->GetPolygon().ExternalBoundary(rect);
 	rect+=Pos;
 }
 

@@ -446,7 +446,7 @@ RRect RLayout::ComputeBoundary(void)
 	RPolygon Union;
 	Sol.Union(Union);
 	RRect Result;
-	Union.Boundary(Result);
+	Union.ExternalBoundary(Result);
 	return(Result);
 }
 

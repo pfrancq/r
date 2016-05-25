@@ -301,7 +301,7 @@ void QRDrawGeoInfos::paintInfo(const RGeoInfo* info,bool fly)
 		{
 			// Size of the object
 			RRect Rect;
-			info->GetPlacedPolygon().Boundary(Rect);
+			info->GetPlacedPolygon().ExternalBoundary(Rect);
 			int w(Rect.GetWidth()*XScale), h(Rect.GetHeight()*YScale);
 
 			if((w>15)&&(h>15))

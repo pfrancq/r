@@ -1,11 +1,26 @@
-SET(rcore_geometry_INST_INCLUDES rsize.h
-                            rpoint.h
-                            rline.h
-                            rrect.h
-                            rpolygon.h)
+SET(rcore_geometry_INST_INCLUDES
+	rgeometry.h
+	rsize.h
+	rpoint.h
+	rpoints.h
+	rline.h
+	rlines.h
+	rrect.h
+	rrects.h
+	rpolygon.h
+	rpolygons.h
+)
 
-SET(rcore_geometry_TARGET_SOURCES rsize.cpp
-                             rpoint.cpp
-                             rline.cpp
-                             rrect.cpp
-                             rpolygon.cpp)
+
+SET(rcore_geometry_TARGET_SOURCES
+	rgeometry.cpp
+	rsize.cpp
+	rpoint.cpp
+	rpoints.cpp
+	rline.cpp
+	rlines.cpp
+	rrect.cpp
+	rrects.cpp
+	rpolygon.cpp
+	rpolygons.cpp
+)
