@@ -143,7 +143,7 @@ private:
 	* @param size            Size of an element downloaded.
 	* @param nmemb           Number of elements downloaded.
    * @return the number of bytes actually taken care of. If it differs from the
-	* numpber of bytes downloaded, the download is stopped.
+	* number of bytes downloaded, the download is stopped.
    */
 	virtual size_t GetData(void* buffer, size_t size, size_t nmemb);
 

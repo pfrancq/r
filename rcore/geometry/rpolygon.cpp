@@ -39,6 +39,7 @@
 #include <rpolygon.h>
 #include <rtextfile.h>
 #include <rlines.h>
+#include <rtriangle.h>
 using namespace R;
 using namespace std;
 
@@ -851,14 +852,14 @@ void RPolygon::EdgeDecomposition(RContainer<RLine,true,false>& edges,RRect& outs
 //------------------------------------------------------------------------------
 void RPolygon::ExternalBoundary(RRect& rect) const
 {
-	if(!GetNb())
-		mThrowRException("No points defined");
+	if(GetNb()<3)
+		mThrowRException("No enough points defined");
 
    RCursor<RPoint> Vertex(*this);
 	Vertex.Start();
 	RPoint a(*Vertex());
 	tCoord MinX(a.X),MinY(a.Y),MaxX(a.X),MaxY(a.Y),X,Y;
-	for(Vertex.Next();Vertex.End();Vertex.Next())
+	for(Vertex.Next();!Vertex.End();Vertex.Next())
 	{
 		// Look for the boundary rectangle
 		X=Vertex()->X;
@@ -1086,7 +1087,215 @@ void RPolygon::RectDecomposition(RContainer<RRect,true,false>& rects) const
 
 
 //------------------------------------------------------------------------------
-void RPolygon::AddVertices(RContainer<RPoint,true,false>& points) const
+inline size_t Next(size_t idx,size_t max)
+{
+	if(idx+1==max)
+		return(0);
+	else
+		return(idx+1);
+}
+inline size_t Prev(size_t idx,size_t max)
+{
+	if(idx==0)
+		return(max-1);
+	else
+		return(idx-1);
+}
+
+
+//------------------------------------------------------------------------------
+void RPolygon::Rectangularize(double loss)
+{
+	if(loss<0.01)
+		loss=0.01;
+	if(loss>1.0)
+		loss=1.0;
+
+	// ReOrder the polygon
+	const_cast<RPolygon*>(this)->ReOrder();
+
+	// Go through each vertex
+	size_t NbEdges(GetNb());   // Number of edges to treat
+	for(size_t pos=0;pos<NbEdges;pos++)
+	{
+		RPoint Pt1(*((*this)[pos]));
+		size_t pos2(Next(pos,NbEdges));
+		RPoint Pt2(*((*this)[pos2]));
+		RLine Vertex(Pt1,Pt2);
+
+		// If the vertex is horizontal or vertical -> nothing to do
+		if(Vertex.IsHorizontal()||Vertex.IsVertical())
+			continue;
+
+		// Look if a full loss is accepted
+		if(loss==1.0)
+		{
+			// Yes -> Replace Pt2 by the edge (Pt1.X,Pt2.Y)
+			// If Pt1 is replace, we must decrease pos since it will be increase in the for loop
+			pos-=AddAfterVerifyEdge(new RPoint(Pt1.X,Pt2.Y),pos,NbEdges)-1;
+			continue;
+		}
+
+		// Determine the direction of the vertex and its length, total high and length
+		bool GoesRight(Pt1.X<Pt2.X);
+		bool GoesUp(Pt1.Y<Pt2.Y);
+		double RefLen(Vertex.GetLength());
+		double VectorX((Pt2.X-Pt1.X)/RefLen),VectorY((Pt2.Y-Pt1.Y)/RefLen);
+
+		// Compute the area of the reference triangle
+		RTriangle Ref(Pt1,Pt2,RPoint(Pt1.X,Pt2.Y));
+		double RefArea(Ref.GetArea());
+		//cout<<"  --> "<<Pt1<<";"<<Pt2<<";"<<pos<<";"<<RefArea<<endl;
+
+		// General variables
+		RContainer<RPoint,false,false> Edges(10);   // Edges to add
+		double Area(0);                             // Area formed by the new vertices
+		int AddedEdges;                             // Number of edges added (different than the number of edges in the container)
+
+		// Try different number of divisions
+		for(size_t NbDiv=1;Area/RefArea<=loss;NbDiv++)
+		{
+			Area=0;                         // Area
+			AddedEdges=0;                   // Start by adding one edge
+			RPoint LastCut(Pt1);            // Last cutting edge (to begin, it is Pt1)
+			double Len(RefLen/(NbDiv+1.));  // Compute the length of each part of the vertex
+
+			// Compute the different segments
+			for(int i=0;i<=NbDiv;i++)
+			{
+				// Each division supposes the insertion of three edges
+				double dist(Len*(i+1)); // Distance from Pt1
+
+				// The cut point
+				RPoint Cut(Pt1.X+(VectorX*dist),Pt1.Y+(VectorY*dist));
+
+				// Different thing to do depending if the last segment is treated
+				if(i==NbDiv)
+				{
+					// Last vertex created
+					// -> One point to add : (LastCut.X,Pt2.Y)
+					RPoint Add(LastCut.X,Pt2.Y);
+					Area+=RTriangle(LastCut,Add,Pt2).GetArea();
+
+					// Verify that the container has enough points
+					while(Edges.GetNb()<AddedEdges+1)
+						Edges.InsertPtr(new RPoint());
+
+					// Add the point to it
+					(*Edges[AddedEdges++])=Add;
+				}
+				else
+				{
+					// Middle vertex created
+					// -> Two point to add : (LastCut.X,Cut.Y) and (Cut.X,Cut.Y)
+					RPoint Add(LastCut.X,Cut.Y);
+					Area+=RTriangle(LastCut,Add,Cut).GetArea();
+
+					// Verify that the container has enough points
+					while(Edges.GetNb()<AddedEdges+2)
+						Edges.InsertPtr(new RPoint());
+
+					// Add the point to it
+					(*Edges[AddedEdges++])=Add;
+					(*Edges[AddedEdges++])=Cut;
+				}
+
+				LastCut=Cut;
+				//cout<<"      "<<Area<<"~"<<Area/RefArea<<endl;
+			}
+
+		}
+
+		// We must now insert the edges
+		for(size_t i=0;i<AddedEdges;i++)
+			NbEdges+=AddAfterVerifyEdge(Edges[i],pos,GetNb());
+	}
+
+	ReOrder();
+}
+
+
+
+//------------------------------------------------------------------------------
+size_t RPolygon::AddAfterVerifyEdge(RPoint* edge,size_t& pos,size_t nbedges)
+{
+	size_t i,j,k;
+
+	// Look first what happens at pos
+	bool DelPt1(false);
+	i=Prev(pos,nbedges);
+	j=pos;
+	RPoint* Pti((*this)[i]);
+	RPoint* Ptj((*this)[j]);
+	RPoint* Ptk(edge);
+
+	// Look if i,j and k are on the same line and if i must be deleted
+	if((Pti->X==Ptj->X)&&(Pti->X==Ptk->X))
+	{
+		// If j is in between i and k
+		if((Ptj->Y>Pti->Y)&&(Ptj->Y<Ptk->Y))
+			DelPt1=true;
+		else if((Ptj->Y<Pti->Y)&&(Ptj->Y>Ptk->Y))
+			DelPt1=true;
+	}
+	else if((Pti->Y==Ptj->Y)&&(Pti->Y==Ptk->Y))
+	{
+		// If j is in between i and k
+		if((Ptj->X>Pti->X)&&(Ptj->X<Ptk->X))
+			DelPt1=true;
+		else if((Ptj->X<Pti->X)&&(Ptj->X>Ptk->X))
+			DelPt1=true;
+	}
+
+	// Look first what happens at pos+1
+	bool DelPt2(false);
+	i=Next(pos,nbedges);
+	j=i;
+	k=Next(j,nbedges);
+	Pti=edge;
+	Ptj=((*this)[j]);
+	Ptk=((*this)[k]);
+
+	// Look if i,j and k are on the same line and if j must be deleted
+	if((Pti->X==Ptj->X)&&(Pti->X==Ptk->X))
+	{
+		// if i is between j and k
+		if((Pti->Y>Ptj->Y)&&(Pti->Y<Ptk->Y))
+			DelPt2=true;
+		else if((Pti->Y<Ptj->Y)&&(Pti->Y>Ptk->Y))
+			DelPt2=true;
+	}
+	else if((Pti->Y==Ptj->Y)&&(Pti->Y==Ptk->Y))
+	{
+		// if i is between j and k
+		if((Pti->X>Ptj->X)&&(Pti->X<Ptk->X))
+			DelPt2=true;
+		else if((Pti->X<Ptj->X)&&(Pti->X>Ptk->X))
+			DelPt2=true;
+	}
+
+	if(DelPt1&&DelPt2)
+		mThrowRException("Big Problem");
+
+	if(DelPt1)
+	{
+		InsertPtrAt(edge,pos,true);
+		return(0);
+	}
+	else if(DelPt2)
+	{
+		pos=Next(pos,nbedges);
+		InsertPtrAt(edge,pos,true);
+		return(0);
+	}
+	pos=Next(pos,nbedges);
+	InsertPtrAt(edge,pos,false);
+	return(1);
+}
+
+
+//------------------------------------------------------------------------------
+void RPolygon::GetEdges(RContainer<RPoint,true,false>& points) const
 {
 	RCursor<RPoint> point(*this);
 	for(point.Start();!point.End();point.Next())

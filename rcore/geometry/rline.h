@@ -93,22 +93,22 @@ public:
 	/**
 	* Construct a line. The points are eventually exchanged to ensure that the
 	* first one is the most left-upper point.
-	* @param x1             X-coordinate of the first point used.
-	* @param y1             Y-coordinate of the first point used.
-	* @param x2             X-coordinate of the second point used.
-	* @param y2             Y-coordinate of the second point used.
-	* @param seg            Is the line a segment.
-	* @param reorder        Define if the line must be reorder.
+	* @param x1              X-coordinate of the first point used.
+	* @param y1              Y-coordinate of the first point used.
+	* @param x2              X-coordinate of the second point used.
+	* @param y2              Y-coordinate of the second point used.
+	* @param seg             Is the line a segment.
+	* @param reorder         Define if the line must be reorder.
 	*/
 	RLine(tCoord x1,tCoord y1,tCoord x2,tCoord y2,bool seg=true,bool reorder=true);
 
 	/**
 	* Construct a line. The points are eventually exchanged to ensure that the
 	* first one is the most left-upper point.
-	* @param pt1            The first point used.
-	* @param pt2            The second point used.
-	* @param seg            Is the line a segment.
-	* @param reorder        Define if the line must be reorder.
+	* @param pt1             The first point used.
+	* @param pt2             The second point used.
+	* @param seg             Is the line a segment.
+	* @param reorder         Define if the line must be reorder.
 	*/
 	RLine(const RPoint& pt1,const RPoint& pt2,bool seg=true,bool reorder=true);
 
@@ -125,7 +125,7 @@ public:
 	* Compare two lines. This function is used with the class RContainer.
 	* @param line            Line used for the comparison.
 	* @return
-	* - -1 The left-bottom point of the current polygon is more at the left (at
+	* - -1 The left-bottom point of the current line is more at the left (at
 	*   the bottom) of the other one. If identical, the second points are
 	*   compared.
 	* - 0 if there have the points.
@@ -159,21 +159,21 @@ public:
 
 	/**
 	* Set new points to the line.
-	* @param x1             X-coordinate of the first point used.
-	* @param y1             Y-coordinate of the first point used.
-	* @param x2             X-coordinate of the second point used.
-	* @param y2             Y-coordinate of the second point used.
-	* @param seg            Is the line a segment.
-	* @param reorder        Define if the line must be reorder.
+	* @param x1              X-coordinate of the first point used.
+	* @param y1              Y-coordinate of the first point used.
+	* @param x2              X-coordinate of the second point used.
+	* @param y2              Y-coordinate of the second point used.
+	* @param seg             Is the line a segment.
+	* @param reorder         Define if the line must be reorder.
 	*/
 	void SetPoints(tCoord x1,tCoord y1,tCoord x2,tCoord y2,bool seg=true,bool reorder=true);
 
 	/**
 	* Set new points to the line.
-	* @param pt1            The first point used.
-	* @param pt2            The second point used.
-	* @param seg            Is the line a segment.
-	* @param reorder        Define if the line must be reorder.
+	* @param pt1             The first point used.
+	* @param pt2             The second point used.
+	* @param seg             Is the line a segment.
+	* @param reorder         Define if the line must be reorder.
 	*/
 	void SetPoints(const RPoint& pt1,const RPoint& pt2,bool seg=true,bool reorder=true)
 	{
@@ -199,7 +199,7 @@ private:
 	/**
 	* Look at the needed clock direction to go between the two extremities by
 	* passing by an intermediate point.
-	* @param pt             Intermediate point.
+	* @param pt              Intermediate point.
 	* @return
 	* -1 if the direction is anticlockwise.
 	* 0 if the point is one the two extremities.
@@ -221,14 +221,14 @@ public:
 
 	/**
 	* Determine if there is an intersection between two lines (To verify!!!).
-	* @param line           Line used for the comparison.
+	* @param line            Line used for the comparison.
 	* @return true if there is an intersection.
 	*/
 	bool Inter(const RLine& line) const;
 
 	/**
 	* Determine if a point is on the line/segment.
-	* @param pt             Point used for the comparison.
+	* @param pt              Point used for the comparison.
 	* @return true if there the point is contained.
 	*/
 	bool IsIn(const RPoint& pt) const;

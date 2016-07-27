@@ -71,7 +71,6 @@ QRDrawGeoInfos::MyItem::MyItem(const RGeoInfo* info,QRDrawGeoInfos* widget,const
 	: QGraphicsPolygonItem(), Widget(widget), Info(info), Pin(0)
 {
 	Widget->paintConnectors(info);
-
 	QString Tmp;
 	if(Info!=widget->Layout->GetBoard())
 	{
@@ -128,7 +127,6 @@ QRDrawGeoInfos::MyItem::MyItem(const RGeoInfo* info,RObj2DConfigPin* pin,QRDrawG
 	: QGraphicsPolygonItem(), Widget(widget), Info(info), Pin(pin)
 {
 	RRect Rect(Pin->GetRect());
-	//cout<<Rect<<endl;
 	if(Info!=widget->Layout->GetBoard())
 		Rect+=Info->GetPos();
 	QPolygonF Polygon;

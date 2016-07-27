@@ -203,7 +203,7 @@ protected:
 	 */
 	inline double y(tCoord y)
 	{
-		return(static_cast<double>(((Layout->GetProblem()->GetLimits().GetWidth()-y)*YScale)+5.0));
+		return((static_cast<double>(Layout->GetProblem()->GetLimits().GetHeight()-y)*YScale)-5.0);
 	}
 
 	/**

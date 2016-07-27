@@ -9,6 +9,7 @@ SET(rcore_geometry_INST_INCLUDES
 	rrects.h
 	rpolygon.h
 	rpolygons.h
+	rtriangle.h
 )
 
 
@@ -23,4 +24,5 @@ SET(rcore_geometry_TARGET_SOURCES
 	rrects.cpp
 	rpolygon.cpp
 	rpolygons.cpp
+	rtriangle.cpp
 )

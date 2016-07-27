@@ -76,10 +76,16 @@ public:
 	RPolygon(void);
 
 	/**
-	* Construct a polygon with a number of vertices.
-	* @param nb              Number of vertices.
-	* @param ...             Vertices.
-	*/
+	 * Construct a polygon with a number of vertices. Each vertex is defined by
+	 * two coordinates that must be of the type double.
+	 * @code
+	 * RPolygon Poly(4,12.5,15.5,12.,52.,45.,41.,0.,0.);
+	 * @endcode
+	 * Using "12." rather than "12" ensures that the number will be passed as a
+	 * double and not as an integer.
+	 * @param nb             Number of vertices.
+	 * @param ...            Coordinates of each vertices.
+	 */
 	RPolygon(size_t nb,...);
 
 	/**
@@ -414,10 +420,41 @@ public:
 	void RectDecomposition(RContainer<RRect,true,false>& rects) const;
 
 	/**
-	* Add the vertices of the polygon to a container of points.
+	 * Transform a polygon in a rectangular one. In practice, each non horizontal
+	 * or vertical vertex is transform into a set of combinations of a pair of
+	 * horizontal and vertical vertices.
+	 *
+	 * In the process, there is always a loss of area, but it can be minimised by
+	 * the parameter.
+	 * @param loss           Level of area loss accepted. In practice, it must be
+	 *                       a number between 0.01 and 1 (if necessary, the
+	 *                       parameter is adapted). The parameter is not global
+	 *                       but is verified for each vertex modified. A value of
+	 *                       1 implies the highest possible area loss.
+	 */
+	void Rectangularize(double loss);
+
+private:
+
+	/**
+	 * Add a edge at a given position in the polygon. Verify also if the edge
+	 * before or after must be deleted or not.
+	 * @param edge           Edge to add.
+	 * @param pos            Position after which the edge must be added. It is
+	 *                       incremented or unmodified if the edge was inserted
+	 *                       or replace an existing one.
+	 * @param nbedges        Number of edges actually in the polygon.
+	 * @return the number of nodes really added (can be 0 or 1).
+	 */
+	size_t AddAfterVerifyEdge(RPoint* edge,size_t& pos,size_t nbedges);
+
+public:
+
+	/**
+	* Get the edges of the polygon to a container of points.
 	* @param points         A pointer to the container of points.
 	*/
-	void AddVertices(RContainer<RPoint,true,false>& points) const;
+	void GetEdges(RContainer<RPoint,true,false>& points) const;
 
 	/**
 	 * Look if the polygon is clockwise or not.

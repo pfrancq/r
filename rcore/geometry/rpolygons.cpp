@@ -98,7 +98,7 @@ void RPolygons::PutPoints(RPoints& points) const
 	points.Clear();
 	RCursor<RPolygon> poly(*this);
 	for(poly.Start();!poly.End();poly.Next())
-		poly()->AddVertices(points);
+		poly()->GetEdges(points);
 	for(poly.Start();!poly.End();poly.Next())
 	{
 		RCursor<RPoint> point(poly()->GetVertices());

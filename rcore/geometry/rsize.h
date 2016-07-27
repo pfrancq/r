@@ -93,6 +93,12 @@ public:
 	inline bool operator!=(const RSize& size) const {return((Width!=size.Width)||(Height!=size.Height));}
 
 	/**
+	* Scale a size.
+	* @param size             The point representing the vector used.
+	*/
+	RSize& operator*=(double factor) {Width*=factor;Height*=factor;return(*this);}
+
+	/**
 	* Make a translation of the point.
 	* @param size             The point representing the vector used.
 	*/
@@ -157,8 +163,8 @@ inline RSize operator+(const RSize& arg1,const RSize& arg2) {return(RSize(arg1)+
 
 //------------------------------------------------------------------------------
 /**
-* Substract two sizes.
-*/
+ * Subtract two sizes.
+ */
 inline RSize operator-(const RSize& arg1,const RSize& arg2) {return(RSize(arg1)-=arg2);}
 
 
