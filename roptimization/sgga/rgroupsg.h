@@ -271,6 +271,7 @@ public:
 	virtual ~RGroupSG(void);
 
 	friend class OrderBySim;
+	friend class RGroups<cGroup,cObj,cGroups>;
 };
 
 

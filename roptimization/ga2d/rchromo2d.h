@@ -157,6 +157,8 @@ public:
 	* Destruct the chromosome.
 	*/
 	virtual ~RChromo2D(void);
+
+	friend class RInst2D<cInst,cChromo,cFit,cThreadData,cInfo>;
 };
 
 

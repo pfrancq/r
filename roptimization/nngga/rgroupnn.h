@@ -143,6 +143,7 @@ public:
 	virtual ~RGroupNN(void);
 
 	friend class OrderBySim;
+	friend class RGroups<cGroup,cObj,cGroups>;
 };
 
 

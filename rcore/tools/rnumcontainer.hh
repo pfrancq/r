@@ -41,7 +41,7 @@ template<class I,bool bOrder>
 	: MaxInt(max)
 {
 	NbInt = 0;
-	if(!max)
+	if(max<50)
 		MaxInt=100;
 	List = new I[MaxInt];
 	memset(List,0,MaxInt*sizeof(I));

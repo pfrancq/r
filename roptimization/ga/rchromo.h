@@ -82,6 +82,12 @@ public:
 	RChromo(cInst* inst,size_t id);
 
 	/**
+	* Get the identifier of the chromosome.
+	* @return the identifier.
+	*/
+	size_t GetId(void) const {return(Id);}
+
+	/**
 	* Initialization of the chromosome.
 	* @param thData         Pointer to the "thread-dependent" data of the chromosome.
 	*/

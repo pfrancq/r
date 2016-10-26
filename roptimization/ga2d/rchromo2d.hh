@@ -84,11 +84,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData,class cInfo>
 	RObj2DContainer* thObj1(GetNewAggregator());
 	parent1->FillAggregator(thObj1,Selected,Kernel,Instance->Random,Instance->GetProblem()->MustWeightedDistances());
 	if(Instance->Debug)
-		Instance->Debug->PrintInfo(RString::Number(thObj1->GetNbObjs())+" objects selected from "+RString::Number(parent1->Id));
+		Instance->Debug->PrintInfo(RString::Number(thObj1->GetNbObjs())+" objects selected from "+RString::Number(parent1->GetId()));
 	RObj2DContainer* thObj2(GetNewAggregator());
 	parent2->FillAggregator(thObj2,Selected,Kernel,Instance->Random,Instance->GetProblem()->MustWeightedDistances());
 	if(Instance->Debug)
-		Instance->Debug->PrintInfo(RString::Number(thObj2->GetNbObjs())+" objects selected from "+RString::Number(parent2->Id));
+		Instance->Debug->PrintInfo(RString::Number(thObj2->GetNbObjs())+" objects selected from "+RString::Number(parent2->GetId()));
 
 	// Use the heuristic to place the two aggregators and the non-aggregated objects
 	Heuristic->Run(Instance->Problem,this,Grid);

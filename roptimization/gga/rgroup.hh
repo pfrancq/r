@@ -238,7 +238,10 @@ template<class cGroup,class cObj,class cGroups>
 	cObj* RGroup<cGroup,cObj,cGroups>::GetObjPos(const size_t pos)
 {
 	if(pos>NbSubObjects)
-			throw std::range_error("cObj* RGroup::GetObjPos(size_t) : group '"+RString::Number(Id)+"' has only "+RString::Number(NbSubObjects)+" objects");
+	{
+		RString Msg("cObj* RGroup::GetObjPos(size_t) : group '"+RString::Number(Id)+"' has only "+RString::Number(NbSubObjects)+" objects");
+		throw std::range_error(Msg.operator std::string());
+	}
 	return(Owner->GetObj(SubObjects+pos));
 }
 

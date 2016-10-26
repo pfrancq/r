@@ -174,7 +174,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	if((*best->Fitness)>(*BestInPop->Fitness))
 	{
 		if(Debug)
-			Debug->PrintInfo("Chromosome "+RString::Number(best->Id)+" best of population");
+			Debug->PrintInfo("Chromosome "+RString::Number(best->GetId())+" best of population");
 		BestInPop=best;
 		AgeBestPop=0;
 		AgeNextMutation=FreqMutation;
@@ -182,7 +182,7 @@ template<class cInst,class cChromo,class cFit,class cThreaData>
 	if((*BestInPop->Fitness)>(*BestChromosome->Fitness))
 	{
 		if(Debug)
-			Debug->PrintInfo("Chromosome "+RString::Number(BestInPop->Id)+" best ever");
+			Debug->PrintInfo("Chromosome "+RString::Number(BestInPop->GetId())+" best ever");
 		BestChromosome->Copy(*BestInPop);
 		AgeBest=0;
 		AgeNextBestMutation=FreqBestMutation;
@@ -280,7 +280,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		// First Crossover
 		C3=(*(C2++));
 		if(Debug)
-			Debug->PrintInfo("Parent "+RString::Number((*C2)->Id)+" + Parent "+RString::Number(C3->Id)+" -> Child "+RString::Number((*C1)->Id));
+			Debug->PrintInfo("Parent "+RString::Number((*C2)->GetId())+" + Parent "+RString::Number(C3->GetId())+" -> Child "+RString::Number((*C1)->GetId()));
 		(*C1)->Crossover(*C2,C3);
 		(*C1)->ToEval=true;
 		if(VerifyGA)
@@ -290,7 +290,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 		// Second Crossover
 		C1--;
 		if(Debug)
-			Debug->PrintInfo("Parent "+RString::Number(C3->Id)+" + Parent "+RString::Number((*C2)->Id)+" -> Child "+RString::Number((*C1)->Id));
+			Debug->PrintInfo("Parent "+RString::Number(C3->GetId())+" + Parent "+RString::Number((*C2)->GetId())+" -> Child "+RString::Number((*C1)->GetId()));
 		(*C1)->Crossover(C3,*C2);
 		(*C1)->ToEval=true;
 		if(VerifyGA)
@@ -314,15 +314,15 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	for(size_t i=NbMutations+1;--i;Mut--)
 	{
 		cChromo* p=(*Mut);
-		if(p->Id!=BestInPop->Id)
+		if(p->GetId()!=BestInPop->GetId())
 		{
-			size_t id=p->Id;
+			size_t id=p->GetId();
 			p->Copy(*BestInPop);
 			p->Id=id;
 		}
 
 		if(Debug)
-			Debug->PrintInfo("Normal Mutation (BestInPop) -> Chromosome "+RString::Number(p->Id));
+			Debug->PrintInfo("Normal Mutation (BestInPop) -> Chromosome "+RString::Number(p->GetId()));
 		PostNotification("RInst::Interact");
 		p->Mutation();
 		p->ToEval=true;
@@ -347,11 +347,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	for(size_t i=NbMutations+1;--i;Mut--)
 	{
 		cChromo* p=(*Mut);
-		size_t id=p->Id;
+		size_t id=p->GetId();
 		p->Copy(*BestChromosome);
 		p->Id=id;
 		if(Debug)
-			Debug->PrintInfo("Strong Mutation (BestInPop) -> Chromosome "+RString::Number(p->Id));
+			Debug->PrintInfo("Strong Mutation (BestInPop) -> Chromosome "+RString::Number(p->GetId()));
 		PostNotification("RInst::Interact");
 		p->StrongMutation();
 		p->ToEval=true;
@@ -375,7 +375,7 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	// Do the inversion
 	cChromo* p=Chromosomes[RRand(PopSize)];
 	if(Debug)
-		Debug->PrintInfo("Inversion of Chromosome "+RString::Number(p->Id));
+		Debug->PrintInfo("Inversion of Chromosome "+RString::Number(p->GetId()));
 	p->Inversion();
 	p->ToEval=true;
 	if(VerifyGA)
