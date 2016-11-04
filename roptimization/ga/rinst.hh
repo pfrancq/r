@@ -500,7 +500,11 @@ template<class cInst,class cChromo,class cFit,class cThreadData>
 	if(Chromosomes)
 	{
 		for(i=PopSize+1,C=Chromosomes;--i;C++)
-			if(*C) delete (*C);
+			if(*C)
+			{
+				delete (*C);
+				(*C)=0;
+			}
 		delete[] Chromosomes;
 	}
 	if(Ranked) delete[] Ranked;

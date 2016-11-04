@@ -299,11 +299,21 @@ template<class I,bool bOrder>
 
 //------------------------------------------------------------------------------
 template<class I,bool bOrder>
-		template<bool bOrder1>
-	RNumContainer<I,bOrder>& RNumContainer<I,bOrder>::operator=(const RNumContainer<I,bOrder1>& src)
+	RNumContainer<I,bOrder>& RNumContainer<I,bOrder>::operator=(const RNumContainer<I,true>& src)
 {
 	Verify(src.GetNb());
-	if(bOrder&&(!bOrder1))
+	NbInt = src.GetNb();
+	memcpy(List,src.GetList(),sizeof(I)*NbInt);
+	return(*this);
+}
+
+
+//------------------------------------------------------------------------------
+template<class I,bool bOrder>
+	RNumContainer<I,bOrder>& RNumContainer<I,bOrder>::operator=(const RNumContainer<I,false>& src)
+{
+	Verify(src.GetNb());
+	if(bOrder)
 	{
 		const I* ptr;
 		size_t i;
@@ -467,5 +477,9 @@ template<class I,bool bOrder>
 template<class I,bool bOrder>
 	RNumContainer<I,bOrder>::~RNumContainer(void)
 {
-	delete[] List;
+	if(List)
+	{
+		delete[] List;
+		List=0;
+	}
 }

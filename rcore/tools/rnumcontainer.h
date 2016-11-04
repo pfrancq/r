@@ -203,10 +203,15 @@ public:
 
 	/**
 	* Assignment operator.
-	* @tparam bOrder1        Is the list ordered?
 	* @param src             List used for the assignment.
 	*/
-	template<bool bOrder1> RNumContainer& operator=(const RNumContainer<I,bOrder1>& src);
+	RNumContainer& operator=(const RNumContainer<I,true>& src);
+
+	/**
+	* Assignment operator.
+	* @param src             List used for the assignment.
+	*/
+	RNumContainer& operator=(const RNumContainer<I,false>& src);
 
 	/**
 	* Insert all the values of a list in the current one. This function

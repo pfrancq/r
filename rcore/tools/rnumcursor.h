@@ -196,4 +196,42 @@ public:
 
 
 //------------------------------------------------------------------------------
+namespace std{
+//------------------------------------------------------------------------------
+
+
+#ifndef __APPLE__
+extern "C++"
+{
+#endif
+
+//------------------------------------------------------------------------------
+/**
+ * Print the numbers the containers.
+ * @param os                Output stream.
+ * @param cont              Container to print.
+ * @return the stream.
+ */
+template<class I,bool bOrder>
+	extern std::ostream& operator<<(std::ostream& os,const R::RNumContainer<I,bOrder>& cont)
+{
+	R::RNumCursor<I> Cur(cont);
+	for(Cur.Start();!Cur.End();Cur.Next())
+	{
+		os<<Cur();
+		if(Cur.GetPos()<Cur.GetNb()-1)
+			os<<";";
+	}
+   return(os);
+}
+
+
+#ifndef __APPLE__
+}
+#endif
+
+
+}  //-------- End of namespace std ---------------------------------------------
+
+//------------------------------------------------------------------------------
 #endif
