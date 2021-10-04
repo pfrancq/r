@@ -8,6 +8,9 @@ How-to build (command-line):
 - sudo make install
 - sudo make uninstall (if you want to remove it ...)
 
+More details are available on the following Web page:
+http://www.otlet-institute.org/wikics/Building_R_Libraries.html
+
 
 ABOUT OPTIONS (when running cmake)
 -----------------------------------
@@ -37,13 +40,23 @@ disable-postgres=true This option disables the support for PostgreSQL.
 disable-qt=true This option disables the support for Qt.
 
 
-MORE INFORMATION
-----------------
-More information is available on the following Web page:
-http://www.otlet-institute.org/wikics/Building_R_Libraries.html
+ALGORIHTMS IMPLEMENTED
+----------------------------
+The algorithms implemented in the R Libraries ("roptimization" directory) are described by the following Web pages:
+http://www.otlet-institute.org/wikics/Genetic_Algorithms.html
+http://www.otlet-institute.org/wikics/Grouping_Genetic_Algorithms.html
+http://www.otlet-institute.org/wikics/Nearest_Neighbors_Grouping_Genetic_Algorithm.html
+http://www.otlet-institute.org/wikics/Hierarchical_Genetic_Algorithms.html
+http://www.otlet-institute.org/wikics/2D_Genetic_Algorithms.html
+http://www.otlet-institute.org/wikics/PROMETHEE.html
 
 
-AUTHORS
+More details on the research are available on the following Web page:
+http://www.otlet-institute.org/wikics/Articles.html
+
+
+CONTRIBUTORS
 -------
+Pascal Francq (main)
+Thomas L'Eglise
 Xavier Sacré 
-Pascal Francq
